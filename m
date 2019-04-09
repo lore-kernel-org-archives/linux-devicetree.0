@@ -1,59 +1,61 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Tue, 9 Apr 2019 08:34:25 +0200
-Message-ID: <19e24c86-a92d-cabe-f20a-64a1a805e172@xilinx.com>
-References: <20190402123123.915-1-nava.manne@xilinx.com>
- <20190402123123.915-4-nava.manne@xilinx.com>
- <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
- <BYAPR02MB47101CD56BDF0B314BA37062C22C0@BYAPR02MB4710.namprd02.prod.outlook.com>
- <CANk1AXSXAfNky3adaWOrU3qn=JiEX=a25MFg6fimVjXPKvwOMg@mail.gmail.com>
- <d425bd61-238b-f085-f450-d052349878a8@xilinx.com>
- <20190408165109.GA6459@archbook>
- <CANk1AXQ5mHr0ZTuRoby3GomKbbQxv8z-O=o83VV=mXTh1aUZZA@mail.gmail.com>
+From: Peng Ma <peng.ma@nxp.com>
+Subject: RE: [EXT] Re: [v7 3/3] ahci: qoriq: add lx2160 platforms support
+Date: Tue, 9 Apr 2019 06:44:33 +0000
+Message-ID: <VI1PR04MB4431213C02A7DC614AB4E693ED2D0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20190312015019.30628-1-peng.ma@nxp.com>
+ <20190312015019.30628-3-peng.ma@nxp.com>
+ <VI1PR04MB44310DDDF2D981F0BC0D7381ED2C0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <5bbd312c-6443-ea23-2b3e-97fd46a98a38@kernel.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXQ5mHr0ZTuRoby3GomKbbQxv8z-O=o83VV=mXTh1aUZZA@mail.gmail.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5bbd312c-6443-ea23-2b3e-97fd46a98a38@kernel.dk>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jens Axboe <axboe@kernel.dk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jianchao Wang <jianchao.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Andy Tang <andy.tang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08. 04. 19 22:27, Alan Tull wrote:
-> On Mon, Apr 8, 2019 at 11:51 AM Moritz Fischer <mdf@kernel.org> wrote:
->>
->> Hi Michal,
->>
->> On Mon, Apr 08, 2019 at 04:36:15PM +0200, Michal Simek wrote:
->>> On 08. 04. 19 16:17, Alan Tull wrote:
->>>> On Mon, Apr 8, 2019 at 7:39 AM Nava kishore Manne <navam@xilinx.com> wrote:
->>>>>
->>>>> Hi Alan,
->>>>>
->>>>> Thanks for look into it and providing the ACK.
->>>>> I got one minor comments from Moritz Fischer do you want me fix that issue now or I can fix it later as it’s a minor comment?
->>>>
->>>> Please fix for Moritz comment.
->>>>
->>>>> In which kernel version i can expect this driver changes??
->>>>
->>>> Patch 2/3 and 3/3 are dependent on 1/3 which isn't a drivers/fpga
->>>> thing, it's drivers/firmware.
->>>
->>> I can take it via arm-soc guys if you are ok with that.
->>> Just need to have your ack in commits.
->>> We have done it like this several times, IIRC reset, nvmem.
->>
->> I'm fine with you taking it through arm-soc. Alan?
-> 
-> Fine with me!
-
-ok.
-Nava: Please address all comments from reviewers and let me know when
-all are happy and I will take it.
-
-Thanks,
-Michal
+SGkgQXhib2UsDQoNClBhdGNoIGxpbms6DQoNCmh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9w
+YXRjaC8xMDU1MDI4Lw0KDQpodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTA1NDE4
+OS8NCg0KQmVzdCBSZWdhcmRzLA0KUGVuZw0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj5Gcm9tOiBKZW5zIEF4Ym9lIDxheGJvZUBrZXJuZWwuZGs+DQo+U2VudDogMjAxOcTqNNTCOMjV
+IDIzOjIxDQo+VG86IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
+ZzsNCj5tYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxs
+ZW95YW5nLmxpQG54cC5jb20+DQo+Q2M6IGxpbnV4LWlkZUB2Z2VyLmtlcm5lbC5vcmc7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgQW5keSBUYW5nDQo+PGFuZHkudGFu
+Z0BueHAuY29tPg0KPlN1YmplY3Q6IFtFWFRdIFJlOiBbdjcgMy8zXSBhaGNpOiBxb3JpcTogYWRk
+IGx4MjE2MCBwbGF0Zm9ybXMgc3VwcG9ydA0KPg0KPldBUk5JTkc6IFRoaXMgZW1haWwgd2FzIGNy
+ZWF0ZWQgb3V0c2lkZSBvZiBOWFAuIERPIE5PVCBDTElDSyBsaW5rcyBvcg0KPmF0dGFjaG1lbnRz
+IHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMg
+c2FmZS4NCj4NCj4NCj4NCj5PbiA0LzgvMTkgNDowNiBBTSwgUGVuZyBNYSB3cm90ZToNCj4+IEhp
+IGF4Ym9lLA0KPj4NCj4+IElmIHlvdSBoYXZlIG5vIGNvbW1lbnRzIG9uIHRoZXNlIHBhdGhzLCBw
+bGVhc2UgbWVyZ2UuDQo+PiBUaGFuayB5b3UgdmVyeSBtdWNoLg0KPj4gUGF0Y2ggbGluazoNCj4+
+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
+JTNBJTJGJTJGcGF0Y2gNCj4+DQo+d29yay5vemxhYnMub3JnJTJGcGF0Y2glMkYxMDU1MDI4JTJG
+JmFtcDtkYXRhPTAyJTdDMDElN0NwZW5nLm1hDQo+JTQwbnhwLg0KPj4NCj5jb20lN0M0MGU4NTk2
+NzY2MDY0MzFjZTg0OTA4ZDZiYzM1YmYzZCU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDkNCj45YzVj
+MzAxDQo+Pg0KPjYzNSU3QzAlN0MxJTdDNjM2OTAzMzM2MzY0MTA5MzIyJmFtcDtzZGF0YT1ROHZF
+bE1rYURtSHZwaGhWbw0KPjEyQnRGVXZxWHANCj4+IFQlMkJEQnJudmRqViUyRkZpemZzJTNEJmFt
+cDtyZXNlcnZlZD0wDQo+PiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
+b2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnBhdGNoDQo+Pg0KPndvcmsub3psYWJzLm9yZyUyRnBh
+dGNoJTJGMTA1NDE4OSUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDcGVuZy5tYQ0KPiU0MG54cC4NCj4+
+DQo+Y29tJTdDNDBlODU5Njc2NjA2NDMxY2U4NDkwOGQ2YmMzNWJmM2QlN0M2ODZlYTFkM2JjMmI0
+YzZmYTkyY2Q5DQo+OWM1YzMwMQ0KPj4NCj42MzUlN0MwJTdDMSU3QzYzNjkwMzMzNjM2NDEwOTMy
+MiZhbXA7c2RhdGE9SE51aUd6JTJCaGZlZ2NnTlE3DQo+VCUyQlBxR1BJDQo+PiBiUzNjaCUyRlVx
+dHhtSEJmTDZNb1JvJTNEJmFtcDtyZXNlcnZlZD0wDQo+DQo+Q2FuIHlvdSByZXNlbmQsIGl0J3Mg
+bm90IGNsZWFyIHdoaWNoIGlzIHdoaWNoIGhlcmUsIGFuZCB3aGF0IHBhcnRzIG9mIHRoZSBzZXJp
+ZXMNCj5nb2VzIHdoZXJlLg0KPg0KPi0tDQo+SmVucyBBeGJvZQ0KDQpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
