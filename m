@@ -1,88 +1,45 @@
-Return-Path: <SRS0=Ks1j=SF=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V3 12/13] ARM: dts: r8a77470: Add HSUSB device nodes
-Date: Wed,  3 Apr 2019 11:28:43 +0100
-Message-Id: <1554287324-22312-13-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:30131 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfDIIwv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:51 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH 10/11] ARM: dts: r8a77470: Add FDP1 support
+Date: Tue,  9 Apr 2019 17:51:51 +0900
+Message-Id: <1554799912-24764-11-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Define the r8a77470 generic part of the HSUSB0/1 device nodes.
+Add fdp1 node to dtsi for FDP1 support on the RZ/G1C (r8a77470) SoC.
 
-Currently the renesas_usbhs driver doesn't handle multiple phys and we
-don't have a proper hardware to validate such driver changes.
-
-So for hsusb1 it is assumed that usbphy0 will be enabled by either
-channel0 host or device.
-
-In future, if any boards support hsusb1, we will need to add multiple phy
-support in the renesas_usbhs driver and override the board dts to enable
-the same.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
-V2-->V3
- * No Change
-V1-->V2
- * New patch
----
- arch/arm/boot/dts/r8a77470.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm/boot/dts/r8a77470.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 482521c..b855e95 100644
+index 13d3f07..a63c627 100644
 --- a/arch/arm/boot/dts/r8a77470.dtsi
 +++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -325,6 +325,23 @@
- 			status = "disabled";
+@@ -1045,6 +1045,15 @@
+ 			resets = <&cpg 128>;
  		};
  
-+		hsusb0: hsusb@e6590000 {
-+			compatible = "renesas,usbhs-r8a77470",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			dmas = <&usb_dmac00 0>, <&usb_dmac00 1>,
-+			       <&usb_dmac10 0>, <&usb_dmac10 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <4>;
-+			phys = <&usb0 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			status = "disabled";
++		fdp1@fe940000 {
++			compatible = "renesas,fdp1";
++			reg = <0 0xfe940000 0 0x2400>;
++			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 119>;
++			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
++			resets = <&cpg 119>;
 +		};
 +
- 		usbphy0: usb-phy@e6590100 {
- 			compatible = "renesas,usb-phy-r8a77470",
- 				     "renesas,rcar-gen2-usb-phy";
-@@ -343,6 +360,24 @@
- 			};
- 		};
- 
-+		hsusb1: hsusb@e6598000 {
-+			compatible = "renesas,usbhs-r8a77470",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6598000 0 0x100>;
-+			interrupts = <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 706>;
-+			dmas = <&usb_dmac01 0>, <&usb_dmac01 1>,
-+			       <&usb_dmac11 0>, <&usb_dmac11 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <4>;
-+			/* We need to turn on usbphy0 to make usbphy1 to work */
-+			phys = <&usb1 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 706>;
-+			status = "disabled";
-+		};
-+
- 		usbphy1: usb-phy@e6598100 {
- 			compatible = "renesas,usb-phy-r8a77470",
- 				     "renesas,rcar-gen2-usb-phy";
+ 		sdhi0: sd@ee100000 {
+ 			compatible = "renesas,sdhi-r8a77470",
+ 				     "renesas,rcar-gen2-sdhi";
 -- 
 2.7.4
