@@ -1,46 +1,52 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv1 6/6] MAINTAINERS: add maintainer for Intel Stratix10 FW drivers
-Date: Tue,  9 Apr 2019 13:46:02 -0500
-Message-ID: <1554835562-25056-7-git-send-email-richard.gong@linux.intel.com>
-References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/6] regulator: lm363x: Make the gpio register enable
+ flexible
+Date: Tue, 9 Apr 2019 20:44:47 +0200
+Message-ID: <1dcaa34b-cce6-63fc-5866-242c1757a4cb@gmail.com>
+References: <20190405145540.27703-1-dmurphy@ti.com>
+ <20190405145540.27703-2-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <20190405145540.27703-2-dmurphy@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
+To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+Hi Dan,
 
-Add myself as maintainer for the newly created Intel Stratix10
-firmware drivers.
+Regulator maintainers should be added too.
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
-Reviewed-by: Alan Tull <atull@kernel.org>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On 4/5/19 4:55 PM, Dan Murphy wrote:
+> The use of and enablement of the GPIO can be used across devices.
+> Use the enable_reg in the regulator descriptor for the register to
+> write.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   drivers/regulator/lm363x-regulator.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+> index c876e161052a..382b1cecdd93 100644
+> --- a/drivers/regulator/lm363x-regulator.c
+> +++ b/drivers/regulator/lm363x-regulator.c
+> @@ -263,8 +263,8 @@ static int lm363x_regulator_probe(struct platform_device *pdev)
+>   
+>   	if (gpiod) {
+>   		cfg.ena_gpiod = gpiod;
+> -
+> -		ret = regmap_update_bits(regmap, LM3632_REG_BIAS_CONFIG,
+> +		ret = regmap_update_bits(regmap,
+> +					 lm363x_regulator_desc[id].enable_reg,
+>   					 LM3632_EXT_EN_MASK,
+>   					 LM3632_EXT_EN_MASK);
+>   		if (ret) {
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4cf3cbf..d7054f5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8039,6 +8039,16 @@ S:	Supported
- F:	drivers/infiniband/hw/i40iw/
- F:	include/uapi/rdma/i40iw-abi.h
- 
-+INTEL STRATIX10 FIRMWARE DRIVERS
-+M:	Richard Gong <richard.gong@intel.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/firmware/stratix10*
-+F:	include/linux/firmware/intel/
-+F:	Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
-+F:	Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
-+F:	Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
-+
- INTEL TELEMETRY DRIVER
- M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
- M:	"David E. Box" <david.e.box@linux.intel.com>
 -- 
-2.7.4
+Best regards,
+Jacek Anaszewski
