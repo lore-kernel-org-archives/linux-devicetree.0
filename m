@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 07/13] arm64: dts: allwinner: orange-pi-3:
- Enable ethernet
-Date: Tue,  9 Apr 2019 02:24:46 +0200
-Message-ID: <20190409002452.14551-8-megous@megous.com>
+Subject: [PATCH v2 08/13] drm: sun4i: Add support for enabling
+ DDC I2C bus to dw_hdmi glue
+Date: Tue,  9 Apr 2019 02:24:47 +0200
+Message-ID: <20190409002452.14551-9-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBXOMV7SQKGQEUS5O6EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBXWMV7SQKGQEJO2C2QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190409002452.14551-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,90 +21,78 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
-to the phy datasheet, both regulators need to be enabled at the same time,
-but we can only specify a single phy-supply in the DT.
-
-This can be achieved by making one regulator depedning on the other via
-vin-supply. While it's not a technically correct description of the
-hardware, it achieves the purpose.
-
-All values of RX/TX delay were tested exhaustively and a middle one of the
-working values was chosen.
+Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
+transistors, before it can be used. Model this as a power supply for DDC
+(via regulator framework).
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 17 ++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 5fbc5e410883..523f1d848042 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -15,6 +15,7 @@
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+index dc47720c99ba..a1518525fa2f 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+@@ -146,16 +146,28 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 		return PTR_ERR(hdmi->regulator);
+ 	}
  
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &emac;
- 	};
++	hdmi->ddc_regulator = devm_regulator_get(dev, "ddc");
++	if (IS_ERR(hdmi->ddc_regulator)) {
++		dev_err(dev, "Couldn't get ddc regulator\n");
++		return PTR_ERR(hdmi->ddc_regulator);
++	}
++
+ 	ret = regulator_enable(hdmi->regulator);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to enable regulator\n");
+ 		return ret;
+ 	}
  
- 	chosen {
-@@ -44,6 +45,27 @@
- 		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
- 	};
++	ret = regulator_enable(hdmi->ddc_regulator);
++	if (ret) {
++		dev_err(dev, "Failed to enable ddc regulator\n");
++		goto err_disable_regulator;
++	}
 +
-+	/*
-+	 * The board uses 2.5V RGMII signalling. Power sequence to enable
-+	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
-+	 * at the same time and to wait 100ms.
-+	 */
-+	reg_gmac_2v5: gmac-2v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "gmac-2v5";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-+
-+		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-+		 * enable two regulators to power the phy. This is one way
-+		 * to achieve that.
-+		 */
-+		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
-+	};
+ 	ret = reset_control_deassert(hdmi->rst_ctrl);
+ 	if (ret) {
+ 		dev_err(dev, "Could not deassert ctrl reset control\n");
+-		goto err_disable_regulator;
++		goto err_disable_ddc_regulator;
+ 	}
+ 
+ 	ret = clk_prepare_enable(hdmi->clk_tmds);
+@@ -208,6 +220,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ err_assert_ctrl_reset:
+ 	reset_control_assert(hdmi->rst_ctrl);
++err_disable_ddc_regulator:
++	regulator_disable(hdmi->ddc_regulator);
+ err_disable_regulator:
+ 	regulator_disable(hdmi->regulator);
+ 
+@@ -223,6 +237,7 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
+ 	sun8i_hdmi_phy_remove(hdmi);
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ 	reset_control_assert(hdmi->rst_ctrl);
++	regulator_disable(hdmi->ddc_regulator);
+ 	regulator_disable(hdmi->regulator);
+ }
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index 720c5aa8adc1..6e93d55560b6 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -188,6 +188,7 @@ struct sun8i_dw_hdmi {
+ 	struct sun8i_hdmi_phy		*phy;
+ 	struct dw_hdmi_plat_data	plat_data;
+ 	struct regulator		*regulator;
++	struct regulator		*ddc_regulator;
+ 	const struct sun8i_dw_hdmi_quirks *quirks;
+ 	struct reset_control		*rst_ctrl;
  };
- 
- &cpu0 {
-@@ -58,6 +80,28 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ext_rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_gmac_2v5>;
-+	allwinner,rx-delay-ps = <1500>;
-+	allwinner,tx-delay-ps = <700>;
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+
-+		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-+		reset-assert-us = <15000>;
-+		reset-deassert-us = <40000>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
 -- 
 2.21.0
