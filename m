@@ -1,65 +1,127 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] dt-bindings: arm: sunxi: Add Beelink
- GS1 board
-Date: Tue, 9 Apr 2019 09:55:39 +0200
-Message-ID: <20190409075539.td5c6utktqsnxknn@flea>
-References: <20190408152755.17405-1-peron.clem@gmail.com>
- <20190408152755.17405-5-peron.clem@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Add binding documentation for TI
+ syscon gate clock
+Date: Tue, 9 Apr 2019 13:27:04 +0530
+Message-ID: <33f6bc53-a361-c12b-1c21-3c34b101e67a@ti.com>
+References: <20190312090518.28666-1-vigneshr@ti.com>
+ <20190312090518.28666-2-vigneshr@ti.com> <20190328123142.GA6229@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4f3icf7t5cp44c7g"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7M7WHSQKGQEMVUUIHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190408152755.17405-5-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190328123142.GA6229@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Menon, Nishanth" <nm@ti.com>, "Kristo, Tero" <t-kristo@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---4f3icf7t5cp44c7g
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 28/03/19 6:01 PM, Rob Herring wrote:
+> On Tue, Mar 12, 2019 at 02:35:17PM +0530, Vignesh Raghavendra wrote:
+>> Add dt bindings for TI syscon gate clock.
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>>  .../bindings/clock/ti,syscon-gate-clock.txt   | 35 +++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt b/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>> new file mode 100644
+>> index 000000000000..f2bc4281ddba
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>> @@ -0,0 +1,35 @@
+>> +TI syscon gate clock
+>> +
+>> +The gate clock node must be provided inside a system controller node.
+>> +
+>> +Required:
+>> +- comaptible: Must be "ti,syscon-gate-clock"
+>> +- reg: Offset of register that controls the clock within syscon regmap
+>> +- ti,clock-bit-idx: bit index that control gate/ungating of clock
+>> +- clocks: phandle to the clock parent
+>> +- #clock-cells: must be <0>
+>> +
+>> +Example:
+>> +	ctrlmmr_epwm_ctrl: syscon@104140{
+>> +		compatible = "syscon", "simple-bus";
+> 
+> Can't be both of these...
+> 
 
-On Mon, Apr 08, 2019 at 05:27:53PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Beelink GS1 device-tree has been introduced.
->
-> Add it to the sunxi yaml documentation.
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+These registers have bits that control other functionalities apart from
+PWM clocks. Therefore, I modeled them as "syscon", "simple-bus";
 
-Applied, thanks!
-Maxime
+Or is it recommended to use:
+ compatible = "syscon", "simple-mfd";
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>> +		reg = <0x0 0x104140 0x0 0x18>;
+>> +		ranges = <0x0 0x0 0x104140>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		ehrpwm0_tbclk: clk@0 {
+>> +			compatible = "ti,syscon-gate-clock";
+>> +			reg = <0x0>;
+>> +			#clock-cells = <0>;
+>> +			clocks = <&k3_clks 40 0>;
+>> +			ti,clock-bit-idx = <0>;
+> 
+> This would imply you have multiple nodes at one address which is 
+> discouraged.
+> 
+>> +		};
+> 
+> We generally don't describe clocks as 1 clock per node. Give the parent 
+> a specific compatible and make it a clock provider.
+> 
 
---4f3icf7t5cp44c7g
-Content-Type: application/pgp-signature; name="signature.asc"
+Ok, I can change this to single clock node and use #clock-cells to pass
+register offset of and bit index from each consumer:
 
------BEGIN PGP SIGNATURE-----
+       ctrlmmr_epwm_ctrl: syscon@104140{
+               compatible = "syscon", "simple-mfd";
+               reg = <0x0 0x104140 0x0 0x18>;
+               ranges = <0x0 0x0 0x104140>;
+               #address-cells = <1>;
+               #size-cells = <0>;
 
-iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxP+wAKCRDj7w1vZxhR
-xSjEAQC3jlcFMiZqldSMXOIrZnldWbM/6HnVF5qag2xWn1QshAD0Dfkn82KRQI1j
-xKaFdy6AWx+BTI3RFM+n0GfoWMsiCA==
-=Zesj
------END PGP SIGNATURE-----
+               ehrpwm_tbclk: clk {
+                       compatible = "ti,syscon-gate-clock";
+                       #clock-cells = <2>;
+               };
+	};
 
---4f3icf7t5cp44c7g--
+And consumer node:
+
+       ehrpwm1: pwm@3010000 {
+               compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+               #pwm-cells = <3>;
+               reg = <0x0 0x3000000 0x0 0x100>;
+               power-domains = <&k3_pds 40>;
+               clocks = <&ehrpwm_tbclk 4 0>; /* offset 4, bit 0 */
+	       clock-names = "tbclk";
+       };
+
+
+Would that be acceptable?
+
+Regards
+Vignesh
+
+>> +
+>> +		ehrpwm1_tbclk: clk@4 {
+>> +			compatible = "ti,syscon-gate-clock";
+>> +			reg = <0x4>;
+>> +			#clock-cells = <0>;
+>> +			clocks = <&k3_clks 41 0>;
+>> +			ti,clock-bit-idx = <0>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.21.0
+>>
