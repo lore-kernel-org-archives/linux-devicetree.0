@@ -1,100 +1,113 @@
-From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 10/13] arm64: dts: allwinner: orange-pi-3:
- Enable HDMI output
-Date: Tue,  9 Apr 2019 02:24:49 +0200
-Message-ID: <20190409002452.14551-11-megous@megous.com>
-References: <20190409002452.14551-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH v10 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Mon, 08 Apr 2019 20:48:38 -0400
+Message-ID: <998d869d-de1d-4ac9-b4e6-8942945912dd@www.fastmail.com>
+References: <20190408144216.160082-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBX6MV7SQKGQES2EGKBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20190409002452.14551-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm802
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190408144216.160082-1-venture@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Patrick Venture <venture@google.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
-I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
----
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+On Tue, 9 Apr 2019, at 00:12, Patrick Venture wrote:
+> Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> 
+> Signed-off-by: Patrick Venture <venture@google.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 523f1d848042..f5595653b2c5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -22,6 +22,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -37,6 +48,15 @@
- 		};
- 	};
- 
-+	reg_ddc: ddc-io {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ddc-io";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+	};
-+
- 	reg_vcc5v: vcc5v {
- 		/* board wide 5V supply directly from the DC jack */
- 		compatible = "regulator-fixed";
-@@ -72,6 +92,10 @@
- 	cpu-supply = <&reg_dcdca>;
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +115,17 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	ddc-supply = <&reg_ddc>;
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
--- 
-2.21.0
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+> Changes for v10:
+>  - Chopped out nearly identical information.
+> Changes for v9:
+>  - Added missing details about syscon parent
+> Changes for v8:
+> - None
+> Changes for v7:
+> - Moved node under the syscon node it requires
+> Changes for v6:
+> - None
+> Changes for v5:
+> - None
+> Changes for v4:
+> - None
+> Changes for v3:
+> - None
+> Changes for v2:
+> - Added comment about syscon required parameter.
+> ---
+>  .../bindings/misc/aspeed-p2a-ctrl.txt         | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt 
+> b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> new file mode 100644
+> index 0000000000000..854bd67ffec68
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> @@ -0,0 +1,47 @@
+> +======================================================================
+> +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge 
+> Control Driver
+> +======================================================================
+> +
+> +The bridge is available on platforms with the VGA enabled on the 
+> Aspeed device.
+> +In this case, the host has access to a 64KiB window into all of the 
+> BMC's
+> +memory.  The BMC can disable this bridge.  If the bridge is enabled, 
+> the host
+> +has read access to all the regions of memory, however the host only 
+> has read
+> +and write access depending on a register controlled by the BMC.
+> +
+> +Required properties:
+> +===================
+> +
+> + - compatible: must be one of:
+> +	- "aspeed,ast2400-p2a-ctrl"
+> +	- "aspeed,ast2500-p2a-ctrl"
+> +
+> +Optional properties:
+> +===================
+> +
+> +- memory-region: A phandle to a reserved_memory region to be used for 
+> the PCI
+> +		to AHB mapping
+> +
+> +The p2a-control node should be the child of a syscon node with the 
+> required
+> +property:
+> +
+> +- compatible : Should be one of the following:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+> +
+> +Example
+> +===================
+> +
+> +g4 Example
+> +----------
+> +
+> +syscon: scu@1e6e2000 {
+> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> +	reg = <0x1e6e2000 0x1a8>;
+> +
+> +	p2a: p2a-control {
+> +		compatible = "aspeed,ast2400-p2a-ctrl";
+> +		memory-region = <&reserved_memory>;
+> +	};
+> +};
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
+>
