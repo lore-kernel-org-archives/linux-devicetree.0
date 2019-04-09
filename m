@@ -1,185 +1,60 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH V10 2/5] pwm: Add i.MX TPM PWM driver support
-Date: Tue, 9 Apr 2019 11:28:59 +0200
-Message-ID: <20190409092859.qj4rgpljokdsokes@pengutronix.de>
-References: <1553582817-29519-1-git-send-email-Anson.Huang@nxp.com>
- <1553582817-29519-3-git-send-email-Anson.Huang@nxp.com>
- <20190409064750.qnjcddlf5gktipah@pengutronix.de>
- <DB3PR0402MB391632F693646A5D600B74F9F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+Date: Tue, 9 Apr 2019 11:33:04 +0200
+Message-ID: <20190409093304.sutpobe5azncyl5r@core.my.home>
+References: <20190409002452.14551-1-megous@megous.com>
+ <20190409002452.14551-3-megous@megous.com>
+ <20190409081230.pz55uwyq33x5tfgz@flea>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBUWNWHSQKGQEQJAJX7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB391632F693646A5D600B74F9F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Robin Gong <yibin.gong@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.or>
+In-Reply-To: <20190409081230.pz55uwyq33x5tfgz@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Tue, Apr 09, 2019 at 08:51:48AM +0000, Anson Huang wrote:
-> > On Tue, Mar 26, 2019 at 06:52:33AM +0000, Anson Huang wrote:
-> > > +     /* get polarity */
-> > > +     if (chan) {
-> > > +             state->polarity = chan->polarity;
-> > > +     } else {
-> > > +             /* in case no channel requested yet, return HW status */
-> > > +             val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> > > +             if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ==
-> > > +                 PWM_IMX_TPM_CnSC_ELS_POLARITY_INVERSED)
-> > > +                     state->polarity = PWM_POLARITY_INVERSED;
-> > > +             else
-> > > +                     /*
-> > > +                      * Assume reserved values (2b00 and 2b11) to yield
-> > > +                      * normal polarity.
-> > > +                      */
-> > > +                     state->polarity = PWM_POLARITY_NORMAL;
-> > > +     }
-> > 
-> > What is the good reason to prefer chan->polarity over reading out the
-> > hardware state?
+On Tue, Apr 09, 2019 at 10:12:30AM +0200, Maxime Ripard wrote:
+> Hi,
 > 
-> Reading it from DDR is faster than accessing HW register as per
-> previous comment?
-
-How much time do you save here? Is it worth to complicate the function
-for that?
-
-> > > +     /* get channel status */
-> > > +     state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true :
-> > > +false; }
-> > > +
-> > > +/* this function is supposed to be called with mutex hold */ static
-> > > +int pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
-> > > +                             struct pwm_device *pwm,
-> > > +                             struct pwm_state *state,
-> > > +                             struct imx_tpm_pwm_param *p) {
-> > > +     struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
-> > > +     struct imx_tpm_pwm_channel *chan = pwm_get_chip_data(pwm);
-> > > +     bool period_update = false;
-> > > +     bool duty_update = false;
-> > > +     u32 val, cmod, cur_prescale;
-> > > +     unsigned long timeout;
-> > > +     struct pwm_state c;
-> > > +
-> > > +     if (state->period != tpm->real_period) {
-> > > +             /*
-> > > +              * TPM counter is shared by multiple channels, so
-> > > +              * prescale and period can NOT be modified when
-> > > +              * there are multiple channels in use with different
-> > > +              * period settings.
-> > > +              */
-> > > +             if (tpm->user_count > 1)
-> > > +                     return -EBUSY;
-> > > +
-> > > +             val = readl(tpm->base + PWM_IMX_TPM_SC);
-> > > +             cmod = FIELD_GET(PWM_IMX_TPM_SC_CMOD, val);
-> > > +             cur_prescale = FIELD_GET(PWM_IMX_TPM_SC_PS, val);
-> > > +             if (cmod && cur_prescale != p->prescale)
-> > > +                     return -EBUSY;
-> > > +
-> > > +             /* set TPM counter prescale */
-> > > +             val &= ~PWM_IMX_TPM_SC_PS;
-> > > +             val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p->prescale);
-> > > +             writel(val, tpm->base + PWM_IMX_TPM_SC);
-> > > +
-> > > +             /*
-> > > +              * set period count:
-> > > +              * if the PWM is disabled (CMOD[1:0] = 2b00), then MOD register
-> > > +              * is updated when MOD register is written.
-> > > +              *
-> > > +              * if the PWM is enabled (CMOD[1:0] ≠ 2b00), the period length
-> > > +              * is latched into hardware when the next period starts.
-> > > +              */
-> > > +             writel(p->mod, tpm->base + PWM_IMX_TPM_MOD);
-> > > +             tpm->real_period = state->period;
-> > > +             period_update = true;
-> > > +     }
-> > > +
-> > > +     pwm_imx_tpm_get_state(chip, pwm, &c);
-> > 
-> > If you move this call above the previous if block you can use c.period instead
-> > of tpm->real_period which is easier to follow.
+> On Tue, Apr 09, 2019 at 02:24:41AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> > +&mmc0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc0_pins>;
 > 
-> I think the period could be changed by the if block, so duty also be changed, need
-> to put the .get_state here, am I right?
+> Since 5 minutes ago, that's now the default.
 
-As you don't use c.period below this shouldn't matter. Where does duty
-change?
+Ah. :)
 
-> > > +     if (state->duty_cycle != c.duty_cycle) {
-> > > +             /*
-> > > +              * set channel value:
-> > > +              * if the PWM is disabled (CMOD[1:0] = 2b00), then CnV register
-> > > +              * is updated when CnV register is written.
-> > > +              *
-> > > +              * if the PWM is enabled (CMOD[1:0] ≠ 2b00), the duty length
-> > > +              * is latched into hardware when the next period starts.
-> > > +              */
-> > > +             writel(p->val, tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm));
-> > > +             duty_update = true;
-> > > +     }
-> > > +
-> > > +     /* make sure MOD & CnV registers are updated */
-> > > +     if (period_update || duty_update) {
-> > > +             timeout = jiffies + msecs_to_jiffies(tpm->real_period /
-> > > +                                                  NSEC_PER_MSEC + 1);
-> > > +             while (readl(tpm->base + PWM_IMX_TPM_MOD) != p->mod
-> > > +                    || readl(tpm->base + PWM_IMX_TPM_CnV(pwm->hwpwm))
-> > > +                    != p->val) {
-> > > +                     if (time_after(jiffies, timeout))
-> > > +                             return -ETIME;
-> > > +                     cpu_relax();
-> > > +             }
-> > > +     }
-> > 
-> > If the PWM is running you wait in the above loop until the new values are
-> > active but before you configure the period. I think in the case where the
-> > PWM is active and a change of polarity is requested it would be more correct
-> > to refuse the change.
+> > +&usb2otg {
+> > +	/*
+> > +	 * Beware that this board will not automatically disconnect
+> > +	 * VBUS from DCIN, when self-powered and used as a peripheral.
+> > +	 */
+> > +	dr_mode = "otg";
+> > +	status = "okay";
+> > +};
 > 
-> Not very understand, the period is changed at the beginning, and most of the time,
-> period should be fixed, changing polarity should be allowed even PWM is active?
-
-Changing polarity should be atomic (that is, get active with the next
-period's start). As the hardware doesn't support that, claiming it does
-is a bad idea.
-
-> That does NOT introduce too many trouble, is it a common case that dynamic changing
-> polarity is NOT good? 
+> As we were discussing, I guess leaving it as host is the safest
+> option.
 > 
+> I can fix both issues while applying if that's ok for you.
+
+It's ok with me. Thank you.
+
+	o.
+
+> Maxime
 > 
-> > 
-> > > +     val = readl(tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
-> > > +     val &= ~(PWM_IMX_TPM_CnSC_ELS | PWM_IMX_TPM_CnSC_MSA |
-> > > +              PWM_IMX_TPM_CnSC_MSB);
-> > > +     if (state->enabled) {
-> > > +             /*
-> > > +              * set polarity (for edge-aligned PWM modes)
-> > > +              *
-> > > +              * ELS[1:0] = 2b10 yields normal polarity behaviour,
-> > > +              * ELS[1:0] = 2b01 yields inversed polarity.
-> > > +              * The other values are reserved.
-> > > +              *
-> > > +              * polarity settings will enabled/disable output status
-> > > +              * immediately, so if the channel is disabled, need to
-> > > +              * make sure MSA/MSB/ELS are set to 0 which means channel
-> > > +              * disabled.
-> > 
-> > I don't understand this comment. Either ELS = 0 is reserved or it can be used.
-> > What is an output status?
-> 
-> The reference manual ONLY states it as reserved, so how to add comments here?
-
-The problem might just be, that I don't get what you intend to say in
-the last paragraph.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
