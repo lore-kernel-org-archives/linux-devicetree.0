@@ -1,180 +1,158 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V5 4/4] rtc: imx-sc: add rtc alarm support
-Date: Tue, 9 Apr 2019 03:08:37 +0000
-Message-ID: <AM0PR04MB4211C3DA99287071FD102EDB802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1552878291-22866-1-git-send-email-Anson.Huang@nxp.com>
- <1552878291-22866-4-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4211209072B94795A6A04E9A802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <DB3PR0402MB39164EEA38E9A3C239CCA221F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH V6 2/4] firmware: imx: enable imx scu general irq function
+Date: Tue, 9 Apr 2019 03:20:44 +0000
+Message-ID: <AM0PR04MB4211CB87CC46C9E1F6FAF844802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1554777487-31075-1-git-send-email-Anson.Huang@nxp.com>
+ <1554777487-31075-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB39164EEA38E9A3C239CCA221F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <1554777487-31075-2-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
-> so I will add another API in imx-scu-irq
-> driver to provide function of enabling/disabling irq, each driver can jus=
-t call the
-> API to enable/disable its own IRQ, ONLY need to pass the corresponding
-> arguments:
->=20
-
-That's exactly what I mean.
-
-> >
-> > > +	msg.group =3D SC_IRQ_GROUP_RTC;
-> > > +	msg.mask =3D SC_IRQ_RTC;
-> > > +	msg.enable =3D enable;
-> > > +
-> > > +	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "enable rtc irq failed, ret %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int imx_sc_rtc_read_alarm(struct device *dev, struct
-> > > +rtc_wkalrm
-> > > +*alrm) {
-> > > +	return 0;
-> > > +}
-> >
-> > Can't avoid define NULL function?
->=20
-> We have to implement it as NULL function, as SCFW does NOT provide such
-> feature, But rtc alarm ONLY available when .read_alarm ops is implemented=
-:
->=20
-
-If the framework mandantorily requires it, then we'd probably better to add
-doc before this function and explain why it's safe to be NULL.
-
-> 147 static ssize_t
-> 148 wakealarm_store(struct device *dev, struct device_attribute *attr,
-> 149                 const char *buf, size_t n)
-> 150 {
->=20
-> ...
->=20
-> 187                 retval =3D rtc_read_alarm(rtc, &alm);
-> 188                 if (retval < 0)
-> 189                         return retval;
->=20
->=20
-> >
-> > > +
-> > > +static int imx_sc_rtc_set_alarm(struct device *dev, struct
-> > > +rtc_wkalrm
-> > > +*alrm) {
-> > > +	struct imx_sc_msg_timer_rtc_set_alarm msg;
-> > > +	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
-> > > +	int ret;
-> > > +	struct rtc_time *alrm_tm =3D &alrm->time;
-> > > +
-> > > +	hdr->ver =3D IMX_SC_RPC_VERSION;
-> > > +	hdr->svc =3D IMX_SC_RPC_SVC_TIMER;
-> > > +	hdr->func =3D IMX_SC_TIMER_FUNC_SET_RTC_ALARM;
-> > > +	hdr->size =3D 3;
-> > > +
-> > > +	msg.year =3D alrm_tm->tm_year + 1900;
-> > > +	msg.mon =3D alrm_tm->tm_mon + 1;
-> > > +	msg.day =3D alrm_tm->tm_mday;
-> > > +	msg.hour =3D alrm_tm->tm_hour;
-> > > +	msg.min =3D alrm_tm->tm_min;
-> > > +	msg.sec =3D alrm_tm->tm_sec;
-> > > +
-> > > +	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "set rtc alarm failed, ret %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	ret =3D imx_sc_rtc_alarm_irq_enable(dev, alrm->enabled);
-> >
-> > Just curious we already have .alarm_irq_enable().
-> > Why do we need call it again here?
->=20
-> That is because the  set_alarm function  pass alarm time and alarm->enabl=
-ed
-> argument, it could be to enable alarm or to disable alarm, so we have to
-> control the alarm function here, all other rtc drivers also do it this wa=
-y.
-> The .alarm_irq_enable() callback is for just enable or disable alarm.
->=20
-
-Got it, thanks for the explanation.
-
-Regards
-Dong Aisheng
-
-> Thanks,
-> Anson
->=20
->=20
-> >
-> > Regards
-> > Dong Aisheng
-> >
-> > > +	if (ret) {
-> > > +		dev_err(dev, "enable rtc alarm failed, ret %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static const struct rtc_class_ops imx_sc_rtc_ops =3D {
-> > >  	.read_time =3D imx_sc_rtc_read_time,
-> > >  	.set_time =3D imx_sc_rtc_set_time,
-> > > +	.read_alarm =3D imx_sc_rtc_read_alarm,
-> > > +	.set_alarm =3D imx_sc_rtc_set_alarm,
-> > > +	.alarm_irq_enable =3D imx_sc_rtc_alarm_irq_enable, };
-> > > +
-> > > +static int imx_sc_rtc_alarm_sc_notify(struct notifier_block *nb,
-> > > +					unsigned long event, void *group) {
-> > > +	/* ignore non-rtc irq */
-> > > +	if (!((event & SC_IRQ_RTC) && (*(u8 *)group =3D=3D
-> > SC_IRQ_GROUP_RTC)))
-> > > +		return 0;
-> > > +
-> > > +	rtc_update_irq(imx_sc_rtc, 1, RTC_IRQF | RTC_AF);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static struct notifier_block imx_sc_rtc_alarm_sc_notifier =3D {
-> > > +	.notifier_call =3D imx_sc_rtc_alarm_sc_notify,
-> > >  };
-> > >
-> > >  static int imx_sc_rtc_probe(struct platform_device *pdev) @@ -73,6
-> > > +181,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev)
-> > >  	if (ret)
-> > >  		return ret;
-> > >
-> > > +	device_init_wakeup(&pdev->dev, true);
-> > > +
-> > >  	imx_sc_rtc =3D devm_rtc_allocate_device(&pdev->dev);
-> > >  	if (IS_ERR(imx_sc_rtc))
-> > >  		return PTR_ERR(imx_sc_rtc);
-> > > @@ -87,6 +197,8 @@ static int imx_sc_rtc_probe(struct
-> > > platform_device
-> > > *pdev)
-> > >  		return ret;
-> > >  	}
-> > >
-> > > +	imx_scu_irq_register_notifier(&imx_sc_rtc_alarm_sc_notifier);
-> > > +
-> > >  	return 0;
-> > >  }
-> > >
-> > > --
-> > > 2.7.4
+PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCA5LCAyMDE5IDEwOjQz
+IEFNDQo+IFN1YmplY3Q6IFtQQVRDSCBWNiAyLzRdIGZpcm13YXJlOiBpbXg6IGVuYWJsZSBpbXgg
+c2N1IGdlbmVyYWwgaXJxIGZ1bmN0aW9uDQo+IA0KPiBUaGUgU3lzdGVtIENvbnRyb2xsZXIgRmly
+bXdhcmUgKFNDRlcpIGNvbnRyb2xzIFJUQywgdGhlcm1hbCBhbmQgV0RPRyBldGMuLA0KPiB0aGVz
+ZSByZXNvdXJjZXMnIGludGVycnVwdCBmdW5jdGlvbiBhcmUgbWFuYWdlZCBieSBTQ1UuIFdoZW4g
+YW55IElSUQ0KPiBwZW5kaW5nLCBTQ1Ugd2lsbCBub3RpZnkgTGludXggdmlhIE1VIGdlbmVyYWwg
+aW50ZXJydXB0IGNoYW5uZWwgIzMsIGFuZCBMaW51eA0KPiBrZXJuZWwgbmVlZHMgdG8gY2FsbCBT
+Q1UgQVBJcyB0byBnZXQgSVJRIHN0YXR1cyBhbmQgbm90aWZ5IGVhY2ggbW9kdWxlIHRvDQo+IGhh
+bmRsZSB0aGUgaW50ZXJydXB0Lg0KPiANCj4gU2luY2UgdGhlcmUgaXMgbm8gZGF0YSB0cmFuc21p
+c3Npb24gZm9yIFNDVSBJUlEgbm90aWZpY2F0aW9uLCBzbyBkb29yYmVsbCBtb2RlDQo+IGlzIHVz
+ZWQgZm9yIHRoaXMgTVUgY2hhbm5lbCwgYW5kIFNDVSBkcml2ZXIgd2lsbCB1c2Ugbm90aWZpZXIg
+bWVjaGFuaXNtIHRvDQo+IGJyb2FkY2FzdCB0byBldmVyeSBtb2R1bGUgd2hpY2ggcmVnaXN0ZXJz
+IHRoZSBTQ1UgYmxvY2sgbm90aWZpZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
+ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gLS0tDQo+IENoYW5nZXMgc2luY2UgVjU6DQo+IAkt
+IHVzZSBBVE9NSUNfTk9USUZJRVIgaW5zdGVhZCBvZiBCTE9DS0lOR19OT1RJRklFUiBmb3IgaXJx
+DQo+IG5vdGlmaWNhdGlvbjsNCj4gCS0gYWRkIG1lbW9yeSBmcmVlIGZvciBmYWlsZWQgY2FzZSB0
+byBhdm9pZCBtZW1vcnkgbGVhazsNCj4gCS0gYWRkIG5ldyBBUEkgaW14X3NjdV9pcnFfZW5hYmxl
+KCkgZm9yIG1vZHVsZXMgdG8gZW5hYmxlL2Rpc2FibGUgdGhlaXINCj4gb3duIGlycXMuDQo+IC0t
+LQ0KPiAgZHJpdmVycy9maXJtd2FyZS9pbXgvTWFrZWZpbGUgICAgICB8ICAgMiArLQ0KPiAgZHJp
+dmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS1pcnEuYyB8IDE2Ng0KPiArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LmMg
+ICAgIHwgICA2ICsrDQo+ICBpbmNsdWRlL2xpbnV4L2Zpcm13YXJlL2lteC9zY2kuaCAgIHwgICA1
+ICsrDQo+ICA0IGZpbGVzIGNoYW5nZWQsIDE3OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS1pcnEu
+Yw0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvaW14L01ha2VmaWxlIGIvZHJp
+dmVycy9maXJtd2FyZS9pbXgvTWFrZWZpbGUNCj4gaW5kZXggMWIyZTE1Yi4uODAyYzRhZCAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9pbXgvTWFrZWZpbGUNCj4gKysrIGIvZHJpdmVy
+cy9maXJtd2FyZS9pbXgvTWFrZWZpbGUNCj4gQEAgLTEsMyArMSwzIEBADQo+ICAjIFNQRFgtTGlj
+ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+IC1vYmotJChDT05GSUdfSU1YX1NDVSkJCSs9IGlt
+eC1zY3UubyBtaXNjLm8NCj4gK29iai0kKENPTkZJR19JTVhfU0NVKQkJKz0gaW14LXNjdS5vIG1p
+c2MubyBpbXgtc2N1LWlycS5vDQo+ICBvYmotJChDT05GSUdfSU1YX1NDVV9QRCkJKz0gc2N1LXBk
+Lm8NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvaW14L2lteC1zY3UtaXJxLmMNCj4g
+Yi9kcml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LWlycS5jDQo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0DQo+IGluZGV4IDAwMDAwMDAuLjQwMDBjNjMNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9k
+cml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LWlycS5jDQo+IEBAIC0wLDAgKzEsMTY2IEBADQo+
+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsNCj4gKy8qDQo+ICsgKiBDb3B5
+cmlnaHQgMjAxOSBOWFANCj4gKyAqDQo+ICsgKiBJbXBsZW1lbnRhdGlvbiBvZiB0aGUgU0NVIElS
+USBmdW5jdGlvbnMgdXNpbmcgTVUuDQo+ICsgKg0KPiArICovDQo+ICsNCj4gKyNpbmNsdWRlIDxk
+dC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPiAjaW5jbHVkZQ0KPiArPGxpbnV4L2Zpcm13
+YXJlL2lteC9pcGMuaD4gI2luY2x1ZGUgPGxpbnV4L21haWxib3hfY2xpZW50Lmg+DQo+ICsNCj4g
+KyNkZWZpbmUgSU1YX1NDX0lSUV9GVU5DX0VOQUJMRQkxDQo+ICsjZGVmaW5lIElNWF9TQ19JUlFf
+RlVOQ19TVEFUVVMJMg0KPiArI2RlZmluZSBJTVhfU0NfSVJRX05VTV9HUk9VUAk0DQo+ICsNCj4g
+K3N0YXRpYyB1MzIgbXVfcmVzb3VyY2VfaWQ7DQo+ICsNCj4gK3N0cnVjdCBpbXhfc2NfbXNnX2ly
+cV9nZXRfc3RhdHVzIHsNCj4gKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cgaGRyOw0KPiArCXVuaW9u
+IHsNCj4gKwkJc3RydWN0IHsNCj4gKwkJCXUxNiByZXNvdXJjZTsNCj4gKwkJCXU4IGdyb3VwOw0K
+PiArCQkJdTggcmVzZXJ2ZWQ7DQo+ICsJCX0gX19wYWNrZWQgcmVxOw0KPiArCQlzdHJ1Y3Qgew0K
+PiArCQkJdTMyIHN0YXR1czsNCj4gKwkJfSByZXNwOw0KPiArCX0gZGF0YTsNCj4gK307DQo+ICsN
+Cj4gK3N0cnVjdCBpbXhfc2NfbXNnX2lycV9lbmFibGUgew0KPiArCXN0cnVjdCBpbXhfc2NfcnBj
+X21zZyBoZHI7DQo+ICsJdTMyIG1hc2s7DQo+ICsJdTE2IHJlc291cmNlOw0KPiArCXU4IGdyb3Vw
+Ow0KPiArCXU4IGVuYWJsZTsNCj4gK30gX19wYWNrZWQ7DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3Qg
+aW14X3NjX2lwYyAqaW14X3NjX2lycV9pcGNfaGFuZGxlOyBzdGF0aWMgc3RydWN0DQo+ICt3b3Jr
+X3N0cnVjdCBpbXhfc2NfaXJxX3dvcms7IHN0YXRpYw0KPiArQVRPTUlDX05PVElGSUVSX0hFQUQo
+aW14X3NjdV9pcnFfbm90aWZpZXJfY2hhaW4pOw0KPiArDQo+ICtpbnQgaW14X3NjdV9pcnFfcmVn
+aXN0ZXJfbm90aWZpZXIoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpuYikgew0KPiArCXJldHVybiBh
+dG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIoDQo+ICsJCSZpbXhfc2N1X2lycV9ub3RpZmll
+cl9jaGFpbiwgbmIpOw0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChpbXhfc2N1X2lycV9yZWdpc3Rl
+cl9ub3RpZmllcik7DQo+ICsNCj4gK2ludCBpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVy
+KHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIpIHsNCj4gKwlyZXR1cm4gYXRvbWljX25vdGlmaWVy
+X2NoYWluX3VucmVnaXN0ZXIoDQo+ICsJCSZpbXhfc2N1X2lycV9ub3RpZmllcl9jaGFpbiwgbmIp
+Ow0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVy
+KTsNCj4gKw0KPiArc3RhdGljIGludCBpbXhfc2N1X2lycV9ub3RpZmllcl9jYWxsX2NoYWluKHVu
+c2lnbmVkIGxvbmcgc3RhdHVzLCB1OA0KPiArKmdyb3VwKSB7DQo+ICsJcmV0dXJuIGF0b21pY19u
+b3RpZmllcl9jYWxsX2NoYWluKCZpbXhfc2N1X2lycV9ub3RpZmllcl9jaGFpbiwNCj4gKwkJc3Rh
+dHVzLCAodm9pZCAqKWdyb3VwKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIHZvaWQgaW14X3NjdV9p
+cnFfd29ya19oYW5kbGVyKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykgew0KPiArCXN0cnVjdCBp
+bXhfc2NfbXNnX2lycV9nZXRfc3RhdHVzIG1zZzsNCj4gKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cg
+KmhkciA9ICZtc2cuaGRyOw0KPiArCXUzMiBpcnFfc3RhdHVzOw0KPiArCWludCByZXQ7DQo+ICsJ
+dTggaTsNCj4gKw0KPiArCWZvciAoaSA9IDA7IGkgPCBJTVhfU0NfSVJRX05VTV9HUk9VUDsgaSsr
+KSB7DQo+ICsJCWhkci0+dmVyID0gSU1YX1NDX1JQQ19WRVJTSU9OOw0KPiArCQloZHItPnN2YyA9
+IElNWF9TQ19SUENfU1ZDX0lSUTsNCj4gKwkJaGRyLT5mdW5jID0gSU1YX1NDX0lSUV9GVU5DX1NU
+QVRVUzsNCj4gKwkJaGRyLT5zaXplID0gMjsNCj4gKw0KPiArCQltc2cuZGF0YS5yZXEucmVzb3Vy
+Y2UgPSBtdV9yZXNvdXJjZV9pZDsNCj4gKwkJbXNnLmRhdGEucmVxLmdyb3VwID0gaTsNCj4gKw0K
+PiArCQlyZXQgPSBpbXhfc2N1X2NhbGxfcnBjKGlteF9zY19pcnFfaXBjX2hhbmRsZSwgJm1zZywg
+dHJ1ZSk7DQo+ICsJCWlmIChyZXQpIHsNCj4gKwkJCXByX2VycigiZ2V0IGlycSBncm91cCAlZCBz
+dGF0dXMgZmFpbGVkLCByZXQgJWRcbiIsDQo+ICsJCQkgICAgICAgaSwgcmV0KTsNCj4gKwkJCXJl
+dHVybjsNCj4gKwkJfQ0KPiArDQo+ICsJCWlycV9zdGF0dXMgPSBtc2cuZGF0YS5yZXNwLnN0YXR1
+czsNCj4gKwkJaWYgKCFpcnFfc3RhdHVzKQ0KPiArCQkJY29udGludWU7DQo+ICsNCj4gKwkJaW14
+X3NjdV9pcnFfbm90aWZpZXJfY2FsbF9jaGFpbihpcnFfc3RhdHVzLCAmaSk7DQo+ICsJfQ0KPiAr
+fQ0KPiArDQo+ICt2b2lkIGlteF9zY3VfaXJxX2VuYWJsZSh1OCBncm91cCwgdTMyIG1hc2ssIHU4
+IGVuYWJsZSkgew0KDQpXaHkgc2hvdWxkIHRoaXMgYmUgYSB2b2lkIHJldHVybj8NCg0KQmVzaWRl
+cyB0aGF0LCBhIG5pdHBpY2sgYmV0dGVyIHJlbmFtZSB0byBpbXhfc2N1X2lycV9ncm91cF9lbmFi
+bGUNCnRvIGRpc3Rpbmd1aXNoIHdpdGggdGhlIGV4aXN0IGdlbmVyYWwgaXJxIGVuYWJsZS4NCg0K
+UmVnYXJkcw0KRG9uZyBBaXNoZW5nDQoNCj4gKwlzdHJ1Y3QgaW14X3NjX21zZ19pcnFfZW5hYmxl
+IG1zZzsNCj4gKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cgKmhkciA9ICZtc2cuaGRyOw0KPiArCWlu
+dCByZXQ7DQo+ICsNCj4gKwloZHItPnZlciA9IElNWF9TQ19SUENfVkVSU0lPTjsNCj4gKwloZHIt
+PnN2YyA9IElNWF9TQ19SUENfU1ZDX0lSUTsNCj4gKwloZHItPmZ1bmMgPSBJTVhfU0NfSVJRX0ZV
+TkNfRU5BQkxFOw0KPiArCWhkci0+c2l6ZSA9IDM7DQo+ICsNCj4gKwltc2cucmVzb3VyY2UgPSBt
+dV9yZXNvdXJjZV9pZDsNCj4gKwltc2cuZ3JvdXAgPSBncm91cDsNCj4gKwltc2cubWFzayA9IG1h
+c2s7DQo+ICsJbXNnLmVuYWJsZSA9IGVuYWJsZTsNCj4gKw0KPiArCXJldCA9IGlteF9zY3VfY2Fs
+bF9ycGMoaW14X3NjX2lycV9pcGNfaGFuZGxlLCAmbXNnLCB0cnVlKTsNCj4gKwlpZiAocmV0KQ0K
+PiArCQlwcl9lcnIoImVuYWJsZSBpcnEgZmFpbGVkLCBncm91cCAlZCwgbWFzayAlZCwgcmV0ICVk
+XG4iLA0KPiArCQkJZ3JvdXAsIG1hc2ssIHJldCk7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGlt
+eF9zY3VfaXJxX2VuYWJsZSk7DQo+ICsNCj4gK3N0YXRpYyB2b2lkIGlteF9zY3VfaXJxX2NhbGxi
+YWNrKHN0cnVjdCBtYm94X2NsaWVudCAqYywgdm9pZCAqbXNnKSB7DQo+ICsJc2NoZWR1bGVfd29y
+aygmaW14X3NjX2lycV93b3JrKTsNCj4gK30NCj4gKw0KPiAraW50IGlteF9zY3VfZW5hYmxlX2dl
+bmVyYWxfaXJxX2NoYW5uZWwoc3RydWN0IGRldmljZSAqZGV2KSB7DQo+ICsJc3RydWN0IG9mX3Bo
+YW5kbGVfYXJncyBzcGVjOw0KPiArCXN0cnVjdCBtYm94X2NsaWVudCAqY2w7DQo+ICsJc3RydWN0
+IG1ib3hfY2hhbiAqY2g7DQo+ICsJaW50IHJldCA9IDAsIGkgPSAwOw0KPiArDQo+ICsJcmV0ID0g
+aW14X3NjdV9nZXRfaGFuZGxlKCZpbXhfc2NfaXJxX2lwY19oYW5kbGUpOw0KPiArCWlmIChyZXQp
+DQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gKwljbCA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVv
+ZigqY2wpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIWNsKQ0KPiArCQlyZXR1cm4gLUVOT01FTTsN
+Cj4gKw0KPiArCWNsLT5kZXYgPSBkZXY7DQo+ICsJY2wtPnJ4X2NhbGxiYWNrID0gaW14X3NjdV9p
+cnFfY2FsbGJhY2s7DQo+ICsNCj4gKwkvKiBTQ1UgZ2VuZXJhbCBJUlEgdXNlcyBnZW5lcmFsIGlu
+dGVycnVwdCBjaGFubmVsIDMgKi8NCj4gKwljaCA9IG1ib3hfcmVxdWVzdF9jaGFubmVsX2J5bmFt
+ZShjbCwgImdpcDMiKTsNCj4gKwlpZiAoSVNfRVJSKGNoKSkgew0KPiArCQlyZXQgPSBQVFJfRVJS
+KGNoKTsNCj4gKwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBtYm94IGNoYW4gZ2lw
+MywgcmV0ICVkXG4iLCByZXQpOw0KPiArCQlkZXZtX2tmcmVlKGRldiwgY2wpOw0KPiArCQlyZXR1
+cm4gcmV0Ow0KPiArCX0NCj4gKw0KPiArCUlOSVRfV09SSygmaW14X3NjX2lycV93b3JrLCBpbXhf
+c2N1X2lycV93b3JrX2hhbmRsZXIpOw0KPiArDQo+ICsJaWYgKCFvZl9wYXJzZV9waGFuZGxlX3dp
+dGhfYXJncyhkZXYtPm9mX25vZGUsICJtYm94ZXMiLA0KPiArCQkJCSAgICAgICAiI21ib3gtY2Vs
+bHMiLCAwLCAmc3BlYykpDQo+ICsJCWkgPSBvZl9hbGlhc19nZXRfaWQoc3BlYy5ucCwgIm11Iik7
+DQo+ICsNCj4gKwkvKiB1c2UgbXUxIGFzIGdlbmVyYWwgbXUgaXJxIGNoYW5uZWwgaWYgZmFpbGVk
+ICovDQo+ICsJaWYgKGkgPCAwKQ0KPiArCQlpID0gMTsNCj4gKw0KPiArCW11X3Jlc291cmNlX2lk
+ID0gSU1YX1NDX1JfTVVfMEEgKyBpOw0KPiArDQo+ICsJcmV0dXJuIHJldDsNCj4gK30NCj4gK0VY
+UE9SVF9TWU1CT0woaW14X3NjdV9lbmFibGVfZ2VuZXJhbF9pcnFfY2hhbm5lbCk7DQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LmMgYi9kcml2ZXJzL2Zpcm13YXJl
+L2lteC9pbXgtc2N1LmMNCj4gaW5kZXggMmJiMWExOS4uMDRhMjRhOCAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS5jDQo+ICsrKyBiL2RyaXZlcnMvZmlybXdhcmUv
+aW14L2lteC1zY3UuYw0KPiBAQCAtMTAsNiArMTAsNyBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L2Vy
+ci5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC90eXBlcy5oPg0KPiAgI2luY2x1
+ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC9pcGMuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9maXJtd2Fy
+ZS9pbXgvc2NpLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ICAjaW5jbHVk
+ZSA8bGludXgvaXJxLmg+DQo+ICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+IEBAIC0yNDYs
+NiArMjQ3LDExIEBAIHN0YXRpYyBpbnQgaW14X3NjdV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlDQo+ICpwZGV2KQ0KPiANCj4gIAlpbXhfc2NfaXBjX2hhbmRsZSA9IHNjX2lwYzsNCj4gDQo+
+ICsJcmV0ID0gaW14X3NjdV9lbmFibGVfZ2VuZXJhbF9pcnFfY2hhbm5lbChkZXYpOw0KPiArCWlm
+IChyZXQpDQo+ICsJCWRldl93YXJuKGRldiwNCj4gKwkJCSJmYWlsZWQgdG8gZW5hYmxlIGdlbmVy
+YWwgaXJxIGNoYW5uZWw6ICVkXG4iLCByZXQpOw0KPiArDQo+ICAJZGV2X2luZm8oZGV2LCAiTlhQ
+IGkuTVggU0NVIEluaXRpYWxpemVkXG4iKTsNCj4gDQo+ICAJcmV0dXJuIGRldm1fb2ZfcGxhdGZv
+cm1fcG9wdWxhdGUoZGV2KTsgZGlmZiAtLWdpdA0KPiBhL2luY2x1ZGUvbGludXgvZmlybXdhcmUv
+aW14L3NjaS5oIGIvaW5jbHVkZS9saW51eC9maXJtd2FyZS9pbXgvc2NpLmgNCj4gaW5kZXggZWJj
+NTUwOS4uNDEwMGJlNyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9maXJtd2FyZS9pbXgv
+c2NpLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9maXJtd2FyZS9pbXgvc2NpLmgNCj4gQEAgLTE1
+LDQgKzE1LDkgQEANCj4gDQo+ICAjaW5jbHVkZSA8bGludXgvZmlybXdhcmUvaW14L3N2Yy9taXNj
+Lmg+ICAjaW5jbHVkZQ0KPiA8bGludXgvZmlybXdhcmUvaW14L3N2Yy9wbS5oPg0KPiArDQo+ICtp
+bnQgaW14X3NjdV9lbmFibGVfZ2VuZXJhbF9pcnFfY2hhbm5lbChzdHJ1Y3QgZGV2aWNlICpkZXYp
+OyBpbnQNCj4gK2lteF9zY3VfaXJxX3JlZ2lzdGVyX25vdGlmaWVyKHN0cnVjdCBub3RpZmllcl9i
+bG9jayAqbmIpOyBpbnQNCj4gK2lteF9zY3VfaXJxX3VucmVnaXN0ZXJfbm90aWZpZXIoc3RydWN0
+IG5vdGlmaWVyX2Jsb2NrICpuYik7IHZvaWQNCj4gK2lteF9zY3VfaXJxX2VuYWJsZSh1OCBncm91
+cCwgdTMyIG1hc2ssIHU4IGVuYWJsZSk7DQo+ICAjZW5kaWYgLyogX1NDX1NDSV9IICovDQo+IC0t
+DQo+IDIuNy40DQoNCg==
