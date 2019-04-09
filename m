@@ -2,7 +2,7 @@ From: Jagan Teki <jagan@amarulasolutions.com>
 Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
  Orange Pi 3 DTS
 Date: Tue, 9 Apr 2019 18:57:47 +0530
-Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ__22921.9751128525$1554816497$gmane$org@mail.gmail.com>
+Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ__38209.59987804$1554816498$gmane$org@mail.gmail.com>
 References: <20190409002452.14551-1-megous@megous.com>
  <20190409002452.14551-3-megous@megous.com>
  <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
@@ -10,17 +10,17 @@ References: <20190409002452.14551-1-megous@megous.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jagan Teki <jagan@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, Kalle Valo <kvalo@codeaurora.org>, Naveen Gupta <naveen.gupta@cypress.com>, dri-devel <dri-devel@lists.freed>
 List-Id: devicetree@vger.kernel.org
 
@@ -95,7 +95,7 @@ d2UgY2FuIG1haW50YWluIGVhc2lseSBpZgp0aGUgYm9hcmRzIGFyZSBmcm9tIHNhbWUgZmFtaWx5
 IG9mIGRlc2lnbiBiYXNlZCBteSBleHBlcmllbmNlIGFuZCBmZXcKYm9hcmRzIGRvIHNoYXJlIGNv
 bW1vbiB0aGluZ3MgaW4gZHRzaSBhbHJlYWR5LgoKQW55d2F5LCB0aGFua3MgZm9yIGlucHV0cy4g
 U2VlbXMgbGlrZSBwYXRjaCBpcyBhcHBsaWVkIGFscmVhZHkgbWF5IGJlCndlIGNhbiBtb3ZlIGlu
-dG8gZHRzaSBpZiByZXF1aXJlIGluIGZ1dHVyZS4KClRoYW5rcywKSmFnYW4uCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+dG8gZHRzaSBpZiByZXF1aXJlIGluIGZ1dHVyZS4KClRoYW5rcywKSmFnYW4uCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
