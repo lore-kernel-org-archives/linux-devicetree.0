@@ -1,54 +1,31 @@
 Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:30075 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfDIIws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:48 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 09/11] ARM: dts: r8a77470: Add VSP support
-Date: Tue,  9 Apr 2019 17:51:50 +0900
-Message-Id: <1554799912-24764-10-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+Received: from kirsty.vergenet.net ([202.4.237.240]:42766 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfDIMCB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 08:02:01 -0400
+Date: Tue, 9 Apr 2019 14:01:57 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 04/11] ARM: dts: r8a77470: Add CAN support
+Message-ID: <20190409120157.a5owu4tus25qsz4e@verge.net.au>
 References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+ <1554799912-24764-5-git-send-email-cv-dong@jinso.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554799912-24764-5-git-send-email-cv-dong@jinso.co.jp>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Add vsp nodes to dtsi for VSP support on the RZ/G1C (r8a77470) SoC.
+On Tue, Apr 09, 2019 at 05:51:45PM +0900, Cao Van Dong wrote:
+> Add can{0|1} nodes to dtsi for CAN support on the RZ/G1C (r8a77470) SoC.
+> 
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- arch/arm/boot/dts/r8a77470.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Thanks,
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index c66a3c4..13d3f07 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -1027,6 +1027,24 @@
- 			status = "disabled";
- 		};
- 
-+		vsp@fe928000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe928000 0 0x8000>;
-+			interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 131>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 131>;
-+		};
-+
-+		vsp@fe930000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe930000 0 0x8000>;
-+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 128>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 128>;
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
--- 
-2.7.4
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
