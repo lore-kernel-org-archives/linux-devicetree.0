@@ -1,102 +1,149 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
- (Camera Sensor Interface)
-Date: Tue, 9 Apr 2019 16:40:40 +0800
-Message-ID: <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
-References: <20190408165744.11672-1-wens@kernel.org> <20190408165744.11672-5-wens@kernel.org>
- <20190409075804.4zrwjil7ie2gjigu@flea> <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
- <20190409082818.z33mq2qrxethldzf@flea>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/13] pinctrl: sunxi: Prepare for
+ alternative bias voltage setting methods
+Date: Tue, 9 Apr 2019 10:43:51 +0200
+Message-ID: <20190409084351.blyvkg47tjbjxwde@flea>
+References: <20190409002452.14551-1-megous@megous.com>
+ <20190409002452.14551-6-megous@megous.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409082818.z33mq2qrxethldzf@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="56xgcpawz766jjoo"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUFWWHSQKGQE2SAFTHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190409002452.14551-6-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
-> > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
-> > > > From: Chen-Yu Tsai <wens@csie.org>
-> > > >
-> > > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-> > > > lingo), which is similar to the one found on the A64 and H3. The only
-> > > > difference seems to be that support of MIPI CSI through a connected
-> > > > MIPI CSI-2 bridge.
-> > > >
-> > > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
-> > > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
-> > > > the pinctrl nodes to keep the device tree blob size down if they are
-> > > > unused.
-> > > >
-> > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > > > ---
-> > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
-> > > >  1 file changed, 31 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > > > index f739b88efb53..0c52f945fd5f 100644
-> > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > > > @@ -682,6 +682,20 @@
-> > > >                       #interrupt-cells = <3>;
-> > > >                       #gpio-cells = <3>;
-> > > >
-> > > > +                     /omit-if-no-ref/
-> > > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
-> > > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
-> > > > +                                    "PE8", "PE9", "PE10", "PE11",
-> > > > +                                    "PE12", "PE13";
-> > > > +                             function = "csi";
-> > > > +                     };
-> > > > +
-> > > > +                     /omit-if-no-ref/
-> > > > +                     csi_mclk_pin: csi-mclk-pin {
-> > > > +                             pins = "PE1";
-> > > > +                             function = "csi";
-> > > > +                     };
-> > > > +
-> > > >                       emac_rgmii_pins: emac-rgmii-pins {
-> > > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-> > > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
-> > > > @@ -994,6 +1008,23 @@
-> > > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-> > > >               };
-> > > >
-> > > > +             csi: camera@1cb0000 {
-> > > > +                     compatible = "allwinner,sun8i-a83t-csi";
-> > > > +                     reg = <0x01cb0000 0x1000>;
-> > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +                     clocks = <&ccu CLK_BUS_CSI>,
-> > > > +                              <&ccu CLK_CSI_SCLK>,
-> > > > +                              <&ccu CLK_DRAM_CSI>;
-> > > > +                     clock-names = "bus", "mod", "ram";
-> > > > +                     resets = <&ccu RST_BUS_CSI>;
-> > > > +                     status = "disabled";
-> > > > +
-> > > > +                     csi_in: port {
-> > > > +                             #address-cells = <1>;
-> > > > +                             #size-cells = <0>;
-> > >
-> > > If we expect a single enpoint, then we don't need the address-cells
-> > > and size-cells properties.
-> >
-> > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
-> > is kind of genius if not very hacky. They have two "identical" sensors
-> > on the same I2C bus and CSI bus, with shared reset line but separate
-> > shutdown lines. Since they are identical, they also have the same I2C
-> > address. I haven't figured out how to model this in the device tree.
-> >
-> > The point is, it's perfectly possible to have two or more sensors use
-> > the same controller, provided only one be active at a time.
->
-> Right, but I guess the common case would be to have a single sensor,
-> where that wouldn't be needed.
->
-> In odd cases, we can always specify it in the DTS, and if it becomes
-> common enough, we can move it to the DTSI.
 
-Makes sense. Do you want me to re-spin?
+--56xgcpawz766jjoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Apr 09, 2019 at 02:24:44AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> H6 has a different I/O voltage bias setting method than A80. Prepare
+> existing code for using alternative bias voltage setting methods.
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 41 +++++++++++++----------
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 ++-
+>  3 files changed, 28 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+> index da37d594a13d..3aa210079b18 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+> @@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
+>  	.npins = ARRAY_SIZE(sun9i_a80_pins),
+>  	.irq_banks = 5,
+>  	.disable_strict_mode = true,
+> -	.has_io_bias_cfg = true,
+> +	.io_bias_cfg_variant = IO_BIAS_CFG_V1,
+>  };
+>
+>  static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index 8dd25caea2cf..b8dd58ef33b7 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -610,7 +610,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  	u32 val, reg;
+>  	int uV;
+>
+> -	if (!pctl->desc->has_io_bias_cfg)
+> +	if (!pctl->desc->io_bias_cfg_variant)
+>  		return 0;
+>
+>  	uV = regulator_get_voltage(supply);
+> @@ -621,23 +621,28 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  	if (uV == 0)
+>  		return 0;
+>
+> -	/* Configured value must be equal or greater to actual voltage */
+> -	if (uV <= 1800000)
+> -		val = 0x0; /* 1.8V */
+> -	else if (uV <= 2500000)
+> -		val = 0x6; /* 2.5V */
+> -	else if (uV <= 2800000)
+> -		val = 0x9; /* 2.8V */
+> -	else if (uV <= 3000000)
+> -		val = 0xA; /* 3.0V */
+> -	else
+> -		val = 0xD; /* 3.3V */
+> -
+> -	pin -= pctl->desc->pin_base;
+> -
+> -	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+> -	reg &= ~IO_BIAS_MASK;
+> -	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
+> +	if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V1) {
+> +		/*
+> +		 * Configured value must be equal or greater to actual
+> +		 * voltage.
+> +		 */
+> +		if (uV <= 1800000)
+> +			val = 0x0; /* 1.8V */
+> +		else if (uV <= 2500000)
+> +			val = 0x6; /* 2.5V */
+> +		else if (uV <= 2800000)
+> +			val = 0x9; /* 2.8V */
+> +		else if (uV <= 3000000)
+> +			val = 0xA; /* 3.0V */
+> +		else
+> +			val = 0xD; /* 3.3V */
+> +
+> +		pin -= pctl->desc->pin_base;
+> +
+> +		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+> +		reg &= ~IO_BIAS_MASK;
+> +		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
+> +	}
+>
+>  	return 0;
+>  }
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> index ee15ab067b5f..642f667e99d2 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -95,6 +95,9 @@
+>  #define PINCTRL_SUN7I_A20	BIT(7)
+>  #define PINCTRL_SUN8I_R40	BIT(8)
+>
+> +/* Bias voltage configuration done via Pn_GRP_CONFIG registers. */
+> +#define IO_BIAS_CFG_V1		1
+> +
+
+Can we turn this into an enum, and give them proper name? Mentionning
+an example in the commit would be great too.
+
+Something like:
+
+enum sunxi_desc_bias_voltage {
+        /* Bias Voltage configuration is done through Pn_GRP_CONFIG registers, as seen on the A83t */
+	BIAS_VOLTAGE_GRP_CONFIG,
+};
+
+etc.
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--56xgcpawz766jjoo--
