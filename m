@@ -1,59 +1,36 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
-Date: Tue, 9 Apr 2019 14:11:58 -0500
-Message-ID: <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
-References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
-Reply-To: thor.thayer@linux.intel.com
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH 0/3] add Maxbotix ultrasonic iio sensors with gpio bitbanging
+Date: Tue, 9 Apr 2019 21:09:53 +0200
+Message-ID: <20190409190952.ctgf6mbx47nwvfs5@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: mchehab@kernel.org, james.morse@arm.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, songqiang1304521@gmail.com, robh@kernel.org, m.othacehe@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This patch series adds support for Maxbotix ultrasonic iio sensors with
+gpio bitbanging protocol.
 
-On 4/4/19 9:36 AM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> This patch series makes the Stratix10 EDAC Bindings
-> specific to the Stratix10 ARM64 architecture.
-> 
-> Instead of using the Arria10 (ARM32) EDAC bindings for
-> Stratix10 (ARM64), create Stratix10 specific EDAC bindings
-> to capture architecture differences between ARM32 and ARM64.
-> This requires fixing the previous Stratix10 bindings.
-> Also add the peripheral bindings for the Stratix10.
-> 
-> V2: Remove Stratix10 compatible check.
-> 
-> V3: Remove patches not related to EDAC bindings so that
->      this patchset is targeted toward the bindings.
->      Improve the Stratix10 specific binding description by
->      adding in descriptions of ARM64 differences.
-> 
-> Resend: Add Reviewed-by and Acked-by from bindings and
->      socfpga device tree maintainers. I'd like this to go
->      through the EDAC tree since future patches will have
->      a dependency on these bindings and device tree.
-> 
-> Thor Thayer (3):
->    Documentation: dt: edac: Fix Stratix10 IRQ bindings
->    Documentation: dt: edac: Add Stratix10 Peripheral bindings
->    arm64: dts: stratix10: Use new Stratix10 EDAC bindings
-> 
->   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 135 +++++++++++++++++++--
->   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  25 ++--
->   2 files changed, 138 insertions(+), 22 deletions(-)
-> 
+These sensors are quite similiar to the existing srf04. This is why the
+existing one was changed to support a driver specific configuration
+containing the differences between the different types.
 
-If possible, I'd like this series to go through the EDAC tree since 
-future patches will follow this format.
+This patch series needs the formerly submitted 
+"[PATCH v2] devantech-srf04.yaml: transform DT binding to YAML" 
+because it relies on the yaml documentation of devantech-srf04.yaml
 
-Regards,
+Andreas Klinger (3):
+  srf04.c: add maxbotix ultrasonic sensors
+  devantech-srf04.yaml: add Maxbotix ultrasonic iio proximity sensors
+  Kconfig: change configuration of srf04 ultrasonic iio sensor
 
-Thor
+ .../bindings/iio/proximity/devantech-srf04.yaml    | 25 +++++++++-----
+ drivers/iio/proximity/Kconfig                      | 11 +++++--
+ drivers/iio/proximity/srf04.c                      | 38 +++++++++++++++++-----
+ 3 files changed, 54 insertions(+), 20 deletions(-)
+
+-- 
+2.11.0
