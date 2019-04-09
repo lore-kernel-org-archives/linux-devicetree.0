@@ -1,31 +1,113 @@
-Return-Path: <SRS0=qoK5=SH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:45961 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEGUQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Apr 2019 02:20:16 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 0/4] Add CMT support for R-Car H3/M3-N/E3
-Date: Fri,  5 Apr 2019 14:44:05 +0900
-Message-Id: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, linux-renesas-soc@vger.kernel.org, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+Return-Path: <SRS0=ScCE=SL=verge.net.au=horms@kernel.org>
+Date: Tue, 9 Apr 2019 13:10:15 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V3 08/13] ARM: dts: r8a77470: Add USB PHY DT support
+Message-ID: <20190409111015.x6t5h3jeslovrrho@verge.net.au>
+References: <1554287324-22312-1-git-send-email-biju.das@bp.renesas.com>
+ <1554287324-22312-9-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554287324-22312-9-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds CMT{0|1|2|3} device nodes for r8a7795/r8a77965/r8a77990 SoCs.
-Based on the renesas-drivers-2019-04-02-v5.1-rc3 tag of renesas-drivers tree.
+On Wed, Apr 03, 2019 at 11:28:39AM +0100, Biju Das wrote:
+> Define the r8a77470 generic part of the USB PHY device node.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Cao Van Dong (4):
-  arm64: dts: renesas: r8a7795: Add CMT device nodes
-  arm64: dts: renesas: r8a77965: Add CMT device nodes
-  arm64: dts: renesas: r8a77990: Add CMT device nodes
-  dt-bindings: timer: renesas, cmt: Document r8a779{5|65|90} CMT support
+Thanks,
 
- .../devicetree/bindings/timer/renesas,cmt.txt      |  6 ++
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 70 ++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77965.dtsi          | 70 ++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77990.dtsi          | 70 ++++++++++++++++++++++
- 4 files changed, 216 insertions(+)
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
--- 
-2.7.4
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+> V2-->V3
+>   * Added gen3 usb2 phy nodes
+> V1-->V2
+>  * New patch
+> ---
+>  arch/arm/boot/dts/r8a77470.dtsi | 56 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+> index 493cf2b..dcd2975 100644
+> --- a/arch/arm/boot/dts/r8a77470.dtsi
+> +++ b/arch/arm/boot/dts/r8a77470.dtsi
+> @@ -325,6 +325,42 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		usbphy0: usb-phy@e6590100 {
+> +			compatible = "renesas,usb-phy-r8a77470",
+> +				     "renesas,rcar-gen2-usb-phy";
+> +			reg = <0 0xe6590100 0 0x100>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			clocks = <&cpg CPG_MOD 704>;
+> +			clock-names = "usbhs";
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> +			resets = <&cpg 704>;
+> +			status = "disabled";
+> +
+> +			usb0: usb-channel@0 {
+> +				reg = <0>;
+> +				#phy-cells = <1>;
+> +			};
+> +		};
+> +
+> +		usbphy1: usb-phy@e6598100 {
+> +			compatible = "renesas,usb-phy-r8a77470",
+> +				     "renesas,rcar-gen2-usb-phy";
+> +			reg = <0 0xe6598100 0 0x100>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			clocks = <&cpg CPG_MOD 706>;
+> +			clock-names = "usbhs";
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> +			resets = <&cpg 706>;
+> +			status = "disabled";
+> +
+> +			usb1: usb-channel@0 {
+> +				reg = <0>;
+> +				#phy-cells = <1>;
+> +			};
+> +		};
+> +
+>  		usb_dmac00: dma-controller@e65a0000 {
+>  			compatible = "renesas,r8a77470-usb-dmac",
+>  				     "renesas,usb-dmac";
+> @@ -588,6 +624,26 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		usb2_phy0: usb-phy@ee080200 {
+> +			compatible = "renesas,usb2-phy-r8a77470";
+> +			reg = <0 0xee080200 0 0x700>;
+> +			clocks = <&cpg CPG_MOD 703>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> +			resets = <&cpg 703>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		usb2_phy1: usb-phy@ee0c0200 {
+> +			compatible = "renesas,usb2-phy-r8a77470";
+> +			reg = <0 0xee0c0200 0 0x700>;
+> +			clocks = <&cpg CPG_MOD 705>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> +			resets = <&cpg 705>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sdhi0: sd@ee100000 {
+>  			compatible = "renesas,sdhi-r8a77470",
+>  				     "renesas,rcar-gen2-sdhi";
+> -- 
+> 2.7.4
+> 
