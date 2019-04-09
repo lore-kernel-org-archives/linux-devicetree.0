@@ -1,39 +1,58 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH] dt-bindings: mfd: axp20x: Add fallback for axp805
-Date: Tue,  9 Apr 2019 18:05:50 +0200
-Message-ID: <20190409160550.1086-1-peron.clem@gmail.com>
+From: Christina Quast <cquast@hanoverdisplays.com>
+Subject: [PATCH 00/15] ARM: dts: am335x: Replace numeric pinmux address w. macro for more boards
+Date: Tue,  9 Apr 2019 18:03:31 +0200
+Message-ID: <20190409160346.25599-1-cquast@hanoverdisplays.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To: tony@atomide.com
+Cc: Christina Quast <cquast@hanoverdisplays.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-axp805 is actually compatible and used with axp806 as fallback.
-But it's actually undocumented and trig a warning with checkpatch.
+Depends on the following patch set:
+[PATCH v2 0/6] ARM: dts: am335x: Replace numeric pinmux address with macro defines
 
-DT compatible string "x-powers,axp805" appears un-documented.
+Replace the numeric pinmux address with the macro defines for an additional 15 boards.
 
-Add this compatible in the dt-bindings documentation.
+Christina Quast (15):
+  ARM: dts: am335x: baltos-ir2110: Replaced register offsets with
+    defines
+  ARM: dts: am335x: baltos-ir3220: Replaced register offsets with
+    defines
+  ARM: dts: am335x: baltos-ir5221: Replaced register offsets with
+    defines
+  ARM: dts: am335x: baltos-leds: Replaced register offsets with defines
+  ARM: dts: am335x: baltos: Replaced register offsets with defines
+  ARM: dts: am335x: base0033: Replaced register offsets with defines
+  ARM: dts: am335x: bonegreen-wireless: Replaced register offsets with
+    defines
+  ARM: dts: am335x: boneblue: Replaced register offsets with defines
+  ARM: dts: am335x: bonegreen-common: Replaced register offsets with
+    defines
+  ARM: dts: am335x: chiliboard: Replaced register offsets with defines
+  ARM: dts: am335x: chilisom: Replaced register offsets with defines
+  ARM: dts: am335x: cm-t335: Replaced register offsets with defines
+  ARM: dts: am335x: evm: Replaced register offsets with defines
+  ARM: dts: am335x: evmsk: Replaced register offsets with defines
+  ARM: dts: am335x: icev2: Replaced register offsets with defines
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/am335x-baltos-ir2110.dts    |  16 +-
+ arch/arm/boot/dts/am335x-baltos-ir3220.dts    |  36 +--
+ arch/arm/boot/dts/am335x-baltos-ir5221.dts    |  40 +--
+ arch/arm/boot/dts/am335x-baltos-leds.dtsi     |   6 +-
+ arch/arm/boot/dts/am335x-baltos.dtsi          | 140 ++++-----
+ arch/arm/boot/dts/am335x-base0033.dts         |  48 +--
+ arch/arm/boot/dts/am335x-boneblue.dts         | 104 +++----
+ .../arm/boot/dts/am335x-bonegreen-common.dtsi |   4 +-
+ .../boot/dts/am335x-bonegreen-wireless.dts    |  28 +-
+ arch/arm/boot/dts/am335x-chiliboard.dts       |  66 ++--
+ arch/arm/boot/dts/am335x-chilisom.dtsi        |  32 +-
+ arch/arm/boot/dts/am335x-cm-t335.dts          | 190 +++++-------
+ arch/arm/boot/dts/am335x-evm.dts              | 234 +++++++-------
+ arch/arm/boot/dts/am335x-evmsk.dts            | 292 +++++++++---------
+ arch/arm/boot/dts/am335x-icev2.dts            | 116 +++----
+ 15 files changed, 658 insertions(+), 694 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index 2af4ff95d6bc..4991a6415796 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -25,6 +25,7 @@ Required properties:
-     * "x-powers,axp223"
-     * "x-powers,axp803"
-     * "x-powers,axp806"
-+    * "x-powers,axp805", "x-powers,axp806"
-     * "x-powers,axp809"
-     * "x-powers,axp813"
- - reg: The I2C slave address or RSB hardware address for the AXP chip
 -- 
-2.17.1
+2.20.1
