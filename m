@@ -1,44 +1,129 @@
-Return-Path: <SRS0=NnWQ=SM=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V11 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 10 Apr 2019 06:01:22 +0000
-Message-ID: <1554875779-19727-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=bb8/=SL=amarulasolutions.com=jagan@kernel.org>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, Andy Gross <andy.gross@linaro.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+References: <20190409002452.14551-1-megous@megous.com> <20190409002452.14551-3-megous@megous.com>
+ <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com> <20190409113157.e4vrzesbgmyslomb@core.my.home>
+In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Tue, 9 Apr 2019 18:57:47 +0530
+Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Jagan Teki <jagan@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, Kalle Valo <kvalo@codeaurora.org>, Naveen Gupta <naveen.gupta@cypress.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-TlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRl
-IGFzDQpzeXN0ZW0gY29udHJvbGxlciwgdGhlIHN5c3RlbSBjb250cm9sbGVyIGlzIGluIGNoYXJn
-ZSBvZiBzeXN0ZW0NCnBvd2VyLCBjbG9jayBhbmQgdGhlcm1hbCBzZW5zb3JzIGV0Yy4gbWFuYWdl
-bWVudCwgTGludXgga2VybmVsDQpoYXMgdG8gY29tbXVuaWNhdGUgd2l0aCBzeXN0ZW0gY29udHJv
-bGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkNCklQQyB0byBnZXQgdGVtcGVyYXR1cmUgZnJvbSB0
-aGVybWFsIHNlbnNvcnMsIHRoaXMgcGF0Y2ggYWRkcw0KYmluZGluZyBkb2MgZm9yIGkuTVggc3lz
-dGVtIGNvbnRyb2xsZXIgdGhlcm1hbCBkcml2ZXIuDQoNClNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQpDaGFuZ2VzIHNpbmNlIFYxMDoNCgktIHJl
-bW92ZSBwcm9wZXJ0eSAiaW14LHNlbnNvci1yZXNvdXJjZS1pZCIuDQotLQ0KIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgICAgICAgIHwgMTYgKysrKysr
-KysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2ws
-c2N1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
-L2ZzbCxzY3UudHh0DQppbmRleCA1ZDdkYmFiLi5mNGZiNmQ1IDEwMDY0NA0KLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCisr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
-Y3UudHh0DQpAQCAtMTMzLDYgKzEzMywxNyBAQCBSVEMgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1l
-c3NhZ2UgUHJvdG9jb2wNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIC0gY29tcGF0aWJsZTogc2hv
-dWxkIGJlICJmc2wsaW14OHF4cC1zYy1ydGMiOw0KIA0KK1RoZXJtYWwgYmluZGluZ3MgYmFzZWQg
-b24gU0NVIE1lc3NhZ2UgUHJvdG9jb2wNCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCisNCitSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-Ky0gY29tcGF0aWJsZToJCQlTaG91bGQgYmUgOg0KKwkJCQkgICJmc2wsaW14OHF4cC1zYy10aGVy
-bWFsIg0KKwkJCQlmb2xsb3dlZCBieSAiZnNsLGlteC1zYy10aGVybWFsIjsNCisNCistICN0aGVy
-bWFsLXNlbnNvci1jZWxsczoJU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL3RoZXJtYWwudHh0DQorCQkJCWZvciBhIGRlc2NyaXB0aW9uLg0KKw0KIEV4YW1wbGUg
-KGlteDhxeHApOg0KIC0tLS0tLS0tLS0tLS0NCiBhbGlhc2VzIHsNCkBAIC0xODUsNiArMTk2LDEx
-IEBAIGZpcm13YXJlIHsNCiAJCXJ0YzogcnRjIHsNCiAJCQljb21wYXRpYmxlID0gImZzbCxpbXg4
-cXhwLXNjLXJ0YyI7DQogCQl9Ow0KKw0KKwkJdHNlbnM6IHRoZXJtYWwtc2Vuc29yIHsNCisJCQlj
-b21wYXRpYmxlID0gImZzbCxpbXg4cXhwLXNjLXRoZXJtYWwiLCAiZnNsLGlteC1zYy10aGVybWFs
-IjsNCisJCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47DQorCQl9Ow0KIAl9Ow0KIH07DQog
-DQotLSANCjIuNy40DQoNCg==
+Hi Ond=C5=99ej Jirman,
+
+On Tue, Apr 9, 2019 at 5:01 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
+>
+> Hi Jagan,
+>
+> On Tue, Apr 09, 2019 at 02:08:18PM +0530, Jagan Teki wrote:
+> > Based on the conversation about using common dtsi from this thread[1],
+> > I'm commenting here to make show the diff directly on the nodes,
+> > giving comments on each node so-that we can see the diff globally.
+>
+> Thanks for the suggestions below. It mostly repeats the differences and
+> commonalities I already stated in the previous discussion.
+>
+> I don't have much to add to what I already said previously, though, becau=
+se you
+> didn't address my concerns there. But I can restate and expand on those
+> concerns.
+>
+> Previously I already agreed it's possible to base orangepi-3.dts on
+> orangepi.dtsi, and proposed a maintainable way forward, and why to follow=
+ it (to
+> quote myself):
+>
+>   Schematics allow for high amount of variability in the power tree (see =
+all the
+>   NC (not connected) / 0R resistors) in the schematic around AXP805. Ever=
+y board
+>   based on this Xunlong design can be subtly different.
+
+Well, how about defining them in required dts file and group it common
+regulators in dtsi? The idea of all these 3 H6 OPI boards are
+evaluated in the same design consideration by adding new IP's in new
+boards design by keeping the core things common like lite2 has wifi,
+one plus has emac and 3 has PCIe etc. This is what I got from
+Steven(OrangePI).
+
+>
+>   I already suggested a maintainable solution, below. Where base dtsi has=
+ empty
+>   config for regulators and every board based on that just defines it com=
+pletely
+>   for itself.
+>
+>   A few regulators (for CPU/GPU) will most probably have the same meaning=
+ on
+>   every derived board, so these can probably be kept in dtsi without caus=
+ing too
+>   much annoyance.
+>
+>   It's unpleasant to have wrong regulator setup defined in an underlying =
+dtsi,
+>   and then trying to override it by removing/adding random properties in =
+the
+>   board dts for the new boards based on that, so that it fits.
+
+If we manage them properly by moving common things in dtsi and rest in
+dts, we may avoid these underlying issues.
+
+>
+>   The rest of the current HW descriptions in the sun50i-h6-orangepi.dtsi =
+can be
+>   shared (as of now).
+>
+> My suggestion was this:
+>
+>   So to base Orange Pi 3 dts on top of existing sun50i-h6-orangepi.dtsi I=
+'d have
+>   to first move some things out of the base dtsi to the OrangePi Lite2 an=
+d One
+>   Plus board dts files, in order to have sun50i-h6-orangepi.dtsi only des=
+cribe
+>   HW that is *really* shared by these 2 boards and Orange Pi 3.
+>
+>   If I do that, I'd undefine all the axp805 regulator nodes and move the
+>   configurations to each of the 3 board files. That will probably end up =
+being
+>   the least confusing and most maintainable. See axp81x.dtsi lines 86-144=
+ for
+>   what I mean.
+>
+> You seem to be suggesting a solution where every time we add an OrangePi =
+H6
+> based board, the person adding it will have to go through the base dtsi a=
+nd all
+> the other boards based on it, status disable or otherwise change regulato=
+rs in
+> the base dtsi, patch all the other boards to re-enable it.
+>
+> It would be already unpleasant just adding a third board based on this ap=
+proach.
+> And when the fourth board is added, with another small differences in the
+> regulator use/meanings, the person will be looking at patching 4 dts file=
+s
+> + adding one for his own board. For what benefit, to save some bytes righ=
+t now?
+>
+> I think maintainability, ease of adding new boards is more important, tha=
+n
+> having a dtsi that tries to maximally cover all the commonalities between=
+ the
+> existing boards right now, without regards for the future. That's why
+> I suggested an approach like in axp81x.dtsi lines 86-144.
+
+True, if the boards indeed are different but we can maintain easily if
+the boards are from same family of design based my experience and few
+boards do share common things in dtsi already.
+
+Anyway, thanks for inputs. Seems like patch is applied already may be
+we can move into dtsi if require in future.
+
+Thanks,
+Jagan.
