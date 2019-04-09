@@ -1,109 +1,101 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-Date: Tue, 9 Apr 2019 08:26:04 -0500
-Message-ID: <20190409132604.GA256045@google.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
- <20190329203159.GG24180@google.com>
- <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
- <20190402183110.GE141706@google.com>
- <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
- <20190403173641.GI141706@google.com>
- <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
- <20190405185842.GC26522@google.com>
- <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
+ Orange Pi 3 DTS
+Date: Tue, 9 Apr 2019 18:57:47 +0530
+Message-ID: <CAMty3ZAivyE922rpJ_FgnL=3hk1jR2eJsnuiQHqXd+NcmhQ+SQ__22921.9751128525$1554816497$gmane$org@mail.gmail.com>
+References: <20190409002452.14551-1-megous@megous.com>
+ <20190409002452.14551-3-megous@megous.com>
+ <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
+ <20190409113157.e4vrzesbgmyslomb@core.my.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com, skomatineni@nvidia.com, liviu.dudau@arm.com, krzk@kernel.org, heiko@sntech.de, horms+renesas@verge.net.au, olof@lixom.net, maxime.ripard@bootlin.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, enric.balletbo@collabora.com, ezequiel@collabora.com, stefan.wahren@i2se.com, marc.w.gonzalez@free.fr, l.stach@pengutronix.de, tpiepho@impinj.com, hayashi.kunihiko@socionext.com, yue.wang@amlogic.com, shawn.lin@rock-chips.com, xiaowei.bao@nxp.com, devicetree@vger.ker
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190409113157.e4vrzesbgmyslomb@core.my.home>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Arend van Spriel <arend.vanspriel@broadcom.com>, Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, Wright Feng <wright.feng@cypress.com>, Kalle Valo <kvalo@codeaurora.org>, Naveen Gupta <naveen.gupta@cypress.com>, dri-devel <dri-devel@lists.freed>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 05:00:53PM +0530, Vidya Sagar wrote:
-> On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
-> > On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
-> > > On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
-> > > > On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
-> > > > > On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
-> > > > > > On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
-> > > > > > > On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
-> > > > > > > > On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
-> > > > > > > > > Add support for Synopsys DesignWare core IP based PCIe host controller
-> > > > > > > > > present in Tegra194 SoC.
-> > > > > > 
-> > > > > >      - Why does this chip require pcie_pme_disable_msi()?  The only other
-> > > > > >        use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
-> > > > > >        ("PCI PM: Make it possible to force using INTx for PCIe PME
-> > > > > >        signaling").
-> > > > > 
-> > > > > Because Tegra194 doesn't support raising PME interrupts through MSI line.
-
-> > There's something wrong here.  Either the question of how PME is
-> > signaled is generic and the spec provides a way for the OS to discover
-> > that method, or it's part of the device-specific architecture that
-> > each host bridge driver has to know about its device.  If the former,
-> > we need to make the PCI core smart enough to figure it out.  If the
-> > latter, we need a better interface than this ad hoc
-> > pcie_pme_disable_msi() thing.  But if it is truly the latter, your
-> > current code is sufficient and we can refine it over time.
->
-> In case of Tegra194, it is the latter case.
-
-This isn't a Tegra194 question; it's a question of whether this
-behavior is covered by the PCIe spec.
-
-> > What I suspect should happen eventually is the DWC driver should call
-> > devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
-> > That would require a little reorganization of the DWC data structures,
-> > but it would be good to be more consistent.
-> > 
-> > For now, I think stashing the pointer in pcie_port or dw_pcie would be
-> > OK.  I'm not 100% clear on the difference, but it looks like either
-> > should be common across all the DWC drivers, which is what we want.
->
-> Since dw_pcie is common for both root port and end point mode structures,
-> I think it makes sense to keep the pointer in pcie_port as this structure
-> is specific to root port mode of operation.
-> I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
-> used in the beginning itself to be inline with non-DWC implementations.
-> But, I'll take it up later (after I'm done with upstreaming current series)
-
-Fair enough.
-
-> > > .remove() internally calls pm_runtime_put_sync() API which calls
-> > > .runtime_suspend(). I made a new patch to add a host_deinit() call
-> > > which make all these calls. Since host_init() is called from inside
-> > > .runtime_resume() of this driver, to be in sync, I'm now calling
-> > > host_deinit() from inside .runtime_suspend() API.
-> > 
-> > I think this is wrong.  pci_stop_root_bus() will detach all the
-> > drivers from all the devices.  We don't want to do that if we're
-> > merely runtime suspending the host bridge, do we?
->
-> In the current driver, the scenarios in which .runtime_suspend() is called
-> are
-> a) during .remove() call and
-
-It makes sense that you should call pci_stop_root_bus() during
-.remove(), i.e., when the host controller driver is being removed,
-because the PCI bus will no longer be accessible.  I think you should
-call it *directly* from tegra_pcie_dw_remove() because that will match
-what other drivers do.
-
-> b) when there is no endpoint found and controller would be shutdown
-> In both cases, it is required to stop the root bus and remove all devices,
-> so, instead of having same call present in respective paths, I kept them
-> in .runtime_suspend() itself to avoid code duplication.
-
-I don't understand this part.  We should be able to runtime suspend
-the host controller without detaching drivers for child devices.
-
-If you shutdown the controller completely and detach the *host
-controller driver*, sure, it makes sense to detach drivers from child
-devices.  But that would be handled by the host controller .remove()
-method, not by the runtime suspend method.
-
-Bjorn
+SGkgT25kxZllaiBKaXJtYW4sCgpPbiBUdWUsIEFwciA5LCAyMDE5IGF0IDU6MDEgUE0gT25kxZll
+aiBKaXJtYW4gPG1lZ291c0BtZWdvdXMuY29tPiB3cm90ZToKPgo+IEhpIEphZ2FuLAo+Cj4gT24g
+VHVlLCBBcHIgMDksIDIwMTkgYXQgMDI6MDg6MThQTSArMDUzMCwgSmFnYW4gVGVraSB3cm90ZToK
+PiA+IEJhc2VkIG9uIHRoZSBjb252ZXJzYXRpb24gYWJvdXQgdXNpbmcgY29tbW9uIGR0c2kgZnJv
+bSB0aGlzIHRocmVhZFsxXSwKPiA+IEknbSBjb21tZW50aW5nIGhlcmUgdG8gbWFrZSBzaG93IHRo
+ZSBkaWZmIGRpcmVjdGx5IG9uIHRoZSBub2RlcywKPiA+IGdpdmluZyBjb21tZW50cyBvbiBlYWNo
+IG5vZGUgc28tdGhhdCB3ZSBjYW4gc2VlIHRoZSBkaWZmIGdsb2JhbGx5Lgo+Cj4gVGhhbmtzIGZv
+ciB0aGUgc3VnZ2VzdGlvbnMgYmVsb3cuIEl0IG1vc3RseSByZXBlYXRzIHRoZSBkaWZmZXJlbmNl
+cyBhbmQKPiBjb21tb25hbGl0aWVzIEkgYWxyZWFkeSBzdGF0ZWQgaW4gdGhlIHByZXZpb3VzIGRp
+c2N1c3Npb24uCj4KPiBJIGRvbid0IGhhdmUgbXVjaCB0byBhZGQgdG8gd2hhdCBJIGFscmVhZHkg
+c2FpZCBwcmV2aW91c2x5LCB0aG91Z2gsIGJlY2F1c2UgeW91Cj4gZGlkbid0IGFkZHJlc3MgbXkg
+Y29uY2VybnMgdGhlcmUuIEJ1dCBJIGNhbiByZXN0YXRlIGFuZCBleHBhbmQgb24gdGhvc2UKPiBj
+b25jZXJucy4KPgo+IFByZXZpb3VzbHkgSSBhbHJlYWR5IGFncmVlZCBpdCdzIHBvc3NpYmxlIHRv
+IGJhc2Ugb3JhbmdlcGktMy5kdHMgb24KPiBvcmFuZ2VwaS5kdHNpLCBhbmQgcHJvcG9zZWQgYSBt
+YWludGFpbmFibGUgd2F5IGZvcndhcmQsIGFuZCB3aHkgdG8gZm9sbG93IGl0ICh0bwo+IHF1b3Rl
+IG15c2VsZik6Cj4KPiAgIFNjaGVtYXRpY3MgYWxsb3cgZm9yIGhpZ2ggYW1vdW50IG9mIHZhcmlh
+YmlsaXR5IGluIHRoZSBwb3dlciB0cmVlIChzZWUgYWxsIHRoZQo+ICAgTkMgKG5vdCBjb25uZWN0
+ZWQpIC8gMFIgcmVzaXN0b3JzKSBpbiB0aGUgc2NoZW1hdGljIGFyb3VuZCBBWFA4MDUuIEV2ZXJ5
+IGJvYXJkCj4gICBiYXNlZCBvbiB0aGlzIFh1bmxvbmcgZGVzaWduIGNhbiBiZSBzdWJ0bHkgZGlm
+ZmVyZW50LgoKV2VsbCwgaG93IGFib3V0IGRlZmluaW5nIHRoZW0gaW4gcmVxdWlyZWQgZHRzIGZp
+bGUgYW5kIGdyb3VwIGl0IGNvbW1vbgpyZWd1bGF0b3JzIGluIGR0c2k/IFRoZSBpZGVhIG9mIGFs
+bCB0aGVzZSAzIEg2IE9QSSBib2FyZHMgYXJlCmV2YWx1YXRlZCBpbiB0aGUgc2FtZSBkZXNpZ24g
+Y29uc2lkZXJhdGlvbiBieSBhZGRpbmcgbmV3IElQJ3MgaW4gbmV3CmJvYXJkcyBkZXNpZ24gYnkg
+a2VlcGluZyB0aGUgY29yZSB0aGluZ3MgY29tbW9uIGxpa2UgbGl0ZTIgaGFzIHdpZmksCm9uZSBw
+bHVzIGhhcyBlbWFjIGFuZCAzIGhhcyBQQ0llIGV0Yy4gVGhpcyBpcyB3aGF0IEkgZ290IGZyb20K
+U3RldmVuKE9yYW5nZVBJKS4KCj4KPiAgIEkgYWxyZWFkeSBzdWdnZXN0ZWQgYSBtYWludGFpbmFi
+bGUgc29sdXRpb24sIGJlbG93LiBXaGVyZSBiYXNlIGR0c2kgaGFzIGVtcHR5Cj4gICBjb25maWcg
+Zm9yIHJlZ3VsYXRvcnMgYW5kIGV2ZXJ5IGJvYXJkIGJhc2VkIG9uIHRoYXQganVzdCBkZWZpbmVz
+IGl0IGNvbXBsZXRlbHkKPiAgIGZvciBpdHNlbGYuCj4KPiAgIEEgZmV3IHJlZ3VsYXRvcnMgKGZv
+ciBDUFUvR1BVKSB3aWxsIG1vc3QgcHJvYmFibHkgaGF2ZSB0aGUgc2FtZSBtZWFuaW5nIG9uCj4g
+ICBldmVyeSBkZXJpdmVkIGJvYXJkLCBzbyB0aGVzZSBjYW4gcHJvYmFibHkgYmUga2VwdCBpbiBk
+dHNpIHdpdGhvdXQgY2F1c2luZyB0b28KPiAgIG11Y2ggYW5ub3lhbmNlLgo+Cj4gICBJdCdzIHVu
+cGxlYXNhbnQgdG8gaGF2ZSB3cm9uZyByZWd1bGF0b3Igc2V0dXAgZGVmaW5lZCBpbiBhbiB1bmRl
+cmx5aW5nIGR0c2ksCj4gICBhbmQgdGhlbiB0cnlpbmcgdG8gb3ZlcnJpZGUgaXQgYnkgcmVtb3Zp
+bmcvYWRkaW5nIHJhbmRvbSBwcm9wZXJ0aWVzIGluIHRoZQo+ICAgYm9hcmQgZHRzIGZvciB0aGUg
+bmV3IGJvYXJkcyBiYXNlZCBvbiB0aGF0LCBzbyB0aGF0IGl0IGZpdHMuCgpJZiB3ZSBtYW5hZ2Ug
+dGhlbSBwcm9wZXJseSBieSBtb3ZpbmcgY29tbW9uIHRoaW5ncyBpbiBkdHNpIGFuZCByZXN0IGlu
+CmR0cywgd2UgbWF5IGF2b2lkIHRoZXNlIHVuZGVybHlpbmcgaXNzdWVzLgoKPgo+ICAgVGhlIHJl
+c3Qgb2YgdGhlIGN1cnJlbnQgSFcgZGVzY3JpcHRpb25zIGluIHRoZSBzdW41MGktaDYtb3Jhbmdl
+cGkuZHRzaSBjYW4gYmUKPiAgIHNoYXJlZCAoYXMgb2Ygbm93KS4KPgo+IE15IHN1Z2dlc3Rpb24g
+d2FzIHRoaXM6Cj4KPiAgIFNvIHRvIGJhc2UgT3JhbmdlIFBpIDMgZHRzIG9uIHRvcCBvZiBleGlz
+dGluZyBzdW41MGktaDYtb3JhbmdlcGkuZHRzaSBJJ2QgaGF2ZQo+ICAgdG8gZmlyc3QgbW92ZSBz
+b21lIHRoaW5ncyBvdXQgb2YgdGhlIGJhc2UgZHRzaSB0byB0aGUgT3JhbmdlUGkgTGl0ZTIgYW5k
+IE9uZQo+ICAgUGx1cyBib2FyZCBkdHMgZmlsZXMsIGluIG9yZGVyIHRvIGhhdmUgc3VuNTBpLWg2
+LW9yYW5nZXBpLmR0c2kgb25seSBkZXNjcmliZQo+ICAgSFcgdGhhdCBpcyAqcmVhbGx5KiBzaGFy
+ZWQgYnkgdGhlc2UgMiBib2FyZHMgYW5kIE9yYW5nZSBQaSAzLgo+Cj4gICBJZiBJIGRvIHRoYXQs
+IEknZCB1bmRlZmluZSBhbGwgdGhlIGF4cDgwNSByZWd1bGF0b3Igbm9kZXMgYW5kIG1vdmUgdGhl
+Cj4gICBjb25maWd1cmF0aW9ucyB0byBlYWNoIG9mIHRoZSAzIGJvYXJkIGZpbGVzLiBUaGF0IHdp
+bGwgcHJvYmFibHkgZW5kIHVwIGJlaW5nCj4gICB0aGUgbGVhc3QgY29uZnVzaW5nIGFuZCBtb3N0
+IG1haW50YWluYWJsZS4gU2VlIGF4cDgxeC5kdHNpIGxpbmVzIDg2LTE0NCBmb3IKPiAgIHdoYXQg
+SSBtZWFuLgo+Cj4gWW91IHNlZW0gdG8gYmUgc3VnZ2VzdGluZyBhIHNvbHV0aW9uIHdoZXJlIGV2
+ZXJ5IHRpbWUgd2UgYWRkIGFuIE9yYW5nZVBpIEg2Cj4gYmFzZWQgYm9hcmQsIHRoZSBwZXJzb24g
+YWRkaW5nIGl0IHdpbGwgaGF2ZSB0byBnbyB0aHJvdWdoIHRoZSBiYXNlIGR0c2kgYW5kIGFsbAo+
+IHRoZSBvdGhlciBib2FyZHMgYmFzZWQgb24gaXQsIHN0YXR1cyBkaXNhYmxlIG9yIG90aGVyd2lz
+ZSBjaGFuZ2UgcmVndWxhdG9ycyBpbgo+IHRoZSBiYXNlIGR0c2ksIHBhdGNoIGFsbCB0aGUgb3Ro
+ZXIgYm9hcmRzIHRvIHJlLWVuYWJsZSBpdC4KPgo+IEl0IHdvdWxkIGJlIGFscmVhZHkgdW5wbGVh
+c2FudCBqdXN0IGFkZGluZyBhIHRoaXJkIGJvYXJkIGJhc2VkIG9uIHRoaXMgYXBwcm9hY2guCj4g
+QW5kIHdoZW4gdGhlIGZvdXJ0aCBib2FyZCBpcyBhZGRlZCwgd2l0aCBhbm90aGVyIHNtYWxsIGRp
+ZmZlcmVuY2VzIGluIHRoZQo+IHJlZ3VsYXRvciB1c2UvbWVhbmluZ3MsIHRoZSBwZXJzb24gd2ls
+bCBiZSBsb29raW5nIGF0IHBhdGNoaW5nIDQgZHRzIGZpbGVzCj4gKyBhZGRpbmcgb25lIGZvciBo
+aXMgb3duIGJvYXJkLiBGb3Igd2hhdCBiZW5lZml0LCB0byBzYXZlIHNvbWUgYnl0ZXMgcmlnaHQg
+bm93Pwo+Cj4gSSB0aGluayBtYWludGFpbmFiaWxpdHksIGVhc2Ugb2YgYWRkaW5nIG5ldyBib2Fy
+ZHMgaXMgbW9yZSBpbXBvcnRhbnQsIHRoYW4KPiBoYXZpbmcgYSBkdHNpIHRoYXQgdHJpZXMgdG8g
+bWF4aW1hbGx5IGNvdmVyIGFsbCB0aGUgY29tbW9uYWxpdGllcyBiZXR3ZWVuIHRoZQo+IGV4aXN0
+aW5nIGJvYXJkcyByaWdodCBub3csIHdpdGhvdXQgcmVnYXJkcyBmb3IgdGhlIGZ1dHVyZS4gVGhh
+dCdzIHdoeQo+IEkgc3VnZ2VzdGVkIGFuIGFwcHJvYWNoIGxpa2UgaW4gYXhwODF4LmR0c2kgbGlu
+ZXMgODYtMTQ0LgoKVHJ1ZSwgaWYgdGhlIGJvYXJkcyBpbmRlZWQgYXJlIGRpZmZlcmVudCBidXQg
+d2UgY2FuIG1haW50YWluIGVhc2lseSBpZgp0aGUgYm9hcmRzIGFyZSBmcm9tIHNhbWUgZmFtaWx5
+IG9mIGRlc2lnbiBiYXNlZCBteSBleHBlcmllbmNlIGFuZCBmZXcKYm9hcmRzIGRvIHNoYXJlIGNv
+bW1vbiB0aGluZ3MgaW4gZHRzaSBhbHJlYWR5LgoKQW55d2F5LCB0aGFua3MgZm9yIGlucHV0cy4g
+U2VlbXMgbGlrZSBwYXRjaCBpcyBhcHBsaWVkIGFscmVhZHkgbWF5IGJlCndlIGNhbiBtb3ZlIGlu
+dG8gZHRzaSBpZiByZXF1aXJlIGluIGZ1dHVyZS4KClRoYW5rcywKSmFnYW4uCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
