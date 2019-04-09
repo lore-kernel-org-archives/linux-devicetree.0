@@ -1,113 +1,143 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V7 1/4] dt-bindings: fsl: scu: add general interrupt support
-Date: Tue, 9 Apr 2019 04:59:49 +0000
-Message-ID: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V7 2/4] firmware: imx: enable imx scu general irq function
+Date: Tue, 9 Apr 2019 04:59:55 +0000
+Message-ID: <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
+References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infra>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add scu general interrupt function support.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-No changes.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 29 +++++++++++++++++-----
- 1 file changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 72d481c..5d7dbab 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -22,9 +22,11 @@ Required properties:
- -------------------
- - compatible:	should be "fsl,imx-scu".
- - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
--			       "rx0", "rx1", "rx2", "rx3".
--- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
--		for rx. All 8 MU channels must be in the same MU instance.
-+			       "rx0", "rx1", "rx2", "rx3";
-+		include "gip3" if want to support general MU interrupt.
-+- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
-+		rx, and 1 optional MU channel for general interrupt.
-+		All MU channels must be in the same MU instance.
- 		Cross instances are not allowed. The MU instance can only
- 		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
- 		to make sure use the one which is not conflict with other
-@@ -34,6 +36,7 @@ Required properties:
- 		Channel 1 must be "tx1" or "rx1".
- 		Channel 2 must be "tx2" or "rx2".
- 		Channel 3 must be "tx3" or "rx3".
-+		General interrupt rx channel must be "gip3".
- 		e.g.
- 		mboxes = <&lsio_mu1 0 0
- 			  &lsio_mu1 0 1
-@@ -42,10 +45,18 @@ Required properties:
- 			  &lsio_mu1 1 0
- 			  &lsio_mu1 1 1
- 			  &lsio_mu1 1 2
--			  &lsio_mu1 1 3>;
-+			  &lsio_mu1 1 3
-+			  &lsio_mu1 3 3>;
- 		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
- 		for detailed mailbox binding.
- 
-+Note: Each mu which supports general interrupt should have an alias correctly
-+numbered in "aliases" node.
-+e.g.
-+aliases {
-+	mu1 = &lsio_mu1;
-+};
-+
- i.MX SCU Client Device Node:
- ============================================================
- 
-@@ -124,6 +135,10 @@ Required properties:
- 
- Example (imx8qxp):
- -------------
-+aliases {
-+	mu1 = &lsio_mu1;
-+};
-+
- lsio_mu1: mailbox@5d1c0000 {
- 	...
- 	#mbox-cells = <2>;
-@@ -133,7 +148,8 @@ firmware {
- 	scu {
- 		compatible = "fsl,imx-scu";
- 		mbox-names = "tx0", "tx1", "tx2", "tx3",
--			     "rx0", "rx1", "rx2", "rx3";
-+			     "rx0", "rx1", "rx2", "rx3",
-+			     "gip3";
- 		mboxes = <&lsio_mu1 0 0
- 			  &lsio_mu1 0 1
- 			  &lsio_mu1 0 2
-@@ -141,7 +157,8 @@ firmware {
- 			  &lsio_mu1 1 0
- 			  &lsio_mu1 1 1
- 			  &lsio_mu1 1 2
--			  &lsio_mu1 1 3>;
-+			  &lsio_mu1 1 3
-+			  &lsio_mu1 3 3>;
- 
- 		clk: clk {
- 			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
--- 
-2.7.4
+VGhlIFN5c3RlbSBDb250cm9sbGVyIEZpcm13YXJlIChTQ0ZXKSBjb250cm9scyBSVEMsIHRoZXJt
+YWwNCmFuZCBXRE9HIGV0Yy4sIHRoZXNlIHJlc291cmNlcycgaW50ZXJydXB0IGZ1bmN0aW9uIGFy
+ZSBtYW5hZ2VkDQpieSBTQ1UuIFdoZW4gYW55IElSUSBwZW5kaW5nLCBTQ1Ugd2lsbCBub3RpZnkg
+TGludXggdmlhIE1VIGdlbmVyYWwNCmludGVycnVwdCBjaGFubmVsICMzLCBhbmQgTGludXgga2Vy
+bmVsIG5lZWRzIHRvIGNhbGwgU0NVIEFQSXMNCnRvIGdldCBJUlEgc3RhdHVzIGFuZCBub3RpZnkg
+ZWFjaCBtb2R1bGUgdG8gaGFuZGxlIHRoZSBpbnRlcnJ1cHQuDQoNClNpbmNlIHRoZXJlIGlzIG5v
+IGRhdGEgdHJhbnNtaXNzaW9uIGZvciBTQ1UgSVJRIG5vdGlmaWNhdGlvbiwgc28NCmRvb3JiZWxs
+IG1vZGUgaXMgdXNlZCBmb3IgdGhpcyBNVSBjaGFubmVsLCBhbmQgU0NVIGRyaXZlciB3aWxsDQp1
+c2Ugbm90aWZpZXIgbWVjaGFuaXNtIHRvIGJyb2FkY2FzdCB0byBldmVyeSBtb2R1bGUgd2hpY2gg
+cmVnaXN0ZXJzDQp0aGUgU0NVIGJsb2NrIG5vdGlmaWVyLg0KDQpTaWduZWQtb2ZmLWJ5OiBBbnNv
+biBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcg
+PGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KLS0tDQpDaGFuZ2VzIHNpbmNlIFY2Og0KCS0gaW1wcm92
+ZSBpbXhfc2N1X2lycV9lbmFibGUoKSBmdW5jdGlvbiBuYW1lIHRvIGlteF9zY3VfaXJxX2dyb3Vw
+X2VuYWJsZSgpOw0KCS0gbWFrZSBpbXhfc2N1X2lycV9ncm91cF9lbmFibGUoKSBmdW5jdGlvbiBy
+ZXR1cm4gaW50Ow0KLS0tDQogZHJpdmVycy9maXJtd2FyZS9pbXgvTWFrZWZpbGUgICAgICB8ICAg
+MiArLQ0KIGRyaXZlcnMvZmlybXdhcmUvaW14L2lteC1zY3UtaXJxLmMgfCAxNjggKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvZmlybXdhcmUvaW14L2lteC1z
+Y3UuYyAgICAgfCAgIDYgKysNCiBpbmNsdWRlL2xpbnV4L2Zpcm13YXJlL2lteC9zY2kuaCAgIHwg
+ICA1ICsrDQogNCBmaWxlcyBjaGFuZ2VkLCAxODAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LWlycS5j
+DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13YXJlL2lteC9NYWtlZmlsZSBiL2RyaXZlcnMv
+ZmlybXdhcmUvaW14L01ha2VmaWxlDQppbmRleCAxYjJlMTViLi44MDJjNGFkIDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy9maXJtd2FyZS9pbXgvTWFrZWZpbGUNCisrKyBiL2RyaXZlcnMvZmlybXdhcmUv
+aW14L01ha2VmaWxlDQpAQCAtMSwzICsxLDMgQEANCiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
+OiBHUEwtMi4wDQotb2JqLSQoQ09ORklHX0lNWF9TQ1UpCQkrPSBpbXgtc2N1Lm8gbWlzYy5vDQor
+b2JqLSQoQ09ORklHX0lNWF9TQ1UpCQkrPSBpbXgtc2N1Lm8gbWlzYy5vIGlteC1zY3UtaXJxLm8N
+CiBvYmotJChDT05GSUdfSU1YX1NDVV9QRCkJKz0gc2N1LXBkLm8NCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LWlycS5jIGIvZHJpdmVycy9maXJtd2FyZS9pbXgvaW14
+LXNjdS1pcnEuYw0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAuLjA0MzgzM2EN
+Ci0tLSAvZGV2L251bGwNCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvaW14L2lteC1zY3UtaXJxLmMN
+CkBAIC0wLDAgKzEsMTY4IEBADQorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAr
+DQorLyoNCisgKiBDb3B5cmlnaHQgMjAxOSBOWFANCisgKg0KKyAqIEltcGxlbWVudGF0aW9uIG9m
+IHRoZSBTQ1UgSVJRIGZ1bmN0aW9ucyB1c2luZyBNVS4NCisgKg0KKyAqLw0KKw0KKyNpbmNsdWRl
+IDxkdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPg0KKyNpbmNsdWRlIDxsaW51eC9maXJt
+d2FyZS9pbXgvaXBjLmg+DQorI2luY2x1ZGUgPGxpbnV4L21haWxib3hfY2xpZW50Lmg+DQorDQor
+I2RlZmluZSBJTVhfU0NfSVJRX0ZVTkNfRU5BQkxFCTENCisjZGVmaW5lIElNWF9TQ19JUlFfRlVO
+Q19TVEFUVVMJMg0KKyNkZWZpbmUgSU1YX1NDX0lSUV9OVU1fR1JPVVAJNA0KKw0KK3N0YXRpYyB1
+MzIgbXVfcmVzb3VyY2VfaWQ7DQorDQorc3RydWN0IGlteF9zY19tc2dfaXJxX2dldF9zdGF0dXMg
+ew0KKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cgaGRyOw0KKwl1bmlvbiB7DQorCQlzdHJ1Y3Qgew0K
+KwkJCXUxNiByZXNvdXJjZTsNCisJCQl1OCBncm91cDsNCisJCQl1OCByZXNlcnZlZDsNCisJCX0g
+X19wYWNrZWQgcmVxOw0KKwkJc3RydWN0IHsNCisJCQl1MzIgc3RhdHVzOw0KKwkJfSByZXNwOw0K
+Kwl9IGRhdGE7DQorfTsNCisNCitzdHJ1Y3QgaW14X3NjX21zZ19pcnFfZW5hYmxlIHsNCisJc3Ry
+dWN0IGlteF9zY19ycGNfbXNnIGhkcjsNCisJdTMyIG1hc2s7DQorCXUxNiByZXNvdXJjZTsNCisJ
+dTggZ3JvdXA7DQorCXU4IGVuYWJsZTsNCit9IF9fcGFja2VkOw0KKw0KK3N0YXRpYyBzdHJ1Y3Qg
+aW14X3NjX2lwYyAqaW14X3NjX2lycV9pcGNfaGFuZGxlOw0KK3N0YXRpYyBzdHJ1Y3Qgd29ya19z
+dHJ1Y3QgaW14X3NjX2lycV93b3JrOw0KK3N0YXRpYyBBVE9NSUNfTk9USUZJRVJfSEVBRChpbXhf
+c2N1X2lycV9ub3RpZmllcl9jaGFpbik7DQorDQoraW50IGlteF9zY3VfaXJxX3JlZ2lzdGVyX25v
+dGlmaWVyKHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIpDQorew0KKwlyZXR1cm4gYXRvbWljX25v
+dGlmaWVyX2NoYWluX3JlZ2lzdGVyKA0KKwkJJmlteF9zY3VfaXJxX25vdGlmaWVyX2NoYWluLCBu
+Yik7DQorfQ0KK0VYUE9SVF9TWU1CT0woaW14X3NjdV9pcnFfcmVnaXN0ZXJfbm90aWZpZXIpOw0K
+Kw0KK2ludCBpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVyKHN0cnVjdCBub3RpZmllcl9i
+bG9jayAqbmIpDQorew0KKwlyZXR1cm4gYXRvbWljX25vdGlmaWVyX2NoYWluX3VucmVnaXN0ZXIo
+DQorCQkmaW14X3NjdV9pcnFfbm90aWZpZXJfY2hhaW4sIG5iKTsNCit9DQorRVhQT1JUX1NZTUJP
+TChpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVyKTsNCisNCitzdGF0aWMgaW50IGlteF9z
+Y3VfaXJxX25vdGlmaWVyX2NhbGxfY2hhaW4odW5zaWduZWQgbG9uZyBzdGF0dXMsIHU4ICpncm91
+cCkNCit7DQorCXJldHVybiBhdG9taWNfbm90aWZpZXJfY2FsbF9jaGFpbigmaW14X3NjdV9pcnFf
+bm90aWZpZXJfY2hhaW4sDQorCQlzdGF0dXMsICh2b2lkICopZ3JvdXApOw0KK30NCisNCitzdGF0
+aWMgdm9pZCBpbXhfc2N1X2lycV93b3JrX2hhbmRsZXIoc3RydWN0IHdvcmtfc3RydWN0ICp3b3Jr
+KQ0KK3sNCisJc3RydWN0IGlteF9zY19tc2dfaXJxX2dldF9zdGF0dXMgbXNnOw0KKwlzdHJ1Y3Qg
+aW14X3NjX3JwY19tc2cgKmhkciA9ICZtc2cuaGRyOw0KKwl1MzIgaXJxX3N0YXR1czsNCisJaW50
+IHJldDsNCisJdTggaTsNCisNCisJZm9yIChpID0gMDsgaSA8IElNWF9TQ19JUlFfTlVNX0dST1VQ
+OyBpKyspIHsNCisJCWhkci0+dmVyID0gSU1YX1NDX1JQQ19WRVJTSU9OOw0KKwkJaGRyLT5zdmMg
+PSBJTVhfU0NfUlBDX1NWQ19JUlE7DQorCQloZHItPmZ1bmMgPSBJTVhfU0NfSVJRX0ZVTkNfU1RB
+VFVTOw0KKwkJaGRyLT5zaXplID0gMjsNCisNCisJCW1zZy5kYXRhLnJlcS5yZXNvdXJjZSA9IG11
+X3Jlc291cmNlX2lkOw0KKwkJbXNnLmRhdGEucmVxLmdyb3VwID0gaTsNCisNCisJCXJldCA9IGlt
+eF9zY3VfY2FsbF9ycGMoaW14X3NjX2lycV9pcGNfaGFuZGxlLCAmbXNnLCB0cnVlKTsNCisJCWlm
+IChyZXQpIHsNCisJCQlwcl9lcnIoImdldCBpcnEgZ3JvdXAgJWQgc3RhdHVzIGZhaWxlZCwgcmV0
+ICVkXG4iLA0KKwkJCSAgICAgICBpLCByZXQpOw0KKwkJCXJldHVybjsNCisJCX0NCisNCisJCWly
+cV9zdGF0dXMgPSBtc2cuZGF0YS5yZXNwLnN0YXR1czsNCisJCWlmICghaXJxX3N0YXR1cykNCisJ
+CQljb250aW51ZTsNCisNCisJCWlteF9zY3VfaXJxX25vdGlmaWVyX2NhbGxfY2hhaW4oaXJxX3N0
+YXR1cywgJmkpOw0KKwl9DQorfQ0KKw0KK2ludCBpbXhfc2N1X2lycV9ncm91cF9lbmFibGUodTgg
+Z3JvdXAsIHUzMiBtYXNrLCB1OCBlbmFibGUpDQorew0KKwlzdHJ1Y3QgaW14X3NjX21zZ19pcnFf
+ZW5hYmxlIG1zZzsNCisJc3RydWN0IGlteF9zY19ycGNfbXNnICpoZHIgPSAmbXNnLmhkcjsNCisJ
+aW50IHJldDsNCisNCisJaGRyLT52ZXIgPSBJTVhfU0NfUlBDX1ZFUlNJT047DQorCWhkci0+c3Zj
+ID0gSU1YX1NDX1JQQ19TVkNfSVJROw0KKwloZHItPmZ1bmMgPSBJTVhfU0NfSVJRX0ZVTkNfRU5B
+QkxFOw0KKwloZHItPnNpemUgPSAzOw0KKw0KKwltc2cucmVzb3VyY2UgPSBtdV9yZXNvdXJjZV9p
+ZDsNCisJbXNnLmdyb3VwID0gZ3JvdXA7DQorCW1zZy5tYXNrID0gbWFzazsNCisJbXNnLmVuYWJs
+ZSA9IGVuYWJsZTsNCisNCisJcmV0ID0gaW14X3NjdV9jYWxsX3JwYyhpbXhfc2NfaXJxX2lwY19o
+YW5kbGUsICZtc2csIHRydWUpOw0KKwlpZiAocmV0KQ0KKwkJcHJfZXJyKCJlbmFibGUgaXJxIGZh
+aWxlZCwgZ3JvdXAgJWQsIG1hc2sgJWQsIHJldCAlZFxuIiwNCisJCQlncm91cCwgbWFzaywgcmV0
+KTsNCisNCisJcmV0dXJuIHJldDsNCit9DQorRVhQT1JUX1NZTUJPTChpbXhfc2N1X2lycV9ncm91
+cF9lbmFibGUpOw0KKw0KK3N0YXRpYyB2b2lkIGlteF9zY3VfaXJxX2NhbGxiYWNrKHN0cnVjdCBt
+Ym94X2NsaWVudCAqYywgdm9pZCAqbXNnKQ0KK3sNCisJc2NoZWR1bGVfd29yaygmaW14X3NjX2ly
+cV93b3JrKTsNCit9DQorDQoraW50IGlteF9zY3VfZW5hYmxlX2dlbmVyYWxfaXJxX2NoYW5uZWwo
+c3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IG9mX3BoYW5kbGVfYXJncyBzcGVjOw0K
+KwlzdHJ1Y3QgbWJveF9jbGllbnQgKmNsOw0KKwlzdHJ1Y3QgbWJveF9jaGFuICpjaDsNCisJaW50
+IHJldCA9IDAsIGkgPSAwOw0KKw0KKwlyZXQgPSBpbXhfc2N1X2dldF9oYW5kbGUoJmlteF9zY19p
+cnFfaXBjX2hhbmRsZSk7DQorCWlmIChyZXQpDQorCQlyZXR1cm4gcmV0Ow0KKw0KKwljbCA9IGRl
+dm1fa3phbGxvYyhkZXYsIHNpemVvZigqY2wpLCBHRlBfS0VSTkVMKTsNCisJaWYgKCFjbCkNCisJ
+CXJldHVybiAtRU5PTUVNOw0KKw0KKwljbC0+ZGV2ID0gZGV2Ow0KKwljbC0+cnhfY2FsbGJhY2sg
+PSBpbXhfc2N1X2lycV9jYWxsYmFjazsNCisNCisJLyogU0NVIGdlbmVyYWwgSVJRIHVzZXMgZ2Vu
+ZXJhbCBpbnRlcnJ1cHQgY2hhbm5lbCAzICovDQorCWNoID0gbWJveF9yZXF1ZXN0X2NoYW5uZWxf
+YnluYW1lKGNsLCAiZ2lwMyIpOw0KKwlpZiAoSVNfRVJSKGNoKSkgew0KKwkJcmV0ID0gUFRSX0VS
+UihjaCk7DQorCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1ib3ggY2hhbiBnaXAz
+LCByZXQgJWRcbiIsIHJldCk7DQorCQlkZXZtX2tmcmVlKGRldiwgY2wpOw0KKwkJcmV0dXJuIHJl
+dDsNCisJfQ0KKw0KKwlJTklUX1dPUksoJmlteF9zY19pcnFfd29yaywgaW14X3NjdV9pcnFfd29y
+a19oYW5kbGVyKTsNCisNCisJaWYgKCFvZl9wYXJzZV9waGFuZGxlX3dpdGhfYXJncyhkZXYtPm9m
+X25vZGUsICJtYm94ZXMiLA0KKwkJCQkgICAgICAgIiNtYm94LWNlbGxzIiwgMCwgJnNwZWMpKQ0K
+KwkJaSA9IG9mX2FsaWFzX2dldF9pZChzcGVjLm5wLCAibXUiKTsNCisNCisJLyogdXNlIG11MSBh
+cyBnZW5lcmFsIG11IGlycSBjaGFubmVsIGlmIGZhaWxlZCAqLw0KKwlpZiAoaSA8IDApDQorCQlp
+ID0gMTsNCisNCisJbXVfcmVzb3VyY2VfaWQgPSBJTVhfU0NfUl9NVV8wQSArIGk7DQorDQorCXJl
+dHVybiByZXQ7DQorfQ0KK0VYUE9SVF9TWU1CT0woaW14X3NjdV9lbmFibGVfZ2VuZXJhbF9pcnFf
+Y2hhbm5lbCk7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS5jIGIv
+ZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS5jDQppbmRleCAyYmIxYTE5Li4wNGEyNGE4IDEw
+MDY0NA0KLS0tIGEvZHJpdmVycy9maXJtd2FyZS9pbXgvaW14LXNjdS5jDQorKysgYi9kcml2ZXJz
+L2Zpcm13YXJlL2lteC9pbXgtc2N1LmMNCkBAIC0xMCw2ICsxMCw3IEBADQogI2luY2x1ZGUgPGxp
+bnV4L2Vyci5oPg0KICNpbmNsdWRlIDxsaW51eC9maXJtd2FyZS9pbXgvdHlwZXMuaD4NCiAjaW5j
+bHVkZSA8bGludXgvZmlybXdhcmUvaW14L2lwYy5oPg0KKyNpbmNsdWRlIDxsaW51eC9maXJtd2Fy
+ZS9pbXgvc2NpLmg+DQogI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KICNpbmNsdWRlIDxs
+aW51eC9pcnEuaD4NCiAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQpAQCAtMjQ2LDYgKzI0Nywx
+MSBAQCBzdGF0aWMgaW50IGlteF9zY3VfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikNCiANCiAJaW14X3NjX2lwY19oYW5kbGUgPSBzY19pcGM7DQogDQorCXJldCA9IGlteF9zY3Vf
+ZW5hYmxlX2dlbmVyYWxfaXJxX2NoYW5uZWwoZGV2KTsNCisJaWYgKHJldCkNCisJCWRldl93YXJu
+KGRldiwNCisJCQkiZmFpbGVkIHRvIGVuYWJsZSBnZW5lcmFsIGlycSBjaGFubmVsOiAlZFxuIiwg
+cmV0KTsNCisNCiAJZGV2X2luZm8oZGV2LCAiTlhQIGkuTVggU0NVIEluaXRpYWxpemVkXG4iKTsN
+CiANCiAJcmV0dXJuIGRldm1fb2ZfcGxhdGZvcm1fcG9wdWxhdGUoZGV2KTsNCmRpZmYgLS1naXQg
+YS9pbmNsdWRlL2xpbnV4L2Zpcm13YXJlL2lteC9zY2kuaCBiL2luY2x1ZGUvbGludXgvZmlybXdh
+cmUvaW14L3NjaS5oDQppbmRleCBlYmM1NTA5Li4xN2JhNGU0IDEwMDY0NA0KLS0tIGEvaW5jbHVk
+ZS9saW51eC9maXJtd2FyZS9pbXgvc2NpLmgNCisrKyBiL2luY2x1ZGUvbGludXgvZmlybXdhcmUv
+aW14L3NjaS5oDQpAQCAtMTUsNCArMTUsOSBAQA0KIA0KICNpbmNsdWRlIDxsaW51eC9maXJtd2Fy
+ZS9pbXgvc3ZjL21pc2MuaD4NCiAjaW5jbHVkZSA8bGludXgvZmlybXdhcmUvaW14L3N2Yy9wbS5o
+Pg0KKw0KK2ludCBpbXhfc2N1X2VuYWJsZV9nZW5lcmFsX2lycV9jaGFubmVsKHN0cnVjdCBkZXZp
+Y2UgKmRldik7DQoraW50IGlteF9zY3VfaXJxX3JlZ2lzdGVyX25vdGlmaWVyKHN0cnVjdCBub3Rp
+Zmllcl9ibG9jayAqbmIpOw0KK2ludCBpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVyKHN0
+cnVjdCBub3RpZmllcl9ibG9jayAqbmIpOw0KK2ludCBpbXhfc2N1X2lycV9ncm91cF9lbmFibGUo
+dTggZ3JvdXAsIHUzMiBtYXNrLCB1OCBlbmFibGUpOw0KICNlbmRpZiAvKiBfU0NfU0NJX0ggKi8N
+Ci0tIA0KMi43LjQNCg0K
