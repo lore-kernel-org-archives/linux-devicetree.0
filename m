@@ -1,8 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 11/13] brcmfmac: Loading the correct firmware
- for brcm43456
-Date: Tue,  9 Apr 2019 02:24:50 +0200
-Message-ID: <20190409002452.14551-12-megous@megous.com>
+Subject: [PATCH v2 10/13] arm64: dts: allwinner: orange-pi-3:
+ Enable HDMI output
+Date: Tue,  9 Apr 2019 02:24:49 +0200
+Message-ID: <20190409002452.14551-11-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,36 +21,80 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-SDIO based brcm43456 is currently misdetected as brcm43455 and the wrong
-firmware name is used. Correct the detection and load the correct firmware
-file. Chiprev for brcm43456 is "9".
+Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
+I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index a06af0cd4a7f..22b73da42822 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -622,6 +622,7 @@ BRCMF_FW_DEF(43430A0, "brcmfmac43430a0-sdio");
- /* Note the names are not postfixed with a1 for backward compatibility */
- BRCMF_FW_DEF(43430A1, "brcmfmac43430-sdio");
- BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
-+BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
- BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
- BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
- BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
-@@ -642,7 +643,8 @@ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
- 	BRCMF_FW_ENTRY(BRCM_CC_4339_CHIP_ID, 0xFFFFFFFF, 4339),
- 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0x00000001, 43430A0),
- 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0xFFFFFFFE, 43430A1),
--	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFFC0, 43455),
-+	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0x00000200, 43456),
-+	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
- 	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
- 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
- 	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 523f1d848042..f5595653b2c5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -22,6 +22,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -37,6 +48,15 @@
+ 		};
+ 	};
+ 
++	reg_ddc: ddc-io {
++		compatible = "regulator-fixed";
++		regulator-name = "ddc-io";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
++	};
++
+ 	reg_vcc5v: vcc5v {
+ 		/* board wide 5V supply directly from the DC jack */
+ 		compatible = "regulator-fixed";
+@@ -72,6 +92,10 @@
+ 	cpu-supply = <&reg_dcdca>;
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -91,6 +115,17 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	ddc-supply = <&reg_ddc>;
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.21.0
