@@ -1,46 +1,72 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/3] dt-bindings: meson: Add G12A display bindings
-Date: Tue, 9 Apr 2019 11:13:24 +0200
-Message-ID: <5c7c873c-0535-0342-26b5-6cb29df9859b@baylibre.com>
-References: <20190313141030.5958-1-narmstrong@baylibre.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 6/9] dt-bindings: opp: Add qcom-opp bindings with
+ properties needed for CPR
+Date: Tue, 9 Apr 2019 14:53:52 +0530
+Message-ID: <20190409092352.joayvxyo77e6lehl@vireshk-i7>
+References: <20190404050931.9812-1-niklas.cassel@linaro.org>
+ <20190404050931.9812-7-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190313141030.5958-1-narmstrong@baylibre.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190404050931.9812-7-niklas.cassel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMvMDMvMjAxOSAxNToxMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6Cj4gVGhpcyBwYXRjaHNl
-dCBhZGRzIHRoZSBHMTJBIHNwZWNpZmljIGJpbmRpbmdzIGZvciB0aGUgRGlzcGxheSBWUFUKPiBh
-bmQgVlBVIFBvd2VyIENvbnRyb2wuCj4gCj4gVGhlIEFtbG9naWMgTWVzb24gRzEyQSBEaXNwbGF5
-IG1vZHVsZSBpcyBiYXNlZCBvbiB0aGUgTWVzb24gR1hNIFNvQwo+IHdpdGggYW4gdXBkYXRlZCBQ
-bGFuZSBCbGVuZGVyLCB0aHVzIFZQVSBhcmNoaXRlY3R1cmUgYW5kIGludGVyY29ubmVjdAo+IGlz
-IHRoZSBzYW1lLgo+IAo+IEltcGxlbWVudGF0aW9uIHRoZW4gRFQgbm9kZXMgd2lsbCBjb21lIGlu
-IGEgZnVydGhlciBwYXRjaHNldHMuCj4gCj4gTmVpbCBBcm1zdHJvbmcgKDMpOgo+ICAgZHQtYmlu
-ZGluZ3M6IGRpc3BsYXk6IGFtbG9naWMsbWVzb24tdnB1OiBBZGQgRzEyQSBjb21wYXRpYmxlIGFu
-ZCBwb3J0cwo+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGFtbG9naWMsbWVzb24tZHctaGRtaTog
-QWRkIEcxMkEgY29tcGF0aWJsZSBhbmQKPiAgICAgcG9ydHMKPiAgIGR0LWJpbmRpbmdzOiBwb3dl
-cjogYW1sb2dpYyxtZXNvbi1neC1wd3JjOiBBZGQgRzEyQSBjb21wYXRpYmxlCj4gCj4gIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dCAgICAg
-fCA0ICsrKysKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29u
-LXZwdS50eHQgICAgICAgICB8IDQgKysrKwo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
-ci9hbWxvZ2ljLG1lc29uLWd4LXB3cmMudHh0ICAgICAgIHwgNCArKystCj4gIDMgZmlsZXMgY2hh
-bmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAoKS2V2aW4sCgpJIGFwcGxp
-ZWQgUGF0Y2hlcyAxICYgMiB0byBkcm0tbWlzYy1uZXh0LCBjYW4geW91IHRha2UgUGF0Y2ggMyBh
-bG9uZyA6Ci0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDg3OTI4NS8KLSBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODc5MjkzLwoKVGhhbmtzICEKTmVp
-bAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 04-04-19, 07:09, Niklas Cassel wrote:
+> Add qcom-opp bindings with properties needed for Core Power Reduction (CPR).
+> 
+> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and msm8996,
+> and was first introduced in msm8974.
+> 
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+>  .../devicetree/bindings/opp/qcom-opp.txt      | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> new file mode 100644
+> index 000000000000..d24280467db7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> @@ -0,0 +1,24 @@
+> +Qualcomm OPP bindings to describe OPP nodes
+> +
+> +The bindings are based on top of the operating-points-v2 bindings
+> +described in Documentation/devicetree/bindings/opp/opp.txt
+> +Additional properties are described below.
+> +
+> +* OPP Table Node
+> +
+> +Required properties:
+> +- compatible: Allow OPPs to express their compatibility. It should be:
+> +  "operating-points-v2-qcom-level"
+> +
+> +* OPP Node
+> +
+> +Optional properties:
+> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. Even
+> +  though a power domain doesn't need a opp-hz, there can be devices in the
+> +  power domain that need to know the highest supported frequency for each
+> +  corner/level (e.g. CPR), in order to properly initialize the hardware.
+> +
+> +- qcom,opp-fuse-level: A positive value representing the fuse corner/level
+> +  associated with this OPP node. Sometimes several corners/levels shares
+> +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
+> +  min uV, and max uV.
+
+I know we discussed this sometime back and so you implemented it this way.
+
+Looking at the implementation of the CPR driver, I now wonder if that was a good
+choice. Technically a single domain can manage many devices, a big and a little
+CPU for example and then we will have different highest frequencies for both of
+them. How will we configure the CPR hardware in such a case ? Isn't the
+programming per-device ?
+
+-- 
+viresh
