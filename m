@@ -1,18 +1,17 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] arm64: dts: allwinner: h6: move MMC
- pinctrl to dtsi
-Date: Tue, 9 Apr 2019 09:53:59 +0200
-Message-ID: <20190409075359.vbh7ghhmfrmfwodf@flea>
+Subject: Re: [PATCH v4 2/6] dt-bindings: vendor-prefixes: add AZW
+Date: Tue, 9 Apr 2019 09:54:12 +0200
+Message-ID: <20190409075412.zgwysgxy7ul3naut@flea>
 References: <20190408152755.17405-1-peron.clem@gmail.com>
- <20190408152755.17405-2-peron.clem@gmail.com>
+ <20190408152755.17405-3-peron.clem@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="afogsb6gtaoti7dv"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBG47WHSQKGQERYJAJTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="hlppgnemfbfukzcl"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ47WHSQKGQEIEJ53KI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190408152755.17405-2-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20190408152755.17405-3-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,20 +23,21 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---afogsb6gtaoti7dv
+--hlppgnemfbfukzcl
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 08, 2019 at 05:27:50PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> There is only one pinmuxing available for each MMC controller.
+On Mon, Apr 08, 2019 at 05:27:51PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Shenzhen AZW Technology Co. Ltd. is a manufacturer specialized in Android
+> smart TV boxes, Intel mini PCs and home cloud TV boxes with NAS.
 >
-> Move the pinctrl to the SOC
+> Add the vendor prefix for AZW.
 >
 > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 
-Applied, thanks
-
+Applied, thanks!
 Maxime
 
 --
@@ -52,15 +52,15 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---afogsb6gtaoti7dv
+--hlppgnemfbfukzcl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxPlwAKCRDj7w1vZxhR
-xWbEAQDd+s7gtd9DsBIkfNn3qrll3ZoU/a0upTOTJ93WbsrXUwEAyOxtVjcV0j6f
-Xx6b+Mw5mCEpK/c7xPzzzg5xNuBbhQU=
-=OpNI
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKxPpAAKCRDj7w1vZxhR
+xRxuAP9u8cxGxCGDABZ/l73QHO5o5IQuvztvtrhHFi4c1Z7sNgD+MX+PabulAl2c
+/KBx54BLXBs9GOwq/pKa1F6Zp+Jpxgg=
+=lGHZ
 -----END PGP SIGNATURE-----
 
---afogsb6gtaoti7dv--
+--hlppgnemfbfukzcl--
