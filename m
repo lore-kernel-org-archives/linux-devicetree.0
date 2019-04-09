@@ -1,356 +1,102 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v2 02/13] arm64: dts: allwinner: h6: Add
- Orange Pi 3 DTS
-Date: Tue, 9 Apr 2019 14:08:18 +0530
-Message-ID: <CAMty3ZBK2jPHTP4Y+hiy8Gq+Nx9iWYoUgke+BvopyzR8T6=0Xw@mail.gmail.com>
-References: <20190409002452.14551-1-megous@megous.com> <20190409002452.14551-3-megous@megous.com>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Date: Tue, 9 Apr 2019 16:40:40 +0800
+Message-ID: <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
+References: <20190408165744.11672-1-wens@kernel.org> <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea> <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20190409002452.14551-3-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190409082818.z33mq2qrxethldzf@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Based on the conversation about using common dtsi from this thread[1],
-I'm commenting here to make show the diff directly on the nodes,
-giving comments on each node so-that we can see the diff globally.
-
-On Tue, Apr 9, 2019 at 5:55 AM megous via linux-sunxi
-<linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > >
+> > > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> > > > lingo), which is similar to the one found on the A64 and H3. The only
+> > > > difference seems to be that support of MIPI CSI through a connected
+> > > > MIPI CSI-2 bridge.
+> > > >
+> > > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> > > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> > > > the pinctrl nodes to keep the device tree blob size down if they are
+> > > > unused.
+> > > >
+> > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > ---
+> > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+> > > >  1 file changed, 31 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > @@ -682,6 +682,20 @@
+> > > >                       #interrupt-cells = <3>;
+> > > >                       #gpio-cells = <3>;
+> > > >
+> > > > +                     /omit-if-no-ref/
+> > > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
+> > > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
+> > > > +                                    "PE8", "PE9", "PE10", "PE11",
+> > > > +                                    "PE12", "PE13";
+> > > > +                             function = "csi";
+> > > > +                     };
+> > > > +
+> > > > +                     /omit-if-no-ref/
+> > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > +                             pins = "PE1";
+> > > > +                             function = "csi";
+> > > > +                     };
+> > > > +
+> > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > > > @@ -994,6 +1008,23 @@
+> > > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > >               };
+> > > >
+> > > > +             csi: camera@1cb0000 {
+> > > > +                     compatible = "allwinner,sun8i-a83t-csi";
+> > > > +                     reg = <0x01cb0000 0x1000>;
+> > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > +                     clock-names = "bus", "mod", "ram";
+> > > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > > +                     status = "disabled";
+> > > > +
+> > > > +                     csi_in: port {
+> > > > +                             #address-cells = <1>;
+> > > > +                             #size-cells = <0>;
+> > >
+> > > If we expect a single enpoint, then we don't need the address-cells
+> > > and size-cells properties.
+> >
+> > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> > is kind of genius if not very hacky. They have two "identical" sensors
+> > on the same I2C bus and CSI bus, with shared reset line but separate
+> > shutdown lines. Since they are identical, they also have the same I2C
+> > address. I haven't figured out how to model this in the device tree.
+> >
+> > The point is, it's perfectly possible to have two or more sensors use
+> > the same controller, provided only one be active at a time.
 >
-> Orange Pi 3 is a H6 based SBC made by Xulong, released in January 2019. I=
-t
-> has the following features:
+> Right, but I guess the common case would be to have a single sensor,
+> where that wouldn't be needed.
 >
-> - Allwinner H6 quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 1GB or 2GB LPDDR3 RAM
-> - AXP805 PMIC
-> - AP6256 Wifi/BT 5.0
-> - USB 2.0 host port (A)
-> - USB 2.0 micro usb, OTG
-> - USB 3.0 Host + 4 port USB hub (GL3510)
-> - Gigabit Ethernet (Realtek RTL8211E phy)
-> - HDMI 2.0 port
-> - soldered eMMC (optional)
-> - 3x LED (one is on the bottom)
-> - microphone
-> - audio jack
-> - PCIe
->
-> Add basic support for the board.
->
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 216 ++++++++++++++++++
->  2 files changed, 217 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dt=
-s
->
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index e4dce2f6fa3a..285a7cb5135b 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dt=
-b
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> new file mode 100644
-> index 000000000000..5fbc5e410883
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -0,0 +1,216 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (C) 2019 Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-h6.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +       model =3D "OrangePi 3";
-> +       compatible =3D "xunlong,orangepi-3", "allwinner,sun50i-h6";
-> +
-> +       aliases {
-> +               serial0 =3D &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path =3D "serial0:115200n8";
-> +       };
-> +
-> +       leds {
-> +               compatible =3D "gpio-leds";
-> +
-> +               power {
-> +                       label =3D "orangepi:red:power";
-> +                       gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 *=
-/
-> +                       default-state =3D "on";
-> +               };
-> +
-> +               status {
-> +                       label =3D "orangepi:green:status";
-> +                       gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 *=
-/
-> +               };
-> +       };
-> +
-> +       reg_vcc5v: vcc5v {
-> +               /* board wide 5V supply directly from the DC jack */
-> +               compatible =3D "regulator-fixed";
-> +               regulator-name =3D "vcc-5v";
-> +               regulator-min-microvolt =3D <5000000>;
-> +               regulator-max-microvolt =3D <5000000>;
-> +               regulator-always-on;
-> +       };
-> +};
+> In odd cases, we can always specify it in the DTS, and if it becomes
+> common enough, we can move it to the DTSI.
 
-all above nodes are common to all h6 opi boards.
-
-> +
-> +&cpu0 {
-> +       cpu-supply =3D <&reg_dcdca>;
-> +};
-> +
-> +&ehci0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&ehci3 {
-> +       status =3D "okay";
-> +};
-
-common to all h6 opi boards.
-
-> +
-> +&mmc0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&mmc0_pins>;
-> +       vmmc-supply =3D <&reg_cldo1>;
-> +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-> +       bus-width =3D <4>;
-> +       status =3D "okay";
-> +};
-
-common to all h6 opi boards.
-
-> +
-> +&ohci0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&ohci3 {
-> +       status =3D "okay";
-> +};
-
-common to all h6 opi boards.
-
-> +
-> +&pio {
-> +       vcc-pc-supply =3D <&reg_bldo2>;
-> +       vcc-pd-supply =3D <&reg_cldo1>;
-> +};
-> +
-> +&r_i2c {
-> +       status =3D "okay";
-> +
-> +       axp805: pmic@36 {
-> +               compatible =3D "x-powers,axp805", "x-powers,axp806";
-> +               reg =3D <0x36>;
-> +               interrupt-parent =3D <&r_intc>;
-> +               interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> +               interrupt-controller;
-> +               #interrupt-cells =3D <1>;
-> +               x-powers,self-working-mode;
-> +               vina-supply =3D <&reg_vcc5v>;
-> +               vinb-supply =3D <&reg_vcc5v>;
-> +               vinc-supply =3D <&reg_vcc5v>;
-> +               vind-supply =3D <&reg_vcc5v>;
-> +               vine-supply =3D <&reg_vcc5v>;
-> +               aldoin-supply =3D <&reg_vcc5v>;
-> +               bldoin-supply =3D <&reg_vcc5v>;
-> +               cldoin-supply =3D <&reg_vcc5v>;
-
-all these supply voltage regulators are common to h6 opi boards.
-
-> +
-> +               regulators {
-> +                       reg_aldo1: aldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc-pl-led-ir";
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       reg_aldo2: aldo2 {
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc33-audio-tv-ephy-m=
-ac";
-> +                       };
-
-rest of h6 opi boards used it for vcc-ac200, we may append ac200 and
-make it common since the voltage is same.
-
-> +
-> +                       /* ALDO3 is shorted to CLDO1 */
-> +                       reg_aldo3: aldo3 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc33-io-pd-emmc-sd-u=
-sb-uart-1";
-> +                       };
-
-same like above regulator.
-
-> +
-> +                       reg_bldo1: bldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc18-dram-bias-pll";
-
-same like other h6 boards.
-
-> +                       };
-> +
-> +                       reg_bldo2: bldo2 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <1800000>;
-> +                               regulator-name =3D "vcc-efuse-pcie-hdmi-p=
-c";
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       bldo3 {
-> +                               /* unused */
-> +                       };
-
-This is used in other h6 opi boards so we may attach status or
-re-enable it on board dts file.
-
-> +
-> +                       bldo4 {
-> +                               /* unused */
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       reg_cldo1: cldo1 {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <3300000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-name =3D "vcc33-io-pd-emmc-sd-u=
-sb-uart-2";
-> +                       };
-
-same like other h6 boards.
-
-> +
-> +                       cldo2 {
-> +                               /* unused */
-> +                       };
-> +
-> +                       cldo3 {
-> +                               /* unused */
-> +                       };
-
-These two used for wifi, so we may define on board dts or attach
-status property.
-
-> +
-> +                       reg_dcdca: dcdca {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <800000>;
-> +                               regulator-max-microvolt =3D <1160000>;
-> +                               regulator-name =3D "vdd-cpu";
-> +                       };
-> +
-> +                       reg_dcdcc: dcdcc {
-> +                               regulator-min-microvolt =3D <810000>;
-> +                               regulator-max-microvolt =3D <1080000>;
-> +                               regulator-name =3D "vdd-gpu";
-> +                       };
-> +
-> +                       reg_dcdcd: dcdcd {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <960000>;
-> +                               regulator-max-microvolt =3D <960000>;
-> +                               regulator-name =3D "vdd-sys";
-> +                       };
-> +
-> +                       reg_dcdce: dcdce {
-> +                               regulator-always-on;
-> +                               regulator-min-microvolt =3D <1200000>;
-> +                               regulator-max-microvolt =3D <1200000>;
-> +                               regulator-name =3D "vcc-dram";
-> +                       };
-> +
-> +                       sw {
-> +                               /* unused */
-> +                       };
-
-all above regulators are common to h6 boards.
-
-> +               };
-> +       };
-> +};
-> +
-> +&uart0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&uart0_ph_pins>;
-> +       status =3D "okay";
-> +};
-> +
-> +&usb2otg {
-> +       /*
-> +        * Beware that this board will not automatically disconnect
-> +        * VBUS from DCIN, when self-powered and used as a peripheral.
-> +        */
-> +       dr_mode =3D "otg";
-> +       status =3D "okay";
-> +};
-
-above nodes uart0, usb2otg are common to h6 opi boards.
-
-> +
-> +&usb2phy {
-> +       usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
-> +       usb0_vbus-supply =3D <&reg_vcc5v>;
-> +       usb3_vbus-supply =3D <&reg_vcc5v>;
-> +       status =3D "okay";
-> +};
-> --
-
-id detect pin can be differ, so we may move this on board specific dts.
-
-Note: the emac node is also common between h6 opi boards.
-
-[1] https://lkml.org/lkml/2019/4/5/857
+Makes sense. Do you want me to re-spin?
