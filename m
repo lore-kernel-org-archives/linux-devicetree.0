@@ -1,86 +1,66 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v8 02/11] dt-bindings: power: supply: add DT bindings for max77650
-Date: Tue, 9 Apr 2019 13:04:21 +0200
-Message-ID: <CAMRc=Mc4HOn+Pjwf+sD4fU7gNoksRKXz9Yq6zE233CCoNskPiQ@mail.gmail.com>
-References: <20190403090108.24788-1-brgl@bgdev.pl> <20190403090108.24788-3-brgl@bgdev.pl>
- <20190406070746.GA29624@bogus> <CAMRc=Mc+cTVrzywTydp-10Hj=-m=qCmtK1+4NRiOFHZ855fnDw@mail.gmail.com>
- <CAL_JsqKHjppN2kXqVpv5LjTedykA-Q8vteQDipw=FAaoUZLGeg@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+Date: Tue, 9 Apr 2019 14:20:50 +0300
+Message-ID: <869a1c6d-cfa6-35e9-592b-4e0937530e31@cogentembedded.com>
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+ <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
+ <231f7423-bf13-99f8-427b-530f5446348b@cogentembedded.com>
+ <OF7F1B534F.B934A9FE-ON482583D0.001DC618-482583D0.001FE84B@mxic.com.tw>
+ <6d60bbef-a8ef-849e-33f3-3db35cefc09f@cogentembedded.com>
+ <OFAEA16021.C7F7B095-ON482583D1.0031A13D-482583D1.00335085@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKHjppN2kXqVpv5LjTedykA-Q8vteQDipw=FAaoUZLGeg@mail.gmail.com>
+In-Reply-To: <OFAEA16021.C7F7B095-ON482583D1.0031A13D-482583D1.00335085@mxic.com.tw>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-wt., 9 kwi 2019 o 03:10 Rob Herring <robh@kernel.org> napisa=C5=82(a):
->
-> On Mon, Apr 8, 2019 at 7:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > sob., 6 kwi 2019 o 09:07 Rob Herring <robh@kernel.org> napisa=C5=82(a):
-> > >
-> > > On Wed, Apr 03, 2019 at 11:00:59AM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > Add the DT binding document for the battery charger module of max77=
-650.
-> > > >
-> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > ---
-> > > >  .../power/supply/max77650-charger.txt         | 27 +++++++++++++++=
-++++
-> > > >  1 file changed, 27 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/power/supply/=
-max77650-charger.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/power/supply/max7765=
-0-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650-cha=
-rger.txt
-> > > > new file mode 100644
-> > > > index 000000000000..fef188144386
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/power/supply/max77650-charg=
-er.txt
-> > > > @@ -0,0 +1,27 @@
-> > > > +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> > > > +
-> > > > +This module is part of the MAX77650 MFD device. For more details
-> > > > +see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > > > +
-> > > > +The charger is represented as a sub-node of the PMIC node on the d=
-evice tree.
-> > > > +
-> > > > +Required properties:
-> > > > +--------------------
-> > > > +- compatible:                Must be "maxim,max77650-charger"
-> > > > +
-> > > > +Optional properties:
-> > > > +--------------------
-> > > > +- min-microvolt:     Minimum CHGIN regulation voltage (in microvol=
-ts). Must be
-> > > > +                     one of: 4000000, 4100000, 4200000, 4300000, 4=
-400000,
-> > > > +                     4500000, 4600000, 4700000.
-> > > > +- current-limit-microamp:    CHGIN input current limit (in microam=
-ps). Must
-> > > > +                             be one of: 95000, 190000, 285000, 380=
-000, 475000.
-> > >
-> > > To repeat what I said on v6, these should be common properties IMO (a=
-nd
-> > > therefore documented as such).
-> > >
-> >
-> > Do you mean a separate "charger.txt" document in
-> > Documentation/devicetree/bindings/power/supply/?
->
-> Yes, though I thought we had something already.
->
-> Rob
+On 04/03/2019 12:20 PM, masonccyang@mxic.com.tw wrote:
 
-We don't AFAICT. There's only a binding document for "simple-battery"
-in power supply.
+[...]
+>> >> > +   ret = rpc_spi_set_freq(rpc, desc->mem->spi->max_speed_hz);
+>> >> > +   if (ret)
+>> >> > +      return ret;
+>> >> > +
+>> >> > +   rpc_spi_mem_set_prep_op_cfg(desc->mem->spi,
+>> >> > +                &desc->info.op_tmpl, &offs, &len);
+>> >> > +
+>> >> > +   regmap_update_bits(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD, 0);
+>> >> > +   regmap_write(rpc->regmap, RPC_DRCR, RPC_DRCR_RBURST(32) |
+>> >> > +           RPC_DRCR_RBE);
+>> >> > +
+>> >> > +   regmap_write(rpc->regmap, RPC_DRCMR, rpc->cmd);
+>> >> > +   regmap_write(rpc->regmap, RPC_DREAR, RPC_DREAR_EAC(1));
+>> >>
+>> >>    So you're not even trying to support flashes larger than the
+>> read dirmap?
+>> >> Now I don't think it's acceptable (and I have rewritten this code
+>> internally).
+>> >
+>> > what about the size comes form mtd->size ?
+>>
+>>    I'm not talking about size here; we should use the full address.
+>> I'm attaching
+>> my patch...
+> 
+> okay,got it!
+> what about just
+> -      regmap_write(rpc->mfd->regmap, RPC_DREAR, RPC_DREAR_EAC(1));
+> +      regmap_write(rpc->mfd->regmap, RPC_DREAR,
+> +                   RPC_DREAR_EAV(offs >> 25) | RPC_DREAR_EAC(1));
+> 
+> because only > 64MByte size make RPC_DREAR_EAV() work.
 
-Bart
+   Seems OK now, after Boris' reply.
+
+> thanks & best regards,
+> Mason
+
+[...]
+
+MBR, Sergei
