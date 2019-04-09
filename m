@@ -1,37 +1,57 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
-Date: Tue, 9 Apr 2019 17:32:07 -0500
-Message-ID: <f843024e-5f06-a566-7ab4-5c3e03e6ed3f@linux.intel.com>
-References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
- <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
- <20190409201323.GD6150@zn.tnic>
-Reply-To: thor.thayer@linux.intel.com
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 0/2] PCI: Describe external-facing ports in device tree
+Date: Tue, 9 Apr 2019 18:11:11 -0500
+Message-ID: <20190409231111.GE256045@google.com>
+References: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409201323.GD6150@zn.tnic>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190402131548.41949-1-jean-philippe.brucker@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, Jeremy.Linton@arm.com, robh+dt@kernel.org, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On 4/9/19 3:13 PM, Borislav Petkov wrote:
-> On Tue, Apr 09, 2019 at 02:11:58PM -0500, Thor Thayer wrote:
->> If possible, I'd like this series to go through the EDAC tree since future
->> patches will follow this format.
+On Tue, Apr 02, 2019 at 02:15:46PM +0100, Jean-Philippe Brucker wrote:
+> Since v1 [1], I improved the wording of patch 1/2 as suggested by Bjorn.
 > 
-> You know how that works - I need ACKs.
+> Add an "external-facing" property to PCI ports in device-tree, to help
+> identify untrusted devices. The notion of untrusted PCI devices was
+> added to the v5.0 kernel to describe devices that should have strict
+> IOMMU protection [2], for example devices that are plugged in a
+> Thunderbolt port. ACPI systems use the ExternalFacingPort property [3].
+> Add an equivalent mechanism to device tree.
 > 
+> [1] https://lore.kernel.org/linux-pci/20190318182124.53859-1-jean-philippe.brucker@arm.com/
+> [2] https://lkml.org/lkml/2018/11/26/631
+> [3] https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
+> 
+> Jean-Philippe Brucker (2):
+>   dt-bindings: Add external-facing PCIe port property
+>   PCI: OF: Support external-facing property
 
-I have ACKs on patches 1 & 3. Patch 2 has a Reviewed-by from Rob Herring 
-which was sufficient in the past.
+Applied to pci/enumeration for v5.2, with reviewed-by from Robin and Grant
+and from Rob (patch 2 only), thanks!
 
-Here are the links to the original ACKs and Reviewed-by.
-
-Patch 1: https://patchwork.codeaurora.org/patch/737155/
-Patch 2: https://patchwork.codeaurora.org/patch/757205/
-Patch 3: https://patchwork.codeaurora.org/patch/757207/
+>  Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
+>  drivers/pci/of.c                              |  3 ++
+>  2 files changed, 53 insertions(+)
+> 
+> -- 
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
