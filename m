@@ -1,37 +1,72 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V6 4/4] rtc: imx-sc: add rtc alarm support
-Date: Tue, 9 Apr 2019 03:35:59 +0000
-Message-ID: <AM0PR04MB4211677CFB66218EEAC0DE20802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1554777487-31075-1-git-send-email-Anson.Huang@nxp.com>
- <1554777487-31075-4-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4211CEA77AB034B5DCF71FE2802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916E7D387D5FA74CFB719C6F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [PATCH v10 01/18] counter: Introduce the Generic Counter
+ interface
+Date: Tue, 9 Apr 2019 13:57:28 +0900
+Message-ID: <20190409045728.GA2842@icarus>
+References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+ <ad3a8c427a911848373eae1c08e89353ffb6cb6d.1554184734.git.vilhelm.gray@gmail.com>
+ <20190408215515.GA27592@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916E7D387D5FA74CFB719C6F52D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190408215515.GA27592@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Wy4uLl0NCg0KPiA+ID4gK3N0YXRpYyBpbnQgaW14X3NjX3J0Y19hbGFybV9pcnFfZW5hYmxlKHN0
-cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQNCj4gPiA+ICtpbnQNCj4gPiA+ICtlbmFibGUpIHsN
-Cj4gPiA+ICsJaW14X3NjdV9pcnFfZW5hYmxlKFNDX0lSUV9HUk9VUF9SVEMsIFNDX0lSUV9SVEMs
-IGVuYWJsZSk7DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiAwOw0KPiA+ID4gK30NCj4gPiA+ICsN
-Cj4gPiA+ICtzdGF0aWMgaW50IGlteF9zY19ydGNfcmVhZF9hbGFybShzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHN0cnVjdA0KPiA+ID4gK3J0Y193a2Fscm0NCj4gPiA+ICsqYWxybSkgew0KPiA+DQo+ID4g
-SSBzdGlsbCB0aGluayBoZXJlIG5lZWRzIGEgZG9jIGV4cGxhaW4gd2h5IG5lZWRzIHRoaXMgYW5k
-IHdoeSBpdCdzDQo+ID4gc2FmZSB0byBkbyB0aGF0Lg0KPiANCj4gSSB3aWxsIGFkZCBhIGNvbW1l
-bnQgaGVyZSwgZm9yIHRoZSBkb2MsIGl0IHNob3VsZCBiZSBhbm90aGVyIHRvcGljIG9mIFJUQw0K
-PiBmcmFtZXdvcmssIHdlIGNhbiBkbyBpdCBsYXRlci4NCg0KSSdtIGZpbmUgd2l0aCBpdC4NCkJU
-VywgZG9uJ3QgbWlzcyB0aGUgbmV4dCBtaW5vciBjb21tZW50cyB3aGVuIHlvdSByZXNlbmQuDQoN
-ClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+ID4gPiArCS5zZXRfYWxhcm0gPSBpbXhfc2NfcnRj
-X3NldF9hbGFybSwNCj4gPiA+ICsJLmFsYXJtX2lycV9lbmFibGUgPSBpbXhfc2NfcnRjX2FsYXJt
-X2lycV9lbmFibGUsIH07DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIGludCBpbXhfc2NfcnRjX2Fs
-YXJtX3NjX25vdGlmeShzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKm5iLA0KPiA+ID4gKwkJCQkJdW5z
-aWduZWQgbG9uZyBldmVudCwgdm9pZCAqZ3JvdXApDQo+ID4NCj4gPiBOb3QgbmVjZXNzYXJ5IHRv
-IGhhdmUgc3VjaCBhIGxvbmcgZnVuY3Rpb24gbmFtZS4NCj4gPiBJbXhfc2NfcnRjX2FsYXJtX25v
-dGlmeSgpIHNob3VsZCBiZSBvaw0KPiA+DQoNCg==
+On Mon, Apr 08, 2019 at 11:55:15PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > +const char *const counter_count_direction_str[2] = {
+> > +	[COUNTER_COUNT_DIRECTION_FORWARD] = "forward",
+> > +	[COUNTER_COUNT_DIRECTION_BACKWARD] = "backward"
+> > +};
+> > +EXPORT_SYMBOL_GPL(counter_count_direction_str);
+> > +
+> > +const char *const counter_count_mode_str[4] = {
+> > +	[COUNTER_COUNT_MODE_NORMAL] = "normal",
+> > +	[COUNTER_COUNT_MODE_RANGE_LIMIT] = "range limit",
+> > +	[COUNTER_COUNT_MODE_NON_RECYCLE] = "non-recycle",
+> > +	[COUNTER_COUNT_MODE_MODULO_N] = "modulo-n"
+> > +};
+> > +EXPORT_SYMBOL_GPL(counter_count_mode_str);
+> 
+> Dunno. Exporting const tables saying "forward" and "backward". Can we
+> ... somehow make it work without need to export this?
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+Right now there are only have 4 counter devices supported in this
+patchset, but it is expected that support for a greater variety of
+devices will be added. For these future cases, new count directions will
+be added to match their functionality.
+
+For example, suppose support for a rotary encoder device is added. These
+type of devices do not move forward/backward but rather rotate. In these
+cases, the following count directions may be added:
+
+    [COUNTER_COUNT_DIRECTION_CLOCKWISE] = "clockwise",
+    [COUNTER_COUNT_DIRECTION_COUNTERCLOCKWISE] = "counterclockwise"
+
+Or as another example, suppose support for a two-axis precision
+positioning table is added. These devices support positioning in a
+cartesian coordinate system. In these cases, spatial direction may serve
+as useful count directions:
+
+    [COUNTER_COUNT_DIRECTION_NORTH] = "north",
+    [COUNTER_COUNT_DIRECTION_NORTHEAST] = "northeast",
+    [COUNTER_COUNT_DIRECTION_EAST] = "east",
+    [COUNTER_COUNT_DIRECTION_SOUTHEAST] = "southeast",
+    [COUNTER_COUNT_DIRECTION_SOUTH] = "south",
+    [COUNTER_COUNT_DIRECTION_SOUTHWEST] = "southwest",
+    [COUNTER_COUNT_DIRECTION_WEST] = "west",
+    [COUNTER_COUNT_DIRECTION_NORTHWEST] = "northwest"
+
+A const table is conveinent in these scenarios because support for new
+count directions may be easily added by simple entry into the table.
+
+William Breathitt Gray
