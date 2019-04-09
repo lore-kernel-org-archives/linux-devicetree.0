@@ -1,51 +1,58 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH 3/3] Kconfig: change configuration of srf04 ultrasonic iio
- sensor
-Date: Tue, 9 Apr 2019 21:11:28 +0200
-Message-ID: <20190409191126.lkjujjnvjyxua3fn@arbad>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: Using device tree overlays in Linux
+Date: Tue, 9 Apr 2019 12:19:14 -0700
+Message-ID: <b2e0e55e-38a3-3dfb-3453-f57d7e2e99a3@gmail.com>
+References: <71fb0ff289e84c55bd92ecd96bc9aa76@svr-chch-ex1.atlnz.lc>
+ <61185ee9-4bee-eec3-f0d0-6d6760595845@gmail.com>
+ <224942bd629e41eaa23ab327b015134e@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <224942bd629e41eaa23ab327b015134e@svr-chch-ex1.atlnz.lc>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, songqiang1304521@gmail.com, robh@kernel.org, m.othacehe@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-reword configuration option for SRF04
+On 4/7/19 6:27 PM, Chris Packham wrote:
+> Hi Frank,
+> 
+> On 8/04/19 1:05 PM, Frank Rowand wrote:
+>> Hi Chris,
+>>
+>> On 4/3/19 6:50 PM, Chris Packham wrote:
+>>> Hi,
+>>>
+>>> I'm implementing support for some modular Linux based systems using
+>>> device tree overlays. The code is working but it seems a little more
+>>> fiddly that than it should be so I'm wondering if I'm doing it right.
+>>
+>> Let me start by saying that I strongly discourage using device tree
+>> overlays in the Linux kernel until the support is more baked.  For
+>> some info on how unbaked overlays are, see:
+>>
+>>     https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
+>>
+>> You should consider applying overlays in the Linux kernel to be
+>> fragile at best.
+>>
+>> If you can not figure out how to solve your needs without using
+>> overlays, then having the boot loader apply the overlay instead
+>> of the kernel applying the overlay avoids most of the issues.
+>>
+> 
+> Consider us beta-testers :).
 
-list supported types in help text
+You should read the elinux.org page more carefully.  The support
+isn't even alpha stage.  It is at the level of proof of concept.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- drivers/iio/proximity/Kconfig | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+I'll update that page to explicitly say the code is proof of
+concept.
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index 12a3d3d40a91..e9f254ae3892 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -68,12 +68,19 @@ config RFD77402
- 	  module will be called rfd77402.
- 
- config SRF04
--	tristate "Devantech SRF04 ultrasonic ranger sensor"
-+	tristate "GPIO bitbanged ultrasonic ranger sensor (SRF04, MB1000)"
- 	depends on GPIOLIB
- 	help
--	  Say Y here to build a driver for Devantech SRF04 ultrasonic
-+	  Say Y here to build a driver for GPIO bitbanged ultrasonic
- 	  ranger sensor. This driver can be used to measure the distance
- 	  of objects. It is using two GPIOs.
-+	  Actually Supported types are:
-+	  - Devantech SRF04
-+	  - Maxbotix mb1000
-+	  - Maxbotix mb1010
-+	  - Maxbotix mb1020
-+	  - Maxbotix mb1030
-+	  - Maxbotix mb1040
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf04.
--- 
-2.11.0
+< snip >
+
+I'll reply to the rest of the email separately.
+
+-Frank
