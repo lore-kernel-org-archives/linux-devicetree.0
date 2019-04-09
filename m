@@ -1,27 +1,38 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
-Date: Tue, 9 Apr 2019 22:13:23 +0200
-Message-ID: <20190409201323.GD6150@zn.tnic>
-References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
- <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 0/3] rockchip: A few clock cleanups for rk3288
+Date: Tue,  9 Apr 2019 13:47:04 -0700
+Message-ID: <20190409204707.150347-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thor Thayer <thor.thayer@linux.intel.com>
-Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Caesar Wang <caesar.wang@rock-chips.com>, linux-rockchip@lists.infradead.org, mka@chromium.org, ryandcase@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>, linux-clk@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 02:11:58PM -0500, Thor Thayer wrote:
-> If possible, I'd like this series to go through the EDAC tree since future
-> patches will follow this format.
 
-You know how that works - I need ACKs.
+This series contains a few misc clock cleanups for Rockchip rk3288
+found by comparing to what's in the downstream Chrome OS 3.14 kernel.
+
+NOTES:
+* The PWM patches could go in separately from the revert but that
+  would cause a merge conflict which is why they're together in a
+  series.
+* Having the PWM marked as a critical clock _definitely_ needs to land
+  before switching the clock in the device tree.
+
+
+Caesar Wang (1):
+  ARM: dts: rockchip: fix PWM clock found on RK3288 Socs
+
+Douglas Anderson (2):
+  Revert "clk: rockchip: mark noc and some special clk as critical on
+    rk3288"
+  clk: rockchip: Make rkpwm a critical clock on rk3288
+
+ arch/arm/boot/dts/rk3288.dtsi     |  8 ++++----
+ drivers/clk/rockchip/clk-rk3288.c | 17 ++++++-----------
+ 2 files changed, 10 insertions(+), 15 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+2.21.0.392.gf8f6787159e-goog
