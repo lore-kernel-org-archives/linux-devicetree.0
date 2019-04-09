@@ -1,65 +1,135 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
-Date: Tue, 9 Apr 2019 17:39:08 +0300
-Message-ID: <6d918bd9-489c-89fa-733e-90a5dabdaa0c@linaro.org>
-References: <20190313090010.20534-1-georgi.djakov@linaro.org>
- <20190313090010.20534-2-georgi.djakov@linaro.org>
- <20190328151255.GA5262@bogus>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Date: Tue, 9 Apr 2019 16:52:25 +0200
+Message-ID: <20190409145225.2ltluiyqa5xha4zd@flea>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opeshs6swmdpxgen"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190328151255.GA5262@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 3/28/19 17:12, Rob Herring wrote:
-> On Wed, Mar 13, 2019 at 11:00:07AM +0200, Georgi Djakov wrote:
->> In addition to frequency and voltage, some devices may have bandwidth
->> requirements for their interconnect throughput - for example a CPU
->> or GPU may also need to increase or decrease their bandwidth to DDR
->> memory based on the current operating performance point.
->>
->> Extend the OPP tables with additional property to describe the bandwidth
->> needs of a device. The average and peak bandwidth values depend on the
->> hardware and its properties.
-> 
-> How would this work if you have 1 OPP (for the bus/interconnect/ddr) and 
-> 2 devices with variable bandwidth needs? Or 'device' here means the 
-> interconnect?
+--opeshs6swmdpxgen
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is a property of the consumer devices and not of the bus. It's fine
-for devices to have different bandwidth needs and to be connected to a
-shared bus. In this case the framework knows the topology and can
-determine which parts of the bus are shared and aggregate the traffic
-accordingly.
+On Tue, Apr 09, 2019 at 04:40:40PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > > >
+> > > > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> > > > > lingo), which is similar to the one found on the A64 and H3. The only
+> > > > > difference seems to be that support of MIPI CSI through a connected
+> > > > > MIPI CSI-2 bridge.
+> > > > >
+> > > > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> > > > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> > > > > the pinctrl nodes to keep the device tree blob size down if they are
+> > > > > unused.
+> > > > >
+> > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > ---
+> > > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 31 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > @@ -682,6 +682,20 @@
+> > > > >                       #interrupt-cells = <3>;
+> > > > >                       #gpio-cells = <3>;
+> > > > >
+> > > > > +                     /omit-if-no-ref/
+> > > > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
+> > > > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
+> > > > > +                                    "PE8", "PE9", "PE10", "PE11",
+> > > > > +                                    "PE12", "PE13";
+> > > > > +                             function = "csi";
+> > > > > +                     };
+> > > > > +
+> > > > > +                     /omit-if-no-ref/
+> > > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > > +                             pins = "PE1";
+> > > > > +                             function = "csi";
+> > > > > +                     };
+> > > > > +
+> > > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > > > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > > > > @@ -994,6 +1008,23 @@
+> > > > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > > >               };
+> > > > >
+> > > > > +             csi: camera@1cb0000 {
+> > > > > +                     compatible = "allwinner,sun8i-a83t-csi";
+> > > > > +                     reg = <0x01cb0000 0x1000>;
+> > > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > > +                     clock-names = "bus", "mod", "ram";
+> > > > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > > > +                     status = "disabled";
+> > > > > +
+> > > > > +                     csi_in: port {
+> > > > > +                             #address-cells = <1>;
+> > > > > +                             #size-cells = <0>;
+> > > >
+> > > > If we expect a single enpoint, then we don't need the address-cells
+> > > > and size-cells properties.
+> > >
+> > > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> > > is kind of genius if not very hacky. They have two "identical" sensors
+> > > on the same I2C bus and CSI bus, with shared reset line but separate
+> > > shutdown lines. Since they are identical, they also have the same I2C
+> > > address. I haven't figured out how to model this in the device tree.
+> > >
+> > > The point is, it's perfectly possible to have two or more sensors use
+> > > the same controller, provided only one be active at a time.
+> >
+> > Right, but I guess the common case would be to have a single sensor,
+> > where that wouldn't be needed.
+> >
+> > In odd cases, we can always specify it in the DTS, and if it becomes
+> > common enough, we can move it to the DTSI.
+>
+> Makes sense. Do you want me to re-spin?
 
->>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
->>  1 file changed, 45 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
->> index 76b6c79604a5..fa598264615f 100644
->> --- a/Documentation/devicetree/bindings/opp/opp.txt
->> +++ b/Documentation/devicetree/bindings/opp/opp.txt
->> @@ -129,6 +129,9 @@ Optional properties:
->>  - opp-microamp-<name>: Named opp-microamp property. Similar to
->>    opp-microvolt-<name> property, but for microamp instead.
->>  
->> +- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
->> +  the two integer values for average and peak bandwidth in megabytes per second.
-> 
-> -MBps would be better IMO. Either way, units should be documented in 
-> property-units.txt.
+If there's no other comment, we'll fix it when applying.
 
-Agree! Of course!
+Maxime
 
-Thanks,
-Georgi
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--opeshs6swmdpxgen
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKyxqAAKCRDj7w1vZxhR
+xQqgAPoCwGE+02LeS5CqpwNkNGyMU+On6b/GFxOR2vtPx16ypwEA42TEbPqw9AfF
+r31IMk7MKBdc6HAcaoxwGTv23e1kfgU=
+=Fr2o
+-----END PGP SIGNATURE-----
+
+--opeshs6swmdpxgen--
