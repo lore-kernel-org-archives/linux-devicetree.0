@@ -1,101 +1,49 @@
-From: Robert Foss <robert.foss@collabora.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
-Date: Tue, 9 Apr 2019 02:07:25 +0200
-Message-ID: <4fd506a1-c961-0569-6d39-283758f363d9@collabora.com>
-References: <20190408175319.9106-1-robert.foss@collabora.com>
- <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
+From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: [PATCH v2 01/13] dt-bindings: sunxi: Add compatible for
+ OrangePi 3 board
+Date: Tue,  9 Apr 2019 02:24:40 +0200
+Message-ID: <20190409002452.14551-2-megous@megous.com>
+References: <20190409002452.14551-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBXGMV7SQKGQE5KK26RQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190409002452.14551-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm802
 List-Id: devicetree@vger.kernel.org
 
-Hey Fabio,
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-On 4/8/19 10:37 PM, Fabio Estevam wrote:
-> Hi Robert,
-> 
-> [Adding Gary]
-> 
-> On Mon, Apr 8, 2019 at 2:54 PM Robert Foss <robert.foss@collabora.com> wrote:
->>
->> If a LVDS device is not connected, having the LVDS channels
->> enabled will prevent imx-ldb from probing correctly even
->> if other CRTCs are connected.
->>
->> Signed-off-by: Robert Foss <robert.foss@collabora.com>
->> ---
->>   arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->> index 39200e5dc896..5b413cf4c250 100644
->> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->> @@ -703,7 +703,7 @@
->>          status = "okay";
->>
->>          lvds-channel@0 {
->> -               status = "okay";
->> +               status = "disabled";
->>
->>                  port@4 {
->>                          reg = <4>;
->> @@ -715,7 +715,7 @@
->>          };
->>
->>          lvds-channel@1 {
->> -               status = "okay";
->> +               status = "disabled";
-> 
-> I am not sure I understood what you are trying to fix.
+Add new Xunlong Orange Pi 3 board compatible string to the bindings
+documentation.
 
-If CONFIG_DRM_IMX_LDB is enabled, LVDS DT channels are enabled
-and no LVDS-panels are connected the imx-ldb driver will
-fail to bind.
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This is a problem, since it will prevent other actually connected
-display output from being used, even if they bind properly.
-
-> 
-> Could you please share some logs when imx-ldb fails to probe correctly?
-
-
-[    2.119563] component_bind_all() trying to bind: ldb
-[    2.124600] imx-drm display-subsystem: binding ldb (ops imx_ldb_ops)
-[    2.146169] drm_of_find_panel_or_bridge() np->name=lvds-channel  np->type=<NULL>
-[    2.153709] drm_of_find_panel_or_bridge() no panel found for remote
-[    2.160081] drm_of_find_panel_or_bridge() bridge needed
-[    2.162043] drm_of_find_panel_or_bridge() bridge not found
-[    2.165331] drm_of_find_panel_or_bridge() failed
-[    2.170023] imx-drm display-subsystem: failed to bind ldb (ops imx_ldb_ops): -517
-
-This at the same time as HDMI binds properly:
-
-[    4.458954] dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.30a with 
-HDCP (DWC HDMI 3D TX PHY)
-[    4.469633] imx-drm display-subsystem: bound 120000.hdmi (ops dw_hdmi_imx_ops)
-
-Which in the end causes the IMX driver to not initialize properly
-and ignore the HDMI connection that bound properly.
-This in turn prevents us from having any graphical output while there
-is no LVDS panel connected.
-
-
-> 
-> Is this a regression?
-> 
-
-Not as far as I know.
-
-How a Nitrogen6-Max board without a LVDS panel, but using the
-imx_v6_v7_defconfig ever started and had displayed graphical
-output on other connected displays I don't know though.
-
-
-Rob.
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 11563d3f7c65..b82db740125b 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -711,6 +711,11 @@ properties:
+           - const: xunlong,orangepi-2
+           - const: allwinner,sun8i-h3
+ 
++      - description: Xunlong OrangePi 3
++        items:
++          - const: xunlong,orangepi-3
++          - const: allwinner,sun50i-h6
++
+       - description: Xunlong OrangePi Lite
+         items:
+           - const: xunlong,orangepi-lite
+-- 
+2.21.0
