@@ -1,215 +1,46 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v2 2/3] ARM: dts: stm32: add stpmic1 support on stm32mp157a
- dk1 board
-Date: Tue, 9 Apr 2019 09:07:03 +0000
-Message-ID: <1554800820-5412-3-git-send-email-p.paillet@st.com>
-References: <1554800820-5412-1-git-send-email-p.paillet@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/3] dt-bindings: meson: Add G12A display bindings
+Date: Tue, 9 Apr 2019 11:13:24 +0200
+Message-ID: <5c7c873c-0535-0342-26b5-6cb29df9859b@baylibre.com>
+References: <20190313141030.5958-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554800820-5412-1-git-send-email-p.paillet@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190313141030.5958-1-narmstrong@baylibre.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>, Yannick FERTRE <yannick.fertre@st.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.i>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds stpmic1 support on stm32mp157a dk1 board.
-The STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
-regulators, 3 power switches, a watchdog and an input for a power on key.
-The DMAs are disabled because the PMIC generates a very few traffic and
-DMA channels may lack for other usage.
-
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 158 ++++++++++++++++++++++++++++++=
-++--
- 1 file changed, 150 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm3=
-2mp157a-dk1.dts
-index 1b1886d..4bb91ab 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -9,6 +9,7 @@
- #include "stm32mp157c.dtsi"
- #include "stm32mp157-pinctrl.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/st,stpmic1.h>
-=20
- / {
- 	model =3D "STMicroelectronics STM32MP157A-DK1 Discovery Board";
-@@ -36,14 +37,6 @@
- 			default-state =3D "off";
- 		};
- 	};
--
--	v3v3: regulator-3v3 {
--		compatible =3D "regulator-fixed";
--		regulator-name =3D "v3v3";
--		regulator-min-microvolt =3D <3300000>;
--		regulator-max-microvolt =3D <3300000>;
--		regulator-always-on;
--	};
- };
-=20
- &ethernet0 {
-@@ -65,6 +58,155 @@
- 	};
- };
-=20
-+
-+&i2c4 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&i2c4_pins_a>;
-+	i2c-scl-rising-time-ns =3D <185>;
-+	i2c-scl-falling-time-ns =3D <20>;
-+	status =3D "okay";
-+	/* spare dmas for other usage */
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+
-+	pmic: stpmic@33 {
-+		compatible =3D "st,stpmic1";
-+		reg =3D <0x33>;
-+		interrupts-extended =3D <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells =3D <2>;
-+		status =3D "okay";
-+
-+		regulators {
-+			compatible =3D "st,stpmic1-regulators";
-+			ldo1-supply =3D <&v3v3>;
-+			ldo3-supply =3D <&vdd_ddr>;
-+			ldo6-supply =3D <&v3v3>;
-+			pwr_sw1-supply =3D <&bst_out>;
-+			pwr_sw2-supply =3D <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name =3D "vddcore";
-+				regulator-min-microvolt =3D <800000>;
-+				regulator-max-microvolt =3D <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode =3D <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name =3D "vdd_ddr";
-+				regulator-min-microvolt =3D <1350000>;
-+				regulator-max-microvolt =3D <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode =3D <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name =3D "vdd";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-always-on;
-+				st,mask-reset;
-+				regulator-initial-mode =3D <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name =3D "v3v3";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode =3D <0>;
-+			};
-+
-+			v1v8_audio: ldo1 {
-+				regulator-name =3D "v1v8_audio";
-+				regulator-min-microvolt =3D <1800000>;
-+				regulator-max-microvolt =3D <1800000>;
-+				regulator-always-on;
-+				interrupts =3D <IT_CURLIM_LDO1 0>;
-+			};
-+
-+			v3v3_hdmi: ldo2 {
-+				regulator-name =3D "v3v3_hdmi";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				regulator-always-on;
-+				interrupts =3D <IT_CURLIM_LDO2 0>;
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name =3D "vtt_ddr";
-+				regulator-min-microvolt =3D <500000>;
-+				regulator-max-microvolt =3D <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name =3D "vdd_usb";
-+				regulator-min-microvolt =3D <3300000>;
-+				regulator-max-microvolt =3D <3300000>;
-+				interrupts =3D <IT_CURLIM_LDO4 0>;
-+			};
-+
-+			vdda: ldo5 {
-+				regulator-name =3D "vdda";
-+				regulator-min-microvolt =3D <2900000>;
-+				regulator-max-microvolt =3D <2900000>;
-+				interrupts =3D <IT_CURLIM_LDO5 0>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v2_hdmi: ldo6 {
-+				regulator-name =3D "v1v2_hdmi";
-+				regulator-min-microvolt =3D <1200000>;
-+				regulator-max-microvolt =3D <1200000>;
-+				regulator-always-on;
-+				interrupts =3D <IT_CURLIM_LDO6 0>;
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name =3D "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			 bst_out: boost {
-+				regulator-name =3D "bst_out";
-+				interrupts =3D <IT_OCP_BOOST 0>;
-+			 };
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name =3D "vbus_otg";
-+				interrupts =3D <IT_OCP_OTG 0>;
-+			 };
-+
-+			 vbus_sw: pwr_sw2 {
-+				regulator-name =3D "vbus_sw";
-+				interrupts =3D <IT_OCP_SWOUT 0>;
-+				regulator-active-discharge;
-+			 };
-+		};
-+
-+		onkey {
-+			compatible =3D "st,stpmic1-onkey";
-+			interrupts =3D <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
-+			interrupt-names =3D "onkey-falling", "onkey-rising";
-+			power-off-time-sec =3D <10>;
-+			status =3D "okay";
-+		};
-+
-+		watchdog {
-+			compatible =3D "st,stpmic1-wdt";
-+			status =3D "disabled";
-+		};
-+	};
-+};
-+
- &ipcc {
- 	status =3D "okay";
- };
---=20
-1.9.1
+T24gMTMvMDMvMjAxOSAxNToxMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6Cj4gVGhpcyBwYXRjaHNl
+dCBhZGRzIHRoZSBHMTJBIHNwZWNpZmljIGJpbmRpbmdzIGZvciB0aGUgRGlzcGxheSBWUFUKPiBh
+bmQgVlBVIFBvd2VyIENvbnRyb2wuCj4gCj4gVGhlIEFtbG9naWMgTWVzb24gRzEyQSBEaXNwbGF5
+IG1vZHVsZSBpcyBiYXNlZCBvbiB0aGUgTWVzb24gR1hNIFNvQwo+IHdpdGggYW4gdXBkYXRlZCBQ
+bGFuZSBCbGVuZGVyLCB0aHVzIFZQVSBhcmNoaXRlY3R1cmUgYW5kIGludGVyY29ubmVjdAo+IGlz
+IHRoZSBzYW1lLgo+IAo+IEltcGxlbWVudGF0aW9uIHRoZW4gRFQgbm9kZXMgd2lsbCBjb21lIGlu
+IGEgZnVydGhlciBwYXRjaHNldHMuCj4gCj4gTmVpbCBBcm1zdHJvbmcgKDMpOgo+ICAgZHQtYmlu
+ZGluZ3M6IGRpc3BsYXk6IGFtbG9naWMsbWVzb24tdnB1OiBBZGQgRzEyQSBjb21wYXRpYmxlIGFu
+ZCBwb3J0cwo+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGFtbG9naWMsbWVzb24tZHctaGRtaTog
+QWRkIEcxMkEgY29tcGF0aWJsZSBhbmQKPiAgICAgcG9ydHMKPiAgIGR0LWJpbmRpbmdzOiBwb3dl
+cjogYW1sb2dpYyxtZXNvbi1neC1wd3JjOiBBZGQgRzEyQSBjb21wYXRpYmxlCj4gCj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dCAgICAg
+fCA0ICsrKysKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29u
+LXZwdS50eHQgICAgICAgICB8IDQgKysrKwo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
+ci9hbWxvZ2ljLG1lc29uLWd4LXB3cmMudHh0ICAgICAgIHwgNCArKystCj4gIDMgZmlsZXMgY2hh
+bmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAoKS2V2aW4sCgpJIGFwcGxp
+ZWQgUGF0Y2hlcyAxICYgMiB0byBkcm0tbWlzYy1uZXh0LCBjYW4geW91IHRha2UgUGF0Y2ggMyBh
+bG9uZyA6Ci0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDg3OTI4NS8KLSBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODc5MjkzLwoKVGhhbmtzICEKTmVp
+bAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
