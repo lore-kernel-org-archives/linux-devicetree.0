@@ -1,55 +1,63 @@
 Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr740048.outbound.protection.outlook.com ([40.107.74.48]:37664
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726129AbfDIGUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Apr 2019 02:20:05 -0400
-From: <michael.hennerich@analog.com>
-Subject: [PATCH v3 2/2] power: supply: ltc3651-charger: Fix device name (rename files)
-Date: Tue, 9 Apr 2019 08:24:41 +0200
-Message-ID: <1554791081-10950-2-git-send-email-michael.hennerich@analog.com>
-In-Reply-To: <1554791081-10950-1-git-send-email-michael.hennerich@analog.com>
-References: <1554791081-10950-1-git-send-email-michael.hennerich@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:30163 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfDIIwy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:54 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH 11/11] ARM: dts: r8a77470: Add LVDS support
+Date: Tue,  9 Apr 2019 17:51:52 +0900
+Message-Id: <1554799912-24764-12-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
 Sender: devicetree-owner@vger.kernel.org
-To: mike.looijmans@topic.nl, sre@kernel.org, robh+dt@kernel.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, robin.getz@analog.com, Michael Hennerich <michael.hennerich@analog.com>
+To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+This patch is to add LVDS support for the RZ/G1C (r8a77470) SoC.
 
-rename only - no functional changes
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
- .../bindings/power/supply/{ltc3651-charger.txt => lt3651-charger.txt}   | 0
- drivers/power/supply/Makefile                                           | 2 +-
- drivers/power/supply/{ltc3651-charger.c => lt3651-charger.c}            | 0
- 3 files changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/power/supply/{ltc3651-charger.txt => lt3651-charger.txt} (100%)
- rename drivers/power/supply/{ltc3651-charger.c => lt3651-charger.c} (100%)
+ arch/arm/boot/dts/r8a77470.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/lt3651-charger.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-rename to Documentation/devicetree/bindings/power/supply/lt3651-charger.txt
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 714c602..a2b3ab1 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -67,7 +67,7 @@ obj-$(CONFIG_CHARGER_LP8727)	+= lp8727_charger.o
- obj-$(CONFIG_CHARGER_LP8788)	+= lp8788-charger.o
- obj-$(CONFIG_CHARGER_GPIO)	+= gpio-charger.o
- obj-$(CONFIG_CHARGER_MANAGER)	+= charger-manager.o
--obj-$(CONFIG_CHARGER_LT3651)	+= ltc3651-charger.o
-+obj-$(CONFIG_CHARGER_LT3651)	+= lt3651-charger.o
- obj-$(CONFIG_CHARGER_MAX14577)	+= max14577_charger.o
- obj-$(CONFIG_CHARGER_DETECTOR_MAX14656)	+= max14656_charger_detector.o
- obj-$(CONFIG_CHARGER_MAX77693)	+= max77693_charger.o
-diff --git a/drivers/power/supply/ltc3651-charger.c b/drivers/power/supply/lt3651-charger.c
-similarity index 100%
-rename from drivers/power/supply/ltc3651-charger.c
-rename to drivers/power/supply/lt3651-charger.c
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index a63c627..48866e5 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -1136,6 +1136,33 @@
+ 				port@2 {
+ 					reg = <2>;
+ 					du_out_lvds0: endpoint {
++                                                remote-endpoint = <&lvds0_in>;
++					};
++				};
++			};
++		};
++
++		lvds0: lvds@feb90000 {
++			compatible = "renesas,r8a77470-lvds";
++			reg = <0 0xfeb90000 0 0x1c>;
++			clocks = <&cpg CPG_MOD 726>;
++			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
++			resets = <&cpg 726>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					lvds0_in: endpoint {
++						remote-endpoint = <&du_out_lvds0>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					lvds0_out: endpoint {
+ 					};
+ 				};
+ 			};
 -- 
 2.7.4
