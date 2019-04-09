@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 09/13] dt-bindings: display: sun4i-drm: Add
- DDC power supply
-Date: Tue,  9 Apr 2019 02:24:48 +0200
-Message-ID: <20190409002452.14551-10-megous@megous.com>
+Subject: [PATCH v2 06/13] pinctrl: sunxi: Support I/O bias
+ voltage setting on H6
+Date: Tue,  9 Apr 2019 02:24:45 +0200
+Message-ID: <20190409002452.14551-7-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBX6MV7SQKGQES2EGKBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBXOMV7SQKGQEUS5O6EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190409002452.14551-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,27 +21,82 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Some Allwinner SoC using boards need to enable a regulator for the DDC bus
-to be usable.
+H6 SoC has a "pio group withstand voltage mode" register (datasheet
+description), that needs to be used to select either 1.8V or 3.3V I/O mode,
+based on what voltage is powering the respective pin banks and is thus used
+for I/O signals.
 
-Add binding documentation for it.
+Add support for configuring this register according to the voltage of the
+pin bank regulator (if enabled).
+
+This is similar to the support for I/O bias voltage setting patch for A80
+and the same concerns apply. See:
+
+  commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 10 ++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  4 ++++
+ 3 files changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 31ab72cba3d4..31474fb92313 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -104,6 +104,7 @@ Required properties:
-     output, usually to an HDMI connector.
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+index ef4268cc6227..30b1befa8ed8 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+@@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
+ 	.irq_banks = 4,
+ 	.irq_bank_map = h6_irq_bank_map,
+ 	.irq_read_needs_mux = true,
++	.io_bias_cfg_variant = IO_BIAS_CFG_V2,
+ };
  
- Optional properties:
-+  - ddc-supply: the VCC power supply for the DDC bus
-   - hvcc-supply: the VCC power supply of the controller
+ static int h6_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index b8dd58ef33b7..0ab50a15a716 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -607,6 +607,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 					 unsigned pin,
+ 					 struct regulator *supply)
+ {
++	unsigned short bank = pin / PINS_PER_BANK;
++	unsigned long flags;
+ 	u32 val, reg;
+ 	int uV;
  
- DWC HDMI PHY
+@@ -642,6 +644,14 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+ 		reg &= ~IO_BIAS_MASK;
+ 		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++	} else if (pctl->desc->io_bias_cfg_variant == IO_BIAS_CFG_V2) {
++		val = uV <= 1800000 ? 1 : 0;
++
++		raw_spin_lock_irqsave(&pctl->lock, flags);
++		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
++		reg &= ~(1 << bank);
++		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
++		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index 642f667e99d2..4044a3cb1819 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -95,8 +95,12 @@
+ #define PINCTRL_SUN7I_A20	BIT(7)
+ #define PINCTRL_SUN8I_R40	BIT(8)
+ 
++#define PIO_POW_MOD_SEL_REG	0x340
++
+ /* Bias voltage configuration done via Pn_GRP_CONFIG registers. */
+ #define IO_BIAS_CFG_V1		1
++/* Bias voltage set in the PIO_POW_MOD_SEL_REG register. */
++#define IO_BIAS_CFG_V2		2
+ 
+ struct sunxi_desc_function {
+ 	unsigned long	variant;
 -- 
 2.21.0
