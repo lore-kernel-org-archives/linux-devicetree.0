@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 12/13] [DO NOT MERGE] arm64: dts: allwinner:
- h6: Add MMC1 pins
-Date: Tue,  9 Apr 2019 02:24:51 +0200
-Message-ID: <20190409002452.14551-13-megous@megous.com>
+Subject: [PATCH v2 09/13] dt-bindings: display: sun4i-drm: Add
+ DDC power supply
+Date: Tue,  9 Apr 2019 02:24:48 +0200
+Message-ID: <20190409002452.14551-10-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBYGMV7SQKGQEQNKN3MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBX6MV7SQKGQES2EGKBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190409002452.14551-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,32 +21,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-MMC1 is used on some H6 boards we want to support. Typical use is 4-bit
-SDIO interface with a WiFi chip. Add pin definitions for this use case.
+Some Allwinner SoC using boards need to enable a regulator for the DDC bus
+to be usable.
+
+Add binding documentation for it.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 91fecab58836..76e20167438a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -238,6 +238,14 @@
- 				bias-pull-up;
- 			};
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 31ab72cba3d4..31474fb92313 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -104,6 +104,7 @@ Required properties:
+     output, usually to an HDMI connector.
  
-+			mmc1_pins: mmc1-pins {
-+				pins = "PG0", "PG1", "PG2", "PG3",
-+				       "PG4", "PG5";
-+				function = "mmc1";
-+				drive-strength = <30>;
-+				bias-pull-up;
-+			};
-+
- 			mmc2_pins: mmc2-pins {
- 				pins = "PC1", "PC4", "PC5", "PC6",
- 				       "PC7", "PC8", "PC9", "PC10",
+ Optional properties:
++  - ddc-supply: the VCC power supply for the DDC bus
+   - hvcc-supply: the VCC power supply of the controller
+ 
+ DWC HDMI PHY
 -- 
 2.21.0
