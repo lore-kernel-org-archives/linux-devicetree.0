@@ -1,8 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v2 13/13] [DO NOT MERGE] arm64: dts: allwinner:
- orange-pi-3: Enable WiFi
-Date: Tue,  9 Apr 2019 02:24:52 +0200
-Message-ID: <20190409002452.14551-14-megous@megous.com>
+Subject: [PATCH v2 12/13] [DO NOT MERGE] arm64: dts: allwinner:
+ h6: Add MMC1 pins
+Date: Tue,  9 Apr 2019 02:24:51 +0200
+Message-ID: <20190409002452.14551-13-megous@megous.com>
 References: <20190409002452.14551-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,109 +21,32 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is called
-bcm43356 and can be used with the brcmfmac driver. The module is powered by
-the two always on regulators (not AXP805).
-
-WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
-configured so that it sets up an 1.8V input bias on this port. This is done
-by the pio driver by reading the vcc-pg-supply voltage.
-
-You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
-configuration that can be found in the Xulongs's repository for H6:
-
-https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
-
-Mainline brcmfmac driver expects the firmware and nvram at the following
-paths relative to the firmware directory:
-
-  brcm/brcmfmac43456-sdio.bin
-  brcm/brcmfmac43456-sdio.txt
+MMC1 is used on some H6 boards we want to support. Typical use is 4-bit
+SDIO interface with a WiFi chip. Add pin definitions for this use case.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index f5595653b2c5..37efcca58a30 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -66,6 +66,26 @@
- 		regulator-always-on;
- 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 91fecab58836..76e20167438a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -238,6 +238,14 @@
+ 				bias-pull-up;
+ 			};
  
-+	reg_vcc33_wifi: vcc33-wifi {
-+		/* Always on 3.3V regulator for WiFi and BT */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc33-wifi";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&reg_vcc5v>;
-+	};
++			mmc1_pins: mmc1-pins {
++				pins = "PG0", "PG1", "PG2", "PG3",
++				       "PG4", "PG5";
++				function = "mmc1";
++				drive-strength = <30>;
++				bias-pull-up;
++			};
 +
-+	reg_vcc_wifi_io: vcc-wifi-io {
-+		/* Always on 1.8V/300mA regulator for WiFi and BT IO */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-wifi-io";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		vin-supply = <&reg_vcc33_wifi>;
-+	};
-+
- 	/*
- 	 * The board uses 2.5V RGMII signalling. Power sequence to enable
- 	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
-@@ -86,6 +106,14 @@
- 		 */
- 		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
-+		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
-+		post-power-on-delay-ms = <200>;
-+	};
- };
- 
- &cpu0 {
-@@ -146,6 +174,25 @@
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_vcc33_wifi>;
-+	vqmmc-supply = <&reg_vcc_wifi_io>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcm: sdio-wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
-@@ -157,6 +204,7 @@
- &pio {
- 	vcc-pc-supply = <&reg_bldo2>;
- 	vcc-pd-supply = <&reg_cldo1>;
-+	vcc-pg-supply = <&reg_vcc_wifi_io>;
- };
- 
- &r_i2c {
+ 			mmc2_pins: mmc2-pins {
+ 				pins = "PC1", "PC4", "PC5", "PC6",
+ 				       "PC7", "PC8", "PC9", "PC10",
 -- 
 2.21.0
