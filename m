@@ -1,13 +1,17 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6-solox: fix cpu hang BUG
-Date: Wed, 10 Apr 2019 09:14:20 -0300
-Message-ID: <CAOMZO5AHTj+tGSs-1eO2D0-fqqWhh3t_UgeLm+4s==uQtw4QqA@mail.gmail.com>
-References: <1554885748-51260-1-git-send-email-root@localhost.localdomain>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
+ exclusive and shared access
+Date: Wed, 10 Apr 2019 18:07:02 +0530
+Message-ID: <dfceed14-d88f-72cb-a647-0ce3fbea3ca5@ti.com>
+References: <20190410053728.17374-1-lokeshvutla@ti.com>
+ <20190410053728.17374-3-lokeshvutla@ti.com>
+ <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1554885748-51260-1-git-send-email-root@localhost.localdomain>
+In-Reply-To: <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,26 +21,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: root <root@localhost.localdomain>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kay-Liu <liuk@cetca.net.cn>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kay,
-
-On Wed, Apr 10, 2019 at 5:43 AM root <root@localhost.localdomain> wrote:
->
-> From: Kay-Liu <liuk@cetca.net.cn>
->
-> The imx6-solox's enet clk config would cause CPU hang in a special
-> environment.The BUG was accepted by yoctoproject, they will process
-> platform related code,only submit dts part here.
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=13258
-> Add support for it.
-
-You did a very good job in describing the issue in the bugzilla report.
-
-Please describe the issue and the proposed solution here in the commit log too.
-
-It can be a summary of what you added in the bugzilla entry.
-
-Thanks
+SGkgVGVybywKCk9uIDEwLzA0LzE5IDE6MzQgUE0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+IE9uIDEw
+LzA0LzIwMTkgMDg6MzcsIExva2VzaCBWdXRsYSB3cm90ZToKPj4gVElTQ0kgcHJvdG9jb2wgc3Vw
+cG9ydHMgZm9yIGVuYWJsaW5nIHRoZSBkZXZpY2UgZWl0aGVyIHdpdGggZXhjbHVzaXZlCj4+IHBl
+cm1pc3Npb25zIGZvciB0aGUgcmVxdWVzdGluZyBob3N0IG9yIHdpdGggc2hhcmluZyBhY3Jvc3Mg
+dGhlIGhvc3RzLgo+PiBUaGVyZSBhcmUgY2VydGFpbiBkZXZpY2VzIHdoaWNoIGFyZSBleGNsdXNp
+dmUgdG8gTGludXggY29udGV4dCBhbmQKPj4gdGhlcmUgYXJlIGNlcnRhaW4gZGV2aWNlcyB0aGF0
+IGFyZSBzaGFyZWQgYWNyb3NzIGRpZmZlcmVudCBob3N0IGNvbnRleHRzLgo+PiBTbyBhZGQgc3Vw
+cG9ydCBmb3IgZ2V0dGluZyB0aGlzIGluZm9ybWF0aW9uIGZyb20gRFQgYnkgaW5jcmVhc2luZwo+
+PiB0aGUgcG93ZXItZG9tYWluIGNlbGxzIHRvIDIuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExva2Vz
+aCBWdXRsYSA8bG9rZXNodnV0bGFAdGkuY29tPgo+PiAtLS0KPj4gwqAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL3RpL3NjaS1wbS1kb21haW4udHh0wqDCoMKgwqDCoCB8IDExICsrKysrKysr
+Ky0tCj4+IMKgIE1BSU5UQUlORVJTwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAxICsK
+Pj4gwqAgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2NpX3BtX2RvbWFpbi5owqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB8wqAgOSArKysrKysrKysKPj4gwqAgMyBmaWxlcyBjaGFuZ2VkLCAxOSBp
+bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgaW5j
+bHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2NpX3BtX2RvbWFpbi5oCj4+Cj4+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL3RpL3NjaS1wbS1kb21haW4u
+dHh0Cj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0t
+ZG9tYWluLnR4dAo+PiBpbmRleCBmN2IwMGE3YzBmNjguLmY1NDFkMWY3NzZhMiAxMDA2NDQKPj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0tZG9t
+YWluLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL3Rp
+L3NjaS1wbS1kb21haW4udHh0Cj4+IEBAIC0xOSw4ICsxOSwxNSBAQCBjaGlsZCBvZiB0aGUgcG1t
+YyBub2RlLgo+PiDCoCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+PiDCoCAtLS0tLS0tLS0tLS0tLS0t
+LS0tLQo+PiDCoCAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSAidGksc2NpLXBtLWRvbWFpbiIKPj4g
+LS0gI3Bvd2VyLWRvbWFpbi1jZWxsczogTXVzdCBiZSAxIHNvIHRoYXQgYW4gaWQgY2FuIGJlIHBy
+b3ZpZGVkIGluIGVhY2gKPj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGV2aWNlIG5v
+ZGUuCj4+ICstICNwb3dlci1kb21haW4tY2VsbHM6IENhbiBiZSBvbmUgb2YgdGhlIGZvbGxvd2lu
+ZzoKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMTogQ29udGFpbmluZyB0aGUgZGV2aWNlIGlk
+IG9mIGVhY2ggbm9kZQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAyOiBGaXJzdCBlbnRyeSBz
+aG91bGQgYmUgZGV2aWNlIGlkCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNlY29u
+ZCBlbnRyeSBzaG91bGQgYmUgb25lIG9mIHRoZSBmbG9vd2luZzoKPj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgVElfU0NJX1BEX0VYQ0xVU0lWRTogVG8gYWxsb3cgZGV2aWNlIHRvIGJl
+Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV4Y2x1
+c2l2ZWx5IGNvbnRyb2xsZWQgYnkKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgdGhlIHJlcXVlc3RpbmcgaG9zdHMuCj4+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIFRJX1NDSV9QRF9TSEFSRUQ6IFRvIGFsbG93IGRldmljZSB0byBiZSBzaGFy
+ZWQKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBi
+eSBtdWx0aXBsZSBob3N0cy4KPiAKPiBPbmUgdGhpbmcgc2hvdWxkIGJlIG5vdGVkIG9uIHRoaXMs
+IHRoZSBhZGRlZCBmbGFnIGlzIHB1cmVseSBmb3Igc29mdHdhcmUKPiBjb25maWd1cmF0aW9uLCBh
+bmQgaXMgbm90IHRlbGxpbmcgdXMgYW55dGhpbmcgYWJvdXQgdGhlIEhXIC8gZmlybXdhcmUuIFNv
+ZnR3YXJlCgpJIGRvZXMgc2F5IGFib3V0IGhvdyBmaXJtd2FyZSBoYW5kbGVzIHRoZSByZXF1ZXN0
+ZWQgZGV2aWNlLgoKPiBjYW4gZGVjaWRlIHRvIGhhdmUgdGhlIGZsYWcgZWl0aGVyIHdheSBhbmQg
+aXQgd2lsbCB3b3JrLiBJIGp1c3Qgd29uZGVyIGlmIERUIGlzCj4gdGhlIGNvcnJlY3QgbG9jYXRp
+b24gdG8gaGF2ZSBzb21ldGhpbmcgbGlrZSB0aGlzLi4uIEV4cGVjdCB0byBoYXZlIHBsZW50eSBv
+Zgo+IGNodXJuIG9uIHRoaXMgYnkgcGVvcGxlIHN3YXBwaW5nIHRoZSBwZXJtaXNzaW9ucyBhcm91
+bmQgYWNjb3JkaW5nIHRvIHRoZWlyCj4gdXNlLWNhc2UgbmVlZHMuCgpEbyB5b3UgaGF2ZSBhbnkg
+b3RoZXIgc3VnZ2VzdGlvbiB0byBoYW5kbGUgc2hhcmVkIGRldmljZXMgYWNyb3NzIFZNcz8KClRo
+YW5rcyBhbmQgcmVnYXJkcywKTG9rZXNoCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
