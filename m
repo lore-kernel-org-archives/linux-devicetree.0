@@ -1,110 +1,73 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
- exclusive and shared access
-Date: Wed, 10 Apr 2019 18:38:31 +0300
-Message-ID: <67537564-c503-8a2a-9f48-26ebca0661ab@ti.com>
-References: <20190410053728.17374-1-lokeshvutla@ti.com>
- <20190410053728.17374-3-lokeshvutla@ti.com>
- <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
- <dfceed14-d88f-72cb-a647-0ce3fbea3ca5@ti.com>
- <2008fbb5-422a-8950-c642-74e63b79a809@ti.com>
- <b4ad336e-42d0-eaf5-7265-d566703fad75@ti.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
+Date: Wed, 10 Apr 2019 12:04:32 -0400
+Message-ID: <20190410160432.GB11568@sasha-vm>
+References: <20190402193316.15144-1-sashal@kernel.org>
+ <20190402193316.15144-2-sashal@kernel.org>
+ <20190403181827.GB17006@linux.intel.com>
+ <20190403182728.GA17451@linux.intel.com>
+ <20190406153047.GF2935@sasha-vm>
+ <20190410112927.GA6586@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b4ad336e-42d0-eaf5-7265-d566703fad75@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190410112927.GA6586@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDQvMjAxOSAxNjoxNSwgTG9rZXNoIFZ1dGxhIHdyb3RlOgo+IAo+IAo+IE9uIDEwLzA0
-LzE5IDY6MTkgUE0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiBPbiAxMC8wNC8yMDE5IDE1OjM3LCBM
-b2tlc2ggVnV0bGEgd3JvdGU6Cj4+PiBIaSBUZXJvLAo+Pj4KPj4+IE9uIDEwLzA0LzE5IDE6MzQg
-UE0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+Pj4+IE9uIDEwLzA0LzIwMTkgMDg6MzcsIExva2VzaCBW
-dXRsYSB3cm90ZToKPj4+Pj4gVElTQ0kgcHJvdG9jb2wgc3VwcG9ydHMgZm9yIGVuYWJsaW5nIHRo
-ZSBkZXZpY2UgZWl0aGVyIHdpdGggZXhjbHVzaXZlCj4+Pj4+IHBlcm1pc3Npb25zIGZvciB0aGUg
-cmVxdWVzdGluZyBob3N0IG9yIHdpdGggc2hhcmluZyBhY3Jvc3MgdGhlIGhvc3RzLgo+Pj4+PiBU
-aGVyZSBhcmUgY2VydGFpbiBkZXZpY2VzIHdoaWNoIGFyZSBleGNsdXNpdmUgdG8gTGludXggY29u
-dGV4dCBhbmQKPj4+Pj4gdGhlcmUgYXJlIGNlcnRhaW4gZGV2aWNlcyB0aGF0IGFyZSBzaGFyZWQg
-YWNyb3NzIGRpZmZlcmVudCBob3N0IGNvbnRleHRzLgo+Pj4+PiBTbyBhZGQgc3VwcG9ydCBmb3Ig
-Z2V0dGluZyB0aGlzIGluZm9ybWF0aW9uIGZyb20gRFQgYnkgaW5jcmVhc2luZwo+Pj4+PiB0aGUg
-cG93ZXItZG9tYWluIGNlbGxzIHRvIDIuCj4+Pj4+Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6IExva2Vz
-aCBWdXRsYSA8bG9rZXNodnV0bGFAdGkuY29tPgo+Pj4+PiAtLS0KPj4+Pj4gIMKgwqAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc29jL3RpL3NjaS1wbS1kb21haW4udHh0wqDCoMKgwqDCoCB8IDEx
-ICsrKysrKysrKy0tCj4+Pj4+ICDCoMKgIE1BSU5UQUlORVJTwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHzCoCAxICsKPj4+Pj4gIMKgwqAgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2Np
-X3BtX2RvbWFpbi5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgOSArKysrKysrKysKPj4+Pj4g
-IMKgwqAgMyBmaWxlcyBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
-Pj4+PiAgwqDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGks
-c2NpX3BtX2RvbWFpbi5oCj4+Pj4+Cj4+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc29jL3RpL3NjaS1wbS1kb21haW4udHh0Cj4+Pj4+IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0tZG9tYWluLnR4dAo+Pj4+
-PiBpbmRleCBmN2IwMGE3YzBmNjguLmY1NDFkMWY3NzZhMiAxMDA2NDQKPj4+Pj4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0tZG9tYWluLnR4dAo+
-Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL3RpL3NjaS1w
-bS1kb21haW4udHh0Cj4+Pj4+IEBAIC0xOSw4ICsxOSwxNSBAQCBjaGlsZCBvZiB0aGUgcG1tYyBu
-b2RlLgo+Pj4+PiAgwqDCoCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+Pj4+PiAgwqDCoCAtLS0tLS0t
-LS0tLS0tLS0tLS0tLQo+Pj4+PiAgwqDCoCAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSAidGksc2Np
-LXBtLWRvbWFpbiIKPj4+Pj4gLS0gI3Bvd2VyLWRvbWFpbi1jZWxsczogTXVzdCBiZSAxIHNvIHRo
-YXQgYW4gaWQgY2FuIGJlIHByb3ZpZGVkIGluIGVhY2gKPj4+Pj4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgZGV2aWNlIG5vZGUuCj4+Pj4+ICstICNwb3dlci1kb21haW4tY2VsbHM6IENh
-biBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-MTogQ29udGFpbmluZyB0aGUgZGV2aWNlIGlkIG9mIGVhY2ggbm9kZQo+Pj4+PiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAyOiBGaXJzdCBlbnRyeSBzaG91bGQgYmUgZGV2aWNlIGlkCj4+Pj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNlY29uZCBlbnRyeSBzaG91bGQgYmUgb25lIG9m
-IHRoZSBmbG9vd2luZzoKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgVElfU0NJ
-X1BEX0VYQ0xVU0lWRTogVG8gYWxsb3cgZGV2aWNlIHRvIGJlCj4+Pj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV4Y2x1c2l2ZWx5IGNvbnRyb2xsZWQg
-YnkKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-dGhlIHJlcXVlc3RpbmcgaG9zdHMuCj4+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IFRJX1NDSV9QRF9TSEFSRUQ6IFRvIGFsbG93IGRldmljZSB0byBiZSBzaGFyZWQKPj4+Pj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBieSBtdWx0aXBs
-ZSBob3N0cy4KPj4+Pgo+Pj4+IE9uZSB0aGluZyBzaG91bGQgYmUgbm90ZWQgb24gdGhpcywgdGhl
-IGFkZGVkIGZsYWcgaXMgcHVyZWx5IGZvciBzb2Z0d2FyZQo+Pj4+IGNvbmZpZ3VyYXRpb24sIGFu
-ZCBpcyBub3QgdGVsbGluZyB1cyBhbnl0aGluZyBhYm91dCB0aGUgSFcgLyBmaXJtd2FyZS4gU29m
-dHdhcmUKPj4+Cj4+PiBJIGRvZXMgc2F5IGFib3V0IGhvdyBmaXJtd2FyZSBoYW5kbGVzIHRoZSBy
-ZXF1ZXN0ZWQgZGV2aWNlLgo+Pgo+PiBUaGVyZSBpcyBhIHNsaWdodCBudWFuY2UgaW4gdGhlIHdv
-cmRpbmcgaGVyZS4gSXQgdGVsbHMgdGhlIGZpcm13YXJlIGhvdyB0bwo+PiBoYW5kbGUgdGhlIGRl
-dmljZSwgYW5kIHlvdSBjYW4gYmFzaWNhbGx5IHVzZSBlaXRoZXIgZmxhZyBhbmQgaXQgd2lsbCB3
-b3JrLi4uCj4+IHVudGlsIHNvbWVvbmUgZWxzZSBhdHRlbXB0cyB0byB1c2UgdGhlIHNhbWUgZGV2
-aWNlLiBJIHJlY2FsbCBEVCB3YXMgc3VwcG9zZWQgdG8KPj4gZGVzY3JpYmUgdGhlIGhhcmR3YXJl
-LCBub3QgdG8gdGVsbCB1cyBob3cgdG8gdXNlIGl0Lgo+IAo+IFdlbGwgSWxsIHB1dCBpdCB0aGlz
-IHdheS4gVGhpcyBmbGFnIGRlc2NyaWJlcyB0aGF0IHRoZSByZXF1ZXN0ZWQgZGV2aWNlIGlzIGEK
-PiBzaGFyZWQgZGV2aWNlIGFjcm9zcyBtdWx0aXBsZSBob3N0cyA6KQoKQnV0IHRoYXQgaXMgcHVy
-ZSBzb2Z0d2FyZSBjb25maWcsIHJpZ2h0PyBEZXBlbmRzIG9uIHRoZSBzb2Z0d2FyZSBkZXNpZ24g
-CmNob2ljZXMgbWFkZSwgd2hpY2ggaG9zdCBpcyBnb2luZyB0byB1c2Ugd2hpY2ggcmVzb3VyY2Uu
-IFBlcnNvbmFsbHkgSSAKZG9uJ3QgdGhpbmsgdGhpcyBqdXN0aWZpZXMgYSBEVCBiaW5kaW5nLCBi
-dXQgSSBtaWdodCBiZSB3cm9uZy4gSSdsbCBsZXQgClJvYiBjb21tZW50IG9uIHRoaXMuCgotVGVy
-bwoKPiAKPj4KPj4+Cj4+Pj4gY2FuIGRlY2lkZSB0byBoYXZlIHRoZSBmbGFnIGVpdGhlciB3YXkg
-YW5kIGl0IHdpbGwgd29yay4gSSBqdXN0IHdvbmRlciBpZiBEVCBpcwo+Pj4+IHRoZSBjb3JyZWN0
-IGxvY2F0aW9uIHRvIGhhdmUgc29tZXRoaW5nIGxpa2UgdGhpcy4uLiBFeHBlY3QgdG8gaGF2ZSBw
-bGVudHkgb2YKPj4+PiBjaHVybiBvbiB0aGlzIGJ5IHBlb3BsZSBzd2FwcGluZyB0aGUgcGVybWlz
-c2lvbnMgYXJvdW5kIGFjY29yZGluZyB0byB0aGVpcgo+Pj4+IHVzZS1jYXNlIG5lZWRzLgo+Pj4K
-Pj4+IERvIHlvdSBoYXZlIGFueSBvdGhlciBzdWdnZXN0aW9uIHRvIGhhbmRsZSBzaGFyZWQgZGV2
-aWNlcyBhY3Jvc3MgVk1zPwo+Pgo+PiBXZWxsLCB3ZSBzaG91bGQgaGF2ZSBjb25maWd1cmF0aW9u
-IGRhdGEgYXZhaWxhYmxlIHNvbWV3aGVyZSwgYnV0IGl0IHNvdW5kcyBsaWtlCj4+IERUIG1pZ2h0
-IGJlIHdyb25nIGxvY2F0aW9uIGZvciB0aGlzLiBNYXliZSBhIHdoaXRlbGlzdCBvZiBkZXZpY2Vz
-IHRoYXQgY2FuIGJlCj4+IHNoYXJlZCBzb21ld2hlcmUuIE1heWJlIHVuZGVyIHRoZSBQRCBkcml2
-ZXIgaXRzZWxmLiBEbyB3ZSBoYXZlIGFueSBleGFtcGxlcyBmb3IKPiAKPiBXZSB3aWxsIGVuZCB1
-cCBjcmVhdGluZyBhIHNlcGFyYXRlIGxpc3QgZm9yIGVhY2ggU29DIGFuZCBpdCBtaWdodCBjaGFu
-Z2UgcGVyIHVzZQo+IGNhc2UuIEkgd291bGQgbm90IGxpa2UgdG8gZ28gZG93biB0aGF0IHJvYWQu
-Cj4gCj4gVGhhbmtzIGFuZCByZWdhcmRzLAo+IExva2VzaAo+IAo+PiBzb21ldGhpbmcgc2ltaWxh
-ciBhdmFpbGFibGUgaW4gdGhlIGtlcm5lbCB0b2RheT8KPj4KPj4gLVRlcm8KPj4gLS0gCgotLQpU
-ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
-aW5raS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2ls
-ZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Apr 10, 2019 at 02:29:27PM +0300, Jarkko Sakkinen wrote:
+>On Sat, Apr 06, 2019 at 11:30:47AM -0400, Sasha Levin wrote:
+>> On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
+>> > On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
+>> > > On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
+>> > > > This patch adds support for a software-only implementation of a TPM
+>> > > > running in TEE.
+>> > > >
+>> > > > There is extensive documentation of the design here:
+>> > > > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
+>> > > >
+>> > > > As well as reference code for the firmware available here:
+>> > > > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
+>> > > >
+>> > > > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+>> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > >
+>> > > What is the context anyway? I mean tpm_crb already supports fTPM running
+>> > > in TZ.
+>> >
+>> > Might take 2-3 weeks before I have time to go through ftpm1.pdf with
+>> > full concentration. I did search through the PDF for CRB and found
+>> > zero hits.
+>>
+>> The fTPM as described in that paper and implemented in practice does not
+>> use the CRB interface, thus we can't use tpm_crb to interface with the
+>> firmware TPM.
+>
+>Obviously not but what is the reason of not implementing CRB but instead
+>making yet another interface? I mean CRB supports SMC call.
+>
+>For me this is taking steps back as to the early days when there was
+>proprietary intefaces to TPM before TCG came along and stardized.
+>
+>I'm sure that the TPM implementation itself could be reworked to
+>inteface using CRB. It would also be good for ARM as a platform as now
+>this new made up interface causes unwanted divergence. I thought that
+>throwing ad hoc intefaces everywhere is something that ARM Linux
+>community tries to reduce, not increase.
+
+I'm not sure what the original reasons were for not using the CRB
+interface. Note that the paper is from a few years ago, and
+implementations of this fTPM existed before the paper, so it's very
+possible that it just predates CRB.
+
+Either way, there is existing hardware that runs this TPM and I'm trying
+to get it out of Microsoft's tree and get it upstream. There's not much
+I could do about existing hardware at this point.
+
+
+--
+Thanks,
+Sasha
