@@ -1,130 +1,44 @@
-Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 01/13] dt-bindings: phy: rcar-gen2: Add r8a77470 support
-Date: Wed, 10 Apr 2019 09:08:23 +0100
-Message-Id: <1554883715-41725-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=NnWQ=SM=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V11 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Wed, 10 Apr 2019 06:01:22 +0000
+Message-ID: <1554875779-19727-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, Andy Gross <andy.gross@linaro.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add USB PHY support for r8a77470 SoC. Renesas RZ/G1C (R8A77470)
-USB PHY is similar to the R-Car Gen2 family, but has the below
-feature compared to other RZ/G1 and R-Car Gen2/3 SoCs
-
-It has a shared pll reset for usbphy0/usbphy1 and this register
-reside in usbphy0 block.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
-V3-->V4
-  * No Change
-V2-->V3
-  * No Change
-V1-->V2
-  * Incorporated Rob's review comment
-    https://patchwork.kernel.org/patch/10655853/
----
- .../devicetree/bindings/phy/rcar-gen2-phy.txt      | 57 ++++++++++++++++++++--
- 1 file changed, 53 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-index 4f0879a..ac96d64 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-@@ -7,6 +7,7 @@ Required properties:
- - compatible: "renesas,usb-phy-r8a7743" if the device is a part of R8A7743 SoC.
- 	      "renesas,usb-phy-r8a7744" if the device is a part of R8A7744 SoC.
- 	      "renesas,usb-phy-r8a7745" if the device is a part of R8A7745 SoC.
-+	      "renesas,usb-phy-r8a77470" if the device is a part of R8A77470 SoC.
- 	      "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
- 	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
- 	      "renesas,usb-phy-r8a7794" if the device is a part of R8A7794 SoC.
-@@ -30,7 +31,7 @@ channels. These subnodes must contain the following properties:
- - #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
- 
- The phandle's argument in the PHY specifier is the USB controller selector for
--the USB channel; see the selector meanings below:
-+the USB channel other than r8a77470 SoC; see the selector meanings below:
- 
- +-----------+---------------+---------------+
- |\ Selector |               |               |
-@@ -41,6 +42,16 @@ the USB channel; see the selector meanings below:
- | 2         | PCI EHCI/OHCI | xHCI          |
- +-----------+---------------+---------------+
- 
-+For r8a77470 SoC;see the selector meaning below:
-+
-++-----------+---------------+---------------+
-+|\ Selector |               |               |
-++ --------- +       0       |       1       |
-+| Channel  \|               |               |
-++-----------+---------------+---------------+
-+| 0         | EHCI/OHCI     | HS-USB        |
-++-----------+---------------+---------------+
-+
- Example (Lager board):
- 
- 	usb-phy@e6590100 {
-@@ -48,15 +59,53 @@ Example (Lager board):
- 		reg = <0 0xe6590100 0 0x100>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		clocks = <&cpg CPG_MOD 704>;
- 		clock-names = "usbhs";
-+		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-+		resets = <&cpg 704>;
- 
--		usb-channel@0 {
-+		usb0: usb-channel@0 {
- 			reg = <0>;
- 			#phy-cells = <1>;
- 		};
--		usb-channel@2 {
-+		usb2: usb-channel@2 {
- 			reg = <2>;
- 			#phy-cells = <1>;
- 		};
- 	};
-+
-+Example (iWave RZ/G1C sbc):
-+
-+	usbphy0: usb-phy0@e6590100 {
-+		compatible = "renesas,usb-phy-r8a77470",
-+			     "renesas,rcar-gen2-usb-phy";
-+		reg = <0 0xe6590100 0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cpg CPG_MOD 704>;
-+		clock-names = "usbhs";
-+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+		resets = <&cpg 704>;
-+
-+		usb0: usb-channel@0 {
-+			reg = <0>;
-+			#phy-cells = <1>;
-+		};
-+	};
-+
-+	usbphy1: usb-phy@e6598100 {
-+		compatible = "renesas,usb-phy-r8a77470",
-+			     "renesas,rcar-gen2-usb-phy";
-+		reg = <0 0xe6598100 0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cpg CPG_MOD 706>;
-+		clock-names = "usbhs";
-+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+		resets = <&cpg 706>;
-+
-+		usb1: usb-channel@0 {
-+			reg = <0>;
-+			#phy-cells = <1>;
-+		};
-+	};
--- 
-2.7.4
+TlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRl
+IGFzDQpzeXN0ZW0gY29udHJvbGxlciwgdGhlIHN5c3RlbSBjb250cm9sbGVyIGlzIGluIGNoYXJn
+ZSBvZiBzeXN0ZW0NCnBvd2VyLCBjbG9jayBhbmQgdGhlcm1hbCBzZW5zb3JzIGV0Yy4gbWFuYWdl
+bWVudCwgTGludXgga2VybmVsDQpoYXMgdG8gY29tbXVuaWNhdGUgd2l0aCBzeXN0ZW0gY29udHJv
+bGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkNCklQQyB0byBnZXQgdGVtcGVyYXR1cmUgZnJvbSB0
+aGVybWFsIHNlbnNvcnMsIHRoaXMgcGF0Y2ggYWRkcw0KYmluZGluZyBkb2MgZm9yIGkuTVggc3lz
+dGVtIGNvbnRyb2xsZXIgdGhlcm1hbCBkcml2ZXIuDQoNClNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
+YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQpDaGFuZ2VzIHNpbmNlIFYxMDoNCgktIHJl
+bW92ZSBwcm9wZXJ0eSAiaW14LHNlbnNvci1yZXNvdXJjZS1pZCIuDQotLQ0KIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgICAgICAgIHwgMTYgKysrKysr
+KysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2ws
+c2N1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
+L2ZzbCxzY3UudHh0DQppbmRleCA1ZDdkYmFiLi5mNGZiNmQ1IDEwMDY0NA0KLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCisr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
+Y3UudHh0DQpAQCAtMTMzLDYgKzEzMywxNyBAQCBSVEMgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1l
+c3NhZ2UgUHJvdG9jb2wNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIC0gY29tcGF0aWJsZTogc2hv
+dWxkIGJlICJmc2wsaW14OHF4cC1zYy1ydGMiOw0KIA0KK1RoZXJtYWwgYmluZGluZ3MgYmFzZWQg
+b24gU0NVIE1lc3NhZ2UgUHJvdG9jb2wNCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCisNCitSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+Ky0gY29tcGF0aWJsZToJCQlTaG91bGQgYmUgOg0KKwkJCQkgICJmc2wsaW14OHF4cC1zYy10aGVy
+bWFsIg0KKwkJCQlmb2xsb3dlZCBieSAiZnNsLGlteC1zYy10aGVybWFsIjsNCisNCistICN0aGVy
+bWFsLXNlbnNvci1jZWxsczoJU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
+aGVybWFsL3RoZXJtYWwudHh0DQorCQkJCWZvciBhIGRlc2NyaXB0aW9uLg0KKw0KIEV4YW1wbGUg
+KGlteDhxeHApOg0KIC0tLS0tLS0tLS0tLS0NCiBhbGlhc2VzIHsNCkBAIC0xODUsNiArMTk2LDEx
+IEBAIGZpcm13YXJlIHsNCiAJCXJ0YzogcnRjIHsNCiAJCQljb21wYXRpYmxlID0gImZzbCxpbXg4
+cXhwLXNjLXJ0YyI7DQogCQl9Ow0KKw0KKwkJdHNlbnM6IHRoZXJtYWwtc2Vuc29yIHsNCisJCQlj
+b21wYXRpYmxlID0gImZzbCxpbXg4cXhwLXNjLXRoZXJtYWwiLCAiZnNsLGlteC1zYy10aGVybWFs
+IjsNCisJCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47DQorCQl9Ow0KIAl9Ow0KIH07DQog
+DQotLSANCjIuNy40DQoNCg==
