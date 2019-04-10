@@ -1,151 +1,197 @@
-From: =?utf-8?Q?Christoph_M=C3=BCllner?=
-        <christoph.muellner@theobroma-systems.com>
-Subject: Re: [PATCH 1/2] drm: panel-simple: Add simple-panel driver.
-Date: Wed, 10 Apr 2019 17:03:44 +0200
-Message-ID: <C2630261-AECD-4357-911F-B0E01E74C74A@theobroma-systems.com>
-References: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
- <7915415.Bhcl4jWJiJ@diego>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Federico Vaga <federico.vaga@cern.ch>
+Subject: Re: Device Description for FPGA Components on x86 system
+Date: Wed, 10 Apr 2019 17:13:32 +0200
+Message-ID: <2706675.qmhD4SUPsn@pcbe13614>
+References: <1629227.alSmCsHHUc@pcbe13614> <31100498.IIhqzTXyFT@pcbe13614> <CANk1AXSQCFGE94R8ZxVSF2Gp+diCHJhFJPSVSx+iEyWp2URcpw@mail.gmail.com>
+Reply-To: <federico.vaga@cern.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7915415.Bhcl4jWJiJ@diego>
+In-Reply-To: <CANk1AXSQCFGE94R8ZxVSF2Gp+diCHJhFJPSVSx+iEyWp2URcpw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alan Tull <atull@kernel.org>
+Cc: Eric Schwarz <eas@sw-optimization.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-x86_64@vger.kernel.org, linux-fpga-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Hi Alan,
 
-> On 10.04.2019, at 16:50, Heiko Stübner <heiko@sntech.de> wrote:
-> 
-> Hi Christoph,
-> 
-> Am Mittwoch, 10. April 2019, 16:10:44 CEST schrieb Christoph Muellner:
->> On our RK3399-Q7 EVK base board we have the option to connect an arbitrary
->> monitor via DP cable. The actual monitor is therefore not known in advance.
->> This means, we don't have any panel information besides the EDID
->> data from the device itself.
-> 
-> Just so I understand correctly, you have a real dp-connector wired to
-> the Analogix dp-controller, and therefore want to connect actual
-> monitors to it.
-> 
-> So the problem you're trying to work around is probably that the
-> rockchip-driver of the analogix controller explictly expects a bridge
-> to be present during probe, right?
-> 
-> I think hacking up the panel-driver is not an ideal approach:
-> (1) bridges/panels do expect to stay connected all the time
->    and are meant for devices with actual hard-wired displays with specific
->    power-sequence requirements
-> (2) devicetree is expected to describe the real hardware, therefore the
->    dt should not describe one thing while the actual hardware is really
->    different
-> 
-> So, I guess a more ideal approach could perhaps be to:
-> (1) define a "dp-connector" devicetree binding, see
->    Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
->    for a similar one
-> (2) steal an idea from drivers/gpu/drm/mediatek/mtk_hdmi.c and check
->    for that new compatible:
-> 	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-> 		//move bridge handling here
-> 	}
-> 
->    and modify both the rockchip-part and the generic analogix bridge code
->    to work with the connector declared instead of a panel?
+thanks for your answer
 
-Thank's for you input on this.
+On Wednesday, April 10, 2019 4:21:09 PM CEST Alan Tull wrote:
+> On Wed, Apr 10, 2019 at 7:50 AM Federico Vaga <federico.vaga@cern.ch> wrote:
+> 
+> Hi Federico,
+> 
+> I wish I could point you to a complete solution, but there is a lot of
+> work to be done in this area.  Most of what is in the kernel is a low
+> level in-kernel API [4].  As you correctly state, the hardest part of
+> this is doing the enumerating if you are on x86 and aren't using
+> devicetree.
+> 
+> > Hi,
+> > 
+> > P.S. sorry if I'm too verbose, hopefully it is useful
+> > 
+> > thanks for the answer
+> > 
+> > On Wednesday, April 10, 2019 12:30:14 PM CEST Eric Schwarz wrote:
+> > > Hi,
+> > > 
+> > > everything you want is already available and on the way to mainline
+> > > concerning support for various FPGA loading modes or available for
+> > > checkout from a git repository.
+> > > All that has already been discussed on the mailing list.
+> > > 
+> > > FPGA loading interface is available here [1].
+> > > Patchset missing for FPGA loading has been sent to the mailing list from
+> > > Anatolij Gustschin for various Linux kernel versions. Link to the most
+> > > recent patchset version [2].
+> > > FPGA Manager mailing list archive link [3] - Please read up the story
+> > > here around those patches and also the replies of the others.
+> > 
+> > This does not answer the problem, which perhaps need to be clarified.
+> > 
+> > Loading FPGA is **not** the problem, I listed it in the things I want to
+> > achieve because it is a pre-requirement for the real problem and because
+> > the two processes are linked (or could be).
+> > 
+> > I continue by commenting myself below, trying to make the use case
+> > clearer.
+> > 
+> > > Cheers
+> > > Eric
+> > > 
+> > > [1] https://github.com/vdsao/fpga-cfg
+> > > [2] https://marc.info/?l=linux-fpga&m=155078072107199&w=2
+> > > [3] https://marc.info/?l=linux-fpga
+> > > 
+> > > Am 10.04.2019 12:01, schrieb Federico Vaga:
+> > > > Hello,
+> > > > 
+> > > > sorry to push for an answer but I do not want to take the risk of
+> > > > designing
+> > > > something useless. I do not know how should I interpret a no-answer.
+> > > > 
+> > > > If the solution really does not exist today, then I would like to
+> > > > collect
+> > > > opinions/arguments/requirements on the topic so that I can write
+> > > > something
+> > > > useful not only for CERN but for the entire community.
+> > > > 
+> > > > Thank you
+> > > > 
+> > > > On Wednesday, March 27, 2019 6:17:18 PM CEST Federico Vaga wrote:
+> > > >> Hello,
+> > > >> 
+> > > >> I'm looking for guidance
+> > > >> 
+> > > >> What I have:
+> > > >> * Intel x86_64 computer
+> > > >> * PCIe card with FPGA on it
+> > > >> 
+> > > >> What I want to achieve:
+> > > >> * load an FPGA bitstream on the card
+> > > >> * load a device-tree like description for the FPGA devices contained
+> > > >> in the bitstream
+> > 
+> > Let me first elaborate on my knowledge to avoid misunderstandings.
+> > 
+> > On ARM, nowadays, we boot with a device tree. Later we program an FPGA in
+> > which there are other devices described by a device tree overlay. This can
+> > be done easily.
+> > 
+> > A typical PC (x86/x86_64) does not boot with DeviceTree (it is possible,
+> > but it is not common and probably not even suggested, not sure), instead
+> > it uses ACPI.
+> 
+> I have heard it suggested that we work on using DT overlays on x86*.
+> It's clear there's work to be done to make that work.  I don't know if
+> anybody has really tried.  It seems impractical to map or translate a
+> x86 systems ACPI into a DT and go from there.  
 
-Modelling the connector instead of the panel is indeed a better approach,
-since we can then also react to connect/disconnect events (after probe).
 
-Thanks,
-Christoph
+> One suggestion a few
+> years ago was adding a partial DT that had nodes that could serve as
+> overlay targets and have that running in parallel with ACPI.
 
+This is also one of my ideas for a solution to our problems. Are you able to 
+easily retrieve that conversation? Perhaps this is something on which I can 
+work on.
+
+> > The FPGA Manager has support only for DeviceTree (there are patching
+> > floating around to load a bitstream with configfs, debugfs or a
+> > chardevice (guilty))
+> There's one other interface in the kernel upstream. The DFL (device
+> feature list) framework built on the FPGA manager/bridge/region stuff
+> [5].   It's probably not what you specifically are looking for, I'm
+> mentioning as it exists in upstream.  It has a limited type of
+> enumeration and appears to mostly be geared for acceleration rather
+> than adding and enumerating any random hardware block.  Also it
+> requires specific bitstreams as the feature list is in fpga fabric.
 > 
->> The functionality for a 'simple-panel' has been remove a couple
->> of years ago with 81cf32b. This patch brings this feature back.
->> 
->> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->> ---
->> drivers/gpu/drm/panel/panel-simple.c | 24 ++++++++++++++++--------
->> 1 file changed, 16 insertions(+), 8 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->> index 9e8218f6a3f2..1f69283f3e4b 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
->> 		backlight_update_status(p->backlight);
->> 	}
->> 
->> -	if (p->desc->delay.disable)
->> +	if (p->desc && p->desc->delay.disable)
->> 		msleep(p->desc->delay.disable);
->> 
->> 	p->enabled = false;
->> @@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
->> 
->> 	regulator_disable(p->supply);
->> 
->> -	if (p->desc->delay.unprepare)
->> +	if (p->desc && p->desc->delay.unprepare)
->> 		msleep(p->desc->delay.unprepare);
->> 
->> 	p->prepared = false;
->> @@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
->> 
->> 	gpiod_set_value_cansleep(p->enable_gpio, 1);
->> 
->> -	delay = p->desc->delay.prepare;
->> -	if (p->no_hpd)
->> -		delay += p->desc->delay.hpd_absent_delay;
->> -	if (delay)
->> -		msleep(delay);
->> +	if (p->desc) {
->> +		delay = p->desc->delay.prepare;
->> +		if (p->no_hpd)
->> +			delay += p->desc->delay.hpd_absent_delay;
->> +		if (delay)
->> +			msleep(delay);
->> +	}
->> 
->> 	p->prepared = true;
->> 
->> @@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
->> 	if (p->enabled)
->> 		return 0;
->> 
->> -	if (p->desc->delay.enable)
->> +	if (p->desc && p->desc->delay.enable)
->> 		msleep(p->desc->delay.enable);
->> 
->> 	if (p->backlight) {
->> @@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
->> 	struct panel_simple *p = to_panel_simple(panel);
->> 	unsigned int i;
->> 
->> +	if (!p->desc)
->> +		return 0;
->> +
->> 	if (p->desc->num_timings < num_timings)
->> 		num_timings = p->desc->num_timings;
->> 
->> @@ -2536,6 +2541,9 @@ static const struct panel_desc arm_rtsm = {
->> 
->> static const struct of_device_id platform_of_match[] = {
->> 	{
->> +		.compatible = "simple-panel",
->> +		.data = NULL,
->> +	}, {
->> 		.compatible = "ampire,am-480272h3tmqw-t01h",
->> 		.data = &ampire_am_480272h3tmqw_t01h,
->> 	}, {
->> 
+> > Most drivers foresee a DeviceTree loading but not an ACPI one (my feeling,
+> > I did not extract exact numbers from the sources)
+> > 
+> > DeviceTree overlay requires that the system boots with DeviceTree.
+> > 
+> > DeviceTree and ACPI do not work together
+> > 
+> > So, this is the state of art that I am aware of. Correct me if, and where,
+> > I am wrong.
+> > 
+> > 
+> > Restarting from this point. I have a PC (x86_64) with a PCIe FPGA card
+> > (e.g. sis8160, spec, links below). How to load the FPGA bitstream (not
+> > really a problem as you correctly pointed out) **and** load all the
+> > IP-core instances in that FPGA bitstream so that drivers will start
+> > running?
+> > 
+> > - Is there a recommendation for such use case?
+> > - ACPI SSDT overlay?
+> > - DT overlay?
+> > - is there a standard way to load FPGA IP-core devices which is
+> > architecture independent?
+> > 
+> > A simple and practical example. The i2c-ocore.c is a platform_driver for
+> > an
+> > HDL I2C Master from open cores. I synthesize it and then load it on the
+> > FPGA. How to create the Linux platform_device instance to driver that
+> > IP-core? How to do that when you have also IRQ controller(s), DMA
+> > engine(s), EEPROM(s) and other devices?
+> > 
+> > The fastest solution is to do what was common on ARM systems: having all
+> > platform devices declared (hard coded) in a file and load them. Which is
+> > not a good solution, for the same reasons why arm stuff moved to
+> > devicetree.
+> > 
+> > Is it clearer?
+> > 
+> > I do not know if it important to highlight but those cards are extensible,
+> > potentially any FMC module could be plugged and this needs a different
+> > FPGA, with different FPGA devices etc. So, It is not possible to hardcode
+> > the description of all possible FPGA code (infinite) that can enable the
+> > usage of all possible FMC module (not infinite, but definitively grater
+> > than 1)
+> > 
+> > 
+> > https://www.struck.de/sis8160.html
+> > https://ohwr.org/project/spec/wikis/home
+> > 
+> > > >> This is achievable on ARM with DeviceTree, overlay-dt, fpga-mgr; but
+> > > >> I'm
+> > > >> puzzled about the x86_64 use-case. I'm not able to find recent and
+> > > >> clear
+> > > >> information.
+> > > >> 
+> > > >> Does anyone know if this is doable? Perhaps with ACPI SSDTs overlay?
+> > > >> Or with
+> > > >> the DT?
+> > > >> 
+> > > >> thanks
 > 
+> Thanks,
+> Alan
 > 
-> 
-> 
+> [4] https://www.kernel.org/doc/html/latest/driver-api/fpga/index.html
+> [5] https://github.com/torvalds/linux/blob/master/Documentation/fpga/dfl.txt
