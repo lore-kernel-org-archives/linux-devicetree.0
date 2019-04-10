@@ -1,114 +1,151 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: Document
- operating-points-v2-sunxi-cpu
-Date: Wed, 10 Apr 2019 16:56:59 +0200
-Message-ID: <20190410145659.62nl4o2jvkuggmpe@flea>
-References: <20190409172558.18778-1-tiny.windzz@gmail.com>
- <20190409172558.18778-3-tiny.windzz@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6yay5myzwekec5cw"
+From: =?utf-8?Q?Christoph_M=C3=BCllner?=
+        <christoph.muellner@theobroma-systems.com>
+Subject: Re: [PATCH 1/2] drm: panel-simple: Add simple-panel driver.
+Date: Wed, 10 Apr 2019 17:03:44 +0200
+Message-ID: <C2630261-AECD-4357-911F-B0E01E74C74A@theobroma-systems.com>
+References: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
+ <7915415.Bhcl4jWJiJ@diego>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190409172558.18778-3-tiny.windzz@gmail.com>
+In-Reply-To: <7915415.Bhcl4jWJiJ@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Heiko,
 
---6yay5myzwekec5cw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 10.04.2019, at 16:50, Heiko Stübner <heiko@sntech.de> wrote:
+> 
+> Hi Christoph,
+> 
+> Am Mittwoch, 10. April 2019, 16:10:44 CEST schrieb Christoph Muellner:
+>> On our RK3399-Q7 EVK base board we have the option to connect an arbitrary
+>> monitor via DP cable. The actual monitor is therefore not known in advance.
+>> This means, we don't have any panel information besides the EDID
+>> data from the device itself.
+> 
+> Just so I understand correctly, you have a real dp-connector wired to
+> the Analogix dp-controller, and therefore want to connect actual
+> monitors to it.
+> 
+> So the problem you're trying to work around is probably that the
+> rockchip-driver of the analogix controller explictly expects a bridge
+> to be present during probe, right?
+> 
+> I think hacking up the panel-driver is not an ideal approach:
+> (1) bridges/panels do expect to stay connected all the time
+>    and are meant for devices with actual hard-wired displays with specific
+>    power-sequence requirements
+> (2) devicetree is expected to describe the real hardware, therefore the
+>    dt should not describe one thing while the actual hardware is really
+>    different
+> 
+> So, I guess a more ideal approach could perhaps be to:
+> (1) define a "dp-connector" devicetree binding, see
+>    Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+>    for a similar one
+> (2) steal an idea from drivers/gpu/drm/mediatek/mtk_hdmi.c and check
+>    for that new compatible:
+> 	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> 		//move bridge handling here
+> 	}
+> 
+>    and modify both the rockchip-part and the generic analogix bridge code
+>    to work with the connector declared instead of a panel?
 
-On Tue, Apr 09, 2019 at 01:25:58PM -0400, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value  based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
->
-> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-microvolt-<name>: voltage in micro Volts.
->   At runtime, the platform can pick a <name> and matching
->   opp-microvolt-<name> property
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
->
-> diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> new file mode 100644
-> index 000000000000..c81a2075b974
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> @@ -0,0 +1,166 @@
-> +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> +===================================
-> +
-> +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> +varies based on the silicon variant in use. Allwinner Process Voltage
-> +Scaling Tables defines the voltage and frequency value  based on the
-> +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-> +reads the efuse value from the SoC to provide the OPP framework with
-> +required information.
-> +
-> +Required properties:
-> +--------------------
-> +In 'cpus' nodes:
-> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> +
-> +In 'operating-points-v2' table:
-> +- compatible: Should be
-> +	- 'operating-points-v2-sunxi-cpu'.
+Thank's for you input on this.
 
-Vendor-specific compatibles should have the vendor mentionned.
+Modelling the connector instead of the panel is indeed a better approach,
+since we can then also react to connect/disconnect events (after probe).
 
-Also, even though the H6 is the only SoC so far that has needed this,
-we can't really assume that it will be the only SoC to use it, or that
-it will always behave like that.
+Thanks,
+Christoph
 
-So having something like allwinner,sun50i-h6-operating-points would be
-great.
-
-> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-> +		efuse registers that has information about the
-> +		speedbin that is used to select the right frequency/voltage
-> +		value pair.
-> +		Please refer the for nvmem-cells
-> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-> +		and also examples below.
-> +
-> +In every OPP node:
-> +- opp-microvolt-<name>: Voltage in micro Volts.
-> +			At runtime, the platform can pick a <name> and
-> +			matching opp-microvolt-<name> property.
-> +			[See: opp.txt]
-
-You need to document the valid names here.
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---6yay5myzwekec5cw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK4EOwAKCRDj7w1vZxhR
-xXr6AQDvwTpjj8VYqGfUgaR7dQGKXPaggIMLIGU9MeAPENqygwD/TQrHWLapGkm0
-0yMu+BgQ5XREz9SeD+UV2GVYA1PoxgA=
-=Bpew
------END PGP SIGNATURE-----
-
---6yay5myzwekec5cw--
+> 
+>> The functionality for a 'simple-panel' has been remove a couple
+>> of years ago with 81cf32b. This patch brings this feature back.
+>> 
+>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+>> ---
+>> drivers/gpu/drm/panel/panel-simple.c | 24 ++++++++++++++++--------
+>> 1 file changed, 16 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+>> index 9e8218f6a3f2..1f69283f3e4b 100644
+>> --- a/drivers/gpu/drm/panel/panel-simple.c
+>> +++ b/drivers/gpu/drm/panel/panel-simple.c
+>> @@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
+>> 		backlight_update_status(p->backlight);
+>> 	}
+>> 
+>> -	if (p->desc->delay.disable)
+>> +	if (p->desc && p->desc->delay.disable)
+>> 		msleep(p->desc->delay.disable);
+>> 
+>> 	p->enabled = false;
+>> @@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
+>> 
+>> 	regulator_disable(p->supply);
+>> 
+>> -	if (p->desc->delay.unprepare)
+>> +	if (p->desc && p->desc->delay.unprepare)
+>> 		msleep(p->desc->delay.unprepare);
+>> 
+>> 	p->prepared = false;
+>> @@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
+>> 
+>> 	gpiod_set_value_cansleep(p->enable_gpio, 1);
+>> 
+>> -	delay = p->desc->delay.prepare;
+>> -	if (p->no_hpd)
+>> -		delay += p->desc->delay.hpd_absent_delay;
+>> -	if (delay)
+>> -		msleep(delay);
+>> +	if (p->desc) {
+>> +		delay = p->desc->delay.prepare;
+>> +		if (p->no_hpd)
+>> +			delay += p->desc->delay.hpd_absent_delay;
+>> +		if (delay)
+>> +			msleep(delay);
+>> +	}
+>> 
+>> 	p->prepared = true;
+>> 
+>> @@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
+>> 	if (p->enabled)
+>> 		return 0;
+>> 
+>> -	if (p->desc->delay.enable)
+>> +	if (p->desc && p->desc->delay.enable)
+>> 		msleep(p->desc->delay.enable);
+>> 
+>> 	if (p->backlight) {
+>> @@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
+>> 	struct panel_simple *p = to_panel_simple(panel);
+>> 	unsigned int i;
+>> 
+>> +	if (!p->desc)
+>> +		return 0;
+>> +
+>> 	if (p->desc->num_timings < num_timings)
+>> 		num_timings = p->desc->num_timings;
+>> 
+>> @@ -2536,6 +2541,9 @@ static const struct panel_desc arm_rtsm = {
+>> 
+>> static const struct of_device_id platform_of_match[] = {
+>> 	{
+>> +		.compatible = "simple-panel",
+>> +		.data = NULL,
+>> +	}, {
+>> 		.compatible = "ampire,am-480272h3tmqw-t01h",
+>> 		.data = &ampire_am_480272h3tmqw_t01h,
+>> 	}, {
+>> 
+> 
+> 
+> 
+> 
