@@ -1,124 +1,49 @@
-From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH 2/2] ARM: dts: imx6ul-pico: Add support for the nymph baseboard
-Date: Tue,  9 Apr 2019 22:00:13 -0300
-Message-ID: <20190410010013.17259-2-otavio@ossystems.com.br>
-References: <20190410010013.17259-1-otavio@ossystems.com.br>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V11 0/5] Add i.MX7ULP EVK PWM backlight support
+Date: Wed, 10 Apr 2019 01:47:28 +0000
+Message-ID: <1554860547-18237-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410010013.17259-1-otavio@ossystems.com.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <festevam@gmail.com>, Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
+TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver support
+and also add backlight support for MIPI-DSI display.
 
-Add support for the imx6ul pico board with nymph baseboard combination.
+Changes since V10:
+	- ONLY change the pwm driver patch.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
----
+Anson Huang (5):
+  dt-bindings: pwm: Add i.MX TPM PWM binding
+  pwm: Add i.MX TPM PWM driver support
+  ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+  ARM: dts: imx7ulp: Add tpm pwm support
+  ARM: dts: imx7ulp-evk: Add backlight support
 
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/imx6ul-pico-nymph.dts | 77 +++++++++++++++++++++++++
- 2 files changed, 78 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-pico-nymph.dts
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        |  22 +
+ arch/arm/boot/dts/imx7ulp-evk.dts                  |  21 +
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  10 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-imx-tpm.c                          | 442 +++++++++++++++++++++
+ 7 files changed, 508 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e4a2349e130e..7b9b3d384902 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -568,6 +568,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-opos6uldev.dtb \
- 	imx6ul-pico-dwarf.dtb \
- 	imx6ul-pico-hobbit.dtb \
-+	imx6ul-pico-nymph.dtb \
- 	imx6ul-pico-pi.dtb \
- 	imx6ul-phytec-phyboard-segin-full.dtb \
- 	imx6ul-tx6ul-0010.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-pico-nymph.dts b/arch/arm/boot/dts/imx6ul-pico-nymph.dts
-new file mode 100644
-index 000000000000..cb5ec45341bc
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-pico-nymph.dts
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Copyright 2015 Technexion Ltd.
-+//
-+// Author: Wig Cheng  <wig.cheng@technexion.com>
-+//	   Richard Hu <richard.hu@technexion.com>
-+//	   Tapani Utriainen <tapani@technexion.com>
-+/dts-v1/;
-+
-+#include "imx6ul-pico.dtsi"
-+/ {
-+	model = "TechNexion PICO-IMX6UL and NYMPH baseboard";
-+	compatible = "technexion,imx6ul-pico-nymph", "fsl,imx6ul";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led {
-+			label = "gpio-led";
-+			gpios = <&gpio1 29 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "fsl,imx-audio-sgtl5000";
-+		model = "imx6ul-sgtl5000";
-+		audio-cpu = <&sai1>;
-+		audio-codec = <&sgtl5000>;
-+		audio-routing =
-+			"LINE_IN", "Line In Jack",
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+	};
-+
-+	sys_mclk: clock-sys-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	sgtl5000: codec@a {
-+		reg = <0x0a>;
-+		compatible = "fsl,sgtl5000";
-+		clocks = <&sys_mclk>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+	};
-+
-+	adc081c: adc@52 {
-+		compatible = "ti,adc081c";
-+		reg = <0x52>;
-+		vref-supply = <&reg_2p5v>;
-+	};
-+
-+	ds1337: rtc@68 {
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_gpio_leds: gpioledsgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29	0x10b0
-+		>;
-+	};
-+};
 -- 
-2.21.0
+2.7.4
