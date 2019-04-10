@@ -1,36 +1,41 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add ltdc pins muxing on stm32mp157
-Date: Wed, 10 Apr 2019 16:00:21 +0200
-Message-ID: <eef7d04a-85d7-1f7b-4cd4-61aa7b41b978@st.com>
-References: <1553862515-6005-1-git-send-email-yannick.fertre@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: Improve of_phandle_iterator_next() error message
+Date: Wed, 10 Apr 2019 09:07:27 -0500
+Message-ID: <20190410140727.GA17374@bogus>
+References: <20190403175633.1839-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553862515-6005-1-git-send-email-yannick.fertre@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190403175633.1839-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Philippe Cornu <philippe.cornu@st.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yannick
-
-On 3/29/19 1:28 PM, Yannick Fertré wrote:
-> Add ltdc pins muxing on stm32mp157.
+On Wed, Apr 03, 2019 at 10:56:33AM -0700, Florian Fainelli wrote:
+> Understanding why of_phandle_iterator_next() returns an error can
+> sometimes be hard to decipher based solely on the error message, a
+> typical error example is that #foo-cells = <X> and the phandle property
+> used has a smaller number of cells specified, e.g.:
 > 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> 	#thermal-sensor-cells = <1>;
+> 	phandle = <&scmi_sensor>
+> 
+> instead of:
+> 
+> 	phandle <&scmi_sensor 0>;
+> 
+> Instead, make it clear what the expectations are towards debugging
+> incorrect Device Tree faster:
+> 
+> OF: /thermal-zones/scmi-thermal: #thermal-sensor-cells = 1, found 0 instead
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 138 ++++++++++++++++++++++++++++++
->   1 file changed, 138 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> index 9104896..da4b411 100644
-> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> @@ -233,6 +233,144 @@
-> 
+>  drivers/of/base.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Applied on stm32-next.
+Applied.
 
-Thanks.
-Alex
+Rob
