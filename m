@@ -1,68 +1,59 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH RFC 7/9] cpufreq: qcom: Add support to update cpu node's
- OPP tables
-Date: Wed, 10 Apr 2019 16:55:16 +0530
-Message-ID: <20190410112516.gnh77jcwawvld6et@vireshk-i7>
-References: <20190328152822.532-1-sibis@codeaurora.org>
- <20190328152822.532-8-sibis@codeaurora.org>
- <20190410103316.sxev2f54klemq2p6@vireshk-i7>
- <8aeedc48150da49b7ab2ce27dd45a455@codeaurora.org>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
+Date: Wed, 10 Apr 2019 14:29:27 +0300
+Message-ID: <20190410112927.GA6586@linux.intel.com>
+References: <20190402193316.15144-1-sashal@kernel.org>
+ <20190402193316.15144-2-sashal@kernel.org>
+ <20190403181827.GB17006@linux.intel.com>
+ <20190403182728.GA17451@linux.intel.com>
+ <20190406153047.GF2935@sasha-vm>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8aeedc48150da49b7ab2ce27dd45a455@codeaurora.org>
+In-Reply-To: <20190406153047.GF2935@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: robh+dt@kernel.org, andy.gross@linaro.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org, bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, cw00.choi@samsung.com, linux-pm@vger.kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, dianders@chromium.org
+To: Sasha Levin <sashal@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10-04-19, 16:46, Sibi Sankar wrote:
-> On 2019-04-10 16:03, Viresh Kumar wrote:
-> > On 28-03-19, 20:58, Sibi Sankar wrote:
-> > > Add support to parse and update OPP tables attached to the cpu nodes.
+On Sat, Apr 06, 2019 at 11:30:47AM -0400, Sasha Levin wrote:
+> On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
+> > On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
+> > > On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
+> > > > This patch adds support for a software-only implementation of a TPM
+> > > > running in TEE.
+> > > >
+> > > > There is extensive documentation of the design here:
+> > > > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
+> > > >
+> > > > As well as reference code for the firmware available here:
+> > > > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
+> > > >
+> > > > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > > > 
-> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > > ---
-> > >  drivers/cpufreq/qcom-cpufreq-hw.c | 29 +++++++++++++++++++++++++++--
-> > >  1 file changed, 27 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > b/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > index 4b0b50403901..5c268dd2346c 100644
-> > > --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > @@ -73,6 +73,25 @@ static unsigned int
-> > > qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
-> > >  	return policy->freq_table[index].frequency;
-> > >  }
-> > > 
-> > > +static int qcom_find_update_opp(struct device *cpu_dev, unsigned
-> > > long freq,
-> > > +				unsigned long volt)
-> > > +{
-> > > +	int ret;
-> > > +	struct dev_pm_opp *opp;
-> > > +
-> > > +	opp = dev_pm_opp_find_freq_exact(cpu_dev, freq, true);
-> > > +	if (IS_ERR(opp)) {
-> > > +		ret = dev_pm_opp_add(cpu_dev, freq, volt);
+> > > What is the context anyway? I mean tpm_crb already supports fTPM running
+> > > in TZ.
 > > 
-> > With my comment on the other patch, you can just call
-> > dev_pm_opp_update_voltage() and if that fails then call
-> > dev_pm_opp_add().
+> > Might take 2-3 weeks before I have time to go through ftpm1.pdf with
+> > full concentration. I did search through the PDF for CRB and found
+> > zero hits.
 > 
-> yeah that should simplify things.
-> 
-> Also through the above approach I cannot
-> really disable opps that the OSM does not
-> support. I can only try enabling opp's that
-> OSM supports. But that would require all
-> opp's nodes to start with "disabled" but
-> that is not allowed I guess.
+> The fTPM as described in that paper and implemented in practice does not
+> use the CRB interface, thus we can't use tpm_crb to interface with the
+> firmware TPM.
 
-Yeah maybe add all OPPs from DT, disable all of them and then only modify and
-enable the ones you need.
+Obviously not but what is the reason of not implementing CRB but instead
+making yet another interface? I mean CRB supports SMC call.
 
--- 
-viresh
+For me this is taking steps back as to the early days when there was
+proprietary intefaces to TPM before TCG came along and stardized.
+
+I'm sure that the TPM implementation itself could be reworked to
+inteface using CRB. It would also be good for ARM as a platform as now
+this new made up interface causes unwanted divergence. I thought that
+throwing ad hoc intefaces everywhere is something that ARM Linux
+community tries to reduce, not increase.
+
+/Jarkko
