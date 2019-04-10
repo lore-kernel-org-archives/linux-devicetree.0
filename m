@@ -1,94 +1,152 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
- exclusive and shared access
-Date: Wed, 10 Apr 2019 15:49:11 +0300
-Message-ID: <2008fbb5-422a-8950-c642-74e63b79a809@ti.com>
-References: <20190410053728.17374-1-lokeshvutla@ti.com>
- <20190410053728.17374-3-lokeshvutla@ti.com>
- <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
- <dfceed14-d88f-72cb-a647-0ce3fbea3ca5@ti.com>
+From: Federico Vaga <federico.vaga@cern.ch>
+Subject: Re: Device Description for FPGA Components on x86 system
+Date: Wed, 10 Apr 2019 14:50:05 +0200
+Message-ID: <31100498.IIhqzTXyFT@pcbe13614>
+References: <1629227.alSmCsHHUc@pcbe13614> <6563205.xRkLC0driV@pcbe13614> <dae0b7ba500cc03fab23956eac85ca79@sw-optimization.com>
+Reply-To: <federico.vaga@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dfceed14-d88f-72cb-a647-0ce3fbea3ca5@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <dae0b7ba500cc03fab23956eac85ca79@sw-optimization.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Schwarz <eas@sw-optimization.com>
+Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-x86_64@vger.kernel.org, linux-fpga-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDQvMjAxOSAxNTozNywgTG9rZXNoIFZ1dGxhIHdyb3RlOgo+IEhpIFRlcm8sCj4gCj4g
-T24gMTAvMDQvMTkgMTozNCBQTSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4+IE9uIDEwLzA0LzIwMTkg
-MDg6MzcsIExva2VzaCBWdXRsYSB3cm90ZToKPj4+IFRJU0NJIHByb3RvY29sIHN1cHBvcnRzIGZv
-ciBlbmFibGluZyB0aGUgZGV2aWNlIGVpdGhlciB3aXRoIGV4Y2x1c2l2ZQo+Pj4gcGVybWlzc2lv
-bnMgZm9yIHRoZSByZXF1ZXN0aW5nIGhvc3Qgb3Igd2l0aCBzaGFyaW5nIGFjcm9zcyB0aGUgaG9z
-dHMuCj4+PiBUaGVyZSBhcmUgY2VydGFpbiBkZXZpY2VzIHdoaWNoIGFyZSBleGNsdXNpdmUgdG8g
-TGludXggY29udGV4dCBhbmQKPj4+IHRoZXJlIGFyZSBjZXJ0YWluIGRldmljZXMgdGhhdCBhcmUg
-c2hhcmVkIGFjcm9zcyBkaWZmZXJlbnQgaG9zdCBjb250ZXh0cy4KPj4+IFNvIGFkZCBzdXBwb3J0
-IGZvciBnZXR0aW5nIHRoaXMgaW5mb3JtYXRpb24gZnJvbSBEVCBieSBpbmNyZWFzaW5nCj4+PiB0
-aGUgcG93ZXItZG9tYWluIGNlbGxzIHRvIDIuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogTG9rZXNo
-IFZ1dGxhIDxsb2tlc2h2dXRsYUB0aS5jb20+Cj4+PiAtLS0KPj4+ICDCoCAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvdGkvc2NpLXBtLWRvbWFpbi50eHTCoMKgwqDCoMKgIHwgMTEgKysrKysr
-KysrLS0KPj4+ICDCoCBNQUlOVEFJTkVSU8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAg
-MSArCj4+PiAgwqAgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2MvdGksc2NpX3BtX2RvbWFpbi5owqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgOSArKysrKysrKysKPj4+ICDCoCAzIGZpbGVzIGNoYW5n
-ZWQsIDE5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+PiAgwqAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3Mvc29jL3RpLHNjaV9wbV9kb21haW4uaAo+Pj4KPj4+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL3RpL3Nj
-aS1wbS1kb21haW4udHh0Cj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b2MvdGkvc2NpLXBtLWRvbWFpbi50eHQKPj4+IGluZGV4IGY3YjAwYTdjMGY2OC4uZjU0MWQxZjc3
-NmEyIDEwMDY0NAo+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
-Yy90aS9zY2ktcG0tZG9tYWluLnR4dAo+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3NvYy90aS9zY2ktcG0tZG9tYWluLnR4dAo+Pj4gQEAgLTE5LDggKzE5LDE1IEBA
-IGNoaWxkIG9mIHRoZSBwbW1jIG5vZGUuCj4+PiAgwqAgUmVxdWlyZWQgUHJvcGVydGllczoKPj4+
-ICDCoCAtLS0tLS0tLS0tLS0tLS0tLS0tLQo+Pj4gIMKgIC0gY29tcGF0aWJsZTogc2hvdWxkIGJl
-ICJ0aSxzY2ktcG0tZG9tYWluIgo+Pj4gLS0gI3Bvd2VyLWRvbWFpbi1jZWxsczogTXVzdCBiZSAx
-IHNvIHRoYXQgYW4gaWQgY2FuIGJlIHByb3ZpZGVkIGluIGVhY2gKPj4+IC3CoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGRldmljZSBub2RlLgo+Pj4gKy0gI3Bvd2VyLWRvbWFpbi1jZWxsczog
-Q2FuIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-MTogQ29udGFpbmluZyB0aGUgZGV2aWNlIGlkIG9mIGVhY2ggbm9kZQo+Pj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgMjogRmlyc3QgZW50cnkgc2hvdWxkIGJlIGRldmljZSBpZAo+Pj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU2Vjb25kIGVudHJ5IHNob3VsZCBiZSBvbmUgb2YgdGhl
-IGZsb293aW5nOgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgVElfU0NJX1BEX0VY
-Q0xVU0lWRTogVG8gYWxsb3cgZGV2aWNlIHRvIGJlCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNsdXNpdmVseSBjb250cm9sbGVkIGJ5Cj4+PiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0aGUgcmVxdWVz
-dGluZyBob3N0cy4KPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFRJX1NDSV9QRF9T
-SEFSRUQ6IFRvIGFsbG93IGRldmljZSB0byBiZSBzaGFyZWQKPj4+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnkgbXVsdGlwbGUgaG9zdHMuCj4+Cj4+
-IE9uZSB0aGluZyBzaG91bGQgYmUgbm90ZWQgb24gdGhpcywgdGhlIGFkZGVkIGZsYWcgaXMgcHVy
-ZWx5IGZvciBzb2Z0d2FyZQo+PiBjb25maWd1cmF0aW9uLCBhbmQgaXMgbm90IHRlbGxpbmcgdXMg
-YW55dGhpbmcgYWJvdXQgdGhlIEhXIC8gZmlybXdhcmUuIFNvZnR3YXJlCj4gCj4gSSBkb2VzIHNh
-eSBhYm91dCBob3cgZmlybXdhcmUgaGFuZGxlcyB0aGUgcmVxdWVzdGVkIGRldmljZS4KClRoZXJl
-IGlzIGEgc2xpZ2h0IG51YW5jZSBpbiB0aGUgd29yZGluZyBoZXJlLiBJdCB0ZWxscyB0aGUgZmly
-bXdhcmUgaG93IAp0byBoYW5kbGUgdGhlIGRldmljZSwgYW5kIHlvdSBjYW4gYmFzaWNhbGx5IHVz
-ZSBlaXRoZXIgZmxhZyBhbmQgaXQgd2lsbCAKd29yay4uLiB1bnRpbCBzb21lb25lIGVsc2UgYXR0
-ZW1wdHMgdG8gdXNlIHRoZSBzYW1lIGRldmljZS4gSSByZWNhbGwgRFQgCndhcyBzdXBwb3NlZCB0
-byBkZXNjcmliZSB0aGUgaGFyZHdhcmUsIG5vdCB0byB0ZWxsIHVzIGhvdyB0byB1c2UgaXQuCgo+
-IAo+PiBjYW4gZGVjaWRlIHRvIGhhdmUgdGhlIGZsYWcgZWl0aGVyIHdheSBhbmQgaXQgd2lsbCB3
-b3JrLiBJIGp1c3Qgd29uZGVyIGlmIERUIGlzCj4+IHRoZSBjb3JyZWN0IGxvY2F0aW9uIHRvIGhh
-dmUgc29tZXRoaW5nIGxpa2UgdGhpcy4uLiBFeHBlY3QgdG8gaGF2ZSBwbGVudHkgb2YKPj4gY2h1
-cm4gb24gdGhpcyBieSBwZW9wbGUgc3dhcHBpbmcgdGhlIHBlcm1pc3Npb25zIGFyb3VuZCBhY2Nv
-cmRpbmcgdG8gdGhlaXIKPj4gdXNlLWNhc2UgbmVlZHMuCj4gCj4gRG8geW91IGhhdmUgYW55IG90
-aGVyIHN1Z2dlc3Rpb24gdG8gaGFuZGxlIHNoYXJlZCBkZXZpY2VzIGFjcm9zcyBWTXM/CgpXZWxs
-LCB3ZSBzaG91bGQgaGF2ZSBjb25maWd1cmF0aW9uIGRhdGEgYXZhaWxhYmxlIHNvbWV3aGVyZSwg
-YnV0IGl0IApzb3VuZHMgbGlrZSBEVCBtaWdodCBiZSB3cm9uZyBsb2NhdGlvbiBmb3IgdGhpcy4g
-TWF5YmUgYSB3aGl0ZWxpc3Qgb2YgCmRldmljZXMgdGhhdCBjYW4gYmUgc2hhcmVkIHNvbWV3aGVy
-ZS4gTWF5YmUgdW5kZXIgdGhlIFBEIGRyaXZlciBpdHNlbGYuIApEbyB3ZSBoYXZlIGFueSBleGFt
-cGxlcyBmb3Igc29tZXRoaW5nIHNpbWlsYXIgYXZhaWxhYmxlIGluIHRoZSBrZXJuZWwgdG9kYXk/
-CgotVGVybwotLQpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIy
-LCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBh
-aWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+P.S. sorry if I'm too verbose, hopefully it is useful
+
+thanks for the answer
+
+On Wednesday, April 10, 2019 12:30:14 PM CEST Eric Schwarz wrote:
+> Hi,
+> 
+> everything you want is already available and on the way to mainline
+> concerning support for various FPGA loading modes or available for
+> checkout from a git repository.
+> All that has already been discussed on the mailing list.
+> 
+> FPGA loading interface is available here [1].
+> Patchset missing for FPGA loading has been sent to the mailing list from
+> Anatolij Gustschin for various Linux kernel versions. Link to the most
+> recent patchset version [2].
+> FPGA Manager mailing list archive link [3] - Please read up the story
+> here around those patches and also the replies of the others.
+
+This does not answer the problem, which perhaps need to be clarified.
+
+Loading FPGA is **not** the problem, I listed it in the things I want to 
+achieve because it is a pre-requirement for the real problem and because the 
+two processes are linked (or could be).
+
+I continue by commenting myself below, trying to make the use case clearer.
+
+> 
+> Cheers
+> Eric
+> 
+> [1] https://github.com/vdsao/fpga-cfg
+> [2] https://marc.info/?l=linux-fpga&m=155078072107199&w=2
+> [3] https://marc.info/?l=linux-fpga
+> 
+> Am 10.04.2019 12:01, schrieb Federico Vaga:
+> > Hello,
+> > 
+> > sorry to push for an answer but I do not want to take the risk of
+> > designing
+> > something useless. I do not know how should I interpret a no-answer.
+> > 
+> > If the solution really does not exist today, then I would like to
+> > collect
+> > opinions/arguments/requirements on the topic so that I can write
+> > something
+> > useful not only for CERN but for the entire community.
+> > 
+> > Thank you
+> > 
+> > On Wednesday, March 27, 2019 6:17:18 PM CEST Federico Vaga wrote:
+> >> Hello,
+> >> 
+> >> I'm looking for guidance
+> >> 
+> >> What I have:
+> >> * Intel x86_64 computer
+> >> * PCIe card with FPGA on it
+> >> 
+> >> What I want to achieve:
+> >> * load an FPGA bitstream on the card
+> >> * load a device-tree like description for the FPGA devices contained
+> >> in the bitstream
+
+Let me first elaborate on my knowledge to avoid misunderstandings.
+
+On ARM, nowadays, we boot with a device tree. Later we program an FPGA in 
+which there are other devices described by a device tree overlay. This can be 
+done easily.
+
+A typical PC (x86/x86_64) does not boot with DeviceTree (it is possible, but 
+it is not common and probably not even suggested, not sure), instead it uses 
+ACPI.
+
+The FPGA Manager has support only for DeviceTree (there are patching floating 
+around to load a bitstream with configfs, debugfs or a chardevice (guilty))
+
+Most drivers foresee a DeviceTree loading but not an ACPI one (my feeling, I 
+did not extract exact numbers from the sources)
+
+DeviceTree overlay requires that the system boots with DeviceTree.
+
+DeviceTree and ACPI do not work together
+
+So, this is the state of art that I am aware of. Correct me if, and where, I 
+am wrong.
+
+
+Restarting from this point. I have a PC (x86_64) with a PCIe FPGA card (e.g. 
+sis8160, spec, links below). How to load the FPGA bitstream (not really a 
+problem as you correctly pointed out) **and** load all the IP-core instances 
+in that FPGA bitstream so that drivers will start running?
+
+- Is there a recommendation for such use case?
+- ACPI SSDT overlay? 
+- DT overlay?
+- is there a standard way to load FPGA IP-core devices which is architecture 
+independent?
+
+A simple and practical example. The i2c-ocore.c is a platform_driver for an 
+HDL I2C Master from open cores. I synthesize it and then load it on the FPGA. 
+How to create the Linux platform_device instance to driver that IP-core? How 
+to do that when you have also IRQ controller(s), DMA engine(s), EEPROM(s) and 
+other devices?
+
+The fastest solution is to do what was common on ARM systems: having all 
+platform devices declared (hard coded) in a file and load them. Which is not a 
+good solution, for the same reasons why arm stuff moved to devicetree.
+
+Is it clearer?
+
+I do not know if it important to highlight but those cards are extensible, 
+potentially any FMC module could be plugged and this needs a different FPGA, 
+with different FPGA devices etc. So, It is not possible to hardcode the 
+description of all possible FPGA code (infinite) that can enable the usage of 
+all possible FMC module (not infinite, but definitively grater than 1)
+
+
+https://www.struck.de/sis8160.html
+https://ohwr.org/project/spec/wikis/home
+
+
+> >> 
+> >> This is achievable on ARM with DeviceTree, overlay-dt, fpga-mgr; but
+> >> I'm
+> >> puzzled about the x86_64 use-case. I'm not able to find recent and
+> >> clear
+> >> information.
+> >> 
+> >> Does anyone know if this is doable? Perhaps with ACPI SSDTs overlay?
+> >> Or with
+> >> the DT?
+> >> 
+> >> thanks
