@@ -1,197 +1,119 @@
-From: Federico Vaga <federico.vaga@cern.ch>
-Subject: Re: Device Description for FPGA Components on x86 system
-Date: Wed, 10 Apr 2019 17:13:32 +0200
-Message-ID: <2706675.qmhD4SUPsn@pcbe13614>
-References: <1629227.alSmCsHHUc@pcbe13614> <31100498.IIhqzTXyFT@pcbe13614> <CANk1AXSQCFGE94R8ZxVSF2Gp+diCHJhFJPSVSx+iEyWp2URcpw@mail.gmail.com>
-Reply-To: <federico.vaga@cern.ch>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH 21/21] docs: hwmon: Add an index file and rename docs to
+ *.rst
+Date: Wed, 10 Apr 2019 17:24:24 +0200
+Message-ID: <20190410152424.GA11536@latitude>
+References: <cover.1554893881.git.mchehab+samsung@kernel.org>
+ <5ac1fbc7f19192dcd30a184e62e3f7989a5437a4.1554893882.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXSQCFGE94R8ZxVSF2Gp+diCHJhFJPSVSx+iEyWp2URcpw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Eric Schwarz <eas@sw-optimization.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-x86_64@vger.kernel.org, linux-fpga-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============4053714340483225101=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5ac1fbc7f19192dcd30a184e62e3f7989a5437a4.1554893882.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Dirk Eibach <eibach@gdsys.de>, linux-aspeed@lists.ozlabs.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Clemens Ladisch <clemens@ladisch.de>, Kamil Debski <kamil@wypas.org>, Marc Hulsman <m.hulsman@tudelft.nl>, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>, Paul Mackerras <paulus@samba.org>, Jim Cromie <jim.cromie@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Joel Stanley <joel@jms.id.au>, Guenter Roeck <linux@roeck-us.net>, Steve Glendinning <steve.glendinning@shawell.net>, Fenghua Yu <fenghua.yu@intel.com>, Jean Delvare <jdelvare@suse.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liviu Dudau <liviu.dudau@arm.com>, Mauro Carvalho Chehab <mchehab@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
 
-thanks for your answer
-
-On Wednesday, April 10, 2019 4:21:09 PM CEST Alan Tull wrote:
-> On Wed, Apr 10, 2019 at 7:50 AM Federico Vaga <federico.vaga@cern.ch> wrote:
-> 
-> Hi Federico,
-> 
-> I wish I could point you to a complete solution, but there is a lot of
-> work to be done in this area.  Most of what is in the kernel is a low
-> level in-kernel API [4].  As you correctly state, the hardest part of
-> this is doing the enumerating if you are on x86 and aren't using
-> devicetree.
-> 
-> > Hi,
-> > 
-> > P.S. sorry if I'm too verbose, hopefully it is useful
-> > 
-> > thanks for the answer
-> > 
-> > On Wednesday, April 10, 2019 12:30:14 PM CEST Eric Schwarz wrote:
-> > > Hi,
-> > > 
-> > > everything you want is already available and on the way to mainline
-> > > concerning support for various FPGA loading modes or available for
-> > > checkout from a git repository.
-> > > All that has already been discussed on the mailing list.
-> > > 
-> > > FPGA loading interface is available here [1].
-> > > Patchset missing for FPGA loading has been sent to the mailing list from
-> > > Anatolij Gustschin for various Linux kernel versions. Link to the most
-> > > recent patchset version [2].
-> > > FPGA Manager mailing list archive link [3] - Please read up the story
-> > > here around those patches and also the replies of the others.
-> > 
-> > This does not answer the problem, which perhaps need to be clarified.
-> > 
-> > Loading FPGA is **not** the problem, I listed it in the things I want to
-> > achieve because it is a pre-requirement for the real problem and because
-> > the two processes are linked (or could be).
-> > 
-> > I continue by commenting myself below, trying to make the use case
-> > clearer.
-> > 
-> > > Cheers
-> > > Eric
-> > > 
-> > > [1] https://github.com/vdsao/fpga-cfg
-> > > [2] https://marc.info/?l=linux-fpga&m=155078072107199&w=2
-> > > [3] https://marc.info/?l=linux-fpga
-> > > 
-> > > Am 10.04.2019 12:01, schrieb Federico Vaga:
-> > > > Hello,
-> > > > 
-> > > > sorry to push for an answer but I do not want to take the risk of
-> > > > designing
-> > > > something useless. I do not know how should I interpret a no-answer.
-> > > > 
-> > > > If the solution really does not exist today, then I would like to
-> > > > collect
-> > > > opinions/arguments/requirements on the topic so that I can write
-> > > > something
-> > > > useful not only for CERN but for the entire community.
-> > > > 
-> > > > Thank you
-> > > > 
-> > > > On Wednesday, March 27, 2019 6:17:18 PM CEST Federico Vaga wrote:
-> > > >> Hello,
-> > > >> 
-> > > >> I'm looking for guidance
-> > > >> 
-> > > >> What I have:
-> > > >> * Intel x86_64 computer
-> > > >> * PCIe card with FPGA on it
-> > > >> 
-> > > >> What I want to achieve:
-> > > >> * load an FPGA bitstream on the card
-> > > >> * load a device-tree like description for the FPGA devices contained
-> > > >> in the bitstream
-> > 
-> > Let me first elaborate on my knowledge to avoid misunderstandings.
-> > 
-> > On ARM, nowadays, we boot with a device tree. Later we program an FPGA in
-> > which there are other devices described by a device tree overlay. This can
-> > be done easily.
-> > 
-> > A typical PC (x86/x86_64) does not boot with DeviceTree (it is possible,
-> > but it is not common and probably not even suggested, not sure), instead
-> > it uses ACPI.
-> 
-> I have heard it suggested that we work on using DT overlays on x86*.
-> It's clear there's work to be done to make that work.  I don't know if
-> anybody has really tried.  It seems impractical to map or translate a
-> x86 systems ACPI into a DT and go from there.  
+--===============4053714340483225101==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
 
 
-> One suggestion a few
-> years ago was adding a partial DT that had nodes that could serve as
-> overlay targets and have that running in parallel with ACPI.
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is also one of my ideas for a solution to our problems. Are you able to 
-easily retrieve that conversation? Perhaps this is something on which I can 
-work on.
+Hello,
 
-> > The FPGA Manager has support only for DeviceTree (there are patching
-> > floating around to load a bitstream with configfs, debugfs or a
-> > chardevice (guilty))
-> There's one other interface in the kernel upstream. The DFL (device
-> feature list) framework built on the FPGA manager/bridge/region stuff
-> [5].   It's probably not what you specifically are looking for, I'm
-> mentioning as it exists in upstream.  It has a limited type of
-> enumeration and appears to mostly be geared for acceleration rather
-> than adding and enumerating any random hardware block.  Also it
-> requires specific bitstreams as the feature list is in fpga fabric.
-> 
-> > Most drivers foresee a DeviceTree loading but not an ACPI one (my feeling,
-> > I did not extract exact numbers from the sources)
-> > 
-> > DeviceTree overlay requires that the system boots with DeviceTree.
-> > 
-> > DeviceTree and ACPI do not work together
-> > 
-> > So, this is the state of art that I am aware of. Correct me if, and where,
-> > I am wrong.
-> > 
-> > 
-> > Restarting from this point. I have a PC (x86_64) with a PCIe FPGA card
-> > (e.g. sis8160, spec, links below). How to load the FPGA bitstream (not
-> > really a problem as you correctly pointed out) **and** load all the
-> > IP-core instances in that FPGA bitstream so that drivers will start
-> > running?
-> > 
-> > - Is there a recommendation for such use case?
-> > - ACPI SSDT overlay?
-> > - DT overlay?
-> > - is there a standard way to load FPGA IP-core devices which is
-> > architecture independent?
-> > 
-> > A simple and practical example. The i2c-ocore.c is a platform_driver for
-> > an
-> > HDL I2C Master from open cores. I synthesize it and then load it on the
-> > FPGA. How to create the Linux platform_device instance to driver that
-> > IP-core? How to do that when you have also IRQ controller(s), DMA
-> > engine(s), EEPROM(s) and other devices?
-> > 
-> > The fastest solution is to do what was common on ARM systems: having all
-> > platform devices declared (hard coded) in a file and load them. Which is
-> > not a good solution, for the same reasons why arm stuff moved to
-> > devicetree.
-> > 
-> > Is it clearer?
-> > 
-> > I do not know if it important to highlight but those cards are extensible,
-> > potentially any FMC module could be plugged and this needs a different
-> > FPGA, with different FPGA devices etc. So, It is not possible to hardcode
-> > the description of all possible FPGA code (infinite) that can enable the
-> > usage of all possible FMC module (not infinite, but definitively grater
-> > than 1)
-> > 
-> > 
-> > https://www.struck.de/sis8160.html
-> > https://ohwr.org/project/spec/wikis/home
-> > 
-> > > >> This is achievable on ARM with DeviceTree, overlay-dt, fpga-mgr; but
-> > > >> I'm
-> > > >> puzzled about the x86_64 use-case. I'm not able to find recent and
-> > > >> clear
-> > > >> information.
-> > > >> 
-> > > >> Does anyone know if this is doable? Perhaps with ACPI SSDTs overlay?
-> > > >> Or with
-> > > >> the DT?
-> > > >> 
-> > > >> thanks
-> 
-> Thanks,
-> Alan
-> 
-> [4] https://www.kernel.org/doc/html/latest/driver-api/fpga/index.html
-> [5] https://github.com/torvalds/linux/blob/master/Documentation/fpga/dfl.txt
+On Wed, Apr 10, 2019 at 08:12:11AM -0300, Mauro Carvalho Chehab wrote:
+> Now that all files were converted to ReST format, rename them
+> and add an index.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+[...]
+> diff --git a/Documentation/hwmon/submitting-patches b/Documentation/hwmon=
+/submitting-patches.rst
+> similarity index 99%
+> rename from Documentation/hwmon/submitting-patches
+> rename to Documentation/hwmon/submitting-patches.rst
+> index 12540b7d9b50..6120db7556aa 100644
+> --- a/Documentation/hwmon/submitting-patches
+> +++ b/Documentation/hwmon/submitting-patches.rst
+
+I'd additionally suggest:
+
+diff --git a/Documentation/hwmon/submitting-patches b/Documentation/hwmon/s=
+ubmitting-patches.rst
+index f88221b46153..0000a86be4b9 100644
+--- a/Documentation/hwmon/submitting-patches
++++ b/Documentation/hwmon/submitting-patches.rst
+@@ -38,7 +38,7 @@ increase the chances of your change being accepted.
+ 2. Adding functionality to existing drivers
+ -------------------------------------------
+=20
+-* Make sure the documentation in Documentation/hwmon/<driver_name> is up to
++* Make sure the documentation in Documentation/hwmon/<driver_name>.rst is =
+up to
+   date.
+=20
+ * Make sure the information in Kconfig is up to date.
+@@ -60,7 +60,7 @@ increase the chances of your change being accepted.
+=20
+ * Consider adding yourself to MAINTAINERS.
+=20
+-* Document the driver in Documentation/hwmon/<driver_name>.
++* Document the driver in Documentation/hwmon/<driver_name>.rst.
+=20
+ * Add the driver to Kconfig and Makefile in alphabetical order.
+=20
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlyuCqAACgkQCDBEmo7z
+X9ssgw//ZmPBGq00gnKgIkdptmktJsCCdbRKqAnKS97nKt6Ad54+llNhFidFR3ij
+Owq03OnpCXcu+3rc9qn/bOEv9QHjUmJ9aBysxuMCjbp5Wm69ItkylykWH6DPik8b
+BhloTUt0lnoweWJjZ4qtHyp5xuUlsQ2q6RbGR+BQwgvPA3y3FMuMYnvqi4BmuJs4
+B2DHhAUQnwgy+CMGBq62WTLZsWU6O4xAGnPRepoEIP4yf3ikOn5uiyYXeJt9sWmB
+7TyiXuM+noRFv5qyyiR695nBSlRZN0W690W2au5d8o1d1zp2tnuNTtljFGPv18S9
+gxxRiAzJRiXIGlg9cPZuyu/LD+4NbGwbRv8AfYYTcXyf1ZwLU6/y2VYRt9riJ/Ul
+1k5LFmFhHlxicwFJmobOor+AxJYtkb6fXCwJ2fSclBgP5tMYiKz3SjMlFxsiAczd
+x5uS/ABnXpJXEy3aOKlF3/GLI2ehMXegPLntmgUYGPHybPxTPgMf4ThsKLN0uovd
+f5ZeHCR5EtdFtJuECRIbvAeTs7MyawkdRzABA0dVUXmAxRzNxaU5tpFT8S9/AN1I
+wHTaekePAAReHn5G87/nu1RwsRWoLe8TyGkpy3IFCPmcYgGzZSF63tM2X0/eHuPi
+Q6PdjLqczbpT3X31fJdJ3q9BEWwy+zsHmKCHB81cYGY1F5fAYIY=
+=QA5J
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
+
+
+--===============4053714340483225101==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4053714340483225101==--
