@@ -1,79 +1,38 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Date: Wed, 10 Apr 2019 20:38:18 +0300
-Message-ID: <20190410173318.GA9052@linux.intel.com>
-References: <20190402193316.15144-1-sashal@kernel.org>
- <20190402193316.15144-2-sashal@kernel.org>
- <20190403181827.GB17006@linux.intel.com>
- <20190403182728.GA17451@linux.intel.com>
- <20190406153047.GF2935@sasha-vm>
- <20190410112927.GA6586@linux.intel.com>
- <20190410160432.GB11568@sasha-vm>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v3 0/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date: Wed, 10 Apr 2019 13:41:37 -0400
+Message-ID: <20190410174139.20012-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190410160432.GB11568@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+To: tiny.windzz@gmail.com, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 12:04:32PM -0400, Sasha Levin wrote:
-> On Wed, Apr 10, 2019 at 02:29:27PM +0300, Jarkko Sakkinen wrote:
-> > On Sat, Apr 06, 2019 at 11:30:47AM -0400, Sasha Levin wrote:
-> > > On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
-> > > > On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
-> > > > > On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
-> > > > > > This patch adds support for a software-only implementation of a TPM
-> > > > > > running in TEE.
-> > > > > >
-> > > > > > There is extensive documentation of the design here:
-> > > > > > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
-> > > > > >
-> > > > > > As well as reference code for the firmware available here:
-> > > > > > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
-> > > > > >
-> > > > > > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > > > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > > >
-> > > > > What is the context anyway? I mean tpm_crb already supports fTPM running
-> > > > > in TZ.
-> > > >
-> > > > Might take 2-3 weeks before I have time to go through ftpm1.pdf with
-> > > > full concentration. I did search through the PDF for CRB and found
-> > > > zero hits.
-> > > 
-> > > The fTPM as described in that paper and implemented in practice does not
-> > > use the CRB interface, thus we can't use tpm_crb to interface with the
-> > > firmware TPM.
-> > 
-> > Obviously not but what is the reason of not implementing CRB but instead
-> > making yet another interface? I mean CRB supports SMC call.
-> > 
-> > For me this is taking steps back as to the early days when there was
-> > proprietary intefaces to TPM before TCG came along and stardized.
-> > 
-> > I'm sure that the TPM implementation itself could be reworked to
-> > inteface using CRB. It would also be good for ARM as a platform as now
-> > this new made up interface causes unwanted divergence. I thought that
-> > throwing ad hoc intefaces everywhere is something that ARM Linux
-> > community tries to reduce, not increase.
-> 
-> I'm not sure what the original reasons were for not using the CRB
-> interface. Note that the paper is from a few years ago, and
-> implementations of this fTPM existed before the paper, so it's very
-> possible that it just predates CRB.
-> 
-> Either way, there is existing hardware that runs this TPM and I'm trying
-> to get it out of Microsoft's tree and get it upstream. There's not much
-> I could do about existing hardware at this point.
+Add sunxi nvmem based CPU scaling driver, refers to qcom-cpufreq-kryo.
 
-OK, the 2nd paragraph kind of is enough reason to pull it. Thanks for
-elaborating this. Just wanted to get a clearer picture where this sits
-in the universe. I'll do detailed review as soon as I have time.
+Yangtao Li (2):
+  cpufreq: Add sunxi nvmem based CPU scaling driver
+  dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
 
-I don't need to have the hardware as long as *someone* could give
-tested-by for this.
+ .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 168 +++++++++++++
+ MAINTAINERS                                   |   7 +
+ drivers/cpufreq/Kconfig.arm                   |  10 +
+ drivers/cpufreq/Makefile                      |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+ drivers/cpufreq/sunxi-cpufreq-nvmem.c         | 232 ++++++++++++++++++
+ 6 files changed, 420 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+ create mode 100644 drivers/cpufreq/sunxi-cpufreq-nvmem.c
 
-/Jarkko
+---
+v3:
+-update changelog and title
+-convert compatibles to allwinner,cpu-operating-points-v2
+-document the valid names for opp-microvolt-<name>
+v2:
+-update changelog
+-convert to dev_pm_opp_set_prop_name instead of
+ dev_pm_opp_set_supported_hw
+-some change in OPP Node 
+---
+2.17.0
