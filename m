@@ -1,25 +1,63 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v2 3/3] ASoC: imx-audmix: fix object reference leaks in
- probe
-Date: Tue, 9 Apr 2019 21:30:26 -0700
-Message-ID: <20190410043025.GE3032@Asurada>
-References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
- <1554809242-27475-4-git-send-email-viorel.suman@nxp.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: [PATCH v5 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Wed, 10 Apr 2019 06:14:57 +0100
+Message-ID: <1554873302-5624-2-git-send-email-pawell@cadence.com>
+References: <1554873302-5624-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1554809242-27475-4-git-send-email-viorel.suman@nxp.com>
+In-Reply-To: <1554873302-5624-1-git-send-email-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viorel Suman <viorel.suman@nxp.com>
-Cc: Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Julia Lawall <Julia.Lawall@lip6.fr>, Viorel Suman <viorel.suman@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lis>
+To: devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 11:27:42AM +0000, Viorel Suman wrote:
-> Release the reference to the underlying device taken
-> by of_find_device_by_node() call.
-> 
-> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> Reported-by: Julia Lawall <Julia.Lawall@lip6.fr>
+This patch aim at documenting USB related dt-bindings for the
+Cadence USBSS-DRD controller.
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+---
+ .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+new file mode 100644
+index 000000000000..1d2b449e3cb4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+@@ -0,0 +1,30 @@
++Binding for the Cadence USBSS-DRD controller
++
++Required properties:
++  - reg: Physical base address and size of the controller's register areas.
++	 Controller has 3 different regions:
++	 region 1 - HOST registers area
++	 region 2 - DEVICE registers area
++	 region 3 - OTG/DRD registers area
++  - reg-names - register memory area names:
++	"xhci" - for HOST registers space
++	"dev" - for DEVICE registers space
++	"otg" - for OTG/DRD registers space
++  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
++  - interrupts: Interrupts used by cdns3 controller.
++
++Optional properties:
++ - maximum-speed : valid arguments are "super-speed", "high-speed" and
++                   "full-speed"; refer to usb/generic.txt
++ - dr_mode: Should be one of "host", "peripheral" or "otg".
++ - phys: reference to the USB PHY
++
++Example:
++	usb@f3000000 {
++		compatible = "cdns,usb3-1.0.1";
++		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
++		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
++			0xf3010000 0x10000	/* memory area for DEVICE registers */
++			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
++		reg-names = "xhci", "dev", "otg";
++	};
+-- 
+2.17.1
