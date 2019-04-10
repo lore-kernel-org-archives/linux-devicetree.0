@@ -1,135 +1,76 @@
-From: Robert Foss <robert.foss@collabora.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
-Date: Wed, 10 Apr 2019 12:57:23 +0200
-Message-ID: <550afae6-8dd8-39aa-c7a2-01b27557aa53@collabora.com>
-References: <20190408175319.9106-1-robert.foss@collabora.com>
- <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
- <4fd506a1-c961-0569-6d39-283758f363d9@collabora.com>
- <CAAMH-ys-S7miJFCAY9bxrDGTPPT7e7c430-_4+edH8scV_qTwA@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] arm64: dts: imx8mq: add GPU node
+Date: Wed, 10 Apr 2019 12:59:24 +0200
+Message-ID: <1554893964.11529.3.camel@pengutronix.de>
+References: <20190404165211.29297-1-l.stach@pengutronix.de>
+ <AM0PR04MB42119DC437AC95F5ABE5F5D9802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAMH-ys-S7miJFCAY9bxrDGTPPT7e7c430-_4+edH8scV_qTwA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Troy Kisky <troy.kisky@boundarydevices.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB42119DC437AC95F5ABE5F5D9802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Gary,
-
-On 4/10/19 9:35 AM, Gary Bisson wrote:
-> Hi,
-> 
-> On Tue, Apr 9, 2019 at 2:07 AM Robert Foss <robert.foss@collabora.com> wrote:
->>
->> Hey Fabio,
->>
->> On 4/8/19 10:37 PM, Fabio Estevam wrote:
->>> Hi Robert,
->>>
->>> [Adding Gary]
-> 
-> Adding Troy, I'm no longer a full-time employee at Boundary Devices.
-> 
->>> On Mon, Apr 8, 2019 at 2:54 PM Robert Foss <robert.foss@collabora.com> wrote:
->>>>
->>>> If a LVDS device is not connected, having the LVDS channels
->>>> enabled will prevent imx-ldb from probing correctly even
->>>> if other CRTCs are connected.
->>>>
->>>> Signed-off-by: Robert Foss <robert.foss@collabora.com>
->>>> ---
->>>>    arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
->>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->>>> index 39200e5dc896..5b413cf4c250 100644
->>>> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->>>> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->>>> @@ -703,7 +703,7 @@
->>>>           status = "okay";
->>>>
->>>>           lvds-channel@0 {
->>>> -               status = "okay";
->>>> +               status = "disabled";
->>>>
->>>>                   port@4 {
->>>>                           reg = <4>;
->>>> @@ -715,7 +715,7 @@
->>>>           };
->>>>
->>>>           lvds-channel@1 {
->>>> -               status = "okay";
->>>> +               status = "disabled";
->>>
->>> I am not sure I understood what you are trying to fix.
->>
->> If CONFIG_DRM_IMX_LDB is enabled, LVDS DT channels are enabled
->> and no LVDS-panels are connected the imx-ldb driver will
->> fail to bind.
->>
->> This is a problem, since it will prevent other actually connected
->> display output from being used, even if they bind properly.
->>
->>>
->>> Could you please share some logs when imx-ldb fails to probe correctly?
->>
->>
->> [    2.119563] component_bind_all() trying to bind: ldb
->> [    2.124600] imx-drm display-subsystem: binding ldb (ops imx_ldb_ops)
->> [    2.146169] drm_of_find_panel_or_bridge() np->name=lvds-channel  np->type=<NULL>
->> [    2.153709] drm_of_find_panel_or_bridge() no panel found for remote
->> [    2.160081] drm_of_find_panel_or_bridge() bridge needed
->> [    2.162043] drm_of_find_panel_or_bridge() bridge not found
->> [    2.165331] drm_of_find_panel_or_bridge() failed
->> [    2.170023] imx-drm display-subsystem: failed to bind ldb (ops imx_ldb_ops): -517
->>
->> This at the same time as HDMI binds properly:
->>
->> [    4.458954] dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.30a with
->> HDCP (DWC HDMI 3D TX PHY)
->> [    4.469633] imx-drm display-subsystem: bound 120000.hdmi (ops dw_hdmi_imx_ops)
->>
->> Which in the end causes the IMX driver to not initialize properly
->> and ignore the HDMI connection that bound properly.
->> This in turn prevents us from having any graphical output while there
->> is no LVDS panel connected.
-> 
-> Does this happen if the LVDS is disabled in cmdline? (adding "video=LVDS-1:d")
-
-I hadn't tried this before, but is seems yo yield the same results
-
-# cat /proc/cmdline
-video=LVDS-1:d enforcing=0 ip=dhcp rw rootwait root=/dev/mmcblk1p1 
-log_buf_len=16M cma=512M vmalloc=512M
-
-# dmesg
-imx-drm display-subsystem: failed to bind disp0 (ops imx_pd_ops): -517
-imx-drm display-subsystem: master bind failed: -517
-
-This dmesg log is failing to bind disp0 at another point than what I
-was seeing before, yet the result is the same. The connected HDMI
-output is not brought online correctly.
-
-> 
-> Note that a bootscript was written for mainline kernel that takes care
-> of display configuration [1].
-> 
-> Currently this bootscript disables all the displays that aren't used.
-> It was tested with HDMI, where LVDS and LCD display are disabled, and
-> it *used to* work.
-> 
-> If this doesn't work then there's most likely a regression somewhere.
-> 
-> Regards,
-> Gary
-> 
-> [1] https://github.com/boundarydevices/u-boot-imx6/blob/boundary-v2018.07/board/boundary/bootscripts/bootscript-mainline.txt#L90
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+QW0gRGllbnN0YWcsIGRlbiAwOS4wNC4yMDE5LCAwMTo1NCArMDAwMCBzY2hyaWViIEFpc2hlbmcg
+RG9uZzoKPiBIaSBMdWNhcywKPiAKPiA+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwu
+c3RhY2hAcGVuZ3V0cm9uaXguZGVdCj4gPiBTZW50OiBGcmlkYXksIEFwcmlsIDUsIDIwMTkgMTI6
+NTIgQU0KPiA+IAo+ID4gVGhpcyBlbmFibGVzIHRoZSBWaXZhbnRlIEdDNzAwMEwgR1BVIG9uIHRo
+ZSBpLk1YOE1RIFNvQy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3Rh
+Y2hAcGVuZ3V0cm9uaXguZGU+Cj4gCj4gSnVzdCBjdXJpb3VzLCBkb2VzIHRoZSBkcml2ZXIgYWxy
+ZWFkeSBzdXBwb3J0cyBNWDhRTSBHQzcwMDBMIG5vdz8KPiBJZiB5ZXMsIHdlIHByb2JhYmx5IGNv
+dWxkIGhlbHAgdGVzdCBpdC4KClRoZSBldG5hdml2IGtlcm5lbCBkcml2ZXIgc3VwcG9ydHMgdGhl
+IGkuTVg4TVEgR0M3MDAwIEdQVS4gTVg4UU0gd2lsbApyZXF1aXJlIGFuIGFkZGl0aW9uIHRvIHRo
+ZSBIVyBkYXRhYmFzZS4KClRoZXJlIGFyZSBzdGlsbCBzb21lIGFkZGl0aW9ucyBuZWVkZWQgdG8g
+dGhlIFVBUEksIHRvIGVuYWJsZSBwcm9wZXIKc3VwcG9ydCBmb3IgdGhlIHRleHR1cmUgZGVzY3Jp
+cHRvciBmZWF0dXJlLCB3aGljaCBJIGhvcGUgdG8gZ2V0IGFyb3VuZAp0byBzZW5kIG91dCBkdXJp
+bmcgdGhpcyB3ZWVrLiBBcyB0aG9zZSBkb24ndCBoYXZlIGFuIGluZmx1ZW5jZSBvbiB0aGUKRFQg
+bm9kZXMgYW5kIHRoaW5ncyBhcmUgcnVubmluZyB3ZWxsIGluIG15IHNldHVwLCBJIGZpZ3VyZWQg
+dGhlIERUCnBhdGNoZXMgYXJlIHJlYWR5IHRvIGJlIG1lcmdlZC4KClJlZ2FyZHMsCkx1Y2FzCgo+
+IFJlZ2FyZHMKPiBEb25nIEFpc2hlbmcKPiDCoAo+ID4gLS0tCj4gPiDCoGFyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIHwgMjIKPiA+ICsrKysrKysrKysrKysrKysrKysr
+KysKPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gPiBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gPiBpbmRleCA0MzAwNzgx
+NTU4ZjYuLjc5ZDQxOGI0ZjU4NSAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+ZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9pbXg4bXEuZHRzaQo+ID4gQEAgLTc5Miw2ICs3OTIsMjggQEAKPiA+ID4gPiDCoAkJCX07
+Cj4gPiA+ID4gwqAJCX07Cj4gPiAKPiA+ID4gPiA+ID4gKwkJZ3B1OiBncHVAMzgwMDAwMDAgewo+
+ID4gPiA+ICsJCQljb21wYXRpYmxlID0gInZpdmFudGUsZ2MiOwo+ID4gPiA+ICsJCQlyZWcgPSA8
+MHgzODAwMDAwMCAweDQwMDAwPjsKPiA+ID4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDMg
+SVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiA+ID4gKwkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9D
+TEtfR1BVX1JPT1Q+LAo+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJTVg4TVFf
+Q0xLX0dQVV9TSEFERVJfRElWPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsg
+SU1YOE1RX0NMS19HUFVfQVhJPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsg
+SU1YOE1RX0NMS19HUFVfQUhCPjsKPiA+ID4gPiArCQkJY2xvY2stbmFtZXMgPSAiY29yZSIsICJz
+aGFkZXIiLCAiYnVzIiwgInJlZyI7Cj4gPiA+ID4gKwkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmY2xr
+IElNWDhNUV9DTEtfR1BVX0NPUkVfU1JDPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19HUFVfU0hBREVSX1NSQz4sCj4gPiA+
+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9D
+TEtfR1BVX0FYST4sCj4gPiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoDwmY2xrIElNWDhNUV9DTEtfR1BVX0FIQj47Cj4gPiA+ID4gKwkJCWFzc2lnbmVkLWNsb2Nr
+LXBhcmVudHMgPSA8JmNsayBJTVg4TVFfR1BVX1BMTF9PVVQ+LAo+ID4gPiA+ICsJCQnCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9H
+UFVfUExMX09VVD4sCj4gPiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0dQVV9QTExfT1VUPiwKPiA+ID4gPiArCQkJ
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJ
+TVg4TVFfR1BVX1BMTF9PVVQ+Owo+ID4gPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw4
+MDAwMDAwMDA+LCA8ODAwMDAwMDAwPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDw4MDAwMDAwMDA+LCA8ODAwMDAwMDAwPjsKPiA+ID4g
+PiArCQkJcG93ZXItZG9tYWlucyA9IDwmcGdjX2dwdT47Cj4gPiA+ID4gKwkJfTsKPiA+ICsKPiA+
+ID4gPiA+ID4gwqAJCXVzYl9kd2MzXzA6IHVzYkAzODEwMDAwMCB7Cj4gPiA+ID4gwqAJCQljb21w
+YXRpYmxlID0gImZzbCxpbXg4bXEtZHdjMyIsICJzbnBzLGR3YzMiOwo+ID4gPiA+IMKgCQkJcmVn
+ID0gPDB4MzgxMDAwMDAgMHgxMDAwMD47Cj4gPiAtLQo+ID4gMi4yMC4xCj4gCj4gCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
