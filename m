@@ -1,102 +1,67 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFT/RFC PATCH v3 0/5] Unify CPU topology across ARM & RISC-V
-Date: Wed, 10 Apr 2019 15:49:54 -0700
-Message-ID: <12c9f8b0-cdeb-2b9c-5662-6c5a08cd0a95@wdc.com>
-References: <20190320234806.19748-1-atish.patra@wdc.com>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/8] Add Allwinner H6 Mali Midgard gpu node
+Date: Thu, 11 Apr 2019 01:25:35 +0200
+Message-ID: <20190410232543.13297-1-peron.clem@gmail.com>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190320234806.19748-1-atish.patra@wdc.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBBEXSXHSQKGQEFTC2A5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/20/19 4:48 PM, Atish Patra wrote:
-> The cpu-map DT entry in ARM can describe the CPU topology in much better
-> way compared to other existing approaches. RISC-V can easily adopt this
-> binding to represent its own CPU topology. Thus, both cpu-map DT
-> binding and topology parsing code can be moved to a common location so
-> that RISC-V or any other architecture can leverage that.
-> 
-> The relevant discussion regarding unifying cpu topology can be found in
-> [1].
-> 
-> arch_topology seems to be a perfect place to move the common code. I
-> have not introduced any significant functional changes in the moved code.
-> The only downside in this approach is that the capacity code will be
-> executed for RISC-V as well. But, it will exit immediately after not
-> able to find the appropriate DT node. If the overhead is considered too
-> much, we can always compile out capacity related functions under a
-> different config for the architectures that do not support them.
-> 
-> There was an opportunity to unify topology data structure for ARM32 done
-> by patch 3/4. But, I refrained from making any other changes as I am not
-> very well versed with original intention for some functions that
-> are present in arch_topology.c. I hope this patch series can be served
-> as a baseline for such changes in the future.
-> 
-> The patches have been tested for RISC-V and compile tested for ARM64,
-> ARM32 & x86.
-> 
-> The socket change[2] is also now part of this series.
-> 
-> [1] https://lkml.org/lkml/2018/11/6/19
-> [2] https://lkml.org/lkml/2018/11/7/918
-> 
-> QEMU changes for RISC-V topology are available at
-> 
-> https://github.com/atishp04/qemu/tree/riscv_topology_dt
-> 
-> HiFive Unleashed DT with topology node is available here.
-> https://github.com/atishp04/opensbi/tree/HiFive_unleashed_topology
-> 
-> It can be verified with OpenSBI with following additional compile time
-> option.
-> 
-> FW_PAYLOAD_FDT="unleashed_topology.dtb"
-> 
-> Changes from v2->v3
-> 1. Cover letter update with experiment DT for topology changes.
-> 2. Added the patch for [2].
-> 
-> Changes from v1->v2
-> 1. ARM32 can now use the common code as well.
-> 
-> Atish Patra (4):
-> dt-binding: cpu-topology: Move cpu-map to a common binding.
-> cpu-topology: Move cpu topology code to common code.
-> arm: Use common cpu_topology
-> RISC-V: Parse cpu topology during boot.
-> 
-> Sudeep Holla (1):
-> Documentation: DT: arm: add support for sockets defining package
-> boundaries
-> 
-> .../topology.txt => cpu/cpu-topology.txt}     | 134 ++++++--
-> arch/arm/include/asm/topology.h               |  22 +-
-> arch/arm/kernel/topology.c                    |  10 +-
-> arch/arm64/include/asm/topology.h             |  23 --
-> arch/arm64/kernel/topology.c                  | 303 +-----------------
-> arch/riscv/Kconfig                            |   1 +
-> arch/riscv/kernel/smpboot.c                   |   3 +
-> drivers/base/arch_topology.c                  | 298 ++++++++++++++++-
-> drivers/base/topology.c                       |   1 +
-> include/linux/arch_topology.h                 |  36 +++
-> 10 files changed, 453 insertions(+), 378 deletions(-)
-> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
-> 
-> --
-> 2.21.0
-> 
-> 
+Hi,
 
-Ping?
+The Allwinner H6 has a Mali-T720 MP2. The drivers are
+out-of-tree so this serie only introduce the dt-bindings.
 
-Specifically, patch 3 & 4 affects ARM & ARM64. Any tests on real 
-hardware would be great.
+The first patch is from Neil Amstrong and has been already
+merged in linux-amlogic. It is required for this serie.
 
-Regards,
-Atish
+The second patch is from Icenowy Zheng where I changed the
+order has required by Rob Herring.
+See: https://patchwork.kernel.org/patch/10699829/
+
+The GPU opp table is taken from Jernej =C5=A0krabec's patch
+on LibreELEC.tv.
+
+Thanks,
+Clement
+
+Cl=C3=A9ment P=C3=A9ron (7):
+  dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+  dt-bindings: gpu: mali-midgard: Add h6 mali gpu compatible
+  arm64: dts: allwinner: Add ARM Mali GPU node for H6
+  arm64: dts: allwinner: Add mali GPU supply for Pine H64
+  arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
+
+Neil Armstrong (1):
+  dt-bindings: gpu: mali-midgard: Add resets property
+
+ .../bindings/gpu/arm,mali-midgard.txt         | 26 ++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 80 +++++++++++++++++++
+ 6 files changed, 126 insertions(+)
+
+--=20
+2.17.1
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
