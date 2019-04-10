@@ -1,47 +1,37 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 5/6] dt-bindings: leds: Add LED bindings for the LM36274
-Date: Wed, 10 Apr 2019 06:37:18 -0500
-Message-ID: <84566e9f-f00a-0984-0279-67e49a2d9331@ti.com>
-References: <20190405145540.27703-1-dmurphy@ti.com>
- <20190405145540.27703-6-dmurphy@ti.com> <20190408101039.GC30958@amd>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
+Date: Wed, 10 Apr 2019 08:55:05 -0300
+Message-ID: <CAOMZO5Aj+NKOsa1zXfQqsSzqDJGOcza+1wGjdiEytvjAhsnOVQ@mail.gmail.com>
+References: <20190408175319.9106-1-robert.foss@collabora.com>
+ <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
+ <4fd506a1-c961-0569-6d39-283758f363d9@collabora.com> <CAAMH-ys-S7miJFCAY9bxrDGTPPT7e7c430-_4+edH8scV_qTwA@mail.gmail.com>
+ <550afae6-8dd8-39aa-c7a2-01b27557aa53@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408101039.GC30958@amd>
-Content-Language: en-US
+In-Reply-To: <550afae6-8dd8-39aa-c7a2-01b27557aa53@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Robert Foss <robert.foss@collabora.com>
+Cc: Gary Bisson <gary.bisson@boundarydevices.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Troy Kisky <troy.kisky@boundarydevices.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+Hi Robert,
 
+On Wed, Apr 10, 2019 at 7:57 AM Robert Foss <robert.foss@collabora.com> wrote:
 
-On 4/8/19 5:10 AM, Pavel Machek wrote:
-> On Fri 2019-04-05 09:55:39, Dan Murphy wrote:
->> Add the LM36274 LED specific bindings.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/leds/leds-lm36274.txt | 82 +++++++++++++++++++
->>   1 file changed, 82 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
->> new file mode 100644
->> index 000000000000..359990d85b28
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
->> @@ -0,0 +1,82 @@
->> +* Texas Instruments LM36274 4-Channel LCD Backlight Driver w/Integrated Bias
->> +
->> +The LM36274 is an integrated four-channel WLED driver and LCD bias supply.
->> +The backlight boost provides the power to bias four parallel LED strings with
->> +up to 29-V total output voltage. The 11-bit LED current is rogrammable via
-> 29V
+> # dmesg
+> imx-drm display-subsystem: failed to bind disp0 (ops imx_pd_ops): -517
+> imx-drm display-subsystem: master bind failed: -517
 >
-Ack
+> This dmesg log is failing to bind disp0 at another point than what I
+> was seeing before, yet the result is the same. The connected HDMI
+> output is not brought online correctly.
 
+It seems that the ldb failure is due to the lvds backlight nodes not
+finding the PWM resource due to the PWM driver rename.
 
-> 								Pavel
+Please check if this patch fixes the problem on your case:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190410&id=728e096dd70889c2e80dd4153feee91afb1daf72
+
+imx-drm should also be fixed independently of this PWM rename change
+in my opinion.
