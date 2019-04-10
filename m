@@ -1,43 +1,69 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/3] ASoC: fsl_audmix: remove "model" attribute
-Date: Wed, 10 Apr 2019 09:20:29 +0300
-Message-ID: <CAEnQRZBDSrpje2-ML0zr+oJkwMbbkxV5hUNc_HzZtPZv-et8mA@mail.gmail.com>
-References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
- <1554809242-27475-2-git-send-email-viorel.suman@nxp.com> <20190410042906.GC3032@Asurada>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+Date: Wed, 10 Apr 2019 08:27:55 +0200
+Message-ID: <2095d059-8276-a01a-7c3a-da4647f7b7df@gmail.com>
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+ <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
+ <a2dc294f-f2a1-2469-1f44-db67f9b8cc10@cogentembedded.com>
+ <OFC7F0028A.CFF6BD04-ON482583D8.00084FA1-482583D8.0008985F@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410042906.GC3032@Asurada>
+In-Reply-To: <OFC7F0028A.CFF6BD04-ON482583D8.00084FA1-482583D8.0008985F@mxic.com.tw>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Viorel Suman <viorel.suman@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Viorel Suman <viorel.suman@gmail.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>"linux-kernel@vger.kernel.org" <linu>
+To: masonccyang@mxic.com.tw, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolin,
+On 4/10/19 3:33 AM, masonccyang@mxic.com.tw wrote:
+> Hi Sergei,
+> 
+>> > +static ssize_t rpc_spi_mem_dirmap_write(struct spi_mem_dirmap_desc
+> *desc,
+>> > +               u64 offs, size_t len, const void *buf)
+>> > +{
+>> > +   struct rpc_spi *rpc =
+>> > +         spi_controller_get_devdata(desc->mem->spi->controller);
+>> > +   int ret;
+>> > +
+>> > +   if (offs + desc->info.offset + len > U32_MAX)
+>> > +      return -EINVAL;
+>> > +
+>> > +   if (len > RPC_WBUF_SIZE)
+>> > +      len = RPC_WBUF_SIZE;
+>> > +
+>> > +   ret = rpc_spi_set_freq(rpc, desc->mem->spi->max_speed_hz);
+>> > +   if (ret)
+>> > +      return ret;
+>> > +
+>> > +   rpc_spi_mem_set_prep_op_cfg(desc->mem->spi,
+>> > +                &desc->info.op_tmpl, &offs, &len);
+>> > +
+>> > +   regmap_update_bits(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD,
+> RPC_CMNCR_MD);
+>> > +
+>> > +   regmap_write(rpc->regmap, RPC_SMDRENR, 0);
+>> > +
+>> > +   regmap_update_bits(rpc->regmap, RPC_PHYCNT, RPC_PHYCNT_STRTIM(7) |
+>> > +            RPC_PHYCNT_WBUF2 | RPC_PHYCNT_WBUF,
+>> > +            RPC_PHYCNT_WBUF2 | RPC_PHYCNT_WBUF);
+>> > +
+>> > +   memcpy_toio(rpc->wbuf, buf, len);
+>>
+>>    Wait, doesn't the manual say that the whole 256-byte buffer should be
+>> filled?  I think that short chunks have to be written w/o WBUF (done,
+> in fact,
+>> by the HF driver).
+>>
+> 
+> From spi-nor.c layer always transfer 256 bytes data with page program
+> command.
 
-On Wed, Apr 10, 2019 at 7:30 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Tue, Apr 09, 2019 at 11:27:39AM +0000, Viorel Suman wrote:
-> > Use "of_device_id.data" to specify the machine driver
-> > instead of "model" DTS attribute.
-> >
-> > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
->
-> Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
->
-> > ---
-> >  sound/soc/fsl/fsl_audmix.c | 43 +++++++++++++++++++++++--------------------
-> >  1 file changed, 23 insertions(+), 20 deletions(-)
->
-> > +     priv->pdev = platform_device_register_data(&pdev->dev, mdrv, 0, NULL,
-> > +                                                0);
->
-> Would you please send a separate patch to replace "pdev->dev"?
+Does that apply even for flashes with not-256-byte pages ?
 
-I am not sure exactly how to explain this change in the commit message. It does
-make code easier to read and avoids dereferencing pdev pointer each time.
-
-Is it enough for commit description?
-
-thanks,
-Daniel.
+-- 
+Best regards,
+Marek Vasut
