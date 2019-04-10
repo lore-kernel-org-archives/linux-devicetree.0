@@ -1,75 +1,114 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 3/3] ARM: dts: stm32: enable Vivante GPU support on
- stm32mp157a-dk1 board
-Date: Wed, 10 Apr 2019 12:02:28 +0200
-Message-ID: <1554890548-24448-4-git-send-email-pierre-yves.mordret@st.com>
-References: <1554890548-24448-1-git-send-email-pierre-yves.mordret@st.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [v3 PATCH 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Wed, 10 Apr 2019 13:22:39 +0300
+Message-ID: <20190410102239.GG20058@kuha.fi.intel.com>
+References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1554890548-24448-1-git-send-email-pierre-yves.mordret@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable Vivante GPU driver for stm32mp157a-dk1 and dk2 boards.
+On Wed, Apr 03, 2019 at 10:09:12AM +0800, Chunfeng Yun wrote:
+> Add fwnode_usb_role_switch_get() to make easier to get
+> usb_role_switch by fwnode which register it.
+> It's useful when there is not device_connection registered
+> between two drivers and only knows the fwnode which register
+> usb_role_switch.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v3 changes:
+>   1. use fwnodes instead of node suggested by Andy
+>   2. rebuild the API suggested by Heikki
+> 
+> v2 no changes
+> ---
+>  drivers/usb/roles/class.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/usb/role.h  |  2 ++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index f45d8df5cfb8..5ecb57f8960b 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  #include <linux/slab.h>
+>  
+>  static struct class *role_class;
+> @@ -135,6 +136,36 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+>  
+> +static int __switch_match_fwnode(struct device *dev, const void *fwnode)
+> +{
+> +	return dev_fwnode(dev->parent) == (const struct fwnode_handle *)fwnode;
+> +}
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-  Version history:
-    v2:
-       * move GPU reserved memeory out of bottom DDR to let free this area for
-         U-Boot
-    v1:
-       * Initial
----
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+I don't think this is actually needed. Why not just assign the
+parent's fwnode for the mux as well?
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 1b1886d..bd06f7b 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -27,6 +27,17 @@
- 		reg = <0xc0000000 0x20000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		gpu_reserved: gpu@d4000000 {
-+			reg = <0xd4000000 0x4000000>;
-+			no-map;
-+		};
-+	};
-+
- 	led {
- 		compatible = "gpio-leds";
- 		blue {
-@@ -69,6 +80,11 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	contiguous-area = <&gpu_reserved>;
-+	status = "okay";
-+};
-+
- &iwdg2 {
- 	timeout-sec = <32>;
- 	status = "okay";
+I'll add an example to the patch 6/6 in this series.
+
+> +/**
+> + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
+> + * @fwnode: The fwnode that register USB role switch
+> + *
+> + * Finds and returns role switch registered by @fwnode. The reference count
+> + * for the found switch is incremented.
+> + */
+> +struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+> +{
+> +	struct usb_role_switch *sw;
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(role_class, NULL, fwnode,
+> +				__switch_match_fwnode);
+
+So here you can then reuse switch_fwnode_match():
+
+	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
+
+> +	if (!dev)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	sw = to_role_switch(dev);
+> +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> +
+> +	return sw;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+> +
+>  /**
+>   * usb_role_switch_put - Release handle to a switch
+>   * @sw: USB Role Switch
+> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+> index c05ffa6abda9..d21cd55d9e45 100644
+> --- a/include/linux/usb/role.h
+> +++ b/include/linux/usb/role.h
+> @@ -46,6 +46,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+>  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+>  struct usb_role_switch *usb_role_switch_get(struct device *dev);
+>  void usb_role_switch_put(struct usb_role_switch *sw);
+> +struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+>  
+>  struct usb_role_switch *
+>  usb_role_switch_register(struct device *parent,
+> -- 
+> 2.20.1
+
+thanks,
+
 -- 
-2.7.4
+heikki
