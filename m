@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/8] dt-bindings: gpu: mali-midgard: Add h6 mali
- gpu compatible
-Date: Thu, 11 Apr 2019 01:25:38 +0200
-Message-ID: <20190410232543.13297-4-peron.clem@gmail.com>
+Subject: [PATCH 2/8] dt-bindings: gpu: add bus clock for Mali
+ Midgard GPUs
+Date: Thu, 11 Apr 2019 01:25:37 +0200
+Message-ID: <20190410232543.13297-3-peron.clem@gmail.com>
 References: <20190410232543.13297-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBFPSXHSQKGQEXQ7HEBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBFHSXHSQKGQEU65ZENI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190410232543.13297-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,43 +21,34 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add the H6 mali compatible in the dt-bindings to later support
-specific implementation.
+Some SoCs adds a bus clock gate to the Mali Midgard GPU.
 
+Add the binding for the bus clock.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/gpu/arm,mali-midgard.txt          | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
 ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 2e8bbce35695..9e71146b5c8a 100644
+index 1b1a74129141..2e8bbce35695 100644
 --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
 +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -15,6 +15,7 @@ Required properties:
-     + "arm,mali-t860"
-     + "arm,mali-t880"
-   * which must be preceded by one of the following vendor specifics:
-+    + "allwinner,sun50i-h6-mali"
-     + "amlogic,meson-gxm-mali"
-     + "rockchip,rk3288-mali"
-     + "rockchip,rk3399-mali"
-@@ -49,9 +50,14 @@ Vendor-specific bindings
- ------------------------
+@@ -31,6 +31,12 @@ Optional properties:
 =20
- The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
-+another. In order to accommodate those differences, you have the option
- to specify one more vendor-specific compatible, among:
+ - clocks : Phandle to clock for the Mali Midgard device.
 =20
-+- "allwinner,sun50i-h6-mali"
-+  Required properties:
-+  - resets: Should contain phandle of :
-+    + GPU reset line
++- clock-names : Specify the names of the clocks specified in clocks
++  when multiple clocks are present.
++    * core: clock driving the GPU itself (When only one clock is present,
++      assume it's this clock.)
++    * bus: bus clock for the GPU
 +
- - "amlogic,meson-gxm-mali"
-   Required properties:
-   - resets : Should contain phandles of :
+ - mali-supply : Phandle to regulator for the Mali device. Refer to
+   Documentation/devicetree/bindings/regulator/regulator.txt for details.
+=20
 --=20
 2.17.1
 
