@@ -1,106 +1,90 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
- exclusive and shared access
-Date: Wed, 10 Apr 2019 11:04:16 +0300
-Message-ID: <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
-References: <20190410053728.17374-1-lokeshvutla@ti.com>
- <20190410053728.17374-3-lokeshvutla@ti.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI
+ controller driver
+Date: Wed, 10 Apr 2019 10:11:10 +0200
+Message-ID: <20190410101110.2224eb91@collabora.com>
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+        <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
+        <a2dc294f-f2a1-2469-1f44-db67f9b8cc10@cogentembedded.com>
+        <OFC7F0028A.CFF6BD04-ON482583D8.00084FA1-482583D8.0008985F@mxic.com.tw>
+        <2095d059-8276-a01a-7c3a-da4647f7b7df@gmail.com>
+        <OF75EDBF48.5C308F1B-ON482583D8.0027A537-482583D8.002C0A64@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190410053728.17374-3-lokeshvutla@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <OF75EDBF48.5C308F1B-ON482583D8.0027A537-482583D8.002C0A64@mxic.com.tw>
+Sender: linux-kernel-owner@vger.kernel.org
+To: masonccyang@mxic.com.tw
+Cc: Marek Vasut <marek.vasut@gmail.com>, bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/2019 08:37, Lokesh Vutla wrote:
-> TISCI protocol supports for enabling the device either with exclusive
-> permissions for the requesting host or with sharing across the hosts.
-> There are certain devices which are exclusive to Linux context and
-> there are certain devices that are shared across different host contexts.
-> So add support for getting this information from DT by increasing
-> the power-domain cells to 2.
+On Wed, 10 Apr 2019 16:01:02 +0800
+masonccyang@mxic.com.tw wrote:
+
+> Hi,
+>  
+> > Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller   
+> driver
+> > 
+> > On 4/10/19 3:33 AM, masonccyang@mxic.com.tw wrote:  
+> > > Hi Sergei,
+> > >   
+> > >> > +static ssize_t rpc_spi_mem_dirmap_write(struct spi_mem_dirmap_desc  
+> > > *desc,  
+> > >> > +               u64 offs, size_t len, const void *buf)
+> > >> > +{
+> > >> > +   struct rpc_spi *rpc =
+> > >> > +         spi_controller_get_devdata(desc->mem->spi->controller);
+> > >> > +   int ret;
+> > >> > +
+> > >> > +   if (offs + desc->info.offset + len > U32_MAX)
+> > >> > +      return -EINVAL;
+> > >> > +
+> > >> > +   if (len > RPC_WBUF_SIZE)
+> > >> > +      len = RPC_WBUF_SIZE;
+> > >> > +
+> > >> > +   ret = rpc_spi_set_freq(rpc, desc->mem->spi->max_speed_hz);
+> > >> > +   if (ret)
+> > >> > +      return ret;
+> > >> > +
+> > >> > +   rpc_spi_mem_set_prep_op_cfg(desc->mem->spi,
+> > >> > +                &desc->info.op_tmpl, &offs, &len);
+> > >> > +
+> > >> > +   regmap_update_bits(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD,  
+> > > RPC_CMNCR_MD);  
+> > >> > +
+> > >> > +   regmap_write(rpc->regmap, RPC_SMDRENR, 0);
+> > >> > +
+> > >> > +   regmap_update_bits(rpc->regmap, RPC_PHYCNT,   
+> RPC_PHYCNT_STRTIM(7) |
+> > >> > +            RPC_PHYCNT_WBUF2 | RPC_PHYCNT_WBUF,
+> > >> > +            RPC_PHYCNT_WBUF2 | RPC_PHYCNT_WBUF);
+> > >> > +
+> > >> > +   memcpy_toio(rpc->wbuf, buf, len);  
+> > >>
+> > >>    Wait, doesn't the manual say that the whole 256-byte buffer should   
+> be
+> > >> filled?   
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->   .../devicetree/bindings/soc/ti/sci-pm-domain.txt      | 11 +++++++++--
->   MAINTAINERS                                           |  1 +
->   include/dt-bindings/soc/ti,sci_pm_domain.h            |  9 +++++++++
->   3 files changed, 19 insertions(+), 2 deletions(-)
->   create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
+> it could be less than 256 bytes, i.e., 128 bytes to rpc->wbuf !
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> index f7b00a7c0f68..f541d1f776a2 100644
-> --- a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> @@ -19,8 +19,15 @@ child of the pmmc node.
->   Required Properties:
->   --------------------
->   - compatible: should be "ti,sci-pm-domain"
-> -- #power-domain-cells: Must be 1 so that an id can be provided in each
-> -		       device node.
-> +- #power-domain-cells: Can be one of the following:
-> +			1: Containing the device id of each node
-> +			2: First entry should be device id
-> +			   Second entry should be one of the floowing:
-> +			   TI_SCI_PD_EXCLUSIVE: To allow device to be
-> +						exclusively controlled by
-> +						the requesting hosts.
-> +			   TI_SCI_PD_SHARED: To allow device to be shared
-> +					     by multiple hosts.
-
-One thing should be noted on this, the added flag is purely for software 
-configuration, and is not telling us anything about the HW / firmware. 
-Software can decide to have the flag either way and it will work. I just 
-wonder if DT is the correct location to have something like this... 
-Expect to have plenty of churn on this by people swapping the 
-permissions around according to their use-case needs.
-
--Tero
-
-
->   
->   Example (K2G):
->   -------------
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2359e12e4c41..dc7a19cc1831 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15345,6 +15345,7 @@ F:	drivers/firmware/ti_sci*
->   F:	include/linux/soc/ti/ti_sci_protocol.h
->   F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->   F:	drivers/soc/ti/ti_sci_pm_domains.c
-> +F:	include/dt-bindings/soc/ti,sci_pm_domain.h
->   F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->   F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->   F:	drivers/clk/keystone/sci-clk.c
-> diff --git a/include/dt-bindings/soc/ti,sci_pm_domain.h b/include/dt-bindings/soc/ti,sci_pm_domain.h
-> new file mode 100644
-> index 000000000000..8f2a7360b65e
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/ti,sci_pm_domain.h
-> @@ -0,0 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __DT_BINDINGS_TI_SCI_PM_DOMAIN_H
-> +#define __DT_BINDINGS_TI_SCI_PM_DOMAIN_H
-> +
-> +#define TI_SCI_PD_EXCLUSIVE	1
-> +#define TI_SCI_PD_SHARED	0
-> +
-> +#endif /* __DT_BINDINGS_TI_SCI_PM_DOMAIN_H */
+>  I think that short chunks have to be written w/o WBUF (done,
+> > > in fact,  
+> > >> by the HF driver).
+> > >>  
+> > > 
+> > > From spi-nor.c layer always transfer 256 bytes data with page program
+> > > command.  
+> > 
+> > Does that apply even for flashes with not-256-byte pages ?
+> >   
 > 
+> I think it needs to patch in case of nor->page_size = 512 bytes.
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I think the main problem here is that you assume the memory is a
+NOR :-). Just do what the spi-mem user asks: if he asks you to write
+X bytes, then write no more than X bytes. Use whatever trick you have
+to make sure this is always true, and if this requires using a slow
+path for non-aligned accesses, then do it, because it's better to have
+a slow+working memory than a fast+non-working one :P.
