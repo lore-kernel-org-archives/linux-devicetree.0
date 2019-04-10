@@ -1,77 +1,98 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 20/30] PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
-Date: Thu, 11 Apr 2019 22:33:45 +0530
-Message-ID: <20190411170355.6882-21-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=PIpc=SM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:43157 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfDJAQS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 20:16:18 -0400
+Subject: Re: [PATCH 01/11] ARM: dts: r8a77470: Add HSCIF support
+References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+ <1554799912-24764-2-git-send-email-cv-dong@jinso.co.jp>
+ <20190409115135.dt4ny3mizmfv3sbd@verge.net.au>
+ <20190409121515.kqsog247tpxkybmr@verge.net.au>
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Message-ID: <6dbaba53-ca72-af14-7717-b0814e3a9945@jinso.co.jp>
+Date: Wed, 10 Apr 2019 09:16:15 +0900
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <20190409121515.kqsog247tpxkybmr@verge.net.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra186 and Tegra30 have three PCIe root ports. AFI_PEX2_CTRL register
-is defined for third root port. Offset of this register in Tegra186 is
-different from Tegra30, so add offset as part of soc data structure.
+Dear Simon-san,
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On 2019/04/09 21:15, Simon Horman wrote:
+> On Tue, Apr 09, 2019 at 01:51:38PM +0200, Simon Horman wrote:
+>> On Tue, Apr 09, 2019 at 05:51:42PM +0900, Cao Van Dong wrote:
+>>> Add hscif{0|1|2} nodes to dtsi for HSCIF support on the RZ/G1C (r8a77470) SoC.
+>>>
+>>> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+>> Thanks,
+>>
+>> This looks fine to me but I will wait to see if there are other reviews
+>> before applying.
+>>
+>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Sorry, I spoke a little too soon.
+>
+> The following incremental change is required in order
+> for this patch to compile.
+>
+> Please test that each patch in this series compiles and resubmit.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 11be88a394e3..8fdc7934d4c9 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -169,7 +169,6 @@
- 
- #define AFI_PEX0_CTRL			0x110
- #define AFI_PEX1_CTRL			0x118
--#define AFI_PEX2_CTRL			0x128
- #define  AFI_PEX_CTRL_RST		(1 << 0)
- #define  AFI_PEX_CTRL_CLKREQ_EN		(1 << 1)
- #define  AFI_PEX_CTRL_REFCLK_EN		(1 << 3)
-@@ -307,6 +306,7 @@ struct tegra_pcie_soc {
- 	unsigned int num_ports;
- 	const struct tegra_pcie_port_soc *ports;
- 	unsigned int msi_base_shift;
-+	unsigned long afi_pex2_ctrl;
- 	u32 pads_pll_ctl;
- 	u32 tx_ref_sel;
- 	u32 pads_refclk_cfg0;
-@@ -516,6 +516,7 @@ static struct pci_ops tegra_pcie_ops = {
- 
- static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
- {
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
- 	unsigned long ret = 0;
- 
- 	switch (port->index) {
-@@ -528,7 +529,7 @@ static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
- 		break;
- 
- 	case 2:
--		ret = AFI_PEX2_CTRL;
-+		ret = soc->afi_pex2_ctrl;
- 		break;
- 	}
- 
-@@ -2439,6 +2440,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.num_ports = 2,
- 	.ports = tegra20_pcie_ports,
- 	.msi_base_shift = 0,
-+	.afi_pex2_ctrl = 0x128,
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
- 	.pads_refclk_cfg0 = 0xfa5cfa5c,
-@@ -2548,6 +2550,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.num_ports = 3,
- 	.ports = tegra186_pcie_ports,
- 	.msi_base_shift = 8,
-+	.afi_pex2_ctrl = 0x19c,
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
- 	.pads_refclk_cfg0 = 0x80b880b8,
--- 
-2.17.1
+Thanks for your feedback. Very sorry for the trouble!
+I will correct and resubmit in version 2.
+
+> diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+> index 85f7a6f68720..60bd79fc35f7 100644
+> --- a/arch/arm/boot/dts/r8a77470.dtsi
+> +++ b/arch/arm/boot/dts/r8a77470.dtsi
+> @@ -594,12 +594,12 @@
+>   			reg = <0 0xe62c0000 0 0x60>;
+>   			interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&cpg CPG_MOD 717>,
+> -				 <&cpg CPG_CORE r8a77470_CLK_ZS>, <&scif_clk>;
+> +				 <&cpg CPG_CORE R8A77470_CLK_ZS>, <&scif_clk>;
+>   			clock-names = "fck", "brg_int", "scif_clk";
+>   			dmas = <&dmac0 0x39>, <&dmac0 0x3a>,
+>   			       <&dmac1 0x39>, <&dmac1 0x3a>;
+>   			dma-names = "tx", "rx", "tx", "rx";
+> -			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+>   			resets = <&cpg 717>;
+>   			status = "disabled";
+>   		};
+> @@ -610,12 +610,12 @@
+>   			reg = <0 0xe62c8000 0 0x60>;
+>   			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&cpg CPG_MOD 716>,
+> -				 <&cpg CPG_CORE r8a77470_CLK_ZS>, <&scif_clk>;
+> +				 <&cpg CPG_CORE R8A77470_CLK_ZS>, <&scif_clk>;
+>   			clock-names = "fck", "brg_int", "scif_clk";
+>   			dmas = <&dmac0 0x4d>, <&dmac0 0x4e>,
+>   			       <&dmac1 0x4d>, <&dmac1 0x4e>;
+>   			dma-names = "tx", "rx", "tx", "rx";
+> -			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+>   			resets = <&cpg 716>;
+>   			status = "disabled";
+>   		};
+> @@ -626,12 +626,12 @@
+>   			reg = <0 0xe62d0000 0 0x60>;
+>   			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&cpg CPG_MOD 713>,
+> -				 <&cpg CPG_CORE r8a77470_CLK_ZS>, <&scif_clk>;
+> +				 <&cpg CPG_CORE R8A77470_CLK_ZS>, <&scif_clk>;
+>   			clock-names = "fck", "brg_int", "scif_clk";
+>   			dmas = <&dmac0 0x3b>, <&dmac0 0x3c>,
+>   			       <&dmac1 0x3b>, <&dmac1 0x3c>;
+>   			dma-names = "tx", "rx", "tx", "rx";
+> -			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+>   			resets = <&cpg 713>;
+>   			status = "disabled";
+>   		};
+Thank you,
+Dong
