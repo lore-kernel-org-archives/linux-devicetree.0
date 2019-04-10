@@ -1,106 +1,39 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH RFC 7/9] cpufreq: qcom: Add support to update cpu node's
- OPP tables
-Date: Wed, 10 Apr 2019 16:03:16 +0530
-Message-ID: <20190410103316.sxev2f54klemq2p6@vireshk-i7>
-References: <20190328152822.532-1-sibis@codeaurora.org>
- <20190328152822.532-8-sibis@codeaurora.org>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 1/3] ASoC: fsl_audmix: remove "model"
+ attribute
+Date: Wed, 10 Apr 2019 10:34:57 +0000
+Message-ID: <1554892497.14997.13.camel@nxp.com>
+References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
+         <1554809242-27475-2-git-send-email-viorel.suman@nxp.com>
+         <20190410042906.GC3032@Asurada>
+Reply-To: Viorel Suman <viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190328152822.532-8-sibis@codeaurora.org>
+In-Reply-To: <20190410042906.GC3032@Asurada>
+Content-Language: en-US
+Content-ID: <19968812BB3F654D91C05730D04AC48D@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: robh+dt@kernel.org, andy.gross@linaro.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org, bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, cw00.choi@samsung.com, linux-pm@vger.kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, dianders@chromium.org
+To: "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Julia.Lawall@lip6.fr" <Julia.L>
 List-Id: devicetree@vger.kernel.org
 
-On 28-03-19, 20:58, Sibi Sankar wrote:
-> Add support to parse and update OPP tables attached to the cpu nodes.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/cpufreq/qcom-cpufreq-hw.c | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index 4b0b50403901..5c268dd2346c 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -73,6 +73,25 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
->  	return policy->freq_table[index].frequency;
->  }
->  
-> +static int qcom_find_update_opp(struct device *cpu_dev, unsigned long freq,
-> +				unsigned long volt)
-> +{
-> +	int ret;
-> +	struct dev_pm_opp *opp;
-> +
-> +	opp = dev_pm_opp_find_freq_exact(cpu_dev, freq, true);
-> +	if (IS_ERR(opp)) {
-> +		ret = dev_pm_opp_add(cpu_dev, freq, volt);
-
-With my comment on the other patch, you can just call
-dev_pm_opp_update_voltage() and if that fails then call dev_pm_opp_add().
-
-> +	} else {
-> +		dev_pm_opp_disable(cpu_dev, freq);
-> +		ret = dev_pm_opp_update_voltage(cpu_dev, freq, volt);
-> +		dev_pm_opp_enable(cpu_dev, freq);
-
-Perhaps no one else should be using the CPU OPP table at this point of time and
-so we can get away with disable and enable stuff ? Just add a comment on why
-that works.
-
-> +		dev_pm_opp_put(opp);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  				    struct cpufreq_policy *policy,
->  				    void __iomem *base)
-> @@ -81,11 +100,16 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  	u32 volt;
->  	unsigned int max_cores = cpumask_weight(policy->cpus);
->  	struct cpufreq_frequency_table	*table;
-> +	int ret;
->  
->  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->  	if (!table)
->  		return -ENOMEM;
->  
-> +	ret = dev_pm_opp_of_add_table(cpu_dev);
-> +	if (ret)
-> +		dev_dbg(cpu_dev, "Couldn't add OPP table\n");
-> +
->  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->  		data = readl_relaxed(base + REG_FREQ_LUT +
->  				      i * LUT_ROW_SIZE);
-> @@ -104,7 +128,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  
->  		if (freq != prev_freq && core_count == max_cores) {
->  			table[i].frequency = freq;
-> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> +			qcom_find_update_opp(cpu_dev, freq * 1000, volt);
->  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->  				freq, core_count);
->  		} else {
-> @@ -125,7 +149,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  			if (prev_cc != max_cores) {
->  				prev->frequency = prev_freq;
->  				prev->flags = CPUFREQ_BOOST_FREQ;
-> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
-> +				qcom_find_update_opp(cpu_dev, prev_freq * 1000,
-> +						     volt);
->  			}
->  
->  			break;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-
--- 
-viresh
+SGkgTmljb2xpbiwNCg0KT24gTWEsIDIwMTktMDQtMDkgYXQgMjE6MjkgLTA3MDAsIE5pY29saW4g
+Q2hlbiB3cm90ZToNCj4gV0FSTklORzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9m
+IE5YUC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVj
+b2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMNCj4gc2FmZS4NCj4gDQo+
+IA0KPiANCj4gT24gVHVlLCBBcHIgMDksIDIwMTkgYXQgMTE6Mjc6MzlBTSArMDAwMCwgVmlvcmVs
+IFN1bWFuIHdyb3RlOg0KPiA+IA0KPiA+IFVzZSAib2ZfZGV2aWNlX2lkLmRhdGEiIHRvIHNwZWNp
+ZnkgdGhlIG1hY2hpbmUgZHJpdmVyDQo+ID4gaW5zdGVhZCBvZiAibW9kZWwiIERUUyBhdHRyaWJ1
+dGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogVmlvcmVsIFN1bWFuIDx2aW9yZWwuc3VtYW5A
+bnhwLmNvbT4NCj4gQWNrZWQtYnk6IE5pY29saW4gQ2hlbiA8bmljb2xlb3RzdWthQGdtYWlsLmNv
+bT4NCj4gDQo+ID4gDQo+ID4gLS0tDQo+ID4gwqBzb3VuZC9zb2MvZnNsL2ZzbF9hdWRtaXguYyB8
+IDQzICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiAtLS0tLS0tLS0NCj4g
+PiDCoDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkNCj4g
+PiANCj4gPiArwqDCoMKgwqDCoHByaXYtPnBkZXYgPSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJf
+ZGF0YSgmcGRldi0+ZGV2LCBtZHJ2LA0KPiA+IDAsIE5VTEwsDQo+ID4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDApOw0KPiBXb3VsZCB5b3UgcGxlYXNlIHNlbmQgYSBz
+ZXBhcmF0ZSBwYXRjaCB0byByZXBsYWNlICJwZGV2LT5kZXYiPw0KDQpUaGFuayB5b3UgZm9yIHJl
+dmlldy4gWWVzLCB3aWxsIHNlbmQgVjMuDQoNCi9WaW9yZWwNCg0K
