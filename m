@@ -1,54 +1,51 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v1 0/5] Add supply property for DSI controller
-Date: Wed, 10 Apr 2019 15:48:43 +0200
-Message-ID: <315b59d5-893a-607a-01e4-cf83fe1cfd86@st.com>
-References: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND V11 4/4] arm64: dts: imx: add i.MX8QXP thermal
+ support
+Date: Wed, 10 Apr 2019 08:52:51 -0500
+Message-ID: <20190410135251.GA20384@bogus>
+References: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
+ <1554881866-26333-4-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
+Content-Type: multipart/mixed; boundary="===============8133682923872736211=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1554881866-26333-4-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Peng Fan <peng.fan@nxp.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, s.hauer@pengu
 List-Id: devicetree@vger.kernel.org
 
-Hi Yannick
+--===============8133682923872736211==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-On 4/3/19 10:16 AM, Yannick Fertré wrote:
-> The DSI controller needs a new property that powers its physical layer.
-> Binding has been updated to documented this property.
-> Device tree of stm32mp157c soc.
-> Move reg18 & reg11 to stm32mp157c device tree file.
-> Remove property phy-dsi-supply property to stm32mp157c-dk2.dts file.
-> 
-> Yannick Fertré (5):
-
-...
-
->    ARM: dts: stm32: add phy-dsi-supply property on stm32mp157c
->    ARM: dts: stm32: move fixe regulators reg11 & reg18
->    ARM: dts: stm32: remove phy-dsi-supply property on stm32mp157c-dk2
->      board
-> 
-
-For ARM part:
-
-Another series is currently under review: "Add support for STM32MP1 
-power regulators" (https://lkml.org/lkml/2019/4/8/614).
-
-As soon I'll merge it I'll take your patches without patch
-"ARM: dts: stm32: move fixe regulators reg11 & reg18" as it will be no 
-longer relevant.
-
-regards
-Alexandre
+:u?w]=00?????;?}??M4?	??q?jx0??^=01?b1=7F=10\??R?^?f?=CE=89=DE=B2?i??R?	?v?=
+?o '??=C7=B9??=02{(?{??	???&
+=16???,?w=1EW]+zj/z??????)???=EC=A2=BA=DE=B2??q??jwi??=D6=AD?(??=1E 8??'^y?=
+!?=17???lz{(??ajwey???g???=DC=87=F6=AB=9B=AE?n?-??l???z?=1A????=1F*=C6=97m?=
+-????????????????????????_?W????y???{=1E?=D8=A8?=CF=91z????[?=1A=1B=1D???x+=
+??dz?=DE=96?
 
 
->   .../devicetree/bindings/display/st,stm32-ltdc.txt    |  3 +++
->   arch/arm/boot/dts/stm32mp157c-dk2.dts                |  9 ---------
->   arch/arm/boot/dts/stm32mp157c-ed1.dts                | 16 ----------------
->   arch/arm/boot/dts/stm32mp157c.dtsi                   | 17 +++++++++++++++++
->   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c                | 20 ++++++++++++++++++++
->   5 files changed, 40 insertions(+), 25 deletions(-)
-> 
+--===============8133682923872736211==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8133682923872736211==--
