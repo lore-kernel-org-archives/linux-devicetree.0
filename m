@@ -1,57 +1,52 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 19/30] PCI: tegra: Use legacy irq for port service drivers
-Date: Thu, 11 Apr 2019 22:33:44 +0530
-Message-ID: <20190411170355.6882-20-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V5 03/13] dt-bindings: rcar-gen3-phy-usb2: Add r8a77470 support
+Date: Wed, 10 Apr 2019 15:48:40 +0100
+Message-Id: <1554907730-14792-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra signals PCIe services like AER, PME, etc over legacy IRQ line.
-By default service drivers register interrupt routine over MSI IRQ line,
-use pcie_pme_disable_msi() function to disable MSI for service drivers.
+Document RZ/G1C (R8A77470) SoC bindings.
 
-PME and AER interrupts registered to MSI without this change
-cat /proc/interrupts | grep -i pci
-36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
-37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
-76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+For RZ/G1C, this driver is used to enable interrupt generation and
+initializing timing registers which is part of phy_init code.
 
-PME and AER interrupts registered to legacy IRQ with this change
-cat /proc/interrupts | grep -i pci
-36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
-37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/pci/controller/pci-tegra.c | 4 ++++
- 1 file changed, 4 insertions(+)
+V4-->V5
+  * No Change
+V3-->V4
+  * No Change
+V2-->V3
+  * New patch
+    https://patchwork.kernel.org/patch/10879899/
+---
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index dcfe97711cb5..11be88a394e3 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -41,6 +41,7 @@
- #include <soc/tegra/pmc.h>
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+index ad9c290..23894db 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+@@ -1,10 +1,12 @@
+ * Renesas R-Car generation 3 USB 2.0 PHY
  
- #include "../pci.h"
-+#include "../pcie/portdrv.h"
+ This file provides information on what the device node for the R-Car generation
+-3 and RZ/G2 USB 2.0 PHY contain.
++3, RZ/G1C and RZ/G2 USB 2.0 PHY contain.
  
- #define INT_PCI_MSI_NR (8 * 32)
- 
-@@ -2724,6 +2725,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 		goto put_resources;
- 	}
- 
-+	/* PME events are received over legacy INTR, so disable MSI for PME */
-+	pcie_pme_disable_msi();
-+
- 	pm_runtime_enable(pcie->dev);
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err) {
+ Required properties:
+-- compatible: "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
++- compatible: "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
++	      SoC.
++	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+ 	      SoC.
+ 	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
+ 	      SoC.
 -- 
-2.17.1
+2.7.4
