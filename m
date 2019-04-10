@@ -1,69 +1,106 @@
-From: Flavio Suligoi <f.suligoi@asem.it>
-Subject: RE: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Date: Wed, 10 Apr 2019 08:04:12 +0000
-Message-ID: <795c8ed2df204658832a93d06caef444@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <5ca84214.1c69fb81.e3ace.21e5@mx.google.com>
- <20190406125550.GA7480@piout.net> <58b8e1bc2b064abcb67db04369cf9c6e@asem.it>
- <CAL_JsqLO20u39Vds_Z_S325D2My1aYKM6BS6RKdWSmyEVh-DtQ@mail.gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
+ exclusive and shared access
+Date: Wed, 10 Apr 2019 11:04:16 +0300
+Message-ID: <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
+References: <20190410053728.17374-1-lokeshvutla@ti.com>
+ <20190410053728.17374-3-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLO20u39Vds_Z_S325D2My1aYKM6BS6RKdWSmyEVh-DtQ@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190410053728.17374-3-lokeshvutla@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IE9uIE1vbiwgQXByIDgsIDIwMTkgYXQgMjoyMiBBTSBGbGF2aW8gU3VsaWdv
-aSA8Zi5zdWxpZ29pQGFzZW0uaXQ+IHdyb3RlOg0KPiA+DQo+ID4gSEksDQo+ID4NCj4gPiA+IE9u
-IDA2LzA0LzIwMTkgMDE6MDc6MTMtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gPiA+IE9u
-IFdlZCwgQXByIDAzLCAyMDE5IGF0IDA0OjUyOjQ0UE0gKzAyMDAsIEZsYXZpbyBTdWxpZ29pIHdy
-b3RlOg0KPiA+ID4gPiA+IFNvbWUgUlRDIGRldmljZXMgaGF2ZSBhIGJhdHRlcnktbG93IGF1dG9t
-YXRpYyBkZXRlY3Rpb24gY2lyY3VpdC4NCj4gPiA+ID4gPiBUaGUgYmF0dGVyeS1sb3cgZXZlbnQg
-aXMgdXN1YWxseSByZXBvcnRlZCB3aXRoOg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gLSBhIGJpdCBj
-aGFuZ2UgaW4gYSBSVEMgc3RhdHVzIHJlZ2lzdGVyDQo+ID4gPiA+ID4gLSBhIGh3IHNpZ25hbGlu
-ZyAoZ2VuZXJhbGx5IHVzaW5nIGFuIGludGVycnVwdCBnZW5lcmF0aW9uKSwNCj4gY2hhbmdpbmcN
-Cj4gPiA+ID4gPiAgIHRoZSBodyBsZXZlbCBvZiBhIHNwZWNpZmljIHBpbjsNCj4gPiA+ID4gPg0K
-PiA+ID4gPiA+IFRoZSBuZXcgcHJvcGVydHkgImJhdHRlcnktbG93LWh3LWFsYXJtIiBlbmFibGUg
-dGhlIFJUQyB0byBnZW5lcmF0ZQ0KPiB0aGUNCj4gPiA+ID4gPiBodyBzaWduYWxpbmcgaW4gY2Fz
-ZSBvZiBiYXR0ZXJ5LWxvdyBldmVudC4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYt
-Ynk6IEZsYXZpbyBTdWxpZ29pIDxmLnN1bGlnb2lAYXNlbS5pdD4NCj4gPiA+ID4gPiAtLS0NCj4g
-PiA+ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMudHh0IHwg
-MyArKysNCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9ydGMvcnRjLnR4dA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcnRjL3J0Yy50eHQNCj4gPiA+ID4gPiBpbmRleCBhOTdmYzZhLi5mOTNhNDRkIDEwMDY0NA0K
-PiA+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcnRj
-LnR4dA0KPiA+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9y
-dGMvcnRjLnR4dA0KPiA+ID4gPiA+IEBAIC0zMSw2ICszMSw5IEBAIGJlbG93Lg0KPiA+ID4gPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXhwcmVzc2VkIGluIGZlbXRvIEZhcmFkIChm
-RikuDQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBUaGUgZGVmYXVsdCB2
-YWx1ZSBzaGFsbCBiZSBsaXN0ZWQgKGlmDQo+ID4gPiBvcHRpb25hbCksDQo+ID4gPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBhbmQgbGlrZXdpc2UgYWxsIHZhbGlkIHZhbHVlcy4N
-Cj4gPiA+ID4gPiArLSBiYXR0ZXJ5LWxvdy1ody1hbGFybSA6ICAgIEVuYWJsZSB0aGUgImJhdHRl
-cnktbG93IiBvdXRwdXQgcGluLg0KPiBUaGlzDQo+ID4gPiBmdW5jdGlvbg0KPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgaXMgYXZhaWxhYmxlIG9uIHRoZSBmb2xsb3dpbmcN
-Cj4gZGV2aWNlczoNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gcGNm
-MjEyNyAtIHBpbiB1c2VkIGZvciBhbGFybTogSU5Ubg0KPiA+ID4gPg0KPiA+ID4gPiBCb29sZWFu
-PyBJZiB0aGVyZSdzIGNhc2VzIHdoZXJlIHdoaWNoIHBpbiBpcyBzZWxlY3RhYmxlLCB0aGVuIHdl
-J2QNCj4gbmVlZA0KPiA+ID4gPiB0aGlzIHRvIHRha2UgYSB2YWx1ZS4gTm90IHN1cmUgaG93IGxp
-a2VseSB0aGF0IGlzPw0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEluZGVlZCwgdGhlcmUgaXMgYXQg
-bGVhc3QgdGhlIHBjZjg1MzYzIHRoYXQgaGFzIHR3byBwb3NzaWJsZSBwaW5zIGZvcg0KPiA+ID4g
-dGhhdCBpbnRlcnJ1cHQuIEhvdyB3b3VsZCB5b3Ugc2VsZWN0IHRoZSBwaW4gdGhlbj8gYSB6ZXJv
-IGJhc2VkIGluZGV4Pw0KPiBhDQo+ID4gPiBzdHJpbmc/DQo+IA0KPiBJIHByZWZlciBhbiBpbmRl
-eC4NCg0KT2ssIHNvIHdlIGNhbiBjYWxsIHRoaXMgcHJvcGVydHkgYXM6DQoNCmxvdy12b2x0YWdl
-LWFsYXJtDQoNCmFuZCB3ZSBjYW4gc2VsZWN0IHRoZSBwaW4gdXNpbmcgYSB6ZXJvLWJhc2UgaW5k
-ZXgsDQphbHNvIGZvciBmdXR1cmUgZGV2ZWxvcG1lbnRzLg0KDQo+IA0KPiA+IEkgdGhpbmsgdGhl
-IHN0cmluZyBjb3VsZCBiZSBjbGVhcmVyIGZvciB0aGUgZmluYWwgdXNlciBhbmQgd291bGQgZ2l2
-ZQ0KPiA+IG1vcmUgZnJlZWRvbSBmb3IgZnV0dXJlIGNoYW5nZXMuDQo+ID4gRm9yIGV4YW1wbGUs
-IHdlIGNhbiBjYWxsIHRoaXMgcHJvcGVydHksIGluc3RlYWQgb2YgImJhdHRlcnktbG93LWFsYXJt
-Ig0KPiBvcg0KPiA+ICJsb3ctdm9sdGFnZS1hbGFybSIsIHNpbXBseTogImFsYXJtLXBpbl8xIiBh
-bmQgdGhlbiB0aGUgc3RyaW5nIGFyZ3VtZW50DQo+ID4gY2FuIGRlc2NyaWJlIHRoZSBmdW5jdGlv
-biB1c2VkOyBmb3IgZXhhbXBsZToNCj4gPg0KPiA+IGFsYXJtLXBpbl8xID0gImJhY2t1cC1zdXBw
-bHktbG93LXZvbHRhZ2UtYWxhcm0iOw0KPiA+IGFsYXJtLXBpbl8yID0gIi4uLi4uLiI7DQo+IA0K
-PiBIb3cgbWFueSBwaW5zIGFuZCBmdW5jdGlvbnMgdGhlbj8gQW5kIGhvdyBkb2VzIHRoaXMgcmVs
-YXRlIHRvIGFueQ0KPiBpbnRlcnJ1cHRzPw0KDQpJZiB3ZSB1c2UgaW5kZXgsIHdlIGRvbid0IHVz
-ZSBzdHJpbmdzIGFueSBtb3JlLg0K
+On 10/04/2019 08:37, Lokesh Vutla wrote:
+> TISCI protocol supports for enabling the device either with exclusive
+> permissions for the requesting host or with sharing across the hosts.
+> There are certain devices which are exclusive to Linux context and
+> there are certain devices that are shared across different host contexts.
+> So add support for getting this information from DT by increasing
+> the power-domain cells to 2.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>   .../devicetree/bindings/soc/ti/sci-pm-domain.txt      | 11 +++++++++--
+>   MAINTAINERS                                           |  1 +
+>   include/dt-bindings/soc/ti,sci_pm_domain.h            |  9 +++++++++
+>   3 files changed, 19 insertions(+), 2 deletions(-)
+>   create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> index f7b00a7c0f68..f541d1f776a2 100644
+> --- a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> @@ -19,8 +19,15 @@ child of the pmmc node.
+>   Required Properties:
+>   --------------------
+>   - compatible: should be "ti,sci-pm-domain"
+> -- #power-domain-cells: Must be 1 so that an id can be provided in each
+> -		       device node.
+> +- #power-domain-cells: Can be one of the following:
+> +			1: Containing the device id of each node
+> +			2: First entry should be device id
+> +			   Second entry should be one of the floowing:
+> +			   TI_SCI_PD_EXCLUSIVE: To allow device to be
+> +						exclusively controlled by
+> +						the requesting hosts.
+> +			   TI_SCI_PD_SHARED: To allow device to be shared
+> +					     by multiple hosts.
+
+One thing should be noted on this, the added flag is purely for software 
+configuration, and is not telling us anything about the HW / firmware. 
+Software can decide to have the flag either way and it will work. I just 
+wonder if DT is the correct location to have something like this... 
+Expect to have plenty of churn on this by people swapping the 
+permissions around according to their use-case needs.
+
+-Tero
+
+
+>   
+>   Example (K2G):
+>   -------------
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2359e12e4c41..dc7a19cc1831 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15345,6 +15345,7 @@ F:	drivers/firmware/ti_sci*
+>   F:	include/linux/soc/ti/ti_sci_protocol.h
+>   F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>   F:	drivers/soc/ti/ti_sci_pm_domains.c
+> +F:	include/dt-bindings/soc/ti,sci_pm_domain.h
+>   F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>   F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>   F:	drivers/clk/keystone/sci-clk.c
+> diff --git a/include/dt-bindings/soc/ti,sci_pm_domain.h b/include/dt-bindings/soc/ti,sci_pm_domain.h
+> new file mode 100644
+> index 000000000000..8f2a7360b65e
+> --- /dev/null
+> +++ b/include/dt-bindings/soc/ti,sci_pm_domain.h
+> @@ -0,0 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __DT_BINDINGS_TI_SCI_PM_DOMAIN_H
+> +#define __DT_BINDINGS_TI_SCI_PM_DOMAIN_H
+> +
+> +#define TI_SCI_PD_EXCLUSIVE	1
+> +#define TI_SCI_PD_SHARED	0
+> +
+> +#endif /* __DT_BINDINGS_TI_SCI_PM_DOMAIN_H */
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
