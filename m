@@ -1,53 +1,32 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 2/2] ARM: dts: stm32: Enable STM32F769 clock driver
-Date: Wed, 10 Apr 2019 15:40:59 +0200
-Message-ID: <5d6bc520-caa1-9dca-539d-e270562c4873@st.com>
-References: <20190405075332.28530-1-gabriel.fernandez@st.com>
- <20190405075332.28530-3-gabriel.fernandez@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND V11 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Wed, 10 Apr 2019 08:46:44 -0500
+Message-ID: <20190410134644.GA7399@bogus>
+References: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190405075332.28530-3-gabriel.fernandez@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@st.com>, michael turquette <mturquette@baylibre.com>, stephen boyd <sboyd@kernel.org>, rob herring <robh+dt@kernel.org>, mark rutland <mark.rutland@arm.com>, maxime coquelin <mcoquelin.stm32@gmail.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel
-
-On 4/5/19 9:53 AM, Gabriel Fernandez wrote:
-> This patch enables clocks for STM32F769 boards.
+On Wed, Apr 10, 2019 at 07:43:04AM +0000, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and thermal sensors etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to get temperature from thermal sensors, this patch adds
+> binding doc for i.MX system controller thermal driver.
 > 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->   arch/arm/boot/dts/stm32f769-disco.dts | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-> index 3c7216844a9b..6f1d0ac8c31c 100644
-> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> @@ -102,6 +102,10 @@
->   	};
->   };
->   
-> +&rcc {
-> +	compatible = "st,stm32f769-rcc", "st,stm32f746-rcc", "st,stm32-rcc";
-> +};
-> +
->   &cec {
->   	pinctrl-0 = <&cec_pins_a>;
->   	pinctrl-names = "default";
-> 
+> Changes since V10:
+> 	- remove property "imx,sensor-resource-id".
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
-Even if driver part is not yet merged, this DT part can be taken as we 
-will run with "st,stm32f746-rcc" compatible (the current one).
-
-So:
-
-Applied on stm32-next.
-
-Thanks.
-Alex
+Reviewed-by: Rob Herring <robh@kernel.org>
