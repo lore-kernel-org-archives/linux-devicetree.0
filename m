@@ -1,84 +1,97 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:29757 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfDIIwY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:24 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 02/11] ARM: dts: r8a77470: Add MSIOF support
-Date: Tue,  9 Apr 2019 17:51:43 +0900
-Message-Id: <1554799912-24764-3-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V4 10/13] ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device
+Date: Wed, 10 Apr 2019 09:08:32 +0100
+Message-Id: <1554883715-41725-11-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add msiof{0|1|2} nodes to dtsi for MSIOF support on the RZ/G1C (r8a77470) SoC.
+Define the r8a77470 generic part of the USB2.0 Host Controller device
+nodes (ehci[01]/ohci[01]).
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- arch/arm/boot/dts/r8a77470.dtsi | 48 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+V3-->V4
+ * Added missing usb2_phy1 in ohci1 node.
+V2-->V3
+ * Updated phys property on host nodes. using generic-ehci compatible for ehci nodes.
+V1-->V2
+ * New patch
+---
+ arch/arm/boot/dts/r8a77470.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 85f7a6f..a7d3f88 100644
+index dcd2975..e7a2234 100644
 --- a/arch/arm/boot/dts/r8a77470.dtsi
 +++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -636,6 +636,54 @@
+@@ -624,6 +624,31 @@
  			status = "disabled";
  		};
  
-+		msiof0: spi@e6e20000 {
-+			compatible = "renesas,msiof-r8a77470",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e20000 0 0x0064>;
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 000>;
-+			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
-+			       <&dmac1 0x51>, <&dmac1 0x52>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 000>;
++		ohci0: usb@ee080000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee080000 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb0 0>, <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 703>;
 +			status = "disabled";
 +		};
 +
-+		msiof1: spi@e6e10000 {
-+			compatible = "renesas,msiof-r8a77470",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e10000 0 0x0064>;
-+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 208>;
-+			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
-+			       <&dmac1 0x55>, <&dmac1 0x56>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 208>;
++		ehci0: usb@ee080100 {
++			compatible = "generic-ehci";
++			reg = <0 0xee080100 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb0 0>, <&usb2_phy0>;
++			phy-names = "usb";
++			companion = <&ohci0>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 703>;
 +			status = "disabled";
 +		};
 +
-+		msiof2: spi@e6e00000 {
-+			compatible = "renesas,msiof-r8a77470",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e00000 0 0x0064>;
-+			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 205>;
-+			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
-+			       <&dmac1 0x41>, <&dmac1 0x42>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 205>;
+ 		usb2_phy0: usb-phy@ee080200 {
+ 			compatible = "renesas,usb2-phy-r8a77470";
+ 			reg = <0 0xee080200 0 0x700>;
+@@ -634,6 +659,31 @@
+ 			status = "disabled";
+ 		};
+ 
++		ohci1: usb@ee0c0000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee0c0000 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 705>;
++			phys = <&usb0 1>, <&usb2_phy1>, <&usb1 0>;
++			phy-names = "usb";
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 705>;
 +			status = "disabled";
 +		};
 +
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
++		ehci1: usb@ee0c0100 {
++			compatible = "generic-ehci";
++			reg = <0 0xee0c0100 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 705>;
++			phys = <&usb0 1>, <&usb2_phy1>, <&usb1 0>;
++			phy-names = "usb";
++			companion = <&ohci1>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 705>;
++			status = "disabled";
++		};
++
+ 		usb2_phy1: usb-phy@ee0c0200 {
+ 			compatible = "renesas,usb2-phy-r8a77470";
+ 			reg = <0 0xee0c0200 0 0x700>;
 -- 
 2.7.4
