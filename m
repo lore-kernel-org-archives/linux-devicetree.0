@@ -1,39 +1,33 @@
 From: Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [EXT] Re: [PATCH v2 1/3] ASoC: fsl_audmix: remove "model"
- attribute
-Date: Wed, 10 Apr 2019 10:34:57 +0000
-Message-ID: <1554892497.14997.13.camel@nxp.com>
-References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
-         <1554809242-27475-2-git-send-email-viorel.suman@nxp.com>
-         <20190410042906.GC3032@Asurada>
-Reply-To: Viorel Suman <viorel.suman@nxp.com>
+Subject: [PATCH v3 0/4] ASoC: fsl: audmix: remove "model" attribute and fix
+ ref leaks
+Date: Wed, 10 Apr 2019 10:37:27 +0000
+Message-ID: <1554892629-17646-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410042906.GC3032@Asurada>
 Content-Language: en-US
-Content-ID: <19968812BB3F654D91C05730D04AC48D@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Julia.Lawall@lip6.fr" <Julia.L>
+To: Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Viorel Suman <viorel.suman@nxp.com>, Viorel Suman <viorel.suman@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmljb2xpbiwNCg0KT24gTWEsIDIwMTktMDQtMDkgYXQgMjE6MjkgLTA3MDAsIE5pY29saW4g
-Q2hlbiB3cm90ZToNCj4gV0FSTklORzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9m
-IE5YUC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVj
-b2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMNCj4gc2FmZS4NCj4gDQo+
-IA0KPiANCj4gT24gVHVlLCBBcHIgMDksIDIwMTkgYXQgMTE6Mjc6MzlBTSArMDAwMCwgVmlvcmVs
-IFN1bWFuIHdyb3RlOg0KPiA+IA0KPiA+IFVzZSAib2ZfZGV2aWNlX2lkLmRhdGEiIHRvIHNwZWNp
-ZnkgdGhlIG1hY2hpbmUgZHJpdmVyDQo+ID4gaW5zdGVhZCBvZiAibW9kZWwiIERUUyBhdHRyaWJ1
-dGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogVmlvcmVsIFN1bWFuIDx2aW9yZWwuc3VtYW5A
-bnhwLmNvbT4NCj4gQWNrZWQtYnk6IE5pY29saW4gQ2hlbiA8bmljb2xlb3RzdWthQGdtYWlsLmNv
-bT4NCj4gDQo+ID4gDQo+ID4gLS0tDQo+ID4gwqBzb3VuZC9zb2MvZnNsL2ZzbF9hdWRtaXguYyB8
-IDQzICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiAtLS0tLS0tLS0NCj4g
-PiDCoDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkNCj4g
-PiANCj4gPiArwqDCoMKgwqDCoHByaXYtPnBkZXYgPSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJf
-ZGF0YSgmcGRldi0+ZGV2LCBtZHJ2LA0KPiA+IDAsIE5VTEwsDQo+ID4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDApOw0KPiBXb3VsZCB5b3UgcGxlYXNlIHNlbmQgYSBz
-ZXBhcmF0ZSBwYXRjaCB0byByZXBsYWNlICJwZGV2LT5kZXYiPw0KDQpUaGFuayB5b3UgZm9yIHJl
-dmlldy4gWWVzLCB3aWxsIHNlbmQgVjMuDQoNCi9WaW9yZWwNCg0K
+VGhlIGxhdGVzdCBhdWRtaXggcGF0Y2gtc2V0ICh2NSkgaGFkIHRoZSAibW9kZWwiIGF0dHJpYnV0
+ZSByZW1vdmVkIGFzDQpyZXF1ZXN0ZWQgYnkgTmljb2xpbiBDaGVuLCBidXQgbG9va3MgbGlrZSAo
+djQpIHZlcnNpb24gb2YgREFJIGRyaXZlcg0KcmVhY2hlZCAiZm9yLW5leHQiIGJyYW5jaCAtIGZp
+eCB0aGlzIGJ5IHJlbW92aW5nICJtb2RlbCIgYXR0cmlidXRlLg0KQXNzaWRlIG9mIHRoaXMgZml4
+IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gbWFjaGluZSBwcm9iZSByZXBvcnRlZCBieQ0KSnVs
+aWEgTGF3YWxsLg0KDQpWaW9yZWwgU3VtYW4gKDQpOg0KICBBU29DOiBmc2xfYXVkbWl4OiByZW1v
+dmUgIm1vZGVsIiBhdHRyaWJ1dGUNCiAgZHQtYmluZGluZ3M6IGZzbCxhdWRtaXg6IHJlbW92ZSAi
+bW9kZWwiIGF0dHJpYnV0ZQ0KICBBU29DOiBpbXgtYXVkbWl4OiBmaXggb2JqZWN0IHJlZmVyZW5j
+ZSBsZWFrcyBpbiBwcm9iZQ0KICBBU29DOiBmc2xfYXVkbWl4OiBjYWNoZSBwZGV2LT5kZXYgcG9p
+bnRlcg0KDQpDaGFuZ2VzIHNpbmNlIFYxOg0KICBhKSBSZW1vdmVkICJtb2RlbCIgYXR0cmlidXRl
+IGZyb20gZHQtYmluZGluZ3MgZG9jdW1lbnRhdGlvbg0KICBiKSBBZHJlc3NlZCBEYW5pZWwncyBj
+b21tZW50cw0KDQpDaGFuZ2VzIHNpbmNlIFYyOg0KICBhKSBDYWNoZSBwZGV2LT5kZXYgcG9pbnRl
+ciBpbiBmc2xfYXVkbWl4IHByb2JlIGFzIHN1Z2dlc3RlZCBieSBOaWNvbGluDQoNCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2wsYXVkbWl4LnR4dCAgICAgICB8ICA0IC0tDQogc291
+bmQvc29jL2ZzbC9mc2xfYXVkbWl4LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA2MSArKysr
+KysrKysrKystLS0tLS0tLS0tDQogc291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgNCArKw0KIDMgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygr
+KSwgMzMgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi43LjQNCg0K
