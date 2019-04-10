@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/3] gpio: lpc32xx: enable interrupt lookup for port 3
-Date: Wed, 10 Apr 2019 12:39:25 +0200
-Message-ID: <20190410103926.8781-3-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/3] ARM: dts: lpc32xx: add GPIO interrupts
+Date: Wed, 10 Apr 2019 12:39:26 +0200
+Message-ID: <20190410103926.8781-4-alexandre.belloni@bootlin.com>
 References: <20190410103926.8781-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,63 +12,48 @@ To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@
 Cc: Vladimir Zapolskiy <vz@mleia.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Interrupt support was disabled "temporarily" in commit 320a6480ef24 ("gpio:
-lpc32xx: disable broken to_irq support").
-
-Reenable to_irq for port 3 as they are directly connected to an interrupt
-controller and a simple lookup is working.
+Add the interrupts for the GPIO controller.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/gpio/gpio-lpc32xx.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
-index aa74cc4d8b14..24f09b08e319 100644
---- a/drivers/gpio/gpio-lpc32xx.c
-+++ b/drivers/gpio/gpio-lpc32xx.c
-@@ -22,6 +22,7 @@
- #include <linux/errno.h>
- #include <linux/gpio/driver.h>
- #include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/module.h>
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 20b38f4ade37..9c61b1856291 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -392,6 +392,31 @@
+ 				reg = <0x40028000 0x1000>;
+ 				gpio-controller;
+ 				#gpio-cells = <3>; /* bank, pin, flags */
++				interrupts-extended = <&sic2 8 IRQ_TYPE_NONE>,
++						<&sic2 22 IRQ_TYPE_NONE>,
++						<&sic2 23 IRQ_TYPE_NONE>,
++						<&sic2 24 IRQ_TYPE_NONE>,
++						<&sic2 25 IRQ_TYPE_NONE>,
++						<&sic2 26 IRQ_TYPE_NONE>,
++						<&sic2 27 IRQ_TYPE_NONE>,
++						<&sic2 28 IRQ_TYPE_NONE>,
++						<&sic2 15 IRQ_TYPE_NONE>,
++						<&sic2 9 IRQ_TYPE_NONE>,
++						<&sic2 10 IRQ_TYPE_NONE>,
++						<&sic1 4 IRQ_TYPE_NONE>,
++						<&sic2 0 IRQ_TYPE_NONE>,
++						<&sic2 1 IRQ_TYPE_NONE>,
++						<&sic2 2 IRQ_TYPE_NONE>,
++						<&sic2 3 IRQ_TYPE_NONE>,
++						<&sic2 4 IRQ_TYPE_NONE>,
++						<&sic2 5 IRQ_TYPE_NONE>;
++				interrupt-names = "p01",
++						"gpi00", "gpi01", "gpi02",
++						"gpi03", "gpi04", "gpi05",
++						"gpi06", "gpi07", "gpi08",
++						"gpi09", "gpi19", "gpi28",
++						"gpio00", "gpio01", "gpio02",
++						"gpio03", "gpio04", "gpio05";
+ 			};
  
-@@ -385,14 +386,9 @@ static int lpc32xx_gpio_to_irq_p01(struct gpio_chip *chip, unsigned offset)
- 	return -ENXIO;
- }
- 
--static int lpc32xx_gpio_to_irq_gpio_p3(struct gpio_chip *chip, unsigned offset)
-+static int lpc32xx_gpio_to_irq_p3(struct gpio_chip *chip, unsigned int offset)
- {
--	return -ENXIO;
--}
--
--static int lpc32xx_gpio_to_irq_gpi_p3(struct gpio_chip *chip, unsigned offset)
--{
--	return -ENXIO;
-+	return of_irq_get_byname(chip->of_node, chip->names[offset]);
- }
- 
- static struct lpc32xx_gpio_chip lpc32xx_gpiochip[] = {
-@@ -451,7 +447,7 @@ static struct lpc32xx_gpio_chip lpc32xx_gpiochip[] = {
- 			.direction_output	= lpc32xx_gpio_dir_output_p3,
- 			.set			= lpc32xx_gpio_set_value_p3,
- 			.request		= lpc32xx_gpio_request,
--			.to_irq			= lpc32xx_gpio_to_irq_gpio_p3,
-+			.to_irq			= lpc32xx_gpio_to_irq_p3,
- 			.base			= LPC32XX_GPIO_P3_GRP,
- 			.ngpio			= LPC32XX_GPIO_P3_MAX,
- 			.names			= gpio_p3_names,
-@@ -465,7 +461,7 @@ static struct lpc32xx_gpio_chip lpc32xx_gpiochip[] = {
- 			.direction_input	= lpc32xx_gpio_dir_in_always,
- 			.get			= lpc32xx_gpi_get_value,
- 			.request		= lpc32xx_gpio_request,
--			.to_irq			= lpc32xx_gpio_to_irq_gpi_p3,
-+			.to_irq			= lpc32xx_gpio_to_irq_p3,
- 			.base			= LPC32XX_GPI_P3_GRP,
- 			.ngpio			= LPC32XX_GPI_P3_MAX,
- 			.names			= gpi_p3_names,
+ 			timer4: timer@4002c000 {
 -- 
 2.20.1
