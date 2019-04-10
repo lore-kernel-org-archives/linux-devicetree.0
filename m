@@ -1,167 +1,175 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
-Date: Wed, 10 Apr 2019 12:52:15 +0300
-Message-ID: <b94feeea-49d2-6761-11f5-fe2e9a3fa98b@linaro.org>
-References: <20190313090010.20534-1-georgi.djakov@linaro.org>
- <20190313090010.20534-2-georgi.djakov@linaro.org>
- <20190314062312.vwyu3ryeyc6iv55h@vireshk-i7>
- <e462c932-4789-4f59-ad58-98c62266d977@linaro.org>
- <20190410040556.uwnhmhajcasic7hb@vireshk-i7>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
+Date: Wed, 10 Apr 2019 15:23:39 +0530
+Message-ID: <31385c64-86b9-ebe3-99e3-6d156b66fb6a@nvidia.com>
+References: <20190329203159.GG24180@google.com>
+ <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
+ <20190402183110.GE141706@google.com>
+ <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
+ <20190403173641.GI141706@google.com>
+ <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
+ <20190405185842.GC26522@google.com>
+ <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
+ <20190409132604.GA256045@google.com>
+ <a414b42c-ce10-e2db-55f0-9428cfd23e68@nvidia.com>
+ <20190410081448.GC15144@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410040556.uwnhmhajcasic7hb@vireshk-i7>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190410081448.GC15144@e110455-lin.cambridge.arm.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: mark.rutland@arm.com, heiko@sntech.de, hayashi.kunihiko@socionext.com, tiwai@suse.de, catalin.marinas@arm.com, spujar@nvidia.com, will.deacon@arm.com, kthota@nvidia.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, stefan.wahren@i2se.com, lorenzo.pieralisi@arm.com, krzk@kernel.org, kishon@ti.com, maxime.ripard@bootlin.com, Bjorn Helgaas <helgaas@kernel.org>, jagan@amarulasolutions.com, linux-pci@vger.kernel.org, andy.gross@linaro.org, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, mmaddireddy@nvidia.com, marc.w.gonzalez@free.fr, yue.wang@amlogic.com, enric.balletbo@collabora.com, robh+dt@kernel.org, linux-tegra@vger.kernel.org, horms+renesas@verge.net.au, bjorn.andersson@linaro.org, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, xiaowei.bao@nxp.com, gustavo.pimentel@synopsys.com, linux-kernel@vger.kernel.org, skomatineni@nv
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
-
-On 4/10/19 07:05, Viresh Kumar wrote:
-> On 09-04-19, 17:36, Georgi Djakov wrote:
->> Hi Viresh,
->>
->> On 3/14/19 08:23, Viresh Kumar wrote:
->>> On 13-03-19, 11:00, Georgi Djakov wrote:
->>>> In addition to frequency and voltage, some devices may have bandwidth
->>>> requirements for their interconnect throughput - for example a CPU
->>>> or GPU may also need to increase or decrease their bandwidth to DDR
->>>> memory based on the current operating performance point.
->>>>
->>>> Extend the OPP tables with additional property to describe the bandwidth
->>>> needs of a device. The average and peak bandwidth values depend on the
->>>> hardware and its properties.
->>>>
->>>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
->>>>  1 file changed, 45 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
->>>> index 76b6c79604a5..fa598264615f 100644
->>>> --- a/Documentation/devicetree/bindings/opp/opp.txt
->>>> +++ b/Documentation/devicetree/bindings/opp/opp.txt
->>>> @@ -129,6 +129,9 @@ Optional properties:
->>>>  - opp-microamp-<name>: Named opp-microamp property. Similar to
->>>>    opp-microvolt-<name> property, but for microamp instead.
->>>>  
->>>> +- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
->>>> +  the two integer values for average and peak bandwidth in megabytes per second.
->>>> +
->>>>  - opp-level: A value representing the performance level of the device,
->>>>    expressed as a 32-bit integer.
->>>>  
->>>> @@ -546,3 +549,45 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
->>>>  		};
->>>>  	};
->>>>  };
->>>> +
->>>> +Example 7: opp-bw-MBs:
->>>> +(example: average and peak bandwidth values are defined for each OPP and the
->>>> +interconnect between CPU and DDR memory is scaled together with CPU frequency)
->>>> +
->>>> +/ {
->>>> +	cpus {
->>>> +		CPU0: cpu@0 {
->>>> +			compatible = "arm,cortex-a53", "arm,armv8";
->>>> +			...
->>>> +			operating-points-v2 = <&cpu_opp_table>;
->>>> +			/* path between the CPU and DDR memory */
->>>> +			interconnects = <&rpm_bimc MASTER_AMPSS_M0
->>>> +					&rpm_bimc SLAVE_EBI_CH0>;
+On 4/10/2019 1:44 PM, Liviu Dudau wrote:
+> On Wed, Apr 10, 2019 at 11:40:40AM +0530, Vidya Sagar wrote:
+>> On 4/9/2019 6:56 PM, Bjorn Helgaas wrote:
+>>> On Tue, Apr 09, 2019 at 05:00:53PM +0530, Vidya Sagar wrote:
+>>>> On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
+>>>>> On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
+>>>>>> On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
+>>>>>>> On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
+>>>>>>>> On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
+>>>>>>>>> On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
+>>>>>>>>>> On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
+>>>>>>>>>>> On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
+>>>>>>>>>>>> Add support for Synopsys DesignWare core IP based PCIe host controller
+>>>>>>>>>>>> present in Tegra194 SoC.
+>>>>>>>>>
+>>>>>>>>>        - Why does this chip require pcie_pme_disable_msi()?  The only other
+>>>>>>>>>          use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
+>>>>>>>>>          ("PCI PM: Make it possible to force using INTx for PCIe PME
+>>>>>>>>>          signaling").
+>>>>>>>>
+>>>>>>>> Because Tegra194 doesn't support raising PME interrupts through MSI line.
 >>>
->>> Can we have multiple paths for a device ?
->>
->> I suppose that this is also a possible scenario. Will propose something
->> to handle multiple paths too.
->>
->>>> +		};
->>>> +	};
->>>> +
->>>> +	cpu_opp_table: cpu_opp_table {
->>>> +		compatible = "operating-points-v2";
->>>> +		opp-shared;
->>>> +
->>>> +		opp-200000000 {
->>>> +			opp-hz = /bits/ 64 <200000000>;
->>>> +			/* 457 MB/s average and 1525 MB/s peak bandwidth */
->>>> +			opp-bw-MBs = <457 1525>;
+>>>>> There's something wrong here.  Either the question of how PME is
+>>>>> signaled is generic and the spec provides a way for the OS to discover
+>>>>> that method, or it's part of the device-specific architecture that
+>>>>> each host bridge driver has to know about its device.  If the former,
+>>>>> we need to make the PCI core smart enough to figure it out.  If the
+>>>>> latter, we need a better interface than this ad hoc
+>>>>> pcie_pme_disable_msi() thing.  But if it is truly the latter, your
+>>>>> current code is sufficient and we can refine it over time.
+>>>>
+>>>> In case of Tegra194, it is the latter case.
 >>>
->>> In that case fixing this to just 2 entries in the array is incorrect
->>> and we should take care of that in the bindings here.
+>>> This isn't a Tegra194 question; it's a question of whether this
+>>> behavior is covered by the PCIe spec.
+>> AFAIU the spec and what I heard from Nvidia hardware folks is that spec doesn't
+>> explicitly talk about this and it was a design choice made by Nvidia hardware
+>> folks to route these interrupts through legacy line instead of MSI line.
 >>
->> We can encode the path name into the property (when there are multiple
->> paths). We already have opp-microamp-<name> and opp-microamp-<name>, so
->> we can follow the same practice.
->>
->> For example:
->>
->> CPU0: cpu@0 {
->> 	compatible = "arm,cortex-a53", "arm,armv8";
->> 	...
->> 	operating-points-v2 = <&cpu_opp_table>;
->> 	/* path between the CPU and DDR and path between CPU and L3 */
->> 	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
->> 			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
->> 	interconnect-names "cpu-mem", "cpu-l3";
->> };
->>
->> cpu_opp_table: cpu_opp_table {
->> 	compatible = "operating-points-v2";
->> 	opp-shared;
->>
->> 	opp-200000000 {
->> 		opp-hz = /bits/ 64 <200000000>;
->> 		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
->> 		opp-bw-MBps-cpu-mem = <457 1525>;
->> 		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
->> 		opp-bw-MBps-cpu-l3 = <914 3050>;
->> 	};
->> };
+>>>
+>>>>> What I suspect should happen eventually is the DWC driver should call
+>>>>> devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
+>>>>> That would require a little reorganization of the DWC data structures,
+>>>>> but it would be good to be more consistent.
+>>>>>
+>>>>> For now, I think stashing the pointer in pcie_port or dw_pcie would be
+>>>>> OK.  I'm not 100% clear on the difference, but it looks like either
+>>>>> should be common across all the DWC drivers, which is what we want.
+>>>>
+>>>> Since dw_pcie is common for both root port and end point mode structures,
+>>>> I think it makes sense to keep the pointer in pcie_port as this structure
+>>>> is specific to root port mode of operation.
+>>>> I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
+>>>> used in the beginning itself to be inline with non-DWC implementations.
+>>>> But, I'll take it up later (after I'm done with upstreaming current series)
+>>>
+>>> Fair enough.
+>>>
+>>>>>> .remove() internally calls pm_runtime_put_sync() API which calls
+>>>>>> .runtime_suspend(). I made a new patch to add a host_deinit() call
+>>>>>> which make all these calls. Since host_init() is called from inside
+>>>>>> .runtime_resume() of this driver, to be in sync, I'm now calling
+>>>>>> host_deinit() from inside .runtime_suspend() API.
+>>>>>
+>>>>> I think this is wrong.  pci_stop_root_bus() will detach all the
+>>>>> drivers from all the devices.  We don't want to do that if we're
+>>>>> merely runtime suspending the host bridge, do we?
+>>>>
+>>>> In the current driver, the scenarios in which .runtime_suspend() is called
+>>>> are
+>>>> a) during .remove() call and
+>>>
+>>> It makes sense that you should call pci_stop_root_bus() during
+>>> .remove(), i.e., when the host controller driver is being removed,
+>>> because the PCI bus will no longer be accessible.  I think you should
+>>> call it *directly* from tegra_pcie_dw_remove() because that will match
+>>> what other drivers do.
+>>>
+>>>> b) when there is no endpoint found and controller would be shutdown
+>>>> In both cases, it is required to stop the root bus and remove all devices,
+>>>> so, instead of having same call present in respective paths, I kept them
+>>>> in .runtime_suspend() itself to avoid code duplication.
+>>>
+>>> I don't understand this part.  We should be able to runtime suspend
+>>> the host controller without detaching drivers for child devices.
+>>>
+>>> If you shutdown the controller completely and detach the *host
+>>> controller driver*, sure, it makes sense to detach drivers from child
+>>> devices.  But that would be handled by the host controller .remove()
+>>> method, not by the runtime suspend method.
+>> I think it is time I give some background about why I chose to implement
+>> .runtime_suspend() and .runtime_resume() APIs in the first place. We wanted to
+>> powerdown PCIe controller if there is no link up (i.e. slot is open and no endpoint
+>> devices are connected). We want to achieve this without returning a failure in
+>> .probe() call. Given PCIe IP power partitioning is handled by generic power domain
+>> framework, power partition gets unpowergated before .probe() gets called and gets
+>> powergated either when a failure is returned in .probe() or when pm_runtime_put_sync()
+>> is called. So, I chose to call pm_runtime_put_sync() in no-link-up scenario and chose
+>> to implement .runtime_suspend() to handle all the cleanup work before PCIe partition
+>> getting powergated. In fact, to match this, I'm doing all the PCIe IP bring up
+>> activity in .runtime_resume() implementation which gets invoked by pm_runtime_get_sync()
+>> which in turn is called in .probe() path. In fact the very dw_pcie_host_init() itself
+>> is called from .runtime_resume() implementation. So, it is because of these reasons that
+>> I called pci_stop_root_bus() and pci_remove_root_bus() as part of .runtime_suspend()
+>> implementation as pm_runtime_put_sync() is called from both .remove() and also during
+>> no-link-up scenario. Please do let me know if there is a better way to do this.
 > 
-> The -<name> property is different as only one of the value is ever used, i.e. we
-> can have opp-microvolt-speed0/1/2/3 (4 different values/properties) and only
-> opp-microvolt-speed1 will be used eventually and all others are discarded.
+> I think you're missing the case where .runtime_suspend() is called when
+> there are no *active* devices on the bus, i.e. everyone is dormant. It
+> doesn't mean that you need to remove them from the bus and re-probe them
+> back on .runtime_resume(). Most of the drivers for PCI devices don't
+> expect to be removed during idle, as they will configure the hardware to
+> be in a "quick wake" state (see PCIe Dx power states).
 > 
-> Also I am not sure if this will be actually required. We already have a list of
-> interconnects above and the order of that can be taken as reference here. i.e.
-> 
-> CPU0: cpu@0 {
-> 	compatible = "arm,cortex-a53", "arm,armv8";
-> 	...
-> 	operating-points-v2 = <&cpu_opp_table>;
-> 	/* path between the CPU and DDR and path between CPU and L3 */
-> 	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
-> 			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
-> };
-> 
-> cpu_opp_table: cpu_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	opp-200000000 {
-> 		opp-hz = /bits/ 64 <200000000>;
-> 		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
-> 		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
-> 		opp-bw-MBps = <457 1525>, <914 3050>;
-> 	};
-> };
+> You should probe and configure the bus during .probe() and remove and
+> detach all drivers during .remove(). For .runtime_suspend() all you need
+> to do is put the host controller in low power mode if it has one, or
+> stop all clocks that are not required for responding to devices waking
+> up from PCIe Dx state. For .runtime_resume() you then restore the
+> clocks, without re-scanning the bus.
+Since this is a host controller driver and the device as such is sitting on platform
+bus instead of PCIe bus, is it still the case that .runtime_suspend() and
+.runtime_resume() of this driver get called when devices on PCIe bus are idle?
 
-This works too.
+Having asked that, I start to feel what I'm doing as part of .runtime_suspend() and
+.runtime_resume() doesn't really justify these API names. Since I know where I'm
+calling pm_runtime_get/put_sync() APIs (which eventually call .runtime_resume/suspend())
+I should probably move the content of these APIs before calling pm_runtime_get/put_sync().
+Do you agree with that?
 
 > 
-> I also strongly believe that "opp-bw-MBps" should be renamed in a way to make it
-> independent of the OPPs. For example, we may have devices which also need to add
-> their vote for the bandwidth but don't have an OPP table as they don't do DVFS.
-> And the same property should be used by them directly as what we will have in
-> the individual OPPs in the above example case.
+> Best regards,
+> Liviu
 > 
-> So maybe something like bw-MBps or something else.
-
-Ok, will make it bandwidth-MBps.
-
-Thanks,
-Georgi
+> 
+>>
+>>>
+>>> Bjorn
+>>>
+>>
+> 
