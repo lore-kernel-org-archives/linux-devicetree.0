@@ -1,171 +1,70 @@
-From: Igor Opaniuk <igor.opaniuk@toradex.com>
-Subject: [PATCH v2 2/2] ARM: dts: tegra124-apalis: convert to SPDX license tags
-Date: Wed, 10 Apr 2019 09:10:07 +0200
-Message-ID: <20190410071007.13276-2-igor.opaniuk@toradex.com>
-References: <20190410071007.13276-1-igor.opaniuk@toradex.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH] arm64: dts: sprd: Add clock properties for serial devices
+Date: Wed, 10 Apr 2019 15:22:50 +0800
+Message-ID: <1246f7a9ce912458ea3b889b0c0e392897a664c8.1554879978.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410071007.13276-1-igor.opaniuk@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-imx@nxp.com
-Cc: jonathanh@nvidia.com, thierry.reding@gmail.com, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, marcel@ziswiler.com, marcel.ziswiler@toradex.com, stefan@agner.ch
+To: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: olof@lixom.net, arm@kernel.org, linux-arm-kernel@lists.infradead.org, orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Replace boiler plate licenses texts with the SPDX license
-identifiers in Colibri/Apalis DTS files.
+We've introduced power management logics for the Spreadtrum serial
+controller by commit 062ec2774c8a ("serial: sprd: Add power management
+for the Spreadtrum serial controller"), thus add related clock properties
+to support this feature.
 
-Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- arch/arm/boot/dts/tegra124-apalis-emc.dtsi | 39 ++-------------------
- arch/arm/boot/dts/tegra124-apalis-eval.dts | 40 ++--------------------
- arch/arm/boot/dts/tegra124-apalis.dtsi     | 40 ++--------------------
- 3 files changed, 6 insertions(+), 113 deletions(-)
+ arch/arm64/boot/dts/sprd/whale2.dtsi |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
-index ca2c3a557895..36211f876e33 100644
---- a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
-@@ -1,42 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
- /*
-- * Copyright 2016 Toradex AG
-+ * Copyright 2016-2019 Toradex AG
-  *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
+index 34b6ca0..b5c5dce 100644
+--- a/arch/arm64/boot/dts/sprd/whale2.dtsi
++++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
+@@ -75,7 +75,9 @@
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x0 0x100>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ext_26m>;
++				clock-names = "enable", "uart", "source";
++				clocks = <&apapb_gate CLK_UART0_EB>,
++				       <&ap_clk CLK_UART0>, <&ext_26m>;
+ 				status = "disabled";
+ 			};
  
- / {
-diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-index eaee10ef6512..e2388368d635 100644
---- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
-+++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-@@ -1,42 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR X11)
- /*
-- * Copyright 2016-2018 Toradex AG
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-+ * Copyright 2016-2019 Toradex AG
-  */
+@@ -84,7 +86,9 @@
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x100000 0x100>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ext_26m>;
++				clock-names = "enable", "uart", "source";
++				clocks = <&apapb_gate CLK_UART1_EB>,
++				       <&ap_clk CLK_UART1>, <&ext_26m>;
+ 				status = "disabled";
+ 			};
  
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 13c93cd507d8..690f881ea9cb 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -1,42 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR X11)
- /*
-- * Copyright 2016-2018 Toradex AG
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-+ * Copyright 2016-2019 Toradex AG
-  */
+@@ -93,7 +97,9 @@
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x200000 0x100>;
+ 				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ext_26m>;
++				clock-names = "enable", "uart", "source";
++				clocks = <&apapb_gate CLK_UART2_EB>,
++				       <&ap_clk CLK_UART2>, <&ext_26m>;
+ 				status = "disabled";
+ 			};
  
- #include "tegra124.dtsi"
+@@ -102,7 +108,9 @@
+ 					     "sprd,sc9836-uart";
+ 				reg = <0x300000 0x100>;
+ 				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&ext_26m>;
++				clock-names = "enable", "uart", "source";
++				clocks = <&apapb_gate CLK_UART3_EB>,
++				       <&ap_clk CLK_UART3>, <&ext_26m>;
+ 				status = "disabled";
+ 			};
+ 		};
 -- 
-2.17.1
+1.7.9.5
