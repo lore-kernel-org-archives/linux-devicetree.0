@@ -1,83 +1,46 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:15121 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfDKI0l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 04:26:41 -0400
+Return-Path: <SRS0=PIpc=SM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:40676 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbfDJJkB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Apr 2019 05:40:01 -0400
+Date: Wed, 10 Apr 2019 11:39:57 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 06/11] ARM: dts: r8a77470: Add Audio support
+Message-ID: <20190410093957.6xpdpsxboaic7wlt@verge.net.au>
 References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
  <1554799912-24764-7-git-send-email-cv-dong@jinso.co.jp>
  <87o95e7lmp.wl-kuninori.morimoto.gx@renesas.com>
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Message-ID: <097a0088-6a9f-f1a0-db05-130c97c95f02@jinso.co.jp>
-Date: Thu, 11 Apr 2019 17:26:37 +0900
+ <73ad4c10-ed8e-7fdc-1c68-837786cfaf6d@jinso.co.jp>
+ <87imvm7jup.wl-kuninori.morimoto.gx@renesas.com>
+ <d5a96c31-aec4-9752-26fd-e3d878e028a2@jinso.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <87o95e7lmp.wl-kuninori.morimoto.gx@renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d5a96c31-aec4-9752-26fd-e3d878e028a2@jinso.co.jp>
 Sender: devicetree-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Dear Morimoto-san,
+On Wed, Apr 10, 2019 at 10:33:57AM +0900, Cao Van Dong wrote:
+> Dear Morimoto-san,
+> 
+> On 2019/04/10 10:16, Kuninori Morimoto wrote:
+> > Hi Cao-san
+> > 
+> > > > BTW, this patch-set is including SoC only.
+> > > > Do you have plan to post board support patch after this ?
+> > > > In other words, did you test these ?
+> > > Thanks for your feedback and help!
+> > > I will create a separate patch (add
+> > > rcar_sound-r8a77470toDocumentation/../sound/renesas,rsnd.txt)
+> > > and update this patch in version 2.
+> > Again, are these tested code ?
+> > If not, please indicate such information at git-log.
+> > Otherwise, people will think that these are well tested upsteam code.
+> Sorry for missing the question!
+> I will add information to the patch in version 2.
 
-On 2019/04/10 9:37, Kuninori Morimoto wrote:
-> Hi Dong-san
->
-> Thank you for your patch
->
->> +		rcar_sound: sound@ec500000 {
->> +			/*
->> +			 * #sound-dai-cells is required
->> +			 *
->> +			 * Single DAI : #sound-dai-cells = <0>; <&rcar_sound>;
->> +			 * Multi  DAI : #sound-dai-cells = <1>; <&rcar_sound N>;
->> +			 */
->> +			compatible = "renesas,rcar_sound-r8a77470",
->> +				     "renesas,rcar_sound-gen2";
->> +			reg = <0 0xec500000 0 0x1000>, /* SCU */
->> +			      <0 0xec5a0000 0 0x100>,  /* ADG */
->> +			      <0 0xec540000 0 0x1000>, /* SSIU */
->> +			      <0 0xec541000 0 0x280>,  /* SSI */
->> +			      <0 0xec740000 0 0x200>;  /* Audio DMAC peri peri */
->> +			reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
-> I don't have r8a77470 datasheet, but does it have *extended* Audio DMAC peri peri
-> address (= 0xec760000) ? If it has, please use it instead of normal address (= 0xec740000).
-
-Alway thanks for your comment!
-
-I consulted the datasheet document of RZ/G1C soc from at the link: 
-"https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rz/rzg/rzg1c.html#documents". 
-I saw the Audio-DMAC-Peripheral-Peripheral address  support to 
-"0xec740000". So I didn't update it in version 2.
-
-Thank you,
-Dong
->> +			rcar_sound,ssi {
->> +				ssi0: ssi-0 {
->> +					interrupts = <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>;
->> +					dmas = <&audma0 0x01>, <&audma0 0x02>,
->> +					       <&audma0 0x15>, <&audma0 0x16>;
->> +					dma-names = "rx", "tx", "rxu", "txu";
->> +				};
-> Please add ssiu.
-> And then, ssi doesn't need "rxu" and "txu" anymore.
-> These can be good help for you.
->
-> 	0ec8e0a879b8d7eacbfbed9a7face8f97f9493a8
-> 	("arm64: dts: renesas: r8a7795: remove BUSIF0 settings from rcar_sound,ssi")
->
-> 	da90dd849dc22e920388d18a0f877366bd4d2b7f
-> 	("arm64: dts: renesas: r8a7795: add SSIU support for sound")
->
->
-> BTW, this patch-set is including SoC only.
-> Do you have plan to post board support patch after this ?
-> In other words, did you test these ?
->
-> Thank you for your help !!
->
-> Best regards
-> ---
-> Kuninori Morimoto
+In general I would prefer that patches that can be tested,
+f.e. using accompanying board dts, are tested before including them
+upstream.
