@@ -1,15 +1,14 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: imx8mq: add GPU node
-Date: Wed, 10 Apr 2019 15:02:12 +0200
-Message-ID: <1554901332.11529.9.camel@pengutronix.de>
-References: <20190404165211.29297-1-l.stach@pengutronix.de>
- <20190408130729.GA31666@bogon.m.sigxcpu.org>
- <20190408134540.GA13816@bogon.m.sigxcpu.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: mtd: Add YAML schemas for the generic
+ NAND options
+Date: Wed, 10 Apr 2019 08:05:26 -0500
+Message-ID: <CAL_Jsq+aXtRSAUoSLxSK2vWj0p8uXMhcr+kfd=60BmdK1agvJw@mail.gmail.com>
+References: <88ac1ca97bc5dd0a0e40d7d828199331b3e01fb9.1554277681.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408134540.GA13816@bogon.m.sigxcpu.org>
+In-Reply-To: <88ac1ca97bc5dd0a0e40d7d828199331b3e01fb9.1554277681.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,56 +18,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VpZG8sCgpBbSBNb250YWcsIGRlbiAwOC4wNC4yMDE5LCAxNTo0NSArMDIwMCBzY2hyaWVi
-IEd1aWRvIEfDvG50aGVyOgo+IEhpLAo+IE9uIE1vbiwgQXByIDA4LCAyMDE5IGF0IDAzOjA3OjI5
-UE0gKzAyMDAsIEd1aWRvIEfDvG50aGVyIHdyb3RlOgo+ID4gSGkgTHVjYXMsCj4gPiBPbiBUaHUs
-IEFwciAwNCwgMjAxOSBhdCAwNjo1MjoxMVBNICswMjAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPiA+
-ID4gVGhpcyBlbmFibGVzIHRoZSBWaXZhbnRlIEdDNzAwMEwgR1BVIG9uIHRoZSBpLk1YOE1RIFNv
-Qy4KPiA+ID4gCj4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNo
-QHBlbmd1dHJvbml4LmRlPgo+ID4gPiAtLS0KPiA+ID4gwqBhcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4bXEuZHRzaSB8IDIyICsrKysrKysrKysrKysrKysrKysrKysKPiA+ID4gwqAx
-IGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiA+ID4gaW5kZXggNDMwMDc4MTU1OGY2Li43
-OWQ0MThiNGY1ODUgMTAwNjQ0Cj4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2lteDhtcS5kdHNpCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2lteDhtcS5kdHNpCj4gPiA+IEBAIC03OTIsNiArNzkyLDI4IEBACj4gPiA+ID4gPiA+IMKgCQkJ
-fTsKPiA+ID4gPiA+ID4gwqAJCX07Cj4gPiA+IMKgCj4gPiA+ID4gPiA+ID4gPiA+ICsJCWdwdTog
-Z3B1QDM4MDAwMDAwIHsKPiA+ID4gPiA+ID4gKwkJCWNvbXBhdGlibGUgPSAidml2YW50ZSxnYyI7
-Cj4gPiA+ID4gPiA+ICsJCQlyZWcgPSA8MHgzODAwMDAwMCAweDQwMDAwPjsKPiA+ID4gPiA+ID4g
-KwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAzIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4gPiA+
-ID4gPiArCQkJY2xvY2tzID0gPCZjbGsgSU1YOE1RX0NMS19HUFVfUk9PVD4sCj4gPiA+ID4gPiA+
-ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJTVg4TVFfQ0xLX0dQVV9TSEFERVJfRElWPiwK
-PiA+ID4gPiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9DTEtfR1BVX0FY
-ST4sCj4gPiA+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJTVg4TVFfQ0xLX0dQ
-VV9BSEI+Owo+ID4gPiA+ID4gPiArCQkJY2xvY2stbmFtZXMgPSAiY29yZSIsICJzaGFkZXIiLCAi
-YnVzIiwgInJlZyI7Cj4gPiA+ID4gPiA+ICsJCQlhc3NpZ25lZC1jbG9ja3MgPSA8JmNsayBJTVg4
-TVFfQ0xLX0dQVV9DT1JFX1NSQz4sCj4gPiA+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJTVg4TVFfQ0xLX0dQVV9TSEFERVJfU1JDPiwKPiA+ID4g
-PiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhN
-UV9DTEtfR1BVX0FYST4sCj4gPiA+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqA8JmNsayBJTVg4TVFfQ0xLX0dQVV9BSEI+Owo+ID4gPiA+ID4gPiArCQkJYXNz
-aWduZWQtY2xvY2stcGFyZW50cyA9IDwmY2xrIElNWDhNUV9HUFVfUExMX09VVD4sCj4gPiA+ID4g
-PiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oDwmY2xrIElNWDhNUV9HUFVfUExMX09VVD4sCj4gPiA+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9HUFVfUExM
-X09VVD4sCj4gPiA+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9HUFVfUExMX09VVD47Cj4gPiA+ID4gPiA+ICsJ
-CQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw4MDAwMDAwMDA+LCA8ODAwMDAwMDAwPiwKPiA+ID4g
-PiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8
-ODAwMDAwMDAwPiwgPDgwMDAwMDAwMD47Cj4gPiA+ID4gPiA+ICsJCQlwb3dlci1kb21haW5zID0g
-PCZwZ2NfZ3B1PjsKPiA+ID4gKwkJfTsKPiA+IAo+ID4gUmV2aWV3ZWQtYnk6IEd1aWRvIEfDvG50
-aGVyIDxhZ3hAc2lneGNwdS5vcmc+Cj4gCj4gT24gYSBzZWNvbmQgdGhvdWdodCBzaG91bGQgdGhp
-cyBoYXZlIGEKPiAKPiDCoMKgwqDCoHN0YXR1cyA9ICJkaXNhYmxlZCI7CgpJIGRpc2FncmVlLiBU
-aGlzIGlzIGEgU29DIGludGVybmFsIHBlcmlwaGVyYWwsIHRoYXQgaGFzIG5vIGJvYXJkIGxldmVs
-CmRlcGVuZGVuY2llcyBvdGhlciB0aGFuIHRoZSB2b2x0YWdlIHJhaWwgYmVpbmcgY29ubmVjdGVk
-LCBzbyBpdCdzIGZpbmUKdG8gaGF2ZSB0aGUgbm9kZSBlbmFibGVkIG9uIGFsbCBzeXN0ZW1zLiBU
-aGlzIGlzIGNvbnNpc3RlbnQgd2l0aCB3aGF0CndlIGRpZCBvbiBhbGwgcHJldmlvdXMgaS5NWCBT
-b0MgRFRzLgoKUmVnYXJkcywKTHVjYXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Apr 3, 2019 at 2:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The NAND chips in MTD have a bunch of generic options that are needed in a
+> device tree. Add a YAML schemas for those.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> ---
+>
+> Changes from v2:
+>   - Fix the regex for the NAND chip node
+>   - Move the minimum into an allOf for nand-ecc-strength and
+>     nand-ecc-step-size
+>
+> Changes from v1:
+>   - Removed free form text binding
+>   - Enhanced properties descriptions
+>   - Fixed the SPDX license tag
+>   - Added minimums for nand-ecc-strength and nand-ecc-step-size
+>   - Removed Boris from the maintainers
+> ---
+>  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 143 +++++++-
+>  Documentation/devicetree/bindings/mtd/nand.txt             |  75 +----
+>  2 files changed, 143 insertions(+), 75 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nand-controller.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/nand.txt
+
+Reviewed-by: Rob Herring <robh@kernel.org>
