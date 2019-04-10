@@ -1,59 +1,63 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Date: Wed, 10 Apr 2019 14:29:27 +0300
-Message-ID: <20190410112927.GA6586@linux.intel.com>
-References: <20190402193316.15144-1-sashal@kernel.org>
- <20190402193316.15144-2-sashal@kernel.org>
- <20190403181827.GB17006@linux.intel.com>
- <20190403182728.GA17451@linux.intel.com>
- <20190406153047.GF2935@sasha-vm>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH 1/5] dt-bindings: pinctrl: stm32: add new entry for package
+ information
+Date: Wed, 10 Apr 2019 13:30:20 +0200
+Message-ID: <1554895824-25709-2-git-send-email-alexandre.torgue@st.com>
+References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190406153047.GF2935@sasha-vm>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com, thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 06, 2019 at 11:30:47AM -0400, Sasha Levin wrote:
-> On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
-> > > On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
-> > > > This patch adds support for a software-only implementation of a TPM
-> > > > running in TEE.
-> > > >
-> > > > There is extensive documentation of the design here:
-> > > > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
-> > > >
-> > > > As well as reference code for the firmware available here:
-> > > > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
-> > > >
-> > > > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > 
-> > > What is the context anyway? I mean tpm_crb already supports fTPM running
-> > > in TZ.
-> > 
-> > Might take 2-3 weeks before I have time to go through ftpm1.pdf with
-> > full concentration. I did search through the PDF for CRB and found
-> > zero hits.
-> 
-> The fTPM as described in that paper and implemented in practice does not
-> use the CRB interface, thus we can't use tpm_crb to interface with the
-> firmware TPM.
+Add "st,package" entry. Possibles values are:
+-STM32MP_PKG_AA for LFBGA448 (18*18) package
+-STM32MP_PKG_AB for LFBGA354 (16*16) package
+-STM32MP_PKG_AC for TFBGA361 (12*12) package
+-STM32MP_PKG_AD for TFBGA257 (10*10) package
 
-Obviously not but what is the reason of not implementing CRB but instead
-making yet another interface? I mean CRB supports SMC call.
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-For me this is taking steps back as to the early days when there was
-proprietary intefaces to TPM before TCG came along and stardized.
-
-I'm sure that the TPM implementation itself could be reworked to
-inteface using CRB. It would also be good for ARM as a platform as now
-this new made up interface causes unwanted divergence. I thought that
-throwing ad hoc intefaces everywhere is something that ARM Linux
-community tries to reduce, not increase.
-
-/Jarkko
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index 48df30a..0016925 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -57,6 +57,8 @@ Optional properties:
+  - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+    used to select GPIOs as interrupts).
+  - hwlocks: reference to a phandle of a hardware spinlock provider node.
++ - st,package: Indicates the SOC package used.
++   More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
+ 
+ Example 1:
+ #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+index b5a2174..e6fb8ad 100644
+--- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
++++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+@@ -32,5 +32,11 @@
+ 
+ #define STM32_PINMUX(port, line, mode) (((PIN_NO(port, line)) << 8) | (mode))
+ 
++/*  package information */
++#define STM32MP_PKG_AA	0x1
++#define STM32MP_PKG_AB	0x2
++#define STM32MP_PKG_AC	0x4
++#define STM32MP_PKG_AD	0x8
++
+ #endif /* _DT_BINDINGS_STM32_PINFUNC_H */
+ 
+-- 
+2.7.4
