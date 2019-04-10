@@ -1,57 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 0/7] sunxi: Add DT representation for the MBUS
- controller
-Date: Wed, 10 Apr 2019 09:01:28 -0500
-Message-ID: <20190410140128.GA6232@bogus>
-References: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
- <5ca841d1.1c69fb81.f4702.b85d@mx.google.com>
- <20190408081126.t3blyvtcqslzvki2@flea>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add ltdc pins muxing on stm32mp157
+Date: Wed, 10 Apr 2019 16:00:21 +0200
+Message-ID: <eef7d04a-85d7-1f7b-4cd4-61aa7b41b978@st.com>
+References: <1553862515-6005-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190408081126.t3blyvtcqslzvki2@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553862515-6005-1-git-send-email-yannick.fertre@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Philippe Cornu <philippe.cornu@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:11:26AM +0200, Maxime Ripard wrote:
-> On Sat, Apr 06, 2019 at 01:06:07AM -0500, Rob Herring wrote:
-> > On Mon, Apr 01, 2019 at 10:56:40AM +0200, Maxime Ripard wrote:
-> > > Hi,
-> > >
-> > > We've had for quite some time to hack around in our drivers to take into
-> > > account the fact that our DMA accesses are not done through the parent
-> > > node, but through another bus with a different mapping than the CPU for the
-> > > RAM (0 instead of 0x40000000 for most SoCs).
-> > >
-> > > After some discussion after the submission of a camera device suffering of
-> > > the same hacks, I've decided to put together a serie that introduce a
-> > > special interconnect name called "dma" that that allows to express the DMA
-> > > relationship between a master and its bus, even if they are not direct
-> > > parents in the DT.
-> > >
-> > > Let me know what you think,
-> > > Maxime
-> >
-> > LGTM.
-> >
-> > How do you propose merging this? I can take 1-5, and 6 and 7 thru
-> > arm-soc?
+Hi Yannick
+
+On 3/29/19 1:28 PM, Yannick Fertré wrote:
+> Add ltdc pins muxing on stm32mp157.
 > 
-> You can merge 1-4, and I'll merge 5 through drm-misc and 6-7 through
-> arm-soc
+> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 138 ++++++++++++++++++++++++++++++
+>   1 file changed, 138 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> index 9104896..da4b411 100644
+> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> @@ -233,6 +233,144 @@
+> 
 
-Done.
+Applied on stm32-next.
 
-Rob
+Thanks.
+Alex
