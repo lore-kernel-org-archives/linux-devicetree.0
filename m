@@ -1,66 +1,80 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 3/3] ARM: dts: lpc32xx: add GPIO interrupts
-Date: Wed, 10 Apr 2019 12:53:52 +0200
-Message-ID: <20190410105352.20436-1-alexandre.belloni@bootlin.com>
-References: <20190410103926.8781-4-alexandre.belloni@bootlin.com>
+From: Eric Schwarz <eas@sw-optimization.com>
+Subject: Re: Device Description for FPGA Components on x86 system
+Date: Wed, 10 Apr 2019 12:30:14 +0200
+Message-ID: <dae0b7ba500cc03fab23956eac85ca79@sw-optimization.com>
+References: <1629227.alSmCsHHUc@pcbe13614> <6563205.xRkLC0driV@pcbe13614>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410103926.8781-4-alexandre.belloni@bootlin.com>
+In-Reply-To: <6563205.xRkLC0driV@pcbe13614>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: federico.vaga@cern.ch
+Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-x86_64@vger.kernel.org, linux-fpga-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the interrupts for the GPIO controller.
+Hi,
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
+everything you want is already available and on the way to mainline 
+concerning support for various FPGA loading modes or available for 
+checkout from a git repository.
+All that has already been discussed on the mailing list.
 
-the previous patch was missing a line, sorry about that.
+FPGA loading interface is available here [1].
+Patchset missing for FPGA loading has been sent to the mailing list from 
+Anatolij Gustschin for various Linux kernel versions. Link to the most 
+recent patchset version [2].
+FPGA Manager mailing list archive link [3] - Please read up the story 
+here around those patches and also the replies of the others.
 
-Changes in v2:
- - add missing interrupt for gpi19
+Cheers
+Eric
 
- arch/arm/boot/dts/lpc32xx.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+[1] https://github.com/vdsao/fpga-cfg
+[2] https://marc.info/?l=linux-fpga&m=155078072107199&w=2
+[3] https://marc.info/?l=linux-fpga
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 20b38f4ade37..a012f668ebd1 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -392,6 +392,32 @@
- 				reg = <0x40028000 0x1000>;
- 				gpio-controller;
- 				#gpio-cells = <3>; /* bank, pin, flags */
-+				interrupts-extended = <&sic2 8 IRQ_TYPE_NONE>,
-+						<&sic2 22 IRQ_TYPE_NONE>,
-+						<&sic2 23 IRQ_TYPE_NONE>,
-+						<&sic2 24 IRQ_TYPE_NONE>,
-+						<&sic2 25 IRQ_TYPE_NONE>,
-+						<&sic2 26 IRQ_TYPE_NONE>,
-+						<&sic2 27 IRQ_TYPE_NONE>,
-+						<&sic2 28 IRQ_TYPE_NONE>,
-+						<&sic2 15 IRQ_TYPE_NONE>,
-+						<&sic2 9 IRQ_TYPE_NONE>,
-+						<&sic2 10 IRQ_TYPE_NONE>,
-+						<&sic2 11 IRQ_TYPE_NONE>,
-+						<&sic1 4 IRQ_TYPE_NONE>,
-+						<&sic2 0 IRQ_TYPE_NONE>,
-+						<&sic2 1 IRQ_TYPE_NONE>,
-+						<&sic2 2 IRQ_TYPE_NONE>,
-+						<&sic2 3 IRQ_TYPE_NONE>,
-+						<&sic2 4 IRQ_TYPE_NONE>,
-+						<&sic2 5 IRQ_TYPE_NONE>;
-+				interrupt-names = "p01",
-+						"gpi00", "gpi01", "gpi02",
-+						"gpi03", "gpi04", "gpi05",
-+						"gpi06", "gpi07", "gpi08",
-+						"gpi09", "gpi19", "gpi28",
-+						"gpio00", "gpio01", "gpio02",
-+						"gpio03", "gpio04", "gpio05";
- 			};
- 
- 			timer4: timer@4002c000 {
--- 
-2.20.1
+Am 10.04.2019 12:01, schrieb Federico Vaga:
+
+> Hello,
+> 
+> sorry to push for an answer but I do not want to take the risk of 
+> designing
+> something useless. I do not know how should I interpret a no-answer.
+> 
+> If the solution really does not exist today, then I would like to 
+> collect
+> opinions/arguments/requirements on the topic so that I can write 
+> something
+> useful not only for CERN but for the entire community.
+> 
+> Thank you
+> 
+> On Wednesday, March 27, 2019 6:17:18 PM CEST Federico Vaga wrote:
+> 
+>> Hello,
+>> 
+>> I'm looking for guidance
+>> 
+>> What I have:
+>> * Intel x86_64 computer
+>> * PCIe card with FPGA on it
+>> 
+>> What I want to achieve:
+>> * load an FPGA bitstream on the card
+>> * load a device-tree like description for the FPGA devices contained 
+>> in the
+>> bitstream
+>> 
+>> This is achievable on ARM with DeviceTree, overlay-dt, fpga-mgr; but 
+>> I'm
+>> puzzled about the x86_64 use-case. I'm not able to find recent and 
+>> clear
+>> information.
+>> 
+>> Does anyone know if this is doable? Perhaps with ACPI SSDTs overlay? 
+>> Or with
+>> the DT?
+>> 
+>> thanks
