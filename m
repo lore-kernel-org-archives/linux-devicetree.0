@@ -1,18 +1,28 @@
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 2/3] ARM: dts: stm32: enable Vivante GPU support on stm32mp157c-ed1 board
-Date: Wed, 10 Apr 2019 12:02:27 +0200
-Message-ID: <1554890548-24448-3-git-send-email-pierre-yves.mordret@st.com>
+Subject: [PATCH v2 3/3] ARM: dts: stm32: enable Vivante GPU support on
+ stm32mp157a-dk1 board
+Date: Wed, 10 Apr 2019 12:02:28 +0200
+Message-ID: <1554890548-24448-4-git-send-email-pierre-yves.mordret@st.com>
 References: <1554890548-24448-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1554890548-24448-1-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable Vivante GPU driver for stm32mp157c-ed1 board.
+Enable Vivante GPU driver for stm32mp157a-dk1 and dk2 boards.
 
 Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 ---
@@ -24,15 +34,15 @@ Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
        * Initial
 ---
 ---
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 16 ++++++++++++++++
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 9fd7943..7bcc122 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -22,6 +22,17 @@
- 		reg = <0xC0000000 0x40000000>;
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index 1b1886d..bd06f7b 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -27,6 +27,17 @@
+ 		reg = <0xc0000000 0x20000000>;
  	};
  
 +	reserved-memory {
@@ -40,16 +50,16 @@ index 9fd7943..7bcc122 100644
 +		#size-cells = <1>;
 +		ranges;
 +
-+		gpu_reserved: gpu@e8000000 {
-+			reg = <0xe8000000 0x8000000>;
++		gpu_reserved: gpu@d4000000 {
++			reg = <0xd4000000 0x4000000>;
 +			no-map;
 +		};
 +	};
 +
- 	aliases {
- 		serial0 = &uart4;
- 	};
-@@ -76,6 +87,11 @@
+ 	led {
+ 		compatible = "gpio-leds";
+ 		blue {
+@@ -69,6 +80,11 @@
  	status = "okay";
  };
  
@@ -58,8 +68,8 @@ index 9fd7943..7bcc122 100644
 +	status = "okay";
 +};
 +
- &i2c4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c4_pins_a>;
+ &iwdg2 {
+ 	timeout-sec = <32>;
+ 	status = "okay";
 -- 
 2.7.4
