@@ -1,43 +1,51 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Remove unnecessary setting of UART0 SCLK rate on veyron
-Date: Wed, 10 Apr 2019 11:30:10 -0700
-Message-ID: <20190410183010.21307-1-mka@chromium.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: del redundant type conversion
+Date: Wed, 10 Apr 2019 11:50:28 -0700
+Message-ID: <8835e19b-e63b-41c9-7c87-1d68a130a319@gmail.com>
+References: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: xiaojiangfeng <xiaojiangfeng@huawei.com>, robh+dt@kernel.org, robh@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some veyron devices have a Bluetooth controller connected on UART0.
-The UART needs to operate at a high speed, however setting the clock
-rate at initialization has no practical effect. During initialization
-user space adjusts the UART baudrate multiple times, which ends up
-changing the SCLK rate. After a successful initiatalization the clk
-is running at the desired speed (48MHz).
+On 4/10/19 1:29 AM, xiaojiangfeng wrote:
+> The type of variable l in early_init_dt_scan_chosen is
+> int, there is no need to convert to int.
+> 
+> Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
+> ---
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 4734223..de893c9 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1091,7 +1091,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>  	/* Retrieve command line */
+>  	p = of_get_flat_dt_prop(node, "bootargs", &l);
+>  	if (p != NULL && l > 0)
+> -		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
+> +		strlcpy(data, p, min(l, COMMAND_LINE_SIZE));
+>  
+>  	/*
+>  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+> 
 
-Remove the unnecessary clock rate configuration from the DT.
+Thanks for catching the redundant cast.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm/boot/dts/rk3288-veyron.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+There is a second problem detected by sparse on that line:
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 0bc2409f6903..97e980383e25 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -378,10 +378,6 @@
- &uart0 {
- 	status = "okay";
- 
--	/* We need to go faster than 24MHz, so adjust clock parents / rates */
--	assigned-clocks = <&cru SCLK_UART0>;
--	assigned-clock-rates = <48000000>;
--
- 	/* Pins don't include flow control by default; add that in */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
--- 
-2.21.0.392.gf8f6787159e-goog
+  drivers/of/fdt.c:1094:34: warning: expression using sizeof(void)
+
+Can you please fix both issues?
+
+Thanks,
+
+Frank
