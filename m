@@ -1,51 +1,34 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: del redundant type conversion
-Date: Wed, 10 Apr 2019 11:50:28 -0700
-Message-ID: <8835e19b-e63b-41c9-7c87-1d68a130a319@gmail.com>
-References: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
+Date: Wed, 10 Apr 2019 21:04:56 +0200
+Message-ID: <20190410190456.GH26580@zn.tnic>
+References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
+ <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
+ <20190409201323.GD6150@zn.tnic>
+ <f843024e-5f06-a566-7ab4-5c3e03e6ed3f@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <f843024e-5f06-a566-7ab4-5c3e03e6ed3f@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xiaojiangfeng <xiaojiangfeng@huawei.com>, robh+dt@kernel.org, robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/10/19 1:29 AM, xiaojiangfeng wrote:
-> The type of variable l in early_init_dt_scan_chosen is
-> int, there is no need to convert to int.
-> 
-> Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
-> ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 4734223..de893c9 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -1091,7 +1091,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->  	/* Retrieve command line */
->  	p = of_get_flat_dt_prop(node, "bootargs", &l);
->  	if (p != NULL && l > 0)
-> -		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
-> +		strlcpy(data, p, min(l, COMMAND_LINE_SIZE));
->  
->  	/*
->  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
-> 
+On Tue, Apr 09, 2019 at 05:32:07PM -0500, Thor Thayer wrote:
+> I have ACKs on patches 1 & 3. Patch 2 has a Reviewed-by from Rob Herring
+> which was sufficient in the past.
 
-Thanks for catching the redundant cast.
+Sorry about that - I missed those because I looked only at the diffstat
+and decided this series is not for me :)
 
-There is a second problem detected by sparse on that line:
+Anyway, all three applied now.
 
-  drivers/of/fdt.c:1094:34: warning: expression using sizeof(void)
+Thx.
 
-Can you please fix both issues?
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks,
-
-Frank
+Good mailing practices for 400: avoid top-posting and trim the reply.
