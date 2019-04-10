@@ -1,76 +1,176 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 3/4] spi: Add MFD for Macronix MX25F0A SPI controller
- driver
-Date: Wed, 10 Apr 2019 10:37:16 +0100
-Message-ID: <20190410093716.GC6106@sirena.org.uk>
-References: <1554777000-10542-1-git-send-email-masonccyang@mxic.com.tw>
- <1554777000-10542-4-git-send-email-masonccyang@mxic.com.tw>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH v3 2/2] usb: dwc3: Add workaround for host mode VBUS
+ glitch when boot
+Date: Wed, 10 Apr 2019 09:40:59 +0000
+Message-ID: <AM5PR0402MB2865B9A93B90BD742EC1AC54F12E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190226070016.27372-1-ran.wang_1@nxp.com>
+ <20190226070016.27372-2-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7943740534075861812=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1554777000-10542-4-git-send-email-masonccyang@mxic.com.tw>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Mason Yang <masonccyang@mxic.com.tw>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, juliensu@mxic.com.tw, christophe.kerello@st.com, richard@nod.at, bbrezillon@kernel.org, marcel.ziswiler@toradex.com, dwmw2@infradead.org, miquel.raynal@bootlin.com, linux-kernel@vger.kernel.org, stefan@agner.ch, linux-spi@vger.kernel.org, marek.vasut@gmail.com, paul.burton@mips.com, robh+dt@kernel.org, geert@linux-m68k.org, linux-mtd@lists.infradead.org, computersforpeace@gmal.com, liang.yang@amlogic.com, lee.jones@linaro.org, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190226070016.27372-2-ran.wang_1@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang Li <pku.leo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello Sirs,
+    May I have your comment on this version patch, please? Thanks.
+Regards,
+Ran
 
---===============7943740534075861812==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
-Content-Disposition: inline
-
-
---z4+8/lEcDcG5Ke9S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 09, 2019 at 10:29:59AM +0800, Mason Yang wrote:
-> Add a MFD driver for Macronix MX25F0A SPI controller.
+On Tuesday, February 26, 2019 14:59, Ran Wang wrote:
+> When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
+> (or its control signal) will be turned on immediately on related Root Hub=
+ ports.
+> Then, the VBUS is turned off for a little while(15us) when do xhci reset
+> (conducted by xhci driver) and back to normal finally, we can observe a n=
+egative
+> glitch of related signal happen.
 >=20
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> This VBUS glitch might cause some USB devices enumeration fail if kernel =
+boot
+> with them connected. Such as LS1012AFWRY/LS1043ARDB/LX2160AQDS
+> /LS1088ARDB with Kingston 16GB USB2.0/Kingston USB3.0/JetFlash Transcend
+> 4GB USB2.0 drives. The fail cases include enumerated as full-speed device=
+ or
+> report wrong device descriptor, etc.
+>=20
+> One SW workaround which can fix this is by programing all xhci PORTSC[PP]=
+ to 0
+> to turn off VBUS immediately after setting host mode in DWC3 driver (per =
+signal
+> measurement result, it will be too late to do it in xhci-plat.c or xhci.c=
+). Then,
+> after xhci reset complete in xhci driver, PORTSC[PP]s' value will back to=
+ 1
+> automatically and VBUS on at that time, no glitch happen and normal
+> enumeration process has no impact.
+>=20
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 > ---
->  drivers/spi/spi-mxic.c | 275 +++++++++----------------------------------=
-------
-
-This isn't adding a new MFD driver, this is a substantial refactoring of
-the SPI driver which doesn't touch SPI at all.
-
---z4+8/lEcDcG5Ke9S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlytuUsACgkQJNaLcl1U
-h9AeQgf8Cq4PSo+iWmspUorVUXm+K5G5aUI3052g+2/+hl0mEaCt7grEKFmiY6ef
-xWMpNCd1tocLecIJxAyiipHfJQDpA4hrpRhZaXkbJAG6LXwXfjK2l8YCnzHpSd43
-zGBQvVlwNIpqjYv8/YmFXe92QFk6XNPhhofK83HennndKm5ZwjF+vJTa8ZDdPhR5
-oikRqtPYEs9ONDwKPL0WRzWBq05uRoe7MjE6tfAqwahQC7paVJCgv40S51m7FUZQ
-dv5NyqAfA+piR5zFrrk5QR3GEX3+Hh2pudJjRCSjY8QQkyULl4hT2ehjanj4uWj9
-bH4xjLtxOcgcsSxo4wM6vyVNDEffnQ==
-=oPnu
------END PGP SIGNATURE-----
-
---z4+8/lEcDcG5Ke9S--
-
-
---===============7943740534075861812==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
---===============7943740534075861812==--
+> Changes in v3:
+>   - Add macro PORT_REGS_SIZE to replace 0x10
+>   - Change initial value of i to 0 for the for loop
+>   - Cosmetic changes
+>=20
+> Changes in v2:
+>   - Rename related property to 'snps,host-vbus-glitches'
+>   - Rename related dwc member to 'host_vbus_glitches'
+>   - Add member 'host_vbus_glitches' description in 'dwc3'
+>=20
+>  drivers/usb/dwc3/core.c |   48
+> +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/dwc3/core.h |   12 +++++++++++
+>  2 files changed, 60 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c index
+> a1b126f..dd80e3d 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -100,6 +100,42 @@ static int dwc3_get_dr_mode(struct dwc3 *dwc)
+>  	return 0;
+>  }
+>=20
+> +/*
+> + * dwc3_power_of_all_roothub_ports - Power off all Root hub ports
+> + * @dwc3: Pointer to our controller context structure  */ static void
+> +dwc3_power_off_all_roothub_ports(struct dwc3 *dwc) {
+> +	int i, port_num;
+> +	u32 reg, op_regs_base, offset;
+> +	void __iomem		*xhci_regs;
+> +
+> +	/* xhci regs is not mapped yet, do it temperary here */
+> +	if (dwc->xhci_resources[0].start) {
+> +		xhci_regs =3D ioremap(dwc->xhci_resources[0].start,
+> +				DWC3_XHCI_REGS_END);
+> +		if (IS_ERR(xhci_regs)) {
+> +			dev_err(dwc->dev, "Failed to ioremap xhci_regs\n");
+> +			return;
+> +		}
+> +
+> +		op_regs_base =3D HC_LENGTH(readl(xhci_regs));
+> +		reg =3D readl(xhci_regs + XHCI_HCSPARAMS1);
+> +		port_num =3D HCS_MAX_PORTS(reg);
+> +
+> +		for (i =3D 0; i < port_num; i++) {
+> +			offset =3D op_regs_base + XHCI_PORTSC_BASE +
+> +				PORT_REGS_SIZE * i;
+> +			reg =3D readl(xhci_regs + offset);
+> +			reg &=3D ~PORT_POWER;
+> +			writel(reg, xhci_regs + offset);
+> +		}
+> +
+> +		iounmap(xhci_regs);
+> +	} else
+> +		dev_err(dwc->dev, "xhci base reg invalid\n"); }
+> +
+>  void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)  {
+>  	u32 reg;
+> @@ -109,6 +145,15 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
+>  	reg |=3D DWC3_GCTL_PRTCAPDIR(mode);
+>  	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
+>=20
+> +	/*
+> +	 * We have to power off all Root hub ports immediately after DWC3 set
+> +	 * to host mode to avoid VBUS glitch happen when xhci get reset later.
+> +	 */
+> +	if (dwc->host_vbus_glitches) {
+> +		if (mode =3D=3D DWC3_GCTL_PRTCAP_HOST)
+> +			dwc3_power_off_all_roothub_ports(dwc);
+> +	}
+> +
+>  	dwc->current_dr_role =3D mode;
+>  }
+>=20
+> @@ -1306,6 +1351,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>  	dwc->dis_metastability_quirk =3D device_property_read_bool(dev,
+>  				"snps,dis_metastability_quirk");
+>=20
+> +	dwc->host_vbus_glitches =3D device_property_read_bool(dev,
+> +				"snps,host-vbus-glitches");
+> +
+>  	dwc->lpm_nyet_threshold =3D lpm_nyet_threshold;
+>  	dwc->tx_de_emphasis =3D tx_de_emphasis;
+>=20
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h index
+> df87641..c2dee0b 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -606,6 +606,15 @@
+>  #define DWC3_OSTS_VBUSVLD		BIT(1)
+>  #define DWC3_OSTS_CONIDSTS		BIT(0)
+>=20
+> +/* Partial XHCI Register and Bit fields for quirk */
+> +#define XHCI_HCSPARAMS1		0x4
+> +#define XHCI_PORTSC_BASE	0x400
+> +#define PORT_REGS_SIZE		0x10
+> +#define PORT_POWER			(1 << 9)
+> +#define HCS_MAX_PORTS(p)	(((p) >> 24) & 0x7f)
+> +#define XHCI_HC_LENGTH(p)	(((p)>>00)&0x00ff)
+> +#define HC_LENGTH(p)		XHCI_HC_LENGTH(p)
+> +
+>  /* Structures */
+>=20
+>  struct dwc3_trb;
+> @@ -1024,6 +1033,8 @@ struct dwc3_scratchpad_array {
+>   * 	2	- No de-emphasis
+>   * 	3	- Reserved
+>   * @dis_metastability_quirk: set to disable metastability quirk.
+> + * @host-vbus-glitches: set to avoid vbus glitch during
+> + *                      xhci reset.
+>   * @imod_interval: set the interrupt moderation interval in 250ns
+>   *                 increments or 0 to disable.
+>   */
+> @@ -1209,6 +1220,7 @@ struct dwc3 {
+>  	unsigned		tx_de_emphasis:2;
+>=20
+>  	unsigned		dis_metastability_quirk:1;
+> +	unsigned		host_vbus_glitches:1;
+>=20
+>  	u16			imod_interval;
+>  };
+> --
+> 1.7.1
