@@ -1,8 +1,8 @@
 Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 00/13] Add USB2.0 support
-Date: Wed, 10 Apr 2019 15:48:37 +0100
-Message-Id: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH V4 00/13] Add USB2.0 support
+Date: Wed, 10 Apr 2019 09:08:22 +0100
+Message-Id: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
@@ -21,11 +21,9 @@ To address the above scenarios, created a ehci-r8a77470 host controller
 driver.
 
 This patchset is based on linux_next next-20190410 branch.
-V4-->V5
-   * Incoporated Shimoda-san's review comment
-     (https://patchwork.kernel.org/patch/10879893/)
+
 V3-->V4
-  * Incoporated Kishon and Shimoda-san's review comment
+  * Incoporated Kishan and Shimoda-san's review comment
     (https://patchwork.kernel.org/patch/10883265/)
   * Added missing rcar-gen3-phy-usb2 phy in ohci1 node.
 
@@ -64,9 +62,9 @@ Biju Das (13):
  arch/arm/boot/dts/r8a77470.dtsi                    | 141 +++++++++++++++++++++
  arch/arm/configs/shmobile_defconfig                |   3 +
  drivers/phy/renesas/Kconfig                        |   2 +-
- drivers/phy/renesas/phy-rcar-gen2.c                | 130 +++++++++++++++++--
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           |  39 +++++-
- 9 files changed, 398 insertions(+), 25 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen2.c                |  86 ++++++++++++-
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c           |  38 +++++-
+ 9 files changed, 363 insertions(+), 15 deletions(-)
 
 -- 
 2.7.4
