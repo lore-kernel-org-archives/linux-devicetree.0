@@ -1,59 +1,26 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/3] ARM: dts: lpc32xx: add GPIO interrupts
-Date: Wed, 10 Apr 2019 12:39:26 +0200
-Message-ID: <20190410103926.8781-4-alexandre.belloni@bootlin.com>
-References: <20190410103926.8781-1-alexandre.belloni@bootlin.com>
+From: Lars Melin <larsm17@gmail.com>
+Subject: Re: [PATCH v6 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Wed, 10 Apr 2019 17:40:06 +0700
+Message-ID: <f04e98f8-e1d4-55a7-d714-9770961e5fc9@gmail.com>
+References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
+ <1554882504-9010-6-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410103926.8781-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <1554882504-9010-6-git-send-email-pawell@cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Add the interrupts for the GPIO controller.
+On 4/10/2019 14:48, Pawel Laszczak wrote:
+> The Cadence USBSS DRD Driver is a highly configurable IP Core which
+> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+> Host Only (XHCI)configurations.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- arch/arm/boot/dts/lpc32xx.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+The hardware is an IP core, the driver is not.
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 20b38f4ade37..9c61b1856291 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -392,6 +392,31 @@
- 				reg = <0x40028000 0x1000>;
- 				gpio-controller;
- 				#gpio-cells = <3>; /* bank, pin, flags */
-+				interrupts-extended = <&sic2 8 IRQ_TYPE_NONE>,
-+						<&sic2 22 IRQ_TYPE_NONE>,
-+						<&sic2 23 IRQ_TYPE_NONE>,
-+						<&sic2 24 IRQ_TYPE_NONE>,
-+						<&sic2 25 IRQ_TYPE_NONE>,
-+						<&sic2 26 IRQ_TYPE_NONE>,
-+						<&sic2 27 IRQ_TYPE_NONE>,
-+						<&sic2 28 IRQ_TYPE_NONE>,
-+						<&sic2 15 IRQ_TYPE_NONE>,
-+						<&sic2 9 IRQ_TYPE_NONE>,
-+						<&sic2 10 IRQ_TYPE_NONE>,
-+						<&sic1 4 IRQ_TYPE_NONE>,
-+						<&sic2 0 IRQ_TYPE_NONE>,
-+						<&sic2 1 IRQ_TYPE_NONE>,
-+						<&sic2 2 IRQ_TYPE_NONE>,
-+						<&sic2 3 IRQ_TYPE_NONE>,
-+						<&sic2 4 IRQ_TYPE_NONE>,
-+						<&sic2 5 IRQ_TYPE_NONE>;
-+				interrupt-names = "p01",
-+						"gpi00", "gpi01", "gpi02",
-+						"gpi03", "gpi04", "gpi05",
-+						"gpi06", "gpi07", "gpi08",
-+						"gpi09", "gpi19", "gpi28",
-+						"gpio00", "gpio01", "gpio02",
-+						"gpio03", "gpio04", "gpio05";
- 			};
- 
- 			timer4: timer@4002c000 {
--- 
-2.20.1
+rgds
+Lars
