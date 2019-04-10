@@ -1,18 +1,15 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH 1/8] dt-bindings: memory: tegra: Add Tegra210 EMC bindings
-Date: Wed, 10 Apr 2019 10:41:16 +0800
-Message-ID: <eec6680d-4d85-ac29-afea-dc64c99c637c@nvidia.com>
-References: <20190325074523.26456-1-josephl@nvidia.com>
- <20190325074523.26456-2-josephl@nvidia.com>
- <5ca06133.1c69fb81.11ebf.91ce@mx.google.com>
- <7d680700-d2f2-7b6c-a8bf-dca6d54dbf2c@nvidia.com>
- <CAL_JsqLL5g7vGNmwcNQw5KBXFP4tE69zGyWd0msP3sexve_sNQ@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date: Wed, 10 Apr 2019 08:54:04 +0530
+Message-ID: <20190410032404.eskk4qxbsws6fbec@vireshk-i7>
+References: <20190409172558.18778-1-tiny.windzz@gmail.com>
+ <20190409172558.18778-2-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLL5g7vGNmwcNQw5KBXFP4tE69zGyWd0msP3sexve_sNQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190409172558.18778-2-tiny.windzz@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,65 +19,169 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX /
- MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: nm@ti.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, maxime.ripard@bootlin.com, vireshk@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, davem@davemloft.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/3/19 12:26 PM, Rob Herring wrote:
-> On Mon, Apr 1, 2019 at 2:58 AM Joseph Lo <josephl@nvidia.com> wrote:
->>
->> On 3/31/19 2:41 PM, Rob Herring wrote:
->>> On Mon, Mar 25, 2019 at 03:45:16PM +0800, Joseph Lo wrote:
->>>> Add the binding document for the external memory controller (EMC) which
->>>> communicates with external LPDDR4 devices. It includes the bindings of
->>>> the EMC node and the EMC table of different rates.
->>>>
->>>> To support high rates for LPDDR4, the EMC table must be trained before
->>>> it can be used for runtime clock switching. It has been done by firmware
->>>> and merged to the table that Linux kernel uses. For backward
->>>> compatibility with the devices that had been launched on the market, like
->>>> Shield and Jetson platforms, the bindings in the EMC table should remain
->>>> the same. So the firmware can recognize them and merge the trained EMC
->>>> table for the kernel.
->>
->> Hi Rob,
->>
->> Thanks for reviewing.
->>
->>>
->>> Overall seems pretty bloated. How much of this really varies by board
->>> vs. just being a dump of all the register values to stuff?
->>
->> Most of them are register values. And by different SDRAM devices that
->> could be used on the same platform (use ram code to identify them), the
->> value could be different.
->>
->>>
->>> Primarily, I'm leary of getting a similar binding for every vendor's DDR
->>> setup.
->>>
->>> Some mostly trivial comments follow.
->>
->> Really sorry about that. I understand these basic rules for DT bindings,
->> but the case here is that these un-reviewed bindings have been used in
->> the firmware on the shipped products. To support the same with the
->> upstream kernel and consider the firmware blob may not be updated, we
->> have no choice to just use the same bindings in the upstream kernel.
->>
->> How can we deal with this case?
-> 
-> Simply, we do not accept bindings as-is. If we did, then there would
-> be no point in documenting and reviewing bindings. NVidia chose this
-> path and now gets to live with it.
+On 09-04-19, 13:25, Yangtao Li wrote:
+> +static const struct sunxi_cpufreq_soc_data sun50i_h6_data = {
+> +	.efuse_xlate = sun50i_efuse_xlate,
+> +	.nvmem_mask = 0x7,
+> +	.nvmem_shift = 5,
+> +};
+> +
+> +static const struct of_device_id sunxi_cpufreq_match_list[] = {
+> +	{ .compatible = "allwinner,sun50i-h6", .data = &sun50i_h6_data },
+> +	{}
+> +};
+> +
+> +static const struct of_device_id *sunxi_cpufreq_match_node(void)
+> +{
+> +	struct device_node *np;
+> +	const struct of_device_id *match;
+> +
+> +	np = of_find_node_by_path("/");
+> +	match = of_match_node(sunxi_cpufreq_match_list, np);
+> +	of_node_put(np);
+> +
+> +	return match;
+> +}
+> +
 
-Hi Rob,
+Above code can be placed just above sunxi_cpufreq_init(), if you ...
 
-Thanks for letting us know the criterion. We will follow up and continue 
-the reviewing process of the binding. Please help us to review.
+> +static int sunxi_cpufreq_nvmem_probe(struct platform_device *pdev)
+> +{
+> +	const struct sunxi_cpufreq_soc_data *soc_data;
+> +	struct opp_table **opp_tables;
+> +	const struct of_device_id *match;
+> +	char name[MAX_NAME_LEN];
+> +	unsigned int cpu;
+> +	u32 speed = 0;
+> +	int ret;
+> +
+> +	opp_tables = kcalloc(num_possible_cpus(), sizeof(*opp_tables),
+> +			     GFP_KERNEL);
+> +	if (!opp_tables)
+> +		return -ENOMEM;
+> +
+> +	match = sunxi_cpufreq_match_node();
 
-And we will fix the driver and firmware to use the reviewed bindings 
-later. Need to settle the binding first.
+... avoid this and ...
 
-Thanks,
-Joseph
+> +	soc_data = match->data;
+> +	if (!soc_data)
+> +		return -EINVAL;
+> +
+> +	ret = sunxi_cpufreq_get_efuse(soc_data, &speed);
+> +	if (ret)
+> +		return ret;
+> +
+> +	snprintf(name, MAX_NAME_LEN, "speed%d", speed);
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		struct device *cpu_dev = get_cpu_device(cpu);
+> +
+> +		if (NULL == cpu_dev) {
+> +			ret = -ENODEV;
+> +			goto free_opp;
+> +		}
+> +
+> +		opp_tables[cpu] = dev_pm_opp_set_prop_name(cpu_dev, name);
+> +		if (IS_ERR(opp_tables[cpu])) {
+> +			ret = PTR_ERR(opp_tables[cpu]);
+> +			pr_err("Failed to set prop name\n");
+> +			goto free_opp;
+> +		}
+> +	}
+> +
+> +	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
+> +							  NULL, 0);
+> +	if (!IS_ERR(cpufreq_dt_pdev)) {
+> +		platform_set_drvdata(pdev, opp_tables);
+> +		return 0;
+> +	}
+> +
+> +	ret = PTR_ERR(cpufreq_dt_pdev);
+> +	pr_err("Failed to register platform device\n");
+> +
+> +free_opp:
+> +	for_each_possible_cpu(cpu) {
+> +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
+> +			break;
+> +		dev_pm_opp_put_prop_name(opp_tables[cpu]);
+> +	}
+> +	kfree(opp_tables);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sunxi_cpufreq_nvmem_remove(struct platform_device *pdev)
+> +{
+> +	struct opp_table **opp_tables = platform_get_drvdata(pdev);
+> +	unsigned int cpu;
+> +
+> +	platform_device_unregister(cpufreq_dt_pdev);
+> +
+> +	for_each_possible_cpu(cpu)
+> +		dev_pm_opp_put_prop_name(opp_tables[cpu]);
+> +
+> +	kfree(opp_tables);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver sunxi_cpufreq_driver = {
+> +	.probe = sunxi_cpufreq_nvmem_probe,
+> +	.remove = sunxi_cpufreq_nvmem_remove,
+> +	.driver = {
+> +		.name = "sunxi-cpufreq-nvmem",
+> +	},
+> +};
+> +
+> +/*
+> + * Since the driver depends on nvmem drivers, which may return EPROBE_DEFER,
+> + * all the real activity is done in the probe, which may be defered as well.
+> + * The init here is only registering the driver and the platform device.
+> + */
+> +static int __init sunxi_cpufreq_init(void)
+> +{
+> +	const struct of_device_id *match;
+> +	int ret;
+> +
+> +	match = sunxi_cpufreq_match_node();
+> +	if (!match)
+> +		return -ENODEV;
+> +
+> +	ret = platform_driver_register(&sunxi_cpufreq_driver);
+> +	if (unlikely(ret < 0))
+> +		return ret;
+> +
+> +	sunxi_cpufreq_pdev = platform_device_register_simple(
+> +		"sunxi-cpufreq-nvmem", -1, NULL, 0);
+
+... pass match->data as platform device's data here..
+
+> +	ret = PTR_ERR_OR_ZERO(sunxi_cpufreq_pdev);
+> +	if (0 == ret)
+> +		return 0;
+> +
+> +	platform_driver_unregister(&sunxi_cpufreq_driver);
+> +	return ret;
+> +}
+> +module_init(sunxi_cpufreq_init);
+> +
+> +static void __exit sunxi_cpufreq_exit(void)
+> +{
+> +	platform_device_unregister(sunxi_cpufreq_pdev);
+> +	platform_driver_unregister(&sunxi_cpufreq_driver);
+> +}
+> +module_exit(sunxi_cpufreq_exit);
+> +
+> +MODULE_DESCRIPTION("Sunxi cpufreq driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.0
+
+-- 
+viresh
