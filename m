@@ -1,149 +1,63 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v5 4/6] usb:common Simplify usb_decode_get_set_descriptor function.
-Date: Wed, 10 Apr 2019 06:15:00 +0100
-Message-ID: <1554873302-5624-5-git-send-email-pawell@cadence.com>
-References: <1554873302-5624-1-git-send-email-pawell@cadence.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v3 0/5] soc: ti: k3-am654: Allow for exclusive and shared
+ device requests
+Date: Wed, 10 Apr 2019 11:07:23 +0530
+Message-ID: <20190410053728.17374-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554873302-5624-1-git-send-email-pawell@cadence.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch moves switch responsible for decoding descriptor type
-outside snprintf. It improves code readability a little.
+Sysfw provides an option for requesting exclusive access for a
+device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
+not used, the device is meant to be shared across hosts. Once a device
+is requested from a host with this flag set, any request to this
+device from a different host will be nacked by sysfw.
 
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
----
- drivers/usb/common/debug.c | 113 +++++++++++++++++++------------------
- 1 file changed, 58 insertions(+), 55 deletions(-)
+Current tisci firmware and pm drivers always requests for device with
+exclusive permissions set. But this is not be true for certain devices
+that are expcted to be shared across different host contexts.
+So add support for getting the shared or exclusive permissions from DT
+and request firmware accordingly.
 
-diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
-index ad6c96aa45b0..8e2c81a40cf8 100644
---- a/drivers/usb/common/debug.c
-+++ b/drivers/usb/common/debug.c
-@@ -105,62 +105,65 @@ static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
- 					  __u16 wValue, __u16 wIndex,
- 					  __u16 wLength, char *str, size_t size)
- {
-+	char *s;
-+
-+	switch (wValue >> 8) {
-+	case USB_DT_DEVICE:
-+		s = "Device";
-+		break;
-+	case USB_DT_CONFIG:
-+		s = "Configuration";
-+		break;
-+	case USB_DT_STRING:
-+		s = "String";
-+		break;
-+	case USB_DT_INTERFACE:
-+		s = "Interface";
-+		break;
-+	case USB_DT_ENDPOINT:
-+		s = "Endpoint";
-+		break;
-+	case USB_DT_DEVICE_QUALIFIER:
-+		s = "Device Qualifier";
-+		break;
-+	case USB_DT_OTHER_SPEED_CONFIG:
-+		s = "Other Speed Config";
-+		break;
-+	case USB_DT_INTERFACE_POWER:
-+		s = "Interface Power";
-+		break;
-+	case USB_DT_OTG:
-+		s = "OTG";
-+		break;
-+	case USB_DT_DEBUG:
-+		s = "Debug";
-+		break;
-+	case USB_DT_INTERFACE_ASSOCIATION:
-+		s = "Interface Association";
-+		break;
-+	case USB_DT_BOS:
-+		s = "BOS";
-+		break;
-+	case USB_DT_DEVICE_CAPABILITY:
-+		s = "Device Capability";
-+		break;
-+	case USB_DT_PIPE_USAGE:
-+		s = "Pipe Usage";
-+		break;
-+	case USB_DT_SS_ENDPOINT_COMP:
-+		s = "SS Endpoint Companion";
-+		break;
-+	case USB_DT_SSP_ISOC_ENDPOINT_COMP:
-+		s = "SSP Isochronous Endpoint Companion";
-+		break;
-+	default:
-+		s = "UNKNOWN";
-+		break;
-+	}
-+
- 	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
--		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
--		 ({ char *s;
--			switch (wValue >> 8) {
--			case USB_DT_DEVICE:
--				s = "Device";
--				break;
--			case USB_DT_CONFIG:
--				s = "Configuration";
--				break;
--			case USB_DT_STRING:
--				s = "String";
--				break;
--			case USB_DT_INTERFACE:
--				s = "Interface";
--				break;
--			case USB_DT_ENDPOINT:
--				s = "Endpoint";
--				break;
--			case USB_DT_DEVICE_QUALIFIER:
--				s = "Device Qualifier";
--				break;
--			case USB_DT_OTHER_SPEED_CONFIG:
--				s = "Other Speed Config";
--				break;
--			case USB_DT_INTERFACE_POWER:
--				s = "Interface Power";
--				break;
--			case USB_DT_OTG:
--				s = "OTG";
--				break;
--			case USB_DT_DEBUG:
--				s = "Debug";
--				break;
--			case USB_DT_INTERFACE_ASSOCIATION:
--				s = "Interface Association";
--				break;
--			case USB_DT_BOS:
--				s = "BOS";
--				break;
--			case USB_DT_DEVICE_CAPABILITY:
--				s = "Device Capability";
--				break;
--			case USB_DT_PIPE_USAGE:
--				s = "Pipe Usage";
--				break;
--			case USB_DT_SS_ENDPOINT_COMP:
--				s = "SS Endpoint Companion";
--				break;
--			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
--				s = "SSP Isochronous Endpoint Companion";
--				break;
--			default:
--				s = "UNKNOWN";
--				break;
--			} s; }), wValue & 0xff, wLength);
-+		bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
-+		s, wValue & 0xff, wLength);
- }
- 
- static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
+Changes since v2:
+- Added macros for new power-domain cell
+- Rebased on top of v5.1-rc4
+- Updated commit messages.
+
+Lokesh Vutla (5):
+  firmware: ti_sci: Allow for device shared and exclusive requests
+  dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
+    access
+  soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
+    access
+  soc: ti: ti_sci_pm_domains: Switch to SPDX Licensing
+  arm64: dts: ti: k3-am654: Update the power domain cells
+
+ .../bindings/soc/ti/sci-pm-domain.txt         | 11 ++++-
+ MAINTAINERS                                   |  1 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 32 ++++++-------
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
+ arch/arm64/boot/dts/ti/k3-am65.dtsi           |  1 +
+ drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
+ drivers/soc/ti/ti_sci_pm_domains.c            | 33 +++++++++-----
+ include/dt-bindings/soc/ti,sci_pm_domain.h    |  9 ++++
+ include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
+ 10 files changed, 112 insertions(+), 39 deletions(-)
+ create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
+
 -- 
-2.17.1
+2.21.0
