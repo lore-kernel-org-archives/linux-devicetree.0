@@ -1,49 +1,33 @@
-From: Federico Vaga <federico.vaga@cern.ch>
-Subject: Re: Device Description for FPGA Components on x86 system
-Date: Wed, 10 Apr 2019 12:01:33 +0200
-Message-ID: <6563205.xRkLC0driV@pcbe13614>
-References: <1629227.alSmCsHHUc@pcbe13614>
-Reply-To: <federico.vaga@cern.ch>, <federico.vaga@cern.ch>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v2 0/3] Add Vivante GPU support on STM32MP157c
+Date: Wed, 10 Apr 2019 12:02:25 +0200
+Message-ID: <1554890548-24448-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1629227.alSmCsHHUc@pcbe13614>
 Sender: linux-kernel-owner@vger.kernel.org
-To: federico.vaga@cern.chFederico Vaga <federico.vaga@cern.ch>
-Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-x86_64@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add and enable Vivante GPU on stm32mp157c for ED1, DK1 and DK2 boards.
+---
+  Version history:
+    v2:
+       * move GPU reserved memeory out of bottom DDR to let free this area for
+         U-Boot
+    v1:
+       * Initial
+---
+Pierre-Yves MORDRET (3):
+  ARM: dts: stm32: Add Vivante GPU support on STM32MP157c
+  ARM: dts: stm32: enable Vivante GPU support on stm32mp157c-ed1 board
+  ARM: dts: stm32: enable Vivante GPU support on stm32mp157a-dk1 board
 
-sorry to push for an answer but I do not want to take the risk of designing 
-something useless. I do not know how should I interpret a no-answer.
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 16 ++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 16 ++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c.dtsi    | 10 ++++++++++
+ 3 files changed, 42 insertions(+)
 
-If the solution really does not exist today, then I would like to collect 
-opinions/arguments/requirements on the topic so that I can write something 
-useful not only for CERN but for the entire community.
-
-Thank you
-
-On Wednesday, March 27, 2019 6:17:18 PM CEST Federico Vaga wrote:
-> Hello,
-> 
-> I'm looking for guidance
-> 
-> What I have:
-> * Intel x86_64 computer
-> * PCIe card with FPGA on it
-> 
-> What I want to achieve:
-> * load an FPGA bitstream on the card
-> * load a device-tree like description for the FPGA devices contained in the
-> bitstream
-> 
-> This is achievable on ARM with DeviceTree, overlay-dt, fpga-mgr; but I'm
-> puzzled about the x86_64 use-case. I'm not able to find recent and clear
-> information.
-> 
-> Does anyone know if this is doable? Perhaps with ACPI SSDTs overlay? Or with
-> the DT?
-> 
-> thanks
+-- 
+2.7.4
