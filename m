@@ -1,35 +1,41 @@
-Return-Path: <SRS0=ukrp=SM=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH V4 06/13] dt-bindings: usb: renesas_usbhs: Add support for
- r8a77470
-Date: Wed, 10 Apr 2019 09:44:36 +0000
-Message-ID: 
- <TYAPR01MB4271FC4678F2810C13A856D0D82E0@TYAPR01MB4271.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V4 06/13] dt-bindings: usb: renesas_usbhs: Add support for r8a77470
+Date: Wed, 10 Apr 2019 09:08:28 +0100
+Message-Id: <1554883715-41725-7-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
 References: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
- <1554883715-41725-7-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554883715-41725-7-git-send-email-biju.das@bp.renesas.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Biju-san,
+Document support for RZ/G1C (R8A77470) SoC.
 
-> From: Biju Das, Sent: Wednesday, April 10, 2019 5:08 PM
->=20
-> Document support for RZ/G1C (R8A77470) SoC.
->=20
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v3-->v4
+  * No change
+V2-->V3
+  * No change
+V1-->V2
+  * New patch
+---
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thank you for the patch!
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index d93b6a1..b8acc2a 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
+ 	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
+ 	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
++	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
+ 	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
+ 	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
+ 	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+-- 
+2.7.4
