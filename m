@@ -1,70 +1,132 @@
 Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 00/13] Add USB2.0 support
-Date: Wed, 10 Apr 2019 09:08:22 +0100
-Message-Id: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH V5 01/13] dt-bindings: phy: rcar-gen2: Add r8a77470 support
+Date: Wed, 10 Apr 2019 15:48:38 +0100
+Message-Id: <1554907730-14792-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+References: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds USB 2.0 support for the RZ/G1C SoC. RZ/G1C
-SoC is similar to R-Car Gen2 SoC, but there are some differences
+Add USB PHY support for r8a77470 SoC. Renesas RZ/G1C (R8A77470)
+USB PHY is similar to the R-Car Gen2 family, but has the below
+feature compared to other RZ/G1 and R-Car Gen2/3 SoCs
 
-- It has a shared pll reset register for hsusb0/hsusb1 and this register 
-  reside in hsusb0 block.
+It has a shared pll reset for usbphy0/usbphy1 and this register
+reside in usbphy0 block.
 
-- Each USB host needs to deassert the pll reset of hsusb block apart from
-  initializing interrupt enable,OVC detection timer and suspend/resume timer
-  register.
-
-To address the above scenarios, created a ehci-r8a77470 host controller
-driver.
-
-This patchset is based on linux_next next-20190410 branch.
-
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+V4-->V5
+  * No Change
 V3-->V4
-  * Incoporated Kishan and Shimoda-san's review comment
-    (https://patchwork.kernel.org/patch/10883265/)
-  * Added missing rcar-gen3-phy-usb2 phy in ohci1 node.
-
+  * No Change
 V2-->V3
- * Incorporated Alan's review comment for dropping ehci-r8a77470 host driver
- * Incorporated shimoda-san's comments.
-   Ref: https://patchwork.kernel.org/patch/10879899/
-
+  * No Change
 V1-->V2
- * Incorporated Rob's review comment
-   Ref: https://patchwork.kernel.org/patch/10655853/
- * Incorporated Shimoda-San's review comment
-   Ref: https://patchwork.kernel.org/patch/10655855/
- * Created ehci-r8a77470 host driver.
+  * Incorporated Rob's review comment
+    https://patchwork.kernel.org/patch/10655853/
+---
+ .../devicetree/bindings/phy/rcar-gen2-phy.txt      | 57 ++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 4 deletions(-)
 
-Biju Das (13):
-  dt-bindings: phy: rcar-gen2: Add r8a77470 support
-  phy: renesas: phy-rcar-gen2: Add support for r8a77470
-  dt-bindings: rcar-gen3-phy-usb2: Add r8a77470 support
-  phy: rcar-gen3-usb2: Add support for r8a77470
-  ARM: shmobile: Enable PHY_RCAR_GEN3_USB2 in shmobile_defconfig
-  dt-bindings: usb: renesas_usbhs: Add support for r8a77470
-  ARM: shmobile: Enable USB [EO]HCI HCD PLATFORM support in
-    shmobile_defconfig
-  ARM: dts: r8a77470: Add USB PHY DT support
-  ARM: dts: iwg23s-sbc: Enable USB Phy[01]
-  ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device
-  ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
-  ARM: dts: r8a77470: Add HSUSB device nodes
-  ARM: dts: iwg23s-sbc: Enable HS-USB
-
- .../devicetree/bindings/phy/rcar-gen2-phy.txt      |  57 ++++++++-
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |   6 +-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |   1 +
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          |  44 +++++++
- arch/arm/boot/dts/r8a77470.dtsi                    | 141 +++++++++++++++++++++
- arch/arm/configs/shmobile_defconfig                |   3 +
- drivers/phy/renesas/Kconfig                        |   2 +-
- drivers/phy/renesas/phy-rcar-gen2.c                |  86 ++++++++++++-
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           |  38 +++++-
- 9 files changed, 363 insertions(+), 15 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+index 4f0879a..ac96d64 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+@@ -7,6 +7,7 @@ Required properties:
+ - compatible: "renesas,usb-phy-r8a7743" if the device is a part of R8A7743 SoC.
+ 	      "renesas,usb-phy-r8a7744" if the device is a part of R8A7744 SoC.
+ 	      "renesas,usb-phy-r8a7745" if the device is a part of R8A7745 SoC.
++	      "renesas,usb-phy-r8a77470" if the device is a part of R8A77470 SoC.
+ 	      "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
+ 	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+ 	      "renesas,usb-phy-r8a7794" if the device is a part of R8A7794 SoC.
+@@ -30,7 +31,7 @@ channels. These subnodes must contain the following properties:
+ - #phy-cells: see phy-bindings.txt in the same directory, must be <1>.
+ 
+ The phandle's argument in the PHY specifier is the USB controller selector for
+-the USB channel; see the selector meanings below:
++the USB channel other than r8a77470 SoC; see the selector meanings below:
+ 
+ +-----------+---------------+---------------+
+ |\ Selector |               |               |
+@@ -41,6 +42,16 @@ the USB channel; see the selector meanings below:
+ | 2         | PCI EHCI/OHCI | xHCI          |
+ +-----------+---------------+---------------+
+ 
++For r8a77470 SoC;see the selector meaning below:
++
+++-----------+---------------+---------------+
++|\ Selector |               |               |
+++ --------- +       0       |       1       |
++| Channel  \|               |               |
+++-----------+---------------+---------------+
++| 0         | EHCI/OHCI     | HS-USB        |
+++-----------+---------------+---------------+
++
+ Example (Lager board):
+ 
+ 	usb-phy@e6590100 {
+@@ -48,15 +59,53 @@ Example (Lager board):
+ 		reg = <0 0xe6590100 0 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
++		clocks = <&cpg CPG_MOD 704>;
+ 		clock-names = "usbhs";
++		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
++		resets = <&cpg 704>;
+ 
+-		usb-channel@0 {
++		usb0: usb-channel@0 {
+ 			reg = <0>;
+ 			#phy-cells = <1>;
+ 		};
+-		usb-channel@2 {
++		usb2: usb-channel@2 {
+ 			reg = <2>;
+ 			#phy-cells = <1>;
+ 		};
+ 	};
++
++Example (iWave RZ/G1C sbc):
++
++	usbphy0: usb-phy0@e6590100 {
++		compatible = "renesas,usb-phy-r8a77470",
++			     "renesas,rcar-gen2-usb-phy";
++		reg = <0 0xe6590100 0 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&cpg CPG_MOD 704>;
++		clock-names = "usbhs";
++		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++		resets = <&cpg 704>;
++
++		usb0: usb-channel@0 {
++			reg = <0>;
++			#phy-cells = <1>;
++		};
++	};
++
++	usbphy1: usb-phy@e6598100 {
++		compatible = "renesas,usb-phy-r8a77470",
++			     "renesas,rcar-gen2-usb-phy";
++		reg = <0 0xe6598100 0 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&cpg CPG_MOD 706>;
++		clock-names = "usbhs";
++		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++		resets = <&cpg 706>;
++
++		usb1: usb-channel@0 {
++			reg = <0>;
++			#phy-cells = <1>;
++		};
++	};
 -- 
 2.7.4
