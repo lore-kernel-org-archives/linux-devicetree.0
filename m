@@ -1,32 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND V11 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 10 Apr 2019 08:46:44 -0500
-Message-ID: <20190410134644.GA7399@bogus>
-References: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v1 0/5] Add supply property for DSI controller
+Date: Wed, 10 Apr 2019 15:48:43 +0200
+Message-ID: <315b59d5-893a-607a-01e4-cf83fe1cfd86@st.com>
+References: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1554279389-27377-1-git-send-email-yannick.fertre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, Andy Gross <andy.gross@linaro.org>
+To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 07:43:04AM +0000, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and thermal sensors etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get temperature from thermal sensors, this patch adds
-> binding doc for i.MX system controller thermal driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V10:
-> 	- remove property "imx,sensor-resource-id".
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+Hi Yannick
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 4/3/19 10:16 AM, Yannick Fertré wrote:
+> The DSI controller needs a new property that powers its physical layer.
+> Binding has been updated to documented this property.
+> Device tree of stm32mp157c soc.
+> Move reg18 & reg11 to stm32mp157c device tree file.
+> Remove property phy-dsi-supply property to stm32mp157c-dk2.dts file.
+> 
+> Yannick Fertré (5):
+
+...
+
+>    ARM: dts: stm32: add phy-dsi-supply property on stm32mp157c
+>    ARM: dts: stm32: move fixe regulators reg11 & reg18
+>    ARM: dts: stm32: remove phy-dsi-supply property on stm32mp157c-dk2
+>      board
+> 
+
+For ARM part:
+
+Another series is currently under review: "Add support for STM32MP1 
+power regulators" (https://lkml.org/lkml/2019/4/8/614).
+
+As soon I'll merge it I'll take your patches without patch
+"ARM: dts: stm32: move fixe regulators reg11 & reg18" as it will be no 
+longer relevant.
+
+regards
+Alexandre
+
+
+>   .../devicetree/bindings/display/st,stm32-ltdc.txt    |  3 +++
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts                |  9 ---------
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts                | 16 ----------------
+>   arch/arm/boot/dts/stm32mp157c.dtsi                   | 17 +++++++++++++++++
+>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c                | 20 ++++++++++++++++++++
+>   5 files changed, 40 insertions(+), 25 deletions(-)
+> 
