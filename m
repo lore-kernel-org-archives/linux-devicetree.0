@@ -1,68 +1,185 @@
-From: Viorel Suman <viorel.suman@nxp.com>
-Subject: [PATCH v4 4/4] ASoC: fsl_audmix: cache pdev->dev pointer
-Date: Wed, 10 Apr 2019 11:06:39 +0000
-Message-ID: <1554894380-25153-5-git-send-email-viorel.suman@nxp.com>
-References: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH RFC 6/9] OPP: Add and export helper to update voltage
+Date: Wed, 10 Apr 2019 16:38:22 +0530
+Message-ID: <bccbe28d586be4304122e3fba27e7d67@codeaurora.org>
+References: <20190328152822.532-1-sibis@codeaurora.org>
+ <20190328152822.532-7-sibis@codeaurora.org>
+ <20190410102429.r6j6brm5kspmqxc3@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190410102429.r6j6brm5kspmqxc3@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Viorel Suman <viorel.suman@nxp.com>, Viorel Suman <viorel.suman@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: robh+dt@kernel.org, andy.gross@linaro.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org, bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, cw00.choi@samsung.com, linux-pm@vger.kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlcmUgc2hvdWxkIGJlIG5vIHRyb3VibGUgdG8gdW5kZXJzdGFuZCBkZXYgPSBwZGV2LT5kZXYu
-DQpUaGlzIGNhbiBzYXZlIHNvbWUgc3BhY2UgdG8gaGF2ZSBtb3JlIHByaW50IGluZm8gb3Igc2F2
-ZQ0Kc29tZSB3cmFwcGVkIGxpbmVzLg0KDQpTaWduZWQtb2ZmLWJ5OiBWaW9yZWwgU3VtYW4gPHZp
-b3JlbC5zdW1hbkBueHAuY29tPg0KU3VnZ2VzdGVkLWJ5OiBOaWNvbGluIENoZW4gPG5pY29sZW90
-c3VrYUBnbWFpbC5jb20+DQotLS0NCiBzb3VuZC9zb2MvZnNsL2ZzbF9hdWRtaXguYyB8IDI3ICsr
-KysrKysrKysrKystLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25z
-KCspLCAxNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy9mc2wvZnNsX2F1
-ZG1peC5jIGIvc291bmQvc29jL2ZzbC9mc2xfYXVkbWl4LmMNCmluZGV4IGRjODAyZDUuLjM4OTdh
-NTQgMTAwNjQ0DQotLS0gYS9zb3VuZC9zb2MvZnNsL2ZzbF9hdWRtaXguYw0KKysrIGIvc291bmQv
-c29jL2ZzbC9mc2xfYXVkbWl4LmMNCkBAIC00NTYsNiArNDU2LDcgQEAgTU9EVUxFX0RFVklDRV9U
-QUJMRShvZiwgZnNsX2F1ZG1peF9pZHMpOw0KIA0KIHN0YXRpYyBpbnQgZnNsX2F1ZG1peF9wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIHsNCisJc3RydWN0IGRldmljZSAqZGV2
-ID0gJnBkZXYtPmRldjsNCiAJc3RydWN0IGZzbF9hdWRtaXggKnByaXY7DQogCXN0cnVjdCByZXNv
-dXJjZSAqcmVzOw0KIAljb25zdCBjaGFyICptZHJ2Ow0KQEAgLTQ2Myw1MiArNDY0LDUwIEBAIHN0
-YXRpYyBpbnQgZnNsX2F1ZG1peF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0K
-IAl2b2lkIF9faW9tZW0gKnJlZ3M7DQogCWludCByZXQ7DQogDQotCW9mX2lkID0gb2ZfbWF0Y2hf
-ZGV2aWNlKGZzbF9hdWRtaXhfaWRzLCAmcGRldi0+ZGV2KTsNCisJb2ZfaWQgPSBvZl9tYXRjaF9k
-ZXZpY2UoZnNsX2F1ZG1peF9pZHMsIGRldik7DQogCWlmICghb2ZfaWQgfHwgIW9mX2lkLT5kYXRh
-KQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogDQogCW1kcnYgPSBvZl9pZC0+ZGF0YTsNCiANCi0JcHJp
-diA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKnByaXYpLCBHRlBfS0VSTkVMKTsN
-CisJcHJpdiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJpdiksIEdGUF9LRVJORUwpOw0K
-IAlpZiAoIXByaXYpDQogCQlyZXR1cm4gLUVOT01FTTsNCiANCiAJLyogR2V0IHRoZSBhZGRyZXNz
-ZXMgKi8NCiAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVN
-LCAwKTsNCi0JcmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0K
-KwlyZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgcmVzKTsNCiAJaWYgKElTX0VSUihy
-ZWdzKSkNCiAJCXJldHVybiBQVFJfRVJSKHJlZ3MpOw0KIA0KLQlwcml2LT5yZWdtYXAgPSBkZXZt
-X3JlZ21hcF9pbml0X21taW9fY2xrKCZwZGV2LT5kZXYsICJpcGciLCByZWdzLA0KKwlwcml2LT5y
-ZWdtYXAgPSBkZXZtX3JlZ21hcF9pbml0X21taW9fY2xrKGRldiwgImlwZyIsIHJlZ3MsDQogCQkJ
-CQkJICZmc2xfYXVkbWl4X3JlZ21hcF9jb25maWcpOw0KIAlpZiAoSVNfRVJSKHByaXYtPnJlZ21h
-cCkpIHsNCi0JCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBpbml0IHJlZ21hcFxuIik7
-DQorCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBpbml0IHJlZ21hcFxuIik7DQogCQlyZXR1cm4g
-UFRSX0VSUihwcml2LT5yZWdtYXApOw0KIAl9DQogDQotCXByaXYtPmlwZ19jbGsgPSBkZXZtX2Ns
-a19nZXQoJnBkZXYtPmRldiwgImlwZyIpOw0KKwlwcml2LT5pcGdfY2xrID0gZGV2bV9jbGtfZ2V0
-KGRldiwgImlwZyIpOw0KIAlpZiAoSVNfRVJSKHByaXYtPmlwZ19jbGspKSB7DQotCQlkZXZfZXJy
-KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0IGlwZyBjbG9ja1xuIik7DQorCQlkZXZfZXJyKGRl
-diwgImZhaWxlZCB0byBnZXQgaXBnIGNsb2NrXG4iKTsNCiAJCXJldHVybiBQVFJfRVJSKHByaXYt
-PmlwZ19jbGspOw0KIAl9DQogDQogCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHByaXYpOw0K
-LQlwbV9ydW50aW1lX2VuYWJsZSgmcGRldi0+ZGV2KTsNCisJcG1fcnVudGltZV9lbmFibGUoZGV2
-KTsNCiANCi0JcmV0ID0gZGV2bV9zbmRfc29jX3JlZ2lzdGVyX2NvbXBvbmVudCgmcGRldi0+ZGV2
-LCAmZnNsX2F1ZG1peF9jb21wb25lbnQsDQorCXJldCA9IGRldm1fc25kX3NvY19yZWdpc3Rlcl9j
-b21wb25lbnQoZGV2LCAmZnNsX2F1ZG1peF9jb21wb25lbnQsDQogCQkJCQkgICAgICBmc2xfYXVk
-bWl4X2RhaSwNCiAJCQkJCSAgICAgIEFSUkFZX1NJWkUoZnNsX2F1ZG1peF9kYWkpKTsNCiAJaWYg
-KHJldCkgew0KLQkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIEFTb0Mg
-REFJXG4iKTsNCisJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIEFTb0MgREFJXG4i
-KTsNCiAJCXJldHVybiByZXQ7DQogCX0NCiANCi0JcHJpdi0+cGRldiA9IHBsYXRmb3JtX2Rldmlj
-ZV9yZWdpc3Rlcl9kYXRhKCZwZGV2LT5kZXYsIG1kcnYsIDAsIE5VTEwsDQotCQkJCQkJICAgMCk7
-DQorCXByaXYtPnBkZXYgPSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfZGF0YShkZXYsIG1kcnYs
-IDAsIE5VTEwsIDApOw0KIAlpZiAoSVNfRVJSKHByaXYtPnBkZXYpKSB7DQogCQlyZXQgPSBQVFJf
-RVJSKHByaXYtPnBkZXYpOw0KLQkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIHJlZ2lz
-dGVyIHBsYXRmb3JtICVzOiAlZFxuIiwNCi0JCQltZHJ2LCByZXQpOw0KKwkJZGV2X2VycihkZXYs
-ICJmYWlsZWQgdG8gcmVnaXN0ZXIgcGxhdGZvcm0gJXM6ICVkXG4iLCBtZHJ2LCByZXQpOw0KIAl9
-DQogDQogCXJldHVybiByZXQ7DQotLSANCjIuNy40DQoNCg==
+Hey Viresh,
+Thanks for the review!
+
+On 2019-04-10 15:54, Viresh Kumar wrote:
+> On 28-03-19, 20:58, Sibi Sankar wrote:
+>> Add and export 'dev_pm_opp_update_voltage' to find and update voltage
+>> of an opp for a given frequency. This will be useful to update the 
+>> opps
+>> with voltages read back from firmware.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/opp/core.c     | 62 
+>> ++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/pm_opp.h | 10 +++++++
+>>  2 files changed, 72 insertions(+)
+>> 
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index addaf7aae9ae..c066cd120a33 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -2090,6 +2090,68 @@ int dev_pm_opp_disable(struct device *dev, 
+>> unsigned long freq)
+>>  }
+>>  EXPORT_SYMBOL_GPL(dev_pm_opp_disable);
+>> 
+>> +static int _opp_update_voltage(struct device *dev, unsigned long 
+>> freq,
+>> +			       unsigned long u_volt)
+>> +{
+>> +	struct opp_table *opp_table;
+>> +	struct dev_pm_opp *tmp_opp, *opp = ERR_PTR(-ENODEV);
+>> +	int r = 0;
+> 
+> s/r/ret/
+> 
+>> +
+>> +	/* Find the opp_table */
+>> +	opp_table = _find_opp_table(dev);
+>> +	if (IS_ERR(opp_table)) {
+>> +		r = PTR_ERR(opp_table);
+>> +		dev_warn(dev, "%s: Device OPP not found (%d)\n", __func__, r);
+> 
+> Why dev_warn instead of dev_err which is normally used in this file ? 
+> And you
+> weren't searching for OPP but opp_table. Put out the correct error 
+> message
+> please.
+
+yeah I'll use dev_err (I'll fix the same in
+_opp_set_availability too)
+
+> 
+>> +		return r;
+>> +	}
+>> +
+>> +	mutex_lock(&opp_table->lock);
+>> +
+>> +	/* Do we have the frequency? */
+>> +	list_for_each_entry(tmp_opp, &opp_table->opp_list, node) {
+>> +		if (tmp_opp->rate == freq) {
+>> +			opp = tmp_opp;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	if (IS_ERR(opp)) {
+>> +		r = PTR_ERR(opp);
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	/* update only if the opp is disabled */
+>> +	if (opp->available)
+>> +		goto unlock;
+>> +
+> 
+> What about reusing dev_pm_opp_find_freq_exact() instead of the above 
+> code in
+> this routine ?
+
+yes I'll use that
+
+> 
+>> +	opp->supplies[0].u_volt = u_volt;
+>> +
+>> +unlock:
+>> +	mutex_unlock(&opp_table->lock);
+>> +	dev_pm_opp_put_opp_table(opp_table);
+>> +	return r;
+>> +}
+>> +
+>> +/**
+>> + * dev_pm_opp_update_voltage() - find and update voltage of an opp
+>> + *				 for a given frequency
+>> + * @dev:	device for which we do this operation
+>> + * @freq:	OPP frequency to update voltage
+>> + * @u_volt:	voltage requested for this opp
+>> + *
+>> + * This is useful only for devices with single power supply.
+>> + *
+>> + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available 
+>> for the
+>> + * copy operation, returns 0 if no modification was done OR 
+>> modification was
+>> + * successful.
+>> + */
+>> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
+>> +			      unsigned long u_volt)
+>> +{
+>> +	return _opp_update_voltage(dev, freq, u_volt);
+> 
+> Remove the unnecessary wrapper and open code this routine here. While 
+> at it, you
+> should updated min/max/target and not just target voltage.
+
+will fix this in the next-respin
+
+> 
+>> +}
+>> +EXPORT_SYMBOL_GPL(dev_pm_opp_update_voltage);
+>> +
+>>  /**
+>>   * dev_pm_opp_register_notifier() - Register OPP notifier for the 
+>> device
+>>   * @dev:	Device for which notifier needs to be registered
+>> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+>> index d7cb0e65c4f0..58490f6839ce 100644
+>> --- a/include/linux/pm_opp.h
+>> +++ b/include/linux/pm_opp.h
+>> @@ -130,6 +130,9 @@ int dev_pm_opp_enable(struct device *dev, unsigned 
+>> long freq);
+>> 
+>>  int dev_pm_opp_disable(struct device *dev, unsigned long freq);
+>> 
+>> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
+>> +			      unsigned long u_volt);
+>> +
+>>  int dev_pm_opp_register_notifier(struct device *dev, struct 
+>> notifier_block *nb);
+>>  int dev_pm_opp_unregister_notifier(struct device *dev, struct 
+>> notifier_block *nb);
+>> 
+>> @@ -265,6 +268,13 @@ static inline int dev_pm_opp_disable(struct 
+>> device *dev, unsigned long freq)
+>>  	return 0;
+>>  }
+>> 
+>> +static inline int dev_pm_opp_update_voltage(struct device *dev,
+>> +					    unsigned long freq,
+>> +					    unsigned long u_volt)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>>  static inline int dev_pm_opp_register_notifier(struct device *dev, 
+>> struct notifier_block *nb)
+>>  {
+>>  	return -ENOTSUPP;
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
