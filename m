@@ -1,76 +1,35 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: imx8mq: add GPU node
-Date: Wed, 10 Apr 2019 12:59:24 +0200
-Message-ID: <1554893964.11529.3.camel@pengutronix.de>
-References: <20190404165211.29297-1-l.stach@pengutronix.de>
- <AM0PR04MB42119DC437AC95F5ABE5F5D9802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: [PATCH v4 0/4] ASoC: fsl: audmix: remove "model" attribute and fix
+ ref leaks
+Date: Wed, 10 Apr 2019 11:06:35 +0000
+Message-ID: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB42119DC437AC95F5ABE5F5D9802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Viorel Suman <viorel.suman@nxp.com>, Viorel Suman <viorel.suman@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAwOS4wNC4yMDE5LCAwMTo1NCArMDAwMCBzY2hyaWViIEFpc2hlbmcg
-RG9uZzoKPiBIaSBMdWNhcywKPiAKPiA+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwu
-c3RhY2hAcGVuZ3V0cm9uaXguZGVdCj4gPiBTZW50OiBGcmlkYXksIEFwcmlsIDUsIDIwMTkgMTI6
-NTIgQU0KPiA+IAo+ID4gVGhpcyBlbmFibGVzIHRoZSBWaXZhbnRlIEdDNzAwMEwgR1BVIG9uIHRo
-ZSBpLk1YOE1RIFNvQy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3Rh
-Y2hAcGVuZ3V0cm9uaXguZGU+Cj4gCj4gSnVzdCBjdXJpb3VzLCBkb2VzIHRoZSBkcml2ZXIgYWxy
-ZWFkeSBzdXBwb3J0cyBNWDhRTSBHQzcwMDBMIG5vdz8KPiBJZiB5ZXMsIHdlIHByb2JhYmx5IGNv
-dWxkIGhlbHAgdGVzdCBpdC4KClRoZSBldG5hdml2IGtlcm5lbCBkcml2ZXIgc3VwcG9ydHMgdGhl
-IGkuTVg4TVEgR0M3MDAwIEdQVS4gTVg4UU0gd2lsbApyZXF1aXJlIGFuIGFkZGl0aW9uIHRvIHRo
-ZSBIVyBkYXRhYmFzZS4KClRoZXJlIGFyZSBzdGlsbCBzb21lIGFkZGl0aW9ucyBuZWVkZWQgdG8g
-dGhlIFVBUEksIHRvIGVuYWJsZSBwcm9wZXIKc3VwcG9ydCBmb3IgdGhlIHRleHR1cmUgZGVzY3Jp
-cHRvciBmZWF0dXJlLCB3aGljaCBJIGhvcGUgdG8gZ2V0IGFyb3VuZAp0byBzZW5kIG91dCBkdXJp
-bmcgdGhpcyB3ZWVrLiBBcyB0aG9zZSBkb24ndCBoYXZlIGFuIGluZmx1ZW5jZSBvbiB0aGUKRFQg
-bm9kZXMgYW5kIHRoaW5ncyBhcmUgcnVubmluZyB3ZWxsIGluIG15IHNldHVwLCBJIGZpZ3VyZWQg
-dGhlIERUCnBhdGNoZXMgYXJlIHJlYWR5IHRvIGJlIG1lcmdlZC4KClJlZ2FyZHMsCkx1Y2FzCgo+
-IFJlZ2FyZHMKPiBEb25nIEFpc2hlbmcKPiDCoAo+ID4gLS0tCj4gPiDCoGFyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIHwgMjIKPiA+ICsrKysrKysrKysrKysrKysrKysr
-KysKPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gPiBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gPiBpbmRleCA0MzAwNzgx
-NTU4ZjYuLjc5ZDQxOGI0ZjU4NSAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9pbXg4bXEuZHRzaQo+ID4gQEAgLTc5Miw2ICs3OTIsMjggQEAKPiA+ID4gPiDCoAkJCX07
-Cj4gPiA+ID4gwqAJCX07Cj4gPiAKPiA+ID4gPiA+ID4gKwkJZ3B1OiBncHVAMzgwMDAwMDAgewo+
-ID4gPiA+ICsJCQljb21wYXRpYmxlID0gInZpdmFudGUsZ2MiOwo+ID4gPiA+ICsJCQlyZWcgPSA8
-MHgzODAwMDAwMCAweDQwMDAwPjsKPiA+ID4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDMg
-SVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiA+ID4gKwkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9D
-TEtfR1BVX1JPT1Q+LAo+ID4gPiA+ICsJCQnCoMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJTVg4TVFf
-Q0xLX0dQVV9TSEFERVJfRElWPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsg
-SU1YOE1RX0NMS19HUFVfQVhJPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsg
-SU1YOE1RX0NMS19HUFVfQUhCPjsKPiA+ID4gPiArCQkJY2xvY2stbmFtZXMgPSAiY29yZSIsICJz
-aGFkZXIiLCAiYnVzIiwgInJlZyI7Cj4gPiA+ID4gKwkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmY2xr
-IElNWDhNUV9DTEtfR1BVX0NPUkVfU1JDPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19HUFVfU0hBREVSX1NSQz4sCj4gPiA+
-ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9D
-TEtfR1BVX0FYST4sCj4gPiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoDwmY2xrIElNWDhNUV9DTEtfR1BVX0FIQj47Cj4gPiA+ID4gKwkJCWFzc2lnbmVkLWNsb2Nr
-LXBhcmVudHMgPSA8JmNsayBJTVg4TVFfR1BVX1BMTF9PVVQ+LAo+ID4gPiA+ICsJCQnCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmY2xrIElNWDhNUV9H
-UFVfUExMX09VVD4sCj4gPiA+ID4gKwkJCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0dQVV9QTExfT1VUPiwKPiA+ID4gPiArCQkJ
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8JmNsayBJ
-TVg4TVFfR1BVX1BMTF9PVVQ+Owo+ID4gPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw4
-MDAwMDAwMDA+LCA8ODAwMDAwMDAwPiwKPiA+ID4gPiArCQkJwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDw4MDAwMDAwMDA+LCA8ODAwMDAwMDAwPjsKPiA+ID4g
-PiArCQkJcG93ZXItZG9tYWlucyA9IDwmcGdjX2dwdT47Cj4gPiA+ID4gKwkJfTsKPiA+ICsKPiA+
-ID4gPiA+ID4gwqAJCXVzYl9kd2MzXzA6IHVzYkAzODEwMDAwMCB7Cj4gPiA+ID4gwqAJCQljb21w
-YXRpYmxlID0gImZzbCxpbXg4bXEtZHdjMyIsICJzbnBzLGR3YzMiOwo+ID4gPiA+IMKgCQkJcmVn
-ID0gPDB4MzgxMDAwMDAgMHgxMDAwMD47Cj4gPiAtLQo+ID4gMi4yMC4xCj4gCj4gCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+VGhlIGxhdGVzdCBhdWRtaXggcGF0Y2gtc2V0ICh2NSkgaGFkIHRoZSAibW9kZWwiIGF0dHJpYnV0
+ZSByZW1vdmVkIGFzDQpyZXF1ZXN0ZWQgYnkgTmljb2xpbiBDaGVuLCBidXQgbG9va3MgbGlrZSAo
+djQpIHZlcnNpb24gb2YgREFJIGRyaXZlcg0KcmVhY2hlZCAiZm9yLW5leHQiIGJyYW5jaCAtIGZp
+eCB0aGlzIGJ5IHJlbW92aW5nICJtb2RlbCIgYXR0cmlidXRlLg0KQXNzaWRlIG9mIHRoaXMgZml4
+IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gbWFjaGluZSBwcm9iZSByZXBvcnRlZCBieQ0KSnVs
+aWEgTGF3YWxsLg0KDQpWaW9yZWwgU3VtYW4gKDQpOg0KICBBU29DOiBmc2xfYXVkbWl4OiByZW1v
+dmUgIm1vZGVsIiBhdHRyaWJ1dGUNCiAgQVNvQzogZnNsX2F1ZG1peDogcmVtb3ZlICJtb2RlbCIg
+YXR0cmlidXRlIGZyb20gRFQgZG9jdW1lbnQNCiAgQVNvQzogaW14LWF1ZG1peDogZml4IG9iamVj
+dCByZWZlcmVuY2UgbGVha3MgaW4gcHJvYmUNCiAgQVNvQzogZnNsX2F1ZG1peDogY2FjaGUgcGRl
+di0+ZGV2IHBvaW50ZXINCg0KQ2hhbmdlcyBzaW5jZSBWMToNCiAgYSkgUmVtb3ZlZCAibW9kZWwi
+IGF0dHJpYnV0ZSBmcm9tIGR0LWJpbmRpbmdzIGRvY3VtZW50YXRpb24NCiAgYikgQWRyZXNzZWQg
+RGFuaWVsJ3MgY29tbWVudHMNCg0KQ2hhbmdlcyBzaW5jZSBWMjoNCiAgYSkgQ2FjaGUgcGRldi0+
+ZGV2IHBvaW50ZXIgaW4gZnNsX2F1ZG1peCBwcm9iZSBhcyBzdWdnZXN0ZWQgYnkgTmljb2xpbg0K
+DQpDaGFuZ2VzIHNpbmNlIFYzOg0KICBhKSBVc2Ugc3ViamVjdCBsaW5lcyBtYXRjaGluZyB0aGUg
+c3R5bGUgZm9yIHRoZSBzdWJzeXN0ZW0uDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3Vu
+ZC9mc2wsYXVkbWl4LnR4dCAgICAgICB8ICA0IC0tDQogc291bmQvc29jL2ZzbC9mc2xfYXVkbWl4
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA2MCArKysrKysrKysrKy0tLS0tLS0tLS0tDQog
+c291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNCAr
+Kw0KIDMgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMzMgZGVsZXRpb25zKC0pDQoN
+Ci0tIA0KMi43LjQNCg0K
