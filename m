@@ -1,102 +1,134 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v5 0/7] sunxi: Add DT representation for the MBUS
- controller
-Date: Wed, 10 Apr 2019 16:34:44 +0200
-Message-ID: <20190410143444.tbuafcrqzbhwwsag@flea>
-References: <cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com>
- <5ca841d1.1c69fb81.f4702.b85d@mx.google.com>
- <20190408081126.t3blyvtcqslzvki2@flea>
- <20190410140128.GA6232@bogus>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] drm: panel-simple: Add simple-panel driver.
+Date: Wed, 10 Apr 2019 16:50:30 +0200
+Message-ID: <7915415.Bhcl4jWJiJ@diego>
+References: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0680717603=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190410140128.GA6232@bogus>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Christoph,
 
---===============0680717603==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mdb5rg4uvbunhslt"
-Content-Disposition: inline
+Am Mittwoch, 10. April 2019, 16:10:44 CEST schrieb Christoph Muellner:
+> On our RK3399-Q7 EVK base board we have the option to connect an arbitrary
+> monitor via DP cable. The actual monitor is therefore not known in advance.
+> This means, we don't have any panel information besides the EDID
+> data from the device itself.
+
+Just so I understand correctly, you have a real dp-connector wired to
+the Analogix dp-controller, and therefore want to connect actual
+monitors to it.
+
+So the problem you're trying to work around is probably that the
+rockchip-driver of the analogix controller explictly expects a bridge
+to be present during probe, right?
+
+I think hacking up the panel-driver is not an ideal approach:
+(1) bridges/panels do expect to stay connected all the time
+    and are meant for devices with actual hard-wired displays with specific
+    power-sequence requirements
+(2) devicetree is expected to describe the real hardware, therefore the
+    dt should not describe one thing while the actual hardware is really
+    different
+
+So, I guess a more ideal approach could perhaps be to:
+(1) define a "dp-connector" devicetree binding, see
+    Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+    for a similar one
+(2) steal an idea from drivers/gpu/drm/mediatek/mtk_hdmi.c and check
+    for that new compatible:
+	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+		//move bridge handling here
+	}
+
+    and modify both the rockchip-part and the generic analogix bridge code
+    to work with the connector declared instead of a panel?
 
 
---mdb5rg4uvbunhslt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Heiko
 
-On Wed, Apr 10, 2019 at 09:01:28AM -0500, Rob Herring wrote:
-> On Mon, Apr 08, 2019 at 10:11:26AM +0200, Maxime Ripard wrote:
-> > On Sat, Apr 06, 2019 at 01:06:07AM -0500, Rob Herring wrote:
-> > > On Mon, Apr 01, 2019 at 10:56:40AM +0200, Maxime Ripard wrote:
-> > > > Hi,
-> > > >
-> > > > We've had for quite some time to hack around in our drivers to take into
-> > > > account the fact that our DMA accesses are not done through the parent
-> > > > node, but through another bus with a different mapping than the CPU for the
-> > > > RAM (0 instead of 0x40000000 for most SoCs).
-> > > >
-> > > > After some discussion after the submission of a camera device suffering of
-> > > > the same hacks, I've decided to put together a serie that introduce a
-> > > > special interconnect name called "dma" that that allows to express the DMA
-> > > > relationship between a master and its bus, even if they are not direct
-> > > > parents in the DT.
-> > > >
-> > > > Let me know what you think,
-> > > > Maxime
-> > >
-> > > LGTM.
-> > >
-> > > How do you propose merging this? I can take 1-5, and 6 and 7 thru
-> > > arm-soc?
-> >
-> > You can merge 1-4, and I'll merge 5 through drm-misc and 6-7 through
-> > arm-soc
->
-> Done.
-
-Thanks!
-
-Applied 5, 6 and 7
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---mdb5rg4uvbunhslt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK3/BAAKCRDj7w1vZxhR
-xUD4AQD5hS7+ZHmcWTv1U+MW+IfeKNzwi9gGJSCD6GW83mUcmgEA+Jr6UQf6ld55
-Yw55wvLBfnlr+KlG11XCEYLm6wiKFQY=
-=LOGN
------END PGP SIGNATURE-----
-
---mdb5rg4uvbunhslt--
-
---===============0680717603==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0680717603==--
+> The functionality for a 'simple-panel' has been remove a couple
+> of years ago with 81cf32b. This patch brings this feature back.
+> 
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 24 ++++++++++++++++--------
+>  1 file changed, 16 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 9e8218f6a3f2..1f69283f3e4b 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
+>  		backlight_update_status(p->backlight);
+>  	}
+>  
+> -	if (p->desc->delay.disable)
+> +	if (p->desc && p->desc->delay.disable)
+>  		msleep(p->desc->delay.disable);
+>  
+>  	p->enabled = false;
+> @@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
+>  
+>  	regulator_disable(p->supply);
+>  
+> -	if (p->desc->delay.unprepare)
+> +	if (p->desc && p->desc->delay.unprepare)
+>  		msleep(p->desc->delay.unprepare);
+>  
+>  	p->prepared = false;
+> @@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
+>  
+>  	gpiod_set_value_cansleep(p->enable_gpio, 1);
+>  
+> -	delay = p->desc->delay.prepare;
+> -	if (p->no_hpd)
+> -		delay += p->desc->delay.hpd_absent_delay;
+> -	if (delay)
+> -		msleep(delay);
+> +	if (p->desc) {
+> +		delay = p->desc->delay.prepare;
+> +		if (p->no_hpd)
+> +			delay += p->desc->delay.hpd_absent_delay;
+> +		if (delay)
+> +			msleep(delay);
+> +	}
+>  
+>  	p->prepared = true;
+>  
+> @@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
+>  	if (p->enabled)
+>  		return 0;
+>  
+> -	if (p->desc->delay.enable)
+> +	if (p->desc && p->desc->delay.enable)
+>  		msleep(p->desc->delay.enable);
+>  
+>  	if (p->backlight) {
+> @@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
+>  	struct panel_simple *p = to_panel_simple(panel);
+>  	unsigned int i;
+>  
+> +	if (!p->desc)
+> +		return 0;
+> +
+>  	if (p->desc->num_timings < num_timings)
+>  		num_timings = p->desc->num_timings;
+>  
+> @@ -2536,6 +2541,9 @@ static const struct panel_desc arm_rtsm = {
+>  
+>  static const struct of_device_id platform_of_match[] = {
+>  	{
+> +		.compatible = "simple-panel",
+> +		.data = NULL,
+> +	}, {
+>  		.compatible = "ampire,am-480272h3tmqw-t01h",
+>  		.data = &ampire_am_480272h3tmqw_t01h,
+>  	}, {
+> 
