@@ -1,38 +1,102 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add BT_EN to the power sequence for veyron
-Date: Wed, 10 Apr 2019 13:59:18 -0700
-Message-ID: <CAD=FV=U531pq__emY9nXm1hZF3Hp3tGFQQTn0eX17rHYp5nH1Q@mail.gmail.com>
-References: <20190409231405.189335-1-mka@chromium.org>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFT/RFC PATCH v3 0/5] Unify CPU topology across ARM & RISC-V
+Date: Wed, 10 Apr 2019 15:49:54 -0700
+Message-ID: <12c9f8b0-cdeb-2b9c-5662-6c5a08cd0a95@wdc.com>
+References: <20190320234806.19748-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409231405.189335-1-mka@chromium.org>
+In-Reply-To: <20190320234806.19748-1-atish.patra@wdc.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 3/20/19 4:48 PM, Atish Patra wrote:
+> The cpu-map DT entry in ARM can describe the CPU topology in much better
+> way compared to other existing approaches. RISC-V can easily adopt this
+> binding to represent its own CPU topology. Thus, both cpu-map DT
+> binding and topology parsing code can be moved to a common location so
+> that RISC-V or any other architecture can leverage that.
+> 
+> The relevant discussion regarding unifying cpu topology can be found in
+> [1].
+> 
+> arch_topology seems to be a perfect place to move the common code. I
+> have not introduced any significant functional changes in the moved code.
+> The only downside in this approach is that the capacity code will be
+> executed for RISC-V as well. But, it will exit immediately after not
+> able to find the appropriate DT node. If the overhead is considered too
+> much, we can always compile out capacity related functions under a
+> different config for the architectures that do not support them.
+> 
+> There was an opportunity to unify topology data structure for ARM32 done
+> by patch 3/4. But, I refrained from making any other changes as I am not
+> very well versed with original intention for some functions that
+> are present in arch_topology.c. I hope this patch series can be served
+> as a baseline for such changes in the future.
+> 
+> The patches have been tested for RISC-V and compile tested for ARM64,
+> ARM32 & x86.
+> 
+> The socket change[2] is also now part of this series.
+> 
+> [1] https://lkml.org/lkml/2018/11/6/19
+> [2] https://lkml.org/lkml/2018/11/7/918
+> 
+> QEMU changes for RISC-V topology are available at
+> 
+> https://github.com/atishp04/qemu/tree/riscv_topology_dt
+> 
+> HiFive Unleashed DT with topology node is available here.
+> https://github.com/atishp04/opensbi/tree/HiFive_unleashed_topology
+> 
+> It can be verified with OpenSBI with following additional compile time
+> option.
+> 
+> FW_PAYLOAD_FDT="unleashed_topology.dtb"
+> 
+> Changes from v2->v3
+> 1. Cover letter update with experiment DT for topology changes.
+> 2. Added the patch for [2].
+> 
+> Changes from v1->v2
+> 1. ARM32 can now use the common code as well.
+> 
+> Atish Patra (4):
+> dt-binding: cpu-topology: Move cpu-map to a common binding.
+> cpu-topology: Move cpu topology code to common code.
+> arm: Use common cpu_topology
+> RISC-V: Parse cpu topology during boot.
+> 
+> Sudeep Holla (1):
+> Documentation: DT: arm: add support for sockets defining package
+> boundaries
+> 
+> .../topology.txt => cpu/cpu-topology.txt}     | 134 ++++++--
+> arch/arm/include/asm/topology.h               |  22 +-
+> arch/arm/kernel/topology.c                    |  10 +-
+> arch/arm64/include/asm/topology.h             |  23 --
+> arch/arm64/kernel/topology.c                  | 303 +-----------------
+> arch/riscv/Kconfig                            |   1 +
+> arch/riscv/kernel/smpboot.c                   |   3 +
+> drivers/base/arch_topology.c                  | 298 ++++++++++++++++-
+> drivers/base/topology.c                       |   1 +
+> include/linux/arch_topology.h                 |  36 +++
+> 10 files changed, 453 insertions(+), 378 deletions(-)
+> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
+> 
+> --
+> 2.21.0
+> 
+> 
 
-On Tue, Apr 9, 2019 at 4:14 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> Add GPIO D5 (BT_ENABLE_L) as reset-GPIO to the power sequence for the
-> Bluetooth/WiFi module. On devices with a Broadcom module the signal
-> needs to be asserted to use Bluetooth.
->
-> Note that BT_ENABLE_L is a misnomer in the schematics, the signal
-> actually is active-high.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+Ping?
 
-Looks right to me.  Thanks!
+Specifically, patch 3 & 4 affects ARM & ARM64. Any tests on real 
+hardware would be great.
 
-Note that this might enable the signals in a different order than in
-the downstream Chrome OS kernel, but it looks like it doesn't matter
-in this case since the datasheet for the AzureWave module talks about
-enabling / disabling these pins in either order.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Regards,
+Atish
