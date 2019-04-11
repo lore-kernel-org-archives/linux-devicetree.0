@@ -1,76 +1,142 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH v4 1/2] dt-bindings: serial: add documentation for the SiFive UART driver
-Date: Thu, 11 Apr 2019 02:00:28 -0700
-Message-ID: <20190411090027.8670-2-paul.walmsley@sifive.com>
-References: <20190411090027.8670-1-paul.walmsley@sifive.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
+Date: Thu, 11 Apr 2019 11:12:40 +0200
+Message-ID: <20190411091240.qzi7266rzhksbxxa@flea>
+References: <20190410232543.13297-1-peron.clem@gmail.com>
+ <20190410232543.13297-5-peron.clem@gmail.com>
+ <20190411072806.yr3z3ei6djjhpo32@flea>
+ <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wt4dw26h24e24tyj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411090027.8670-1-paul.walmsley@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for the Linux driver for the SiFive
-asynchronous serial IP block.
 
-This revision incorporates changes based on feedback from Rob
-Herring <robh@kernel.org>.
+--wt4dw26h24e24tyj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Cc: linux-serial@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
----
- .../bindings/serial/sifive-serial.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+On Thu, Apr 11, 2019 at 09:56:15AM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> On Thu, 11 Apr 2019 at 09:28, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Thu, Apr 11, 2019 at 01:25:39AM +0200, Cl=E9ment P=E9ron wrote:
+> > > Add the mali gpu node to the H6 device-tree.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++=
+++
+> > >  1 file changed, 80 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index e0dc4a05c1ba..152b2128aadf 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -17,6 +17,71 @@
+> > >       #address-cells =3D <1>;
+> > >       #size-cells =3D <1>;
+> > >
+> > > +     gpu_opp_table: opp_table1 {
+> > > +             compatible =3D "operating-points-v2";
+> > > +
+> > > +             opp@756000000 {
+> > > +                     opp-hz =3D /bits/ 64 <756000000>;
+> > > +                     opp-microvolt =3D <1040000>;
+> > > +             };
+> > > +             opp@624000000 {
+> > > +                     opp-hz =3D /bits/ 64 <624000000>;
+> > > +                     opp-microvolt =3D <950000>;
+> > > +             };
+> > > +             opp@576000000 {
+> > > +                     opp-hz =3D /bits/ 64 <576000000>;
+> > > +                     opp-microvolt =3D <930000>;
+> > > +             };
+> > > +             opp@540000000 {
+> > > +                     opp-hz =3D /bits/ 64 <540000000>;
+> > > +                     opp-microvolt =3D <910000>;
+> > > +             };
+> > > +             opp@504000000 {
+> > > +                     opp-hz =3D /bits/ 64 <504000000>;
+> > > +                     opp-microvolt =3D <890000>;
+> > > +             };
+> > > +             opp@456000000 {
+> > > +                     opp-hz =3D /bits/ 64 <456000000>;
+> > > +                     opp-microvolt =3D <870000>;
+> > > +             };
+> > > +             opp@432000000 {
+> > > +                     opp-hz =3D /bits/ 64 <432000000>;
+> > > +                     opp-microvolt =3D <860000>;
+> > > +             };
+> > > +             opp@420000000 {
+> > > +                     opp-hz =3D /bits/ 64 <420000000>;
+> > > +                     opp-microvolt =3D <850000>;
+> > > +             };
+> > > +             opp@408000000 {
+> > > +                     opp-hz =3D /bits/ 64 <408000000>;
+> > > +                     opp-microvolt =3D <840000>;
+> > > +             };
+> > > +             opp@384000000 {
+> > > +                     opp-hz =3D /bits/ 64 <384000000>;
+> > > +                     opp-microvolt =3D <830000>;
+> > > +             };
+> > > +             opp@360000000 {
+> > > +                     opp-hz =3D /bits/ 64 <360000000>;
+> > > +                     opp-microvolt =3D <820000>;
+> > > +             };
+> > > +             opp@336000000 {
+> > > +                     opp-hz =3D /bits/ 64 <336000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +             opp@312000000 {
+> > > +                     opp-hz =3D /bits/ 64 <312000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +             opp@264000000 {
+> > > +                     opp-hz =3D /bits/ 64 <264000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +             opp@216000000 {
+> > > +                     opp-hz =3D /bits/ 64 <216000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +     };
+> > > +
+> >
+> > How were those OPPs tested?
+>
+> They are taken from the vendor device tree.
+> https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm6=
+4/boot/dts/sunxi/sun50iw6p1.dtsi#L2121
 
-diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-new file mode 100644
-index 000000000000..c86b1e524159
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-@@ -0,0 +1,33 @@
-+SiFive asynchronous serial interface (UART)
-+
-+Required properties:
-+
-+- compatible: should be something similar to
-+	      "sifive,<chip>-uart" for the UART as integrated
-+	      on a particular chip, and "sifive,uart<version>" for the
-+	      general UART IP block programming model.	Supported
-+	      compatible strings as of the date of this writing are:
-+	      "sifive,fu540-c000-uart" for the SiFive UART v0 as
-+	      integrated onto the SiFive FU540 chip, or "sifive,uart0"
-+	      for the SiFive UART v0 IP block with no chip integration
-+	      tweaks (if any)
-+- reg: address and length of the register space
-+- interrupts: Should contain the UART interrupt identifier
-+- clocks: Should contain a clock identifier for the UART's parent clock
-+
-+
-+UART HDL that corresponds to the IP block version numbers can be found
-+here:
-+
-+https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-+
-+
-+Example:
-+
-+uart0: serial@10010000 {
-+	compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-+	interrupt-parent = <&plic0>;
-+	interrupts = <80>;
-+	reg = <0x0 0x10010000 0x0 0x1000>;
-+	clocks = <&prci PRCI_CLK_TLCLK>;
-+};
--- 
-2.20.1
+Please remove them if you haven't tested them then.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--wt4dw26h24e24tyj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK8FCAAKCRDj7w1vZxhR
+xTKWAQCkcHeJX2zsAy0gS4+huXZb+yrk24lKRns1Ip4dRUB8QgD/Q6ImVqglfwyb
+izJof9k7hFc2NMkMbgoiFC/503I0DAs=
+=rMsx
+-----END PGP SIGNATURE-----
+
+--wt4dw26h24e24tyj--
