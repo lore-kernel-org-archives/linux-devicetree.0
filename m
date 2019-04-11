@@ -1,53 +1,39 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 09/30] PCI: tegra: Process pending DLL transactions before entering L1 or L2
-Date: Thu, 11 Apr 2019 22:33:34 +0530
-Message-ID: <20190411170355.6882-10-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lists.gateworks.com ([108.161.130.12]:25495 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbfDKAgg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Apr 2019 20:36:36 -0400
+From: Robert Jones <rjones@gateworks.com>
+Subject: [PATCH v2 0/2] iio: accel: add support for LIS2DE12
+Date: Wed, 10 Apr 2019 17:12:07 -0700
+Message-Id: <20190411001209.29488-1-rjones@gateworks.com>
+In-Reply-To: <20190305203252.13647-1-rjones@gateworks.com>
+References: <20190305203252.13647-1-rjones@gateworks.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Robert Jones <rjones@gateworks.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PM message are truncated while entering L1 or L2, which is resulting in
-receiver errors. Set the required bit to finish processing DLLP before
-link enter L1 or L2.
+- Document the LIS2DE12 device tree binding.
+- Add device tree support for STM LIS2DE12 accelerometer sensors.
+- Add new st_sensor_settings entry for .wai == 0x33 devices with
+  5376Hz capability.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Changelog:
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index ce0282819370..e40df52e46a7 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -212,6 +212,9 @@
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
- 
-+#define RP_VEND_XP_BIST	0x00000f4c
-+#define  RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE	(1 << 28)
-+
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
-@@ -537,6 +540,14 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
- 	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
- 	writel(value, port->base + RP_VEND_XP);
-+
-+	/*
-+	 * LTSSM will wait for DLLP to finish before entering L1 or L2,
-+	 * to avoid truncation of PM messages which results in receiver errors
-+	 */
-+	value = readl(port->base + RP_VEND_XP_BIST);
-+	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
-+	writel(value, port->base + RP_VEND_XP_BIST);
- }
- 
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+v2:	- Removed "-accel" postfix to device tree bindings and compatible string
+	- Updated .drdy_irq field to follow updated structure format
+
+Robert Jones (2):
+  dt-bindings: iio: accel: add LIS2DE12 sensor device binding
+  iio: accel: add support to LIS2DE12
+
+ .../devicetree/bindings/iio/st-sensors.txt         |  1 +
+ drivers/iio/accel/Kconfig                          |  2 +-
+ drivers/iio/accel/st_accel.h                       |  2 +
+ drivers/iio/accel/st_accel_core.c                  | 76 ++++++++++++++++++++++
+ drivers/iio/accel/st_accel_i2c.c                   |  5 ++
+ 5 files changed, 85 insertions(+), 1 deletion(-)
+
 -- 
-2.17.1
+2.9.2
