@@ -1,134 +1,76 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/8] arm64: dts: allwinner: Add ARM Mali GPU
- node for H6
-Date: Thu, 11 Apr 2019 09:56:15 +0200
-Message-ID: <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
-References: <20190410232543.13297-1-peron.clem@gmail.com> <20190410232543.13297-5-peron.clem@gmail.com>
- <20190411072806.yr3z3ei6djjhpo32@flea>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH v4] arm64: dts: ls1088a: add one more thermal zone node
+Date: Thu, 11 Apr 2019 08:01:55 +0000
+Message-ID: <VI1PR04MB433392E5E650435B0D06AFFFF32F0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20190401032905.32711-1-andy.tang@nxp.com>
+ <273bb946-8659-8e50-6598-3cffa6dff9f5@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBL7GXPSQKGQEOQFFWFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190411072806.yr3z3ei6djjhpo32@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <273bb946-8659-8e50-6598-3cffa6dff9f5@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, 11 Apr 2019 at 09:28, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wro=
-te:
->
-> On Thu, Apr 11, 2019 at 01:25:39AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Add the mali gpu node to the H6 device-tree.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++++
-> >  1 file changed, 80 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index e0dc4a05c1ba..152b2128aadf 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -17,6 +17,71 @@
-> >       #address-cells =3D <1>;
-> >       #size-cells =3D <1>;
-> >
-> > +     gpu_opp_table: opp_table1 {
-> > +             compatible =3D "operating-points-v2";
-> > +
-> > +             opp@756000000 {
-> > +                     opp-hz =3D /bits/ 64 <756000000>;
-> > +                     opp-microvolt =3D <1040000>;
-> > +             };
-> > +             opp@624000000 {
-> > +                     opp-hz =3D /bits/ 64 <624000000>;
-> > +                     opp-microvolt =3D <950000>;
-> > +             };
-> > +             opp@576000000 {
-> > +                     opp-hz =3D /bits/ 64 <576000000>;
-> > +                     opp-microvolt =3D <930000>;
-> > +             };
-> > +             opp@540000000 {
-> > +                     opp-hz =3D /bits/ 64 <540000000>;
-> > +                     opp-microvolt =3D <910000>;
-> > +             };
-> > +             opp@504000000 {
-> > +                     opp-hz =3D /bits/ 64 <504000000>;
-> > +                     opp-microvolt =3D <890000>;
-> > +             };
-> > +             opp@456000000 {
-> > +                     opp-hz =3D /bits/ 64 <456000000>;
-> > +                     opp-microvolt =3D <870000>;
-> > +             };
-> > +             opp@432000000 {
-> > +                     opp-hz =3D /bits/ 64 <432000000>;
-> > +                     opp-microvolt =3D <860000>;
-> > +             };
-> > +             opp@420000000 {
-> > +                     opp-hz =3D /bits/ 64 <420000000>;
-> > +                     opp-microvolt =3D <850000>;
-> > +             };
-> > +             opp@408000000 {
-> > +                     opp-hz =3D /bits/ 64 <408000000>;
-> > +                     opp-microvolt =3D <840000>;
-> > +             };
-> > +             opp@384000000 {
-> > +                     opp-hz =3D /bits/ 64 <384000000>;
-> > +                     opp-microvolt =3D <830000>;
-> > +             };
-> > +             opp@360000000 {
-> > +                     opp-hz =3D /bits/ 64 <360000000>;
-> > +                     opp-microvolt =3D <820000>;
-> > +             };
-> > +             opp@336000000 {
-> > +                     opp-hz =3D /bits/ 64 <336000000>;
-> > +                     opp-microvolt =3D <810000>;
-> > +             };
-> > +             opp@312000000 {
-> > +                     opp-hz =3D /bits/ 64 <312000000>;
-> > +                     opp-microvolt =3D <810000>;
-> > +             };
-> > +             opp@264000000 {
-> > +                     opp-hz =3D /bits/ 64 <264000000>;
-> > +                     opp-microvolt =3D <810000>;
-> > +             };
-> > +             opp@216000000 {
-> > +                     opp-hz =3D /bits/ 64 <216000000>;
-> > +                     opp-microvolt =3D <810000>;
-> > +             };
-> > +     };
-> > +
->
-> How were those OPPs tested?
-
-They are taken from the vendor device tree.
-https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm64/=
-boot/dts/sunxi/sun50iw6p1.dtsi#L2121
-
-Clement
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGkgRGFuaWVsLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFu
+aWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IFNlbnQ6IDIwMTnlubQ0
+5pyINOaXpSAxMDozNQ0KPiBUbzogQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT47IHNoYXdu
+Z3VvQGtlcm5lbC5vcmcNCj4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtk
+dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBydWkuemhh
+bmdAaW50ZWwuY29tOw0KPiBlZHViZXp2YWxAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjRdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBvbmUgbW9yZSB0aGVybWFsIHpvbmUgbm9k
+ZQ0KPiA+ICsJCQkJCQk8JmNwdTEgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05PX0xJTUlU
+PiwNCj4gPiArCQkJCQkJPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCj4gVEhFUk1BTF9OT19MSU1J
+VD4sDQo+ID4gKwkJCQkJCTwmY3B1MyBUSEVSTUFMX05PX0xJTUlUDQo+IFRIRVJNQUxfTk9fTElN
+SVQ+LA0KPiA+ICsJCQkJCQk8JmNwdTQgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05PX0xJ
+TUlUPiwNCj4gPiArCQkJCQkJPCZjcHU1IFRIRVJNQUxfTk9fTElNSVQNCj4gVEhFUk1BTF9OT19M
+SU1JVD4sDQo+ID4gKwkJCQkJCTwmY3B1NiBUSEVSTUFMX05PX0xJTUlUDQo+IFRIRVJNQUxfTk9f
+TElNSVQ+LA0KPiA+ICsJCQkJCQk8JmNwdTcgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05P
+X0xJTUlUPjsNCj4gPiArCQkJCX07DQo+IA0KPiBEb2VzIGl0IG1ha2Ugc2Vuc2UgdG8gYXNzaWdu
+IHRoZSBzYW1lIGNvb2xpbmcgZGV2aWNlcyB0byB0d28gZGlmZmVyZW50IHRoZXJtYWwNCj4gem9u
+ZXMgcnVubmluZyBkaWZmZXJlbnQgaW5zdGFuY2VzIG9mIGdvdmVybm9yID8NCkV2ZW4gdGhvdWdo
+IEkgZGlkbid0IGZpbmQgYW55IGVycm9yIHdoZW4gdGVzdCwgSSBkbyB0aGluayBpdCBpcyBpbmFw
+cHJvcHJpYXRlLg0KDQpCUiwNCkFuZHkNCj4gDQo+ID4gKwkJCX07DQo+ID4gKwkJfTsNCj4gPiAr
+DQo+ID4gKwkJcGxhdGZvcm0tdGhlcm1hbCB7DQo+ID4gKwkJCXBvbGxpbmctZGVsYXktcGFzc2l2
+ZSA9IDwxMDAwPjsNCj4gPiArCQkJcG9sbGluZy1kZWxheSA9IDw1MDAwPjsNCj4gPiArCQkJdGhl
+cm1hbC1zZW5zb3JzID0gPCZ0bXUgMT47DQo+ID4gKw0KPiA+ICsJCQl0cmlwcyB7DQo+ID4gKwkJ
+CQlwbGF0Zm9ybV9hbGVydDogcGxhdGZvcm0tYWxlcnQgew0KPiA+ICsJCQkJCXRlbXBlcmF0dXJl
+ID0gPDg1MDAwPjsNCj4gPiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICsJCQkJCXR5
+cGUgPSAicGFzc2l2ZSI7DQo+ID4gKwkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCXBsYXRmb3JtX2Ny
+aXQ6IHBsYXRmb3JtLWNyaXQgew0KPiA+ICsJCQkJCXRlbXBlcmF0dXJlID0gPDk1MDAwPjsNCj4g
+PiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICsJCQkJCXR5cGUgPSAiY3JpdGljYWwi
+Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4gKwkJCWNvb2xpbmctbWFwcyB7
+DQo+ID4gKwkJCQltYXAwIHsNCj4gPiArCQkJCQl0cmlwID0gPCZwbGF0Zm9ybV9hbGVydD47DQo+
+ID4gIAkJCQkJY29vbGluZy1kZXZpY2UgPQ0KPiA+ICAJCQkJCQk8JmNwdTAgVEhFUk1BTF9OT19M
+SU1JVA0KPiBUSEVSTUFMX05PX0xJTUlUPiwNCj4gPiAgCQkJCQkJPCZjcHUxIFRIRVJNQUxfTk9f
+TElNSVQNCj4gVEhFUk1BTF9OT19MSU1JVD4sDQo+ID4NCj4gDQo+IA0KPiAtLQ0KPiANCj4gPGh0
+dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNB
+JTJGJTJGd3d3Lmxpbg0KPiBhcm8ub3JnJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRhbmcl
+NDBueHAuY29tJTdDZTFiNzA0ODMyZWEzNA0KPiA2YWU3Mzg0MDhkNmI4YTYyODNmJTdDNjg2ZWEx
+ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3Qw0KPiA2MzY4OTk0MjExMTA0NDE1
+NzQmYW1wO3NkYXRhPUM3bXJVenRPYmtITVp5cUVKZzUzaDk5U2RJd2VKU2VLaGk4bA0KPiAlMkJR
+cFVRaEElM0QmYW1wO3Jlc2VydmVkPTA+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3
+YXJlIGZvcg0KPiBBUk0gU29Dcw0KPiANCj4gRm9sbG93IExpbmFybzoNCj4gPGh0dHBzOi8vZXVy
+MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3
+LmZhYw0KPiBlYm9vay5jb20lMkZwYWdlcyUyRkxpbmFybyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5k
+eS50YW5nJTQwbnhwLmNvbQ0KPiAlN0NlMWI3MDQ4MzJlYTM0NmFlNzM4NDA4ZDZiOGE2MjgzZiU3
+QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzANCj4gMTYzNSU3QzAlN0MwJTdDNjM2ODk5NDIx
+MTEwNDQxNTc0JmFtcDtzZGF0YT1QeGolMkJsZmMlMkZDMUtpUUJEMA0KPiBrelRqUUdUMkFnakNi
+WWxjWGhuc2NXVGI2cHclM0QmYW1wO3Jlc2VydmVkPTA+IEZhY2Vib29rIHwNCj4gPGh0dHBzOi8v
+ZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJG
+dHdpdHRlci5jDQo+IG9tJTJGJTIzISUyRmxpbmFyb29yZyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5k
+eS50YW5nJTQwbnhwLmNvbSU3Q2UNCj4gMWI3MDQ4MzJlYTM0NmFlNzM4NDA4ZDZiOGE2MjgzZiU3
+QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1DQo+ICU3QzAlN0MwJTdDNjM2ODk5NDIx
+MTEwNDQxNTc0JmFtcDtzZGF0YT1ZSlFSZ01Ud2NHJTJCM0gxZyUyRlgNCj4gaDN6YXclMkJYeThP
+ZGxzdEw1QUg0UjBlWG1OOCUzRCZhbXA7cmVzZXJ2ZWQ9MD4gVHdpdHRlciB8DQo+IDxodHRwczov
+L2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUy
+Rnd3dy5saW4NCj4gYXJvLm9yZyUyRmxpbmFyby1ibG9nJTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nh
+bmR5LnRhbmclNDBueHAuY29tJTdDDQo+IGUxYjcwNDgzMmVhMzQ2YWU3Mzg0MDhkNmI4YTYyODNm
+JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2Mw0KPiA1JTdDMCU3QzAlN0M2MzY4OTk0
+MjExMTA0NDE1NzQmYW1wO3NkYXRhPXJsa082bWtIZ2RhbThLMlJUd3NPZg0KPiA4RXhQRjJLUnkl
+MkZyTXd3eXNoUkJLQWclM0QmYW1wO3Jlc2VydmVkPTA+IEJsb2cNCg0K
