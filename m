@@ -1,65 +1,41 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v3 1/2] dt-bindings: thermal: al-thermal: Add binding documentation
-Date: Thu, 11 Apr 2019 13:22:47 +0300
-Message-ID: <1554978168-17369-2-git-send-email-talel@amazon.com>
-References: <1554978168-17369-1-git-send-email-talel@amazon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 1/3] dt-bindings: phy: rcar-gen3-phy-usb2: Revise #phy-cells property
+Date: Thu, 11 Apr 2019 19:27:34 +0900
+Message-ID: <1554978456-20794-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1554978456-20794-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554978168-17369-1-git-send-email-talel@amazon.com>
+In-Reply-To: <1554978456-20794-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: talel@amazon.com, robh@kernel.org, edubezval@gmail.com, dwmw@amazon.co.uk, jonnyc@amazon.com, rui.zhang@intel.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add thermal binding documentation for Amazon's Annapurna Labs Thermal
-Sensor.
+To have the detailed property on each PHY specifier, this patch revises
+the #phy-cells property.
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../bindings/thermal/amazon,al-thermal.txt         | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
-new file mode 100644
-index 0000000..703979d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
-@@ -0,0 +1,33 @@
-+Amazon's Annapurna Labs Thermal Sensor
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+index 23894db..d46188f 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+@@ -29,7 +29,13 @@ Required properties:
+ 
+ - reg: offset and length of the partial USB 2.0 Host register block.
+ - clocks: clock phandle and specifier pair(s).
+-- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
++- #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
++	      using <0> is deprecated).
 +
-+Simple thermal device that allows temperature reading by a single MMIO
-+transaction.
-+
-+Required properties:
-+- compatible: "amazon,al-thermal".
-+- reg: The physical base address and length of the sensor's registers.
-+- #thermal-sensor-cells: Must be 1. See ./thermal.txt for a description.
-+
-+Example:
-+	thermal: thermal {
-+		compatible = "amazon,al-thermal";
-+		reg = <0x0 0x05002860 0x0 0x1>;
-+		#thermal-sensor-cells = <0x1>;
-+	};
-+
-+	thermal-zones {
-+		thermal-z0 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&thermal 0>;
-+			trips {
-+				critical {
-+					temperature = <105000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+		};
-+	};
-+
++The phandle's argument in the PHY specifier is the INT_STATUS bit of controller:
++- 1 = USBH_INTA (OHCI)
++- 2 = USBH_INTB (EHCI)
++- 3 = UCOM_INT (OTG and BC)
+ 
+ Optional properties:
+ To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
 -- 
 2.7.4
