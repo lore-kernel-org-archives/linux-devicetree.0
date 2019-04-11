@@ -1,57 +1,73 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 7/8] arm64: dts: allwinner: Add mali GPU
- supply for OrangePi Boards
-Date: Thu, 11 Apr 2019 12:57:19 +0200
-Message-ID: <20190411105720.32357-8-peron.clem@gmail.com>
-References: <20190411105720.32357-1-peron.clem@gmail.com>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 14/25] drm/medaitek: add layer_nr for ovl private data
+Date: Thu, 11 Apr 2019 18:57:09 +0800
+Message-ID: <1554980229.27008.4.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-15-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBUNWXTSQKGQEKEJ423A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190411105720.32357-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553667561-25447-15-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yongqiang.niu@mediatek.com
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Enable and add supply to the Mali GPU node on the
-Orange Pi One Plus and Lite2 boards.
+Hi, Yongqiang:
 
-Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add layer_nr for ovl private data
+> ovl_2l almost same with with ovl hardware, except the
+> layer number for ovl_2l is 2 and ovl is 4.
+> this patch is a preparation for ovl-2l and
+> ovl share the same driver.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/a=
-rm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 62e27948a3fa..bd13297555ab 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -55,6 +55,11 @@
- 	status =3D "okay";
- };
-=20
-+&gpu {
-+	mali-supply =3D <&reg_dcdcc>;
-+	status =3D "okay";
-+};
-+
- &mmc0 {
- 	vmmc-supply =3D <&reg_cldo1>;
- 	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
---=20
-2.17.1
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> index afb313c..a0ab760 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -60,6 +60,7 @@
+>  struct mtk_disp_ovl_data {
+>  	unsigned int addr;
+>  	unsigned int gmc_bits;
+> +	unsigned int layer_nr;
+>  	bool fmt_rgb565_is_0;
+>  };
+>  
+> @@ -137,7 +138,9 @@ static void mtk_ovl_config(struct mtk_ddp_comp *comp, unsigned int w,
+>  
+>  static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
+>  {
+> -	return 4;
+> +	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
+> +
+> +	return ovl->data->layer_nr;
+>  }
+>  
+>  static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
+> @@ -342,12 +345,14 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+>  static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
+>  	.addr = DISP_REG_OVL_ADDR_MT2701,
+>  	.gmc_bits = 8,
+> +	.layer_nr = 4,
+>  	.fmt_rgb565_is_0 = false,
+>  };
+>  
+>  static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
+>  	.addr = DISP_REG_OVL_ADDR_MT8173,
+>  	.gmc_bits = 8,
+> +	.layer_nr = 4,
+>  	.fmt_rgb565_is_0 = true,
+>  };
+>  
