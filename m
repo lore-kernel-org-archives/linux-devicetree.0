@@ -1,69 +1,37 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 3/5] ARM: dts: rockchip: Add DDR retention/poweroff to rk3288-veyron hogs
-Date: Thu, 11 Apr 2019 16:21:55 -0700
-Message-ID: <20190411232157.55125-3-dianders@chromium.org>
-References: <20190411232157.55125-1-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH v2 1/2] ARM: dts: ls1021: Use different compatible for MDIO bus node
+Date: Fri, 12 Apr 2019 02:23:14 +0300
+Message-ID: <20190411232315.19588-1-olteanv@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411232157.55125-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Elaine Zhang <zhangqing@rock-chips.com>
-Cc: dbasehore@chromium.org, amstan@chromium.org, linux-rockchip@lists.infradead.org, briannorris@chromium.org, mka@chromium.org, ryandcase@chromium.org, Chris Zhong <zyw@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: shawnguo@kernel.org, leoyang.li@nxp.com, claudiu.manoil@nxp.com
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, Vladimir Oltean <olteanv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Even though upstream Linux doesn't yet go into deep enough suspend to
-get DDR into self refresh, there is no harm in setting these pins up.
-They'll only actually do something if we go into a deeper suspend but
-leaving them configed always is fine.
+This makes it less ambiguous since the bindings for the Ethernet
+controller and for the MDIO bus were using the same compatible string.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Changing it, since the LS1021 has the only DTS that uses this compatible
+string for the MDIO bus node.
+
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Suggested-by: Leo Li <leoyang.li@nxp.com>
 ---
+ arch/arm/boot/dts/ls1021a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 4 ++++
- arch/arm/boot/dts/rk3288-veyron.dtsi            | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-index 72c4754032e9..b9cc90f0f25c 100644
---- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-@@ -229,6 +229,8 @@
- &pinctrl {
- 	pinctrl-0 = <
- 		/* Common for sleep and wake, but no owners */
-+		&ddr0_retention
-+		&ddrio_pwroff
- 		&global_pwroff
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index b4f2723ecd86..1a2a9509d9c2 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -701,7 +701,7 @@
+ 		};
  
- 		/* Wake only */
-@@ -236,6 +238,8 @@
- 	>;
- 	pinctrl-1 = <
- 		/* Common for sleep and wake, but no owners */
-+		&ddr0_retention
-+		&ddrio_pwroff
- 		&global_pwroff
- 
- 		/* Sleep only */
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 5c67acc3e6d8..279d7f4ecce0 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -451,10 +451,14 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <
- 		/* Common for sleep and wake, but no owners */
-+		&ddr0_retention
-+		&ddrio_pwroff
- 		&global_pwroff
- 	>;
- 	pinctrl-1 = <
- 		/* Common for sleep and wake, but no owners */
-+		&ddr0_retention
-+		&ddrio_pwroff
- 		&global_pwroff
- 	>;
- 
+ 		mdio0: mdio@2d24000 {
+-			compatible = "gianfar";
++			compatible = "fsl,etsec2-mdio";
+ 			device_type = "mdio";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
-2.21.0.392.gf8f6787159e-goog
+2.17.1
