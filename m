@@ -1,35 +1,126 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: enable display nodes on
- rk3328-roc-cc
-Date: Thu, 11 Apr 2019 14:13:16 +0200
-Message-ID: <1814995.poL7WSfubG@phil>
-References: <20190403182248.16164-1-papadakospan@gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 04/11] pinctrl: sunxi: Support I/O bias
+ voltage setting on H6
+Date: Thu, 11 Apr 2019 14:22:17 +0200
+Message-ID: <20190411122217.w2fdxymxehc2tm5c@flea>
+References: <20190411101951.30223-1-megous@megous.com>
+ <20190411101951.30223-5-megous@megous.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190403182248.16164-1-papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mws5lc35x3cnuznz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB77CXTSQKGQEDGFB6EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190411101951.30223-5-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev@v
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 3. April 2019, 20:22:48 CEST schrieb Leonidas P. Papadakos:
-> Enable necessary nodes to get output on the hdmi port of the board.
-> 
-> This is a port of Heiko's patch for the rock64.
-> 
-> Signed-off-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-applied for 5.2
+--mws5lc35x3cnuznz
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Thanks
-Heiko
+Hi,
+
+On Thu, Apr 11, 2019 at 12:19:44PM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> H6 SoC has a "pio group withstand voltage mode" register (datasheet
+> description), that needs to be used to select either 1.8V or 3.3V I/O mode,
+> based on what voltage is powering the respective pin banks and is thus used
+> for I/O signals.
+>
+> Add support for configuring this register according to the voltage of the
+> pin bank regulator (if enabled).
+>
+> This is similar to the support for I/O bias voltage setting patch for A80
+> and the same concerns apply. See:
+>
+>   commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 11 +++++++++++
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 +++++
+>  3 files changed, 17 insertions(+)
+>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> index ef4268cc6227..3cc1121589c9 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> @@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
+>  	.irq_banks = 4,
+>  	.irq_bank_map = h6_irq_bank_map,
+>  	.irq_read_needs_mux = true,
+> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+>  };
+>
+>  static int h6_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index 98c4de5f4019..0cbca30b75dc 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -614,6 +614,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  					 unsigned pin,
+>  					 struct regulator *supply)
+>  {
+> +	unsigned short bank = pin / PINS_PER_BANK;
+> +	unsigned long flags;
+>  	u32 val, reg;
+>  	int uV;
+>
+> @@ -651,6 +653,15 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  		reg &= ~IO_BIAS_MASK;
+>  		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
+>  		return 0;
+> +	case BIAS_VOLTAGE_PIO_POW_MODE_SEL:
+> +		val = uV <= 1800000 ? 1 : 0;
+> +
+> +		raw_spin_lock_irqsave(&pctl->lock, flags);
+> +		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
+> +		reg &= ~(1 << bank);
+> +		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +		return 0;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> index 4bfc8a6d9dce..36186906f0a7 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -95,11 +95,16 @@
+>  #define PINCTRL_SUN7I_A20	BIT(7)
+>  #define PINCTRL_SUN8I_R40	BIT(8)
+>
+> +#define PIO_POW_MOD_SEL_REG	0x340
+> +
+>  enum sunxi_desc_bias_voltage {
+>  	BIAS_VOLTAGE_NONE,
+>  	/* Bias voltage configuration is done through
+>  	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
+>  	BIAS_VOLTAGE_GRP_CONFIG,
+> +	/* Bias voltage is set through PIO_POW_MOD_SEL_REG
+> +	 * register, as seen on H6 SoC, for example. */
+
+That's not the proper comment style.
+
+Once fixed, this patch and the previous is
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--mws5lc35x3cnuznz--
