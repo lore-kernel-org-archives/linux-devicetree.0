@@ -1,69 +1,94 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: gpu: mali-midgard: Add h6 mali gpu compatible
-Date: Thu, 11 Apr 2019 10:03:29 +0200
-Message-ID: <CAJiuCcdo2etQhiVpLS98cv=dt1N+2p-+fGhieBDS2iaBCeORPg@mail.gmail.com>
-References: <20190410232543.13297-1-peron.clem@gmail.com> <20190410232543.13297-4-peron.clem@gmail.com>
- <20190411072724.qdhfvdhjce5sopzi@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date: Thu, 11 Apr 2019 10:09:55 +0200
+Message-ID: <20190411080955.ysp3wreifwqrpn3n@flea>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com>
+ <20190410174139.20012-2-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ljbikfewuqsnslmi"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411072724.qdhfvdhjce5sopzi@flea>
+Content-Disposition: inline
+In-Reply-To: <20190410174139.20012-2-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
+
+
+--ljbikfewuqsnslmi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 Hi,
 
-On Thu, 11 Apr 2019 at 09:27, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
+On Wed, Apr 10, 2019 at 01:41:38PM -0400, Yangtao Li wrote:
+> For some SoCs, the CPU frequency subset and voltage value of each OPP
+> varies based on the silicon variant in use. The sunxi-cpufreq-nvmem
+> driver reads the efuse value from the SoC to provide the OPP framework
+> with required information.
 >
-> On Thu, Apr 11, 2019 at 01:25:38AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > This add the H6 mali compatible in the dt-bindings to later support
-> > specific implementation.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  .../devicetree/bindings/gpu/arm,mali-midgard.txt          | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt=
- b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> > index 2e8bbce35695..9e71146b5c8a 100644
-> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> > @@ -15,6 +15,7 @@ Required properties:
-> >      + "arm,mali-t860"
-> >      + "arm,mali-t880"
-> >    * which must be preceded by one of the following vendor specifics:
-> > +    + "allwinner,sun50i-h6-mali"
-> >      + "amlogic,meson-gxm-mali"
-> >      + "rockchip,rk3288-mali"
-> >      + "rockchip,rk3399-mali"
-> > @@ -49,9 +50,14 @@ Vendor-specific bindings
-> >  ------------------------
-> >
-> >  The Mali GPU is integrated very differently from one SoC to
-> > -another. In order to accomodate those differences, you have the option
-> > +another. In order to accommodate those differences, you have the optio=
-n
-> >  to specify one more vendor-specific compatible, among:
-> >
-> > +- "allwinner,sun50i-h6-mali"
-> > +  Required properties:
-> > +  - resets: Should contain phandle of :
-> > +    + GPU reset line
-> > +
->
-> And clocks, I assume?
-Yes you're right clocks are also required for the H6.
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Clement
+The driver has a bunch of checkpatch warnings, please fix them
+(running checkpatch with --strict).
+
+> ---
+>  MAINTAINERS                           |   7 +
+>  drivers/cpufreq/Kconfig.arm           |  10 ++
+>  drivers/cpufreq/Makefile              |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c  |   2 +
+>  drivers/cpufreq/sunxi-cpufreq-nvmem.c | 232 ++++++++++++++++++++++++++
+>  5 files changed, 252 insertions(+)
+>  create mode 100644 drivers/cpufreq/sunxi-cpufreq-nvmem.c
 >
-> Maxime
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 391405091c6b..bfd18ba6aa1a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -667,6 +667,13 @@ S:	Maintained
+>  F:	Documentation/i2c/busses/i2c-ali1563
+>  F:	drivers/i2c/busses/i2c-ali1563.c
 >
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> +ALLWINNER CPUFREQ DRIVER
+> +M:	Yangtao Li <tiny.windzz@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> +F:	drivers/cpufreq/sunxi-cpufreq-nvmem.c
+> +
+
+Please use a less generic name for the driver as well. It's called
+sunxi, but applies to a single SoC (for now).
+
+> +struct sunxi_cpufreq_soc_data {
+> +	u32 (*efuse_xlate)(const struct sunxi_cpufreq_soc_data *soc_data,
+> +			   u32 efuse);
+> +	u32 nvmem_mask;
+> +	u32 nvmem_shift;
+> +};
+
+What cases do you have? You're mentionning that it might apply to more
+SoCs, which ones? How is the data stored on those SoCs (and why do you
+need this particular abstraction)?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ljbikfewuqsnslmi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK72UwAKCRDj7w1vZxhR
+xddWAP4/ozszJEsxyLl3PcSuUQNUmGNPTI5/EZoFHMnPIMM1+gEA26Mdnj9YBQVs
+HKxva/PTNG3RNdsvgtKweCHQ+Qrllww=
+=diSg
+-----END PGP SIGNATURE-----
+
+--ljbikfewuqsnslmi--
