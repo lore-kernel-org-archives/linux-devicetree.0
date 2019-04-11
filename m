@@ -1,133 +1,28 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 4/5] clk: Aspeed: Setup video engine clocking
-Date: Thu, 11 Apr 2019 02:50:16 +0000
-Message-ID: <CACPK8Xc5vA6M06QgXMAm9angZMdobxNOqFMNwzq30_GQNaBT9A@mail.gmail.com>
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com> <1554229504-5661-5-git-send-email-eajames@linux.ibm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: imx8qxp: Add lpuart1/lpuart2/lpuart3 nodes
+Date: Thu, 11 Apr 2019 11:00:35 +0800
+Message-ID: <20190411030034.GN26817@dragon>
+References: <20190330170725.24360-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554229504-5661-5-git-send-email-eajames@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20190330170725.24360-1-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-media@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, mchehab@kernel.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Teo Hall <teo.hall@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2 Apr 2019 at 18:25, Eddie James <eajames@linux.ibm.com> wrote:
->
-> Add eclk mux and clock divider table. Also change the video engine reset
-> to the correct clock; it was previously on the video capture but needs
-> to be on the video engine clock.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+On Sat, Mar 30, 2019 at 05:07:44PM +0000, Daniel Baluta wrote:
+> lpuart nodes are part of the ADMA subsystem. See Audio DMA
+> memory map in iMX8 QXP RM [1]
+> 
+> This patch is based on the dtsi file initially submitted by
+> Teo Hall in i.MX NXP internal tree.
+> 
+> [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+> 
+> Signed-off-by: Teo Hall <teo.hall@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-
-Stephen, Eddie and I have worked together on this change and I am
-happy with it now.
-
-Cheers,
-
-Joel
-
-> ---
->  drivers/clk/clk-aspeed.c | 42 +++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 39 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
-> index 5961367..42b4df6 100644
-> --- a/drivers/clk/clk-aspeed.c
-> +++ b/drivers/clk/clk-aspeed.c
-> @@ -87,10 +87,10 @@ struct aspeed_clk_gate {
->  /* TODO: ask Aspeed about the actual parent data */
->  static const struct aspeed_gate_data aspeed_gates[] = {
->         /*                               clk rst   name                 parent  flags */
-> -       [ASPEED_CLK_GATE_ECLK] =        {  0, -1, "eclk-gate",          "eclk", 0 }, /* Video Engine */
-> +       [ASPEED_CLK_GATE_ECLK] =        {  0,  6, "eclk-gate",          "eclk", 0 }, /* Video Engine */
->         [ASPEED_CLK_GATE_GCLK] =        {  1,  7, "gclk-gate",          NULL,   0 }, /* 2D engine */
->         [ASPEED_CLK_GATE_MCLK] =        {  2, -1, "mclk-gate",          "mpll", CLK_IS_CRITICAL }, /* SDRAM */
-> -       [ASPEED_CLK_GATE_VCLK] =        {  3,  6, "vclk-gate",          NULL,   0 }, /* Video Capture */
-> +       [ASPEED_CLK_GATE_VCLK] =        {  3, -1, "vclk-gate",          NULL,   0 }, /* Video Capture */
->         [ASPEED_CLK_GATE_BCLK] =        {  4,  8, "bclk-gate",          "bclk", CLK_IS_CRITICAL }, /* PCIe/PCI */
->         [ASPEED_CLK_GATE_DCLK] =        {  5, -1, "dclk-gate",          NULL,   CLK_IS_CRITICAL }, /* DAC */
->         [ASPEED_CLK_GATE_REFCLK] =      {  6, -1, "refclk-gate",        "clkin", CLK_IS_CRITICAL },
-> @@ -113,6 +113,24 @@ struct aspeed_clk_gate {
->         [ASPEED_CLK_GATE_LHCCLK] =      { 28, -1, "lhclk-gate",         "lhclk", 0 }, /* LPC master/LPC+ */
->  };
->
-> +static const char * const eclk_parent_names[] = {
-> +       "mpll",
-> +       "hpll",
-> +       "dpll",
-> +};
-> +
-> +static const struct clk_div_table ast2500_eclk_div_table[] = {
-> +       { 0x0, 2 },
-> +       { 0x1, 2 },
-> +       { 0x2, 3 },
-> +       { 0x3, 4 },
-> +       { 0x4, 5 },
-> +       { 0x5, 6 },
-> +       { 0x6, 7 },
-> +       { 0x7, 8 },
-> +       { 0 }
-> +};
-> +
->  static const struct clk_div_table ast2500_mac_div_table[] = {
->         { 0x0, 4 }, /* Yep, really. Aspeed confirmed this is correct */
->         { 0x1, 4 },
-> @@ -192,18 +210,21 @@ static struct clk_hw *aspeed_ast2500_calc_pll(const char *name, u32 val)
->
->  struct aspeed_clk_soc_data {
->         const struct clk_div_table *div_table;
-> +       const struct clk_div_table *eclk_div_table;
->         const struct clk_div_table *mac_div_table;
->         struct clk_hw *(*calc_pll)(const char *name, u32 val);
->  };
->
->  static const struct aspeed_clk_soc_data ast2500_data = {
->         .div_table = ast2500_div_table,
-> +       .eclk_div_table = ast2500_eclk_div_table,
->         .mac_div_table = ast2500_mac_div_table,
->         .calc_pll = aspeed_ast2500_calc_pll,
->  };
->
->  static const struct aspeed_clk_soc_data ast2400_data = {
->         .div_table = ast2400_div_table,
-> +       .eclk_div_table = ast2400_div_table,
->         .mac_div_table = ast2400_div_table,
->         .calc_pll = aspeed_ast2400_calc_pll,
->  };
-> @@ -522,6 +543,22 @@ static int aspeed_clk_probe(struct platform_device *pdev)
->                 return PTR_ERR(hw);
->         aspeed_clk_data->hws[ASPEED_CLK_24M] = hw;
->
-> +       hw = clk_hw_register_mux(dev, "eclk-mux", eclk_parent_names,
-> +                                ARRAY_SIZE(eclk_parent_names), 0,
-> +                                scu_base + ASPEED_CLK_SELECTION, 2, 0x3, 0,
-> +                                &aspeed_clk_lock);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +       aspeed_clk_data->hws[ASPEED_CLK_ECLK_MUX] = hw;
-> +
-> +       hw = clk_hw_register_divider_table(dev, "eclk", "eclk-mux", 0,
-> +                                          scu_base + ASPEED_CLK_SELECTION, 28,
-> +                                          3, 0, soc_data->eclk_div_table,
-> +                                          &aspeed_clk_lock);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +       aspeed_clk_data->hws[ASPEED_CLK_ECLK] = hw;
-> +
->         /*
->          * TODO: There are a number of clocks that not included in this driver
->          * as more information is required:
-> @@ -531,7 +568,6 @@ static int aspeed_clk_probe(struct platform_device *pdev)
->          *   RGMII
->          *   RMII
->          *   UART[1..5] clock source mux
-> -        *   Video Engine (ECLK) mux and clock divider
->          */
->
->         for (i = 0; i < ARRAY_SIZE(aspeed_gates); i++) {
-> --
-> 1.8.3.1
->
+Applied, thanks.
