@@ -1,64 +1,76 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx: add Zii Ultra board support
-Date: Thu, 11 Apr 2019 14:47:07 +0800
-Message-ID: <20190411064706.GY26817@dragon>
-References: <20190403164555.13941-1-l.stach@pengutronix.de>
- <CAOMZO5CNi_Jd3Cah7poxAt8PuRdP=QT7cfkQUPqS1U9+j7tPMw@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 13/25] drm/mediatek: add gmc_bits for ovl private data
+Date: Thu, 11 Apr 2019 14:48:11 +0800
+Message-ID: <1554965291.4768.10.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1553667561-25447-14-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5CNi_Jd3Cah7poxAt8PuRdP=QT7cfkQUPqS1U9+j7tPMw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, patchwork-lst@pengutronix.de, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1553667561-25447-14-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 11:08:34AM -0300, Fabio Estevam wrote:
-> Hi Lucas,
-> 
-> On Wed, Apr 3, 2019 at 1:45 PM Lucas Stach <l.stach@pengutronix.de> wrote:
-> >
-> > The Zii Ultra design, also known as RDU3, is the i.MX8M based successor
-> > to the the i.MX6 based RDU2. This adds the basic board support for all
-> > components which are supported by the upstream kernel at this time.
-> >
-> > The board comes in 2 different versions, called RMB3 and Zest, which
-> > are derived from the same design, but have different layouts and a
-> > few small differences in the populated components.
-> >
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> 
-> I got the following build error after applying this patch against linux-next:
-> 
->   DTC     arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dtb
-> Error: arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi:438.1-7
-> Label or path pcie0 not found
-> Error: arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi:445.1-7
-> Label or path pcie1 not found
-> FATAL ERROR: Syntax error parsing input tree
-> 
-> We need Andrey's "[PATCH v4 4/5] arm64: dts: imx8mq: Add nodes for
-> PCIe IP blocks" applied first.
-
-Thanks for the notes.  Applied with Andrey's patch in prior.
-
-> 
-> > +       eeti_touch: eeti_i2c@2a {
-> 
-> touchscreen@2a
-> 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Thanks.
-
-Shawn
+SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgZ21jX2JpdHMgZm9yIG92
+bCBwcml2YXRlIGRhdGEKPiBHTUMgcmVnaXN0ZXIgd2FzIHNldCBSRE1BIHVsdHJhIGFuZCBwcmUt
+dWx0cmEgdGhyZXNob2xkLgo+IDEwYml0IEdNQyByZWdpc3RlciBkZWZpbmUgaXMgZGlmZmVyZW50
+IHdpdGggb3RoZXIgU09DLCBnbWNfdGhyc2hkX2wgbm90Cj4gdXNlZC4KClJldmlld2VkLWJ5OiBD
+SyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcg
+Tml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX292bC5jIHwgMjMgKysrKysrKysrKysrKysrKysrKysrLS0KPiAg
+MSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBiL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+IGluZGV4IDI4ZDE5MTEuLmFmYjMx
+M2MgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5j
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gQEAgLTM5
+LDcgKzM5LDkgQEAKPiAgI2RlZmluZSBESVNQX1JFR19PVkxfQUREUl9NVDgxNzMJCTB4MGY0MAo+
+ICAjZGVmaW5lIERJU1BfUkVHX09WTF9BRERSKG92bCwgbikJCSgob3ZsKS0+ZGF0YS0+YWRkciAr
+IDB4MjAgKiAobikpCj4gIAo+IC0jZGVmaW5lCU9WTF9SRE1BX01FTV9HTUMJMHg0MDQwMjAyMAo+
+ICsjZGVmaW5lIEdNQ19USFJFU0hPTERfQklUUwkxNgo+ICsjZGVmaW5lIEdNQ19USFJFU0hPTERf
+SElHSAkoKDEgPDwgR01DX1RIUkVTSE9MRF9CSVRTKSAvIDQpCj4gKyNkZWZpbmUgR01DX1RIUkVT
+SE9MRF9MT1cJKCgxIDw8IEdNQ19USFJFU0hPTERfQklUUykgLyA4KQo+ICAKPiAgI2RlZmluZSBP
+VkxfQ09OX0JZVEVfU1dBUAlCSVQoMjQpCj4gICNkZWZpbmUgT1ZMX0NPTl9NVFhfWVVWX1RPX1JH
+QgkoNiA8PCAxNikKPiBAQCAtNTcsNiArNTksNyBAQAo+ICAKPiAgc3RydWN0IG10a19kaXNwX292
+bF9kYXRhIHsKPiAgCXVuc2lnbmVkIGludCBhZGRyOwo+ICsJdW5zaWduZWQgaW50IGdtY19iaXRz
+Owo+ICAJYm9vbCBmbXRfcmdiNTY1X2lzXzA7Cj4gIH07Cj4gIAo+IEBAIC0xNDAsOSArMTQzLDIz
+IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX292bF9sYXllcl9ucihzdHJ1Y3QgbXRrX2RkcF9j
+b21wICpjb21wKQo+ICBzdGF0aWMgdm9pZCBtdGtfb3ZsX2xheWVyX29uKHN0cnVjdCBtdGtfZGRw
+X2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCBpZHgpCj4gIHsKPiAgCXVuc2lnbmVkIGludCByZWc7
+Cj4gKwl1bnNpZ25lZCBpbnQgZ21jX3RocnNoZF9sOwo+ICsJdW5zaWduZWQgaW50IGdtY190aHJz
+aGRfaDsKPiArCXVuc2lnbmVkIGludCBnbWNfdmFsdWU7Cj4gKwlzdHJ1Y3QgbXRrX2Rpc3Bfb3Zs
+ICpvdmwgPSBjb21wX3RvX292bChjb21wKTsKPiAgCj4gIAl3cml0ZWwoMHgxLCBjb21wLT5yZWdz
+ICsgRElTUF9SRUdfT1ZMX1JETUFfQ1RSTChpZHgpKTsKPiAtCXdyaXRlbChPVkxfUkRNQV9NRU1f
+R01DLCBjb21wLT5yZWdzICsgRElTUF9SRUdfT1ZMX1JETUFfR01DKGlkeCkpOwo+ICsKPiArCWdt
+Y190aHJzaGRfbCA9IEdNQ19USFJFU0hPTERfTE9XID4+Cj4gKwkJICAgICAgKEdNQ19USFJFU0hP
+TERfQklUUyAtIG92bC0+ZGF0YS0+Z21jX2JpdHMpOwo+ICsJZ21jX3RocnNoZF9oID0gR01DX1RI
+UkVTSE9MRF9ISUdIID4+Cj4gKwkJICAgICAgKEdNQ19USFJFU0hPTERfQklUUyAtIG92bC0+ZGF0
+YS0+Z21jX2JpdHMpOwo+ICsJaWYgKG92bC0+ZGF0YS0+Z21jX2JpdHMgPT0gMTApCj4gKwkJZ21j
+X3ZhbHVlID0gZ21jX3RocnNoZF9oIHwgZ21jX3RocnNoZF9oIDw8IDE2Owo+ICsJZWxzZQo+ICsJ
+CWdtY192YWx1ZSA9IGdtY190aHJzaGRfbCB8IGdtY190aHJzaGRfbCA8PCA4IHwKPiArCQkJICAg
+IGdtY190aHJzaGRfaCA8PCAxNiB8IGdtY190aHJzaGRfaCA8PCAyNDsKPiArCXdyaXRlbChnbWNf
+dmFsdWUsIGNvbXAtPnJlZ3MgKyBESVNQX1JFR19PVkxfUkRNQV9HTUMoaWR4KSk7Cj4gIAo+ICAJ
+cmVnID0gcmVhZGwoY29tcC0+cmVncyArIERJU1BfUkVHX09WTF9TUkNfQ09OKTsKPiAgCXJlZyA9
+IHJlZyB8IEJJVChpZHgpOwo+IEBAIC0zMjQsMTEgKzM0MSwxMyBAQCBzdGF0aWMgaW50IG10a19k
+aXNwX292bF9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCj4gIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsX2RhdGEgbXQyNzAxX292bF9kcml2ZXJfZGF0YSA9
+IHsKPiAgCS5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJfTVQyNzAxLAo+ICsJLmdtY19iaXRzID0g
+OCwKPiAgCS5mbXRfcmdiNTY1X2lzXzAgPSBmYWxzZSwKPiAgfTsKPiAgCj4gIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsX2RhdGEgbXQ4MTczX292bF9kcml2ZXJfZGF0YSA9IHsKPiAg
+CS5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJfTVQ4MTczLAo+ICsJLmdtY19iaXRzID0gOCwKPiAg
+CS5mbXRfcmdiNTY1X2lzXzAgPSB0cnVlLAo+ICB9Owo+ICAKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
