@@ -1,77 +1,134 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
- (Camera Sensor Interface)
-Date: Thu, 11 Apr 2019 14:59:51 +0200
-Message-ID: <20190411125951.zkbubk3kqmtiidkr@core.my.home>
-References: <20190408165744.11672-1-wens@kernel.org>
- <20190408165744.11672-5-wens@kernel.org>
- <20190409075804.4zrwjil7ie2gjigu@flea>
- <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
- <20190409082818.z33mq2qrxethldzf@flea>
- <20190409220040.3sx456gefmjq3t3g@core.my.home>
- <4c9aa6a850d76533ff693a44ef95b68241836751.camel@bootlin.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 5/6] riscv: dts: add initial board data for the SiFive
+ HiFive Unleashed
+Date: Thu, 11 Apr 2019 08:03:04 -0500
+Message-ID: <CAL_JsqJ-tF081FoK3_O6vR-MUjefvEqTGWKRpW7K33nzav8eXA@mail.gmail.com>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411084304.5072-6-paul.walmsley@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4c9aa6a850d76533ff693a44ef95b68241836751.camel@bootlin.com>
+In-Reply-To: <20190411084304.5072-6-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 02:47:52PM +0200, Paul Kocialkowski wrote:
-> > > > > If we expect a single enpoint, then we don't need the address-cells
-> > > > > and size-cells properties.
-> > > > 
-> > > > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
-> > > > is kind of genius if not very hacky. They have two "identical" sensors
-> > > > on the same I2C bus and CSI bus, with shared reset line but separate
-> > > > shutdown lines. Since they are identical, they also have the same I2C
-> > > > address. I haven't figured out how to model this in the device tree.
-> > > > 
-> > > > The point is, it's perfectly possible to have two or more sensors use
-> > > > the same controller, provided only one be active at a time.
-> > > 
-> > > Right, but I guess the common case would be to have a single sensor,
-> > > where that wouldn't be needed.
-> > > 
-> > > In odd cases, we can always specify it in the DTS, and if it becomes
-> > > common enough, we can move it to the DTSI.
-> > 
-> > I'm planning on having two sensors there, in a less arcane setup,
-> > though - no shared resets, and different I2C addresses.
-> > 
-> > Anyway, I can confirm that CSI driver works fine on A83T with just
-> > a DTSI patch, even without the clock patch in this series. I've been
-> > running it for quite a while that way without any issues (different
-> > camera chip than the ones being used by wens).
-> 
-> That's quite nice to hear! I would be interested in getting some
-> insight on which sensors are known to work and which are broken or have
-> limitations.
-> 
-> Would you happen to have a list of the sensors that you tested and
-> whether you encountered such issues with them?
+On Thu, Apr 11, 2019 at 3:43 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> Add initial board data for the SiFive HiFive Unleashed A00.
+>
+> Currently the data populated in this DT file describes the board
+> DRAM configuration and the external clock sources that supply the
+> PRCI.
+>
+> This second version adds onboard SPI device data, fixes the board's
+> memory size, and adds changes based on comments from Rob Herring
+> <robh+dt@kernel.org>.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/riscv/boot/dts/sifive/Makefile           |  2 +
+>  .../dts/sifive/hifive-unleashed-a00-fu540.dts | 69 +++++++++++++++++++
+>  2 files changed, 71 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/sifive/Makefile
+>  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+>
+> diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
+> new file mode 100644
+> index 000000000000..fb825db888df
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/sifive/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00-fu540.dtb
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+> new file mode 100644
+> index 000000000000..9d35e811a3aa
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: (Apache-2.0 OR GPL-2.0+)
+> +/* Copyright (c) 2018-2019 SiFive, Inc */
+> +
+> +/dts-v1/;
+> +
+> +#include "fu540-c000.dtsi"
+> +
+> +/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
+> +#define RTCCLK_FREQ            1000000
+> +
+> +/ {
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +       model = "SiFive HiFive Unleashed A00 (FU540-C000)";
+> +       compatible = "sifive,hifive-unleashed-a00-fu540",
+> +               "sifive,hifive-unleashed-fu540",
+> +               "sifive,fu540-c000", "sifive-fu540";
 
-I wrote the driver for the sensor I'm using, so the issues were mostly
-during the development. It's Himax HM5065 sensor (not yet upstream).
+This doesn't match your schema which has 3 entries. Really, 4 entries
+is kind of pointless typically. Usually, just a board and SoC
+compatible are enough.
 
-If you try using other mainline sensors, the issues you'll face will mostly
-be configuring the buses (CSI, I2C) correctly in DTS, or lack of support
-for some VSYNC/HSYNC combinations on the sensor driver side. Luckily, CSI
-controller is quite flexible, and will accomodate lack of configurability
-on the sensor side.
-
-regards,
-  o.
-
-> Cheers,
-> 
-> Paul
-> 
-> -- 
-> Paul Kocialkowski, Bootlin
-> Embedded Linux and kernel engineering
-> https://bootlin.com
-> 
+> +
+> +       chosen {
+> +       };
+> +
+> +       cpus {
+> +               timebase-frequency = <RTCCLK_FREQ>;
+> +       };
+> +
+> +       memory@80000000 {
+> +               device_type = "memory";
+> +               reg = <0x0 0x80000000 0x2 0x00000000>;
+> +       };
+> +
+> +       soc {
+> +       };
+> +
+> +       hfclk: hfclk {
+> +               #clock-cells = <0>;
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <33333333>;
+> +               clock-output-names = "hfclk";
+> +       };
+> +
+> +       rtcclk: rtcclk {
+> +               #clock-cells = <0>;
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <RTCCLK_FREQ>;
+> +               clock-output-names = "rtcclk";
+> +       };
+> +};
+> +
+> +&qspi0 {
+> +       flash@0 {
+> +               compatible = "issi,is25wp256d", "jedec,spi-nor";
+> +               reg = <0>;
+> +               spi-max-frequency = <50000000>;
+> +               m25p,fast-read;
+> +               spi-tx-bus-width = <4>;
+> +               spi-rx-bus-width = <4>;
+> +       };
+> +};
+> +
+> +&qspi2 {
+> +       status = "okay";
+> +       mmc@0 {
+> +               compatible = "mmc-spi-slot";
+> +               reg = <0>;
+> +               spi-max-frequency = <20000000>;
+> +               voltage-ranges = <3300 3300>;
+> +               disable-wp;
+> +       };
+> +};
+> --
+> 2.20.1
+>
