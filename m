@@ -1,109 +1,33 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6ul-pico: Add support for the dwarf
- baseboard
-Date: Thu, 11 Apr 2019 14:57:36 +0800
-Message-ID: <20190411065734.GC26817@dragon>
-References: <20190407193723.3351-1-otavio@ossystems.com.br>
- <20190407193723.3351-2-otavio@ossystems.com.br>
+Subject: Re: [PATCH] ARM: dts: imx6dl-sabreauto: update opp table for auto
+ part
+Date: Thu, 11 Apr 2019 14:59:47 +0800
+Message-ID: <20190411065945.GD26817@dragon>
+References: <1554709166-21952-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190407193723.3351-2-otavio@ossystems.com.br>
+In-Reply-To: <1554709166-21952-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Otavio Salvador <otavio@ossystems.com.br>
-Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 07, 2019 at 04:37:23PM -0300, Otavio Salvador wrote:
-> From: Fabio Estevam <festevam@gmail.com>
+On Mon, Apr 08, 2019 at 07:44:21AM +0000, Anson Huang wrote:
+> Update i.MX6DL automotive part's opp table according to i.MX6DL
+> automotive datasheet Rev.9, 11/2018, it adds 996MHz set-point
+> support as below:
 > 
-> Add support for the imx6ul pico board with dwarf baseboard combination.
+> LDO enabled(min value):
+> 996MHz: VDDARM: 1.275V, VDDSOC: 1.175V;
+> 792MHz: VDDARM: 1.150V, VDDSOC: 1.150V;
+> 396MHz: VDDARM: 1.125V, VDDSOC: 1.150V;
 > 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-> ---
+> Adding 25mV to cover board IR drop, for LDO enabled mode of 996MHz,
+> as the max value of LDO output can NOT exceed 1.3V, so 25mV is NOT
+> added for VDDARM.
 > 
->  arch/arm/boot/dts/Makefile              |  1 +
->  arch/arm/boot/dts/imx6ul-pico-dwarf.dts | 52 +++++++++++++++++++++++++
->  2 files changed, 53 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-pico-dwarf.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a969ca820d41..e4a2349e130e 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -566,6 +566,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
->  	imx6ul-isiot-nand.dtb \
->  	imx6ul-liteboard.dtb \
->  	imx6ul-opos6uldev.dtb \
-> +	imx6ul-pico-dwarf.dtb \
->  	imx6ul-pico-hobbit.dtb \
->  	imx6ul-pico-pi.dtb \
->  	imx6ul-phytec-phyboard-segin-full.dtb \
-> diff --git a/arch/arm/boot/dts/imx6ul-pico-dwarf.dts b/arch/arm/boot/dts/imx6ul-pico-dwarf.dts
-> new file mode 100644
-> index 000000000000..3edd60f46d37
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ul-pico-dwarf.dts
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +//
-> +// Copyright 2015 Technexion Ltd.
-> +//
-> +// Author: Wig Cheng  <wig.cheng@technexion.com>
-> +//	   Richard Hu <richard.hu@technexion.com>
-> +//	   Tapani Utriainen <tapani@technexion.com>
-> +/dts-v1/;
-> +
-> +#include "imx6ul-pico.dtsi"
-> +/ {
-> +	model = "TechNexion PICO-IMX6UL and DWARF baseboard";
-> +	compatible = "technexion,imx6ul-pico-dwarf", "fsl,imx6ul";
-> +
-> +	sound {
-> +		compatible = "fsl,imx-audio-sgtl5000";
-> +		model = "imx6ul-sgtl5000";
-> +		audio-cpu = <&sai1>;
-> +		audio-codec = <&sgtl5000>;
-> +		audio-routing =
-> +			"LINE_IN", "Line In Jack",
-> +			"MIC_IN", "Mic Jack",
-> +			"Mic Jack", "Mic Bias",
-> +			"Headphone Jack", "HP_OUT";
-> +	};
-> +
-> +	sys_mclk: clock-sys-mclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <24576000>;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	clock_frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +
-> +	sgtl5000: codec@a {
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-audio-codec for node name.
-
-Shawn
-
-> +		reg = <0x0a>;
-> +		compatible = "fsl,sgtl5000";
-> +		clocks = <&sys_mclk>;
-> +		VDDA-supply = <&reg_2p5v>;
-> +		VDDIO-supply = <&reg_3p3v>;
-> +	};
-> +
-> +	pressure-sensor@60 {
-> +		compatible = "fsl,mpl3115";
-> +		reg = <0x60>;
-> +	};
-> +};
-> -- 
-> 2.21.0
-> 
+Applied, thanks.
