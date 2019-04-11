@@ -1,26 +1,41 @@
-From: Marek Behun <marek.behun@nic.cz>
-Subject: Re: [PATCH v2 2/7] dt: bindings: Add multicolor class dt bindings
- documention
-Date: Fri, 12 Apr 2019 00:07:07 +0200
-Message-ID: <20190412000707.70f8319f@nic.cz>
-References: <20190411193848.23140-1-dmurphy@ti.com>
-        <20190411193848.23140-3-dmurphy@ti.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v1 0/3] memory: Introduce NVIDIA Tegra30 EMC driver
+Date: Fri, 12 Apr 2019 02:02:18 +0300
+Message-ID: <20190411230221.31362-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411193848.23140-3-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
-this probaly was discussed, but I did not follow brightness model
-discussions:
-what will happen if I set yellow by writing into yellow mode
-brightness, and then orange by writing orange model brightness?
-Will the resulting color be a mix of yellow and orange, or will the
-orange overwrite the yellow setting?
+Hello,
 
-Marek
+This patchset adds driver for the External Memory Controller of NVIDIA
+Tegra30 SoC's. It performs memory hardware configuration that is required
+for changing DRAM frequency, thus providing facility for the memory
+frequency scaling on Tegra30. The memory scaling was tested using the
+Tegra's devfreq driver which is available in upstream, it dynamically
+changes memory clock rate based on memory clients activity.
+
+Dmitry Osipenko (3):
+  dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
+    Controller
+  memory: tegra: Introduce Tegra30 EMC driver
+  ARM: dts: tegra30: Add External Memory Controller node
+
+ .../memory-controllers/nvidia,tegra30-emc.txt |  257 ++++
+ arch/arm/boot/dts/tegra30.dtsi                |   11 +
+ drivers/memory/tegra/Kconfig                  |   10 +
+ drivers/memory/tegra/Makefile                 |    1 +
+ drivers/memory/tegra/mc.c                     |    3 -
+ drivers/memory/tegra/mc.h                     |   30 +-
+ drivers/memory/tegra/tegra30-emc.c            | 1106 +++++++++++++++++
+ drivers/memory/tegra/tegra30.c                |   44 +
+ 8 files changed, 1450 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
+ create mode 100644 drivers/memory/tegra/tegra30-emc.c
+
+-- 
+2.21.0
