@@ -1,48 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 06/12] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Thu, 11 Apr 2019 08:00:23 -0700
-Message-ID: <20190411150023.GQ2839@atomide.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-7-lokeshvutla@ti.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 0/8] Add Allwinner H6 Mali Midgard GPU
+Date: Thu, 11 Apr 2019 17:01:03 +0200
+Message-ID: <2219012.spPdo1bsEq@jernej-laptop>
+References: <20190411105720.32357-1-peron.clem@gmail.com> <20190411123223.zyumngnlwhlvk6mf@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190410041358.16809-7-lokeshvutla@ti.com>
+In-Reply-To: <20190411123223.zyumngnlwhlvk6mf@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi!
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
-> +Example:
-> +--------
-> +The following example demonstrates both interrupt router node and the consumer
-> +node(main gpio) on the AM654 SoC:
-> +
-> +main_intr: interrupt-controller0 {
-> +	compatible = "ti,sci-intr";
-> +	ti,intr-trigger-type = <1>;
-> +	interrupt-controller;
-> +	interrupt-parent = <&gic500>;
-> +	#interrupt-cells = <3>;
-> +	ti,sci = <&dmsc>;
-> +	ti,sci-dst-id = <56>;
-> +	ti,sci-rm-range-girq = <0x1>;
-> +};
+Dne četrtek, 11. april 2019 ob 14:32:23 CEST je Maxime Ripard napisal(a):
+> On Thu, Apr 11, 2019 at 12:57:12PM +0200, Clément Péron wrote:
+> > Hi,
+> > 
+> > The Allwinner H6 has a Mali-T720 MP2. The drivers are
+> > out-of-tree so this series only introduce the dt-bindings.
+> > 
+> > The first patch is from Neil Amstrong and has been already
+> > merged in linux-amlogic. It is required for this series.
+> > 
+> > The second patch is from Icenowy Zheng where I changed the
+> > order has required by Rob Herring.
+> > See: https://patchwork.kernel.org/patch/10699829/
+> > 
+> > The GPU opp table was taken from Jernej Škrabec's patch
+> > on LibreELEC.tv.
+> 
+> One valuable information here would be which stack did you use,
+> panfrost and mesa or the ARM stack? If so, with which driver and which
+> blob?
 
-To me it seems there should not be too many of these interrupt
-controller nodes for each SoC. Maybe you're already planning on
-doing it, but I suggest that you just add more specific compatibles
-and then look up the dst-id from a mapping table in the driver
-similar to what patch 04/12 in this series is already doing.
+I'm using similar binding (different clock and interrupt names, but otherwise  
+same) for quiet some time now on LibreELEC with ARM proprietary userspace and 
+kernel space driver (32-bit GBM version) and it works well.
 
-That way you don't need to add custom TI specific (firmware
-defined) device tree properties listed above ;)
+It's true that I'm using OPP table, but most (if not all) of the time GPU is 
+set to lowest setting as there is not much to do when rendering GUI.
 
-Regards,
-
-Tony
+Best regards,
+Jernej
