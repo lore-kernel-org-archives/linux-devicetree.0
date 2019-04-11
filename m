@@ -1,139 +1,61 @@
-Return-Path: <SRS0=Uozk=SO=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v6 4/6] iio: gyro: fxas21002c: add spi driver
-Date: Fri, 12 Apr 2019 17:48:59 +0100
-Message-Id: <20190412164901.2321-5-rui.silva@linaro.org>
-In-Reply-To: <20190412164901.2321-1-rui.silva@linaro.org>
-References: <20190412164901.2321-1-rui.silva@linaro.org>
+Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH 24/30] arm64: tegra: Add PEX DPD states as pinctrl properties
+Date: Thu, 11 Apr 2019 22:33:49 +0530
+Message-ID: <20190411170355.6882-25-mmaddireddy@nvidia.com>
+In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add driver to talk over spi to a fxas21002c gyroscope device and use
-the core as main controller.
+Add PEX DPD states as pinctrl properties to set in PCIe driver. In Tegra210
+BIAS pads are not in power down mode when clamps are applied. So to set the
+pads in DPD, pass the PEX DPD states as pinctrl properties to PCIe driver.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
- drivers/iio/gyro/Kconfig          |  7 +++-
- drivers/iio/gyro/Makefile         |  1 +
- drivers/iio/gyro/fxas21002c_spi.c | 70 +++++++++++++++++++++++++++++++
- 3 files changed, 77 insertions(+), 1 deletion(-)
- create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index 71b6552ee06b..61c00cee037d 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -78,7 +78,8 @@ config FXAS21002C
-        select IIO_BUFFER
-        select IIO_TRIGGERED_BUFFER
-        select FXAS21002C_I2C if (I2C)
--       depends on I2C
-+       select FXAS21002C_SPI if (SPI)
-+       depends on (I2C || SPI_MASTER)
-        help
-          Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
-          Sensor driver connected via I2C or SPI.
-@@ -90,6 +91,10 @@ config FXAS21002C_I2C
-        tristate
-        select REGMAP_I2C
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index a550c0a4d572..876e32e6d577 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -48,6 +48,11 @@
+ 			 <&tegra_car 72>,
+ 			 <&tegra_car 74>;
+ 		reset-names = "pex", "afi", "pcie_x";
++
++		pinctrl-names = "pex-dpd-disable", "pex-dpd-enable";
++		pinctrl-0 = <&pex_dpd_disable>;
++		pinctrl-1 = <&pex_dpd_enable>;
++
+ 		status = "disabled";
  
-+config FXAS21002C_SPI
-+       tristate
-+       select REGMAP_SPI
+ 		pci@1,0 {
+@@ -848,6 +853,20 @@
+ 			pins = "sdmmc3";
+ 			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
+ 		};
 +
- config HID_SENSOR_GYRO_3D
- 	depends on HID_SENSOR_HUB
- 	select IIO_BUFFER
-diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
-index adc18a5eb283..45cbd5dc644e 100644
---- a/drivers/iio/gyro/Makefile
-+++ b/drivers/iio/gyro/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
- obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
- obj-$(CONFIG_FXAS21002C) += fxas21002c_core.o
- obj-$(CONFIG_FXAS21002C_I2C) += fxas21002c_i2c.o
-+obj-$(CONFIG_FXAS21002C_SPI) += fxas21002c_spi.o
++		pex_dpd_disable: pex_en {
++			pex-dpd-disable {
++				pins = "pex-bias", "pex-clk1", "pex-clk2";
++				low-power-disable;
++			};
++		};
++
++		pex_dpd_enable: pex_dis {
++			pex-dpd-enable {
++				pins = "pex-bias", "pex-clk1", "pex-clk2";
++				low-power-enable;
++			};
++		};
+ 	};
  
- obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
- 
-diff --git a/drivers/iio/gyro/fxas21002c_spi.c b/drivers/iio/gyro/fxas21002c_spi.c
-new file mode 100644
-index 000000000000..77ceebef4e34
---- /dev/null
-+++ b/drivers/iio/gyro/fxas21002c_spi.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for NXP Fxas21002c Gyroscope - SPI
-+ *
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+
-+#include "fxas21002c.h"
-+
-+static const struct regmap_config fxas21002c_regmap_spi_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = FXAS21002C_REG_CTRL3,
-+};
-+
-+static int fxas21002c_spi_probe(struct spi_device *spi)
-+{
-+	const struct spi_device_id *id = spi_get_device_id(spi);
-+	struct regmap *regmap;
-+
-+	regmap = devm_regmap_init_spi(spi, &fxas21002c_regmap_spi_conf);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&spi->dev, "Failed to register spi regmap: %ld\n",
-+			PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
-+	}
-+
-+	return fxas21002c_core_probe(&spi->dev, regmap, spi->irq, id->name);
-+}
-+
-+static int fxas21002c_spi_remove(struct spi_device *spi)
-+{
-+	fxas21002c_core_remove(&spi->dev);
-+
-+	return 0;
-+}
-+
-+static const struct spi_device_id fxas21002c_spi_id[] = {
-+	{ "fxas21002c", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, fxas21002c_spi_id);
-+
-+static const struct of_device_id fxas21002c_spi_of_match[] = {
-+	{ .compatible = "nxp,fxas21002c", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, fxas21002c_spi_of_match);
-+
-+static struct spi_driver fxas21002c_spi_driver = {
-+	.driver = {
-+		.name = "fxas21002c_spi",
-+		.pm = &fxas21002c_pm_ops,
-+		.of_match_table = fxas21002c_spi_of_match,
-+	},
-+	.probe		= fxas21002c_spi_probe,
-+	.remove		= fxas21002c_spi_remove,
-+	.id_table	= fxas21002c_spi_id,
-+};
-+module_spi_driver(fxas21002c_spi_driver);
-+
-+MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("FXAS21002C SPI Gyro driver");
+ 	fuse@7000f800 {
 -- 
-2.21.0
+2.17.1
