@@ -1,129 +1,346 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [v3 PATCH 4/6] usb: roles: add API to get usb_role_switch by node
-Date: Thu, 11 Apr 2019 11:11:09 +0800
-Message-ID: <1554952269.10179.185.camel@mhfsdcap03>
-References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
- <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
- <20190410102239.GG20058@kuha.fi.intel.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date: Thu, 11 Apr 2019 09:33:35 +0530
+Message-ID: <20190411040335.qckm7zyiqwbanykx@vireshk-i7>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com>
+ <20190410174139.20012-2-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190410102239.GG20058@kuha.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190410174139.20012-2-tiny.windzz@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-04-10 at 13:22 +0300, Heikki Krogerus wrote:
-> On Wed, Apr 03, 2019 at 10:09:12AM +0800, Chunfeng Yun wrote:
-> > Add fwnode_usb_role_switch_get() to make easier to get
-> > usb_role_switch by fwnode which register it.
-> > It's useful when there is not device_connection registered
-> > between two drivers and only knows the fwnode which register
-> > usb_role_switch.
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v3 changes:
-> >   1. use fwnodes instead of node suggested by Andy
-> >   2. rebuild the API suggested by Heikki
-> > 
-> > v2 no changes
-> > ---
-> >  drivers/usb/roles/class.c | 31 +++++++++++++++++++++++++++++++
-> >  include/linux/usb/role.h  |  2 ++
-> >  2 files changed, 33 insertions(+)
-> > 
-> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> > index f45d8df5cfb8..5ecb57f8960b 100644
-> > --- a/drivers/usb/roles/class.c
-> > +++ b/drivers/usb/roles/class.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/mutex.h>
-> > +#include <linux/of.h>
-> >  #include <linux/slab.h>
-> >  
-> >  static struct class *role_class;
-> > @@ -135,6 +136,36 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_role_switch_get);
-> >  
-> > +static int __switch_match_fwnode(struct device *dev, const void *fwnode)
-> > +{
-> > +	return dev_fwnode(dev->parent) == (const struct fwnode_handle *)fwnode;
-> > +}
+On 10-04-19, 13:41, Yangtao Li wrote:
+> For some SoCs, the CPU frequency subset and voltage value of each OPP
+> varies based on the silicon variant in use. The sunxi-cpufreq-nvmem
+> driver reads the efuse value from the SoC to provide the OPP framework
+> with required information.
 > 
-> I don't think this is actually needed. 
-Yes, you are right
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  MAINTAINERS                           |   7 +
+>  drivers/cpufreq/Kconfig.arm           |  10 ++
+>  drivers/cpufreq/Makefile              |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c  |   2 +
+>  drivers/cpufreq/sunxi-cpufreq-nvmem.c | 232 ++++++++++++++++++++++++++
+>  5 files changed, 252 insertions(+)
+>  create mode 100644 drivers/cpufreq/sunxi-cpufreq-nvmem.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 391405091c6b..bfd18ba6aa1a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -667,6 +667,13 @@ S:	Maintained
+>  F:	Documentation/i2c/busses/i2c-ali1563
+>  F:	drivers/i2c/busses/i2c-ali1563.c
+>  
+> +ALLWINNER CPUFREQ DRIVER
+> +M:	Yangtao Li <tiny.windzz@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> +F:	drivers/cpufreq/sunxi-cpufreq-nvmem.c
+> +
+>  ALLWINNER SECURITY SYSTEM
+>  M:	Corentin Labbe <clabbe.montjoie@gmail.com>
+>  L:	linux-crypto@vger.kernel.org
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 179a1d302f48..25933c4321a7 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -18,6 +18,16 @@ config ACPI_CPPC_CPUFREQ
+>  
+>  	  If in doubt, say N.
+>  
+> +config ARM_ALLWINNER_CPUFREQ_NVMEM
+> +	tristate "Allwinner nvmem based CPUFreq"
+> +	depends on ARCH_SUNXI
+> +	depends on NVMEM_SUNXI_SID
+> +	select PM_OPP
+> +	help
+> +	  This adds the CPUFreq driver for Allwinner nvmem based SoC.
+> +
+> +	  If in doubt, say N.
+> +
+>  config ARM_ARMADA_37XX_CPUFREQ
+>  	tristate "Armada 37xx CPUFreq support"
+>  	depends on ARCH_MVEBU && CPUFREQ_DT
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 689b26c6f949..da28de67613c 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -78,6 +78,7 @@ obj-$(CONFIG_ARM_SCMI_CPUFREQ)		+= scmi-cpufreq.o
+>  obj-$(CONFIG_ARM_SCPI_CPUFREQ)		+= scpi-cpufreq.o
+>  obj-$(CONFIG_ARM_SPEAR_CPUFREQ)		+= spear-cpufreq.o
+>  obj-$(CONFIG_ARM_STI_CPUFREQ)		+= sti-cpufreq.o
+> +obj-$(CONFIG_ARM_ALLWINNER_CPUFREQ_NVMEM) += sunxi-cpufreq-nvmem.o
+>  obj-$(CONFIG_ARM_TANGO_CPUFREQ)		+= tango-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index 47729a22c159..50e7810f3a28 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -105,6 +105,8 @@ static const struct of_device_id whitelist[] __initconst = {
+>   * platforms using "operating-points-v2" property.
+>   */
+>  static const struct of_device_id blacklist[] __initconst = {
+> +	{ .compatible = "allwinner,sun50i-h6", },
+> +
+>  	{ .compatible = "calxeda,highbank", },
+>  	{ .compatible = "calxeda,ecx-2000", },
+>  
+> diff --git a/drivers/cpufreq/sunxi-cpufreq-nvmem.c b/drivers/cpufreq/sunxi-cpufreq-nvmem.c
+> new file mode 100644
+> index 000000000000..6bf4755d00d9
+> --- /dev/null
+> +++ b/drivers/cpufreq/sunxi-cpufreq-nvmem.c
+> @@ -0,0 +1,232 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Allwinner CPUFreq nvmem based driver
+> + *
+> + * The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> + * provide the OPP framework with required information.
+> + *
+> + * Copyright (C) 2019 Yangtao Li <tiny.windzz@gmail.com>
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/slab.h>
+> +
+> +#define MAX_NAME_LEN      7
+> +
+> +struct sunxi_cpufreq_soc_data {
+> +	u32 (*efuse_xlate)(const struct sunxi_cpufreq_soc_data *soc_data,
+> +			   u32 efuse);
+> +	u32 nvmem_mask;
+> +	u32 nvmem_shift;
+> +};
+> +
+> +static struct platform_device *cpufreq_dt_pdev, *sunxi_cpufreq_pdev;
+> +
+> +static u32 sun50i_efuse_xlate(const struct sunxi_cpufreq_soc_data *soc_data,
+> +			      u32 efuse)
+> +{
+> +	return (efuse >> soc_data->nvmem_shift) & soc_data->nvmem_mask;
+> +}
+> +
+> +/**
+> + * sunxi_cpufreq_get_efuse() - Parse and return efuse value present on SoC
+> + * @soc_data: Pointer to sunxi_cpufreq_soc_data context
+> + * @versions: Set to the value parsed from efuse
+> + *
+> + * Returns 0 if success.
+> + */
+> +static int sunxi_cpufreq_get_efuse(const struct sunxi_cpufreq_soc_data *soc_data,
+> +				   u32 *versions)
+> +{
+> +	struct nvmem_cell *speedbin_nvmem;
+> +	struct device_node *np;
+> +	struct device *cpu_dev;
+> +	u32 *speedbin;
+> +	size_t len;
+> +	int ret;
+> +
+> +	cpu_dev = get_cpu_device(0);
+> +	if (!cpu_dev)
+> +		return -ENODEV;
+> +
+> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+> +	if (!np)
+> +		return -ENOENT;
+> +
+> +	ret = of_device_is_compatible(np, "allwinner,cpu-operating-points-v2");
+> +	if (!ret) {
+> +		of_node_put(np);
+> +		return -ENOENT;
+> +	}
+> +
+> +	speedbin_nvmem = of_nvmem_cell_get(np, NULL);
+> +	of_node_put(np);
+> +	if (IS_ERR(speedbin_nvmem)) {
+> +		if (PTR_ERR(speedbin_nvmem) != -EPROBE_DEFER)
+> +			pr_err("Could not get nvmem cell: %ld\n",
+> +			PTR_ERR(speedbin_nvmem));
+> +		return PTR_ERR(speedbin_nvmem);
+> +	}
+> +
+> +	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
+> +	nvmem_cell_put(speedbin_nvmem);
+> +	if (IS_ERR(speedbin))
+> +		return PTR_ERR(speedbin);
+> +
+> +	*versions = soc_data->efuse_xlate(soc_data, *speedbin);
+> +
+> +	kfree(speedbin);
+> +	return 0;
+> +};
+> +
+> +static const struct sunxi_cpufreq_soc_data sun50i_h6_data = {
+> +	.efuse_xlate = sun50i_efuse_xlate,
+> +	.nvmem_mask = 0x7,
+> +	.nvmem_shift = 5,
+> +};
+> +
+> +static const struct of_device_id sunxi_cpufreq_match_list[] = {
+> +	{ .compatible = "allwinner,sun50i-h6", .data = &sun50i_h6_data },
+> +	{}
+> +};
+> +
+> +static const struct of_device_id *sunxi_cpufreq_match_node(void)
+> +{
+> +	struct device_node *np;
+> +	const struct of_device_id *match;
+> +
+> +	np = of_find_node_by_path("/");
+> +	match = of_match_node(sunxi_cpufreq_match_list, np);
+> +	of_node_put(np);
+> +
+> +	return match;
+> +}
+> +
 
-> Why not just assign the
-> parent's fwnode for the mux as well?
-will do it in next version
+As I said in the previous version, this should have been moved to somewhere
+below. i.e. right above the routine that needs it.
 
-> 
-> I'll add an example to the patch 6/6 in this series.
-> 
-> > +/**
-> > + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
-> > + * @fwnode: The fwnode that register USB role switch
-> > + *
-> > + * Finds and returns role switch registered by @fwnode. The reference count
-> > + * for the found switch is incremented.
-> > + */
-> > +struct usb_role_switch *
-> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
-> > +{
-> > +	struct usb_role_switch *sw;
-> > +	struct device *dev;
-> > +
-> > +	dev = class_find_device(role_class, NULL, fwnode,
-> > +				__switch_match_fwnode);
-> 
-> So here you can then reuse switch_fwnode_match():
-> 
-> 	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
-I make a fast test, it works, thanks a lot Heikki
+> +static int sunxi_cpufreq_nvmem_probe(struct platform_device *pdev)
+> +{
+> +	struct opp_table **opp_tables;
+> +	const struct of_device_id *match;
+> +	char name[MAX_NAME_LEN];
+> +	unsigned int cpu;
+> +	u32 speed = 0;
+> +	int ret;
+> +
+> +	opp_tables = kcalloc(num_possible_cpus(), sizeof(*opp_tables),
+> +			     GFP_KERNEL);
+> +	if (!opp_tables)
+> +		return -ENOMEM;
+> +
+> +	match = dev_get_platdata(&pdev->dev);
 
-> 
-> > +	if (!dev)
-> > +		return ERR_PTR(-EPROBE_DEFER);
-> > +
-> > +	sw = to_role_switch(dev);
-> > +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-> > +
-> > +	return sw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
-> > +
-> >  /**
-> >   * usb_role_switch_put - Release handle to a switch
-> >   * @sw: USB Role Switch
-> > diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-> > index c05ffa6abda9..d21cd55d9e45 100644
-> > --- a/include/linux/usb/role.h
-> > +++ b/include/linux/usb/role.h
-> > @@ -46,6 +46,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
-> >  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
-> >  struct usb_role_switch *usb_role_switch_get(struct device *dev);
-> >  void usb_role_switch_put(struct usb_role_switch *sw);
-> > +struct usb_role_switch *
-> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
-> >  
-> >  struct usb_role_switch *
-> >  usb_role_switch_register(struct device *parent,
-> > -- 
-> > 2.20.1
-> 
-> thanks,
-> 
+Also, you should have just passed match->data instead of match here.
+
+> +	if (!match)
+> +		return -EINVAL;
+> +
+> +	ret = sunxi_cpufreq_get_efuse(match->data, &speed);
+> +	if (ret)
+> +		return ret;
+> +
+> +	snprintf(name, MAX_NAME_LEN, "speed%d", speed);
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		struct device *cpu_dev = get_cpu_device(cpu);
+> +
+> +		if (NULL == cpu_dev) {
+> +			ret = -ENODEV;
+> +			goto free_opp;
+> +		}
+> +
+> +		opp_tables[cpu] = dev_pm_opp_set_prop_name(cpu_dev, name);
+> +		if (IS_ERR(opp_tables[cpu])) {
+> +			ret = PTR_ERR(opp_tables[cpu]);
+> +			pr_err("Failed to set prop name\n");
+> +			goto free_opp;
+> +		}
+> +	}
+> +
+> +	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
+> +							  NULL, 0);
+> +	if (!IS_ERR(cpufreq_dt_pdev)) {
+> +		platform_set_drvdata(pdev, opp_tables);
+> +		return 0;
+> +	}
+> +
+> +	ret = PTR_ERR(cpufreq_dt_pdev);
+> +	pr_err("Failed to register platform device\n");
+> +
+> +free_opp:
+> +	for_each_possible_cpu(cpu) {
+> +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
+> +			break;
+> +		dev_pm_opp_put_prop_name(opp_tables[cpu]);
+> +	}
+> +	kfree(opp_tables);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sunxi_cpufreq_nvmem_remove(struct platform_device *pdev)
+> +{
+> +	struct opp_table **opp_tables = platform_get_drvdata(pdev);
+> +	unsigned int cpu;
+> +
+> +	platform_device_unregister(cpufreq_dt_pdev);
+> +
+> +	for_each_possible_cpu(cpu)
+> +		dev_pm_opp_put_prop_name(opp_tables[cpu]);
+> +
+> +	kfree(opp_tables);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver sunxi_cpufreq_driver = {
+> +	.probe = sunxi_cpufreq_nvmem_probe,
+> +	.remove = sunxi_cpufreq_nvmem_remove,
+> +	.driver = {
+> +		.name = "sunxi-cpufreq-nvmem",
+> +	},
+> +};
+> +
+> +/*
+> + * Since the driver depends on nvmem drivers, which may return EPROBE_DEFER,
+> + * all the real activity is done in the probe, which may be defered as well.
+> + * The init here is only registering the driver and the platform device.
+> + */
+> +static int __init sunxi_cpufreq_init(void)
+> +{
+> +	const struct of_device_id *match;
+> +	int ret;
+> +
+> +	match = sunxi_cpufreq_match_node();
+> +	if (!match)
+> +		return -ENODEV;
+> +
+> +	ret = platform_driver_register(&sunxi_cpufreq_driver);
+> +	if (unlikely(ret < 0))
+> +		return ret;
+> +
+> +	sunxi_cpufreq_pdev = platform_device_register_data(NULL,
+> +		"sunxi-cpufreq-nvmem", -1, match, sizeof(*match));
+> +	ret = PTR_ERR_OR_ZERO(sunxi_cpufreq_pdev);
+> +	if (0 == ret)
+> +		return 0;
+> +
+> +	platform_driver_unregister(&sunxi_cpufreq_driver);
+> +	return ret;
+> +}
+> +module_init(sunxi_cpufreq_init);
+> +
+> +static void __exit sunxi_cpufreq_exit(void)
+> +{
+> +	platform_device_unregister(sunxi_cpufreq_pdev);
+> +	platform_driver_unregister(&sunxi_cpufreq_driver);
+> +}
+> +module_exit(sunxi_cpufreq_exit);
+> +
+> +MODULE_DESCRIPTION("Sunxi cpufreq driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.0
+
+-- 
+viresh
