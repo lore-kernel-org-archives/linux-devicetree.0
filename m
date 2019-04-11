@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v3 08/11] arm64: dts: allwinner: orange-pi-3:
- Enable HDMI output
-Date: Thu, 11 Apr 2019 12:19:48 +0200
-Message-ID: <20190411101951.30223-9-megous@megous.com>
+Subject: [PATCH v3 03/11] pinctrl: sunxi: Prepare for
+ alternative bias voltage setting methods
+Date: Thu, 11 Apr 2019 12:19:43 +0200
+Message-ID: <20190411101951.30223-4-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBTVJXTSQKGQE3UL7AXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBTFJXTSQKGQEYOKWITI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190411101951.30223-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,80 +21,120 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
-I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
+H6 has a different I/O voltage bias setting method than A80. Prepare
+existing code for using alternative bias voltage setting methods.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 47 +++++++++++++----------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  9 ++++-
+ 3 files changed, 36 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 6d6b1f66796d..58a6635c909e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -22,6 +22,18 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+		ddc-supply = <&reg_ddc>;
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -37,6 +49,15 @@
- 		};
- 	};
- 
-+	reg_ddc: ddc-io {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ddc-io";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+	};
-+
- 	reg_vcc5v: vcc5v {
- 		/* board wide 5V supply directly from the DC jack */
- 		compatible = "regulator-fixed";
-@@ -72,6 +93,10 @@
- 	cpu-supply = <&reg_dcdca>;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+index da37d594a13d..0633a03d5e13 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
+@@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
+ 	.npins = ARRAY_SIZE(sun9i_a80_pins),
+ 	.irq_banks = 5,
+ 	.disable_strict_mode = true,
+-	.has_io_bias_cfg = true,
++	.io_bias_cfg_variant = BIAS_VOLTAGE_GRP_CONFIG,
  };
  
-+&de {
-+	status = "okay";
+ static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index be04223591d4..98c4de5f4019 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -617,7 +617,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 	u32 val, reg;
+ 	int uV;
+ 
+-	if (!pctl->desc->has_io_bias_cfg)
++	if (!pctl->desc->io_bias_cfg_variant)
+ 		return 0;
+ 
+ 	uV = regulator_get_voltage(supply);
+@@ -628,25 +628,32 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+ 	if (uV == 0)
+ 		return 0;
+ 
+-	/* Configured value must be equal or greater to actual voltage */
+-	if (uV <= 1800000)
+-		val = 0x0; /* 1.8V */
+-	else if (uV <= 2500000)
+-		val = 0x6; /* 2.5V */
+-	else if (uV <= 2800000)
+-		val = 0x9; /* 2.8V */
+-	else if (uV <= 3000000)
+-		val = 0xA; /* 3.0V */
+-	else
+-		val = 0xD; /* 3.3V */
+-
+-	pin -= pctl->desc->pin_base;
+-
+-	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
+-	reg &= ~IO_BIAS_MASK;
+-	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
+-
+-	return 0;
++	switch (pctl->desc->io_bias_cfg_variant) {
++	case BIAS_VOLTAGE_GRP_CONFIG:
++		/*
++		 * Configured value must be equal or greater to actual
++		 * voltage.
++		 */
++		if (uV <= 1800000)
++			val = 0x0; /* 1.8V */
++		else if (uV <= 2500000)
++			val = 0x6; /* 2.5V */
++		else if (uV <= 2800000)
++			val = 0x9; /* 2.8V */
++		else if (uV <= 3000000)
++			val = 0xA; /* 3.0V */
++		else
++			val = 0xD; /* 3.3V */
++
++		pin -= pctl->desc->pin_base;
++
++		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
++		reg &= ~IO_BIAS_MASK;
++		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
++		return 0;
++	default:
++		return -EINVAL;
++	}
+ }
+ 
+ static int sunxi_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index ee15ab067b5f..4bfc8a6d9dce 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -95,6 +95,13 @@
+ #define PINCTRL_SUN7I_A20	BIT(7)
+ #define PINCTRL_SUN8I_R40	BIT(8)
+ 
++enum sunxi_desc_bias_voltage {
++	BIAS_VOLTAGE_NONE,
++	/* Bias voltage configuration is done through
++	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
++	BIAS_VOLTAGE_GRP_CONFIG,
 +};
 +
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +116,16 @@
- 	status = "okay";
+ struct sunxi_desc_function {
+ 	unsigned long	variant;
+ 	const char	*name;
+@@ -117,7 +124,7 @@ struct sunxi_pinctrl_desc {
+ 	const unsigned int		*irq_bank_map;
+ 	bool				irq_read_needs_mux;
+ 	bool				disable_strict_mode;
+-	bool				has_io_bias_cfg;
++	int				io_bias_cfg_variant;
  };
  
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ struct sunxi_pinctrl_function {
 -- 
 2.21.0
