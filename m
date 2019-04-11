@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/8] dt-bindings: gpu: mali-midgard: Add h6
- mali gpu compatible
-Date: Thu, 11 Apr 2019 12:57:15 +0200
-Message-ID: <20190411105720.32357-4-peron.clem@gmail.com>
+Subject: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali GPU
+ node for H6
+Date: Thu, 11 Apr 2019 12:57:16 +0200
+Message-ID: <20190411105720.32357-5-peron.clem@gmail.com>
 References: <20190411105720.32357-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBTFWXTSQKGQE2CZANZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBTVWXTSQKGQEVDZKBSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190411105720.32357-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,44 +21,39 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add the H6 mali compatible in the dt-bindings to later support
-specific implementation.
+Add the mali gpu node to the H6 device-tree.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
-ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 2e8bbce35695..0000ec4a9f44 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -15,6 +15,7 @@ Required properties:
-     + "arm,mali-t860"
-     + "arm,mali-t880"
-   * which must be preceded by one of the following vendor specifics:
-+    + "allwinner,sun50i-h6-mali"
-     + "amlogic,meson-gxm-mali"
-     + "rockchip,rk3288-mali"
-     + "rockchip,rk3399-mali"
-@@ -49,9 +50,15 @@ Vendor-specific bindings
- ------------------------
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
+/dts/allwinner/sun50i-h6.dtsi
+index e0dc4a05c1ba..196753110434 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -157,6 +157,20 @@
+ 			allwinner,sram =3D <&ve_sram 1>;
+ 		};
 =20
- The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
-+another. In order to accommodate those differences, you have the option
- to specify one more vendor-specific compatible, among:
-=20
-+- "allwinner,sun50i-h6-mali"
-+  Required properties:
-+  - clocks : phandles to core and bus clocks
-+  - clock-names : must contain "core" and "bus"
-+  - resets: phandle to GPU reset line
++		gpu: gpu@1800000 {
++			compatible =3D "allwinner,sun50i-h6-mali",
++				     "arm,mali-t720";
++			reg =3D <0x01800000 0x4000>;
++			interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names =3D "job", "mmu", "gpu";
++			clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
++			clock-names =3D "core", "bus";
++			resets =3D <&ccu RST_BUS_GPU>;
++			status =3D "disabled";
++		};
 +
- - "amlogic,meson-gxm-mali"
-   Required properties:
-   - resets : Should contain phandles of :
+ 		syscon: syscon@3000000 {
+ 			compatible =3D "allwinner,sun50i-h6-system-control",
+ 				     "allwinner,sun50i-a64-system-control";
 --=20
 2.17.1
 
