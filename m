@@ -1,52 +1,44 @@
-Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 03/13] dt-bindings: rcar-gen3-phy-usb2: Add r8a77470 support
-Date: Wed, 10 Apr 2019 15:48:40 +0100
-Message-Id: <1554907730-14792-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:50012 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfDKHzE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:55:04 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH v2 13/20] ARM: dts: r8a77470: Add can clocks
+Date: Thu, 11 Apr 2019 16:54:15 +0900
+Message-Id: <1554969262-15028-14-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/G1C (R8A77470) SoC bindings.
+Add can_clk node to dtsi for can support on the RZ/G1C (r8a77470) SoC.
 
-For RZ/G1C, this driver is used to enable interrupt generation and
-initializing timing registers which is part of phy_init code.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
-V4-->V5
-  * No Change
-V3-->V4
-  * No Change
-V2-->V3
-  * New patch
-    https://patchwork.kernel.org/patch/10879899/
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a77470.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index ad9c290..23894db 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -1,10 +1,12 @@
- * Renesas R-Car generation 3 USB 2.0 PHY
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index fcf8dd0..8a6bff9 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -48,6 +48,14 @@
+ 		clock-frequency = <0>;
+ 	};
  
- This file provides information on what the device node for the R-Car generation
--3 and RZ/G2 USB 2.0 PHY contain.
-+3, RZ/G1C and RZ/G2 USB 2.0 PHY contain.
- 
- Required properties:
--- compatible: "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
-+- compatible: "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
-+	      SoC.
-+	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
- 	      SoC.
- 	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
- 	      SoC.
++	/* External CAN clock */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.7.4
