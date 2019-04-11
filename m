@@ -1,49 +1,54 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 0/2] PCI: Describe external-facing ports in device tree
-Date: Thu, 11 Apr 2019 16:18:23 -0500
-Message-ID: <20190411211823.GU256045@google.com>
-References: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
+ DT source data
+Date: Thu, 11 Apr 2019 14:38:02 -0700
+Message-ID: <b1f10ff7-6c45-1468-c97c-ff301bb66966@wdc.com>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com>
+ <20190411114616.GA10032@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Mark.Rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, robh+dt@kernel.org, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190411114616.GA10032@infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Christoph Hellwig <hch@infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 01:40:25PM +0100, Jean-Philippe Brucker wrote:
-> Since v2 [1] I fixed a possible NULL dereference reported by smatch,
-> sorry about that. I dropped all tags for patch 2.
+On 4/11/19 4:46 AM, Christoph Hellwig wrote:
+> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
+>> Similar to ARM64, add support for building DTB files from DT source
+>> data for RISC-V boards.
+>>
+>> This patch starts with the infrastructure needed for SiFive boards.
+>> Boards from other vendors would add support here in a similar form.
 > 
-> Add an "external-facing" property to PCI ports in device-tree, to help
-> identify untrusted devices. The notion of untrusted PCI devices was
-> added to the v5.0 kernel to describe devices that should have strict
-> IOMMU protection [2], for example devices that are plugged in a
-> Thunderbolt port. ACPI systems use the ExternalFacingPort property [3].
-> Add an equivalent mechanism to device tree.
+> What do we build it for?  We'd really need something like this:
 > 
-> [1] https://lore.kernel.org/linux-pci/20190402131548.41949-1-jean-philippe.brucker@arm.com/
-> [2] https://lkml.org/lkml/2018/11/26/631
-> [3] https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
+> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
+> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
 > 
-> Jean-Philippe Brucker (2):
->   dt-bindings: Add external-facing PCIe port property
->   PCI: OF: Support external-facing property
+> To actually use the DT files.
 > 
->  Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
->  drivers/pci/of.c                              | 14 ++++--
->  2 files changed, 60 insertions(+), 4 deletions(-)
 
-Applied to pci/enumeration for v5.2, thanks, and thanks for fixing the NULL
-pointer issue!
+We also need to modify the DT, as the default DTS file in this patch 
+series has hart0 status as "okay",
+
+Or we should set hart0 status as "masked" in the .dts file now.
+
+Regards,
+Atish
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
