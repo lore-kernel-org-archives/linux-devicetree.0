@@ -1,54 +1,47 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
- DT source data
-Date: Thu, 11 Apr 2019 14:38:02 -0700
-Message-ID: <b1f10ff7-6c45-1468-c97c-ff301bb66966@wdc.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com>
- <20190411114616.GA10032@infradead.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 2/2] clk: meson-g12a: Add Temperature Sensor clock
+Date: Thu, 11 Apr 2019 23:38:43 +0200
+Message-ID: <CAFBinCBVmPa5hi83B1ZTe-guassHxKQFrN5QOyMJc9s95LJ1cg@mail.gmail.com>
+References: <20190411084537.30299-1-glaroque@baylibre.com> <20190411084537.30299-3-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190411114616.GA10032@infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Christoph Hellwig <hch@infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190411084537.30299-3-glaroque@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/11/19 4:46 AM, Christoph Hellwig wrote:
-> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
->> Similar to ARM64, add support for building DTB files from DT source
->> data for RISC-V boards.
->>
->> This patch starts with the infrastructure needed for SiFive boards.
->> Boards from other vendors would add support here in a similar form.
-> 
-> What do we build it for?  We'd really need something like this:
-> 
-> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
-> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
-> 
-> To actually use the DT files.
-> 
+Hi Guillaume,
 
-We also need to modify the DT, as the default DTS file in this patch 
-series has hart0 status as "okay",
+On Thu, Apr 11, 2019 at 10:46 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Add TS clock used by two temperature sensor
+thank you for working on this!
 
-Or we should set hart0 status as "masked" in the .dts file now.
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a.c | 31 +++++++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h |  3 ++-
+>  2 files changed, 33 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 3a3134976534..e6d2af6ee8ea 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -2335,6 +2335,33 @@ static struct clk_regmap g12a_mali = {
+>         },
+>  };
+>
+> +static struct clk_regmap g12a_ts_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_TS_CLK_CNTL,
+> +               .shift = 0,
+> +               .width = 7,
+buildroot_openlinux_kernel_4.9_fbdev_20180706 uses ".width = 8".
+That matches with the public S922X datasheet from hardkernel which
+states that HHI_TS_CLK_CNTL[7:0] is "ts_clk clk_div"
 
-Regards,
-Atish
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
+
+Martin
