@@ -1,29 +1,29 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add BT_EN to the power sequence for veyron
-Date: Thu, 11 Apr 2019 13:38:32 +0200
-Message-ID: <5092711.5oqtbe4BJ2@phil>
-References: <20190409231405.189335-1-mka@chromium.org>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
+ DT source data
+Date: Thu, 11 Apr 2019 04:46:16 -0700
+Message-ID: <20190411114616.GA10032@infradead.org>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409231405.189335-1-mka@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20190411084304.5072-2-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 10. April 2019, 01:14:05 CEST schrieb Matthias Kaehlcke:
-> Add GPIO D5 (BT_ENABLE_L) as reset-GPIO to the power sequence for the
-> Bluetooth/WiFi module. On devices with a Broadcom module the signal
-> needs to be asserted to use Bluetooth.
+On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
+> Similar to ARM64, add support for building DTB files from DT source
+> data for RISC-V boards.
 > 
-> Note that BT_ENABLE_L is a misnomer in the schematics, the signal
-> actually is active-high.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> This patch starts with the infrastructure needed for SiFive boards.
+> Boards from other vendors would add support here in a similar form.
 
-applied for 5.2 with Doug's rb.
+What do we build it for?  We'd really need something like this:
 
-Thanks
-Heiko
+http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
+http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
+
+To actually use the DT files.
