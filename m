@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v3 03/11] pinctrl: sunxi: Prepare for
- alternative bias voltage setting methods
-Date: Thu, 11 Apr 2019 12:19:43 +0200
-Message-ID: <20190411101951.30223-4-megous@megous.com>
+Subject: [PATCH v3 06/11] dt-bindings: display: hdmi-connector:
+ Add DDC power supply
+Date: Thu, 11 Apr 2019 12:19:46 +0200
+Message-ID: <20190411101951.30223-7-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBTFJXTSQKGQEYOKWITI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBTNJXTSQKGQEFCZ2ENQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190411101951.30223-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,120 +21,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-H6 has a different I/O voltage bias setting method than A80. Prepare
-existing code for using alternative bias voltage setting methods.
+Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+on-board voltage shifting logic for the DDC bus to be usable. Use
+ddc-supply on the hdmi-connector to model this.
+
+Add binding documentation for optional ddc-supply property.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 47 +++++++++++++----------
- drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  9 ++++-
- 3 files changed, 36 insertions(+), 22 deletions(-)
+ .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-index da37d594a13d..0633a03d5e13 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-@@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
- 	.npins = ARRAY_SIZE(sun9i_a80_pins),
- 	.irq_banks = 5,
- 	.disable_strict_mode = true,
--	.has_io_bias_cfg = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_GRP_CONFIG,
- };
+diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+index 508aee461e0d..33085aeb0bb9 100644
+--- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - label: a symbolic name for the connector
+ - hpd-gpios: HPD GPIO number
+ - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
++- ddc-supply: the power supply for the DDC bus
  
- static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index be04223591d4..98c4de5f4019 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -617,7 +617,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 	u32 val, reg;
- 	int uV;
- 
--	if (!pctl->desc->has_io_bias_cfg)
-+	if (!pctl->desc->io_bias_cfg_variant)
- 		return 0;
- 
- 	uV = regulator_get_voltage(supply);
-@@ -628,25 +628,32 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 	if (uV == 0)
- 		return 0;
- 
--	/* Configured value must be equal or greater to actual voltage */
--	if (uV <= 1800000)
--		val = 0x0; /* 1.8V */
--	else if (uV <= 2500000)
--		val = 0x6; /* 2.5V */
--	else if (uV <= 2800000)
--		val = 0x9; /* 2.8V */
--	else if (uV <= 3000000)
--		val = 0xA; /* 3.0V */
--	else
--		val = 0xD; /* 3.3V */
--
--	pin -= pctl->desc->pin_base;
--
--	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
--	reg &= ~IO_BIAS_MASK;
--	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
--
--	return 0;
-+	switch (pctl->desc->io_bias_cfg_variant) {
-+	case BIAS_VOLTAGE_GRP_CONFIG:
-+		/*
-+		 * Configured value must be equal or greater to actual
-+		 * voltage.
-+		 */
-+		if (uV <= 1800000)
-+			val = 0x0; /* 1.8V */
-+		else if (uV <= 2500000)
-+			val = 0x6; /* 2.5V */
-+		else if (uV <= 2800000)
-+			val = 0x9; /* 2.8V */
-+		else if (uV <= 3000000)
-+			val = 0xA; /* 3.0V */
-+		else
-+			val = 0xD; /* 3.3V */
-+
-+		pin -= pctl->desc->pin_base;
-+
-+		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
-+		reg &= ~IO_BIAS_MASK;
-+		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
- static int sunxi_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index ee15ab067b5f..4bfc8a6d9dce 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,6 +95,13 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
- 
-+enum sunxi_desc_bias_voltage {
-+	BIAS_VOLTAGE_NONE,
-+	/* Bias voltage configuration is done through
-+	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
-+	BIAS_VOLTAGE_GRP_CONFIG,
-+};
-+
- struct sunxi_desc_function {
- 	unsigned long	variant;
- 	const char	*name;
-@@ -117,7 +124,7 @@ struct sunxi_pinctrl_desc {
- 	const unsigned int		*irq_bank_map;
- 	bool				irq_read_needs_mux;
- 	bool				disable_strict_mode;
--	bool				has_io_bias_cfg;
-+	int				io_bias_cfg_variant;
- };
- 
- struct sunxi_pinctrl_function {
+ Required nodes:
+ - Video port for HDMI input
 -- 
 2.21.0
