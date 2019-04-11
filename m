@@ -1,107 +1,118 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: add GPU node
-Date: Thu, 11 Apr 2019 20:47:28 +0200
-Message-ID: <20190411184728.GA4139@bogon.m.sigxcpu.org>
-References: <20190404165211.29297-1-l.stach@pengutronix.de>
- <20190408130729.GA31666@bogon.m.sigxcpu.org>
- <20190408134540.GA13816@bogon.m.sigxcpu.org>
- <1554901332.11529.9.camel@pengutronix.de>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal zone node
+Date: Thu, 11 Apr 2019 21:14:44 +0200
+Message-ID: <915c86d8-d00e-f1e1-e7f5-24bc225c8e42@linaro.org>
+References: <20190411083236.9377-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1554901332.11529.9.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190411083236.9377-1-andy.tang@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuantian Tang <andy.tang@nxp.com>, shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rui.zhang@intel.com, edubezval@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Wed, Apr 10, 2019 at 03:02:12PM +0200, Lucas Stach wrote:
-> Hi Guido,
-> =
+On 11/04/2019 10:32, Yuantian Tang wrote:
+> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
+> sensor is used to monitor the temperature of core and SoC platform is for
+> platform. The current dts only support the first sensor.
+> This patch adds the second sensor node to dts to enable it.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> ---
+> v5:
+> 	- update the thermal zone name due to the length limitation
+> 	- remove cooling map in platform zone
+> v4:
+> 	- use hyphen instead of underscore in node name
+> v3:
+> 	- use more descriptive name for each zone
+> v2:
+> 	- Add more information about sensors to description
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   28 ++++++++++++++++++++---
+>  1 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index de93b42..de39672 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -129,19 +129,19 @@
+>  	};
+>  
+>  	thermal-zones {
+> -		cpu_thermal: cpu-thermal {
+> +		core-cluster {
+>  			polling-delay-passive = <1000>;
+>  			polling-delay = <5000>;
+>  			thermal-sensors = <&tmu 0>;
+>  
+>  			trips {
+> -				cpu_alert: cpu-alert {
+> +				core_cluster_alert: core-cluster-alert {
+>  					temperature = <85000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu_crit: cpu-crit {
+> +				core_cluster_crit: core-cluster-crit {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "critical";
+> @@ -150,7 +150,7 @@
+>  
+>  			cooling-maps {
+>  				map0 {
+> -					trip = <&cpu_alert>;
+> +					trip = <&core_cluster_alert>;
+>  					cooling-device =
+>  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> @@ -163,6 +163,26 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		platform {
+> +			polling-delay-passive = <1000>;
+> +			polling-delay = <5000>;
+> +			thermal-sensors = <&tmu 1>;
+> +
+> +			trips {
+> +				platform-alert {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				platform-crit {
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
 
-> Am Montag, den 08.04.2019, 15:45 +0200 schrieb Guido G=FCnther:
-> > Hi,
-> > On Mon, Apr 08, 2019 at 03:07:29PM +0200, Guido G=FCnther wrote:
-> > > Hi Lucas,
-> > > On Thu, Apr 04, 2019 at 06:52:11PM +0200, Lucas Stach wrote:
-> > > > This enables the Vivante GC7000L GPU on the i.MX8MQ SoC.
-> > > > =
 
-> > > > > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > > > ---
-> > > > =A0arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 +++++++++++++++++=
-+++++
-> > > > =A01 file changed, 22 insertions(+)
-> > > > =
+Unfortunately, the documentation says the thermal zone node must contain
+a "cooling-maps" entry.
 
-> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64=
-/boot/dts/freescale/imx8mq.dtsi
-> > > > index 4300781558f6..79d418b4f585 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > > > @@ -792,6 +792,28 @@
-> > > > > > > =A0			};
-> > > > > > > =A0		};
-> > > > =A0
-> > > > > > > > > > +		gpu: gpu@38000000 {
-> > > > > > > +			compatible =3D "vivante,gc";
-> > > > > > > +			reg =3D <0x38000000 0x40000>;
-> > > > > > > +			interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > > +			clocks =3D <&clk IMX8MQ_CLK_GPU_ROOT>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0<&clk IMX8MQ_CLK_GPU_SHADER_DI=
-V>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0<&clk IMX8MQ_CLK_GPU_AXI>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0<&clk IMX8MQ_CLK_GPU_AHB>;
-> > > > > > > +			clock-names =3D "core", "shader", "bus", "reg";
-> > > > > > > +			assigned-clocks =3D <&clk IMX8MQ_CLK_GPU_CORE_SRC>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0<&c=
-lk IMX8MQ_CLK_GPU_SHADER_SRC>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0<&c=
-lk IMX8MQ_CLK_GPU_AXI>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0<&c=
-lk IMX8MQ_CLK_GPU_AHB>;
-> > > > > > > +			assigned-clock-parents =3D <&clk IMX8MQ_GPU_PLL_OUT>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0<&clk IMX8MQ_GPU_PLL_OUT>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0<&clk IMX8MQ_GPU_PLL_OUT>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0<&clk IMX8MQ_GPU_PLL_OUT>;
-> > > > > > > +			assigned-clock-rates =3D <800000000>, <800000000>,
-> > > > > > > +			=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0<800000000>, <800000000>;
-> > > > > > > +			power-domains =3D <&pgc_gpu>;
-> > > > +		};
-> > > =
+It makes sense as if there is no cooling device, there is no action to
+be taken thus polling the temperature just add noise to the system.
 
-> > > Reviewed-by: Guido G=FCnther <agx@sigxcpu.org>
-> > =
 
-> > On a second thought should this have a
-> > =
 
-> > =A0=A0=A0=A0status =3D "disabled";
-> =
+>  	};
+>  
+>  	timer {
+> 
 
-> I disagree. This is a SoC internal peripheral, that has no board level
-> dependencies other than the voltage rail being connected, so it's fine
-> to have the node enabled on all systems. This is consistent with what
-> we did on all previous i.MX SoC DTs.
 
-Makes sense.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Reviewed-by: Guido G=FCnther <agx@sigxcpu.org> =
-
-Cheers,
- -- Guido
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
