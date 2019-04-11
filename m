@@ -1,70 +1,107 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 3/7] drivers/clocksource: timer-fsl-ftm: use common
- header for FlexTimer #defines
-Date: Thu, 11 Apr 2019 18:40:37 +0200
-Message-ID: <ba80affb-0d9d-8248-f995-788105394bb3@linaro.org>
-References: <20190306111208.7454-1-patrick.havelange@essensium.com>
- <20190306111208.7454-4-patrick.havelange@essensium.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 02/11] dt-bindings: power: supply: add DT bindings for max77650
+Date: Thu, 11 Apr 2019 11:50:19 -0500
+Message-ID: <CAL_JsqKHGczKAD3VjBsq6G=Ev0t8p_qWZ0YG6rRsqO8GuRAK7Q@mail.gmail.com>
+References: <20190403090108.24788-1-brgl@bgdev.pl> <20190403090108.24788-3-brgl@bgdev.pl>
+ <20190406070746.GA29624@bogus> <CAMRc=Mc+cTVrzywTydp-10Hj=-m=qCmtK1+4NRiOFHZ855fnDw@mail.gmail.com>
+ <CAL_JsqKHjppN2kXqVpv5LjTedykA-Q8vteQDipw=FAaoUZLGeg@mail.gmail.com>
+ <CAMRc=Mc4HOn+Pjwf+sD4fU7gNoksRKXz9Yq6zE233CCoNskPiQ@mail.gmail.com> <CAMRc=MfkdBMmhrCM7Ut8ZGkgT=gFTRrbgFmu3MbghGwCRkEEKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190306111208.7454-4-patrick.havelange@essensium.com>
-Content-Language: en-US
+In-Reply-To: <CAMRc=MfkdBMmhrCM7Ut8ZGkgT=gFTRrbgFmu3MbghGwCRkEEKg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Jonathan Cameron <jic23@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2019 12:12, Patrick Havelange wrote:
-> Common #defines have been moved to "linux/fsl/ftm.h". Thus making use of
-> this file.
-> Also FTM_SC_CLK_SHIFT has been renamed to FTM_SC_CLK_MASK_SHIFT.
-> 
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> Reviewed-by: Esben Haabendal <esben@haabendal.dk>
+On Tue, Apr 9, 2019 at 10:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> wt., 9 kwi 2019 o 13:04 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
+a):
+> >
+> > wt., 9 kwi 2019 o 03:10 Rob Herring <robh@kernel.org> napisa=C5=82(a):
+> > >
+> > > On Mon, Apr 8, 2019 at 7:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> > > >
+> > > > sob., 6 kwi 2019 o 09:07 Rob Herring <robh@kernel.org> napisa=C5=82=
+(a):
+> > > > >
+> > > > > On Wed, Apr 03, 2019 at 11:00:59AM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > > >
+> > > > > > Add the DT binding document for the battery charger module of m=
+ax77650.
+> > > > > >
+> > > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > > > ---
+> > > > > >  .../power/supply/max77650-charger.txt         | 27 +++++++++++=
+++++++++
+> > > > > >  1 file changed, 27 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/power/sup=
+ply/max77650-charger.txt
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/power/supply/max=
+77650-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650=
+-charger.txt
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..fef188144386
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/power/supply/max77650-c=
+harger.txt
+> > > > > > @@ -0,0 +1,27 @@
+> > > > > > +Battery charger driver for MAX77650 PMIC from Maxim Integrated=
+.
+> > > > > > +
+> > > > > > +This module is part of the MAX77650 MFD device. For more detai=
+ls
+> > > > > > +see Documentation/devicetree/bindings/mfd/max77650.txt.
+> > > > > > +
+> > > > > > +The charger is represented as a sub-node of the PMIC node on t=
+he device tree.
+> > > > > > +
+> > > > > > +Required properties:
+> > > > > > +--------------------
+> > > > > > +- compatible:                Must be "maxim,max77650-charger"
+> > > > > > +
+> > > > > > +Optional properties:
+> > > > > > +--------------------
+> > > > > > +- min-microvolt:     Minimum CHGIN regulation voltage (in micr=
+ovolts). Must be
+> > > > > > +                     one of: 4000000, 4100000, 4200000, 430000=
+0, 4400000,
+> > > > > > +                     4500000, 4600000, 4700000.
+> > > > > > +- current-limit-microamp:    CHGIN input current limit (in mic=
+roamps). Must
+> > > > > > +                             be one of: 95000, 190000, 285000,=
+ 380000, 475000.
+> > > > >
+> > > > > To repeat what I said on v6, these should be common properties IM=
+O (and
+> > > > > therefore documented as such).
+> > > > >
+> > > >
+> > > > Do you mean a separate "charger.txt" document in
+> > > > Documentation/devicetree/bindings/power/supply/?
+> > >
+> > > Yes, though I thought we had something already.
+> > >
+> > > Rob
+> >
+> > We don't AFAICT. There's only a binding document for "simple-battery"
+> > in power supply.
+> >
+> > Bart
+>
+> Can we have it locally for now but without the maxim prefix and then
+> reuse it if any other charger needs such functionality? To make it
+> even more generic we can name it: "input-voltage-min-microvolt" &
+> "input-current-limit-microamp".
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+I guess. And defining these as 'input' is good because we do have
+similar property names already for battery current limit and voltages.
 
-> ---
-> Changes v2
->      - None
-> ---
->  drivers/clocksource/timer-fsl-ftm.c | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-fsl-ftm.c b/drivers/clocksource/timer-fsl-ftm.c
-> index 846d18daf893..e1c34b2f53a5 100644
-> --- a/drivers/clocksource/timer-fsl-ftm.c
-> +++ b/drivers/clocksource/timer-fsl-ftm.c
-> @@ -19,20 +19,9 @@
->  #include <linux/of_irq.h>
->  #include <linux/sched_clock.h>
->  #include <linux/slab.h>
-> +#include <linux/fsl/ftm.h>
->  
-> -#define FTM_SC		0x00
-> -#define FTM_SC_CLK_SHIFT	3
-> -#define FTM_SC_CLK_MASK	(0x3 << FTM_SC_CLK_SHIFT)
-> -#define FTM_SC_CLK(c)	((c) << FTM_SC_CLK_SHIFT)
-> -#define FTM_SC_PS_MASK	0x7
-> -#define FTM_SC_TOIE	BIT(6)
-> -#define FTM_SC_TOF	BIT(7)
-> -
-> -#define FTM_CNT		0x04
-> -#define FTM_MOD		0x08
-> -#define FTM_CNTIN	0x4C
-> -
-> -#define FTM_PS_MAX	7
-> +#define FTM_SC_CLK(c)	((c) << FTM_SC_CLK_MASK_SHIFT)
->  
->  struct ftm_clock_device {
->  	void __iomem *clksrc_base;
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Rob
