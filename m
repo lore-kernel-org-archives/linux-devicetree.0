@@ -1,7 +1,7 @@
 From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: [PATCH v3 1/2] dt-bindings: Add external-facing PCIe port property
-Date: Thu, 11 Apr 2019 13:40:26 +0100
-Message-ID: <20190411124027.9490-2-jean-philippe.brucker@arm.com>
+Subject: [PATCH v3 2/2] PCI: OF: Support external-facing property
+Date: Thu, 11 Apr 2019 13:40:27 +0100
+Message-ID: <20190411124027.9490-3-jean-philippe.brucker@arm.com>
 References: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,76 +21,48 @@ To: bhelgaas@google.com
 Cc: Mark.Rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, robh+dt@kernel.org, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Provide a way for the firmware to tell the OS which devices are external
-to the machine and therefore untrusted. The property can describe for
-example Thunderbolt and other user-accessible ports, which should always
-have the strongest IOMMU protection.
+Set the "untrusted" attribute to any PCIe port that has an
+"external-facing" device tree property. Any device downstream of this
+port will inherit the attribute and have only the strictest IOMMU
+protection.
 
-Reviewed-by: Grant Likely <grant.likely@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
- Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+v2->v3:
+* Use of_property_read_bool().
+* Firmware can in theory set the property on the host bridge node.
+  Handle this case.
+* Don't pass a NULL node to the of driver. Although it is handled
+  gracefully at the moment, it isn't documented and we might as well
+  proof this too.
+---
+ drivers/pci/of.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index c77981c5dd18..92c01db610df 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -24,3 +24,53 @@ driver implementation may support the following properties:
-    unsupported link speed, for instance, trying to do training for
-    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-    for gen2, and '1' for gen1. Any other values are invalid.
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 3d32da15c215..67376cf45880 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -31,10 +31,16 @@ void pci_release_of_node(struct pci_dev *dev)
+ 
+ void pci_set_bus_of_node(struct pci_bus *bus)
+ {
+-	if (bus->self == NULL)
+-		bus->dev.of_node = pcibios_get_phb_of_node(bus);
+-	else
+-		bus->dev.of_node = of_node_get(bus->self->dev.of_node);
++	struct device_node *node;
 +
-+PCI-PCI Bridge properties
-+-------------------------
-+
-+PCIe root ports and switch ports may be described explicitly in the device
-+tree, as children of the host bridge node. Even though those devices are
-+discoverable by probing, it might be necessary to describe properties that
-+aren't provided by standard PCIe capabilities.
-+
-+Required properties:
-+
-+- reg:
-+   Identifies the PCI-PCI bridge. As defined in the IEEE Std 1275-1994
-+   document, it is a five-cell address encoded as (phys.hi phys.mid
-+   phys.lo size.hi size.lo). phys.hi should contain the device's BDF as
-+   0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be zero.
-+
-+   The bus number is defined by firmware, through the standard bridge
-+   configuration mechanism. If this port is a switch port, then firmware
-+   allocates the bus number and writes it into the Secondary Bus Number
-+   register of the bridge directly above this port. Otherwise, the bus
-+   number of a root port is the first number in the bus-range property,
-+   defaulting to zero.
-+
-+   If firmware leaves the ARI Forwarding Enable bit set in the bridge
-+   above this port, then phys.hi contains the 8-bit function number as
-+   0b00000000 bbbbbbbb ffffffff 00000000. Note that the PCIe specification
-+   recommends that firmware only leaves ARI enabled when it knows that the
-+   OS is ARI-aware.
-+
-+Optional properties:
-+
-+- external-facing:
-+   When present, the port is external-facing. All bridges and endpoints
-+   downstream of this port are external to the machine. The OS can, for
-+   example, use this information to identify devices that cannot be
-+   trusted with relaxed DMA protection, as users could easily attach
-+   malicious devices to this port.
-+
-+Example:
-+
-+pcie@10000000 {
-+	compatible = "pci-host-ecam-generic";
-+	...
-+	pcie@0008 {
-+		/* Root port 00:01.0 is external-facing */
-+		reg = <0x00000800 0 0 0 0>;
-+		external-facing;
-+	};
-+};
++	if (bus->self == NULL) {
++		node = pcibios_get_phb_of_node(bus);
++	} else {
++		node = of_node_get(bus->self->dev.of_node);
++		if (node && of_property_read_bool(node, "external-facing"))
++			bus->self->untrusted = true;
++	}
++	bus->dev.of_node = node;
+ }
+ 
+ void pci_release_bus_of_node(struct pci_bus *bus)
 -- 
 2.21.0
