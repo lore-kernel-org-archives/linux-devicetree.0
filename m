@@ -1,241 +1,262 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-Date: Thu, 11 Apr 2019 09:57:42 -0700
-Message-ID: <20190411165742.GA29395@roeck-us.net>
-References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
- <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date: Fri, 12 Apr 2019 02:36:42 +0800
+Message-ID: <CAEExFWvcoK+C=_+knCw4nZQso2Frz0-CpbECQbVzKPS11P9RUw@mail.gmail.com>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-2-tiny.windzz@gmail.com>
+ <20190411080955.ysp3wreifwqrpn3n@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <20190411080955.ysp3wreifwqrpn3n@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
-> This adds RPM support to the pwm-fan driver in order to use with
-> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
-> output signal, which generate a defined number of pulses per revolution.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/hwmon/pwm-fan.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 103 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index e4c5197..8c4c5ee 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -18,6 +18,7 @@
->  
->  #include <linux/hwmon.h>
->  #include <linux/hwmon-sysfs.h>
-> +#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/of.h>
-> @@ -26,6 +27,7 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
-> +#include <linux/timer.h>
->  
->  #define MAX_PWM 255
->  
-> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
->  	struct mutex lock;
->  	struct pwm_device *pwm;
->  	struct regulator *reg_en;
-> +
-> +	int irq;
-> +	atomic_t pulses;
-> +	unsigned int rpm;
-> +	u8 pulses_per_revolution;
-> +	ktime_t sample_start;
-> +	struct timer_list rpm_timer;
-> +
->  	unsigned int pwm_value;
->  	unsigned int pwm_fan_state;
->  	unsigned int pwm_fan_max_state;
-> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
->  	struct thermal_cooling_device *cdev;
->  };
->  
-> +/* This handler assumes self resetting edge triggered interrupt. */
-> +static irqreturn_t pulse_handler(int irq, void *dev_id)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_id;
-> +
-> +	atomic_inc(&ctx->pulses);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void sample_timer(struct timer_list *t)
-> +{
-> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
-> +	int pulses;
-> +	u64 tmp;
-> +
-> +	pulses = atomic_read(&ctx->pulses);
-> +	atomic_sub(pulses, &ctx->pulses);
-> +	tmp = (u64)pulses * ktime_ms_delta(ktime_get(), ctx->sample_start) * 60;
-> +	do_div(tmp, ctx->pulses_per_revolution * 1000);
-> +	ctx->rpm = tmp;
-> +
-> +	ctx->sample_start = ktime_get();
-> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
-> +}
-> +
->  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->  {
->  	unsigned long period;
-> @@ -100,15 +136,47 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->  	return sprintf(buf, "%u\n", ctx->pwm_value);
->  }
->  
-> +static ssize_t rpm_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", ctx->rpm);
-> +}
->  
->  static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
-> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->  
->  static struct attribute *pwm_fan_attrs[] = {
->  	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
->  	NULL,
->  };
->  
-> -ATTRIBUTE_GROUPS(pwm_fan);
-> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
-> +				     int n)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +	struct device_attribute *devattr;
-> +
-> +	/* Hide fan_input in case no interrupt is available  */
-> +	devattr = container_of(a, struct device_attribute, attr);
+Hi,
+    Changes:
+    1. I removed this sunxi_cpufreq_soc_data structure for now.
+    2. Convert to  less generic name.
+    3. Update soc_bin xlate. (LINE:484
+https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/soc/sunxi/sunxi-sid.c)
 
-Field day for static analyzers - devattr is no longer used.
-No need to resend. I'll let the series rest for a couple of days
-and then apply to hwmon-next (after removing devattr) unless there are
-additional comments.
+    Now temporarily consider it as supporting only one platform.
+    Anything else to modify?
 
-> +	if (n == 1 && ctx->irq <= 0)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +static const struct attribute_group pwm_fan_group = {
-> +	.attrs = pwm_fan_attrs,
-> +	.is_visible = pwm_fan_attrs_visible,
-> +};
-> +
-> +static const struct attribute_group *pwm_fan_groups[] = {
-> +	&pwm_fan_group,
-> +	NULL,
-> +};
->  
->  /* thermal cooling device callbacks */
->  static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
-> @@ -214,6 +282,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  	struct device *hwmon;
->  	int ret;
->  	struct pwm_state state = { };
-> +	u32 ppr = 2;
->  
->  	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
->  	if (!ctx)
-> @@ -233,6 +302,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, ctx);
->  
-> +	ctx->irq = platform_get_irq(pdev, 0);
-> +	if (ctx->irq == -EPROBE_DEFER)
-> +		return ctx->irq;
-> +
->  	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
->  	if (IS_ERR(ctx->reg_en)) {
->  		if (PTR_ERR(ctx->reg_en) != -ENODEV)
-> @@ -261,17 +334,38 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  		goto err_reg_disable;
->  	}
->  
-> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
-> +
-> +	of_property_read_u32(pdev->dev.of_node, "pulses-per-revolution", &ppr);
-> +	ctx->pulses_per_revolution = ppr;
-> +	if (!ctx->pulses_per_revolution) {
-> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
-> +		ret = -EINVAL;
-> +		goto err_pwm_disable;
-> +	}
-> +
-> +	if (ctx->irq > 0) {
-> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
-> +				       pdev->name, ctx);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
-> +			goto err_pwm_disable;
-> +		}
-> +		ctx->sample_start = ktime_get();
-> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
-> +	}
-> +
->  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->  						       ctx, pwm_fan_groups);
->  	if (IS_ERR(hwmon)) {
->  		dev_err(&pdev->dev, "Failed to register hwmon device\n");
->  		ret = PTR_ERR(hwmon);
-> -		goto err_pwm_disable;
-> +		goto err_del_timer;
->  	}
->  
->  	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
->  	if (ret)
-> -		goto err_pwm_disable;
-> +		goto err_del_timer;
->  
->  	ctx->pwm_fan_state = ctx->pwm_fan_max_state;
->  	if (IS_ENABLED(CONFIG_THERMAL)) {
-> @@ -282,7 +376,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  			dev_err(&pdev->dev,
->  				"Failed to register pwm-fan as cooling device");
->  			ret = PTR_ERR(cdev);
-> -			goto err_pwm_disable;
-> +			goto err_del_timer;
->  		}
->  		ctx->cdev = cdev;
->  		thermal_cdev_update(cdev);
-> @@ -290,6 +384,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  
->  	return 0;
->  
-> +err_del_timer:
-> +	del_timer_sync(&ctx->rpm_timer);
-> +
->  err_pwm_disable:
->  	state.enabled = false;
->  	pwm_apply_state(ctx->pwm, &state);
-> @@ -306,6 +403,8 @@ static int pwm_fan_remove(struct platform_device *pdev)
->  	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
->  
->  	thermal_cooling_device_unregister(ctx->cdev);
-> +	del_timer_sync(&ctx->rpm_timer);
-> +
->  	if (ctx->pwm_value)
->  		pwm_disable(ctx->pwm);
->  
-> -- 
-> 2.7.4
-> 
+THx,
+Yangtao
+
+diff --git a/drivers/cpufreq/sun5i-cpufreq-nvmem.c
+b/drivers/cpufreq/sun5i-cpufreq-nvmem.c
+new file mode 100644
+index 000000000000..08a8f99463ba
+--- /dev/null
++++ b/drivers/cpufreq/sun5i-cpufreq-nvmem.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Allwinner CPUFreq nvmem based driver
++ *
++ * The sun5i-cpufreq-nvmem driver reads the efuse value from the SoC to
++ * provide the OPP framework with required information.
++ *
++ * Copyright (C) 2019 Yangtao Li <tiny.windzz@gmail.com>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/module.h>
++#include <linux/nvmem-consumer.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++#include <linux/slab.h>
++
++#define MAX_NAME_LEN 7
++
++#define NVMEM_MASK 0x7
++#define NVMEM_SHIFT 5
++
++static struct platform_device *cpufreq_dt_pdev, *sunxi_cpufreq_pdev;
++
++/**
++ * sunxi_cpufreq_get_efuse() - Parse and return efuse value present on SoC
++ * @versions: Set to the value parsed from efuse
++ *
++ * Returns 0 if success.
++ */
++static int sunxi_cpufreq_get_efuse(u32 *versions)
++{
++ struct nvmem_cell *speedbin_nvmem;
++ struct device_node *np;
++ struct device *cpu_dev;
++ u32 *speedbin, efuse_value;
++ size_t len;
++ int ret;
++
++ cpu_dev = get_cpu_device(0);
++ if (!cpu_dev)
++ return -ENODEV;
++
++ np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
++ if (!np)
++ return -ENOENT;
++
++ ret = of_device_is_compatible(np,
++ "allwinner,sun50i-h6-operating-points");
++ if (!ret) {
++ of_node_put(np);
++ return -ENOENT;
++ }
++
++ speedbin_nvmem = of_nvmem_cell_get(np, NULL);
++ of_node_put(np);
++ if (IS_ERR(speedbin_nvmem)) {
++ if (PTR_ERR(speedbin_nvmem) != -EPROBE_DEFER)
++ pr_err("Could not get nvmem cell: %ld\n",
++ PTR_ERR(speedbin_nvmem));
++ return PTR_ERR(speedbin_nvmem);
++ }
++
++ speedbin = nvmem_cell_read(speedbin_nvmem, &len);
++ nvmem_cell_put(speedbin_nvmem);
++ if (IS_ERR(speedbin))
++ return PTR_ERR(speedbin);
++
++ efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
++ switch (efuse_value) {
++ case 0b0001:
++ *versions = 1;
++ break;
++ case 0b0011:
++ *versions = 2;
++ break;
++ default:
++ /*
++ * For other situations, we treat it as bin0.
++ * This vf table can be run for any good cpu.
++ */
++ *versions = 0;
++ break;
++ }
++
++ kfree(speedbin);
++ return 0;
++};
++
++static int sunxi_cpufreq_nvmem_probe(struct platform_device *pdev)
++{
++ struct opp_table **opp_tables;
++ char name[MAX_NAME_LEN];
++ unsigned int cpu;
++ u32 speed = 0;
++ int ret;
++
++ opp_tables = kcalloc(num_possible_cpus(), sizeof(*opp_tables),
++      GFP_KERNEL);
++ if (!opp_tables)
++ return -ENOMEM;
++
++ ret = sunxi_cpufreq_get_efuse(&speed);
++ if (ret)
++ return ret;
++
++ snprintf(name, MAX_NAME_LEN, "speed%d", speed);
++
++ for_each_possible_cpu(cpu) {
++ struct device *cpu_dev = get_cpu_device(cpu);
++
++ if (cpu_dev == NULL) {
++ ret = -ENODEV;
++ goto free_opp;
++ }
++
++ opp_tables[cpu] = dev_pm_opp_set_prop_name(cpu_dev, name);
++ if (IS_ERR(opp_tables[cpu])) {
++ ret = PTR_ERR(opp_tables[cpu]);
++ pr_err("Failed to set prop name\n");
++ goto free_opp;
++ }
++ }
++
++ cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
++   NULL, 0);
++ if (!IS_ERR(cpufreq_dt_pdev)) {
++ platform_set_drvdata(pdev, opp_tables);
++ return 0;
++ }
++
++ ret = PTR_ERR(cpufreq_dt_pdev);
++ pr_err("Failed to register platform device\n");
++
++free_opp:
++ for_each_possible_cpu(cpu) {
++ if (IS_ERR_OR_NULL(opp_tables[cpu]))
++ break;
++ dev_pm_opp_put_prop_name(opp_tables[cpu]);
++ }
++ kfree(opp_tables);
++
++ return ret;
++}
++
++static int sunxi_cpufreq_nvmem_remove(struct platform_device *pdev)
++{
++ struct opp_table **opp_tables = platform_get_drvdata(pdev);
++ unsigned int cpu;
++
++ platform_device_unregister(cpufreq_dt_pdev);
++
++ for_each_possible_cpu(cpu)
++ dev_pm_opp_put_prop_name(opp_tables[cpu]);
++
++ kfree(opp_tables);
++
++ return 0;
++}
++
++static struct platform_driver sunxi_cpufreq_driver = {
++ .probe = sunxi_cpufreq_nvmem_probe,
++ .remove = sunxi_cpufreq_nvmem_remove,
++ .driver = {
++ .name = "sunxi-cpufreq-nvmem",
++ },
++};
++
++static const struct of_device_id sunxi_cpufreq_match_list[] = {
++ { .compatible = "allwinner,sun50i-h6" },
++ {}
++};
++
++static const struct of_device_id *sunxi_cpufreq_match_node(void)
++{
++ const struct of_device_id *match;
++ struct device_node *np;
++
++ np = of_find_node_by_path("/");
++ match = of_match_node(sunxi_cpufreq_match_list, np);
++ of_node_put(np);
++
++ return match;
++}
++
++/*
++ * Since the driver depends on nvmem drivers, which may return EPROBE_DEFER,
++ * all the real activity is done in the probe, which may be defered as well.
++ * The init here is only registering the driver and the platform device.
++ */
++static int __init sunxi_cpufreq_init(void)
++{
++ const struct of_device_id *match;
++ int ret;
++
++ match = sunxi_cpufreq_match_node();
++ if (!match)
++ return -ENODEV;
++
++ ret = platform_driver_register(&sunxi_cpufreq_driver);
++ if (unlikely(ret < 0))
++ return ret;
++
++ sunxi_cpufreq_pdev = platform_device_register_simple(
++ "sunxi-cpufreq-nvmem", -1, NULL, 0);
++ ret = PTR_ERR_OR_ZERO(sunxi_cpufreq_pdev);
++ if (ret == 0)
++ return 0;
++
++ platform_driver_unregister(&sunxi_cpufreq_driver);
++ return ret;
++}
++module_init(sunxi_cpufreq_init);
++
++static void __exit sunxi_cpufreq_exit(void)
++{
++ platform_device_unregister(sunxi_cpufreq_pdev);
++ platform_driver_unregister(&sunxi_cpufreq_driver);
++}
++module_exit(sunxi_cpufreq_exit);
++
++MODULE_DESCRIPTION("Sunxi cpufreq driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
