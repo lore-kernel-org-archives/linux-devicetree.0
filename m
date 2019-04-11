@@ -1,58 +1,201 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: RE: [PATCH V3 05/10] arm64: tegra: fix default tap and trim values
-Date: Thu, 11 Apr 2019 19:42:35 +0000
-Message-ID: <BYAPR12MB3398FC694371926446B377D3C22F0@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
- <1552513552-23423-5-git-send-email-skomatineni@nvidia.com>
- <CAPDyKFq4ZVaMmvefuVqGs84E7xg5VgvU-Ecq1MYJdmBhuEm7xA@mail.gmail.com>
- <BYAPR12MB3398F91B190D9B1C56FDC4F7C2420@BYAPR12MB3398.namprd12.prod.outlook.com>
- <BYAPR12MB339845B4C5A37468841E256AC2550@BYAPR12MB3398.namprd12.prod.outlook.com>
- <CAPDyKFqwESQ9_gDxLXhzBzu236+8p6rnqricULA7GrZguVZQWQ@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 4/6] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+Date: Thu, 11 Apr 2019 21:48:19 +0200
+Message-ID: <04e160da-a73e-d330-3df4-8f420b3612b4@gmail.com>
+References: <20190405142855.3969-1-dmurphy@ti.com>
+ <20190405142855.3969-4-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqwESQ9_gDxLXhzBzu236+8p6rnqricULA7GrZguVZQWQ@mail.gmail.com>
+In-Reply-To: <20190405142855.3969-4-dmurphy@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harjani Ritesh <riteshh@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiBNb24sIDEgQXByIDIwMTkgYXQgMTk6NDMsIFNvd2phbnlhIEtvbWF0aW5lbmkgPHNrb21h
-dGluZW5pQG52aWRpYS5jb20+IHdyb3RlOg0KPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBEZWZh
-dWx0IHRhcCBhbmQgdHJpbSB2YWx1ZXMgYXJlIGluY29ycmVjdCBmb3IgVGVncmExODYgU0RNTUM0
-Lg0KPiA+ID4gPiA+IFRoaXMgcGF0Y2ggZml4ZXMgaXQuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBU
-ZXN0ZWQtYnk6IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPg0KPiA+ID4gPiA+IFNp
-Z25lZC1vZmYtYnk6IFNvd2phbnlhIEtvbWF0aW5lbmkgPHNrb21hdGluZW5pQG52aWRpYS5jb20+
-DQo+ID4gPiA+DQo+ID4gPiA+IElzIHRoaXMgYSBmaXggYW5kL29yIGZvciBzdGFibGU/DQo+ID4g
-PiA+DQo+ID4gPiA+IEluIGVpdGhlciBjYXNlLCBJIGFtIGxlYXZpbmcgdGhpcyBmb3IgYXJtLXNv
-Yy4NCj4gPiA+ID4NCj4gPiA+ID4gS2luZCByZWdhcmRzDQo+ID4gPiA+IFVmZmUNCj4gPiA+ID4N
-Cj4gPiA+DQo+ID4gPiBUaGFua3MgVWZmZS4gWWVzIHRoaXMgaXMgYXBwbGljYWJsZSBmb3Igc3Rh
-YmxlLg0KPiA+DQo+ID4gSSBkb27igJl0IHNlZSBhbnkgY29uZmlybWF0aW9uIG9mIHRoaXMgYmVp
-bmcgYXBwbGllZCBieSBhcm0tc29jLg0KPiA+IFNvIHRob3VnaHQgdG8gcmUtY2hlY2sgaWYgdGhp
-cyBpcyBhcHBsaWVkPw0KPg0KPiBQZXJoYXBzIHJlcG9zdCBpdCB0byByZW1pbmQgdGhlIHNvYyBt
-YWludGFpbmVyIHRvIHBpY2sgaXQgdXAuDQo+DQo+IEtpbmQgcmVnYXJkcw0KPiBVZmZlDQo+DQoN
-ClJlcG9zdGVkIHBhdGNoIDUgYW5kIDEwIGluIHRoaXMgc2VyaWVzIHRoYXQgYXJlIHdhaXRpbmcg
-Zm9yIHNvYyBtYWludGFpbmVycyBhcyBmcmVzaCBpbmRpdmlkdWFsIHBhdGNoZXMuDQoNClRoYW5r
-cw0KU293amFueWENCg0KPiA+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvbnZpZGlhL3RlZ3JhMTg2LmR0c2kgfCA0ICsrLS0NCj4gPiA+ID4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiA+ID4gPg0KPiA+
-ID4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL252aWRpYS90ZWdyYTE4Ni5k
-dHNpDQo+ID4gPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL252aWRpYS90ZWdyYTE4Ni5kdHNp
-DQo+ID4gPiA+ID4gaW5kZXggOTdhZWI5NDZlZDVlLi40NzJmNTVmZTk0ODggMTAwNjQ0DQo+ID4g
-PiA+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9udmlkaWEvdGVncmExODYuZHRzaQ0KPiA+
-ID4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbnZpZGlhL3RlZ3JhMTg2LmR0c2kNCj4g
-PiA+ID4gPiBAQCAtMzE3LDggKzMxNyw4IEBADQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgIG52
-aWRpYSxwYWQtYXV0b2NhbC1wdWxsLWRvd24tb2Zmc2V0LTF2OC10aW1lb3V0ID0gPDB4MGE+Ow0K
-PiA+ID4gPiA+ICAgICAgICAgICAgICAgICBudmlkaWEscGFkLWF1dG9jYWwtcHVsbC11cC1vZmZz
-ZXQtM3YzLXRpbWVvdXQgPSA8MHgwYT47DQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgIG52aWRp
-YSxwYWQtYXV0b2NhbC1wdWxsLWRvd24tb2Zmc2V0LTN2My10aW1lb3V0ID0gPDB4MGE+Ow0KPiA+
-ID4gPiA+IC0gICAgICAgICAgICAgICBudmlkaWEsZGVmYXVsdC10YXAgPSA8MHg1PjsNCj4gPiA+
-ID4gPiAtICAgICAgICAgICAgICAgbnZpZGlhLGRlZmF1bHQtdHJpbSA9IDwweDk+Ow0KPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICBudmlkaWEsZGVmYXVsdC10YXAgPSA8MHg5PjsNCj4gPiA+ID4g
-PiArICAgICAgICAgICAgICAgbnZpZGlhLGRlZmF1bHQtdHJpbSA9IDwweDU+Ow0KPiA+ID4gPiA+
-ICAgICAgICAgICAgICAgICBudmlkaWEsZHFzLXRyaW0gPSA8NjM+Ow0KPiA+ID4gPiA+ICAgICAg
-ICAgICAgICAgICBtbWMtaHM0MDAtMV84djsNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgc3Rh
-dHVzID0gImRpc2FibGVkIjsNCj4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+IDIuNy40DQo+ID4gPiA+
-ID4NCg==
+Hi Rob,
+
+I've collected references to the DT patches we're waiting
+to be reviewed. This is just to make sure that none of them
+will be missed - recent traffic on the linux-leds list
+is a bit heavier.
+
+[0] - draft of LED multi color class - we would especially like
+       to get a feedback on the proposed brightness-model DT design
+[1][2] - LM3697 backlight driver rework
+[3][4] - LM36274 backlight driver with regulator support
+
+On 4/5/19 4:28 PM, Dan Murphy wrote:
+> The LM3697 is a single function LED driver. The single function LED
+> driver needs to reside in the LED directory as a dedicated LED driver
+> and not as a MFD device.  The device does have common brightness and ramp
+> features and those can be accomodated by a TI LMU framework.
+> 
+> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
+> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
+> reside in the Documentation/devicetree/bindings/leds directory and follow the
+> current LED and general bindings guidelines.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.txt -
+> https://lore.kernel.org/patchwork/patch/1054501/
+> 
+>   .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
+>   .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
+>   2 files changed, 74 insertions(+), 26 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> new file mode 100644
+> index 000000000000..02378f33c9ab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> @@ -0,0 +1,73 @@
+> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
+> +
+> +The LM3697 11-bit LED driver provides high-
+> +performance backlight dimming for 1, 2, or 3 series
+> +LED strings while delivering up to 90% efficiency.
+> +
+> +This device is suitable for display and keypad Lighting
+> +
+> +Required properties:
+> +	- compatible:
+> +		"ti,lm3697"
+> +	- reg :  I2C slave address
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+> +
+> +Optional properties:
+> +	- enable-gpios : GPIO pin to enable/disable the device
+> +	- vled-supply : LED supply
+> +
+> +Required child properties:
+> +	- reg : 0 - LED is Controlled by bank A
+> +		1 - LED is Controlled by bank B
+> +	- led-sources : Indicates which HVLED string is associated to which
+> +			control bank.  This is a zero based property so
+> +			HVLED1 = 0, HVLED2 = 1, HVLED3 = 2.
+> +			Additional information is contained
+> +			in Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Optional child properties:
+> +	- ti,brightness-resolution - see Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +	- ramp-up-ms: see Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +	- ramp-down-ms: see Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +	- linux,default-trigger :
+> +	   see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
+> +controlled by control bank B.
+> +
+> +led-controller@36 {
+> +	compatible = "ti,lm3697";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x36>;
+> +
+> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	vled-supply = <&vbatt>;
+> +
+> +	led@0 {
+> +		reg = <0>;
+> +		led-sources = <0 2>;
+> +		ti,brightness-resolution = <2047>;
+> +		ramp-up-ms = <5000>;
+> +		ramp-down-ms = <1000>;
+> +		label = "white:first_backlight_cluster";
+> +		linux,default-trigger = "backlight";
+> +	};
+> +
+> +	led@1 {
+> +		reg = <1>;
+> +		led-sources = <1>;
+> +		ti,brightness-resolution = <255>;
+> +		ramp-up-ms = <500>;
+> +		ramp-down-ms = <1000>;
+> +		label = "white:second_backlight_cluster";
+> +		linux,default-trigger = "backlight";
+> +	};
+> +}
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/lit/ds/symlink/lm3697.pdf
+> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> index 5881929d5f7a..a948a8f41b2c 100644
+> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> @@ -8,7 +8,6 @@ TI LMU driver supports lighting devices below.
+>     LM3632       Backlight and regulator
+>     LM3633       Backlight, LED and fault monitor
+>     LM3695       Backlight
+> -  LM3697       Backlight and fault monitor
+>   
+>   Required properties:
+>     - compatible: Should be one of:
+> @@ -16,11 +15,10 @@ Required properties:
+>                   "ti,lm3632"
+>                   "ti,lm3633"
+>                   "ti,lm3695"
+> -                "ti,lm3697"
+>     - reg: I2C slave address.
+>            0x11 for LM3632
+>            0x29 for LM3631
+> -         0x36 for LM3633, LM3697
+> +         0x36 for LM3633
+>            0x63 for LM3695
+>   
+>   Optional property:
+> @@ -51,7 +49,6 @@ Optional nodes:
+>       Required properties:
+>         - compatible: Should be one of:
+>                       "ti,lm3633-fault-monitor"
+> -                    "ti,lm3697-fault-monitor"
+>     - leds: LED properties for LM3633. Please refer to [2].
+>     - regulators: Regulator properties for LM3631 and LM3632.
+>                   Please refer to [3].
+> @@ -216,25 +213,3 @@ lm3695@63 {
+>   		};
+>   	};
+>   };
+> -
+> -lm3697@36 {
+> -	compatible = "ti,lm3697";
+> -	reg = <0x36>;
+> -
+> -	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+> -
+> -	backlight {
+> -		compatible = "ti,lm3697-backlight";
+> -
+> -		lcd {
+> -			ti,brightness-resolution = <255>;
+> -			led-sources = <0 1 2>;
+> -			ramp-up-ms = <200>;
+> -			ramp-down-ms = <200>;
+> -		};
+> -	};
+> -
+> -	fault-monitor {
+> -		compatible = "ti,lm3697-fault-monitor";
+> -	};
+> -};
+> 
+
+[0] https://marc.info/?l=linux-kernel&m=155414072611538&w=2
+[1] https://marc.info/?l=devicetree&m=155447454524411&w=2
+[2] https://lore.kernel.org/patchwork/patch/1058762/
+[3] https://marc.info/?l=devicetree&m=155447624324995&w=2
+[4] https://lore.kernel.org/patchwork/patch/1058779/
+
+-- 
+Best regards,
+Jacek Anaszewski
