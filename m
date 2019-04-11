@@ -1,43 +1,30 @@
-From: xiaojiangfeng <xiaojiangfeng@huawei.com>
-Subject: =?utf-8?B?UmU6IFxcIOetlOWkjTogW1BBVENIXSBvZjogZGVsIHJlZHVuZGFudCB0eXBl?=
- =?utf-8?Q?_conversion?=
-Date: Thu, 11 Apr 2019 01:51:26 +0000
-Message-ID: <BE69D0C4DC96EF4BA3F03246F234C4BD01FDE17F@dggeml512-mbx.china.huawei.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/4] ARM: dts: imx6: RDU2: Use new CODEC reset pin name
+Date: Thu, 11 Apr 2019 10:42:51 +0800
+Message-ID: <20190411024250.GL26817@dragon>
+References: <20190329181313.21009-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: zh-CN
+Content-Disposition: inline
+In-Reply-To: <20190329181313.21009-1-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "robh@kernel.org" <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-TXkgcGxlYXN1cmUuDQoNCkkgYW0gdmVyeSBuZXcgdG8gc3BhcnNlLg0KDQpJIGd1ZXNzIHRoZSB3
-YXJuaW5nIGlzIGNhdXNlZCBieSB0aGUgbWFjcm8gbWluLg0KDQpUaGVuIEkgc3VibWl0dGVkIG15
-IGNoYW5nZXMuDQoNClRoYW5rcyBmb3IgY29kZSByZXZpZXcuDQoNCg0KLS0tLS3pgq7ku7bljp/k
-u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBGcmFuayBSb3dhbmQgW21haWx0bzpmcm93YW5kLmxpc3RAZ21h
-aWwuY29tXSANCuWPkemAgeaXtumXtDogMjAxOeW5tDTmnIgxMeaXpSAyOjUwDQrmlLbku7bkuro6
-IHhpYW9qaWFuZ2ZlbmcgPHhpYW9qaWFuZ2ZlbmdAaHVhd2VpLmNvbT47IHJvYmgrZHRAa2VybmVs
-Lm9yZzsgcm9iaEBrZXJuZWwub3JnDQrmioTpgIE6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQrkuLvpopg6IFJlOiBbUEFUQ0hdIG9mOiBk
-ZWwgcmVkdW5kYW50IHR5cGUgY29udmVyc2lvbg0KDQpPbiA0LzEwLzE5IDE6MjkgQU0sIHhpYW9q
-aWFuZ2Zlbmcgd3JvdGU6DQo+IFRoZSB0eXBlIG9mIHZhcmlhYmxlIGwgaW4gZWFybHlfaW5pdF9k
-dF9zY2FuX2Nob3NlbiBpcyBpbnQsIHRoZXJlIGlzIA0KPiBubyBuZWVkIHRvIGNvbnZlcnQgdG8g
-aW50Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogeGlhb2ppYW5nZmVuZyA8eGlhb2ppYW5nZmVuZ0Bo
-dWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvb2YvZmR0LmMgfCAyICstDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL29mL2ZkdC5jIGIvZHJpdmVycy9vZi9mZHQuYyBpbmRleCANCj4gNDczNDIyMy4u
-ZGU4OTNjOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYw0KPiArKysgYi9kcml2ZXJz
-L29mL2ZkdC5jDQo+IEBAIC0xMDkxLDcgKzEwOTEsNyBAQCBpbnQgX19pbml0IGVhcmx5X2luaXRf
-ZHRfc2Nhbl9jaG9zZW4odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICp1bmFtZSwNCj4g
-IAkvKiBSZXRyaWV2ZSBjb21tYW5kIGxpbmUgKi8NCj4gIAlwID0gb2ZfZ2V0X2ZsYXRfZHRfcHJv
-cChub2RlLCAiYm9vdGFyZ3MiLCAmbCk7DQo+ICAJaWYgKHAgIT0gTlVMTCAmJiBsID4gMCkNCj4g
-LQkJc3RybGNweShkYXRhLCBwLCBtaW4oKGludClsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAr
-CQlzdHJsY3B5KGRhdGEsIHAsIG1pbihsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAgDQo+ICAJ
-LyoNCj4gIAkgKiBDT05GSUdfQ01ETElORSBpcyBtZWFudCB0byBiZSBhIGRlZmF1bHQgaW4gY2Fz
-ZSBub3RoaW5nIGVsc2UNCj4gDQoNClRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhlIHJlZHVuZGFudCBj
-YXN0Lg0KDQpUaGVyZSBpcyBhIHNlY29uZCBwcm9ibGVtIGRldGVjdGVkIGJ5IHNwYXJzZSBvbiB0
-aGF0IGxpbmU6DQoNCiAgZHJpdmVycy9vZi9mZHQuYzoxMDk0OjM0OiB3YXJuaW5nOiBleHByZXNz
-aW9uIHVzaW5nIHNpemVvZih2b2lkKQ0KDQpDYW4geW91IHBsZWFzZSBmaXggYm90aCBpc3N1ZXM/
-DQoNClRoYW5rcywNCg0KRnJhbmsNCg==
+On Fri, Mar 29, 2019 at 01:13:10PM -0500, Andrew F. Davis wrote:
+> The correct DT property for specifying a GPIO used for reset
+> is "reset-gpios", the driver now accepts this name, use it here.
+> 
+> Note the GPIO polarity in the driver was ignored before and always
+> assumed to be active low, when all the DTs are fixed we will start
+> respecting the specified polarity. Switch polarity in DT to the
+> currently assumed one, this way when the driver changes the
+> behavior will not change.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+
+I fixed up the prefix to use board name, and applied patch #1 ~ #3.
+
+Shawn
