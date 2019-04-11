@@ -1,131 +1,50 @@
-Return-Path: <SRS0=vThj=SN=flygoat.com=jiaxun.yang@kernel.org>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 3/6] MIPS: Loongson32: Kconfig merge CPU_LOONGSON1B&C
-Date: Thu, 11 Apr 2019 20:19:12 +0800
-Message-Id: <20190411121915.8040-4-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190411121915.8040-1-jiaxun.yang@flygoat.com>
-References: <20190312091520.8863-2-jiaxun.yang@flygoat.com>
- <20190411121915.8040-1-jiaxun.yang@flygoat.com>
+Return-Path: <shawnguo@kernel.org>
+Date: Thu, 11 Apr 2019 10:24:08 +0800
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 0/5] ARM: imx7s: add media nodes
+Message-ID: <20190411022407.GJ26817@dragon>
+References: <20190328142516.30372-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org, paul.burton@mips.com, robh+dt@kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328142516.30372-1-rui.silva@linaro.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Loongson-1B&C have totally identical GS232 core, so merge
-them into same CPU config.
+On Thu, Mar 28, 2019 at 02:25:11PM +0000, Rui Miguel Silva wrote:
+> This series is a continuation of the
+> [PATCH v14 00/13] media: staging/imx7: add i.MX7 media driver [0] series.
+> All code patches and bindings are already merged, missing only this
+> dts patches.
+> 
+> The main difference from the version in the previous series is as
+> commented by Laurent:
+>  - split of dtsi and dts in 2 patches
+>  - push endpoints to imx7s.dtsi
+> 
+> Cheers,
+>    Rui
+> 
+> v2->v3:
+> Laurent Pinchart:
+>   - Add label to csi-mux
+>   - Disable csi-mux in imx7s
+>   - enable it in warp dts
+>   - add port@0 to mux
+> 
+> v1->v2:
+> Shawn Guo:
+>   - sort alphabetically
+>   - hyphen for node name
+>   - indent align clocks
+>   - send status to end of property list
+> 
+> Rui Miguel Silva (5):
+>   ARM: dts: imx7s: add mipi phy power domain
+>   ARM: dts: imx7s: add multiplexer controls
+>   ARM: dts: imx7s: Add video mux, csi and mipi_csi
+>   ARM: dts: imx7s-warp: add csi and mipi_csi node
+>   ARM: dts: imx7s-warp: add ov2680 sensor node
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/Kconfig                | 38 +++++++++-----------------------
- arch/mips/include/asm/cpu-type.h |  3 +--
- arch/mips/loongson32/Kconfig     |  4 ++--
- 3 files changed, 14 insertions(+), 31 deletions(-)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 15f8cc3c965f..ac0b93e57ca3 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1429,26 +1429,22 @@ config CPU_LOONGSON2F
- 	  have a similar programming interface with FPGA northbridge used in
- 	  Loongson2E.
- 
--config CPU_LOONGSON1B
--	bool "Loongson 1B"
--	depends on SYS_HAS_CPU_LOONGSON1B
--	select CPU_LOONGSON1
-+config CPU_LOONGSON1
-+	bool "Loongson 1"
-+	depends on SYS_HAS_CPU_LOONGSON1
-+	select CPU_MIPS32
-+	select CPU_MIPSR2
-+	select CPU_HAS_PREFETCH
-+	select CPU_HAS_LOAD_STORE_LR
-+	select CPU_SUPPORTS_32BIT_KERNEL
-+	select CPU_SUPPORTS_HIGHMEM
-+	select CPU_SUPPORTS_CPUFREQ
- 	select LEDS_GPIO_REGISTER
- 	help
- 	  The Loongson 1B is a 32-bit SoC, which implements the MIPS32
- 	  Release 1 instruction set and part of the MIPS32 Release 2
- 	  instruction set.
- 
--config CPU_LOONGSON1C
--	bool "Loongson 1C"
--	depends on SYS_HAS_CPU_LOONGSON1C
--	select CPU_LOONGSON1
--	select LEDS_GPIO_REGISTER
--	help
--	  The Loongson 1C is a 32-bit SoC, which implements the MIPS32
--	  Release 1 instruction set and part of the MIPS32 Release 2
--	  instruction set.
--
- config CPU_MIPS32_R1
- 	bool "MIPS32 Release 1"
- 	depends on SYS_HAS_CPU_MIPS32_R1
-@@ -1866,15 +1862,6 @@ config CPU_LOONGSON2
- 	select ARCH_HAS_PHYS_TO_DMA
- 	select CPU_HAS_LOAD_STORE_LR
- 
--config CPU_LOONGSON1
--	bool
--	select CPU_MIPS32
--	select CPU_MIPSR2
--	select CPU_HAS_PREFETCH
--	select CPU_HAS_LOAD_STORE_LR
--	select CPU_SUPPORTS_32BIT_KERNEL
--	select CPU_SUPPORTS_HIGHMEM
--	select CPU_SUPPORTS_CPUFREQ
- 
- config CPU_BMIPS32_3300
- 	select SMP_UP if SMP
-@@ -1914,10 +1901,7 @@ config SYS_HAS_CPU_LOONGSON2F
- 	select CPU_SUPPORTS_ADDRWINCFG if 64BIT
- 	select CPU_SUPPORTS_UNCACHED_ACCELERATED
- 
--config SYS_HAS_CPU_LOONGSON1B
--	bool
--
--config SYS_HAS_CPU_LOONGSON1C
-+config SYS_HAS_CPU_LOONGSON1
- 	bool
- 
- config SYS_HAS_CPU_MIPS32_R1
-diff --git a/arch/mips/include/asm/cpu-type.h b/arch/mips/include/asm/cpu-type.h
-index a45af3de075d..ee17f02419a3 100644
---- a/arch/mips/include/asm/cpu-type.h
-+++ b/arch/mips/include/asm/cpu-type.h
-@@ -24,8 +24,7 @@ static inline int __pure __get_cpu_type(const int cpu_type)
- 	case CPU_LOONGSON3:
- #endif
- 
--#if defined(CONFIG_SYS_HAS_CPU_LOONGSON1B) || \
--    defined(CONFIG_SYS_HAS_CPU_LOONGSON1C)
-+#if defined(CONFIG_SYS_HAS_CPU_LOONGSON1)
- 	case CPU_LOONGSON1:
- #endif
- 
-diff --git a/arch/mips/loongson32/Kconfig b/arch/mips/loongson32/Kconfig
-index 6dacc1438906..a0a00c3e2187 100644
---- a/arch/mips/loongson32/Kconfig
-+++ b/arch/mips/loongson32/Kconfig
-@@ -8,7 +8,7 @@ config LOONGSON1_LS1B
- 	bool "Loongson LS1B board"
- 	select CEVT_R4K if !MIPS_EXTERNAL_TIMER
- 	select CSRC_R4K if !MIPS_EXTERNAL_TIMER
--	select SYS_HAS_CPU_LOONGSON1B
-+	select SYS_HAS_CPU_LOONGSON1
- 	select DMA_NONCOHERENT
- 	select BOOT_ELF32
- 	select IRQ_MIPS_CPU
-@@ -23,7 +23,7 @@ config LOONGSON1_LS1C
- 	bool "Loongson LS1C board"
- 	select CEVT_R4K if !MIPS_EXTERNAL_TIMER
- 	select CSRC_R4K if !MIPS_EXTERNAL_TIMER
--	select SYS_HAS_CPU_LOONGSON1C
-+	select SYS_HAS_CPU_LOONGSON1
- 	select DMA_NONCOHERENT
- 	select BOOT_ELF32
- 	select IRQ_MIPS_CPU
--- 
-2.21.0
+Applied all, thanks.
