@@ -1,65 +1,63 @@
-Return-Path: <SRS0=4d3r=SO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V3 2/7] dt-bindings: usb: renesas_usb3: Add renesas,usb-role-switch property
-Date: Fri, 12 Apr 2019 11:16:14 +0100
-Message-Id: <1555064179-15626-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1555064179-15626-1-git-send-email-biju.das@bp.renesas.com>
-References: <1555064179-15626-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:49957 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfDKHy6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:54:58 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH v2 11/20] ARM: dts: r8a77470: Add LVDS support
+Date: Thu, 11 Apr 2019 16:54:13 +0900
+Message-Id: <1554969262-15028-12-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Add an optional property renesas,usb-role-switch to support
-dual role switch for USB Type-C DRP port controller devices
-using USB role switch class framework.
+This patch is to add LVDS support for the RZ/G1C (r8a77470) SoC.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
- V2-->V3
-  * Added optional renesas,usb-role-switch property.
- V1-->V2
-  * Added usb-role-switch-property
-  * Updated the example with usb-role-switch property.
----
- .../devicetree/bindings/usb/renesas_usb3.txt       | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/r8a77470.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index 35039e7..f1cb06a 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -22,6 +22,7 @@ Required properties:
- Optional properties:
-   - phys: phandle + phy specifier pair
-   - phy-names: must be "usb"
-+  - renesas,usb-role-switch: use USB role switch to handle role switch events
- 
- Example of R-Car H3 ES1.x:
- 	usb3_peri0: usb@ee020000 {
-@@ -39,3 +40,24 @@ Example of R-Car H3 ES1.x:
- 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cpg CPG_MOD 327>;
- 	};
-+
-+Example of RZ/G2E:
-+	usb3_peri0: usb@ee020000 {
-+		compatible = "renesas,r8a774c0-usb3-peri",
-+			     "renesas,rcar-gen3-usb3-peri";
-+		reg = <0 0xee020000 0 0x400>;
-+		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 328>;
-+		companion = <&xhci0>;
-+		renesas,usb-role-switch;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			usb3peri_role_switch: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&hd3ss3220_ep>;
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index 7881516..9b65e49 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -1222,6 +1222,33 @@
+ 				port@2 {
+ 					reg = <2>;
+ 					du_out_lvds0: endpoint {
++						remote-endpoint = <&lvds0_in>;
++					};
++				};
 +			};
 +		};
-+	};
++
++		lvds0: lvds@feb90000 {
++			compatible = "renesas,r8a77470-lvds";
++			reg = <0 0xfeb90000 0 0x1c>;
++			clocks = <&cpg CPG_MOD 726>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 726>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					lvds0_in: endpoint {
++						remote-endpoint = <&du_out_lvds0>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					lvds0_out: endpoint {
+ 					};
+ 				};
+ 			};
 -- 
 2.7.4
