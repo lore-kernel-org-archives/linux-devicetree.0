@@ -1,7 +1,7 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 5/5] ARM: dts: rockchip: vdd_gpu off in suspend for rk3288-veyron
-Date: Thu, 11 Apr 2019 16:21:57 -0700
-Message-ID: <20190411232157.55125-5-dianders@chromium.org>
+Subject: [PATCH 4/5] ARM: dts: rockchip: vcc33_ccd off in suspend for rk3288-veyron-chromebook
+Date: Thu, 11 Apr 2019 16:21:56 -0700
+Message-ID: <20190411232157.55125-4-dianders@chromium.org>
 References: <20190411232157.55125-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,36 +12,39 @@ To: Heiko Stuebner <heiko@sntech.de>, Elaine Zhang <zhangqing@rock-chips.com>
 Cc: dbasehore@chromium.org, amstan@chromium.org, linux-rockchip@lists.infradead.org, briannorris@chromium.org, mka@chromium.org, ryandcase@chromium.org, Chris Zhong <zyw@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-At some point long long ago the downstream GPU driver would crash if
-we turned the GPU off during suspend.  For some context you can see:
+As per my comments when the device tree for rk3288-veyron-chromebook
+first landed:
 
-https://chromium-review.googlesource.com/#/c/215780/5..6/arch/arm/boot/dts/rk3288-pinky-rev2.dts
+> Technically I think vcc33_ccd can be off since we have
+> 'needs-reset-on-resume' down in the EHCI port (this regulator is for
+> the USB webcam that's connected to the EHCI port).
+>
+>  ...but leaving it on for now seems fine until we get suspend/resume
+> more solid.
 
-At some point in time not too long after that got fixed.
+It's probably about time to do it right.
 
-It's unclear why the GPU is left enabled during suspend on the
-mainline kernel.  Everything seems fine if I turn this off, so let's
-do it.
+[1] https://lore.kernel.org/linux-arm-kernel/CAD=FV=U37Yx8Mqk75_x05zxonvdc3qRMhqp8TyTDPWGHqSuRqg@mail.gmail.com/
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 3 +--
+ arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 279d7f4ecce0..1252522392c7 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -217,8 +217,7 @@
- 				regulator-max-microvolt = <1250000>;
- 				regulator-ramp-delay = <6001>;
- 				regulator-state-mem {
--					regulator-on-in-suspend;
--					regulator-suspend-microvolt = <1000000>;
-+					regulator-off-in-suspend;
- 				};
+diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+index b9cc90f0f25c..fbef34578100 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+@@ -176,8 +176,7 @@
+ 			regulator-min-microvolt = <3300000>;
+ 			regulator-max-microvolt = <3300000>;
+ 			regulator-state-mem {
+-				regulator-on-in-suspend;
+-				regulator-suspend-microvolt = <3300000>;
++				regulator-off-in-suspend;
  			};
- 
+ 		};
+ 	};
 -- 
 2.21.0.392.gf8f6787159e-goog
