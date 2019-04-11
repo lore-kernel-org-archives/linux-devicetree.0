@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v3 04/11] pinctrl: sunxi: Support I/O bias
- voltage setting on H6
-Date: Thu, 11 Apr 2019 12:19:44 +0200
-Message-ID: <20190411101951.30223-5-megous@megous.com>
+Subject: [PATCH v3 09/11] brcmfmac: Loading the correct firmware
+ for brcm43456
+Date: Thu, 11 Apr 2019 12:19:49 +0200
+Message-ID: <20190411101951.30223-10-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBTNJXTSQKGQEFCZ2ENQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBT5JXTSQKGQEDJPYDFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190411101951.30223-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,87 +21,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-H6 SoC has a "pio group withstand voltage mode" register (datasheet
-description), that needs to be used to select either 1.8V or 3.3V I/O mode,
-based on what voltage is powering the respective pin banks and is thus used
-for I/O signals.
-
-Add support for configuring this register according to the voltage of the
-pin bank regulator (if enabled).
-
-This is similar to the support for I/O bias voltage setting patch for A80
-and the same concerns apply. See:
-
-  commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
+SDIO based brcm43456 is currently misdetected as brcm43455 and the wrong
+firmware name is used. Correct the detection and load the correct firmware
+file. Chiprev for brcm43456 is "9".
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
- drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 11 +++++++++++
- drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 +++++
- 3 files changed, 17 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-index ef4268cc6227..3cc1121589c9 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-@@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
- 	.irq_banks = 4,
- 	.irq_bank_map = h6_irq_bank_map,
- 	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- };
- 
- static int h6_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 98c4de5f4019..0cbca30b75dc 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -614,6 +614,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 					 unsigned pin,
- 					 struct regulator *supply)
- {
-+	unsigned short bank = pin / PINS_PER_BANK;
-+	unsigned long flags;
- 	u32 val, reg;
- 	int uV;
- 
-@@ -651,6 +653,15 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 		reg &= ~IO_BIAS_MASK;
- 		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
- 		return 0;
-+	case BIAS_VOLTAGE_PIO_POW_MODE_SEL:
-+		val = uV <= 1800000 ? 1 : 0;
-+
-+		raw_spin_lock_irqsave(&pctl->lock, flags);
-+		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-+		reg &= ~(1 << bank);
-+		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-+		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index 4bfc8a6d9dce..36186906f0a7 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,11 +95,16 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
- 
-+#define PIO_POW_MOD_SEL_REG	0x340
-+
- enum sunxi_desc_bias_voltage {
- 	BIAS_VOLTAGE_NONE,
- 	/* Bias voltage configuration is done through
- 	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
- 	BIAS_VOLTAGE_GRP_CONFIG,
-+	/* Bias voltage is set through PIO_POW_MOD_SEL_REG
-+	 * register, as seen on H6 SoC, for example. */
-+	BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- };
- 
- struct sunxi_desc_function {
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index a06af0cd4a7f..22b73da42822 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -622,6 +622,7 @@ BRCMF_FW_DEF(43430A0, "brcmfmac43430a0-sdio");
+ /* Note the names are not postfixed with a1 for backward compatibility */
+ BRCMF_FW_DEF(43430A1, "brcmfmac43430-sdio");
+ BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
++BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
+ BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
+ BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
+ BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
+@@ -642,7 +643,8 @@ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
+ 	BRCMF_FW_ENTRY(BRCM_CC_4339_CHIP_ID, 0xFFFFFFFF, 4339),
+ 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0x00000001, 43430A0),
+ 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0xFFFFFFFE, 43430A1),
+-	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFFC0, 43455),
++	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0x00000200, 43456),
++	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
+ 	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
+ 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
+ 	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
 -- 
 2.21.0
