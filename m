@@ -1,35 +1,43 @@
 From: xiaojiangfeng <xiaojiangfeng@huawei.com>
-Subject: [PATCH] of: fix expression using sizeof(void)
-Date: Thu, 11 Apr 2019 09:47:35 +0800
-Message-ID: <1554947255-80031-1-git-send-email-xiaojiangfeng@huawei.com>
+Subject: =?utf-8?B?UmU6IFxcIOetlOWkjTogW1BBVENIXSBvZjogZGVsIHJlZHVuZGFudCB0eXBl?=
+ =?utf-8?Q?_conversion?=
+Date: Thu, 11 Apr 2019 01:51:26 +0000
+Message-ID: <BE69D0C4DC96EF4BA3F03246F234C4BD01FDE17F@dggeml512-mbx.china.huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: zh-CN
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com, robh@kernel.org, grant.likely@secretlab.ca, xiaojiangfeng@huawei.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "robh@kernel.org" <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-problem detected by sparse:
-drivers/of/fdt.c:1094:34: warning: expression using sizeof(void)
-
-Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 4734223..75c6c55 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1091,7 +1091,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 	/* Retrieve command line */
- 	p = of_get_flat_dt_prop(node, "bootargs", &l);
- 	if (p != NULL && l > 0)
--		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
-+		strlcpy(data, p, COMMAND_LINE_SIZE);
- 
- 	/*
- 	 * CONFIG_CMDLINE is meant to be a default in case nothing else
--- 
-1.8.5.6
+TXkgcGxlYXN1cmUuDQoNCkkgYW0gdmVyeSBuZXcgdG8gc3BhcnNlLg0KDQpJIGd1ZXNzIHRoZSB3
+YXJuaW5nIGlzIGNhdXNlZCBieSB0aGUgbWFjcm8gbWluLg0KDQpUaGVuIEkgc3VibWl0dGVkIG15
+IGNoYW5nZXMuDQoNClRoYW5rcyBmb3IgY29kZSByZXZpZXcuDQoNCg0KLS0tLS3pgq7ku7bljp/k
+u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBGcmFuayBSb3dhbmQgW21haWx0bzpmcm93YW5kLmxpc3RAZ21h
+aWwuY29tXSANCuWPkemAgeaXtumXtDogMjAxOeW5tDTmnIgxMeaXpSAyOjUwDQrmlLbku7bkuro6
+IHhpYW9qaWFuZ2ZlbmcgPHhpYW9qaWFuZ2ZlbmdAaHVhd2VpLmNvbT47IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgcm9iaEBrZXJuZWwub3JnDQrmioTpgIE6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQrkuLvpopg6IFJlOiBbUEFUQ0hdIG9mOiBk
+ZWwgcmVkdW5kYW50IHR5cGUgY29udmVyc2lvbg0KDQpPbiA0LzEwLzE5IDE6MjkgQU0sIHhpYW9q
+aWFuZ2Zlbmcgd3JvdGU6DQo+IFRoZSB0eXBlIG9mIHZhcmlhYmxlIGwgaW4gZWFybHlfaW5pdF9k
+dF9zY2FuX2Nob3NlbiBpcyBpbnQsIHRoZXJlIGlzIA0KPiBubyBuZWVkIHRvIGNvbnZlcnQgdG8g
+aW50Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogeGlhb2ppYW5nZmVuZyA8eGlhb2ppYW5nZmVuZ0Bo
+dWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvb2YvZmR0LmMgfCAyICstDQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL29mL2ZkdC5jIGIvZHJpdmVycy9vZi9mZHQuYyBpbmRleCANCj4gNDczNDIyMy4u
+ZGU4OTNjOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYw0KPiArKysgYi9kcml2ZXJz
+L29mL2ZkdC5jDQo+IEBAIC0xMDkxLDcgKzEwOTEsNyBAQCBpbnQgX19pbml0IGVhcmx5X2luaXRf
+ZHRfc2Nhbl9jaG9zZW4odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICp1bmFtZSwNCj4g
+IAkvKiBSZXRyaWV2ZSBjb21tYW5kIGxpbmUgKi8NCj4gIAlwID0gb2ZfZ2V0X2ZsYXRfZHRfcHJv
+cChub2RlLCAiYm9vdGFyZ3MiLCAmbCk7DQo+ICAJaWYgKHAgIT0gTlVMTCAmJiBsID4gMCkNCj4g
+LQkJc3RybGNweShkYXRhLCBwLCBtaW4oKGludClsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAr
+CQlzdHJsY3B5KGRhdGEsIHAsIG1pbihsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAgDQo+ICAJ
+LyoNCj4gIAkgKiBDT05GSUdfQ01ETElORSBpcyBtZWFudCB0byBiZSBhIGRlZmF1bHQgaW4gY2Fz
+ZSBub3RoaW5nIGVsc2UNCj4gDQoNClRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhlIHJlZHVuZGFudCBj
+YXN0Lg0KDQpUaGVyZSBpcyBhIHNlY29uZCBwcm9ibGVtIGRldGVjdGVkIGJ5IHNwYXJzZSBvbiB0
+aGF0IGxpbmU6DQoNCiAgZHJpdmVycy9vZi9mZHQuYzoxMDk0OjM0OiB3YXJuaW5nOiBleHByZXNz
+aW9uIHVzaW5nIHNpemVvZih2b2lkKQ0KDQpDYW4geW91IHBsZWFzZSBmaXggYm90aCBpc3N1ZXM/
+DQoNClRoYW5rcywNCg0KRnJhbmsNCg==
