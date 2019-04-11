@@ -1,142 +1,74 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
-Date: Thu, 11 Apr 2019 11:12:40 +0200
-Message-ID: <20190411091240.qzi7266rzhksbxxa@flea>
-References: <20190410232543.13297-1-peron.clem@gmail.com>
- <20190410232543.13297-5-peron.clem@gmail.com>
- <20190411072806.yr3z3ei6djjhpo32@flea>
- <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V3 05/10] arm64: tegra: fix default tap and trim values
+Date: Thu, 11 Apr 2019 12:11:38 +0200
+Message-ID: <CAPDyKFqwESQ9_gDxLXhzBzu236+8p6rnqricULA7GrZguVZQWQ@mail.gmail.com>
+References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
+ <1552513552-23423-5-git-send-email-skomatineni@nvidia.com>
+ <CAPDyKFq4ZVaMmvefuVqGs84E7xg5VgvU-Ecq1MYJdmBhuEm7xA@mail.gmail.com>
+ <BYAPR12MB3398F91B190D9B1C56FDC4F7C2420@BYAPR12MB3398.namprd12.prod.outlook.com>
+ <BYAPR12MB339845B4C5A37468841E256AC2550@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wt4dw26h24e24tyj"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
+In-Reply-To: <BYAPR12MB339845B4C5A37468841E256AC2550@BYAPR12MB3398.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harjani Ritesh <riteshh@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Aniruddha Tvs Rao <anrao@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---wt4dw26h24e24tyj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 11, 2019 at 09:56:15AM +0200, Cl=E9ment P=E9ron wrote:
-> Hi,
->
-> On Thu, 11 Apr 2019 at 09:28, Maxime Ripard <maxime.ripard@bootlin.com> w=
+On Mon, 1 Apr 2019 at 19:43, Sowjanya Komatineni <skomatineni@nvidia.com> w=
 rote:
-> >
-> > On Thu, Apr 11, 2019 at 01:25:39AM +0200, Cl=E9ment P=E9ron wrote:
-> > > Add the mali gpu node to the H6 device-tree.
-> > >
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++=
-++
-> > >  1 file changed, 80 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
-4/boot/dts/allwinner/sun50i-h6.dtsi
-> > > index e0dc4a05c1ba..152b2128aadf 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > @@ -17,6 +17,71 @@
-> > >       #address-cells =3D <1>;
-> > >       #size-cells =3D <1>;
-> > >
-> > > +     gpu_opp_table: opp_table1 {
-> > > +             compatible =3D "operating-points-v2";
-> > > +
-> > > +             opp@756000000 {
-> > > +                     opp-hz =3D /bits/ 64 <756000000>;
-> > > +                     opp-microvolt =3D <1040000>;
-> > > +             };
-> > > +             opp@624000000 {
-> > > +                     opp-hz =3D /bits/ 64 <624000000>;
-> > > +                     opp-microvolt =3D <950000>;
-> > > +             };
-> > > +             opp@576000000 {
-> > > +                     opp-hz =3D /bits/ 64 <576000000>;
-> > > +                     opp-microvolt =3D <930000>;
-> > > +             };
-> > > +             opp@540000000 {
-> > > +                     opp-hz =3D /bits/ 64 <540000000>;
-> > > +                     opp-microvolt =3D <910000>;
-> > > +             };
-> > > +             opp@504000000 {
-> > > +                     opp-hz =3D /bits/ 64 <504000000>;
-> > > +                     opp-microvolt =3D <890000>;
-> > > +             };
-> > > +             opp@456000000 {
-> > > +                     opp-hz =3D /bits/ 64 <456000000>;
-> > > +                     opp-microvolt =3D <870000>;
-> > > +             };
-> > > +             opp@432000000 {
-> > > +                     opp-hz =3D /bits/ 64 <432000000>;
-> > > +                     opp-microvolt =3D <860000>;
-> > > +             };
-> > > +             opp@420000000 {
-> > > +                     opp-hz =3D /bits/ 64 <420000000>;
-> > > +                     opp-microvolt =3D <850000>;
-> > > +             };
-> > > +             opp@408000000 {
-> > > +                     opp-hz =3D /bits/ 64 <408000000>;
-> > > +                     opp-microvolt =3D <840000>;
-> > > +             };
-> > > +             opp@384000000 {
-> > > +                     opp-hz =3D /bits/ 64 <384000000>;
-> > > +                     opp-microvolt =3D <830000>;
-> > > +             };
-> > > +             opp@360000000 {
-> > > +                     opp-hz =3D /bits/ 64 <360000000>;
-> > > +                     opp-microvolt =3D <820000>;
-> > > +             };
-> > > +             opp@336000000 {
-> > > +                     opp-hz =3D /bits/ 64 <336000000>;
-> > > +                     opp-microvolt =3D <810000>;
-> > > +             };
-> > > +             opp@312000000 {
-> > > +                     opp-hz =3D /bits/ 64 <312000000>;
-> > > +                     opp-microvolt =3D <810000>;
-> > > +             };
-> > > +             opp@264000000 {
-> > > +                     opp-hz =3D /bits/ 64 <264000000>;
-> > > +                     opp-microvolt =3D <810000>;
-> > > +             };
-> > > +             opp@216000000 {
-> > > +                     opp-hz =3D /bits/ 64 <216000000>;
-> > > +                     opp-microvolt =3D <810000>;
-> > > +             };
-> > > +     };
-> > > +
-> >
-> > How were those OPPs tested?
 >
-> They are taken from the vendor device tree.
-> https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm6=
-4/boot/dts/sunxi/sun50iw6p1.dtsi#L2121
+> > > >
+> > > > Default tap and trim values are incorrect for Tegra186 SDMMC4.
+> > > > This patch fixes it.
+> > > >
+> > > > Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> > > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > >
+> > > Is this a fix and/or for stable?
+> > >
+> > > In either case, I am leaving this for arm-soc.
+> > >
+> > > Kind regards
+> > > Uffe
+> > >
+> >
+> > Thanks Uffe. Yes this is applicable for stable.
+>
+> I don=E2=80=99t see any confirmation of this being applied by arm-soc.
+> So thought to re-check if this is applied?
 
-Please remove them if you haven't tested them then.
+Perhaps repost it to remind the soc maintainer to pick it up.
 
-Maxime
+Kind regards
+Uffe
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---wt4dw26h24e24tyj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK8FCAAKCRDj7w1vZxhR
-xTKWAQCkcHeJX2zsAy0gS4+huXZb+yrk24lKRns1Ip4dRUB8QgD/Q6ImVqglfwyb
-izJof9k7hFc2NMkMbgoiFC/503I0DAs=
-=rMsx
------END PGP SIGNATURE-----
-
---wt4dw26h24e24tyj--
+>
+> > > > ---
+> > > >  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > index 97aeb946ed5e..472f55fe9488 100644
+> > > > --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > @@ -317,8 +317,8 @@
+> > > >                 nvidia,pad-autocal-pull-down-offset-1v8-timeout =3D=
+ <0x0a>;
+> > > >                 nvidia,pad-autocal-pull-up-offset-3v3-timeout =3D <=
+0x0a>;
+> > > >                 nvidia,pad-autocal-pull-down-offset-3v3-timeout =3D=
+ <0x0a>;
+> > > > -               nvidia,default-tap =3D <0x5>;
+> > > > -               nvidia,default-trim =3D <0x9>;
+> > > > +               nvidia,default-tap =3D <0x9>;
+> > > > +               nvidia,default-trim =3D <0x5>;
+> > > >                 nvidia,dqs-trim =3D <63>;
+> > > >                 mmc-hs400-1_8v;
+> > > >                 status =3D "disabled";
+> > > > --
+> > > > 2.7.4
+> > > >
