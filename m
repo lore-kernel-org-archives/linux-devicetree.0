@@ -1,14 +1,14 @@
 From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Subject: Re: [PATCH v5 3/5] phy: allwinner: add phy driver for
  USB3 PHY on Allwinner H6 SoC
-Date: Thu, 11 Apr 2019 02:15:05 +0200
-Message-ID: <20190411001505.tyjhem2yocxqtjuo@core.my.home>
+Date: Thu, 11 Apr 2019 02:20:42 +0200
+Message-ID: <20190411002042.mw7pozfzopj5qnxu@core.my.home>
 References: <20190405205736.55177-1-icenowy@aosc.io>
  <20190405205736.55177-4-icenowy@aosc.io>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBDEOXLSQKGQEBEIPNMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBXEQXLSQKGQEM2QD2GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
 In-Reply-To: <20190405205736.55177-4-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,8 +20,6 @@ List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39
 To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
-Hello Icenowy,
 
 On Sat, Apr 06, 2019 at 04:57:34AM +0800, Icenowy Zheng wrote:
 > Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
@@ -291,17 +289,21 @@ On Sat, Apr 06, 2019 at 04:57:34AM +0800, Icenowy Zheng wrote:
 > +	 * only process one connector now.
 > +	 */
 > +	connector_node = of_get_next_child(pdev->dev.of_node, NULL);
+> +
+> +	if (connector_node) {
+> +		/* Get the platform device */
+> +		phy->connector_dev = of_find_device_by_node(connector_node);
 
-I also noticed, that you're leaking connector_node, but I guess next patch will
-not have this code, so anyway... You should call of_node_put(). So just
-something to keep in mind in the future.
+Also of_find_device_by_node takes a reference that needs to be put back in
+sun50i_usb3_phy_remove() and error paths. So many refs to take care of,
+everywhere. Hmm. :)
+
+I'm just noticing all this now, because I'm writing similar code for
+HDMI/connector regualtor borrowing from HDMI controller via of_graph.
 
 regards,
 	o.
 
-> +	if (connector_node) {
-> +		/* Get the platform device */
-> +		phy->connector_dev = of_find_device_by_node(connector_node);
 > +		if (!phy->connector_dev) {
 > +			dev_err(dev, "no device for connector\n");
 > +			return -ENODEV;
