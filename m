@@ -1,52 +1,86 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] arm64: defconfig: Enable Sun4i SPDIF module
-Date: Thu, 11 Apr 2019 23:44:22 +0200
-Message-ID: <20190411214422.2267-5-peron.clem@gmail.com>
-References: <20190411214422.2267-1-peron.clem@gmail.com>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
+ DT source data
+Date: Thu, 11 Apr 2019 14:52:22 -0700
+Message-ID: <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com>
+ <20190411114616.GA10032@infradead.org>
+ <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBX7KX3SQKGQE4VEPGDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190411214422.2267-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Paul Walmsley <paul.walmsley@sifive.com>, Christoph Hellwig <hch@infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64 and H6 use the Sun4i SPDIF driver.
+On 4/11/19 2:12 PM, Paul Walmsley wrote:
+> On Thu, 11 Apr 2019, Christoph Hellwig wrote:
+> 
+>> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
+>>> Similar to ARM64, add support for building DTB files from DT source
+>>> data for RISC-V boards.
+>>>
+>>> This patch starts with the infrastructure needed for SiFive boards.
+>>> Boards from other vendors would add support here in a similar form.
+>>
+>> What do we build it for?  We'd really need something like this:
+>>
+>> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
+>> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
+>>
+>> To actually use the DT files.
+> 
+> Those patches might be useful - I have not reviewed them closely - but
+> they are not necessary.
+> 
+> The FSBL already supplies a DTB to Linux.  I assume the U-boot port works
+> the same way.
+> 
 
-Enable this to allow a proper support for these SoCs.
+I am bit confused here. I thought the idea behind putting the the DTS in 
+kernel so that Kernel don't need to depend on DT passed from boot 
+loaders. Currently, DTB passed from FSBL is modified by OpenSBI/BBL 
+before passing to U-Boot or Linux.
 
-Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+If Linux kernel can boot from the DTS contained within its source code 
+as is, that would be much more helpful.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c39033c1a..423413768d79 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -531,6 +531,7 @@ CONFIG_SND_SOC_RK3399_GRU_SOUND=3Dm
- CONFIG_SND_MESON_AXG_SOUND_CARD=3Dm
- CONFIG_SND_SOC_SAMSUNG=3Dy
- CONFIG_SND_SOC_RCAR=3Dm
-+CONFIG_SND_SUN4I_SPDIF=3Dm
- CONFIG_SND_SOC_AK4613=3Dm
- CONFIG_SND_SOC_PCM3168A_I2C=3Dm
- CONFIG_SND_SIMPLE_CARD=3Dm
---=20
-2.17.1
+> I haven't switched to U-boot yet for these driver tests, so I personally
+> have been using the open-source FSBL (freedom-u540-c000-bootloader) with
+> the following trivial patches applied:
+> 
+> https://github.com/sifive/freedom-u540-c000-bootloader/tree/dev/paulw/supply-fsbl-dtb-v5.1-rc4
+>
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+
+> The fsbl/ux00_fsbl.dtb file can be symlinked to the kernel DTB output,
+> e.g., ~/linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb.
+> 
+> 
+
+This assumes that FSBL has to be rebuilt every time I want to change the 
+DT. I was hoping to avoid that.
+
+Regards,
+Atish
+
+> - Paul
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
