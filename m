@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali GPU
- node for H6
-Date: Thu, 11 Apr 2019 12:57:16 +0200
-Message-ID: <20190411105720.32357-5-peron.clem@gmail.com>
+Subject: [PATCH v2 5/8] arm64: dts: allwinner: Add mali GPU
+ supply for Pine H64
+Date: Thu, 11 Apr 2019 12:57:17 +0200
+Message-ID: <20190411105720.32357-6-peron.clem@gmail.com>
 References: <20190411105720.32357-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBTVWXTSQKGQEVDZKBSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBT5WXTSQKGQEQZSSJGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190411105720.32357-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,39 +21,31 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the mali gpu node to the H6 device-tree.
+Enable and add supply to the Mali GPU node on the
+Pine H64 board.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
-/dts/allwinner/sun50i-h6.dtsi
-index e0dc4a05c1ba..196753110434 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -157,6 +157,20 @@
- 			allwinner,sram =3D <&ve_sram 1>;
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/ar=
+m64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 4802902e128f..e16a8c6738f9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -85,6 +85,11 @@
+ 	status =3D "okay";
+ };
 =20
-+		gpu: gpu@1800000 {
-+			compatible =3D "allwinner,sun50i-h6-mali",
-+				     "arm,mali-t720";
-+			reg =3D <0x01800000 0x4000>;
-+			interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "job", "mmu", "gpu";
-+			clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-+			clock-names =3D "core", "bus";
-+			resets =3D <&ccu RST_BUS_GPU>;
-+			status =3D "disabled";
-+		};
++&gpu {
++	mali-supply =3D <&reg_dcdcc>;
++	status =3D "okay";
++};
 +
- 		syscon: syscon@3000000 {
- 			compatible =3D "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+ &hdmi {
+ 	status =3D "okay";
+ };
 --=20
 2.17.1
 
