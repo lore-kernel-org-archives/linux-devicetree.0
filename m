@@ -1,120 +1,132 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: =?UTF-8?B?UmU6IFxcIOetlOWkjTogW1BBVENIXSBvZjogZGVsIHJlZHVuZGFudCB0?=
- =?UTF-8?Q?ype_conversion?=
-Date: Wed, 10 Apr 2019 22:30:21 -0700
-Message-ID: <64c41d24-e956-2f91-5838-0e572e532af7@gmail.com>
-References: <BE69D0C4DC96EF4BA3F03246F234C4BD01FDE17F@dggeml512-mbx.china.huawei.com>
- <5739f2b6-5909-adf0-4fa6-dfaa1614a22a@gmail.com>
- <803ef005-c5af-0682-7aa2-cff1fda5a85e@gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 07/25] drm/mediatek: move rdma sout from
+ mtk_ddp_mout_en into mtk_ddp_sout_sel
+Date: Thu, 11 Apr 2019 13:30:16 +0800
+Message-ID: <1554960616.4768.1.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1553667561-25447-8-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <803ef005-c5af-0682-7aa2-cff1fda5a85e@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: xiaojiangfeng <xiaojiangfeng@huawei.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "robh@kernel.org" <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1553667561-25447-8-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/10/19 9:21 PM, Frank Rowand wrote:
-> On 4/10/19 9:13 PM, Frank Rowand wrote:
->> On 4/10/19 6:51 PM, xiaojiangfeng wrote:
->>> My pleasure.
->>>
->>> I am very new to sparse.
->>>
->>> I guess the warning is caused by the macro min.
->>
->> I think the warning is likely because the type of data is 'void *'.
->>
->> Removing the (int) cast is a good fix, but does not resolve
->> the sparse warning.
-> 
-> Let me correct myself.  When I ran sparse, I see the removing min() does
-> eliminate the sparse warning.  I'm not sure why, so I'll go dig a little
-> deeper.
-
-Digging leaves me with more information, but still not sure of the actual
-underlying cause.  min() is defined in include/linux/kernel.h.  Unraveling
-the defines, the code that sparse is complaining about is in
-__no_side_effects(), which is:
-
-#define __no_side_effects(x, y) \
-                (__is_constexpr(x) && __is_constexpr(y))
-
-and __is_constexpr() is:
-
-#define __is_constexpr(x) \
-        (sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
-
-The compiler warning points to the second sizeof() in the __is_constexpr() for
-'l', which expands as:
-
-  (sizeof(int) == sizeof(*(8 ? ((void *)((long)(   l) * 0l)) : (int *)8)))
-
-I'll dig into this a little more, to see if maybe the problem is related to
-my compiler version or sparse version.  Or if the reason lies elsewhere.
-
--Frank
-
-
-> 
-> -Frank
-> 
->>
->> -Frank
->>
->>
->>> Then I submitted my changes.
->>>
->>> Thanks for code review.
->>>
->>>
->>> -----邮件原件-----
->>> 发件人: Frank Rowand [mailto:frowand.list@gmail.com] 
->>> 发送时间: 2019年4月11日 2:50
->>> 收件人: xiaojiangfeng <xiaojiangfeng@huawei.com>; robh+dt@kernel.org; robh@kernel.org
->>> 抄送: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
->>> 主题: Re: [PATCH] of: del redundant type conversion
->>>
->>> On 4/10/19 1:29 AM, xiaojiangfeng wrote:
->>>> The type of variable l in early_init_dt_scan_chosen is int, there is 
->>>> no need to convert to int.
->>>>
->>>> Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
->>>> ---
->>>>  drivers/of/fdt.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c index 
->>>> 4734223..de893c9 100644
->>>> --- a/drivers/of/fdt.c
->>>> +++ b/drivers/of/fdt.c
->>>> @@ -1091,7 +1091,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->>>>  	/* Retrieve command line */
->>>>  	p = of_get_flat_dt_prop(node, "bootargs", &l);
->>>>  	if (p != NULL && l > 0)
->>>> -		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
->>>> +		strlcpy(data, p, min(l, COMMAND_LINE_SIZE));
->>>>  
->>>>  	/*
->>>>  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
->>>>
->>>
->>> Thanks for catching the redundant cast.
->>>
->>> There is a second problem detected by sparse on that line:
->>>
->>>   drivers/of/fdt.c:1094:34: warning: expression using sizeof(void)
->>>
->>> Can you please fix both issues?
->>>
->>> Thanks,
->>>
->>> Frank
->>>
->>
->>
-> 
-> 
+SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBtb3ZlIHJkbWEgc291dCBmcm9t
+IG10a19kZHBfbW91dF9lbiBpbnRvIG10a19kZHBfc291dF9zZWwKPiByZG1hIG9ubHkgaGFzIHNp
+bmdsZSBvdXRwdXQsIGJ1dCBubyBtdWx0aSBvdXRwdXQsCj4gYWxsIHRoZXNlIHJkbWEtPmRzaS9k
+cGkgdXNlY2FzZSBzaG91bGQgbW92ZSB0byBtdGtfZGRwX3NvdXRfc2VsCgpSZXZpZXdlZC1ieTog
+Q0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5n
+IE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIHwgOTAgKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
+LS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgNDUgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBpbmRleCBlNGRh
+ZmUwLi41YWUxM2IwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2RkcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMK
+PiBAQCAtMjgxLDUxICsyODEsNiBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfbW91dF9l
+bihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09N
+UE9ORU5UX09EMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfUkRNQTEpIHsKPiAgCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX09EX01PVVRfRU47Cj4gIAkJdmFsdWUgPSBPRDFfTU9VVF9F
+Tl9SRE1BMTsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19E
+SVNQX1JETUEwX1NPVVRfRU47Cj4gLQkJdmFsdWUgPSBSRE1BMF9TT1VUX0RQSTA7Cj4gLQl9IGVs
+c2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVO
+VF9EUEkxKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VO
+Owo+IC0JCXZhbHVlID0gUkRNQTBfU09VVF9EUEkxOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgewo+IC0JCSph
+ZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfU09VVF9FTjsKPiAtCQl2YWx1ZSA9IFJE
+TUEwX1NPVVRfRFNJMTsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAg
+JiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NP
+TkZJR19ESVNQX1JETUEwX1NPVVRfRU47Cj4gLQkJdmFsdWUgPSBSRE1BMF9TT1VUX0RTSTI7Cj4g
+LQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NP
+TVBPTkVOVF9EU0kzKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9T
+T1VUX0VOOwo+IC0JCXZhbHVlID0gUkRNQTBfU09VVF9EU0kzOwo+IC0JfSBlbHNlIGlmIChjdXIg
+PT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgewo+
+IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiAtCQl2YWx1
+ZSA9IFJETUExX1NPVVRfRFNJMTsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRf
+UkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiAtCQkqYWRkciA9IERJU1Bf
+UkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47Cj4gLQkJdmFsdWUgPSBSRE1BMV9TT1VUX0RT
+STI7Cj4gLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0g
+RERQX0NPTVBPTkVOVF9EU0kzKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9S
+RE1BMV9TT1VUX0VOOwo+IC0JCXZhbHVlID0gUkRNQTFfU09VVF9EU0kzOwo+IC0JfSBlbHNlIGlm
+IChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJ
+MCkgewo+IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiAt
+CQl2YWx1ZSA9IFJETUExX1NPVVRfRFBJMDsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01Q
+T05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsKPiAtCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47Cj4gLQkJdmFsdWUgPSBSRE1BMV9T
+T1VUX0RQSTE7Cj4gLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5l
+eHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdf
+RElTUF9SRE1BMl9TT1VUOwo+IC0JCXZhbHVlID0gUkRNQTJfU09VVF9EUEkwOwo+IC0JfSBlbHNl
+IGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRf
+RFBJMSkgewo+IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiAt
+CQl2YWx1ZSA9IFJETUEyX1NPVVRfRFBJMTsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01Q
+T05FTlRfUkRNQTIgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTEpIHsKPiAtCQkqYWRkciA9
+IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7Cj4gLQkJdmFsdWUgPSBSRE1BMl9TT1VU
+X0RTSTE7Cj4gLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQg
+PT0gRERQX0NPTVBPTkVOVF9EU0kyKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElT
+UF9SRE1BMl9TT1VUOwo+IC0JCXZhbHVlID0gUkRNQTJfU09VVF9EU0kyOwo+IC0JfSBlbHNlIGlm
+IChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJ
+Mykgewo+IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiAtCQl2
+YWx1ZSA9IFJETUEyX1NPVVRfRFNJMzsKPiAgCX0gZWxzZSB7Cj4gIAkJdmFsdWUgPSAwOwo+ICAJ
+fQo+IEBAIC00MDYsNiArMzYxLDUxIEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zb3V0
+X3NlbChlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kwKSB7Cj4gIAkJKmFk
+ZHIgPSBESVNQX1JFR19DT05GSUdfRFNJX1NFTDsKPiAgCQl2YWx1ZSA9IERTSV9TRUxfSU5fUkRN
+QTsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYgbmV4dCA9PSBE
+RFBfQ09NUE9ORU5UX0RQSTApIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JE
+TUEwX1NPVVRfRU47Cj4gKwkJdmFsdWUgPSBSRE1BMF9TT1VUX0RQSTA7Cj4gKwl9IGVsc2UgaWYg
+KGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkx
+KSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOwo+ICsJ
+CXZhbHVlID0gUkRNQTBfU09VVF9EUEkxOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBP
+TkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgewo+ICsJCSphZGRyID0g
+RElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfU09VVF9FTjsKPiArCQl2YWx1ZSA9IFJETUEwX1NP
+VVRfRFNJMTsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19E
+SVNQX1JETUEwX1NPVVRfRU47Cj4gKwkJdmFsdWUgPSBSRE1BMF9TT1VUX0RTSTI7Cj4gKwl9IGVs
+c2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVO
+VF9EU0kzKSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VO
+Owo+ICsJCXZhbHVlID0gUkRNQTBfU09VVF9EU0kzOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgewo+ICsJCSph
+ZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiArCQl2YWx1ZSA9IFJE
+TUExX1NPVVRfRFNJMTsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEg
+JiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NP
+TkZJR19ESVNQX1JETUExX1NPVVRfRU47Cj4gKwkJdmFsdWUgPSBSRE1BMV9TT1VUX0RTSTI7Cj4g
+Kwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NP
+TVBPTkVOVF9EU0kzKSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9T
+T1VUX0VOOwo+ICsJCXZhbHVlID0gUkRNQTFfU09VVF9EU0kzOwo+ICsJfSBlbHNlIGlmIChjdXIg
+PT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+
+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiArCQl2YWx1
+ZSA9IFJETUExX1NPVVRfRFBJMDsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRf
+UkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsKPiArCQkqYWRkciA9IERJU1Bf
+UkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47Cj4gKwkJdmFsdWUgPSBSRE1BMV9TT1VUX0RQ
+STE7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0g
+RERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9S
+RE1BMl9TT1VUOwo+ICsJCXZhbHVlID0gUkRNQTJfU09VVF9EUEkwOwo+ICsJfSBlbHNlIGlmIChj
+dXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkg
+ewo+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiArCQl2YWx1
+ZSA9IFJETUEyX1NPVVRfRFBJMTsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRf
+UkRNQTIgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTEpIHsKPiArCQkqYWRkciA9IERJU1Bf
+UkVHX0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7Cj4gKwkJdmFsdWUgPSBSRE1BMl9TT1VUX0RTSTE7
+Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQ
+X0NPTVBPTkVOVF9EU0kyKSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1B
+Ml9TT1VUOwo+ICsJCXZhbHVlID0gUkRNQTJfU09VVF9EU0kyOwo+ICsJfSBlbHNlIGlmIChjdXIg
+PT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMykgewo+
+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiArCQl2YWx1ZSA9
+IFJETUEyX1NPVVRfRFNJMzsKPiAgCX0gZWxzZSB7Cj4gIAkJdmFsdWUgPSAwOwo+ICAJfQoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
