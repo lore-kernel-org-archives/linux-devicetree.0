@@ -1,70 +1,58 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 4/5] arm64: dts: rk3399: Add dfi and dmc nodes.
-Date: Thu, 11 Apr 2019 15:20:53 +0200
-Message-ID: <7786013.gjegOBUKu0@phil>
-References: <20190321231440.19031-1-gael.portay@collabora.com> <20190321231440.19031-5-gael.portay@collabora.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/4] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Thu, 11 Apr 2019 15:29:11 +0200
+Message-ID: <CAPDyKFpRA4mP-SHt_JuWk-Ee7=2Jgv6jKFh_08n_V20czKyvNg@mail.gmail.com>
+References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com> <5b9fe100-6147-d64f-f676-6a5370a03016@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190321231440.19031-5-gael.portay@collabora.com>
+In-Reply-To: <5b9fe100-6147-d64f-f676-6a5370a03016@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Gaël,
+On Thu, 11 Apr 2019 at 14:37, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+> Hi Ulf
+>
+> Just a gentleman ping about this series.
+> I sent this series at same time of dt_mode
+> (no dependence between both).
 
-Am Freitag, 22. März 2019, 00:14:39 CEST schrieb Gaël PORTAY:
-> From: Lin Huang <hl@rock-chips.com>
-> 
-> These are required to support DDR DVFS on rk3399 platform. The patch also
-> introduces a new file with default DRAM settings.
-> 
-> Signed-off-by: Lin Huang <hl@rock-chips.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+Thanks for pinging.
 
-> +	dmc: dmc {
-> +		compatible = "rockchip,rk3399-dmc";
-> +		rockchip,pmu = <&pmugrf>;
-> +		devfreq-events = <&dfi>;
-> +		clocks = <&cru SCLK_DDRC>;
-> +		clock-names = "dmc_clk";
-> +		status = "disabled";
-> +		rockchip,ddr3_speed_bin = <21>;
-> +		rockchip,pd_idle = <0x40>;
-> +		rockchip,sr_idle = <0x2>;
-> +		rockchip,sr_mc_gate_idle = <0x3>;
-> +		rockchip,srpd_lite_idle	= <0x4>;
-> +		rockchip,standby_idle = <0x2000>;
-> +		rockchip,dram_dll_dis_freq = <300000000>;
-> +		rockchip,phy_dll_dis_freq = <125000000>;
-> +		rockchip,auto_pd_dis_freq = <666000000>;
-> +		rockchip,ddr3_odt_dis_freq = <333000000>;
-> +		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
-> +		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
-> +		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
-> +		rockchip,lpddr3_odt_dis_freq = <333000000>;
-> +		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
-> +		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
-> +		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
-> +		rockchip,lpddr4_odt_dis_freq = <333000000>;
-> +		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
-> +		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
-> +		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
-> +		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
-> +		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
-> +		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
+It's been a busy period, with travels etc. I am just catching up on
+everything and I will soon come back to this.
 
-as Rob mentioned in his review, these values look board-specific,
-so should probably move over to the specific board you're using them
-on?
+I haven't tried to apply this on top of the other recent queued
+changes for mmci, but perhaps you can check if a rebase is needed?
+Especially since I plan to run this on my ux500 board.
 
+Kind regards
+Uffe
 
-Heiko
+>
+> BR
+> Ludo
+>
+> On 3/5/19 5:10 PM, Ludovic Barre wrote:
+> > From: Ludovic Barre <ludovic.barre@st.com>
+> >
+> > This patch series adds busy detect for stm32 sdmmc variant.
+> > Some adaptations are required:
+> > -Avoid to check and poll busy status when is not expected.
+> > -Clear busy status bit if busy_detect_flag and busy_detect_mask are
+> >   different.
+> > -Add hardware busy timeout with MMCIDATATIMER register.
+> >
+> > Ludovic Barre (4):
+> >    mmc: mmci: avoid fake busy polling
+> >    mmc: mmci: fix clear of busy detect status
+> >    mmc: mmci: add hardware busy timeout feature
+> >    mmc: mmci: add busy detect for stm32 sdmmc variant
+> >
+> >   drivers/mmc/host/mmci.c | 67 +++++++++++++++++++++++++++++++++++++++----------
+> >   drivers/mmc/host/mmci.h |  3 +++
+> >   2 files changed, 57 insertions(+), 13 deletions(-)
+> >
