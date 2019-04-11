@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 6/8] arm64: dts: allwinner: Add mali GPU
- supply for Beelink GS1
-Date: Thu, 11 Apr 2019 12:57:18 +0200
-Message-ID: <20190411105720.32357-7-peron.clem@gmail.com>
+Subject: [PATCH v2 8/8] arm64: dts: allwinner: Add mali GPU
+ supply for OrangePi 3
+Date: Thu, 11 Apr 2019 12:57:20 +0200
+Message-ID: <20190411105720.32357-9-peron.clem@gmail.com>
 References: <20190411105720.32357-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBUFWXTSQKGQEODXYPXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBUVWXTSQKGQEN2ALIFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190411105720.32357-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,19 +22,19 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY
 List-Id: devicetree@vger.kernel.org
 
 Enable and add supply to the Mali GPU node on the
-Beelink GS1 board.
+Orange Pi 3 board.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 5 +++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 0dc33c90dd60..21440d572f0a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -70,6 +70,11 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/=
+arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 17d496990108..d4c989cc92a7 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -58,6 +58,11 @@
  	status =3D "okay";
  };
 =20
@@ -43,9 +43,9 @@ index 0dc33c90dd60..21440d572f0a 100644
 +	status =3D "okay";
 +};
 +
- &hdmi {
- 	status =3D "okay";
- };
+ &mmc0 {
+ 	vmmc-supply =3D <&reg_cldo1>;
+ 	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
 --=20
 2.17.1
 
