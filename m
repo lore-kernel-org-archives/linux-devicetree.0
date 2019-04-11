@@ -1,57 +1,70 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mtd: Add YAML schemas for the generic
- NAND options
-Date: Thu, 11 Apr 2019 08:19:32 -0500
-Message-ID: <CAL_JsqKCky41zrGKNdwrj8i-fburCXx_D+NkZwESUasqNkbMeA@mail.gmail.com>
-References: <74b8a52ce98b09d7906f988c107793a86c0c5f6b.1554216856.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqL9rOO8jUUVQ5MnD3GCvyyCDPsw=Kd=va3X-rAF60Wkzg@mail.gmail.com>
- <20190403073551.ym7nbqwcdpicwo6e@flea>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 4/5] arm64: dts: rk3399: Add dfi and dmc nodes.
+Date: Thu, 11 Apr 2019 15:20:53 +0200
+Message-ID: <7786013.gjegOBUKu0@phil>
+References: <20190321231440.19031-1-gael.portay@collabora.com> <20190321231440.19031-5-gael.portay@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190403073551.ym7nbqwcdpicwo6e@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190321231440.19031-5-gael.portay@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 2:35 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Rob,
->
-> On Tue, Apr 02, 2019 at 08:20:58PM -0500, Rob Herring wrote:
-> > > +      nand-ecc-strength:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        minimum: 1
-> >
-> > While I wished this worked, these 2 have to be under 'allOf'.
-> > Unfortunately, this will also silently pass validation in json-schema.
->
-> Unfortunately, I'm not sure I fully get how the ref system is supposed
-> to work yet. Can you elaborate a bit on why we should put the ref and
-> whatever constraint we have in an allOf?
+Hi Gaël,
 
-TL;DR is that is how sub-classing or extending schemas works.
+Am Freitag, 22. März 2019, 00:14:39 CEST schrieb Gaël PORTAY:
+> From: Lin Huang <hl@rock-chips.com>
+> 
+> These are required to support DDR DVFS on rk3399 platform. The patch also
+> introduces a new file with default DRAM settings.
+> 
+> Signed-off-by: Lin Huang <hl@rock-chips.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
 
-I think I read something at one point which explained why it doesn't
-work without allOf, but couldn't find it. Certainly, it seems like it
-should at first.
+> +	dmc: dmc {
+> +		compatible = "rockchip,rk3399-dmc";
+> +		rockchip,pmu = <&pmugrf>;
+> +		devfreq-events = <&dfi>;
+> +		clocks = <&cru SCLK_DDRC>;
+> +		clock-names = "dmc_clk";
+> +		status = "disabled";
+> +		rockchip,ddr3_speed_bin = <21>;
+> +		rockchip,pd_idle = <0x40>;
+> +		rockchip,sr_idle = <0x2>;
+> +		rockchip,sr_mc_gate_idle = <0x3>;
+> +		rockchip,srpd_lite_idle	= <0x4>;
+> +		rockchip,standby_idle = <0x2000>;
+> +		rockchip,dram_dll_dis_freq = <300000000>;
+> +		rockchip,phy_dll_dis_freq = <125000000>;
+> +		rockchip,auto_pd_dis_freq = <666000000>;
+> +		rockchip,ddr3_odt_dis_freq = <333000000>;
+> +		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
+> +		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
+> +		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
+> +		rockchip,lpddr3_odt_dis_freq = <333000000>;
+> +		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
+> +		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
+> +		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
+> +		rockchip,lpddr4_odt_dis_freq = <333000000>;
+> +		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
+> +		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
+> +		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
+> +		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
+> +		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
+> +		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
 
-> Should we do the same in a separate schema that would reference
-> another entire schema (like the second patch does with the first
-> one)?
+as Rob mentioned in his review, these values look board-specific,
+so should probably move over to the specific board you're using them
+on?
 
-That would just split defining the type from the additional
-constraints. I prefer to keep the top-level 'allOf' including classes
-of devices.
 
-Rob
+Heiko
