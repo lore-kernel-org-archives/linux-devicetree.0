@@ -1,49 +1,33 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: RE: [PATCH V2 11/20] spi: expand mode support and add LSBYTE_FIRST
- mode
-Date: Thu, 11 Apr 2019 19:58:33 +0000
-Message-ID: <BYAPR12MB3398CC43DC1F78A10BC51DE8C22F0@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
- <1554423259-26056-11-git-send-email-skomatineni@nvidia.com>
- <20190408062819.GJ2803@sirena.org.uk>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 4/4] ASoC: fsl_audmix: cache pdev->dev pointer
+Date: Thu, 11 Apr 2019 13:21:18 -0700
+Message-ID: <20190411202117.GC13170@Asurada-Nvidia.nvidia.com>
+References: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com>
+ <1554894380-25153-5-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408062819.GJ2803@sirena.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1554894380-25153-5-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Julia Lawall <Julia.Lawall@lip6.fr>, Viorel Suman <viorel.suman@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lis>
 List-Id: devicetree@vger.kernel.org
 
-> On Thu, Apr 04, 2019 at 05:14:10PM -0700, Sowjanya Komatineni wrote:
-> > Some SPI Master controllers support configuring Least significant byte=
-=20
-> > first or Most significant byte first order for transfers. Also some=20
-> > SPI slave devices expect bytes to be in Least significant first order=20
-> > and some devices expect Most significant first order.
-> >=20
-> > SPI driver declares mode and mode_bits as u16 and all bits are used.
-> >=20
-> > This patch changes mode and mode_bits to be u32 to allow for more mode=
-=20
-> > configurations.
-> >=20
-> > This patch also creates SPI_LSBYTE_FIRST mode to allow SPI clients to=20
-> > choose LSByte order or MSByte order through the device tree property=20
-> > spi-lsbyte-first.
->
-> Please submit one patch per change, each with a clear changelog, as cover=
-ed in SubmittingPatches.  This makes it much easier to review things since =
-it's easier to tell if the patch does what it was intended to do and means =
-that if one part of the patch casues problems it won't hold up the other pa=
-rts.
+On Wed, Apr 10, 2019 at 11:06:39AM +0000, Viorel Suman wrote:
+> There should be no trouble to understand dev = pdev->dev.
+> This can save some space to have more print info or save
+> some wrapped lines.
 
-Hi Mark,
-I split changes on SPI code side and SPI Tegra side as separate patches.
-Do you meant to have both changes on SPI core and SPI Tegra together in a s=
-ingle patch?
+Change looks fine. Ack.
 
-Thanks
-Sowjanya
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> Suggested-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+I think usually Suggested-by comes above Signed-off-by.
+
+This was originally in your change already, so you can replace:
+-Suggested-by: Nicolin Chen <nicoleotsuka@gmail.com>
+-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Just a chance for it to get resent without being a noise :)
