@@ -1,285 +1,259 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH RFC 8/8] ARM: dts: exynos: Add ASV tables for exynos5422/5800
-Date: Thu, 11 Apr 2019 13:09:04 +0530
-Message-ID: <CANAwSgTPeSZS_Tcy2ucO5OUQjoY1ta5+7TpAer1CHV2tQTOcrw@mail.gmail.com>
-References: <CGME20190404172257epcas1p20d789242a2353dc8e9ffd7f435dc5eee@epcas1p2.samsung.com>
- <20190404171735.12815-1-s.nawrocki@samsung.com> <20190404171735.12815-9-s.nawrocki@samsung.com>
+From: "elaine.zhang" <zhangqing@rock-chips.com>
+Subject: Re: [PATCH v1 1/3] thermal: rockchip: add pinctrl control
+Date: Thu, 11 Apr 2019 15:46:59 +0800
+Message-ID: <db977a75-195f-4c98-ef84-aa186b484e0d@rock-chips.com>
+References: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com>
+ <1554100985-11385-2-git-send-email-zhangqing@rock-chips.com>
+ <30325add-d75a-6775-50c0-d2d2274ff81e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404171735.12815-9-s.nawrocki@samsung.com>
+In-Reply-To: <30325add-d75a-6775-50c0-d2d2274ff81e@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, heiko@sntech.de
+Cc: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+hi,
 
-As per my knowledge HK soc introduce this table to support
-overclocking of cpufreq for Odroid XU3 XU4 family for boards.
+在 2019/4/4 上午11:03, Daniel Lezcano 写道:
+> On 01/04/2019 08:43, Elaine Zhang wrote:
+>> Based on the TSADC Tshut mode to select pinctrl,
+>> instead of setting pinctrl based on architecture
+>> (Not depends on pinctrl setting by "init" or "default").
+>> And it requires setting the tshut polarity before select pinctrl.
+> I'm not sure to fully read the description. Can you rephrase/elaborate
+> the changelog?
+Example:
+         tsadc: tsadc@ff250000 {
+                     compatible = "rockchip,rk3328-tsadc";
+                     .....
+                 pinctrl-names = "init", "default", "sleep";
+                     pinctrl-0 = <&otp_gpio>;
+                     pinctrl-1 = <&otp_out>;
+                     pinctrl-2 = <&otp_gpio>;
+                     status = "disabled";
+                 .....
+             };
+         &tsadc {
+                 rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
+                 status = "okay";
+         };
+     Application on the product, hope tsadc overtemperature reset cru to 
+restart.
+     But when pinctrl is initialized, it will setting pinctrl by "init" 
+and "default".
+     So the pinctrl will set iomux to "otp_out", which may be make 
+system crash.
+     tsadc gpio iomux:
+     "otp_gpio" : just normal gpio, keep default level.
+     "otp_out" : tsadc shut down io, when overtemperature,this io may be 
+trigger high
+     level or low level(depend on the tsadc polarity).
 
-ARM Cortex-A15 Quad CPU (Eagle) 1800 to 2000
-ARM Cortex-A7 Quard CPU (Kingfisher) 1400 to 1500
+     After correction:
+     if rockchip,hw-tshut-mode = <0>; (tsadc overtemperature reset cru 
+to restart)
+     select pinctrl to otp_gpio
+     if rockchip,hw-tshut-mode = <1>;(tsadc overtemperature IO triggers 
+output at high or low levels)
+     select pinctrl to otp_out.
+     Actively select iomux based on rockchip,hw-tshut-mode,
+     rather than relying on the pinctrl framework to select iomux.
+>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+>> ---
+>>   drivers/thermal/rockchip_thermal.c | 61 +++++++++++++++++++++++++++++++-------
+>>   1 file changed, 50 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+>> index 9c7643d62ed7..faa6c7792155 100644
+>> --- a/drivers/thermal/rockchip_thermal.c
+>> +++ b/drivers/thermal/rockchip_thermal.c
+>> @@ -34,7 +34,7 @@
+>>    */
+>>   enum tshut_mode {
+>>   	TSHUT_MODE_CRU = 0,
+>> -	TSHUT_MODE_GPIO,
+>> +	TSHUT_MODE_OTP,
+> Why do you change the enum name? The impact on the patch is much higher,
+> no ?
 
-For Exynos5422  below table
-asv-table-[0-3]  AVS range from 200 to 2100
-asv-table-[100-103] AVS range from 200 to 1500.
+I just want to make it a little bit more intuitive to understand the 
+definition of mode.
 
-Are these setting stable for this board to cover clock the cpu now.
+TSHUT_MODE_CRU: pinctrl select iomux to otp_gpio,the io is normal io.
+TSHUT_MODE_OTP: pinctrl select iomux to otp_out, the io is tsadc shut io.
 
-Can you also enable support for this clk-exynos5420.c
-For example exynos5800_eglclk_d and exynos5420_kfcclk_d table.
-
-Also can you update exynos5420.dtsi  following opp table
-For example cluster_a15_opp_table and cluster_a7_opp_table opt binding.
-
-To make this work synchronously with AVS.
-
-Best Regards
--Anand
-
-On Thu, 4 Apr 2019 at 22:55, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
 >
-> This patch ASV (Adaptive Supply Voltage) table entries for
-> Exynos5422/5800 SoC.
+>>   };
+>>   
+>>   /**
+>> @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+>>   	int tshut_temp;
+>>   	enum tshut_mode tshut_mode;
+>>   	enum tshut_polarity tshut_polarity;
+>> +	struct pinctrl *pinctrl;
+>> +	struct pinctrl_state *gpio_state;
+>> +	struct pinctrl_state *otp_state;
+>>   };
+>>   
+>>   /**
+>> @@ -807,7 +810,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	u32 val;
+>>   
+>>   	val = readl_relaxed(regs + TSADCV2_INT_EN);
+>> -	if (mode == TSHUT_MODE_GPIO) {
+>> +	if (mode == TSHUT_MODE_OTP) {
+>>   		val &= ~TSADCV2_SHUT_2CRU_SRC_EN(chn);
+>>   		val |= TSADCV2_SHUT_2GPIO_SRC_EN(chn);
+>>   	} else {
+>> @@ -822,7 +825,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+>>   	.chn_num = 1, /* one channel for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -846,7 +849,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+>>   	.chn_num = 1, /* one channel for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -871,7 +874,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 2, /* gpu sensor is channel 2 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -919,7 +922,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -944,7 +947,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -969,7 +972,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -1080,6 +1083,20 @@ static int rockchip_thermal_get_temp(void *_sensor, int *out_temp)
+>>   	.set_trips = rockchip_thermal_set_trips,
+>>   };
+>>   
+>> +static void thermal_pinctrl_select_otp(struct rockchip_thermal_data *thermal)
+>> +{
+>> +	if (!IS_ERR(thermal->pinctrl) && !IS_ERR_OR_NULL(thermal->otp_state))
+>> +		pinctrl_select_state(thermal->pinctrl,
+>> +				     thermal->otp_state);
+>> +}
+>> +
+>> +static void thermal_pinctrl_select_gpio(struct rockchip_thermal_data *thermal)
+>> +{
+>> +	if (!IS_ERR(thermal->pinctrl) && !IS_ERR_OR_NULL(thermal->gpio_state))
+>> +		pinctrl_select_state(thermal->pinctrl,
+>> +				     thermal->gpio_state);
+>> +}
+> You should not have to create a couple of specific functions just to
+> check the pinctrl pointers are set. The caller should do that.
+Because there are several places where the call is made,create a couple 
+of specific functions reduce a lot of duplicated code.
 >
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5.dtsi    |   2 +-
->  arch/arm/boot/dts/exynos5800.dtsi | 207 ++++++++++++++++++++++++++++++
->  2 files changed, 208 insertions(+), 1 deletion(-)
+>>   static int rockchip_configure_from_dt(struct device *dev,
+>>   				      struct device_node *np,
+>>   				      struct rockchip_thermal_data *thermal)
+>> @@ -1103,7 +1120,7 @@ static int rockchip_configure_from_dt(struct device *dev,
+>>   	if (of_property_read_u32(np, "rockchip,hw-tshut-mode", &tshut_mode)) {
+>>   		dev_warn(dev,
+>>   			 "Missing tshut mode property, using default (%s)\n",
+>> -			 thermal->chip->tshut_mode == TSHUT_MODE_GPIO ?
+>> +			 thermal->chip->tshut_mode == TSHUT_MODE_OTP ?
+>>   				"gpio" : "cru");
+>>   		thermal->tshut_mode = thermal->chip->tshut_mode;
+>>   	} else {
+>> @@ -1242,6 +1259,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>>   		return error;
+>>   	}
+>>   
+>> +	thermal->chip->control(thermal->regs, false);
+>> +
+>>   	error = clk_prepare_enable(thermal->clk);
+>>   	if (error) {
+>>   		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+>> @@ -1267,6 +1286,24 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>>   	thermal->chip->initialize(thermal->grf, thermal->regs,
+>>   				  thermal->tshut_polarity);
+>>   
+>> +	if (thermal->tshut_mode == TSHUT_MODE_OTP) {
+>> +		thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+>> +		if (IS_ERR(thermal->pinctrl))
+>> +			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+>> +
+>> +		thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+>> +							   "gpio");
+>> +		if (IS_ERR_OR_NULL(thermal->gpio_state))
+>> +			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+>> +
+>> +		thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+>> +							  "otpout");
+>> +		if (IS_ERR_OR_NULL(thermal->otp_state))
+>> +			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+> What is the meaning for the rest of the code if the lookup fails for any
+> of those ?
+If the lookup fails for any of those， The pinctrl is no longer set and 
+remains in its default state(otp_gpio normal io).
 >
-> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-> index 67f9b4504a42..22eb951c614c 100644
-> --- a/arch/arm/boot/dts/exynos5.dtsi
-> +++ b/arch/arm/boot/dts/exynos5.dtsi
-> @@ -35,7 +35,7 @@
->                 #size-cells = <1>;
->                 ranges;
->
-> -               chipid@10000000 {
-> +               chipid: chipid@10000000 {
->                         compatible = "samsung,exynos4210-chipid";
->                         reg = <0x10000000 0x100>;
->                 };
-> diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
-> index 57d3b319fd65..5358865f5c0b 100644
-> --- a/arch/arm/boot/dts/exynos5800.dtsi
-> +++ b/arch/arm/boot/dts/exynos5800.dtsi
-> @@ -16,6 +16,213 @@
->         compatible = "samsung,exynos5800", "samsung,exynos5";
->  };
->
-> +&chipid {
-> +       asv {
-> +               compatible = "samsung,exynos-asv-v1";
-> +               asv-table-0 {
-> +                       /* ARM 0, 1 */
-> +                       samsung,asv-table-size = <20 15>;
-> +                       samsung,asv-table-id = <0x0>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12   ASV13 */
-> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
-> +                               <2000 1312500 1312500 1300000 1287500 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1900 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1800 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1700 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1075000 1062500 1050000 1037500 1025000>,
-> +                               <1600 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1037500 1025000 1012500 1000000  987500>,
-> +                               <1500 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500 1000000  987500  975000  962500  950000>,
-> +                               <1400 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  975000  962500  950000  937500  925000>,
-> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
-> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
-> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
-> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                    /* ASV0...13 */
-> +                       samsung,asv-common-data = <700 900000>,
-> +                                                 <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +               asv-table-2 {
-> +                       /* ARM 2 */
-> +                       samsung,asv-table-size = <20 15>;
-> +                       samsung,asv-table-id = <0x2>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
-> +                               <2000 1312500 1312500 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1900 1262500 1250000 1250000 1237500 1212500 1200000 1187500 1175000 1162500 1175000 1162500 1150000 1137500 1125000>,
-> +                               <1800 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1125000 1112500 1100000 1087500 1075000>,
-> +                               <1700 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1087500 1075000 1062500 1050000 1037500>,
-> +                               <1600 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1050000 1037500 1025000 1012500 1000000>,
-> +                               <1500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000  987500  975000  962500>,
-> +                               <1400 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  987500  975000  962500  950000  937500>,
-> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
-> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
-> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
-> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                    /* ASV0...13 */
-> +                       samsung,asv-common-data = <700 900000>,
-> +                                                 <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +               asv-table-3 {
-> +                       /* ARM 3 */
-> +                       samsung,asv-table-size = <20 15>;
-> +                       samsung,asv-table-id = <0x3>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
-> +                               <2000 1312500 1312500 1300000 1287500 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1900 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1175000 1162500 1150000 1137500 1125000>,
-> +                               <1800 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1125000 1112500 1100000 1087500 1075000>,
-> +                               <1700 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1087500 1075000 1062500 1050000 1037500>,
-> +                               <1600 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1050000 1037500 1025000 1012500 1000000>,
-> +                               <1500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000  987500  975000  962500>,
-> +                               <1400 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  987500  975000  962500  950000  937500>,
-> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
-> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
-> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
-> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                    /* ASV0...13 */
-> +                       samsung,asv-common-data = <700 900000>,
-> +                                                 <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-4 {
-> +                       /* ARM BIN2 */
-> +                       samsung,asv-table-size = <17 15>;
-> +                       samsung,asv-table-id = <0x4>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1800 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1150000 1137500 1125000 1112500 1100000>,
-> +                               <1700 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1600 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1075000 1062500 1050000 1037500 1025000>,
-> +                               <1500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1037500 1025000 1012500 1000000 987500>,
-> +                               <1400 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000 987500  975000  962500>,
-> +                               <1300 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 987500  1000000 987500  975000  962500  950000>,
-> +                               <1200 1062500 1050000 1037500 1025000 1012500 1000000 987500  975000  962500  975000  962500  950000  937500  925000>,
-> +                               <1100 1037500 1025000 1012500 1000000 987500  975000  962500  950000  937500  950000  937500  925000  912500  900000>,
-> +                               <1000 1012500 1000000  987500  975000 962500  950000  937500  925000  912500  925000  912500  900000  900000  900000>,
-> +                               < 900  987500  975000  962500  950000 937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  962500  950000  937500  925000 912500  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 700  937500  925000  912500  900000 900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                      /* ASV0...13 */
-> +                       samsung,asv-common-data = <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +
-> +               asv-table-100 {
-> +                       /* KFC 0, 1 */
-> +                       samsung,asv-table-size = <14 15>;
-> +                       samsung,asv-table-id = <0x100>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
-> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
-> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
-> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
-> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
-> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-102 {
-> +                       /* KFC 2 */
-> +                       samsung,asv-table-size = <14 15>;
-> +                       samsung,asv-table-id = <0x102>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
-> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
-> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
-> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
-> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
-> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-103 {
-> +                       /* KFC 3 */
-> +                       samsung,asv-table-size = <14 15>;
-> +                       samsung,asv-table-id = <0x103>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
-> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
-> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
-> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
-> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
-> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-104 {
-> +                       /* KFC BIN2 */
-> +                       samsung,asv-table-size = <12 15>;
-> +                       samsung,asv-table-id = <0x104>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1300 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500>,
-> +                               <1200 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500>,
-> +                               <1100 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000>,
-> +                               <1000 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500>,
-> +                               < 900 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000>,
-> +                               < 800 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000>,
-> +                               < 700 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000>,
-> +                               < 600  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 400  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +       };
-> +};
-> +
->  &clock {
->         compatible = "samsung,exynos5800-clock";
->  };
-> --
-> 2.17.1
+>> +		thermal_pinctrl_select_otp(thermal);
+>> +	}
+>> +
+>>   	for (i = 0; i < thermal->chip->chn_num; i++) {
+>>   		error = rockchip_thermal_register_sensor(pdev, thermal,
+>>   						&thermal->sensors[i],
+>> @@ -1338,7 +1375,8 @@ static int __maybe_unused rockchip_thermal_suspend(struct device *dev)
+>>   	clk_disable(thermal->pclk);
+>>   	clk_disable(thermal->clk);
+>>   
+>> -	pinctrl_pm_select_sleep_state(dev);
+>> +	if (thermal->tshut_mode == TSHUT_MODE_OTP)
+>> +		thermal_pinctrl_select_gpio(thermal);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -1383,7 +1421,8 @@ static int __maybe_unused rockchip_thermal_resume(struct device *dev)
+>>   	for (i = 0; i < thermal->chip->chn_num; i++)
+>>   		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+>>   
+>> -	pinctrl_pm_select_default_state(dev);
+>> +	if (thermal->tshut_mode == TSHUT_MODE_OTP)
+>> +		thermal_pinctrl_select_otp(thermal);
+>>   
+>>   	return 0;
+>>   }
+>>
 >
