@@ -1,86 +1,34 @@
-Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 7/7] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
-Date: Tue, 16 Apr 2019 10:38:07 +0100
-Message-Id: <1555407487-35394-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
-References: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbfDKHH5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:07:57 -0400
+Date: Thu, 11 Apr 2019 15:07:36 +0800
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6sx: select rgmii-id phy mode
+Message-ID: <20190411070735.GF26817@dragon>
+References: <1554781105-3514-1-git-send-email-fugang.duan@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554781105-3514-1-git-send-email-fugang.duan@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Andy Duan <fugang.duan@nxp.com>
+Cc: "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables TI HD3SS3220 device and support usb role switch
-for the CAT 874 platform.
+On Tue, Apr 09, 2019 at 03:39:18AM +0000, Andy Duan wrote:
+> The PHY AR8031 must add both tx and rx delay. But PHY driver
+> disable tx/rx delay by default in Commit 6d4cd041f0af(net: phy:
+> at803x: disable delay only for RGMII mode), which brokes i.MX6SX
+> sdb board networking.
+> 
+> So enable rgmii-txid phy mode to enable the tx/rx delay.
+> 
+> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V3-->V4
-  * No change
-V2-->V3
-  * Used "renesas,usb-role-switch" instead of generic "usb-role-switch"
-    property
-V1-->V2
-  * New patch
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+We already queued a patch from Fabio [1] that covers imx6sx-sdb.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index b9ae7db..746826c 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -85,6 +85,34 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	hd3ss3220@47 {
-+		compatible = "ti,hd3ss3220";
-+		reg = <0x47>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+		};
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hd3ss3220_ep: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&usb3peri_role_switch>;
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-0 = <&i2c1_pins>;
- 	pinctrl-names = "default";
-@@ -175,6 +203,17 @@
- &usb3_peri0 {
- 	companion = <&xhci0>;
- 	status = "okay";
-+	renesas,usb-role-switch;
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb3peri_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&hd3ss3220_ep>;
-+		};
-+	};
- };
- 
- &xhci0 {
--- 
-2.7.4
+Shawn
+
+[1] https://patchwork.kernel.org/patch/10884569/
