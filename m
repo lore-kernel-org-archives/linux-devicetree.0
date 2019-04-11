@@ -1,68 +1,104 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: [PATCH v3 2/2] PCI: OF: Support external-facing property
-Date: Thu, 11 Apr 2019 13:40:27 +0100
-Message-ID: <20190411124027.9490-3-jean-philippe.brucker@arm.com>
-References: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
+From: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+Subject: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Date: Thu, 11 Apr 2019 14:41:03 +0200
+Message-ID: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bhelgaas@google.com
-Cc: Mark.Rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, robh+dt@kernel.org, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: horms@verge.net.au
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, erosca@de.adit-jv.com, tfranzen@de.adit-jv.com
 List-Id: devicetree@vger.kernel.org
 
-Set the "untrusted" attribute to any PCIe port that has an
-"external-facing" device tree property. Any device downstream of this
-port will inherit the attribute and have only the strictest IOMMU
-protection.
+This patch adds description of TI WL1837 and links interfaces
+to communicate with the IC, namely the SDIO interface to WLAN.
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
 ---
-v2->v3:
-* Use of_property_read_bool().
-* Firmware can in theory set the property on the host bridge node.
-  Handle this case.
-* Don't pass a NULL node to the of driver. Although it is handled
-  gracefully at the moment, it isn't documented and we might as well
-  proof this too.
----
- drivers/pci/of.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 49 ++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 3d32da15c215..67376cf45880 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -31,10 +31,16 @@ void pci_release_of_node(struct pci_dev *dev)
- 
- void pci_set_bus_of_node(struct pci_bus *bus)
- {
--	if (bus->self == NULL)
--		bus->dev.of_node = pcibios_get_phb_of_node(bus);
--	else
--		bus->dev.of_node = of_node_get(bus->self->dev.of_node);
-+	struct device_node *node;
+diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+index 7a09576..27851a7 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+@@ -38,6 +38,18 @@
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+ 	};
 +
-+	if (bus->self == NULL) {
-+		node = pcibios_get_phb_of_node(bus);
-+	} else {
-+		node = of_node_get(bus->self->dev.of_node);
-+		if (node && of_property_read_bool(node, "external-facing"))
-+			bus->self->untrusted = true;
-+	}
-+	bus->dev.of_node = node;
- }
++	wlan_en: regulator-wlan_en {
++		compatible = "regulator-fixed";
++		regulator-name = "wlan-en-regulator";
++
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <70000>;
++		enable-active-high;
++	};
+ };
  
- void pci_release_bus_of_node(struct pci_bus *bus)
+ &can0 {
+@@ -88,6 +100,13 @@
+ 			line-name = "Audio_Out_OFF";
+ 		};
+ 
++		sd-wifi-mux {
++			gpio-hog;
++			gpios = <5 GPIO_ACTIVE_HIGH>;
++			output-low;	/* Connect WL1837 */
++			line-name = "SD WiFi mux";
++		};
++
+ 		hub_pwen {
+ 			gpio-hog;
+ 			gpios = <6 GPIO_ACTIVE_HIGH>;
+@@ -254,6 +273,12 @@
+ 		function = "scif1";
+ 	};
+ 
++	sdhi3_pins: sdhi3 {
++		groups = "sdhi3_data4", "sdhi3_ctrl";
++		function = "sdhi3";
++		power-source = <3300>;
++	};
++
+ 	usb0_pins: usb0 {
+ 		groups = "usb0";
+ 		function = "usb0";
+@@ -273,6 +298,30 @@
+ 	status = "okay";
+ };
+ 
++&sdhi3 {
++	pinctrl-0 = <&sdhi3_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&wlan_en>;
++	vqmmc-supply = <&wlan_en>;
++	bus-width = <4>;
++	no-1-8-v;
++	non-removable;
++	cap-power-off-card;
++	keep-power-in-suspend;
++	max-frequency = <26000000>;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	wlcore: wlcore@2 {
++		compatible = "ti,wl1837";
++		reg = <2>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++	};
++};
++
+ &usb2_phy0 {
+ 	pinctrl-0 = <&usb0_pins>;
+ 	pinctrl-names = "default";
 -- 
-2.21.0
+2.7.4
