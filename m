@@ -1,48 +1,49 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
- DT source data
-Date: Thu, 11 Apr 2019 14:11:58 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411114616.GA10032@infradead.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 0/2] PCI: Describe external-facing ports in device tree
+Date: Thu, 11 Apr 2019 16:18:23 -0500
+Message-ID: <20190411211823.GU256045@google.com>
+References: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411114616.GA10032@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190411124027.9490-1-jean-philippe.brucker@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: Mark.Rutland@arm.com, devicetree@vger.kernel.org, Grant.Likely@arm.com, linux-pci@vger.kernel.org, robh+dt@kernel.org, Robin.Murphy@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Apr 2019, Christoph Hellwig wrote:
-
-> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
-> > Similar to ARM64, add support for building DTB files from DT source
-> > data for RISC-V boards.
-> > 
-> > This patch starts with the infrastructure needed for SiFive boards.
-> > Boards from other vendors would add support here in a similar form.
+On Thu, Apr 11, 2019 at 01:40:25PM +0100, Jean-Philippe Brucker wrote:
+> Since v2 [1] I fixed a possible NULL dereference reported by smatch,
+> sorry about that. I dropped all tags for patch 2.
 > 
-> What do we build it for?  We'd really need something like this:
+> Add an "external-facing" property to PCI ports in device-tree, to help
+> identify untrusted devices. The notion of untrusted PCI devices was
+> added to the v5.0 kernel to describe devices that should have strict
+> IOMMU protection [2], for example devices that are plugged in a
+> Thunderbolt port. ACPI systems use the ExternalFacingPort property [3].
+> Add an equivalent mechanism to device tree.
 > 
-> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
-> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
+> [1] https://lore.kernel.org/linux-pci/20190402131548.41949-1-jean-philippe.brucker@arm.com/
+> [2] https://lkml.org/lkml/2018/11/26/631
+> [3] https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
 > 
-> To actually use the DT files.
+> Jean-Philippe Brucker (2):
+>   dt-bindings: Add external-facing PCIe port property
+>   PCI: OF: Support external-facing property
+> 
+>  Documentation/devicetree/bindings/pci/pci.txt | 50 +++++++++++++++++++
+>  drivers/pci/of.c                              | 14 ++++--
+>  2 files changed, 60 insertions(+), 4 deletions(-)
 
-Those patches might be useful - I have not reviewed them closely - but 
-they are not necessary. 
-
-The FSBL already supplies a DTB to Linux.  I assume the U-boot port works 
-the same way.
-
-I haven't switched to U-boot yet for these driver tests, so I personally 
-have been using the open-source FSBL (freedom-u540-c000-bootloader) with 
-the following trivial patches applied:
-
-https://github.com/sifive/freedom-u540-c000-bootloader/tree/dev/paulw/supply-fsbl-dtb-v5.1-rc4
-
-The fsbl/ux00_fsbl.dtb file can be symlinked to the kernel DTB output, 
-e.g., ~/linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb.
-
-
-- Paul
+Applied to pci/enumeration for v5.2, thanks, and thanks for fixing the NULL
+pointer issue!
