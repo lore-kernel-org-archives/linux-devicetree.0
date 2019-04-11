@@ -1,43 +1,36 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [v3 PATCH 6/6] usb: mtu3: register a USB Role Switch for dual
- role mode
-Date: Thu, 11 Apr 2019 09:05:59 +0800
-Message-ID: <1554944759.10179.182.camel@mhfsdcap03>
-References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1554257354-7440-7-git-send-email-chunfeng.yun@mediatek.com>
-         <20190410102415.GH20058@kuha.fi.intel.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 0/5] ARM: dts: tq imx7 evaluation board
+Date: Thu, 11 Apr 2019 09:21:45 +0800
+Message-ID: <20190411012144.GA26817@dragon>
+References: <20190304165630.18225-1-bruno.thomsen@gmail.com>
+ <20190403064427.30041-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410102415.GH20058@kuha.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190403064427.30041-1-bruno.thomsen@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc: markus.niebel@tq-group.com, devicetree@vger.kernel.org, laa@kamstrup.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bth@kamstrup.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-04-10 at 13:24 +0300, Heikki Krogerus wrote:
-> On Wed, Apr 03, 2019 at 10:09:14AM +0800, Chunfeng Yun wrote:
-> > +static int ssusb_role_sw_register(struct otg_switch_mtk *otg_sx)
-> > +{
-> > +	struct usb_role_switch_desc role_sx_desc = { 0 };
-> > +	struct ssusb_mtk *ssusb =
-> > +		container_of(otg_sx, struct ssusb_mtk, otg_switch);
-> > +
-> > +	if (!otg_sx->role_sw_used)
-> > +		return 0;
-> > +
-> > +	role_sx_desc.set = ssusb_role_sw_set;
-> > +	role_sx_desc.get = ssusb_role_sw_get;
-> 
->         role_sw_desc.fwnode = dev_fwnode(ssusb->dev);
-Ok, thanks
+On Wed, Apr 03, 2019 at 08:44:22AM +0200, Bruno Thomsen wrote:
+> Bruno Thomsen (5):
+>   dt-bindings: add vendor prefix for TQ Systems GmbH
+>   dt-bindings: arm: add TQ boards
+>   ARM: dts: tq imx7 common board support
+>   ARM: dts: tq imx7s board support
+>   ARM: dts: tq imx7d board support
 
-> 
-> > +	otg_sx->role_sw = usb_role_switch_register(ssusb->dev, &role_sx_desc);
-> > +
-> > +	return PTR_ERR_OR_ZERO(otg_sx->role_sw);
-> > +}
-> 
-> thanks,
-> 
+Applied all with a small fix-up on patch #3 (will reply to it).
+
+Shawn
