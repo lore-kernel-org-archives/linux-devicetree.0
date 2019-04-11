@@ -1,116 +1,134 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: Document
- operating-points-v2-sunxi-cpu
-Date: Thu, 11 Apr 2019 09:49:38 +0200
-Message-ID: <20190411074938.z6gygxfcj43giz57@flea>
-References: <20190409172558.18778-1-tiny.windzz@gmail.com>
- <20190409172558.18778-3-tiny.windzz@gmail.com>
- <20190410145659.62nl4o2jvkuggmpe@flea>
- <CAEExFWu60DZ2xY7qxpjGFq3f_u2G4p7y-wqmsj0HR7CQy24r7w@mail.gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/8] arm64: dts: allwinner: Add ARM Mali GPU
+ node for H6
+Date: Thu, 11 Apr 2019 09:56:15 +0200
+Message-ID: <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
+References: <20190410232543.13297-1-peron.clem@gmail.com> <20190410232543.13297-5-peron.clem@gmail.com>
+ <20190411072806.yr3z3ei6djjhpo32@flea>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ar5gkwcb4uiazh5y"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAEExFWu60DZ2xY7qxpjGFq3f_u2G4p7y-wqmsj0HR7CQy24r7w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Lee <tiny.windzz@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBBL7GXPSQKGQEOQFFWFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190411072806.yr3z3ei6djjhpo32@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---ar5gkwcb4uiazh5y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Apr 11, 2019 at 01:49:39AM +0800, Frank Lee wrote:
-> On Wed, Apr 10, 2019 at 10:57 PM Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Tue, Apr 09, 2019 at 01:25:58PM -0400, Yangtao Li wrote:
-> > > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > > frequency value  based on the speedbin blown in the efuse combination.
-> > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > > provide the OPP framework with required information.
-> > > This is used to determine the voltage and frequency value for each
-> > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> > >
-> > > The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> > > with following parameters:
-> > > - nvmem-cells (NVMEM area containig the speedbin information)
-> > > - opp-microvolt-<name>: voltage in micro Volts.
-> > >   At runtime, the platform can pick a <name> and matching
-> > >   opp-microvolt-<name> property
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 166 ++++++++++++++++++
-> > >  1 file changed, 166 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> > > new file mode 100644
-> > > index 000000000000..c81a2075b974
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> > > @@ -0,0 +1,166 @@
-> > > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> > > +===================================
-> > > +
-> > > +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> > > +varies based on the silicon variant in use. Allwinner Process Voltage
-> > > +Scaling Tables defines the voltage and frequency value  based on the
-> > > +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-> > > +reads the efuse value from the SoC to provide the OPP framework with
-> > > +required information.
-> > > +
-> > > +Required properties:
-> > > +--------------------
-> > > +In 'cpus' nodes:
-> > > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> > > +
-> > > +In 'operating-points-v2' table:
-> > > +- compatible: Should be
-> > > +     - 'operating-points-v2-sunxi-cpu'.
-> >
-> > Vendor-specific compatibles should have the vendor mentionned.
-> >
-> > Also, even though the H6 is the only SoC so far that has needed this,
-> > we can't really assume that it will be the only SoC to use it, or that
-> > it will always behave like that.
+On Thu, 11 Apr 2019 at 09:28, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wro=
+te:
 >
-> There is no doubt that many platforms need this.
+> On Thu, Apr 11, 2019 at 01:25:39AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Add the mali gpu node to the H6 device-tree.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++++
+> >  1 file changed, 80 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index e0dc4a05c1ba..152b2128aadf 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -17,6 +17,71 @@
+> >       #address-cells =3D <1>;
+> >       #size-cells =3D <1>;
+> >
+> > +     gpu_opp_table: opp_table1 {
+> > +             compatible =3D "operating-points-v2";
+> > +
+> > +             opp@756000000 {
+> > +                     opp-hz =3D /bits/ 64 <756000000>;
+> > +                     opp-microvolt =3D <1040000>;
+> > +             };
+> > +             opp@624000000 {
+> > +                     opp-hz =3D /bits/ 64 <624000000>;
+> > +                     opp-microvolt =3D <950000>;
+> > +             };
+> > +             opp@576000000 {
+> > +                     opp-hz =3D /bits/ 64 <576000000>;
+> > +                     opp-microvolt =3D <930000>;
+> > +             };
+> > +             opp@540000000 {
+> > +                     opp-hz =3D /bits/ 64 <540000000>;
+> > +                     opp-microvolt =3D <910000>;
+> > +             };
+> > +             opp@504000000 {
+> > +                     opp-hz =3D /bits/ 64 <504000000>;
+> > +                     opp-microvolt =3D <890000>;
+> > +             };
+> > +             opp@456000000 {
+> > +                     opp-hz =3D /bits/ 64 <456000000>;
+> > +                     opp-microvolt =3D <870000>;
+> > +             };
+> > +             opp@432000000 {
+> > +                     opp-hz =3D /bits/ 64 <432000000>;
+> > +                     opp-microvolt =3D <860000>;
+> > +             };
+> > +             opp@420000000 {
+> > +                     opp-hz =3D /bits/ 64 <420000000>;
+> > +                     opp-microvolt =3D <850000>;
+> > +             };
+> > +             opp@408000000 {
+> > +                     opp-hz =3D /bits/ 64 <408000000>;
+> > +                     opp-microvolt =3D <840000>;
+> > +             };
+> > +             opp@384000000 {
+> > +                     opp-hz =3D /bits/ 64 <384000000>;
+> > +                     opp-microvolt =3D <830000>;
+> > +             };
+> > +             opp@360000000 {
+> > +                     opp-hz =3D /bits/ 64 <360000000>;
+> > +                     opp-microvolt =3D <820000>;
+> > +             };
+> > +             opp@336000000 {
+> > +                     opp-hz =3D /bits/ 64 <336000000>;
+> > +                     opp-microvolt =3D <810000>;
+> > +             };
+> > +             opp@312000000 {
+> > +                     opp-hz =3D /bits/ 64 <312000000>;
+> > +                     opp-microvolt =3D <810000>;
+> > +             };
+> > +             opp@264000000 {
+> > +                     opp-hz =3D /bits/ 64 <264000000>;
+> > +                     opp-microvolt =3D <810000>;
+> > +             };
+> > +             opp@216000000 {
+> > +                     opp-hz =3D /bits/ 64 <216000000>;
+> > +                     opp-microvolt =3D <810000>;
+> > +             };
+> > +     };
+> > +
+>
+> How were those OPPs tested?
 
-That many platform *may* need this, yeah, sure. We can probably even
-share the same driver for them.
+They are taken from the vendor device tree.
+https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm64/=
+boot/dts/sunxi/sun50iw6p1.dtsi#L2121
 
-That all of those theretical platform will have the exact same
-behaviour, down to how the data is stored in the nvmem, and how many
-bins you have? I seriously doubt so.
+Clement
 
-> > So having something like allwinner,sun50i-h6-operating-points would be
-> > great.
-> allwinner,cpu-operating-points-v2 Maybe better?
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-No. You need to have the SoC name in there, and you can drop the
-v2. There's never been a v1.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ar5gkwcb4uiazh5y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK7xkgAKCRDj7w1vZxhR
-xaAhAP9mCtA9PL96fROyWgoWeKqRtTOzgxofM1fFfIWQI0WIYgEAjKbvK2Xm9ckT
-sy+VyxscwMnLi1Fb5bC3INUKJVbhhw8=
-=T5TI
------END PGP SIGNATURE-----
-
---ar5gkwcb4uiazh5y--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
