@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v3 07/11] drm: sun4i: Add support for enabling
- DDC I2C bus power to dw_hdmi glue
-Date: Thu, 11 Apr 2019 12:19:47 +0200
-Message-ID: <20190411101951.30223-8-megous@megous.com>
+Subject: [PATCH v3 11/11] [DO NOT MERGE] arm64: dts: allwinner:
+ orange-pi-3: Enable WiFi
+Date: Thu, 11 Apr 2019 12:19:51 +0200
+Message-ID: <20190411101951.30223-12-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBTVJXTSQKGQE3UL7AXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBUFJXTSQKGQET254Y2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190411101951.30223-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,134 +21,109 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-transistors, before the bus can be used.
+Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is called
+bcm43356 and can be used with the brcmfmac driver. The module is powered by
+the two always on regulators (not AXP805).
 
-Model this as a power supply for DDC bus on the HDMI connector connected
-to the output port (port 1) of the HDMI controller.
+WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
+configured so that it sets up an 1.8V input bias on this port. This is done
+by the pio driver by reading the vcc-pg-supply voltage.
+
+You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
+configuration that can be found in the Xulongs's repository for H6:
+
+https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
+
+Mainline brcmfmac driver expects the firmware and nvram at the following
+paths relative to the firmware directory:
+
+  brcm/brcmfmac43456-sdio.bin
+  brcm/brcmfmac43456-sdio.txt
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 60 ++++++++++++++++++++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
- 2 files changed, 60 insertions(+), 2 deletions(-)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 39d8509d96a0..1b6ffba41177 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
- 	return crtcs;
- }
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 58a6635c909e..f795362f5b77 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -67,6 +67,26 @@
+ 		regulator-always-on;
+ 	};
  
-+static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-+					     struct platform_device **pdev_out)
-+{
-+	struct platform_device* pdev;
-+	struct device_node *remote;
++	reg_vcc33_wifi: vcc33-wifi {
++		/* Always on 3.3V regulator for WiFi and BT */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc33-wifi";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		vin-supply = <&reg_vcc5v>;
++	};
 +
-+	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-+	if (!remote)
-+		return -ENODEV;
++	reg_vcc_wifi_io: vcc-wifi-io {
++		/* Always on 1.8V/300mA regulator for WiFi and BT IO */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-wifi-io";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		vin-supply = <&reg_vcc33_wifi>;
++	};
 +
-+	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-+		of_node_put(remote);
-+		return -ENODEV;
-+	}
+ 	/*
+ 	 * The board uses 2.5V RGMII signalling. Power sequence to enable
+ 	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
+@@ -87,6 +107,14 @@
+ 		 */
+ 		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
+ 	};
 +
-+	pdev = of_find_device_by_node(remote);
-+	of_node_put(remote);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	*pdev_out = pdev;
-+	return 0;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
-@@ -151,16 +175,34 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
- 
-+	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-+	if (!ret) {
-+		hdmi->ddc_regulator = regulator_get(&hdmi->connector_pdev->dev, "ddc");
-+		if (IS_ERR(hdmi->ddc_regulator)) {
-+			platform_device_put(hdmi->connector_pdev);
-+			dev_err(dev, "Couldn't get ddc regulator\n");
-+			return PTR_ERR(hdmi->ddc_regulator);
-+		}
-+	}
-+
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
--		return ret;
-+		goto err_unref_ddc_regulator;
-+	}
-+
-+	if (hdmi->ddc_regulator) {
-+		ret = regulator_enable(hdmi->ddc_regulator);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable ddc regulator\n");
-+			goto err_disable_regulator;
-+		}
- 	}
- 
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_regulator;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -213,8 +255,15 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
-+err_disable_ddc_regulator:
-+	if (hdmi->ddc_regulator)
-+		regulator_disable(hdmi->ddc_regulator);
- err_disable_regulator:
- 	regulator_disable(hdmi->regulator);
-+err_unref_ddc_regulator:
-+	if (hdmi->ddc_regulator)
-+		regulator_put(hdmi->ddc_regulator);
-+	platform_device_put(hdmi->connector_pdev);
- 
- 	return ret;
- }
-@@ -229,6 +278,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
- 	regulator_disable(hdmi->regulator);
-+
-+	if (hdmi->ddc_regulator) {
-+		regulator_disable(hdmi->ddc_regulator);
-+		regulator_put(hdmi->ddc_regulator);
-+	}
-+
-+	platform_device_put(hdmi->connector_pdev);
- }
- 
- static const struct component_ops sun8i_dw_hdmi_ops = {
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..60f5200aee73 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -188,8 +188,10 @@ struct sun8i_dw_hdmi {
- 	struct sun8i_hdmi_phy		*phy;
- 	struct dw_hdmi_plat_data	plat_data;
- 	struct regulator		*regulator;
-+	struct regulator		*ddc_regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
-+	struct platform_device		*connector_pdev;
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
++		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
++		post-power-on-delay-ms = <200>;
++	};
  };
  
- static inline struct sun8i_dw_hdmi *
+ &cpu0 {
+@@ -144,6 +172,25 @@
+ 	status = "okay";
+ };
+ 
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&reg_vcc33_wifi>;
++	vqmmc-supply = <&reg_vcc_wifi_io>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	brcm: sdio-wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&r_pio>;
++		interrupts = <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
++		interrupt-names = "host-wake";
++	};
++};
++
+ &ohci0 {
+ 	status = "okay";
+ };
+@@ -155,6 +202,7 @@
+ &pio {
+ 	vcc-pc-supply = <&reg_bldo2>;
+ 	vcc-pd-supply = <&reg_cldo1>;
++	vcc-pg-supply = <&reg_vcc_wifi_io>;
+ };
+ 
+ &r_i2c {
 -- 
 2.21.0
