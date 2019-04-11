@@ -1,76 +1,87 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 13/25] drm/mediatek: add gmc_bits for ovl private data
-Date: Thu, 11 Apr 2019 14:48:11 +0800
-Message-ID: <1554965291.4768.10.camel@mtksdaap41>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
- <1553667561-25447-14-git-send-email-yongqiang.niu@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: imx8qxp: Add lpuart1/lpuart2/lpuart3 nodes
+Date: Thu, 11 Apr 2019 14:49:08 +0800
+Message-ID: <20190411064907.GZ26817@dragon>
+References: <20190330170725.24360-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1553667561-25447-14-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190330170725.24360-1-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Teo Hall <teo.hall@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgZ21jX2JpdHMgZm9yIG92
-bCBwcml2YXRlIGRhdGEKPiBHTUMgcmVnaXN0ZXIgd2FzIHNldCBSRE1BIHVsdHJhIGFuZCBwcmUt
-dWx0cmEgdGhyZXNob2xkLgo+IDEwYml0IEdNQyByZWdpc3RlciBkZWZpbmUgaXMgZGlmZmVyZW50
-IHdpdGggb3RoZXIgU09DLCBnbWNfdGhyc2hkX2wgbm90Cj4gdXNlZC4KClJldmlld2VkLWJ5OiBD
-SyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcg
-Tml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kaXNwX292bC5jIHwgMjMgKysrKysrKysrKysrKysrKysrKysrLS0KPiAg
-MSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBiL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+IGluZGV4IDI4ZDE5MTEuLmFmYjMx
-M2MgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5j
-Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gQEAgLTM5
-LDcgKzM5LDkgQEAKPiAgI2RlZmluZSBESVNQX1JFR19PVkxfQUREUl9NVDgxNzMJCTB4MGY0MAo+
-ICAjZGVmaW5lIERJU1BfUkVHX09WTF9BRERSKG92bCwgbikJCSgob3ZsKS0+ZGF0YS0+YWRkciAr
-IDB4MjAgKiAobikpCj4gIAo+IC0jZGVmaW5lCU9WTF9SRE1BX01FTV9HTUMJMHg0MDQwMjAyMAo+
-ICsjZGVmaW5lIEdNQ19USFJFU0hPTERfQklUUwkxNgo+ICsjZGVmaW5lIEdNQ19USFJFU0hPTERf
-SElHSAkoKDEgPDwgR01DX1RIUkVTSE9MRF9CSVRTKSAvIDQpCj4gKyNkZWZpbmUgR01DX1RIUkVT
-SE9MRF9MT1cJKCgxIDw8IEdNQ19USFJFU0hPTERfQklUUykgLyA4KQo+ICAKPiAgI2RlZmluZSBP
-VkxfQ09OX0JZVEVfU1dBUAlCSVQoMjQpCj4gICNkZWZpbmUgT1ZMX0NPTl9NVFhfWVVWX1RPX1JH
-QgkoNiA8PCAxNikKPiBAQCAtNTcsNiArNTksNyBAQAo+ICAKPiAgc3RydWN0IG10a19kaXNwX292
-bF9kYXRhIHsKPiAgCXVuc2lnbmVkIGludCBhZGRyOwo+ICsJdW5zaWduZWQgaW50IGdtY19iaXRz
-Owo+ICAJYm9vbCBmbXRfcmdiNTY1X2lzXzA7Cj4gIH07Cj4gIAo+IEBAIC0xNDAsOSArMTQzLDIz
-IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX292bF9sYXllcl9ucihzdHJ1Y3QgbXRrX2RkcF9j
-b21wICpjb21wKQo+ICBzdGF0aWMgdm9pZCBtdGtfb3ZsX2xheWVyX29uKHN0cnVjdCBtdGtfZGRw
-X2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCBpZHgpCj4gIHsKPiAgCXVuc2lnbmVkIGludCByZWc7
-Cj4gKwl1bnNpZ25lZCBpbnQgZ21jX3RocnNoZF9sOwo+ICsJdW5zaWduZWQgaW50IGdtY190aHJz
-aGRfaDsKPiArCXVuc2lnbmVkIGludCBnbWNfdmFsdWU7Cj4gKwlzdHJ1Y3QgbXRrX2Rpc3Bfb3Zs
-ICpvdmwgPSBjb21wX3RvX292bChjb21wKTsKPiAgCj4gIAl3cml0ZWwoMHgxLCBjb21wLT5yZWdz
-ICsgRElTUF9SRUdfT1ZMX1JETUFfQ1RSTChpZHgpKTsKPiAtCXdyaXRlbChPVkxfUkRNQV9NRU1f
-R01DLCBjb21wLT5yZWdzICsgRElTUF9SRUdfT1ZMX1JETUFfR01DKGlkeCkpOwo+ICsKPiArCWdt
-Y190aHJzaGRfbCA9IEdNQ19USFJFU0hPTERfTE9XID4+Cj4gKwkJICAgICAgKEdNQ19USFJFU0hP
-TERfQklUUyAtIG92bC0+ZGF0YS0+Z21jX2JpdHMpOwo+ICsJZ21jX3RocnNoZF9oID0gR01DX1RI
-UkVTSE9MRF9ISUdIID4+Cj4gKwkJICAgICAgKEdNQ19USFJFU0hPTERfQklUUyAtIG92bC0+ZGF0
-YS0+Z21jX2JpdHMpOwo+ICsJaWYgKG92bC0+ZGF0YS0+Z21jX2JpdHMgPT0gMTApCj4gKwkJZ21j
-X3ZhbHVlID0gZ21jX3RocnNoZF9oIHwgZ21jX3RocnNoZF9oIDw8IDE2Owo+ICsJZWxzZQo+ICsJ
-CWdtY192YWx1ZSA9IGdtY190aHJzaGRfbCB8IGdtY190aHJzaGRfbCA8PCA4IHwKPiArCQkJICAg
-IGdtY190aHJzaGRfaCA8PCAxNiB8IGdtY190aHJzaGRfaCA8PCAyNDsKPiArCXdyaXRlbChnbWNf
-dmFsdWUsIGNvbXAtPnJlZ3MgKyBESVNQX1JFR19PVkxfUkRNQV9HTUMoaWR4KSk7Cj4gIAo+ICAJ
-cmVnID0gcmVhZGwoY29tcC0+cmVncyArIERJU1BfUkVHX09WTF9TUkNfQ09OKTsKPiAgCXJlZyA9
-IHJlZyB8IEJJVChpZHgpOwo+IEBAIC0zMjQsMTEgKzM0MSwxMyBAQCBzdGF0aWMgaW50IG10a19k
-aXNwX292bF9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCj4gIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsX2RhdGEgbXQyNzAxX292bF9kcml2ZXJfZGF0YSA9
-IHsKPiAgCS5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJfTVQyNzAxLAo+ICsJLmdtY19iaXRzID0g
-OCwKPiAgCS5mbXRfcmdiNTY1X2lzXzAgPSBmYWxzZSwKPiAgfTsKPiAgCj4gIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsX2RhdGEgbXQ4MTczX292bF9kcml2ZXJfZGF0YSA9IHsKPiAg
-CS5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJfTVQ4MTczLAo+ICsJLmdtY19iaXRzID0gOCwKPiAg
-CS5mbXRfcmdiNTY1X2lzXzAgPSB0cnVlLAo+ICB9Owo+ICAKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Sat, Mar 30, 2019 at 05:07:44PM +0000, Daniel Baluta wrote:
+> lpuart nodes are part of the ADMA subsystem. See Audio DMA
+> memory map in iMX8 QXP RM [1]
+> 
+> This patch is based on the dtsi file initially submitted by
+> Teo Hall in i.MX NXP internal tree.
+> 
+> [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+> 
+> Signed-off-by: Teo Hall <teo.hall@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 0cb939861a60..1adfe15c2ea5 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -193,6 +193,39 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		adma_lpuart1: serial@5a070000 {
+> +			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +			reg = <0x5a070000 0x1000>;
+> +			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&gic>;
+> +			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
+> +			clock-names = "ipg";
+> +			power-domains = <&pd IMX_SC_R_UART_1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		adma_lpuart2: serial@5a080000 {
+> +			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +			reg = <0x5a080000 0x1000>;
+> +			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&gic>;
+> +			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
+> +			clock-names = "ipg";
+> +			power-domains = <&pd IMX_SC_R_UART_2>;
+> +			status = "disabled";
+> +		}
+
+Missing semicolon.
+
+> +
+> +		adma_lpuart3: serial@5a090000 {
+> +			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +			reg = <0x5a090000 0x1000>;
+> +			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&gic>;
+> +			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
+> +			clock-names = "ipg";
+> +			power-domains = <&pd IMX_SC_R_UART_3>;
+> +			status = "disabled";
+> +		}
+
+Ditto.
+
+I fixed them up when applying.
+
+Shawn
+
+> +
+>  		adma_i2c0: i2c@5a800000 {
+>  			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+>  			reg = <0x5a800000 0x4000>;
+> -- 
+> 2.17.1
+> 
