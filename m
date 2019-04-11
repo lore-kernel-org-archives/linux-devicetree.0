@@ -1,54 +1,39 @@
-Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 11/13] ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
-Date: Wed, 10 Apr 2019 09:08:33 +0100
-Message-Id: <1554883715-41725-12-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH 18/30] PCI: tegra: Change PRSNT_SENSE irq log to debug
+Date: Thu, 11 Apr 2019 22:33:43 +0530
+Message-ID: <20190411170355.6882-19-mmaddireddy@nvidia.com>
+In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable USB2.0 host on the iwg23s sbc.
+PRSNT_MAP bit field is programmed to update the slot present status.
+PRSNT_SENSE irq is triggered when this bit field is programmed, which is
+not an error. Add a new switch case to trap RSNT_SENSE code and print it
+with debug log level.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
-V3-->V4
- * No change
-V2-->V3
- * No change
-V1-->V2
- * No change
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 7ae7ee1..366832c 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -106,6 +106,10 @@
- 	};
- };
- 
-+&ehci1 {
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <20000000>;
- };
-@@ -166,6 +170,10 @@
- 	};
- };
- 
-+&ohci1 {
-+	status = "okay";
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		groups = "avb_mdio", "avb_gmii_tx_rx";
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index cf2715065a53..dcfe97711cb5 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -855,6 +855,9 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
+ 	switch (code) {
+ 	case AFI_INTR_LEGACY:
+ 		return IRQ_NONE;
++	case AFI_INTR_PE_PRSNT_SENSE:
++		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
++		break;
+ 	/*
+ 	 * do not pollute kernel log with master abort reports since they
+ 	 * happen a lot during enumeration
 -- 
-2.7.4
+2.17.1
