@@ -1,110 +1,140 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 13/25] leds: lm3692x: Use generic support for composing
- LED names
-Date: Thu, 11 Apr 2019 10:29:35 -0500
-Message-ID: <68d3f78d-7362-7707-450b-1d40deeeeaaa@ti.com>
-References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
- <20190331175501.23471-14-jacek.anaszewski@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 18/26] PCI: endpoint: Add support to allocate aligned
+ buffers to be mapped in BARs
+Date: Thu, 11 Apr 2019 16:32:39 +0100
+Message-ID: <20190411153238.GD6862@red-moon>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-19-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190331175501.23471-14-jacek.anaszewski@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190325093947.32633-19-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+On Mon, Mar 25, 2019 at 03:09:39PM +0530, Kishon Vijay Abraham I wrote:
+> Modify pci_epf_alloc_space API to take alignment size as argument in
+> order to argument in order to allocate aligned buffers to be mapped to
+> BARs.
+> 
+> Add 'align' parameter to epc_features which can be used by platform
+> drivers to specifiy the BAR allocation alignment requirements and use
+> this while invoking pci_epf_alloc_space.
+> 
+> This is mainly required for Synopsys Designware PCIe core which masks
+> the lower bits based on the BAR size (See "I/O and MEM Match Modes"
+> section in DesignWare Cores PCI Express Controller Databook version
+> 4.90a).
 
-On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
-> Switch to using generic LED support for composing LED class
-> device name.
->
-> At this occassion remove initialization of struct led_classdev's
-> dev->of_node property in the driver, since now it will be taken from
-> fwnode assigned to struct led_init_data and passed to the new
-> devm_led_classdev_register_ext() API.
->
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Dan Murphy <dmurphy@ti.com>
+Hi Kishon,
+
+isn't this a generic PCI BAR requirement rather than a Designware
+specific one ?
+
+The patch is fine I just would like to understand the statement above.
+
+Thanks,
+Lorenzo
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/leds/leds-lm3692x.c | 22 ++++++----------------
->  1 file changed, 6 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> index 4f413a7c5f05..d2b30074d87a 100644
-> --- a/drivers/leds/leds-lm3692x.c
-> +++ b/drivers/leds/leds-lm3692x.c
-> @@ -13,7 +13,6 @@
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
-> -#include <uapi/linux/uleds.h>
+>  drivers/pci/endpoint/functions/pci-epf-test.c |  5 +++--
+>  drivers/pci/endpoint/pci-epf-core.c           | 10 ++++++++--
+>  include/linux/pci-epc.h                       |  2 ++
+>  include/linux/pci-epf.h                       |  3 ++-
+>  4 files changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index d0b91da49bf4..c0786ca74312 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -438,7 +438,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  	epc_features = epf_test->epc_features;
 >  
->  #define LM36922_MODEL	0
->  #define LM36923_MODEL	1
-> @@ -103,7 +102,6 @@
->   * @regmap - Devices register map
->   * @enable_gpio - VDDIO/EN gpio to enable communication interface
->   * @regulator - LED supply regulator pointer
-> - * @label - LED label
->   * @led_enable - LED sync to be enabled
->   * @model_id - Current device model ID enumerated
+>  	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
+> -				   test_reg_bar);
+> +				   test_reg_bar, epc_features->align);
+>  	if (!base) {
+>  		dev_err(dev, "Failed to allocated register space\n");
+>  		return -ENOMEM;
+> @@ -453,7 +453,8 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  		if (!!(epc_features->reserved_bar & (1 << bar)))
+>  			continue;
+>  
+> -		base = pci_epf_alloc_space(epf, bar_size[bar], bar);
+> +		base = pci_epf_alloc_space(epf, bar_size[bar], bar,
+> +					   epc_features->align);
+>  		if (!base)
+>  			dev_err(dev, "Failed to allocate space for BAR%d\n",
+>  				bar);
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 8bfdcd291196..fb1306de8f40 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -109,10 +109,12 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
+>   * pci_epf_alloc_space() - allocate memory for the PCI EPF register space
+>   * @size: the size of the memory that has to be allocated
+>   * @bar: the BAR number corresponding to the allocated register space
+> + * @align: alignment size for the allocation region
+>   *
+>   * Invoke to allocate memory for the PCI EPF register space.
 >   */
-> @@ -114,7 +112,6 @@ struct lm3692x_led {
->  	struct regmap *regmap;
->  	struct gpio_desc *enable_gpio;
->  	struct regulator *regulator;
-> -	char label[LED_MAX_NAME_SIZE];
->  	int led_enable;
->  	int model_id;
->  };
-> @@ -325,7 +322,7 @@ static int lm3692x_init(struct lm3692x_led *led)
->  static int lm3692x_probe_dt(struct lm3692x_led *led)
+> -void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar)
+> +void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+> +			  size_t align)
 >  {
->  	struct fwnode_handle *child = NULL;
-> -	const char *name;
-> +	struct led_init_data init_data;
->  	int ret;
+>  	void *space;
+>  	struct device *dev = epf->epc->dev.parent;
+> @@ -120,7 +122,11 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar)
 >  
->  	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-> @@ -350,30 +347,23 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->  	fwnode_property_read_string(child, "linux,default-trigger",
->  				    &led->led_dev.default_trigger);
+>  	if (size < 128)
+>  		size = 128;
+> -	size = roundup_pow_of_two(size);
+> +
+> +	if (align)
+> +		size = ALIGN(size, align);
+> +	else
+> +		size = roundup_pow_of_two(size);
 >  
-> -	ret = fwnode_property_read_string(child, "label", &name);
-> -	if (ret)
-> -		snprintf(led->label, sizeof(led->label),
-> -			"%s::", led->client->name);
-> -	else
-> -		snprintf(led->label, sizeof(led->label),
-> -			 "%s:%s", led->client->name, name);
-> -
->  	ret = fwnode_property_read_u32(child, "reg", &led->led_enable);
->  	if (ret) {
->  		dev_err(&led->client->dev, "reg DT property missing\n");
->  		return ret;
->  	}
+>  	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
+>  	if (!space) {
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index c3ffa3917f88..f641badc2c61 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -109,6 +109,7 @@ struct pci_epc {
+>   * @reserved_bar: bitmap to indicate reserved BAR unavailable to function driver
+>   * @bar_fixed_64bit: bitmap to indicate fixed 64bit BARs
+>   * @bar_fixed_size: Array specifying the size supported by each BAR
+> + * @align: alignment size required for BAR buffer allocation
+>   */
+>  struct pci_epc_features {
+>  	unsigned int	linkup_notifier : 1;
+> @@ -117,6 +118,7 @@ struct pci_epc_features {
+>  	u8	reserved_bar;
+>  	u8	bar_fixed_64bit;
+>  	u64	bar_fixed_size[BAR_5 + 1];
+> +	size_t	align;
+>  };
 >  
-> -	led->led_dev.name = led->label;
-> +	init_data.fwnode = child;
-> +	init_data.led_hw_name = led->client->name;
-> +	init_data.default_label = ":";
->  
-> -	ret = devm_led_classdev_register(&led->client->dev, &led->led_dev);
-> +	ret = devm_led_classdev_register_ext(&led->client->dev, &led->led_dev,
-> +					     &init_data);
->  	if (ret) {
->  		dev_err(&led->client->dev, "led register err: %d\n", ret);
->  		return ret;
->  	}
->  
-> -	led->led_dev.dev->of_node = to_of_node(child);
-> -
->  	return 0;
->  }
->  
-
-Tested-by: Dan Murphy <dmurphy@ti.com>
+>  #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
+> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> index ec02f58758c8..2d6f07556682 100644
+> --- a/include/linux/pci-epf.h
+> +++ b/include/linux/pci-epf.h
+> @@ -149,7 +149,8 @@ void pci_epf_destroy(struct pci_epf *epf);
+>  int __pci_epf_register_driver(struct pci_epf_driver *driver,
+>  			      struct module *owner);
+>  void pci_epf_unregister_driver(struct pci_epf_driver *driver);
+> -void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar);
+> +void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+> +			  size_t align);
+>  void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar);
+>  int pci_epf_bind(struct pci_epf *epf);
+>  void pci_epf_unbind(struct pci_epf *epf);
+> -- 
+> 2.17.1
+> 
