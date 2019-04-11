@@ -1,45 +1,79 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: lpc32xx: document interrupt bindings
-Date: Thu, 11 Apr 2019 15:49:58 +0200
-Message-ID: <CACRpkdZfdxNwU_9h3PtcJkAE++QZnC_JifoqNfLwJyqj_ofJuA@mail.gmail.com>
-References: <20190410103926.8781-1-alexandre.belloni@bootlin.com> <20190410103926.8781-2-alexandre.belloni@bootlin.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 0/4] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Thu, 11 Apr 2019 15:51:10 +0200
+Message-ID: <6cae3029-b40c-d43c-0712-47a472e8b1af@st.com>
+References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
+ <5b9fe100-6147-d64f-f676-6a5370a03016@st.com>
+ <CAPDyKFpRA4mP-SHt_JuWk-Ee7=2Jgv6jKFh_08n_V20czKyvNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410103926.8781-2-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Vladimir Zapolskiy <vz@mleia.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFpRA4mP-SHt_JuWk-Ee7=2Jgv6jKFh_08n_V20czKyvNg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+hi Ulf
 
-thanks for your patch!
+On 4/11/19 3:29 PM, Ulf Hansson wrote:
+> On Thu, 11 Apr 2019 at 14:37, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>>
+>> Hi Ulf
+>>
+>> Just a gentleman ping about this series.
+>> I sent this series at same time of dt_mode
+>> (no dependence between both).
+> 
+> Thanks for pinging.
+> 
+> It's been a busy period, with travels etc. I am just catching up on
+> everything and I will soon come back to this.
 
-On Wed, Apr 10, 2019 at 12:39 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
+No problem, I saw lot of power group presentations at linaro connect :-)
 
-> Some of the LPC32xx gpios are wired directly to one of the interrupt
-> controllers while port 0 and port 1 share the same interrupt for their
-> interrupt capable gpios.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-(...)
+> 
+> I haven't tried to apply this on top of the other recent queued
+> changes for mmci, but perhaps you can check if a rebase is needed?
 
-> +- interrupts: Should be the interrupt shared by port 0 and port 1 and the
-> +  interrupts for individual pins from port 3.
-> +- interrupt-names : Should be the names of irq resources. The shared port
-> +  interrupt is named "p01", the other use the pin names.
+I try on the last mmc next, rebase, build and stm32mp157 test OK
 
-The recent design pattern with hierarchical interrupts such as this one
-is to simply hardcode the relationship between parent interrupt controller
-and child interrupt controller in the driver.
-
-However you should add interrupt-controller and possibly
-interrupt-parent to the bindings and example.
-
-More comments in patch 2.
-
-Yours,
-Linus Walleij
+> Especially since I plan to run this on my ux500 board.
+> 
+> Kind regards
+> Uffe
+> 
+>>
+>> BR
+>> Ludo
+>>
+>> On 3/5/19 5:10 PM, Ludovic Barre wrote:
+>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>
+>>> This patch series adds busy detect for stm32 sdmmc variant.
+>>> Some adaptations are required:
+>>> -Avoid to check and poll busy status when is not expected.
+>>> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
+>>>    different.
+>>> -Add hardware busy timeout with MMCIDATATIMER register.
+>>>
+>>> Ludovic Barre (4):
+>>>     mmc: mmci: avoid fake busy polling
+>>>     mmc: mmci: fix clear of busy detect status
+>>>     mmc: mmci: add hardware busy timeout feature
+>>>     mmc: mmci: add busy detect for stm32 sdmmc variant
+>>>
+>>>    drivers/mmc/host/mmci.c | 67 +++++++++++++++++++++++++++++++++++++++----------
+>>>    drivers/mmc/host/mmci.h |  3 +++
+>>>    2 files changed, 57 insertions(+), 13 deletions(-)
+>>>
