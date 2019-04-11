@@ -1,78 +1,120 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 04/12] firmware: ti_sci: Add RM mapping table for am654
-Date: Thu, 11 Apr 2019 07:54:16 -0700
-Message-ID: <20190411145416.GP2839@atomide.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-5-lokeshvutla@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 16/26] PCI: OF: Allow of_pci_get_max_link_speed() to
+ be used by PCI Endpoint drivers
+Date: Thu, 11 Apr 2019 16:00:18 +0100
+Message-ID: <20190411150018.GB6862@red-moon>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-17-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190410041358.16809-5-lokeshvutla@ti.com>
+In-Reply-To: <20190325093947.32633-17-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Mar 25, 2019 at 03:09:37PM +0530, Kishon Vijay Abraham I wrote:
+> of_pci_get_max_link_speed() is built only if CONFIG_PCI is enabled.
+> Make of_pci_get_max_link_speed() to be also used by PCI Endpoint
+> controllers with just CONFIG_PCI_ENDPOINT enabled.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> ---
+>  drivers/pci/Makefile |  2 +-
+>  drivers/pci/of.c     | 44 +++++++++++++++++++++++---------------------
+>  2 files changed, 24 insertions(+), 22 deletions(-)
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
-> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> index b56a02c10ae6..6f0cd31c1520 100644
-> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> @@ -24,7 +24,8 @@ relationship between the TI-SCI parent node to the child node.
+I delegated this patch to Bjorn in the patch queue since it needs his
+review/ACK to proceed.
+
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 657d642fcc67..28cdd8c0213a 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -10,10 +10,10 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
+>  ifdef CONFIG_PCI
+>  obj-$(CONFIG_PROC_FS)		+= proc.o
+>  obj-$(CONFIG_SYSFS)		+= slot.o
+> -obj-$(CONFIG_OF)		+= of.o
+>  obj-$(CONFIG_ACPI)		+= pci-acpi.o
+>  endif
 >  
->  Required properties:
->  -------------------
-> -- compatible: should be "ti,k2g-sci"
-> +- compatible:	should be "ti,k2g-sci" for TI 66AK2G SoC
-> +		should be "ti,am654-sci" for for TI AM654 SoC
->  - mbox-names:
->  	"rx" - Mailbox corresponding to receive path
->  	"tx" - Mailbox corresponding to transmit path
-> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> index d303f5a14da9..88e461498def 100644
-> --- a/drivers/firmware/ti_sci.c
-> +++ b/drivers/firmware/ti_sci.c
-> @@ -2297,10 +2297,33 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
->  	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
->  	.max_msgs = 20,
->  	.max_msg_size = 64,
-> +	.rm_type_map = NULL,
-> +};
-> +
-> +static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
-> +	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
-> +	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
-> +	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
-> +	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
-> +	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
-> +	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
-> +	{.dev_id = 0, .type = 0x000}, /* end of table */
-> +};
-> +
-> +/* Description for AM654 */
-> +static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
-> +	.default_host_id = 12,
-> +	/* Conservative duration */
-> +	.max_rx_timeout_ms = 10000,
-> +	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
-> +	.max_msgs = 20,
-> +	.max_msg_size = 60,
-> +	.rm_type_map = ti_sci_am654_rm_type_map,
->  };
+> +obj-$(CONFIG_OF)		+= of.o
+>  obj-$(CONFIG_PCI_QUIRKS)	+= quirks.o
+>  obj-$(CONFIG_PCIEPORTBUS)	+= pcie/
+>  obj-$(CONFIG_HOTPLUG_PCI)	+= hotplug/
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 3d32da15c215..8095933f8452 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of_pci.h>
+>  #include "pci.h"
 >  
->  static const struct of_device_id ti_sci_of_match[] = {
->  	{.compatible = "ti,k2g-sci", .data = &ti_sci_pmmc_k2g_desc},
-> +	{.compatible = "ti,am654-sci", .data = &ti_sci_pmmc_am654_desc},
->  	{ /* Sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, ti_sci_of_match);
-
-Great, this approach with mapping table in the driver based on
-the compatible looks good to me and avoids stuffing the IDs
-into device tree:
-
-Acked-by: Tony Lindgren <tony@atomide.com>
+> +#ifdef CONFIG_PCI
+>  void pci_set_of_node(struct pci_dev *dev)
+>  {
+>  	if (!dev->bus->dev.of_node)
+> @@ -196,27 +197,6 @@ int of_get_pci_domain_nr(struct device_node *node)
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
+>  
+> -/**
+> - * This function will try to find the limitation of link speed by finding
+> - * a property called "max-link-speed" of the given device node.
+> - *
+> - * @node: device tree node with the max link speed information
+> - *
+> - * Returns the associated max link speed from DT, or a negative value if the
+> - * required property is not found or is invalid.
+> - */
+> -int of_pci_get_max_link_speed(struct device_node *node)
+> -{
+> -	u32 max_link_speed;
+> -
+> -	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
+> -	    max_link_speed > 4)
+> -		return -EINVAL;
+> -
+> -	return max_link_speed;
+> -}
+> -EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> -
+>  /**
+>   * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
+>   *                           is present and valid
+> @@ -537,3 +517,25 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+>  	return err;
+>  }
+>  
+> +#endif /* CONFIG_PCI */
+> +
+> +/**
+> + * This function will try to find the limitation of link speed by finding
+> + * a property called "max-link-speed" of the given device node.
+> + *
+> + * @node: device tree node with the max link speed information
+> + *
+> + * Returns the associated max link speed from DT, or a negative value if the
+> + * required property is not found or is invalid.
+> + */
+> +int of_pci_get_max_link_speed(struct device_node *node)
+> +{
+> +	u32 max_link_speed;
+> +
+> +	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
+> +	    max_link_speed > 4)
+> +		return -EINVAL;
+> +
+> +	return max_link_speed;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> -- 
+> 2.17.1
+> 
