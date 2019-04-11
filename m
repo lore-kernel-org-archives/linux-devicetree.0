@@ -1,107 +1,42 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/4] arm64: dts: allwinner: Add SPDIF node for
- Allwinner H6
-Date: Thu, 11 Apr 2019 23:44:20 +0200
-Message-ID: <20190411214422.2267-3-peron.clem@gmail.com>
-References: <20190411214422.2267-1-peron.clem@gmail.com>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 0/4] Allwinner H6 SPDIF support
+Date: Thu, 11 Apr 2019 23:44:18 +0200
+Message-ID: <20190411214422.2267-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBXPKX3SQKGQEXPU5PZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190411214422.2267-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
+*H6 DMA support IS REQUIRED*
 
-Add this node in the SoC device-tree and as they are only one pinmuxing
-available set it as default.
+Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
+is different from the previous H3 generation but still compatible.
 
-Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Difference are an increase of fifo sizes and there is now the possibility
+to output the master clock on a pin.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
-/dts/allwinner/sun50i-h6.dtsi
-index ad2077830f73..5e850b359be5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -83,6 +83,24 @@
- 		method =3D "smc";
- 	};
-=20
-+	sound_spdif {
-+		compatible =3D "simple-audio-card";
-+		simple-audio-card,name =3D "On-board SPDIF";
-+
-+		simple-audio-card,cpu {
-+			sound-dai =3D <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai =3D <&spdif_out>;
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		#sound-dai-cells =3D <0>;
-+		compatible =3D "linux,spdif-dit";
-+	};
-+
- 	timer {
- 		compatible =3D "arm,armv8-timer";
- 		interrupts =3D <GIC_PPI 13
-@@ -264,6 +282,11 @@
- 				bias-pull-up;
- 			};
-=20
-+			spdif_tx_pin: spdif-tx-pin {
-+				pins =3D "PH7";
-+				function =3D "spdif";
-+			};
-+
- 			uart0_ph_pins: uart0-ph-pins {
- 				pins =3D "PH0", "PH1";
- 				function =3D "uart0";
-@@ -391,6 +414,22 @@
- 			};
- 		};
-=20
-+		spdif: spdif@5093000 {
-+			#sound-dai-cells =3D <0>;
-+			compatible =3D "allwinner,sun50i-h6-spdif",
-+				     "allwinner,sun8i-h3-spdif";
-+			reg =3D <0x05093000 0x400>;
-+			interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
-+			clock-names =3D "apb", "spdif";
-+			resets =3D <&ccu RST_BUS_SPDIF>;
-+			dmas =3D <&dma 2>;
-+			dma-names =3D "tx";
-+			pinctrl-names =3D "default";
-+			pinctrl-0 =3D <&spdif_tx_pin>;
-+			status =3D "disabled";
-+		};
-+
- 		usb2otg: usb@5100000 {
- 			compatible =3D "allwinner,sun50i-h6-musb",
- 				     "allwinner,sun8i-a33-musb";
---=20
+Also this series require the DMA working on H6, a first version has been
+submitted by Jernej Škrabec but is not yet accepted (as this moment):
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=89011
+
+This patch has been tested on Beelink GS1 on top of sunxi/for-next with
+the series above applied.
+
+Clément Péron (4):
+  dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
+  arm64: dts: allwinner: Add SPDIF node for Allwinner H6
+  arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
+  arm64: defconfig: Enable Sun4i SPDIF module
+
+ .../bindings/sound/sunxi,sun4i-spdif.txt      |  3 +-
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 39 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ 4 files changed, 46 insertions(+), 1 deletion(-)
+
+-- 
 2.17.1
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
