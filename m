@@ -1,149 +1,101 @@
-Return-Path: <SRS0=W701=SJ=labundy.com=jeff@kernel.org>
-From: Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v8 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
-Date: Sun,  7 Apr 2019 00:01:11 -0500
-Message-Id: <1554613272-10757-1-git-send-email-jeff@labundy.com>
-To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
+Return-Path: <SRS0=vThj=SN=flygoat.com=jiaxun.yang@kernel.org>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v2 1/6] MIPS: Loongson32: Remove ehci platform device
+Date: Thu, 11 Apr 2019 20:19:10 +0800
+Message-Id: <20190411121915.8040-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190411121915.8040-1-jiaxun.yang@flygoat.com>
+References: <20190312091520.8863-2-jiaxun.yang@flygoat.com>
+ <20190411121915.8040-1-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org, paul.burton@mips.com, robh+dt@kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds binding documentation for the Azoteq IQS550/572/525
-family of trackpad/touchscreen controllers.
+It's going to be enabled by DeviceTree
 
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-Changes in v8:
-  - Added Reviewed-by trailer
+ .../include/asm/mach-loongson32/platform.h    |  1 -
+ arch/mips/loongson32/common/platform.c        | 30 -------------------
+ arch/mips/loongson32/ls1b/board.c             |  1 -
+ 3 files changed, 32 deletions(-)
 
-Changes in v7:
-  - Removed the azoteq,exp-ver-major and azoteq,exp-ver-minor properties to
-    match the driver's updated device identification scheme
-  - Updated the example node to use a level-sensitive interrupt rather than
-    an edge-sensitive interrupt
-  - Removed previous Reviewed-by trailer as this file has since changed
-
-Changes in v6:
-  - None
-
-Changes in v5:
-  - None
-
-Changes in v4:
-  - None
-
-Changes in v3:
-  - Added Reviewed-by trailer
-
-Changes in v2:
-  - Separated each valid "compatible" property with a line break
-  - Specified the polarity of the RDY and NRST pins
-  - Replaced duplicate definitions of common touchscreen properties with a
-    reference to touchscreen.txt
-  - Specified the example node as "touchscreen@74"
-
- .../bindings/input/touchscreen/iqs5xx.txt          | 80 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-new file mode 100644
-index 0000000..36f1f97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-@@ -0,0 +1,80 @@
-+Azoteq IQS550/572/525 Trackpad/Touchscreen Controller
-+
-+Required properties:
-+
-+- compatible			: Must be equal to one of the following:
-+				  "azoteq,iqs550"
-+				  "azoteq,iqs572"
-+				  "azoteq,iqs525"
-+
-+- reg				: I2C slave address for the device.
-+
-+- interrupts			: GPIO to which the device's active-high RDY
-+				  output is connected (see [0]).
-+
-+- reset-gpios			: GPIO to which the device's active-low NRST
-+				  input is connected (see [1]).
-+
-+Optional properties:
-+
-+- touchscreen-min-x		: See [2].
-+
-+- touchscreen-min-y		: See [2].
-+
-+- touchscreen-size-x		: See [2]. If this property is omitted, the
-+				  maximum x-coordinate is specified by the
-+				  device's "X Resolution" register.
-+
-+- touchscreen-size-y		: See [2]. If this property is omitted, the
-+				  maximum y-coordinate is specified by the
-+				  device's "Y Resolution" register.
-+
-+- touchscreen-max-pressure	: See [2]. Pressure is expressed as the sum of
-+				  the deltas across all channels impacted by a
-+				  touch event. A channel's delta is calculated
-+				  as its count value minus a reference, where
-+				  the count value is inversely proportional to
-+				  the channel's capacitance.
-+
-+- touchscreen-fuzz-x		: See [2].
-+
-+- touchscreen-fuzz-y		: See [2].
-+
-+- touchscreen-fuzz-pressure	: See [2].
-+
-+- touchscreen-inverted-x	: See [2]. Inversion is applied relative to that
-+				  which may already be specified by the device's
-+				  FLIP_X and FLIP_Y register fields.
-+
-+- touchscreen-inverted-y	: See [2]. Inversion is applied relative to that
-+				  which may already be specified by the device's
-+				  FLIP_X and FLIP_Y register fields.
-+
-+- touchscreen-swapped-x-y	: See [2]. Swapping is applied relative to that
-+				  which may already be specified by the device's
-+				  SWITCH_XY_AXIS register field.
-+
-+[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-+[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-+
-+Example:
-+
-+	&i2c1 {
-+		/* ... */
-+
-+		touchscreen@74 {
-+			compatible = "azoteq,iqs550";
-+			reg = <0x74>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <17 4>;
-+			reset-gpios = <&gpio 27 0>;
-+
-+			touchscreen-size-x = <640>;
-+			touchscreen-size-y = <480>;
-+
-+			touchscreen-max-pressure = <16000>;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 4b1a2a8..51f9954 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -53,6 +53,7 @@ avic	Shanghai AVIC Optoelectronics Co., Ltd.
- avnet	Avnet, Inc.
- axentia	Axentia Technologies AB
- axis	Axis Communications AB
-+azoteq	Azoteq (Pty) Ltd
- bananapi BIPAI KEJI LIMITED
- bhf	Beckhoff Automation GmbH & Co. KG
- bitmain	Bitmain Technologies
---
-2.7.4
+diff --git a/arch/mips/include/asm/mach-loongson32/platform.h b/arch/mips/include/asm/mach-loongson32/platform.h
+index 15d1de2300fe..f36c8d287b59 100644
+--- a/arch/mips/include/asm/mach-loongson32/platform.h
++++ b/arch/mips/include/asm/mach-loongson32/platform.h
+@@ -19,7 +19,6 @@ extern struct platform_device ls1x_uart_pdev;
+ extern struct platform_device ls1x_cpufreq_pdev;
+ extern struct platform_device ls1x_eth0_pdev;
+ extern struct platform_device ls1x_eth1_pdev;
+-extern struct platform_device ls1x_ehci_pdev;
+ extern struct platform_device ls1x_gpio0_pdev;
+ extern struct platform_device ls1x_gpio1_pdev;
+ extern struct platform_device ls1x_rtc_pdev;
+diff --git a/arch/mips/loongson32/common/platform.c b/arch/mips/loongson32/common/platform.c
+index 0bf355c8bcb2..4b35f49e9fcb 100644
+--- a/arch/mips/loongson32/common/platform.c
++++ b/arch/mips/loongson32/common/platform.c
+@@ -10,12 +10,10 @@
+ #include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
+-#include <linux/mtd/partitions.h>
+ #include <linux/sizes.h>
+ #include <linux/phy.h>
+ #include <linux/serial_8250.h>
+ #include <linux/stmmac.h>
+-#include <linux/usb/ehci_pdriver.h>
+ 
+ #include <platform.h>
+ #include <loongson1.h>
+@@ -255,34 +253,6 @@ struct platform_device ls1x_gpio1_pdev = {
+ 	.resource	= ls1x_gpio1_resources,
+ };
+ 
+-/* USB EHCI */
+-static u64 ls1x_ehci_dmamask = DMA_BIT_MASK(32);
+-
+-static struct resource ls1x_ehci_resources[] = {
+-	[0] = {
+-		.start	= LS1X_EHCI_BASE,
+-		.end	= LS1X_EHCI_BASE + SZ_32K - 1,
+-		.flags	= IORESOURCE_MEM,
+-	},
+-	[1] = {
+-		.start	= LS1X_EHCI_IRQ,
+-		.flags	= IORESOURCE_IRQ,
+-	},
+-};
+-
+-static struct usb_ehci_pdata ls1x_ehci_pdata = {
+-};
+-
+-struct platform_device ls1x_ehci_pdev = {
+-	.name		= "ehci-platform",
+-	.id		= -1,
+-	.num_resources	= ARRAY_SIZE(ls1x_ehci_resources),
+-	.resource	= ls1x_ehci_resources,
+-	.dev		= {
+-		.dma_mask = &ls1x_ehci_dmamask,
+-		.platform_data = &ls1x_ehci_pdata,
+-	},
+-};
+ 
+ /* Real Time Clock */
+ void __init ls1x_rtc_set_extclk(struct platform_device *pdev)
+diff --git a/arch/mips/loongson32/ls1b/board.c b/arch/mips/loongson32/ls1b/board.c
+index 447b15fc0a2b..74f7b530d9b1 100644
+--- a/arch/mips/loongson32/ls1b/board.c
++++ b/arch/mips/loongson32/ls1b/board.c
+@@ -42,7 +42,6 @@ static struct platform_device *ls1b_platform_devices[] __initdata = {
+ 	&ls1x_cpufreq_pdev,
+ 	&ls1x_eth0_pdev,
+ 	&ls1x_eth1_pdev,
+-	&ls1x_ehci_pdev,
+ 	&ls1x_gpio0_pdev,
+ 	&ls1x_gpio1_pdev,
+ 	&ls1x_rtc_pdev,
+-- 
+2.21.0
