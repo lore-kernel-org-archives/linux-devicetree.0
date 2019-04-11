@@ -1,63 +1,79 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 15/25] drm/mediatek: add function to background color
- input select for ovl/ovl_2l direct link
-Date: Thu, 11 Apr 2019 19:01:14 +0800
-Message-ID: <1554980474.27008.6.camel@mtksdaap41>
+Subject: Re: [PATCH v2 16/25] drm/mediatek: add ddp write register common api
+Date: Thu, 11 Apr 2019 19:15:19 +0800
+Message-ID: <1554981319.31170.2.camel@mtksdaap41>
 References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
- <1553667561-25447-16-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-17-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1553667561-25447-16-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1553667561-25447-17-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: yongqiang.niu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgZnVuY3Rpb24gdG8gYmFj
-a2dyb3VuZCBjb2xvciBpbnB1dCBzZWxlY3QgZm9yIG92bC9vdmxfMmwgZGlyZWN0IGxpbmsKPiBm
-b3Igb3ZsL292bF8ybCBkaXJlY3QgbGluayB1c2VjYXNlLCB3ZSBuZWVkIHNldCBiYWNrZ3JvdW5k
-IGNvbG9yCj4gaW5wdXQgc2VsZWN0IGZvciB0aGVzZSBoYXJkd2FyZS4KPiB0aGlzIGlzIHByZXBh
-cmF0aW9uIHBhdGNoIGZvciBvdmwvb3ZsXzJsIHVzZWNhc2UKPiAKPiBTaWduZWQtb2ZmLWJ5OiBZ
-b25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8IDE2ICsrKysrKysrKysrKysr
-KysKPiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKPiBpbmRleCBiNzZiNjYzLi4yMGU4MDYx
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
-LmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCj4g
-QEAgLTkyLDYgKzkyLDkgQEAgc3RydWN0IG10a19kZHBfY29tcF9mdW5jcyB7Cj4gIAkJCSAgICAg
-c3RydWN0IG10a19wbGFuZV9zdGF0ZSAqc3RhdGUpOwo+ICAJdm9pZCAoKmdhbW1hX3NldCkoc3Ry
-dWN0IG10a19kZHBfY29tcCAqY29tcCwKPiAgCQkJICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKnN0
-YXRlKTsKPiArICAgICAgICB2b2lkICgqYmdjbHJfaW5fb24pKHN0cnVjdCBtdGtfZGRwX2NvbXAg
-KmNvbXAsCj4gKwkJCSAgICBlbnVtIG10a19kZHBfY29tcF9pZCBwcmV2KTsKPiArICAgICAgICB2
-b2lkICgqYmdjbHJfaW5fb2ZmKShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKTsKPiAgfTsKPiAg
-Cj4gIHN0cnVjdCBtdGtfZGRwX2NvbXAgewo+IEBAIC0xNzMsNiArMTc2LDE5IEBAIHN0YXRpYyBp
-bmxpbmUgdm9pZCBtdGtfZGRwX2dhbW1hX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLAo+
-ICAJCWNvbXAtPmZ1bmNzLT5nYW1tYV9zZXQoY29tcCwgc3RhdGUpOwo+ICB9Cj4gIAo+ICtzdGF0
-aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jb21wX2JnY2xyX2luX29uKHN0cnVjdCBtdGtfZGRwX2Nv
-bXAgKmNvbXAsCj4gKwkJCQkJICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIHByZXYpCj4gK3sKPiAr
-ICAgICAgICBpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmJnY2xyX2luX29uKQo+ICsg
-ICAgICAgICAgICAgICAgY29tcC0+ZnVuY3MtPmJnY2xyX2luX29uKGNvbXAsIHByZXYpOwo+ICt9
-Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHZvaWQgbXRrX2RkcF9jb21wX2JnY2xyX2luX29mZihzdHJ1
-Y3QgbXRrX2RkcF9jb21wICpjb21wKQo+ICt7Cj4gKyAgICAgICAgaWYgKGNvbXAtPmZ1bmNzICYm
-IGNvbXAtPmZ1bmNzLT5iZ2Nscl9pbl9vZmYpCj4gKyAgICAgICAgICAgICAgICBjb21wLT5mdW5j
-cy0+YmdjbHJfaW5fb2ZmKGNvbXApOwoKSSB0aGluayB5b3Ugc2hvdWxkIHVzZSBhICd0YWInIHRv
-IHJlcGxhY2UgOCB3aGl0ZSBzcGFjZS4KClJlZ2FyZHMsCkNLCgo+ICt9Cj4gKwo+ICBpbnQgbXRr
-X2RkcF9jb21wX2dldF9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCj4gIAkJCWVudW0gbXRr
-X2RkcF9jb21wX3R5cGUgY29tcF90eXBlKTsKPiAgaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVj
-dCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpjb21wX25vZGUsCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hi, Yongqiang:
+
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add ddp write register common api
+> this is preparation patch for ovl/ovl_2l direct link
+> usecase.
+> in that case, we need this funtion to set one bit of ovl_2l
+> register
+
+The reason is so strange. You could grep 'readl' in mediatek drm driver,
+and you would find that many place need this function. 
+
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 11 +++++++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  4 ++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index afd6ca2..72288b4 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -84,6 +84,17 @@
+>  #define DITHER_ADD_LSHIFT_G(x)			(((x) & 0x7) << 4)
+>  #define DITHER_ADD_RSHIFT_G(x)			(((x) & 0x7) << 0)
+>  
+> +void mtk_ddp_write_mask(unsigned int value,
+> +			struct mtk_ddp_comp *comp,
+> +			unsigned int offset,
+> +			unsigned int mask)
+> +{
+> +	unsigned int tmp = readl(comp->regs + offset);
+> +
+> +	tmp = (tmp & ~mask) | (value & mask);
+
+Why not just place this calculation into writel()?
+
+Regards,
+CK
+
+> +	writel(tmp, comp->regs + offset);
+> +}
+> +
+>  void mtk_dither_set(struct mtk_ddp_comp *comp, unsigned int bpc,
+>  		    unsigned int CFG)
+>  {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index 20e8061..ed715ff 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -198,5 +198,9 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
+>  void mtk_ddp_comp_unregister(struct drm_device *drm, struct mtk_ddp_comp *comp);
+>  void mtk_dither_set(struct mtk_ddp_comp *comp, unsigned int bpc,
+>  		    unsigned int CFG);
+> +void mtk_ddp_write_mask(unsigned int value,
+> +			struct mtk_ddp_comp *comp,
+> +			unsigned int offset,
+> +			unsigned int mask);
+>  
+>  #endif /* MTK_DRM_DDP_COMP_H */
