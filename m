@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@kernel.org>
 Subject: Re: [PATCH 3/3] clk: qcom: Add QCS404 TuringCC
-Date: Thu, 11 Apr 2019 13:36:44 -0700
-Message-ID: <155501500497.20095.1440923707925089208@swboyd.mtv.corp.google.com>
+Date: Thu, 11 Apr 2019 13:36:48 -0700
+Message-ID: <155501500860.20095.12195621768250948176@swboyd.mtv.corp.google.com>
 References: <20190306174758.22462-1-bjorn.andersson@linaro.org> <20190306174758.22462-4-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,17 +14,14 @@ Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Ro
 List-Id: devicetree@vger.kernel.org
 
 Quoting Bjorn Andersson (2019-03-06 09:47:58)
-> +
-> +static int turingcc_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +
-> +       pm_runtime_enable(&pdev->dev);
-> +       ret =3D pm_clk_create(&pdev->dev);
+> The Turing Clock Controller provides resources related to running the
+> Turing subsystem.
+>=20
+> PM runtime is used to ensure that the associated AHB clock is ticking
+> while the clock framework is accessing the registers in the Turing clock
+> controller.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Neat solution. Thanks!
-
-> +       if (ret)
-> +               goto disable_pm_runtime;
-> +
-> +       ret =3D pm_clk_add(&pdev->dev, NULL);
+Applied to clk-next
