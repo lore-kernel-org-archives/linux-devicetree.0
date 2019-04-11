@@ -1,76 +1,69 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH v4] arm64: dts: ls1088a: add one more thermal zone node
-Date: Thu, 11 Apr 2019 08:01:55 +0000
-Message-ID: <VI1PR04MB433392E5E650435B0D06AFFFF32F0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190401032905.32711-1-andy.tang@nxp.com>
- <273bb946-8659-8e50-6598-3cffa6dff9f5@linaro.org>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH 3/8] dt-bindings: gpu: mali-midgard: Add h6 mali gpu compatible
+Date: Thu, 11 Apr 2019 10:03:29 +0200
+Message-ID: <CAJiuCcdo2etQhiVpLS98cv=dt1N+2p-+fGhieBDS2iaBCeORPg@mail.gmail.com>
+References: <20190410232543.13297-1-peron.clem@gmail.com> <20190410232543.13297-4-peron.clem@gmail.com>
+ <20190411072724.qdhfvdhjce5sopzi@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <273bb946-8659-8e50-6598-3cffa6dff9f5@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20190411072724.qdhfvdhjce5sopzi@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFu
-aWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IFNlbnQ6IDIwMTnlubQ0
-5pyINOaXpSAxMDozNQ0KPiBUbzogQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT47IHNoYXdu
-Z3VvQGtlcm5lbC5vcmcNCj4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtk
-dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBydWkuemhh
-bmdAaW50ZWwuY29tOw0KPiBlZHViZXp2YWxAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjRdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBvbmUgbW9yZSB0aGVybWFsIHpvbmUgbm9k
-ZQ0KPiA+ICsJCQkJCQk8JmNwdTEgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05PX0xJTUlU
-PiwNCj4gPiArCQkJCQkJPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCj4gVEhFUk1BTF9OT19MSU1J
-VD4sDQo+ID4gKwkJCQkJCTwmY3B1MyBUSEVSTUFMX05PX0xJTUlUDQo+IFRIRVJNQUxfTk9fTElN
-SVQ+LA0KPiA+ICsJCQkJCQk8JmNwdTQgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05PX0xJ
-TUlUPiwNCj4gPiArCQkJCQkJPCZjcHU1IFRIRVJNQUxfTk9fTElNSVQNCj4gVEhFUk1BTF9OT19M
-SU1JVD4sDQo+ID4gKwkJCQkJCTwmY3B1NiBUSEVSTUFMX05PX0xJTUlUDQo+IFRIRVJNQUxfTk9f
-TElNSVQ+LA0KPiA+ICsJCQkJCQk8JmNwdTcgVEhFUk1BTF9OT19MSU1JVA0KPiBUSEVSTUFMX05P
-X0xJTUlUPjsNCj4gPiArCQkJCX07DQo+IA0KPiBEb2VzIGl0IG1ha2Ugc2Vuc2UgdG8gYXNzaWdu
-IHRoZSBzYW1lIGNvb2xpbmcgZGV2aWNlcyB0byB0d28gZGlmZmVyZW50IHRoZXJtYWwNCj4gem9u
-ZXMgcnVubmluZyBkaWZmZXJlbnQgaW5zdGFuY2VzIG9mIGdvdmVybm9yID8NCkV2ZW4gdGhvdWdo
-IEkgZGlkbid0IGZpbmQgYW55IGVycm9yIHdoZW4gdGVzdCwgSSBkbyB0aGluayBpdCBpcyBpbmFw
-cHJvcHJpYXRlLg0KDQpCUiwNCkFuZHkNCj4gDQo+ID4gKwkJCX07DQo+ID4gKwkJfTsNCj4gPiAr
-DQo+ID4gKwkJcGxhdGZvcm0tdGhlcm1hbCB7DQo+ID4gKwkJCXBvbGxpbmctZGVsYXktcGFzc2l2
-ZSA9IDwxMDAwPjsNCj4gPiArCQkJcG9sbGluZy1kZWxheSA9IDw1MDAwPjsNCj4gPiArCQkJdGhl
-cm1hbC1zZW5zb3JzID0gPCZ0bXUgMT47DQo+ID4gKw0KPiA+ICsJCQl0cmlwcyB7DQo+ID4gKwkJ
-CQlwbGF0Zm9ybV9hbGVydDogcGxhdGZvcm0tYWxlcnQgew0KPiA+ICsJCQkJCXRlbXBlcmF0dXJl
-ID0gPDg1MDAwPjsNCj4gPiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICsJCQkJCXR5
-cGUgPSAicGFzc2l2ZSI7DQo+ID4gKwkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCXBsYXRmb3JtX2Ny
-aXQ6IHBsYXRmb3JtLWNyaXQgew0KPiA+ICsJCQkJCXRlbXBlcmF0dXJlID0gPDk1MDAwPjsNCj4g
-PiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICsJCQkJCXR5cGUgPSAiY3JpdGljYWwi
-Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4gKwkJCWNvb2xpbmctbWFwcyB7
-DQo+ID4gKwkJCQltYXAwIHsNCj4gPiArCQkJCQl0cmlwID0gPCZwbGF0Zm9ybV9hbGVydD47DQo+
-ID4gIAkJCQkJY29vbGluZy1kZXZpY2UgPQ0KPiA+ICAJCQkJCQk8JmNwdTAgVEhFUk1BTF9OT19M
-SU1JVA0KPiBUSEVSTUFMX05PX0xJTUlUPiwNCj4gPiAgCQkJCQkJPCZjcHUxIFRIRVJNQUxfTk9f
-TElNSVQNCj4gVEhFUk1BTF9OT19MSU1JVD4sDQo+ID4NCj4gDQo+IA0KPiAtLQ0KPiANCj4gPGh0
-dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNB
-JTJGJTJGd3d3Lmxpbg0KPiBhcm8ub3JnJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRhbmcl
-NDBueHAuY29tJTdDZTFiNzA0ODMyZWEzNA0KPiA2YWU3Mzg0MDhkNmI4YTYyODNmJTdDNjg2ZWEx
-ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3Qw0KPiA2MzY4OTk0MjExMTA0NDE1
-NzQmYW1wO3NkYXRhPUM3bXJVenRPYmtITVp5cUVKZzUzaDk5U2RJd2VKU2VLaGk4bA0KPiAlMkJR
-cFVRaEElM0QmYW1wO3Jlc2VydmVkPTA+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3
-YXJlIGZvcg0KPiBBUk0gU29Dcw0KPiANCj4gRm9sbG93IExpbmFybzoNCj4gPGh0dHBzOi8vZXVy
-MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3
-LmZhYw0KPiBlYm9vay5jb20lMkZwYWdlcyUyRkxpbmFybyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5k
-eS50YW5nJTQwbnhwLmNvbQ0KPiAlN0NlMWI3MDQ4MzJlYTM0NmFlNzM4NDA4ZDZiOGE2MjgzZiU3
-QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzANCj4gMTYzNSU3QzAlN0MwJTdDNjM2ODk5NDIx
-MTEwNDQxNTc0JmFtcDtzZGF0YT1QeGolMkJsZmMlMkZDMUtpUUJEMA0KPiBrelRqUUdUMkFnakNi
-WWxjWGhuc2NXVGI2cHclM0QmYW1wO3Jlc2VydmVkPTA+IEZhY2Vib29rIHwNCj4gPGh0dHBzOi8v
-ZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJG
-dHdpdHRlci5jDQo+IG9tJTJGJTIzISUyRmxpbmFyb29yZyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5k
-eS50YW5nJTQwbnhwLmNvbSU3Q2UNCj4gMWI3MDQ4MzJlYTM0NmFlNzM4NDA4ZDZiOGE2MjgzZiU3
-QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1DQo+ICU3QzAlN0MwJTdDNjM2ODk5NDIx
-MTEwNDQxNTc0JmFtcDtzZGF0YT1ZSlFSZ01Ud2NHJTJCM0gxZyUyRlgNCj4gaDN6YXclMkJYeThP
-ZGxzdEw1QUg0UjBlWG1OOCUzRCZhbXA7cmVzZXJ2ZWQ9MD4gVHdpdHRlciB8DQo+IDxodHRwczov
-L2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUy
-Rnd3dy5saW4NCj4gYXJvLm9yZyUyRmxpbmFyby1ibG9nJTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nh
-bmR5LnRhbmclNDBueHAuY29tJTdDDQo+IGUxYjcwNDgzMmVhMzQ2YWU3Mzg0MDhkNmI4YTYyODNm
-JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2Mw0KPiA1JTdDMCU3QzAlN0M2MzY4OTk0
-MjExMTA0NDE1NzQmYW1wO3NkYXRhPXJsa082bWtIZ2RhbThLMlJUd3NPZg0KPiA4RXhQRjJLUnkl
-MkZyTXd3eXNoUkJLQWclM0QmYW1wO3Jlc2VydmVkPTA+IEJsb2cNCg0K
+Hi,
+
+On Thu, 11 Apr 2019 at 09:27, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Thu, Apr 11, 2019 at 01:25:38AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > This add the H6 mali compatible in the dt-bindings to later support
+> > specific implementation.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../devicetree/bindings/gpu/arm,mali-midgard.txt          | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt=
+ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > index 2e8bbce35695..9e71146b5c8a 100644
+> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > @@ -15,6 +15,7 @@ Required properties:
+> >      + "arm,mali-t860"
+> >      + "arm,mali-t880"
+> >    * which must be preceded by one of the following vendor specifics:
+> > +    + "allwinner,sun50i-h6-mali"
+> >      + "amlogic,meson-gxm-mali"
+> >      + "rockchip,rk3288-mali"
+> >      + "rockchip,rk3399-mali"
+> > @@ -49,9 +50,14 @@ Vendor-specific bindings
+> >  ------------------------
+> >
+> >  The Mali GPU is integrated very differently from one SoC to
+> > -another. In order to accomodate those differences, you have the option
+> > +another. In order to accommodate those differences, you have the optio=
+n
+> >  to specify one more vendor-specific compatible, among:
+> >
+> > +- "allwinner,sun50i-h6-mali"
+> > +  Required properties:
+> > +  - resets: Should contain phandle of :
+> > +    + GPU reset line
+> > +
+>
+> And clocks, I assume?
+Yes you're right clocks are also required for the H6.
+
+Clement
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
