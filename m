@@ -1,125 +1,128 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali
- GPU node for H6
-Date: Thu, 11 Apr 2019 17:27:52 +0200
-Message-ID: <20190411152752.qlabx7heh74dy2ao@flea>
-References: <20190411105720.32357-1-peron.clem@gmail.com>
- <2957024.jOddxINRMN@jernej-laptop>
- <CAJiuCcdo_WAP1_rOcqOcoNkt7rdGb3H_GVMN2DiZnvo_4c=7DA@mail.gmail.com>
- <2797515.ZAugZ1JPiN@jernej-laptop>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 11/25] leds: lp8860: Use generic support for composing
+ LED names
+Date: Thu, 11 Apr 2019 10:28:54 -0500
+Message-ID: <4c454bbc-62b2-8607-893c-5e126cba31ad@ti.com>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+ <20190331175501.23471-12-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fif5jmfw3lbbiwm7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7FZXXSQKGQEOCQRBPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <2797515.ZAugZ1JPiN@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190331175501.23471-12-jacek.anaszewski@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Jacek
 
---fif5jmfw3lbbiwm7
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 11, 2019 at 05:23:25PM +0200, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 11. april 2019 ob 17:20:04 CEST je Cl=C3=A9ment P=C3=A9=
-ron napisal(a):
-> > Hi,
-> >
-> > On Thu, 11 Apr 2019 at 17:05, Jernej =C5=A0krabec <jernej.skrabec@siol.=
-net>
-> wrote:
-> > > Dne =C4=8Detrtek, 11. april 2019 ob 12:57:16 CEST je Cl=C3=A9ment P=
-=C3=A9ron napisal(a):
-> > > > Add the mali gpu node to the H6 device-tree.
-> > > >
-> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > ---
-> > > >
-> > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
-> > > >  1 file changed, 14 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > > > e0dc4a05c1ba..196753110434 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > @@ -157,6 +157,20 @@
-> > > >
-> > > >                       allwinner,sram =3D <&ve_sram 1>;
-> > > >
-> > > >               };
-> > > >
-> > > > +             gpu: gpu@1800000 {
-> > > > +                     compatible =3D "allwinner,sun50i-h6-mali",
-> > > > +                                  "arm,mali-t720";
-> > > > +                     reg =3D <0x01800000 0x4000>;
-> > > > +                     interrupts =3D <GIC_SPI 84
-> > >
-> > > IRQ_TYPE_LEVEL_HIGH>,
-> > >
-> > > > +                                  <GIC_SPI 85
-> > >
-> > > IRQ_TYPE_LEVEL_HIGH>,
-> > >
-> > > > +                                  <GIC_SPI 83
-> > >
-> > > IRQ_TYPE_LEVEL_HIGH>;
-> > >
-> > > > +                     interrupt-names =3D "job", "mmu", "gpu";
-> > > > +                     clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>=
-;
-> > > > +                     clock-names =3D "core", "bus";
-> > > > +                     resets =3D <&ccu RST_BUS_GPU>;
-> > > > +                     status =3D "disabled";
-> > >
-> > > Usually self sufficient peripherals are enabled by default in DTSI.
-> >
-> > I follow the other Mali Midgard (rk3399, rk3288) syntax.
-> > But I think you're right here, will go for an update I think.
+On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
+> Switch to using generic LED support for composing LED class
+> device name.
 >
-> I quickly checked A64 and H5 DTSI and both have GPU enabled by default (s=
-tatus
-> property is not set).
-
-I asked myself the same question, but the H6 seems to have a supply
-wired to the GPU, while the H3 and H5 do not. So I'm not sure we want
-to enable it on all the boards, even though some might have left out
-the GPU supply which will result in a non-working GPU (I assume?)
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---fif5jmfw3lbbiwm7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK9c+AAKCRDj7w1vZxhR
-xbnqAP9Fea7hvFgQtbH751uRaJa3DMnClBVLo69G8zipCrWZ1QD/evi37AfeavWu
-FrgvyLIPaSeqbmzh/A9/COc65LFHUQA=
-=OM01
------END PGP SIGNATURE-----
-
---fif5jmfw3lbbiwm7--
+> While at it, avoid iterating through available child of nodes
+> in favor of obtaining single expected child node using single
+> call to of_get_next_available_child().
+>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/leds/leds-lp8860.c | 35 ++++++++++++++++-------------------
+>  1 file changed, 16 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+> index 39c72a908f3b..10364068da53 100644
+> --- a/drivers/leds/leds-lp8860.c
+> +++ b/drivers/leds/leds-lp8860.c
+> @@ -22,7 +22,6 @@
+>  #include <linux/of_gpio.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/slab.h>
+> -#include <uapi/linux/uleds.h>
+>  
+>  #define LP8860_DISP_CL1_BRT_MSB		0x00
+>  #define LP8860_DISP_CL1_BRT_LSB		0x01
+> @@ -87,6 +86,8 @@
+>  
+>  #define LP8860_CLEAR_FAULTS		0x01
+>  
+> +#define LP8860_NAME			"lp8860"
+> +
+>  /**
+>   * struct lp8860_led -
+>   * @lock - Lock for reading/writing the device
+> @@ -96,7 +97,6 @@
+>   * @eeprom_regmap - EEPROM register map
+>   * @enable_gpio - VDDIO/EN gpio to enable communication interface
+>   * @regulator - LED supply regulator pointer
+> - * @label - LED label
+>   */
+>  struct lp8860_led {
+>  	struct mutex lock;
+> @@ -106,7 +106,6 @@ struct lp8860_led {
+>  	struct regmap *eeprom_regmap;
+>  	struct gpio_desc *enable_gpio;
+>  	struct regulator *regulator;
+> -	char label[LED_MAX_NAME_SIZE];
+>  };
+>  
+>  struct lp8860_eeprom_reg {
+> @@ -387,25 +386,19 @@ static int lp8860_probe(struct i2c_client *client,
+>  	struct lp8860_led *led;
+>  	struct device_node *np = client->dev.of_node;
+>  	struct device_node *child_node;
+> -	const char *name;
+> +	struct led_init_data init_data;
+>  
+>  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+>  	if (!led)
+>  		return -ENOMEM;
+>  
+> -	for_each_available_child_of_node(np, child_node) {
+> -		led->led_dev.default_trigger = of_get_property(child_node,
+> -						    "linux,default-trigger",
+> -						    NULL);
+> -
+> -		ret = of_property_read_string(child_node, "label", &name);
+> -		if (!ret)
+> -			snprintf(led->label, sizeof(led->label), "%s:%s",
+> -				 id->name, name);
+> -		else
+> -			snprintf(led->label, sizeof(led->label),
+> -				"%s::display_cluster", id->name);
+> -	}
+> +	child_node = of_get_next_available_child(np, NULL);
+> +	if (!child_node)
+> +		return -EINVAL;
+> +
+> +	led->led_dev.default_trigger = of_get_property(child_node,
+> +					    "linux,default-trigger",
+> +					    NULL);
+>  
+>  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+>  						   "enable", GPIOD_OUT_LOW);
+> @@ -420,7 +413,6 @@ static int lp8860_probe(struct i2c_client *client,
+>  		led->regulator = NULL;
+>  
+>  	led->client = client;
+> -	led->led_dev.name = led->label;
+>  	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
+>  
+>  	mutex_init(&led->lock);
+> @@ -447,7 +439,12 @@ static int lp8860_probe(struct i2c_client *client,
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
+> +	init_data.fwnode = of_fwnode_handle(child_node);
+> +	init_data.led_hw_name = LP8860_NAME;
+> +	init_data.default_label = ":display_cluster";
+> +
+> +	ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
+> +					     &init_data);
+>  	if (ret) {
+>  		dev_err(&client->dev, "led register err: %d\n", ret);
+>  		return ret;
+Tested-by: Dan Murphy <dmurphy@ti.com>
