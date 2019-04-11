@@ -1,50 +1,37 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: ti_sci_pm_domains: Add support for
- exclusive and shared access
-Date: Thu, 11 Apr 2019 07:34:07 -0700
-Message-ID: <20190411143407.GO2839@atomide.com>
-References: <20190410053728.17374-1-lokeshvutla@ti.com>
- <20190410053728.17374-3-lokeshvutla@ti.com>
- <2087d79b-67b0-5ce4-bf2f-f659ef1a5494@ti.com>
- <dfceed14-d88f-72cb-a647-0ce3fbea3ca5@ti.com>
- <2008fbb5-422a-8950-c642-74e63b79a809@ti.com>
- <b4ad336e-42d0-eaf5-7265-d566703fad75@ti.com>
- <67537564-c503-8a2a-9f48-26ebca0661ab@ti.com>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v3 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
+Date: Thu, 11 Apr 2019 16:45:24 +0200
+Message-ID: <mvm1s28fvnf.fsf@suse.de>
+References: <20181020101045.15991-1-paul.walmsley@sifive.com>
+        <mvmr2bkxntv.fsf@suse.de>
+        <alpine.DEB.2.21.9999.1904110151030.5868@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <67537564-c503-8a2a-9f48-26ebca0661ab@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1904110151030.5868@viisi.sifive.com> (Paul
+        Walmsley's message of "Thu, 11 Apr 2019 01:54:05 -0700 (PDT)")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Palmer Dabbelt <palmer@sifive.com>, Wesley Terpstra <wesley@sifive.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [190410 15:39]:
-> On 10/04/2019 16:15, Lokesh Vutla wrote:
-> > Well Ill put it this way. This flag describes that the requested device is a
-> > shared device across multiple hosts :)
-> 
-> But that is pure software config, right? Depends on the software design
-> choices made, which host is going to use which resource. Personally I don't
-> think this justifies a DT binding, but I might be wrong. I'll let Rob
-> comment on this.
+On Apr 11 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-I agree. It's best to stick to basics with the device tree bindings
-and not put any software flags there.
+> On Wed, 6 Mar 2019, Andreas Schwab wrote:
+>
+>> Trying to log in on the serial console causes the system to freeze.  The
+>> last message is:
+>> 
+>> [  115.597858] sifive-serial 10010000.serial: BRKINT/PARMRK flag not supported
+>
+> Have not seen that problem.
 
-You can configure things on init in the device driver based on
-compatible and soc_device_match().
+# stty sane -F /dev/ttySIF0
+<crash>
 
-Regards,
+Andreas.
 
-Tony
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
