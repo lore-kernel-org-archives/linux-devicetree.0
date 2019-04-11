@@ -1,26 +1,35 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [v7 1/3] dt-bindings: ahci-fsl-qoriq: add lx2160a chip name to
- the list
-Date: Thu, 11 Apr 2019 09:38:03 +0800
-Message-ID: <20190411013802.GF26817@dragon>
-References: <20190312015019.30628-1-peng.ma@nxp.com>
+From: xiaojiangfeng <xiaojiangfeng@huawei.com>
+Subject: [PATCH] of: fix expression using sizeof(void)
+Date: Thu, 11 Apr 2019 09:47:35 +0800
+Message-ID: <1554947255-80031-1-git-send-email-xiaojiangfeng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190312015019.30628-1-peng.ma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>
-Cc: axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, frowand.list@gmail.com, robh@kernel.org, grant.likely@secretlab.ca, xiaojiangfeng@huawei.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 09:50:17AM +0800, Peng Ma wrote:
-> Add lx2160a compatible to bindings documentation.
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+problem detected by sparse:
+drivers/of/fdt.c:1094:34: warning: expression using sizeof(void)
 
-I assume that the bindings will go via AHCI tree.  Otherwise, please let
-me know.
+Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
+---
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Shawn
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 4734223..75c6c55 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1091,7 +1091,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 	/* Retrieve command line */
+ 	p = of_get_flat_dt_prop(node, "bootargs", &l);
+ 	if (p != NULL && l > 0)
+-		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
++		strlcpy(data, p, COMMAND_LINE_SIZE);
+ 
+ 	/*
+ 	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+-- 
+1.8.5.6
