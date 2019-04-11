@@ -1,47 +1,74 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 0/8] Add Allwinner H6 Mali Midgard GPU
-Date: Thu, 11 Apr 2019 17:01:03 +0200
-Message-ID: <2219012.spPdo1bsEq@jernej-laptop>
-References: <20190411105720.32357-1-peron.clem@gmail.com> <20190411123223.zyumngnlwhlvk6mf@flea>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to
+ be compiled for ARM64
+Date: Thu, 11 Apr 2019 16:03:32 +0100
+Message-ID: <20190411150332.GC6862@red-moon>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-13-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411123223.zyumngnlwhlvk6mf@flea>
+Content-Disposition: inline
+In-Reply-To: <20190325093947.32633-13-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Mon, Mar 25, 2019 at 03:09:33PM +0530, Kishon Vijay Abraham I wrote:
+> hook_fault_code is an ARM32 specific API for hooking into data abort.
+> Since pci-keystone.c will be used for AM65X platforms which is an
+> ARM64 platform,
 
-Dne četrtek, 11. april 2019 ob 14:32:23 CEST je Maxime Ripard napisal(a):
-> On Thu, Apr 11, 2019 at 12:57:12PM +0200, Clément Péron wrote:
-> > Hi,
-> > 
-> > The Allwinner H6 has a Mali-T720 MP2. The drivers are
-> > out-of-tree so this series only introduce the dt-bindings.
-> > 
-> > The first patch is from Neil Amstrong and has been already
-> > merged in linux-amlogic. It is required for this series.
-> > 
-> > The second patch is from Icenowy Zheng where I changed the
-> > order has required by Rob Herring.
-> > See: https://patchwork.kernel.org/patch/10699829/
-> > 
-> > The GPU opp table was taken from Jernej Škrabec's patch
-> > on LibreELEC.tv.
+Hi Kishon,
+
+How is the problem plugged by the fault hook fixed on ARM64 ?
+
+Thanks,
+Lorenzo
+
+> allow hook_fault_code to be compiled only for ARM32.
 > 
-> One valuable information here would be which stack did you use,
-> panfrost and mesa or the ARM stack? If so, with which driver and which
-> blob?
-
-I'm using similar binding (different clock and interrupt names, but otherwise  
-same) for quiet some time now on LibreELEC with ARM proprietary userspace and 
-kernel space driver (32-bit GBM version) and it works well.
-
-It's true that I'm using OPP table, but most (if not all) of the time GPU is 
-set to lowest setting as there is not much to do when rendering GUI.
-
-Best regards,
-Jernej
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index dfe54553d832..93296d434f40 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
+>  	return ret;
+>  }
+>  
+> +#ifdef CONFIG_ARM
+>  /*
+>   * When a PCI device does not exist during config cycles, keystone host gets a
+>   * bus error instead of returning 0xffffffff. This handler always returns 0
+> @@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
+>  
+>  	return 0;
+>  }
+> +#endif
+>  
+>  static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
+>  {
+> @@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +#ifdef CONFIG_ARM
+>  	/*
+>  	 * PCIe access errors that result into OCP errors are caught by ARM as
+>  	 * "External aborts"
+>  	 */
+>  	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
+>  			"Asynchronous external abort");
+> +#endif
+>  
+>  	ks_pcie_start_link(pci);
+>  	dw_pcie_wait_for_link(pci);
+> -- 
+> 2.17.1
+> 
