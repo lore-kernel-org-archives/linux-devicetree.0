@@ -1,58 +1,28 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/4] mmc: mmci: add busy detect for stm32 sdmmc variant
-Date: Thu, 11 Apr 2019 15:29:11 +0200
-Message-ID: <CAPDyKFpRA4mP-SHt_JuWk-Ee7=2Jgv6jKFh_08n_V20czKyvNg@mail.gmail.com>
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com> <5b9fe100-6147-d64f-f676-6a5370a03016@st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 4/9] pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
+Date: Thu, 11 Apr 2019 15:29:58 +0200
+Message-ID: <CACRpkdY8-JZkbKGx_vEwhqWAozH1a_pB0W-wULJoYizzBxPMBg@mail.gmail.com>
+References: <1554794651-6874-1-git-send-email-amelie.delaunay@st.com> <1554794651-6874-5-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b9fe100-6147-d64f-f676-6a5370a03016@st.com>
+In-Reply-To: <1554794651-6874-5-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Apr 2019 at 14:37, Ludovic BARRE <ludovic.barre@st.com> wrote:
+On Tue, Apr 9, 2019 at 9:24 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+
+> This patch adds pinctrl/GPIO driver for STMicroelectronics
+> Multi-Function eXpander (STMFX) GPIO expander.
+> STMFX is an I2C slave controller, offering up to 24 GPIOs.
+> The driver relies on generic pin config interface to configure the GPIOs.
 >
-> Hi Ulf
->
-> Just a gentleman ping about this series.
-> I sent this series at same time of dt_mode
-> (no dependence between both).
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-Thanks for pinging.
+A very clean pin controller/GPIO combo.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-It's been a busy period, with travels etc. I am just catching up on
-everything and I will soon come back to this.
-
-I haven't tried to apply this on top of the other recent queued
-changes for mmci, but perhaps you can check if a rebase is needed?
-Especially since I plan to run this on my ux500 board.
-
-Kind regards
-Uffe
-
->
-> BR
-> Ludo
->
-> On 3/5/19 5:10 PM, Ludovic Barre wrote:
-> > From: Ludovic Barre <ludovic.barre@st.com>
-> >
-> > This patch series adds busy detect for stm32 sdmmc variant.
-> > Some adaptations are required:
-> > -Avoid to check and poll busy status when is not expected.
-> > -Clear busy status bit if busy_detect_flag and busy_detect_mask are
-> >   different.
-> > -Add hardware busy timeout with MMCIDATATIMER register.
-> >
-> > Ludovic Barre (4):
-> >    mmc: mmci: avoid fake busy polling
-> >    mmc: mmci: fix clear of busy detect status
-> >    mmc: mmci: add hardware busy timeout feature
-> >    mmc: mmci: add busy detect for stm32 sdmmc variant
-> >
-> >   drivers/mmc/host/mmci.c | 67 +++++++++++++++++++++++++++++++++++++++----------
-> >   drivers/mmc/host/mmci.h |  3 +++
-> >   2 files changed, 57 insertions(+), 13 deletions(-)
-> >
+Yours,
+Linus Walleij
