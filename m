@@ -1,94 +1,47 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
-Date: Thu, 11 Apr 2019 10:09:55 +0200
-Message-ID: <20190411080955.ysp3wreifwqrpn3n@flea>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com>
- <20190410174139.20012-2-tiny.windzz@gmail.com>
+From: Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Subject: Backwards compatiblity for QorIQ FMAN LIODN entries
+Date: Thu, 11 Apr 2019 03:28:10 +0000
+Message-ID: <1554953290.3747.66.camel@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ljbikfewuqsnslmi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190410174139.20012-2-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Language: en-US
+Content-ID: <67A1AA396ADF3348A0C67EB6174FC3FE@atlnz.lc>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "paulus@samba.org" <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---ljbikfewuqsnslmi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Wed, Apr 10, 2019 at 01:41:38PM -0400, Yangtao Li wrote:
-> For some SoCs, the CPU frequency subset and voltage value of each OPP
-> varies based on the silicon variant in use. The sunxi-cpufreq-nvmem
-> driver reads the efuse value from the SoC to provide the OPP framework
-> with required information.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-
-The driver has a bunch of checkpatch warnings, please fix them
-(running checkpatch with --strict).
-
-> ---
->  MAINTAINERS                           |   7 +
->  drivers/cpufreq/Kconfig.arm           |  10 ++
->  drivers/cpufreq/Makefile              |   1 +
->  drivers/cpufreq/cpufreq-dt-platdev.c  |   2 +
->  drivers/cpufreq/sunxi-cpufreq-nvmem.c | 232 ++++++++++++++++++++++++++
->  5 files changed, 252 insertions(+)
->  create mode 100644 drivers/cpufreq/sunxi-cpufreq-nvmem.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 391405091c6b..bfd18ba6aa1a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -667,6 +667,13 @@ S:	Maintained
->  F:	Documentation/i2c/busses/i2c-ali1563
->  F:	drivers/i2c/busses/i2c-ali1563.c
->
-> +ALLWINNER CPUFREQ DRIVER
-> +M:	Yangtao Li <tiny.windzz@gmail.com>
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> +F:	drivers/cpufreq/sunxi-cpufreq-nvmem.c
-> +
-
-Please use a less generic name for the driver as well. It's called
-sunxi, but applies to a single SoC (for now).
-
-> +struct sunxi_cpufreq_soc_data {
-> +	u32 (*efuse_xlate)(const struct sunxi_cpufreq_soc_data *soc_data,
-> +			   u32 efuse);
-> +	u32 nvmem_mask;
-> +	u32 nvmem_shift;
-> +};
-
-What cases do you have? You're mentionning that it might apply to more
-SoCs, which ones? How is the data stored on those SoCs (and why do you
-need this particular abstraction)?
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ljbikfewuqsnslmi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK72UwAKCRDj7w1vZxhR
-xddWAP4/ozszJEsxyLl3PcSuUQNUmGNPTI5/EZoFHMnPIMM1+gEA26Mdnj9YBQVs
-HKxva/PTNG3RNdsvgtKweCHQ+Qrllww=
-=diSg
------END PGP SIGNATURE-----
-
---ljbikfewuqsnslmi--
+SGkgUm9iIGFuZCBNYXJrLA0KDQpJIGFtIHVwZ3JhZGluZyB0aGUga2VybmVsIG9uIGEgRnJlZXNj
+YWxlIFAyMDQwIGJhc2VkIHN5c3RlbSBhbmQgaGF2ZQ0Kc3RydWNrIGFuIGlzc3VlIHdpdGggTElP
+RE5zIG5vdCBiZWluZyB1cGRhdGVkIGJ5IHVib290IGZvciBhbiBGTUFODQpldGhlcm5ldCBwb3J0
+Lg0KDQpNeSBzeXN0ZW0gaGFzIGFuIG9sZCB1Ym9vdCBydW5uaW5nIHdoaWNoIGZhaWxzIGluIGl0
+cyBhdHRlbXB0IHRvIHVwZGF0ZQ0KdGhlIGZtYW4gcnggcG9ydCBub2RlIHdpdGggdGhlIHJlcXVp
+cmVkIExJT0ROIGVudHJ5LiBUaGlzIGlzIGJlY2F1c2UgbXkNCm9sZCB1Ym9vdCBpbnN0YWxsYXRp
+b24gaXMgbG9va2luZyBmb3IgY29tcGF0aWJpbGl0eSB2YWx1ZSAiZnNsLGZtYW4tDQpwb3J0LTFn
+LXJ4IiB3aGlsZSB0aGUgbGF0ZXN0IGtlcm5lbCBkZWZpbmVzIHRoZSBjb21wYXRpYmxlIHZhbHVl
+IGFzDQoiZnNsLGZtYW4tdjItcG9ydC1yeCIgKHNlZSBmb3INCmluc3RhbmNlwqBhcmNoL3Bvd2Vy
+cGMvYm9vdC9kdHMvZnNsL3FvcmlxLWZtYW4tMC0xZy0zLmR0c2kpLg0KTmV3ZXIgdWJvb3QgbG9v
+a3MgZm9yIGJvdGggdmFsdWVzIHBlciB0aGlzIGNvbW1pdDoNCmh0dHBzOi8vZ2l0aHViLmNvbS91
+LWJvb3QvdS1ib290L2NvbW1pdC85N2E4ZDAxMGUwMjkxMTFlNTcxMWE0NTI2NGE3MjZiDQplZGJl
+YjI0YzQjZGlmZi00MzI0M2I5MTA4MzcyODNiYjFkNWQ2MjZmNGQ4OWQ3NQ0KDQpJIGFtIHVuYWJs
+ZSB0byB1cGRhdGUgYm9vdGxvYWRlcnMgZm9yIGRldmljZXMgb2YgdGhpcyB0eXBlIGluIHRoZSBm
+aWVsZA0Kc28gSSBhbSB3b25kZXJpbmcgaWYgdGhlIGNvcnJlY3QgYXBwcm9hY2ggaXMgdG8gYWRq
+dXN0IG15IERUUyBmaWxlDQpsb2NhbGx5IHRvIGFkZCB0aGUgY29tcGF0aWJsZSBzdHJpbmcgbXkg
+b2xkIHVib290IGlzIHNlYXJjaGluZyBmb3IsIG9yDQppZiB3ZSBzaG91bGQgYWRkIHRoaXMgdG8g
+dGhlIHZhcmlvdXMgcW9yaXEtZm1hbiBkdHNpIGZpbGVzIGluIHRoZQ0Ka2VybmVsIHRvIG1ha2Ug
+dGhpcyB3b3JrIGluIGEgbmljZSBiYWNrd2FyZHMgY29tcGF0aWJsZSB3YXkuDQoNCkxldCBtZSBr
+bm93IHlvdXIgb3Bpbmlvbi4gSSdtIGhhcHB5IHRvIHdvcmsgdXAgYSBwYXRjaCBpZiB5b3UnZCBs
+aWtlIHRvDQptYWtlIHRoZSBjaGFuZ2UgaW4gdGhlIGtlcm5lbCwgb3RoZXJ3aXNlIEknbGwgaGFu
+ZGxlIGl0IGxvY2FsbHkgYnkNCm92ZXJyaWRpbmcgdGhlIGNvbXBhdGlibGUgc3RyaW5nIGluIG15
+IHN5c3RlbSdzIGR0cyBmaWxlLg0KDQpUaGFua3MsDQpIYW1pc2ggTQ==
