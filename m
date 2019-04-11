@@ -1,56 +1,55 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v8 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Date: Fri, 12 Apr 2019 15:18:49 +0800
-Message-ID: <20190412071851.60332-6-pihsun@chromium.org>
-References: <20190412071851.60332-1-pihsun@chromium.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 1/4] dt-bindings: display: renesas: du: Document the r8a774a1
+ bindings
+Date: Thu, 11 Apr 2019 15:34:28 +0100
+Message-ID: <1554993271-29523-2-git-send-email-biju.das@bp.renesas.com>
+References: <1554993271-29523-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412071851.60332-1-pihsun@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1554993271-29523-1-git-send-email-biju.das@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a DT binding documentation for ChromeOS EC driver over rpmsg.
-
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes from v7:
- - No change.
-
-Changes from v6:
- - No change.
-
-Changes from v5:
- - New patch.
----
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 6245c9b1a68b..4860eabd0f72 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
- 
--The EC can be connect through various means (I2C, SPI, LPC) and the
-+The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,9 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (RPMSG):
-+- compatible: "google,cros-ec-rpmsg"
-+
- Optional properties (SPI):
- - google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
-   time to wake up from sleep before they can receive SPI transfers at a high
--- 
-2.21.0.392.gf8f6787159e-goog
+RG9jdW1lbnQgdGhlIFJaL0cyTSAoUjhBNzc0QTEpIFNvQyBpbiB0aGUgUi1DYXIgRFUgYmluZGlu
+Z3MuCgpTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+Ci0t
+LQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50
+eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4
+dAppbmRleCBhZWRiMjJiLi5jOTdkZmFjIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dApAQCAtNyw2ICs3LDcg
+QEAgUmVxdWlyZWQgUHJvcGVydGllczoKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NDQiIGZvciBS
+OEE3NzQ0IChSWi9HMU4pIGNvbXBhdGlibGUgRFUKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NDUi
+IGZvciBSOEE3NzQ1IChSWi9HMUUpIGNvbXBhdGlibGUgRFUKICAgICAtICJyZW5lc2FzLGR1LXI4
+YTc3NDcwIiBmb3IgUjhBNzc0NzAgKFJaL0cxQykgY29tcGF0aWJsZSBEVQorICAgIC0gInJlbmVz
+YXMsZHUtcjhhNzc0YTEiIGZvciBSOEE3NzRBMSAoUlovRzJNKSBjb21wYXRpYmxlIERVCiAgICAg
+LSAicmVuZXNhcyxkdS1yOGE3NzRjMCIgZm9yIFI4QTc3NEMwIChSWi9HMkUpIGNvbXBhdGlibGUg
+RFUKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NzkiIGZvciBSOEE3Nzc5IChSLUNhciBIMSkgY29t
+cGF0aWJsZSBEVQogICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5MCIgZm9yIFI4QTc3OTAgKFItQ2Fy
+IEgyKSBjb21wYXRpYmxlIERVCkBAIC01OCw2ICs1OSw3IEBAIGNvcnJlc3BvbmRpbmcgdG8gZWFj
+aCBEVSBvdXRwdXQuCiAgUjhBNzc0NCAoUlovRzFOKSAgICAgICBEUEFEIDAgICAgICAgICBMVkRT
+IDAgICAgICAgICAtICAgICAgICAgICAgICAtCiAgUjhBNzc0NSAoUlovRzFFKSAgICAgICBEUEFE
+IDAgICAgICAgICBEUEFEIDEgICAgICAgICAtICAgICAgICAgICAgICAtCiAgUjhBNzc0NzAgKFJa
+L0cxQykgICAgICBEUEFEIDAgICAgICAgICBEUEFEIDEgICAgICAgICBMVkRTIDAgICAgICAgICAt
+CisgUjhBNzc0QTEgKFJaL0cyTSkgICAgICBEUEFEIDAgICAgICAgICBIRE1JIDAgICAgICAgICBM
+VkRTIDAgICAgICAgICAtCiAgUjhBNzc0QzAgKFJaL0cyRSkgICAgICBEUEFEIDAgICAgICAgICBM
+VkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAtCiAgUjhBNzc3OSAoUi1DYXIgSDEpICAgICBE
+UEFEIDAgICAgICAgICBEUEFEIDEgICAgICAgICAtICAgICAgICAgICAgICAtCiAgUjhBNzc5MCAo
+Ui1DYXIgSDIpICAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAg
+ICAtCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVs
