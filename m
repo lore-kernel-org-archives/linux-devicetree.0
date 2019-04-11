@@ -1,91 +1,57 @@
-Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 12/13] ARM: dts: r8a77470: Add HSUSB device nodes
-Date: Wed, 10 Apr 2019 09:08:34 +0100
-Message-Id: <1554883715-41725-13-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554883715-41725-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:50000 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfDKHzC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:55:02 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH v2 12/20] ARM: dts: r8a77470: Add audio clocks
+Date: Thu, 11 Apr 2019 16:54:14 +0900
+Message-Id: <1554969262-15028-13-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Define the r8a77470 generic part of the HSUSB0/1 device nodes.
+Add audio_clk* nodes to dtsi for audio support on the RZ/G1C (r8a77470) SoC.
 
-Currently the renesas_usbhs driver doesn't handle multiple phys and we
-don't have a proper hardware to validate such driver changes.
-
-So for hsusb1 it is assumed that usbphy0 will be enabled by either
-channel0 host or device.
-
-In future, if any boards support hsusb1, we will need to add multiple phy
-support in the renesas_usbhs driver and override the board dts to enable
-the same.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
-V3-->V4
- * NO change
-V2-->V3
- * No Change
-V1-->V2
- * New patch
----
- arch/arm/boot/dts/r8a77470.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm/boot/dts/r8a77470.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index e7a2234..c930606 100644
+index 9b65e49..fcf8dd0 100644
 --- a/arch/arm/boot/dts/r8a77470.dtsi
 +++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -325,6 +325,23 @@
- 			status = "disabled";
- 		};
+@@ -27,6 +27,27 @@
+ 		vin1 = &vin1;
+ 	};
  
-+		hsusb0: hsusb@e6590000 {
-+			compatible = "renesas,usbhs-r8a77470",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			dmas = <&usb_dmac00 0>, <&usb_dmac00 1>,
-+			       <&usb_dmac10 0>, <&usb_dmac10 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <4>;
-+			phys = <&usb0 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			status = "disabled";
-+		};
++	/*
++	 * The external audio clocks are configured as 0 Hz fixed frequency
++	 * clocks by default.
++	 * Boards that provide audio clocks should override them.
++	 */
++	audio_clk_a: audio_clk_a {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clk_b: audio_clk_b {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clk_c: audio_clk_c {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
 +
- 		usbphy0: usb-phy@e6590100 {
- 			compatible = "renesas,usb-phy-r8a77470",
- 				     "renesas,rcar-gen2-usb-phy";
-@@ -343,6 +360,24 @@
- 			};
- 		};
- 
-+		hsusb1: hsusb@e6598000 {
-+			compatible = "renesas,usbhs-r8a77470",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6598000 0 0x100>;
-+			interrupts = <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 706>;
-+			dmas = <&usb_dmac01 0>, <&usb_dmac01 1>,
-+			       <&usb_dmac11 0>, <&usb_dmac11 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <4>;
-+			/* We need to turn on usbphy0 to make usbphy1 to work */
-+			phys = <&usb1 1>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 706>;
-+			status = "disabled";
-+		};
-+
- 		usbphy1: usb-phy@e6598100 {
- 			compatible = "renesas,usb-phy-r8a77470",
- 				     "renesas,rcar-gen2-usb-phy";
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.7.4
