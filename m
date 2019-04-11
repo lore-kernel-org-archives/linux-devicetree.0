@@ -1,47 +1,107 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/2] clk: meson-g12a: Add Temperature Sensor clock
-Date: Thu, 11 Apr 2019 23:38:43 +0200
-Message-ID: <CAFBinCBVmPa5hi83B1ZTe-guassHxKQFrN5QOyMJc9s95LJ1cg@mail.gmail.com>
-References: <20190411084537.30299-1-glaroque@baylibre.com> <20190411084537.30299-3-glaroque@baylibre.com>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/4] arm64: dts: allwinner: Add SPDIF node for
+ Allwinner H6
+Date: Thu, 11 Apr 2019 23:44:20 +0200
+Message-ID: <20190411214422.2267-3-peron.clem@gmail.com>
+References: <20190411214422.2267-1-peron.clem@gmail.com>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411084537.30299-3-glaroque@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBBXPKX3SQKGQEXPU5PZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190411214422.2267-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guillaume,
+The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
 
-On Thu, Apr 11, 2019 at 10:46 AM Guillaume La Roque
-<glaroque@baylibre.com> wrote:
->
-> Add TS clock used by two temperature sensor
-thank you for working on this!
+Add this node in the SoC device-tree and as they are only one pinmuxing
+available set it as default.
 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  drivers/clk/meson/g12a.c | 31 +++++++++++++++++++++++++++++++
->  drivers/clk/meson/g12a.h |  3 ++-
->  2 files changed, 33 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index 3a3134976534..e6d2af6ee8ea 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -2335,6 +2335,33 @@ static struct clk_regmap g12a_mali = {
->         },
->  };
->
-> +static struct clk_regmap g12a_ts_div = {
-> +       .data = &(struct clk_regmap_div_data){
-> +               .offset = HHI_TS_CLK_CNTL,
-> +               .shift = 0,
-> +               .width = 7,
-buildroot_openlinux_kernel_4.9_fbdev_20180706 uses ".width = 8".
-That matches with the public S922X datasheet from hardkernel which
-states that HHI_TS_CLK_CNTL[7:0] is "ts_clk clk_div"
+Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 39 ++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
+/dts/allwinner/sun50i-h6.dtsi
+index ad2077830f73..5e850b359be5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -83,6 +83,24 @@
+ 		method =3D "smc";
+ 	};
+=20
++	sound_spdif {
++		compatible =3D "simple-audio-card";
++		simple-audio-card,name =3D "On-board SPDIF";
++
++		simple-audio-card,cpu {
++			sound-dai =3D <&spdif>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai =3D <&spdif_out>;
++		};
++	};
++
++	spdif_out: spdif-out {
++		#sound-dai-cells =3D <0>;
++		compatible =3D "linux,spdif-dit";
++	};
++
+ 	timer {
+ 		compatible =3D "arm,armv8-timer";
+ 		interrupts =3D <GIC_PPI 13
+@@ -264,6 +282,11 @@
+ 				bias-pull-up;
+ 			};
+=20
++			spdif_tx_pin: spdif-tx-pin {
++				pins =3D "PH7";
++				function =3D "spdif";
++			};
++
+ 			uart0_ph_pins: uart0-ph-pins {
+ 				pins =3D "PH0", "PH1";
+ 				function =3D "uart0";
+@@ -391,6 +414,22 @@
+ 			};
+ 		};
+=20
++		spdif: spdif@5093000 {
++			#sound-dai-cells =3D <0>;
++			compatible =3D "allwinner,sun50i-h6-spdif",
++				     "allwinner,sun8i-h3-spdif";
++			reg =3D <0x05093000 0x400>;
++			interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks =3D <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
++			clock-names =3D "apb", "spdif";
++			resets =3D <&ccu RST_BUS_SPDIF>;
++			dmas =3D <&dma 2>;
++			dma-names =3D "tx";
++			pinctrl-names =3D "default";
++			pinctrl-0 =3D <&spdif_tx_pin>;
++			status =3D "disabled";
++		};
++
+ 		usb2otg: usb@5100000 {
+ 			compatible =3D "allwinner,sun50i-h6-musb",
+ 				     "allwinner,sun8i-a33-musb";
+--=20
+2.17.1
 
-Martin
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
