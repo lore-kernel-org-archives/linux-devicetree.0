@@ -1,61 +1,70 @@
-Return-Path: <SRS0=Uozk=SO=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v6 1/6] iio: gyro: add DT bindings to fxas21002c
-Date: Fri, 12 Apr 2019 17:48:56 +0100
-Message-Id: <20190412164901.2321-2-rui.silva@linaro.org>
-In-Reply-To: <20190412164901.2321-1-rui.silva@linaro.org>
-References: <20190412164901.2321-1-rui.silva@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=4d3r=SO=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V3 1/7] dt-bindings: usb: hd3ss3220 device tree binding document
+Date: Fri, 12 Apr 2019 11:22:43 +0100
+Message-Id: <1555064563-22465-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for the FXAS21002C gyroscope.
+Add device tree binding document for TI HD3SS3220 Type-C DRP port
+controller driver.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+V2-->V3
+  * Added Rob's Reviewed by tag.
+V1-->V2
+  * Added connector node.
+  * updated the example with connector node.
+---
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
 new file mode 100644
-index 000000000000..465e104bbf14
+index 0000000..7f41400
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-@@ -0,0 +1,31 @@
-+* NXP FXAS21002C Gyroscope device tree bindings
-+
-+http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
++++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+@@ -0,0 +1,37 @@
++TI HD3SS3220 TypeC DRP Port Controller.
 +
 +Required properties:
-+  - compatible : should be "nxp,fxas21002c"
-+  - reg : the I2C address of the sensor or SPI chip select number for the
-+          device.
-+  - vdd-supply: phandle to the regulator that provides power to the sensor.
-+  - vddio-supply: phandle to the regulator that provides power to the bus.
++ - compatible: Must be "ti,hd3ss3220".
++ - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
++ - interrupts: <a b> where a is the interrupt number and b represents an
++   encoding of the sense and level information for the interrupt.
 +
-+Optional properties:
-+  - reset-gpios : gpio used to reset the device, see gpio/gpio.txt
-+  - interrupts : device support 2 interrupts, INT1 and INT2,
-+                 the interrupts can be triggered on rising or falling edges.
-+                 See interrupt-controller/interrupts.txt
-+  - interrupt-names: should contain "INT1" or "INT2", the gyroscope interrupt
-+                     line in use.
-+  - drive-open-drain: the interrupt/data ready line will be configured
-+                      as open drain, which is useful if several sensors share
-+                      the same interrupt line. This is a boolean property.
-+                      (This binding is taken from pinctrl/pinctrl-bindings.txt)
++Required sub-node:
++ - connector : The "usb-c-connector" attached to the hd3ss3220 chip. The
++   bindings of the connector node are specified in:
++
++	Documentation/devicetree/bindings/connector/usb-connector.txt
 +
 +Example:
++hd3ss3220@47 {
++	compatible = "ti,hd3ss3220";
++	reg = <0x47>;
++	interrupt-parent = <&gpio6>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
 +
-+gyroscope@20 {
-+	compatible = "nxp,fxas21002c";
-+	reg = <0x20>;
-+	vdd-supply = <&reg_peri_3p15v>;
-+	vddio-supply = <&reg_peri_3p15v>;
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++	};
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		hd3ss3220_ep: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&usb3peri_role_switch>;
++		};
++	};
 +};
 -- 
-2.21.0
+2.7.4
