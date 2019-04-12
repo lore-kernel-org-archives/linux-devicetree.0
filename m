@@ -1,68 +1,46 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 2/3] Input: add a driver for GPIO controllable vibrators
-Date: Fri, 12 Apr 2019 10:43:52 -0700
-Message-ID: <155509103299.20095.15957232326393337000@swboyd.mtv.corp.google.com>
-References: <20190412150625.28384-1-luca@z3ntu.xyz> <20190412150625.28384-2-luca@z3ntu.xyz>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 03/24] dt-bindings: pwrap: mediatek: add pwrap support for
+ MT8516
+Date: Fri, 12 Apr 2019 19:44:05 +0200
+Message-ID: <effcf905-92c9-0181-2518-5a8e943f36ac@gmail.com>
+References: <20190323211612.860-1-fparent@baylibre.com>
+ <20190323211612.860-4-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412150625.28384-2-luca@z3ntu.xyz>
+In-Reply-To: <20190323211612.860-4-fparent@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT KEYBOARD, MOUSE, JOYSTICK , TOUCHSCREEN..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>Luca Weiss <l>
+To: Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: sean.wang@kernel.org, ryder.lee@mediatek.com, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, chaotian.jing@mediatek.com, yong.mao@mediatek.com, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Luca Weiss (2019-04-12 08:06:24)
-> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vi=
-bra.c
-> new file mode 100644
-> index 000000000000..3fd2dfd4f670
-> --- /dev/null
-> +++ b/drivers/input/misc/gpio-vibra.c
-> @@ -0,0 +1,209 @@
-> +
-> +static int gpio_vibrator_probe(struct platform_device *pdev)
-> +{
-[...]
-> +       vibrator->input->id.bustype =3D BUS_HOST;
-> +       vibrator->input->close =3D gpio_vibrator_close;
-> +
-> +       input_set_drvdata(vibrator->input, vibrator);
-> +       input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-> +
-> +       err =3D input_ff_create_memless(vibrator->input, NULL,
-> +                                     gpio_vibrator_play_effect);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
-> +               return err;
-> +       }
-> +
-> +       err =3D input_register_device(vibrator->input);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "Couldn't register input dev: %d", er=
-r);
 
-All the printks in this file need a newline.
 
-> +               return err;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, vibrator);
-> +
-> +       return 0;
-> +}
-> +
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id gpio_vibra_dt_match_table[] =3D {
-> +       { .compatible =3D "gpio-vibrator" },
-> +       {},
+On 23/03/2019 22:15, Fabien Parent wrote:
+> Add binding documentation of pwrap for MT8516 SoCs.
+> 
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Nitpick: Drop the comma on the sentinel so nothing can go after it
-without causing a compilation error.
+applied to v5.1-next/soc
 
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
-> +#endif
-> +
+Thanks!
+
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> index 5a2ef1726e2a..7a32404c6114 100644
+> --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> @@ -25,6 +25,7 @@ Required properties in pwrap device node.
+>  	"mediatek,mt8135-pwrap" for MT8135 SoCs
+>  	"mediatek,mt8173-pwrap" for MT8173 SoCs
+>  	"mediatek,mt8183-pwrap" for MT8183 SoCs
+> +	"mediatek,mt8516-pwrap" for MT8516 SoCs
+>  - interrupts: IRQ for pwrap in SOC
+>  - reg-names: Must include the following entries:
+>    "pwrap": Main registers base
+> 
