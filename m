@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 3/4] dt-bindings: arm: coresight: Unify funnel DT binding
-Date: Fri, 12 Apr 2019 18:27:37 +0800
-Message-ID: <20190412102738.12679-4-leo.yan@linaro.org>
+Subject: [PATCH v5 4/4] coresight: funnel: Support static funnel
+Date: Fri, 12 Apr 2019 18:27:38 +0800
+Message-ID: <20190412102738.12679-5-leo.yan@linaro.org>
 References: <20190412102738.12679-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190412102738.12679-1-leo.yan@linaro.org>
@@ -10,130 +10,258 @@ To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulo
 Cc: Leo Yan <leo.yan@linaro.org>, Wanglai Shi <shiwanglai@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Following the same fashion with replicator DT binding, this patch is to
-unify the DT binding for funnel to support static and dynamic modes;
-finally we get the funnel DT binding as below:
+Since CoreSight hardware topology can use a 'hidden' funnel in the
+trace data path, this kind funnel doesn't have register for accessing
+and is used by default from hardware design perspective.  Below is an
+example for related hardware topology:
 
-Before patch:
+  +------+  +------+
+  | cpu0 |->| ETM  |-\
+  +------+  +------+  \-> +--------+  +-----+
+   ......                 | Funnel |->| ETF |-\    Hidden funnel
+  +------+  +------+  /-> +--------+  +-----+  \        |
+  | cpu3 |->| ETM  |-/                          \       V
+  +------+  +------+                             \-> +--------+
+                                                     | Funnel |-> ...
+  +------+  +------+                             /-> +--------+
+  | cpu4 |->| ETM  |-\                          /
+  +------+  +------+  \-> +--------+  +-----+  /
+   ......                 | Funnel |->| ETF |-/
+  +------+  +------+  /-> +--------+  +-----+
+  | cpu7 |->| ETM  |-/
+  +------+  +------+
 
-  Static funnel, aka. non-configurable funnel:
-    Not supported;
+The CoreSight funnel driver only supports dynamic funnel with
+registration register resource, thus it cannot support for the static
+funnel case and it's impossible to create trace data path for this case.
 
-  Dynamic funnel, aka. configurable funnel:
-    "arm,coresight-funnel", "arm,primecell";
-
-After patch:
-
-  Static funnel:
-    "arm,coresight-static-funnel";
-
-  Dynamic funnel:
-    "arm,coresight-dynamic-funnel", "arm,primecell";
-    "arm,coresight-funnel", "arm,primecell"; (obsolete)
-
-At the end of this patch, it gives an example for static funnel DT
-binding, and updates the dynamic funnel example.
+This patch is to extend CoreSight funnel driver to support both for
+static funnel and dynamic funnel.  For the dynamic funnel it reuses the
+code existed in the driver, for static funnel the driver will support
+device probe if without providing register resource and the driver skips
+registers accessing when detect the register base is NULL.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc: Wanglai Shi <shiwanglai@hisilicon.com>
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- .../devicetree/bindings/arm/coresight.txt     | 53 +++++++++++++++++--
- 1 file changed, 48 insertions(+), 5 deletions(-)
+ .../hwtracing/coresight/coresight-funnel.c    | 116 ++++++++++++++----
+ 1 file changed, 89 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index d02d160fa8ac..8a88ddebc1a2 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -8,7 +8,8 @@ through the intermediate links connecting the source to the currently selected
- sink. Each CoreSight component device should use these properties to describe
- its hardware characteristcs.
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index 927925151509..16b0c0e1e43a 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -12,6 +12,8 @@
+ #include <linux/err.h>
+ #include <linux/fs.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/coresight.h>
+ #include <linux/amba/bus.h>
+@@ -43,7 +45,7 @@ struct funnel_drvdata {
+ 	unsigned long		priority;
+ };
  
--* Required properties for all components *except* non-configurable replicators:
-+* Required properties for all components *except* non-configurable replicators
-+  and non-configurable funnels:
+-static int funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
++static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+ {
+ 	u32 functl;
+ 	int rc = 0;
+@@ -71,17 +73,19 @@ static int funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+ static int funnel_enable(struct coresight_device *csdev, int inport,
+ 			 int outport)
+ {
+-	int rc;
++	int rc = 0;
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
  
- 	* compatible: These have to be supplemented with "arm,primecell" as
- 	  drivers are using the AMBA bus interface.  Possible values include:
-@@ -24,8 +25,10 @@ its hardware characteristcs.
- 		  discovered at boot time when the device is probed.
- 			"arm,coresight-tmc", "arm,primecell";
+-	rc = funnel_enable_hw(drvdata, inport);
++	if (drvdata->base)
++		rc = dynamic_funnel_enable_hw(drvdata, inport);
  
--		- Trace Funnel:
--			"arm,coresight-funnel", "arm,primecell";
-+		- Trace Programmable Funnel:
-+			"arm,coresight-dynamic-funnel", "arm,primecell";
-+			"arm,coresight-funnel", "arm,primecell"; (OBSOLETE. For
-+				backward compatibility and will be removed)
+ 	if (!rc)
+ 		dev_dbg(drvdata->dev, "FUNNEL inport %d enabled\n", inport);
+ 	return rc;
+ }
  
- 		- Embedded Trace Macrocell (version 3.x) and
- 					Program Flow Trace Macrocell:
-@@ -65,7 +68,7 @@ its hardware characteristcs.
- 	  "stm-stimulus-base", each corresponding to the areas defined in "reg".
+-static void funnel_disable_hw(struct funnel_drvdata *drvdata, int inport)
++static void dynamic_funnel_disable_hw(struct funnel_drvdata *drvdata,
++				      int inport)
+ {
+ 	u32 functl;
  
- * Required properties for devices that don't show up on the AMBA bus, such as
--  non-configurable replicators:
-+  non-configurable replicators and non-configurable funnels:
+@@ -103,7 +107,8 @@ static void funnel_disable(struct coresight_device *csdev, int inport,
+ {
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
  
- 	* compatible: Currently supported value is (note the absence of the
- 	  AMBA markee):
-@@ -74,6 +77,9 @@ its hardware characteristcs.
- 			"arm,coresight-replicator"; (OBSOLETE. For backward
- 				compatibility and will be removed)
+-	funnel_disable_hw(drvdata, inport);
++	if (drvdata->base)
++		dynamic_funnel_disable_hw(drvdata, inport);
  
-+		- Coresight Non-configurable Funnel:
-+			"arm,coresight-static-funnel";
+ 	dev_dbg(drvdata->dev, "FUNNEL inport %d disabled\n", inport);
+ }
+@@ -177,54 +182,70 @@ static struct attribute *coresight_funnel_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(coresight_funnel);
+ 
+-static int funnel_probe(struct amba_device *adev, const struct amba_id *id)
++static int funnel_probe(struct device *dev, struct resource *res)
+ {
+ 	int ret;
+ 	void __iomem *base;
+-	struct device *dev = &adev->dev;
+ 	struct coresight_platform_data *pdata = NULL;
+ 	struct funnel_drvdata *drvdata;
+-	struct resource *res = &adev->res;
+ 	struct coresight_desc desc = { 0 };
+-	struct device_node *np = adev->dev.of_node;
++	struct device_node *np = dev->of_node;
+ 
+ 	if (np) {
+ 		pdata = of_get_coresight_platform_data(dev, np);
+ 		if (IS_ERR(pdata))
+ 			return PTR_ERR(pdata);
+-		adev->dev.platform_data = pdata;
++		dev->platform_data = pdata;
+ 	}
+ 
++	if (of_device_is_compatible(np, "arm,coresight-funnel"))
++		pr_warn_once("Uses OBSOLETE CoreSight funnel binding\n");
 +
- 	* port or ports: see "Graph bindings for Coresight" below.
+ 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+ 	if (!drvdata)
+ 		return -ENOMEM;
  
- * Optional properties for ETM/PTMs:
-@@ -203,8 +209,45 @@ Example:
- 		};
- 	};
+-	drvdata->dev = &adev->dev;
+-	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
++	drvdata->dev = dev;
++	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
+ 		if (ret)
+ 			return ret;
+ 	}
+-	dev_set_drvdata(dev, drvdata);
  
-+	funnel {
-+		/*
-+		 * non-configurable funnel don't show up on the AMBA
-+		 * bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-static-funnel";
-+		clocks = <&crg_ctrl HI3660_PCLK>;
-+		clock-names = "apb_pclk";
-+
-+		out-ports {
-+			port {
-+				combo_funnel_out: endpoint {
-+					remote-endpoint = <&top_funnel_in>;
-+				};
-+			};
-+		};
-+
-+		in-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				combo_funnel_in0: endpoint {
-+					remote-endpoint = <&cluster0_etf_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				combo_funnel_in1: endpoint {
-+					remote-endpoint = <&cluster1_etf_out>;
-+				};
-+			};
-+		};
-+	};
-+
- 	funnel@20040000 {
--		compatible = "arm,coresight-funnel", "arm,primecell";
-+		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 		reg = <0 0x20040000 0 0x1000>;
+-	/* Validity for the resource is already checked by the AMBA core */
+-	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
++	/*
++	 * Map the device base for dynamic-funnel, which has been
++	 * validated by AMBA core.
++	 */
++	if (res) {
++		base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(base)) {
++			ret = PTR_ERR(base);
++			goto out_disable_clk;
++		}
++		drvdata->base = base;
++		desc.groups = coresight_funnel_groups;
++	}
  
- 		clocks = <&oscclk6a>;
+-	drvdata->base = base;
+-	pm_runtime_put(&adev->dev);
++	dev_set_drvdata(dev, drvdata);
+ 
+ 	desc.type = CORESIGHT_DEV_TYPE_LINK;
+ 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_MERG;
+ 	desc.ops = &funnel_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
+-	desc.groups = coresight_funnel_groups;
+ 	drvdata->csdev = coresight_register(&desc);
++	if (IS_ERR(drvdata->csdev)) {
++		ret = PTR_ERR(drvdata->csdev);
++		goto out_disable_clk;
++	}
++
++	pm_runtime_put(dev);
+ 
+-	return PTR_ERR_OR_ZERO(drvdata->csdev);
++out_disable_clk:
++	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
++		clk_disable_unprepare(drvdata->atclk);
++	return ret;
+ }
+ 
+ #ifdef CONFIG_PM
+@@ -253,7 +274,48 @@ static const struct dev_pm_ops funnel_dev_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(funnel_runtime_suspend, funnel_runtime_resume, NULL)
+ };
+ 
+-static const struct amba_id funnel_ids[] = {
++static int static_funnel_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	pm_runtime_get_noresume(&pdev->dev);
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++
++	/* Static funnel do not have programming base */
++	ret = funnel_probe(&pdev->dev, NULL);
++
++	if (ret) {
++		pm_runtime_put_noidle(&pdev->dev);
++		pm_runtime_disable(&pdev->dev);
++	}
++
++	return ret;
++}
++
++static const struct of_device_id static_funnel_match[] = {
++	{.compatible = "arm,coresight-static-funnel"},
++	{}
++};
++
++static struct platform_driver static_funnel_driver = {
++	.probe          = static_funnel_probe,
++	.driver         = {
++		.name   = "coresight-static-funnel",
++		.of_match_table = static_funnel_match,
++		.pm	= &funnel_dev_pm_ops,
++		.suppress_bind_attrs = true,
++	},
++};
++builtin_platform_driver(static_funnel_driver);
++
++static int dynamic_funnel_probe(struct amba_device *adev,
++				const struct amba_id *id)
++{
++	return funnel_probe(&adev->dev, &adev->res);
++}
++
++static const struct amba_id dynamic_funnel_ids[] = {
+ 	{
+ 		.id     = 0x000bb908,
+ 		.mask   = 0x000fffff,
+@@ -266,14 +328,14 @@ static const struct amba_id funnel_ids[] = {
+ 	{ 0, 0},
+ };
+ 
+-static struct amba_driver funnel_driver = {
++static struct amba_driver dynamic_funnel_driver = {
+ 	.drv = {
+-		.name	= "coresight-funnel",
++		.name	= "coresight-dynamic-funnel",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &funnel_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
+ 	},
+-	.probe		= funnel_probe,
+-	.id_table	= funnel_ids,
++	.probe		= dynamic_funnel_probe,
++	.id_table	= dynamic_funnel_ids,
+ };
+-builtin_amba_driver(funnel_driver);
++builtin_amba_driver(dynamic_funnel_driver);
 -- 
 2.17.1
