@@ -1,52 +1,56 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] arm64: dts: mt2712: Remove un-used property for PCIe
-Date: Fri, 12 Apr 2019 11:02:51 +0100
-Message-ID: <20190412100251.GC8113@red-moon>
-References: <1552897675-8051-1-git-send-email-honghui.zhang@mediatek.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add dynamic-power-coefficient for rk3288
+Date: Fri, 12 Apr 2019 12:08:21 +0200
+Message-ID: <9063550.zi1cCdPW0A@diego>
+References: <20190412000158.248080-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552897675-8051-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20190412000158.248080-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: matthias.bgg@gmail.com, robh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ryder.lee@mediatek.com, robh+dt@kernel.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 04:27:55PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
+Am Freitag, 12. April 2019, 02:01:58 CEST schrieb Matthias Kaehlcke:
+> The value was determined with the following method:
 > 
-> The "num-lanes" property for PCIe is not used, remove it.
+> - take CPUs 1-3 offline
+> - for each OPP
+>   - set cpufreq min and max freq to OPP freq
+>   - start dhrystone benchmark
+>   - measure CPU power consumption during 10s
+>   - calculate Cx for OPPx
+>     - Cx = (Px - P1) / (Vx²fx - V1²f1)          [1]
+>       using the following units: mW / Ghz / V   [2]
+> - C = avg(C2, ..., Cn)
 > 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-
-Applied to pci/mediatek for v5.2, thanks.
-
-Lorenzo
-
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> index 976d92a..43307ba 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -819,7 +819,6 @@
->  			#size-cells = <2>;
->  			#interrupt-cells = <1>;
->  			ranges;
-> -			num-lanes = <1>;
->  			interrupt-map-mask = <0 0 0 7>;
->  			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
->  					<0 0 0 2 &pcie_intc0 1>,
-> @@ -840,7 +839,6 @@
->  			#size-cells = <2>;
->  			#interrupt-cells = <1>;
->  			ranges;
-> -			num-lanes = <1>;
->  			interrupt-map-mask = <0 0 0 7>;
->  			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
->  					<0 0 0 2 &pcie_intc1 1>,
-> -- 
-> 2.6.4
+> [1] see commit 4daa001a1773 ("arm64: dts: juno: Add cpu
+>      dynamic-power-coefficient information")
+> [2] https://patchwork.kernel.org/patch/10493615/#22158551
 > 
+> FTR, these are the values for the different OPPs:
+> 
+> freq (kHz)   	mV		Px (mW)		Cx
+> 
+> 126000		900		39
+> 216000		900		66		370
+> 312000		900		95		372
+> 408000		900		122		363
+> 600000		900		177		359
+> 696000		950		230		363
+> 816000		1000		297		361
+> 1008000		1050		404		362
+> 1200000		1100		528		362
+> 1416000		1200		770		377
+> 1512000		1300		984		385
+> 1608000		1350		1156		394
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+
+I've applied this for 5.2 but moved the new entries
+below the clock properties for some more alphabetic ordering.
+
+
+Heiko
