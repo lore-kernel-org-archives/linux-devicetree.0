@@ -1,56 +1,122 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: Add Lenovo Miix 630
-Date: Fri, 12 Apr 2019 12:41:36 -0600
-Message-ID: <CAOCk7NrRb=CZiZp6LKmP9yFZzWTO6AaRt4aZ5dyoVxBw4ZA9_w@mail.gmail.com>
-References: <20190411205144.43557-1-jeffrey.l.hugo@gmail.com> <20190412180142.GZ1843@tuxbook-pro>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH RESEND v6 3/6] i2c: mediatek: Add arb clock in i2c driver
+Date: Fri, 12 Apr 2019 20:41:51 +0200
+Message-ID: <9a4fafcc-07aa-914a-c57e-ebe647650d35@gmail.com>
+References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
+ <1554208560-14817-4-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412180142.GZ1843@tuxbook-pro>
+In-Reply-To: <1554208560-14817-4-git-send-email-qii.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: agross@kernel.org, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, robh@kernel.org, leilk.liu@mediatek.com, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:01 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 11 Apr 13:51 PDT 2019, Jeffrey Hugo wrote:
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-clam.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clam.dtsi
-> [..]
-> > +&tlmm {
-> > +     gpio-reserved-ranges = <0 4>, <81 4>;
->
-> Did you double check that you actually need these? (Iirc boot testing is
-> enough)
 
-Yes, still needed.
 
->
-> > +
-> > +     touchpad: touchpad {
-> > +             config {
-> > +                     pins = "gpio123";
-> > +                     bias-pull-up;           /* pull up */
-> > +             };
-> > +     };
-> > +};
-> [..]
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> [..]
-> > +/ {
-> > +     model = "Lenovo Miix 630";
-> > +     compatible = "qcom,msm8998-clam";
->
-> compatible = "lenovo,miix-630", "qcom,msm8998";
+On 02/04/2019 14:35, Qii Wang wrote:
+> When two i2c controllers are internally connected to the same
+> GPIO pins, the arb clock is needed to ensure that the waveforms
+> do not interfere with each other. And we also need to enable
+> the interrupt to find arb lost, old i2c controllers also have
+> the bit.
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> ---
+>  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
 
-Thanks for the suggestion.  Will do.
+Looks good:
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
->
-> > +
-> > +     /* bootloader doesn't understand DT, so no qcom,board-id */
->
-> You can omit this comment, as I don't think people will miss these
-> non-standard properties.
-
-Makes sense.  Will do.
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index be36018..1a7235e 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/slab.h>
+>  
+>  #define I2C_RS_TRANSFER			(1 << 4)
+> +#define I2C_ARB_LOST			(1 << 3)
+>  #define I2C_HS_NACKERR			(1 << 2)
+>  #define I2C_ACKERR			(1 << 1)
+>  #define I2C_TRANSAC_COMP		(1 << 0)
+> @@ -181,6 +182,7 @@ struct mtk_i2c {
+>  	struct clk *clk_main;		/* main clock for i2c bus */
+>  	struct clk *clk_dma;		/* DMA clock for i2c via DMA */
+>  	struct clk *clk_pmic;		/* PMIC clock for i2c from PMIC */
+> +	struct clk *clk_arb;		/* Arbitrator clock for i2c */
+>  	bool have_pmic;			/* can use i2c pins from PMIC */
+>  	bool use_push_pull;		/* IO config push-pull mode */
+>  
+> @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+>  		if (ret)
+>  			goto err_pmic;
+>  	}
+> +
+> +	if (i2c->clk_arb) {
+> +		ret = clk_prepare_enable(i2c->clk_arb);
+> +		if (ret)
+> +			goto err_arb;
+> +	}
+> +
+>  	return 0;
+>  
+> +err_arb:
+> +	if (i2c->have_pmic)
+> +		clk_disable_unprepare(i2c->clk_pmic);
+>  err_pmic:
+>  	clk_disable_unprepare(i2c->clk_main);
+>  err_main:
+> @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+>  
+>  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+>  {
+> +	if (i2c->clk_arb)
+> +		clk_disable_unprepare(i2c->clk_arb);
+> +
+>  	if (i2c->have_pmic)
+>  		clk_disable_unprepare(i2c->clk_pmic);
+>  
+> @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  
+>  	/* Clear interrupt status */
+>  	mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> -	       I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+> +			    I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+>  
+>  	mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
+>  
+>  	/* Enable interrupt */
+>  	mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> -	       I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+> +			    I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+>  
+>  	/* Set transfer and transaction len */
+>  	if (i2c->op == I2C_MASTER_WRRD) {
+> @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  
+>  	/* Clear interrupt mask */
+>  	mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> -	       I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+> +			    I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+>  
+>  	if (i2c->op == I2C_MASTER_WR) {
+>  		dma_unmap_single(i2c->dev, wpaddr,
+> @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(i2c->clk_dma);
+>  	}
+>  
+> +	i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
+> +	if (IS_ERR(i2c->clk_arb))
+> +		i2c->clk_arb = NULL;
+> +
+>  	clk = i2c->clk_main;
+>  	if (i2c->have_pmic) {
+>  		i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
+> 
