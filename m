@@ -1,95 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 04/12] firmware: ti_sci: Add RM mapping table for am654
-Date: Fri, 12 Apr 2019 08:20:24 -0700
-Message-ID: <20190412152024.GU2839@atomide.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-5-lokeshvutla@ti.com>
- <20190411145416.GP2839@atomide.com>
- <49dd19bf-f5bd-e048-75ad-2d4cb708bcf9@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Fri, 12 Apr 2019 16:30:41 +0100
+Message-ID: <20190412153040.GB7481@lakrids.cambridge.arm.com>
+References: <20190411205144.43557-1-jeffrey.l.hugo@gmail.com>
+ <20190412144712.GA7481@lakrids.cambridge.arm.com>
+ <CAOCk7Np+WTMuoRZOrQzbt1H6xENW2OhRFgpOc-vWn+9daBBqbg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <49dd19bf-f5bd-e048-75ad-2d4cb708bcf9@ti.com>
+In-Reply-To: <CAOCk7Np+WTMuoRZOrQzbt1H6xENW2OhRFgpOc-vWn+9daBBqbg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: bjorn.andersson@linaro.org, agross@kernel.org, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190412 04:08]:
+On Fri, Apr 12, 2019 at 09:19:18AM -0600, Jeffrey Hugo wrote:
+> > > +     keyboard@3a {
+> > > +             /* QTEC0001 is the ACPI HID, which could be used for quirks */
+> > > +             compatible = "QTEC0001", "hid-over-i2c";
+> >
+> > As mentioned last time, please drop the ACPI HID, and allocate a real
+> > compatible string.
 > 
+> So, I'm in a quandary with this device.  As far as I can tell, its an
+> off the shelf component, the device adheres to the "PNP0C50" spec (HID
+> over I2C), and can be driven by the full "hid-over-i2c" driver (which
+> is just a DT shim over the PNP0C50 ACPI driver).  However, the device
+> itself identifies itself as an ELAN 400 device, which is an ID that is
+> also used for standalone touchpad devices.  Per my understanding of
+> the Linux drivers, there is a separate ELAN driver for the standalone
+> touchpad devices as its been discovered though trial and error that
+> the Linux PNP0C50 driver cannot drive those devices.  To handle this,
+> there is a quirk in hid-quirks which rejects ELAN 400 devices, except
+> those which are "QTEC0001".
 > 
-> On 11/04/19 8:24 PM, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
-> >> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> >> index b56a02c10ae6..6f0cd31c1520 100644
-> >> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> >> @@ -24,7 +24,8 @@ relationship between the TI-SCI parent node to the child node.
-> >>  
-> >>  Required properties:
-> >>  -------------------
-> >> -- compatible: should be "ti,k2g-sci"
-> >> +- compatible:	should be "ti,k2g-sci" for TI 66AK2G SoC
-> >> +		should be "ti,am654-sci" for for TI AM654 SoC
-> >>  - mbox-names:
-> >>  	"rx" - Mailbox corresponding to receive path
-> >>  	"tx" - Mailbox corresponding to transmit path
-> >> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> >> index d303f5a14da9..88e461498def 100644
-> >> --- a/drivers/firmware/ti_sci.c
-> >> +++ b/drivers/firmware/ti_sci.c
-> >> @@ -2297,10 +2297,33 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
-> >>  	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
-> >>  	.max_msgs = 20,
-> >>  	.max_msg_size = 64,
-> >> +	.rm_type_map = NULL,
-> >> +};
-> >> +
-> >> +static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
-> >> +	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
-> >> +	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
-> >> +	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
-> >> +	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
-> >> +	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
-> >> +	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
-> >> +	{.dev_id = 0, .type = 0x000}, /* end of table */
-> >> +};
-> >> +
-> >> +/* Description for AM654 */
-> >> +static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
-> >> +	.default_host_id = 12,
-> >> +	/* Conservative duration */
-> >> +	.max_rx_timeout_ms = 10000,
-> >> +	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
-> >> +	.max_msgs = 20,
-> >> +	.max_msg_size = 60,
-> >> +	.rm_type_map = ti_sci_am654_rm_type_map,
-> >>  };
-> >>  
-> >>  static const struct of_device_id ti_sci_of_match[] = {
-> >>  	{.compatible = "ti,k2g-sci", .data = &ti_sci_pmmc_k2g_desc},
-> >> +	{.compatible = "ti,am654-sci", .data = &ti_sci_pmmc_am654_desc},
-> >>  	{ /* Sentinel */ },
-> >>  };
-> >>  MODULE_DEVICE_TABLE(of, ti_sci_of_match);
-> > 
-> > Great, this approach with mapping table in the driver based on
-> > the compatible looks good to me and avoids stuffing the IDs
-> > into device tree:
-> > 
-> > Acked-by: Tony Lindgren <tony@atomide.com>
-> > 
-> 
-> Thanks, but I don't think you understood what the patch is actually doing.
-> Please look at the rest of the series on how this table is being used.
+> We need that quirk bypass for this device because the ELAN driver
+> cannot handle this device.
 
-Oh OK yes I misunderstood. So you still need to use the dev_id also
-in the dts.
+This is useful context; thanks for writing this up!
 
-Regards,
+> I'd much rather have a single identifier to quirk on, rather than
+> having one for DT and one for ACPI, and its not looking feasible to
+> get the vendor to update the ACPI, so it seems like using the ACPI
+> identifier is just simpler.
+>
+> So, if you want a different compatible string, I'll need to go put DT
+> in a driver that is primarily ACPI.  I'm not sure what the HID folks
+> will think of that. 
 
-Tony
+My objection is that an ACPI HID is _not_ a DT compatible string, and
+the two should be treated separately. Munging the two together opens the
+door for other pain.
+
+The driver in question has a DT probe function, i2c_hid_of_probe, so
+there's certainly a place to wire up that quirk.
+
+> I'll propose it, but what do you view is a
+> "proper" compatible string?  "ELAN0400-msm8998-clamshell"?
+
+A proper compatible string has a vendor-prefix, and is documented
+somewhere in Documentation/devicetree/bindings.
+
+e.g. you could allocate something like:
+
+	"qcom,msm8998-clamshell-hid-over-i2c"
+
+Thanks,
+Mark.
