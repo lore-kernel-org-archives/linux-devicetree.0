@@ -1,176 +1,35 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 4/7] arm64: dts: meson: g12a: add tdm devices
-Date: Fri, 12 Apr 2019 14:51:33 +0200
-Message-ID: <20190412125136.28232-5-jbrunet@baylibre.com>
-References: <20190412125136.28232-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v2 0/2] Add support for the Purism Librem5 devkit
+Date: Fri, 12 Apr 2019 07:04:25 -0600
+Message-ID: <20190412130427.13418-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412125136.28232-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
+To: angus@akkea.ca
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the tdm encoders, decoders and interfaces devices of the g12a SoC.
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 135 ++++++++++++++++++++
- 1 file changed, 135 insertions(+)
+Changes since v1:
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 18f7d5af7dae..5f5b8c67df49 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -18,6 +18,39 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	tdmif_a: audio-controller-0 {
-+		compatible = "amlogic,axg-tdm-iface";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "TDM_A";
-+		clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-+		clock-names = "mclk", "sclk", "lrclk";
-+		status = "disabled";
-+	};
-+
-+	tdmif_b: audio-controller-1 {
-+		compatible = "amlogic,axg-tdm-iface";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "TDM_B";
-+		clocks = <&clkc_audio AUD_CLKID_MST_B_MCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_B_SCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_B_LRCLK>;
-+		clock-names = "mclk", "sclk", "lrclk";
-+		status = "disabled";
-+	};
-+
-+	tdmif_c: audio-controller-2 {
-+		compatible = "amlogic,axg-tdm-iface";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "TDM_C";
-+		clocks = <&clkc_audio AUD_CLKID_MST_C_MCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_C_SCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_C_LRCLK>;
-+		clock-names = "mclk", "sclk", "lrclk";
-+		status = "disabled";
-+	};
-+
- 	cpus {
- 		#address-cells = <0x2>;
- 		#size-cells = <0x0>;
-@@ -320,6 +353,108 @@
- 					#reset-cells = <1>;
- 					clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
- 				};
-+
-+				tdmin_a: audio-controller@300 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x300 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_A";
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_A>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmin_b: audio-controller@340 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x340 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_B";
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_B>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmin_c: audio-controller@380 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x380 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_C";
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_C>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmin_lb: audio-controller@3c0 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x3c0 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_LB";
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_LB>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmout_a: audio-controller@500 {
-+					compatible = "amlogic,g12a-tdmout";
-+					reg = <0x0 0x500 0x0 0x40>;
-+					sound-name-prefix = "TDMOUT_A";
-+					clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmout_b: audio-controller@540 {
-+					compatible = "amlogic,g12a-tdmout";
-+					reg = <0x0 0x540 0x0 0x40>;
-+					sound-name-prefix = "TDMOUT_B";
-+					clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmout_c: audio-controller@580 {
-+					compatible = "amlogic,g12a-tdmout";
-+					reg = <0x0 0x580 0x0 0x40>;
-+					sound-name-prefix = "TDMOUT_C";
-+					clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
- 			};
- 		};
- 
+Angus Ainslie (Purism) (2):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 850 ++++++++++++++++++
+ 3 files changed, 852 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+
 -- 
-2.20.1
+2.17.1
