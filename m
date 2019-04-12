@@ -1,28 +1,47 @@
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v2 0/2] Add support of Temperature sensor Clock for G12 SoC
-Date: Fri, 12 Apr 2019 10:37:26 +0200
-Message-ID: <20190412083728.21029-1-glaroque@baylibre.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
+ irq function
+Date: Fri, 12 Apr 2019 10:41:16 +0200
+Message-ID: <20190412084116.GS3578@piout.net>
+References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
+ <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
+ <20190411073252.GC3050@dragon>
+ <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM0PR04MB4211816EDBEF23F7B330CCCB80280@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39162D194A2B5B79211C1774F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39162D194A2B5B79211C1774F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jbrunet@baylibre.com, narmstrong@baylibre.com, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>d
 List-Id: devicetree@vger.kernel.org
 
-This patch series add support of Clock for temperature sensor
-on Amlogic G12a SoC.
+On 12/04/2019 02:32:54+0000, Anson Huang wrote:
+> > > 	As i.MX SCU general irq function is picked up by Shawn, could you
+> > > please also pick up below i.MX SC RTC alarm support patch ?
+> > > 	https://patchwork.kernel.org/patch/10890525/
+> > >
+> > 
+> > No, it can't go through Alexandre's tree due to dependency issue.
+> > 
+> > Shawn,
+> > Do you think you can pick it up? Alexandre already gave the Ack.
+> > 
+> > AFAIK there's no other SCU RTC patches since v5.1-rc1 in Alexandre's tree.
+> 
+> Yes, need to make sure the dependency is handled, the RTC alarm patch MUST be picked up
+> ONLY when scu irq patch is ready, NOT sure how to handle this case for such scenario?
+> 
 
-Guillaume
+Either it goes through arm-soc or if it can wait one release, I pick it
+up for 5.3. The other solution involves immutable branch but I don't
+think this is necessary.
 
-changes since v1:
-- fix .width value
-
-Guillaume La Roque (2):
-  dt-bindings: clk: g12a-clkc: add Temperature Sensor clock ID
-  clk: meson-g12a: Add Temperature Sensor clock
-
- drivers/clk/meson/g12a.c              | 31 +++++++++++++++++++++++++++
- drivers/clk/meson/g12a.h              |  3 ++-
- include/dt-bindings/clock/g12a-clkc.h |  1 +
- 3 files changed, 34 insertions(+), 1 deletion(-)
 
 -- 
-2.17.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
