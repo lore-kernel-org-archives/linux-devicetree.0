@@ -1,27 +1,76 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/15] ARM: dts: am335x: Replace numeric pinmux address
- w. macro for more boards
-Date: Fri, 12 Apr 2019 08:57:32 -0700
-Message-ID: <20190412155732.GY2839@atomide.com>
-References: <20190409160346.25599-1-cquast@hanoverdisplays.com>
+From: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Subject: about cci400 pmu
+Date: Fri, 12 Apr 2019 17:01:54 +0100
+Message-ID: <20190412160153.edbbe7mrwm7xsewa@macpro-scc.lancs.ac.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190409160346.25599-1-cquast@hanoverdisplays.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christina Quast <cquast@hanoverdisplays.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Christina Quast <cquast@hanoverdisplays.com> [190409 09:04]:
-> Depends on the following patch set:
-> [PATCH v2 0/6] ARM: dts: am335x: Replace numeric pinmux address with macro defines
-> 
-> Replace the numeric pinmux address with the macro defines for an additional 15 boards.
+Hi,
 
-Thanks applying these into omap-for-v5.2/dt-am3.
+I'm trying to add pmu support for CCI400 on an Odroid-XU3/4.
+Following https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/cci.txt,
+and other dtsi, I end up with this patch:
 
-Regards,
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index f4e8c5823bc2..8432f01fb463 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -170,6 +170,16 @@
+                                interface-type = "ace";
+                                reg = <0x5000 0x1000>;
+                        };
++
++                       pmu@9000 {
++                               compatible = "arm,cci-400-pmu,r0";
++                               reg = <0x9000 0x5000>;
++                               interrupts = <0 105 4>,
++                                            <0 101 4>,
++                                            <0 102 4>,
++                                            <0 103 4>,
++                                            <0 104 4>;
++                       };
+                };
+ 
+                clock: clock-controller@10010000 {
+		
+Saddly, I got:
+[    5.375913] ARM-CCI PMU 10d20000.cci:pmu@9000: invalid resource
+[    5.389595] ARM-CCI PMU: probe of 10d20000.cci:pmu@9000 failed with error -12
 
-Tony
+By pluging some printk here and there in arm-cci.c in init and probe functions,
+all return 0. I assume that the driver initialisation is succesful.
+
+I trace a bit more in really_probe function, however, I can't find the real
+cause of this error.
+
+$ dmesg | grep cci
+[    0.070299] drivers/bus/arm-cci.c:569:cci_init()
+[    0.071484] drivers/bus/arm-cci.c:580:cci_init() cci_init_status = 0
+[    0.071610] drivers/bus/arm-cci.c:595:cci_probed() cci_init_status = 0
+[    0.113575] drivers/bus/arm-cci.c:569:cci_init()
+[    0.113684] drivers/bus/arm-cci.c:572:cci_init() cci_init_status = 0
+[    0.770287] drivers/bus/arm-cci.c:94:cci_platform_init() 0
+[    0.811655] drivers/base/dd.c:516:really_probe() ARM-CCI 10d20000.cci try probe drv = c1058908, drv->probe = c0593498, dev = e8b2f010
+[    0.811788] drivers/bus/arm-cci.c:72:cci_platform_probe()
+[    0.811866] drivers/bus/arm-cci.c:569:cci_init()
+[    0.811937] drivers/bus/arm-cci.c:572:cci_init() cci_init_status = 0
+[    0.812023] drivers/bus/arm-cci.c:595:cci_probed() cci_init_status = 0
+[    0.814718] drivers/bus/arm-cci.c:79:cci_platform_probe() 0
+[    6.738502] drivers/base/dd.c:516:really_probe() ARM-CCI PMU 10d20000.cci:pmu@9000 try probe drv = c10859f4, drv->probe = c0593498, dev = e8b2fc10
+[    6.747909] ARM-CCI PMU 10d20000.cci:pmu@9000: invalid resource
+[    6.753711] drivers/base/dd.c:522:really_probe() ARM-CCI PMU 10d20000.cci:pmu@9000 fail probe
+[    6.762416] drivers/base/dd.c:561:really_probe() ARM-CCI PMU 10d20000.cci:pmu@9000 probe_failed
+[    6.770940] ARM-CCI PMU: probe of 10d20000.cci:pmu@9000 failed with error -12
+
+I don't know if the provided values for dtsi is correct either.
+
+I would be very happy to have some help to make these pmu working.
+Many thanks in advance.
+
+Best Regards,
+Willy
