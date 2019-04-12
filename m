@@ -1,64 +1,31 @@
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH 1/4] dt-bindings: display: renesas: du: Document the
- r8a774a1 bindings
-Date: Fri, 12 Apr 2019 10:54:21 +0100
-Message-ID: <d73aa824-9627-7d5b-39c8-0d564e56d23f@ideasonboard.com>
-References: <1554993271-29523-1-git-send-email-biju.das@bp.renesas.com>
- <1554993271-29523-2-git-send-email-biju.das@bp.renesas.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1554993271-29523-2-git-send-email-biju.das@bp.renesas.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Biju Das <biju.das@bp.renesas.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v3 0/2] Add support of Temperature sensor Clock for G12 SoC
+Date: Fri, 12 Apr 2019 12:02:19 +0200
+Message-ID: <20190412100221.26740-1-glaroque@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jbrunet@baylibre.com, narmstrong@baylibre.com, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmlqdSwKCk9uIDExLzA0LzIwMTkgMTU6MzQsIEJpanUgRGFzIHdyb3RlOgo+IERvY3VtZW50
-IHRoZSBSWi9HMk0gKFI4QTc3NEExKSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRpbmdzLgoKQmFz
-ZWQgb24gdGhlIGV4cGVjdGF0aW9uIHRoYXQgdGhpcyBpcyBlcXVpdmFsZW50IHRvIHRoZSBNMy1X
-LCB0aGVuIHRoaXMKbG9va3MgZ29vZCB0byBtZS4KCkFyZSB0aGUgUlovRyBkYXRhc2hlZXRzIGF2
-YWlsYWJsZSBwdWJsaWNseSBzb21ld2hlcmU/IElmIG5vdCBJJ2xsIHNlZSBpZgpJIGNhbiBzb3Vy
-Y2UgaXQgdGhyb3VnaCBteSBSZW5lc2FzIE5EQSBjaGFubmVscy4KCj4gU2lnbmVkLW9mZi1ieTog
-QmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgoKUmV2aWV3ZWQtYnk6IEtpZXJhbiBC
-aW5naGFtIDxraWVyYW4uYmluZ2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+CgoKPiAtLS0K
-PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50
-eHQgfCAyICsrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxk
-dS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
-LGR1LnR4dAo+IGluZGV4IGFlZGIyMmIuLmM5N2RmYWMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+
-IEBAIC03LDYgKzcsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICAgICAgLSAicmVuZXNhcyxk
-dS1yOGE3NzQ0IiBmb3IgUjhBNzc0NCAoUlovRzFOKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJy
-ZW5lc2FzLGR1LXI4YTc3NDUiIGZvciBSOEE3NzQ1IChSWi9HMUUpIGNvbXBhdGlibGUgRFUKPiAg
-ICAgIC0gInJlbmVzYXMsZHUtcjhhNzc0NzAiIGZvciBSOEE3NzQ3MCAoUlovRzFDKSBjb21wYXRp
-YmxlIERVCj4gKyAgICAtICJyZW5lc2FzLGR1LXI4YTc3NGExIiBmb3IgUjhBNzc0QTEgKFJaL0cy
-TSkgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3NzRjMCIgZm9yIFI4QTc3
-NEMwIChSWi9HMkUpIGNvbXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc3OSIg
-Zm9yIFI4QTc3NzkgKFItQ2FyIEgxKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1
-LXI4YTc3OTAiIGZvciBSOEE3NzkwIChSLUNhciBIMikgY29tcGF0aWJsZSBEVQo+IEBAIC01OCw2
-ICs1OSw3IEBAIGNvcnJlc3BvbmRpbmcgdG8gZWFjaCBEVSBvdXRwdXQuCj4gICBSOEE3NzQ0IChS
-Wi9HMU4pICAgICAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAgICAgICAg
-IC0KPiAgIFI4QTc3NDUgKFJaL0cxRSkgICAgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAg
-ICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc0NzAgKFJaL0cxQykgICAgICBEUEFEIDAgICAg
-ICAgICBEUEFEIDEgICAgICAgICBMVkRTIDAgICAgICAgICAtCj4gKyBSOEE3NzRBMSAoUlovRzJN
-KSAgICAgIERQQUQgMCAgICAgICAgIEhETUkgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0KPiAg
-IFI4QTc3NEMwIChSWi9HMkUpICAgICAgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgTFZE
-UyAxICAgICAgICAgLQo+ICAgUjhBNzc3OSAoUi1DYXIgSDEpICAgICBEUEFEIDAgICAgICAgICBE
-UEFEIDEgICAgICAgICAtICAgICAgICAgICAgICAtCj4gICBSOEE3NzkwIChSLUNhciBIMikgICAg
-IERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIExWRFMgMSAgICAgICAgIC0KPiAKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+This patch series add support of Clock for temperature sensor
+on Amlogic G12a SoC.
+
+Guillaume
+
+cahnges sinve v2:
+- rebase on good branch
+
+changes since v1:
+- fix .width value
+
+Guillaume La Roque (2):
+  dt-bindings: clk: g12a-clkc: add Temperature Sensor clock ID
+  clk: meson-g12a: Add Temperature Sensor clock
+
+ drivers/clk/meson/g12a.c              | 31 +++++++++++++++++++++++++++
+ drivers/clk/meson/g12a.h              |  3 ++-
+ include/dt-bindings/clock/g12a-clkc.h |  1 +
+ 3 files changed, 34 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
