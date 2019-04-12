@@ -1,82 +1,71 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date: Fri, 12 Apr 2019 02:23:15 +0300
-Message-ID: <20190411232315.19588-2-olteanv@gmail.com>
-References: <20190411232315.19588-1-olteanv@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190411232315.19588-1-olteanv@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: shawnguo@kernel.org, leoyang.li@nxp.com, claudiu.manoil@nxp.com
-Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, Vladimir Oltean <olteanv@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Add dynamic-power-coefficient for rk3288
+Date: Thu, 11 Apr 2019 17:01:58 -0700
+Message-ID: <20190412000158.248080-1-mka@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
-
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
-
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 97e1fb7ea932..9b1fe99d55b1 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -145,7 +145,7 @@
- };
- 
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -225,6 +225,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 1a2a9509d9c2..89eab1fd1f7f 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -709,6 +709,15 @@
- 			      <0x0 0x2d10030 0x0 0x4>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
--- 
-2.17.1
+VGhlIHZhbHVlIHdhcyBkZXRlcm1pbmVkIHdpdGggdGhlIGZvbGxvd2luZyBtZXRob2Q6CgotIHRh
+a2UgQ1BVcyAxLTMgb2ZmbGluZQotIGZvciBlYWNoIE9QUAogIC0gc2V0IGNwdWZyZXEgbWluIGFu
+ZCBtYXggZnJlcSB0byBPUFAgZnJlcQogIC0gc3RhcnQgZGhyeXN0b25lIGJlbmNobWFyawogIC0g
+bWVhc3VyZSBDUFUgcG93ZXIgY29uc3VtcHRpb24gZHVyaW5nIDEwcwogIC0gY2FsY3VsYXRlIEN4
+IGZvciBPUFB4CiAgICAtIEN4ID0gKFB4IC0gUDEpIC8gKFZ4wrJmeCAtIFYxwrJmMSkgICAgICAg
+ICAgWzFdCiAgICAgIHVzaW5nIHRoZSBmb2xsb3dpbmcgdW5pdHM6IG1XIC8gR2h6IC8gViAgIFsy
+XQotIEMgPSBhdmcoQzIsIC4uLiwgQ24pCgpbMV0gc2VlIGNvbW1pdCA0ZGFhMDAxYTE3NzMgKCJh
+cm02NDogZHRzOiBqdW5vOiBBZGQgY3B1CiAgICAgZHluYW1pYy1wb3dlci1jb2VmZmljaWVudCBp
+bmZvcm1hdGlvbiIpClsyXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNDkz
+NjE1LyMyMjE1ODU1MQoKRlRSLCB0aGVzZSBhcmUgdGhlIHZhbHVlcyBmb3IgdGhlIGRpZmZlcmVu
+dCBPUFBzOgoKZnJlcSAoa0h6KSAgIAltVgkJUHggKG1XKQkJQ3gKCjEyNjAwMAkJOTAwCQkzOQoy
+MTYwMDAJCTkwMAkJNjYJCTM3MAozMTIwMDAJCTkwMAkJOTUJCTM3Mgo0MDgwMDAJCTkwMAkJMTIy
+CQkzNjMKNjAwMDAwCQk5MDAJCTE3NwkJMzU5CjY5NjAwMAkJOTUwCQkyMzAJCTM2Mwo4MTYwMDAJ
+CTEwMDAJCTI5NwkJMzYxCjEwMDgwMDAJCTEwNTAJCTQwNAkJMzYyCjEyMDAwMDAJCTExMDAJCTUy
+OAkJMzYyCjE0MTYwMDAJCTEyMDAJCTc3MAkJMzc3CjE1MTIwMDAJCTEzMDAJCTk4NAkJMzg1CjE2
+MDgwMDAJCTEzNTAJCTExNTYJCTM5NAoKU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgS2FlaGxja2Ug
+PG1rYUBjaHJvbWl1bS5vcmc+Ci0tLQpJIGNvdWxkbid0IGZpbmQgYW55IHJlYWxseSBjb21wcmVo
+ZW5zaXZlIGluZm9ybWF0aW9uIG9uIGRldGVybWluaW5nCnRoZSBkeW5hbWljLXBvd2VyLWNvZWZm
+aWNpZW50LCB0aGUgbWV0aG9kIHVzZWQgaXMgbXkgdW5kZXJzdGFuZGluZwptb3N0bHkgZGVyaXZl
+ZCBmcm9tIHRoZSBzb3VyY2VzIG1lbnRpb25lZCBhYm92ZSwgdGhlIHJlc3VsdGluZyB2YWx1ZQpp
+cyB3aXRoaW4gYSByZWFzb25hYmxlIHJhbmdlIGFuZCB0aGUgcmFuZ2Ugb2YgdGhlIGludGVybWVk
+aWF0ZSBDeAp2YWx1ZXMgaXMgY29uc2lzdGVudC4gSWYgc29tZW9uZSBrbm93cyBiZXR0ZXIgYW5k
+IHRoaW5ncyBzaG91bGQgYmUKZG9uZSBkaWZmZXJlbnRseSBwbGVhc2Ugc2hhcmUgeW91ciBrbm93
+bGVkZ2UgOikKLS0tCiBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSB8IDQgKysrKwogMSBm
+aWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3JrMzI4OC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kKaW5kZXggMjNl
+OWM1MjUzMDE5Li5mMGQ5MmIwNDVjNTcgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3Jr
+MzI4OC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpCkBAIC02MSw2ICs2
+MSw3IEBACiAJCQlyZWcgPSA8MHg1MDA+OwogCQkJcmVzZXRzID0gPCZjcnUgU1JTVF9DT1JFMD47
+CiAJCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZjcHVfb3BwX3RhYmxlPjsKKwkJCWR5bmFtaWMt
+cG93ZXItY29lZmZpY2llbnQgPSA8MzcwPjsKIAkJCSNjb29saW5nLWNlbGxzID0gPDI+OyAvKiBt
+aW4gZm9sbG93ZWQgYnkgbWF4ICovCiAJCQljbG9jay1sYXRlbmN5ID0gPDQwMDAwPjsKIAkJCWNs
+b2NrcyA9IDwmY3J1IEFSTUNMSz47CkBAIC03MSw2ICs3Miw3IEBACiAJCQlyZWcgPSA8MHg1MDE+
+OwogCQkJcmVzZXRzID0gPCZjcnUgU1JTVF9DT1JFMT47CiAJCQlvcGVyYXRpbmctcG9pbnRzID0g
+PCZjcHVfb3BwX3RhYmxlPjsKKwkJCWR5bmFtaWMtcG93ZXItY29lZmZpY2llbnQgPSA8MzcwPjsK
+IAkJCSNjb29saW5nLWNlbGxzID0gPDI+OyAvKiBtaW4gZm9sbG93ZWQgYnkgbWF4ICovCiAJCQlj
+bG9jay1sYXRlbmN5ID0gPDQwMDAwPjsKIAkJCWNsb2NrcyA9IDwmY3J1IEFSTUNMSz47CkBAIC04
+MSw2ICs4Myw3IEBACiAJCQlyZWcgPSA8MHg1MDI+OwogCQkJcmVzZXRzID0gPCZjcnUgU1JTVF9D
+T1JFMj47CiAJCQlvcGVyYXRpbmctcG9pbnRzID0gPCZjcHVfb3BwX3RhYmxlPjsKKwkJCWR5bmFt
+aWMtcG93ZXItY29lZmZpY2llbnQgPSA8MzcwPjsKIAkJCSNjb29saW5nLWNlbGxzID0gPDI+OyAv
+KiBtaW4gZm9sbG93ZWQgYnkgbWF4ICovCiAJCQljbG9jay1sYXRlbmN5ID0gPDQwMDAwPjsKIAkJ
+CWNsb2NrcyA9IDwmY3J1IEFSTUNMSz47CkBAIC05MSw2ICs5NCw3IEBACiAJCQlyZWcgPSA8MHg1
+MDM+OwogCQkJcmVzZXRzID0gPCZjcnUgU1JTVF9DT1JFMz47CiAJCQlvcGVyYXRpbmctcG9pbnRz
+ID0gPCZjcHVfb3BwX3RhYmxlPjsKKwkJCWR5bmFtaWMtcG93ZXItY29lZmZpY2llbnQgPSA8Mzcw
+PjsKIAkJCSNjb29saW5nLWNlbGxzID0gPDI+OyAvKiBtaW4gZm9sbG93ZWQgYnkgbWF4ICovCiAJ
+CQljbG9jay1sYXRlbmN5ID0gPDQwMDAwPjsKIAkJCWNsb2NrcyA9IDwmY3J1IEFSTUNMSz47Ci0t
+IAoyLjIxLjAuMzkyLmdmOGY2Nzg3MTU5ZS1nb29nCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
