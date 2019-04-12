@@ -1,42 +1,37 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-Date: Fri, 12 Apr 2019 15:35:13 +0200
-Message-ID: <518757ac-b0d7-298c-c896-4bd7e3b2ac5b@i2se.com>
-References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
- <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
- <24771fbe-0c45-78b0-e96b-6ed31ccdcb7f@metux.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Date: Fri, 12 Apr 2019 15:42:44 +0200
+Message-ID: <20190412134244.GC324@lunn.ch>
+References: <20190412130427.13418-1-angus@akkea.ca>
+ <20190412130427.13418-2-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <24771fbe-0c45-78b0-e96b-6ed31ccdcb7f@metux.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190412130427.13418-2-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>, Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Enrico,
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@1 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
 
-On 12.04.19 15:15, Enrico Weigelt, metux IT consult wrote:
-> On 11.04.19 15:30, Stefan Wahren wrote:
->> This adds RPM support to the pwm-fan driver in order to use with
->> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
->> output signal, which generate a defined number of pulses per revolution.
-> Wouldn't it be better to have a CONFIG_* flag for keeping the kernel
-> image size smaller when this feature isn't needed ?
+Hi Angus
 
-i compared the kernel module size in linux-next for ARM without and with
-this patch:
-without patch: 12088 bytes
-with patch: 14292 bytes
+This compatible string is optional. It won't warm, but it is not
+needed.
 
-I don't think it is worth the trouble.
+> +			reg = <1>;
+> +			power-supply = <&reg_3V3_P>;
 
-Stefan
+I don't remember seeing a power-supply property in an Ethernet PHY
+node before. What is using it? The PHY driver? Or the driver core
+code?
 
->
->
-> --mtx
->
+	Andrew
