@@ -1,74 +1,90 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v5 09/13] usb: roles: Add usb role switch notifier.
-Date: Thu, 11 Apr 2019 20:59:17 -0700
-Message-ID: <CALAqxLWf0_73spYd68-bnYZp5evLNjcFwBqevVdHCoziG9paBA@mail.gmail.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com> <20190329041409.70138-10-chenyu56@huawei.com>
- <CALAqxLUQW03waz0LETcnYpc7qhm=RG6RfwbGVZ7MQz00jTZSWQ@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v6 04/12] firmware: ti_sci: Add RM mapping table for am654
+Date: Fri, 12 Apr 2019 09:38:05 +0530
+Message-ID: <49dd19bf-f5bd-e048-75ad-2d4cb708bcf9@ti.com>
+References: <20190410041358.16809-1-lokeshvutla@ti.com>
+ <20190410041358.16809-5-lokeshvutla@ti.com>
+ <20190411145416.GP2839@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLUQW03waz0LETcnYpc7qhm=RG6RfwbGVZ7MQz00jTZSWQ@mail.gmail.com>
+In-Reply-To: <20190411145416.GP2839@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, "Liuyu (R)" <liuyu712@hisilicon.com>, wanghu17@hisilicon.com, butao <butao@hisilicon.com>, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, Yudongbin <yudongbin@hisilicon.com>, Zang Leigang <zangleigang@hisilicon.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 6:12 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Thu, Mar 28, 2019 at 9:14 PM Yu Chen <chenyu56@huawei.com> wrote:
-> >
-> > This patch adds notifier for drivers want to be informed of the usb role
-> > switch.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Cc: Hans de Goede <hdegoede@redhat.com>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: John Stultz <john.stultz@linaro.org>
-> > Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Signed-off-by: Yu Chen <chenyu56@huawei.com>
->
-> Hey Yu Chen!
->    Thanks again for sending this patch out! As mentioned in my
-> comments with the other patches, I've got one proposal I wanted to
-> share to try to avoid  state initialization races that I've seen with
-> this patchset.
->
-> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> > index f45d8df5cfb8..e2caaa665d6e 100644
-> > --- a/drivers/usb/roles/class.c
-> > +++ b/drivers/usb/roles/class.c
-> > @@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
-> >
-> > +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-> > +                                     struct notifier_block *nb)
-> > +{
-> > +       return blocking_notifier_chain_register(&sw->nh, nb);
-> > +}
-> > +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
->
-> As noted earlier, one issue I've seen is that the hisi_hikey_usb
-> driver's notifier may not get called early enough to receive
-> notification of the initial usb state.
->
-> It seems like on registration here, we should take the lock, read the
-> role state and immediately call the notifier to properly initialize
-> it? I suspect that should close the window for any state races around
-> driver probe timings and
->
-> Does that make sense? I have roughly prototyped this but need to do
-> additional testing.
 
-So these seem to be working ok.
-First, the notifier call on register change:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=1d312db9763c2449c3cf5b3383b1f33390f8ce7b
 
-Second, the current_dr_role change for dwc3:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=b80b536de76eb80f7df0846aa54ac22e2b4ffe4e
+On 11/04/19 8:24 PM, Tony Lindgren wrote:
+> Hi,
+> 
+> * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
+>> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>> index b56a02c10ae6..6f0cd31c1520 100644
+>> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>> @@ -24,7 +24,8 @@ relationship between the TI-SCI parent node to the child node.
+>>  
+>>  Required properties:
+>>  -------------------
+>> -- compatible: should be "ti,k2g-sci"
+>> +- compatible:	should be "ti,k2g-sci" for TI 66AK2G SoC
+>> +		should be "ti,am654-sci" for for TI AM654 SoC
+>>  - mbox-names:
+>>  	"rx" - Mailbox corresponding to receive path
+>>  	"tx" - Mailbox corresponding to transmit path
+>> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+>> index d303f5a14da9..88e461498def 100644
+>> --- a/drivers/firmware/ti_sci.c
+>> +++ b/drivers/firmware/ti_sci.c
+>> @@ -2297,10 +2297,33 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
+>>  	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
+>>  	.max_msgs = 20,
+>>  	.max_msg_size = 64,
+>> +	.rm_type_map = NULL,
+>> +};
+>> +
+>> +static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
+>> +	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
+>> +	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
+>> +	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
+>> +	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
+>> +	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
+>> +	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
+>> +	{.dev_id = 0, .type = 0x000}, /* end of table */
+>> +};
+>> +
+>> +/* Description for AM654 */
+>> +static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
+>> +	.default_host_id = 12,
+>> +	/* Conservative duration */
+>> +	.max_rx_timeout_ms = 10000,
+>> +	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
+>> +	.max_msgs = 20,
+>> +	.max_msg_size = 60,
+>> +	.rm_type_map = ti_sci_am654_rm_type_map,
+>>  };
+>>  
+>>  static const struct of_device_id ti_sci_of_match[] = {
+>>  	{.compatible = "ti,k2g-sci", .data = &ti_sci_pmmc_k2g_desc},
+>> +	{.compatible = "ti,am654-sci", .data = &ti_sci_pmmc_am654_desc},
+>>  	{ /* Sentinel */ },
+>>  };
+>>  MODULE_DEVICE_TABLE(of, ti_sci_of_match);
+> 
+> Great, this approach with mapping table in the driver based on
+> the compatible looks good to me and avoids stuffing the IDs
+> into device tree:
+> 
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> 
 
-Feel free to fold/rework those changes into your patch set.
+Thanks, but I don't think you understood what the patch is actually doing.
+Please look at the rest of the series on how this table is being used.
 
-thanks
--john
+Thanks and regards,
+Lokesh
