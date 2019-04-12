@@ -1,69 +1,36 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero
- board
-Date: Fri, 12 Apr 2019 07:31:24 +0200
-Message-ID: <20190412073124.6f04e105@kemnade.info>
-References: <20190301185212.26837-1-andreas@kemnade.info>
-        <20190407222321.11ec297d@kemnade.info>
-        <20190408081404.554zdbcotnidljsl@flea>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
+ DT source data
+Date: Thu, 11 Apr 2019 22:49:52 -0700
+Message-ID: <20190412054952.GA26672@infradead.org>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com>
+ <20190411114616.GA10032@infradead.org>
+ <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
+ <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
+ <alpine.DEB.2.21.9999.1904111618460.21321@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Wej8p2Dft83Sj2Tb9NyHpdn"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190408081404.554zdbcotnidljsl@flea>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1904111618460.21321@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Atish Patra <atish.patra@wdc.com>, Christoph Hellwig <hch@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/Wej8p2Dft83Sj2Tb9NyHpdn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 11, 2019 at 05:08:11PM -0700, Paul Walmsley wrote:
+> However: the vast majority of users -- even embedded users -- will not use 
+> a kernel with a bundled DTB.  This is because it irrevocably ties that 
+> kernel binary to one specific board type.  I hope it is obvious why this 
+> would be a non-starter for Linux distributions, and, more generally, 
+> anyone who wants their kernels to be usable on multiple boards.  Those 
+> distributors would need to ship one kernel binary per board, or bloat 
+> their kernels with DTBs and come up with some new mechanism to select one.
 
-Hi,
+Yes, that is the point why the DTB usually comes with the firmware.
+In my case I need it because by nommu M-mode Linux port targeted to
+the Kendrye _is_ the firmware and there is nothing else running on that
+tiny system.
 
-On Mon, 8 Apr 2019 10:14:04 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-
-> On Sun, Apr 07, 2019 at 10:23:21PM +0200, Andreas Kemnade wrote:
-> > ping
-> >
-> > On Fri,  1 Mar 2019 19:52:12 +0100
-> > Andreas Kemnade <andreas@kemnade.info> wrote:
-> > =20
-> > > The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-> > > with broadcom internals attached to UART1 and some gpios.
-> > > This addition is in line with similar boards
-> > >
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
->=20
-> I never received that patch, who did you send it to?
->=20
-Seems that I only have sent you the first version of that patch. Somehow
-I must have left you out during copy and paste of adresses.
-
-Regards,
-Andreas
-
---Sig_/Wej8p2Dft83Sj2Tb9NyHpdn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlywIq0ACgkQl4jFM1s/
-ye+X4Q//UYhkarSSxswTQLL7gML8IvH4+OF+6Gbi3CsW86AZ7vq9FElGvcWpXusC
-rQQQGt6oAfA1Nyc1JGTZB3tNoBjAQJ2xqFtLNVbixUNIs+dOeRrBnj3hAmIae0ko
-gqBkKdwGCwvrLk2u4F1B06IES34cV+PO4jZCSrifUIwmu5CqqXo6Wt0kdHMpeViG
-7cIwSF8K3+J0smj0muJgGtHnoPzRm2oQjXImcp4Akb3edVXkAJSVM2Z4cRbJvbzU
-NnBMG9vpB3MXTZp6jwd//vDl4eyIAsIn+RxcAvlpvXiGtTAWqwpSspFrbyw35LcS
-8UTU67ApH13KKs+0+5uSzAd2Q3iBWKUHaGnvxwSYJGu0VcpKLafzbx/UzRGkqWtU
-j/c0tjujvL4DXUUg1LdWSf9w4o1meIaTBkRwR6HYLnWcskvsfDSlqTdmnFwA36Vn
-/NVPSiVFOu0+8e+S/HJhZl2YLEcR6UDCqbh9BBSNfRcOd4awEbGFQcO4114H6e9v
-iGxrJrk2JQuGg0nBn8mVoUlhJNBuYm/Ns+agQso2XrxmVCdPSo7llnzaNPQdz4h6
-2cMNV+T1YynsxAqUjyguWPNxukIiWD79aurbTE27nT3G8BJw4heu7+8W2THVCCge
-SzRidYL5fjKy2hZd8hB8F84u2f//d9C4p2vlREZwJ2kfxzTpFAs=
-=gLI5
------END PGP SIGNATURE-----
-
---Sig_/Wej8p2Dft83Sj2Tb9NyHpdn--
+But why are you submitting the DTB files if there is not ways use them
+from the kernel?  That is what I was wondering about.
