@@ -1,64 +1,84 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v5 1/3] media: dt-bindings: media: meson-ao-cec: Add G12A AO-CEC-B Compatible
-Date: Fri, 12 Apr 2019 10:30:58 +0200
-Message-ID: <20190412083100.4070-2-narmstrong@baylibre.com>
-References: <20190412083100.4070-1-narmstrong@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 11/20] spi: expand mode support and add LSBYTE_FIRST
+ mode
+Date: Fri, 12 Apr 2019 09:32:48 +0100
+Message-ID: <20190412083248.GB6909@sirena.org.uk>
+References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
+ <1554423259-26056-11-git-send-email-skomatineni@nvidia.com>
+ <20190408062819.GJ2803@sirena.org.uk>
+ <BYAPR12MB3398CC43DC1F78A10BC51DE8C22F0@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412083100.4070-1-narmstrong@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <BYAPR12MB3398CC43DC1F78A10BC51DE8C22F0@BYAPR12MB3398.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: hverkuil@xs4all.nl, mchehab@kernel.org, devicetree@vger.kernel.org
-Cc: baylibre-upstreaming@groups.io, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic G12A embeds a second CEC controller named AO-CEC-B, and
-the other one is AO-CEC-A described by the current bindings.
 
-The register interface is very close but the internal architecture
-is totally different.
+--DKU6Jbt7q3WqK7+M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The other difference is the clock source, the AO-CEC-B takes the
-"oscin", the Always-On Oscillator clock, as input and embeds a
-dual-divider clock divider to provide the precise 32768Hz base
-clock for CEC communication.
+On Thu, Apr 11, 2019 at 07:58:33PM +0000, Sowjanya Komatineni wrote:
+> > On Thu, Apr 04, 2019 at 05:14:10PM -0700, Sowjanya Komatineni wrote:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/media/meson-ao-cec.txt      | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+> > > Some SPI Master controllers support configuring Least significant byt=
+e=20
+> > > first or Most significant byte first order for transfers. Also some=
+=20
+> > > SPI slave devices expect bytes to be in Least significant first order=
+=20
+> > > and some devices expect Most significant first order.
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-index 8671bdb08080..c67fc41d4aa2 100644
---- a/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-+++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-@@ -4,16 +4,23 @@ The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
- to handle communication between HDMI connected devices over the CEC bus.
- 
- Required properties:
--  - compatible : value should be following
-+  - compatible : value should be following depending on the SoC :
-+	For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
- 	"amlogic,meson-gx-ao-cec"
-+	For G12A (AO_CEC_B module) :
-+	"amlogic,meson-g12a-ao-cec"
- 
-   - reg : Physical base address of the IP registers and length of memory
- 	  mapped region.
- 
-   - interrupts : AO-CEC interrupt number to the CPU.
-   - clocks : from common clock binding: handle to AO-CEC clock.
--  - clock-names : from common clock binding: must contain "core",
--		  corresponding to entry in the clocks property.
-+  - clock-names : from common clock binding, must contain :
-+		For GXBB, GXL, GXM and G12A (AO_CEC_A module) :
-+		- "core"
-+		For G12A (AO_CEC_B module) :
-+		- "oscin"
-+		corresponding to entry in the clocks property.
-   - hdmi-phandle: phandle to the HDMI controller
- 
- Example:
--- 
-2.21.0
+> > > SPI driver declares mode and mode_bits as u16 and all bits are used.
+
+> > > This patch changes mode and mode_bits to be u32 to allow for more mod=
+e=20
+> > > configurations.
+
+> > > This patch also creates SPI_LSBYTE_FIRST mode to allow SPI clients to=
+=20
+> > > choose LSByte order or MSByte order through the device tree property=
+=20
+> > > spi-lsbyte-first.
+
+> > Please submit one patch per change, each with a clear changelog, as cov=
+ered in SubmittingPatches.  This makes it much easier to review things sinc=
+e it's easier to tell if the patch does what it was intended to do and mean=
+s that if one part of the patch casues problems it won't hold up the other =
+parts.
+
+> I split changes on SPI code side and SPI Tegra side as separate patches.
+> Do you meant to have both changes on SPI core and SPI Tegra together in a=
+ single patch?
+
+You are expanding the size of the mode variable and adding a new mode in
+the same patch.  These are two separate changes and should be in two
+separate patches, as soon as you start writing "Also..." in a changelog
+that should be a warning flag.
+
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
+
+--DKU6Jbt7q3WqK7+M
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlywTTAACgkQJNaLcl1U
+h9ASVgf/YJl1oQzWArLRQHn7PzVwQ4QsUKLnP+dbbx8RWVhM93Whw0IURubE0Qkj
+zHIRDTu88rSP4hQMymsqJwcN9ZSWA/QgWW/950S+kZQ23a7d2hmSfC5LEXZACawm
+gJ1MFuHKf5zA1nHTeSu1aXVR6QdABMaAvu0Bk+VPplAZPuLI5k7vvLxcxGZ7G3e8
+S5Xwyo3Prv9T4J8pMiD/5eg4jc/o05MTw26M2kFRE2IV9STQ25DaSIQjtMhTq8c2
+kaBMQKAfEnQ+roNYcqNKMo4SPCCmNrR8MljdRf/bmIqaLIhyj9P/qRFOrjeC19eM
+ELTmw4Unue23lYbVs5FVE3JuWWbQgg==
+=0IqI
+-----END PGP SIGNATURE-----
+
+--DKU6Jbt7q3WqK7+M--
