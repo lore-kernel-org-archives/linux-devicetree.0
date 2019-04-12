@@ -1,159 +1,79 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for
- the Librem5 devkit
-Date: Fri, 12 Apr 2019 14:39:28 +0000
-Message-ID: <baef6ba37a7a8d6e4dec0cfbc4ab8252b1d7a3fa.camel@nxp.com>
-References: <20190412130427.13418-1-angus@akkea.ca>
-         <20190412130427.13418-2-angus@akkea.ca>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv5 1/6] PCI: mobiveil: Refactor Mobiveil PCIe Host Bridge
+ IP driver
+Date: Fri, 12 Apr 2019 16:39:16 +0200
+Message-ID: <CAK8P3a38F=y92ECU-iB-D=OqmuY5ANAwDw2NDPOTFmhUZQTovA@mail.gmail.com>
+References: <20190412095332.41370-1-Zhiqiang.Hou@nxp.com> <20190412095332.41370-2-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412130427.13418-2-angus@akkea.ca>
-Content-Language: en-US
-Content-ID: <03A728088FA122419989483B1B96D021@eurprd04.prod.outlook.com>
+In-Reply-To: <20190412095332.41370-2-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "matti.vaittinen@fi.rohmeurope.com" <matti.vaittinen@fi.rohmeurope.com>, "angus@akkea.ca" <angus@akkea.ca>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robin Gong <yibin.gong@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, Mingkai
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA0LTEyIGF0IDA3OjA0IC0wNjAwLCBBbmd1cyBBaW5zbGllIChQdXJpc20p
-IHdyb3RlOg0KPiArJmkyYzEgew0KPiArICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDA+
-Ow0KPiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsgICAgICAgcGluY3Ry
-bC0wID0gPCZwaW5jdHJsX2kyYzE+Ow0KPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gKw0K
-PiArICAgICAgIHBtaWM6IHBtaWNANGIgew0KPiArICAgICAgICAgICAgICAgcmVnID0gPDB4NGI+
-Ow0KPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyb2htLGJkNzE4MzciOw0KPiArICAg
-ICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gKyAgICAgICAgICAgICAg
-IHBpbmN0cmwtMCA9IDwmcGluY3RybF9wbWljPjsNCj4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9
-IDwmcG1pY19vc2M+Ow0KPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAib3NjIjsNCj4g
-KyAgICAgICAgICAgICAgIGNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbWljX2NsayI7DQo+ICsgICAg
-ICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ICsgICAgICAgICAgICAg
-ICBpbnRlcnJ1cHRzID0gPDMgR1BJT19BQ1RJVkVfTE9XPjsNCj4gKyAgICAgICAgICAgICAgIGlu
-dGVycnVwdC1uYW1lcyA9ICJpcnEiOw0KPiArICAgICAgICAgICAgICAgcm9obSxyZXNldC1zbnZz
-LXBvd2VyZWQ7DQo+ICsNCj4gKyAgICAgICAgICAgICAgIGdwbyB7DQo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIC8qIDBiMDAwMF8xMTAwIGFsbCBncG9zIHdpdGggY21vcyBvdXRwdXQgbW9kZQ0K
-PiAqLw0KPiArICAgICAgICAgICAgICAgICAgICAgICByb2htLGRydiA9IDwweDBDPjsNCj4gKyAg
-ICAgICAgICAgICAgIH07DQoNCkFmdGVyIHNlYXJjaGluZyBmb3IgdGhpcyBncG8vcm9obSxkcnYg
-cHJvcGVydHkgaXQgZG9lcyBub3Qgc2VlbSB0byBiZQ0KZG9jdW1lbnRlZCBvciBoYW5kbGVkIGFu
-eXdoZXJlPw0KDQpTaG91bGQgcHJvYmFibHkganVzdCBkcm9wLg0KDQo+ICsgICAgICAgICAgICAg
-ICByZWd1bGF0b3JzIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMg
-PSA8MT47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiAr
-DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2sxX3JlZzogQlVDSzFAMCB7DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2sxIjsNCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0K
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0
-ID0gPDEzMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRv
-ci1ib290LW9uOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1h
-bHdheXMtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLXJh
-bXAtZGVsYXkgPSA8MTI1MD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcm9o
-bSxkdnMtcnVuLXZvbHRhZ2UgPSA8OTAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICByb2htLGR2cy1pZGxlLXZvbHRhZ2UgPSA8ODUwMDAwPjsNCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByb2htLGR2cy1zdXNwZW5kLXZvbHRhZ2UgPSA8ODAwMDAwPjsN
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKw0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICBidWNrMl9yZWc6IEJVQ0syQDEgew0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHJlZyA9IDwxPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0
-b3ItbmFtZSA9ICJidWNrMiI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
-dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NzAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzAwMDAwPjsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItYm9vdC1vbjsNCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1yYW1wLWRlbGF5ID0gPDEyNTA+Ow0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZzLXJ1bi12b2x0YWdlID0gPDEw
-MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZzLWlkbGUt
-dm9sdGFnZSA9IDw5MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiArDQo+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2szX3JlZzogQlVDSzNAMiB7DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDI+Ow0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2szIjsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
-PDEzMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZzLXJ1
-bi12b2x0YWdlID0gPDEwMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiAr
-DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2s0X3JlZzogQlVDSzRAMyB7DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDM+Ow0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2s0IjsNCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0K
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0
-ID0gPDEzMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZz
-LXJ1bi12b2x0YWdlID0gPDEwMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0K
-PiArDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2s1X3JlZzogQlVDSzVANCB7DQo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDQ+Ow0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2s1IjsNCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+
-Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92
-b2x0ID0gPDEzNTAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3Vs
-YXRvci1ib290LW9uOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRv
-ci1hbHdheXMtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgYnVjazZfcmVnOiBCVUNLNkA1IHsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICByZWcgPSA8NT47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcmVndWxhdG9yLW5hbWUgPSAiYnVjazYiOw0KPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMwMDAwMDA+Ow0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAw
-MDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9u
-Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247
-DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgYnVjazdfcmVnOiBCVUNLN0A2IHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZWcgPSA8Nj47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxh
-dG9yLW5hbWUgPSAiYnVjazciOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE2MDUwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE5OTUwMDA+Ow0KPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9uOw0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVjazhf
-cmVnOiBCVUNLOEA3IHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-Nz47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAi
-YnVjazgiOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4t
-bWljcm92b2x0ID0gPDgwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTQwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgfTsNCj4gKw0KPiArICAgICAgICAgICAgICAgICAgICAgICBsZG8xX3JlZzogTERPMUA4IHsN
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8OD47DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvMSI7DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAw
-MDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1heC1t
-aWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVndWxhdG9yLWJvb3Qtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
-dWxhdG9yLWFsd2F5cy1vbjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKw0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBsZG8yX3JlZzogTERPMkA5IHsNCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByZWcgPSA8OT47DQo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvMiI7DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8OTAwMDAwPjsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDw5MDAw
-MDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9u
-Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247
-DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgbGRvM19yZWc6IExETzNAMTAgew0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHJlZyA9IDwxMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxh
-dG9yLW5hbWUgPSAibGRvMyI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
-dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgfTsNCj4gKw0KPiArICAgICAgICAgICAgICAgICAgICAgICBsZG80X3Jl
-ZzogTERPNEAxMSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDEx
-PjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJs
-ZG80IjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1p
-Y3Jvdm9sdCA9IDw5MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-Z3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9uOw0KPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAg
-IH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGRvNV9yZWc6IExETzVAMTIgew0K
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxMj47DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvNSI7DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgw
-MDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1heC1t
-aWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsN
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGRvNl9yZWc6IExETzZAMTMgew0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxMz47DQo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvNiI7DQo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8OTAwMDAwPjsNCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
-IDwxODAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKw0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICBsZG83X3JlZzogTERPN0AxNCB7DQo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcmVnID0gPDE0PjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZWd1bGF0b3ItbmFtZSA9ICJsZG83IjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAw
-PjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKyAgICAgICAgICAgICAgIH07DQo+
-ICsgICAgICAgfTsNCg0K
+On Fri, Apr 12, 2019 at 11:53 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+
+> +int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  {
+> -       struct mobiveil_pcie *pcie;
+>         struct pci_bus *bus;
+>         struct pci_bus *child;
+>         struct pci_host_bridge *bridge;
+> -       struct device *dev = &pdev->dev;
+> +       struct device *dev = &pcie->pdev->dev;
+>         resource_size_t iobase;
+>         int ret;
+>
+> -       /* allocate the PCIe port */
+> -       bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> -       if (!bridge)
+> -               return -ENOMEM;
+> -
+> -       pcie = pci_host_bridge_priv(bridge);
+> -
+> -       pcie->pdev = pdev;
+> +       INIT_LIST_HEAD(&pcie->resources);
+>
+>         ret = mobiveil_pcie_parse_dt(pcie);
+>         if (ret) {
+> @@ -928,7 +560,10 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> -       INIT_LIST_HEAD(&pcie->resources);
+> +       /* allocate the PCIe port */
+> +       bridge = devm_pci_alloc_host_bridge(dev, 0);
+> +       if (!bridge)
+> +               return -ENOMEM;
+>
+
+> +static int mobiveil_pcie_probe(struct platform_device *pdev)
+> +{
+> +       struct mobiveil_pcie *pcie;
+> +       struct device *dev = &pdev->dev;
+> +
+> +       pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +       if (!pcie)
+> +               return -ENOMEM;
+> +
+> +       pcie->pdev = pdev;
+> +
+> +       return mobiveil_pcie_host_probe(pcie);
+> +}
+
+I think you need to pull the allocation of the host structure out into the
+main driver here, to keep both allocations together, otherwise the
+release function will free the mobiveil_pcie structure before freeing
+the pci_host_bridge if that is still in use.
+
+> +
+> +struct mobiveil_pcie {
+> +       struct platform_device *pdev;
+> +       struct list_head resources;
+
+These two should not be needed here, as they are already part
+of the pci_host_bridge structure.
+
+     Arnd
