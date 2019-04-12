@@ -1,50 +1,40 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v3 00/11] Add support for Orange Pi 3
-Date: Fri, 12 Apr 2019 19:05:05 +0800
-Message-ID: <CAGb2v64HgPePM=rk_kSdS7yFx4S4TR=tpGC2yQ6ruDCvBnosiA@mail.gmail.com>
-References: <20190411101951.30223-1-megous@megous.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Fri, 12 Apr 2019 13:07:40 +0200
+Message-ID: <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
+References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
+ <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+ <20190411165742.GA29395@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190411101951.30223-1-megous@megous.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-stm32@st-md-mailman.stormreply.com, brcm80211-dev-list@cypress.com, David Airlie <airlied@linux.ie>, Jose Abreu <joabreu@synopsys.com>, Naveen Gupta <naveen.gupta@cypress.com>, devicetree <devicetree@vger.kernel.org>, Arend van Spriel <arend.vanspriel@broadcom.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hante Meuleman <hante.meuleman@broadcom.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Wright Feng <wright.feng@cypress.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Franky Lin <franky.lin@broadcom.com>, Maxime Coquelin <mcoquelin.stm32@g>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190411165742.GA29395@roeck-us.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBcHIgMTEsIDIwMTkgYXQgNjoxOSBQTSBtZWdvdXMgdmlhIGxpbnV4LXN1bnhpCjxs
-aW51eC1zdW54aUBnb29nbGVncm91cHMuY29tPiB3cm90ZToKPgo+IEZyb206IE9uZHJlaiBKaXJt
-YW4gPG1lZ291c0BtZWdvdXMuY29tPgo+Cj4gVGhpcyBzZXJpZXMgaW1wbGVtZW50cyBzdXBwb3J0
-IGZvciBYdW5sb25nIE9yYW5nZSBQaSAzIGJvYXJkLgo+Cj4gVW5mb3J0dW5hdGVseSwgdGhpcyBi
-b2FyZCBuZWVkcyBzb21lIHNtYWxsIGRyaXZlciBwYXRjaGVzLCBzbyBJIGhhdmUKPiBzcGxpdCB0
-aGUgYm9hcmRzIERUIHBhdGNoIGludG8gY2h1bmtzIHRoYXQgcmVxdWlyZSBwYXRjaGVzIGZvciBk
-cml2ZXJzCj4gaW4gdmFyaW91cyBzdWJzeXN0ZW1zLgo+Cj4gU3VnZ2VzdGVkIG1lcmdpbmcgcGxh
-bi9kZXBlbmRlbmNpZXM6Cj4KPiAtIFBpbmN0cmwgYW5kIHN0bW1hYyBwYXRjaGVzIGFyZSBuZWVk
-ZWQgZm9yIGV0aGVybmV0IHN1cHBvcnQuCj4gICAocGF0Y2hlcyAxLTUpCj4gLSBIRE1JIHN1cHBv
-cnQgd2FzIGNoYW5nZWQsIHBsZWFzZSByZXZpZXcuIChwYXRjaGVzIDYtOCkKPiAtIGJyY21mbWFj
-IHBhdGNoIDksIGZpeGluZyBmaXJtd2FyZSBmaWxlIHNlbGVjdGlvbiwgY2FuIGJlIG1lcmdlZAo+
-ICAgbm93LCBhZnRlciByZXZpZXcsIGFzIGl0IGRvZXNuJ3QgZGVwZW5kIG9uIGFueXRoaW5nIChw
-bGVhc2UKPiAgIHJldmlldyA6KSkKPiAtIG1tYzEgcGluY29uZiAocGF0Y2ggMTApIGNhbiBwcm9i
-YWJseSBiZSBtZXJnZWQgbm93LCB0b28gKGl0IHdpbGwKPiAgIGNlcnRhaW5seSBiZSB1c2VkIHNv
-b24gYnkgYWxsIHRoZSBvdGhlciBXaUZpIGZlYXR1cmluZyBib2FyZHMKPiAgIGJhc2VkIG9uIEg2
-KQo+IC0gV2lGaSBkdHMgcGF0Y2ggd2lsbCBoYXZlIHRvIHdhaXQgZm9yIEg2IFJUQyBwYXRjaGVz
-LCB3aGljaCBpbiB0dXJuCj4gICBkZXBlbmQgb24gQ2hlbll1J3MgUlRDIHNlcmllcywgdG8gYmUg
-bWVyZ2VkLiBUaGF0IHdpbGwgdGFrZSBhCj4gICB3aGlsZSB5ZXQuIEknbSBqdXN0IGtlZXBpbmcg
-aXQgaW4gdGhlIHNlcmllcyBmb3IgY29tcGxldG5lc3MuCj4gICAocGF0Y2ggMTEpCgpVbmZvcnR1
-bmF0ZWx5IEkgd2lsbCBub3QgaGF2ZSB0aW1lIHRvIHRhY2tsZSB0aGlzIGZvciB0aGUgbmV4dCBy
-ZWxlYXNlLgpGdXJ0aGVybW9yZSwgSSdkIGxpa2UgdG8gZG8gdGhpcyBhZnRlciB0aGUgbmV3IGNs
-ayBwYXJlbnRpbmcgc3R1ZmYgbGFuZHMuCk90aGVyd2lzZSBpdCdzIGdvaW5nIHRvIGJlIGEgbWVz
-cywgYXMgdGhlIGNsb2NrIHRyZWUgaXMgYSBiaXQgY29udm9sdXRlZApjb21wYXJlZCB0byBwcmV2
-aW91cyBTb0NzLgoKQ2hlbll1Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbA==
+On 11.04.19 18:57, Guenter Roeck wrote:
+> On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
+>>  
+>> -ATTRIBUTE_GROUPS(pwm_fan);
+>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>> +				     int n)
+>> +{
+>> +	struct device *dev = container_of(kobj, struct device, kobj);
+>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>> +	struct device_attribute *devattr;
+>> +
+>> +	/* Hide fan_input in case no interrupt is available  */
+>> +	devattr = container_of(a, struct device_attribute, attr);
+> Field day for static analyzers - devattr is no longer used.
+> No need to resend. I'll let the series rest for a couple of days
+> and then apply to hwmon-next (after removing devattr) unless there are
+> additional comments.
+>
+Thank you
+
+Stefan
