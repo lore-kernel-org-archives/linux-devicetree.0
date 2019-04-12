@@ -1,67 +1,75 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
- to DT
-Date: Fri, 12 Apr 2019 17:31:12 +0200
-Message-ID: <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-2-brgl@bgdev.pl>
- <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com> <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
- <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v6 06/12] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Fri, 12 Apr 2019 08:33:21 -0700
+Message-ID: <20190412153321.GV2839@atomide.com>
+References: <20190410041358.16809-1-lokeshvutla@ti.com>
+ <20190410041358.16809-7-lokeshvutla@ti.com>
+ <20190411150023.GQ2839@atomide.com>
+ <9cd4b818-905c-08a4-5675-a5ee763cea98@ti.com>
+ <7e41405b-74e2-dc53-982a-766dee8a6884@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com>
+Content-Disposition: inline
+In-Reply-To: <7e41405b-74e2-dc53-982a-766dee8a6884@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
-> > pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
-> >>
-> >> Hi Bartosz,
-> >>
-> >> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> >>> From: David Lechner <david@lechnology.com>
-> >>>
-> >>> This adds a cpu node and operating points to the common da850.dtsi fi=
-le.
-> >>>
-> >>> Additionally, a regulator is added to the LEGO EV3 board along with
-> >>> some board-specific CPU configuration.
-> >>>
-> >>> Regulators need to be hooked up on other boards to get them working.
-> >>>
-> >>> Signed-off-by: David Lechner <david@lechnology.com>
-> >>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>
-> >> I remember you mentioning about some problems using OCHI and cpufreq
-> >> together. Are those resolved now? CPU PLL on DA850 can affect other
-> >> peripheral clock frequencies too. So enabling it should really be a
-> >> per-board decision.
-> >>
-> >
-> > The problems are still there. I've never been able to find the
-> > culprit, but it also occurs on TI BSP in the same way (a couple
-> > cpufreq transitions will make the controller unresponsive).
->
-> Is that on LCDK as well? As I recall cpufreq was never enabled on LCDK
-> in TI BSP.
->
+* Tero Kristo <t-kristo@ti.com> [190412 08:43]:
+> On 12/04/2019 07:24, Lokesh Vutla wrote:
+> > 
+> > 
+> > On 11/04/19 8:30 PM, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
+> > > > +Example:
+> > > > +--------
+> > > > +The following example demonstrates both interrupt router node and the consumer
+> > > > +node(main gpio) on the AM654 SoC:
+> > > > +
+> > > > +main_intr: interrupt-controller0 {
+> > > > +	compatible = "ti,sci-intr";
+> > > > +	ti,intr-trigger-type = <1>;
+> > > > +	interrupt-controller;
+> > > > +	interrupt-parent = <&gic500>;
+> > > > +	#interrupt-cells = <3>;
+> > > > +	ti,sci = <&dmsc>;
+> > > > +	ti,sci-dst-id = <56>;
+> > > > +	ti,sci-rm-range-girq = <0x1>;
+> > > > +};
+> > > 
+> > > To me it seems there should not be too many of these interrupt
+> > > controller nodes for each SoC. Maybe you're already planning on
+> > > doing it, but I suggest that you just add more specific compatibles
+> > > and then look up the dst-id from a mapping table in the driver
+> > > similar to what patch 04/12 in this series is already doing.
+> > > 
+> > > That way you don't need to add custom TI specific (firmware
+> > > defined) device tree properties listed above ;)
+> > 
+> 
+> < snip: I think Lokesh had a bad day or something :) >
 
-Yes, I just verified that the bug occurs on LCDK with patches from this ser=
-ies.
+Certainly custom bindings need to be discussed properly on the lists :)
 
-> If the OHCI problem is present on LCDK, then there is a user visible
-> regression on mainline after this patch. Lets enable cpufreq in LCDK
-> only if all working peripherals keep working afterwards.
->
+> Anyways, the reason why we want these as custom properties in the DT is that
+> there are multiple instances of the routers within one SoC. On AM65x we have
+> MAIN NAVSS, MCU NAVSS, GPIOs for both etc., if we add driver data for each
+> of these, it easily explodes quite a bit. Especially going forward with new
+> SoCs.
 
-The OHCI driver doesn't register any cpufreq transition notifier
-callbacks. I can't really find anything in the datasheet, but I'm
-wondering if we shouldn't do something similar to what the driver for
-davinci i2c controller does. I'll try a couple things tomorrow.
+Yup and I keep getting worried about this every time I see it still. But like
+I've mentioned when we chatted offline, as long as Arnd, Marc and Rob ack this
+use, I can live with it.
 
-Bart
+I'm just trying to avoid another "ti,hwmods" type custom property here..
+We are still dealing with it to replace it with just standard use of
+"compatible" property, and every time Rob sees it he still comments on it :)
+
+Reagrds,
+
+Tony
