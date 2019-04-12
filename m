@@ -1,63 +1,44 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:49957 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbfDKHy6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:54:58 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH v2 11/20] ARM: dts: r8a77470: Add LVDS support
-Date: Thu, 11 Apr 2019 16:54:13 +0900
-Message-Id: <1554969262-15028-12-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+Return-Path: <SRS0=cJdl=SO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54237 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfDLLhv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Apr 2019 07:37:51 -0400
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 0/2] media: rcar-vin: Add "renesas,id" to V3H
+Date: Fri, 12 Apr 2019 13:38:30 +0200
+Message-Id: <20190412113832.30075-1-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, sergei.shtylyov@cogentembedded.com, geert+renesas@glider.be
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch is to add LVDS support for the RZ/G1C (r8a77470) SoC.
+These two patches add the mandatory "renesas,id" property to
+V3H device tree.
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- arch/arm/boot/dts/r8a77470.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+As the property is mandatory and the driver checks for its presence,
+this might actually fix VIN probe on V3H boards.
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 7881516..9b65e49 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -1222,6 +1222,33 @@
- 				port@2 {
- 					reg = <2>;
- 					du_out_lvds0: endpoint {
-+						remote-endpoint = <&lvds0_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		lvds0: lvds@feb90000 {
-+			compatible = "renesas,r8a77470-lvds";
-+			reg = <0 0xfeb90000 0 0x1c>;
-+			clocks = <&cpg CPG_MOD 726>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 726>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					lvds0_in: endpoint {
-+						remote-endpoint = <&du_out_lvds0>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					lvds0_out: endpoint {
- 					};
- 				};
- 			};
--- 
-2.7.4
+In order to support V3H, which has 16 VIN instances, modify the way the
+VIN driver handles the maximum number of VIN, making it a per-SoC property.
+
+As explained in the commit message of [2/2] if anyone with an V3H board could
+provide a Tested-by tag, these two patches might actually be tagged as fixes.
+
+Tested on Salvator-x M3-W and Ebisu E3.
+
+Thanks
+  j
+
+Jacopo Mondi (2):
+  media: rcar-vin: Make the number of VIN SoC-dependent
+  arm64: dts: renesas: r8a77980: Add "renesas,id" to VIN
+
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi   | 16 ++++++++++++++
+ drivers/media/platform/rcar-vin/rcar-core.c | 23 +++++++++++++++------
+ drivers/media/platform/rcar-vin/rcar-vin.h  |  5 ++++-
+ 3 files changed, 37 insertions(+), 7 deletions(-)
+
+--
+2.21.0
