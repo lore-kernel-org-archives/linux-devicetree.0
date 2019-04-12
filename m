@@ -1,117 +1,60 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 16/26] PCI: OF: Allow of_pci_get_max_link_speed() to
- be used by PCI Endpoint drivers
-Date: Fri, 12 Apr 2019 09:05:00 -0500
-Message-ID: <20190412140500.GB141472@google.com>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-17-kishon@ti.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
+Date: Fri, 12 Apr 2019 16:23:04 +0200
+Message-ID: <CAMRc=MfTytX=8L8BrNKXGhiutxWj8i84wX-5agh=EWA-AZe1Pw@mail.gmail.com>
+References: <20190408075924.2284-1-brgl@bgdev.pl>
+ <20190408075924.2284-3-brgl@bgdev.pl>
+ <57fe079c-fd69-45ef-b4fb-a2c792218c21@ti.com>
+ <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190325093947.32633-17-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>, Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Adam Ford <aford173@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 03:09:37PM +0530, Kishon Vijay Abraham I wrote:
-> of_pci_get_max_link_speed() is built only if CONFIG_PCI is enabled.
-> Make of_pci_get_max_link_speed() to be also used by PCI Endpoint
-> controllers with just CONFIG_PCI_ENDPOINT enabled.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  drivers/pci/Makefile |  2 +-
->  drivers/pci/of.c     | 44 +++++++++++++++++++++++---------------------
->  2 files changed, 24 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 657d642fcc67..28cdd8c0213a 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -10,10 +10,10 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
->  ifdef CONFIG_PCI
->  obj-$(CONFIG_PROC_FS)		+= proc.o
->  obj-$(CONFIG_SYSFS)		+= slot.o
-> -obj-$(CONFIG_OF)		+= of.o
->  obj-$(CONFIG_ACPI)		+= pci-acpi.o
->  endif
->  
-> +obj-$(CONFIG_OF)		+= of.o
->  obj-$(CONFIG_PCI_QUIRKS)	+= quirks.o
->  obj-$(CONFIG_PCIEPORTBUS)	+= pcie/
->  obj-$(CONFIG_HOTPLUG_PCI)	+= hotplug/
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 3d32da15c215..8095933f8452 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -15,6 +15,7 @@
->  #include <linux/of_pci.h>
->  #include "pci.h"
->  
-> +#ifdef CONFIG_PCI
->  void pci_set_of_node(struct pci_dev *dev)
->  {
->  	if (!dev->bus->dev.of_node)
-> @@ -196,27 +197,6 @@ int of_get_pci_domain_nr(struct device_node *node)
->  }
->  EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
->  
-> -/**
-> - * This function will try to find the limitation of link speed by finding
-> - * a property called "max-link-speed" of the given device node.
-> - *
-> - * @node: device tree node with the max link speed information
-> - *
-> - * Returns the associated max link speed from DT, or a negative value if the
-> - * required property is not found or is invalid.
-> - */
-> -int of_pci_get_max_link_speed(struct device_node *node)
-> -{
-> -	u32 max_link_speed;
-> -
-> -	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
-> -	    max_link_speed > 4)
-> -		return -EINVAL;
-> -
-> -	return max_link_speed;
-> -}
-> -EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
-> -
->  /**
->   * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
->   *                           is present and valid
-> @@ -537,3 +517,25 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
->  	return err;
->  }
->  
-> +#endif /* CONFIG_PCI */
-> +
-> +/**
-> + * This function will try to find the limitation of link speed by finding
-> + * a property called "max-link-speed" of the given device node.
-> + *
-> + * @node: device tree node with the max link speed information
-> + *
-> + * Returns the associated max link speed from DT, or a negative value if the
-> + * required property is not found or is invalid.
-> + */
-> +int of_pci_get_max_link_speed(struct device_node *node)
-> +{
-> +	u32 max_link_speed;
-> +
-> +	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
-> +	    max_link_speed > 4)
-> +		return -EINVAL;
-> +
-> +	return max_link_speed;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
-> -- 
-> 2.17.1
-> 
+cHQuLCAxMiBrd2kgMjAxOSBvIDE1OjU5IEFkYW0gRm9yZCA8YWZvcmQxNzNAZ21haWwuY29tPiBu
+YXBpc2HFgihhKToKPgo+IE9uIEZyaSwgQXByIDEyLCAyMDE5IGF0IDg6MDYgQU0gU2VraGFyIE5v
+cmkgPG5zZWtoYXJAdGkuY29tPiB3cm90ZToKPiA+Cj4gPiBPbiAwOC8wNC8xOSAxOjI5IFBNLCBC
+YXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOgo+ID4gPiBGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+ID4gPgo+ID4gPiBFbmFibGUgY3B1ZnJlcS1k
+dCBzdXBwb3J0IGZvciBkYTg1MC1ldm0uIFRoZSBjdmRkIGlzIHN1cHBsaWVkIGJ5IHRoZQo+ID4g
+PiB0cHM2NTA3IHBtaWMgd2l0aCBjb25maWd1cmFibGUgb3V0cHV0IHZvbHRhZ2UsIHNvIGFsbCBv
+cGVyYXRpbmcgcG9pbnRzCj4gPiA+IGNhbiBiZSBlbmFibGVkLgo+ID4gPgo+ID4gPiBTaWduZWQt
+b2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+
+ID4KPiA+IEFkYW0sIGNhbiB5b3UgcGxlYXNlIGFjaz8gTG9va3MgZ29vZCB0byBtZS4KPgo+IFNl
+a2hhciwKPiBCYXNlZCBvbiB3aGF0IEkgcmVhZCBpbiB0aGUgdGhyZWFkIGFib3V0IHRoZSBMQ0RL
+LCBJIHdhbnQgdG8gZG8gc29tZQo+IHRlc3RzIG9uIHRoZSBkYTg1MC1ldm0gYmVmb3JlIHB1dCBt
+eSBuYW1lIG9uIGl0LiAgSSBsaWtlIHdoYXQgSSBzZWUgaW4KPiBnZW5lcmFsLCBzbyBJIGFtIGV4
+Y2l0ZWQgdG8gdGhpcyB0aGlzIGhlcmUuCj4KPiBCYXJ0b3N6IC0gd2hpY2gga2VybmVsIGJyYW5j
+aCBzaG91bGQgSSB1c2UgYXMgYSBzdGFydGluZyBwb2ludCB0byBhcHBseSB0aGVzZT8KPgoKVXBz
+dHJlYW0gdjUuMS1yYzQuCgpCYXJ0b3N6Cgo+IGFkYW0KPiA+Cj4gPiBUaGFua3MsCj4gPiBTZWto
+YXIKPiA+Cj4gPiA+IC0tLQo+ID4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyB8
+IDEzICsrKysrKysrKysrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCsp
+Cj4gPiA+Cj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRz
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cwo+ID4gPiBpbmRleCBmMDRiYzNlMTUz
+MzIuLmY5NGJiMzhmZGFkOSAxMDA2NDQKPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4
+NTAtZXZtLmR0cwo+ID4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRzCj4g
+PiA+IEBAIC0xOTEsNiArMTkxLDE5IEBACj4gPiA+ICAgICAgIH07Cj4gPiA+ICB9Owo+ID4gPgo+
+ID4gPiArJmNwdSB7Cj4gPiA+ICsgICAgIGNwdS1zdXBwbHkgPSA8JnZkY2RjM19yZWc+Owo+ID4g
+PiArfTsKPiA+ID4gKwo+ID4gPiArLyoKPiA+ID4gKyAqIFRoZSBzdGFuZGFyZCBkYTg1MC1ldm0g
+a2l0cyBhbmQgU09NJ3MgYXJlIDM3NU1IeiBzbyBlbmFibGUgdGhpcyBvcGVyYXRpbmcKPiA+ID4g
+KyAqIHBvaW50IGJ5IGRlZmF1bHQuIEhpZ2hlciBmcmVxdWVuY2llcyBtdXN0IGJlIGVuYWJsZWQg
+Zm9yIGN1c3RvbSBib2FyZHMgd2l0aAo+ID4gPiArICogb3RoZXIgdmFyaWFudHMgb2YgdGhlIFNv
+Qy4KPiA+ID4gKyAqLwo+ID4gPiArJm9wcF8zNzUgewo+ID4gPiArICAgICBzdGF0dXMgPSAib2th
+eSI7Cj4gPiA+ICt9Owo+ID4gPiArCj4gPiA+ICAmc2F0YSB7Cj4gPiA+ICAgICAgIHN0YXR1cyA9
+ICJva2F5IjsKPiA+ID4gIH07Cj4gPiA+IC0tCj4gPiA+IDIuMjEuMAo+ID4gPgo+ID4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
