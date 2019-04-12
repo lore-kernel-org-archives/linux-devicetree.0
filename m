@@ -1,7 +1,7 @@
 From: Pablo Greco <pgreco@centosproject.org>
-Subject: [PATCH v2 2/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable GMAC ethernet controller
-Date: Fri, 12 Apr 2019 07:33:01 -0300
-Message-ID: <1555065186-8154-3-git-send-email-pgreco@centosproject.org>
+Subject: [PATCH v2 1/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Sort device node dereferences.
+Date: Fri, 12 Apr 2019 07:33:00 -0300
+Message-ID: <1555065186-8154-2-git-send-email-pgreco@centosproject.org>
 References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
@@ -10,77 +10,66 @@ To: linux-sunxi@googlegroups.com
 Cc: Pablo Greco <pgreco@centosproject.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
-RTL8211E RGMII PHY tied to the GMAC.
-The PMIC's DC1SW output provides power for the PHY, while the ALDO2
-output provides I/O voltages on both sides.
+The device node dereferences are out of order, sort them.
 
 Signed-off-by: Pablo Greco <pgreco@centosproject.org>
 ---
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 36 +++++++++++------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index f05cabd..0d79e91 100644
+index bf97f62..f05cabd 100644
 --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -50,6 +50,7 @@
- 	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+@@ -105,6 +105,24 @@
  
- 	aliases {
-+		ethernet0 = &gmac;
- 		serial0 = &uart0;
- 	};
+ #include "axp22x.dtsi"
  
-@@ -92,6 +93,22 @@
- 	status = "okay";
- };
- 
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_rgmii_pins>;
-+	phy-handle = <&phy1>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&reg_dc1sw>;
++&mmc0 {
++	vmmc-supply = <&reg_dcdc1>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
 +	status = "okay";
 +};
 +
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -123,6 +140,13 @@
- 	status = "okay";
- };
- 
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2500000>;
-+	regulator-max-microvolt = <2500000>;
-+	regulator-name = "vcc-pa";
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pg_pins>;
++	vmmc-supply = <&reg_dldo2>;
++	vqmmc-supply = <&reg_dldo1>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
 +};
 +
  &reg_aldo3 {
  	regulator-always-on;
  	regulator-min-microvolt = <2700000>;
-@@ -130,6 +154,12 @@
- 	regulator-name = "avcc";
+@@ -152,24 +170,6 @@
+ 	regulator-name = "vcc-wifi";
  };
  
-+&reg_dc1sw {
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-gmac-phy";
-+};
-+
- &reg_dcdc1 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <3000000>;
+-&mmc0 {
+-	vmmc-supply = <&reg_dcdc1>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
+-	status = "okay";
+-};
+-
+-&mmc1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc1_pg_pins>;
+-	vmmc-supply = <&reg_dldo2>;
+-	vqmmc-supply = <&reg_dldo1>;
+-	mmc-pwrseq = <&wifi_pwrseq>;
+-	bus-width = <4>;
+-	non-removable;
+-	status = "okay";
+-};
+-
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 1.8.3.1
