@@ -1,15 +1,16 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v6 04/12] firmware: ti_sci: Add RM mapping table for am654
-Date: Fri, 12 Apr 2019 09:38:05 +0530
-Message-ID: <49dd19bf-f5bd-e048-75ad-2d4cb708bcf9@ti.com>
+Subject: Re: [PATCH v6 06/12] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Fri, 12 Apr 2019 09:54:24 +0530
+Message-ID: <9cd4b818-905c-08a4-5675-a5ee763cea98@ti.com>
 References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-5-lokeshvutla@ti.com>
- <20190411145416.GP2839@atomide.com>
+ <20190410041358.16809-7-lokeshvutla@ti.com>
+ <20190411150023.GQ2839@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411145416.GP2839@atomide.com>
+In-Reply-To: <20190411150023.GQ2839@atomide.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Tony Lindgren <tony@atomide.com>
@@ -18,73 +19,38 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/04/19 8:24 PM, Tony Lindgren wrote:
+On 11/04/19 8:30 PM, Tony Lindgren wrote:
 > Hi,
 > 
 > * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
->> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> index b56a02c10ae6..6f0cd31c1520 100644
->> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> @@ -24,7 +24,8 @@ relationship between the TI-SCI parent node to the child node.
->>  
->>  Required properties:
->>  -------------------
->> -- compatible: should be "ti,k2g-sci"
->> +- compatible:	should be "ti,k2g-sci" for TI 66AK2G SoC
->> +		should be "ti,am654-sci" for for TI AM654 SoC
->>  - mbox-names:
->>  	"rx" - Mailbox corresponding to receive path
->>  	"tx" - Mailbox corresponding to transmit path
->> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
->> index d303f5a14da9..88e461498def 100644
->> --- a/drivers/firmware/ti_sci.c
->> +++ b/drivers/firmware/ti_sci.c
->> @@ -2297,10 +2297,33 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
->>  	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
->>  	.max_msgs = 20,
->>  	.max_msg_size = 64,
->> +	.rm_type_map = NULL,
->> +};
+>> +Example:
+>> +--------
+>> +The following example demonstrates both interrupt router node and the consumer
+>> +node(main gpio) on the AM654 SoC:
 >> +
->> +static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
->> +	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
->> +	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
->> +	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
->> +	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
->> +	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
->> +	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
->> +	{.dev_id = 0, .type = 0x000}, /* end of table */
+>> +main_intr: interrupt-controller0 {
+>> +	compatible = "ti,sci-intr";
+>> +	ti,intr-trigger-type = <1>;
+>> +	interrupt-controller;
+>> +	interrupt-parent = <&gic500>;
+>> +	#interrupt-cells = <3>;
+>> +	ti,sci = <&dmsc>;
+>> +	ti,sci-dst-id = <56>;
+>> +	ti,sci-rm-range-girq = <0x1>;
 >> +};
->> +
->> +/* Description for AM654 */
->> +static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
->> +	.default_host_id = 12,
->> +	/* Conservative duration */
->> +	.max_rx_timeout_ms = 10000,
->> +	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
->> +	.max_msgs = 20,
->> +	.max_msg_size = 60,
->> +	.rm_type_map = ti_sci_am654_rm_type_map,
->>  };
->>  
->>  static const struct of_device_id ti_sci_of_match[] = {
->>  	{.compatible = "ti,k2g-sci", .data = &ti_sci_pmmc_k2g_desc},
->> +	{.compatible = "ti,am654-sci", .data = &ti_sci_pmmc_am654_desc},
->>  	{ /* Sentinel */ },
->>  };
->>  MODULE_DEVICE_TABLE(of, ti_sci_of_match);
 > 
-> Great, this approach with mapping table in the driver based on
-> the compatible looks good to me and avoids stuffing the IDs
-> into device tree:
+> To me it seems there should not be too many of these interrupt
+> controller nodes for each SoC. Maybe you're already planning on
+> doing it, but I suggest that you just add more specific compatibles
+> and then look up the dst-id from a mapping table in the driver
+> similar to what patch 04/12 in this series is already doing.
 > 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> 
+> That way you don't need to add custom TI specific (firmware
+> defined) device tree properties listed above ;)
 
-Thanks, but I don't think you understood what the patch is actually doing.
-Please look at the rest of the series on how this table is being used.
+I am tired of arguing on this. We did close this topic in the previous version
+of this series. Why do you want to keep re visiting the same. Sorry, I am not
+going change unless I receive a Nack from Marc or Rob.
 
 Thanks and regards,
 Lokesh
