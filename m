@@ -1,130 +1,123 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
- DT source data
-Date: Thu, 11 Apr 2019 17:08:11 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1904111618460.21321@viisi.sifive.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com>
- <20190411114616.GA10032@infradead.org>
- <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
- <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
+Date: Fri, 12 Apr 2019 03:25:54 +0300
+Message-ID: <20190412002554.8880-1-olteanv@gmail.com>
+References: <20190130104709.ganb2vuvzbxqkmxy@e5254000004ec.dyn.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190130104709.ganb2vuvzbxqkmxy@e5254000004ec.dyn.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@armlinux.org.uk, ccaione@baylibre.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc: mark.rutland@arm.com, andrew@lunn.ch, devicetree@vger.kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, olteanv@gmail.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, abailon@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Apr 2019, Atish Patra wrote:
-
-> On 4/11/19 2:12 PM, Paul Walmsley wrote:
-> > On Thu, 11 Apr 2019, Christoph Hellwig wrote:
+On Jan. 30, 2019, 10:47 a.m., Russell King - ARM Linux admin wrote:
+> On Wed, Jan 30, 2019 at 10:16:39AM +0000, Carlo Caione wrote:
+> > On 28/01/2019 19:04, Russell King - ARM Linux admin wrote:
 > > 
-> > > On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
-> > > > Similar to ARM64, add support for building DTB files from DT source
-> > > > data for RISC-V boards.
-> > > > 
-> > > > This patch starts with the infrastructure needed for SiFive boards.
-> > > > Boards from other vendors would add support here in a similar form.
+> > Hi Russell,
+> > 
+> > > There is no "advertisement of SmartEEE" - it's just EEE.  That is
+> > > because as far as the link partner is concerned, SmartEEE is just
+> > > EEE.
 > > > 
-> > > What do we build it for?  We'd really need something like this:
+> > > Carlio posted a link to one of the datasheets for the family.  In
+> > > there, it describes the EEE capability register, which describes
+> > > what is supported, and the EEE wake error counter register.
 > > > 
-> > > http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
-> > > http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
+> > > It also describes the EEE advertisement and link parter advertisement
+> > > registers.
 > > > 
-> > > To actually use the DT files.
+> > > All these registers correspond to the 802.3 section 45 defined MMD
+> > > and address offsets found in Clause 45 compliant PHYs, and these
+> > > registers control not only EEE but also SmartEEE.
+> > > 
+> > > Please stop thinking that SmartEEE is different on the link partner
+> > > side from EEE - as far as the link partner is concerned, there is
+> > > no difference.  The difference is all to do with the MAC side of
+> > > the local PHY.
 > > 
-> > Those patches might be useful - I have not reviewed them closely - but
-> > they are not necessary.
+> > Thank you for clarifying how the SmartEEE is really working.
 > > 
-> > The FSBL already supplies a DTB to Linux.  I assume the U-boot port works
-> > the same way.
-> > 
+> > Now, the problem is that the MMD registers controlling the EEE (7.3c and
+> > 7.3d, touched by the "eee-broken-*" property) are not the same as the ones
+> > for the SmartEEE (3.805b, 3.805c, 3.805d). So, is it worth to add a new DT
+> > property to deal also with the cases where we want to selectively disable
+> > the SmartEEE?
 > 
-> I am bit confused here. I thought the idea behind putting the the DTS in
-> kernel so that Kernel don't need to depend on DT passed from boot loaders.
-
-Some users will want to do that - mostly embedded device integrators and 
-kernel developers.  We should definitely support these use-cases.  So the 
-basic idea behind Christoph's patch to do that is good (I have not yet 
-reviewed the code nor tested it).
-
-In fact, there has been an unofficial patch to do something similar for 
-ARM for about a decade now.  But for various reasons, some technical, some 
-managerial - it was never merged.  To be clear, I do agree that we should 
-merge something like that for RISC-V.
-
-However: the vast majority of users -- even embedded users -- will not use 
-a kernel with a bundled DTB.  This is because it irrevocably ties that 
-kernel binary to one specific board type.  I hope it is obvious why this 
-would be a non-starter for Linux distributions, and, more generally, 
-anyone who wants their kernels to be usable on multiple boards.  Those 
-distributors would need to ship one kernel binary per board, or bloat 
-their kernels with DTBs and come up with some new mechanism to select one.
-
-> Currently, DTB passed from FSBL is modified by OpenSBI/BBL before passing to
-> U-Boot or Linux.
-
-This should be avoided whenever possible.  I'd be interested in hearing 
-what OpenSBI is doing now to the DTB; perhaps there is a case where it 
-makes sense.  But in general, doing this makes development and maintenance 
-quite difficult.  Considre that different operating systems that may use 
-the same SBI layer may use different DT data formats, or may not even use 
-DT at all.  And when the DT data format changes - as is happening now - a 
-maintenance hassle is created, since then versions across multiple pieces 
-of software may need to be synchronized.  It is also very disconcerting as 
-a kernel developer to have multiple pieces of software modifying one's 
-DTB.
-
-The DT data is meant to represent hardware fact.  DT is also used to pass 
-in some non-hardware-related runtime configuration parameters, via the 
-"chosen" node.  But that's about it.  So from that point of view, only the 
-first-stage bootloader should be altering the DT data, and only then in 
-very minimal ways.
-
-> If Linux kernel can boot from the DTS contained within its source code as is,
-> that would be much more helpful.
-
-If you are thinking about embedded system builders, and developers who 
-only care about their test kernel being compatible with one board, I agree 
-with you for those specific use-cases.  Almost everyone else will pass in 
-a separate DTB, specific to the board they are using, from U-Boot or 
-Coreboot or GRUB.
-
-> > I haven't switched to U-boot yet for these driver tests, so I 
-> > personally have been using the open-source FSBL 
-> > (freedom-u540-c000-bootloader) with the following trivial patches 
-> > applied:
-> > 
-> > https://github.com/sifive/freedom-u540-c000-bootloader/tree/dev/paulw/supply-fsbl-dtb-v5.1-rc4
+> That's because you're confusing what the registers are.  Please take
+> the time to read the data sheet for the AR803x devices, and the 802.3
+> specifications, and you will save yourself from asking a lot of
+> questions by email.
 > 
-> > The fsbl/ux00_fsbl.dtb file can be symlinked to the kernel DTB output,
-> > e.g., ~/linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb.
+> 7.3c (or 7.60 in decimal) is the EEE advertisement register.  This is
+>   what gets sent _to_ the link partner.
 > 
-> This assumes that FSBL has to be rebuilt every time I want to change the DT. I
-> was hoping to avoid that.
+> 7.3d (or 7.61 in decimal) is the EEE link partner ability register.
+>   This is what the link partner sent to us _from_ its own EEE
+>   advertisement register.
+> 
+> The eee-broken-* properties allow the EEE advertisement to be altered,
+> thereby preventing EEE being negotiated for the various link modes.
+> Disabling EEE for a particular link mode means that EEE (in any form)
+> will not operate while the link is operating at that speed.
+> 
+> 3.805b, 3.805c, 3.805d in the AR803x family are specifically to do
+> with the SmartEEE implementation.
+> 
+> 3.805b controls how much time between the link waking up and buffered
+>   data already received from the MAC being sent.
+> 3.805c controls the time from the last activity to entering low power
+>   mode, additional bits in 3.805d.
+> 3.805d contains the SmartEEE enable bit, as well as the additional bits
+>   from 3.805c.
+> 
+> Most of these registers are only useful when you have a MAC that has no
+> EEE functionality - that is where SmartEEE can be enabled to provide the
+> power savings, and in order to implement EEE, there are various timeouts
+> required by the protocol.  SmartEEE allows these timeouts to be
+> programmed via the above register.
+> 
+> When using a MAC that has EEE functionality, SmartEEE should be disabled
+> via 3.805d to allow _full_ 802.3az EEE (from local MAC to link partner)
+> to operate, rather than SmartEEE (from local PHY to link partner.)
+> 
+> Otherwise, using the existing "eee-broken-*" properties to disable the
+> link modes where EEE fails would be the correct way forward, and should
+> be used in preference to disabling SmartEEE.
+> 
+> However, no one has mentioned what the problem that is trying to be
+> addressed.  Is it data corruption?  Is it that the link fails?  Is it
+> lost packets?  Is it that the MAC supports EEE?  I think there needs to
+> be some better understanding of the problem at hand before trying to
+> address it.
 
-The FSBL is on its way out.  It is just a short-term workaround until the 
-various popular bootloader ports become more stable.  After that happens, 
-it's likely that almost no one to use the current SiFive FSBLs.  We plan 
-to transition our Freedom-U development environment away from it 
-ourselves.
 
-The point of what I wrote to Christoph earlier is simply that everyone is 
-already using DTB data that is passed in from an early bootloader, whether 
-they realize it or not.  So there is an existence proof that no additional 
-patches are needed for the basics to function.  It may not be functioning 
-well in some cases, and may need patching; but that is a separate matter.
+Hi Russell, Heiner, Carlo, Florian,
 
+You could have copied me when referencing the U-boot patch.
 
-- Paul
+It is indeed correct that disabling regular EEE advertisement does also disable
+SmartEEE. Somehow I hadn't taken this thought one step further to realize that
+the regular eee-broken-1000t DT binding is enough to take care of this.
+
+In my case it was indeed a situation of packet loss when the PHY should have
+buffered it, and nobody debugged it to find the root cause. While true that the
+Layerscape MACs in general need to disable EEE advertisement, in this
+particular case I can't rule out an electrical issue on the PHY's voltage
+rails. This is especially plausible since the MDIO interface of this PHY needed
+some rework anyway, whereas the RGMII side presented no more packet loss after
+disabling the PHY's low power mode.
+
+Thank you,
+-Vladimir
