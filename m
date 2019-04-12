@@ -1,119 +1,112 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to
- be compiled for ARM64
-Date: Fri, 12 Apr 2019 12:48:24 +0100
-Message-ID: <20190412114824.GA8319@red-moon>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-13-kishon@ti.com>
- <20190411150332.GC6862@red-moon>
- <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
- <20190412111156.GE8113@red-moon>
- <9cb169b1-577a-2345-d4b8-ddef4509f80c@ti.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Fri, 12 Apr 2019 12:50:35 +0100
+Message-ID: <77c56129-d3e7-1518-9d1d-a15a20540269@arm.com>
+References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
+ <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+ <20190411165742.GA29395@roeck-us.net>
+ <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9cb169b1-577a-2345-d4b8-ddef4509f80c@ti.com>
+In-Reply-To: <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
+To: Stefan Wahren <stefan.wahren@i2se.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 04:59:36PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
-> 
-> On 12/04/19 4:41 PM, Lorenzo Pieralisi wrote:
-> > On Fri, Apr 12, 2019 at 02:20:06PM +0530, Kishon Vijay Abraham I wrote:
-> >> Hi Lorenzo,
-> >>
-> >> On 11/04/19 8:33 PM, Lorenzo Pieralisi wrote:
-> >>> On Mon, Mar 25, 2019 at 03:09:33PM +0530, Kishon Vijay Abraham I wrote:
-> >>>> hook_fault_code is an ARM32 specific API for hooking into data abort.
-> >>>> Since pci-keystone.c will be used for AM65X platforms which is an
-> >>>> ARM64 platform,
-> >>>
-> >>> Hi Kishon,
-> >>>
-> >>> How is the problem plugged by the fault hook fixed on ARM64 ?
-> >>
-> >> At least in AM654 platform, I don't see a bus error when PCIe device
-> >> is not connected but returns 0xffffffff. So there is no necessary for
-> >> hook_fault_code in AM654 platform.
-> > 
-> > That can't have much to do with ARM32<->ARM64, it is rather a platform
-> > integration issue AFAICS. Russell has a point, this has to be documented
-> > I can do it for you but I need additional information.
-> 
-> Right now only ARM32 exports hook_fault_code which was used by K2G (ARM32
-> platform) and since AM654 (ARM64 platform) uses the same driver, it'll result
-> in compilation error. Also AM654 doesn't require hook_fault_code (or something
-> similar) because it doesn't throw bus error on accessing PCIe address space
-> when PCI device is not connected).
-> 
-> Are you looking for some other information?
+On 12/04/2019 12:07, Stefan Wahren wrote:
+> On 11.04.19 18:57, Guenter Roeck wrote:
+>> On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
+>>>   
+>>> -ATTRIBUTE_GROUPS(pwm_fan);
+>>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>>> +				     int n)
+>>> +{
+>>> +	struct device *dev = container_of(kobj, struct device, kobj);
+>>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>>> +	struct device_attribute *devattr;
+>>> +
+>>> +	/* Hide fan_input in case no interrupt is available  */
+>>> +	devattr = container_of(a, struct device_attribute, attr);
+>> Field day for static analyzers - devattr is no longer used.
+>> No need to resend. I'll let the series rest for a couple of days
+>> and then apply to hwmon-next (after removing devattr) unless there are
+>> additional comments.
+>>
+> Thank you
 
-No thanks it was to confirm my understanding, it is really not
-an ARM<->ARM64 issue, I will try to phrase it in a way that
-is more explicit.
+FWIW you can have a
 
-Lorenzo
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-> 
-> Thanks
-> Kishon
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> >> Thanks
-> >> Kishon
-> >>
-> >>>
-> >>> Thanks,
-> >>> Lorenzo
-> >>>
-> >>>> allow hook_fault_code to be compiled only for ARM32.
-> >>>>
-> >>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >>>> ---
-> >>>>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
-> >>>>  1 file changed, 4 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> >>>> index dfe54553d832..93296d434f40 100644
-> >>>> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> >>>> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> >>>> @@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
-> >>>>  	return ret;
-> >>>>  }
-> >>>>  
-> >>>> +#ifdef CONFIG_ARM
-> >>>>  /*
-> >>>>   * When a PCI device does not exist during config cycles, keystone host gets a
-> >>>>   * bus error instead of returning 0xffffffff. This handler always returns 0
-> >>>> @@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
-> >>>>  
-> >>>>  	return 0;
-> >>>>  }
-> >>>> +#endif
-> >>>>  
-> >>>>  static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
-> >>>>  {
-> >>>> @@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
-> >>>>  	if (ret < 0)
-> >>>>  		return ret;
-> >>>>  
-> >>>> +#ifdef CONFIG_ARM
-> >>>>  	/*
-> >>>>  	 * PCIe access errors that result into OCP errors are caught by ARM as
-> >>>>  	 * "External aborts"
-> >>>>  	 */
-> >>>>  	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
-> >>>>  			"Asynchronous external abort");
-> >>>> +#endif
-> >>>>  
-> >>>>  	ks_pcie_start_link(pci);
-> >>>>  	dw_pcie_wait_for_link(pci);
-> >>>> -- 
-> >>>> 2.17.1
-> >>>>
+for the whole series. The only minor comment that springs to mind
+isn't actually specific to this patch, so is probably best made as
+the follow-up below.
+
+Robin.
+
+----->8-----
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] hwmon: pwm-fan: Report probe errors consistently
+
+Printing the error code for a failure provides a head-start for
+debugging, since it's often sufficient to pinpoint the origin of the
+failure. We already do this for some probe-failure messages, so let's
+make the rest of them consistent.
+
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/hwmon/pwm-fan.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 8c4c5eefd4ca..556db4bef743 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -330,7 +330,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+
+ 	ret = pwm_apply_state(ctx->pwm, &state);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Failed to configure PWM\n");
++		dev_err(&pdev->dev, "Failed to configure PWM: %d\n", ret);
+ 		goto err_reg_disable;
+ 	}
+
+@@ -348,7 +348,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
+ 				       pdev->name, ctx);
+ 		if (ret) {
+-			dev_err(&pdev->dev, "Can't get interrupt working.\n");
++			dev_err(&pdev->dev,
++				"Failed to request interrupt: %d\n", ret);
+ 			goto err_pwm_disable;
+ 		}
+ 		ctx->sample_start = ktime_get();
+@@ -358,8 +359,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+ 						       ctx, pwm_fan_groups);
+ 	if (IS_ERR(hwmon)) {
+-		dev_err(&pdev->dev, "Failed to register hwmon device\n");
+ 		ret = PTR_ERR(hwmon);
++		dev_err(&pdev->dev,
++			"Failed to register hwmon device: %d\n", ret);
+ 		goto err_del_timer;
+ 	}
+
+@@ -373,9 +375,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 							  "pwm-fan", ctx,
+ 							  &pwm_fan_cooling_ops);
+ 		if (IS_ERR(cdev)) {
+-			dev_err(&pdev->dev,
+-				"Failed to register pwm-fan as cooling device");
+ 			ret = PTR_ERR(cdev);
++			dev_err(&pdev->dev,
++				"Failed to register pwm-fan as cooling device: %d\n",
++				ret);
+ 			goto err_del_timer;
+ 		}
+ 		ctx->cdev = cdev;
