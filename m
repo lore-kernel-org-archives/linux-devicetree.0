@@ -1,93 +1,69 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/3] spi: Make of_find_spi_controller_by_node visible
-Date: Fri, 12 Apr 2019 17:02:12 +1200
-Message-ID: <20190412050213.17698-3-chris.packham@alliedtelesis.co.nz>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero
+ board
+Date: Fri, 12 Apr 2019 07:31:24 +0200
+Message-ID: <20190412073124.6f04e105@kemnade.info>
+References: <20190301185212.26837-1-andreas@kemnade.info>
+        <20190407222321.11ec297d@kemnade.info>
+        <20190408081404.554zdbcotnidljsl@flea>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Wej8p2Dft83Sj2Tb9NyHpdn"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190408081404.554zdbcotnidljsl@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Hamish Martin <hamish.martin@alliedtelesis.co.nz>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Drop the static and add of_find_spi_controller_by_node() to spi.h. Also
-move it outside of the CONFIG_OF_DYNAMIC so it is available with just
-CONFIG_OF.
+--Sig_/Wej8p2Dft83Sj2Tb9NyHpdn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/spi/spi.c       | 7 ++++---
- include/linux/spi/spi.h | 7 +++++++
- 2 files changed, 11 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 93986f879b09..19929163a45b 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3531,16 +3531,14 @@ struct spi_device *of_find_spi_device_by_node(str=
-uct device_node *node)
- 	return dev ? to_spi_device(dev) : NULL;
- }
- EXPORT_SYMBOL_GPL(of_find_spi_device_by_node);
--#endif /* IS_ENABLED(CONFIG_OF) */
-=20
--#if IS_ENABLED(CONFIG_OF_DYNAMIC)
- static int __spi_of_controller_match(struct device *dev, const void *dat=
-a)
- {
- 	return dev->of_node =3D=3D data;
- }
-=20
- /* the spi controllers are not using spi_bus, so we find it with another=
- way */
--static struct spi_controller *of_find_spi_controller_by_node(struct devi=
-ce_node *node)
-+struct spi_controller *of_find_spi_controller_by_node(struct device_node=
- *node)
- {
- 	struct device *dev;
-=20
-@@ -3555,7 +3553,10 @@ static struct spi_controller *of_find_spi_controll=
-er_by_node(struct device_node
- 	/* reference got in class_find_device */
- 	return container_of(dev, struct spi_controller, dev);
- }
-+EXPORT_SYMBOL_GPL(of_find_spi_controller_by_node);
-+#endif /* IS_ENABLED(CONFIG_OF) */
-=20
-+#if IS_ENABLED(CONFIG_OF_DYNAMIC)
- static int of_spi_notify(struct notifier_block *nb, unsigned long action=
-,
- 			 void *arg)
- {
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 662b336aa2e4..e763290767ea 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -1334,6 +1334,8 @@ spi_transfer_is_last(struct spi_controller *ctlr, s=
-truct spi_transfer *xfer)
- extern struct spi_device *
- of_find_spi_device_by_node(struct device_node *node);
-=20
-+extern struct spi_controller *
-+of_find_spi_controller_by_node(struct device_node *node);
- #else
-=20
- static inline struct spi_device *
-@@ -1342,6 +1344,11 @@ of_find_spi_device_by_node(struct device_node *nod=
-e)
- 	return NULL;
- }
-=20
-+static inline struct spi_controller *
-+of_find_spi_controller_by_node(struct device_node *node)
-+{
-+	return NULL;
-+}
- #endif /* IS_ENABLED(CONFIG_OF) */
-=20
- /* Compatibility layer */
---=20
-2.21.0
+On Mon, 8 Apr 2019 10:14:04 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+
+> On Sun, Apr 07, 2019 at 10:23:21PM +0200, Andreas Kemnade wrote:
+> > ping
+> >
+> > On Fri,  1 Mar 2019 19:52:12 +0100
+> > Andreas Kemnade <andreas@kemnade.info> wrote:
+> > =20
+> > > The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+> > > with broadcom internals attached to UART1 and some gpios.
+> > > This addition is in line with similar boards
+> > >
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
+>=20
+> I never received that patch, who did you send it to?
+>=20
+Seems that I only have sent you the first version of that patch. Somehow
+I must have left you out during copy and paste of adresses.
+
+Regards,
+Andreas
+
+--Sig_/Wej8p2Dft83Sj2Tb9NyHpdn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlywIq0ACgkQl4jFM1s/
+ye+X4Q//UYhkarSSxswTQLL7gML8IvH4+OF+6Gbi3CsW86AZ7vq9FElGvcWpXusC
+rQQQGt6oAfA1Nyc1JGTZB3tNoBjAQJ2xqFtLNVbixUNIs+dOeRrBnj3hAmIae0ko
+gqBkKdwGCwvrLk2u4F1B06IES34cV+PO4jZCSrifUIwmu5CqqXo6Wt0kdHMpeViG
+7cIwSF8K3+J0smj0muJgGtHnoPzRm2oQjXImcp4Akb3edVXkAJSVM2Z4cRbJvbzU
+NnBMG9vpB3MXTZp6jwd//vDl4eyIAsIn+RxcAvlpvXiGtTAWqwpSspFrbyw35LcS
+8UTU67ApH13KKs+0+5uSzAd2Q3iBWKUHaGnvxwSYJGu0VcpKLafzbx/UzRGkqWtU
+j/c0tjujvL4DXUUg1LdWSf9w4o1meIaTBkRwR6HYLnWcskvsfDSlqTdmnFwA36Vn
+/NVPSiVFOu0+8e+S/HJhZl2YLEcR6UDCqbh9BBSNfRcOd4awEbGFQcO4114H6e9v
+iGxrJrk2JQuGg0nBn8mVoUlhJNBuYm/Ns+agQso2XrxmVCdPSo7llnzaNPQdz4h6
+2cMNV+T1YynsxAqUjyguWPNxukIiWD79aurbTE27nT3G8BJw4heu7+8W2THVCCge
+SzRidYL5fjKy2hZd8hB8F84u2f//d9C4p2vlREZwJ2kfxzTpFAs=
+=gLI5
+-----END PGP SIGNATURE-----
+
+--Sig_/Wej8p2Dft83Sj2Tb9NyHpdn--
