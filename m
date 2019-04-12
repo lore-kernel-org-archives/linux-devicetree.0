@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v4 3/5] ARM: dts: da850-lcdk: enable cpufreq
-Date: Fri, 12 Apr 2019 15:44:35 +0200
-Message-ID: <20190412134437.14864-4-brgl@bgdev.pl>
+Subject: [PATCH v4 4/5] ARM: dts: da850-evm: enable cpufreq
+Date: Fri, 12 Apr 2019 15:44:36 +0200
+Message-ID: <20190412134437.14864-5-brgl@bgdev.pl>
 References: <20190412134437.14864-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,64 +12,41 @@ To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add a fixed regulator for the da850-lcdk board along with board-specific
-CPU configuration.
+Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
+tps6507 pmic with configurable output voltage. By default da850-evm
+boards support frequencies up to 375MHz so enable this operating
+point.
 
-Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/boot/dts/da850-lcdk.dts | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 26f453dc8370..f29ed9010812 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -155,12 +155,43 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index f04bc3e15332..f94bb38fdad9 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -191,6 +191,19 @@
  	};
-+
-+	cvdd: regulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cvdd";
-+		regulator-min-microvolt = <1300000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
- };
- 
- &ref_clk {
- 	clock-frequency = <24000000>;
  };
  
 +&cpu {
-+	cpu-supply = <&cvdd>;
++	cpu-supply = <&vdcdc3_reg>;
 +};
 +
-+/* LCDK has a fixed CVDD of 1.3V, so only op points >= 300MHz are valid */
-+
-+&opp_100 {
-+	status = "disabled";
-+};
-+
-+&opp_200 {
-+	status = "disabled";
-+};
-+
++/*
++ * The standard da850-evm kits and SOM's are 375MHz so enable this operating
++ * point by default. Higher frequencies must be enabled for custom boards with
++ * other variants of the SoC.
++ */
 +&opp_375 {
 +	status = "okay";
 +};
 +
-+&opp_456 {
-+	status = "okay";
-+};
-+
- &pmx_core {
+ &sata {
  	status = "okay";
- 
+ };
 -- 
 2.21.0
