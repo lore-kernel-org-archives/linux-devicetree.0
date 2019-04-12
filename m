@@ -1,54 +1,63 @@
-From: "elaine.zhang" <zhangqing@rock-chips.com>
-Subject: Re: [PATCH 5/5] ARM: dts: rockchip: vdd_gpu off in suspend for
- rk3288-veyron
-Date: Fri, 12 Apr 2019 09:55:18 +0800
-Message-ID: <70a7fea1-3818-b386-d951-013f94110f73@rock-chips.com>
-References: <20190411232157.55125-1-dianders@chromium.org>
- <20190411232157.55125-5-dianders@chromium.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
+ irq function
+Date: Fri, 12 Apr 2019 02:25:42 +0000
+Message-ID: <AM0PR04MB4211816EDBEF23F7B330CCCB80280@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
+ <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
+ <20190411073252.GC3050@dragon>
+ <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411232157.55125-5-dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: dbasehore@chromium.org, amstan@chromium.org, linux-rockchip@lists.infradead.org, briannorris@chromium.org, mka@chromium.org, ryandcase@chromium.org, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-hi,
+> From: Anson Huang
+> Sent: Friday, April 12, 2019 9:06 AM
+> 
+> Hello, Alexandre
+> 	As i.MX SCU general irq function is picked up by Shawn, could you please
+> also pick up below i.MX SC RTC alarm support patch ?
+> 	https://patchwork.kernel.org/patch/10890525/
+> 
 
-ÔÚ 2019/4/12 ÉÏÎç7:21, Douglas Anderson Ð´µÀ:
-> At some point long long ago the downstream GPU driver would crash if
-> we turned the GPU off during suspend.  For some context you can see:
->
-> https://chromium-review.googlesource.com/#/c/215780/5..6/arch/arm/boot/dts/rk3288-pinky-rev2.dts
->
-> At some point in time not too long after that got fixed.
->
-> It's unclear why the GPU is left enabled during suspend on the
-> mainline kernel.  Everything seems fine if I turn this off, so let's
-> do it.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->   arch/arm/boot/dts/rk3288-veyron.dtsi | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 279d7f4ecce0..1252522392c7 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -217,8 +217,7 @@
->   				regulator-max-microvolt = <1250000>;
->   				regulator-ramp-delay = <6001>;
->   				regulator-state-mem {
-> -					regulator-on-in-suspend;
-> -					regulator-suspend-microvolt = <1000000>;
-> +					regulator-off-in-suspend;
->   				};
->   			};
->   
+No, it can't go through Alexandre's tree due to dependency issue.
 
-Reviewed-by: Elaine Zhang<zhangqing@rock-chips.com>
+Shawn,
+Do you think you can pick it up? Alexandre already gave the Ack.
+
+AFAIK there's no other SCU RTC patches since v5.1-rc1 in Alexandre's tree.
+
+Regards
+Dong Aisheng
+
+> > On Tue, Apr 09, 2019 at 04:59:55AM +0000, Anson Huang wrote:
+> > > The System Controller Firmware (SCFW) controls RTC, thermal and WDOG
+> > > etc., these resources' interrupt function are managed by SCU. When
+> > > any IRQ pending, SCU will notify Linux via MU general interrupt
+> > > channel #3, and Linux kernel needs to call SCU APIs to get IRQ
+> > > status and notify each module to handle the interrupt.
+> > >
+> > > Since there is no data transmission for SCU IRQ notification, so
+> > > doorbell mode is used for this MU channel, and SCU driver will use
+> > > notifier mechanism to broadcast to every module which registers the
+> > > SCU block notifier.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> >
+> > Applied, thanks.
