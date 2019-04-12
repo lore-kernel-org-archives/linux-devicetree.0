@@ -1,7 +1,7 @@
 From: Pablo Greco <pgreco@centosproject.org>
-Subject: [PATCH v2 1/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Sort device node dereferences.
-Date: Fri, 12 Apr 2019 07:33:00 -0300
-Message-ID: <1555065186-8154-2-git-send-email-pgreco@centosproject.org>
+Subject: [PATCH v2 3/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable HDMI output
+Date: Fri, 12 Apr 2019 07:33:02 -0300
+Message-ID: <1555065186-8154-4-git-send-email-pgreco@centosproject.org>
 References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
@@ -10,64 +10,72 @@ To: linux-sunxi@googlegroups.com
 Cc: Pablo Greco <pgreco@centosproject.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The device node dereferences are out of order, sort them.
+This patch adds the hdmi nodes to the Bananapi M2 Berry, the same way it
+was done to the Bananapi M2 Ultra
 
 Signed-off-by: Pablo Greco <pgreco@centosproject.org>
 ---
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 36 +++++++++++------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 29 +++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index bf97f62..f05cabd 100644
+index 0d79e91..2a5b80b 100644
 --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -105,6 +105,24 @@
+@@ -58,6 +58,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- #include "axp22x.dtsi"
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
  
-+&mmc0 {
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
+@@ -88,6 +99,10 @@
+ 	};
+ };
+ 
++&de {
 +	status = "okay";
 +};
 +
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pg_pins>;
-+	vmmc-supply = <&reg_dldo2>;
-+	vqmmc-supply = <&reg_dldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
+ &ehci1 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+ 	status = "okay";
+@@ -109,6 +124,16 @@
+ 	};
+ };
+ 
++&hdmi {
 +	status = "okay";
 +};
 +
- &reg_aldo3 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <2700000>;
-@@ -152,24 +170,6 @@
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -200,6 +225,10 @@
  	regulator-name = "vcc-wifi";
  };
  
--&mmc0 {
--	vmmc-supply = <&reg_dcdc1>;
--	bus-width = <4>;
--	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
--	status = "okay";
--};
--
--&mmc1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc1_pg_pins>;
--	vmmc-supply = <&reg_dldo2>;
--	vqmmc-supply = <&reg_dldo1>;
--	mmc-pwrseq = <&wifi_pwrseq>;
--	bus-width = <4>;
--	non-removable;
--	status = "okay";
--};
--
++&tcon_tv0 {
++	status = "okay";
++};
++
  &uart0 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_pb_pins>;
