@@ -1,182 +1,107 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v3 5/5] mtd: hyperbus: Add driver for TI's HyperBus memory controller
-Date: Fri, 12 Apr 2019 14:59:23 +0530
-Message-ID: <20190412092923.24919-6-vigneshr@ti.com>
-References: <20190412092923.24919-1-vigneshr@ti.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to
+ be compiled for ARM64
+Date: Fri, 12 Apr 2019 10:31:54 +0100
+Message-ID: <20190412093154.7wj4dmm3oppvv32m@shell.armlinux.org.uk>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-13-kishon@ti.com>
+ <20190411150332.GC6862@red-moon>
+ <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412092923.24919-1-vigneshr@ti.com>
+Content-Disposition: inline
+In-Reply-To: <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, linux-kernel@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, Jesper Nilsson <jesper.nilsson@axis.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, linux-omap@vger.kernel.org, Roy Zang <roy.zang@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add driver for HyperBus memory controller on TI's AM654 SoC. Programming
-IP is pretty simple and provides direct memory mapped access to
-connected Flash devices.
+On Fri, Apr 12, 2019 at 02:20:06PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
+> 
+> On 11/04/19 8:33 PM, Lorenzo Pieralisi wrote:
+> > On Mon, Mar 25, 2019 at 03:09:33PM +0530, Kishon Vijay Abraham I wrote:
+> >> hook_fault_code is an ARM32 specific API for hooking into data abort.
+> >> Since pci-keystone.c will be used for AM65X platforms which is an
+> >> ARM64 platform,
+> > 
+> > Hi Kishon,
+> > 
+> > How is the problem plugged by the fault hook fixed on ARM64 ?
+> 
+> At least in AM654 platform, I don't see a bus error when PCIe device is not
+> connected but returns 0xffffffff. So there is no necessary for hook_fault_code
+> in AM654 platform.
 
-Add basic support for the IP without DMA. Second chipSelect is not
-supported for now.
+... which needs to be explained somewhere, either in the commit
+message or comments in the file, so that years later when someone
+has to look at this code, they know why it is the way that it is.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/mtd/hyperbus/Kconfig      |  12 ++++
- drivers/mtd/hyperbus/Makefile     |   1 +
- drivers/mtd/hyperbus/hbmc-am654.c | 115 ++++++++++++++++++++++++++++++
- 3 files changed, 128 insertions(+)
- create mode 100644 drivers/mtd/hyperbus/hbmc-am654.c
+When writing commits, please think about whether there is enough
+information to understand the change in ten years time.
 
-diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-index 98147e28caa0..cff6bbd226f5 100644
---- a/drivers/mtd/hyperbus/Kconfig
-+++ b/drivers/mtd/hyperbus/Kconfig
-@@ -9,3 +9,15 @@ menuconfig MTD_HYPERBUS
- 	  the HyperBus Controller driver to communicate with
- 	  HyperFlash. See Cypress HyperBus specification for more
- 	  details
-+
-+if MTD_HYPERBUS
-+
-+config HBMC_AM654
-+	tristate "HyperBus controller driver for AM65x SoC"
-+	select MULTIPLEXER
-+	select MUX_MMIO
-+	help
-+	 This is the driver for HyperBus controller on TI's AM65x and
-+	 other SoCs
-+
-+endif # MTD_HYPERBUS
-diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
-index ca61dedd730d..8a936e066f48 100644
---- a/drivers/mtd/hyperbus/Makefile
-+++ b/drivers/mtd/hyperbus/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
-+obj-$(CONFIG_HBMC_AM654)	+= hbmc-am654.o
-diff --git a/drivers/mtd/hyperbus/hbmc-am654.c b/drivers/mtd/hyperbus/hbmc-am654.c
-new file mode 100644
-index 000000000000..f458d7226df9
---- /dev/null
-+++ b/drivers/mtd/hyperbus/hbmc-am654.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+// Author: Vignesh Raghavendra <vigneshr@ti.com>
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mtd/hyperbus.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mux/consumer.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/types.h>
-+
-+struct am654_hbmc_priv {
-+	struct hyperbus_ctlr ctlr;
-+	struct hyperbus_device hbdev;
-+	void __iomem	*regbase;
-+};
-+
-+static const struct hyperbus_ops am654_hbmc_ops = {
-+	.calibrate = hyperbus_calibrate,
-+};
-+
-+static int am654_hbmc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct am654_hbmc_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->regbase = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->regbase))
-+		return PTR_ERR(priv->regbase);
-+
-+	if (of_property_read_bool(dev->of_node, "mux-controls")) {
-+		struct mux_control *control = devm_mux_control_get(dev, NULL);
-+
-+		if (IS_ERR(control))
-+			return PTR_ERR(control);
-+
-+		ret = mux_control_select(control, 1);
-+		if (ret) {
-+			dev_err(dev, "Failed to select HBMC mux\n");
-+			return ret;
-+		}
-+	}
-+
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
-+		goto disable_pm;
-+	}
-+
-+	priv->ctlr.dev = dev;
-+	priv->ctlr.ops = &am654_hbmc_ops;
-+	priv->hbdev.ctlr = &priv->ctlr;
-+	priv->hbdev.np = of_get_next_child(dev->of_node, NULL);
-+	ret = hyperbus_register_device(&priv->hbdev);
-+	if (ret) {
-+		dev_err(dev, "failed to register controller\n");
-+		pm_runtime_put_sync(&pdev->dev);
-+		goto disable_pm;
-+	}
-+
-+	return 0;
-+disable_pm:
-+	pm_runtime_disable(dev);
-+	return ret;
-+}
-+
-+static int am654_hbmc_remove(struct platform_device *pdev)
-+{
-+	struct am654_hbmc_priv *priv = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = hyperbus_unregister_device(&priv->hbdev);
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id am654_hbmc_dt_ids[] = {
-+	{
-+		.compatible = "ti,am654-hbmc",
-+	},
-+	{ /* end of table */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, am654_hbmc_dt_ids);
-+
-+static struct platform_driver am654_hbmc_platform_driver = {
-+	.probe = am654_hbmc_probe,
-+	.remove = am654_hbmc_remove,
-+	.driver = {
-+		.name = "hbmc-am654",
-+		.of_match_table = am654_hbmc_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(am654_hbmc_platform_driver);
-+
-+MODULE_DESCRIPTION("HBMC driver for AM654 SoC");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:hbmc-am654");
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
+> 
+> Thanks
+> Kishon
+> 
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> >> allow hook_fault_code to be compiled only for ARM32.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> >> index dfe54553d832..93296d434f40 100644
+> >> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> >> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> >> @@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
+> >>  	return ret;
+> >>  }
+> >>  
+> >> +#ifdef CONFIG_ARM
+> >>  /*
+> >>   * When a PCI device does not exist during config cycles, keystone host gets a
+> >>   * bus error instead of returning 0xffffffff. This handler always returns 0
+> >> @@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
+> >>  
+> >>  	return 0;
+> >>  }
+> >> +#endif
+> >>  
+> >>  static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
+> >>  {
+> >> @@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+> >>  	if (ret < 0)
+> >>  		return ret;
+> >>  
+> >> +#ifdef CONFIG_ARM
+> >>  	/*
+> >>  	 * PCIe access errors that result into OCP errors are caught by ARM as
+> >>  	 * "External aborts"
+> >>  	 */
+> >>  	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
+> >>  			"Asynchronous external abort");
+> >> +#endif
+> >>  
+> >>  	ks_pcie_start_link(pci);
+> >>  	dw_pcie_wait_for_link(pci);
+> >> -- 
+> >> 2.17.1
+> >>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
 -- 
-2.21.0
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
