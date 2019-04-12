@@ -1,102 +1,96 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 29/30] PCI: tegra: Add support for GPIO based PCIe reset
-Date: Thu, 11 Apr 2019 22:33:54 +0530
-Message-ID: <20190411170355.6882-30-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=Y+yZ=SO=jmondi.org=jacopo@kernel.org>
+Date: Fri, 12 Apr 2019 09:07:31 +0200
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: rcar-csi2: List resets as a
+ mandatory property
+Message-ID: <20190412070730.ley3qv3wotexktoq@uno.localdomain>
+References: <20190312234930.23193-1-niklas.soderlund+renesas@ragnatech.se>
+ <20190312234930.23193-2-niklas.soderlund+renesas@ragnatech.se>
+ <20190412070338.5n6cs55pkecwglnu@uno.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yclc63psgmrmxktg"
+Content-Disposition: inline
+In-Reply-To: <20190412070338.5n6cs55pkecwglnu@uno.localdomain>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for GPIO based PERST# instead of SFIO mode controller by AFI.
-GPIO number comes from per port PCIe device tree node.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 37 +++++++++++++++++++++++++-----
- 1 file changed, 31 insertions(+), 6 deletions(-)
+--yclc63psgmrmxktg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 4a91c9fb3a9d..75873e6627f9 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -17,6 +17,7 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/export.h>
-+#include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
-@@ -26,6 +27,7 @@
- #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/pci.h>
-@@ -406,6 +408,7 @@ struct tegra_pcie_port {
- 
- 	int n_gpios;
- 	int *gpios;
-+	int rst_gpio;
- };
- 
- struct tegra_pcie_bus {
-@@ -589,15 +592,23 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 	unsigned long value;
- 
- 	/* pulse reset signal */
--	value = afi_readl(port->pcie, ctrl);
--	value &= ~AFI_PEX_CTRL_RST;
--	afi_writel(port->pcie, value, ctrl);
-+	if (gpio_is_valid(port->rst_gpio)) {
-+		gpio_set_value(port->rst_gpio, 0);
-+	} else {
-+		value = afi_readl(port->pcie, ctrl);
-+		value &= ~AFI_PEX_CTRL_RST;
-+		afi_writel(port->pcie, value, ctrl);
-+	}
- 
- 	usleep_range(1000, 2000);
- 
--	value = afi_readl(port->pcie, ctrl);
--	value |= AFI_PEX_CTRL_RST;
--	afi_writel(port->pcie, value, ctrl);
-+	if (gpio_is_valid(port->rst_gpio)) {
-+		gpio_set_value(port->rst_gpio, 1);
-+	} else {
-+		value = afi_readl(port->pcie, ctrl);
-+		value |= AFI_PEX_CTRL_RST;
-+		afi_writel(port->pcie, value, ctrl);
-+	}
- }
- 
- static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
-@@ -2241,6 +2252,20 @@ static int tegra_pcie_parse_plat_dt(struct tegra_pcie_port *port,
- 		}
- 	}
- 
-+	port->rst_gpio = of_get_named_gpio(np, "nvidia,rst-gpio", 0);
-+	if (gpio_is_valid(port->rst_gpio)) {
-+		err = devm_gpio_request(dev, port->rst_gpio, "pex_rst_gpio");
-+		if (err < 0) {
-+			dev_err(dev, "rst_gpio request failed: %d\n", err);
-+			return err;
-+		}
-+		err = gpio_direction_output(port->rst_gpio, 0);
-+		if (err < 0) {
-+			dev_err(dev, "rst_gpio set o/p failed: %d\n", err);
-+			return err;
-+		}
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.17.1
+Oh, I missed a pull request was sent already for this series :)
+
+Even better!
+
+On Fri, Apr 12, 2019 at 09:03:38AM +0200, Jacopo Mondi wrote:
+> Hi Niklas,
+>
+> On Wed, Mar 13, 2019 at 12:49:29AM +0100, Niklas S=C3=B6derlund wrote:
+> > The resets property will become mandatory to operate the device, list it
+> > as such. All device tree source files have always included the reset
+> > property so making it mandatory will not introduce any regressions.
+> >
+> > While at it improve the description for the clocks property.
+> >
+> > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
+h.se>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.=
+txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> > index d63275e17afdd180..9a0d0531c67df48c 100644
+> > --- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> > +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> > @@ -18,7 +18,8 @@ Mandatory properties
+> >
+> >   - reg: the register base and size for the device registers
+> >   - interrupts: the interrupt for the device
+> > - - clocks: reference to the parent clock
+> > + - clocks: A phandle + clock specifier for the module clock
+> > + - resets: A phandle + reset specifier for the module reset
+> >
+>
+> Verified that all users in mainline of this bindings already contains
+> a 'reset' property:
+> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+>
+> Thanks
+>    j
+>
+> >  The device node shall contain two 'port' child nodes according to the
+> >  bindings defined in Documentation/devicetree/bindings/media/
+> > --
+> > 2.21.0
+> >
+
+
+
+--yclc63psgmrmxktg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlywOTIACgkQcjQGjxah
+Vjy3ThAAiU2aRR84/SSVlNW1zKt/OFok17DzWczEyOmC+P0Pu923WfNv5LLW+IEu
+zdrnBU3bSxQq0PVZrbJ/XlisK+J3UUU7pMVDu34ED+9hwcIaeTyoXZeDmpCm3JKG
+4zm5z8h+U49ZqJDyvGfe8ydFLLs8kqoIJI+PqHN/EwP4JkyYho1L2f6xfXV3yaPA
+u36Tijx3TnRXm0c2Kb1GF9JYBohUi2XtfehhimscB0u701BCOvidXTN+dga17yW1
+GwLcZZ+wzkl7qyXLG0vCWAAloZBEOq15HxULePQ1nk4rv2lInBQlXox7Hcximwsq
+WY18ZlMmSoG5CHWX1qzZsiJef6xeonIr4QTqVN/jOgoQjXXsIpvrxjtVYiY9Ueau
+YSO5oQhSf5LgI/bqx4+4QrOhoKJqbWhvX1bLa9fml5FkpQiGCCZ0V2olLFY8Lydc
+nRQq2ULBj5vUEVYHhET0vErND6E2Tta+bgsw7W2eYRPbiFVk/RGN7Sicqyn+IAX0
+2beQXa3XLIx0oSKx3NIxY4kgVl5Su1mEX7gzLgQuX1nQ8dn97tbgAnaLng9NaqUo
+loG7k0dNZzgVSAyspVDEaYn5LvA2U0D6s4gEeCZOv0CIa12B0JJFeK0yL6L533rN
+3SAocxW/wfMcnVs642uaeKJmRBp3SbmRfVpR+Xn1zRDHn27frIM=
+=X9f5
+-----END PGP SIGNATURE-----
+
+--yclc63psgmrmxktg--
