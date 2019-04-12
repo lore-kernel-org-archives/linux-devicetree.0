@@ -1,123 +1,91 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Fri, 12 Apr 2019 03:25:54 +0300
-Message-ID: <20190412002554.8880-1-olteanv@gmail.com>
-References: <20190130104709.ganb2vuvzbxqkmxy@e5254000004ec.dyn.armlinux.org.uk>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v5 10/13] usb: dwc3: Registering a role switch in the DRD code.
+Date: Thu, 11 Apr 2019 17:48:04 -0700
+Message-ID: <CALAqxLVdrzNS2t1OYT=Pziu81VO+zWq5LYghHhMJO53cSvNNtQ@mail.gmail.com>
+References: <20190329041409.70138-1-chenyu56@huawei.com> <20190329041409.70138-11-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190130104709.ganb2vuvzbxqkmxy@e5254000004ec.dyn.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@armlinux.org.uk, ccaione@baylibre.com, f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc: mark.rutland@arm.com, andrew@lunn.ch, devicetree@vger.kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, olteanv@gmail.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, abailon@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190329041409.70138-11-chenyu56@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yu Chen <chenyu56@huawei.com>
+Cc: Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, "Liuyu (R)" <liuyu712@hisilicon.com>, wanghu17@hisilicon.com, butao <butao@hisilicon.com>, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, Yudongbin <yudongbin@hisilicon.com>, Zang Leigang <zangleigang@hisilicon.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki
 List-Id: devicetree@vger.kernel.org
 
-On Jan. 30, 2019, 10:47 a.m., Russell King - ARM Linux admin wrote:
-> On Wed, Jan 30, 2019 at 10:16:39AM +0000, Carlo Caione wrote:
-> > On 28/01/2019 19:04, Russell King - ARM Linux admin wrote:
-> > 
-> > Hi Russell,
-> > 
-> > > There is no "advertisement of SmartEEE" - it's just EEE.  That is
-> > > because as far as the link partner is concerned, SmartEEE is just
-> > > EEE.
-> > > 
-> > > Carlio posted a link to one of the datasheets for the family.  In
-> > > there, it describes the EEE capability register, which describes
-> > > what is supported, and the EEE wake error counter register.
-> > > 
-> > > It also describes the EEE advertisement and link parter advertisement
-> > > registers.
-> > > 
-> > > All these registers correspond to the 802.3 section 45 defined MMD
-> > > and address offsets found in Clause 45 compliant PHYs, and these
-> > > registers control not only EEE but also SmartEEE.
-> > > 
-> > > Please stop thinking that SmartEEE is different on the link partner
-> > > side from EEE - as far as the link partner is concerned, there is
-> > > no difference.  The difference is all to do with the MAC side of
-> > > the local PHY.
-> > 
-> > Thank you for clarifying how the SmartEEE is really working.
-> > 
-> > Now, the problem is that the MMD registers controlling the EEE (7.3c and
-> > 7.3d, touched by the "eee-broken-*" property) are not the same as the ones
-> > for the SmartEEE (3.805b, 3.805c, 3.805d). So, is it worth to add a new DT
-> > property to deal also with the cases where we want to selectively disable
-> > the SmartEEE?
-> 
-> That's because you're confusing what the registers are.  Please take
-> the time to read the data sheet for the AR803x devices, and the 802.3
-> specifications, and you will save yourself from asking a lot of
-> questions by email.
-> 
-> 7.3c (or 7.60 in decimal) is the EEE advertisement register.  This is
->   what gets sent _to_ the link partner.
-> 
-> 7.3d (or 7.61 in decimal) is the EEE link partner ability register.
->   This is what the link partner sent to us _from_ its own EEE
->   advertisement register.
-> 
-> The eee-broken-* properties allow the EEE advertisement to be altered,
-> thereby preventing EEE being negotiated for the various link modes.
-> Disabling EEE for a particular link mode means that EEE (in any form)
-> will not operate while the link is operating at that speed.
-> 
-> 3.805b, 3.805c, 3.805d in the AR803x family are specifically to do
-> with the SmartEEE implementation.
-> 
-> 3.805b controls how much time between the link waking up and buffered
->   data already received from the MAC being sent.
-> 3.805c controls the time from the last activity to entering low power
->   mode, additional bits in 3.805d.
-> 3.805d contains the SmartEEE enable bit, as well as the additional bits
->   from 3.805c.
-> 
-> Most of these registers are only useful when you have a MAC that has no
-> EEE functionality - that is where SmartEEE can be enabled to provide the
-> power savings, and in order to implement EEE, there are various timeouts
-> required by the protocol.  SmartEEE allows these timeouts to be
-> programmed via the above register.
-> 
-> When using a MAC that has EEE functionality, SmartEEE should be disabled
-> via 3.805d to allow _full_ 802.3az EEE (from local MAC to link partner)
-> to operate, rather than SmartEEE (from local PHY to link partner.)
-> 
-> Otherwise, using the existing "eee-broken-*" properties to disable the
-> link modes where EEE fails would be the correct way forward, and should
-> be used in preference to disabling SmartEEE.
-> 
-> However, no one has mentioned what the problem that is trying to be
-> addressed.  Is it data corruption?  Is it that the link fails?  Is it
-> lost packets?  Is it that the MAC supports EEE?  I think there needs to
-> be some better understanding of the problem at hand before trying to
-> address it.
+On Thu, Mar 28, 2019 at 9:14 PM Yu Chen <chenyu56@huawei.com> wrote:
+>
+> The Type-C drivers use USB role switch API to inform the
+> system about the negotiated data role, so registering a role
+> switch in the DRD code in order to support platforms with
+> USB Type-C connectors.
+>
 
+Hey Yu Chen!
+  Thanks so much for sending these patches out!  I have run into some
+troubles on bootup where things aren't working properly at first, that
+seem to be due to state initialization races.  In chasing those down,
+I've found some other quirks I wanted to bring up.
 
-Hi Russell, Heiner, Carlo, Florian,
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -479,6 +479,43 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+>         return edev;
+>  }
+>
+> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> +{
+> +       struct dwc3 *dwc = dev_get_drvdata(dev);
+> +       u32 mode;
+> +
+> +       switch (role) {
+> +       case USB_ROLE_HOST:
+> +               mode = DWC3_GCTL_PRTCAP_HOST;
+> +               break;
+> +       case USB_ROLE_DEVICE:
+> +               mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +               break;
+> +       default:
+> +               if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> +                       mode = DWC3_GCTL_PRTCAP_HOST;
+> +               else
+> +                       mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +               break;
+> +       }
+> +
+> +       dwc3_set_mode(dwc, mode);
+> +       return 0;
+> +}
+> +
+> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
+> +{
+> +       struct dwc3 *dwc = dev_get_drvdata(dev);
+> +       unsigned long flags;
+> +       enum usb_role role;
+> +
+> +       spin_lock_irqsave(&dwc->lock, flags);
+> +       role = dwc->current_otg_role;
+> +       spin_unlock_irqrestore(&dwc->lock, flags);
+> +
+> +       return role;
+> +}
+> +
 
-You could have copied me when referencing the U-boot patch.
+So the two functions above are a bit asymmetric.  The
+dwc3_usb_role_switch_set() can put the device into host or device
+mode, which eventually sets the current_dr_role value.  However on the
+dwc3_usb_role_switch_get() we return the current_otg_role value.
+current_otg_role isn't set unless current_dr_role is
+DWC3_GCTL_PRTCAP_OTG, which doesn't seem to happen here.
 
-It is indeed correct that disabling regular EEE advertisement does also disable
-SmartEEE. Somehow I hadn't taken this thought one step further to realize that
-the regular eee-broken-1000t DT binding is enough to take care of this.
+I suspect in dwc3_usb_role_switch_get() we should return
+current_dr_role, unless current_dr_role==DWC3_GCTL_PRTCAP_OTG, in
+which case we'd want to return current_otg_role.
 
-In my case it was indeed a situation of packet loss when the PHY should have
-buffered it, and nobody debugged it to find the root cause. While true that the
-Layerscape MACs in general need to disable EEE advertisement, in this
-particular case I can't rule out an electrical issue on the PHY's voltage
-rails. This is especially plausible since the MDIO interface of this PHY needed
-some rework anyway, whereas the RGMII side presented no more packet loss after
-disabling the PHY's low power mode.
+Does that make sense?
 
-Thank you,
--Vladimir
+Nothing really actually use this dwc3_usb_role_switch_get() yet, so
+this was easy to overlook, and I only caught it as I was trying to
+debug some of the initialization races.
+
+thanks
+-john
