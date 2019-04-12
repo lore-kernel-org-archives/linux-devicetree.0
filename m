@@ -1,37 +1,78 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:50235 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfDKHzP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:55:15 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH v2 17/20] dt-bindings: pwm: Document r8a77470 bindings
-Date: Thu, 11 Apr 2019 16:54:19 +0900
-Message-Id: <1554969262-15028-18-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+Return-Path: <SRS0=cJdl=SO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:56288 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbfDLL05 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Apr 2019 07:26:57 -0400
+Date: Fri, 12 Apr 2019 13:26:52 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 05/20] ARM: dts: r8a77470: Add VIN support
+Message-ID: <20190412112652.aslmaludlrignetc@verge.net.au>
 References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+ <1554969262-15028-6-git-send-email-cv-dong@jinso.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554969262-15028-6-git-send-email-cv-dong@jinso.co.jp>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, biju.das@bp.renesas.com, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Document SoC specific bindings for R-Car RZ/G1C(r8a77470) SoC.
+On Thu, Apr 11, 2019 at 04:54:07PM +0900, Cao Van Dong wrote:
+> Add vin{0|1} nodes to dtsi for VIN support on the RZ/G1C (r8a77470) SoC.
+> 
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+> ---
+>  arch/arm/boot/dts/r8a77470.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+> index 97c51c5..7d47d04 100644
+> --- a/arch/arm/boot/dts/r8a77470.dtsi
+> +++ b/arch/arm/boot/dts/r8a77470.dtsi
+> @@ -23,6 +23,8 @@
+>  		spi1 = &msiof0;
+>  		spi2 = &msiof1;
+>  		spi3 = &msiof2;
+> +		vin0 = &vin0;
+> +		vin1 = &vin1;
+>  	};
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
+Please do not add aliases like this.
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-index fbd6a4f..cba6ace 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-+++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-@@ -5,6 +5,7 @@ Required Properties:
-  - "renesas,pwm-r8a7743": for RZ/G1M
-  - "renesas,pwm-r8a7744": for RZ/G1N
-  - "renesas,pwm-r8a7745": for RZ/G1E
-+ - "renesas,pwm-r8a77470": for RZ/G1C
-  - "renesas,pwm-r8a774a1": for RZ/G2M
-  - "renesas,pwm-r8a774c0": for RZ/G2E
-  - "renesas,pwm-r8a7778": for R-Car M1A
--- 
-2.7.4
+I will go ahead and apply v1 of this patch which did not have the aliases.
+
+>  
+>  	cpus {
+> @@ -783,6 +785,28 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		vin0: video@e6ef0000 {
+> +			compatible = "renesas,vin-r8a77470",
+> +				     "renesas,rcar-gen2-vin";
+> +			reg = <0 0xe6ef0000 0 0x1000>;
+> +			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 811>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> +			resets = <&cpg 811>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin1: video@e6ef1000 {
+> +			compatible = "renesas,vin-r8a77470",
+> +				     "renesas,rcar-gen2-vin";
+> +			reg = <0 0xe6ef1000 0 0x1000>;
+> +			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 810>;
+> +			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+> +			resets = <&cpg 810>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sdhi0: sd@ee100000 {
+>  			compatible = "renesas,sdhi-r8a77470",
+>  				     "renesas,rcar-gen2-sdhi";
+> -- 
+> 2.7.4
+> 
