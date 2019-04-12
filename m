@@ -1,84 +1,62 @@
-Return-Path: <SRS0=mx8/=SE=in.bosch.com=ArunKumar.Prakash@kernel.org>
-From: ArunKumar.Prakash <ArunKumar.Prakash@in.bosch.com>
-Subject: [PATCH] of: overlay: Fix for possible kfree() on already freed memory
-Message-ID: <0171a15f-a1fc-bcc6-f10d-1bc0e401eadd@in.bosch.com>
-Date: Tue, 2 Apr 2019 06:53:25 +0200
+Return-Path: <SRS0=cJdl=SO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:51778 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfDLKnM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Apr 2019 06:43:12 -0400
+Date: Fri, 12 Apr 2019 12:43:08 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 14/20] dt-bindings: display: renesas: lvds: Add
+ r8a77470 support
+Message-ID: <20190412104308.nozru2hcwmah53nx@verge.net.au>
+References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+ <1554969262-15028-15-git-send-email-cv-dong@jinso.co.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554969262-15028-15-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, biju.das@bp.renesas.com, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-While applying an overlay, on an error return from
-init_overlay_changeset(), of_overlay_apply()
-frees memory pointed by the function arguments 'fdt' and 'tree';
-free_overlay_changeset() is then called which tries to free memory
-at the same location as 'fdt' aka 'ovcs->fdt' and
-'tree' aka 'ovcs->overlay_tree'.
+On Thu, Apr 11, 2019 at 04:54:16PM +0900, Cao Van Dong wrote:
+> Add lvds support and document SoC specific bindings for R-Car RZ/G1C(r8a77470) SoC.
+> 
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 
-This can produce kernel Oops/BUG_ON() assertion.
-This is fixed by making sure elements in ovcs are zero/NULL initialized
-until _all_ checks for errors pass.
+The register layout of the LVDS module on the RZ/G1C (r8a77470) seems
+different to that of, f.e. the R8A7791 (R-Car M2-W). Are you sure this
+is the right driver for this IP block?
 
-Below kernel OOPS occurred when a device tree overlay
-with an invalid target/target-path is applied.
-
-OF: overlay: find target, node: /fragment@2, path '/external-pcb' not found
-OF: overlay: init_overlay_changeset() failed, ret = -22
-------------[ cut here ]------------
-kernel BUG at mm/slub.c:3892!
-Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-
-------------[manual cut]------------------
-task: ffff8004c1529c00 task.stack: ffff00001eea8000
-PC is at kfree+0xe4/0x238
-LR is at free_overlay_changeset+0x8c/0xac
-pc : [<ffff0000081d13e0>] lr : [<ffff0000085b29e8>] ps
-x0 : ffff7e0012795d20
-Process cat (pid: 2586, stack limit = 0xffff00001eea8000)
-Call trace:
-Exception stack(0xffff00001eeaba20 to 0xffff00001eeabb60)
-[<ffff0000081d13e0>] kfree+0xe4/0x238
-[<ffff0000085b29e8>] free_overlay_changeset+0x8c/0xac
-[<ffff0000085b33a0>] of_overlay_fdt_apply+0x4d4/0x614
-[<ffff0000085ac2e8>] create_overlay+0xac/0x104
-[<ffff0000085ac3a4>] cfs_overlay_item_dtbo_write+0x64/0x98
-[<ffff00000825dda8>] configfs_release_bin_file+0x58/0x98
-[<ffff0000081e587c>] __fput+0xe4/0x1a8
-[<ffff0000081e5998>] ____fput+0xc/0x14
-[<ffff0000080b9da0>] task_work_run+0x88/0xa4
-[<ffff0000080a0968>] do_exit+0x428/0x8f4
-[<ffff0000080a0ea4>] do_group_exit+0x40/0x98
-[<ffff0000080a0f0c>] __wake_up_parent+0x0/0x28
-
-Signed-off-by: Arun Kumar Prakash <ArunKumar.Prakash@in.bosch.com>
----
- drivers/of/overlay.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 68c281d..a0908ce 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -569,9 +569,6 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
- 	if (!of_node_is_root(tree))
- 		pr_debug("%s() tree is not root\n", __func__);
- 
--	ovcs->overlay_tree = tree;
--	ovcs->fdt = fdt;
--
- 	INIT_LIST_HEAD(&ovcs->ovcs_list);
- 
- 	of_changeset_init(&ovcs->cset);
-@@ -650,6 +647,8 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
- 	ovcs->id = id;
- 	ovcs->count = cnt;
- 	ovcs->fragments = fragments;
-+	ovcs->overlay_tree = tree;
-+	ovcs->fdt = fdt;
- 
- 	return 0;
- 
--- 
-2.7.4
+> ---
+>  Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 1 +
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c                               | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> index a720dbb..f720883 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>  - compatible : Shall contain one of
+>    - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
+>    - "renesas,r8a7744-lvds" for R8A7744 (RZ/G1N) compatible LVDS encoders
+> +  - "renesas,r8a77470-lvds" for R8A77470 (RZ/G1C) compatible LVDS encoders
+>    - "renesas,r8a774c0-lvds" for R8A774C0 (RZ/G2E) compatible LVDS encoders
+>    - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
+>    - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS encoders
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index f7e4710..61a536f 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -925,6 +925,7 @@ static const struct rcar_lvds_device_info rcar_lvds_r8a77995_info = {
+>  static const struct of_device_id rcar_lvds_of_table[] = {
+>  	{ .compatible = "renesas,r8a7743-lvds", .data = &rcar_lvds_gen2_info },
+>  	{ .compatible = "renesas,r8a7744-lvds", .data = &rcar_lvds_gen2_info },
+> +	{ .compatible = "renesas,r8a77470-lvds", .data = &rcar_lvds_gen2_info },
+>  	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
+>  	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_r8a7790_info },
+>  	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
+> -- 
+> 2.7.4
+> 
