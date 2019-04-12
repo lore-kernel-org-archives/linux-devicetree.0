@@ -1,104 +1,56 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v5 10/13] usb: dwc3: Registering a role switch in the DRD
- code.
-Date: Fri, 12 Apr 2019 09:23:42 +0800
-Message-ID: <7d5ba117-735e-3fb0-97f7-33be328a4ae6@huawei.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com>
- <20190329041409.70138-11-chenyu56@huawei.com>
- <CALAqxLVdrzNS2t1OYT=Pziu81VO+zWq5LYghHhMJO53cSvNNtQ@mail.gmail.com>
+From: "elaine.zhang" <zhangqing@rock-chips.com>
+Subject: Re: [PATCH 4/5] ARM: dts: rockchip: vcc33_ccd off in suspend for
+ rk3288-veyron-chromebook
+Date: Fri, 12 Apr 2019 09:53:57 +0800
+Message-ID: <d032d8b2-3b21-03f2-ecad-fc0889f6011b@rock-chips.com>
+References: <20190411232157.55125-1-dianders@chromium.org>
+ <20190411232157.55125-4-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLVdrzNS2t1OYT=Pziu81VO+zWq5LYghHhMJO53cSvNNtQ@mail.gmail.com>
+In-Reply-To: <20190411232157.55125-4-dianders@chromium.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: liuyu712@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, wanghu17@hisilicon.com, butao <butao@hisilicon.com>, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, Yudongbin <yudongbin@hisilicon.com>, Zang Leigang <zangleigang@hisilicon.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki
+To: Douglas Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: dbasehore@chromium.org, amstan@chromium.org, linux-rockchip@lists.infradead.org, briannorris@chromium.org, mka@chromium.org, ryandcase@chromium.org, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+hi,
 
-On 2019/4/12 8:48, John Stultz wrote:
-> On Thu, Mar 28, 2019 at 9:14 PM Yu Chen <chenyu56@huawei.com> wrote:
+ÔÚ 2019/4/12 ÉÏÎç7:21, Douglas Anderson Ð´µÀ:
+> As per my comments when the device tree for rk3288-veyron-chromebook
+> first landed:
+>
+>> Technically I think vcc33_ccd can be off since we have
+>> 'needs-reset-on-resume' down in the EHCI port (this regulator is for
+>> the USB webcam that's connected to the EHCI port).
 >>
->> The Type-C drivers use USB role switch API to inform the
->> system about the negotiated data role, so registering a role
->> switch in the DRD code in order to support platforms with
->> USB Type-C connectors.
->>
-> 
-> Hey Yu Chen!
->   Thanks so much for sending these patches out!  I have run into some
-> troubles on bootup where things aren't working properly at first, that
-> seem to be due to state initialization races.  In chasing those down,
-> I've found some other quirks I wanted to bring up.
-> 
->> --- a/drivers/usb/dwc3/drd.c
->> +++ b/drivers/usb/dwc3/drd.c
->> @@ -479,6 +479,43 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
->>         return edev;
->>  }
->>
->> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
->> +{
->> +       struct dwc3 *dwc = dev_get_drvdata(dev);
->> +       u32 mode;
->> +
->> +       switch (role) {
->> +       case USB_ROLE_HOST:
->> +               mode = DWC3_GCTL_PRTCAP_HOST;
->> +               break;
->> +       case USB_ROLE_DEVICE:
->> +               mode = DWC3_GCTL_PRTCAP_DEVICE;
->> +               break;
->> +       default:
->> +               if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
->> +                       mode = DWC3_GCTL_PRTCAP_HOST;
->> +               else
->> +                       mode = DWC3_GCTL_PRTCAP_DEVICE;
->> +               break;
->> +       }
->> +
->> +       dwc3_set_mode(dwc, mode);
->> +       return 0;
->> +}
->> +
->> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
->> +{
->> +       struct dwc3 *dwc = dev_get_drvdata(dev);
->> +       unsigned long flags;
->> +       enum usb_role role;
->> +
->> +       spin_lock_irqsave(&dwc->lock, flags);
->> +       role = dwc->current_otg_role;
->> +       spin_unlock_irqrestore(&dwc->lock, flags);
->> +
->> +       return role;
->> +}
->> +
-> 
-> So the two functions above are a bit asymmetric.  The
-> dwc3_usb_role_switch_set() can put the device into host or device
-> mode, which eventually sets the current_dr_role value.  However on the
-> dwc3_usb_role_switch_get() we return the current_otg_role value.
-> current_otg_role isn't set unless current_dr_role is
-> DWC3_GCTL_PRTCAP_OTG, which doesn't seem to happen here.
-> 
-> I suspect in dwc3_usb_role_switch_get() we should return
-> current_dr_role, unless current_dr_role==DWC3_GCTL_PRTCAP_OTG, in
-> which case we'd want to return current_otg_role.
-> 
-> Does that make sense?
-> 
-Yes, you are right! The dwc3_usb_role_switch_get() should return current_dr_role
-. Actually if we register the dwc3_role_switch, the current_dr_role would not be DWC3_GCTL_PRTCAP_OTG.
-> Nothing really actually use this dwc3_usb_role_switch_get() yet, so
-> this was easy to overlook, and I only caught it as I was trying to
-> debug some of the initialization races.
-> 
-> thanks
-> -john
-> 
-> .
-> 
+>>   ...but leaving it on for now seems fine until we get suspend/resume
+>> more solid.
+> It's probably about time to do it right.
+>
+> [1] https://lore.kernel.org/linux-arm-kernel/CAD=FV=U37Yx8Mqk75_x05zxonvdc3qRMhqp8TyTDPWGHqSuRqg@mail.gmail.com/
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>   arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+> index b9cc90f0f25c..fbef34578100 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+> @@ -176,8 +176,7 @@
+>   			regulator-min-microvolt = <3300000>;
+>   			regulator-max-microvolt = <3300000>;
+>   			regulator-state-mem {
+> -				regulator-on-in-suspend;
+> -				regulator-suspend-microvolt = <3300000>;
+> +				regulator-off-in-suspend;
+>   			};
+>   		};
+>   	};
+
+Reviewed-by: Elaine Zhang<zhangqing@rock-chips.com>
