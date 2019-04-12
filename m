@@ -1,60 +1,138 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
-Date: Fri, 12 Apr 2019 16:23:04 +0200
-Message-ID: <CAMRc=MfTytX=8L8BrNKXGhiutxWj8i84wX-5agh=EWA-AZe1Pw@mail.gmail.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl>
- <20190408075924.2284-3-brgl@bgdev.pl>
- <57fe079c-fd69-45ef-b4fb-a2c792218c21@ti.com>
- <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+Date: Fri, 12 Apr 2019 07:29:04 -0700
+Message-ID: <c9616343-baa0-8bda-9190-720bc08eda88@roeck-us.net>
+References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
+ <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+ <20190411165742.GA29395@roeck-us.net>
+ <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
+ <77c56129-d3e7-1518-9d1d-a15a20540269@arm.com>
+ <cfde0244-1faf-80cd-b49e-500654e5bad8@roeck-us.net>
+ <19616839-f78f-a15f-c7b7-7ef9e7817140@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <19616839-f78f-a15f-c7b7-7ef9e7817140@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-cHQuLCAxMiBrd2kgMjAxOSBvIDE1OjU5IEFkYW0gRm9yZCA8YWZvcmQxNzNAZ21haWwuY29tPiBu
-YXBpc2HFgihhKToKPgo+IE9uIEZyaSwgQXByIDEyLCAyMDE5IGF0IDg6MDYgQU0gU2VraGFyIE5v
-cmkgPG5zZWtoYXJAdGkuY29tPiB3cm90ZToKPiA+Cj4gPiBPbiAwOC8wNC8xOSAxOjI5IFBNLCBC
-YXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOgo+ID4gPiBGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tp
-IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+ID4gPgo+ID4gPiBFbmFibGUgY3B1ZnJlcS1k
-dCBzdXBwb3J0IGZvciBkYTg1MC1ldm0uIFRoZSBjdmRkIGlzIHN1cHBsaWVkIGJ5IHRoZQo+ID4g
-PiB0cHM2NTA3IHBtaWMgd2l0aCBjb25maWd1cmFibGUgb3V0cHV0IHZvbHRhZ2UsIHNvIGFsbCBv
-cGVyYXRpbmcgcG9pbnRzCj4gPiA+IGNhbiBiZSBlbmFibGVkLgo+ID4gPgo+ID4gPiBTaWduZWQt
-b2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+
-ID4KPiA+IEFkYW0sIGNhbiB5b3UgcGxlYXNlIGFjaz8gTG9va3MgZ29vZCB0byBtZS4KPgo+IFNl
-a2hhciwKPiBCYXNlZCBvbiB3aGF0IEkgcmVhZCBpbiB0aGUgdGhyZWFkIGFib3V0IHRoZSBMQ0RL
-LCBJIHdhbnQgdG8gZG8gc29tZQo+IHRlc3RzIG9uIHRoZSBkYTg1MC1ldm0gYmVmb3JlIHB1dCBt
-eSBuYW1lIG9uIGl0LiAgSSBsaWtlIHdoYXQgSSBzZWUgaW4KPiBnZW5lcmFsLCBzbyBJIGFtIGV4
-Y2l0ZWQgdG8gdGhpcyB0aGlzIGhlcmUuCj4KPiBCYXJ0b3N6IC0gd2hpY2gga2VybmVsIGJyYW5j
-aCBzaG91bGQgSSB1c2UgYXMgYSBzdGFydGluZyBwb2ludCB0byBhcHBseSB0aGVzZT8KPgoKVXBz
-dHJlYW0gdjUuMS1yYzQuCgpCYXJ0b3N6Cgo+IGFkYW0KPiA+Cj4gPiBUaGFua3MsCj4gPiBTZWto
-YXIKPiA+Cj4gPiA+IC0tLQo+ID4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyB8
-IDEzICsrKysrKysrKysrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCsp
-Cj4gPiA+Cj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRz
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cwo+ID4gPiBpbmRleCBmMDRiYzNlMTUz
-MzIuLmY5NGJiMzhmZGFkOSAxMDA2NDQKPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4
-NTAtZXZtLmR0cwo+ID4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRzCj4g
-PiA+IEBAIC0xOTEsNiArMTkxLDE5IEBACj4gPiA+ICAgICAgIH07Cj4gPiA+ICB9Owo+ID4gPgo+
-ID4gPiArJmNwdSB7Cj4gPiA+ICsgICAgIGNwdS1zdXBwbHkgPSA8JnZkY2RjM19yZWc+Owo+ID4g
-PiArfTsKPiA+ID4gKwo+ID4gPiArLyoKPiA+ID4gKyAqIFRoZSBzdGFuZGFyZCBkYTg1MC1ldm0g
-a2l0cyBhbmQgU09NJ3MgYXJlIDM3NU1IeiBzbyBlbmFibGUgdGhpcyBvcGVyYXRpbmcKPiA+ID4g
-KyAqIHBvaW50IGJ5IGRlZmF1bHQuIEhpZ2hlciBmcmVxdWVuY2llcyBtdXN0IGJlIGVuYWJsZWQg
-Zm9yIGN1c3RvbSBib2FyZHMgd2l0aAo+ID4gPiArICogb3RoZXIgdmFyaWFudHMgb2YgdGhlIFNv
-Qy4KPiA+ID4gKyAqLwo+ID4gPiArJm9wcF8zNzUgewo+ID4gPiArICAgICBzdGF0dXMgPSAib2th
-eSI7Cj4gPiA+ICt9Owo+ID4gPiArCj4gPiA+ICAmc2F0YSB7Cj4gPiA+ICAgICAgIHN0YXR1cyA9
-ICJva2F5IjsKPiA+ID4gIH07Cj4gPiA+IC0tCj4gPiA+IDIuMjEuMAo+ID4gPgo+ID4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 4/12/19 6:54 AM, Robin Murphy wrote:
+> On 12/04/2019 14:50, Guenter Roeck wrote:
+>> On 4/12/19 4:50 AM, Robin Murphy wrote:
+>>> On 12/04/2019 12:07, Stefan Wahren wrote:
+>>>> On 11.04.19 18:57, Guenter Roeck wrote:
+>>>>> On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
+>>>>>> -ATTRIBUTE_GROUPS(pwm_fan);
+>>>>>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>>>>>> +                     int n)
+>>>>>> +{
+>>>>>> +    struct device *dev = container_of(kobj, struct device, kobj);
+>>>>>> +    struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>>>>>> +    struct device_attribute *devattr;
+>>>>>> +
+>>>>>> +    /* Hide fan_input in case no interrupt is available  */
+>>>>>> +    devattr = container_of(a, struct device_attribute, attr);
+>>>>> Field day for static analyzers - devattr is no longer used.
+>>>>> No need to resend. I'll let the series rest for a couple of days
+>>>>> and then apply to hwmon-next (after removing devattr) unless there are
+>>>>> additional comments.
+>>>>>
+>>>> Thank you
+>>>
+>>> FWIW you can have a
+>>>
+>>> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>>>
+>>> for the whole series. The only minor comment that springs to mind
+>>> isn't actually specific to this patch, so is probably best made as
+>>> the follow-up below.
+>>>
+>>> Robin.
+>>>
+>>
+>> Any chance you can send the patch below as separate patch ? I track patches
+>> using patchwork, and attachments don't show up there.
+> 
+> Sure, can do - would you like an explicit R-b on #1 and #2 here for patchwork to pick up as well?
+> That would simplify my life a bit, but I can add that part myself to the patches.
+I primarily like to have the patches in patchwork to make sure they don't get lost
+and that I can pick them up again later if needed.
+
+Thanks,
+Guenter
+
+> Robin.
+> 
+>>
+>> Thanks,
+>> Guenter
+>>
+>>> ----->8-----
+>>> From: Robin Murphy <robin.murphy@arm.com>
+>>> Subject: [PATCH] hwmon: pwm-fan: Report probe errors consistently
+>>>
+>>> Printing the error code for a failure provides a head-start for
+>>> debugging, since it's often sufficient to pinpoint the origin of the
+>>> failure. We already do this for some probe-failure messages, so let's
+>>> make the rest of them consistent.
+>>>
+>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>>> ---
+>>>   drivers/hwmon/pwm-fan.c | 13 ++++++++-----
+>>>   1 file changed, 8 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+>>> index 8c4c5eefd4ca..556db4bef743 100644
+>>> --- a/drivers/hwmon/pwm-fan.c
+>>> +++ b/drivers/hwmon/pwm-fan.c
+>>> @@ -330,7 +330,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>>>
+>>>       ret = pwm_apply_state(ctx->pwm, &state);
+>>>       if (ret) {
+>>> -        dev_err(&pdev->dev, "Failed to configure PWM\n");
+>>> +        dev_err(&pdev->dev, "Failed to configure PWM: %d\n", ret);
+>>>           goto err_reg_disable;
+>>>       }
+>>>
+>>> @@ -348,7 +348,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>>>           ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
+>>>                          pdev->name, ctx);
+>>>           if (ret) {
+>>> -            dev_err(&pdev->dev, "Can't get interrupt working.\n");
+>>> +            dev_err(&pdev->dev,
+>>> +                "Failed to request interrupt: %d\n", ret);
+>>>               goto err_pwm_disable;
+>>>           }
+>>>           ctx->sample_start = ktime_get();
+>>> @@ -358,8 +359,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>>>       hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+>>>                                  ctx, pwm_fan_groups);
+>>>       if (IS_ERR(hwmon)) {
+>>> -        dev_err(&pdev->dev, "Failed to register hwmon device\n");
+>>>           ret = PTR_ERR(hwmon);
+>>> +        dev_err(&pdev->dev,
+>>> +            "Failed to register hwmon device: %d\n", ret);
+>>>           goto err_del_timer;
+>>>       }
+>>>
+>>> @@ -373,9 +375,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>>>                                 "pwm-fan", ctx,
+>>>                                 &pwm_fan_cooling_ops);
+>>>           if (IS_ERR(cdev)) {
+>>> -            dev_err(&pdev->dev,
+>>> -                "Failed to register pwm-fan as cooling device");
+>>>               ret = PTR_ERR(cdev);
+>>> +            dev_err(&pdev->dev,
+>>> +                "Failed to register pwm-fan as cooling device: %d\n",
+>>> +                ret);
+>>>               goto err_del_timer;
+>>>           }
+>>>           ctx->cdev = cdev;
+>>>
+>>
+> 
