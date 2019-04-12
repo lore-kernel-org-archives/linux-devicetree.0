@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible for static replicator
-Date: Fri, 12 Apr 2019 18:27:35 +0800
-Message-ID: <20190412102738.12679-2-leo.yan@linaro.org>
+Subject: [PATCH v5 2/4] coresight: replicator: Add new device id for static replicator
+Date: Fri, 12 Apr 2019 18:27:36 +0800
+Message-ID: <20190412102738.12679-3-leo.yan@linaro.org>
 References: <20190412102738.12679-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190412102738.12679-1-leo.yan@linaro.org>
@@ -10,60 +10,47 @@ To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulo
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-CoreSight uses below bindings for replicator:
+This patch adds a device id for the new static replicator compatible
+string; it changes the driver name from "coresight-replicator" to
+"coresight-static-replicator" as well.
 
-  Dynamic replicator, aka. configurable replicator:
-    "arm,coresight-dynamic-replicator", "arm,primecell";
-
-  Static replicator, aka. non-configurable replicator:
-    "arm,coresight-replicator";
-
-The compatible string "arm,coresight-replicator" is not an explicit
-naming to express the replicator is 'static'.  To unify the naming
-convention, this patch introduces a new compatible string
-"arm,coresight-static-replicator" for the static replicator; the
-compatible string "arm,coresight-replicator" is kept for backward
-compatibility, but tag it as obsolete and suggest to use the new
-compatible string.
-
-As result CoreSight replicator have below bindings:
-
-  Dynamic replicator:
-    "arm,coresight-dynamic-replicator", "arm,primecell";
-
-  Static replicator:
-    "arm,coresight-static-replicator";
-    "arm,coresight-replicator"; (obsolete)
+This patch also gives warning when use the replicator obsolete DT
+binding.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-replicator.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index f8aff65ab921..d02d160fa8ac 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -69,7 +69,10 @@ its hardware characteristcs.
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 4e0da85efd2d..8c9ce74498e1 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -189,6 +189,9 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 		dev->platform_data = pdata;
+ 	}
  
- 	* compatible: Currently supported value is (note the absence of the
- 	  AMBA markee):
--		- "arm,coresight-replicator"
-+		- Coresight Non-configurable Replicator:
-+			"arm,coresight-static-replicator";
-+			"arm,coresight-replicator"; (OBSOLETE. For backward
-+				compatibility and will be removed)
++	if (of_device_is_compatible(np, "arm,coresight-replicator"))
++		pr_warn_once("Uses OBSOLETE CoreSight replicator binding\n");
++
+ 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+ 	if (!drvdata)
+ 		return -ENOMEM;
+@@ -285,13 +288,14 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
  
- 	* port or ports: see "Graph bindings for Coresight" below.
+ static const struct of_device_id static_replicator_match[] = {
+ 	{.compatible = "arm,coresight-replicator"},
++	{.compatible = "arm,coresight-static-replicator"},
+ 	{}
+ };
  
-@@ -169,7 +172,7 @@ Example:
- 		/* non-configurable replicators don't show up on the
- 		 * AMBA bus.  As such no need to add "arm,primecell".
- 		 */
--		compatible = "arm,coresight-replicator";
-+		compatible = "arm,coresight-static-replicator";
- 
- 		out-ports {
- 			#address-cells = <1>;
+ static struct platform_driver static_replicator_driver = {
+ 	.probe          = static_replicator_probe,
+ 	.driver         = {
+-		.name   = "coresight-replicator",
++		.name   = "coresight-static-replicator",
+ 		.of_match_table = static_replicator_match,
+ 		.pm	= &replicator_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
 -- 
 2.17.1
