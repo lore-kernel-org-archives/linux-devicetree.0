@@ -1,37 +1,53 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for
- the Librem5 devkit
-Date: Fri, 12 Apr 2019 15:42:44 +0200
-Message-ID: <20190412134244.GC324@lunn.ch>
-References: <20190412130427.13418-1-angus@akkea.ca>
- <20190412130427.13418-2-angus@akkea.ca>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v4 0/5] ARM: da850: enable cpufreq in DT mode
+Date: Fri, 12 Apr 2019 15:44:32 +0200
+Message-ID: <20190412134437.14864-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412130427.13418-2-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@1 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Hi Angus
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm).
 
-This compatible string is optional. It won't warm, but it is not
-needed.
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
 
-> +			reg = <1>;
-> +			power-supply = <&reg_3V3_P>;
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
 
-I don't remember seeing a power-supply property in an Ethernet PHY
-node before. What is using it? The PHY driver? Or the driver core
-code?
+v2 -> v3:
+- drop patch 1, as the revision tag is in fact correctly passed to the kernel
+  by u-boot
+- only enable the 375 operating point for da850-evm as this is the standard
+  frequency for this board
 
-	Andrew
+v3 -> v4:
+- split the first patch into three separate changesets: one adding the
+  operating points to the main dtsi and two enabling cpufreq on da850-lego-ev3
+  and da850-lcdk
+- remove the operating point not mentioned in the datasheet (415 MHz)
+- fix commit message in patch 4/5
+
+Bartosz Golaszewski (1):
+  ARM: dts: da850-evm: enable cpufreq
+
+David Lechner (4):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: dts: da850-lego-ev3: enable cpufreq
+  ARM: dts: da850-lcdk: enable cpufreq
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+
+ arch/arm/boot/dts/da850-evm.dts        | 13 +++++++
+ arch/arm/boot/dts/da850-lcdk.dts       | 31 ++++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts   | 30 ++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi           | 50 ++++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig |  1 +
+ 5 files changed, 125 insertions(+)
+
+-- 
+2.21.0
