@@ -1,48 +1,56 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 2/7] dt: bindings: Add multicolor class dt bindings
- documention
-Date: Fri, 12 Apr 2019 20:14:42 +0200
-Message-ID: <4e22f95f-8658-99cd-145e-b96f9e8314f7@gmail.com>
-References: <20190411193848.23140-1-dmurphy@ti.com>
- <20190411193848.23140-3-dmurphy@ti.com> <20190412000707.70f8319f@nic.cz>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Fri, 12 Apr 2019 12:41:36 -0600
+Message-ID: <CAOCk7NrRb=CZiZp6LKmP9yFZzWTO6AaRt4aZ5dyoVxBw4ZA9_w@mail.gmail.com>
+References: <20190411205144.43557-1-jeffrey.l.hugo@gmail.com> <20190412180142.GZ1843@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412000707.70f8319f@nic.cz>
-Content-Language: en-US
+In-Reply-To: <20190412180142.GZ1843@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Behun <marek.behun@nic.cz>, Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, pavel@ucw.cz, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: agross@kernel.org, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Fri, Apr 12, 2019 at 12:01 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 11 Apr 13:51 PDT 2019, Jeffrey Hugo wrote:
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-clam.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clam.dtsi
+> [..]
+> > +&tlmm {
+> > +     gpio-reserved-ranges = <0 4>, <81 4>;
+>
+> Did you double check that you actually need these? (Iirc boot testing is
+> enough)
 
-On 4/12/19 12:07 AM, Marek Behun wrote:
-> Hi Dan,
-> this probaly was discussed, but I did not follow brightness model
-> discussions:
-> what will happen if I set yellow by writing into yellow mode
-> brightness, and then orange by writing orange model brightness?
-> Will the resulting color be a mix of yellow and orange, or will the
-> orange overwrite the yellow setting?
+Yes, still needed.
 
-Orange will overwrite yellow settings. When color name is given
-it should be treated as a hue. Then changing brightness level
-should affect the lightness of a hue, similarly like changing
-L component of HSL color model. This will be however entirely
-up to DT brightness-model designer how they will design their models.
-We are not going to verify that in the LED multi color class.
+>
+> > +
+> > +     touchpad: touchpad {
+> > +             config {
+> > +                     pins = "gpio123";
+> > +                     bias-pull-up;           /* pull up */
+> > +             };
+> > +     };
+> > +};
+> [..]
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> [..]
+> > +/ {
+> > +     model = "Lenovo Miix 630";
+> > +     compatible = "qcom,msm8998-clam";
+>
+> compatible = "lenovo,miix-630", "qcom,msm8998";
 
-It implies that it will be possible to define arbitrary range
-of color levels, not necessarily adhering to any established color
-model. I think it could be useful to define brightness model
-that allows to go from blue color (for cold) up to red (hot)
-for representing a temperature for instance.
+Thanks for the suggestion.  Will do.
 
-These ideas will need however more documentation. Generally
-we aim to propose only a convention.
+>
+> > +
+> > +     /* bootloader doesn't understand DT, so no qcom,board-id */
+>
+> You can omit this comment, as I don't think people will miss these
+> non-standard properties.
 
--- 
-Best regards,
-Jacek Anaszewski
+Makes sense.  Will do.
