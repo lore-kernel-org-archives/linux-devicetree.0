@@ -1,43 +1,87 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 3/3] ARM: dts: tegra30: Add External Memory Controller
- node
-Date: Fri, 12 Apr 2019 13:11:31 +0300
-Message-ID: <17f2a6b4-8017-0581-d7a2-6ff1cd914df1@gmail.com>
-References: <20190411230221.31362-1-digetx@gmail.com>
- <20190411230221.31362-4-digetx@gmail.com>
- <20190412080606.GH12975@pdeschrijver-desktop.Nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5 0/4] CoreSight: Support static funnel with DT binding consolidation
+Date: Fri, 12 Apr 2019 18:27:34 +0800
+Message-ID: <20190412102738.12679-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412080606.GH12975@pdeschrijver-desktop.Nvidia.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-12.04.2019 11:06, Peter De Schrijver пишет:
-> On Fri, Apr 12, 2019 at 02:02:21AM +0300, Dmitry Osipenko wrote:
->> Add Add External Memory Controller node to the device-tree.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
-> ..
->> diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
->> index 38ebdb076ccd..defdb38bde54 100644
->> --- a/drivers/memory/tegra/tegra30-emc.c
->> +++ b/drivers/memory/tegra/tegra30-emc.c
->> @@ -980,7 +980,8 @@ static long emc_round_rate(unsigned long rate,
->>  	}
->>  
->>  	if (!timing) {
->> -		dev_err(emc->dev, "no timing for rate %lu\n", rate);
->> +		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
->> +			rate, min_rate, max_rate);
->>  		return -EINVAL;
->>  	}
-> 
-> This doesn't seem to belong to this patch?
+Since before there have no platforms use static funnel in mainline
+kernel (though maybe some in-house SoC has used it but didn't upstream
+for mainline kernel yet so we don't be aware for it), when enable
+CoreSight DT binding for hikey960, we found the SoC uses the static
+funnel in the link path and but it's not supported in CoreSight funnel
+driver.
 
-Yes, I accidentally edited a wrong patch on rebase. Fixed it up for v2 already, thank you.
+When support static funnel it's found the DT binding compatible string
+doesn't follow the same fashion between replicator and funnel; so the
+first two patches are firstly to refine the replicator DT binding and
+correspondingly, change the replicator driver to support new DT binding
+compatible.
+
+Patch 0003 is to update DT documentation to support static funnel (we
+call it as non-configurable funnel in documentation) and unify the
+compatible string with the same fashion for replicator and funnel.
+
+Patch 0004 is to support the static funnel in the CoreSight funnel
+driver.
+
+The consolidated DT binding compatible strings are as below:
+
+  Dynamic replicator:
+    "arm,coresight-dynamic-replicator", "arm,primecell";
+
+  Static replicator:
+    "arm,coresight-static-replicator";
+    "arm,coresight-replicator"; (obsolete)
+
+  Static funnel:
+    "arm,coresight-static-funnel";
+
+  Dynamic funnel:
+    "arm,coresight-dynamic-funnel", "arm,primecell";
+    "arm,coresight-funnel", "arm,primecell"; (obsolete)
+
+This patch set has been rebased on CoreSight next branch [1] with
+latest commit d5d246a56af0 ("coresight: Merge the static and dynamic
+replicator drivers") and tested on Hikey960/Hikey with perf commands:
+
+  Hikey960:
+
+  # perf record -e cs_etm/@ec033000.etr/ --per-thread ./main
+  # perf report --tui
+
+  Hikey:
+
+  # perf record -e cs_etm/@f6404000.etr/ --per-thread uname
+  # perf report --tui
+
+[1] https://git.linaro.org/kernel/coresight.git/log/?h=next
+
+== Changes for v5 ==
+* Marked the the obsolete compatible strings to be more abvious
+  (Suzuki).
+* Used pr_warn_once() to print out warning if DT binding uses
+  the  obsolete compatible string (Suzuki).
+
+== Changes for v4 ==
+* Consolidate the DT binding compatible strings for replicator and
+  funnel (Mathieu).
+* Changed replicator driver to support new compatible string.
+
+
+Leo Yan (4):
+  dt-bindings: arm: coresight: Add new compatible for static replicator
+  coresight: replicator: Add new device id for static replicator
+  dt-bindings: arm: coresight: Unify funnel DT binding
+  coresight: funnel: Support static funnel
+
+ .../devicetree/bindings/arm/coresight.txt     |  60 +++++++--
+ .../hwtracing/coresight/coresight-funnel.c    | 116 ++++++++++++++----
+ .../coresight/coresight-replicator.c          |   6 +-
+ 3 files changed, 147 insertions(+), 35 deletions(-)
+
+-- 
+2.17.1
