@@ -1,50 +1,82 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v3 1/3] dt-bindings: input: add GPIO controllable vibrator
-Date: Fri, 12 Apr 2019 17:06:23 +0200
-Message-ID: <20190412150625.28384-1-luca@z3ntu.xyz>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Fri, 12 Apr 2019 09:19:18 -0600
+Message-ID: <CAOCk7Np+WTMuoRZOrQzbt1H6xENW2OhRFgpOc-vWn+9daBBqbg@mail.gmail.com>
+References: <20190411205144.43557-1-jeffrey.l.hugo@gmail.com> <20190412144712.GA7481@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190412144712.GA7481@lakrids.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT KEYBOARD, MOUSE, JOYSTICK
-        , TOUCHSCREEN..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Luca Weiss <luca@z3ntu.xyz>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: bjorn.andersson@linaro.org, agross@kernel.org, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Provide a simple driver for GPIO controllable vibrators.
-It will be used by the Fairphone 2.
+I'm sorry, I had completely missed your reply to v1.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- .../bindings/input/gpio-vibrator.txt          | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.txt
+To answer your previous question, why do we need a DT?
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-new file mode 100644
-index 000000000000..93e5a8e7622d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-@@ -0,0 +1,20 @@
-+* GPIO vibrator device tree bindings
-+
-+Registers a GPIO device as vibrator, where the vibration motor just has the
-+capability to turn on or off. If the device is connected to a pwm, you should
-+use the pwm-vibrator driver instead.
-+
-+Required properties:
-+- compatible: should contain "gpio-vibrator"
-+- enable-gpios: Should contain a GPIO handle
-+
-+Optional properties:
-+- vcc-supply: Phandle for the regulator supplying power
-+
-+Example from Fairphone 2:
-+
-+vibrator {
-+	compatible = "gpio-vibrator";
-+	enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
-+	vcc-supply = <&pm8941_l18>;
-+};
--- 
-2.21.0
+DT is the quick path to support for these systems.  There is already a
+fair amount of support in mainline to support the core SoC (msm8998)
+which is/was heavily used in top tier phone products.  All of that
+support is DT based, which is expected to also be leveraged to other
+products beyond these laptops, and the existing phones on the market.
+As far as I am aware, the ACPI for the laptops was developed only with
+Windows in mind, and it is expected, from initial investigations, that
+supporting the ACPI is going to be painful.  Its on the road map, but
+getting full functionality, quickly, is what what we'd like to do to
+meet the demand for these systems.
+
+On Fri, Apr 12, 2019 at 8:47 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Thu, Apr 11, 2019 at 01:51:44PM -0700, Jeffrey Hugo wrote:
+> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> > functionality includes USB (host), microSD-card, keyboard, and trackpad.
+> >
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+> >
+> > v2:
+> > -Changed "cls" to "clam" since feedback indicated "cls" is too opaque, but
+> > "clamshell" is a mouthfull.  "clam" seems to be a happy medium.
+>
+> Please use "clamshell". The extra 5 characters aren't going to hurt
+> anyone, and it avoids having yet another short name just confuses
+> matters further.
+
+Sure.  Will queue this for the next rev.
+
+>
+> [...]
+>
+> > +     keyboard@3a {
+> > +             /* QTEC0001 is the ACPI HID, which could be used for quirks */
+> > +             compatible = "QTEC0001", "hid-over-i2c";
+>
+> As mentioned last time, please drop the ACPI HID, and allocate a real
+> compatible string.
+
+So, I'm in a quandary with this device.  As far as I can tell, its an
+off the shelf component, the device adheres to the "PNP0C50" spec (HID
+over I2C), and can be driven by the full "hid-over-i2c" driver (which
+is just a DT shim over the PNP0C50 ACPI driver).  However, the device
+itself identifies itself as an ELAN 400 device, which is an ID that is
+also used for standalone touchpad devices.  Per my understanding of
+the Linux drivers, there is a separate ELAN driver for the standalone
+touchpad devices as its been discovered though trial and error that
+the Linux PNP0C50 driver cannot drive those devices.  To handle this,
+there is a quirk in hid-quirks which rejects ELAN 400 devices, except
+those which are "QTEC0001".
+
+We need that quirk bypass for this device because the ELAN driver
+cannot handle this device.
+
+I'd much rather have a single identifier to quirk on, rather than
+having one for DT and one for ACPI, and its not looking feasible to
+get the vendor to update the ACPI, so it seems like using the ACPI
+identifier is just simpler.
+
+So, if you want a different compatible string, I'll need to go put DT
+in a driver that is primarily ACPI.  I'm not sure what the HID folks
+will think of that.  I'll propose it, but what do you view is a
+"proper" compatible string?  "ELAN0400-msm8998-clamshell"?
