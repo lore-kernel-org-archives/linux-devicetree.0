@@ -1,63 +1,169 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 2/4] coresight: replicator: Add new device id for
- static replicator
-Date: Fri, 12 Apr 2019 11:41:11 +0100
-Message-ID: <489e8aff-b279-b984-1cd2-f528a46eb2fe@arm.com>
-References: <20190412102738.12679-1-leo.yan@linaro.org>
- <20190412102738.12679-3-leo.yan@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 18/26] PCI: endpoint: Add support to allocate aligned
+ buffers to be mapped in BARs
+Date: Fri, 12 Apr 2019 16:07:49 +0530
+Message-ID: <7e44bd0d-c450-cb0b-45b0-e96748482477@ti.com>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-19-kishon@ti.com> <20190411153238.GD6862@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412102738.12679-3-leo.yan@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190411153238.GD6862@red-moon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: devicetree@vger.kernel.org, Jesper Nilsson <jesper.nilsson@axis.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, linux-omap@vger.kernel.org, Roy Zang <roy.zang@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2019 11:27 AM, Leo Yan wrote:
-> This patch adds a device id for the new static replicator compatible
-> string; it changes the driver name from "coresight-replicator" to
-> "coresight-static-replicator" as well.
-> 
-> This patch also gives warning when use the replicator obsolete DT
-> binding.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->   drivers/hwtracing/coresight/coresight-replicator.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index 4e0da85efd2d..8c9ce74498e1 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -189,6 +189,9 @@ static int replicator_probe(struct device *dev, struct resource *res)
->   		dev->platform_data = pdata;
->   	}
->   
-> +	if (of_device_is_compatible(np, "arm,coresight-replicator"))
-> +		pr_warn_once("Uses OBSOLETE CoreSight replicator binding\n");
-> +
->   	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->   	if (!drvdata)
->   		return -ENOMEM;
-> @@ -285,13 +288,14 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
->   
->   static const struct of_device_id static_replicator_match[] = {
->   	{.compatible = "arm,coresight-replicator"},
-> +	{.compatible = "arm,coresight-static-replicator"},
->   	{}
->   };
->   
->   static struct platform_driver static_replicator_driver = {
->   	.probe          = static_replicator_probe,
->   	.driver         = {
-> -		.name   = "coresight-replicator",
-> +		.name   = "coresight-static-replicator",
->   		.of_match_table = static_replicator_match,
->   		.pm	= &replicator_dev_pm_ops,
->   		.suppress_bind_attrs = true,
-> 
+Hi Lorenzo,
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On 11/04/19 9:02 PM, Lorenzo Pieralisi wrote:
+> On Mon, Mar 25, 2019 at 03:09:39PM +0530, Kishon Vijay Abraham I wrote:
+>> Modify pci_epf_alloc_space API to take alignment size as argument in
+>> order to argument in order to allocate aligned buffers to be mapped to
+>> BARs.
+>>
+>> Add 'align' parameter to epc_features which can be used by platform
+>> drivers to specifiy the BAR allocation alignment requirements and use
+>> this while invoking pci_epf_alloc_space.
+>>
+>> This is mainly required for Synopsys Designware PCIe core which masks
+>> the lower bits based on the BAR size (See "I/O and MEM Match Modes"
+>> section in DesignWare Cores PCI Express Controller Databook version
+>> 4.90a).
+> 
+> Hi Kishon,
+> 
+> isn't this a generic PCI BAR requirement rather than a Designware
+> specific one ?
+> 
+> The patch is fine I just would like to understand the statement above.
+
+The address that is allocated using pci_epf_alloc_space would be directly
+written to the target address of the Inbound address translation unit.
+Designware IP has a configuration parameter (CX_ATU_MIN_REGION_SIZE [1]) which
+has 64KB as default value and the lower 16 bits of the Base, Limit and Target
+registers of the Inbound ATU are fixed to zero.  So if the programmed memory
+address is not aligned to 64 KB boundary there will be memory corruption.
+
+PCI spec has restrictions on the minimum memory address range requested by BAR
+as 128 Bytes and the size to be a power of 2, however it doesn't have any
+restriction on the local endpoint memory addresses that are mapped to BAR. That
+is an endpoint controller restriction.
+
+[1] -> http://www.ti.com/lit/ug/spruid7c/spruid7c.pdf
+
+Thanks
+Kishon
+
+> Thanks,
+> Lorenzo
+> 
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/endpoint/functions/pci-epf-test.c |  5 +++--
+>>  drivers/pci/endpoint/pci-epf-core.c           | 10 ++++++++--
+>>  include/linux/pci-epc.h                       |  2 ++
+>>  include/linux/pci-epf.h                       |  3 ++-
+>>  4 files changed, 15 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index d0b91da49bf4..c0786ca74312 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -438,7 +438,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>  	epc_features = epf_test->epc_features;
+>>  
+>>  	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
+>> -				   test_reg_bar);
+>> +				   test_reg_bar, epc_features->align);
+>>  	if (!base) {
+>>  		dev_err(dev, "Failed to allocated register space\n");
+>>  		return -ENOMEM;
+>> @@ -453,7 +453,8 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>  		if (!!(epc_features->reserved_bar & (1 << bar)))
+>>  			continue;
+>>  
+>> -		base = pci_epf_alloc_space(epf, bar_size[bar], bar);
+>> +		base = pci_epf_alloc_space(epf, bar_size[bar], bar,
+>> +					   epc_features->align);
+>>  		if (!base)
+>>  			dev_err(dev, "Failed to allocate space for BAR%d\n",
+>>  				bar);
+>> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+>> index 8bfdcd291196..fb1306de8f40 100644
+>> --- a/drivers/pci/endpoint/pci-epf-core.c
+>> +++ b/drivers/pci/endpoint/pci-epf-core.c
+>> @@ -109,10 +109,12 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
+>>   * pci_epf_alloc_space() - allocate memory for the PCI EPF register space
+>>   * @size: the size of the memory that has to be allocated
+>>   * @bar: the BAR number corresponding to the allocated register space
+>> + * @align: alignment size for the allocation region
+>>   *
+>>   * Invoke to allocate memory for the PCI EPF register space.
+>>   */
+>> -void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar)
+>> +void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>> +			  size_t align)
+>>  {
+>>  	void *space;
+>>  	struct device *dev = epf->epc->dev.parent;
+>> @@ -120,7 +122,11 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar)
+>>  
+>>  	if (size < 128)
+>>  		size = 128;
+>> -	size = roundup_pow_of_two(size);
+>> +
+>> +	if (align)
+>> +		size = ALIGN(size, align);
+>> +	else
+>> +		size = roundup_pow_of_two(size);
+>>  
+>>  	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
+>>  	if (!space) {
+>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>> index c3ffa3917f88..f641badc2c61 100644
+>> --- a/include/linux/pci-epc.h
+>> +++ b/include/linux/pci-epc.h
+>> @@ -109,6 +109,7 @@ struct pci_epc {
+>>   * @reserved_bar: bitmap to indicate reserved BAR unavailable to function driver
+>>   * @bar_fixed_64bit: bitmap to indicate fixed 64bit BARs
+>>   * @bar_fixed_size: Array specifying the size supported by each BAR
+>> + * @align: alignment size required for BAR buffer allocation
+>>   */
+>>  struct pci_epc_features {
+>>  	unsigned int	linkup_notifier : 1;
+>> @@ -117,6 +118,7 @@ struct pci_epc_features {
+>>  	u8	reserved_bar;
+>>  	u8	bar_fixed_64bit;
+>>  	u64	bar_fixed_size[BAR_5 + 1];
+>> +	size_t	align;
+>>  };
+>>  
+>>  #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
+>> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+>> index ec02f58758c8..2d6f07556682 100644
+>> --- a/include/linux/pci-epf.h
+>> +++ b/include/linux/pci-epf.h
+>> @@ -149,7 +149,8 @@ void pci_epf_destroy(struct pci_epf *epf);
+>>  int __pci_epf_register_driver(struct pci_epf_driver *driver,
+>>  			      struct module *owner);
+>>  void pci_epf_unregister_driver(struct pci_epf_driver *driver);
+>> -void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar);
+>> +void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>> +			  size_t align);
+>>  void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar);
+>>  int pci_epf_bind(struct pci_epf *epf);
+>>  void pci_epf_unbind(struct pci_epf *epf);
+>> -- 
+>> 2.17.1
+>>
