@@ -1,84 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 11/20] spi: expand mode support and add LSBYTE_FIRST
- mode
-Date: Fri, 12 Apr 2019 09:32:48 +0100
-Message-ID: <20190412083248.GB6909@sirena.org.uk>
-References: <1554423259-26056-1-git-send-email-skomatineni@nvidia.com>
- <1554423259-26056-11-git-send-email-skomatineni@nvidia.com>
- <20190408062819.GJ2803@sirena.org.uk>
- <BYAPR12MB3398CC43DC1F78A10BC51DE8C22F0@BYAPR12MB3398.namprd12.prod.outlook.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: [PATCHv5 00/20] PCI: mobiveil: fixes for Mobiveil PCIe Host Bridge IP
+ driver
+Date: Fri, 12 Apr 2019 08:35:11 +0000
+Message-ID: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BYAPR12MB3398CC43DC1F78A10BC51DE8C22F0@BYAPR12MB3398.namprd12.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---DKU6Jbt7q3WqK7+M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 11, 2019 at 07:58:33PM +0000, Sowjanya Komatineni wrote:
-> > On Thu, Apr 04, 2019 at 05:14:10PM -0700, Sowjanya Komatineni wrote:
-
-> > > Some SPI Master controllers support configuring Least significant byt=
-e=20
-> > > first or Most significant byte first order for transfers. Also some=
-=20
-> > > SPI slave devices expect bytes to be in Least significant first order=
-=20
-> > > and some devices expect Most significant first order.
-
-> > > SPI driver declares mode and mode_bits as u16 and all bits are used.
-
-> > > This patch changes mode and mode_bits to be u32 to allow for more mod=
-e=20
-> > > configurations.
-
-> > > This patch also creates SPI_LSBYTE_FIRST mode to allow SPI clients to=
-=20
-> > > choose LSByte order or MSByte order through the device tree property=
-=20
-> > > spi-lsbyte-first.
-
-> > Please submit one patch per change, each with a clear changelog, as cov=
-ered in SubmittingPatches.  This makes it much easier to review things sinc=
-e it's easier to tell if the patch does what it was intended to do and mean=
-s that if one part of the patch casues problems it won't hold up the other =
-parts.
-
-> I split changes on SPI code side and SPI Tegra side as separate patches.
-> Do you meant to have both changes on SPI core and SPI Tegra together in a=
- single patch?
-
-You are expanding the size of the mode variable and adding a new mode in
-the same patch.  These are two separate changes and should be in two
-separate patches, as soon as you start writing "Also..." in a changelog
-that should be a warning flag.
-
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
-
---DKU6Jbt7q3WqK7+M
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlywTTAACgkQJNaLcl1U
-h9ASVgf/YJl1oQzWArLRQHn7PzVwQ4QsUKLnP+dbbx8RWVhM93Whw0IURubE0Qkj
-zHIRDTu88rSP4hQMymsqJwcN9ZSWA/QgWW/950S+kZQ23a7d2hmSfC5LEXZACawm
-gJ1MFuHKf5zA1nHTeSu1aXVR6QdABMaAvu0Bk+VPplAZPuLI5k7vvLxcxGZ7G3e8
-S5Xwyo3Prv9T4J8pMiD/5eg4jc/o05MTw26M2kFRE2IV9STQ25DaSIQjtMhTq8c2
-kaBMQKAfEnQ+roNYcqNKMo4SPCCmNrR8MljdRf/bmIqaLIhyj9P/qRFOrjeC19eM
-ELTmw4Unue23lYbVs5FVE3JuWWbQgg==
-=0IqI
------END PGP SIGNATURE-----
-
---DKU6Jbt7q3WqK7+M--
+RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhpcyBwYXRjaCBz
+ZXQgaXMgdG8gYWRkIGZpeGVzIGZvciBNb2JpdmVpbCBQQ0llIEhvc3QgZHJpdmVyLg0KQW5kIHRo
+ZXNlIHBhdGNoZXMgYXJlIHNwbGl0ZWQgZnJvbSB0aGUgdGhyZWFkIGJlbG93Og0KaHR0cDovL3Bh
+dGNod29yay5vemxhYnMub3JnL3Byb2plY3QvbGludXgtcGNpL2xpc3QvP3Nlcmllcz05NjQxNw0K
+DQpIb3UgWmhpcWlhbmcgKDIwKToNCiAgUENJOiBtb2JpdmVpbDogVW5pZnkgcmVnaXN0ZXIgYWNj
+ZXNzb3JzDQogIFBDSTogbW9iaXZlaWw6IEZvcm1hdCB0aGUgY29kZSB3aXRob3V0IGZ1bmN0aW9u
+YWxpdHkgY2hhbmdlDQogIFBDSTogbW9iaXZlaWw6IENvcnJlY3QgdGhlIHJldHVybmVkIGVycm9y
+IG51bWJlcg0KICBQQ0k6IG1vYml2ZWlsOiBSZW1vdmUgdGhlIGZsYWcgTVNJX0ZMQUdfTVVMVElf
+UENJX01TSQ0KICBQQ0k6IG1vYml2ZWlsOiBDb3JyZWN0IFBDSSBiYXNlIGFkZHJlc3MgaW4gTUVN
+L0lPIG91dGJvdW5kIHdpbmRvd3MNCiAgUENJOiBtb2JpdmVpbDogUmVwbGFjZSB0aGUgcmVzb3Vy
+Y2UgbGlzdCBpdGVyYXRpb24gZnVuY3Rpb24NCiAgUENJOiBtb2JpdmVpbDogVXNlIFdJTl9OVU1f
+MCBleHBsaWNpdGx5IGZvciBDRkcgb3V0Ym91bmQgd2luZG93DQogIFBDSTogbW9iaXZlaWw6IFVz
+ZSB0aGUgMXN0IGluYm91bmQgd2luZG93IGZvciBNRU0gaW5ib3VuZCB0cmFuc2FjdGlvbnMNCiAg
+UENJOiBtb2JpdmVpbDogQ29ycmVjdCBpbmJvdW5kL291dGJvdW5kIHdpbmRvdyBzZXR1cCByb3V0
+aW5lcw0KICBQQ0k6IG1vYml2ZWlsOiBGaXggdGhlIElOVHggcHJvY2VzcyBlcnJvcnMNCiAgUENJ
+OiBtb2JpdmVpbDogQ29ycmVjdCB0aGUgZml4dXAgb2YgQ2xhc3MgQ29kZSBmaWVsZA0KICBQQ0k6
+IG1vYml2ZWlsOiBNb3ZlIHRoZSBsaW5rIHVwIHdhaXRpbmcgb3V0IG9mIG1vYml2ZWlsX2hvc3Rf
+aW5pdCgpDQogIFBDSTogbW9iaXZlaWw6IE1vdmUgSVJRIGNoYWluZWQgaGFuZGxlciBzZXR1cCBv
+dXQgb2YgRFQgcGFyc2UNCiAgUENJOiBtb2JpdmVpbDogSW5pdGlhbGl6ZSBQcmltYXJ5L1NlY29u
+ZGFyeS9TdWJvcmRpbmF0ZSBidXMgbnVtYmVycw0KICBQQ0k6IG1vYml2ZWlsOiBGaXggdGhlIGNo
+ZWNraW5nIG9mIHZhbGlkIGRldmljZQ0KICBQQ0k6IG1vYml2ZWlsOiBBZGQgbGluayB1cCBjb25k
+aXRpb24gY2hlY2sNCiAgUENJOiBtb2JpdmVpbDogQ29tcGxldGUgaW5pdGlhbGl6YXRpb24gb2Yg
+aG9zdCBldmVuIGlmIG5vIFBDSWUgbGluaw0KICBQQ0k6IG1vYml2ZWlsOiBEaXNhYmxlIElCIGFu
+ZCBPQiB3aW5kb3dzIHNldCBieSBib290bG9hZGVyDQogIFBDSTogbW9iaXZlaWw6IEFkZCA4LWJp
+dCBhbmQgMTYtYml0IHJlZ2lzdGVyIGFjY2Vzc29ycw0KICBkdC1iaW5kaW5nczogUENJOiBtb2Jp
+dmVpbDogQ2hhbmdlIGdwaW9fc2xhdmUgYW5kIGFwYl9jc3IgdG8gb3B0aW9uYWwNCg0KIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tb2JpdmVpbC1wY2llLnR4dCB8ICAgMiArDQogZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMgICAgICAgIHwgNTc4ICsrKysrKysrKysr
+LS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgMzY4IGluc2VydGlvbnMoKyksIDIxMiBkZWxldGlv
+bnMoLSkNCg0KLS0gDQoyLjE3LjENCg0K
