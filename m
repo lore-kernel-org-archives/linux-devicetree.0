@@ -1,146 +1,71 @@
-From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-Date: Fri, 12 Apr 2019 14:07:29 +0200
-Message-ID: <20190412120730.473-3-megous@megous.com>
-References: <20190412120730.473-1-megous@megous.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v3 00/11] Add support for Orange Pi 3
+Date: Fri, 12 Apr 2019 14:10:03 +0200
+Message-ID: <20190412121003.yhw7w5qspps5r5nf@core.my.home>
+References: <20190411101951.30223-1-megous@megous.com>
+ <CAGb2v64HgPePM=rk_kSdS7yFx4S4TR=tpGC2yQ6ruDCvBnosiA@mail.gmail.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBBP7YHSQKGQEZ32FX6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20190412120730.473-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBHEAYLSQKGQEY7ZSNZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64HgPePM=rk_kSdS7yFx4S4TR=tpGC2yQ6ruDCvBnosiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Naveen Gupta <naveen.gupta-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Franky Lin <franky.lin@broad>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Hello ChenYu,
 
-RTC on H6 is mostly the same as on H5 and H3. It has slight differences
-mostly in features that are not yet supported by this driver.
+On Fri, Apr 12, 2019 at 07:05:05PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Apr 11, 2019 at 6:19 PM megous via linux-sunxi
+> <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+> >
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >
+> > This series implements support for Xunlong Orange Pi 3 board.
+> >
+> > Unfortunately, this board needs some small driver patches, so I have
+> > split the boards DT patch into chunks that require patches for drivers
+> > in various subsystems.
+> >
+> > Suggested merging plan/dependencies:
+> >
+> > - Pinctrl and stmmac patches are needed for ethernet support.
+> >   (patches 1-5)
+> > - HDMI support was changed, please review. (patches 6-8)
+> > - brcmfmac patch 9, fixing firmware file selection, can be merged
+> >   now, after review, as it doesn't depend on anything (please
+> >   review :))
+> > - mmc1 pinconf (patch 10) can probably be merged now, too (it will
+> >   certainly be used soon by all the other WiFi featuring boards
+> >   based on H6)
+> > - WiFi dts patch will have to wait for H6 RTC patches, which in turn
+> >   depend on ChenYu's RTC series, to be merged. That will take a
+> >   while yet. I'm just keeping it in the series for completness.
+> >   (patch 11)
+> 
+> Unfortunately I will not have time to tackle this for the next release.
+> Furthermore, I'd like to do this after the new clk parenting stuff lands.
+> Otherwise it's going to be a mess, as the clock tree is a bit convoluted
+> compared to previous SoCs.
 
-Some differences are already stated in the comments in existing code.
-One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
-EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
+I've sent out a patch series that addresses part of that for now.
 
-It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
-external low speed oscillator is working correctly.
+So perhaps we can start with that and incrementally get to a full support,
+of H6's complexities around clocks managed by RTC.
 
-This patch adds support for enabling LOSC when necessary:
+thanks,
+	o.
 
-- during reparenting
-- when probing the clock
-
-H6 also has capacbility to automatically reparent RTC clock from
-external crystal oscillator, to internal RC oscillator, if external
-oscillator fails. This is enabled by default. Disable it during
-probe.
-
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
----
- drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index 11f56de52179..7375a530c565 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -41,9 +41,11 @@
- /* Control register */
- #define SUN6I_LOSC_CTRL				0x0000
- #define SUN6I_LOSC_CTRL_KEY			(0x16aa << 16)
-+#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS		BIT(15)
- #define SUN6I_LOSC_CTRL_ALM_DHMS_ACC		BIT(9)
- #define SUN6I_LOSC_CTRL_RTC_HMS_ACC		BIT(8)
- #define SUN6I_LOSC_CTRL_RTC_YMD_ACC		BIT(7)
-+#define SUN6I_LOSC_CTRL_EXT_LOSC_EN		BIT(4)
- #define SUN6I_LOSC_CTRL_EXT_OSC			BIT(0)
- #define SUN6I_LOSC_CTRL_ACC_MASK		GENMASK(9, 7)
- 
-@@ -137,6 +139,8 @@ struct sun6i_rtc_clk_data {
- 	unsigned int has_prescaler : 1;
- 	unsigned int has_out_clk : 1;
- 	unsigned int export_iosc : 1;
-+	unsigned int has_losc_en : 1;
-+	unsigned int has_auto_swt : 1;
- };
- 
- struct sun6i_rtc_dev {
-@@ -199,6 +203,10 @@ static int sun6i_rtc_osc_set_parent(struct clk_hw *hw, u8 index)
- 	val &= ~SUN6I_LOSC_CTRL_EXT_OSC;
- 	val |= SUN6I_LOSC_CTRL_KEY;
- 	val |= index ? SUN6I_LOSC_CTRL_EXT_OSC : 0;
-+	if (rtc->data->has_losc_en) {
-+		val &= ~SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-+		val |= index ? SUN6I_LOSC_CTRL_EXT_LOSC_EN : 0;
-+	}
- 	writel(val, rtc->base + SUN6I_LOSC_CTRL);
- 	spin_unlock_irqrestore(&rtc->lock, flags);
- 
-@@ -224,6 +232,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 	const char *iosc_name = "rtc-int-osc";
- 	const char *clkout_name = "osc32k-out";
- 	const char *parents[2];
-+	u32 reg;
- 
- 	rtc = kzalloc(sizeof(*rtc), GFP_KERNEL);
- 	if (!rtc)
-@@ -244,9 +253,18 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 		goto err;
- 	}
- 
-+	reg = SUN6I_LOSC_CTRL_KEY;
-+	if (rtc->data->has_auto_swt) {
-+		/* Bypass auto-switch to int osc, on ext losc failure */
-+		reg |= SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS;
-+		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-+	}
-+
- 	/* Switch to the external, more precise, oscillator */
--	writel(SUN6I_LOSC_CTRL_KEY | SUN6I_LOSC_CTRL_EXT_OSC,
--	       rtc->base + SUN6I_LOSC_CTRL);
-+	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-+	if (rtc->data->has_losc_en)
-+		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-+	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
- 
- 	/* Yes, I know, this is ugly. */
- 	sun6i_rtc = rtc;
-@@ -354,6 +372,23 @@ CLK_OF_DECLARE_DRIVER(sun8i_h3_rtc_clk, "allwinner,sun8i-h3-rtc",
- CLK_OF_DECLARE_DRIVER(sun50i_h5_rtc_clk, "allwinner,sun50i-h5-rtc",
- 		      sun8i_h3_rtc_clk_init);
- 
-+static const struct sun6i_rtc_clk_data sun50i_h6_rtc_data = {
-+	.rc_osc_rate = 16000000,
-+	.fixed_prescaler = 32,
-+	.has_prescaler = 1,
-+	.has_out_clk = 1,
-+	.export_iosc = 1,
-+	.has_losc_en = 1,
-+	.has_auto_swt = 1,
-+};
-+
-+static void __init sun50i_h6_rtc_clk_init(struct device_node *node)
-+{
-+	sun6i_rtc_clk_init(node, &sun50i_h6_rtc_data);
-+}
-+CLK_OF_DECLARE_DRIVER(sun50i_h6_rtc_clk, "allwinner,sun50i-h6-rtc",
-+		      sun50i_h6_rtc_clk_init);
-+
- static const struct sun6i_rtc_clk_data sun8i_v3_rtc_data = {
- 	.rc_osc_rate = 32000,
- 	.has_out_clk = 1,
-@@ -683,6 +718,7 @@ static const struct of_device_id sun6i_rtc_dt_ids[] = {
- 	{ .compatible = "allwinner,sun8i-h3-rtc" },
- 	{ .compatible = "allwinner,sun8i-v3-rtc" },
- 	{ .compatible = "allwinner,sun50i-h5-rtc" },
-+	{ .compatible = "allwinner,sun50i-h6-rtc" },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
--- 
-2.21.0
+> ChenYu
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
