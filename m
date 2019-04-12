@@ -1,56 +1,57 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v6 06/12] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Fri, 12 Apr 2019 09:54:24 +0530
-Message-ID: <9cd4b818-905c-08a4-5675-a5ee763cea98@ti.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-7-lokeshvutla@ti.com>
- <20190411150023.GQ2839@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Date: Fri, 12 Apr 2019 06:58:32 +0200
+Message-ID: <20190412045832.5109-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411150023.GQ2839@atomide.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, maxime.ripard@bootlin.com
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
+The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+with Broadcom internals attached to UART1 and some gpios.
+This addition is in line with similar boards.
 
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+changes in v3: spelling fixes
+changes in v2: remove pinctrl things
+ arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-On 11/04/19 8:30 PM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
->> +Example:
->> +--------
->> +The following example demonstrates both interrupt router node and the consumer
->> +node(main gpio) on the AM654 SoC:
->> +
->> +main_intr: interrupt-controller0 {
->> +	compatible = "ti,sci-intr";
->> +	ti,intr-trigger-type = <1>;
->> +	interrupt-controller;
->> +	interrupt-parent = <&gic500>;
->> +	#interrupt-cells = <3>;
->> +	ti,sci = <&dmsc>;
->> +	ti,sci-dst-id = <56>;
->> +	ti,sci-rm-range-girq = <0x1>;
->> +};
-> 
-> To me it seems there should not be too many of these interrupt
-> controller nodes for each SoC. Maybe you're already planning on
-> doing it, but I suggest that you just add more specific compatibles
-> and then look up the dst-id from a mapping table in the driver
-> similar to what patch 04/12 in this series is already doing.
-> 
-> That way you don't need to add custom TI specific (firmware
-> defined) device tree properties listed above ;)
-
-I am tired of arguing on this. We did close this topic in the previous version
-of this series. Why do you want to keep re visiting the same. Sorry, I am not
-going change unless I receive a Nack from Marc or Rob.
-
-Thanks and regards,
-Lokesh
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index 1db2541135a7..57432d0500b1 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -69,6 +69,8 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
+ 
+@@ -122,7 +124,20 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vcc3v3>;
++		vddio-supply = <&reg_vcc3v3>;
++		device-wakeup-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
++		host-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
++		shutdown-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++	};
++
+ };
+ 
+ &usb_otg {
+-- 
+2.11.0
