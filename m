@@ -1,61 +1,113 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 3/4] ARM: dts: rockchip: Hook resets up to USB PHYs on
- rk3288.
-Date: Fri, 12 Apr 2019 17:00:00 -0700
-Message-ID: <20190413000000.GA112750@google.com>
-References: <20190412224149.106971-1-dianders@chromium.org>
- <20190412224149.106971-4-dianders@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 6/7] ARM: dts: rockchip: Specify
+ rk3288-veyron-chromebook's display timings
+Date: Fri, 12 Apr 2019 17:07:12 -0700
+Message-ID: <CAD=FV=WivkKM3CXE+28QCMO=RnJb19vhse0Ot0q-81a1L30iEA@mail.gmail.com>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-7-dianders@chromium.org>
+ <CAPCnQJmWfnBwxj8gScNzmZTGV6eU5B1vk76sQ56A2FvpSiYRaw@mail.gmail.com>
+ <CAD=FV=VK3ow3PgA9nXiE8+0UdgsGiFbAiZd-QAmCsLHK0Yi2Cg@mail.gmail.com>
+ <CAPCnQJkDDGrFLpFHr=xD02Gz_TzMwHK7B4-E4cw7A=QhWFFF4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412224149.106971-4-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Minas Harutyunyan <hminas@synopsys.com>, Heiko Stuebner <heiko@sntech.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, amstan@chromium.org, linux-rockchip@lists.infradead.org, linux-usb@vger.kernel.org, Randy Li <ayaka@soulik.info>, ryandcase@chromium.org, jwerner@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAPCnQJkDDGrFLpFHr=xD02Gz_TzMwHK7B4-E4cw7A=QhWFFF4w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Urja Rannikko <urjaman@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@collabora.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 03:41:48PM -0700, Douglas Anderson wrote:
-> Let's hook up the resets to the three USB PHYs on rk3288 as per the
-> bindings.  This is in preparation for a future patch that will set the
-> "snps,reset-phy-on-wake" on the host port.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  arch/arm/boot/dts/rk3288.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 2e604f0afa98..92e0600595f8 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -905,6 +905,8 @@
->  				clocks = <&cru SCLK_OTGPHY0>;
->  				clock-names = "phyclk";
->  				#clock-cells = <0>;
-> +				resets = <&cru SRST_USBOTG_PHY>;
-> +				reset-names = "phy-reset";
->  			};
->  
->  			usbphy1: usb-phy@334 {
-> @@ -913,6 +915,8 @@
->  				clocks = <&cru SCLK_OTGPHY1>;
->  				clock-names = "phyclk";
->  				#clock-cells = <0>;
-> +				resets = <&cru SRST_USBHOST0_PHY>;
-> +				reset-names = "phy-reset";
->  			};
->  
->  			usbphy2: usb-phy@348 {
-> @@ -921,6 +925,8 @@
->  				clocks = <&cru SCLK_OTGPHY2>;
->  				clock-names = "phyclk";
->  				#clock-cells = <0>;
-> +				resets = <&cru SRST_USBHOST1_PHY>;
-> +				reset-names = "phy-reset";
->  			};
->  		};
->  	};
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+SGksCgpPbiBNb24sIEFwciA4LCAyMDE5IGF0IDk6MjYgQU0gVXJqYSBSYW5uaWtrbyA8dXJqYW1h
+bkBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gSGksCj4KPiBPbiBNb24sIEFwciA4LCAyMDE5IGF0IDM6
+MjEgUE0gRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPiA+Cj4g
+PiBIaSwKPiA+Cj4gPiBPbiBTYXQsIEFwciA2LCAyMDE5IGF0IDY6MTYgUE0gVXJqYSBSYW5uaWtr
+byA8dXJqYW1hbkBnbWFpbC5jb20+IHdyb3RlOgo+ID4gPgo+ID4gPiBIaSwKPiA8c25pcD4KPiA+
+ID4KPiA+ID4gVGhlIGRpZmZlcmVuY2Ugd291bGQgYmUgaW4gdGhpcyBmb3JtYXQganVzdCBzZXR0
+aW5nIGhmcm9udC1wb3JjaCA9IDg3Cj4gPiA+IGFuZCB2YmFjay1wb3JjaCA9IDE0Lgo+ID4gPiBB
+bnl3YXlzIHRoZSBwb2ludCBpczogSSBzdXBwb3J0IG1vdmluZyB0aGlzIG1vZGUgaW5mbyBpbnRv
+IHRoZSBkdHMsCj4gPiA+IGFuZCBJJ2QgbGlrZSB0byBrbm93IGhvdyBpZiBhdCBhbGwgc2hvdWxk
+IGkgZ28gYWJvdXQgZ2V0dGluZyBhCj4gPiA+IDYwSHooaXNoKSBtb2RlIHVwc3RyZWFtZWQ/Cj4g
+Pgo+ID4gSSdtIGEgYml0IHRvcm4gaGVyZS4gIEkgbGlrZSB0aGUgaWRlYSBvZiBhY3R1YWxseSBn
+ZXR0aW5nIDYwIEh6IGFuZAo+ID4geW91IGFsc28gaW5jcmVhc2UgdGhlIHZibGFuayB0aW1lIGJ5
+IGEgbGl0dGxlIGJpdCAod2hpY2ggbWVhbnMgdGhhdCBpZgo+ID4gYW55b25lIGV2ZXIgZ2V0cyBE
+RFJGcmVxIHVwc3RyZWFtIGl0IHdpbGwgd29yayBiZXR0ZXIpLiAgLi4uYnV0IEknbQo+ID4gYWxz
+byBzbGlnaHRseSBuZXJ2b3VzIGNoYW5naW5nIHNvbWV0aGluZyBsaWtlIHRoaXMgd2l0aG91dCBh
+IHJlYWxseQo+ID4gZ29vZCBtb3RpdmF0aW9uLiAgQXMgeW91IHNhaWQgaW4geW91ciBjb21taXQg
+bWVzc2FnZSB0aGUgcGl4ZWxzIGNsb2Nrcwo+ID4gY2xhaW1lZCBieSB0aGUgc3BlYyBkb24ndCBh
+Y3R1YWxseSBhbGwgd29yayBhbmQgdGh1cywgdG8gc29tZSBleHRlbnQsCj4gPiB3ZSBjYW4gb25s
+eSByZWx5IG9uIHRyaWFsLWFuZC1lcnJvciBoZXJlLiAgV2hpbGUgeW91ciBuZXcgbW9kZSB3b3Jr
+cwo+ID4gd2VsbCBvbiB5b3VyIGRldmljZSAoYW5kIHlvdSB3aXNlbHkgZ2F2ZSBpdCBhIGJpdCBv
+ZiBtYXJnaW4pLCBpdCBpcwo+ID4gX3Bvc3NpYmxlXyB0aGF0IHRoZXJlIGNvdWxkIGJlIGRldmlj
+ZXMgb3V0IHRoZXJlIHdoZXJlIGl0IGRvZXNuJ3Qgd29yawo+ID4gKGVzcGVjaWFsbHkgYWNyb3Nz
+IHZhcmlvdXMgdGVtcGVyYXR1cmUgZXh0cmVtZXMpLiAgQWxsIGRldmljZXMgd2VyZQo+ID4gdGVz
+dGVkIGluIHRoZSBmYWN0b3J5IHdpdGggdGhlIG9sZCB0aW1pbmdzIGFuZCBwcmVzdW1hYmx5IGhh
+dmUgYmVlbgo+ID4gcnVubmluZyBmaW5lIGZvciB5ZWFycyBsaWtlIHRoYXQuLi4KPiBSZTogdGhl
+IHRyaWFsIGFuZCBlcnJvcjogaXQgbWlnaHQgYmUgdGhlIGNhc2UgdGhhdCB0aGUgcGFuZWxzIGFj
+dHVhbGx5Cj4gd29yayBhdCAxNTA2IHZ0b3RhbCBpZiB5b3UgYWxzbyBhZGp1c3QgdGhlIHN5bmMg
+bGVuZ3RoIGFuZC9vciBiYWNrCj4gcG9yY2ggImFjY29yZGluZ2x5Iiwgd2hhdGV2ZXIgdGhhdCBh
+Y2NvcmRpbmdseSB3b3VsZCBiZSBmb3IgdGhpcyBwYW5lbAo+IHNpbmNlIHRoZSBkYXRhc2hlZXQg
+ZG9lc250IHRlbGwuIEkgbWlzc2VkIHRoaXMgcG9pbnQgd2hlbiBpIHdhcyBkb2luZwo+IG15IHRl
+c3RpbmcgYW5kIGp1c3QgYWRqdXN0ZWQgdGhlIHZhcmlhYmxlcyB3aXRoIHRoZSBtb3N0Cj4gImFk
+anVzdGFiaWxpdHkiIChiaWdnZXIgc3RhcnRpbmcgdmFsdWUpIHRvIHRoZW0uCgpGYWlyIGVub3Vn
+aC4gIEkgZ3Vlc3MgSSBqdXN0IGhhdmUgbXkgZ3V0IGluc3RpbmN0cyB0aGF0IHNheSB0aGF0IHRo
+aXMKd2lsbCBicmVhayBzb21lIGRldmljZSBzb21ld2hlcmUsIGJ1dCBpdCdzIGNlcnRhaW5seSBw
+b3NzaWJsZSB0aGF0J3MKd3JvbmcuCgoKPiA+IEkgd2lsbCBjZXJ0YWlubHkgYWRtaXQgdGhhdCBp
+dCdzIHVubGlrZWx5IGRldmljZXMgd291bGQgYmUgYWZmZWN0ZWQsCj4gPiBidXQgYXQgdGhlIHNh
+bWUgdGltZSBJJ2Qgd2FudCB0byBrbm93IGhvdyBtdWNoIG9mIGEgZGlmZmVyZW5jZSBnb2luZwo+
+ID4gZnJvbSA1OC4zIEh6IHRvIDYwIEh6IG1hZGUgZm9yIHlvdS4gIENvdWxkIHlvdSBhY3R1YWxs
+eSBub3RpY2UgYW55Cj4gPiB2aXNpYmxlIGRpZmZlcmVuY2UsIG9yIHdhcyBpdCBqdXN0IG5pY2Ug
+dG8gYmUgYXQgNjAgSHo/Cj4gSG9uZXN0bHkgSSB3YXMganVzdCBkb2luZyB0aGlzIGJlY2F1c2Ug
+aSByZWFsbHkgbGlrZWQgdGhlIGlkZWEgb2YKPiBhY3R1YWxseSBtYWtpbmcgaXQgNjBIeiBhbmQg
+bXkgZXllcyBhcmVudCB0aGF0IGdvb2QgYXQgbm90aWNpbmcKPiBoaWdoLWZwcyB0aGluZ3MgLSBp
+IHRoaW5rIHRoZSBvbmUgY2FzZSB3aGVyZSBpdCBtaWdodCBiZSB2aXNpYmxlIHRvIGEKPiBrZWVu
+IGV5ZSBpcyA3MjBwNjAgcGxheWJhY2sgd2hlcmUgeW91J2QgbmVlZCB0byBza2lwICJhYm91dCAy
+IiAoMS43Li4pCj4gZnJhbWVzIGEgc2Vjb25kIGlmIHJ1bm5pbmcgYXQgNTguMyBIei4gQnV0IGN1
+cnJlbnRseSB0aGUgQzIwMSBpc250Cj4gZG9pbmcgYSBsb3Qgb2YgdGhhdCBnaXZlbiBpIGRvbnQg
+dGhpbmsgaS93ZSBoYXZlIGEgZ29vZCBzb2Z0d2FyZSBzZXR1cAo+IGZvciBpdC4gVGhhdCBjb3Vs
+ZCBiZSBjaGFuZ2luZyBpbiB0aGUgZnV0dXJlIHdpdGggcGFuZnJvc3QgYW5kIHRoZSBWUFUKPiBo
+YXJkd2FyZSBkZWNvZGVyIHN1cHBvcnQsIGV0Yy4KClllYWgsIEknZCBkZWZpbml0ZWx5IHdvbmRl
+ciBob3cgZWFzeSB0aGlzIGlzIHRvIG5vdGljZS4gIFNpbmNlIEkKaGF2ZW4ndCBldmVyIGhlYXJk
+IG9mIGFueW9uZSB3aG8gdGhvdWdodCB0aGF0IHRoZSBjdXJyZW50IDU4LjMgSHogd2FzCmNhdXNp
+bmcgcHJvYmxlbXMgdGhhdCB0aGV5IGNvdWxkIGFjdHVhbGx5IG5vdGljZSBpdCBtYWtlcyBtZSBo
+ZXNpdGFudAp0byBjaGFuZ2UgaXQuCgoKPiBBbnl3YXlzIEknbSB0aGlua2luZyBpdCB3b3VsZCBi
+ZSBwcnVkZW50IHRvIGZpcnN0IGdldCB0aGlzIGZyYW1ld29yawo+IG9mIGRldmljZS10cmVlIG1v
+ZGVzIGluIGFuZCB0aGVuIG1heWJlIGFkanVzdCB0aGUgbW9kZSBsYXRlci4KCklmIHlvdSdyZSBP
+SyB3aXRoIGl0LCBsZXQncyBhaW0gdG8gbGFuZCB0aGluZ3Mgd2l0aCB0aGUgY3VycmVudCA1OC4z
+CmFuZCB0aGVuIHdlIGNhbiBkbyB0aGluayBhYm91dCB0aGUgNjAgSHogbW9kZS4KCi4uLkknbSBw
+cm9iYWJseSBzb3VuZGluZyBzdXBlciBwYXJhbm9pZCBoZXJlIHNpbmNlIChwcmVzdW1hYmx5KSBh
+bnlvbmUKd2hvIGlzIHJ1bm5pbmcgdXBzdHJlYW0gTGludXggb24gdGhlaXIgQ2hyb21lYm9vayBp
+cyBtb3JlIHRoYW4gY2FwYWJsZQpvZiBiaXNlY3RpbmcgcHJvYmxlbXMgbGlrZSB0aGlzIGlmIGl0
+IGNhdXNlcyBwcm9ibGVtcywgYnV0IEkgZ3Vlc3MgSSdtCndvcnJpZWQgdGhhdCB0aGlzIGNvdWxk
+IGV2ZW50dWFsbHkgbWFrZSBpdHMgd2F5IGludG8gYSBDaHJvbWUgT1MgdHJlZQooZWl0aGVyIHRo
+cm91Z2ggYSBrZXJuZWwgdXByZXYgb3Igc2ltcGxlIGNoZXJyeS1waWNrcykgYW5kIGFmZmVjdApw
+ZW9wbGUuCgoKPiBUZXN0aW5nIHRoZSA2MEh6IG1vZGUgaXMgc2ltcGxlIGVub3VnaDoKPiB4cmFu
+ZHIgLS1uZXdtb2RlIDEzNjZ4NzY4cDYwIDc0LjI1IDEzNjYgMTQ1MyAxNDgzIDE1NDMgNzY4IDc3
+NiA3OTAgODAyCj4gLUhTeW5jIC1WU3luYwo+IHhyYW5kciAtLWFkZG1vZGUgZURQLTEgMTM2Nng3
+NjhwNjAKPiB4cmFuZHIgLS1vdXRwdXQgZURQLTEgLS1tb2RlIDEzNjZ4NzY4cDYwCj4KPiAoVGhl
+IG1vZGUgbmFtZSBjYW4gYmUgYW55dGhpbmcuLi4pCj4gU28gbWVhbndoaWxlIEkgd291bGQgYXBw
+cmVjaWF0ZSBpdCBpZiB3ZSBjb3VsZCBnZXQgc29tZSB0ZXN0IHJlcG9ydHMKPiBvZiB0aGUgbW9k
+ZSB3aXRoIG90aGVyIHZleXJvbiBjaHJvbWVib29rcyB0aGF0IGhhdmUgdGhpcyBwYW5lbCA6KQoK
+SSBzdGlsbCBoYXZlbid0IGRvbmUgdGhpcyBhbmQgSSdtIG5vdCBpbiBmcm9udCBvZiBteSBDaHJv
+bWVib29rIG5vdy4KSSdsbCB0cnkgdG8gZ2l2ZSBpdCBhIHRyeSBzb29uLiAgVGhlIGtpbmRzIG9m
+IHByb2JsZW1zIEknZCBleHBlY3QgKGlmCnRoZXJlIGFyZSBhbnkpIHdvdWxkIGJlIGZsaWNrZXJz
+IHRoYXQgaGFwcGVuIF92ZXJ5XyByYXJlbHkgdGhvdWdoLCBidXQKSSBjYW4gYXQgbGVhc3QgZG8g
+c29tZSBiYXNpYyB0ZXN0aW5nLgoKT25lIG90aGVyIG5vdGUgdG8ganVzdGlmeSBteSBwYXJhbm9p
+YTogb24gYSBwYXN0IENocm9tZWJvb2sgd2UKY2VydGFpbmx5IGhhZCBjcmF6eSBmbGlja2VyaW5n
+IHByb2JsZW1zLiAgT24gb25lIGRldmljZSBvbmUgZGF5IHlvdSdkCmdldCB0d28gZmxpY2tlcnMg
+YW5kIHRoZW4gc2VlIG5vdGhpbmcgZm9yIHRoZSBuZXh0IHR3byB3ZWVrcy4gIC4uLnNvbWUKZGV2
+aWNlcyB3b3VsZCBzZWUgYXQgbGVhc3QgYSBmbGlja2VyIGEgZGF5IGFuZCBzb21lIHdvdWxkIHNl
+ZSBubwpmbGlja2VycyBldmVyLiAgT2J2aW91c2x5IGl0J3MgdW5saWtlbHkgdGhhdCB3b3VsZCBo
+YXBwZW4gaGVyZSwgYnV0CnN1Y2ggcGFzdCBleHBlcmllbmNlIGp1c3QgbWFrZXMgbWUgcGFyYW5v
+aWQuICA7LSkKCgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
