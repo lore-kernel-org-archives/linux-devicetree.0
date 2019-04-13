@@ -1,14 +1,11 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v4 7/9] drm: sun4i: Add support for enabling DDC
- I2C bus power to dw_hdmi glue
-Date: Sat, 13 Apr 2019 18:54:16 +0200
-Message-ID: <20190413165418.27880-8-megous@megous.com>
-References: <20190413165418.27880-1-megous@megous.com>
+Subject: [PATCH v4 0/9] Add support for Orange Pi 3
+Date: Sat, 13 Apr 2019 18:54:09 +0200
+Message-ID: <20190413165418.27880-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBP5IZDSQKGQERH3HLLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20190413165418.27880-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBPNIZDSQKGQEIOJMLOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,135 +18,93 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-transistors, before the bus can be used.
+This series implements support for Xunlong Orange Pi 3 board.
 
-Model this as a power supply for DDC bus on the HDMI connector connected
-to the output port (port 1) of the HDMI controller.
+Unfortunately, this board needs some small driver patches, so I have
+split the boards DT patch into chunks that require patches for drivers
+in various subsystems.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 61 ++++++++++++++++++++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
- 2 files changed, 61 insertions(+), 2 deletions(-)
+Suggested merging plan/dependencies:
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 39d8509d96a0..acf89780260d 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
- 	return crtcs;
- }
- 
-+static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-+					     struct platform_device **pdev_out)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *remote;
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-+	if (!remote)
-+		return -ENODEV;
-+
-+	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-+		of_node_put(remote);
-+		return -ENODEV;
-+	}
-+
-+	pdev = of_find_device_by_node(remote);
-+	of_node_put(remote);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	*pdev_out = pdev;
-+	return 0;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
-@@ -151,16 +175,35 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
- 
-+	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-+	if (!ret) {
-+		hdmi->ddc_regulator = regulator_get(&hdmi->connector_pdev->dev,
-+						    "ddc");
-+		if (IS_ERR(hdmi->ddc_regulator)) {
-+			platform_device_put(hdmi->connector_pdev);
-+			dev_err(dev, "Couldn't get ddc regulator\n");
-+			return PTR_ERR(hdmi->ddc_regulator);
-+		}
-+	}
-+
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
--		return ret;
-+		goto err_unref_ddc_regulator;
-+	}
-+
-+	if (hdmi->ddc_regulator) {
-+		ret = regulator_enable(hdmi->ddc_regulator);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable ddc regulator\n");
-+			goto err_disable_regulator;
-+		}
- 	}
- 
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_regulator;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -213,8 +256,15 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
-+err_disable_ddc_regulator:
-+	if (hdmi->ddc_regulator)
-+		regulator_disable(hdmi->ddc_regulator);
- err_disable_regulator:
- 	regulator_disable(hdmi->regulator);
-+err_unref_ddc_regulator:
-+	if (hdmi->ddc_regulator)
-+		regulator_put(hdmi->ddc_regulator);
-+	platform_device_put(hdmi->connector_pdev);
- 
- 	return ret;
- }
-@@ -229,6 +279,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
- 	regulator_disable(hdmi->regulator);
-+
-+	if (hdmi->ddc_regulator) {
-+		regulator_disable(hdmi->ddc_regulator);
-+		regulator_put(hdmi->ddc_regulator);
-+	}
-+
-+	platform_device_put(hdmi->connector_pdev);
- }
- 
- static const struct component_ops sun8i_dw_hdmi_ops = {
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..60f5200aee73 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -188,8 +188,10 @@ struct sun8i_dw_hdmi {
- 	struct sun8i_hdmi_phy		*phy;
- 	struct dw_hdmi_plat_data	plat_data;
- 	struct regulator		*regulator;
-+	struct regulator		*ddc_regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
-+	struct platform_device		*connector_pdev;
- };
- 
- static inline struct sun8i_dw_hdmi *
+- Pinctrl and stmmac patches are needed for ethernet support.
+  (patches 1-5) - these should be ready now
+- HDMI support - waits for DT review. (patches 6-8)
+- mmc1 pinconf (patch 9) can probably be merged now, too (it will
+  certainly be used soon by all the other WiFi featuring boards
+  based on H6)
+
+This patch is also needed to not get segfault on boot (it was already
+merged): 
+  https://lkml.org/lkml/2019/4/5/856
+
+Changes in v2:
+- added dt-bindings documentation for the board's compatible string
+  (suggested by Clement)
+- addressed checkpatch warnings and code formatting issues (on Maxime's
+  suggestions)
+- stmmac: dropped useless parenthesis, reworded description of the patch
+  (suggested by Sergei)
+- drop useles dev_info() about the selected io bias voltage
+- docummented io voltage bias selection variant macros
+- wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
+  because wifi depends on H6 RTC support that's not merged yet (suggested
+  by Clement)
+- added missing signed-of-bys
+- changed &usb2otg dr_mode to otg, and added a note about VBUS
+- improved wording of HDMI driver's DDC power supply patch
+
+Changes in v3:
+- dropped already applied patches
+- changed pinctrl I/O bias selection constants to enum and renamed
+- added /omit-if-no-ref/ to mmc1_pins
+- made mmc1_pins default pinconf for mmc1 in H6 dtsi
+- move ddc-supply to HDMI connector node, updated patch descriptions,
+  changed dt-bindings docs
+
+Changes in v4:
+- fix checkpatch warnings/style issues
+- use enum in struct sunxi_desc_function for io_bias_cfg_variant
+- collected acked-by's
+- fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
+  caused by missing conversion from has_io_bias_cfg struct member
+  (I've kept the acked-by, because it's a trivial change, but feel free
+  to object.) (reported by Martin A. on github)
+  I did not have A80 pinctrl enabled for some reason, so I did not catch
+  this sooner.
+- dropped brcm firmware patch (was already applied)
+- dropped the wifi dts patch (will re-send after H6 RTC gets merged,
+  along with bluetooth support, in a separate series)
+
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+Icenowy Zheng (2):
+  net: stmmac: sun8i: add support for Allwinner H6 EMAC
+  net: stmmac: sun8i: force select external PHY when no internal one
+
+Ondrej Jirman (7):
+  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+  pinctrl: sunxi: Support I/O bias voltage setting on H6
+  arm64: dts: allwinner: orange-pi-3: Enable ethernet
+  dt-bindings: display: hdmi-connector: Add DDC power supply
+  drm: sun4i: Add support for enabling DDC I2C bus power to dw_hdmi glue
+  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+  arm64: dts: allwinner: h6: Add MMC1 pins
+
+ .../display/connector/hdmi-connector.txt      |  1 +
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 79 +++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 11 +++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 61 +++++++++++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 +++++
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c   |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 56 ++++++++-----
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         | 18 ++++-
+ 11 files changed, 230 insertions(+), 24 deletions(-)
+
 -- 
 2.21.0
