@@ -1,12 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v4 9/9] arm64: dts: allwinner: h6: Add MMC1 pins
-Date: Sat, 13 Apr 2019 18:54:18 +0200
-Message-ID: <20190413165418.27880-10-megous@megous.com>
+Subject: [PATCH v4 5/9] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Sat, 13 Apr 2019 18:54:14 +0200
+Message-ID: <20190413165418.27880-6-megous@megous.com>
 References: <20190413165418.27880-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBQFIZDSQKGQEVSTIA6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBP5IZDSQKGQERH3HLLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190413165418.27880-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,45 +21,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-MMC1 is used on some H6 boards we want to support. Typical use is 4-bit
-SDIO interface with a WiFi chip. Add pin definitions for this use case.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+to the phy datasheet, both regulators need to be enabled at the same time,
+but we can only specify a single phy-supply in the DT.
 
-As this is the only possible configration for mmc1, make it the default
-one, too.
+This can be achieved by making one regulator depedning on the other via
+vin-supply. While it's not a technically correct description of the
+hardware, it achieves the purpose.
+
+All values of RX/TX delay were tested exhaustively and a middle one of the
+working values was chosen.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index e0dc4a05c1ba..bd37b849d3b7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -243,6 +243,15 @@
- 				bias-pull-up;
- 			};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 17d496990108..6d6b1f66796d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
-+			/omit-if-no-ref/
-+			mmc1_pins: mmc1-pins {
-+				pins = "PG0", "PG1", "PG2", "PG3",
-+				       "PG4", "PG5";
-+				function = "mmc1";
-+				drive-strength = <30>;
-+				bias-pull-up;
-+			};
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -44,6 +45,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
 +
- 			mmc2_pins: mmc2-pins {
- 				pins = "PC1", "PC4", "PC5", "PC6",
- 				       "PC7", "PC8", "PC9", "PC10",
-@@ -294,6 +303,8 @@
- 			resets = <&ccu RST_BUS_MMC1>;
- 			reset-names = "ahb";
- 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc1_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
++	 * at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++
++		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
++		 * enable two regulators to power the phy. This is one way
++		 * to achieve that.
++		 */
++		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
++	};
+ };
+ 
+ &cpu0 {
+@@ -58,6 +80,28 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	vmmc-supply = <&reg_cldo1>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
 -- 
 2.21.0
