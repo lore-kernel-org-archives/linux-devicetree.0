@@ -1,13 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v4 4/9] pinctrl: sunxi: Support I/O bias voltage
- setting on H6
-Date: Sat, 13 Apr 2019 18:54:13 +0200
-Message-ID: <20190413165418.27880-5-megous@megous.com>
+Subject: [PATCH v4 8/9] arm64: dts: allwinner: orange-pi-3:
+ Enable HDMI output
+Date: Sat, 13 Apr 2019 18:54:17 +0200
+Message-ID: <20190413165418.27880-9-megous@megous.com>
 References: <20190413165418.27880-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBPVIZDSQKGQESQGZR2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBP5IZDSQKGQERH3HLLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <20190413165418.27880-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,92 +21,80 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-H6 SoC has a "pio group withstand voltage mode" register (datasheet
-description), that needs to be used to select either 1.8V or 3.3V I/O mode,
-based on what voltage is powering the respective pin banks and is thus used
-for I/O signals.
-
-Add support for configuring this register according to the voltage of the
-pin bank regulator (if enabled).
-
-This is similar to the support for I/O bias voltage setting patch for A80
-and the same concerns apply. See:
-
-  commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
+Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
+I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
- drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 11 +++++++++++
- drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  7 +++++++
- 3 files changed, 19 insertions(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-index ef4268cc6227..3cc1121589c9 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-@@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
- 	.irq_banks = 4,
- 	.irq_bank_map = h6_irq_bank_map,
- 	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 6d6b1f66796d..58a6635c909e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -22,6 +22,18 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++		ddc-supply = <&reg_ddc>;
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -37,6 +49,15 @@
+ 		};
+ 	};
+ 
++	reg_ddc: ddc-io {
++		compatible = "regulator-fixed";
++		regulator-name = "ddc-io";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
++	};
++
+ 	reg_vcc5v: vcc5v {
+ 		/* board wide 5V supply directly from the DC jack */
+ 		compatible = "regulator-fixed";
+@@ -72,6 +93,10 @@
+ 	cpu-supply = <&reg_dcdca>;
  };
  
- static int h6_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 98c4de5f4019..0cbca30b75dc 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -614,6 +614,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 					 unsigned pin,
- 					 struct regulator *supply)
- {
-+	unsigned short bank = pin / PINS_PER_BANK;
-+	unsigned long flags;
- 	u32 val, reg;
- 	int uV;
- 
-@@ -651,6 +653,15 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 		reg &= ~IO_BIAS_MASK;
- 		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
- 		return 0;
-+	case BIAS_VOLTAGE_PIO_POW_MODE_SEL:
-+		val = uV <= 1800000 ? 1 : 0;
++&de {
++	status = "okay";
++};
 +
-+		raw_spin_lock_irqsave(&pctl->lock, flags);
-+		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-+		reg &= ~(1 << bank);
-+		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-+		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index a62b81357136..44e30deeee38 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,6 +95,8 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
- 
-+#define PIO_POW_MOD_SEL_REG	0x340
-+
- enum sunxi_desc_bias_voltage {
- 	BIAS_VOLTAGE_NONE,
- 	/*
-@@ -102,6 +104,11 @@ enum sunxi_desc_bias_voltage {
- 	 * Pn_GRP_CONFIG registers, as seen on A80 SoC.
- 	 */
- 	BIAS_VOLTAGE_GRP_CONFIG,
-+	/*
-+	 * Bias voltage is set through PIO_POW_MOD_SEL_REG
-+	 * register, as seen on H6 SoC, for example.
-+	 */
-+	BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -91,6 +116,16 @@
+ 	status = "okay";
  };
  
- struct sunxi_desc_function {
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.21.0
