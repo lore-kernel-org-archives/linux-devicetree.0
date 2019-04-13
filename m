@@ -1,129 +1,22 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 02/26] PCI: keystone: Cleanup error_irq configuration
-Date: Sat, 13 Apr 2019 09:07:36 -0500
-Message-ID: <20190413140735.GD126710@google.com>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-3-kishon@ti.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
+Date: Sat, 13 Apr 2019 11:08:25 -0300
+Message-ID: <CAOMZO5CbZg9Q8Ms9tXWL=8Q6hOfcJ4nRkHa8XV=hn8_psX96dw@mail.gmail.com>
+References: <20190411065440.GB26817@dragon> <1555161577-1533-1-git-send-email-kueffner.markus@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190325093947.32633-3-kishon@ti.com>
+In-Reply-To: <1555161577-1533-1-git-send-email-kueffner.markus@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
+To: Markus Kueffner <kueffner.markus@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 03:09:23PM +0530, Kishon Vijay Abraham I wrote:
-> pci-keystone driver uses irq_of_parse_and_map to get irq number of
-> error_irq. Use platform_get_irq instead and move platform_get_irq()
-> and request_irq() of error_irq from ks_pcie_add_pcie_port to ks_pcie_probe
-> since error_irq is common to both RC mode and EP mode.
+On Sat, Apr 13, 2019 at 10:20 AM Markus Kueffner
+<kueffner.markus@gmail.com> wrote:
+>
+> Add Pincfgs to enable the i.MX6's OTG feature for UDOO
+>
+> Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
 
-Part of my confusion here is that there's no hint about why
-you need to use platform_get_irq() instead of irq_of_parse_and_map().
-
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 43 +++++++++--------------
->  1 file changed, 17 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 07f55b355d75..e50f8773e768 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -98,8 +98,6 @@ struct keystone_pcie {
->  	struct irq_domain	*legacy_irq_domain;
->  	struct device_node	*np;
->  
-> -	int error_irq;
-> -
->  	/* Application register space */
->  	void __iomem		*va_app_base;	/* DT 1st resource */
->  	struct resource		app;
-> @@ -743,12 +741,6 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
->  	return ret;
->  }
->  
-> -static void ks_pcie_setup_interrupts(struct keystone_pcie *ks_pcie)
-> -{
-> -	if (ks_pcie->error_irq > 0)
-> -		ks_pcie_enable_error_irq(ks_pcie);
-> -}
-> -
->  /*
->   * When a PCI device does not exist during config cycles, keystone host gets a
->   * bus error instead of returning 0xffffffff. This handler always returns 0
-> @@ -810,7 +802,6 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
->  
->  	ks_pcie_stop_link(pci);
->  	ks_pcie_setup_rc_app_regs(ks_pcie);
-> -	ks_pcie_setup_interrupts(ks_pcie);
->  	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
->  			pci->dbi_base + PCI_IO_BASE);
->  
-> @@ -854,23 +845,6 @@ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
->  	struct device *dev = &pdev->dev;
->  	int ret;
->  
-> -	/*
-> -	 * Index 0 is the platform interrupt for error interrupt
-> -	 * from RC.  This is optional.
-> -	 */
-> -	ks_pcie->error_irq = irq_of_parse_and_map(ks_pcie->np, 0);
-> -	if (ks_pcie->error_irq <= 0)
-> -		dev_info(dev, "no error IRQ defined\n");
-> -	else {
-> -		ret = request_irq(ks_pcie->error_irq, ks_pcie_err_irq_handler,
-> -				  IRQF_SHARED, "pcie-error-irq", ks_pcie);
-> -		if (ret < 0) {
-> -			dev_err(dev, "failed to request error IRQ %d\n",
-> -				ks_pcie->error_irq);
-> -			return ret;
-> -		}
-> -	}
-> -
->  	pp->ops = &ks_pcie_host_ops;
->  	ret = ks_pcie_dw_host_init(ks_pcie);
->  	if (ret) {
-> @@ -946,6 +920,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	u32 num_lanes;
->  	char name[10];
->  	int ret;
-> +	int irq;
->  	int i;
->  
->  	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
-> @@ -965,6 +940,20 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "missing IRQ resource: %d\n", irq);
-> +		return irq;
-> +	}
-> +
-> +	ret = request_irq(irq, ks_pcie_err_irq_handler, IRQF_SHARED,
-> +			  "ks-pcie-error-irq", ks_pcie);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to request error IRQ %d\n",
-> +			irq);
-> +		return ret;
-> +	}
-> +
->  	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
->  	if (ret)
->  		num_lanes = 1;
-> @@ -1020,6 +1009,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		goto err_get_sync;
->  
-> +	ks_pcie_enable_error_irq(ks_pcie);
-> +
->  	return 0;
->  
->  err_get_sync:
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
