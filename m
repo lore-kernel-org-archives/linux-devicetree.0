@@ -1,356 +1,184 @@
-From: andrew-sh.cheng <andrew-sh.cheng@mediatek.com>
-Subject: Re: [v2,4/4] devfreq: add mediatek cci devfreq
-Date: Sat, 13 Apr 2019 15:07:24 +0800
-Message-ID: <1555139244.22373.2.camel@mtksdaap41>
-References: <1553841972-19737-5-git-send-email-andrew-sh.cheng@mediatek.com>
- <20190408172220.GA28972@roeck-us.net>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 2/7] dt: bindings: Add multicolor class dt bindings
+ documention
+Date: Sat, 13 Apr 2019 11:54:33 +0200
+Message-ID: <8d9f2ab2-62a6-7fc7-074d-9ac73a261c2e@gmail.com>
+References: <20190411193848.23140-1-dmurphy@ti.com>
+ <20190411193848.23140-3-dmurphy@ti.com> <20190412000707.70f8319f@nic.cz>
+ <5675ac20-6db2-34ea-938a-01f0076b87e7@ti.com>
+ <7a987453-0e4d-be27-790e-efa4a0f40b2b@gmail.com>
+ <d2768a25-046f-9aff-f0ed-2772f451a829@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190408172220.GA28972@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, fan.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d2768a25-046f-9aff-f0ed-2772f451a829@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, Marek Behun <marek.behun@nic.cz>
+Cc: robh+dt@kernel.org, pavel@ucw.cz, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-04-08 at 10:22 -0700, Guenter Roeck wrote:
-> On Fri, Mar 29, 2019 at 02:46:12PM +0800, Andrew-sh Cheng wrote:
-> > This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
-> > of the Mediatek MT8183.
-> > 
-> > On the MT8183 the CCI is supplied by the same regulator as the LITTLE
-> > cores. The driver is notified when the regulator voltage changes
-> > (driven by cpufreq) and adjusts the CCI frequency to the maximum
-> > possible value.
-> > 
-> > Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> > ---
-> >  drivers/devfreq/Kconfig              |  10 ++
-> >  drivers/devfreq/Makefile             |   1 +
-> >  drivers/devfreq/mt8183-cci-devfreq.c | 235 +++++++++++++++++++++++++++++++++++
-> >  3 files changed, 246 insertions(+)
-> >  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
-> > 
-> > diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> > index 6a172d3..da2f8ec 100644
-> > --- a/drivers/devfreq/Kconfig
-> > +++ b/drivers/devfreq/Kconfig
-> > @@ -91,6 +91,16 @@ config ARM_EXYNOS_BUS_DEVFREQ
-> >  	  and adjusts the operating frequencies and voltages with OPP support.
-> >  	  This does not yet operate with optimal voltages.
-> >  
-> > +config ARM_MT8183_CCI_DEVFREQ
-> > +	tristate "MT8183 CCI DEVFREQ Driver"
-> > +	depends on ARM_MEDIATEK_CPUFREQ
-> > +	help
-> > +		This adds a devfreq driver for Cache Coherent Interconnect
-> > +		of Mediatek MT8183, which is shared the same regulator
-> > +		with cpu cluster.
-> > +		It can track buck voltage and update a proper cci frequency.
-> > +		Use notification to get regulator status.
-> > +
-> >  config ARM_TEGRA_DEVFREQ
-> >  	tristate "Tegra DEVFREQ Driver"
-> >  	depends on ARCH_TEGRA_124_SOC
-> > diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-> > index 32b8d4d..817dde7 100644
-> > --- a/drivers/devfreq/Makefile
-> > +++ b/drivers/devfreq/Makefile
-> > @@ -9,6 +9,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
-> >  
-> >  # DEVFREQ Drivers
-> >  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-> > +obj-$(CONFIG_ARM_MT8183_CCI_DEVFREQ)    += mt8183-cci-devfreq.o
-> >  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
-> >  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
-> >  
-> > diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
-> > new file mode 100644
-> > index 0000000..af82d2e
-> > --- /dev/null
-> > +++ b/drivers/devfreq/mt8183-cci-devfreq.c
-> > @@ -0,0 +1,235 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019 MediaTek Inc.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/devfreq.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +#include "governor.h"
-> > +
-> > +struct cci_devfreq {
-> > +	struct devfreq		*devfreq;
-> > +	struct regulator	*proc_reg;
-> > +	unsigned long           proc_reg_uV;
-> > +	struct clk		*cci_clk;
-> > +	struct notifier_block	nb;
-> > +};
-> > +
-> > +static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
-> > +					  unsigned long val, void *data)
-> > +{
-> > +	struct cci_devfreq *cci_df =
-> > +		container_of(nb, struct cci_devfreq, nb);
-> > +
-> > +	/* deal with reduce frequency */
-> > +	if (val & REGULATOR_EVENT_PRE_VOLTAGE_CHANGE) {
-> > +		struct pre_voltage_change_data *pvc_data = data;
-> > +
-> > +		if (pvc_data->min_uV < pvc_data->old_uV) {
-> > +			cci_df->proc_reg_uV =
-> > +				(unsigned long)(pvc_data->min_uV);
-> > +			mutex_lock(&cci_df->devfreq->lock);
-> > +			update_devfreq(cci_df->devfreq);
-> > +			mutex_unlock(&cci_df->devfreq->lock);
-> > +		}
-> > +	}
-> > +
-> > +	if ((val & REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE) &&
-> > +	    ((unsigned long)data > cci_df->proc_reg_uV)) {
-> > +		cci_df->proc_reg_uV = (unsigned long)data;
-> > +		mutex_lock(&cci_df->devfreq->lock);
-> > +		update_devfreq(cci_df->devfreq);
-> > +		mutex_unlock(&cci_df->devfreq->lock);
-> > +	}
-> > +
-> > +	/* deal with increase frequency */
-> > +	if ((val & REGULATOR_EVENT_VOLTAGE_CHANGE) &&
-> > +	    (cci_df->proc_reg_uV < (unsigned long)data)) {
-> > +		cci_df->proc_reg_uV = (unsigned long)data;
-> > +		mutex_lock(&cci_df->devfreq->lock);
-> > +		update_devfreq(cci_df->devfreq);
-> > +		mutex_unlock(&cci_df->devfreq->lock);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mtk_cci_governor_get_target(struct devfreq *devfreq,
-> > +				       unsigned long *freq)
-> > +{
-> > +	struct cci_devfreq *cci_df;
-> > +	struct dev_pm_opp *opp;
-> > +
-> > +	cci_df = dev_get_drvdata(devfreq->dev.parent);
-> > +
-> > +	/* find available frequency */
-> > +	opp = dev_pm_opp_find_max_freq_by_volt(devfreq->dev.parent,
-> > +						 cci_df->proc_reg_uV);
-> > +	*freq = dev_pm_opp_get_freq(opp);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
-> > +					  unsigned int event, void *data)
-> > +{
-> > +	struct cci_devfreq *cci_df;
-> > +	struct notifier_block *nb;
-> > +
-> > +	cci_df = dev_get_drvdata(devfreq->dev.parent);
-> > +	nb = &cci_df->nb;
-> > +
-> > +	switch (event) {
-> > +	case DEVFREQ_GOV_START:
-> > +	case DEVFREQ_GOV_RESUME:
-> > +		nb->notifier_call = cci_devfreq_regulator_notifier;
-> > +		regulator_register_notifier(cci_df->proc_reg,
-> > +					    nb);
-> > +		break;
-> > +
-> > +	case DEVFREQ_GOV_STOP:
-> > +	case DEVFREQ_GOV_SUSPEND:
-> > +		regulator_unregister_notifier(cci_df->proc_reg,
-> > +					    nb);
-> > +
-> > +		break;
-> > +
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct devfreq_governor mtk_cci_devfreq_governor = {
-> > +	.name = "mtk_cci_vmon",
-> > +	.get_target_freq = mtk_cci_governor_get_target,
-> > +	.event_handler = mtk_cci_governor_event_handler,
-> > +};
-> > +
-> > +static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
-> > +				  u32 flags)
-> > +{
-> > +	struct cci_devfreq *cci_df = dev_get_drvdata(dev);
-> > +
-> > +	if (!cci_df)
-> > +		return -EINVAL;
-> > +
-> > +	clk_set_rate(cci_df->cci_clk, *freq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct devfreq_dev_profile cci_devfreq_profile = {
-> > +	.target		= mtk_cci_devfreq_target,
-> > +};
-> > +
-> > +static int mtk_cci_devfreq_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *cci_dev = &pdev->dev;
-> > +	struct cci_devfreq *cci_df;
-> > +	int ret;
-> > +
-> > +	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
-> > +	if (!cci_df)
-> > +		return -ENOMEM;
-> > +
-> > +	cci_df->cci_clk = clk_get(cci_dev, "cci_clock");
+Dan,
+
+On 4/13/19 12:02 AM, Dan Murphy wrote:
+> All
 > 
-> Should use devm_clk_get().
-I will change it on next patch.
+> On 4/12/19 2:10 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 4/12/19 1:50 PM, Dan Murphy wrote:
+>>> Marek
+>>>
+>>> On 4/11/19 5:07 PM, Marek Behun wrote:
+>>>> Hi Dan,
+>>>> this probaly was discussed, but I did not follow brightness model
+>>>> discussions:
+>>>> what will happen if I set yellow by writing into yellow mode
+>>>> brightness, and then orange by writing orange model brightness?
+>>>> Will the resulting color be a mix of yellow and orange, or will the
+>>>> orange overwrite the yellow setting?
+>>>>
+>>>
+>>> This was not discussed and is a good question.  If you write the yellow mode for a group of
+>>> LEDs then yellow would be produced for the brightness requested.
+>>>
+>>> If orange is then requested then orange should be displayed at the brightness level requested.
+>>> So yes the orange will over write the yellow.
+>>
+>> Yes, and individual color brightness levels should correspond
+>> to the color components of the brightness-model level currently set.
+>>
+>>> The next question is if the absolute colors are written does it produce the same behavior?
+>>>
+>>> So if you have yellow and write to the red should the red LED brightness be modified or should the
+>>> color switch to red?
+>>> And if the red LED is on and the blue LED is written should the color switch to blue or should the blue and red LEDs be mixed together?
+>>
+>> Now, if any of the color brightness files is altered it should update
+>> the hardware with this new setting, but brightness-model and main
+>> brightness level should not be changed. The thing that is missing in our
+>> proposal is lack of the way to check if brightness-model is up to date
+>> (i.e. if it reflects what is written to the hardware).
+>>
+>> How about utilizing the sync file from the new colors directory?
+>> It could return 1 on read when brightness levels of all colors
+>> match exactly the ones assigned to the brightness model level currently
+>> set.
+>>
 > 
-> > +	ret = PTR_ERR_OR_ZERO(cci_df->cci_clk);
-> > +	if (ret) {
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(cci_dev, "failed to get clock for CCI: %d\n",
-> > +				ret);
-> > +
-> > +		return ret;
-> > +	}
-> > +
-> > +	cci_df->proc_reg = regulator_get_optional(cci_dev, "proc");
+> There maybe a more pragmatic way to set the color brightness as opposed to defining each level. By defining the monochrome LEDs base maximum brightness for the brightness model and calculating a percentage for each LED from max   I shared this with Jacek earlier and he did not go for it but lets see if others agree or disagree.
 > 
-> Should use devm_regulator_get_optional().
-I will change it on next patch.
+> With this method we don't have to define a slew of levels. This in theory may work but not sure it will work in practice.
 > 
-> > +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
-> > +	if (ret) {
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
-> > +				ret);
-> > +
-> > +		goto err_put_clk;
-> > +	}
-> > +
-> > +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> > +	if (ret) {
-> > +		dev_err(cci_dev, "Fail to init CCI OPP table\n");
+> For instance
 > 
-> No error code display here ? Not that it really matters, but it is
-> inconsistent with the other error messages.
-I will add it on next patch.
+> 	lp5024_model_yellow: brightness-models {
+> 		led-brightness-model;
+> 		model@0 {
+> 			model_name = "yellow";
+> 			layout = <LED_COLOR_ID_RED
+> 				  LED_COLOR_ID_GREEN
+> 				  LED_COLOR_ID_BLUE>;
+> 			max_level = <255 247 196>;  //max level of the monochrome LEDs to obtain the color model.
+> 		};
+> 	};
 > 
-> > +		goto err_put_reg;
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, cci_df);
-> > +
-> > +	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
-> > +						       &cci_devfreq_profile,
-> > +						       "mtk_cci_vmon",
-> > +						       NULL);
-> > +	if (IS_ERR(cci_df->devfreq)) {
+> Assumption made that a linear slope for each color model is expected.
 > 
-> 		ret = PTR_ERR(cci_df->devfreq);
+> Then in the code when a new brightness level is requested for the color the brightness of the monochrome LEDs would be based off the percentage from the max_brightness of the max in the max_level array
 > 
-> > +		dev_err(cci_dev, "cannot create cci devfreq device\n", ret);
+> The hue is presented as just another color in the colors dir with brightness and max_brightness files.  So it "appears" as a single LED.
 > 
-> 		dev_err(cci_dev, "cannot create cci devfreq device: %d\n", ret);
+> max_brightness = 255 This is the max of the LEDs in the array and this would also be presented to the user in the max_brightness of the hue.
 > 
-> Something like
-> 		dev_pm_opp_of_remove_table(...);
-> seems to be missing here.
-I will fix this, and add dev_pm_opp_of_remove_table(...) when error
-occur.
+> Red = (255/255)  = 100%
+> Green = (247/255) = 97%
+> Blue = (196/255) = 77%
 > 
-> > +		goto err_put_reg;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +err_put_reg:
-> > +	regulator_put(cci_df->proc_reg);
-> > +err_put_clk:
-> > +	clk_put(cci_df->cci_clk);
+> brightness_val 128
 > 
-> Can be dropped when using devm_ functions above.
-I will remove these code.
+> Red = (128 * 100) / 100 = 128
+> Green = (128 * 97) / 100 = 124
+> Blue = (128 * 77) / 100 = 98
 > 
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct of_device_id mediatek_cci_devfreq_of_match[] = {
-> > +	{ .compatible = "mediatek,mt8183-cci" },
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mediatek_cci_devfreq_of_match);
-> > +
-> > +static struct platform_driver cci_devfreq_driver = {
-> > +	.probe	= mtk_cci_devfreq_probe,
-> > +	.driver = {
-> > +		.name = "mediatek-cci-devfreq",
-> > +		.of_match_table = mediatek_cci_devfreq_of_match,
+> brightness_val 80
 > 
-> If the driver depends on OF, that should be stated in the Kconfig file.
-> Otherwise, of_match_ptr() should be used, and mediatek_cci_devfreq_of_match
-> should be tagged with __maybe_unused (or made conditional with #ifdef).
-I will fix this on next patch.
+> Red = (80 * 100) / 100 = 80
+> Green = (80 * 97) / 100 = 77
+> Blue = (80 * 77) / 100 = 61
 > 
-> > +	},
-> > +};
-> > +
-> > +static int __init mtk_cci_devfreq_init(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = devfreq_add_governor(&mtk_cci_devfreq_governor);
-> > +	if (ret) {
-> > +		pr_err("%s: failed to add governor: %d\n", __func__, ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = platform_driver_register(&cci_devfreq_driver);
-> > +	if (ret)
-> > +		devfreq_remove_governor(&mtk_cci_devfreq_governor);
-> > +
-> > +	return ret;
-> > +}
-> > +module_init(mtk_cci_devfreq_init)
-> > +
-> > +static void __exit mtk_cci_devfreq_exit(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = devfreq_remove_governor(&mtk_cci_devfreq_governor);
-> > +	if (ret)
-> > +		pr_err("%s: failed to remove governor: %d\n", __func__, ret);
-> > +
-> > +	platform_driver_unregister(&cci_devfreq_driver);
-> > +}
-> > +module_exit(mtk_cci_devfreq_exit)
-> > +
-> > +MODULE_DESCRIPTION("Mediatek CCI devfreq driver");
-> > +MODULE_AUTHOR("Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>");
-> > +MODULE_LICENSE("GPL v2");
+> brightness_val 10
 > 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> Red = (10 * 100) / 100 = 10
+> Green = (10 * 97) / 100 = 9
+> Blue = (10 * 77) / 100 = 7
+> 
+> This method maintains a rough percentage delta between the LEDs.  Where in the MAX brightness case (255) blue is 77% dimmer in intensity then Red and with a brightness that is 1/4 max the delta percentage is 75% so the delta is within 5% tolerance.
+> 
+> This would keep the directory structures clean and the user space would just need to know colors, brightness and max_brightness for each color.
+> 
+> Also with this simplistic model we can simplify the DT nodes to
+> 	lp5024_model_yellow: brightness-models {
+> 		led-brightness-model;
+> 		model@0 {
+> 			model_name = "yellow";
+> 			layout = <LED_COLOR_ID_RED
+> 				  LED_COLOR_ID_GREEN
+> 				  LED_COLOR_ID_BLUE>;
+> 			max_level = <255 247 196>;
+> 		};
+> 	};
+> 
+> 	lp5024_model_orange: brightness-models {
+> 		led-brightness-model;
+> 		model@1 {
+> 			model_name = "orange";
+> 			layout = <LED_COLOR_ID_RED
+> 				  LED_COLOR_ID_GREEN
+> 				  LED_COLOR_ID_BLUE>;
+> 			max_level = <236 140 16>;
+> 		};
+> 	};
+> 
+> For orange
+> max_brightness = 236 This is the max of the LEDs in the array and this would also be presented to the user in the max_brightness of the hue.
+> 
+> Red = (236/236)  = 100%
+> Green = (140/236) = 59%
+> Blue = (16/236) = 6%
+> 
+> <same math from above involved here>
+> 
+> After all of this most likely someone will say this will not work.
+> Like I indicated it works in principle maybe not in practice but it keeps the user interface simple and keeps the dt small.
+
+Great, we will have simple. not working interface.
+
+If you will prove that it works for the whole range of devices and
+LEDs and is able to produce uniform colors then I'm all in.
+
+Especially, I'd expect it will be able to keep the same hue
+and increase only lightness as brightness level rises.
+
+> The other alternative is to have the user space define the color models and just expose the monochrome LEDs.
+
+Please propose the whole interface since I don't see how it would work,
+and especially how its functionality would differ from the discussed
+approach.
+
+Would it allow to support LEDn_BRIGHTNESS of lp50xx devices?
+
+I'm afraid we're making a full circle now.
+
+We've discussed many aspects of the problem throughout last months -
+does your design introduce some novelty in regard to what has been
+discussed so far?
+
+If not, and if there is no consensus regarding brightness-models, then
+let's implement iouts as monochrome LEDs, without the support for
+LEDn_BRIGHTNESS.
+
+-- 
+Best regards,
+Jacek Anaszewski
