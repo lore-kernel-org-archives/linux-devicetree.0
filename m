@@ -1,14 +1,13 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V2 1/4] dt-bindings: display: renesas: du: Document the
- r8a774a1 bindings
-Date: Fri, 12 Apr 2019 13:38:02 +0100
-Message-ID: <1555072685-59276-2-git-send-email-biju.das@bp.renesas.com>
-References: <1555072685-59276-1-git-send-email-biju.das@bp.renesas.com>
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 11/12] brcmfmac: Loading the correct firmware for brcm43456
+Date: Sat, 13 Apr 2019 11:06:20 +0000 (UTC)
+Message-ID: <20190413110621.ED2CA61834@smtp.codeaurora.org>
+References: <20190405234514.6183-12-megous@megous.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1555072685-59276-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <20190405234514.6183-12-megous@megous.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,40 +17,19 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ondrej Jirman <megous@megous.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, linux-stm32@st-md-mailman.stormreply.com, brcm80211-dev-list@cypress.com, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Jose Abreu <joabreu@synopsys.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arend van Spriel <arend.vanspriel@broadcom.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hante Meuleman <hante.meuleman@broadcom.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wright Feng <wright.feng@cypress.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Naveen Gupta <naveen.gupta@cypress.com>, Franky Lin <franky.lin@broadcom.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>brcm80211-dev-
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIFJaL0cyTSAoUjhBNzc0QTEpIFNvQyBpbiB0aGUgUi1DYXIgRFUgYmluZGlu
-Z3MuCgpTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+ClJl
-dmlld2VkLWJ5OiBLaWVyYW4gQmluZ2hhbSA8a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29u
-Ym9hcmQuY29tPgotLS0KVjEtLT5WMgogKiBBZGRlZCBLaWVyYW4ncyBSZXZpZXdlZC1ieSB0YWcu
-Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxk
-dS50eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1
-LnR4dAppbmRleCBhZWRiMjJiLi5jOTdkZmFjIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAorKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dApAQCAtNyw2ICs3
-LDcgQEAgUmVxdWlyZWQgUHJvcGVydGllczoKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NDQiIGZv
-ciBSOEE3NzQ0IChSWi9HMU4pIGNvbXBhdGlibGUgRFUKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3
-NDUiIGZvciBSOEE3NzQ1IChSWi9HMUUpIGNvbXBhdGlibGUgRFUKICAgICAtICJyZW5lc2FzLGR1
-LXI4YTc3NDcwIiBmb3IgUjhBNzc0NzAgKFJaL0cxQykgY29tcGF0aWJsZSBEVQorICAgIC0gInJl
-bmVzYXMsZHUtcjhhNzc0YTEiIGZvciBSOEE3NzRBMSAoUlovRzJNKSBjb21wYXRpYmxlIERVCiAg
-ICAgLSAicmVuZXNhcyxkdS1yOGE3NzRjMCIgZm9yIFI4QTc3NEMwIChSWi9HMkUpIGNvbXBhdGli
-bGUgRFUKICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NzkiIGZvciBSOEE3Nzc5IChSLUNhciBIMSkg
-Y29tcGF0aWJsZSBEVQogICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5MCIgZm9yIFI4QTc3OTAgKFIt
-Q2FyIEgyKSBjb21wYXRpYmxlIERVCkBAIC01OCw2ICs1OSw3IEBAIGNvcnJlc3BvbmRpbmcgdG8g
-ZWFjaCBEVSBvdXRwdXQuCiAgUjhBNzc0NCAoUlovRzFOKSAgICAgICBEUEFEIDAgICAgICAgICBM
-VkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCiAgUjhBNzc0NSAoUlovRzFFKSAgICAgICBE
-UEFEIDAgICAgICAgICBEUEFEIDEgICAgICAgICAtICAgICAgICAgICAgICAtCiAgUjhBNzc0NzAg
-KFJaL0cxQykgICAgICBEUEFEIDAgICAgICAgICBEUEFEIDEgICAgICAgICBMVkRTIDAgICAgICAg
-ICAtCisgUjhBNzc0QTEgKFJaL0cyTSkgICAgICBEUEFEIDAgICAgICAgICBIRE1JIDAgICAgICAg
-ICBMVkRTIDAgICAgICAgICAtCiAgUjhBNzc0QzAgKFJaL0cyRSkgICAgICBEUEFEIDAgICAgICAg
-ICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAtCiAgUjhBNzc3OSAoUi1DYXIgSDEpICAg
-ICBEUEFEIDAgICAgICAgICBEUEFEIDEgICAgICAgICAtICAgICAgICAgICAgICAtCiAgUjhBNzc5
-MCAoUi1DYXIgSDIpICAgICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAg
-ICAgICAtCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVs
+bWVnb3VzQG1lZ291cy5jb20gd3JvdGU6Cgo+IEZyb206IE9uZHJlaiBKaXJtYW4gPG1lZ291c0Bt
+ZWdvdXMuY29tPgo+IAo+IFNESU8gYmFzZWQgYnJjbTQzNDU2IGlzIGN1cnJlbnRseSBtaXNkZXRl
+Y3RlZCBhcyBicmNtNDM0NTUgYW5kIHRoZSB3cm9uZwo+IGZpcm13YXJlIG5hbWUgaXMgdXNlZC4g
+Q29ycmVjdCB0aGUgZGV0ZWN0aW9uIGFuZCBsb2FkIHRoZSBjb3JyZWN0Cj4gZmlybXdhcmUgZmls
+ZS4gQ2hpcHJldiBmb3IgYnJjbTQzNDU2IGlzICI5Ii4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBPbmRy
+ZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4KClBhdGNoIGFwcGxpZWQgdG8gd2lyZWxlc3Mt
+ZHJpdmVycy1uZXh0LmdpdCwgdGhhbmtzLgoKZTMwNjJlMDVlMWNmIGJyY21mbWFjOiBMb2FkaW5n
+IHRoZSBjb3JyZWN0IGZpcm13YXJlIGZvciBicmNtNDM0NTYKCi0tIApodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzEwODg4MDIzLwoKaHR0cHM6Ly93aXJlbGVzcy53aWtpLmtlcm5l
+bC5vcmcvZW4vZGV2ZWxvcGVycy9kb2N1bWVudGF0aW9uL3N1Ym1pdHRpbmdwYXRjaGVzCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
