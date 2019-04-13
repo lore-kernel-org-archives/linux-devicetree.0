@@ -1,11 +1,13 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v4 0/9] Add support for Orange Pi 3
-Date: Sat, 13 Apr 2019 18:54:09 +0200
-Message-ID: <20190413165418.27880-1-megous@megous.com>
+Subject: [PATCH v4 9/9] arm64: dts: allwinner: h6: Add MMC1 pins
+Date: Sat, 13 Apr 2019 18:54:18 +0200
+Message-ID: <20190413165418.27880-10-megous@megous.com>
+References: <20190413165418.27880-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBPNIZDSQKGQEIOJMLOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBQFIZDSQKGQEVSTIA6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190413165418.27880-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,93 +20,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-This series implements support for Xunlong Orange Pi 3 board.
+MMC1 is used on some H6 boards we want to support. Typical use is 4-bit
+SDIO interface with a WiFi chip. Add pin definitions for this use case.
 
-Unfortunately, this board needs some small driver patches, so I have
-split the boards DT patch into chunks that require patches for drivers
-in various subsystems.
+As this is the only possible configration for mmc1, make it the default
+one, too.
 
-Suggested merging plan/dependencies:
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-- Pinctrl and stmmac patches are needed for ethernet support.
-  (patches 1-5) - these should be ready now
-- HDMI support - waits for DT review. (patches 6-8)
-- mmc1 pinconf (patch 9) can probably be merged now, too (it will
-  certainly be used soon by all the other WiFi featuring boards
-  based on H6)
-
-This patch is also needed to not get segfault on boot (it was already
-merged): 
-  https://lkml.org/lkml/2019/4/5/856
-
-Changes in v2:
-- added dt-bindings documentation for the board's compatible string
-  (suggested by Clement)
-- addressed checkpatch warnings and code formatting issues (on Maxime's
-  suggestions)
-- stmmac: dropped useless parenthesis, reworded description of the patch
-  (suggested by Sergei)
-- drop useles dev_info() about the selected io bias voltage
-- docummented io voltage bias selection variant macros
-- wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
-  because wifi depends on H6 RTC support that's not merged yet (suggested
-  by Clement)
-- added missing signed-of-bys
-- changed &usb2otg dr_mode to otg, and added a note about VBUS
-- improved wording of HDMI driver's DDC power supply patch
-
-Changes in v3:
-- dropped already applied patches
-- changed pinctrl I/O bias selection constants to enum and renamed
-- added /omit-if-no-ref/ to mmc1_pins
-- made mmc1_pins default pinconf for mmc1 in H6 dtsi
-- move ddc-supply to HDMI connector node, updated patch descriptions,
-  changed dt-bindings docs
-
-Changes in v4:
-- fix checkpatch warnings/style issues
-- use enum in struct sunxi_desc_function for io_bias_cfg_variant
-- collected acked-by's
-- fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
-  caused by missing conversion from has_io_bias_cfg struct member
-  (I've kept the acked-by, because it's a trivial change, but feel free
-  to object.) (reported by Martin A. on github)
-  I did not have A80 pinctrl enabled for some reason, so I did not catch
-  this sooner.
-- dropped brcm firmware patch (was already applied)
-- dropped the wifi dts patch (will re-send after H6 RTC gets merged,
-  along with bluetooth support, in a separate series)
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-Icenowy Zheng (2):
-  net: stmmac: sun8i: add support for Allwinner H6 EMAC
-  net: stmmac: sun8i: force select external PHY when no internal one
-
-Ondrej Jirman (7):
-  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
-  pinctrl: sunxi: Support I/O bias voltage setting on H6
-  arm64: dts: allwinner: orange-pi-3: Enable ethernet
-  dt-bindings: display: hdmi-connector: Add DDC power supply
-  drm: sun4i: Add support for enabling DDC I2C bus power to dw_hdmi glue
-  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-  arm64: dts: allwinner: h6: Add MMC1 pins
-
- .../display/connector/hdmi-connector.txt      |  1 +
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 79 +++++++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 11 +++
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 61 +++++++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 +++++
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |  1 +
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c   |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 56 ++++++++-----
- drivers/pinctrl/sunxi/pinctrl-sunxi.h         | 18 ++++-
- 11 files changed, 230 insertions(+), 24 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index e0dc4a05c1ba..bd37b849d3b7 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -243,6 +243,15 @@
+ 				bias-pull-up;
+ 			};
+ 
++			/omit-if-no-ref/
++			mmc1_pins: mmc1-pins {
++				pins = "PG0", "PG1", "PG2", "PG3",
++				       "PG4", "PG5";
++				function = "mmc1";
++				drive-strength = <30>;
++				bias-pull-up;
++			};
++
+ 			mmc2_pins: mmc2-pins {
+ 				pins = "PC1", "PC4", "PC5", "PC6",
+ 				       "PC7", "PC8", "PC9", "PC10",
+@@ -294,6 +303,8 @@
+ 			resets = <&ccu RST_BUS_MMC1>;
+ 			reset-names = "ahb";
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc1_pins>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.21.0
