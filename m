@@ -1,471 +1,356 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH v2 2/2] phy: ralink: Add PHY driver for MT7621 PCIe PHY
-Date: Sat, 13 Apr 2019 08:41:48 +0200
-Message-ID: <CAMhs-H_wsxo9kF+N9or0RNoz=cfd0Sk2Onv8qTOh93Ut+FibTA@mail.gmail.com>
-References: <20190330055038.18958-1-sergio.paracuellos@gmail.com> <20190330055038.18958-3-sergio.paracuellos@gmail.com>
+From: andrew-sh.cheng <andrew-sh.cheng@mediatek.com>
+Subject: Re: [v2,4/4] devfreq: add mediatek cci devfreq
+Date: Sat, 13 Apr 2019 15:07:24 +0800
+Message-ID: <1555139244.22373.2.camel@mtksdaap41>
+References: <1553841972-19737-5-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20190408172220.GA28972@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190330055038.18958-3-sergio.paracuellos@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, driverdev-devel@linuxdriverproject.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190408172220.GA28972@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, fan.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all!
-
-On Sat, Mar 30, 2019 at 6:50 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> This patch adds a driver for the PCIe PHY of MT7621 SoC.
->
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->  drivers/phy/ralink/Kconfig          |   7 +
->  drivers/phy/ralink/Makefile         |   1 +
->  drivers/phy/ralink/phy-mt7621-pci.c | 401 ++++++++++++++++++++++++++++
->  3 files changed, 409 insertions(+)
->  create mode 100644 drivers/phy/ralink/phy-mt7621-pci.c
-
-Any comments on this?
-
-Thanks in advance for your time.
-
-Best regards,
-    Sergio Paracuellos
->
-> diff --git a/drivers/phy/ralink/Kconfig b/drivers/phy/ralink/Kconfig
-> index 14fd219535ef..87943a10f210 100644
-> --- a/drivers/phy/ralink/Kconfig
-> +++ b/drivers/phy/ralink/Kconfig
-> @@ -1,6 +1,13 @@
->  #
->  # PHY drivers for Ralink platforms.
->  #
-> +config PHY_MT7621_PCI
-> +       tristate "MediaTek MT7621 PCI PHY Driver"
-> +       depends on RALINK && OF
-> +       select GENERIC_PHY
-> +       help
-> +         Say 'Y' here to add support for MediaTek MT7621 PCI PHY driver,
-> +
->  config PHY_RALINK_USB
->         tristate "Ralink USB PHY driver"
->         depends on RALINK || COMPILE_TEST
-> diff --git a/drivers/phy/ralink/Makefile b/drivers/phy/ralink/Makefile
-> index 5c9e326e8757..2052d5649863 100644
-> --- a/drivers/phy/ralink/Makefile
-> +++ b/drivers/phy/ralink/Makefile
-> @@ -1 +1,2 @@
-> +obj-$(CONFIG_PHY_MT7621_PCI)   += phy-mt7621-pci.o
->  obj-$(CONFIG_PHY_RALINK_USB)   += phy-ralink-usb.o
-> diff --git a/drivers/phy/ralink/phy-mt7621-pci.c b/drivers/phy/ralink/phy-mt7621-pci.c
-> new file mode 100644
-> index 000000000000..118302c122ee
-> --- /dev/null
-> +++ b/drivers/phy/ralink/phy-mt7621-pci.c
-> @@ -0,0 +1,401 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Mediatek MT7621 PCI PHY Driver
-> + * Author: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> + */
-> +
-> +#include <dt-bindings/phy/phy.h>
-> +#include <linux/bitops.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <mt7621.h>
-> +#include <ralink_regs.h>
-> +
-> +#define RALINK_CLKCFG1                         0x30
-> +#define CHIP_REV_MT7621_E2                     0x0101
-> +
-> +#define PCIE_PORT_CLK_EN(x)                    BIT(24 + (x))
-> +
-> +#define RG_PE1_PIPE_REG                                0x02c
-> +#define RG_PE1_PIPE_RST                                BIT(12)
-> +#define RG_PE1_PIPE_CMD_FRC                    BIT(4)
-> +
-> +#define RG_P0_TO_P1_WIDTH                      0x100
-> +#define RG_PE1_H_LCDDS_REG                     0x49c
-> +#define RG_PE1_H_LCDDS_PCW                     GENMASK(30, 0)
-> +#define RG_PE1_H_LCDDS_PCW_VAL(x)              ((0x7fffffff & (x)) << 0)
-> +
-> +#define RG_PE1_FRC_H_XTAL_REG                  0x400
-> +#define RG_PE1_FRC_H_XTAL_TYPE                 BIT(8)
-> +#define RG_PE1_H_XTAL_TYPE                     GENMASK(10, 9)
-> +#define RG_PE1_H_XTAL_TYPE_VAL(x)              ((0x3 & (x)) << 9)
-> +
-> +#define RG_PE1_FRC_PHY_REG                     0x000
-> +#define RG_PE1_FRC_PHY_EN                      BIT(4)
-> +#define RG_PE1_PHY_EN                          BIT(5)
-> +
-> +#define RG_PE1_H_PLL_REG                       0x490
-> +#define RG_PE1_H_PLL_BC                                GENMASK(23, 22)
-> +#define RG_PE1_H_PLL_BC_VAL(x)                 ((0x3 & (x)) << 22)
-> +#define RG_PE1_H_PLL_BP                                GENMASK(21, 18)
-> +#define RG_PE1_H_PLL_BP_VAL(x)                 ((0xf & (x)) << 18)
-> +#define RG_PE1_H_PLL_IR                                GENMASK(15, 12)
-> +#define RG_PE1_H_PLL_IR_VAL(x)                 ((0xf & (x)) << 12)
-> +#define RG_PE1_H_PLL_IC                                GENMASK(11, 8)
-> +#define RG_PE1_H_PLL_IC_VAL(x)                 ((0xf & (x)) << 8)
-> +#define RG_PE1_H_PLL_PREDIV                    GENMASK(7, 6)
-> +#define RG_PE1_H_PLL_PREDIV_VAL(x)             ((0x3 & (x)) << 6)
-> +#define RG_PE1_PLL_DIVEN                       GENMASK(3, 1)
-> +#define RG_PE1_PLL_DIVEN_VAL(x)                        ((0x7 & (x)) << 1)
-> +
-> +#define RG_PE1_H_PLL_FBKSEL_REG                        0x4bc
-> +#define RG_PE1_H_PLL_FBKSEL                    GENMASK(5, 4)
-> +#define RG_PE1_H_PLL_FBKSEL_VAL(x)             ((0x3 & (x)) << 4)
-> +
-> +#define        RG_PE1_H_LCDDS_SSC_PRD_REG              0x4a4
-> +#define RG_PE1_H_LCDDS_SSC_PRD                 GENMASK(15, 0)
-> +#define RG_PE1_H_LCDDS_SSC_PRD_VAL(x)          ((0xffff & (x)) << 0)
-> +
-> +#define RG_PE1_H_LCDDS_SSC_DELTA_REG           0x4a8
-> +#define RG_PE1_H_LCDDS_SSC_DELTA               GENMASK(11, 0)
-> +#define RG_PE1_H_LCDDS_SSC_DELTA_VAL(x)                ((0xfff & (x)) << 0)
-> +#define RG_PE1_H_LCDDS_SSC_DELTA1              GENMASK(27, 16)
-> +#define RG_PE1_H_LCDDS_SSC_DELTA1_VAL(x)       ((0xff & (x)) << 16)
-> +
-> +#define RG_PE1_LCDDS_CLK_PH_INV_REG            0x4a0
-> +#define RG_PE1_LCDDS_CLK_PH_INV                        BIT(5)
-> +
-> +#define RG_PE1_H_PLL_BR_REG                    0x4ac
-> +#define RG_PE1_H_PLL_BR                                GENMASK(18, 16)
-> +#define RG_PE1_H_PLL_BR_VAL(x)                 ((0x7 & (x)) << 16)
-> +
-> +#define        RG_PE1_MSTCKDIV_REG                     0x414
-> +#define RG_PE1_MSTCKDIV                                GENMASK(7, 6)
-> +#define RG_PE1_MSTCKDIV_VAL(x)                 ((0x3 & (x)) << 6)
-> +
-> +#define RG_PE1_FRC_MSTCKDIV                    BIT(5)
-> +
-> +#define MAX_PHYS       2
-> +
-> +/**
-> + * struct mt7621_pci_phy_instance - Mt7621 Pcie PHY device
-> + * @phy: pointer to the kernel PHY device
-> + * @port_base: base register
-> + * @index: internal ID to identify the Mt7621 PCIe PHY
-> + */
-> +struct mt7621_pci_phy_instance {
-> +       struct phy *phy;
-> +       void __iomem *port_base;
-> +       u32 index;
-> +};
-> +
-> +/**
-> + * struct mt7621_pci_phy - Mt7621 Pcie PHY core
-> + * @dev: pointer to device
-> + * @phys: pointer to Mt7621 PHY device
-> + * @nphys: number of PHY devices for this core
-> + */
-> +struct mt7621_pci_phy {
-> +       struct device *dev;
-> +       struct mt7621_pci_phy_instance **phys;
-> +       int nphys;
-> +};
-> +
-> +static inline u32 phy_read(struct mt7621_pci_phy_instance *instance, u32 reg)
-> +{
-> +       return readl(instance->port_base + reg);
-> +}
-> +
-> +static inline void phy_write(struct mt7621_pci_phy_instance *instance,
-> +                            u32 val, u32 reg)
-> +{
-> +       writel(val, instance->port_base + reg);
-> +}
-> +
-> +static void mt7621_bypass_pipe_rst(struct mt7621_pci_phy *phy,
-> +                                  struct mt7621_pci_phy_instance *instance)
-> +{
-> +       u32 offset = (instance->index != 1) ?
-> +               RG_PE1_PIPE_REG : RG_PE1_PIPE_REG + RG_P0_TO_P1_WIDTH;
-> +       u32 reg;
-> +
-> +       reg = phy_read(instance, offset);
-> +       reg &= ~(RG_PE1_PIPE_RST | RG_PE1_PIPE_CMD_FRC);
-> +       reg |= (RG_PE1_PIPE_RST | RG_PE1_PIPE_CMD_FRC);
-> +       phy_write(instance, reg, offset);
-> +}
-> +
-> +static void mt7621_set_phy_for_ssc(struct mt7621_pci_phy *phy,
-> +                                  struct mt7621_pci_phy_instance *instance)
-> +{
-> +       struct device *dev = phy->dev;
-> +       u32 reg = rt_sysc_r32(SYSC_REG_SYSTEM_CONFIG0);
-> +       u32 offset;
-> +       u32 val;
-> +
-> +       reg = (reg >> 6) & 0x7;
-> +       /* Set PCIe Port PHY to disable SSC */
-> +       /* Debug Xtal Type */
-> +       val = phy_read(instance, RG_PE1_FRC_H_XTAL_REG);
-> +       val &= ~(RG_PE1_FRC_H_XTAL_TYPE | RG_PE1_H_XTAL_TYPE);
-> +       val |= RG_PE1_FRC_H_XTAL_TYPE;
-> +       val |= RG_PE1_H_XTAL_TYPE_VAL(0x00);
-> +       phy_write(instance, val, RG_PE1_FRC_H_XTAL_REG);
-> +
-> +       /* disable port */
-> +       offset = (instance->index != 1) ?
-> +               RG_PE1_FRC_PHY_REG : RG_PE1_FRC_PHY_REG + RG_P0_TO_P1_WIDTH;
-> +       val = phy_read(instance, offset);
-> +       val &= ~(RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
-> +       val |= RG_PE1_FRC_PHY_EN;
-> +       phy_write(instance, val, offset);
-> +
-> +       /* Set Pre-divider ratio (for host mode) */
-> +       val = phy_read(instance, RG_PE1_H_PLL_REG);
-> +       val &= ~(RG_PE1_H_PLL_PREDIV);
-> +
-> +       if (reg <= 5 && reg >= 3) { /* 40MHz Xtal */
-> +               val |= RG_PE1_H_PLL_PREDIV_VAL(0x01);
-> +               phy_write(instance, val, RG_PE1_H_PLL_REG);
-> +               dev_info(dev, "Xtal is 40MHz\n");
-> +       } else { /* 25MHz | 20MHz Xtal */
-> +               val |= RG_PE1_H_PLL_PREDIV_VAL(0x00);
-> +               phy_write(instance, val, RG_PE1_H_PLL_REG);
-> +               if (reg >= 6) {
-> +                       dev_info(dev, "Xtal is 25MHz\n");
-> +
-> +                       /* Select feedback clock */
-> +                       val = phy_read(instance, RG_PE1_H_PLL_FBKSEL_REG);
-> +                       val &= ~(RG_PE1_H_PLL_FBKSEL);
-> +                       val |= RG_PE1_H_PLL_FBKSEL_VAL(0x01);
-> +                       phy_write(instance, val, RG_PE1_H_PLL_FBKSEL_REG);
-> +
-> +                       /* DDS NCPO PCW (for host mode) */
-> +                       val = phy_read(instance, RG_PE1_H_LCDDS_SSC_PRD_REG);
-> +                       val &= ~(RG_PE1_H_LCDDS_SSC_PRD);
-> +                       val |= RG_PE1_H_LCDDS_SSC_PRD_VAL(0x18000000);
-> +                       phy_write(instance, val, RG_PE1_H_LCDDS_SSC_PRD_REG);
-> +
-> +                       /* DDS SSC dither period control */
-> +                       val = phy_read(instance, RG_PE1_H_LCDDS_SSC_PRD_REG);
-> +                       val &= ~(RG_PE1_H_LCDDS_SSC_PRD);
-> +                       val |= RG_PE1_H_LCDDS_SSC_PRD_VAL(0x18d);
-> +                       phy_write(instance, val, RG_PE1_H_LCDDS_SSC_PRD_REG);
-> +
-> +                       /* DDS SSC dither amplitude control */
-> +                       val = phy_read(instance, RG_PE1_H_LCDDS_SSC_DELTA_REG);
-> +                       val &= ~(RG_PE1_H_LCDDS_SSC_DELTA |
-> +                                RG_PE1_H_LCDDS_SSC_DELTA1);
-> +                       val |= RG_PE1_H_LCDDS_SSC_DELTA_VAL(0x4a);
-> +                       val |= RG_PE1_H_LCDDS_SSC_DELTA1_VAL(0x4a);
-> +                       phy_write(instance, val, RG_PE1_H_LCDDS_SSC_DELTA_REG);
-> +               } else {
-> +                       dev_info(dev, "Xtal is 20MHz\n");
-> +               }
-> +       }
-> +
-> +       /* DDS clock inversion */
-> +       val = phy_read(instance, RG_PE1_LCDDS_CLK_PH_INV_REG);
-> +       val &= ~(RG_PE1_LCDDS_CLK_PH_INV);
-> +       val |= RG_PE1_LCDDS_CLK_PH_INV;
-> +       phy_write(instance, val, RG_PE1_LCDDS_CLK_PH_INV_REG);
-> +
-> +       /* Set PLL bits */
-> +       val = phy_read(instance, RG_PE1_H_PLL_REG);
-> +       val &= ~(RG_PE1_H_PLL_BC | RG_PE1_H_PLL_BP | RG_PE1_H_PLL_IR |
-> +                RG_PE1_H_PLL_IC | RG_PE1_PLL_DIVEN);
-> +       val |= RG_PE1_H_PLL_BC_VAL(0x02);
-> +       val |= RG_PE1_H_PLL_BP_VAL(0x06);
-> +       val |= RG_PE1_H_PLL_IR_VAL(0x02);
-> +       val |= RG_PE1_H_PLL_IC_VAL(0x01);
-> +       val |= RG_PE1_PLL_DIVEN_VAL(0x02);
-> +       phy_write(instance, val, RG_PE1_H_PLL_REG);
-> +
-> +       val = phy_read(instance, RG_PE1_H_PLL_BR_REG);
-> +       val &= ~(RG_PE1_H_PLL_BR);
-> +       val |= RG_PE1_H_PLL_BR_VAL(0x00);
-> +       phy_write(instance, val, RG_PE1_H_PLL_BR_REG);
-> +
-> +       if (reg <= 5 && reg >= 3) { /* 40MHz Xtal */
-> +               /* set force mode enable of da_pe1_mstckdiv */
-> +               val = phy_read(instance, RG_PE1_MSTCKDIV_REG);
-> +               val &= ~(RG_PE1_MSTCKDIV | RG_PE1_FRC_MSTCKDIV);
-> +               val |= (RG_PE1_MSTCKDIV_VAL(0x01) | RG_PE1_FRC_MSTCKDIV);
-> +               phy_write(instance, val, RG_PE1_MSTCKDIV_REG);
-> +       }
-> +}
-> +
-> +static int mt7621_pci_phy_init(struct phy *phy)
-> +{
-> +       struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
-> +       struct mt7621_pci_phy *mphy = dev_get_drvdata(phy->dev.parent);
-> +       u32 chip_rev_id = rt_sysc_r32(SYSC_REG_CHIP_REV);
-> +
-> +       if ((chip_rev_id & 0xFFFF) == CHIP_REV_MT7621_E2)
-> +               mt7621_bypass_pipe_rst(mphy, instance);
-> +
-> +       mt7621_set_phy_for_ssc(mphy, instance);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mt7621_pci_phy_power_on(struct phy *phy)
-> +{
-> +       struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
-> +       u32 offset = (instance->index != 1) ?
-> +               RG_PE1_FRC_PHY_REG : RG_PE1_FRC_PHY_REG + RG_P0_TO_P1_WIDTH;
-> +       u32 val;
-> +
-> +       /* Enable PHY and disable force mode */
-> +       val = phy_read(instance, offset);
-> +       val &= ~(RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
-> +       val |= (RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
-> +       phy_write(instance, val, offset);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mt7621_pci_phy_power_off(struct phy *phy)
-> +{
-> +       struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
-> +       u32 offset = (instance->index != 1) ?
-> +               RG_PE1_FRC_PHY_REG : RG_PE1_FRC_PHY_REG + RG_P0_TO_P1_WIDTH;
-> +       u32 val;
-> +
-> +       /* Disable PHY */
-> +       val = phy_read(instance, offset);
-> +       val &= ~(RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
-> +       val |= RG_PE1_FRC_PHY_EN;
-> +       phy_write(instance, val, offset);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mt7621_pci_phy_exit(struct phy *phy)
-> +{
-> +       struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
-> +
-> +       rt_sysc_m32(PCIE_PORT_CLK_EN(instance->index), 0, RALINK_CLKCFG1);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct phy_ops mt7621_pci_phy_ops = {
-> +       .init           = mt7621_pci_phy_init,
-> +       .exit           = mt7621_pci_phy_exit,
-> +       .power_on       = mt7621_pci_phy_power_on,
-> +       .power_off      = mt7621_pci_phy_power_off,
-> +       .owner          = THIS_MODULE,
-> +};
-> +
-> +static struct phy *mt7621_pcie_phy_of_xlate(struct device *dev,
-> +                                           struct of_phandle_args *args)
-> +{
-> +       struct mt7621_pci_phy *mt7621_phy = dev_get_drvdata(dev);
-> +
-> +       if (args->args_count == 0)
-> +               return mt7621_phy->phys[0]->phy;
-> +
-> +       if (WARN_ON(args->args[0] >= MAX_PHYS))
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       return mt7621_phy->phys[args->args[0]]->phy;
-> +}
-> +
-> +static int mt7621_pci_phy_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct device_node *child_np;
-> +       struct phy_provider *provider;
-> +       struct mt7621_pci_phy *phy;
-> +       struct resource res;
-> +       int port, ret;
-> +       void __iomem *port_base;
-> +
-> +       phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +       if (!phy)
-> +               return -ENOMEM;
-> +
-> +       phy->nphys = MAX_PHYS;
-> +       phy->phys = devm_kcalloc(dev, phy->nphys,
-> +                                sizeof(*phy->phys), GFP_KERNEL);
-> +       if (!phy->phys)
-> +               return -ENOMEM;
-> +
-> +       phy->dev = dev;
-> +       platform_set_drvdata(pdev, phy);
-> +
-> +       ret = of_address_to_resource(np, 0, &res);
-> +       if (ret) {
-> +               dev_err(dev, "failed to get address resource(id-%d)\n", port);
-> +               return ret;
-> +       }
-> +
-> +       port_base = devm_ioremap_resource(dev, &res);
-> +       if (IS_ERR(port_base)) {
-> +               dev_err(dev, "failed to remap phy regs\n");
-> +               return PTR_ERR(port_base);
-> +       }
-> +
-> +       for (port = 0; port < MAX_PHYS; port++) {
-> +               struct mt7621_pci_phy_instance *instance;
-> +               struct phy *pphy;
-> +
-> +               instance = devm_kzalloc(dev, sizeof(*instance), GFP_KERNEL);
-> +               if (!instance) {
-> +                       ret = -ENOMEM;
-> +                       goto put_child;
-> +               }
-> +
-> +               phy->phys[port] = instance;
-> +
-> +               pphy = devm_phy_create(dev, dev->of_node, &mt7621_pci_phy_ops);
-> +               if (IS_ERR(phy)) {
-> +                       dev_err(dev, "failed to create phy\n");
-> +                       ret = PTR_ERR(phy);
-> +                       goto put_child;
-> +               }
-> +
-> +               instance->port_base = port_base;
-> +               instance->phy = pphy;
-> +               instance->index = port;
-> +               phy_set_drvdata(pphy, instance);
-> +       }
-> +
-> +       provider = devm_of_phy_provider_register(dev, mt7621_pcie_phy_of_xlate);
-> +
-> +       return PTR_ERR_OR_ZERO(provider);
-> +
-> +put_child:
-> +       of_node_put(child_np);
-> +       return ret;
-> +}
-> +
-> +static const struct of_device_id mt7621_pci_phy_ids[] = {
-> +       { .compatible = "mediatek,mt7621-pci-phy" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, mt7621_pci_ids);
-> +
-> +static struct platform_driver mt7621_pci_phy_driver = {
-> +       .probe = mt7621_pci_phy_probe,
-> +       .driver = {
-> +               .name = "mt7621-pci-phy",
-> +               .of_match_table = of_match_ptr(mt7621_pci_phy_ids),
-> +       },
-> +};
-> +
-> +static int __init mt7621_pci_phy_drv_init(void)
-> +{
-> +       return platform_driver_register(&mt7621_pci_phy_driver);
-> +}
-> +
-> +module_init(mt7621_pci_phy_drv_init);
-> +
-> +MODULE_AUTHOR("Sergio Paracuellos <sergio.paracuellos@gmail.com>");
-> +MODULE_DESCRIPTION("MediaTek MT7621 PCIe PHY driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.19.1
->
+On Mon, 2019-04-08 at 10:22 -0700, Guenter Roeck wrote:
+> On Fri, Mar 29, 2019 at 02:46:12PM +0800, Andrew-sh Cheng wrote:
+> > This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
+> > of the Mediatek MT8183.
+> > 
+> > On the MT8183 the CCI is supplied by the same regulator as the LITTLE
+> > cores. The driver is notified when the regulator voltage changes
+> > (driven by cpufreq) and adjusts the CCI frequency to the maximum
+> > possible value.
+> > 
+> > Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> > ---
+> >  drivers/devfreq/Kconfig              |  10 ++
+> >  drivers/devfreq/Makefile             |   1 +
+> >  drivers/devfreq/mt8183-cci-devfreq.c | 235 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 246 insertions(+)
+> >  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
+> > 
+> > diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> > index 6a172d3..da2f8ec 100644
+> > --- a/drivers/devfreq/Kconfig
+> > +++ b/drivers/devfreq/Kconfig
+> > @@ -91,6 +91,16 @@ config ARM_EXYNOS_BUS_DEVFREQ
+> >  	  and adjusts the operating frequencies and voltages with OPP support.
+> >  	  This does not yet operate with optimal voltages.
+> >  
+> > +config ARM_MT8183_CCI_DEVFREQ
+> > +	tristate "MT8183 CCI DEVFREQ Driver"
+> > +	depends on ARM_MEDIATEK_CPUFREQ
+> > +	help
+> > +		This adds a devfreq driver for Cache Coherent Interconnect
+> > +		of Mediatek MT8183, which is shared the same regulator
+> > +		with cpu cluster.
+> > +		It can track buck voltage and update a proper cci frequency.
+> > +		Use notification to get regulator status.
+> > +
+> >  config ARM_TEGRA_DEVFREQ
+> >  	tristate "Tegra DEVFREQ Driver"
+> >  	depends on ARCH_TEGRA_124_SOC
+> > diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+> > index 32b8d4d..817dde7 100644
+> > --- a/drivers/devfreq/Makefile
+> > +++ b/drivers/devfreq/Makefile
+> > @@ -9,6 +9,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
+> >  
+> >  # DEVFREQ Drivers
+> >  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+> > +obj-$(CONFIG_ARM_MT8183_CCI_DEVFREQ)    += mt8183-cci-devfreq.o
+> >  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
+> >  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
+> >  
+> > diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
+> > new file mode 100644
+> > index 0000000..af82d2e
+> > --- /dev/null
+> > +++ b/drivers/devfreq/mt8183-cci-devfreq.c
+> > @@ -0,0 +1,235 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2019 MediaTek Inc.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/devfreq.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regulator/consumer.h>
+> > +
+> > +#include "governor.h"
+> > +
+> > +struct cci_devfreq {
+> > +	struct devfreq		*devfreq;
+> > +	struct regulator	*proc_reg;
+> > +	unsigned long           proc_reg_uV;
+> > +	struct clk		*cci_clk;
+> > +	struct notifier_block	nb;
+> > +};
+> > +
+> > +static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
+> > +					  unsigned long val, void *data)
+> > +{
+> > +	struct cci_devfreq *cci_df =
+> > +		container_of(nb, struct cci_devfreq, nb);
+> > +
+> > +	/* deal with reduce frequency */
+> > +	if (val & REGULATOR_EVENT_PRE_VOLTAGE_CHANGE) {
+> > +		struct pre_voltage_change_data *pvc_data = data;
+> > +
+> > +		if (pvc_data->min_uV < pvc_data->old_uV) {
+> > +			cci_df->proc_reg_uV =
+> > +				(unsigned long)(pvc_data->min_uV);
+> > +			mutex_lock(&cci_df->devfreq->lock);
+> > +			update_devfreq(cci_df->devfreq);
+> > +			mutex_unlock(&cci_df->devfreq->lock);
+> > +		}
+> > +	}
+> > +
+> > +	if ((val & REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE) &&
+> > +	    ((unsigned long)data > cci_df->proc_reg_uV)) {
+> > +		cci_df->proc_reg_uV = (unsigned long)data;
+> > +		mutex_lock(&cci_df->devfreq->lock);
+> > +		update_devfreq(cci_df->devfreq);
+> > +		mutex_unlock(&cci_df->devfreq->lock);
+> > +	}
+> > +
+> > +	/* deal with increase frequency */
+> > +	if ((val & REGULATOR_EVENT_VOLTAGE_CHANGE) &&
+> > +	    (cci_df->proc_reg_uV < (unsigned long)data)) {
+> > +		cci_df->proc_reg_uV = (unsigned long)data;
+> > +		mutex_lock(&cci_df->devfreq->lock);
+> > +		update_devfreq(cci_df->devfreq);
+> > +		mutex_unlock(&cci_df->devfreq->lock);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_cci_governor_get_target(struct devfreq *devfreq,
+> > +				       unsigned long *freq)
+> > +{
+> > +	struct cci_devfreq *cci_df;
+> > +	struct dev_pm_opp *opp;
+> > +
+> > +	cci_df = dev_get_drvdata(devfreq->dev.parent);
+> > +
+> > +	/* find available frequency */
+> > +	opp = dev_pm_opp_find_max_freq_by_volt(devfreq->dev.parent,
+> > +						 cci_df->proc_reg_uV);
+> > +	*freq = dev_pm_opp_get_freq(opp);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
+> > +					  unsigned int event, void *data)
+> > +{
+> > +	struct cci_devfreq *cci_df;
+> > +	struct notifier_block *nb;
+> > +
+> > +	cci_df = dev_get_drvdata(devfreq->dev.parent);
+> > +	nb = &cci_df->nb;
+> > +
+> > +	switch (event) {
+> > +	case DEVFREQ_GOV_START:
+> > +	case DEVFREQ_GOV_RESUME:
+> > +		nb->notifier_call = cci_devfreq_regulator_notifier;
+> > +		regulator_register_notifier(cci_df->proc_reg,
+> > +					    nb);
+> > +		break;
+> > +
+> > +	case DEVFREQ_GOV_STOP:
+> > +	case DEVFREQ_GOV_SUSPEND:
+> > +		regulator_unregister_notifier(cci_df->proc_reg,
+> > +					    nb);
+> > +
+> > +		break;
+> > +
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct devfreq_governor mtk_cci_devfreq_governor = {
+> > +	.name = "mtk_cci_vmon",
+> > +	.get_target_freq = mtk_cci_governor_get_target,
+> > +	.event_handler = mtk_cci_governor_event_handler,
+> > +};
+> > +
+> > +static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
+> > +				  u32 flags)
+> > +{
+> > +	struct cci_devfreq *cci_df = dev_get_drvdata(dev);
+> > +
+> > +	if (!cci_df)
+> > +		return -EINVAL;
+> > +
+> > +	clk_set_rate(cci_df->cci_clk, *freq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct devfreq_dev_profile cci_devfreq_profile = {
+> > +	.target		= mtk_cci_devfreq_target,
+> > +};
+> > +
+> > +static int mtk_cci_devfreq_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *cci_dev = &pdev->dev;
+> > +	struct cci_devfreq *cci_df;
+> > +	int ret;
+> > +
+> > +	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
+> > +	if (!cci_df)
+> > +		return -ENOMEM;
+> > +
+> > +	cci_df->cci_clk = clk_get(cci_dev, "cci_clock");
+> 
+> Should use devm_clk_get().
+I will change it on next patch.
+> 
+> > +	ret = PTR_ERR_OR_ZERO(cci_df->cci_clk);
+> > +	if (ret) {
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(cci_dev, "failed to get clock for CCI: %d\n",
+> > +				ret);
+> > +
+> > +		return ret;
+> > +	}
+> > +
+> > +	cci_df->proc_reg = regulator_get_optional(cci_dev, "proc");
+> 
+> Should use devm_regulator_get_optional().
+I will change it on next patch.
+> 
+> > +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
+> > +	if (ret) {
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
+> > +				ret);
+> > +
+> > +		goto err_put_clk;
+> > +	}
+> > +
+> > +	ret = dev_pm_opp_of_add_table(&pdev->dev);
+> > +	if (ret) {
+> > +		dev_err(cci_dev, "Fail to init CCI OPP table\n");
+> 
+> No error code display here ? Not that it really matters, but it is
+> inconsistent with the other error messages.
+I will add it on next patch.
+> 
+> > +		goto err_put_reg;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, cci_df);
+> > +
+> > +	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
+> > +						       &cci_devfreq_profile,
+> > +						       "mtk_cci_vmon",
+> > +						       NULL);
+> > +	if (IS_ERR(cci_df->devfreq)) {
+> 
+> 		ret = PTR_ERR(cci_df->devfreq);
+> 
+> > +		dev_err(cci_dev, "cannot create cci devfreq device\n", ret);
+> 
+> 		dev_err(cci_dev, "cannot create cci devfreq device: %d\n", ret);
+> 
+> Something like
+> 		dev_pm_opp_of_remove_table(...);
+> seems to be missing here.
+I will fix this, and add dev_pm_opp_of_remove_table(...) when error
+occur.
+> 
+> > +		goto err_put_reg;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_put_reg:
+> > +	regulator_put(cci_df->proc_reg);
+> > +err_put_clk:
+> > +	clk_put(cci_df->cci_clk);
+> 
+> Can be dropped when using devm_ functions above.
+I will remove these code.
+> 
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct of_device_id mediatek_cci_devfreq_of_match[] = {
+> > +	{ .compatible = "mediatek,mt8183-cci" },
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mediatek_cci_devfreq_of_match);
+> > +
+> > +static struct platform_driver cci_devfreq_driver = {
+> > +	.probe	= mtk_cci_devfreq_probe,
+> > +	.driver = {
+> > +		.name = "mediatek-cci-devfreq",
+> > +		.of_match_table = mediatek_cci_devfreq_of_match,
+> 
+> If the driver depends on OF, that should be stated in the Kconfig file.
+> Otherwise, of_match_ptr() should be used, and mediatek_cci_devfreq_of_match
+> should be tagged with __maybe_unused (or made conditional with #ifdef).
+I will fix this on next patch.
+> 
+> > +	},
+> > +};
+> > +
+> > +static int __init mtk_cci_devfreq_init(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = devfreq_add_governor(&mtk_cci_devfreq_governor);
+> > +	if (ret) {
+> > +		pr_err("%s: failed to add governor: %d\n", __func__, ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = platform_driver_register(&cci_devfreq_driver);
+> > +	if (ret)
+> > +		devfreq_remove_governor(&mtk_cci_devfreq_governor);
+> > +
+> > +	return ret;
+> > +}
+> > +module_init(mtk_cci_devfreq_init)
+> > +
+> > +static void __exit mtk_cci_devfreq_exit(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = devfreq_remove_governor(&mtk_cci_devfreq_governor);
+> > +	if (ret)
+> > +		pr_err("%s: failed to remove governor: %d\n", __func__, ret);
+> > +
+> > +	platform_driver_unregister(&cci_devfreq_driver);
+> > +}
+> > +module_exit(mtk_cci_devfreq_exit)
+> > +
+> > +MODULE_DESCRIPTION("Mediatek CCI devfreq driver");
+> > +MODULE_AUTHOR("Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>");
+> > +MODULE_LICENSE("GPL v2");
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
