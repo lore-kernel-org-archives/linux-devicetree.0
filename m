@@ -1,88 +1,149 @@
-Return-Path: <SRS0=Y+yZ=SO=jmondi.org=jacopo@kernel.org>
-Date: Fri, 12 Apr 2019 09:03:38 +0200
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: rcar-csi2: List resets as a
- mandatory property
-Message-ID: <20190412070338.5n6cs55pkecwglnu@uno.localdomain>
-References: <20190312234930.23193-1-niklas.soderlund+renesas@ragnatech.se>
- <20190312234930.23193-2-niklas.soderlund+renesas@ragnatech.se>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 14 Apr 2019 14:39:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 4/6] iio: gyro: fxas21002c: add spi driver
+Message-ID: <20190414143937.144df168@archlinux>
+In-Reply-To: <20190412164901.2321-5-rui.silva@linaro.org>
+References: <20190412164901.2321-1-rui.silva@linaro.org>
+	<20190412164901.2321-5-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kohb6q32x453fa7o"
-Content-Disposition: inline
-In-Reply-To: <20190312234930.23193-2-niklas.soderlund+renesas@ragnatech.se>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Fri, 12 Apr 2019 17:48:59 +0100
+Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
---kohb6q32x453fa7o
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add driver to talk over spi to a fxas21002c gyroscope device and use
+> the core as main controller.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-Hi Niklas,
+Thanks,
 
-On Wed, Mar 13, 2019 at 12:49:29AM +0100, Niklas S=C3=B6derlund wrote:
-> The resets property will become mandatory to operate the device, list it
-> as such. All device tree source files have always included the reset
-> property so making it mandatory will not introduce any regressions.
->
-> While at it improve the description for the clocks property.
->
-> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Jonathan
+
 > ---
->  Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.tx=
-t b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> index d63275e17afdd180..9a0d0531c67df48c 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> @@ -18,7 +18,8 @@ Mandatory properties
->
->   - reg: the register base and size for the device registers
->   - interrupts: the interrupt for the device
-> - - clocks: reference to the parent clock
-> + - clocks: A phandle + clock specifier for the module clock
-> + - resets: A phandle + reset specifier for the module reset
->
-
-Verified that all users in mainline of this bindings already contains
-a 'reset' property:
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-   j
-
->  The device node shall contain two 'port' child nodes according to the
->  bindings defined in Documentation/devicetree/bindings/media/
-> --
-> 2.21.0
->
-
---kohb6q32x453fa7o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlywOEoACgkQcjQGjxah
-VjzdcQ/49g4XgS0i3j0gVBBy3zo9Ux91vgIiPiUsibF/TxDTvkwJutzlRvxDpb9I
-9jX7Vu/73CIwerHlcMHF/JrR9xFMsJCQ1bv3dBvA2HOx3vqCudns04C6hAam5izS
-OI+in6KOENSeKeXPu58CdVSrgDbmspB9irg6pkKU96MswvjX3G9Vt78ztJ4uVbPU
-i0RtsWe6uofYQGZ3toV7/stiZFoUOkFUUEzPc2MOGl3LjLkOaaoM8iOnVXPlPhxx
-++10/HyMWhC3TkLCWmI0HPm8E1vkULjJ8EqowUZ3LhUFd0CVZEvG+sBnbGESQRXA
-xzQYxIivddnC7iDEjLpN3WFwKAQ653vPiqzUv3lVOpd5vIfdyLPTc1GiJ5cm7ziQ
-Cz+H38Oz6uyuMs2PmPLQBsmqdBp4WVhunzECe0xX4ycL3/6zNL6rM6IaqVi8eVCk
-PoXJwOAXhveLrhskIteaOupkjAwL5G5QCk+9W4Gd3efiFnUU0OVRfJni9tUVmEom
-uHE24H7vMZNyamFeUHAijC2K7mKs9JWtN0KW/uyJZej+D05XGxoFcT3wuAWiS3Co
-ByW/leUl0sC66enqgRWG9gEMBvTUz+mvJvHk2epfYwHiK+SyL5p5yYPm0GNm/Ens
-KFEVxDM0jPmh7Fo4hT2+qwAdiRs58BHr7RYDIbZRILOIKPB1hA==
-=dLsB
------END PGP SIGNATURE-----
-
---kohb6q32x453fa7o--
+>  drivers/iio/gyro/Kconfig          |  7 +++-
+>  drivers/iio/gyro/Makefile         |  1 +
+>  drivers/iio/gyro/fxas21002c_spi.c | 70 +++++++++++++++++++++++++++++++
+>  3 files changed, 77 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
+> 
+> diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
+> index 71b6552ee06b..61c00cee037d 100644
+> --- a/drivers/iio/gyro/Kconfig
+> +++ b/drivers/iio/gyro/Kconfig
+> @@ -78,7 +78,8 @@ config FXAS21002C
+>         select IIO_BUFFER
+>         select IIO_TRIGGERED_BUFFER
+>         select FXAS21002C_I2C if (I2C)
+> -       depends on I2C
+> +       select FXAS21002C_SPI if (SPI)
+> +       depends on (I2C || SPI_MASTER)
+>         help
+>           Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
+>           Sensor driver connected via I2C or SPI.
+> @@ -90,6 +91,10 @@ config FXAS21002C_I2C
+>         tristate
+>         select REGMAP_I2C
+>  
+> +config FXAS21002C_SPI
+> +       tristate
+> +       select REGMAP_SPI
+> +
+>  config HID_SENSOR_GYRO_3D
+>  	depends on HID_SENSOR_HUB
+>  	select IIO_BUFFER
+> diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
+> index adc18a5eb283..45cbd5dc644e 100644
+> --- a/drivers/iio/gyro/Makefile
+> +++ b/drivers/iio/gyro/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
+>  obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
+>  obj-$(CONFIG_FXAS21002C) += fxas21002c_core.o
+>  obj-$(CONFIG_FXAS21002C_I2C) += fxas21002c_i2c.o
+> +obj-$(CONFIG_FXAS21002C_SPI) += fxas21002c_spi.o
+>  
+>  obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
+>  
+> diff --git a/drivers/iio/gyro/fxas21002c_spi.c b/drivers/iio/gyro/fxas21002c_spi.c
+> new file mode 100644
+> index 000000000000..77ceebef4e34
+> --- /dev/null
+> +++ b/drivers/iio/gyro/fxas21002c_spi.c
+> @@ -0,0 +1,70 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for NXP Fxas21002c Gyroscope - SPI
+> + *
+> + * Copyright (C) 2019 Linaro Ltd.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include "fxas21002c.h"
+> +
+> +static const struct regmap_config fxas21002c_regmap_spi_conf = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = FXAS21002C_REG_CTRL3,
+> +};
+> +
+> +static int fxas21002c_spi_probe(struct spi_device *spi)
+> +{
+> +	const struct spi_device_id *id = spi_get_device_id(spi);
+> +	struct regmap *regmap;
+> +
+> +	regmap = devm_regmap_init_spi(spi, &fxas21002c_regmap_spi_conf);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&spi->dev, "Failed to register spi regmap: %ld\n",
+> +			PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	return fxas21002c_core_probe(&spi->dev, regmap, spi->irq, id->name);
+> +}
+> +
+> +static int fxas21002c_spi_remove(struct spi_device *spi)
+> +{
+> +	fxas21002c_core_remove(&spi->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct spi_device_id fxas21002c_spi_id[] = {
+> +	{ "fxas21002c", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(spi, fxas21002c_spi_id);
+> +
+> +static const struct of_device_id fxas21002c_spi_of_match[] = {
+> +	{ .compatible = "nxp,fxas21002c", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, fxas21002c_spi_of_match);
+> +
+> +static struct spi_driver fxas21002c_spi_driver = {
+> +	.driver = {
+> +		.name = "fxas21002c_spi",
+> +		.pm = &fxas21002c_pm_ops,
+> +		.of_match_table = fxas21002c_spi_of_match,
+> +	},
+> +	.probe		= fxas21002c_spi_probe,
+> +	.remove		= fxas21002c_spi_remove,
+> +	.id_table	= fxas21002c_spi_id,
+> +};
+> +module_spi_driver(fxas21002c_spi_driver);
+> +
+> +MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("FXAS21002C SPI Gyro driver");
