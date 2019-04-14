@@ -1,42 +1,52 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 RESEND 2/4] memory: Kconfig: Drop dependency on MACH_JZ4780 for jz4780
-Date: Sun, 14 Apr 2019 13:47:00 +0200
-Message-ID: <20190414114702.8236-2-paul@crapouillou.net>
-References: <20190414114702.8236-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190414114702.8236-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+From: Bruno Thomsen <bruno.thomsen@gmail.com>
+Subject: [PATCH] ARM: dts: bugfix tqma7 soft reset issue
+Date: Sun, 14 Apr 2019 14:06:29 +0200
+Message-ID: <20190414120629.8912-1-bruno.thomsen@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, Bruno Thomsen <bruno.thomsen@gmail.com>, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, Markus Niebel <Markus.Niebel@tq-group.com>
 List-Id: devicetree@vger.kernel.org
 
-Depending on MACH_JZ4780 prevent us from creating a generic kernel that
-works on more than one MIPS board. Instead, we just depend on MIPS being
-set.
+Running reboot command on the TQMa7 board would just hang infinite
+at the end of the system shutdown process.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+Handling of i.MX7 errata e10574:
+Watchdog: A watchdog timeout or software trigger will not reset the SOC.
+
+Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+Reviewed-by: Markus Niebel <Markus.Niebel@tq-group.com>
 ---
+ arch/arm/boot/dts/imx7-tqma7.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-v2: No change
-
-v3: No change
-
- drivers/memory/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index 2d91b00e3591..3d411575fcb6 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -122,7 +122,7 @@ config FSL_IFC
- config JZ4780_NEMC
- 	bool "Ingenic JZ4780 SoC NEMC driver"
- 	default y
--	depends on MACH_JZ4780 || COMPILE_TEST
-+	depends on MIPS || COMPILE_TEST
- 	depends on HAS_IOMEM && OF
- 	help
- 	  This driver is for the NAND/External Memory Controller (NEMC) in
+diff --git a/arch/arm/boot/dts/imx7-tqma7.dtsi b/arch/arm/boot/dts/imx7-tqma7.dtsi
+index 85fe461e5e67..896eff839d5e 100644
+--- a/arch/arm/boot/dts/imx7-tqma7.dtsi
++++ b/arch/arm/boot/dts/imx7-tqma7.dtsi
+@@ -228,5 +228,12 @@
+ };
+ 
+ &wdog1 {
++	/*
++	 * Errata e10574:
++	 * WDOG reset needs to run with WDOG_RESET_B signal enabled.
++	 * X1-51 (WDOG1#) signal needs carrier board handling to reset
++	 * TQMa7 on X1-22 (RESET_IN#).
++	 */
++	fsl,ext-reset-output;
+ 	status = "okay";
+ };
 -- 
-2.11.0
+2.20.1
