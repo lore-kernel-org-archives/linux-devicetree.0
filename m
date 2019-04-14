@@ -1,52 +1,53 @@
-From: Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH] ARM: dts: bugfix tqma7 soft reset issue
-Date: Sun, 14 Apr 2019 14:06:29 +0200
-Message-ID: <20190414120629.8912-1-bruno.thomsen@gmail.com>
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v3 1/2] dt-bindings: power: supply: Add charge-status-gpios property
+Date: Sun, 14 Apr 2019 14:40:38 +0200
+Message-ID: <20190414124039.10040-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, Bruno Thomsen <bruno.thomsen@gmail.com>, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, Markus Niebel <Markus.Niebel@tq-group.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Running reboot command on the TQMa7 board would just hang infinite
-at the end of the system shutdown process.
+Add documentation for the "charge-status-gpios" property.
+Update the "gpios" property with a valid example.
 
-Handling of i.MX7 errata e10574:
-Watchdog: A watchdog timeout or software trigger will not reset the SOC.
-
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-Reviewed-by: Markus Niebel <Markus.Niebel@tq-group.com>
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/imx7-tqma7.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7-tqma7.dtsi b/arch/arm/boot/dts/imx7-tqma7.dtsi
-index 85fe461e5e67..896eff839d5e 100644
---- a/arch/arm/boot/dts/imx7-tqma7.dtsi
-+++ b/arch/arm/boot/dts/imx7-tqma7.dtsi
-@@ -228,5 +228,12 @@
- };
+Changes:
+
+v2: - add a better description for the "status-gpios" property,
+    - add valid examples for the "gpios" and "status-gpios" properties
+
+v3: rename the "status-gpios" property to "charge-status-gpios"
+
+ .../devicetree/bindings/power/supply/gpio-charger.txt       | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+index adbb5dc5b6e9..30349332f051 100644
+--- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+@@ -14,12 +14,16 @@ Required properties :
+      usb-cdp (USB charging downstream port)
+      usb-aca (USB accessory charger adapter)
  
- &wdog1 {
-+	/*
-+	 * Errata e10574:
-+	 * WDOG reset needs to run with WDOG_RESET_B signal enabled.
-+	 * X1-51 (WDOG1#) signal needs carrier board handling to reset
-+	 * TQMa7 on X1-22 (RESET_IN#).
-+	 */
-+	fsl,ext-reset-output;
- 	status = "okay";
- };
++Optional properties:
++ - charge-status-gpios: GPIO indicating whether a battery is charging.
++
+ Example:
+ 
+ 	usb_charger: charger {
+ 		compatible = "gpio-charger";
+ 		charger-type = "usb-sdp";
+-		gpios = <&gpf0 2 0 0 0>;
++		gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
++		charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
+ 	}
+ 
+ 	battery {
 -- 
-2.20.1
+2.21.0
