@@ -1,78 +1,40 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [EXT] Re: [PATCHv5 4/6] PCI: mobiveil: Add PCIe Gen4 RC driver
- for NXP Layerscape SoCs
-Date: Sun, 14 Apr 2019 11:16:18 +0000
-Message-ID: <AM6PR04MB57812C408E832313DADAB248842A0@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190412095332.41370-1-Zhiqiang.Hou@nxp.com>
- <20190412095332.41370-5-Zhiqiang.Hou@nxp.com>
- <20190412140041.GA141472@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190412140041.GA141472@google.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 RESEND 3/4] memory: jz4780-nemc: Reduce size of const array
+Date: Sun, 14 Apr 2019 13:47:01 +0200
+Message-ID: <20190414114702.8236-3-paul@crapouillou.net>
+References: <20190414114702.8236-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190414114702.8236-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <bbrezillon@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
-c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjAxDQo+IFRvOiBaLnEu
-IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0
-QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWls
-LmNvLmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
-bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+
-OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFv
-d2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIdjUgNC82XSBQQ0k6
-IG1vYml2ZWlsOiBBZGQgUENJZSBHZW40IFJDIGRyaXZlciBmb3INCj4gTlhQIExheWVyc2NhcGUg
-U29Dcw0KPiANCj4gV0FSTklORzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5Y
-UC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2du
-aXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4gDQo+IA0KPiAN
-Cj4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDk6NTI6NTBBTSArMDAwMCwgWi5xLiBIb3Ugd3Jv
-dGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0K
-PiA+IFRoaXMgUENJZSBjb250cm9sbGVyIGlzIGJhc2VkIG9uIHRoZSBNb2JpdmVpbCBHUEVYIElQ
-LCB3aGljaCBpcw0KPiA+IGNvbXBhdGlibGUgd2l0aCB0aGUgUENJIEV4cHJlc3PihKIgQmFzZSBT
-cGVjaWZpY2F0aW9uLCBSZXZpc2lvbiA0LjAuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3Ug
-WmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVh
-biBMaWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gVjU6DQo+ID4gIC0g
-Q29ycmVjdGVkIHRoZSBzdWJqZWN0Lg0KPiA+ICAtIENvcnJlY3RlZCAyIHR5cG9zLg0KPiA+ICAt
-IFVwZGF0ZWQgdGhlIENvcHlyaWdodCBhbmQgZHJpdmVyIGRlc2NyaXB0aW9uLg0KPiA+ICAtIENo
-YW5nZWQgdG8gdXNlIEJJVCh4KSB0byBkZWZpbmUgdmVyaW91cyBmdW5jdGlvbnMgb2YgcmVnaXN0
-ZXIncyBiaXRzLg0KPiA+ICAtIFVuaWZpZWQgdGhlIGNhcGl0YWxpemF0aW9uIG9mIGVycm9yIGlu
-Zm8uDQo+ID4gIC0gQ2hhbmdlZCB0aGUgSVJRIGhhbmRsZXIgbmFtZSB0byBsc19wY2llX2c0X2lz
-cigpLg0KPiA+ICAtIENoYW5nZSAnaXJxJyB0byAnSVJRJyBpbiBlcnJvciBpbmZvLg0KPiA+ICAt
-IFRyaW1tZWQgc29tZSBmdW5jdGlvbnMgd2l0aG91dCBmdW5jdGlvbmFsaXR5IGNoYW5nZS4NCj4g
-Pg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25maWcgICAgICAgfCAg
-MTAgKw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlICAgICAg
-fCAgIDEgKw0KPiANCj4gPiAgLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUt
-Z2VuNC5jIHwgMjU2DQo+ID4gKysrKysrKysrKysrKysrKysrDQo+IA0KPiBJIHdvdWxkIHByb2Jh
-Ymx5IG5hbWUgdGhpcyAicGNpZS1sYXllcnNjYXBlLWdlbjQuYyIgKCJwY2llIiBpbnN0ZWFkIG9m
-ICJwY2kiKSwNCj4gc2luY2UgdGhhdCdzIG1vcmUgdHlwaWNhbCBhbmQgdGhpcyByZWFsbHkgaXMg
-UENJZS1zcGVjaWZpYy4NCg0KWWVzLCB0aGlzIGNhbiBiZSBhcnJhbmdlZCBpbiB2Ni4NCg0KPiAN
-Cj4gPiArI2RlZmluZSBQQ0lFX1BGX0RCRyAgICAgICAgICAgICAgICAgIDB4N2ZjDQo+ID4gKyNk
-ZWZpbmUgUEZfREJHX0xUU1NNX01BU0sgICAgICAgICAgICAweDNmDQo+ID4gKyNkZWZpbmUgUEZf
-REJHX1dFICAgICAgICAgICAgICAgICAgICBCSVQoMzEpDQo+ID4gKyNkZWZpbmUgUEZfREJHX1BB
-QlIgICAgICAgICAgICAgICAgICBCSVQoMjcpDQo+ID4gKw0KPiA+ICsjZGVmaW5lIExTX1BDSUVf
-RzRfTFRTU01fTDAgICAgICAgICAgMHgyZCAvKiBMMCBzdGF0ZSAqLw0KPiANCj4gTWF5YmUgcmVu
-YW1lIHRoaXMgYW5kIG1vdmUgaXQgdG8gbWFrZSBpdCBvYnZpb3VzIHRoYXQgaXQncyByZWxhdGVk
-IHRvDQo+IFBGX0RCR19MVFNTTV9NQVNLPw0KDQpZZXMsIHdpbGwgcmVuYW1lIGl0IGluIHY2Lg0K
-DQo+IA0KPiA+ICsgICAgICAgICAgICAgZGV2X2VycihkZXYsICJQb2xsIFBBQlJTVCZQQUJBQ1Qg
-dGltZW91dC5cbiIpOw0KPiANCj4gTm8gbmVlZCBmb3IgcHVuY3R1YXRpb24gYXQgZW5kIG9mIG1l
-c3NhZ2VzLg0KDQpXaWxsIHJlbW92ZSB0aGVtIGluIHY2Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+The maximum value found in that array is 15, there's no need to store
+these values as uint32_t, a uint8_t is enough.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+
+v2: Remove casts to uint32_t
+
+v3: No change
+
+ drivers/memory/jz4780-nemc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+index bcf06adefc96..66b8b43eaeff 100644
+--- a/drivers/memory/jz4780-nemc.c
++++ b/drivers/memory/jz4780-nemc.c
+@@ -161,7 +161,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
+ 	 * Conversion of tBP and tAW cycle counts to values supported by the
+ 	 * hardware (round up to the next supported value).
+ 	 */
+-	static const uint32_t convert_tBP_tAW[] = {
++	static const u8 convert_tBP_tAW[] = {
+ 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+ 
+ 		/* 11 - 12 -> 12 cycles */
+-- 
+2.11.0
