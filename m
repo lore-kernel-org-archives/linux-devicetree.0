@@ -1,34 +1,52 @@
-Return-Path: <SRS0=2n8j=SD=bootlin.com=miquel.raynal@kernel.org>
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH] dt-bindings: connector: Spelling mistake
-Date: Mon,  1 Apr 2019 15:09:00 +0200
-Message-Id: <20190401130900.6069-1-miquel.raynal@bootlin.com>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 14 Apr 2019 14:40:14 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 6/6] MAINTAINERS: add entry for fxas21002c gyro
+ driver
+Message-ID: <20190414144014.34cb5d6b@archlinux>
+In-Reply-To: <20190412164901.2321-7-rui.silva@linaro.org>
+References: <20190412164901.2321-1-rui.silva@linaro.org>
+	<20190412164901.2321-7-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Cosmetic change multpile -> multiple.
+On Fri, 12 Apr 2019 17:49:01 +0100
+Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
-Fixes: 593aa2b405f9 ("dt-bindings: add bindings for USB physical connector")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- Documentation/devicetree/bindings/connector/usb-connector.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Add me as maintainer of the nxp fxas21002c gyroscope driver.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Applied.
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index a9a2f2fc44f2..cef556d4e5ee 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -47,7 +47,7 @@ Required properties for usb-c-connector with power delivery support:
- Required nodes:
- - any data bus to the connector should be modeled using the OF graph bindings
-   specified in bindings/graph.txt, unless the bus is between parent node and
--  the connector. Since single connector can have multpile data buses every bus
-+  the connector. Since single connector can have multiple data buses every bus
-   has assigned OF graph port number as follows:
-     0: High Speed (HS), present in all connectors,
-     1: Super Speed (SS), present in SS capable connectors,
--- 
-2.19.1
+Thanks,
+
+Jonathan
+> ---
+>  MAINTAINERS | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3671fdea5010..f770f5124f4e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11117,6 +11117,16 @@ F:	Documentation/ABI/stable/sysfs-bus-nvmem
+>  F:	include/linux/nvmem-consumer.h
+>  F:	include/linux/nvmem-provider.h
+>  
+> +NXP FXAS21002C DRIVER
+> +M:	Rui Miguel Silva <rmfrfs@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/iio/gyroscope/fxas21002c.txt
+> +F:	drivers/iio/gyro/fxas21002c_core.c
+> +F:	drivers/iio/gyro/fxas21002c.h
+> +F:	drivers/iio/gyro/fxas21002c_i2c.c
+> +F:	drivers/iio/gyro/fxas21002c_spi.c
+> +
+>  NXP SGTL5000 DRIVER
+>  M:	Fabio Estevam <festevam@gmail.com>
+>  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
