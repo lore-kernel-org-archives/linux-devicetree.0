@@ -1,95 +1,39 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 RESEND 4/4] memory: jz4780_nemc: Add support for the JZ4740
-Date: Sun, 14 Apr 2019 13:47:02 +0200
-Message-ID: <20190414114702.8236-4-paul@crapouillou.net>
-References: <20190414114702.8236-1-paul@crapouillou.net>
+Subject: [PATCH v3 RESEND 1/4] dt-bindings: memory: jz4780: Add compatible string for JZ4740 SoC
+Date: Sun, 14 Apr 2019 13:46:59 +0200
+Message-ID: <20190414114702.8236-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190414114702.8236-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Boris Brezillon <bbrezillon@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the JZ4740 SoC from Ingenic.
+Add a compatible string to support the memory controller built into the
+JZ4740 SoC from Ingenic.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 v2: No change
 
-v3: Support the JZ4740 instead of the JZ4725B (exact same functionality
-    but JZ4740 is already fully upstream)
+v3: Change compatible string for jz4740 instead of j4725b
 
- drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt       | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index 66b8b43eaeff..f3a19b9b76ac 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -44,9 +44,14 @@
- #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
- #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+index f936b5589b19..59b8dcc118ee 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+@@ -5,6 +5,7 @@ controller in Ingenic JZ4780
  
-+struct jz_soc_info {
-+	u8 tas_tah_cycles_max;
-+};
-+
- struct jz4780_nemc {
- 	spinlock_t lock;
- 	struct device *dev;
-+	const struct jz_soc_info *soc_info;
- 	void __iomem *base;
- 	struct clk *clk;
- 	uint32_t clk_period;
-@@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAS_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAH_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	if (!nemc)
- 		return -ENOMEM;
- 
-+	nemc->soc_info = device_get_match_data(dev);
-+	if (!nemc->soc_info)
-+		return -EINVAL;
-+
- 	spin_lock_init(&nemc->lock);
- 	nemc->dev = dev;
- 
-@@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct jz_soc_info jz4740_soc_info = {
-+	.tas_tah_cycles_max = 7,
-+};
-+
-+static const struct jz_soc_info jz4780_soc_info = {
-+	.tas_tah_cycles_max = 15,
-+};
-+
- static const struct of_device_id jz4780_nemc_dt_match[] = {
--	{ .compatible = "ingenic,jz4780-nemc" },
-+	{ .compatible = "ingenic,jz4740-nemc", .data = &jz4740_soc_info, },
-+	{ .compatible = "ingenic,jz4780-nemc", .data = &jz4780_soc_info, },
- 	{},
- };
- 
+ Required properties:
+ - compatible: Should be set to one of:
++    "ingenic,jz4740-nemc" (JZ4740)
+     "ingenic,jz4780-nemc" (JZ4780)
+ - reg: Should specify the NEMC controller registers location and length.
+ - clocks: Clock for the NEMC controller.
 -- 
 2.11.0
