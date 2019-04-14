@@ -1,67 +1,71 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:49724 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfDKHyo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:54:44 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH v2 05/20] ARM: dts: r8a77470: Add VIN support
-Date: Thu, 11 Apr 2019 16:54:07 +0900
-Message-Id: <1554969262-15028-6-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+Return-Path: <jic23@kernel.org>
+Date: Sun, 14 Apr 2019 14:21:00 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 1/6] iio: gyro: add DT bindings to fxas21002c
+Message-ID: <20190414142100.6153ac79@archlinux>
+In-Reply-To: <20190412164901.2321-2-rui.silva@linaro.org>
+References: <20190412164901.2321-1-rui.silva@linaro.org>
+	<20190412164901.2321-2-rui.silva@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add vin{0|1} nodes to dtsi for VIN support on the RZ/G1C (r8a77470) SoC.
+On Fri, 12 Apr 2019 17:48:56 +0100
+Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- arch/arm/boot/dts/r8a77470.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+> Add device tree bindings for the FXAS21002C gyroscope.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to ignore.
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 97c51c5..7d47d04 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -23,6 +23,8 @@
- 		spi1 = &msiof0;
- 		spi2 = &msiof1;
- 		spi3 = &msiof2;
-+		vin0 = &vin0;
-+		vin1 = &vin1;
- 	};
- 
- 	cpus {
-@@ -783,6 +785,28 @@
- 			status = "disabled";
- 		};
- 
-+		vin0: video@e6ef0000 {
-+			compatible = "renesas,vin-r8a77470",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef0000 0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 811>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 811>;
-+			status = "disabled";
-+		};
-+
-+		vin1: video@e6ef1000 {
-+			compatible = "renesas,vin-r8a77470",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef1000 0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 810>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 810>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
--- 
-2.7.4
+Thanks,
+
+Jonathan
+
+> ---
+>  .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+> new file mode 100644
+> index 000000000000..465e104bbf14
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+> @@ -0,0 +1,31 @@
+> +* NXP FXAS21002C Gyroscope device tree bindings
+> +
+> +http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
+> +
+> +Required properties:
+> +  - compatible : should be "nxp,fxas21002c"
+> +  - reg : the I2C address of the sensor or SPI chip select number for the
+> +          device.
+> +  - vdd-supply: phandle to the regulator that provides power to the sensor.
+> +  - vddio-supply: phandle to the regulator that provides power to the bus.
+> +
+> +Optional properties:
+> +  - reset-gpios : gpio used to reset the device, see gpio/gpio.txt
+> +  - interrupts : device support 2 interrupts, INT1 and INT2,
+> +                 the interrupts can be triggered on rising or falling edges.
+> +                 See interrupt-controller/interrupts.txt
+> +  - interrupt-names: should contain "INT1" or "INT2", the gyroscope interrupt
+> +                     line in use.
+> +  - drive-open-drain: the interrupt/data ready line will be configured
+> +                      as open drain, which is useful if several sensors share
+> +                      the same interrupt line. This is a boolean property.
+> +                      (This binding is taken from pinctrl/pinctrl-bindings.txt)
+> +
+> +Example:
+> +
+> +gyroscope@20 {
+> +	compatible = "nxp,fxas21002c";
+> +	reg = <0x20>;
+> +	vdd-supply = <&reg_peri_3p15v>;
+> +	vddio-supply = <&reg_peri_3p15v>;
+> +};
