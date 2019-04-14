@@ -1,51 +1,51 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 14/30] PCI: tegra: Set target speed as Gen1 before link up
-Date: Thu, 11 Apr 2019 22:33:39 +0530
-Message-ID: <20190411170355.6882-15-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 14 Apr 2019 14:41:15 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 5/6] ARM: dts: imx7s-warp: add fxas21002c gyroscope
+Message-ID: <20190414144115.747d3706@archlinux>
+In-Reply-To: <20190412164901.2321-6-rui.silva@linaro.org>
+References: <20190412164901.2321-1-rui.silva@linaro.org>
+	<20190412164901.2321-6-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some of the legacy PCIe endpoints doesn't enumerate if root port advertises
-both Gen-1 and Gen-2 speeds. Hence, the strategy followed here is to
-initially advertise only Gen-1 and after link is up, retrain link to Gen-2
-speed.
+On Fri, 12 Apr 2019 17:49:00 +0100
+Rui Miguel Silva <rui.silva@linaro.org> wrote:
 
-Following two cards display this behaviour,
-  - Fusion HDTV 5 Express card
-  - IOGear SIL - PCIE - SATA card
+> Add entry to enable the fxas21002c gyroscope in the warp7 board.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+The driver is now queued up in the IIO tree and will head towards
+Linux-next fairly soon. Should be in plenty of time for the coming
+merge window.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Thanks,
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 7dc728cc5f51..7e24eac12668 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -670,6 +670,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= soc->update_fc_val;
- 		writel(value, port->base + RP_VEND_XP);
- 	}
-+
-+	/*
-+	 * PCIe link doesn't come up with few legacy PCIe endpoints
-+	 * if root port advertises both Gen-1 and Gen-2 speeds.
-+	 * Hence, the strategy followed here is to initially advertise
-+	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
-+	 */
-+	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+	value &= ~PCI_EXP_LNKSTA_CLS;
-+	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
-+	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
- }
- 
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
--- 
-2.17.1
+Jonathan
+
+> ---
+>  arch/arm/boot/dts/imx7s-warp.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+> index 613f0a9b319f..568f3289b34c 100644
+> --- a/arch/arm/boot/dts/imx7s-warp.dts
+> +++ b/arch/arm/boot/dts/imx7s-warp.dts
+> @@ -242,6 +242,13 @@
+>  		compatible = "fsl,mpl3115";
+>  		reg = <0x60>;
+>  	};
+> +
+> +	gyroscope@20 {
+> +		compatible = "nxp,fxas21002c";
+> +		reg = <0x20>;
+> +		vdd-supply = <&reg_peri_3p15v>;
+> +		vddio-supply = <&reg_peri_3p15v>;
+> +	};
+>  };
+>  
+>  &mipi_csi {
