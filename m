@@ -1,60 +1,68 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] Kconfig: change configuration of srf04 ultrasonic
- iio sensor
-Date: Sun, 14 Apr 2019 14:09:09 +0100
-Message-ID: <20190414140909.104c9795@archlinux>
-References: <20190409191126.lkjujjnvjyxua3fn@arbad>
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: Add bindings for TI
+ ADS8344 A/DC chips
+Date: Sun, 14 Apr 2019 14:49:44 +0100
+Message-ID: <20190414144944.62bf502a@archlinux>
+References: <20190412091537.14657-1-gregory.clement@bootlin.com>
+ <20190412091537.14657-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409191126.lkjujjnvjyxua3fn@arbad>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, songqiang1304521@gmail.com, robh@kernel.org, m.othacehe@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190412091537.14657-2-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Apr 2019 21:11:28 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
+On Fri, 12 Apr 2019 11:15:36 +0200
+Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> reword configuration option for SRF04
+> This adds device tree bindings for the TI ADS8344 A/DC chips.
 > 
-> list supported types in help text
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Applied and pushed out as testing for the autobuilders to play with it.
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied.
 
-thanks,
+Thanks,
 
 Jonathan
 
 > ---
->  drivers/iio/proximity/Kconfig | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+>  .../bindings/iio/adc/ti-ads8344.txt           | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
 > 
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index 12a3d3d40a91..e9f254ae3892 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -68,12 +68,19 @@ config RFD77402
->  	  module will be called rfd77402.
->  
->  config SRF04
-> -	tristate "Devantech SRF04 ultrasonic ranger sensor"
-> +	tristate "GPIO bitbanged ultrasonic ranger sensor (SRF04, MB1000)"
->  	depends on GPIOLIB
->  	help
-> -	  Say Y here to build a driver for Devantech SRF04 ultrasonic
-> +	  Say Y here to build a driver for GPIO bitbanged ultrasonic
->  	  ranger sensor. This driver can be used to measure the distance
->  	  of objects. It is using two GPIOs.
-> +	  Actually Supported types are:
-> +	  - Devantech SRF04
-> +	  - Maxbotix mb1000
-> +	  - Maxbotix mb1010
-> +	  - Maxbotix mb1020
-> +	  - Maxbotix mb1030
-> +	  - Maxbotix mb1040
->  
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called srf04.
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt b/Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
+> new file mode 100644
+> index 000000000000..e47c3759a82b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
+> @@ -0,0 +1,19 @@
+> +* Texas Instruments ADS8344 A/DC chip
+> +
+> +Required properties:
+> + - compatible: Must be "ti,ads8344"
+> + - reg: SPI chip select number for the device
+> + - vref-supply: phandle to a regulator node that supplies the
+> +   reference voltage
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Example:
+> +adc@0 {
+> +	compatible = "ti,ads8344";
+> +	reg = <0>;
+> +	vref-supply = <&refin_supply>;
+> +	spi-max-frequency = <10000000>;
+> +};
