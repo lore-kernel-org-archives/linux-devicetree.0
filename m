@@ -1,310 +1,78 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery
- driver.
-Date: Sun, 14 Apr 2019 11:37:58 +0100
-Message-ID: <20190414113758.07702982@archlinux>
-References: <20190323172809.14407-1-contact@artur-rojek.eu>
-        <20190323172809.14407-4-contact@artur-rojek.eu>
-        <20190324153137.04857cdf@archlinux>
-        <20190407165234.is66vmnjfc35jnho@earth.universe>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [EXT] Re: [PATCHv5 4/6] PCI: mobiveil: Add PCIe Gen4 RC driver
+ for NXP Layerscape SoCs
+Date: Sun, 14 Apr 2019 11:16:18 +0000
+Message-ID: <AM6PR04MB57812C408E832313DADAB248842A0@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190412095332.41370-1-Zhiqiang.Hou@nxp.com>
+ <20190412095332.41370-5-Zhiqiang.Hou@nxp.com>
+ <20190412140041.GA141472@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190407165234.is66vmnjfc35jnho@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Artur Rojek <contact@artur-rojek.eu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190412140041.GA141472@google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 7 Apr 2019 18:52:34 +0200
-Sebastian Reichel <sre@kernel.org> wrote:
-
-> Hi,
-> 
-> On Sun, Mar 24, 2019 at 03:31:37PM +0000, Jonathan Cameron wrote:
-> > On Sat, 23 Mar 2019 18:28:09 +0100
-> > Artur Rojek <contact@artur-rojek.eu> wrote:
-> >   
-> > > Add a driver for battery present on Ingenic JZ47xx SoCs.
-> > > 
-> > > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>  
-> > The IIO parts look fine to me.
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Sebastian, assuming you are happy with this version,  
-> 
-> The driver itself looks ok. I'm a bit unhappy, that we already have
-> jz4740-battery. This driver is much cleaner, but does not yet seem
-> to be ready to replace it. Artur Rojek what are your plans regarding
-> to the existing driver? Is there currently work going on migrating
-> JZ47xx to DT?
-> 
-> > do you have any preference for how we handle this series?
-> > 
-> > Probably needs one of us to do an immutable branch with just this
-> > in it.  I'm happy to do so once all the relevant Acks etc are in
-> > place, but don't mind if you want to!  
-> 
-> I suppose you could provide an immutable branch with just the first
-> two patches in it. Then I can pull it and apply the power-supply
-> patches on top.
-Done. ib-jz47xx-battery-prereq branch of 
-git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-
-which is based on v5.0
-
-I'll pull that into the togreg branch of iio.git shortly.
-
-Thanks,
-
-Jonathan
-
-> 
-> -- Sebastian
-> 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> > > ---
-> > > 
-> > > Changes:
-> > > 
-> > > v2: - rework the return logic in ingenic_battery_get_property,
-> > >     - make index offsets point forward in ingenic_battery_set_scale,
-> > >     - fix spacing around scale_raw[best_idx + 1]
-> > > 
-> > >  drivers/power/supply/Kconfig           |  11 ++
-> > >  drivers/power/supply/Makefile          |   1 +
-> > >  drivers/power/supply/ingenic-battery.c | 180 +++++++++++++++++++++++++
-> > >  3 files changed, 192 insertions(+)
-> > >  create mode 100644 drivers/power/supply/ingenic-battery.c
-> > > 
-> > > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> > > index e901b9879e7e..9bfb1637ec28 100644
-> > > --- a/drivers/power/supply/Kconfig
-> > > +++ b/drivers/power/supply/Kconfig
-> > > @@ -169,6 +169,17 @@ config BATTERY_COLLIE
-> > >  	  Say Y to enable support for the battery on the Sharp Zaurus
-> > >  	  SL-5500 (collie) models.
-> > >  
-> > > +config BATTERY_INGENIC
-> > > +	tristate "Ingenic JZ47xx SoCs battery driver"
-> > > +	depends on MIPS || COMPILE_TEST
-> > > +	depends on INGENIC_ADC
-> > > +	help
-> > > +	  Choose this option if you want to monitor battery status on
-> > > +	  Ingenic JZ47xx SoC based devices.
-> > > +
-> > > +	  This driver can also be built as a module. If so, the module will be
-> > > +	  called ingenic-battery.
-> > > +
-> > >  config BATTERY_IPAQ_MICRO
-> > >  	tristate "iPAQ Atmel Micro ASIC battery driver"
-> > >  	depends on MFD_IPAQ_MICRO
-> > > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> > > index b731c2a9b695..9e2c481d0187 100644
-> > > --- a/drivers/power/supply/Makefile
-> > > +++ b/drivers/power/supply/Makefile
-> > > @@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
-> > >  obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
-> > >  obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
-> > >  obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
-> > > +obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
-> > >  obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
-> > >  obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
-> > >  obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
-> > > diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
-> > > new file mode 100644
-> > > index 000000000000..822aee1c7b64
-> > > --- /dev/null
-> > > +++ b/drivers/power/supply/ingenic-battery.c
-> > > @@ -0,0 +1,180 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Battery driver for the Ingenic JZ47xx SoCs
-> > > + * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
-> > > + *
-> > > + * based on drivers/power/supply/jz4740-battery.c
-> > > + */
-> > > +
-> > > +#include <linux/iio/consumer.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/power_supply.h>
-> > > +#include <linux/property.h>
-> > > +
-> > > +struct ingenic_battery {
-> > > +	struct device *dev;
-> > > +	struct iio_channel *channel;
-> > > +	struct power_supply_desc desc;
-> > > +	struct power_supply *battery;
-> > > +	struct power_supply_battery_info info;
-> > > +};
-> > > +
-> > > +static int ingenic_battery_get_property(struct power_supply *psy,
-> > > +					enum power_supply_property psp,
-> > > +					union power_supply_propval *val)
-> > > +{
-> > > +	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
-> > > +	struct power_supply_battery_info *info = &bat->info;
-> > > +	int ret;
-> > > +
-> > > +	switch (psp) {
-> > > +	case POWER_SUPPLY_PROP_HEALTH:
-> > > +		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> > > +		val->intval *= 1000;
-> > > +		if (val->intval < info->voltage_min_design_uv)
-> > > +			val->intval = POWER_SUPPLY_HEALTH_DEAD;
-> > > +		else if (val->intval > info->voltage_max_design_uv)
-> > > +			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-> > > +		else
-> > > +			val->intval = POWER_SUPPLY_HEALTH_GOOD;
-> > > +		return ret;
-> > > +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> > > +		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> > > +		val->intval *= 1000;
-> > > +		return ret;
-> > > +	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
-> > > +		val->intval = info->voltage_min_design_uv;
-> > > +		return 0;
-> > > +	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
-> > > +		val->intval = info->voltage_max_design_uv;
-> > > +		return 0;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	};
-> > > +}
-> > > +
-> > > +/* Set the most appropriate IIO channel voltage reference scale
-> > > + * based on the battery's max voltage.
-> > > + */
-> > > +static int ingenic_battery_set_scale(struct ingenic_battery *bat)
-> > > +{
-> > > +	const int *scale_raw;
-> > > +	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
-> > > +	u64 max_mV;
-> > > +
-> > > +	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
-> > > +	if (ret) {
-> > > +		dev_err(bat->dev, "Unable to read max raw channel value\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
-> > > +					       &scale_type, &scale_len,
-> > > +					       IIO_CHAN_INFO_SCALE);
-> > > +	if (ret < 0) {
-> > > +		dev_err(bat->dev, "Unable to read channel avail scale\n");
-> > > +		return ret;
-> > > +	}
-> > > +	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
-> > > +		return -EINVAL;
-> > > +
-> > > +	max_mV = bat->info.voltage_max_design_uv / 1000;
-> > > +
-> > > +	for (i = 0; i < scale_len; i += 2) {
-> > > +		u64 scale_mV = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
-> > > +
-> > > +		if (scale_mV < max_mV)
-> > > +			continue;
-> > > +
-> > > +		if (best_idx >= 0 && scale_mV > best_mV)
-> > > +			continue;
-> > > +
-> > > +		best_mV = scale_mV;
-> > > +		best_idx = i;
-> > > +	}
-> > > +
-> > > +	if (best_idx < 0) {
-> > > +		dev_err(bat->dev, "Unable to find matching voltage scale\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	return iio_write_channel_attribute(bat->channel,
-> > > +					   scale_raw[best_idx],
-> > > +					   scale_raw[best_idx + 1],
-> > > +					   IIO_CHAN_INFO_SCALE);
-> > > +}
-> > > +
-> > > +static enum power_supply_property ingenic_battery_properties[] = {
-> > > +	POWER_SUPPLY_PROP_HEALTH,
-> > > +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> > > +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-> > > +	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-> > > +};
-> > > +
-> > > +static int ingenic_battery_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device *dev = &pdev->dev;
-> > > +	struct ingenic_battery *bat;
-> > > +	struct power_supply_config psy_cfg = {};
-> > > +	struct power_supply_desc *desc;
-> > > +	int ret;
-> > > +
-> > > +	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
-> > > +	if (!bat)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	bat->dev = dev;
-> > > +	bat->channel = devm_iio_channel_get(dev, "battery");
-> > > +	if (IS_ERR(bat->channel))
-> > > +		return PTR_ERR(bat->channel);
-> > > +
-> > > +	desc = &bat->desc;
-> > > +	desc->name = "jz-battery";
-> > > +	desc->type = POWER_SUPPLY_TYPE_BATTERY;
-> > > +	desc->properties = ingenic_battery_properties;
-> > > +	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
-> > > +	desc->get_property = ingenic_battery_get_property;
-> > > +	psy_cfg.drv_data = bat;
-> > > +	psy_cfg.of_node = dev->of_node;
-> > > +
-> > > +	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
-> > > +	if (IS_ERR(bat->battery)) {
-> > > +		dev_err(dev, "Unable to register battery\n");
-> > > +		return PTR_ERR(bat->battery);
-> > > +	}
-> > > +
-> > > +	ret = power_supply_get_battery_info(bat->battery, &bat->info);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "Unable to get battery info: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +	if (bat->info.voltage_min_design_uv < 0) {
-> > > +		dev_err(dev, "Unable to get voltage min design\n");
-> > > +		return bat->info.voltage_min_design_uv;
-> > > +	}
-> > > +	if (bat->info.voltage_max_design_uv < 0) {
-> > > +		dev_err(dev, "Unable to get voltage max design\n");
-> > > +		return bat->info.voltage_max_design_uv;
-> > > +	}
-> > > +
-> > > +	return ingenic_battery_set_scale(bat);
-> > > +}
-> > > +
-> > > +#ifdef CONFIG_OF
-> > > +static const struct of_device_id ingenic_battery_of_match[] = {
-> > > +	{ .compatible = "ingenic,jz4740-battery", },
-> > > +	{ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
-> > > +#endif
-> > > +
-> > > +static struct platform_driver ingenic_battery_driver = {
-> > > +	.driver = {
-> > > +		.name = "ingenic-battery",
-> > > +		.of_match_table = of_match_ptr(ingenic_battery_of_match),  
-> > 
-> > I guess we can be fairly sure no one will even user this with ACPI
-> > (magic DT) bindings?  That would make this a rare case where the
-> > of_match_pr protection and ifdef fun is still fine.
-> > 
-> >   
-> > > +	},
-> > > +	.probe = ingenic_battery_probe,
-> > > +};
-> > > +module_platform_driver(ingenic_battery_driver);  
-> >   
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjAxDQo+IFRvOiBaLnEu
+IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0
+QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWls
+LmNvLmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
+bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
+Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+
+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFv
+d2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIdjUgNC82XSBQQ0k6
+IG1vYml2ZWlsOiBBZGQgUENJZSBHZW40IFJDIGRyaXZlciBmb3INCj4gTlhQIExheWVyc2NhcGUg
+U29Dcw0KPiANCj4gV0FSTklORzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5Y
+UC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2du
+aXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4gDQo+IA0KPiAN
+Cj4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDk6NTI6NTBBTSArMDAwMCwgWi5xLiBIb3Ugd3Jv
+dGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0K
+PiA+IFRoaXMgUENJZSBjb250cm9sbGVyIGlzIGJhc2VkIG9uIHRoZSBNb2JpdmVpbCBHUEVYIElQ
+LCB3aGljaCBpcw0KPiA+IGNvbXBhdGlibGUgd2l0aCB0aGUgUENJIEV4cHJlc3PihKIgQmFzZSBT
+cGVjaWZpY2F0aW9uLCBSZXZpc2lvbiA0LjAuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3Ug
+WmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVh
+biBMaWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gVjU6DQo+ID4gIC0g
+Q29ycmVjdGVkIHRoZSBzdWJqZWN0Lg0KPiA+ICAtIENvcnJlY3RlZCAyIHR5cG9zLg0KPiA+ICAt
+IFVwZGF0ZWQgdGhlIENvcHlyaWdodCBhbmQgZHJpdmVyIGRlc2NyaXB0aW9uLg0KPiA+ICAtIENo
+YW5nZWQgdG8gdXNlIEJJVCh4KSB0byBkZWZpbmUgdmVyaW91cyBmdW5jdGlvbnMgb2YgcmVnaXN0
+ZXIncyBiaXRzLg0KPiA+ICAtIFVuaWZpZWQgdGhlIGNhcGl0YWxpemF0aW9uIG9mIGVycm9yIGlu
+Zm8uDQo+ID4gIC0gQ2hhbmdlZCB0aGUgSVJRIGhhbmRsZXIgbmFtZSB0byBsc19wY2llX2c0X2lz
+cigpLg0KPiA+ICAtIENoYW5nZSAnaXJxJyB0byAnSVJRJyBpbiBlcnJvciBpbmZvLg0KPiA+ICAt
+IFRyaW1tZWQgc29tZSBmdW5jdGlvbnMgd2l0aG91dCBmdW5jdGlvbmFsaXR5IGNoYW5nZS4NCj4g
+Pg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25maWcgICAgICAgfCAg
+MTAgKw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlICAgICAg
+fCAgIDEgKw0KPiANCj4gPiAgLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUt
+Z2VuNC5jIHwgMjU2DQo+ID4gKysrKysrKysrKysrKysrKysrDQo+IA0KPiBJIHdvdWxkIHByb2Jh
+Ymx5IG5hbWUgdGhpcyAicGNpZS1sYXllcnNjYXBlLWdlbjQuYyIgKCJwY2llIiBpbnN0ZWFkIG9m
+ICJwY2kiKSwNCj4gc2luY2UgdGhhdCdzIG1vcmUgdHlwaWNhbCBhbmQgdGhpcyByZWFsbHkgaXMg
+UENJZS1zcGVjaWZpYy4NCg0KWWVzLCB0aGlzIGNhbiBiZSBhcnJhbmdlZCBpbiB2Ni4NCg0KPiAN
+Cj4gPiArI2RlZmluZSBQQ0lFX1BGX0RCRyAgICAgICAgICAgICAgICAgIDB4N2ZjDQo+ID4gKyNk
+ZWZpbmUgUEZfREJHX0xUU1NNX01BU0sgICAgICAgICAgICAweDNmDQo+ID4gKyNkZWZpbmUgUEZf
+REJHX1dFICAgICAgICAgICAgICAgICAgICBCSVQoMzEpDQo+ID4gKyNkZWZpbmUgUEZfREJHX1BB
+QlIgICAgICAgICAgICAgICAgICBCSVQoMjcpDQo+ID4gKw0KPiA+ICsjZGVmaW5lIExTX1BDSUVf
+RzRfTFRTU01fTDAgICAgICAgICAgMHgyZCAvKiBMMCBzdGF0ZSAqLw0KPiANCj4gTWF5YmUgcmVu
+YW1lIHRoaXMgYW5kIG1vdmUgaXQgdG8gbWFrZSBpdCBvYnZpb3VzIHRoYXQgaXQncyByZWxhdGVk
+IHRvDQo+IFBGX0RCR19MVFNTTV9NQVNLPw0KDQpZZXMsIHdpbGwgcmVuYW1lIGl0IGluIHY2Lg0K
+DQo+IA0KPiA+ICsgICAgICAgICAgICAgZGV2X2VycihkZXYsICJQb2xsIFBBQlJTVCZQQUJBQ1Qg
+dGltZW91dC5cbiIpOw0KPiANCj4gTm8gbmVlZCBmb3IgcHVuY3R1YXRpb24gYXQgZW5kIG9mIG1l
+c3NhZ2VzLg0KDQpXaWxsIHJlbW92ZSB0aGVtIGluIHY2Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
