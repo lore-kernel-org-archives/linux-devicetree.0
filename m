@@ -1,146 +1,133 @@
-From: Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v3 2/2] power: supply: gpio-charger: Add support for charger status.
-Date: Sun, 14 Apr 2019 14:40:39 +0200
-Message-ID: <20190414124039.10040-2-contact@artur-rojek.eu>
-References: <20190414124039.10040-1-contact@artur-rojek.eu>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] srf04.c: add maxbotix ultrasonic sensors
+Date: Sun, 14 Apr 2019 14:06:10 +0100
+Message-ID: <20190414140610.20039659@archlinux>
+References: <20190409191021.w6phf2q4m2pxcrkq@arbad>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190414124039.10040-1-contact@artur-rojek.eu>
+In-Reply-To: <20190409191021.w6phf2q4m2pxcrkq@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, songqiang1304521@gmail.com, robh@kernel.org, m.othacehe@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce optional support of POWER_SUPPLY_PROP_STATUS for chargers
-which provide charging status GPIO.
+On Tue, 9 Apr 2019 21:10:22 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
----
+> add Maxbotix LV ultrasonic sensor types mb1000, mb1010, mb1020, mb1030
+> and mb1040
+> 
+> add a configuration struct with the different trigger pulse lengths
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Changes:
+Thanks,
 
-v2: no change
+Jonathan
 
-v3: rename "status_irq" and "status" fields to "charge_status_irq"
-    and "charge_status" accordingly
-
- drivers/power/supply/gpio-charger.c | 57 +++++++++++++++++++++++------
- 1 file changed, 46 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/power/supply/gpio-charger.c b/drivers/power/supply/gpio-charger.c
-index 7e4f11d5a230..f99e8f1eef23 100644
---- a/drivers/power/supply/gpio-charger.c
-+++ b/drivers/power/supply/gpio-charger.c
-@@ -29,11 +29,13 @@
- 
- struct gpio_charger {
- 	unsigned int irq;
-+	unsigned int charge_status_irq;
- 	bool wakeup_enabled;
- 
- 	struct power_supply *charger;
- 	struct power_supply_desc charger_desc;
- 	struct gpio_desc *gpiod;
-+	struct gpio_desc *charge_status;
- };
- 
- static irqreturn_t gpio_charger_irq(int irq, void *devid)
-@@ -59,6 +61,12 @@ static int gpio_charger_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_ONLINE:
- 		val->intval = gpiod_get_value_cansleep(gpio_charger->gpiod);
- 		break;
-+	case POWER_SUPPLY_PROP_STATUS:
-+		if (gpiod_get_value_cansleep(gpio_charger->charge_status))
-+			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+		else
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -93,8 +101,29 @@ static enum power_supply_type gpio_charger_get_type(struct device *dev)
- 	return POWER_SUPPLY_TYPE_UNKNOWN;
- }
- 
-+static int gpio_charger_get_irq(struct device *dev, void *dev_id,
-+				struct gpio_desc *gpio)
-+{
-+	int ret, irq = gpiod_to_irq(gpio);
-+
-+	if (irq > 0) {
-+		ret = devm_request_any_context_irq(dev, irq, gpio_charger_irq,
-+						   IRQF_TRIGGER_RISING |
-+						   IRQF_TRIGGER_FALLING,
-+						   dev_name(dev),
-+						   dev_id);
-+		if (ret < 0) {
-+			dev_warn(dev, "Failed to request irq: %d\n", ret);
-+			irq = 0;
-+		}
-+	}
-+
-+	return irq;
-+}
-+
- static enum power_supply_property gpio_charger_properties[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_STATUS /* Must always be last in the array. */
- };
- 
- static int gpio_charger_probe(struct platform_device *pdev)
-@@ -104,8 +133,10 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 	struct power_supply_config psy_cfg = {};
- 	struct gpio_charger *gpio_charger;
- 	struct power_supply_desc *charger_desc;
-+	struct gpio_desc *charge_status;
-+	int charge_status_irq;
- 	unsigned long flags;
--	int irq, ret;
-+	int ret;
- 
- 	if (!pdata && !dev->of_node) {
- 		dev_err(dev, "No platform data\n");
-@@ -151,9 +182,17 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 		return PTR_ERR(gpio_charger->gpiod);
- 	}
- 
-+	charge_status = devm_gpiod_get_optional(dev, "charge-status", GPIOD_IN);
-+	gpio_charger->charge_status = charge_status;
-+	if (IS_ERR(gpio_charger->charge_status))
-+		return PTR_ERR(gpio_charger->charge_status);
-+
- 	charger_desc = &gpio_charger->charger_desc;
- 	charger_desc->properties = gpio_charger_properties;
- 	charger_desc->num_properties = ARRAY_SIZE(gpio_charger_properties);
-+	/* Remove POWER_SUPPLY_PROP_STATUS from the supported properties. */
-+	if (!gpio_charger->charge_status)
-+		charger_desc->num_properties -= 1;
- 	charger_desc->get_property = gpio_charger_get_property;
- 
- 	psy_cfg.of_node = dev->of_node;
-@@ -180,16 +219,12 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	irq = gpiod_to_irq(gpio_charger->gpiod);
--	if (irq > 0) {
--		ret = devm_request_any_context_irq(dev, irq, gpio_charger_irq,
--				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
--				dev_name(dev), gpio_charger->charger);
--		if (ret < 0)
--			dev_warn(dev, "Failed to request irq: %d\n", ret);
--		else
--			gpio_charger->irq = irq;
--	}
-+	gpio_charger->irq = gpio_charger_get_irq(dev, gpio_charger->charger,
-+						 gpio_charger->gpiod);
-+
-+	charge_status_irq = gpio_charger_get_irq(dev, gpio_charger->charger,
-+						 gpio_charger->charge_status);
-+	gpio_charger->charge_status_irq = charge_status_irq;
- 
- 	platform_set_drvdata(pdev, gpio_charger);
- 
--- 
-2.21.0
+> ---
+>  drivers/iio/proximity/srf04.c | 38 +++++++++++++++++++++++++++++---------
+>  1 file changed, 29 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
+> index 09c7b9c095b0..1bad4018d1aa 100644
+> --- a/drivers/iio/proximity/srf04.c
+> +++ b/drivers/iio/proximity/srf04.c
+> @@ -23,7 +23,7 @@
+>   * trig:  --+   +------------------------------------------------------
+>   *          ^   ^
+>   *          |<->|
+> - *         udelay(10)
+> + *         udelay(trigger_pulse_us)
+>   *
+>   * ultra           +-+ +-+ +-+
+>   * sonic           | | | | | |
+> @@ -48,6 +48,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  #include <linux/sched.h>
+> @@ -56,6 +57,10 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  
+> +struct srf04_cfg {
+> +	unsigned long trigger_pulse_us;
+> +};
+> +
+>  struct srf04_data {
+>  	struct device		*dev;
+>  	struct gpio_desc	*gpiod_trig;
+> @@ -66,6 +71,15 @@ struct srf04_data {
+>  	ktime_t			ts_falling;
+>  	struct completion	rising;
+>  	struct completion	falling;
+> +	const struct srf04_cfg	*cfg;
+> +};
+> +
+> +static const struct srf04_cfg srf04_cfg = {
+> +	.trigger_pulse_us = 10,
+> +};
+> +
+> +static const struct srf04_cfg mb_lv_cfg = {
+> +	.trigger_pulse_us = 20,
+>  };
+>  
+>  static irqreturn_t srf04_handle_irq(int irq, void *dev_id)
+> @@ -102,7 +116,7 @@ static int srf04_read(struct srf04_data *data)
+>  	reinit_completion(&data->falling);
+>  
+>  	gpiod_set_value(data->gpiod_trig, 1);
+> -	udelay(10);
+> +	udelay(data->cfg->trigger_pulse_us);
+>  	gpiod_set_value(data->gpiod_trig, 0);
+>  
+>  	/* it cannot take more than 20 ms */
+> @@ -215,6 +229,18 @@ static const struct iio_chan_spec srf04_chan_spec[] = {
+>  	},
+>  };
+>  
+> +static const struct of_device_id of_srf04_match[] = {
+> +	{ .compatible = "devantech,srf04", .data = &srf04_cfg},
+> +	{ .compatible = "maxbotix,mb1000", .data = &mb_lv_cfg},
+> +	{ .compatible = "maxbotix,mb1010", .data = &mb_lv_cfg},
+> +	{ .compatible = "maxbotix,mb1020", .data = &mb_lv_cfg},
+> +	{ .compatible = "maxbotix,mb1030", .data = &mb_lv_cfg},
+> +	{ .compatible = "maxbotix,mb1040", .data = &mb_lv_cfg},
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_srf04_match);
+> +
+>  static int srf04_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -230,6 +256,7 @@ static int srf04_probe(struct platform_device *pdev)
+>  
+>  	data = iio_priv(indio_dev);
+>  	data->dev = dev;
+> +	data->cfg = of_match_device(of_srf04_match, dev)->data;
+>  
+>  	mutex_init(&data->lock);
+>  	init_completion(&data->rising);
+> @@ -280,13 +307,6 @@ static int srf04_probe(struct platform_device *pdev)
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+> -static const struct of_device_id of_srf04_match[] = {
+> -	{ .compatible = "devantech,srf04", },
+> -	{},
+> -};
+> -
+> -MODULE_DEVICE_TABLE(of, of_srf04_match);
+> -
+>  static struct platform_driver srf04_driver = {
+>  	.probe		= srf04_probe,
+>  	.driver		= {
