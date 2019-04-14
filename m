@@ -1,39 +1,44 @@
-Return-Path: <SRS0=vr9i=SS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:13351 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727214AbfDPB4N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 21:56:13 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 4/4] dt-bindings: pwm: renesas: tpu: Document R8A779{5|6|65} bindings
-Date: Tue, 16 Apr 2019 10:55:52 +0900
-Message-Id: <1555379752-5980-5-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1555379752-5980-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1555379752-5980-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+Return-Path: <jic23@kernel.org>
+Date: Sun, 14 Apr 2019 11:04:41 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: accel: add LIS2DE12 sensor
+ device binding
+Message-ID: <20190414110441.1e58f58c@archlinux>
+In-Reply-To: <20190411001209.29488-2-rjones@gateworks.com>
+References: <20190305203252.13647-1-rjones@gateworks.com>
+	<20190411001209.29488-1-rjones@gateworks.com>
+	<20190411001209.29488-2-rjones@gateworks.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Robert Jones <rjones@gateworks.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car H3/M3-W/M3-N (R8A779{5|6|65}) SoC in the Renesas TPU bindings;
+On Wed, 10 Apr 2019 17:12:08 -0700
+Robert Jones <rjones@gateworks.com> wrote:
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 3 +++
- 1 file changed, 3 insertions(+)
+> Signed-off-by: Robert Jones <rjones@gateworks.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-index 848a92b..054ce4a 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-@@ -9,6 +9,9 @@ Required Properties:
-     - "renesas,tpu-r8a7744": for R8A7744 (RZ/G1N) compatible PWM controller.
-     - "renesas,tpu-r8a7745": for R8A7745 (RZ/G1E) compatible PWM controller.
-     - "renesas,tpu-r8a7790": for R8A7790 (R-Car H2) compatible PWM controller.
-+    - "renesas,tpu-r8a7795": for R8A7795 (R-Car H3) compatible PWM controller.
-+    - "renesas,tpu-r8a7796": for R8A7796 (R-Car M3-W) compatible PWM controller.
-+    - "renesas,tpu-r8a77965": for R8A77965 (R-Car M3-N) compatible PWM controller.
-     - "renesas,tpu-r8a77970": for R8A77970 (R-Car V3M) compatible PWM
- 			      controller.
-     - "renesas,tpu-r8a77980": for R8A77980 (R-Car V3H) compatible PWM
--- 
-2.7.4
+Thanks,
+
+Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
+> index 52ee4ba..0ef64a4 100644
+> --- a/Documentation/devicetree/bindings/iio/st-sensors.txt
+> +++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
+> @@ -49,6 +49,7 @@ Accelerometers:
+>  - st,lis2dw12
+>  - st,lis3dhh
+>  - st,lis3de
+> +- st,lis2de12
+>  
+>  Gyroscopes:
+>  - st,l3g4200d-gyro
