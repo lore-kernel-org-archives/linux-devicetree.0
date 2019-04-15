@@ -1,464 +1,277 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 12/16] arm64: tegra: Add P2U and PCIe controller nodes
- to Tegra194 DT
-Date: Mon, 15 Apr 2019 17:15:52 +0200
-Message-ID: <20190415151552.GI29254@ulmo>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
- <1554407683-31580-13-git-send-email-vidyas@nvidia.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+Date: Mon, 15 Apr 2019 17:17:03 +0200
+Message-ID: <20190415151703.svdosn3wbhk625jm@core.my.home>
+References: <20190412120730.473-1-megous@megous.com>
+ <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+ <20190415142222.cytlvz7z3mjf7slm@core.my.home>
+ <CAGb2v67XBGhoJWho16A3+2axBuTsY+SkYkg1hwQJ0XyPvPeoOw@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="McTFpSeH7KqpdXA3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB4OA2LSQKGQEEB4R7SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1554407683-31580-13-git-send-email-vidyas@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+In-Reply-To: <CAGb2v67XBGhoJWho16A3+2axBuTsY+SkYkg1hwQJ0XyPvPeoOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---McTFpSeH7KqpdXA3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 05, 2019 at 01:24:39AM +0530, Vidya Sagar wrote:
-> Add P2U (PIPE to UPHY) and PCIe controller nodes to device tree.
-> The Tegra194 SoC contains six PCIe controllers and twenty P2U instances
-> grouped into two different PHY bricks namely High-Speed IO (HSIO-12 P2Us)
-> and NVIDIA High Speed (NVHS-8 P2Us) respectively.
+On Mon, Apr 15, 2019 at 10:35:47PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Apr 15, 2019 at 10:22 PM 'Ond=C5=99ej Jirman' via linux-sunxi
+> <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+> >
+> > Hi ChenYu,
+> >
+> > On Mon, Apr 15, 2019 at 04:18:12PM +0800, Chen-Yu Tsai wrote:
+> > > On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
+> > > <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+> > > >
+> > > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > > >
+> > > > I went through the datasheets for H6 and H5, and compared the diffe=
+rences.
+> > > > RTCs are largely similar, but not entirely compatible. Incompatibil=
+ities
+> > > > are in details not yet implemented by the rtc driver though.
+> > > >
+> > > > I also corrected the clock tree in H6 DTSI.
+> > >
+> > > Please also add DCXO clock input/output and XO clock input to the bin=
+dings
+> > > and DT, and also fix up the clock tree. You can skip them in the driv=
+er for
+> > > now, but please add a TODO. As long as you don't change the clock-out=
+put-name
+> > > of osc24M, everything should work as before.
+> >
+> > That's a bit confusing. There's no clock-output-name for osc24M, nor fo=
+r input
+> > clock used in the dt-bindings or the driver. Perhaps you meant osc32k? =
+Maybe
+> > I'm misunderstanding something?
 >=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v1]:
-> * Flattened all P2U nodes by removing 'hsio-p2u' and 'nvhs-p2u' super nod=
-es
-> * Changed P2U nodes compatible string from 'nvidia,tegra194-phy-p2u' to '=
-nvidia,tegra194-p2u'
-> * Changed reg-name from 'base' to 'ctl'
-> * Updated all PCIe nodes according to the changes made to DT documentatio=
-n file
+> I meant the clock-output-names in the device node of the external 24M cry=
+stal.
 >=20
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 449 +++++++++++++++++++++++++=
-++++++
->  1 file changed, 449 insertions(+)
+> > If you look at the datasheet page 349, it looks like RTC provides "hosc=
+"
+> > clock (to plls and the system) either from XO or DCXO oscillators.
+> > The default selection depends on the voltage level on external PAD.
+> >
+> > So based on what you wrote, I suggest these actual changes/names:
+> >
+> > 1) Add DT docs for HOSC clock provided at index 3:
+> >
+> >   - 3: HOSC, 24MHz clock that clocks the PLLs and most of the SoC (H6 o=
+nly)
 >=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/d=
-ts/nvidia/tegra194.dtsi
-> index c77ca211fa8f..5b62136d97a5 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> @@ -884,6 +884,166 @@
->  				nvidia,interface =3D <3>;
->  			};
->  		};
-> +
-> +		p2u_0: p2u@03e10000 {			/* HSIO-Lane-0 */
-> +			compatible =3D "nvidia,tegra194-p2u";
-> +			reg =3D <0x03e10000 0x10000>;
-> +			reg-names =3D "ctl";
-> +
-> +			#phy-cells =3D <0>;
-> +		};
-> +
-[...]
-> +		p2u_12: p2u@03eb0000 {			/* NVHS-Lane-0 */
-> +			compatible =3D "nvidia,tegra194-p2u";
-> +			reg =3D <0x03eb0000 0x10000>;
-> +			reg-names =3D "ctl";
-> +
-> +			#phy-cells =3D <0>;
-> +		};
-[...]
-
-Do we perhaps want to include the type of P2U in the label? That would
-make it more obvious which ones to list in the PCIe controller nodes'
-phys properties. Something like:
-
-		p2u_hsio_0: p2u@3e10000 {
-			...
-		};
-
-		...
-
-		p2u_nvhs_0: p2u@3eb0000 {
-			...
-		};
-
-? Also, make sure to drop the leading 0 from unit-addresses. Recent
-versions of DTC have checks for that in place and will warn about it in
-recent Linux builds.
-
-[...]
-> @@ -1054,4 +1214,293 @@
->  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->  		interrupt-parent =3D <&gic>;
->  	};
-> +
-> +	pcie@14180000 {
-> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
-> +		reg =3D <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)    =
-  */
-> +		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) =
-*/
-> +		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  =
-*/
-> +		       0x00 0x38080000 0x0 0x00040000>; /* DBI reg space (256K)       =
-*/
-> +		reg-names =3D "appl", "config", "atu_dma", "dbi";
-> +
-> +		status =3D "disabled";
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <2>;
-> +		device_type =3D "pci";
-> +		num-lanes =3D <8>;
-> +		num-viewport =3D <8>;
-> +		linux,pci-domain =3D <0>;
-> +
-> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
-> +		clock-names =3D "core";
-> +
-> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
-> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
-> +		reset-names =3D "core_apb", "core";
-> +
-> +		interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
-pt */
-> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-> +		interrupt-names =3D "intr", "msi";
-> +
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-map-mask =3D <0 0 0 0>;
-> +		interrupt-map =3D <0 0 0 0 &gic 0 72 0x04>;
-> +
-> +		nvidia,bpmp =3D <&bpmp>;
-> +
-> +		supports-clkreq;
-> +		nvidia,disable-aspm-states =3D <0xf>;
-> +		nvidia,controller-id =3D <0>;
-> +		nvidia,aspm-cmrt-us =3D <60>;
-> +		nvidia,aspm-pwr-on-t-us =3D <20>;
-> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
-
-Didn't you remove some of these from the bindings?
-
-Thierry
-
-> +
-> +		bus-range =3D <0x0 0xff>;
-> +		ranges =3D <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000   =
- /* downstream I/O (1MB) */
-> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000  /* prefe=
-tchable memory (13GB) */
-> +			  0x82000000 0x0 0x40000000 0x1B 0x40000000 0x0 0xC0000000>; /* non-p=
-refetchable memory (3GB) */
-> +	};
-> +
-> +	pcie@14100000 {
-> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
-> +		reg =3D <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)    =
-  */
-> +		       0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) =
-*/
-> +		       0x00 0x30040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  =
-*/
-> +		       0x00 0x30080000 0x0 0x00040000>; /* DBI reg space (256K)       =
-*/
-> +		reg-names =3D "appl", "config", "atu_dma", "dbi";
-> +
-> +		status =3D "disabled";
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <2>;
-> +		device_type =3D "pci";
-> +		num-lanes =3D <1>;
-> +		num-viewport =3D <8>;
-> +		linux,pci-domain =3D <1>;
-> +
-> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_1>;
-> +		clock-names =3D "core";
-> +
-> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_1_APB>,
-> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_1>;
-> +		reset-names =3D "core_apb", "core";
-> +
-> +		interrupts =3D <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
-pt */
-> +			     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-> +		interrupt-names =3D "intr", "msi";
-> +
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-map-mask =3D <0 0 0 0>;
-> +		interrupt-map =3D <0 0 0 0 &gic 0 45 0x04>;
-> +
-> +		nvidia,bpmp =3D <&bpmp>;
-> +
-> +		supports-clkreq;
-> +		nvidia,disable-aspm-states =3D <0xf>;
-> +		nvidia,controller-id =3D <1>;
-> +		nvidia,aspm-cmrt-us =3D <60>;
-> +		nvidia,aspm-pwr-on-t-us =3D <20>;
-> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
-> +
-> +		bus-range =3D <0x0 0xff>;
-> +		ranges =3D <0x81000000 0x0 0x30100000 0x0 0x30100000 0x0 0x00100000   =
- /* downstream I/O (1MB) */
-> +			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000  /* prefe=
-tchable memory (768MB) */
-> +			  0x82000000 0x0 0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-p=
-refetchable memory (256MB) */
-> +	};
-> +
-> +	pcie@14120000 {
-> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
-> +		reg =3D <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)    =
-  */
-> +		       0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) =
-*/
-> +		       0x00 0x32040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  =
-*/
-> +		       0x00 0x32080000 0x0 0x00040000>; /* DBI reg space (256K)       =
-*/
-> +		reg-names =3D "appl", "config", "atu_dma", "dbi";
-> +
-> +		status =3D "disabled";
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <2>;
-> +		device_type =3D "pci";
-> +		num-lanes =3D <1>;
-> +		num-viewport =3D <8>;
-> +		linux,pci-domain =3D <2>;
-> +
-> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_2>;
-> +		clock-names =3D "core";
-> +
-> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_2_APB>,
-> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_2>;
-> +		reset-names =3D "core_apb", "core";
-> +
-> +		interrupts =3D <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
-pt */
-> +			     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-> +		interrupt-names =3D "intr", "msi";
-> +
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-map-mask =3D <0 0 0 0>;
-> +		interrupt-map =3D <0 0 0 0 &gic 0 47 0x04>;
-> +
-> +		nvidia,bpmp =3D <&bpmp>;
-> +
-> +		supports-clkreq;
-> +		nvidia,disable-aspm-states =3D <0xf>;
-> +		nvidia,controller-id =3D <2>;
-> +		nvidia,aspm-cmrt-us =3D <60>;
-> +		nvidia,aspm-pwr-on-t-us =3D <20>;
-> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
-> +
-> +		bus-range =3D <0x0 0xff>;
-> +		ranges =3D <0x81000000 0x0 0x32100000 0x0 0x32100000 0x0 0x00100000   =
- /* downstream I/O (1MB) */
-> +			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000  /* prefe=
-tchable memory (768MB) */
-> +			  0x82000000 0x0 0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-p=
-refetchable memory (256MB) */
-> +	};
-> +
-> +	pcie@14140000 {
-> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
-> +		reg =3D <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)    =
-  */
-> +		       0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) =
-*/
-> +		       0x00 0x34040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  =
-*/
-> +		       0x00 0x34080000 0x0 0x00040000>; /* DBI reg space (256K)       =
-*/
-> +		reg-names =3D "appl", "config", "atu_dma", "dbi";
-> +
-> +		status =3D "disabled";
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <2>;
-> +		device_type =3D "pci";
-> +		num-lanes =3D <1>;
-> +		num-viewport =3D <8>;
-> +		linux,pci-domain =3D <3>;
-> +
-> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_3>;
-> +		clock-names =3D "core";
-> +
-> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_3_APB>,
-> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_3>;
-> +		reset-names =3D "core_apb", "core";
-> +
-> +		interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
-pt */
-> +			     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-> +		interrupt-names =3D "intr", "msi";
-> +
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-map-mask =3D <0 0 0 0>;
-> +		interrupt-map =3D <0 0 0 0 &gic 0 49 0x04>;
-> +
-> +		nvidia,bpmp =3D <&bpmp>;
-> +
-> +		supports-clkreq;
-> +		nvidia,disable-aspm-states =3D <0xf>;
-> +		nvidia,controller-id =3D <3>;
-> +		nvidia,aspm-cmrt-us =3D <60>;
-> +		nvidia,aspm-pwr-on-t-us =3D <20>;
-> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
-> +
-> +		bus-range =3D <0x0 0xff>;
-> +		ranges =3D <0x81000000 0x0 0x34100000 0x0 0x34100000 0x0 0x00100000   =
- /* downstream I/O (1MB) */
-> +			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000  /* prefe=
-tchable memory (768MB) */
-> +			  0x82000000 0x0 0x40000000 0x12 0xB0000000 0x0 0x10000000>; /* non-p=
-refetchable memory (256MB) */
-> +	};
-> +
-> +	pcie@14160000 {
-> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
-> +		reg =3D <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)    =
-  */
-> +		       0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) =
-*/
-> +		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  =
-*/
-> +		       0x00 0x36080000 0x0 0x00040000>; /* DBI reg space (256K)       =
-*/
-> +		reg-names =3D "appl", "config", "atu_dma", "dbi";
-> +
-> +		status =3D "disabled";
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <2>;
-> +		device_type =3D "pci";
-> +		num-lanes =3D <4>;
-> +		num-viewport =3D <8>;
-> +		linux,pci-domain =3D <4>;
-> +
-> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
-> +		clock-names =3D "core";
-> +
-> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
-> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
-> +		reset-names =3D "core_apb", "core";
-> +
-> +		interrupts =3D <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
-pt */
-> +			     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-> +		interrupt-names =3D "intr", "msi";
-> +
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-map-mask =3D <0 0 0 0>;
-> +		interrupt-map =3D <0 0 0 0 &gic 0 51 0x04>;
-> +
-> +		nvidia,bpmp =3D <&bpmp>;
-> +
-> +		supports-clkreq;
-> +		nvidia,disable-aspm-states =3D <0xf>;
-> +		nvidia,controller-id =3D <4>;
-> +		nvidia,aspm-cmrt-us =3D <60>;
-> +		nvidia,aspm-pwr-on-t-us =3D <20>;
-> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
-> +
-> +		bus-range =3D <0x0 0xff>;
-> +		ranges =3D <0x81000000 0x0 0x36100000 0x0 0x36100000 0x0 0x00100000   =
- /* downstream I/O (1MB) */
-> +			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000  /* prefe=
-tchable memory (13GB) */
-> +			  0x82000000 0x0 0x40000000 0x17 0x40000000 0x0 0xC0000000>; /* non-p=
-refetchable memory (3GB) */
-> +	};
-> +
-> +	pcie@141a0000 {
-> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
-> +		reg =3D <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)    =
-  */
-> +		       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) =
-*/
-> +		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  =
-*/
-> +		       0x00 0x3a080000 0x0 0x00040000>; /* DBI reg space (256K)       =
-*/
-> +		reg-names =3D "appl", "config", "atu_dma", "dbi";
-> +
-> +		status =3D "disabled";
-> +
-> +		#address-cells =3D <3>;
-> +		#size-cells =3D <2>;
-> +		device_type =3D "pci";
-> +		num-lanes =3D <8>;
-> +		num-viewport =3D <8>;
-> +		linux,pci-domain =3D <5>;
-> +
-> +		clocks =3D <&bpmp TEGRA194_CLK_PEX1_CORE_5>,
-> +			<&bpmp TEGRA194_CLK_PEX1_CORE_5M>;
-> +		clock-names =3D "core", "core_m";
-> +
-> +		resets =3D <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
-> +			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
-> +		reset-names =3D "core_apb", "core";
-> +
-> +		interrupts =3D <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
-pt */
-> +			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
-> +		interrupt-names =3D "intr", "msi";
-> +
-> +		nvidia,bpmp =3D <&bpmp>;
-> +
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-map-mask =3D <0 0 0 0>;
-> +		interrupt-map =3D <0 0 0 0 &gic 0 53 0x04>;
-> +
-> +		supports-clkreq;
-> +		nvidia,disable-aspm-states =3D <0xf>;
-> +		nvidia,controller-id =3D <5>;
-> +		nvidia,aspm-cmrt-us =3D <60>;
-> +		nvidia,aspm-pwr-on-t-us =3D <20>;
-> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
-> +
-> +		bus-range =3D <0x0 0xff>;
-> +		ranges =3D <0x81000000 0x0 0x3a100000 0x0 0x3a100000 0x0 0x00100000   =
- /* downstream I/O (1MB) */
-> +			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000  /* prefe=
-tchable memory (13GB) */
-> +			  0x82000000 0x0 0x40000000 0x1f 0x40000000 0x0 0xC0000000>; /* non-p=
-refetchable memory (3GB) */
-> +	};
->  };
-> --=20
-> 2.7.4
+> Correct.
 >=20
+> > 2) Add bindings description for "osc24M-dc", "osc24M-m" input clocks in
+> >    addition to existing support for "osc32k". Name "osc24M-m" is based =
+on
+> >    X24MIN/MOUT pins and datasheet's "clk_24mxo" name.
+> >
+> > 3) The RTC driver would now just registers a fixed HOSC clock with a na=
+me
+> >    gathered from the clock-output-names index 3 (if enabled by the new
+> >    export_hosc flag - only enabled on H6).
+>=20
+> You don't need to do this part yet. Since the CCU drivers are hard-wired
+> (suprise) to use the global clock name "osc24M" as hosc source. The DT
+> references are only for show ATM, so it doesn't matter if you implement
+> the clocks in the RTC driver.
 
---McTFpSeH7KqpdXA3
-Content-Type: application/pgp-signature; name="signature.asc"
+Ah, so that's how it works. And that's what "clock parent rework" refers
+to! :)
 
------BEGIN PGP SIGNATURE-----
+> However we want the DT to be correct, so that when we do get around to
+> doing it, we won't have to update the DT again.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly0oCgACgkQ3SOs138+
-s6FNtA/7B3EsMLrbJS6e3JxzTdh7l3B+keT7uHuQjqEaK0zRSYfAWMuNabf4cRpS
-XSe2oVzbE2NRkjL+re6BHVVrWU2usS6BflBwL8pqzDiFfN67BKp77qvNYN73b/IH
-eZmIySIquh14nPRx3ThiPRks6MWcsHLR0cLNutLRzftBFbbXFuHsyluYQMeWo+Ib
-VU3dJD3Ag4pPL2EprzZnuATQcRGZOfBIM5OsW57GHCTIuH6Raao5ikH5vKdwWV0a
-GHwbg93lnh/TtoCwaFm+1R5XM67jAXX5FdvKdNiKpxsBGnqtWsLNRaj7gOV4GcoS
-ZzlFUw44E1KCVviE3AfzaalkVNljzpK9sNM1ggvCYH+t0pvBQnFxD5C9ZVr+X8r/
-EUWHEV9kT6nJFwbokLxvHQPXRXLf8nvkk7m/OTEsn4tb5NJfD/b6buyUIOyCizLi
-sfiAMjQSNENCBZyTuJ52r6g6L0Zxvhxw38E7AXPXMqSKDwj7DI2Fvcz6iAyMoiKA
-fxy7jiloq7LmXd8qLvhv/YD6gDG8bqHXgDNA9gNAzl4APwUXaRyBKhId8kGl+acT
-H6RSS7bKeaC8jKf8CrCn6QVufy7W7NHsC1TnEs/tLoLS1BGmHXCoz9biD8PTzQJV
-t0oNda+3NtBbtC95OuMfXqCismMP0OmvWgC98TAWA+u9hnkzp88=
-=uQ8E
------END PGP SIGNATURE-----
+Ok, so I'll try to come up with a new set of patches, and we'll see if
+I'll get the description right.
 
---McTFpSeH7KqpdXA3--
+> It's up to you though. If you want to implement basic support, that's
+> fine by me. However you won't be able to test it without hacking the
+> CCU driver.
+>=20
+> After describing this, it seems that when we get to doing the clk parent
+> rework, we'll be in a bad situation if we don't get rtc changes in before
+> the CCU changes.
+
+Yeah.
+
+> >    The driver would ignore the "osc24M-dc", "osc24M-m" input clocks. Or=
+ perhaps
+> >    it could just support a case where only one of these are used and ma=
+ke it the
+> >    only parent of the HOSC clock?
+>=20
+> They should just be DCXO and XO, based on the diagram. The names are loca=
+l
+> to the RTC, so they don't need to be globally unique. Whatever matches th=
+e
+> datasheet is best.
+
+Ok.
+
+> >    HOSC default source selection is done based on external PAD setup, a=
+nd
+> >    there's no need for runtime access/selection of HOSC source at the m=
+oment.
+>=20
+> Is it even possible to change it?
+
+Hmm. Looks like the answer is no:
+
+DCXO_CTRL_REG:
+  - OSC_CLK_SRC_SEL bit:
+    (Pad select)
+    Read/Write column contains 'U' not (R/W)
+
+> > 4) In the future the RTC driver would be extended to support more refin=
+ed
+> >    setup/muxing/runtime selection of osc24M-dc/osc24M-m. PRCM driver wo=
+uld
+> >    provide the osc24M-m clock, to be able for kernel to know how to gat=
+e it.
+> >
+> > The board's DTSI would have to link either "osc24M-dc", "osc24M-m" to n=
+odes
+> > describing an external crystal (or to PRCM clock in the future). It's a=
+ boards
+> > choice  on what crystals are actually used. 3 configs are possible - wi=
+th one or
+> > two crystals, connected to either one of XIN/XOUT X24MIN/X24MOUT pins o=
+r both.
+>=20
+> AFAIK, osc24M-dc would link directly to the external crystal, while osc24=
+M-m
+> would link to the external crystal first, then PRCM if it gets implemente=
+d.
+
+Ok.
+
+thank you,
+	o.
+
+> > Would that work?
+> >
+> > DT would still probably need a re-work in the future, if the PRCM clock
+> > modeling the gate would be needed.
+>=20
+> Yeah. We'll deal with that when we get to it.
+>=20
+>=20
+> To summarize, the goal is to get the DT right the first time.
+>=20
+> Regards
+> ChenYu
+>=20
+>=20
+> > regards,
+> >   o.
+> >
+> > > We just want the DT to describe what is actually there. For the XO in=
+put,
+> > > you could just directly reference the external crystal node. The gate=
+ for
+> > > it is likely somewhere in the PRCM block, which we don't have docs fo=
+r.
+> > >
+> > > > There's a small detail here, that's not described absolutely correc=
+tly in
+> > > > DTSI, but the difference is not really that material. ext_osc32k is
+> > > > originally modelled as a fixed clock that feeds into RTC module, bu=
+t in
+> > > > reality it's the RTC module that implements via its registers enabl=
+ing and
+> > > > disabling of this oscillator/clock.
+> > > >
+> > > > Though:
+> > > > - there's no other possible user of ext_osc32k than RTC module
+> > > > - there's no other possible external configuration for the crystal
+> > > >   circuit that would need to be handled in the dts per board
+> > > >
+> > > > So I guess, while the description is not perfect, this patch series=
+ still
+> > > > improves the current situation. Or maybe I'm misunderstanding somet=
+hing,
+> > > > and &ext_osc32k node just describes a fact that there's a crystal o=
+n
+> > > > the board. Then, everything is perhaps fine. :)
+> > >
+> > > Correct. The external clock nodes are modeling the crystal, not the i=
+nternal
+> > > clock gate / distributor.
+> > >
+> > > Were the vendor to not include the crystal (for whatever reasons), th=
+e DT
+> > > should be able to describe it via the absence of the clock input, and=
+ the
+> > > driver should correctly use the internal (inaccurate) oscillator. I r=
+ealize
+> > > the clocks property is required, and the driver doesn't handle this c=
+ase
+> > > either, so we might have to fix that if it were to appear in the wild=
+.
+> > >
+> > > > For now, the enable bit for this oscillator is toggled by the re-pa=
+renting
+> > > > code automatically, as needed.
+> > >
+> > > That's fine. No need to increase the clock tree depth.
+> > >
+> > > ChenYu
+> > >
+> > > > This patchset is necessary for implementing the WiFi/Bluetooth supp=
+ort
+> > > > on boards using H6 SoC.
+> > > >
+> > > > Please take a look.
+> > > >
+> > > > Thank you and regards,
+> > > >   Ondrej Jirman
+> > > >
+> > > > Ondrej Jirman (3):
+> > > >   dt-bindings: Add compatible for H6 RTC
+> > > >   rtc: sun6i: Add support for H6 RTC
+> > > >   arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
+> > > >
+> > > >  .../devicetree/bindings/rtc/sun6i-rtc.txt     |  1 +
+> > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 30 +++++++-------
+> > > >  drivers/rtc/rtc-sun6i.c                       | 40 +++++++++++++++=
++++-
+> > > >  3 files changed, 55 insertions(+), 16 deletions(-)
+> > > >
+> > > > --
+> > > > 2.21.0
+> > > >
+> > > > --
+> > > > You received this message because you are subscribed to the Google =
+Groups "linux-sunxi" group.
+> > > > To unsubscribe from this group and stop receiving emails from it, s=
+end an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> > > > For more options, visit https://groups.google.com/d/optout.
+> >
+> > --
+> > You received this message because you are subscribed to the Google Grou=
+ps "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send =
+an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> > For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
