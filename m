@@ -1,122 +1,118 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=T9D/=SR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13530 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbfDOPFt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 11:05:49 -0400
 Subject: Re: [PATCH 13/30] PCI: tegra: Update flow control threshold in
  Tegra210
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
  <20190411170355.6882-14-mmaddireddy@nvidia.com> <20190415114703.GO29254@ulmo>
- <e55e7850-a960-4b36-7b62-f7ed85d3b17f@nvidia.com>
-Message-ID: <cb1c70a9-39e7-b8f1-d47b-b0e374a016f4@nvidia.com>
-Date: Tue, 23 Apr 2019 14:57:31 +0530
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <e55e7850-a960-4b36-7b62-f7ed85d3b17f@nvidia.com>
+Date: Mon, 15 Apr 2019 20:35:25 +0530
 MIME-Version: 1.0
-In-Reply-To: <e55e7850-a960-4b36-7b62-f7ed85d3b17f@nvidia.com>
+In-Reply-To: <20190415114703.GO29254@ulmo>
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>
 Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
 
-On 15-Apr-19 8:35 PM, Manikanta Maddireddy wrote:
->
-> On 15-Apr-19 5:17 PM, Thierry Reding wrote:
->> On Thu, Apr 11, 2019 at 10:33:38PM +0530, Manikanta Maddireddy wrote:
->>> Recommended update FC threshold in Tegra210 is 0x60 for best performance
->>> of x1 link. Setting this to 0x60 provides the best balance between number
->>> of UpdateFC and read data sent over the link.
->>>
->>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->>> ---
->>>  drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->> Looks to me like part of this patch ended up in 12/30?
+On 15-Apr-19 5:17 PM, Thierry Reding wrote:
+> On Thu, Apr 11, 2019 at 10:33:38PM +0530, Manikanta Maddireddy wrote:
+>> Recommended update FC threshold in Tegra210 is 0x60 for best performance
+>> of x1 link. Setting this to 0x60 provides the best balance between number
+>> of UpdateFC and read data sent over the link.
 >>
->> Thierry
-> Ok, I will squash 12/30 & 13/30 and clearly mentioned what it means for T124 and T210
-> in commit message.
-
-12/30 and 13/30 are fixing two independent issues, so I couldn't merge these
-two patches. However I am providing more details in commit log in V2, please
-take a look at V2 and let me know if you have different opinion.
-
-Manikanta
-
->>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
->>> index b74408eeb367..7dc728cc5f51 100644
->>> --- a/drivers/pci/controller/pci-tegra.c
->>> +++ b/drivers/pci/controller/pci-tegra.c
->>> @@ -319,6 +319,7 @@ struct tegra_pcie_soc {
->>>  	bool update_clamp_threshold;
->>>  	bool program_deskew_time;
->>>  	bool raw_violation_fixup;
->>> +	bool update_fc_threshold;
->>>  	struct {
->>>  		struct {
->>>  			u32 rp_ectl_2_r1;
->>> @@ -662,6 +663,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
->>>  		value |= soc->update_fc_val;
->>>  		writel(value, port->base + RP_VEND_XP);
->>>  	}
->>> +
->>> +	if (soc->update_fc_threshold) {
->>> +		value = readl(port->base + RP_VEND_XP);
->>> +		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
->>> +		value |= soc->update_fc_val;
->>> +		writel(value, port->base + RP_VEND_XP);
->>> +	}
->>>  }
->>>  
->>>  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
->>> @@ -2409,6 +2417,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
->>>  	.update_clamp_threshold = false,
->>>  	.program_deskew_time = false,
->>>  	.raw_violation_fixup = false,
->>> +	.update_fc_threshold = false,
->>>  	.ectl.enable = false,
->>>  };
->>>  
->>> @@ -2436,6 +2445,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
->>>  	.update_clamp_threshold = false,
->>>  	.program_deskew_time = false,
->>>  	.raw_violation_fixup = false,
->>> +	.update_fc_threshold = false,
->>>  	.ectl.enable = false,
->>>  };
->>>  
->>> @@ -2458,6 +2468,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
->>>  	.update_clamp_threshold = true,
->>>  	.program_deskew_time = false,
->>>  	.raw_violation_fixup = true,
->>> +	.update_fc_threshold = false,
->>>  	.ectl.enable = false,
->>>  };
->>>  
->>> @@ -2468,6 +2479,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
->>>  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
->>>  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
->>>  	.pads_refclk_cfg0 = 0x90b890b8,
->>> +	/* FC threshold is bit[25:18] */
->>> +	.update_fc_val = 0x01800000,
->>>  	.has_pex_clkreq_en = true,
->>>  	.has_pex_bias_ctrl = true,
->>>  	.has_intr_prsnt_sense = true,
->>> @@ -2478,6 +2491,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
->>>  	.update_clamp_threshold = true,
->>>  	.program_deskew_time = true,
->>>  	.raw_violation_fixup = false,
->>> +	.update_fc_threshold = true,
->>>  	.ectl.regs.rp_ectl_2_r1 = 0x0000000f,
->>>  	.ectl.regs.rp_ectl_4_r1 = 0x00000067,
->>>  	.ectl.regs.rp_ectl_5_r1 = 0x55010000,
->>> @@ -2513,6 +2527,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
->>>  	.update_clamp_threshold = false,
->>>  	.program_deskew_time = false,
->>>  	.raw_violation_fixup = false,
->>> +	.update_fc_threshold = false,
->>>  	.ectl.enable = false,
->>>  };
->>>  
->>> -- 
->>> 2.17.1
->>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+> Looks to me like part of this patch ended up in 12/30?
+>
+> Thierry
+Ok, I will squash 12/30 & 13/30 and clearly mentioned what it means for T124 and T210
+in commit message.
+>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index b74408eeb367..7dc728cc5f51 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -319,6 +319,7 @@ struct tegra_pcie_soc {
+>>  	bool update_clamp_threshold;
+>>  	bool program_deskew_time;
+>>  	bool raw_violation_fixup;
+>> +	bool update_fc_threshold;
+>>  	struct {
+>>  		struct {
+>>  			u32 rp_ectl_2_r1;
+>> @@ -662,6 +663,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+>>  		value |= soc->update_fc_val;
+>>  		writel(value, port->base + RP_VEND_XP);
+>>  	}
+>> +
+>> +	if (soc->update_fc_threshold) {
+>> +		value = readl(port->base + RP_VEND_XP);
+>> +		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
+>> +		value |= soc->update_fc_val;
+>> +		writel(value, port->base + RP_VEND_XP);
+>> +	}
+>>  }
+>>  
+>>  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+>> @@ -2409,6 +2417,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+>>  	.update_clamp_threshold = false,
+>>  	.program_deskew_time = false,
+>>  	.raw_violation_fixup = false,
+>> +	.update_fc_threshold = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2436,6 +2445,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+>>  	.update_clamp_threshold = false,
+>>  	.program_deskew_time = false,
+>>  	.raw_violation_fixup = false,
+>> +	.update_fc_threshold = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2458,6 +2468,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+>>  	.update_clamp_threshold = true,
+>>  	.program_deskew_time = false,
+>>  	.raw_violation_fixup = true,
+>> +	.update_fc_threshold = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2468,6 +2479,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+>>  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+>>  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+>>  	.pads_refclk_cfg0 = 0x90b890b8,
+>> +	/* FC threshold is bit[25:18] */
+>> +	.update_fc_val = 0x01800000,
+>>  	.has_pex_clkreq_en = true,
+>>  	.has_pex_bias_ctrl = true,
+>>  	.has_intr_prsnt_sense = true,
+>> @@ -2478,6 +2491,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+>>  	.update_clamp_threshold = true,
+>>  	.program_deskew_time = true,
+>>  	.raw_violation_fixup = false,
+>> +	.update_fc_threshold = true,
+>>  	.ectl.regs.rp_ectl_2_r1 = 0x0000000f,
+>>  	.ectl.regs.rp_ectl_4_r1 = 0x00000067,
+>>  	.ectl.regs.rp_ectl_5_r1 = 0x55010000,
+>> @@ -2513,6 +2527,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+>>  	.update_clamp_threshold = false,
+>>  	.program_deskew_time = false,
+>>  	.raw_violation_fixup = false,
+>> +	.update_fc_threshold = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> -- 
+>> 2.17.1
+>>
