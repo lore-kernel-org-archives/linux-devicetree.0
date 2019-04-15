@@ -1,70 +1,154 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/2] dt-bindings: sound: sun6i-spdif: Document that the RX
- channel can be missing
-Date: Mon, 15 Apr 2019 14:07:46 +0200
-Message-ID: <e671a8289b7176b1eacb79edf443575f940f4a22.1555330005.git-series.maxime.ripard@bootlin.com>
-References: <4060ec46117ccf3cd643b8f1b9759ed44d38c5e7.1555330005.git-series.maxime.ripard@bootlin.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Mon, 15 Apr 2019 07:10:04 -0500
+Message-ID: <051b5306-9dab-6249-9e41-b815dce1f2e2@ti.com>
+References: <20190415072905.2861-1-masneyb@onstation.org>
+ <20190415072905.2861-3-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4060ec46117ccf3cd643b8f1b9759ed44d38c5e7.1555330005.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190415072905.2861-3-masneyb@onstation.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-Not all controllers using the A31 SPDIF binding actually have some RX
-capabilities, and therefore on some controllers we don't have the option to
-set an RX DMA channel.
+Brian
+On 4/15/19 2:29 AM, Brian Masney wrote:
+> Add new backlight bindings for the TI LM3630A dual-string white LED.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Rob: Since the common bindings aren't converted to the new JSON schema
+> yet, I'm not sure how to do led-sources here. I would expect that we'd
+> have the uint32-array on the common binding once it exists. I had to
+> add it here to keep 'make dt_binding_check' happy. I left the
+> description off though for that property since that'll come from common
+> once its converted.
+> 
+> Changes since v2:
+> - Update description of max-brightness
+> - Add description for reg
+> - Correct typo: s/tranisiton/transition
+> - Remove label from bindings since this isn't on backlight_properties
+> - add reg to control banks
+> - add additionalProperties
+> 
+>  .../leds/backlight/lm3630a-backlight.yaml     | 124 ++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> new file mode 100644
+> index 000000000000..cccd43c02732
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LM3630A High-Efficiency Dual-String White LED
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +description: |
+> +  The LM3630A is a current-mode boost converter which supplies the power and
+> +  controls the current in up to two strings of 10 LEDs per string.
+> +  https://www.ti.com/product/LM3630A
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,lm3630a
+> +
+> +  reg:
+> +    description: The I2C address of the device
+> +    maxItems: 1
+> +
+> +  ti,linear-mapping-mode:
+> +    description: |
+> +      Enable linear mapping mode. If disabled, then it will use exponential
+> +      mapping mode in which the ramp up/down appears to have a more uniform
+> +      transition to the human eye.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^led@[01]$":
+> +    type: object
+> +    description: |
+> +      Properties for a string of connected LEDs.
+> +
+> +    properties:
+> +      reg:
+> +        description: Control Bank
+> +        maxItems: 1
+> +        minimum: 0
+> +        maximum: 1
+> +
+> +      led-sources:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +          - minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              minimum: 0
+> +              maximum: 1
+> +
+> +      default-brightness:
+> +        description: Default brightness level on boot.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +      max-brightness:
+> +        description: Maximum brightness that is allowed during runtime.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties: false
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        lm3630a_bl@38 {
+> +                compatible = "ti,lm3630a";
+> +                status = "ok";
+> +                reg = <0x38>;
+> +
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                        reg = <0>;
+> +                        led-sources = <0 1>;
+> +                        default-brightness = <200>;
+> +                        max-brightness = <255>;
+> +                };
+> +        };
+> +    };
+> +  - |
 
-This was already done in the DTSI, but the binding itself was never
-updated.
+I noticed we are missing "label".  It is defined as optional and it is hard coded in the driver
+but wondering if there is a need to add it.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- Documentation/devicetree/bindings/sound/allwinner,sun6i-a31-spdif.yaml | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun6i-a31-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun6i-a31-spdif.yaml
-index 7329d9fcf34c..800f794fafe0 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun6i-a31-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun6i-a31-spdif.yaml
-@@ -44,14 +44,24 @@ properties:
-       - const: spdif
- 
-   dmas:
-+    minItems: 1
-+    maxItems: 2
-     items:
-       - description: RX DMA Channel
-       - description: TX DMA Channel
-+    description:
-+      Some controllers cannot receive but can only transmit data. In
-+      such a case, the RX DMA channel is to be omitted.
- 
-   dma-names:
--    items:
--      - const: rx
--      - const: tx
-+    minItems: 1
-+    maxItems: 2
-+    enum:
-+      - rx
-+      - tx
-+    description:
-+      Some controllers cannot receive but can only transmit data. In
-+      such a case, the RX name is to be omitted.
- 
-   resets:
-     maxItems: 1
--- 
-git-series 0.9.1
+Dan
+<snip>
