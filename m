@@ -1,193 +1,183 @@
 Return-Path: <SRS0=S1EI=SR=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v6 03/13] media: v4l2-fwnode: add initial connector parsing support
-Date: Mon, 15 Apr 2019 14:44:03 +0200
-Message-Id: <20190415124413.18456-4-m.felsch@pengutronix.de>
+Subject: [PATCH v6 12/13] media: tvp5150: add support to limit tv norms on connector
+Date: Mon, 15 Apr 2019 14:44:12 +0200
+Message-Id: <20190415124413.18456-13-m.felsch@pengutronix.de>
 In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Jacopo Mondi <jacopo@jmondi.org>
+Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the initial connector parsing code, so we can move from a
-driver specific parsing code to a generic one. Currently only the
-generic fields and the analog-connector specific fields are parsed. Parsing
-the other connector specific fields can be added by a simple callbacks.
+The tvp5150 accepts NTSC(M,J,4.43), PAL (B,D,G,H,I,M,N) and SECAM video
+data and is able to auto-detect the input signal. The auto-detection
+does not work if the connector does not receive an input signal and the
+tvp5150 might not be configured correctly. This misconfiguration leads
+into wrong decoded video streams if the tvp5150 gets powered on before
+the video signal is present.
+
+Limit the supported tv norms according to the actual selected connector
+to avoid a misconfiguration.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 ---
 [1] https://patchwork.kernel.org/cover/10794703/
 
-v6:
-- use 'unsigned int' count var
-- fix comment and style issues
-- place '/* fall through */' to correct places
-- fix error handling and cleanup by releasing fwnode
-- drop vga and dvi parsing support as those connectors are rarely used
-  these days
-
 v5:
-- s/strlcpy/strscpy/
+- probe() initialize supported tv-norms according the given connectors
+  if they are available.
+- check if media-controller is used. Don't limit the norm if it isn't
+  used.
+- add more logic to be smarter during connector changing so it is
+  intuitiver for the user space.
 
 v2-v4:
 - nothing since the patch was squashed from series [1] into this
   series.
 
- drivers/media/v4l2-core/v4l2-fwnode.c | 111 ++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  16 ++++
- 2 files changed, 127 insertions(+)
+ drivers/media/i2c/tvp5150.c | 69 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 67 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 20571846e636..f1cca95c8fef 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -592,6 +592,117 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index cd54715eb641..c0ee08546643 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -32,6 +32,13 @@
+ #define TVP5150_MBUS_FMT	MEDIA_BUS_FMT_UYVY8_2X8
+ #define TVP5150_FIELD		V4L2_FIELD_ALTERNATE
+ #define TVP5150_COLORSPACE	V4L2_COLORSPACE_SMPTE170M
++#define TVP5150_STD_MASK	(V4L2_STD_NTSC     | \
++				 V4L2_STD_NTSC_443 | \
++				 V4L2_STD_PAL      | \
++				 V4L2_STD_PAL_M    | \
++				 V4L2_STD_PAL_N    | \
++				 V4L2_STD_PAL_Nc   | \
++				 V4L2_STD_SECAM)
+ 
+ MODULE_DESCRIPTION("Texas Instruments TVP5150A/TVP5150AM1/TVP5151 video decoder driver");
+ MODULE_AUTHOR("Mauro Carvalho Chehab");
+@@ -66,6 +73,7 @@ struct tvp5150 {
+ 	/* media-ctl properties */
+ 	struct media_pad pads[TVP5150_NUM_PADS];
+ 	struct tvp5150_connector *connectors;
++	struct tvp5150_connector *cur_connector;
+ 	int connectors_num;
+ 
+ 	struct v4l2_ctrl_handler hdl;
+@@ -785,17 +793,28 @@ static int tvp5150_g_std(struct v4l2_subdev *sd, v4l2_std_id *std)
+ static int tvp5150_s_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
++	struct tvp5150_connector *cur_con = decoder->cur_connector;
++	v4l2_std_id supported_norms = cur_con ?
++		cur_con->base.connector.analog.supported_tvnorms : V4L2_STD_ALL;
+ 
+ 	if (decoder->norm == std)
+ 		return 0;
+ 
++	/*
++	 * check if requested std or group of std's is/are supported by the
++	 * connector
++	 */
++	if ((supported_norms & std) == 0)
++		return -EINVAL;
++
+ 	/* Change cropping height limits */
+ 	if (std & V4L2_STD_525_60)
+ 		decoder->rect.height = TVP5150_V_MAX_525_60;
+ 	else
+ 		decoder->rect.height = TVP5150_V_MAX_OTHERS;
+ 
+-	decoder->norm = std;
++	/* set only the specific supported std in case of group of std's */
++	decoder->norm = supported_norms & std;
+ 
+ 	return tvp5150_set_std(sd, std);
  }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+@@ -1347,6 +1366,8 @@ static int tvp5150_link_setup(struct media_entity *entity,
+ 			  TVP5150_BLACK_SCREEN, 0);
  
-+static const struct v4l2_fwnode_connector_conv {
-+	enum v4l2_connector_type type;
-+	const char *name;
-+} connectors[] = {
-+	{
-+		.type = V4L2_CON_COMPOSITE,
-+		.name = "composite-video-connector",
-+	}, {
-+		.type = V4L2_CON_SVIDEO,
-+		.name = "svideo-connector",
-+	}, {
-+		.type = V4L2_CON_HDMI,
-+		.name = "hdmi-connector",
-+	},
-+};
+ 	if (flags & MEDIA_LNK_FL_ENABLED) {
++		u32 new_norm;
 +
-+static enum v4l2_connector_type
-+v4l2_fwnode_string_to_connector_type(const char *con_str)
-+{
-+	unsigned int i;
+ 		/*
+ 		 * S-Video connector is conneted to both ports AIP1A and AIP1B.
+ 		 * Both links must be enabled in one-shot regardless which link
+@@ -1358,6 +1379,26 @@ static int tvp5150_link_setup(struct media_entity *entity,
+ 			if (err)
+ 				return err;
+ 		}
 +
-+	for (i = 0; i < ARRAY_SIZE(connectors); i++)
-+		if (!strcmp(con_str, connectors[i].name))
-+			return connectors[i].type;
++		/* Update the current connector */
++		decoder->cur_connector =
++			container_of(remote, struct tvp5150_connector, pad);
 +
-+	/* no valid connector found */
-+	return V4L2_CON_UNKNOWN;
-+}
-+
-+static int
-+v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
-+				   struct v4l2_fwnode_connector *vc)
-+{
-+	u32 tvnorms;
-+	int ret;
-+
-+	ret = fwnode_property_read_u32(fwnode, "tvnorms", &tvnorms);
-+
-+	/* tvnorms is optional */
-+	vc->connector.analog.supported_tvnorms = ret ? V4L2_STD_ALL : tvnorms;
-+
-+	return 0;
-+}
-+
-+int v4l2_fwnode_parse_connector(struct fwnode_handle *__fwnode,
-+				struct v4l2_fwnode_connector *connector)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct fwnode_endpoint __ep;
-+	const char *c_type_str, *label;
-+	int ret;
-+
-+	memset(connector, 0, sizeof(*connector));
-+
-+	fwnode = fwnode_graph_get_remote_port_parent(__fwnode);
-+	if (!fwnode)
-+		return -EINVAL;
-+
-+	/* parse all common properties first */
-+	/* connector-type is stored within the compatible string */
-+	ret = fwnode_property_read_string(fwnode, "compatible", &c_type_str);
-+	if (ret) {
-+		fwnode_handle_put(fwnode);
-+		return -EINVAL;
-+	}
-+
-+	connector->type = v4l2_fwnode_string_to_connector_type(c_type_str);
-+
-+	fwnode_graph_parse_endpoint(__fwnode, &__ep);
-+	connector->remote_port = __ep.port;
-+	connector->remote_id = __ep.id;
-+
-+	ret = fwnode_property_read_string(fwnode, "label", &label);
-+	if (!ret) {
-+		/* ensure label doesn't exceed V4L2_CONNECTOR_MAX_LABEL size */
-+		strscpy(connector->label, label, V4L2_CONNECTOR_MAX_LABEL);
-+	} else {
 +		/*
-+		 * labels are optional, if none is given create one:
-+		 * <connector-type-string>@port<endpoint_port>/ep<endpoint_id>
++		 * Do nothing if the new connector supports the same tv-norms as
++		 * the old one.
 +		 */
-+		snprintf(connector->label, V4L2_CONNECTOR_MAX_LABEL,
-+			 "%s@port%u/ep%u", c_type_str, connector->remote_port,
-+			 connector->remote_id);
++		new_norm = decoder->norm &
++			decoder->cur_connector->base.connector.analog.supported_tvnorms;
++		if (decoder->norm == new_norm)
++			return 0;
++
++		/*
++		 * Fallback to the new connector tv-norms if we can't find any
++		 * common between the current tv-norm and the new one.
++		 */
++		tvp5150_s_std(sd, new_norm ? new_norm :
++			decoder->cur_connector->base.connector.analog.supported_tvnorms);
+ 	}
+ 
+ 	return 0;
+@@ -1576,6 +1617,9 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
+ 				TVP5150_COMPOSITE1;
+ 
+ 			tvp5150_selmux(sd);
++			decoder->cur_connector = &decoder->connectors[i];
++			tvp5150_s_std(sd,
++				decoder->connectors[i].base.connector.analog.supported_tvnorms);
+ 		}
+ 	}
+ #endif
+@@ -1903,6 +1947,11 @@ static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
+ 				ret = -EINVAL;
+ 				goto err;
+ 			}
++			if (!(c.connector.analog.supported_tvnorms &
++			    TVP5150_STD_MASK))
++				dev_warn(dev,
++					"Unsupported tv-norm on connector %s.\n",
++					c.label);
+ 			in++;
+ 			break;
+ 		case TVP5150_PAD_VID_OUT:
+@@ -2011,7 +2060,23 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	if (res < 0)
+ 		goto err_cleanup_dt;
+ 
+-	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
++	/*
++	 * Iterate over all available connectors in case they are supported and
++	 * successfully parsed. Fallback to default autodetect in case they
++	 * aren't supported.
++	 */
++	if (core->connectors) {
++		struct v4l2_fwnode_connector *con;
++		int i;
++
++		for (i = 0; i < core->connectors_num; i++) {
++			con = &core->connectors[i].base;
++			core->norm |= con->connector.analog.supported_tvnorms;
++		}
++	} else {
++		core->norm = V4L2_STD_ALL;
 +	}
 +
-+	/* now parse the connector specific properties */
-+	switch (connector->type) {
-+	case V4L2_CON_COMPOSITE:
-+		/* fall through */
-+	case V4L2_CON_SVIDEO:
-+		ret = v4l2_fwnode_connector_parse_analog(fwnode, connector);
-+		break;
-+	case V4L2_CON_HDMI:
-+		pr_warn("Connector specific parsing is currently not supported for %s\n",
-+			c_type_str);
-+		ret = 0;
-+		break;
-+	case V4L2_CON_UNKNOWN:
-+		/* fall through */
-+	default:
-+		pr_err("Unknown connector type\n");
-+		ret = -EINVAL;
-+	};
-+
-+	fwnode_handle_put(fwnode);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_parse_connector);
-+
- static int
- v4l2_async_notifier_fwnode_parse_endpoint(struct device *dev,
- 					  struct v4l2_async_notifier *notifier,
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index f4df1b95c5ef..e072f2915ddb 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -269,6 +269,22 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
-  */
- void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
- 
-+/**
-+ * v4l2_fwnode_parse_connector() - parse the connector on endpoint
-+ * @fwnode: pointer to the endpoint's fwnode handle where the connector is
-+ *          connected to
-+ * @connector: pointer to the V4L2 fwnode connector data structure
-+ *
-+ * Fill the connector data structure with the connector type, label and the
-+ * endpoint id and port where the connector belongs to. If no label is present
-+ * a unique one will be created. Labels with more than 40 characters are cut.
-+ *
-+ * Return: %0 on success or a negative error code on failure:
-+ *	   %-EINVAL on parsing failure
-+ */
-+int v4l2_fwnode_parse_connector(struct fwnode_handle *fwnode,
-+				struct v4l2_fwnode_connector *connector);
-+
- /**
-  * typedef parse_endpoint_func - Driver's callback function to be called on
-  *	each V4L2 fwnode endpoint.
+ 	core->detected_norm = V4L2_STD_UNKNOWN;
+ 	core->input = TVP5150_COMPOSITE1;
+ 	core->enable = true;
 -- 
 2.20.1
