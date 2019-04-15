@@ -1,119 +1,53 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 11/30] PCI: tegra: Increase the deskew retry time
-Date: Thu, 11 Apr 2019 22:33:36 +0530
-Message-ID: <20190411170355.6882-12-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=gys9=SR=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 30/30] PCI: tegra: Change link retry log level to INFO
 References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-31-mmaddireddy@nvidia.com> <20190415142338.GD29254@ulmo>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <26c565cb-1eee-3314-cb50-c36e102b322d@nvidia.com>
+Date: Mon, 15 Apr 2019 23:35:29 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <20190415142338.GD29254@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some times link speed change from Gen2 to Gen1 fails due to instability
-in deskew logic on lane-0 in Tegra210. Increase the deskew retry time
-to resolve this issue.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f785ecae2f6b..9e61da68cfae 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -209,6 +209,10 @@
- #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
- #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
- 
-+#define RP_VEND_CTL0	0x00000f44
-+#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
-+#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH	(0x9 << 12)
-+
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
- 
-@@ -304,6 +308,7 @@ struct tegra_pcie_soc {
- 	bool force_pca_enable;
- 	bool program_uphy;
- 	bool update_clamp_threshold;
-+	bool program_deskew_time;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -615,6 +620,23 @@ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
- 	writel(val, port->base + RP_ECTL_6_R2);
- }
- 
-+static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
-+{
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
-+	u32 value;
-+
-+	/*
-+	 * Tune deskew retry time to take care of Gen2 -> Gen1
-+	 * link speed change error in corner cases
-+	 */
-+	if (soc->program_deskew_time) {
-+		value = readl(port->base + RP_VEND_CTL0);
-+		value &= ~RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK;
-+		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
-+		writel(value, port->base + RP_VEND_CTL0);
-+	}
-+}
-+
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -643,6 +665,7 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 	tegra_pcie_enable_rp_features(port);
- 	if (soc->ectl.enable)
- 		tegra_pcie_program_ectl_settings(port);
-+	tegra_pcie_apply_sw_fixup(port);
- }
- 
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
-@@ -2357,6 +2380,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2382,6 +2406,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2400,6 +2425,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2418,6 +2444,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.force_pca_enable = true,
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
-+	.program_deskew_time = true,
- 	.ectl.regs.rp_ectl_2_r1 = 0x0000000f,
- 	.ectl.regs.rp_ectl_4_r1 = 0x00000067,
- 	.ectl.regs.rp_ectl_5_r1 = 0x55010000,
-@@ -2451,6 +2478,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = false,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+On 15-Apr-19 7:53 PM, Thierry Reding wrote:
+> On Thu, Apr 11, 2019 at 10:33:55PM +0530, Manikanta Maddireddy wrote:
+>> Link retry log is info log not error, so change it to INFO log level.
+> The wording here is confusing. The log is clearly error level right now.
+> Perhaps you meant to say something like this:
+>
+>     Letting users know that a link is down and in the process of being
+>     brought up again is informational, not an error condition.
+>
+> Thierry
+I will update in V2.
+
+Manikanta
+>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  drivers/pci/controller/pci-tegra.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index 75873e6627f9..55f8ff4f3e07 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -2461,7 +2461,7 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
+>>  		} while (--timeout);
+>>  
+>>  		if (!timeout) {
+>> -			dev_err(dev, "link %u down, retrying\n", port->index);
+>> +			dev_info(dev, "link %u down, retrying\n", port->index);
+>>  			goto retry;
+>>  		}
+>>  
+>> -- 
+>> 2.17.1
+>>
