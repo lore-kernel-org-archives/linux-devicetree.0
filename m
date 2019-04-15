@@ -1,281 +1,98 @@
-Return-Path: <SRS0=+UXU=SR=sirena.org.uk=broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: Add support for stm32 power regulators" to the regulator tree
-In-Reply-To: <1555319855-2982-3-git-send-email-p.paillet@st.com>
-Message-Id: <20190415095850.30F0411279E1@debutante.sirena.org.uk>
-Date: Mon, 15 Apr 2019 10:58:50 +0100 (BST)
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, broonie@kernel.orgbroonie@kernel.org, devicetree@vger.kernel.orgdevicetree@vger.kernel.org, lgirdwood@gmail.comlgirdwood@gmail.com, linux-arm-kernel@lists.infradead.orglinux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.comlinux-stm32, @st-md-mailman.stormreply.comMarkBrownbroonie@kernel.org, mark.rutland@arm.commark.rutland@arm.com, mcoquelin.stm32@gmail.commcoquelin.stm32@gmail.com, robh+dt@kernel.orgrobh+dt@kernel.org
+Return-Path: <SRS0=gys9=SR=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 03/30] PCI: tegra: Move REFCLK pad settings out of
+ phy_power_on()
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-4-mmaddireddy@nvidia.com> <20190415110628.GD29254@ulmo>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <7eb69509-5a38-2fe4-5aef-9a38ad0accac@nvidia.com>
+Date: Mon, 15 Apr 2019 19:50:56 +0530
+MIME-Version: 1.0
+In-Reply-To: <20190415110628.GD29254@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The patch
 
-   regulator: Add support for stm32 power regulators
-
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6cdae8173f6771977c3863bac7f1455c96bb1f6e Mon Sep 17 00:00:00 2001
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Date: Mon, 15 Apr 2019 09:17:38 +0000
-Subject: [PATCH] regulator: Add support for stm32 power regulators
-
-Add support for 1V1 1V8 USB3V3 power regulators.
-
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/Kconfig     |   7 ++
- drivers/regulator/Makefile    |   1 +
- drivers/regulator/stm32-pwr.c | 190 ++++++++++++++++++++++++++++++++++
- 3 files changed, 198 insertions(+)
- create mode 100644 drivers/regulator/stm32-pwr.c
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index c4dc2bcafb56..6c37f0df9323 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -840,6 +840,13 @@ config REGULATOR_STM32_VREFBUF
- 	  This driver can also be built as a module. If so, the module
- 	  will be called stm32-vrefbuf.
- 
-+config REGULATOR_STM32_PWR
-+	bool "STMicroelectronics STM32 PWR"
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	help
-+	  This driver supports internal regulators (1V1, 1V8, 3V3) in the
-+	  STMicroelectronics STM32 chips.
-+
- config REGULATOR_STPMIC1
- 	tristate "STMicroelectronics STPMIC1 PMIC Regulators"
- 	depends on MFD_STPMIC1
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 1169f8a27d91..93f53840e8f1 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
- obj-$(CONFIG_REGULATOR_SC2731) += sc2731-regulator.o
- obj-$(CONFIG_REGULATOR_SKY81452) += sky81452-regulator.o
- obj-$(CONFIG_REGULATOR_STM32_VREFBUF) += stm32-vrefbuf.o
-+obj-$(CONFIG_REGULATOR_STM32_PWR) += stm32-pwr.o
- obj-$(CONFIG_REGULATOR_STPMIC1) += stpmic1_regulator.o
- obj-$(CONFIG_REGULATOR_STW481X_VMMC) += stw481x-vmmc.o
- obj-$(CONFIG_REGULATOR_SY8106A) += sy8106a-regulator.o
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-new file mode 100644
-index 000000000000..e434b26d4c8b
---- /dev/null
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -0,0 +1,190 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) STMicroelectronics 2019
-+// Authors: Gabriel Fernandez <gabriel.fernandez@st.com>
-+//          Pascal Paillet <p.paillet@st.com>.
-+
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+/*
-+ * Registers description
-+ */
-+#define REG_PWR_CR3 0x0C
-+
-+#define USB_3_3_EN BIT(24)
-+#define USB_3_3_RDY BIT(26)
-+#define REG_1_8_EN BIT(28)
-+#define REG_1_8_RDY BIT(29)
-+#define REG_1_1_EN BIT(30)
-+#define REG_1_1_RDY BIT(31)
-+
-+/* list of supported regulators */
-+enum {
-+	PWR_REG11,
-+	PWR_REG18,
-+	PWR_USB33,
-+	STM32PWR_REG_NUM_REGS
-+};
-+
-+u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
-+	[PWR_REG11] = REG_1_1_RDY,
-+	[PWR_REG18] = REG_1_8_RDY,
-+	[PWR_USB33] = USB_3_3_RDY,
-+};
-+
-+struct stm32_pwr_reg {
-+	void __iomem *base;
-+	const struct regulator_desc *desc;
-+	u32 ready_mask;
-+};
-+
-+int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
-+	u32 val;
-+
-+	val = readl_relaxed(priv->base + REG_PWR_CR3);
-+
-+	return (val & priv->ready_mask);
-+}
-+
-+int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
-+	u32 val;
-+
-+	val = readl_relaxed(priv->base + REG_PWR_CR3);
-+
-+	return (val & priv->desc->enable_mask);
-+}
-+
-+static int stm32_pwr_reg_enable(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
-+	int ret;
-+	u32 val;
-+
-+	val = readl_relaxed(priv->base + REG_PWR_CR3);
-+	val |= priv->desc->enable_mask;
-+	writel_relaxed(val, priv->base + REG_PWR_CR3);
-+
-+	/* use an arbitrary timeout of 20ms */
-+	ret = readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, val,
-+				 100, 20 * 1000);
-+	if (ret)
-+		dev_err(&rdev->dev, "regulator enable timed out!\n");
-+
-+	return ret;
-+}
-+
-+static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
-+	int ret;
-+	u32 val;
-+
-+	val = readl_relaxed(priv->base + REG_PWR_CR3);
-+	val &= ~priv->desc->enable_mask;
-+	writel_relaxed(val, priv->base + REG_PWR_CR3);
-+
-+	/* use an arbitrary timeout of 20ms */
-+	ret = readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, !val,
-+				 100, 20 * 1000);
-+	if (ret)
-+		dev_err(&rdev->dev, "regulator disable timed out!\n");
-+
-+	return ret;
-+}
-+
-+static const struct regulator_ops stm32_pwr_reg_ops = {
-+	.list_voltage	= regulator_list_voltage_linear,
-+	.enable		= stm32_pwr_reg_enable,
-+	.disable	= stm32_pwr_reg_disable,
-+	.is_enabled	= stm32_pwr_reg_is_enabled,
-+};
-+
-+#define PWR_REG(_id, _name, _volt, _en, _supply) \
-+	[_id] = { \
-+		.id = _id, \
-+		.name = _name, \
-+		.of_match = of_match_ptr(_name), \
-+		.n_voltages = 1, \
-+		.type = REGULATOR_VOLTAGE, \
-+		.min_uV = _volt, \
-+		.fixed_uV = _volt, \
-+		.ops = &stm32_pwr_reg_ops, \
-+		.enable_mask = _en, \
-+		.owner = THIS_MODULE, \
-+		.supply_name = _supply, \
-+	} \
-+
-+static const struct regulator_desc stm32_pwr_desc[] = {
-+	PWR_REG(PWR_REG11, "reg11", 1100000, REG_1_1_EN, "vdd"),
-+	PWR_REG(PWR_REG18, "reg18", 1800000, REG_1_8_EN, "vdd"),
-+	PWR_REG(PWR_USB33, "usb33", 3300000, USB_3_3_EN, "vdd_3v3_usbfs"),
-+};
-+
-+static int stm32_pwr_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct stm32_pwr_reg *priv;
-+	void __iomem *base;
-+	struct regulator_dev *rdev;
-+	struct regulator_config config = { };
-+	int i, ret = 0;
-+
-+	base = of_iomap(np, 0);
-+	if (IS_ERR(base)) {
-+		dev_err(&pdev->dev, "Unable to map IO memory\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	config.dev = &pdev->dev;
-+
-+	for (i = 0; i < STM32PWR_REG_NUM_REGS; i++) {
-+		priv = devm_kzalloc(&pdev->dev, sizeof(struct stm32_pwr_reg),
-+				    GFP_KERNEL);
-+		if (!priv)
-+			return -ENOMEM;
-+		priv->base = base;
-+		priv->desc = &stm32_pwr_desc[i];
-+		priv->ready_mask = ready_mask_table[i];
-+		config.driver_data = priv;
-+
-+		rdev = devm_regulator_register(&pdev->dev,
-+					       &stm32_pwr_desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			ret = PTR_ERR(rdev);
-+			dev_err(&pdev->dev,
-+				"Failed to register regulator: %d\n", ret);
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static const struct of_device_id stm32_pwr_of_match[] = {
-+	{ .compatible = "st,stm32mp1,pwr-reg", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
-+
-+static struct platform_driver stm32_pwr_driver = {
-+	.probe = stm32_pwr_regulator_probe,
-+	.driver = {
-+		.name  = "stm32-pwr-regulator",
-+		.of_match_table = of_match_ptr(stm32_pwr_of_match),
-+	},
-+};
-+module_platform_driver(stm32_pwr_driver);
-+
-+MODULE_DESCRIPTION("STM32MP1 PWR voltage regulator driver");
-+MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+On 15-Apr-19 4:36 PM, Thierry Reding wrote:
+> On Thu, Apr 11, 2019 at 10:33:28PM +0530, Manikanta Maddireddy wrote:
+>> In Tegra186 PHY programming is done by BPMP-FW, so PHY calls are skipped
+>> in driver. REFCLK pad settings are independent of PHY and should be
+>> programmed by driver. So move REFCLK pad settings out of phy_power_on().
+>> These pad settings tune REFCLK peak to peak amplitude.
+>>
+>> Fixes: cf5d31801278 ("PCI: tegra: Program PADS_REFCLK_CFG* always, not
+>> just on legacy SoCs")
+>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  drivers/pci/controller/pci-tegra.c | 20 +++++++++++++-------
+>>  1 file changed, 13 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index 0bf270bcea34..a61ce9d475b4 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -852,7 +852,6 @@ static int tegra_pcie_port_phy_power_off(struct tegra_pcie_port *port)
+>>  static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
+>>  {
+>>  	struct device *dev = pcie->dev;
+>> -	const struct tegra_pcie_soc *soc = pcie->soc;
+>>  	struct tegra_pcie_port *port;
+>>  	int err;
+>>  
+>> @@ -878,12 +877,6 @@ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
+>>  		}
+>>  	}
+>>  
+>> -	/* Configure the reference clock driver */
+>> -	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
+>> -
+>> -	if (soc->num_ports > 2)
+>> -		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
+>> -
+>>  	return 0;
+>>  }
+>>  
+>> @@ -2092,11 +2085,24 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
+>>  	return false;
+>>  }
+>>  
+>> +static void tegra_pcie_apply_pad_settings(struct tegra_pcie *pcie)
+>> +{
+>> +	const struct tegra_pcie_soc *soc = pcie->soc;
+>> +
+>> +	/* Configure the reference clock driver */
+>> +	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
+>> +
+>> +	if (soc->num_ports > 2)
+>> +		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
+>> +}
+>> +
+>>  static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
+>>  {
+>>  	struct device *dev = pcie->dev;
+>>  	struct tegra_pcie_port *port, *tmp;
+>>  
+>> +	tegra_pcie_apply_pad_settings(pcie);
+>> +
+>>  	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+>>  		dev_info(dev, "probing port %u, using %u lanes\n",
+>>  			 port->index, port->lanes);
+> This also seems to move the programming of these registers to a
+> different point in time. Was that intentional? If so, please mention it
+> in the commit message and describe why that's necessary.
+>
+> If that was not intentional, it seems like the right place to call this
+> would be right after the call to tegra_pcie_enable_controller() in
+> tegra_pcie_pm_resume().
+>
+> Thierry
+PCIe pad registers access needs PEX clk and reset enabled, so I moved to
+tegra_pcie_enable_ports(). But looking at this carefully I see a pattern
+that only per port PCIe register programming is done, however PCIe
+pad register spec is for all controller. So the right place would be
+tegra_pcie_pm_resume() after enable PEX clk and reset. I will update
+in V2
