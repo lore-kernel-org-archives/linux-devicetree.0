@@ -1,55 +1,41 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [RESEND][PATCH 0/3] DMA dts changes for hi3660
-Date: Mon, 15 Apr 2019 17:02:27 +0100
-Message-ID: <5420f497-1316-c4ba-5b8a-1116f680cb01@hisilicon.com>
-References: <1554365788-25610-1-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v3 0/2] Add support for the Purism Librem5 devkit
+Date: Mon, 15 Apr 2019 09:03:44 -0700
+Message-ID: <20190415160346.7324-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554365788-25610-1-git-send-email-john.stultz@linaro.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
-Cc: Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, xuwei5@hisilicon.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-On 4/4/2019 9:16 AM, John Stultz wrote:
-> Here are a few dts changes which didn't get picked up
-> for the last merge window to enable support for code
-> changes that did land in v5.1.
-> 
-> Let me know if you have any objecitons or feedback!
-> 
-> thanks
-> -john
-> 
-> Cc: Tanglei Han <hantanglei@huawei.com>
-> Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-> Cc: Ryan Grachek <ryan@edited.us>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Wei Xu <xuwei5@hisilicon.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> 
-> 
-> John Stultz (2):
->   arm64: dts: hi3660: Add dma to uart nodes
->   arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-channel-mask
-> 
-> Youlin Wang (1):
->   arm64: dts: hi3660: Add hisi asp dma device
-> 
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
+Changes since v2:
 
-Thanks!
-Applied the series to the hisilicon dts tree.
+Fixed incorrect phy-supply for the fsl-fec.
+Dropped unused regulator property.
+Fixup Makefile for linux-next.
 
-Best Regards,
-Wei
+Changes since v1:
+
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
+
+Angus Ainslie (Purism) (2):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 844 ++++++++++++++++++
+ 3 files changed, 846 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+
+-- 
+2.17.1
