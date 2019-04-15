@@ -1,39 +1,56 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50085.outbound.protection.outlook.com ([40.107.5.85]:64339
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726456AbfDIDjW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Apr 2019 23:39:22 -0400
-From: Andy Duan <fugang.duan@nxp.com>
-Subject: [PATCH 1/1] ARM: dts: imx6sx: select rgmii-id phy mode
-Date: Tue, 9 Apr 2019 03:39:18 +0000
-Message-ID: <1554781105-3514-1-git-send-email-fugang.duan@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=lIuD=SR=gmail.com=thierry.reding@kernel.org>
+Date: Mon, 15 Apr 2019 13:33:04 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 09/30] PCI: tegra: Process pending DLL transactions
+ before entering L1 or L2
+Message-ID: <20190415113304.GJ29254@ulmo>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-10-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
-Cc: Andy Duan <fugang.duan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SBT+cnFS/G3NVgv4"
+Content-Disposition: inline
+In-Reply-To: <20190411170355.6882-10-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-VGhlIFBIWSBBUjgwMzEgbXVzdCBhZGQgYm90aCB0eCBhbmQgcnggZGVsYXkuIEJ1dCBQSFkgZHJp
-dmVyDQpkaXNhYmxlIHR4L3J4IGRlbGF5IGJ5IGRlZmF1bHQgaW4gQ29tbWl0IDZkNGNkMDQxZjBh
-ZihuZXQ6IHBoeToNCmF0ODAzeDogZGlzYWJsZSBkZWxheSBvbmx5IGZvciBSR01JSSBtb2RlKSwg
-d2hpY2ggYnJva2VzIGkuTVg2U1gNCnNkYiBib2FyZCBuZXR3b3JraW5nLg0KDQpTbyBlbmFibGUg
-cmdtaWktdHhpZCBwaHkgbW9kZSB0byBlbmFibGUgdGhlIHR4L3J4IGRlbGF5Lg0KDQpTaWduZWQt
-b2ZmLWJ5OiBGdWdhbmcgRHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT4NCi0tLQ0KIGFyY2gvYXJt
-L2Jvb3QvZHRzL2lteDZzeC1zZGIuZHRzaSB8IDQgKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy9pbXg2c3gtc2RiLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c3gtc2RiLmR0c2kN
-CmluZGV4IDA4ZWRlNTYuLjg2NTUyOGIgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg2c3gtc2RiLmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zZGIuZHRzaQ0K
-QEAgLTE5MSw3ICsxOTEsNyBAQA0KIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KIAlwaW5j
-dHJsLTAgPSA8JnBpbmN0cmxfZW5ldDE+Ow0KIAlwaHktc3VwcGx5ID0gPCZyZWdfZW5ldF8zdjM+
-Ow0KLQlwaHktbW9kZSA9ICJyZ21paSI7DQorCXBoeS1tb2RlID0gInJnbWlpLWlkIjsNCiAJcGh5
-LWhhbmRsZSA9IDwmZXRocGh5MT47DQogCXBoeS1yZXNldC1ncGlvcyA9IDwmZ3BpbzIgNyBHUElP
-X0FDVElWRV9MT1c+Ow0KIAlzdGF0dXMgPSAib2theSI7DQpAQCAtMjEzLDcgKzIxMyw3IEBADQog
-JmZlYzIgew0KIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KIAlwaW5jdHJsLTAgPSA8JnBp
-bmN0cmxfZW5ldDI+Ow0KLQlwaHktbW9kZSA9ICJyZ21paSI7DQorCXBoeS1tb2RlID0gInJnbWlp
-LWlkIjsNCiAJcGh5LWhhbmRsZSA9IDwmZXRocGh5Mj47DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9
-Ow0KLS0gDQoyLjcuNA0KDQo=
+
+--SBT+cnFS/G3NVgv4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Apr 11, 2019 at 10:33:34PM +0530, Manikanta Maddireddy wrote:
+> PM message are truncated while entering L1 or L2, which is resulting in
+> receiver errors. Set the required bit to finish processing DLLP before
+> link enter L1 or L2.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--SBT+cnFS/G3NVgv4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly0a/AACgkQ3SOs138+
+s6EZ1A/9H7FTiL5bNpYfqZl/Bkgx3P61HMKh5lIzrmjMbJgWv/REah55hktenUV/
+FWzmWUh0cAqLbXtlbTX2crqRVfcURJvyyKYB3lOc+kEwm/558Ifex4DbWTedvBlF
+n2ZAlcc+U5fYY1qB/1agxw9rByBfLuOBugmS3+2aU1PXhhFwQhXz3qrZA1rfz0oQ
+mbHFjIlT4xtvbq02aALI7G6oSAGnMD5jKx99PhNo78f/2luTjbkg0mdUuzArbkCJ
+lLw9HncnLluSsPbY8oiWr6ZwB0rBOsQ27B8DYC9Geitf04XBkOY/3S1XJfbUx0LP
+VmbdFuGopMID9j+PA/8kBdacMrDpBJ7pmUjV5uMhhy5/y514pPm1OzVxri6TfA6/
+cFyjaURjNysjm/0JfzWSgRlFAOUJkRH638vR2viK6ojcoEvysj2GEDtXhVYTPJ+T
+kyTTlWK9S5vDvpp1jDdjlO/Zw/J53LThAXVUnBnzChhWVdIr36AVRI8h12IAffTM
+2X7Kcz+yoLfYMj+S3j+IhuNEdeXn+i4QpP3KmR26HPOOIzrSfadhP5hEgSiq4X/Y
+s/fkK0UiK90Rcgqm8cDONPR3KX+cqVyeH8HeC8SN1Hfpt2Ki+OXDiFoqWXgReLR4
+y54i33/Ws/ZlfvLCZGhYNLguX6T0BL4I9w4kUB5Vxgp4vEEu9hs=
+=H46F
+-----END PGP SIGNATURE-----
+
+--SBT+cnFS/G3NVgv4--
