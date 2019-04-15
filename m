@@ -1,74 +1,91 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT 4/4] ARM: dts: exynos: Properly override node to use MDMA0 on Universal C210
-Date: Mon, 15 Apr 2019 20:05:10 +0200
-Message-ID: <20190415180510.6044-4-krzk@kernel.org>
-References: <20190415180510.6044-1-krzk@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: exynos: Move fixed-clocks out of soc
+Date: Mon, 15 Apr 2019 20:34:40 +0200
+Message-ID: <20190415183440.19697-2-krzk@kernel.org>
+References: <20190415183440.19697-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415180510.6044-1-krzk@kernel.org>
+In-Reply-To: <20190415183440.19697-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The Universal C210 (Exynos4210) uses the secure interface of MDMA0,
-instead of regular one - non-secure MDMA1.  DTS was overriding MDMA1
-node address which caused DTC W=1 warning:
+The XXTI fixed-clock is the input to the SoC therefore it should not be
+inside the soc node.  This also fixes DTC W=1 warning:
 
-    arch/arm/boot/dts/exynos4.dtsi:707.25-716.6:
-        Warning (simple_bus_reg): /soc/amba/mdma@12850000: simple-bus unit address format error, expected "12840000"
+    arch/arm64/boot/dts/exynos/exynos7.dtsi:90.17-94.5:
+        Warning (simple_bus_reg): /soc/xxti: missing or empty reg/ranges property
+
+While moving, change the name of the xxti node to match the generic type
+of device (following DeviceTree specification).
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4.dtsi                  |  2 +-
- arch/arm/boot/dts/exynos4210-universal_c210.dts | 17 ++++++++++++++++-
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 13 +++++++------
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    | 13 +++++++------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 1c21627e3c3c..36ccf227434d 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -675,7 +675,7 @@
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 62cedf9855cf..d29d13f4694f 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -41,6 +41,13 @@
+ 		interrupt-affinity = <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
+ 	};
+ 
++	xxti: clock {
++		/* XXTI */
++		compatible = "fixed-clock";
++		clock-output-names = "oscclk";
++		#clock-cells = <0>;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -260,12 +267,6 @@
+ 			reg = <0x10000000 0x100>;
  		};
  
--		amba {
-+		amba: amba {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "simple-bus";
-diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-index 07d64a8f82e3..bf092e97e14f 100644
---- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -177,6 +177,20 @@
+-		xxti: xxti {
+-			compatible = "fixed-clock";
+-			clock-output-names = "oscclk";
+-			#clock-cells = <0>;
+-		};
+-
+ 		cmu_top: clock-controller@10030000 {
+ 			compatible = "samsung,exynos5433-cmu-top";
+ 			reg = <0x10030000 0x1000>;
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index f83ad4c491f2..077d23478901 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -38,6 +38,13 @@
+ 				     <&cpu_atlas2>, <&cpu_atlas3>;
  	};
- };
  
-+&amba {
-+	mdma0: mdma@12840000 {
-+		compatible = "arm,pl330", "arm,primecell";
-+		reg = <0x12840000 0x1000>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clock CLK_MDMA>;
-+		clock-names = "apb_pclk";
-+		#dma-cells = <1>;
-+		#dma-channels = <8>;
-+		#dma-requests = <1>;
-+		power-domains = <&pd_lcd0>;
++	fin_pll: clock {
++		/* XXTI */
++		compatible = "fixed-clock";
++		clock-output-names = "fin_pll";
++		#clock-cells = <0>;
 +	};
-+};
 +
- &camera {
- 	status = "okay";
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -87,12 +94,6 @@
+ 			reg = <0x10000000 0x100>;
+ 		};
  
-@@ -491,7 +505,8 @@
- };
- 
- &mdma1 {
--	reg = <0x12840000 0x1000>;
-+	/* Use the secure mdma0 */
-+	status = "disabled";
- };
- 
- &mixer {
+-		fin_pll: xxti {
+-			compatible = "fixed-clock";
+-			clock-output-names = "fin_pll";
+-			#clock-cells = <0>;
+-		};
+-
+ 		gic: interrupt-controller@11001000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
 -- 
 2.17.1
