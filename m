@@ -1,89 +1,113 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFT/RFC PATCH v3 4/5] arm: Use common cpu_topology
-Date: Mon, 15 Apr 2019 14:16:43 -0700
-Message-ID: <41f890e9-3893-9092-bac7-3daca99f181b@wdc.com>
-References: <20190320234806.19748-1-atish.patra@wdc.com>
- <20190320234806.19748-5-atish.patra@wdc.com>
- <20190415153147.GB28623@e107155-lin>
+From: =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+Subject: [PATCH v4 0/5] Add support for drm/rockchip to dynamically control the DDR frequency.
+Date: Mon, 15 Apr 2019 17:29:43 -0400
+Message-ID: <20190415212948.7736-1-gael.portay@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415153147.GB28623@e107155-lin>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Peter Zijlstra (Inte
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/15/19 8:31 AM, Sudeep Holla wrote:
-> On Wed, Mar 20, 2019 at 04:48:05PM -0700, Atish Patra wrote:
->> Currently, ARM32 and ARM64 uses different data structures to
->> represent their cpu toplogies. Since, we are moving the ARM64
->> topology to common code to be used by other architectures, we
->> can reuse that for ARM32 as well.
->>
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> ---
->>   arch/arm/include/asm/topology.h | 22 +---------------------
->>   arch/arm/kernel/topology.c      | 10 +++++-----
->>   include/linux/arch_topology.h   | 10 +++++++++-
->>   3 files changed, 15 insertions(+), 27 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
->> index d4e76e0a..7c850611 100644
->> --- a/include/linux/arch_topology.h
->> +++ b/include/linux/arch_topology.h
->> @@ -36,17 +36,25 @@ unsigned long topology_get_freq_scale(int cpu)
->>   struct cpu_topology {
->>   	int thread_id;
->>   	int core_id;
->> +#ifdef CONFIG_ARM_CPU_TOPOLOGY
->> +	int socket_id;
-> 
-> Sorry, but I can't find any reason why we need to do this ifdef dance
-> here, especially for socket_id vs package_id ? 
+Dear all,
 
-I was not sure if we can rename socket_id to package_id from a semantic 
-point of view. If you are okay with it, I will change it to package_id 
-and send a v4.
+The rk3399 platform has a DFI controller that can monitor DDR load and a
+DMC driver that talks with the TF-A (Trusted Firmware-A) to dynamically
+set the DDR frequency with following flow.
 
-Other's I can understand
-> as there are new, but I am sure we can find a way and get away with
-> #ifdefery here completely.
-> 
-That would be good. Any suggestions on how to do that?
+             kernel                          Trusted Firmware-A
+                                                  (bl31)
+        monitor ddr load
+                |
+                |
+        get_target_rate
+                |
+                |           pass rate to TF-A
+        clk_set_rate(ddr) --------------------->run ddr dvs flow
+                                                    |
+                                                    |
+                 <------------------------------end ddr dvs flow
+                |
+                |
+              return
 
->> +#else
->>   	int package_id;
->>   	int llc_id;
->> +	cpumask_t llc_sibling;
->> +#endif
->>   	cpumask_t thread_sibling;
->>   	cpumask_t core_sibling;
->> -	cpumask_t llc_sibling;
->>   };
->>
->>   #ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
->>   extern struct cpu_topology cpu_topology[NR_CPUS];
->>
->> +#ifdef CONFIG_ARM_CPU_TOPOLOGY
->> +#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
->> +#else
->>   #define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
->> +#endif
-> 
-> Since all callsites must use topology_physical_package_id, we should be
-> able to rename socket_id to package_id easily.
-> 
-Sure.
+These patches add support for devfreq to dynamically control the DDR
+frequency for the gru chromebooks. By default it uses the
+'simple_ondemand' governor which can adjust the frequency based on the
+DDR load.
 
-Regards,
-Atish
-> --
-> Regards,
-> Sudeep
-> 
+Waiting for your feedback.
+
+Best regards,
+Gaël
+
+Note: The RFC and the first patchset contained three patches to sync the
+DDR frequency change within the vblank. These patches was removed.
+
+Changes in v4:
+- [PATCH v3 1/5] Add Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>.
+- [PATCH v3 2/5] Add Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>.
+- [PATCH v3 3/5] Add Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>.
+- [PATCH v3 4/5] Remove board related DDR settings (moved to 5/5).
+- [PATCH v3 5/5] Add board related DDR settings (moved from 5/5).
+
+Changes in v3:
+- [PATCH v2 1/5] Add Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>.
+- [PATCH v2 2/5] Add Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>.
+- [PATCH v2 3/5] Add Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>.
+		 Remove comments.
+		 Move pmu dt parsing after dt-parsing of timings to fix
+		  data->odt_dis_freq value.
+- [PATCH v2 5/5] Remove display_subsystem nodes.
+
+Changes in v2:
+- [PATCH 1/8] Really add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>.
+- [PATCH 4/8] Removed from patchset.
+- [PATCH 5/8] Removed from patchset.
+- [PATCH 6/8] Removed from patchset.
+- [PATCH 7/8] Reword the commit message to reflect the removal of
+              rk3390-dram-default-timing.dts in v1.
+- [PATCH 8/8] Move center-supply attribute of dmc node in file
+              rk3399-gru-chromebook.dtsi (where ppvar_centerlogic is
+	      defined).
+
+Changes in v1:
+- [RFC 1/10] Add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+- [RFC 1/10] s/Generic/General/ (Robin Murphy)
+- [RFC 2/10] Add reviewed and acked tags from Chanwoo Choi and Rob Herring
+- [RFC 3/10] Add an explanation for platform SIP calls.
+- [RFC 3/10] Change if statement for a switch.
+- [RFC 3/10] Rename ddr_flag to odt_enable to be more clear.
+- [RFC 4/10] Removed from the series. I did not found a use case where not holding the mutex causes the issue.
+- [RFC 7/10] Removed from the series. I did not found a use case where this matters.
+- [RFC 8/10] Move rk3399-dram.h to dt-includes.
+- [RFC 8/10] Put sdram default values under the dmc node.
+- [RFC 8/10] Removed rk3399-dram-default-timing.dts
+
+Enric Balletbo i Serra (3):
+  devfreq: rockchip-dfi: Move GRF definitions to a common place.
+  dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu phandle.
+  devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.
+
+Lin Huang (2):
+  arm64: dts: rk3399: Add dfi and dmc nodes.
+  arm64: dts: rockchip: Enable dmc and dfi nodes on gru.
+
+ .../bindings/devfreq/rk3399_dmc.txt           |  2 +
+ .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  4 +
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  | 46 ++++++++++++
+ .../boot/dts/rockchip/rk3399-op1-opp.dtsi     | 29 ++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 19 +++++
+ drivers/devfreq/event/rockchip-dfi.c          | 23 ++----
+ drivers/devfreq/rk3399_dmc.c                  | 71 +++++++++++++++++-
+ include/dt-bindings/power/rk3399-dram.h       | 73 +++++++++++++++++++
+ include/soc/rockchip/rk3399_grf.h             | 21 ++++++
+ include/soc/rockchip/rockchip_sip.h           |  1 +
+ 10 files changed, 272 insertions(+), 17 deletions(-)
+ create mode 100644 include/dt-bindings/power/rk3399-dram.h
+ create mode 100644 include/soc/rockchip/rk3399_grf.h
+
+-- 
+2.21.0
