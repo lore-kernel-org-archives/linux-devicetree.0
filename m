@@ -1,47 +1,77 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v5 1/3] firmware: xilinx: Add fpga API's
-Date: Mon, 15 Apr 2019 10:34:12 +0200
-Message-ID: <24f666c6-50e7-36d9-62a9-73efb9d66dda@xilinx.com>
-References: <20190415071748.32275-1-nava.manne@xilinx.com>
- <20190415071748.32275-2-nava.manne@xilinx.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: rsnd: Document r8a77470 bindings" to
+	the asoc tree
+Date: Mon, 15 Apr 2019 09:53:30 +0100 (BST)
+Message-ID: <20190415085330.7C14B1127A64@debutante.sirena.org.uk>
+References: <1554969262-15028-17-git-send-email-cv-dong@jinso.co.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415071748.32275-2-nava.manne@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>, atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1554969262-15028-17-git-send-email-cv-dong@jinso.co.jp>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+Cc: cv-dong@jinso.co.jp, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, geert+renesas@glider.be, yoshihiro.shimoda.uh@renesas.com, biju.das@bp.renesas.com, linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, na-hoan@jinso.co.jp, horms+renesas@verge.net.au, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp
 List-Id: devicetree@vger.kernel.org
 
-On 15. 04. 19 9:17, Nava kishore Manne wrote:
-> This Patch Adds fpga API's to support the Bitstream loading
-> by using firmware interface.
-> 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> Reviewed-by: Moritz Fischer <mdf@kernel.org>
-> ---
-> Changes for v5:
-> 		-Modified API's doc as suggested by Moritz.
-> 
->  drivers/firmware/xilinx/zynqmp.c     | 45 ++++++++++++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h | 12 ++++++++
->  2 files changed, 57 insertions(+)
-> 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index 98f936125643..f355ad42917c 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -537,6 +537,49 @@ static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
->  	return ret;
->  }
->  
-> +/*
+The patch
 
-This should be /**
+   ASoC: rsnd: Document r8a77470 bindings
 
-I have fixed it myself and applied the whole series to zynqmp/soc branch
-and this will go via arm-soc tree.
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Michal
+Mark
+
+>From d1d58766908aad18b1f967fc107702959da84f2b Mon Sep 17 00:00:00 2001
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Date: Thu, 11 Apr 2019 16:54:18 +0900
+Subject: [PATCH] ASoC: rsnd: Document r8a77470 bindings
+
+Document SoC specific bindings for R-Car RZ/G1C(r8a77470) SoC.
+
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+index b34afa66fb00..5c52182f7dcf 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+@@ -266,6 +266,7 @@ Required properties:
+ 				    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
+ 				    - "renesas,rcar_sound-r8a7744" (RZ/G1N)
+ 				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
++				    - "renesas,rcar_sound-r8a77470" (RZ/G1C)
+ 				    - "renesas,rcar_sound-r8a774a1" (RZ/G2M)
+ 				    - "renesas,rcar_sound-r8a774c0" (RZ/G2E)
+ 				    - "renesas,rcar_sound-r8a7778" (R-Car M1A)
+-- 
+2.20.1
