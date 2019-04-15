@@ -1,52 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] regulator: Add support for stm32 power regulators
-Date: Mon, 15 Apr 2019 10:57:17 +0100
-Message-ID: <20190415095717.GA6880@sirena.org.uk>
-References: <1555319855-2982-1-git-send-email-p.paillet@st.com>
- <1555319855-2982-3-git-send-email-p.paillet@st.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
+ to DT
+Date: Mon, 15 Apr 2019 15:51:13 +0530
+Message-ID: <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
+References: <20190408075924.2284-1-brgl@bgdev.pl>
+ <20190408075924.2284-2-brgl@bgdev.pl>
+ <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com>
+ <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
+ <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com>
+ <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1555319855-2982-3-git-send-email-p.paillet@st.com>
+In-Reply-To: <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
+> pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>
+>> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
+>>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>>>
+>>>> Hi Bartosz,
+>>>>
+>>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
+>>>>> From: David Lechner <david@lechnology.com>
+>>>>>
+>>>>> This adds a cpu node and operating points to the common da850.dtsi file.
+>>>>>
+>>>>> Additionally, a regulator is added to the LEGO EV3 board along with
+>>>>> some board-specific CPU configuration.
+>>>>>
+>>>>> Regulators need to be hooked up on other boards to get them working.
+>>>>>
+>>>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>
+>>>> I remember you mentioning about some problems using OCHI and cpufreq
+>>>> together. Are those resolved now? CPU PLL on DA850 can affect other
+>>>> peripheral clock frequencies too. So enabling it should really be a
+>>>> per-board decision.
+>>>>
+>>>
+>>> The problems are still there. I've never been able to find the
+>>> culprit, but it also occurs on TI BSP in the same way (a couple
+>>> cpufreq transitions will make the controller unresponsive).
+>>
+>> Is that on LCDK as well? As I recall cpufreq was never enabled on LCDK
+>> in TI BSP.
+>>
+> 
+> Yes, I just verified that the bug occurs on LCDK with patches from this series.
+> 
+>> If the OHCI problem is present on LCDK, then there is a user visible
+>> regression on mainline after this patch. Lets enable cpufreq in LCDK
+>> only if all working peripherals keep working afterwards.
+>>
+> 
+> The OHCI driver doesn't register any cpufreq transition notifier
+> callbacks. I can't really find anything in the datasheet, but I'm
+> wondering if we shouldn't do something similar to what the driver for
+> davinci i2c controller does. I'll try a couple things tomorrow.
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
+not sure the benefits of just frequency scaling will be justifiable enough.
 
-On Mon, Apr 15, 2019 at 09:17:38AM +0000, Pascal PAILLET-LME wrote:
+Fixing the OHCI issue may help in other boards like da850-evm use it
+though. So that will be a good thing.
 
-> +int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-> +{
-> +	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(priv->base + REG_PWR_CR3);
-> +
-> +	return (val & priv->ready_mask);
-> +}
+How do you feel about keeping all OPPs disabled by default in da850.dtsi
+and enabling only the ones that make sense for a board in <board>.dts?
 
-You should probably add a get_status() callback using this.
+Empty OPP table is illegal, so this does mean that every board must
+enable at least one OPP.
 
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly0VX0ACgkQJNaLcl1U
-h9AwaAf/aToCo2Lpwde4IyVS0Xah6RImQN5eFMHjqU/CAVzhfuHyxA3nncqEftbR
-Ekr+CFAMrmjVYKnK4Qor47WwRDcGVkHgnlT3RqIMg7DlEUEdtgJm0ODNYQ53arhU
-IaBwLKcv0/swlrt7tv0Bx2nB2BjTTE1DorL6DYw2fxhJ8o28FWgL4y+J/ZD6NUQB
-KoiAe6vs/G1Wiyj3HRv+wd8nppNLHw6WCYdKUUOT6ApeTBfTmpMvuxGz2XLKrL3Q
-/Aj8MN6dy6hLwwDZWtSV7UgcFkx/GpoMDORtFadEX9lyO0KcThiXKHh24D5MVFkd
-mwSQr2AdZEEN8mMT8ZU8+gjOa3gVOg==
-=JHeU
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+Thanks,
+Sekhar
