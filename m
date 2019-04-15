@@ -1,7 +1,7 @@
 From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v2 2/2] regulator: Add support for stm32 power regulators
-Date: Mon, 15 Apr 2019 09:17:38 +0000
-Message-ID: <1555319855-2982-3-git-send-email-p.paillet@st.com>
+Subject: [PATCH v2 1/2] dt-bindings: regulator: Add stm32mp1 pwr regulators
+Date: Mon, 15 Apr 2019 09:17:37 +0000
+Message-ID: <1555319855-2982-2-git-send-email-p.paillet@st.com>
 References: <1555319855-2982-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,242 +14,67 @@ To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@k
 Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for 1V1 1V8 USB3V3 power regulators.
+Document devicetree bindings for stm32mp1 pwr regulators.
 
 Signed-off-by: Pascal Paillet <p.paillet@st.com>
 ---
- drivers/regulator/Kconfig     |   7 ++
- drivers/regulator/Makefile    |   1 +
- drivers/regulator/stm32-pwr.c | 190 ++++++++++++++++++++++++++++++++++++++=
+ .../bindings/regulator/st,stm32mp1-pwr-reg.txt     | 43 ++++++++++++++++++=
 ++++
- 3 files changed, 198 insertions(+)
- create mode 100644 drivers/regulator/stm32-pwr.c
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1=
+-pwr-reg.txt
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index c4dc2bc..6c37f0d 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -840,6 +840,13 @@ config REGULATOR_STM32_VREFBUF
- 	  This driver can also be built as a module. If so, the module
- 	  will be called stm32-vrefbuf.
-=20
-+config REGULATOR_STM32_PWR
-+	bool "STMicroelectronics STM32 PWR"
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	help
-+	  This driver supports internal regulators (1V1, 1V8, 3V3) in the
-+	  STMicroelectronics STM32 chips.
-+
- config REGULATOR_STPMIC1
- 	tristate "STMicroelectronics STPMIC1 PMIC Regulators"
- 	depends on MFD_STPMIC1
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 1169f8a..93f5384 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_REGULATOR_S5M8767) +=3D s5m8767.o
- obj-$(CONFIG_REGULATOR_SC2731) +=3D sc2731-regulator.o
- obj-$(CONFIG_REGULATOR_SKY81452) +=3D sky81452-regulator.o
- obj-$(CONFIG_REGULATOR_STM32_VREFBUF) +=3D stm32-vrefbuf.o
-+obj-$(CONFIG_REGULATOR_STM32_PWR) +=3D stm32-pwr.o
- obj-$(CONFIG_REGULATOR_STPMIC1) +=3D stpmic1_regulator.o
- obj-$(CONFIG_REGULATOR_STW481X_VMMC) +=3D stw481x-vmmc.o
- obj-$(CONFIG_REGULATOR_SY8106A) +=3D sy8106a-regulator.o
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-re=
+g.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
 new file mode 100644
-index 0000000..e434b26
+index 0000000..e372dd3
 --- /dev/null
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -0,0 +1,190 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) STMicroelectronics 2019
-+// Authors: Gabriel Fernandez <gabriel.fernandez@st.com>
-+//          Pascal Paillet <p.paillet@st.com>.
++++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+@@ -0,0 +1,43 @@
++STM32MP1 PWR Regulators
++-----------------------
 +
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
++Available Regulators in STM32MP1 PWR block are:
++  - reg11 for regulator 1V1
++  - reg18 for regulator 1V8
++  - usb33 for the swtich USB3V3
 +
-+/*
-+ * Registers description
-+ */
-+#define REG_PWR_CR3 0x0C
++Required properties:
++- compatible: Must be "st,stm32mp1,pwr-reg"
++- list of child nodes that specify the regulator reg11, reg18 or usb33
++  initialization data for defined regulators. The definition for each of
++  these nodes is defined using the standard binding for regulators found a=
+t
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++- vdd-supply: phandle to the parent supply/regulator node for vdd input
++- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for us=
+b33
 +
-+#define USB_3_3_EN BIT(24)
-+#define USB_3_3_RDY BIT(26)
-+#define REG_1_8_EN BIT(28)
-+#define REG_1_8_RDY BIT(29)
-+#define REG_1_1_EN BIT(30)
-+#define REG_1_1_RDY BIT(31)
++Example:
 +
-+/* list of supported regulators */
-+enum {
-+	PWR_REG11,
-+	PWR_REG18,
-+	PWR_USB33,
-+	STM32PWR_REG_NUM_REGS
++pwr_regulators: pwr@50001000 {
++	compatible =3D "st,stm32mp1,pwr-reg";
++	reg =3D <0x50001000 0x10>;
++	vdd-supply =3D <&vdd>;
++	vdd_3v3_usbfs-supply =3D <&vdd_usb>;
++
++	reg11: reg11 {
++		regulator-name =3D "reg11";
++		regulator-min-microvolt =3D <1100000>;
++		regulator-max-microvolt =3D <1100000>;
++	};
++
++	reg18: reg18 {
++		regulator-name =3D "reg18";
++		regulator-min-microvolt =3D <1800000>;
++		regulator-max-microvolt =3D <1800000>;
++	};
++
++	usb33: usb33 {
++		regulator-name =3D "usb33";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
 +};
-+
-+u32 ready_mask_table[STM32PWR_REG_NUM_REGS] =3D {
-+	[PWR_REG11] =3D REG_1_1_RDY,
-+	[PWR_REG18] =3D REG_1_8_RDY,
-+	[PWR_USB33] =3D USB_3_3_RDY,
-+};
-+
-+struct stm32_pwr_reg {
-+	void __iomem *base;
-+	const struct regulator_desc *desc;
-+	u32 ready_mask;
-+};
-+
-+int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+
-+	return (val & priv->ready_mask);
-+}
-+
-+int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+
-+	return (val & priv->desc->enable_mask);
-+}
-+
-+static int stm32_pwr_reg_enable(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	int ret;
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+	val |=3D priv->desc->enable_mask;
-+	writel_relaxed(val, priv->base + REG_PWR_CR3);
-+
-+	/* use an arbitrary timeout of 20ms */
-+	ret =3D readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, val,
-+				 100, 20 * 1000);
-+	if (ret)
-+		dev_err(&rdev->dev, "regulator enable timed out!\n");
-+
-+	return ret;
-+}
-+
-+static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	int ret;
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+	val &=3D ~priv->desc->enable_mask;
-+	writel_relaxed(val, priv->base + REG_PWR_CR3);
-+
-+	/* use an arbitrary timeout of 20ms */
-+	ret =3D readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, !val,
-+				 100, 20 * 1000);
-+	if (ret)
-+		dev_err(&rdev->dev, "regulator disable timed out!\n");
-+
-+	return ret;
-+}
-+
-+static const struct regulator_ops stm32_pwr_reg_ops =3D {
-+	.list_voltage	=3D regulator_list_voltage_linear,
-+	.enable		=3D stm32_pwr_reg_enable,
-+	.disable	=3D stm32_pwr_reg_disable,
-+	.is_enabled	=3D stm32_pwr_reg_is_enabled,
-+};
-+
-+#define PWR_REG(_id, _name, _volt, _en, _supply) \
-+	[_id] =3D { \
-+		.id =3D _id, \
-+		.name =3D _name, \
-+		.of_match =3D of_match_ptr(_name), \
-+		.n_voltages =3D 1, \
-+		.type =3D REGULATOR_VOLTAGE, \
-+		.min_uV =3D _volt, \
-+		.fixed_uV =3D _volt, \
-+		.ops =3D &stm32_pwr_reg_ops, \
-+		.enable_mask =3D _en, \
-+		.owner =3D THIS_MODULE, \
-+		.supply_name =3D _supply, \
-+	} \
-+
-+static const struct regulator_desc stm32_pwr_desc[] =3D {
-+	PWR_REG(PWR_REG11, "reg11", 1100000, REG_1_1_EN, "vdd"),
-+	PWR_REG(PWR_REG18, "reg18", 1800000, REG_1_8_EN, "vdd"),
-+	PWR_REG(PWR_USB33, "usb33", 3300000, USB_3_3_EN, "vdd_3v3_usbfs"),
-+};
-+
-+static int stm32_pwr_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct stm32_pwr_reg *priv;
-+	void __iomem *base;
-+	struct regulator_dev *rdev;
-+	struct regulator_config config =3D { };
-+	int i, ret =3D 0;
-+
-+	base =3D of_iomap(np, 0);
-+	if (IS_ERR(base)) {
-+		dev_err(&pdev->dev, "Unable to map IO memory\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	config.dev =3D &pdev->dev;
-+
-+	for (i =3D 0; i < STM32PWR_REG_NUM_REGS; i++) {
-+		priv =3D devm_kzalloc(&pdev->dev, sizeof(struct stm32_pwr_reg),
-+				    GFP_KERNEL);
-+		if (!priv)
-+			return -ENOMEM;
-+		priv->base =3D base;
-+		priv->desc =3D &stm32_pwr_desc[i];
-+		priv->ready_mask =3D ready_mask_table[i];
-+		config.driver_data =3D priv;
-+
-+		rdev =3D devm_regulator_register(&pdev->dev,
-+					       &stm32_pwr_desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			ret =3D PTR_ERR(rdev);
-+			dev_err(&pdev->dev,
-+				"Failed to register regulator: %d\n", ret);
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static const struct of_device_id stm32_pwr_of_match[] =3D {
-+	{ .compatible =3D "st,stm32mp1,pwr-reg", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
-+
-+static struct platform_driver stm32_pwr_driver =3D {
-+	.probe =3D stm32_pwr_regulator_probe,
-+	.driver =3D {
-+		.name  =3D "stm32-pwr-regulator",
-+		.of_match_table =3D of_match_ptr(stm32_pwr_of_match),
-+	},
-+};
-+module_platform_driver(stm32_pwr_driver);
-+
-+MODULE_DESCRIPTION("STM32MP1 PWR voltage regulator driver");
-+MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
-+MODULE_LICENSE("GPL v2");
 --=20
 1.9.1
