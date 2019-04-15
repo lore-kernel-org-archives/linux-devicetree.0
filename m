@@ -1,78 +1,67 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 03/30] PCI: tegra: Move REFCLK pad settings out of phy_power_on()
-Date: Thu, 11 Apr 2019 22:33:28 +0530
-Message-ID: <20190411170355.6882-4-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=T9D/=SR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:42568 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfDOIop (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 04:44:45 -0400
+Date: Mon, 15 Apr 2019 10:44:40 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a77980: Add "renesas,id" to
+ VIN
+Message-ID: <20190415084440.zj3r2lthxbcaaqn6@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9797b2c6-58b0-954c-0d8d-f60c95ebc8e1@cogentembedded.com>
+ <20190412120053.GB1980@bigcity.dyn.berto.se>
+Sender: devicetree-owner@vger.kernel.org
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In Tegra186 PHY programming is done by BPMP-FW, so PHY calls are skipped
-in driver. REFCLK pad settings are independent of PHY and should be
-programmed by driver. So move REFCLK pad settings out of phy_power_on().
-These pad settings tune REFCLK peak to peak amplitude.
+On Fri, Apr 12, 2019 at 02:00:53PM +0200, Niklas Söderlund wrote:
+> Hi Jacopo,
+> 
+> Thanks for your patch.
+> 
+> On 2019-04-12 13:38:32 +0200, Jacopo Mondi wrote:
+> > Add the "renesas,id" property to VIN nodes in the R-Car V3H R8A77980
+> > device tree.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 
-Fixes: cf5d31801278 ("PCI: tegra: Program PADS_REFCLK_CFG* always, not
-just on legacy SoCs")
+...
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+On Sat, Apr 13, 2019 at 09:25:08PM +0300, Sergei Shtylyov wrote:
+> On 04/12/2019 02:38 PM, Jacopo Mondi wrote:
+> 
+> > Add the "renesas,id" property to VIN nodes in the R-Car V3H R8A77980
+> > device tree.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> > 
+> > I do not have a V3H board to test on, but I suspect VIN failed to probe
+> > on V3H before these 2 patches.
+> 
+>    Yes, probably. The upstream patch wasn't ever runtime tested, so this
+> went unnoticed. The BSPs use the old soc_camera driver.
+> 
+> > If that's the case, these patches would merit
+> > Fixes: 3182aa4e0bf4 ("arm64: dts: renesas: r8a77980: add CSI2/VIN support")
+> 
+>    I'm OK with that.
+> 
+> > Sergei, do you still have a V3H board around? Could I have your Tested-by
+> > tag if things are fine now?
+> 
+>    I have V3H Stater Kit on my desk but I don't think it has VINs wired to
+> anything...
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 0bf270bcea34..a61ce9d475b4 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -852,7 +852,6 @@ static int tegra_pcie_port_phy_power_off(struct tegra_pcie_port *port)
- static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
--	const struct tegra_pcie_soc *soc = pcie->soc;
- 	struct tegra_pcie_port *port;
- 	int err;
- 
-@@ -878,12 +877,6 @@ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
- 		}
- 	}
- 
--	/* Configure the reference clock driver */
--	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
--
--	if (soc->num_ports > 2)
--		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
--
- 	return 0;
- }
- 
-@@ -2092,11 +2085,24 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
- 	return false;
- }
- 
-+static void tegra_pcie_apply_pad_settings(struct tegra_pcie *pcie)
-+{
-+	const struct tegra_pcie_soc *soc = pcie->soc;
-+
-+	/* Configure the reference clock driver */
-+	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
-+
-+	if (soc->num_ports > 2)
-+		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
-+}
-+
- static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
- 	struct tegra_pcie_port *port, *tmp;
- 
-+	tegra_pcie_apply_pad_settings(pcie);
-+
- 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
- 		dev_info(dev, "probing port %u, using %u lanes\n",
- 			 port->index, port->lanes);
--- 
-2.17.1
+...
+
+Thanks everyone,
+
+I have applied this for inclusion in v5.2 with the fixes tag.
