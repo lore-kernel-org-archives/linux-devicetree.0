@@ -1,53 +1,144 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v5 6/6] drm/bridge: sii902x: Implement HDMI audio support
-Date: Mon, 15 Apr 2019 10:26:21 +0300
-Message-ID: <60b43760-fccd-4c3b-df7a-9afdde3f62a8@ti.com>
-References: <cover.1553241734.git.jsarha@ti.com>
- <CGME20190322080653epcas2p3923ec514f775739da7fd517e944ed27f@epcas2p3.samsung.com>
- <ba7ec8ae3188d023575031ab77742c56002a5cde.1553241734.git.jsarha@ti.com>
- <d10b5155-ad7b-b4f3-7b79-c1ecea7c3ff6@samsung.com>
- <2e1298f9-f9a2-9831-69d4-6b1b20260d82@ti.com>
- <e6fbf183-9f19-d749-0d87-54875957949f@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/4] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+Date: Mon, 15 Apr 2019 09:27:31 +0200
+Message-ID: <CAJKOXPfZBmNATxDTOqiZm_rpjEpRL9sdGF7QAOxppG+ygRmZPQ@mail.gmail.com>
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br> <20190415012635.6369-4-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e6fbf183-9f19-d749-0d87-54875957949f@samsung.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: fabrizio.castro@bp.renesas.com, architt@codeaurora.org, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190415012635.6369-4-matheus@castello.eng.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMDQvMjAxOSAxNTozMCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4+PiArc3RhdGljIGNv
-bnN0IHVuc2lnbmVkIGludCBzaWk5MDJ4X21jbGtfZGl2X3RhYmxlW10gPSB7Cj4+Pj4gKwkxMjgs
-IDI1NiwgMzg0LCA1MTIsIDc2OCwgMTAyNCwgMTE1MiwgMTkyIH07Cj4+Pj4gKwo+Pj4+ICtzdGF0
-aWMgaW50IHNpaTkwMnhfc2VsZWN0X21jbGtfZGl2KHU4ICppMnNfY29uZmlnX3JlZywgdW5zaWdu
-ZWQgaW50IHJhdGUsCj4+Pj4gKwkJCQkgICB1bnNpZ25lZCBpbnQgbWNsaykKPj4+PiArewo+Pj4+
-ICsJdW5zaWduZWQgaW50IGRpdiA9IG1jbGsgLyByYXRlOwo+Pj4+ICsJaW50IGRpc3RhbmNlID0g
-MTAwMDAwOwo+Pj4+ICsJdTggaSwgbmVhcmVzdCA9IDA7Cj4+Pj4gKwo+Pj4+ICsJZm9yIChpID0g
-MDsgaSA8IEFSUkFZX1NJWkUoc2lpOTAyeF9tY2xrX2Rpdl90YWJsZSk7IGkrKykgewo+Pj4+ICsJ
-CXVuc2lnbmVkIGludCBkID0gYWJzKGRpdiAtIHNpaTkwMnhfbWNsa19kaXZfdGFibGVbaV0pOwo+
-Pj4gVXNpbmcgdW5zaWduZWQgdHlwZXMgaW4gdGhpcyBjb250ZXh0IHNlZW1zIHRvIGJlIGFza2lu
-ZyBmb3IgdHJvdWJsZXMuCj4+Pgo+PiBXaHk/IElzbid0IHJldHVybiB2YWx1ZSBvZiBhYnMoKSBi
-eSBkZWZpbml0aW9uIHVuc2lnbmVkPyBVc2luZyBzaWduZWQKPj4gaW50ZWdlcnMgd2hlbiBjb21w
-YXJpbmcgYWJzb2x1dGUgZGlzdGFuY2VzIHdvdWxkIHNlZW0gYXdrd2FyZCB0byBtZS4KPiAKPiAo
-ZGl2IC0gc2lpOTAyeF9tY2xrX2Rpdl90YWJsZVtpXSkgaXMgdW5zaWduZWQsIGlmIGRpdiBpcyBs
-b3dlciwgdGhlcmUgaXMgb3ZlcmZsb3csIGFuZCB0aGUgdmFsdWUgaXMgYmlnIGludCwgSSBzdXBw
-b3NlIHRoaXMgaXMgbm90IHdoYXQgeW91IHdhbnQuCj4gCgpPaCB5ZXMuIEkgaGFkIG15IGV5ZXMg
-Zml4ZWQgb24gd3JvbmcgdW5zaWduZWQuIFRoZSBmaXJzdCBvcGVyYW5kIG9mCnN1YnRyYWN0aW9u
-IHNob3VsZCBpbmRlZWQgYmUgc2lnbmVkIGZvciB0aGUgcmVzdWx0IHRvIGJlIHNpZ25lZCwgSQpj
-b21wbGV0ZWx5IG92ZXJsb29rZWQgdGhhdC4KClRoYW5rcywKSnlyaQoKCgotLSAKVGV4YXMgSW5z
-dHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClkt
-dHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNp
-bmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Mon, 15 Apr 2019 at 03:51, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> For configuration of fuel gauge alert for a low level state of charge
+> interrupt we add a function to config level threshold and a device tree
+> binding property to set it in flatned device tree node.
+>
+> Now we can use "maxim,alert-soc-level" property with the values from
+> 1 up to 32 to configure alert interrupt threshold.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/power/supply/max17040_battery.c | 56 ++++++++++++++++++++++---
+>  1 file changed, 50 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 8d2f8ed3f44c..f036f272d52f 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -29,6 +29,9 @@
+>  #define MAX17040_DELAY         1000
+>  #define MAX17040_BATTERY_FULL  95
+>
+> +#define MAX17040_ATHD_MASK             0xFFE0
+> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
+> +
+>  struct max17040_chip {
+>         struct i2c_client               *client;
+>         struct delayed_work             work;
+> @@ -43,6 +46,8 @@ struct max17040_chip {
+>         int soc;
+>         /* State Of Charge */
+>         int status;
+> +       /* Alert threshold from 32% to 1% of the State of Charge */
+> +       u32 alert_threshold;
+>  };
+>
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -119,6 +124,27 @@ static void max17040_get_soc(struct i2c_client *client)
+>         chip->soc = (soc >> 8);
+>  }
+>
+> +static int max17040_set_soc_threshold(struct i2c_client *client, u32 level)
+> +{
+> +       int ret;
+> +       u16 data;
+> +
+> +       /* check if level is between 1% and 32% */
+> +       if (level > 0 && level < 33) {
+> +               /* alert threshold use LSb 5 bits from RCOMP */
+> +               level = 32 - level;
+> +               data = max17040_read_reg(client, MAX17040_RCOMP);
+> +               data &= MAX17040_ATHD_MASK;
+> +               data |= level;
+> +               max17040_write_reg(client, MAX17040_RCOMP, data);
+> +               ret = 0;
+> +       } else {
+> +               ret = -EINVAL;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static void max17040_get_version(struct i2c_client *client)
+>  {
+>         u16 version;
+> @@ -161,6 +187,16 @@ static void max17040_get_status(struct i2c_client *client)
+>                 chip->status = POWER_SUPPLY_STATUS_FULL;
+>  }
+>
+> +static void max17040_get_of_data(struct max17040_chip *chip)
+> +{
+> +       struct device *dev = &chip->client->dev;
+> +       struct device_node *np = dev->of_node;
+> +
+> +       if (of_property_read_u32(np, "maxim,alert-soc-level",
+> +                       &chip->alert_threshold))
+> +               chip->alert_threshold = MAX17040_ATHD_DEFAULT_POWER_UP;
+> +}
+> +
+>  static void max17040_check_changes(struct i2c_client *client)
+>  {
+>         max17040_get_vcell(client);
+> @@ -226,6 +262,7 @@ static int max17040_probe(struct i2c_client *client,
+>
+>         chip->client = client;
+>         chip->pdata = client->dev.platform_data;
+> +       max17040_get_of_data(chip);
+>
+>         i2c_set_clientdata(client, chip);
+>         psy_cfg.drv_data = chip;
+> @@ -237,16 +274,26 @@ static int max17040_probe(struct i2c_client *client,
+>                 return PTR_ERR(chip->battery);
+>         }
+>
+> +       max17040_reset(client);
+> +       max17040_get_version(client);
+> +
+>         /* check interrupt */
+>         if (client->irq) {
+>                 int ret;
+> -               unsigned int flags;
+> +
+> +               ret = max17040_set_soc_threshold(client, chip->alert_threshold);
+> +               if (ret) {
+> +                       dev_err(&client->dev,
+> +                               "Failed to set SOC alert threshold: err %d\n",
+> +                               ret);
+> +                       return ret;
+> +               }
+>
+>                 dev_info(&client->dev, "IRQ: enabled\n");
+> -               flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+>
+>                 ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> -                                               max17040_thread_handler, flags,
+> +                                               max17040_thread_handler,
+> +                                               (client->flags | IRQF_ONESHOT),
+>                                                 chip->battery->desc->name,
+>                                                 chip);
+
+Now I noticed that you are not clearing the ALRT status bit. Therefore
+alert interrupt will be generated only once. Even if SoC goes up
+(charged) and then down to alert level it will not be generated second
+time. At least documentation for max77836 is saying that clearing this
+bit is required.
+
+Best regards,
+Krzysztof
