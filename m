@@ -1,35 +1,110 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v4 01/12] dt-binding: gce: remove thread-num property
-Date: Mon, 15 Apr 2019 20:58:22 +0800
-Message-ID: <20190415125833.38704-2-bibby.hsieh@mediatek.com>
-References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
+ to DT
+Date: Mon, 15 Apr 2019 08:02:10 -0500
+Message-ID: <CAHCN7xLyiKjr9dvVKBHmpacTQnWwdf_WjJ4xa-URrO8=-=UVQw@mail.gmail.com>
+References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-2-brgl@bgdev.pl>
+ <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com> <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
+ <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com> <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
+ <6ff5711c-b607-1f3a-e362-709b53762179@ti.com> <CAMpxmJUG+7ENUCnooexWKMwoq+zCuRsV_Y54un7omumk9nJguA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+In-Reply-To: <CAMpxmJUG+7ENUCnooexWKMwoq+zCuRsV_Y54un7omumk9nJguA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-"thread-num" is an unused property so we remove it from example.
+On Mon, Apr 15, 2019 at 6:55 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> pon., 15 kwi 2019 o 12:21 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
+> >
+> > On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
+> > > pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a)=
+:
+> > >>
+> > >> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
+> > >>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(=
+a):
+> > >>>>
+> > >>>> Hi Bartosz,
+> > >>>>
+> > >>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
+> > >>>>> From: David Lechner <david@lechnology.com>
+> > >>>>>
+> > >>>>> This adds a cpu node and operating points to the common da850.dts=
+i file.
+> > >>>>>
+> > >>>>> Additionally, a regulator is added to the LEGO EV3 board along wi=
+th
+> > >>>>> some board-specific CPU configuration.
+> > >>>>>
+> > >>>>> Regulators need to be hooked up on other boards to get them worki=
+ng.
+> > >>>>>
+> > >>>>> Signed-off-by: David Lechner <david@lechnology.com>
+> > >>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >>>>
+> > >>>> I remember you mentioning about some problems using OCHI and cpufr=
+eq
+> > >>>> together. Are those resolved now? CPU PLL on DA850 can affect othe=
+r
+> > >>>> peripheral clock frequencies too. So enabling it should really be =
+a
+> > >>>> per-board decision.
+> > >>>>
+> > >>>
+> > >>> The problems are still there. I've never been able to find the
+> > >>> culprit, but it also occurs on TI BSP in the same way (a couple
+> > >>> cpufreq transitions will make the controller unresponsive).
+> > >>
+> > >> Is that on LCDK as well? As I recall cpufreq was never enabled on LC=
+DK
+> > >> in TI BSP.
+> > >>
+> > >
+> > > Yes, I just verified that the bug occurs on LCDK with patches from th=
+is series.
+> > >
+> > >> If the OHCI problem is present on LCDK, then there is a user visible
+> > >> regression on mainline after this patch. Lets enable cpufreq in LCDK
+> > >> only if all working peripherals keep working afterwards.
+> > >>
+> > >
+> > > The OHCI driver doesn't register any cpufreq transition notifier
+> > > callbacks. I can't really find anything in the datasheet, but I'm
+> > > wondering if we shouldn't do something similar to what the driver for
+> > > davinci i2c controller does. I'll try a couple things tomorrow.
+> >
+> > Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
+> > not sure the benefits of just frequency scaling will be justifiable eno=
+ugh.
+> >
+> > Fixing the OHCI issue may help in other boards like da850-evm use it
+> > though. So that will be a good thing.
+> >
+> > How do you feel about keeping all OPPs disabled by default in da850.dts=
+i
+> > and enabling only the ones that make sense for a board in <board>.dts?
+> >
+> > Empty OPP table is illegal, so this does mean that every board must
+> > enable at least one OPP.
+> >
+>
+> I guess in that case we'd need to make 300 MHz the default for
+> da850-evm, but on da850-lcdk I'd go for 456 MHz (due to the regulator
+> being fixed anyway).
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
----
- Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 1 -
- 1 file changed, 1 deletion(-)
+Based on what I've seen of your V4 patch, I think it's fine to let the
+da850-evm run at 375.  I am not sure why it would need to be default
+to 300.
+I agree that the cpu-supply is correctly referencing vdcdc3_reg, and
+it's currently setup to handle .95 to 1.35V, which I think is OK based
+on what I've seen and the OPP's look right from what I can tell.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index 7d72b21c9e94..cfe40b01d164 100644
---- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -39,7 +39,6 @@ Example:
- 		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&infracfg CLK_INFRA_GCE>;
- 		clock-names = "gce";
--		thread-num = CMDQ_THR_MAX_COUNT;
- 		#mbox-cells = <3>;
- 	};
- 
--- 
-2.18.0
+adam
+>
+> Bart
