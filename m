@@ -1,119 +1,72 @@
-From: David Bauer <mail@david-bauer.net>
-Subject: [PATCH 2/3] net: phy: add support for reset-controller
-Date: Mon, 15 Apr 2019 14:38:39 +0200
-Message-ID: <20190415123840.31407-2-mail@david-bauer.net>
-References: <20190415123840.31407-1-mail@david-bauer.net>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v4 03/12] dt-binding: gce: add binding for gce event property
+Date: Mon, 15 Apr 2019 20:58:24 +0800
+Message-ID: <20190415125833.38704-4-bibby.hsieh@mediatek.com>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190415123840.31407-1-mail@david-bauer.net>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for PHY reset pins handled by a reset controller.
+Client hardware would send event to GCE hardware,
+so #event-cells, mediatek,gce-event-names, mediatek,gce-events.
+present the event.
 
-Signed-off-by: David Bauer <mail@david-bauer.net>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- drivers/net/phy/mdio_bus.c    | 25 +++++++++++++++++++++++++
- drivers/net/phy/mdio_device.c | 13 +++++++++++--
- include/linux/mdio.h          |  1 +
- 3 files changed, 37 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/mailbox/mtk-gce.txt     | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 4be4cc09eb90..7590645f19ef 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -24,6 +24,7 @@
- #include <linux/of_gpio.h>
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
-+#include <linux/reset.h>
- #include <linux/skbuff.h>
- #include <linux/spinlock.h>
- #include <linux/mm.h>
-@@ -63,6 +64,27 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+index 1f7f8f2a3f49..2f175d6b296d 100644
+--- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
++++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+@@ -21,12 +21,21 @@ Required properties:
+ 	priority: Priority of GCE thread.
+ 	atomic_exec: GCE processing continuous packets of commands in atomic
+ 		way.
++- #event-cells: Should be 1.
++	<&phandle event_number>
++	phandle: Label name of a gce node.
++	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
++		      or 'dt-binding/gce/mt8183-gce.h'.
  
-+static int mdiobus_register_reset(struct mdio_device *mdiodev)
-+{
-+	struct reset_control *reset = NULL;
-+
-+	if (mdiodev->dev.of_node)
-+		reset = devm_reset_control_get_exclusive(&mdiodev->dev,
-+							 "phy");
-+	if (PTR_ERR(reset) == -ENOENT ||
-+	    PTR_ERR(reset) == -ENOTSUPP)
-+		reset = NULL;
-+	else if (IS_ERR(reset))
-+		return PTR_ERR(reset);
-+
-+	mdiodev->reset_ctrl = reset;
-+
-+	/* Assert the reset signal */
-+	mdio_device_reset(mdiodev, 1);
-+
-+	return 0;
-+}
-+
- int mdiobus_register_device(struct mdio_device *mdiodev)
- {
- 	int err;
-@@ -74,6 +96,9 @@ int mdiobus_register_device(struct mdio_device *mdiodev)
- 		err = mdiobus_register_gpiod(mdiodev);
- 		if (err)
- 			return err;
-+		err = mdiobus_register_reset(mdiodev);
-+		if (err)
-+			return err;
- 	}
+ Required properties for a client device:
+ - mboxes: Client use mailbox to communicate with GCE, it should have this
+   property and list of phandle, mailbox specifiers.
+ - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+   to the register address.
++Optional propertier for a client device:
++- mediatek,gce-event-names: the event name can be defined by user.
++- mediatek,gce-events: u32, the event number defined in
++  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
  
- 	mdiodev->bus->mdio_map[mdiodev->addr] = mdiodev;
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index 887076292e50..57668e0f9256 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -16,6 +16,7 @@
- #include <linux/mii.h>
- #include <linux/module.h>
- #include <linux/phy.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/unistd.h>
-@@ -116,10 +117,18 @@ void mdio_device_reset(struct mdio_device *mdiodev, int value)
- {
- 	unsigned int d;
+ Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+ or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+@@ -40,6 +49,7 @@ Example:
+ 		clocks = <&infracfg CLK_INFRA_GCE>;
+ 		clock-names = "gce";
+ 		#mbox-cells = <3>;
++		#event-cells = <1>;
+ 	};
  
--	if (!mdiodev->reset)
-+	if (!mdiodev->reset && !mdiodev->reset_ctrl)
- 		return;
- 
--	gpiod_set_value(mdiodev->reset, value);
-+	if (mdiodev->reset)
-+		gpiod_set_value(mdiodev->reset, value);
-+
-+	if (mdiodev->reset_ctrl) {
-+		if (value)
-+			reset_control_assert(mdiodev->reset_ctrl);
-+		else
-+			reset_control_deassert(mdiodev->reset_ctrl);
-+	}
- 
- 	d = value ? mdiodev->reset_assert_delay : mdiodev->reset_deassert_delay;
- 	if (d)
-diff --git a/include/linux/mdio.h b/include/linux/mdio.h
-index 3e99ae3ed87f..6eaf71500ef6 100644
---- a/include/linux/mdio.h
-+++ b/include/linux/mdio.h
-@@ -40,6 +40,7 @@ struct mdio_device {
- 	int addr;
- 	int flags;
- 	struct gpio_desc *reset;
-+	struct reset_control *reset_ctrl;
- 	unsigned int reset_assert_delay;
- 	unsigned int reset_deassert_delay;
- };
+ Example for a client device:
+@@ -49,8 +59,9 @@ Example for a client device:
+ 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+ 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+ 		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+-		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+-				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+-
++		mediatek,gce-event-names = "rdma0_sof",
++					   "rsz0_sof";
++		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
++				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
+ 		...
+ 	};
 -- 
-2.21.0
+2.18.0
