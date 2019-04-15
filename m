@@ -1,45 +1,53 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v2 4/4] ARM: dts: tegra30: Add External Memory Controller node
-Date: Sun, 14 Apr 2019 23:20:09 +0300
-Message-ID: <20190414202009.31268-5-digetx@gmail.com>
-References: <20190414202009.31268-1-digetx@gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v2 0/4] power: supply: MAX17040: Add IRQ for low level and alert SOC changes
+Date: Sun, 14 Apr 2019 22:26:31 -0300
+Message-ID: <20190415012635.6369-1-matheus@castello.eng.br>
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190414202009.31268-1-digetx@gmail.com>
+In-Reply-To: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, cw00.choi@samsung.com, b.zolnierkie@samsung.com, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
 List-Id: devicetree@vger.kernel.org
 
-Add External Memory Controller node to the device-tree.
+This series add IRQ handler for low level SOC alert, define a devicetree 
+binding attribute to configure the alert level threshold and check for
+changes in SOC for send uevents.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra30.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Max17040 have a pin for alert host about low level state of charge and
+this alert can be configured in a threshold from 1% up to 32% of SOC.
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index e074258d4518..92c4aeafab29 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -732,6 +732,17 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	memory-controller@7000f400 {
-+		compatible = "nvidia,tegra30-emc";
-+		reg = <0x7000f400 0x400>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA30_CLK_EMC>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		nvidia,memory-controller = <&mc>;
-+	};
-+
- 	fuse@7000f800 {
- 		compatible = "nvidia,tegra30-efuse";
- 		reg = <0x7000f800 0x400>;
+Tested on Toradex Colibri iMX7D, with a SparkFun Lipo Fuel Gauge module
+based on MAXIM MAX17043.
+
+Thanks Krzysztof Kozlowski for your time reviewing it, and forgive me for
+the delay in working on it, now I'm back to the patchs. Let me know what
+you think about the fixes and I'm open to maintainers suggestions.
+
+Changes since v1:
+(Suggested by Krzysztof Kozlowski)
+- Put common code from max17040_work and max17040_thread_handler in a function
+- Code style fixes
+- Define mask and low level threshold alert default
+- Check return value from max17040_set_soc_threshold
+- Set low level state of charge threshold before IRQ
+- CC maintainers from drivers/mfd/max14577
+- Use flags from FDT client->flags instead hard coded it
+- Mention interrupts on DT Documentation
+- Fix "maxim,max77836-battery" missed from DT Documentation
+- Fix commit description
+
+Matheus Castello (4):
+  power: supply: max17040: Add IRQ handler for low SOC alert
+  dt-bindings: power: supply: Max17040: Add low level SOC alert
+    threshold
+  power: supply: max17040: Config alert SOC low level threshold from FDT
+  power: supply: max17040: Send uevent in SOC changes
+
+ .../power/supply/max17040_battery.txt         |  24 ++++
+ drivers/power/supply/max17040_battery.c       | 118 +++++++++++++++++-
+ 2 files changed, 138 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+
 -- 
-2.21.0
+2.17.0
