@@ -1,62 +1,41 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH RESEND v6 0/6] add i2c support for mt8183
-Date: Mon, 15 Apr 2019 13:30:37 +0200
-Message-ID: <20190415113037.GA2751@kunai>
-References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
- <20190404230916.GA964@kunai>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/3] L2 cache controller and EDAC support for SiFive SoCs
+Date: Mon, 15 Apr 2019 17:10:40 +0530
+Message-ID: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190404230916.GA964@kunai>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qii Wang <qii.wang@mediatek.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, robh@kernel.org
+To: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds an L2 cache controller driver with DT documentation
+and an EDAC platform driver for SiFive SoCs.
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The EDAC platform driver registers for notifier events from the L2 cache
+controller driver for L2 ECC events.
 
-On Fri, Apr 05, 2019 at 01:09:16AM +0200, Wolfram Sang wrote:
-> On Tue, Apr 02, 2019 at 08:35:54PM +0800, Qii Wang wrote:
-> > This series are based on 5.1-rc1 and the patch
-> > https://patchwork.kernel.org/patch/10856987/(for dts)
-> > We provide six patches to support mt8183 IC.
-> >=20
-> > Main changes compared to v5:
-> > --add i2c controller nodes in mt8183.dtsi
-> > --add a note that old i2c controllers also have I2C_ARB_LOST bit
-> > --add a flag(ltiming_adjust) to avoid unnecessary settings
-> > --add Reviewed-by from Rob Herring, Nicolas and Matthias
->=20
-> Well, it seems you missed Rob's Rev-by. No need to resend, I can add it.
-> I just wonder if Matthias wants to have another look at this?
+This patchset is based on Linux 5.1-rc2 and tested on HiFive Unleashed
+board with additional board related patches needed for testing can be found
+at dev/yashs/L2_cache_controller branch of:
+https://github.com/yashshah7/riscv-linux.git
 
-Thanks Matthias! Patches 1-5 applied to for-next.
+Yash Shah (3):
+  RISC-V: Add DT documentation for SiFive L2 Cache Controller
+  RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive
+    SoCs
+  edac: sifive: Add EDAC platform driver for SiFive SoCs
 
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  |  53 +++++
+ arch/riscv/Kconfig                                 |   1 +
+ arch/riscv/mm/Makefile                             |   1 +
+ arch/riscv/mm/sifive_l2_cache.c                    | 224 +++++++++++++++++++++
+ drivers/edac/Kconfig                               |   6 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/sifive_edac.c                         | 121 +++++++++++
+ 7 files changed, 407 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+ create mode 100644 drivers/edac/sifive_edac.c
 
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0a1kACgkQFA3kzBSg
-KbaRqw//W6Yqr4N1qOn8OrTcXiGxV2kYIlJZGifVdPC87dDKQuV+c10MmePB/zgL
-mwdrFlvO0nKQE8cVzTB594+DJR/icbR7kQ4pRNXQaNKqzzHv9V021VPlWiFyklbF
-TKheBbdXSG4GWcIOzQWmukrMPuZONGtyQzWJdrVHlDrifXnbwchXw5rGsq7yvRxr
-E3nweabEvp2sRSyw0k1yzd9/I9aOGyfFuRnrYIEZ4HRL+7NUOzb3LCZLtRcTKUEM
-sx6fJpMs5GzCwMwSYl2Kh1Fn4xUhvjSBzSZ5Yt6Usz03nvNiXLX4pvWNp98Ert4k
-2QB0VWY9FdwmHDI0kUOdzBkNzTRRHc1kuiOgofOZjxYzGM/9zKAucVRbTGK5Jr/7
-bMbLToxDNKrXMVwQ8G/t0PcwbGboquhhnOS5Sb/G47NumDNmWqEOZ4coH8gu5y5H
-Cnf57CQKbH9NFmnSh7ovMqVeGDOfSapgiVrjjNrwZ8iEUeSCpO/3d503emWW97Xq
-OVWw28npGySAdprdUrilUtJAW+xyeIN8LZ+z+oO3+ns5Av2pIbsBz10h5ooSyq6b
-cHTHVW3TMlbFiWaEKvMwm1IpOL4qkLdGZJhqZX2xmfWzIIivCa9CvUw5LZqIImn4
-NYmiP8mDh2Kwhsigpzho8qAXeodpTI0d8QTb1ecTp3/qezbLGGw=
-=U4jH
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+-- 
+1.9.1
