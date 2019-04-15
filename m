@@ -1,48 +1,71 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
-Date: Mon, 15 Apr 2019 10:05:35 +0200
-Message-ID: <20190415080535.o6crd2nrcwgoj456@flea>
-References: <20190412045832.5109-1-andreas@kemnade.info>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add
+ Allwinner H6 compatible
+Date: Mon, 15 Apr 2019 10:09:11 +0200
+Message-ID: <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+References: <20190411214422.2267-1-peron.clem@gmail.com> <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pualiwtqtftt3t5p"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412045832.5109-1-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBBM7Y2DSQKGQEDF7NULQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190415080443.frubh4ln4agrdsfe@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---pualiwtqtftt3t5p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Apr 12, 2019 at 06:58:32AM +0200, Andreas Kemnade wrote:
-> The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-> with Broadcom internals attached to UART1 and some gpios.
-> This addition is in line with similar boards.
+On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wro=
+te:
 >
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> Hi,
+>
+> On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Allwinner H6 has a SPDIF controller with an increase of the fifo
+> > size and the possibility to output the master clock.
+> > However it's still compatible with the already existing driver for
+> > Allwiner H3.
+> >
+> > Add this compatible in the device-tree bindings documentation.
+>
+> How was this tested?
 
-Applied, thanks!
-Maxime
+Using Alsa utils on a Beelink GS1 and I check correct output sound on
+my home cinema.
+>
+> After looking at the datasheet, it looks like it's still significantly
+> different. In particular:
+>
+>   - The MCLK divider isn't at the same offset
+We don't use the MCLK
+>   - The bits to flush the FIFO aren't at the same offset
+>   - The FIFO trigger levels aren't at the same offset
+>   - The FIFO status register layout is almost entirely different
+We use DMA not FIFO
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Clement
+>
+> So it doesn't really look compatible to me
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
---pualiwtqtftt3t5p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLQ7TwAKCRDj7w1vZxhR
-xZdJAPiHblBbVt1h/raCZOy68/tiqax8uwfDI1De/hLc9w5WAQCR+XEJ5IJiPNbu
-VHPDEEkUSBQrMGEZJaPNsC5TL9QxAg==
-=ZIu1
------END PGP SIGNATURE-----
-
---pualiwtqtftt3t5p--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
