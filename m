@@ -1,41 +1,82 @@
 From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH 0/3] L2 cache controller and EDAC support for SiFive SoCs
-Date: Mon, 15 Apr 2019 17:10:40 +0530
-Message-ID: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
+Subject: [PATCH 1/3] RISC-V: Add DT documentation for SiFive L2 Cache Controller
+Date: Mon, 15 Apr 2019 17:10:41 +0530
+Message-ID: <1555328443-30874-2-git-send-email-yash.shah@sifive.com>
+References: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds an L2 cache controller driver with DT documentation
-and an EDAC platform driver for SiFive SoCs.
+This patch adds device tree bindings for SiFive FU540 L2 cache controller
+driver
 
-The EDAC platform driver registers for notifier events from the L2 cache
-controller driver for L2 ECC events.
-
-This patchset is based on Linux 5.1-rc2 and tested on HiFive Unleashed
-board with additional board related patches needed for testing can be found
-at dev/yashs/L2_cache_controller branch of:
-https://github.com/yashshah7/riscv-linux.git
-
-Yash Shah (3):
-  RISC-V: Add DT documentation for SiFive L2 Cache Controller
-  RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive
-    SoCs
-  edac: sifive: Add EDAC platform driver for SiFive SoCs
-
- .../devicetree/bindings/riscv/sifive-l2-cache.txt  |  53 +++++
- arch/riscv/Kconfig                                 |   1 +
- arch/riscv/mm/Makefile                             |   1 +
- arch/riscv/mm/sifive_l2_cache.c                    | 224 +++++++++++++++++++++
- drivers/edac/Kconfig                               |   6 +
- drivers/edac/Makefile                              |   1 +
- drivers/edac/sifive_edac.c                         | 121 +++++++++++
- 7 files changed, 407 insertions(+)
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
- create mode 100644 arch/riscv/mm/sifive_l2_cache.c
- create mode 100644 drivers/edac/sifive_edac.c
 
+diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+new file mode 100644
+index 0000000..15132e2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+@@ -0,0 +1,53 @@
++SiFive L2 Cache Controller
++--------------------------
++The SiFive Level 2 Cache Controller is used to provide access to fast copies
++of memory for masters in a Core Complex. The Level 2 Cache Controller also
++acts as directory-based coherency manager.
++
++Required Properties:
++--------------------
++- compatible: Should be "sifive,fu540-c000-ccache"
++
++- cache-block-size: Specifies the block size in bytes of the cache
++
++- cache-level: Should be set to 2 for a level 2 cache
++
++- cache-sets: Specifies the number of associativity sets of the cache
++
++- cache-size: Specifies the size in bytes of the cache
++
++- cache-unified: Specifies the cache is a unified cache
++
++- interrupt-parent: Must be core interrupt controller
++
++- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
++
++- reg: Physical base address and size of L2 cache controller registers map
++
++- reg-names: Should be "control"
++
++Optional Properties:
++--------------------
++- next-level-cache: phandle to the next level cache if present.
++
++- memory-region: reference to the reserved-memory for the L2 Loosely Integrated
++  Memory region. The reserved memory node should be defined as per the bindings
++  in reserved-memory.txt
++
++
++Example:
++
++	cache-controller@2010000 {
++		compatible = "sifive,fu540-c000-ccache";
++		cache-block-size = <0x40>;
++		cache-level = <0x2>;
++		cache-sets = <0x400>;
++		cache-size = <0x100000>;
++		cache-unified;
++		interrupt-parent = <&plic0>;
++		interrupts = <1 2 3>;
++		reg = <0x0 0x2010000 0x0 0x1000>;
++		reg-names = "control";
++		next-level-cache = <&L25 &L40 &L36>;
++		memory-region = <&l2_lim>;
++	};
 -- 
 1.9.1
