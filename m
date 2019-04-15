@@ -1,35 +1,58 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 30/30] PCI: tegra: Change link retry log level to INFO
-Date: Thu, 11 Apr 2019 22:33:55 +0530
-Message-ID: <20190411170355.6882-31-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=S1EI=SR=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v6 11/13] media: dt-bindings: tvp5150: add optional tvnorms documentation
+Date: Mon, 15 Apr 2019 14:44:11 +0200
+Message-Id: <20190415124413.18456-12-m.felsch@pengutronix.de>
+In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
+References: <20190415124413.18456-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
+Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Link retry log is info log not error, so change it to INFO log level.
+Document the optional binding to limit the possible tv-norms on the
+input connectors.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/media/i2c/tvp5150.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 75873e6627f9..55f8ff4f3e07 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2461,7 +2461,7 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
- 		} while (--timeout);
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index 82fff80fa63a..970be21fb191 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -48,6 +48,13 @@ Required Endpoint Properties for parallel synchronization on output port:
+ Note: Do not specify any of these properties if you want to use the embedded
+       BT.656 synchronization.
  
- 		if (!timeout) {
--			dev_err(dev, "link %u down, retrying\n", port->index);
-+			dev_info(dev, "link %u down, retrying\n", port->index);
- 			goto retry;
- 		}
++Optional Connector Properties:
++==============================
++
++- tvnorms: Set the possible signals to which the hardware tries to lock instead
++	   of using the autodetection mechnism. Please look at [1] for more
++	   information.
++
+ [1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
  
+ Example - three input sources:
+@@ -55,6 +62,7 @@ Example - three input sources:
+ comp_connector_0 {
+ 	compatible = "composite-video-connector";
+ 	label = "Composite0";
++	tvnorms = <TVNORM_PAL_M>; /* limit to pal-m signals */
+ 
+ 	port {
+ 		composite0_to_tvp5150: endpoint {
+@@ -66,6 +74,7 @@ comp_connector_0 {
+ comp_connector_1 {
+ 	compatible = "composite-video-connector";
+ 	label = "Composite1";
++	tvnorms = <TVNORM_NTSC_M>; /* limit to ntsc-m signals */
+ 
+ 	port {
+ 		composite1_to_tvp5150: endpoint {
 -- 
-2.17.1
+2.20.1
