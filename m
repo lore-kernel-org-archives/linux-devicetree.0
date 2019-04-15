@@ -1,35 +1,70 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 11/12] brcmfmac: Loading the correct firmware for brcm43456
-Date: Sat, 13 Apr 2019 11:06:20 +0000 (UTC)
-Message-ID: <20190413110621.ED2CA61834@smtp.codeaurora.org>
-References: <20190405234514.6183-12-megous@megous.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+Date: Mon, 15 Apr 2019 09:13:18 +0200
+Message-ID: <CAJKOXPfk5CYnaTmrxs+CFYXcB61t0ONQb11xDuqZnyA6AtkqVw@mail.gmail.com>
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br> <20190415012635.6369-3-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190405234514.6183-12-megous@megous.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: Ondrej Jirman <megous@megous.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chi-Hsien Lin <chi-hsien.lin@cypress.com>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, linux-stm32@st-md-mailman.stormreply.com, brcm80211-dev-list@cypress.com, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Jose Abreu <joabreu@synopsys.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arend van Spriel <arend.vanspriel@broadcom.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hante Meuleman <hante.meuleman@broadcom.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wright Feng <wright.feng@cypress.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Naveen Gupta <naveen.gupta@cypress.com>, Franky Lin <franky.lin@broadcom.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>brcm80211-dev-
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190415012635.6369-3-matheus@castello.eng.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-bWVnb3VzQG1lZ291cy5jb20gd3JvdGU6Cgo+IEZyb206IE9uZHJlaiBKaXJtYW4gPG1lZ291c0Bt
-ZWdvdXMuY29tPgo+IAo+IFNESU8gYmFzZWQgYnJjbTQzNDU2IGlzIGN1cnJlbnRseSBtaXNkZXRl
-Y3RlZCBhcyBicmNtNDM0NTUgYW5kIHRoZSB3cm9uZwo+IGZpcm13YXJlIG5hbWUgaXMgdXNlZC4g
-Q29ycmVjdCB0aGUgZGV0ZWN0aW9uIGFuZCBsb2FkIHRoZSBjb3JyZWN0Cj4gZmlybXdhcmUgZmls
-ZS4gQ2hpcHJldiBmb3IgYnJjbTQzNDU2IGlzICI5Ii4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBPbmRy
-ZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4KClBhdGNoIGFwcGxpZWQgdG8gd2lyZWxlc3Mt
-ZHJpdmVycy1uZXh0LmdpdCwgdGhhbmtzLgoKZTMwNjJlMDVlMWNmIGJyY21mbWFjOiBMb2FkaW5n
-IHRoZSBjb3JyZWN0IGZpcm13YXJlIGZvciBicmNtNDM0NTYKCi0tIApodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzEwODg4MDIzLwoKaHR0cHM6Ly93aXJlbGVzcy53aWtpLmtlcm5l
-bC5vcmcvZW4vZGV2ZWxvcGVycy9kb2N1bWVudGF0aW9uL3N1Ym1pdHRpbmdwYXRjaGVzCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Mon, 15 Apr 2019 at 03:50, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> For configure low level state of charge threshold alert signaled from
+> max17040 we add "maxim,alert-soc-level" property.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  .../power/supply/max17040_battery.txt         | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> new file mode 100644
+> index 000000000000..9b2cc67d556f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -0,0 +1,24 @@
+> +max17040_battery
+> +~~~~~~~~~~~~~~~~
+> +
+> +Required properties :
+> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> +
+> +Optional properties :
+> +- maxim,alert-soc-level :      The alert threshold that sets the state of
+> +                               charge level where an interrupt is generated.
+> +                               Can be configured from 1 up to 32. If skipped
+> +                               the power up default value of 4 will be used.
+> +- interrupt-parent :           The GPIO bank from the interrupt line.
+
+It does not have to be GPIO so:
+"phandle of the parent interrupt controller"
+
+> +- interrupts :                         Interrupt line see Documentation/devicetree/
+> +                               bindings/interrupt-controller/interrupts.txt
+> +
+> +Example:
+> +
+> +       battery-charger@36 {
+
+It is a fuel gauge, not battery charger.
+
+Best regards,
+Krzysztof
+
+> +               compatible = "maxim,max17040";
+> +               reg = <0x36>;
+> +               maxim,alert-soc-level = <10>;
+> +               interrupt-parent = <&gpio7>;
+> +               interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +       };
+> --
+> 2.17.0
+>
