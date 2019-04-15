@@ -1,52 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Mon, 15 Apr 2019 19:49:24 +0300
-Message-ID: <907f2e87-1cb4-fa37-5406-82bf2bf71188@cogentembedded.com>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/3] net: phy: add support for reset-controller
+Date: Mon, 15 Apr 2019 19:01:04 +0200
+Message-ID: <20190415170104.GC9343@lunn.ch>
+References: <20190415123840.31407-1-mail@david-bauer.net>
+ <20190415123840.31407-2-mail@david-bauer.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
-Content-Language: en-MW
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190415123840.31407-2-mail@david-bauer.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Bauer <mail@david-bauer.net>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2019 10:37 AM, Mason Yang wrote:
-
-> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> new file mode 100644
-> index 0000000..bfb3d29
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> @@ -0,0 +1,37 @@
-> +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
-> +-------------------------------------------------------------
+On Mon, Apr 15, 2019 at 02:38:39PM +0200, David Bauer wrote:
+> +static int mdiobus_register_reset(struct mdio_device *mdiodev)
+> +{
+> +	struct reset_control *reset = NULL;
 > +
-> +Required properties:
-> +- compatible: should be an SoC-specific compatible value, followed by
-> +		"renesas,rcar-gen3-rpc" as a fallback.
-> +		supported SoC-specific values are:
-> +		"renesas,r8a77995-rpc"	(R-Car D3)
-> +- reg: should contain 2 entries, one for the base address of rpc-if registers,
-> +	and one for the direct mapping area
-> +- reg-names: should contain "regs", and "dirmap"
+> +	if (mdiodev->dev.of_node)
+> +		reset = devm_reset_control_get_exclusive(&mdiodev->dev,
+> +							 "phy");
+> +	if (PTR_ERR(reset) == -ENOENT ||
+> +	    PTR_ERR(reset) == -ENOTSUPP)
+> +		reset = NULL;
+> +	else if (IS_ERR(reset))
+> +		return PTR_ERR(reset);
+> +
+> +	mdiodev->reset_ctrl = reset;
+> +
+> +	/* Assert the reset signal */
+> +	mdio_device_reset(mdiodev, 1);
 
-   The device tree describes the hardware, not the driver. Why did you remove
-the "wbuf" area?
+Hi David
 
-[...]
+The mdiobus_register_gpiod() function also has a call to
+mdio_device_reset(). So we end up resetting the GPIO twice.
 
-MBR, Sergei
+It is probably better to pull this out of here, and
+mdiobus_register_gpiod(), and do it once in mdiobus_register_device().
+
+	  Andrew
