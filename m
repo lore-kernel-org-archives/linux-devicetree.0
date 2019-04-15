@@ -1,244 +1,204 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH RESEND v6 6/6] dts: arm64: mt8183: Add I2C nodes
-Date: Mon, 15 Apr 2019 19:23:07 +0200
-Message-ID: <dc21ff44-bbe5-4072-3102-c2a92a1b8be3@gmail.com>
-References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
- <1554208560-14817-7-git-send-email-qii.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/4] ARM: dts: exynos: Move pmu and timer nodes out of soc
+Date: Mon, 15 Apr 2019 20:05:07 +0200
+Message-ID: <20190415180510.6044-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554208560-14817-7-git-send-email-qii.wang@mediatek.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, robh@kernel.org, leilk.liu@mediatek.com, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Qii Wang,
+The ARM PMU and ARM architected timer nodes are part of ARM CPU design
+therefore they should not be inside the soc node.  This also fixes DTC
+W=1 warnings like:
 
-On 02/04/2019 14:36, Qii Wang wrote:
-> This patch adds i2c nodes for I2C controllers
-> 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi |  192 ++++++++++++++++++++++++++++++
->  1 file changed, 192 insertions(+)
-> 
+    arch/arm/boot/dts/exynos3250.dtsi:106.21-135.5:
+        Warning (simple_bus_reg): /soc/fixed-rate-clocks: missing or empty reg/ranges property
+    arch/arm/boot/dts/exynos3250.dtsi:676.7-680.5:
+        Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
 
-No upstream version of the dtsi file present right now. But we are getting
-slowly there. Please rebase and resubmit when basic support got accepted. Thanks
-a lot.
-Matthias
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos3250.dtsi | 12 +++++-----
+ arch/arm/boot/dts/exynos4.dtsi    | 12 +++++-----
+ arch/arm/boot/dts/exynos5250.dtsi | 40 +++++++++++++++----------------
+ arch/arm/boot/dts/exynos54xx.dtsi | 38 ++++++++++++++---------------
+ 4 files changed, 51 insertions(+), 51 deletions(-)
 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 75c4881..3dde2be 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -16,6 +16,21 @@
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  
-> +	aliases {
-> +		i2c0 = &i2c0;
-> +		i2c1 = &i2c1;
-> +		i2c2 = &i2c2;
-> +		i2c3 = &i2c3;
-> +		i2c4 = &i2c4;
-> +		i2c5 = &i2c5;
-> +		i2c6 = &i2c6;
-> +		i2c7 = &i2c7;
-> +		i2c8 = &i2c8;
-> +		i2c9 = &i2c9;
-> +		i2c10 = &i2c10;
-> +		i2c11 = &i2c11;
-> +	};
-> +
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -299,6 +314,183 @@
->  			status = "disabled";
->  		};
->  
-> +		i2c6: i2c@11005000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11005000 0 0x1000>,
-> +				<0 0x11000600 0 0x80>;
-> +			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C6>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>;
-> +			clock-names = "main", "dma";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c0: i2c@11007000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11007000 0 0x1000>,
-> +				<0 0x11000080 0 0x80>;
-> +			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C0>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>;
-> +			clock-names = "main", "dma";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c4: i2c@11008000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			id = <4>;
-> +			reg = <0 0x11008000 0 0x1000>,
-> +				<0 0x11000100 0 0x80>;
-> +			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C1>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>,
-> +				 <&infracfg CLK_INFRA_I2C1_ARBITER>;
-> +			clock-names = "main", "dma","arb";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c2: i2c@11009000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11009000 0 0x1000>,
-> +				<0 0x11000280 0 0x80>;
-> +			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C2>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>,
-> +				 <&infracfg CLK_INFRA_I2C2_ARBITER>;
-> +			clock-names = "main", "dma", "arb";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c3: i2c@1100f000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x1100f000 0 0x1000>,
-> +				<0 0x11000400 0 0x80>;
-> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C3>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>;
-> +			clock-names = "main", "dma";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c1: i2c@11011000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11011000 0 0x1000>,
-> +				<0 0x11000480 0 0x80>;
-> +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C4>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>;
-> +			clock-names = "main", "dma";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +
-> +		i2c9: i2c@11014000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11014000 0 0x1000>,
-> +				<0 0x11000180 0 0x80>;
-> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C1_IMM>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>,
-> +				 <&infracfg CLK_INFRA_I2C1_ARBITER>;
-> +			clock-names = "main", "dma", "arb";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c10: i2c@11015000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11015000 0 0x1000>,
-> +				<0 0x11000300 0 0x80>;
-> +			interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C2_IMM>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>,
-> +				 <&infracfg CLK_INFRA_I2C2_ARBITER>;
-> +			clock-names = "main", "dma", "arb";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c5: i2c@11016000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11016000 0 0x1000>,
-> +				<0 0x11000500 0 0x80>;
-> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C5>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>,
-> +				 <&infracfg CLK_INFRA_I2C5_ARBITER>;
-> +			clock-names = "main", "dma", "arb";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c11: i2c@11017000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x11017000 0 0x1000>,
-> +				<0 0x11000580 0 0x80>;
-> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C5_IMM>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>,
-> +				 <&infracfg CLK_INFRA_I2C5_ARBITER>;
-> +			clock-names = "main", "dma", "arb";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +
-> +		i2c7: i2c@1101a000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x1101a000 0 0x1000>,
-> +				<0 0x11000680 0 0x80>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C7>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>;
-> +			clock-names = "main", "dma";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c8: i2c@1101b000 {
-> +			compatible = "mediatek,mt8183-i2c";
-> +			reg = <0 0x1101b000 0 0x1000>,
-> +				<0 0x11000700 0 0x80>;
-> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_I2C8>,
-> +				 <&infracfg CLK_INFRA_AP_DMA>;
-> +			clock-names = "main", "dma";
-> +			clock-div = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		audiosys: syscon@11220000 {
->  			compatible = "mediatek,mt8183-audiosys", "syscon";
->  			reg = <0 0x11220000 0 0x1000>;
-> 
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 5892a9f7622f..af54b306204b 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -97,6 +97,12 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -673,12 +679,6 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pmu {
+-			compatible = "arm,cortex-a7-pmu";
+-			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		ppmu_dmc0: ppmu_dmc0@106a0000 {
+ 			compatible = "samsung,exynos-ppmu";
+ 			reg = <0x106a0000 0x2000>;
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 6085e92ac2d7..1c21627e3c3c 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -51,6 +51,12 @@
+ 		serial3 = &serial_3;
+ 	};
+ 
++	pmu: pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupt-parent = <&combiner>;
++		interrupts = <2 2>, <3 2>;
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -169,12 +175,6 @@
+ 			reg = <0x10440000 0x1000>;
+ 		};
+ 
+-		pmu: pmu {
+-			compatible = "arm,cortex-a9-pmu";
+-			interrupt-parent = <&combiner>;
+-			interrupts = <2 2>, <3 2>;
+-		};
+-
+ 		sys_reg: syscon@10010000 {
+ 			compatible = "samsung,exynos4-sysreg", "syscon";
+ 			reg = <0x10010000 0x400>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 80986b97dfe5..96ace6a5e2f9 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -157,6 +157,26 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a15-pmu";
++		interrupt-parent = <&combiner>;
++		interrupts = <1 2>, <22 4>;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		/*
++		 * Unfortunately we need this since some versions
++		 * of U-Boot on Exynos don't set the CNTFRQ register,
++		 * so we need the value from DT.
++		 */
++		clock-frequency = <24000000>;
++	};
++
+ 	soc: soc {
+ 		sysram@2020000 {
+ 			compatible = "mmio-sram";
+@@ -227,20 +247,6 @@
+ 			power-domains = <&pd_mau>;
+ 		};
+ 
+-		timer {
+-			compatible = "arm,armv7-timer";
+-			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+-			/*
+-			 * Unfortunately we need this since some versions
+-			 * of U-Boot on Exynos don't set the CNTFRQ register,
+-			 * so we need the value from DT.
+-			 */
+-			clock-frequency = <24000000>;
+-		};
+-
+ 		mct@101c0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x101C0000 0x800>;
+@@ -265,12 +271,6 @@
+ 			};
+ 		};
+ 
+-		pmu {
+-			compatible = "arm,cortex-a15-pmu";
+-			interrupt-parent = <&combiner>;
+-			interrupts = <1 2>, <22 4>;
+-		};
+-
+ 		pinctrl_0: pinctrl@11400000 {
+ 			compatible = "samsung,exynos5250-pinctrl";
+ 			reg = <0x11400000 0x1000>;
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index de26e5ee0d2d..ae866bcc30c4 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -25,27 +25,27 @@
+ 		usbdrdphy1 = &usbdrd_phy1;
+ 	};
+ 
+-	soc: soc {
+-		arm_a7_pmu: arm-a7-pmu {
+-			compatible = "arm,cortex-a7-pmu";
+-			interrupt-parent = <&gic>;
+-			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+-			status = "disabled";
+-		};
++	arm_a7_pmu: arm-a7-pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
+ 
+-		arm_a15_pmu: arm-a15-pmu {
+-			compatible = "arm,cortex-a15-pmu";
+-			interrupt-parent = <&combiner>;
+-			interrupts = <1 2>,
+-				     <7 0>,
+-				     <16 6>,
+-				     <19 2>;
+-			status = "disabled";
+-		};
++	arm_a15_pmu: arm-a15-pmu {
++		compatible = "arm,cortex-a15-pmu";
++		interrupt-parent = <&combiner>;
++		interrupts = <1 2>,
++			     <7 0>,
++			     <16 6>,
++			     <19 2>;
++		status = "disabled";
++	};
+ 
++	soc: soc {
+ 		sysram@2020000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x02020000 0x54000>;
+-- 
+2.17.1
