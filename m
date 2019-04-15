@@ -1,80 +1,49 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v2 1/2] dt-bindings: regulator: Add stm32mp1 pwr regulators
-Date: Mon, 15 Apr 2019 09:17:37 +0000
-Message-ID: <1555319855-2982-2-git-send-email-p.paillet@st.com>
-References: <1555319855-2982-1-git-send-email-p.paillet@st.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
+ irq function
+Date: Mon, 15 Apr 2019 17:23:54 +0800
+Message-ID: <20190415092350.GC18917@X250.skyworth_vap>
+References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
+ <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
+ <20190411073252.GC3050@dragon>
+ <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM0PR04MB4211816EDBEF23F7B330CCCB80280@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39162D194A2B5B79211C1774F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190412084116.GS3578@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555319855-2982-1-git-send-email-p.paillet@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190412084116.GS3578@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Anson Huang <anson.huang@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document devicetree bindings for stm32mp1 pwr regulators.
+On Fri, Apr 12, 2019 at 10:41:16AM +0200, Alexandre Belloni wrote:
+> On 12/04/2019 02:32:54+0000, Anson Huang wrote:
+> > > > 	As i.MX SCU general irq function is picked up by Shawn, could you
+> > > > please also pick up below i.MX SC RTC alarm support patch ?
+> > > > 	https://patchwork.kernel.org/patch/10890525/
+> > > >
+> > > 
+> > > No, it can't go through Alexandre's tree due to dependency issue.
+> > > 
+> > > Shawn,
+> > > Do you think you can pick it up? Alexandre already gave the Ack.
+> > > 
+> > > AFAIK there's no other SCU RTC patches since v5.1-rc1 in Alexandre's tree.
+> > 
+> > Yes, need to make sure the dependency is handled, the RTC alarm patch MUST be picked up
+> > ONLY when scu irq patch is ready, NOT sure how to handle this case for such scenario?
+> > 
+> 
+> Either it goes through arm-soc or if it can wait one release, I pick it
+> up for 5.3. The other solution involves immutable branch but I don't
+> think this is necessary.
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- .../bindings/regulator/st,stm32mp1-pwr-reg.txt     | 43 ++++++++++++++++++=
-++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1=
--pwr-reg.txt
+I send other subsystem patch through arm-soc tree only when it's
+absolutely necessary. This is not anything either critical or urgent,
+so I'm not going to take it.  Wait one release, I'd say.
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-re=
-g.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-new file mode 100644
-index 0000000..e372dd3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-@@ -0,0 +1,43 @@
-+STM32MP1 PWR Regulators
-+-----------------------
-+
-+Available Regulators in STM32MP1 PWR block are:
-+  - reg11 for regulator 1V1
-+  - reg18 for regulator 1V8
-+  - usb33 for the swtich USB3V3
-+
-+Required properties:
-+- compatible: Must be "st,stm32mp1,pwr-reg"
-+- list of child nodes that specify the regulator reg11, reg18 or usb33
-+  initialization data for defined regulators. The definition for each of
-+  these nodes is defined using the standard binding for regulators found a=
-t
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+- vdd-supply: phandle to the parent supply/regulator node for vdd input
-+- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for us=
-b33
-+
-+Example:
-+
-+pwr_regulators: pwr@50001000 {
-+	compatible =3D "st,stm32mp1,pwr-reg";
-+	reg =3D <0x50001000 0x10>;
-+	vdd-supply =3D <&vdd>;
-+	vdd_3v3_usbfs-supply =3D <&vdd_usb>;
-+
-+	reg11: reg11 {
-+		regulator-name =3D "reg11";
-+		regulator-min-microvolt =3D <1100000>;
-+		regulator-max-microvolt =3D <1100000>;
-+	};
-+
-+	reg18: reg18 {
-+		regulator-name =3D "reg18";
-+		regulator-min-microvolt =3D <1800000>;
-+		regulator-max-microvolt =3D <1800000>;
-+	};
-+
-+	usb33: usb33 {
-+		regulator-name =3D "usb33";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+	};
-+};
---=20
-1.9.1
+Shawn
