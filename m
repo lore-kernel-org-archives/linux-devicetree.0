@@ -1,86 +1,54 @@
-Return-Path: <SRS0=T9D/=SR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48727 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbfDOMol (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 08:44:41 -0400
+Return-Path: <SRS0=S1EI=SR=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v6 09/13] media: tvp5150: add s_power callback
-Date: Mon, 15 Apr 2019 14:44:09 +0200
-Message-Id: <20190415124413.18456-10-m.felsch@pengutronix.de>
+Subject: [PATCH v6 08/13] media: tvp5150: initialize subdev before parsing device tree
+Date: Mon, 15 Apr 2019 14:44:08 +0200
+Message-Id: <20190415124413.18456-9-m.felsch@pengutronix.de>
 In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
 To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Don't en-/disable the interrupts during s_stream because someone can
-disable the stream but wants to get informed if the stream is locked
-again. So keep the interrupts enabled the whole time the pipeline is
-opened.
+From: Michael Tretter <m.tretter@pengutronix.de>
 
+There are several debug prints in the tvp5150_parse_dt() function, which
+do not print the prefix, because the v4l2_subdev is not initialized, yet.
+
+Initialize the v4l2_subdev before parsing the device tree to fix the
+debug messages.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ drivers/media/i2c/tvp5150.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 305a5e256b31..cd54715eb641 100644
+index 9331609425bf..305a5e256b31 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -1370,11 +1370,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-+static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int val = 0;
-+
-+	if (on)
-+		val = TVP5150_INT_A_LOCK;
-+
-+	if (decoder->irq)
-+		/* Enable / Disable lock interrupt */
-+		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-+				   TVP5150_INT_A_LOCK, val);
-+
-+	return 0;
-+}
+@@ -1973,6 +1973,9 @@ static int tvp5150_probe(struct i2c_client *c,
  
- static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
--	unsigned int mask, val = 0, int_val = 0;
-+	unsigned int mask, val = 0;
+ 	core->regmap = map;
+ 	sd = &core->sd;
++	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
++	sd->internal_ops = &tvp5150_internal_ops;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
  
- 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
- 	       TVP5150_MISC_CTL_CLOCK_OE;
-@@ -1387,15 +1402,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 			val = decoder->lock ? decoder->oe : 0;
- 		else
- 			val = decoder->oe;
--		int_val = TVP5150_INT_A_LOCK;
- 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
+@@ -1985,10 +1988,6 @@ static int tvp5150_probe(struct i2c_client *c,
+ 		core->mbus_type = V4L2_MBUS_BT656;
  	}
  
- 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
--	if (decoder->irq)
--		/* Enable / Disable lock interrupt */
--		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
--				   TVP5150_INT_A_LOCK, int_val);
- 
- 	return 0;
- }
-@@ -1586,6 +1596,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
- 	.g_register = tvp5150_g_register,
- 	.s_register = tvp5150_s_register,
- #endif
-+	.s_power = tvp5150_s_power,
- };
- 
- static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+-	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+-	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-
+ 	res = tvp5150_mc_init(core);
+ 	if (res)
+ 		goto err_cleanup_dt;
 -- 
 2.20.1
