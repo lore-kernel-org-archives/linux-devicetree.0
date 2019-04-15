@@ -1,92 +1,163 @@
-Return-Path: <SRS0=5T1w=SH=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v5 00/13] TVP5150 new features
-Date: Fri,  5 Apr 2019 08:03:04 +0200
-Message-Id: <20190405060317.11240-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=gys9=SR=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 12/30] PCI: tegra: Add SW fixup for RAW violations
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-13-mmaddireddy@nvidia.com> <20190415114510.GN29254@ulmo>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <93988f14-6776-0143-ccf3-4efbf5be8ada@nvidia.com>
+Date: Mon, 15 Apr 2019 20:32:05 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <20190415114510.GN29254@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
 
-few months ago I send my v4 of this series [1] unfortunately I got no
-feedback from Mauro but Jacopos feedback was quite helpfull =)
 
-After my v4 I send another series which adds a generic way to parse
-connector endpoints [2]. To make it easier for everyone I squashed both
-series [1,2] into this one.
+On 15-Apr-19 5:15 PM, Thierry Reding wrote:
+> On Thu, Apr 11, 2019 at 10:33:37PM +0530, Manikanta Maddireddy wrote:
+>> The logic which blocks read requests till AFI gets ACK for all outstanding
+>> MC writes does not behave correctly when number of outstanding write
+>> becomes more than 32 in Tegra124 and 132.
+>>
+>> SW fixup to prevent this issue is to limit outstanding posted writes and
+>> tweak updateFC timer threshold.
+>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  drivers/pci/controller/pci-tegra.c | 34 ++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index 9e61da68cfae..b74408eeb367 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -178,6 +178,13 @@
+>>  
+>>  #define AFI_PEXBIAS_CTRL_0		0x168
+>>  
+>> +#define RP_PRIV_XP_DL		0x00000494
+>> +#define  RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD	(0x1ff << 1)
+>> +
+>> +#define RP_RX_HDR_LIMIT		0x00000e00
+>> +#define  RP_RX_HDR_LIMIT_PW_MASK	(0xff << 8)
+>> +#define  RP_RX_HDR_LIMIT_PW		(0x0e << 8)
+>> +
+>>  #define RP_ECTL_2_R1	0x00000e84
+>>  #define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
+>>  
+>> @@ -208,6 +215,7 @@
+>>  #define  RP_VEND_XP_DL_UP			(1 << 30)
+>>  #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
+>>  #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
+>> +#define  RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK	(0xff << 18)
+>>  
+>>  #define RP_VEND_CTL0	0x00000f44
+>>  #define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
+>> @@ -300,6 +308,7 @@ struct tegra_pcie_soc {
+>>  	u32 tx_ref_sel;
+>>  	u32 pads_refclk_cfg0;
+>>  	u32 pads_refclk_cfg1;
+>> +	u32 update_fc_val;
+> Shouldn't this be something like "update_fc_threshold" since the mask
+> defined above is for a field named UPDATE_FC_THRESHOLD?
+>
+>>  	bool has_pex_clkreq_en;
+>>  	bool has_pex_bias_ctrl;
+>>  	bool has_intr_prsnt_sense;
+>> @@ -309,6 +318,7 @@ struct tegra_pcie_soc {
+>>  	bool program_uphy;
+>>  	bool update_clamp_threshold;
+>>  	bool program_deskew_time;
+>> +	bool raw_violation_fixup;
+>>  	struct {
+>>  		struct {
+>>  			u32 rp_ectl_2_r1;
+>> @@ -635,6 +645,23 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+>>  		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
+>>  		writel(value, port->base + RP_VEND_CTL0);
+>>  	}
+>> +
+>> +	/* Fixup for read after write violation in T124 & T132 platforms */
+> No need to mention the SoC generations here, it's already implied by the
+> per-SoC flag.
+>
+> Thierry
+I will take care of both the comments in V2
 
-I recognized that patch ("media: v4l2-subdev: add stubs for
-v4l2_subdev_get_try_*") was a possible blocker for this series so I
-factored the patch out [3].
-
-My main goal with the v5 was to simplify the link_setup() code a lot.
-There were also some build-dep issues which I fixed too. Last
-significant improvement is done on patch ("media: tvp5150: add
-support to limit tv norms on connector").
-
-I've tested it on a custom hardware and compile tested it too.
-
-@Mauro
-Please let me know how I can help you to speed up the review progress
-since I wanted to get those changes merged in the near future =)
-
-@Sakari, Hans
-I've added you to the series since I made some core changes.
-
-New patches (wasn't part of [1] or [2]):
-  media: dt-bindings: tvp5150: cleanup bindings stlye
-  media: dt-bindings: tvp5150: add optional tvnorms documentation
-  media: tvp5150: make debug output more readable
-
-New (squashed) patches (was part of [2]):
-  dt-bindings: connector: analog: add tv norms property
-  media: v4l2-fwnode: add v4l2_fwnode_connector
-  media: v4l2-fwnode: add initial connector parsing support
-  media: tvp5150: add support to limit tv norms on connector
-
-Droped patches:
-  media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
-
-[1] https://patchwork.ozlabs.org/cover/1032891/
-[2] https://patchwork.kernel.org/cover/10794703/
-[3] https://www.mail-archive.com/linux-media@vger.kernel.org/msg146065.html
-
-Regards,
-	Marco
-
-Javier Martinez Canillas (1):
-  partial revert of "[media] tvp5150: add HW input connectors support"
-
-Marco Felsch (11):
-  dt-bindings: connector: analog: add tv norms property
-  media: v4l2-fwnode: add v4l2_fwnode_connector
-  media: v4l2-fwnode: add initial connector parsing support
-  media: tvp5150: add input source selection of_graph support
-  media: dt-bindings: tvp5150: Add input port connectors DT bindings
-  media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-  media: tvp5150: add s_power callback
-  media: dt-bindings: tvp5150: cleanup bindings stlye
-  media: dt-bindings: tvp5150: add optional tvnorms documentation
-  media: tvp5150: add support to limit tv norms on connector
-  media: tvp5150: make debug output more readable
-
-Michael Tretter (1):
-  media: tvp5150: initialize subdev before parsing device tree
-
- .../display/connector/analog-tv-connector.txt |   4 +
- .../devicetree/bindings/media/i2c/tvp5150.txt | 125 +++-
- drivers/media/i2c/tvp5150.c                   | 673 +++++++++++++-----
- drivers/media/v4l2-core/v4l2-fwnode.c         | 113 +++
- include/dt-bindings/media/tvnorms.h           |  42 ++
- include/dt-bindings/media/tvp5150.h           |   2 -
- include/media/v4l2-connector.h                |  34 +
- include/media/v4l2-fwnode.h                   |  49 ++
- 8 files changed, 850 insertions(+), 192 deletions(-)
- create mode 100644 include/dt-bindings/media/tvnorms.h
- create mode 100644 include/media/v4l2-connector.h
-
--- 
-2.20.1
+Manikanta
+>
+>> +	if (soc->raw_violation_fixup) {
+>> +		value = readl(port->base + RP_RX_HDR_LIMIT);
+>> +		value &= ~RP_RX_HDR_LIMIT_PW_MASK;
+>> +		value |= RP_RX_HDR_LIMIT_PW;
+>> +		writel(value, port->base + RP_RX_HDR_LIMIT);
+>> +
+>> +		value = readl(port->base + RP_PRIV_XP_DL);
+>> +		value |= RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD;
+>> +		writel(value, port->base + RP_PRIV_XP_DL);
+>> +
+>> +		value = readl(port->base + RP_VEND_XP);
+>> +		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
+>> +		value |= soc->update_fc_val;
+>> +		writel(value, port->base + RP_VEND_XP);
+>> +	}
+>>  }
+>>  
+>>  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+>> @@ -2381,6 +2408,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = false,
+>>  	.program_deskew_time = false,
+>> +	.raw_violation_fixup = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2407,6 +2435,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = false,
+>>  	.program_deskew_time = false,
+>> +	.raw_violation_fixup = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2417,6 +2446,8 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+>>  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+>>  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+>>  	.pads_refclk_cfg0 = 0x44ac44ac,
+>> +	/* FC threshold is bit[25:18] */
+>> +	.update_fc_val = 0x03fc0000,
+>
+>
+>>  	.has_pex_clkreq_en = true,
+>>  	.has_pex_bias_ctrl = true,
+>>  	.has_intr_prsnt_sense = true,
+>> @@ -2426,6 +2457,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = true,
+>>  	.program_deskew_time = false,
+>> +	.raw_violation_fixup = true,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2445,6 +2477,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = true,
+>>  	.program_deskew_time = true,
+>> +	.raw_violation_fixup = false,
+>>  	.ectl.regs.rp_ectl_2_r1 = 0x0000000f,
+>>  	.ectl.regs.rp_ectl_4_r1 = 0x00000067,
+>>  	.ectl.regs.rp_ectl_5_r1 = 0x55010000,
+>> @@ -2479,6 +2512,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+>>  	.program_uphy = false,
+>>  	.update_clamp_threshold = false,
+>>  	.program_deskew_time = false,
+>> +	.raw_violation_fixup = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> -- 
+>> 2.17.1
+>>
