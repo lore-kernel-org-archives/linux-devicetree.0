@@ -1,187 +1,76 @@
-Return-Path: <SRS0=5T1w=SH=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v5 03/13] media: v4l2-fwnode: add initial connector parsing support
-Date: Fri,  5 Apr 2019 08:03:07 +0200
-Message-Id: <20190405060317.11240-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190405060317.11240-1-m.felsch@pengutronix.de>
-References: <20190405060317.11240-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=lIuD=SR=gmail.com=thierry.reding@kernel.org>
+Date: Mon, 15 Apr 2019 17:42:01 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 21/30] PCI: tegra: Add "pci" type check before parsing
+ child device tree node
+Message-ID: <20190415154201.GN29254@ulmo>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-22-mmaddireddy@nvidia.com>
+ <20190415133715.GV29254@ulmo>
+ <059fd53c-8a53-be56-a5bc-393f37aae168@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, javierm@redhat.co, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2CW6+cughRlDaKZr"
+Content-Disposition: inline
+In-Reply-To: <059fd53c-8a53-be56-a5bc-393f37aae168@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the initial connector parsing code, so we can move from a
-driver specific parsing code to a generic one. Currently only the
-generic fields and the analog-connector specific fields are parsed. Parsing
-the other connector specific fields can be added by a simple callbacks.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
+--2CW6+cughRlDaKZr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://patchwork.kernel.org/cover/10794703/
+On Mon, Apr 15, 2019 at 09:00:58PM +0530, Manikanta Maddireddy wrote:
+>=20
+>=20
+> On 15-Apr-19 7:07 PM, Thierry Reding wrote:
+> > On Thu, Apr 11, 2019 at 10:33:46PM +0530, Manikanta Maddireddy wrote:
+> >> Each root port is added as a child device tree node of PCIe controller
+> >> node. These child nodes are parsed using open firmware PCI bus accessor
+> >> functions. If the child node is not of "pci" type then device tree
+> >> parsing fails. Add "pci" type check before parsing child device tree n=
+ode.
+> >>
+> >> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> >> ---
+> >>  drivers/pci/controller/pci-tegra.c | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> > Erm... what is the use-case that you're trying to support? Why would we
+> > ever have children nodes that are not of type "pci"?
+> >
+> > Thierry
+> In downstream kernel we have "prod-settings" node as one of the child nod=
+es.
+> Even though we are not supporting this in upstream kernel, I believe this
+> check is good to have.
 
-v5:
-- s/strlcpy/strscpy/
+We don't have prod-settings upstream and for good reason. There's no
+need to add this check in upstream. We can carry the change downstream
+until we've moved away from prod-settings downstream as well.
 
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
+Thierry
 
- drivers/media/v4l2-core/v4l2-fwnode.c | 113 ++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  16 ++++
- 2 files changed, 129 insertions(+)
+--2CW6+cughRlDaKZr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 20571846e636..a6bbe42ca518 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -592,6 +592,119 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
- 
-+static const struct v4l2_fwnode_connector_conv {
-+	enum v4l2_connector_type type;
-+	const char *name;
-+} connectors[] = {
-+	{
-+		.type = V4L2_CON_COMPOSITE,
-+		.name = "composite-video-connector",
-+	}, {
-+		.type = V4L2_CON_SVIDEO,
-+		.name = "svideo-connector",
-+	}, {
-+		.type = V4L2_CON_VGA,
-+		.name = "vga-connector",
-+	}, {
-+		.type = V4L2_CON_DVI,
-+		.name = "dvi-connector",
-+	}, {
-+		.type = V4L2_CON_HDMI,
-+		.name = "hdmi-connector"
-+	}
-+};
-+
-+static enum v4l2_connector_type
-+v4l2_fwnode_string_to_connector_type(const char *con_str)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(connectors); i++)
-+		if (!strcmp(con_str, connectors[i].name))
-+			return connectors[i].type;
-+
-+	/* no valid connector found */
-+	return V4L2_CON_UNKNOWN;
-+}
-+
-+static int
-+v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
-+				   struct v4l2_fwnode_connector *vc)
-+{
-+	u32 tvnorms;
-+	int ret;
-+
-+	ret = fwnode_property_read_u32(fwnode, "tvnorms", &tvnorms);
-+
-+	/* set it to V4L2_STD_ALL in case of not specified tvnorms */
-+	vc->connector.analog.supported_tvnorms = ret ? V4L2_STD_ALL : tvnorms;
-+	return 0;
-+}
-+
-+int v4l2_fwnode_parse_connector(struct fwnode_handle *__fwnode,
-+				struct v4l2_fwnode_connector *connector)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct fwnode_endpoint __ep;
-+	const char *c_type_str, *label;
-+	int ret;
-+
-+	memset(connector, 0, sizeof(*connector));
-+
-+	fwnode = fwnode_graph_get_remote_port_parent(__fwnode);
-+
-+	/* 1st parse all common properties */
-+	/* connector-type is stored within the compatible string */
-+	ret = fwnode_property_read_string(fwnode, "compatible", &c_type_str);
-+	if (ret)
-+		return -EINVAL;
-+
-+	connector->type = v4l2_fwnode_string_to_connector_type(c_type_str);
-+
-+	fwnode_graph_parse_endpoint(__fwnode, &__ep);
-+	connector->remote_port = __ep.port;
-+	connector->remote_id = __ep.id;
-+
-+	ret = fwnode_property_read_string(fwnode, "label", &label);
-+	if (!ret) {
-+		/* ensure label doesn't exceed V4L2_CONNECTOR_MAX_LABEL size */
-+		strscpy(connector->label, label, V4L2_CONNECTOR_MAX_LABEL);
-+	} else {
-+		/*
-+		 * labels are optional, if no one is given create one:
-+		 * <connector-type-string>@port<endpoint_port>/ep<endpoint_id>
-+		 */
-+		snprintf(connector->label, V4L2_CONNECTOR_MAX_LABEL,
-+			 "%s@port%u/ep%u", c_type_str, connector->remote_port,
-+			 connector->remote_id);
-+	}
-+
-+	/* now parse the connector specific properties */
-+	switch (connector->type) {
-+		/* fall through */
-+	case V4L2_CON_COMPOSITE:
-+	case V4L2_CON_SVIDEO:
-+		ret = v4l2_fwnode_connector_parse_analog(fwnode, connector);
-+		break;
-+		/* fall through */
-+	case V4L2_CON_VGA:
-+	case V4L2_CON_DVI:
-+	case V4L2_CON_HDMI:
-+		pr_warn("Connector specific parsing is currently not supported for %s\n",
-+			c_type_str);
-+		ret = 0;
-+		break;
-+		/* fall through */
-+	case V4L2_CON_UNKNOWN:
-+	default:
-+		pr_err("Unknown connector type\n");
-+		ret = -EINVAL;
-+	};
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_parse_connector);
-+
- static int
- v4l2_async_notifier_fwnode_parse_endpoint(struct device *dev,
- 					  struct v4l2_async_notifier *notifier,
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 04344b71656f..aa8bbef8589b 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -269,6 +269,22 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
-  */
- void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
- 
-+/**
-+ * v4l2_fwnode_parse_connector() - parse the connector on endpoint
-+ * @fwnode: pointer to the endpoint's fwnode handle where the connector is
-+ *          connected to.
-+ * @connector: pointer to the V4L2 fwnode connector data structure
-+ *
-+ * Fill the connector data structure with the connector type, label and the
-+ * endpoint id and port where the connector belongs to. If no label is present
-+ * a unique one will be created. Labels with more than 40 characters are cut.
-+ *
-+ * Return: %0 on success or a negative error code on failure:
-+ *	   %-EINVAL on parsing failure
-+ */
-+int v4l2_fwnode_parse_connector(struct fwnode_handle *fwnode,
-+				struct v4l2_fwnode_connector *connector);
-+
- /**
-  * typedef parse_endpoint_func - Driver's callback function to be called on
-  *	each V4L2 fwnode endpoint.
--- 
-2.20.1
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly0pkkACgkQ3SOs138+
+s6Hk6BAAuuLmSi3da795/1SMFfCMinG4+Xv2R3ifsnGGXF9deM9FABvAmRlwxQ4o
+uXQ3ZgmW5TVPqydtUc4/bDmTl79P2Q2tthMzCmGw8PtWf3mPCeaeHwYGwGgq6b/7
+ujii/QFJB3KnVFiB91lfog5oaKSfTH5igeSyzhofSWAyfoj+XXAsXZ2KlFpslKCu
+g5daw4687XvnolPgpt/YtPemta+rEJaBl0ZonQpRxQnp3mJcbu1DumLbJB92vi0k
+UrhzD2G5s/lZ78w1NuZaEwR6iz9Y8lilZ95lK5BZZJL9DsJVta0wI75lWfqi5JbD
+yc8aI4FfrJ6V/zxi3MVhITDytLWyelmJcbFxZOs3qbGmdu0LczBmDtgik8sVGDkt
+r0oyetd6kmp/JeWkf30A9zWm/pfR09JFOhG935lanjt5OSjNgWVX/7mDgCHLIG6q
+GjZA90KrDUmMr7R6ewCd62wFOh7ftHlLq+B3CWGCE2h9CohPn21bD8kue8OR1zXf
+E+v3ml38bdn3BkIZLWGysJLapOSNjGMXxjXXzGylTDyAN7E/Af+IE/pXvUt341+H
+hv5733jebhTb0EPszwwWZC3sG6TdDkmxYtDVvCBEwNNK+qD53s9oFsUT4hQ04ehN
+wBUmzXgJWnVL+RqFaSTmVPQIBQKac+vm89f4G/2XeO1vKFSNNQY=
+=Hexk
+-----END PGP SIGNATURE-----
+
+--2CW6+cughRlDaKZr--
