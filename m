@@ -1,37 +1,133 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:50343 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfDKHzV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Apr 2019 03:55:21 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH v2 20/20] dt-bindings: can: rcar_can: Document r8a77470 bindings
-Date: Thu, 11 Apr 2019 16:54:22 +0900
-Message-Id: <1554969262-15028-21-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+Return-Path: <SRS0=T9D/=SR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36691 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfDOMod (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 08:44:33 -0400
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v6 01/13] dt-bindings: connector: analog: add tv norms property
+Date: Mon, 15 Apr 2019 14:44:01 +0200
+Message-Id: <20190415124413.18456-2-m.felsch@pengutronix.de>
+In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
+References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
+Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document SoC specific bindings for R-Car RZ/G1C(r8a77470) SoC.
+Some connectors no matter if in- or output supports only a limited
+range of tv norms. It doesn't matter if the hardware behind that
+connector supports more than the listed formats since the users are
+restriced by a label e.g. to plug only a camera into this connector
+which uses the PAL format.
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+This patch adds the capability to describe such limitation within the
+firmware. There are no format restrictions if the property isn't
+present, so it's completely backward compatible.
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 1 +
- 1 file changed, 1 insertion(+)
+[1] https://patchwork.kernel.org/cover/10794703/
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index 9936b9e..a5d57da 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -5,6 +5,7 @@ Required properties:
- - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
- 	      "renesas,can-r8a7744" if CAN controller is a part of R8A7744 SoC.
- 	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
-+	      "renesas,can-r8a77470" if CAN controller is a part of R8A77470 SoC.
- 	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
- 	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
- 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+v6:
+- tvnorms.h: use tabs instead of spaces
+- tvnorms.h: add TVNORM_PAL and TVNORM_SECAM
+- tvnorms.h: drop rarely used TVNORM_ATSC_* norms
+
+v2-v4:
+- nothing since the patch was squashed from series [1] into this
+  series.
+
+ .../display/connector/analog-tv-connector.txt |  4 ++
+ include/dt-bindings/media/tvnorms.h           | 56 +++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+ create mode 100644 include/dt-bindings/media/tvnorms.h
+
+diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+index 0c0970c210ab..346f8937a0b7 100644
+--- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+@@ -6,6 +6,9 @@ Required properties:
+ 
+ Optional properties:
+ - label: a symbolic name for the connector
++- tvnorms: limit the supported tv norms on a connector to the given ones else
++           all tv norms are allowed. Possible video standards are defined in
++           include/dt-bindings/media/tvnorms.h.
+ 
+ Required nodes:
+ - Video port for TV input
+@@ -16,6 +19,7 @@ Example
+ tv: connector {
+ 	compatible = "composite-video-connector";
+ 	label = "tv";
++	tvnorms = <(TVNORM_PAL_M | TVNORM_NTSC_M)>;
+ 
+ 	port {
+ 		tv_connector_in: endpoint {
+diff --git a/include/dt-bindings/media/tvnorms.h b/include/dt-bindings/media/tvnorms.h
+new file mode 100644
+index 000000000000..058ab8414145
+--- /dev/null
++++ b/include/dt-bindings/media/tvnorms.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0-only or X11 */
++/*
++ * Copyright 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
++ */
++
++#ifndef _DT_BINDINGS_MEDIA_TVNORMS_H
++#define _DT_BINDINGS_MEDIA_TVNORMS_H
++
++/* one bit for each */
++#define TVNORM_PAL_B		0x00000001
++#define TVNORM_PAL_B1		0x00000002
++#define TVNORM_PAL_G		0x00000004
++#define TVNORM_PAL_H		0x00000008
++#define TVNORM_PAL_I		0x00000010
++#define TVNORM_PAL_D		0x00000020
++#define TVNORM_PAL_D1		0x00000040
++#define TVNORM_PAL_K		0x00000080
++
++#define TVNORM_PAL		(TVNORM_PAL_B  | \
++				 TVNORM_PAL_B1 | \
++				 TVNORM_PAL_G  | \
++				 TVNORM_PAL_H  | \
++				 TVNORM_PAL_I  | \
++				 TVNORM_PAL_D  | \
++				 TVNORM_PAL_D1 | \
++				 TVNORM_PAL_K)
++
++#define TVNORM_PAL_M		0x00000100
++#define TVNORM_PAL_N		0x00000200
++#define TVNORM_PAL_Nc		0x00000400
++#define TVNORM_PAL_60		0x00000800
++
++#define TVNORM_NTSC_M		0x00001000	/* BTSC */
++#define TVNORM_NTSC_M_JP	0x00002000	/* EIA-J */
++#define TVNORM_NTSC_443		0x00004000
++#define TVNORM_NTSC_M_KR	0x00008000	/* FM A2 */
++
++#define TVNORM_SECAM_B		0x00010000
++#define TVNORM_SECAM_D		0x00020000
++#define TVNORM_SECAM_G		0x00040000
++#define TVNORM_SECAM_H		0x00080000
++#define TVNORM_SECAM_K		0x00100000
++#define TVNORM_SECAM_K1		0x00200000
++#define TVNORM_SECAM_L		0x00400000
++#define TVNORM_SECAM_LC		0x00800000
++
++#define TVNORM_SECAM		(TVNORM_SECAM_B  | \
++				 TVNORM_SECAM_D  | \
++				 TVNORM_SECAM_G  | \
++				 TVNORM_SECAM_H  | \
++				 TVNORM_SECAM_K  | \
++				 TVNORM_SECAM_K1 | \
++				 TVNORM_SECAM_L  | \
++				 TVNORM_SECAM_LC)
++
++#endif /* _DT_BINDINGS_MEDIA_TVNORMS_H */
 -- 
-2.7.4
+2.20.1
