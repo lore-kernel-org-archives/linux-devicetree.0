@@ -1,91 +1,73 @@
-Return-Path: <SRS0=8VLQ=SR=nxp.com=aisheng.dong@kernel.org>
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: Re: [PATCH 1/4] dt-bindings: firmware: imx-scu: new binding to parse
- clocks from device tree
-Date: Mon, 15 Apr 2019 14:37:34 +0000
-Message-ID: 
- <AM0PR04MB4211C417490D2245BFFEB63A802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=gys9=SR=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 14/30] PCI: tegra: Set target speed as Gen1 before link up
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-15-mmaddireddy@nvidia.com> <20190415115218.GP29254@ulmo>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <75493937-fd77-024b-0e07-62ecc009c917@nvidia.com>
+Date: Mon, 15 Apr 2019 20:42:37 +0530
 MIME-Version: 1.0
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20190415115218.GP29254@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgUm9iLA0KDQo+ID4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
-bS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+ID4gPiBpbmRleCA3MmQ0
-ODFjLi4yODE2Nzg5IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+ID4gPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0K
-PiA+ID4gPiBAQCAtNzgsNiArNzgsMTkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ID4g
-ICAgICAgICAgICAgICAgICAgICAgICJmc2wsaW14OHFtLWNsb2NrIg0KPiA+ID4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgImZzbCxpbXg4cXhwLWNsb2NrIg0KPiA+ID4gPiAgICAgICAgICAgICAg
-ICAgICAgIGZvbGxvd2VkIGJ5ICJmc2wsc2N1LWNsayINCj4gPiA+ID4gKy0gI2Nsb2NrLWNlbGxz
-OiAgICAgICAgICAgIFNob3VsZCBiZSAwLg0KPiA+ID4gPiArLSByc3JjLWlkOiAgICAgICAgIFJl
-c291cmNlIElEIGFzc29jaWF0ZWQgd2l0aCB0aGlzIGNsb2NrDQo+ID4gPiA+ICstIGNsay10eXBl
-OiAgICAgICAgICAgICAgICBUeXBlIG9mIHRoaXMgY2xvY2suDQo+ID4gPiA+ICsgICAgICAgICAg
-ICAgICAgICAgUmVmZXIgdG8gPGluY2x1ZGUvZHQtYmluZGluZ3MvZmlybXdhcmUvaW14L3JzcmMu
-aD4NCj4gZm9yDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgYXZhaWxhYmxlIGNsb2NrIHR5
-cGVzIHN1cHBvcnRlZCBieSBTQ1UuDQo+ID4gPg0KPiA+ID4gQ2FuJ3QgeW91IGp1c3QgbWFrZSB0
-aGVzZSAyIHZhbHVlcyBjbG9jayBjZWxscz8gSSdtIGFsbCBmb3IgZ2V0dGluZw0KPiA+ID4gcmlk
-IG9mIG1hZGUgdXAgY2xvY2sgbnVtYmVycy4NCj4gPiA+DQo+ID4NCj4gPiBUaGFua3MgZm9yIHRo
-ZSBhZ3JlZW1lbnQgdG8gcmVtb3ZlIGNsb2NrIElEcy4NCj4gPg0KPiA+IFRoZSAyIHZhbHVlcyBj
-bG9jayBjZWxsIHNlZW1zIG5vdCB0aGUgYmVzdCBhcHByb2FjaCBmb3IgaS5NWCBiZWNhdXNlDQo+
-ID4gaXQgc3RpbGwgbmVlZHMgdG8gZGVmaW5lIGFsbCBjbG9ja3MgaW4gdGhlIGRyaXZlciB3aGlj
-aCBpcyBleGFjdGx5IHdlDQo+ID4gd2FudCB0byBhdm9pZCBub3cgZHVlIHRvIHNvbWUgc3BlY2lh
-bCBIVyBjaGFyYWN0ZXJpc3RpYzoNCj4gDQo+IFdoeSdzIHRoYXQ/IFlvdSBjYW4gd2FsayB0aGUg
-RFQgYW5kIGV4dHJhY3QgdGhlIDIgY2VsbHMgZm9yIGVhY2ggY2xvY2sgcHJlc2VudC4NCj4gVGhh
-dCdzIG5vdCBhbnkgZGlmZmVyZW50IHRoYW4gd2Fsa2luZyBjaGlsZCBub2RlcyBoZXJlIGFuZCBn
-ZXR0aW5nIHRoZSByZXNvdXJjZQ0KPiBpZHMgYW5kIHR5cGUuIFRoYXQncyBub3QgcmVhbGx5IGZh
-c3QsIGJ1dCBpZiBzcGVlZCBpcyByZWFsbHkgYW4gaXNzdWUgd2UgY2FuDQo+IGNvbnNpZGVyIGFk
-ZHJlc3NpbmcgdGhhdCBpbiB3YXlzIHRoYXQgZXh0ZW5kIHJhdGhlciB0aGFuIGNoYW5nZSB0aGUg
-YmluZGluZy4NCj4gDQoNCkR1ZSB0byBzZWFyY2hpbmcgdGhlICdjbG9ja3MnIHByb3BlcnR5IG9m
-IGFsbCBkZXZpY2Ugbm9kZXMgaW5kaXJlY3RseSB0byANCmV4YWN0IHRoZSAyIGNlbGwgdmFsdWUg
-Y2F1c2VzIG11Y2ggdHJvdWJsZXMgaW4gZHJpdmVyIGltcGxlbWVudGF0aW9uIGFuZA0KbG9va3Mg
-YSBiaXQgd2VpcmQgYW5kIGlzIHZlcnkgbG93IGVmZmljaWVuY3kgKCB0aGUgcGVyZm9ybWFuY2Ug
-d2lsbCBhbHNvIHBvdGVudGlhbGx5DQpiZSBhZmZlY3RlZCBieSBhZGRpbmcgbmV3IHVucmVsZXZh
-bnQgbm9kZXMgd2hpY2ggaXMgYmFkKSwgd2UgZm91bmQgdGhlIGJlbG93DQphbHRlcm5hdGl2ZSB3
-YXkgdG8gZG8gdGhlIHNhbWUgMiBjZWxsIGJpbmRpbmcsIGJ1dCBoYXZpbmcgbm8gcGVyZm9ybWFu
-Y2UgaXNzdWUuDQpJdCdzIG11Y2ggc2ltaWxhciB0byB0aGUgQVJNIFNDUEkgY2xvY2sgYmluZGlu
-Zy4NCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXJtLHNjcGkudHh0DQoN
-CkRvIHlvdSB0aGluayBpZiBpdCdzIG9rYXkgdG8geW91Pw0KDQpJZiB3ZSBoYXZlIHRvIHVzZSAy
-IGNlbGwgYmluZGluZywgd2UgcHJvYmFibHkgd291bGQgcHJlZmVyIHRvIHVzZSB0aGlzIHdheQ0K
-YXMgaXQgY2FuIHJlbGllZiB1cyBhIGxvdCBmcm9tIGluZGlyZWN0bHkgc2VhcmNoaW5nIHRoZSAn
-Y2xvY2tzJyBwcm9wZXJ0eS4gDQoNCklmIHlvdSdyZSBvaywgcGxlYXNlIGxldCBtZSBrbm93LCBJ
-IHdpbGwgbWFrZSBpdCBpbiBWMiBmb3IgdGhlIHJldmlldy4NCg0KZW5ldDBfY2xrOiBjbG9jay1l
-bmV0MCB7DQogICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAtY2xvY2siLCAiZnNsLHNj
-dS1jbGsiOw0KICAgICAgICAjY2xvY2stY2VsbHMgPSA8Mj47DQogICAgICAgIGNsb2NrLWluZGlj
-ZSA9IDxJTVhfU0NfUE1fQ0xLX1BFUj4sCQkvLyBjbG9jayBjZWxsIDIgdmFsdWUNCiAgICAgICAg
-ICAgICAgICAgICAgICAgPElNWF9TQ19QTV9DTEtfQllQQVNTPiwNCiAgICAgICAgICAgICAgICAg
-ICAgICAgPElNWF9TQ19QTV9DTEtfTUlTQzA+Ow0KICAgICAgICBjbG9jay1vdXRwdXQtbmFtZXMg
-PSAiZW5ldDBfY2xrIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImVuZXQwX2J5cGFz
-c19jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZW5ldDBfcmdtaWlfY2xrIjsN
-CgkJLy8gd2UgY2FuIHVzZSB0aGUgc2FtZSByZXNvdXJjZSBpZCBmb3IgY2xvY2sgY2VsbHMgMSB2
-YWx1ZQ0KCQkvLyBvciBwcm9iYWJseSBlbmNvZGVkIGluIG5vZGVAcmVnPw0KICAgICAgICBwb3dl
-ci1kb21haW5zID0gPCZwZCBJTVhfU0NfUl9FTkVUXzA+OyANCn07DQoNCmVuZXQwX2xwY2c6IGNs
-b2NrLWNvbnRyb2xsZXJANWIyMzAwMDAgew0KICAgICAgICBjb21wYXRpYmxlID0gImZzbCxpbXg4
-cXhwLWxwY2ciOw0KICAgICAgICByZWcgPSA8MHg1YjIzMDAwMCAweDEwMDAwPjsNCiAgICAgICAg
-I2Nsb2NrLWNlbGxzID0gPDE+Ow0KICAgICAgICBjbG9ja3MgPSA8JmVuZXQwX2NsayBJTVhfU0Nf
-Ul9FTkVUXzAgSU1YX1NDX1BNX0NMS19QRVI+LA0KICAgICAgICAgICAgICAgICA8JmVuZXQwX2Ns
-ayBJTVhfU0NfUl9FTkVUXzAgSU1YX1NDX1BNX0NMS19QRVI+LA0KICAgICAgICAgICAgICAgICA8
-JmNvbm5fYXhpX2Nsaz4sIDwmY29ubl9pcGdfY2xrPiwgPCZjb25uX2lwZ19jbGs+Ow0KICAgICAg
-ICBiaXQtb2Zmc2V0ID0gPDAgNCA4IDE2IDIwPjsNCiAgICAgICAgY2xvY2stb3V0cHV0LW5hbWVz
-ID0gImVuZXQwX2lwZ19yb290X2NsayIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICJl
-bmV0MF90eF9jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZW5ldDBfYWhiX2Ns
-ayIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICJlbmV0MF9pcGdfY2xrIiwNCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgImVuZXQwX2lwZ19zX2NsayI7DQogICAgICAgIHBvd2Vy
-LWRvbWFpbnMgPSA8JnBkIElNWF9TQ19SX0VORVRfMD47DQp9Ow0KDQpmZWMxOiBldGhlcm5ldEA1
-YjA0MDAwMCB7DQogICAgICAgIHJlZyA9IDwweDViMDQwMDAwIDB4MTAwMDA+Ow0KICAgICAgICBp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMjU4IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KICAgICAgICAg
-ICAgICAgICAgICAgPEdJQ19TUEkgMjU2IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KICAgICAgICAg
-ICAgICAgICAgICAgPEdJQ19TUEkgMjU3IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KICAgICAgICAg
-ICAgICAgICAgICAgPEdJQ19TUEkgMjU5IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KICAgICAgICBj
-bG9ja3MgPSA8JmVuZXQwX2xwY2cgMz4sDQogICAgICAgICAgICAgICAgIDwmZW5ldDBfbHBjZyAy
-PiwNCiAgICAgICAgICAgICAgICAgPCZlbmV0MF9scGNnIDE+LA0KICAgICAgICAgICAgICAgICA8
-JmVuZXQwX2xwY2cgMD47DQogICAgICAgIGNsb2NrLW5hbWVzID0gImlwZyIsICJhaGIiLCAiZW5l
-dF9jbGtfcmVmIiwgInB0cCI7DQogICAgICAgIGZzbCxudW0tdHgtcXVldWVzPTwzPjsNCiAgICAg
-ICAgZnNsLG51bS1yeC1xdWV1ZXM9PDM+Ow0KICAgICAgICBwb3dlci1kb21haW5zID0gPCZwZCBJ
-TVhfU0NfUl9FTkVUXzA+Ow0KICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KfTsNCg0KUmVn
-YXJkcw0KRG9uZyBBaXNoZW5nDQo=
+
+
+On 15-Apr-19 5:22 PM, Thierry Reding wrote:
+> On Thu, Apr 11, 2019 at 10:33:39PM +0530, Manikanta Maddireddy wrote:
+>> Some of the legacy PCIe endpoints doesn't enumerate if root port advertises
+>> both Gen-1 and Gen-2 speeds. Hence, the strategy followed here is to
+>> initially advertise only Gen-1 and after link is up, retrain link to Gen-2
+>> speed.
+>>
+>> Following two cards display this behaviour,
+>>   - Fusion HDTV 5 Express card
+>>   - IOGear SIL - PCIE - SATA card
+>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index 7dc728cc5f51..7e24eac12668 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -670,6 +670,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+>>  		value |= soc->update_fc_val;
+>>  		writel(value, port->base + RP_VEND_XP);
+>>  	}
+>> +
+>> +	/*
+>> +	 * PCIe link doesn't come up with few legacy PCIe endpoints
+>> +	 * if root port advertises both Gen-1 and Gen-2 speeds.
+>> +	 * Hence, the strategy followed here is to initially advertise
+>> +	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
+>> +	 */
+>> +	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
+>> +	value &= ~PCI_EXP_LNKSTA_CLS;
+>> +	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
+>> +	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
+>>  }
+>>  
+>>  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+> This looks like it's related to the earlier patch that adds support for
+> retraining the link at Gen-2. As such, I think the two patches should be
+> moved closer together to make that more obvious.
+>
+> Also, perhaps even the order needs to be changed. For example, if the
+> earlier patch enables advertisement of Gen-2, then there will be a
+> period of 10 or so patches where the above devices wouldn't work. So if
+> this fixes an error introduced by an earlier patch, it makes sense to
+> resort the patches so that we first fix the potential error and then
+> introduce the code that would cause the error to happen.
+>
+> Thierry
+Both are independent patches. Even though HW init Target speed is Gen2, Tegra
+PCIe gets the link up in Gen1 only because HW autonomous speed change feature
+is not available. After link up in Gen1 SW has to retrain the link to Gen2, which is
+done in 4/30. Current patch changes the HW init value of Target speed to Gen1,
+to support the cards mentioned in commit message.
