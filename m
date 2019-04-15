@@ -1,83 +1,85 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 17/30] PCI: tegra: Use switch statements in tegra_pcie_isr()
-Date: Thu, 11 Apr 2019 22:33:42 +0530
-Message-ID: <20190411170355.6882-18-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=S1EI=SR=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v6 10/13] media: dt-bindings: tvp5150: cleanup bindings stlye
+Date: Mon, 15 Apr 2019 14:44:10 +0200
+Message-Id: <20190415124413.18456-11-m.felsch@pengutronix.de>
+In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
+References: <20190415124413.18456-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
+Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Use switch statements in tegra_pcie_isr() for better code readability.
+Use underlines to highlight optional and required properties. This is
+quite common for all bindings. Align descriptions and start sentence
+with uppercase letter. Also reword the usage of the required
+endpoint properties for the output port in case BT.656 should be used.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pci-tegra.c | 37 ++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
+ .../devicetree/bindings/media/i2c/tvp5150.txt | 30 +++++++++++--------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index cdaaf13a9fd7..cf2715065a53 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -842,36 +842,39 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
- 	};
- 	struct tegra_pcie *pcie = arg;
- 	struct device *dev = pcie->dev;
--	u32 code, signature;
-+	u32 code, signature, fpci;
-+	u64 address;
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index bdd273d8b44d..82fff80fa63a 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -5,12 +5,14 @@ The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
+ with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
  
- 	code = afi_readl(pcie, AFI_INTR_CODE) & AFI_INTR_CODE_MASK;
- 	signature = afi_readl(pcie, AFI_INTR_SIGNATURE);
- 	afi_writel(pcie, 0, AFI_INTR_CODE);
+ Required Properties:
+-- compatible: value must be "ti,tvp5150"
+-- reg: I2C slave address
++====================
++- compatible:	Value must be "ti,tvp5150".
++- reg:		I2C slave address.
  
--	if (code == AFI_INTR_LEGACY)
--		return IRQ_NONE;
--
- 	if (code >= ARRAY_SIZE(err_msg))
--		code = 0;
-+		return IRQ_NONE;
+ Optional Properties:
+-- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
+-- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
++====================
++- pdn-gpios:	Phandle for the GPIO connected to the PDN pin, if any.
++- reset-gpios:	Phandle for the GPIO connected to the RESETB pin, if any.
  
-+	switch (code) {
-+	case AFI_INTR_LEGACY:
-+		return IRQ_NONE;
- 	/*
- 	 * do not pollute kernel log with master abort reports since they
- 	 * happen a lot during enumeration
- 	 */
--	if (code == AFI_INTR_MASTER_ABORT)
-+	case AFI_INTR_MASTER_ABORT:
- 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
--	else
-+		fpci = afi_readl(pcie, AFI_UPPER_FPCI_ADDRESS) & 0xff;
-+		address = (u64)fpci << 32 | (signature & 0xfffffffc);
-+		dev_dbg(dev, "  FPCI address: %10llx\n", address);
-+		break;
-+	case AFI_INTR_TARGET_ABORT:
-+	case AFI_INTR_FPCI_DECODE_ERROR:
- 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
--
--	if (code == AFI_INTR_TARGET_ABORT || code == AFI_INTR_MASTER_ABORT ||
--	    code == AFI_INTR_FPCI_DECODE_ERROR) {
--		u32 fpci = afi_readl(pcie, AFI_UPPER_FPCI_ADDRESS) & 0xff;
--		u64 address = (u64)fpci << 32 | (signature & 0xfffffffc);
--
--		if (code == AFI_INTR_MASTER_ABORT)
--			dev_dbg(dev, "  FPCI address: %10llx\n", address);
--		else
--			dev_err(dev, "  FPCI address: %10llx\n", address);
-+		fpci = afi_readl(pcie, AFI_UPPER_FPCI_ADDRESS) & 0xff;
-+		address = (u64)fpci << 32 | (signature & 0xfffffffc);
-+		dev_err(dev, "  FPCI address: %10llx\n", address);
-+		break;
-+	default:
-+		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
-+		break;
- 	}
+ The device node must contain one 'port' child node per device physical input
+ and output port, in accordance with the video interface bindings defined in
+@@ -24,9 +26,8 @@ are numbered as follows
+ 	  Y-OUT		src		2
  
- 	return IRQ_HANDLED;
+ The device node must contain at least one sink port and the src port. Each input
+-port must be linked to an endpoint defined in
+-Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
+-port/connector layout is as follows
++port must be linked to an endpoint defined in [1]. The port/connector layout is
++as follows
+ 
+ tvp-5150 port@0 (AIP1A)
+ 	endpoint@0 -----------> Comp0-Con  port
+@@ -37,14 +38,17 @@ tvp-5150 port@2
+ 	endpoint (video bitstream output at YOUT[0-7] parallel bus)
+ 
+ Required Endpoint Properties for parallel synchronization on output port:
++=========================================================================
+ 
+-- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
+-- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
+-- field-even-active: field signal level during the even field data
+-  transmission. Must be <0>.
++- hsync-active:		Active state of the HSYNC signal. Must be <1> (HIGH).
++- vsync-active:		Active state of the VSYNC signal. Must be <1> (HIGH).
++- field-even-active:	Field signal level during the even field data
++			transmission. Must be <0>.
+ 
+-If none of hsync-active, vsync-active and field-even-active is specified,
+-the endpoint is assumed to use embedded BT.656 synchronization.
++Note: Do not specify any of these properties if you want to use the embedded
++      BT.656 synchronization.
++
++[1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
+ 
+ Example - three input sources:
+ 
 -- 
-2.17.1
+2.20.1
