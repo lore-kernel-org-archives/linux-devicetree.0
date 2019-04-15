@@ -1,195 +1,119 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
-Date: Mon, 15 Apr 2019 07:58:17 -0700
-Message-ID: <8e0b801194e1a3e2961ccceeb9de5381@www.akkea.ca>
-References: <20190412130427.13418-1-angus@akkea.ca>
- <20190412130427.13418-2-angus@akkea.ca>
- <baef6ba37a7a8d6e4dec0cfbc4ab8252b1d7a3fa.camel@nxp.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add
+ Allwinner H6 compatible
+Date: Mon, 15 Apr 2019 17:06:21 +0200
+Message-ID: <20190415150621.rbuhtoqkdnwgze6s@core.my.home>
+References: <20190411214422.2267-1-peron.clem@gmail.com>
+ <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea>
+ <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+ <20190415081816.2pay4pioc5d4mojf@flea>
+ <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <baef6ba37a7a8d6e4dec0cfbc4ab8252b1d7a3fa.camel@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: matti.vaittinen@fi.rohmeurope.com, dl-linux-imx <linux-imx@nxp.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, Robin Gong <yibin.gong@nxp.com>, kernel@pengutronix.de, s.hauer@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB3532LSQKGQESZMJURI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-04-12 07:39, Leonard Crestez wrote:
-> On Fri, 2019-04-12 at 07:04 -0600, Angus Ainslie (Purism) wrote:
->> +&i2c1 {
->> +       clock-frequency = <400000>;
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pinctrl_i2c1>;
->> +       status = "okay";
->> +
->> +       pmic: pmic@4b {
->> +               reg = <0x4b>;
->> +               compatible = "rohm,bd71837";
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&pinctrl_pmic>;
->> +               clocks = <&pmic_osc>;
->> +               clock-names = "osc";
->> +               clock-output-names = "pmic_clk";
->> +               interrupt-parent = <&gpio1>;
->> +               interrupts = <3 GPIO_ACTIVE_LOW>;
->> +               interrupt-names = "irq";
->> +               rohm,reset-snvs-powered;
->> +
->> +               gpo {
->> +                       /* 0b0000_1100 all gpos with cmos output mode
->> */
->> +                       rohm,drv = <0x0C>;
->> +               };
-> 
-> After searching for this gpo/rohm,drv property it does not seem to be
-> documented or handled anywhere?
-> 
-> Should probably just drop.
+Hi Clement,
 
-Right I can't find it in the driver either. I'll drop it.
+On Mon, Apr 15, 2019 at 10:30:38AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> On Mon, 15 Apr 2019 at 10:18, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> w=
+rote:
+> >
+> > On Mon, Apr 15, 2019 at 10:09:11AM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
+:
+> > > Hi,
+> > >
+> > > On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard-LDxbnhwyfcKIwRZHo2/mJg@public.gmane.org=
+m> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=C3=A9ment P=C3=A9ron w=
+rote:
+> > > > > Allwinner H6 has a SPDIF controller with an increase of the fifo
+> > > > > size and the possibility to output the master clock.
+> > > > > However it's still compatible with the already existing driver fo=
+r
+> > > > > Allwiner H3.
+> > > > >
+> > > > > Add this compatible in the device-tree bindings documentation.
+> > > >
+> > > > How was this tested?
+> > >
+> > > Using Alsa utils on a Beelink GS1 and I check correct output sound on
+> > > my home cinema.
+> > >
+> > > > After looking at the datasheet, it looks like it's still significan=
+tly
+> > > > different. In particular:
+> > > >
+> > > >   - The MCLK divider isn't at the same offset
+> > >
+> > > We don't use the MCLK
+> > >
+> > > >   - The bits to flush the FIFO aren't at the same offset
+> > > >   - The FIFO trigger levels aren't at the same offset
+> > > >   - The FIFO status register layout is almost entirely different
+> > >
+> > > We use DMA not FIFO
+> >
+> > Well, DMA still uses the FIFOs. And even then, you're kind of missing
+> > the point. The device tree's compatible is about whether a particular
+> > device can be used as another one. How you are using it in the driver
+> > is completely irrelevant.
+>=20
+> Sorry I meant " We use DMA not PIO".
+>=20
+> I didn't change the driver and the SPDIF is working what's irrelevant
+> in declaring the driver as compatible ?
+>
+> If some feature are missing they can be introduce later as there is a
+> special binding for H6 no ?
 
-Thanks
-Angus
+You have to drop fallback to allwinner,sun8i-h3-spdif at the very least:
 
-> 
->> +               regulators {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +
->> +                       buck1_reg: BUCK1@0 {
->> +                               reg = <0>;
->> +                               regulator-name = "buck1";
->> +                               regulator-min-microvolt = <700000>;
->> +                               regulator-max-microvolt = <1300000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                               regulator-ramp-delay = <1250>;
->> +                               rohm,dvs-run-voltage = <900000>;
->> +                               rohm,dvs-idle-voltage = <850000>;
->> +                               rohm,dvs-suspend-voltage = <800000>;
->> +                       };
->> +
->> +                       buck2_reg: BUCK2@1 {
->> +                               reg = <1>;
->> +                               regulator-name = "buck2";
->> +                               regulator-min-microvolt = <700000>;
->> +                               regulator-max-microvolt = <1300000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                               regulator-ramp-delay = <1250>;
->> +                               rohm,dvs-run-voltage = <1000000>;
->> +                               rohm,dvs-idle-voltage = <900000>;
->> +                       };
->> +
->> +                       buck3_reg: BUCK3@2 {
->> +                               reg = <2>;
->> +                               regulator-name = "buck3";
->> +                               regulator-min-microvolt = <700000>;
->> +                               regulator-max-microvolt = <1300000>;
->> +                               rohm,dvs-run-voltage = <1000000>;
->> +                       };
->> +
->> +                       buck4_reg: BUCK4@3 {
->> +                               reg = <3>;
->> +                               regulator-name = "buck4";
->> +                               regulator-min-microvolt = <700000>;
->> +                               regulator-max-microvolt = <1300000>;
->> +                               rohm,dvs-run-voltage = <1000000>;
->> +                       };
->> +
->> +                       buck5_reg: BUCK5@4 {
->> +                               reg = <4>;
->> +                               regulator-name = "buck5";
->> +                               regulator-min-microvolt = <700000>;
->> +                               regulator-max-microvolt = <1350000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       buck6_reg: BUCK6@5 {
->> +                               reg = <5>;
->> +                               regulator-name = "buck6";
->> +                               regulator-min-microvolt = <3000000>;
->> +                               regulator-max-microvolt = <3300000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       buck7_reg: BUCK7@6 {
->> +                               reg = <6>;
->> +                               regulator-name = "buck7";
->> +                               regulator-min-microvolt = <1605000>;
->> +                               regulator-max-microvolt = <1995000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       buck8_reg: BUCK8@7 {
->> +                               reg = <7>;
->> +                               regulator-name = "buck8";
->> +                               regulator-min-microvolt = <800000>;
->> +                               regulator-max-microvolt = <1400000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       ldo1_reg: LDO1@8 {
->> +                               reg = <8>;
->> +                               regulator-name = "ldo1";
->> +                               regulator-min-microvolt = <3000000>;
->> +                               regulator-max-microvolt = <3300000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       ldo2_reg: LDO2@9 {
->> +                               reg = <9>;
->> +                               regulator-name = "ldo2";
->> +                               regulator-min-microvolt = <900000>;
->> +                               regulator-max-microvolt = <900000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       ldo3_reg: LDO3@10 {
->> +                               reg = <10>;
->> +                               regulator-name = "ldo3";
->> +                               regulator-min-microvolt = <1800000>;
->> +                               regulator-max-microvolt = <3300000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       ldo4_reg: LDO4@11 {
->> +                               reg = <11>;
->> +                               regulator-name = "ldo4";
->> +                               regulator-min-microvolt = <900000>;
->> +                               regulator-max-microvolt = <1800000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +
->> +                       ldo5_reg: LDO5@12 {
->> +                               reg = <12>;
->> +                               regulator-name = "ldo5";
->> +                               regulator-min-microvolt = <1800000>;
->> +                               regulator-max-microvolt = <3300000>;
->> +                       };
->> +
->> +                       ldo6_reg: LDO6@13 {
->> +                               reg = <13>;
->> +                               regulator-name = "ldo6";
->> +                               regulator-min-microvolt = <900000>;
->> +                               regulator-max-microvolt = <1800000>;
->> +                       };
->> +
->> +                       ldo7_reg: LDO7@14 {
->> +                               reg = <14>;
->> +                               regulator-name = "ldo7";
->> +                               regulator-min-microvolt = <1800000>;
->> +                               regulator-max-microvolt = <3300000>;
->> +                       };
->> +               };
->> +       };
++                       #sound-dai-cells =3D <0>;
++                       compatible =3D "allwinner,sun50i-h6-spdif",
++                                    "allwinner,sun8i-h3-spdif";
++                       reg =3D <0x05093000 0x400>;
+
+If the H6 hardware doesn't just implement some optional superset of what H3
+does.
+
+regards,
+	o.
+
+> Clement
+>=20
+> >
+> > Maxime
+> >
+> > --
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
