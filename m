@@ -1,27 +1,82 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Mon, 15 Apr 2019 08:42:36 -0400
-Message-ID: <20190415124236.GA1910@basecamp>
-References: <20190415072905.2861-1-masneyb@onstation.org>
- <20190415072905.2861-3-masneyb@onstation.org>
- <051b5306-9dab-6249-9e41-b815dce1f2e2@ti.com>
+From: David Bauer <mail@david-bauer.net>
+Subject: [PATCH 3/3] net: mdio: rename mdio_device reset to reset_gpio
+Date: Mon, 15 Apr 2019 14:38:40 +0200
+Message-ID: <20190415123840.31407-3-mail@david-bauer.net>
+References: <20190415123840.31407-1-mail@david-bauer.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <051b5306-9dab-6249-9e41-b815dce1f2e2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190415123840.31407-1-mail@david-bauer.net>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 07:10:04AM -0500, Dan Murphy wrote:
-> I noticed we are missing "label".  It is defined as optional and it is hard coded in the driver
-> but wondering if there is a need to add it.
+This renames the GPIO reset of mdio devices from 'reset' to
+'reset_gpio' to better differentiate between GPIO and
+reset-controller driven reset line.
 
-OK, I'll make it optional and have it fall back to the hardcoded values
-if it is missing.
+Signed-off-by: David Bauer <mail@david-bauer.net>
+---
+ drivers/net/phy/mdio_bus.c    | 6 +++---
+ drivers/net/phy/mdio_device.c | 6 +++---
+ include/linux/mdio.h          | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-Thanks for the quick feedback on this patch and the other one.
-
-Brian
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 7590645f19ef..d1087bd24c83 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -56,7 +56,7 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
+ 			return PTR_ERR(gpiod);
+ 	}
+ 
+-	mdiodev->reset = gpiod;
++	mdiodev->reset_gpio = gpiod;
+ 
+ 	/* Assert the reset signal again */
+ 	mdio_device_reset(mdiodev, 1);
+@@ -471,8 +471,8 @@ void mdiobus_unregister(struct mii_bus *bus)
+ 		if (!mdiodev)
+ 			continue;
+ 
+-		if (mdiodev->reset)
+-			gpiod_put(mdiodev->reset);
++		if (mdiodev->reset_gpio)
++			gpiod_put(mdiodev->reset_gpio);
+ 
+ 		mdiodev->device_remove(mdiodev);
+ 		mdiodev->device_free(mdiodev);
+diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
+index 57668e0f9256..e282600bd83e 100644
+--- a/drivers/net/phy/mdio_device.c
++++ b/drivers/net/phy/mdio_device.c
+@@ -117,11 +117,11 @@ void mdio_device_reset(struct mdio_device *mdiodev, int value)
+ {
+ 	unsigned int d;
+ 
+-	if (!mdiodev->reset && !mdiodev->reset_ctrl)
++	if (!mdiodev->reset_gpio && !mdiodev->reset_ctrl)
+ 		return;
+ 
+-	if (mdiodev->reset)
+-		gpiod_set_value(mdiodev->reset, value);
++	if (mdiodev->reset_gpio)
++		gpiod_set_value(mdiodev->reset_gpio, value);
+ 
+ 	if (mdiodev->reset_ctrl) {
+ 		if (value)
+diff --git a/include/linux/mdio.h b/include/linux/mdio.h
+index 6eaf71500ef6..9dc16d5705a1 100644
+--- a/include/linux/mdio.h
++++ b/include/linux/mdio.h
+@@ -39,7 +39,7 @@ struct mdio_device {
+ 	/* Bus address of the MDIO device (0-31) */
+ 	int addr;
+ 	int flags;
+-	struct gpio_desc *reset;
++	struct gpio_desc *reset_gpio;
+ 	struct reset_control *reset_ctrl;
+ 	unsigned int reset_assert_delay;
+ 	unsigned int reset_deassert_delay;
+-- 
+2.21.0
