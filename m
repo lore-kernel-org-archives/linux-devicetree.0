@@ -1,28 +1,136 @@
-Return-Path: <SRS0=9N3P=SS=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V12 4/5] defconfig: arm64: add i.MX system controller thermal
- support
-Date: Tue, 16 Apr 2019 03:22:33 +0000
-Message-ID: <1555384609-7030-4-git-send-email-Anson.Huang@nxp.com>
-References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=gys9=SR=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 11/30] PCI: tegra: Increase the deskew retry time
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-12-mmaddireddy@nvidia.com> <20190415113918.GL29254@ulmo>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <e7a8746e-484a-03b1-bec1-ee026d0651f0@nvidia.com>
+Date: Mon, 15 Apr 2019 20:28:54 +0530
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "agross@kernel.org" <agross@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <20190415113918.GL29254@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-VGhpcyBwYXRjaCBlbmFibGVzIENPTkZJR19JTVhfU0NfVEhFUk1BTCBhcyBtb2R1bGUuDQoNClNp
-Z25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQpObyBj
-aGFuZ2UuDQotLS0NCiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIHwgMSArDQogMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2NvbmZp
-Z3MvZGVmY29uZmlnIGIvYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZw0KaW5kZXggMTdkYWE5
-Ny4uZmJlM2JlNyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCisr
-KyBiL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCkBAIC00MjUsNiArNDI1LDcgQEAgQ09O
-RklHX1NFTlNPUlNfSU5BMlhYPW0NCiBDT05GSUdfVEhFUk1BTF9HT1ZfUE9XRVJfQUxMT0NBVE9S
-PXkNCiBDT05GSUdfQ1BVX1RIRVJNQUw9eQ0KIENPTkZJR19USEVSTUFMX0VNVUxBVElPTj15DQor
-Q09ORklHX0lNWF9TQ19USEVSTUFMPW0NCiBDT05GSUdfUk9DS0NISVBfVEhFUk1BTD1tDQogQ09O
-RklHX1JDQVJfVEhFUk1BTD15DQogQ09ORklHX1JDQVJfR0VOM19USEVSTUFMPXkNCi0tIA0KMi43
-LjQNCg0K
+
+
+On 15-Apr-19 5:09 PM, Thierry Reding wrote:
+> On Thu, Apr 11, 2019 at 10:33:36PM +0530, Manikanta Maddireddy wrote:
+>> Some times link speed change from Gen2 to Gen1 fails due to instability
+> "Sometimes"
+>
+>> in deskew logic on lane-0 in Tegra210. Increase the deskew retry time
+>> to resolve this issue.
+>>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  drivers/pci/controller/pci-tegra.c | 28 ++++++++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index f785ecae2f6b..9e61da68cfae 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -209,6 +209,10 @@
+>>  #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
+>>  #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
+>>  
+>> +#define RP_VEND_CTL0	0x00000f44
+>> +#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
+>> +#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH	(0x9 << 12)
+>> +
+>>  #define RP_VEND_CTL1	0x00000f48
+>>  #define  RP_VEND_CTL1_ERPT	(1 << 13)
+>>  
+>> @@ -304,6 +308,7 @@ struct tegra_pcie_soc {
+>>  	bool force_pca_enable;
+>>  	bool program_uphy;
+>>  	bool update_clamp_threshold;
+>> +	bool program_deskew_time;
+>>  	struct {
+>>  		struct {
+>>  			u32 rp_ectl_2_r1;
+>> @@ -615,6 +620,23 @@ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+>>  	writel(val, port->base + RP_ECTL_6_R2);
+>>  }
+>>  
+>> +static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+>> +{
+>> +	const struct tegra_pcie_soc *soc = port->pcie->soc;
+>> +	u32 value;
+>> +
+>> +	/*
+>> +	 * Tune deskew retry time to take care of Gen2 -> Gen1
+>> +	 * link speed change error in corner cases
+>> +	 */
+>> +	if (soc->program_deskew_time) {
+>> +		value = readl(port->base + RP_VEND_CTL0);
+>> +		value &= ~RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK;
+>> +		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
+>> +		writel(value, port->base + RP_VEND_CTL0);
+>> +	}
+>> +}
+>> +
+>>  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+>>  {
+>>  	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
+>> @@ -643,6 +665,7 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+>>  	tegra_pcie_enable_rp_features(port);
+>>  	if (soc->ectl.enable)
+>>  		tegra_pcie_program_ectl_settings(port);
+>> +	tegra_pcie_apply_sw_fixup(port);
+> Blank line between the above two for readability.
+>
+> Thierry
+I will take care of all the comments in V2
+
+Manikanta
+>
+>>  }
+>>  
+>>  static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+>> @@ -2357,6 +2380,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+>>  	.force_pca_enable = false,
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = false,
+>> +	.program_deskew_time = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2382,6 +2406,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+>>  	.force_pca_enable = false,
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = false,
+>> +	.program_deskew_time = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2400,6 +2425,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+>>  	.force_pca_enable = false,
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = true,
+>> +	.program_deskew_time = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> @@ -2418,6 +2444,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+>>  	.force_pca_enable = true,
+>>  	.program_uphy = true,
+>>  	.update_clamp_threshold = true,
+>> +	.program_deskew_time = true,
+>>  	.ectl.regs.rp_ectl_2_r1 = 0x0000000f,
+>>  	.ectl.regs.rp_ectl_4_r1 = 0x00000067,
+>>  	.ectl.regs.rp_ectl_5_r1 = 0x55010000,
+>> @@ -2451,6 +2478,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+>>  	.force_pca_enable = false,
+>>  	.program_uphy = false,
+>>  	.update_clamp_threshold = false,
+>> +	.program_deskew_time = false,
+>>  	.ectl.enable = false,
+>>  };
+>>  
+>> -- 
+>> 2.17.1
+>>
