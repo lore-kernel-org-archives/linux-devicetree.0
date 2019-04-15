@@ -1,91 +1,40 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
- to DT
-Date: Mon, 15 Apr 2019 13:54:58 +0200
-Message-ID: <CAMpxmJUG+7ENUCnooexWKMwoq+zCuRsV_Y54un7omumk9nJguA@mail.gmail.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-2-brgl@bgdev.pl>
- <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com> <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
- <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com> <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
- <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: Device Description for FPGA Components on x86 system
+Date: Mon, 15 Apr 2019 13:55:49 +0200
+Message-ID: <08e60e79-8ae3-06ac-779e-d4d99e0ed846@metux.net>
+References: <1629227.alSmCsHHUc@pcbe13614> <6563205.xRkLC0driV@pcbe13614>
+ <dae0b7ba500cc03fab23956eac85ca79@sw-optimization.com>
+ <31100498.IIhqzTXyFT@pcbe13614>
+ <CANk1AXSQCFGE94R8ZxVSF2Gp+diCHJhFJPSVSx+iEyWp2URcpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
+In-Reply-To: <CANk1AXSQCFGE94R8ZxVSF2Gp+diCHJhFJPSVSx+iEyWp2URcpw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Alan Tull <atull@kernel.org>, Federico Vaga <federico.vaga@cern.ch>
+Cc: Eric Schwarz <eas@sw-optimization.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-x86_64@vger.kernel.org, linux-fpga-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-pon., 15 kwi 2019 o 12:21 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
-> > pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
-> >>
-> >> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
-> >>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a)=
-:
-> >>>>
-> >>>> Hi Bartosz,
-> >>>>
-> >>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> >>>>> From: David Lechner <david@lechnology.com>
-> >>>>>
-> >>>>> This adds a cpu node and operating points to the common da850.dtsi =
-file.
-> >>>>>
-> >>>>> Additionally, a regulator is added to the LEGO EV3 board along with
-> >>>>> some board-specific CPU configuration.
-> >>>>>
-> >>>>> Regulators need to be hooked up on other boards to get them working=
-.
-> >>>>>
-> >>>>> Signed-off-by: David Lechner <david@lechnology.com>
-> >>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>>
-> >>>> I remember you mentioning about some problems using OCHI and cpufreq
-> >>>> together. Are those resolved now? CPU PLL on DA850 can affect other
-> >>>> peripheral clock frequencies too. So enabling it should really be a
-> >>>> per-board decision.
-> >>>>
-> >>>
-> >>> The problems are still there. I've never been able to find the
-> >>> culprit, but it also occurs on TI BSP in the same way (a couple
-> >>> cpufreq transitions will make the controller unresponsive).
-> >>
-> >> Is that on LCDK as well? As I recall cpufreq was never enabled on LCDK
-> >> in TI BSP.
-> >>
-> >
-> > Yes, I just verified that the bug occurs on LCDK with patches from this=
- series.
-> >
-> >> If the OHCI problem is present on LCDK, then there is a user visible
-> >> regression on mainline after this patch. Lets enable cpufreq in LCDK
-> >> only if all working peripherals keep working afterwards.
-> >>
-> >
-> > The OHCI driver doesn't register any cpufreq transition notifier
-> > callbacks. I can't really find anything in the datasheet, but I'm
-> > wondering if we shouldn't do something similar to what the driver for
-> > davinci i2c controller does. I'll try a couple things tomorrow.
->
-> Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
-> not sure the benefits of just frequency scaling will be justifiable enoug=
-h.
->
-> Fixing the OHCI issue may help in other boards like da850-evm use it
-> though. So that will be a good thing.
->
-> How do you feel about keeping all OPPs disabled by default in da850.dtsi
-> and enabling only the ones that make sense for a board in <board>.dts?
->
-> Empty OPP table is illegal, so this does mean that every board must
-> enable at least one OPP.
->
+On 10.04.19 16:21, Alan Tull wrote:
 
-I guess in that case we'd need to make 300 MHz the default for
-da850-evm, but on da850-lcdk I'd go for 456 MHz (due to the regulator
-being fixed anyway).
+> I wish I could point you to a complete solution, but there is a lot of> work to be done in this area.  Most of what is in the kernel is a low>
+level in-kernel API [4].  As you correctly state, the hardest part of>
+this is doing the enumerating if you are on x86 and aren't using>
+devicetree.
+ACK. I believe, introducing oftree the right way to go. I've got that
+on my 2do list, too, but yet too busy w/ other things. So, if you'd
+like to work on that, I'd highly appreciate that.
 
-Bart
+I'd like to also use oftree overlays for some platform drivers that
+essentially just initialize/wire up generic drivers to perform some
+board specific function (eg. drivers/platform/x86/pcengines-apuv2.c).
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
