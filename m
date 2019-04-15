@@ -1,176 +1,96 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
- driver
-Date: Mon, 15 Apr 2019 22:57:45 +0300
-Message-ID: <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: power: supply: Add
+ charge-status-gpios property
+Date: Mon, 15 Apr 2019 22:09:51 +0200
+Message-ID: <20190415200951.jcp2ksfn7osucyxh@earth.universe>
+References: <20190414124039.10040-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gcnw5pz23wsfch2f"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <20190414124039.10040-1-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
+To: Artur Rojek <contact@artur-rojek.eu>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch name is somewhat misleading -- there's no "MFD controller".
 
-On 04/15/2019 10:37 AM, Mason Yang wrote:
+--gcnw5pz23wsfch2f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-[...]
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 26ad646..7914349 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -978,6 +978,15 @@ config MFD_RDC321X
->  	  southbridge which provides access to GPIOs and Watchdog using the
->  	  southbridge PCI device configuration space.
->  
-> +config MFD_RENESAS_RPC
-> +	tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
-> +	select MFD_CORE
-> +	depends on ARCH_RENESAS
-> +	help
-> +	  This supports for Renesas R-Car Gen3 RPC-IF multifunction device
+Hi,
 
-   "For" node needed here.
+On Sun, Apr 14, 2019 at 02:40:38PM +0200, Artur Rojek wrote:
+> Add documentation for the "charge-status-gpios" property.
+> Update the "gpios" property with a valid example.
+>=20
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
 
-> +	  controller which provides either SPI host controller or HyperFlash.
-> +	  You have to select individual components under the corresponding menu.
+Thanks, both queued.
+
+-- Sebastian
+
+>=20
+> Changes:
+>=20
+> v2: - add a better description for the "status-gpios" property,
+>     - add valid examples for the "gpios" and "status-gpios" properties
+>=20
+> v3: rename the "status-gpios" property to "charge-status-gpios"
+>=20
+>  .../devicetree/bindings/power/supply/gpio-charger.txt       | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.=
+txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> index adbb5dc5b6e9..30349332f051 100644
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> @@ -14,12 +14,16 @@ Required properties :
+>       usb-cdp (USB charging downstream port)
+>       usb-aca (USB accessory charger adapter)
+> =20
+> +Optional properties:
+> + - charge-status-gpios: GPIO indicating whether a battery is charging.
 > +
->  config MFD_RT5033
->  	tristate "Richtek RT5033 Power Management IC"
->  	depends on I2C
-[...]
-> diff --git a/drivers/mfd/renesas-rpc.c b/drivers/mfd/renesas-rpc.c
-> new file mode 100644
-> index 0000000..a565f31
-> --- /dev/null
-> +++ b/drivers/mfd/renesas-rpc.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
-> +// Copyright (C) 2019 Macronix International Co., Ltd.
-> +//
-> +// R-Car Gen3 RPC-IF MFD driver
-> +//
-> +// Author:
-> +//	Mason Yang <masonccyang@mxic.com.tw>
-> +//
-> +
-> +#include <linux/mfd/renesas-rpc.h>
-> +#include <linux/mfd/core.h>
-> +
-> +static const struct mfd_cell rpc_hf_ctlr = {
-> +	.name = "rpc-hf",
-> +	.of_compatible = "renesas,rcar-rpc-hf",
+>  Example:
+> =20
+>  	usb_charger: charger {
+>  		compatible =3D "gpio-charger";
+>  		charger-type =3D "usb-sdp";
+> -		gpios =3D <&gpf0 2 0 0 0>;
+> +		gpios =3D <&gpd 28 GPIO_ACTIVE_LOW>;
+> +		charge-status-gpios =3D <&gpc 27 GPIO_ACTIVE_LOW>;
+>  	}
+> =20
+>  	battery {
+> --=20
+> 2.21.0
+>=20
 
-   Don't need this line any more...
+--gcnw5pz23wsfch2f
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +};
-> +
-> +static const struct mfd_cell rpc_spi_ctlr = {
-> +	.name = "rpc-spi",
-> +	.of_compatible = "renesas,rcar-rpc-spi",
+-----BEGIN PGP SIGNATURE-----
 
-   ... and this too.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly05QsACgkQ2O7X88g7
++pqdGA/+KsYQL0q2WUeGM35ujw9cogRo7OFQO4V0JOEYvGAB/ZoTEUqoVYOTi+aq
+V/I4c+WDh2I5o74/QY+zCuyQJtxkO5/DWWQoiOteXX91UW6siSHu4oosm0GRYRKJ
+H9fjYcNcpBN8UCtOMezNdKbhPdA2oPc4OZWQp0qsu5Jab7QNPEHgHuz5E8FQ4pLU
+ZiihiBLkWAR5RnwB3LB6w9v+xk8+NAQc5Wve0uGo3cu0MreP+hQbnp5wGD1RjOj6
+dTrtZYgfV4U0gofRrrZfS+Scg2QGNTKtzSmEVd5Qtbx6DxUCGSPGilglJX4hu2Qr
+Ww7GHW0Nd3nHvhxr3y6ugY9tYOw+dPQhmLbV+DaIqTa97F8D2YJBDQ4bxGuYTaZu
+K9w87Kcl8XmEyeXMj/T43dylLGA3NiCAxK4PUAN69SRpbJqjpUkaw6l5kxRSYYtg
+Mio17MIwwz01Q0+By6AHwmEbuVJ0OJYh47ezF4zDWDAMvf9WiuVfsUPmpujUleLY
+R1elh5wEHTH4rgVlRIXwkH8Zy+oYL3v/LpJ/1q4CJsFlC46nCdq0sJbnfPlTA+bE
+xHqsKc4knclLHaSqlVrGORnlPZch0TD66VSHcXHnrHdq2x5/9tHgTL+sT2gj1Ekl
+48vRc0rCLWGAa0KCzFCG2LhLzZmVELZZ19T7+bXZcdqigHlZZ6A=
+=1Nfv
+-----END PGP SIGNATURE-----
 
-[...]
-> +static int rpc_mfd_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *flash;
-> +	const struct mfd_cell *cell;
-> +	struct resource *res;
-> +	struct rpc_mfd *rpc;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	flash = of_get_next_child(pdev->dev.of_node, NULL);
-> +	if (!flash) {
-> +		dev_warn(&pdev->dev, "no flash node found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = of_device_is_compatible(flash, "jedec,spi-nor");
-> +	if (ret) {
-> +		cell = &rpc_spi_ctlr;
-> +	} else {
-> +		ret = of_device_is_compatible(flash, "cfi-flash");
-> +		if (ret) {
-> +			cell = &rpc_hf_ctlr;
-> +		} else {
-> +			dev_warn(&pdev->dev, "no jedec spi/cfi device found\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-
-
-   This definitely should look simpler, like below:
-
-	if (of_device_is_compatible(flash, "jedec,spi-nor")) {
- 		cell = &rpc_spi_ctlr;
-	} else if (of_device_is_compatible(flash, "cfi-flash")) {
-		cell = &rpc_hf_ctlr;
- 	} else {
-		dev_warn(&pdev->dev, "unknown flash type\n");
-		return -ENODEV;
-	}
-
-[...]
-
-> +	ret = devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
-> +
-> +	return ret;
-
-	return devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
-
-[...]
-> diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/renesas-rpc.h
-> new file mode 100644
-> index 0000000..61ada14
-> --- /dev/null
-> +++ b/include/linux/mfd/renesas-rpc.h
-> @@ -0,0 +1,153 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
-> +// Copyright (C) 2019 Macronix International Co., Ltd.
-> +//
-> +// R-Car Gen3 RPC-IF MFD driver
-> +//
-> +// Author:
-> +//	Mason Yang <masonccyang@mxic.com.tw>
-> +//
-> +
-> +#ifndef __MFD_RENESAS_RPC_H
-> +#define __MFD_RENESAS_RPC_H
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/log2.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-
-   NAK. I have already told you that these #include's are only needed in the
-drivers, not in this header.
-
-   My idea is to contain all hardware manipulation in the MFD driver,
-with SPI/HF drivers calling that code via a set of APIs declared in this header.
-The registers (declared below) would end up only needed by that common MFD driver...
-
-[...]
-
-MBR, Sergei
+--gcnw5pz23wsfch2f--
