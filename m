@@ -1,116 +1,52 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
-Date: Mon, 15 Apr 2019 18:30:10 +0200
-Message-ID: <CAJiuCcdrQ64jC8UH1eDKKhFdcOtk=bkWTAzoYOQ1ut3He+j2GQ@mail.gmail.com>
-References: <20190411214422.2267-1-peron.clem@gmail.com> <20190411214422.2267-2-peron.clem@gmail.com>
- <20190415080443.frubh4ln4agrdsfe@flea> <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
- <20190415081816.2pay4pioc5d4mojf@flea> <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
- <20190415145135.fjbcaldwy7w3eqcs@flea>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Mon, 15 Apr 2019 19:49:24 +0300
+Message-ID: <907f2e87-1cb4-fa37-5406-82bf2bf71188@cogentembedded.com>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415145135.fjbcaldwy7w3eqcs@flea>
+In-Reply-To: <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/15/2019 10:37 AM, Mason Yang wrote:
 
-On Mon, 15 Apr 2019 at 16:51, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Mon, Apr 15, 2019 at 10:30:38AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > On Mon, 15 Apr 2019 at 10:18, Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > >
-> > > On Mon, Apr 15, 2019 at 10:09:11AM +0200, Cl=C3=A9ment P=C3=A9ron wro=
-te:
-> > > > Hi,
-> > > >
-> > > > On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard@bootlin.=
-com> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=C3=A9ment P=C3=A9ron=
- wrote:
-> > > > > > Allwinner H6 has a SPDIF controller with an increase of the fif=
-o
-> > > > > > size and the possibility to output the master clock.
-> > > > > > However it's still compatible with the already existing driver =
-for
-> > > > > > Allwiner H3.
-> > > > > >
-> > > > > > Add this compatible in the device-tree bindings documentation.
-> > > > >
-> > > > > How was this tested?
-> > > >
-> > > > Using Alsa utils on a Beelink GS1 and I check correct output sound =
-on
-> > > > my home cinema.
-> > > >
-> > > > > After looking at the datasheet, it looks like it's still signific=
-antly
-> > > > > different. In particular:
-> > > > >
-> > > > >   - The MCLK divider isn't at the same offset
-> > > >
-> > > > We don't use the MCLK
-> > > >
-> > > > >   - The bits to flush the FIFO aren't at the same offset
-> > > > >   - The FIFO trigger levels aren't at the same offset
-> > > > >   - The FIFO status register layout is almost entirely different
-> > > >
-> > > > We use DMA not FIFO
-> > >
-> > > Well, DMA still uses the FIFOs. And even then, you're kind of missing
-> > > the point. The device tree's compatible is about whether a particular
-> > > device can be used as another one. How you are using it in the driver
-> > > is completely irrelevant.
-> >
-> > Sorry I meant " We use DMA not PIO".
->
-> I'm still not quite sure what you mean. Both DMA and PIO would be
-> using the FIFOs.
+> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> new file mode 100644
+> index 0000000..bfb3d29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> @@ -0,0 +1,37 @@
+> +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
+> +-------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +		"renesas,rcar-gen3-rpc" as a fallback.
+> +		supported SoC-specific values are:
+> +		"renesas,r8a77995-rpc"	(R-Car D3)
+> +- reg: should contain 2 entries, one for the base address of rpc-if registers,
+> +	and one for the direct mapping area
+> +- reg-names: should contain "regs", and "dirmap"
 
-Just correcting myself but yes we use FIFO with the DMA.
+   The device tree describes the hardware, not the driver. Why did you remove
+the "wbuf" area?
 
->
-> > I didn't change the driver and the SPDIF is working what's irrelevant
-> > in declaring the driver as compatible ?
->
-> It's working by accident.
->
-> This won't work for example:
-> https://elixir.bootlin.com/linux/latest/source/sound/soc/sunxi/sun4i-spdi=
-f.c#L181
->
-> > If some feature are missing they can be introduce later as there is a
-> > special binding for H6 no ?
->
-> Again, that's irrelevant. The only question you need to ask yourself
-> is whether, if you take an imaginary source code that would support
-> all the H3 SPDIF features and run it on an H6, it works just as well.
->
-> The examples above that it's not the case, so you can't claim that the
-> device is compatible.
+[...]
 
-Is it ok if I fix the TX Fifo flush bit and remove the compatible with H3 ?
-(Looking at the driver this is the only bit used that is incompatible with =
-H6)
-
-Or should I send a new driver with the correct mapping ?
-
-Thanks
-Cl=C3=A9ment
-
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+MBR, Sergei
