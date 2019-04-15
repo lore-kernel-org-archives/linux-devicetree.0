@@ -1,63 +1,281 @@
-Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 0/7] Add USB3.0 and TI HD3SS3220 driver support
-Date: Tue, 16 Apr 2019 10:38:00 +0100
-Message-Id: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=+UXU=SR=sirena.org.uk=broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: Add support for stm32 power regulators" to the regulator tree
+In-Reply-To: <1555319855-2982-3-git-send-email-p.paillet@st.com>
+Message-Id: <20190415095850.30F0411279E1@debutante.sirena.org.uk>
+Date: Mon, 15 Apr 2019 10:58:50 +0100 (BST)
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>, broonie@kernel.orgbroonie@kernel.org, devicetree@vger.kernel.orgdevicetree@vger.kernel.org, lgirdwood@gmail.comlgirdwood@gmail.com, linux-arm-kernel@lists.infradead.orglinux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.comlinux-stm32, @st-md-mailman.stormreply.comMarkBrownbroonie@kernel.org, mark.rutland@arm.commark.rutland@arm.com, mcoquelin.stm32@gmail.commcoquelin.stm32@gmail.com, robh+dt@kernel.orgrobh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds USB 3.0 support for the CAT874 platform, including a
-new driver for the TI HD3SS3220 USB Type-C DRP port controller.
+The patch
 
-This patch series supports:
-1) Host hotplug operation
-2) Device hot plug operation
-3) USB type-C data_role switch
-   (Tested with 2 RZ/G2E boards connected with a Type-C cable)
+   regulator: Add support for stm32 power regulators
 
-This patchset is based on linux_next next-20190411 branch.
-V3-->V4
-  * Incorporated Chunfeng Yun's review comment
-    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
-  * Used fwnode API's to get roleswitch handle
+has been applied to the regulator tree at
 
-V2-->V3
-  * Used the new API to usb_role_switch by node to find the remote endpoint
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Added renesas,usb-role-switch property
-  * Incorporated shimoda-san's review comment
-    (https://patchwork.kernel.org/patch/10852507/)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
-V1-->V2
-  * Use USB role class instead of extcon to receive connect and disconnect
-    events and also for the dual role switch.
-  * Dropped patch 6
-  * Squashed patch 8 and patch 9
-  * https://patchwork.kernel.org/cover/10840641/
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Biju Das (7):
-  dt-bindings: usb: hd3ss3220 device tree binding document
-  dt-bindings: usb: renesas_usb3: Add renesas,usb-role-switch property
-  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
-  usb: gadget: udc: renesas_usb3: Use usb_role_switch framework
-  arm64: defconfig: enable TYPEC_HD3SS3220 config option
-  arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral
-    device node
-  arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
- .../devicetree/bindings/usb/renesas_usb3.txt       |  22 ++
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  37 +++
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |  56 +++++
- arch/arm64/configs/defconfig                       |   2 +
- drivers/usb/gadget/udc/renesas_usb3.c              | 126 ++++++++--
- drivers/usb/typec/Kconfig                          |  10 +
- drivers/usb/typec/Makefile                         |   1 +
- drivers/usb/typec/hd3ss3220.c                      | 263 +++++++++++++++++++++
- 8 files changed, 495 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 drivers/usb/typec/hd3ss3220.c
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
+
+>From 6cdae8173f6771977c3863bac7f1455c96bb1f6e Mon Sep 17 00:00:00 2001
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Date: Mon, 15 Apr 2019 09:17:38 +0000
+Subject: [PATCH] regulator: Add support for stm32 power regulators
+
+Add support for 1V1 1V8 USB3V3 power regulators.
+
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/Kconfig     |   7 ++
+ drivers/regulator/Makefile    |   1 +
+ drivers/regulator/stm32-pwr.c | 190 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 198 insertions(+)
+ create mode 100644 drivers/regulator/stm32-pwr.c
+
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index c4dc2bcafb56..6c37f0df9323 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -840,6 +840,13 @@ config REGULATOR_STM32_VREFBUF
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called stm32-vrefbuf.
+ 
++config REGULATOR_STM32_PWR
++	bool "STMicroelectronics STM32 PWR"
++	depends on ARCH_STM32 || COMPILE_TEST
++	help
++	  This driver supports internal regulators (1V1, 1V8, 3V3) in the
++	  STMicroelectronics STM32 chips.
++
+ config REGULATOR_STPMIC1
+ 	tristate "STMicroelectronics STPMIC1 PMIC Regulators"
+ 	depends on MFD_STPMIC1
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 1169f8a27d91..93f53840e8f1 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -105,6 +105,7 @@ obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
+ obj-$(CONFIG_REGULATOR_SC2731) += sc2731-regulator.o
+ obj-$(CONFIG_REGULATOR_SKY81452) += sky81452-regulator.o
+ obj-$(CONFIG_REGULATOR_STM32_VREFBUF) += stm32-vrefbuf.o
++obj-$(CONFIG_REGULATOR_STM32_PWR) += stm32-pwr.o
+ obj-$(CONFIG_REGULATOR_STPMIC1) += stpmic1_regulator.o
+ obj-$(CONFIG_REGULATOR_STW481X_VMMC) += stw481x-vmmc.o
+ obj-$(CONFIG_REGULATOR_SY8106A) += sy8106a-regulator.o
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+new file mode 100644
+index 000000000000..e434b26d4c8b
+--- /dev/null
++++ b/drivers/regulator/stm32-pwr.c
+@@ -0,0 +1,190 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) STMicroelectronics 2019
++// Authors: Gabriel Fernandez <gabriel.fernandez@st.com>
++//          Pascal Paillet <p.paillet@st.com>.
++
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++
++/*
++ * Registers description
++ */
++#define REG_PWR_CR3 0x0C
++
++#define USB_3_3_EN BIT(24)
++#define USB_3_3_RDY BIT(26)
++#define REG_1_8_EN BIT(28)
++#define REG_1_8_RDY BIT(29)
++#define REG_1_1_EN BIT(30)
++#define REG_1_1_RDY BIT(31)
++
++/* list of supported regulators */
++enum {
++	PWR_REG11,
++	PWR_REG18,
++	PWR_USB33,
++	STM32PWR_REG_NUM_REGS
++};
++
++u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
++	[PWR_REG11] = REG_1_1_RDY,
++	[PWR_REG18] = REG_1_8_RDY,
++	[PWR_USB33] = USB_3_3_RDY,
++};
++
++struct stm32_pwr_reg {
++	void __iomem *base;
++	const struct regulator_desc *desc;
++	u32 ready_mask;
++};
++
++int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
++{
++	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
++	u32 val;
++
++	val = readl_relaxed(priv->base + REG_PWR_CR3);
++
++	return (val & priv->ready_mask);
++}
++
++int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
++{
++	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
++	u32 val;
++
++	val = readl_relaxed(priv->base + REG_PWR_CR3);
++
++	return (val & priv->desc->enable_mask);
++}
++
++static int stm32_pwr_reg_enable(struct regulator_dev *rdev)
++{
++	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
++	int ret;
++	u32 val;
++
++	val = readl_relaxed(priv->base + REG_PWR_CR3);
++	val |= priv->desc->enable_mask;
++	writel_relaxed(val, priv->base + REG_PWR_CR3);
++
++	/* use an arbitrary timeout of 20ms */
++	ret = readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, val,
++				 100, 20 * 1000);
++	if (ret)
++		dev_err(&rdev->dev, "regulator enable timed out!\n");
++
++	return ret;
++}
++
++static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
++{
++	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
++	int ret;
++	u32 val;
++
++	val = readl_relaxed(priv->base + REG_PWR_CR3);
++	val &= ~priv->desc->enable_mask;
++	writel_relaxed(val, priv->base + REG_PWR_CR3);
++
++	/* use an arbitrary timeout of 20ms */
++	ret = readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, !val,
++				 100, 20 * 1000);
++	if (ret)
++		dev_err(&rdev->dev, "regulator disable timed out!\n");
++
++	return ret;
++}
++
++static const struct regulator_ops stm32_pwr_reg_ops = {
++	.list_voltage	= regulator_list_voltage_linear,
++	.enable		= stm32_pwr_reg_enable,
++	.disable	= stm32_pwr_reg_disable,
++	.is_enabled	= stm32_pwr_reg_is_enabled,
++};
++
++#define PWR_REG(_id, _name, _volt, _en, _supply) \
++	[_id] = { \
++		.id = _id, \
++		.name = _name, \
++		.of_match = of_match_ptr(_name), \
++		.n_voltages = 1, \
++		.type = REGULATOR_VOLTAGE, \
++		.min_uV = _volt, \
++		.fixed_uV = _volt, \
++		.ops = &stm32_pwr_reg_ops, \
++		.enable_mask = _en, \
++		.owner = THIS_MODULE, \
++		.supply_name = _supply, \
++	} \
++
++static const struct regulator_desc stm32_pwr_desc[] = {
++	PWR_REG(PWR_REG11, "reg11", 1100000, REG_1_1_EN, "vdd"),
++	PWR_REG(PWR_REG18, "reg18", 1800000, REG_1_8_EN, "vdd"),
++	PWR_REG(PWR_USB33, "usb33", 3300000, USB_3_3_EN, "vdd_3v3_usbfs"),
++};
++
++static int stm32_pwr_regulator_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct stm32_pwr_reg *priv;
++	void __iomem *base;
++	struct regulator_dev *rdev;
++	struct regulator_config config = { };
++	int i, ret = 0;
++
++	base = of_iomap(np, 0);
++	if (IS_ERR(base)) {
++		dev_err(&pdev->dev, "Unable to map IO memory\n");
++		return PTR_ERR(base);
++	}
++
++	config.dev = &pdev->dev;
++
++	for (i = 0; i < STM32PWR_REG_NUM_REGS; i++) {
++		priv = devm_kzalloc(&pdev->dev, sizeof(struct stm32_pwr_reg),
++				    GFP_KERNEL);
++		if (!priv)
++			return -ENOMEM;
++		priv->base = base;
++		priv->desc = &stm32_pwr_desc[i];
++		priv->ready_mask = ready_mask_table[i];
++		config.driver_data = priv;
++
++		rdev = devm_regulator_register(&pdev->dev,
++					       &stm32_pwr_desc[i],
++					       &config);
++		if (IS_ERR(rdev)) {
++			ret = PTR_ERR(rdev);
++			dev_err(&pdev->dev,
++				"Failed to register regulator: %d\n", ret);
++			break;
++		}
++	}
++	return ret;
++}
++
++static const struct of_device_id stm32_pwr_of_match[] = {
++	{ .compatible = "st,stm32mp1,pwr-reg", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
++
++static struct platform_driver stm32_pwr_driver = {
++	.probe = stm32_pwr_regulator_probe,
++	.driver = {
++		.name  = "stm32-pwr-regulator",
++		.of_match_table = of_match_ptr(stm32_pwr_of_match),
++	},
++};
++module_platform_driver(stm32_pwr_driver);
++
++MODULE_DESCRIPTION("STM32MP1 PWR voltage regulator driver");
++MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.20.1
