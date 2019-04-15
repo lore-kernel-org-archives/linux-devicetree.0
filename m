@@ -1,72 +1,49 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 14/16] phy: tegra: Add PCIe PIPE2UPHY support
-Date: Mon, 15 Apr 2019 17:33:19 +0200
-Message-ID: <20190415153319.GK29254@ulmo>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
- <1554407683-31580-15-git-send-email-vidyas@nvidia.com>
- <20190415153148.GJ29254@ulmo>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v2 0/2] Add Reset controller support for HI3670 SoC
+Date: Mon, 15 Apr 2019 16:53:36 +0100
+Message-ID: <fa2bf251-56f4-fe2c-b645-4b634a87940f@hisilicon.com>
+References: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NrP+m7YXMSGlHqXH"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190415153148.GJ29254@ulmo>
+In-Reply-To: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org, john.stultz@linaro.org, xuwei5@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Manivannan,
 
---NrP+m7YXMSGlHqXH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2/15/2019 5:49 AM, Manivannan Sadhasivam wrote:
+> Hello,
+> 
+> This patchset adds Reset controller support for HiSilicon HI3670 SoC.
+> HI3670 SoC is architecturally same as HI3660 SoC, hence the same driver
+> is reused.
+> 
+> This patchset has been tested on HiKey970 board.
+> 
+> Thanks,
+> Mani
+> 
+> Changes in v2:
+> 
+> * Used the DT compatible fallback approach instead of adding a new one
+>   for HI3670
+> 
+> Manivannan Sadhasivam (2):
+>   dt-bindings: reset: Add HI3670 reset controller binding
+>   arm64: dts: hisilicon: hi3670: Add reset controller support
+> 
+>  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt   | 7 ++++---
+>  arch/arm64/boot/dts/hisilicon/hi3670.dtsi                  | 6 ++++++
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+> 
 
-On Mon, Apr 15, 2019 at 05:31:48PM +0200, Thierry Reding wrote:
-> On Fri, Apr 05, 2019 at 01:24:41AM +0530, Vidya Sagar wrote:
-[...]
-> > diff --git a/drivers/phy/tegra/pcie-p2u-tegra194.c b/drivers/phy/tegra/=
-pcie-p2u-tegra194.c
-> > new file mode 100644
-> > index 000000000000..d4df8bfa9979
-> > --- /dev/null
-> > +++ b/drivers/phy/tegra/pcie-p2u-tegra194.c
-[...]
-> > +MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
-> > +MODULE_DESCRIPTION("NVIDIA Tegra PIPE_To_UPHY phy driver");
->=20
-> The driver description is somewhat odd here. Perhaps something like:
->=20
-> 	"NVIDIA Tegra PIPE to UPHY PHY driver"
->=20
-> ?
+Thanks!
+Applied the series to the hisilicon dts tree.
 
-Or perhaps just
-
-	"NVIDIA Tegra PIPE2UPHY PHY driver"
-
-which is what you already use in the commit subject.
-
-Thierry
-
---NrP+m7YXMSGlHqXH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly0pD8ACgkQ3SOs138+
-s6GGORAAo698Yjy8BynRD0sRJ0x8Z7blftz6y1Ui3Ho3DyCHkFW8XsKWWLluQehE
-b4AiRWWB/skZ2JyYmPcQzZz45GlrSoBe042LQKy6GWkJo+k9nnQxrpQhzflWY8uk
-NJlWSvUbhtgVEhRNKeHqeOQRuupssqMRdUr5Nplzn2I+oe1U0w6o28IW4TzbEe0e
-kWbPPMZmDArmo5evjNZF2lnqIaXq2YLcOJLBJZ8GAzS3Utve6eXBpSITn2hqJfTC
-MjEBZoHpR6cjFdOBtNW9wvnMSSgoR8TYCy8qhMolKyE7D1K3/m/8Y71KBNOpjtxC
-O/iSl4JLVRtsQ5RwibiNAarNrblbX8XMseMb8SnYWeCe8YkXYWjURXSXetwCOph1
-uNRYVHvU9k2ko6/3k79YjP9tRo6glwIN/psCM7mAdNpUPEqxlxpkseKB9qZQdNui
-PXvp9I+GL6Tjl8hybQxZXamhaCsE73mgXsjmpbnp/27icvzfkrPrW/Ui85aWcesC
-zUidFhIURvPy2drp9A33TAeRoTwrRVBIICepCAVOC2ptbXSfdcpfoB3mdQxYNVSR
-u4lW/Dab/cuQhrJSRB4bvCKmaHDvkeIfr+smOeY+OFI+0x1vQZI3KxxCQsEPH7VL
-hOob4+jJuyEmCYQQNaKHNCM2KMiPXWLYw4wKa3Eb/Kezkx1ewSE=
-=TygX
------END PGP SIGNATURE-----
-
---NrP+m7YXMSGlHqXH--
+Best Regards,
+Wei
