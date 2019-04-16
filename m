@@ -1,93 +1,77 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining
- down after PHY disconnect
-Date: Tue, 16 Apr 2019 11:57:53 -0500
-Message-ID: <CADRPPNS2kecKh=MXJZafKW1x7wZ2MJh4qng1jdZ=-Pij2nXi2g@mail.gmail.com>
-References: <20190411232315.19588-1-olteanv@gmail.com> <20190411232315.19588-2-olteanv@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/3] mtd: rawnand: sunxi: Add DMA support for sun8i
+Date: Tue, 16 Apr 2019 18:53:45 +0200
+Message-ID: <20190416185345.5553923f@xps13>
+References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
+ <20190404162111.22618-3-miquel.raynal@bootlin.com>
+ <20190414110549.5c91829d@collabora.com>
+ <20190415085859.21f69396@xps13>
+ <20190415091420.3fb86ef7@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411232315.19588-2-olteanv@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, claudiu.manoil@nxp.com, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190415091420.3fb86ef7@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 6:28 PM Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-> are pointing towards the same internal PCS. Therefore nobody is
-> controlling the internal PCS of eTSEC0.
->
-> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-> initialization. But upon an ifdown/ifup sequence, the code path from
-> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-> failure condition, the PHY driver keeps printing
-> '803x_aneg_done: SGMII link is not ok'.
->
-> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-
-Acked-by: Li Yang <leoyang.li@nxp.com>
-
-Thanks,
-Leo
-> ---
->  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
->  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-> index 97e1fb7ea932..9b1fe99d55b1 100644
-> --- a/arch/arm/boot/dts/ls1021a-twr.dts
-> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
-> @@ -145,7 +145,7 @@
->  };
->
->  &enet0 {
-> -       tbi-handle = <&tbi1>;
-> +       tbi-handle = <&tbi0>;
->         phy-handle = <&sgmii_phy2>;
->         phy-connection-type = "sgmii";
->         status = "okay";
-> @@ -225,6 +225,13 @@
->         sgmii_phy2: ethernet-phy@2 {
->                 reg = <0x2>;
->         };
-> +       tbi0: tbi-phy@1f {
-> +               reg = <0x1f>;
-> +               device_type = "tbi-phy";
-> +       };
-> +};
-> +
-> +&mdio1 {
->         tbi1: tbi-phy@1f {
->                 reg = <0x1f>;
->                 device_type = "tbi-phy";
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 1a2a9509d9c2..89eab1fd1f7f 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -709,6 +709,15 @@
->                               <0x0 0x2d10030 0x0 0x4>;
->                 };
->
-> +               mdio1: mdio@2d64000 {
-> +                       compatible = "fsl,etsec2-mdio";
-> +                       device_type = "mdio";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0x0 0x2d64000 0x0 0x4000>,
-> +                             <0x0 0x2d50030 0x0 0x4>;
-> +               };
-> +
->                 ptp_clock@2d10e00 {
->                         compatible = "fsl,etsec-ptp";
->                         reg = <0x0 0x2d10e00 0x0 0xb0>;
-> --
-> 2.17.1
->
+SGkgQm9yaXMsCgpCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29t
+PiB3cm90ZSBvbiBNb24sIDE1IEFwcgoyMDE5IDA5OjE0OjIwICswMjAwOgoKPiBPbiBNb24sIDE1
+IEFwciAyMDE5IDA4OjU4OjU5ICswMjAwCj4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBi
+b290bGluLmNvbT4gd3JvdGU6Cj4gCj4gPiBIaSBCb3JpcywKPiA+IAo+ID4gQm9yaXMgQnJlemls
+bG9uIDxib3Jpcy5icmV6aWxsb25AY29sbGFib3JhLmNvbT4gd3JvdGUgb24gU3VuLCAxNCBBcHIK
+PiA+IDIwMTkgMTE6MDU6NDkgKzAyMDA6Cj4gPiAgIAo+ID4gPiBPbiBUaHUsICA0IEFwciAyMDE5
+IDE4OjIxOjEwICswMjAwCj4gPiA+IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxp
+bi5jb20+IHdyb3RlOgo+ID4gPiAgICAgCj4gPiA+ID4gQWxsd2lubmVyIE5BTkQgY29udHJvbGxl
+cnMgY2FuIG1ha2UgdXNlIG9mIERNQSB0byBlbmhhbmNlIHRoZSBJL08KPiA+ID4gPiB0aHJvdWdo
+cHV0IHRoYW5rcyB0byBFQ0MgcGlwZWxpbmluZy4gRE1BIGhhbmRsaW5nIHdpdGggc3VuOGkgTkFO
+RCBJUAo+ID4gPiA+IGlzIGEgYml0IGRpZmZlcmVudCB0aGFuIHdpdGggdGhlIG9sZGVyIFNvQ3Ms
+IGhlbmNlIHRoZSBpbnRyb2R1Y3Rpb24gb2YKPiA+ID4gPiBhIG5ldyBjb21wYXRpYmxlIHRvIGhh
+bmRsZToKPiA+ID4gPiAqIHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHJlZ2lzdGVyIG9mZnNldHMs
+Cj4gPiA+ID4gKiB0aGUgYnVyc3QgbGVuZ3RoIGNoYW5nZSBmcm9tIDQgdG8gbWluaW11bSA4LAo+
+ID4gPiA+ICogZHJpdmUgU1JBTSBhY2Nlc3NlcyB0aHJvdWdoIHRoZSBBSEIgYnVzIGluc3RlYWQg
+b2YgdGhlIE1CVVMuICAgICAgCj4gPiA+IAo+ID4gPiBIbSwgbm93IHRoYXQgeW91IGtub3cgTUJV
+UyBhY2Nlc3NlcyBhcmUgd29ya2luZyBmaW5lIChJSVJDLCB0aGF0J3Mgd2hhdAo+ID4gPiB5b3Ug
+dXNlZCBmb3IgdGhlIFNQTCBETUEtYmFzZWQgaW1wbGVtZW50YXRpb24pLCB3aHkgbm90IGRpcmVj
+dGx5IHVzZQo+ID4gPiBNQlVTIGFjY2Vzc2VzIG9uIEEzMz8gSSBtZWFuLCBpdCdzIGxpa2VseSBm
+YXN0ZXIgdGhhbiBnb2luZyB0aHJvdWdoCj4gPiA+IHRoZSBETUEgZW5naW5lICh3aGljaCBpcyBz
+aGFyZWQgYnkgc2V2ZXJhbCBJUHMpLCBhbmQgQUZBSVIsIHRoZSBNQlVTCj4gPiA+IHNldHVwIGlz
+IHByZXR0eSBzaW1wbGUuICAgIAo+ID4gCj4gPiBCZWNhdXNlIGFsbCB0aGUgZHJpdmVyIGlzIGFs
+cmVhZHkgaW4gc2hhcGUgdG8gdXNlIHRoZSBleHRlcm5hbCBETUEKPiA+IGVuZ2luZSBhbmQgaXQg
+d2FzIHZlcnkgZWFzeSBhbmQgcXVpY2sgKGhhdmUgYSBsb29rIGF0IHRoZSBkaWZmIG9mIHRoZQo+
+ID4gdjMpIHRvIHVzZSBpdCBhZ2Fpbi4gIAo+IAo+IFllcywgSSBzZWUgdGhhdC4gSSBtaWdodCBi
+ZSB3cm9uZyBidXQgSSdkIGV4cGVjdCB0aGUgTURNQSB2ZXJzaW9uIHRvIGJlCj4ganVzdCBhcyBz
+aW1wbGUgYXMgdGhpcyBvbmUuCj4gCj4gPiAKPiA+IEhvd2V2ZXIsIHRoZSBjaG9pY2UgSSBhbSBk
+ZXNjcmliaW5nIGhlcmUgaXMgbm90IERNQSB2cy4gTUJVUyAob3IgTURNQSksCj4gPiBpdCBpcyBN
+QlVTIHZzLiBBSEIsIGl0IGlzIGp1c3QgYWJvdXQgdGhlIGJ1cyB0aGF0IHdpbGwgYWNjZXNzIHRo
+ZSBTUkFNCj4gPiAodGhpcyBpcyB3aGF0IHdlIGhhdmUgdW5kZXJzdG9vZCB3aXRoIE1heGltZSBm
+cm9tIHRoZSBkYXRhc2hlZXRzIGFuZAo+ID4gdGhlIHRlc3RzIHdlIGhhdmUgZG9uZSkuICAKPiAK
+PiBZZXMsIHNvcnJ5LCBJIG1lYW50IE1ETUEgdnMgc2hhcmVkIERNQSBlbmdpbmUsIGJ1dCBJIGd1
+ZXNzIE1CVVMgaXMgb25seQo+IHVzZWQgdGhyb3VnaCBNRE1BIGFjY2Vzc2VzIGFueXdheSwgcmln
+aHQ/CgpJIGhhdmUgbm8gcHJvb2YgdGhhdCBJIGFjdHVhbGx5IHVzZWQgTUJVUywgYnV0IHRoZXJl
+IGlzIGEgYml0IHdoaWNoIGNhbgpiZSBzZXQgdG8gdXNlIE1CVVMgdG8gYWNjZXNzIHRoZSBTUkFN
+IGV2ZW4gd2hlbiBub3QgdXNpbmcgTURNQS4gSW4gdGhpcwpjYXNlLCBNQlVTIHBheWxvYWQgbGVu
+Z3RoIGhhZCB0byBiZSBmaWxsZWQgb3IgdGhlIG9wZXJhdGlvbiB3b3VsZCBub3QKc3VjY2VlZC4g
+SG93ZXZlciB3aGVuIHVzaW5nIEFIQiwgdGhlcmUgaXMgbm8gbmVlZCBmb3IgdGhpcyBleHRyYQpj
+b25maWd1cmF0aW9uLiBUaGF0J3Mgd2h5IEkgZGVjaWRlZCB0byB1c2UgdGhlIEFIQi4KCj4gCj4g
+PiBGb3IgdGhpcyBjaG9pY2UsIHdlIHRlc3RlZCB3aXRoIGJvdGggYnVzZXM6IG5vCj4gPiB0aHJv
+dWdocHV0IGNoYW5nZSBzbyB3ZSB0aGluayB0aGF0IGl0IGlzIG5vdCBhIGJvdHRsZW5lY2sgYW55
+d2F5LiAgCj4gCj4gV2VsbCwgeW91J2QgbmVlZCB0byB0ZXN0IHdpdGggYSBsb3Qgb2YgdHJhZmZp
+YyBnb2luZyB0aHJvdWdoIHRoZSBETUEKPiBlbmdpbmUgdG8gY2hlY2sgaWYgdGhhdCBtYWtlcyBh
+IGRpZmZlcmVuY2UuCgpUcnVlLCBJIHByb2JhYmx5IGRpZG4ndCBzdHJlc3NlZCB0aGUgcGxhdGZv
+cm0gZW5vdWdoIHRvIHNlZSB0aGUKZGlmZmVyZW5jZS4KCj4gCj4gQW55d2F5LCBpdCB3YXMganVz
+dCBhIHN1Z2dlc3Rpb24sIGtlZXAgaXQgbGlrZSB0aGF0IGlmIHlvdSB0aGluayB1c2luZwo+IE1E
+TUEgaXMgbm90IHdvcnRod2hpbGUuCgoKVGhhbmtzLApNaXF1w6hsCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Np
+b24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtbXRkLwo=
