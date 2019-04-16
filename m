@@ -1,70 +1,66 @@
-From: Nishad Kamdar <nishadkamdar@gmail.com>
-Subject: [PATCH v3 1/5] arm64: Use the correct style for SPDX License
- Identifier
-Date: Tue, 16 Apr 2019 20:49:35 +0530
-Message-ID: <ecdbe63bea1b1d2d67db6cc577aa32bf872f2310.1555427419.git.nishadkamdar@gmail.com>
-References: <cover.1555427418.git.nishadkamdar@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V1 3/3] regulator: slg51000: add slg51000 regulator driver
+Date: Tue, 16 Apr 2019 16:24:48 +0100
+Message-ID: <20190416152448.GC4834@sirena.org.uk>
+References: <cover.1555389447.git.eric.jeong.opensource@diasemi.com>
+ <5e4a6a007e45feac6d35203305cafd865be48755.1555389447.git.eric.jeong.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1555427418.git.nishadkamdar@gmail.com>
+In-Reply-To: <5e4a6a007e45feac6d35203305cafd865be48755.1555389447.git.eric.jeong.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in the arm64 Hardware Architecture related files.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 2 +-
- arch/arm64/include/asm/pointer_auth.h         | 2 +-
- arch/arm64/include/asm/sdei.h                 | 2 +-
- arch/arm64/include/asm/vmap_stack.h           | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+--s9fJI615cBHmzTOP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-index 1b4cb0c55744..385c455a7c98 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-+++ b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2018 MediaTek Inc.
-  * Author: Zhiyong Tao <zhiyong.tao@mediatek.com>
-diff --git a/arch/arm64/include/asm/pointer_auth.h b/arch/arm64/include/asm/pointer_auth.h
-index 15d49515efdd..d328540cb85e 100644
---- a/arch/arm64/include/asm/pointer_auth.h
-+++ b/arch/arm64/include/asm/pointer_auth.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __ASM_POINTER_AUTH_H
- #define __ASM_POINTER_AUTH_H
- 
-diff --git a/arch/arm64/include/asm/sdei.h b/arch/arm64/include/asm/sdei.h
-index ffe47d766c25..63e0b92a5fbb 100644
---- a/arch/arm64/include/asm/sdei.h
-+++ b/arch/arm64/include/asm/sdei.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2017 Arm Ltd.
- #ifndef __ASM_SDEI_H
- #define __ASM_SDEI_H
-diff --git a/arch/arm64/include/asm/vmap_stack.h b/arch/arm64/include/asm/vmap_stack.h
-index 0b5ec6e08c10..0a12115d9638 100644
---- a/arch/arm64/include/asm/vmap_stack.h
-+++ b/arch/arm64/include/asm/vmap_stack.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2017 Arm Ltd.
- #ifndef __ASM_VMAP_STACK_H
- #define __ASM_VMAP_STACK_H
--- 
-2.17.1
+On Tue, Apr 16, 2019 at 01:37:27PM +0900, Eric Jeong wrote:
+
+> +static int slg51000_regulator_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	struct slg51000 *chip =3D rdev_get_drvdata(rdev);
+> +	int ret, id =3D rdev_get_id(rdev);
+> +	unsigned int state;
+> +
+> +	ret =3D regmap_read(chip->regmap, es_reg[id].sreg, &state);
+> +	if (ret < 0) {
+> +		dev_err(chip->dev, "Failed to read status register(%d)\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	if (!(state & SLG51000_STA_ILIM_FLAG_MASK) &&
+> +	    (state & SLG51000_STA_VOUT_OK_FLAG_MASK))
+> +		return 1;
+> +	else
+> +		return 0;
+
+This looks like it should be a get_status() operation as it's reading
+status bits rather than the command we sent to the device - for that
+just use regulator_is_enabled_regmap(). =20
+
+Otherwise this all looks great.
+
+--s9fJI615cBHmzTOP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly188AACgkQJNaLcl1U
+h9A9kgf/SxzEZiZ5nf8g1+aL08hUyDRPIRQDtAHgEU9JWSsQXFe/aVf4ofnAVIo/
+N+oy8hSnaOanH3WXRikr4FqJ61ola2ffeugPM5rT3Tw55CSwgqLPaEOMSn+XzXPd
+y37fxJR/x+ebkcYwzzOIM/R6xMcn8LMrCZHH6X4eZGKYnB9+FlmUMzWt1oVxkdVI
+9TPDB6Lskkplp8DFTv08A1sCC5giDARen1gBNIGYGueryRjAoU+K2+8ChoEi+IWf
+Qq4vPgrqWdiwNQXmHSvW76gtkzWKZWCiPFvXMPZWlzy2l/mmUGl6K+eEcMVMPWpF
+ICzk5mRS58a90vDSNOmTgisvnxgvnQ==
+=shk/
+-----END PGP SIGNATURE-----
+
+--s9fJI615cBHmzTOP--
