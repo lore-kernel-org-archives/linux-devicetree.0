@@ -1,59 +1,95 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [5.2][PATCH 0/3] Ingenic JZ47xx KMS driver
-Date: Tue, 16 Apr 2019 11:02:35 -0300
-Message-ID: <16b99f4040a1837bcdbf860d0e9517eb53002aed.camel@collabora.com>
-References: <20190228220756.20262-1-paul@crapouillou.net>
-         <fce3f17981cda6a263abcce6b2902591e7984fa4.camel@collabora.com>
-         <1552304705.1929.0@crapouillou.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 20/26] PCI: dwc: Fix dw_pcie_ep_find_capability to
+ return correct capability offset
+Date: Tue, 16 Apr 2019 15:11:58 +0100
+Message-ID: <20190416141158.GC14705@red-moon>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-21-kishon@ti.com>
+ <20190413154437.GG126710@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1552304705.1929.0@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20190413154437.GG126710@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-03-11 at 12:45 +0100, Paul Cercueil wrote:
-> Hi Ezequiel,
-> 
-> On Mon, Mar 11, 2019 at 1:02 AM, Ezequiel Garcia 
-> <ezequiel@collabora.com> wrote:
-> > On Thu, 2019-02-28 at 19:07 -0300, Paul Cercueil wrote:
-> > >  Hi,
-> > > 
-> > >  This is a first attempt at a KMS driver for the JZ47xx MIPS SoCs by
-> > >  Ingenic. It is aimed to replace the aging jz4740-fb driver.
-> > > 
-> > >  The driver will later be updated with new features (overlays, TV-out
-> > >  etc.), that's why I didn't go with the simple/tiny DRM driver.
-> > > 
-> > >  The driver has been tested on the Ben Nanonote (JZ4740) and the
-> > >  RetroMini RS-90 (JZ4725B) handheld gaming console.
-> > > 
+On Sat, Apr 13, 2019 at 10:44:37AM -0500, Bjorn Helgaas wrote:
+> On Mon, Mar 25, 2019 at 03:09:41PM +0530, Kishon Vijay Abraham I wrote:
+> > commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
+> > adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
+> > __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
 > > 
-> > Does this support JZ4780? Or otherwise,
-> > is there any similarity with JZ4780 display controller?
+> > However if MSI or MSIX capability is the last capability (i.e there are
+> > no additional items in the capabilities list and the Next Capability
+> > Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
+> > even though MSI or MSIX capability may be present. This is because of
+> > incorrect ordering of "next_cap_ptr" check. Fix it here.
+> 
+> Nice fix.  It looks like dw_pcie_ep_find_capability() is currently
+> only used for MSI and MSI-X, but IIUC, it *could* be used for any
+> capability, so this commit message seems a little too specific.
+> 
+> It would be slightly less confusing if beb4641a787d ("PCI: dwc: Add
+> MSI-X callbacks handler") had been split into a commit that added the
+> general-purpose dw_pcie_ep_find_capability() and a commit that used it
+> for MSI and MSI-X, but obviously we can't change history.
+> 
+> > Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
+> 
+> These commit references are longer than necessary (and different -
+> 19-char SHA1 here and 16 chars above).  I typically use 12 chars via
+> 
+>   gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+
+Fixed while queueing it.
+
+Thanks,
+Lorenzo
+
+> > > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
 > > 
-> > Thanks,
-> > Eze
-> 
-> The JZ4780 LCD controller would in theory work with this driver, but
-> to test on the CI20 you'd need to add support for HDMI first.
-> 
-
-After reviewing a bit this driver and the JZ480 one on the CI20 repo,
-there seems to be some differences.
-
-To begin with, the JZ480 apparently has a new 8-word descriptor.
-
-The HDMI looks pretty much a Synopsys DW HDMI, mostly compatible
-with the dw-hdmi encoder.
-
-I'll try to put together some patches to enable JZ4780 support.
-Won't happen anytime soon, so if anyone wants to give it
-a shot, be my guest :-)
-
-Regards,
-Eze
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index dc6a4bbd3ace..74477ad7467f 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+> >  	u8 cap_id, next_cap_ptr;
+> >  	u16 reg;
+> >  
+> > +	if (!cap_ptr)
+> > +		return 0;
+> > +
+> >  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+> > -	next_cap_ptr = (reg & 0xff00) >> 8;
+> >  	cap_id = (reg & 0x00ff);
+> >  
+> > -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
+> > +	if (cap_id > PCI_CAP_ID_MAX)
+> >  		return 0;
+> >  
+> >  	if (cap_id == cap)
+> >  		return cap_ptr;
+> >  
+> > +	next_cap_ptr = (reg & 0xff00) >> 8;
+> >  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+> >  }
+> >  
+> > @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+> >  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+> >  	next_cap_ptr = (reg & 0x00ff);
+> >  
+> > -	if (!next_cap_ptr)
+> > -		return 0;
+> > -
+> >  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+> >  }
+> >  
+> > -- 
+> > 2.17.1
+> > 
