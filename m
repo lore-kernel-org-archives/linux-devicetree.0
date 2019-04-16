@@ -1,7 +1,7 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v2 03/15] [media] mtk-mipicsi: add pm function
-Date: Tue, 16 Apr 2019 17:27:31 +0800
-Message-ID: <1555406863-18069-4-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v2 09/15] [media] mtk-mipicsi: enable/disable cmos for mt2712
+Date: Tue, 16 Apr 2019 17:27:37 +0800
+Message-ID: <1555406863-18069-10-git-send-email-stu.hsieh@mediatek.com>
 References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,110 +12,85 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add PM function to enable/disable clk and larb.
+This patch enable/disable cmos setting for mt2712 when
+vb2 start/stop streaming.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index e26bebe17fe5..ec4f6b503b32 100644
+index 8a4079f0ed9b..7331543d400a 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -464,6 +464,85 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
- 	.set_bus_param		= mtk_mipicsi_set_bus_param,
- };
+@@ -97,9 +97,11 @@
+ #define CAMSV_MODULE_EN					0x10
+ #define CAMSV_FMT_SEL					0x14
+ #define CAMSV_INT_EN					0x18
++#define CAMSV_SW_CTL					0x20
+ #define CAMSV_CLK_EN					0x30
  
-+static int mtk_mipicsi_pm_suspend(struct device *dev)
-+{
-+	struct soc_camera_host *ici = to_soc_camera_host(dev);
-+	struct mtk_mipicsi_dev *mipicsi = NULL;
-+	int ret = 0;
-+	int i = 0;
+ #define CAMSV_TG_SEN_MODE				0x500
++#define CAMSV_TG_VF_CON					0x504
+ #define CAMSV_TG_SEN_GRAB_PXL				0x508
+ #define CAMSV_TG_SEN_GRAB_LIN				0x50C
+ #define CAMSV_TG_PATH_CFG				0x510
+@@ -531,9 +533,25 @@ static int mtk_mipicsi_vb2_start_streaming(struct vb2_queue *vq,
+ 	struct soc_camera_device *icd = soc_camera_from_vb2q(vq);
+ 	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
+ 	struct mtk_mipicsi_dev *mipicsi = ici->priv;
++	unsigned int index = 0;
++	void __iomem *base = NULL;
+ 
+ 	icd->vdev->queue = vq;
+ 
++	for (index = 0U; index < MTK_CAMDMA_MAX_NUM; ++index)
++		if (((mipicsi->link_reg_val >> index) & 0x01U) == 0x01U &&
++			!mipicsi->is_enable_irq[index]) {
++			enable_irq(mipicsi->irq[index]);
++			mipicsi->is_enable_irq[index] = true;
 +
-+	mipicsi = container_of(ici, struct mtk_mipicsi_dev, soc_host);
-+	if (mipicsi->soc_host.icd != NULL) {
-+		struct v4l2_subdev *sd =
-+			soc_camera_to_subdev(mipicsi->soc_host.icd);
++			/*enable cmos_en and vf_en*/
++			base = mipicsi->camsv[index];
++			writel(0x00000001U | readl(base + CAMSV_TG_SEN_MODE),
++				base + CAMSV_TG_SEN_MODE);
++			writel(0x00000001U | readl(base + CAMSV_TG_VF_CON),
++				base + CAMSV_TG_VF_CON);
++		}
 +
-+		ret = v4l2_subdev_call(sd, core, s_power, 0);
-+		if (ret == -ENOIOCTLCMD)
-+			ret = 0;
-+	}
+ 	mipicsi->streamon = true;
+ 	return 0;
+ }
+@@ -543,7 +561,29 @@ static void mtk_mipicsi_vb2_stop_streaming(struct vb2_queue *vq)
+ 	struct mtk_mipicsi_dev *mipicsi = vb2_get_drv_priv(vq);
+ 	struct mtk_mipicsi_buf *buf = NULL;
+ 	struct mtk_mipicsi_buf *tmp = NULL;
++	unsigned int i = 0U;
+ 	unsigned int index = 0;
++	void __iomem *base = NULL;
 +
-+	/* close digtal and analog clock */
-+	for (i = 0; i < mipicsi->clk_num; ++i)
-+		clk_disable_unprepare(mipicsi->clk[i]);
-+
-+	if (mipicsi->larb_pdev != NULL)
-+		mtk_smi_larb_put(mipicsi->larb_pdev);
-+
-+	return ret;
-+}
-+
-+static int mtk_mipicsi_suspend(struct device *dev)
-+{
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	return mtk_mipicsi_pm_suspend(dev);
-+}
-+
-+static int mtk_mipicsi_pm_resume(struct device *dev)
-+{
-+	struct soc_camera_host *ici = to_soc_camera_host(dev);
-+	struct mtk_mipicsi_dev *mipicsi =
-+		container_of(ici, struct mtk_mipicsi_dev, soc_host);
-+	int ret = 0;
-+	int i = 0;
-+
-+	if (mipicsi->soc_host.icd != NULL) {
-+		struct v4l2_subdev *sd =
-+			soc_camera_to_subdev(mipicsi->soc_host.icd);
-+
-+		ret = v4l2_subdev_call(sd, core, s_power, 1);
-+		if (ret == -ENOIOCTLCMD)
-+			ret = 0;
-+	}
-+
-+	if (mipicsi->larb_pdev != NULL) {
-+		ret = mtk_smi_larb_get(mipicsi->larb_pdev);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	/* enable digtal clock */
-+	for (i = 0; i < mipicsi->clk_num; ++i)
-+		(void)clk_prepare_enable(mipicsi->clk[i]);
-+
-+	return ret;
-+}
-+
-+static int mtk_mipicsi_resume(struct device *dev)
-+{
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	return mtk_mipicsi_pm_resume(dev);
-+}
-+
-+static const struct dev_pm_ops mtk_mipicsi_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mtk_mipicsi_suspend, mtk_mipicsi_resume)
-+	SET_RUNTIME_PM_OPS(mtk_mipicsi_pm_suspend,
-+		mtk_mipicsi_pm_resume, NULL)
-+};
-+
- static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
- 		int index)
- {
-@@ -756,6 +835,7 @@ static const struct of_device_id mtk_mipicsi_of_match[] = {
- static struct platform_driver mtk_mipicsi_driver = {
- 	.driver		= {
- 		.name	= MTK_MIPICSI_DRV_NAME,
-+		.pm	= &mtk_mipicsi_pm,
- 		.of_match_table = of_match_ptr(mtk_mipicsi_of_match),
- 	},
- 	.probe		= mtk_mipicsi_probe,
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
++		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
++			/*disable cmos_en and vf_en*/
++			base = mipicsi->camsv[i];
++			writel(readl(base + CAMSV_TG_SEN_MODE) & 0xFFFFFFFEU,
++				base + CAMSV_TG_SEN_MODE);
++			writel(readl(base + CAMSV_TG_VF_CON) & 0xFFFFFFFEU,
++				base + CAMSV_TG_VF_CON);
++			/*camsv reset*/
++			base = mipicsi->camsv[i];
++			writel(0x00000004U | readl(base + CAMSV_SW_CTL),
++				base + CAMSV_SW_CTL);
++			writel(readl(base + CAMSV_SW_CTL) & 0xFFFFFFFBU,
++				base + CAMSV_SW_CTL);
++			disable_irq(mipicsi->irq[i]);
++			mipicsi->is_enable_irq[i] = false;
++			mipicsi->frame_cnt[i] = 0UL;
++			mipicsi->irq_status[i] = false;
++		}
+ 
+ 	spin_lock(&mipicsi->queue_lock);
+ 	while (list_empty(&(mipicsi->fb_list)) == 0) {
 -- 
 2.18.0
