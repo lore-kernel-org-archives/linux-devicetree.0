@@ -1,126 +1,136 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
- to DT
-Date: Tue, 16 Apr 2019 06:48:42 -0500
-Message-ID: <CAHCN7x+CAr9MjckhVP_suBRHY+o8Je1aLz28XTL9bnDBd4WyKA@mail.gmail.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-2-brgl@bgdev.pl>
- <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com> <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
- <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com> <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
- <6ff5711c-b607-1f3a-e362-709b53762179@ti.com> <CAMRc=Mfb4xrpLkJoX0SyoCPU6Au1TPxCtr29EhvU=VsKkSt2xQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Enable GMAC ethernet controller
+Date: Tue, 16 Apr 2019 15:00:57 +0200
+Message-ID: <20190416130057.bjaweorywikaa6ig@flea>
+References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
+ <1555065186-8154-3-git-send-email-pgreco@centosproject.org>
+ <20190415075309.p7pgj62mmtmxsnnr@flea>
+ <eb80d64f-7355-071b-c1d1-04e0eb4475ce@centosproject.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Mfb4xrpLkJoX0SyoCPU6Au1TPxCtr29EhvU=VsKkSt2xQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2w42a2v2c5vbfesk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKNE27SQKGQEQZC3JXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <eb80d64f-7355-071b-c1d1-04e0eb4475ce-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pablo =?utf-8?Q?Sebasti=C3=A1n?= Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 3:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> pon., 15 kwi 2019 o 12:21 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
-> >
-> > On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
-> > > pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a)=
-:
-> > >>
-> > >> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
-> > >>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(=
-a):
-> > >>>>
-> > >>>> Hi Bartosz,
-> > >>>>
-> > >>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> > >>>>> From: David Lechner <david@lechnology.com>
-> > >>>>>
-> > >>>>> This adds a cpu node and operating points to the common da850.dts=
-i file.
-> > >>>>>
-> > >>>>> Additionally, a regulator is added to the LEGO EV3 board along wi=
-th
-> > >>>>> some board-specific CPU configuration.
-> > >>>>>
-> > >>>>> Regulators need to be hooked up on other boards to get them worki=
-ng.
-> > >>>>>
-> > >>>>> Signed-off-by: David Lechner <david@lechnology.com>
-> > >>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >>>>
-> > >>>> I remember you mentioning about some problems using OCHI and cpufr=
-eq
-> > >>>> together. Are those resolved now? CPU PLL on DA850 can affect othe=
-r
-> > >>>> peripheral clock frequencies too. So enabling it should really be =
-a
-> > >>>> per-board decision.
-> > >>>>
-> > >>>
-> > >>> The problems are still there. I've never been able to find the
-> > >>> culprit, but it also occurs on TI BSP in the same way (a couple
-> > >>> cpufreq transitions will make the controller unresponsive).
-> > >>
-> > >> Is that on LCDK as well? As I recall cpufreq was never enabled on LC=
-DK
-> > >> in TI BSP.
-> > >>
-> > >
-> > > Yes, I just verified that the bug occurs on LCDK with patches from th=
-is series.
-> > >
-> > >> If the OHCI problem is present on LCDK, then there is a user visible
-> > >> regression on mainline after this patch. Lets enable cpufreq in LCDK
-> > >> only if all working peripherals keep working afterwards.
-> > >>
-> > >
-> > > The OHCI driver doesn't register any cpufreq transition notifier
-> > > callbacks. I can't really find anything in the datasheet, but I'm
-> > > wondering if we shouldn't do something similar to what the driver for
-> > > davinci i2c controller does. I'll try a couple things tomorrow.
-> >
-> > Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
-> > not sure the benefits of just frequency scaling will be justifiable eno=
-ugh.
-> >
-> > Fixing the OHCI issue may help in other boards like da850-evm use it
-> > though. So that will be a good thing.
-> >
->
-> I've been trying different things, like suspending the device before
-> the transition, resetting the controller or playing with the clock
-> during transitions but it always results in the same kind of error:
->
-> ohci-da8xx 1e25000.usb: frame counter not updating; disabled
-> ohci-da8xx 1e25000.usb: HC died; cleaning up
-> usb 1-1: USB disconnect, device number 2
->
-> If you have any idea - let me know, otherwise I'll give up.
->
-> If we agree on the direction of these patches, then I can go with a
-> single enabled OPP for lcdk (456 MHz) and all OPPs up to 375 MHz
-> enabled for da850-evm.
 
-One last questions, and this probably directed at Sekhar, but what
-happens if you modify the OPP for the boards with fixed regulators to
-enable all the frequencies but with the only available voltage.  Is
-there harm is running the processor at a higher voltage than
-necessary?  I did some quick experiments on a different ARM board and
-I saw some changes in power consumption.  I would think some power
-savings might be better than none, but I don't know if it causes
-damage.
+--2w42a2v2c5vbfesk
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-adam
+65;5600;1c
+On Tue, Apr 16, 2019 at 07:47:09AM -0300, Pablo Sebasti=C3=A1n Greco wrote:
 >
-> David - do you want to keep the lego board as is?
+> El 15/4/19 a las 04:53, Maxime Ripard escribi=C3=B3:
+> > On Fri, Apr 12, 2019 at 07:33:01AM -0300, Pablo Greco wrote:
+> > > Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
+> > > RTL8211E RGMII PHY tied to the GMAC.
+> > > The PMIC's DC1SW output provides power for the PHY, while the ALDO2
+> > > output provides I/O voltages on both sides.
+> > >
+> > > Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> > > ---
+> > >   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 ++++++++++++=
++++++++++++
+> > >   1 file changed, 30 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch=
+/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > index f05cabd..0d79e91 100644
+> > > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > @@ -50,6 +50,7 @@
+> > >   	compatible =3D "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+> > >
+> > >   	aliases {
+> > > +		ethernet0 =3D &gmac;
+> > >   		serial0 =3D &uart0;
+> > >   	};
+> > >
+> > > @@ -92,6 +93,22 @@
+> > >   	status =3D "okay";
+> > >   };
+> > >
+> > > +&gmac {
+> > > +	pinctrl-names =3D "default";
+> > > +	pinctrl-0 =3D <&gmac_rgmii_pins>;
+> > > +	phy-handle =3D <&phy1>;
+> > > +	phy-mode =3D "rgmii";
+> > > +	phy-supply =3D <&reg_dc1sw>;
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&gmac_mdio {
+> > > +	phy1: ethernet-phy@1 {
+> > > +		compatible =3D "ethernet-phy-ieee802.3-c22";
+> > > +		reg =3D <1>;
+> > > +	};
+> > > +};
+> > > +
+> > >   &i2c0 {
+> > >   	status =3D "okay";
+> > >
+> > > @@ -123,6 +140,13 @@
+> > >   	status =3D "okay";
+> > >   };
+> > >
+> > > +&reg_aldo2 {
+> > > +	regulator-always-on;
+> > > +	regulator-min-microvolt =3D <2500000>;
+> > > +	regulator-max-microvolt =3D <2500000>;
+> > > +	regulator-name =3D "vcc-pa";
+> > > +};
+> > > +
+> > If this one provides power to the pins, it should be tied to the PIO
+> > node.
 >
-> Bart
->
-> > How do you feel about keeping all OPPs disabled by default in da850.dts=
-i
-> > and enabling only the ones that make sense for a board in <board>.dts?
-> >
-> > Empty OPP table is illegal, so this does mean that every board must
-> > enable at least one OPP.
-> >
-> > Thanks,
-> > Sekhar
+> In that case, I should fix the bananapi-m2-ultra the same way. Do you pre=
+fer
+> me to add those fixes to this series?
+
+If you have that board, then please add that yep.
+
+> Or is it better to apply this like it is, and I fix both together in a
+> separated series?
+
+No, please resend a new version.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--2w42a2v2c5vbfesk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLXSCQAKCRDj7w1vZxhR
+xSSuAQCQ/kkSRgvp8XeaTQsZFfcjmgEBvvtjYDzpMrPJdVpClwD/Q3IuzuS0sWoE
+nYcAS9VzOQTUlt9QAbaD7EeaL/sdOQg=
+=0e9z
+-----END PGP SIGNATURE-----
+
+--2w42a2v2c5vbfesk--
