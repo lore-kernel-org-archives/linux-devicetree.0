@@ -1,69 +1,106 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: devfreq: add compatible for mt8183
- cci devfreq
-Date: Tue, 16 Apr 2019 18:08:36 +0900
-Message-ID: <28f2c90a-9588-3afa-193d-2572c9cc9bf5@samsung.com>
-References: <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
-        <CGME20190329064630epcas5p216f8d9263dc6fea26bb71165b5673111@epcas5p2.samsung.com>
-        <1553841972-19737-4-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Bruno Thomsen <bruno.thomsen@gmail.com>
+Subject: [PATCH v2] ARM: dts: bugfix tqma7 soft reset issue
+Date: Tue, 16 Apr 2019 11:08:05 +0200
+Message-ID: <20190416090805.13166-1-bruno.thomsen@gmail.com>
+References: <20190414120629.8912-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553841972-19737-4-git-send-email-andrew-sh.cheng@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190414120629.8912-1-bruno.thomsen@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, laa@kamstrup.com, festevam@gmail.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, bruno.thomsen@gmail.com, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, markus.niebel@tq-group.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Running reboot command on the TQMa7 board would just hang infinite
+at the end of the system shutdown process.
 
-I already reviewed this patch on v1[1].
-[1] https://lkml.org/lkml/2019/2/11/2228
+Handling of i.MX7 errata e10574:
+Watchdog: A watchdog timeout or software trigger will not reset the SOC.
 
-But, the second version patch doesn't include the anything
-about review. Please check it[1].
+Moved pinctrl from common mba7 to common tqma7 dtsi as it improves
+readability of errata handling. Most integrators of this SoM will
+likely use the development board as inspiration for handling this
+SoC issue.
 
-On 19. 3. 29. 오후 3:46, Andrew-sh.Cheng wrote:
-> This adds dt-binding documentation of cci devfreq
-> for Mediatek MT8183 SoC platform.
-> 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  .../bindings/devfreq/mt8183-cci-devfreq.txt           | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> new file mode 100644
-> index 0000000..e2b61cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> @@ -0,0 +1,19 @@
-> +* Mediatek CCI frequency device
-> +
-> +Required properties:
-> +- compatible: should contain "mediatek,mt8183-cci" for cci devfreq
-> +
-> +- clocks: for cci devfreq
-> +
-> +- clock-names: for cci devfreq driver to reference
-> +
-> +- operating-points-v2: for cci devfreq opp table
-> +
-> +Example:
-> +	cci: cci {
-> +		compatible = "mediatek,cci";
-> +		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
-> +		clock-names = "cci_clock";
-> +		operating-points-v2 = <&cci_opp>;
-> +	};
-> +
-> 
+Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+---
+v2:
+Moved pinctrl from common development board to common SoM.
+Removed Markus reviewed-by as he only acked the fsl,ext-reset-output part.
 
+ arch/arm/boot/dts/imx7-mba7.dtsi  | 11 -----------
+ arch/arm/boot/dts/imx7-tqma7.dtsi | 17 +++++++++++++++++
+ 2 files changed, 17 insertions(+), 11 deletions(-)
 
+diff --git a/arch/arm/boot/dts/imx7-mba7.dtsi b/arch/arm/boot/dts/imx7-mba7.dtsi
+index 578341b6848b..50abf18ad30b 100644
+--- a/arch/arm/boot/dts/imx7-mba7.dtsi
++++ b/arch/arm/boot/dts/imx7-mba7.dtsi
+@@ -472,12 +472,6 @@
+ 			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x59
+ 		>;
+ 	};
+-
+-	pinctrl_wdog1: wdog1grp {
+-		fsl,pins = <
+-			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B	0x30
+-		>;
+-	};
+ };
+ 
+ &pwm1 {
+@@ -554,8 +548,3 @@
+ 	no-1-8-v;
+ 	status = "okay";
+ };
+-
+-&wdog1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_wdog1>;
+-};
+diff --git a/arch/arm/boot/dts/imx7-tqma7.dtsi b/arch/arm/boot/dts/imx7-tqma7.dtsi
+index 85fe461e5e67..9aaed85138cb 100644
+--- a/arch/arm/boot/dts/imx7-tqma7.dtsi
++++ b/arch/arm/boot/dts/imx7-tqma7.dtsi
+@@ -209,6 +209,14 @@
+ 	};
+ };
+ 
++&iomuxc_lpsr {
++	pinctrl_wdog1: wdog1grp {
++		fsl,pins = <
++			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B	0x30
++		>;
++	};
++};
++
+ &sdma {
+ 	status = "okay";
+ };
+@@ -228,5 +236,14 @@
+ };
+ 
+ &wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog1>;
++	/*
++	 * Errata e10574:
++	 * WDOG reset needs to run with WDOG_RESET_B signal enabled.
++	 * X1-51 (WDOG1#) signal needs carrier board handling to reset
++	 * TQMa7 on X1-22 (RESET_IN#).
++	 */
++	fsl,ext-reset-output;
+ 	status = "okay";
+ };
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.20.1
