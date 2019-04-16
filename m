@@ -1,67 +1,67 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH 1/2] arm64: dts: mt8183: add dsi node
-Date: Tue, 16 Apr 2019 16:54:45 +0800
-Message-ID: <20190416085446.84071-2-jitao.shi@mediatek.com>
-References: <20190416085446.84071-1-jitao.shi@mediatek.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 1/1] arm64: dts: mt8173: add pmu nodes for mt8173
+Date: Tue, 16 Apr 2019 10:57:16 +0200
+Message-ID: <82f9aa3b-4621-c404-f6f6-312ca321f46a@gmail.com>
+References: <20190109082143.26468-1-seiya.wang@mediatek.com>
+ <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
+ <1555403701.26958.1.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416085446.84071-1-jitao.shi@mediatek.com>
+In-Reply-To: <1555403701.26958.1.camel@mtksdaap41>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu@mediate
+To: Seiya Wang <seiya.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add dsi and mipitx nodes to the mt8183
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 25 ++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index b36e37fcdfe3..80929a0e5a6f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -353,6 +353,16 @@
- 			status = "disabled";
- 		};
- 
-+		mipi_tx0: mipi-dphy@11e50000 {
-+			compatible = "mediatek,mt8183-mipi-tx";
-+			reg = <0 0x11e50000 0 0x1000>;
-+			clocks = <&apmixedsys CLK_APMIXED_MIPID0_26M>;
-+			clock-names = "ref_clk";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
-+			clock-output-names = "mipi_tx0_pll";
-+		};
-+
- 		mfgcfg: syscon@13000000 {
- 			compatible = "mediatek,mt8183-mfgcfg", "syscon";
- 			reg = <0 0x13000000 0 0x1000>;
-@@ -365,6 +375,21 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		dsi0: dsi@14014000 {
-+			compatible = "mediatek,mt8173-dsi",
-+				"mediatek,mt8183-dsi";
-+			reg = <0 0x14014000 0 0x1000>;
-+			interrupts = <GIC_SPI 236 IRQ_TYPE_LEVEL_LOW>;
-+			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-+			mediatek,syscon-dsi = <&mmsys 0x140>;
-+			clocks = <&mmsys CLK_MM_DSI0_MM>,
-+				<&mmsys CLK_MM_DSI0_IF>,
-+				<&mipi_tx0>;
-+			clock-names = "engine", "digital", "hs";
-+			phys = <&mipi_tx0>;
-+			phy-names = "dphy";
-+		};
-+
- 		smi_common: smi@14019000 {
- 			compatible = "mediatek,mt8183-smi-common", "syscon";
- 			reg = <0 0x14019000 0 0x1000>;
--- 
-2.21.0
+On 16/04/2019 10:35, Seiya Wang wrote:
+> On Fri, 2019-02-08 at 16:04 +0100, Matthias Brugger wrote:
+>>
+>> On 09/01/2019 09:21, Seiya Wang wrote:
+>>> This patch adds the device nodes of ARM Performance Monitor Uint
+>>> for mt8173.
+>>>
+>>> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+>>> ---
+>>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
+>>>  1 file changed, 14 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> index 412ffd4d426b..44374c506a1c 100644
+>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> @@ -216,6 +216,20 @@
+>>>  		};
+>>>  	};
+>>>  
+>>> +	pmu_a53 {
+>>> +		compatible = "arm,cortex-a53-pmu";
+>>> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
+>>> +		interrupt-affinity = <&cpu0>, <&cpu1>;
+>>> +	};
+>>> +
+>>> +	pmu_a72 {
+>>> +		compatible = "arm,cortex-a72-pmu";
+>>> +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_SPI 13 IRQ_TYPE_LEVEL_LOW>;
+>>> +		interrupt-affinity = <&cpu2>, <&cpu3>;
+>>> +	};
+>>
+>> There is no a72 but a a57 CPU present.
+>> Typo?
+>>
+>> Regards,
+>> Matthias
+> 
+> Please also apply this (if no problems) since we have changed to ca72.
+> Thanks.
+> 
+
+Pushed now to v5.1-next/dts64
+
+Thanks for the heads up :)
