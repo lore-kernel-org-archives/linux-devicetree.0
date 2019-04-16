@@ -1,71 +1,107 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: Re: [PATCH v9] arm64: dts: Add Mediatek SoC MT8183 and evaluation
- board dts and Makefile
-Date: Tue, 16 Apr 2019 17:27:16 +0800
-Message-ID: <1555406836.27018.10.camel@mtksdaap41>
-References: <1552898552-13045-2-git-send-email-erin.lo@mediatek.com>
-         <201903190247.QZDwfpLQ%lkp@intel.com>
-         <135d7e3a-d5a3-0f13-05c9-4a8ec0524256@gmail.com>
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: [PATCH v2 11/15] [media] mtk-mipicsi: set the output address in HW reg
+Date: Tue, 16 Apr 2019 17:27:39 +0800
+Message-ID: <1555406863-18069-12-git-send-email-stu.hsieh@mediatek.com>
+References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <135d7e3a-d5a3-0f13-05c9-4a8ec0524256@gmail.com>
+In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, mars.cheng@mediatek.com, eddie.huang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-04-16 at 10:29 +0200, Matthias Brugger wrote:
-> 
-> On 18/03/2019 19:42, kbuild test robot wrote:
-> > Hi Erin,
-> > 
-> > Thank you for the patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on robh/for-next]
-> > [also build test ERROR on v5.1-rc1 next-20190318]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Erin-Lo/arm64-dts-Add-Mediatek-SoC-MT8183-and-evaluation-board-dts-and-Makefile/20190318-170422
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> > config: arm64-allyesconfig (attached as .config)
-> > compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.2.0 make.cross ARCH=arm64 
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    In file included from arch/arm64/boot/dts/mediatek/mt8183-evb.dts:9:0:
-> >>> arch/arm64/boot/dts/mediatek/mt8183.dtsi:8:10: fatal error: dt-bindings/clock/mt8183-clk.h: No such file or directory
-> >     #include <dt-bindings/clock/mt8183-clk.h>
-> >              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >    compilation terminated.
-> > 
-> > vim +8 arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > 
-> >    > 8	#include <dt-bindings/clock/mt8183-clk.h>
-> >      9	#include <dt-bindings/interrupt-controller/arm-gic.h>
-> >     10	#include <dt-bindings/interrupt-controller/irq.h>
-> >     11	
-> > 
-> 
-> Stephen queued the corresponding patch for v5.2.
-> I propose we wait for v5.2-rc1 and then apply the basic support and the others
-> based on this one.
-> 
-> Erin: There are may mt8183 dts patches floating around that depend on this or
-> more patches. Can you coordinate with your colleagues to resend them as a
-> series? Then it will be easier for me to take them for v5.3, as some have
-> dependencies on other series etc.
-> 
-> Thanks a lot.
-> Matthias
+This patch set the output address in HW reg when buffer queue and ISR.
 
-OK, I will coordinate with my colleagues to resend mt8183 dts patches as
-a series base on v5.2-rc1 when v5.2-rc1 release.
-Since we want to send this series more confident so they still send
-separate patch in v5.1 just for review in advance. Is that ok for you?
+Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+---
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+index 3624186206bd..4027ed9c94f3 100644
+--- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
++++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+@@ -109,6 +109,7 @@
+ #define CAMSV_TG_SEN_GRAB_LIN				0x50C
+ #define CAMSV_TG_PATH_CFG				0x510
+ 
++#define IMGO_BASE_ADDR					0x220
+ #define IMGO_XSIZE					0x230
+ #define IMGO_YSIZE					0x234
+ #define IMGO_STRIDE					0x238
+@@ -516,12 +517,22 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
+ 	return 0;
+ }
+ 
++static void mtk_mipicsi_fill_buffer(void __iomem *base, dma_addr_t dma_handle)
++{
++	writel(dma_handle, base + IMGO_BASE_ADDR);
++}
++
+ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
+ {
+ 	struct soc_camera_device *icd = soc_camera_from_vb2q(vb->vb2_queue);
+ 	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
+ 	struct mtk_mipicsi_dev *mipicsi = ici->priv;
++	unsigned int i = 0;
++	u64 offset = 0;
++	u8 link_index = 0U;
+ 	char *va = NULL;
++	u32 bytesperline = mipicsi->bytesperline;
++	u32 height = mipicsi->height;
+ 
+ 	spin_lock(&mipicsi->queue_lock);
+ 	list_add_tail(&(mipicsi->cam_buf[vb->index].queue),
+@@ -530,6 +541,20 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
+ 
+ 	va = vb2_plane_vaddr(vb, 0);
+ 
++	for (i = 0U; (mipicsi->enqueue_cnt == 0UL) && (i < MTK_CAMDMA_MAX_NUM);
++		++i)
++		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
++			offset = (u64)link_index * bytesperline * height;
++
++			spin_lock(&mipicsi->lock);
++			mtk_mipicsi_fill_buffer(mipicsi->camsv[i],
++				mipicsi->cam_buf[vb->index].vb_dma_addr_phy
++					+ offset);
++			spin_unlock(&mipicsi->lock);
++
++			link_index++;
++		}
++
+ 	++(mipicsi->enqueue_cnt);
+ }
+ 
+@@ -961,6 +986,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+ 	struct mtk_mipicsi_buf *tmp = NULL;
+ 	unsigned int index = 0U;
+ 	unsigned int next = 0U;
++	u64 offset = 0ULL;
++	u8 link_index = 0U;
++	void __iomem *base = NULL;
++	dma_addr_t pa;
+ 
+ 	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
+ 		mipicsi->irq_status[i] = false;
+@@ -983,6 +1012,16 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+ 		++i;
+ 	}
+ 
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
++		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
++			offset = (u64)link_index *
++				mipicsi->bytesperline * mipicsi->height;
++			base = mipicsi->camsv[i];
++			pa = mipicsi->cam_buf[next].vb_dma_addr_phy;
++			mtk_mipicsi_fill_buffer(base, pa + offset);
++			link_index++;
++		}
++	}
+ 	/*
+ 	 * fb_list has one more buffer. Free the first buffer to user
+ 	 * and fill the second buffer to HW.
+-- 
+2.18.0
