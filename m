@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v2 8/8] ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
-Date: Tue, 16 Apr 2019 16:58:19 +0200
-Message-ID: <1555426699-5340-9-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v2 7/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
+Date: Tue, 16 Apr 2019 16:58:18 +0200
+Message-ID: <1555426699-5340-8-git-send-email-fabien.dessenne@st.com>
 References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,33 +12,65 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable m4 coprocessor for STM32MP157a-dk1 board.
+Declare reserved memories shared by the processors for STM32MP157a-dk1
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 42 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 26ce8de..da64ee2 100644
+index 85a761a..26ce8de 100644
 --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
 +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -116,6 +116,16 @@
- 	status = "okay";
- };
+@@ -27,6 +27,48 @@
+ 		reg = <0xc0000000 0x20000000>;
+ 	};
  
-+&m4_rproc {
-+	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
-+			<&vdev0vring1>, <&vdev0buffer>;
-+	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
-+	mbox-names = "vq0", "vq1", "shutdown";
-+	interrupt-parent = <&exti>;
-+	interrupts = <68 1>;
-+	status = "okay";
-+};
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- &rng1 {
- 	status = "okay";
- };
++		mcuram2: mcuram2@10000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10000000 0x40000>;
++			no-map;
++		};
++
++		vdev0vring0: vdev0vring0@10040000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10040000 0x1000>;
++			no-map;
++		};
++
++		vdev0vring1: vdev0vring1@10041000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10041000 0x1000>;
++			no-map;
++		};
++
++		vdev0buffer: vdev0buffer@10042000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10042000 0x4000>;
++			no-map;
++		};
++
++		mcuram: mcuram@30000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x30000000 0x40000>;
++			no-map;
++		};
++
++		retram: retram@38000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x38000000 0x10000>;
++			no-map;
++		};
++	};
++
+ 	led {
+ 		compatible = "gpio-leds";
+ 		blue {
 -- 
 2.7.4
