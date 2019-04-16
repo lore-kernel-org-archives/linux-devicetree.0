@@ -1,71 +1,188 @@
-From: Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 04/15] [media] mtk-mipicsi: add color format support for
- mt2712
-Date: Tue, 16 Apr 2019 17:27:32 +0800
-Message-ID: <1555406863-18069-5-git-send-email-stu.hsieh@mediatek.com>
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: [PATCH v2 10/15] [media] mtk-mipicsi: add ISR for writing the data to buffer
+Date: Tue, 16 Apr 2019 17:27:38 +0800
+Message-ID: <1555406863-18069-11-git-send-email-stu.hsieh@mediatek.com>
 References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add color format support for mt2712
+This patch add ISR for writing the data to buffer
 
-Signed-off-by: Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+When mipicsi HW complete to write the data in buffer,
+the interrupt woulb be trigger.
+So, the ISR need to clear interrupt status for next interrupt.
+
+Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 112 ++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index ec4f6b503b32..16f6bc480f4e 100644
+index 7331543d400a..3624186206bd 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -138,6 +138,20 @@ static void mtk_mipicsi_remove_device(struct soc_camera_device *icd)
- 	(void)pm_runtime_put_sync(icd->parent);
- }
+@@ -35,6 +35,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/iommu.h>
+ #include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-dev.h>
+@@ -97,6 +98,8 @@
+ #define CAMSV_MODULE_EN					0x10
+ #define CAMSV_FMT_SEL					0x14
+ #define CAMSV_INT_EN					0x18
++#define CAMSV_INT_STATUS				0x1C
++#define PASS1_DONE_STATUS				10
+ #define CAMSV_SW_CTL					0x20
+ #define CAMSV_CLK_EN					0x30
  
-+static bool is_supported(const u32 pixformat)
+@@ -127,6 +130,8 @@ struct mtk_mipicsi_dev {
+ 	unsigned int camsv_num;
+ 	struct v4l2_device	v4l2_dev;
+ 	struct device *larb_pdev;
++	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
++	bool irq_status[MTK_CAMDMA_MAX_NUM];
+ 	void __iomem		*ana;
+ 	void __iomem		*seninf_ctrl;
+ 	void __iomem		*seninf;
+@@ -140,6 +145,7 @@ struct mtk_mipicsi_dev {
+ 	spinlock_t		lock;
+ 	spinlock_t		queue_lock;
+ 	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
++	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
+ 	bool streamon;
+ 	unsigned long frame_cnt[MTK_CAMDMA_MAX_NUM];
+ 	unsigned int link;
+@@ -934,9 +940,98 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
+ 		mtk_mipicsi_pm_resume, NULL)
+ };
+ 
++static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
 +{
-+	switch (pixformat) {
-+	/* YUV422 */
-+	case V4L2_PIX_FMT_YUYV:
-+	case V4L2_PIX_FMT_UYVY:
-+	case V4L2_PIX_FMT_YVYU:
-+	case V4L2_PIX_FMT_VYUY:
-+		return true;
++	int ch;
++	u32 int_reg_val;
++
++	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
++		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
++		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
++			return ch;
 +	}
 +
-+	return false;
++	return -1;
 +}
 +
- static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
- 				struct v4l2_format *f)
- {
-@@ -153,6 +167,12 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
- 	struct v4l2_mbus_framefmt *mf = &format.format;
- 	int ret = 0;
- 
-+	if (!is_supported(pix->pixelformat)) {
-+		dev_err(dev, "Format %x not support. set V4L2_PIX_FMT_YUYV as default\n",
-+			pix->pixelformat);
-+		pix->pixelformat = V4L2_PIX_FMT_YUYV;
++static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
++{
++	unsigned int i = 0U;
++	struct mtk_mipicsi_buf *new_cam_buf = NULL;
++	struct mtk_mipicsi_buf *tmp = NULL;
++	unsigned int index = 0U;
++	unsigned int next = 0U;
++
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
++		mipicsi->irq_status[i] = false;
++
++	i = 0;
++
++	/* only one buffer left */
++	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
++		return;
++
++	/*for each fb_lst 2 times to get the top 2 buffer.*/
++	list_for_each_entry_safe(new_cam_buf, tmp,
++		&(mipicsi->fb_list), queue) {
++		if (i == 0U) {
++			index = new_cam_buf->vb->index;
++		} else {
++			next = new_cam_buf->vb->index;
++			break;
++		}
++		++i;
 +	}
 +
- 	xlate = soc_camera_xlate_by_fourcc(icd, pix->pixelformat);
- 	if (xlate == NULL) {
- 		dev_err(dev, "Format 0x%x not found\n", pix->pixelformat);
++	/*
++	 * fb_list has one more buffer. Free the first buffer to user
++	 * and fill the second buffer to HW.
++	 */
++	vb2_buffer_done(mipicsi->cam_buf[index].vb,
++		VB2_BUF_STATE_DONE);
++	++(mipicsi->dequeue_cnt);
++
++	list_del_init(&(mipicsi->cam_buf[index].queue));
++}
++
++static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
++{
++
++	struct mtk_mipicsi_dev *mipicsi = data;
++	unsigned long flags = 0;
++	int isr_ch;
++	u8 irq_cnt = 0, i = 0;
++
++	spin_lock_irqsave(&mipicsi->lock, flags);
++
++	isr_ch = get_irq_channel(mipicsi);
++	if (isr_ch < 0) {
++		spin_unlock_irqrestore(&mipicsi->lock, flags);
++		return IRQ_HANDLED;
++	}
++
++	/* clear interrupt */
++	writel(1UL << PASS1_DONE_STATUS,
++		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
++	mipicsi->irq_status[isr_ch] = true;
++	++(mipicsi->frame_cnt[isr_ch]);
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
++		if (mipicsi->irq_status[i])
++			++irq_cnt;
++	}
++
++	if (irq_cnt == mipicsi->link)
++		mtk_mipicsi_irq_buf_process(mipicsi);
++	spin_unlock_irqrestore(&mipicsi->lock, flags);
++
++	return IRQ_HANDLED;
++}
++
+ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+ 		int index)
+ {
++	int ret;
++	int irq;
+ 	struct clk *clk = NULL;
+ 	struct device *dev = NULL;
+ 	struct resource *res = NULL;
+@@ -974,6 +1069,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+ 	}
+ 	mipicsi->clk[index] = clk;
+ 
++	irq = of_irq_get(np, 0);
++	if (irq <= 0) {
++		dev_err(dev, "get irq fail in %s node\n", np->full_name);
++		return -ENODEV;
++	}
++	mipicsi->irq[index] = irq;
++
++	ret = devm_request_irq(dev, irq,
++			mtk_mipicsi_isr, 0,
++			mipicsi->drv_name, mipicsi);
++	if (ret != 0) {
++		dev_err(dev, "%s irq register failed\n", np->full_name);
++		return -ENODEV;
++	}
++	disable_irq(mipicsi->irq[index]);
++	mipicsi->irq_status[index] = false;
++
+ 	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
+ 	if (res == NULL) {
+ 		dev_err(dev, "get seninf_mux memory failed in %s node\n",
 -- 
 2.18.0
