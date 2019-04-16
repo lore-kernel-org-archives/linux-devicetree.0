@@ -1,67 +1,31 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V2 07/16] dt-bindings: PCI: designware: Add binding for
- CDM register check
-Date: Tue, 16 Apr 2019 19:59:12 +0530
-Message-ID: <ccaf5077-4fb8-847c-d8b6-6e8a25f27660@nvidia.com>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
- <1554407683-31580-8-git-send-email-vidyas@nvidia.com>
- <20190415145402.GF29254@ulmo>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Enable AHCI
+Date: Tue, 16 Apr 2019 20:04:11 +0530
+Message-ID: <CAMty3ZCQiSgRMhxEpykcA-6RnDgBdjMVtXEw0XLYM2cqgtU=bQ@mail.gmail.com>
+References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org> <1555065186-8154-5-git-send-email-pgreco@centosproject.org>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415145402.GF29254@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB4OP27SQKGQEBMBUB2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1555065186-8154-5-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Pablo_Sebasti=C3=A1n_Greco?= <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/15/2019 8:24 PM, Thierry Reding wrote:
-> On Fri, Apr 05, 2019 at 01:24:34AM +0530, Vidya Sagar wrote:
->> Add support to enable CDM (Configuration Dependent Module) registers check
->> for any data corruption. CDM registers include standard PCIe configuration
->> space registers, Port Logic registers and iATU and DMA registers.
->> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
->> Version 4.90a
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v1]:
->> * This is a new patch in v2 series
->>
->>   Documentation/devicetree/bindings/pci/designware-pcie.txt | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index c124f9bc11f3..728281b5bcd5 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -31,6 +31,10 @@ Optional properties:
->>   - clock-names: Must include the following entries:
->>   	- "pcie"
->>   	- "pcie_bus"
->> +- cdm-check: This is a boolean property and if present enables automatic
->> +   checking of CDM (Configuration Dependent Module) registers for data
->> +   corruption. CDM registers include configuration space registers and iATU
->> +   (internal Address Translation Unit) registers.
-> 
-> By comparison the commit message also lists "Port Logic" and "DMA"
-> registers as being part of the CDM registers. Shouldn't they be part of
-> the bindings document as well?
-Ok. I'll add them in V3 patch series.
+On Fri, Apr 12, 2019 at 4:03 PM Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org> wrote:
+>
+> Just like the Bananapi M2 Ultra, enable the ahci controller and
+> the two regulators needed to activate it.
+>
+> Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> ---
 
-> 
-> Perhaps it'd also be a good idea to rename this property to something
-> more imperative, like "enable-cdm" or similar.
-Ok. I'll go with "enable-cdm-check". I hope that should be fine.
-
-> 
-> Thierry
-> 
->>   RC mode:
->>   - num-viewport: number of view ports configured in hardware. If a platform
->>     does not specify it, the driver assumes 2.
->> -- 
->> 2.7.4
->>
+Reviewed-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
