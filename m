@@ -1,97 +1,93 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v4 0/2] Add support for the Purism Librem5 devkit
-Date: Tue, 16 Apr 2019 18:55:43 +0200
-Message-ID: <20190416165543.hbowm2zejjdxzwc3@pengutronix.de>
-References: <20190415235343.16565-1-angus@akkea.ca>
- <20190416075834.6wurd6nq4ow5woyn@pengutronix.de>
- <665773559cd9449a27fc9bc40cf73792@www.akkea.ca>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining
+ down after PHY disconnect
+Date: Tue, 16 Apr 2019 11:57:53 -0500
+Message-ID: <CADRPPNS2kecKh=MXJZafKW1x7wZ2MJh4qng1jdZ=-Pij2nXi2g@mail.gmail.com>
+References: <20190411232315.19588-1-olteanv@gmail.com> <20190411232315.19588-2-olteanv@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <665773559cd9449a27fc9bc40cf73792@www.akkea.ca>
+In-Reply-To: <20190411232315.19588-2-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Angus Ainslie <angus@akkea.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, claudiu.manoil@nxp.com, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 19-04-16 09:38, Angus Ainslie wrote:
-> On 2019-04-16 00:58, Marco Felsch wrote:
-> > Hi Agnus,
-> > 
-> > On 19-04-15 16:53, Angus Ainslie (Purism) wrote:
-> > > The Librem5 devkit is based on the imx8mq from NXP. This is a default
-> > > devicetree to boot the board to a command prompt.
-> > 
-> > You should also provide a patch which adds the devicetree to the yaml
-> > file, see: Documentation/devicetree/bindings/arm/fsl.yaml.
-> > 
-> 
-> Sure, what is that yaml file for ?
+On Thu, Apr 11, 2019 at 6:28 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+> are pointing towards the same internal PCS. Therefore nobody is
+> controlling the internal PCS of eTSEC0.
+>
+> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
+> initialization. But upon an ifdown/ifup sequence, the code path from
+> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
+> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
+> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
+> failure condition, the PHY driver keeps printing
+> '803x_aneg_done: SGMII link is not ok'.
+>
+> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-Thats for Rob's the validation: https://lwn.net/Articles/771621/
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-Regards,
-  Marco
-
-> 
-> Angus
-> 
-> > Thanks,
-> >   Marco
-> > 
-> > > 
-> > > Changes since v3:
-> > > 
-> > > Freshly sorted and pressed nodes.
-> > > Change the backlight to an interpolated scale.
-> > > Dropped i2c2.
-> > > Dropped devkit version number to match debian MR.
-> > > 
-> > > Changes since v2:
-> > > 
-> > > Fixed incorrect phy-supply for the fsl-fec.
-> > > Dropped unused regulator property.
-> > > Fixup Makefile for linux-next.
-> > > 
-> > > Changes since v1:
-> > > 
-> > > Dropped config file.
-> > > Updated the board compatible label.
-> > > Changed node names to follow naming conventions.
-> > > Added a more complete regulator hierachy.
-> > > Removed unused nodes.
-> > > Removed unknown devices.
-> > > Fixed comment style.
-> > > Dropped undocumented properties.
-> > > 
-> > > Angus Ainslie (Purism) (2):
-> > >   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
-> > >   dt-bindings: Add an entry for Purism SPC
-> > > 
-> > >  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
-> > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> > >  .../dts/freescale/imx8mq-librem5-devkit.dts   | 822
-> > > ++++++++++++++++++
-> > >  3 files changed, 824 insertions(+)
-> > >  create mode 100644
-> > > arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > > 
-> > > --
-> > > 2.17.1
-> > > 
-> > > 
-> > > 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Leo
+> ---
+>  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
+>  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+> index 97e1fb7ea932..9b1fe99d55b1 100644
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -145,7 +145,7 @@
+>  };
+>
+>  &enet0 {
+> -       tbi-handle = <&tbi1>;
+> +       tbi-handle = <&tbi0>;
+>         phy-handle = <&sgmii_phy2>;
+>         phy-connection-type = "sgmii";
+>         status = "okay";
+> @@ -225,6 +225,13 @@
+>         sgmii_phy2: ethernet-phy@2 {
+>                 reg = <0x2>;
+>         };
+> +       tbi0: tbi-phy@1f {
+> +               reg = <0x1f>;
+> +               device_type = "tbi-phy";
+> +       };
+> +};
+> +
+> +&mdio1 {
+>         tbi1: tbi-phy@1f {
+>                 reg = <0x1f>;
+>                 device_type = "tbi-phy";
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 1a2a9509d9c2..89eab1fd1f7f 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -709,6 +709,15 @@
+>                               <0x0 0x2d10030 0x0 0x4>;
+>                 };
+>
+> +               mdio1: mdio@2d64000 {
+> +                       compatible = "fsl,etsec2-mdio";
+> +                       device_type = "mdio";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0x0 0x2d64000 0x0 0x4000>,
+> +                             <0x0 0x2d50030 0x0 0x4>;
+> +               };
+> +
+>                 ptp_clock@2d10e00 {
+>                         compatible = "fsl,etsec-ptp";
+>                         reg = <0x0 0x2d10e00 0x0 0xb0>;
+> --
+> 2.17.1
+>
