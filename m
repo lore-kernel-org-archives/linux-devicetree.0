@@ -1,67 +1,60 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:29904 "EHLO
+Return-Path: <SRS0=vr9i=SS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:13313 "EHLO
         www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfDIIwl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:41 -0400
+        with ESMTP id S1727214AbfDPB4I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 21:56:08 -0400
 From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 07/11] ARM: dts: r8a77470: Add Audio-DMAC support
-Date: Tue,  9 Apr 2019 17:51:48 +0900
-Message-Id: <1554799912-24764-8-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
+Subject: [PATCH 2/4] arm64: dts: renesas: r8a7796: Add TPU support
+Date: Tue, 16 Apr 2019 10:55:50 +0900
+Message-Id: <1555379752-5980-3-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1555379752-5980-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1555379752-5980-1-git-send-email-cv-dong@jinso.co.jp>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+To: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Add audma0 node to dtsi for audio support on the RZ/G1C (r8a77470) SoC.
+Add TPU support on r8a7796 SoC.
 
 Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
- arch/arm/boot/dts/r8a77470.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 11 +++++++++++
+ drivers/clk/renesas/r8a7796-cpg-mssr.c   |  1 +
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 2cea3e8..f2349a0 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -982,6 +982,37 @@
- 			};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index d5e2f4a..a5c6a99 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1319,6 +1319,17 @@
+ 			status = "disabled";
  		};
  
-+		audma0: dma-controller@ec700000 {
-+			compatible = "renesas,dmac-r8a77470",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xec700000 0 0x10000>;
-+			interrupts = <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12";
-+			clocks = <&cpg CPG_MOD 502>;
-+			clock-names = "fck";
-+			power-domains = <&sysc r8a77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 502>;
-+			#dma-cells = <1>;
-+			dma-channels = <13>;
++		tpu: pwm@e6e80000 {
++			compatible = "renesas,tpu-r8a7796", "renesas,tpu";
++			reg = <0 0xe6e80000 0 0x148>;
++			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 304>;
++			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++			resets = <&cpg 304>;
++			#pwm-cells = <3>;
++			status = "disabled";
 +		};
 +
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
+ 		msiof0: spi@e6e90000 {
+ 			compatible = "renesas,msiof-r8a7796",
+ 				     "renesas,rcar-gen3-msiof";
+diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+index d8e9af5..e4f5db4 100644
+--- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+@@ -134,6 +134,7 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
+ 	DEF_MOD("cmt2",			 301,	R8A7796_CLK_R),
+ 	DEF_MOD("cmt1",			 302,	R8A7796_CLK_R),
+ 	DEF_MOD("cmt0",			 303,	R8A7796_CLK_R),
++	DEF_MOD("tpu0",			 304,	R8A7796_CLK_S3D4),
+ 	DEF_MOD("scif2",		 310,	R8A7796_CLK_S3D4),
+ 	DEF_MOD("sdif3",		 311,	R8A7796_CLK_SD3),
+ 	DEF_MOD("sdif2",		 312,	R8A7796_CLK_SD2),
 -- 
 2.7.4
