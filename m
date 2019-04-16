@@ -1,51 +1,63 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 24/25] drm/mediatek: respect page offset for PRIME
- mmap calls
-Date: Tue, 16 Apr 2019 16:33:54 +0800
-Message-ID: <1555403634.11519.11.camel@mtksdaap41>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
- <1553667561-25447-25-git-send-email-yongqiang.niu@mediatek.com>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: Re: [PATCH v1 1/1] arm64: dts: mt8173: add pmu nodes for mt8173
+Date: Tue, 16 Apr 2019 16:35:01 +0800
+Message-ID: <1555403701.26958.1.camel@mtksdaap41>
+References: <20190109082143.26468-1-seiya.wang@mediatek.com>
+         <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1553667561-25447-25-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gUmVzcGVjdCBwYWdlIG9mZnNldCBmb3IgUFJJTUUg
-bW1hcCBjYWxscwoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IAo+
-IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29t
-Pgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyB8IDcgKysr
-KysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5jIGIv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMKPiBpbmRleCBjMjMwMjM3Li41
-MjRlNDk0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dl
-bS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMKPiBAQCAt
-MTQ0LDcgKzE0NCw2IEBAIHN0YXRpYyBpbnQgbXRrX2RybV9nZW1fb2JqZWN0X21tYXAoc3RydWN0
-IGRybV9nZW1fb2JqZWN0ICpvYmosCj4gIAkgKiBWTV9QRk5NQVAgZmxhZyB0aGF0IHdhcyBzZXQg
-YnkgZHJtX2dlbV9tbWFwX29iaigpL2RybV9nZW1fbW1hcCgpLgo+ICAJICovCj4gIAl2bWEtPnZt
-X2ZsYWdzICY9IH5WTV9QRk5NQVA7Cj4gLQl2bWEtPnZtX3Bnb2ZmID0gMDsKPiAgCj4gIAlyZXQg
-PSBkbWFfbW1hcF9hdHRycyhwcml2LT5kbWFfZGV2LCB2bWEsIG10a19nZW0tPmNvb2tpZSwKPiAg
-CQkJICAgICBtdGtfZ2VtLT5kbWFfYWRkciwgb2JqLT5zaXplLCBtdGtfZ2VtLT5kbWFfYXR0cnMp
-Owo+IEBAIC0xODMsNiArMTgyLDEyIEBAIGludCBtdGtfZHJtX2dlbV9tbWFwKHN0cnVjdCBmaWxl
-ICpmaWxwLCBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSkKPiAgCj4gIAlvYmogPSB2bWEtPnZt
-X3ByaXZhdGVfZGF0YTsKPiAgCj4gKwkvKgo+ICsJICogU2V0IHZtX3Bnb2ZmICh1c2VkIGFzIGEg
-ZmFrZSBidWZmZXIgb2Zmc2V0IGJ5IERSTSkgdG8gMCBhbmQgbWFwIHRoZQo+ICsJICogd2hvbGUg
-YnVmZmVyIGZyb20gdGhlIHN0YXJ0Lgo+ICsJICovCj4gKwl2bWEtPnZtX3Bnb2ZmID0gMDsKPiAr
-Cj4gIAlyZXR1cm4gbXRrX2RybV9nZW1fb2JqZWN0X21tYXAob2JqLCB2bWEpOwo+ICB9Cj4gIAoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Fri, 2019-02-08 at 16:04 +0100, Matthias Brugger wrote:
+> 
+> On 09/01/2019 09:21, Seiya Wang wrote:
+> > This patch adds the device nodes of ARM Performance Monitor Uint
+> > for mt8173.
+> > 
+> > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 412ffd4d426b..44374c506a1c 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -216,6 +216,20 @@
+> >  		};
+> >  	};
+> >  
+> > +	pmu_a53 {
+> > +		compatible = "arm,cortex-a53-pmu";
+> > +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-affinity = <&cpu0>, <&cpu1>;
+> > +	};
+> > +
+> > +	pmu_a72 {
+> > +		compatible = "arm,cortex-a72-pmu";
+> > +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 13 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-affinity = <&cpu2>, <&cpu3>;
+> > +	};
+> 
+> There is no a72 but a a57 CPU present.
+> Typo?
+> 
+> Regards,
+> Matthias
+
+Please also apply this (if no problems) since we have changed to ca72.
+Thanks.
+
+> > +
+> >  	psci {
+> >  		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+> >  		method = "smc";
+> > 
