@@ -1,105 +1,42 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4 v2] drm/mcde: Add device tree bindings
-Date: Tue, 16 Apr 2019 16:28:44 +0200
-Message-ID: <20190416142844.12038-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v4 0/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date: Tue, 16 Apr 2019 11:52:07 -0400
+Message-ID: <20190416155209.24216-1-tiny.windzz@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tiny.windzz@gmail.com, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIFNULUVyaWNzc29uCk11
-bHRpIENoYW5uZWwgRGlzcGxheSBFbmdpbmUgTUNERSBhcyBmb3VuZCBpbiB0aGUgVTg1MDAKU29D
-cy4KCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpTaWduZWQtb2ZmLWJ5OiBMaW51cyBX
-YWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ci0tLQpDaGFuZ2VMb2cgdjEtPnYyOgot
-IERyb3AgdGhlIGdyYXBoIHJlcHJlc2VudGF0aW9uIG9mIGEgcG9ydCBmcm9tIERTSSBob3N0CiAg
-dG8gcGFuZWwgY2hpbGQuIEp1c3QgaGF2ZSBwYW5lbHMgb3IgYnJpZGdlcyBiZSBjaGlsZHJlbgog
-IG9mIHRoZSBEU0kgaG9zdC4KLSBKdXN0IG5hbWUgdGhlIHBhbmVsIG5vZGUgInBhbmVsIi4KLSBN
-b3ZlIHRoZSBIUyBhbmQgTFAvRVMgY2xvY2tzIHRvIGJlIHByb3BlcnRpZXMgb24gdGhlaXIKICBy
-ZXNwZWN0aXZlIERTSSBob3N0IGRldmljZSBub2Rlcy4KLSBDbGFyaWZ5IHRoYXQgdGhlIHRoaXJk
-IERTSSBibG9jayAoRFNJMikgZG9lcyBub3QgaGF2ZQogIGFueSBoaWdoIHNwZWVkIGNsb2NrLgot
-LS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3RlLG1jZGUudHh0ICB8IDEwNCAr
-KysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMDQgaW5zZXJ0aW9ucygrKQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3N0ZSxtY2RlLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3N0ZSxtY2RlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3N0ZSxtY2RlLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAw
-MDAwMDAwMDAuLjRjMzNjNjkyYmQ1ZgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0ZSxtY2RlLnR4dApAQCAtMCwwICsxLDEwNCBA
-QAorU1QtRXJpY3Nzb24gTXVsdGkgQ2hhbm5lbCBEaXNwbGF5IEVuZ2luZSBNQ0RFCisKK1RoZSBT
-VC1Fcmljc3NvbiBNQ0RFIGlzIGEgZGlzcGxheSBjb250cm9sbGVyIHdpdGggc3VwcG9ydCBmb3Ig
-Y29tcG9zaXRpbmcKK2FuZCBkaXNwbGF5aW5nIHNldmVyYWwgY2hhbm5lbHMgbWVtb3J5IHJlc2lk
-ZW50IGdyYXBoaWNzIGRhdGEgb24gRFNJIG9yCitMQ0QgZGlzcGxheXMgb3IgYnJpZGdlcy4gSXQg
-aXMgdXNlZCBpbiB0aGUgU1QtRXJpY3Nzb24gVTg1MDAgcGxhdGZvcm0uCisKK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZTogbXVzdCBiZToKKyAgInN0ZSxtY2RlIgorLSByZWc6
-IHJlZ2lzdGVyIGJhc2UgZm9yIHRoZSBtYWluIE1DREUgY29udHJvbCByZWdpc3RlcnMsIHNob3Vs
-ZCBiZQorICAweDEwMDAgaW4gc2l6ZQorLSBpbnRlcnJ1cHRzOiB0aGUgaW50ZXJydXB0IGxpbmUg
-Zm9yIHRoZSBNQ0RFCistIGVwb2Qtc3VwcGx5OiBhIHBoYW5kbGUgdG8gdGhlIEVQT0QgcmVndWxh
-dG9yCistIHZhbmEtc3VwcGx5OiBhIHBoYW5kbGUgdG8gdGhlIGFuYWxvZyB2b2x0YWdlIHJlZ3Vs
-YXRvcgorLSBjbG9ja3M6IGFuIGFycmF5IG9mIHRoZSBNQ0RFIGNsb2NrcyBpbiB0aGlzIHN0cmlj
-dCBvcmRlcjoKKyAgTUNERUNMSyAobWFpbiBNQ0RFIGNsb2NrKSwgTENEQ0xLIChMQ0QgY2xvY2sp
-LCBQTExEU0kKKyAgKEhETUkgY2xvY2spLCBEU0kwRVNDTEsgKERTSTAgZW5lcmd5IHNhdmUgY2xv
-Y2spLAorICBEU0kxRVNDTEsgKERTSTEgZW5lcmd5IHNhdmUgY2xvY2spLCBEU0kyRVNDTEsgKERT
-STIgZW5lcmd5CisgIHNhdmUgY2xvY2spCistIGNsb2NrLW5hbWVzOiBtdXN0IGJlIHRoZSBmb2xs
-b3dpbmcgYXJyYXk6CisgICJtY2RlIiwgImxjZCIsICJoZG1pIgorICB0byBtYXRjaCB0aGUgcmVx
-dWlyZWQgY2xvY2sgaW5wdXRzIGFib3ZlLgorLSAjYWRkcmVzcy1jZWxsczogc2hvdWxkIGJlIDwx
-PiAoZm9yIHRoZSBEU0kgaG9zdHMgdGhhdCB3aWxsIGJlIGNoaWxkcmVuKQorLSAjc2l6ZS1jZWxs
-czogc2hvdWxkIGJlIDwxPiAoZm9yIHRoZSBEU0kgaG9zdHMgdGhhdCB3aWxsIGJlIGNoaWxkcmVu
-KQorLSByYW5nZXM6IHRoaXMgc2hvdWxkIGFsd2F5cyBiZSBzdGF0ZWQKKworUmVxdWlyZWQgc3Vi
-bm9kZXM6CisKK1RoZSBkZXZpY2V0cmVlIG11c3Qgc3BlY2lmeSBzdWJub2RlcyBmb3IgdGhlIERT
-SSBob3N0IGFkYXB0ZXJzLgorVGhlc2UgbXVzdCBoYXZlIHRoZSBmb2xsb3dpbmcgY2hhcmFjdGVy
-aXN0aWNzOgorCistIGNvbXBhdGlibGU6IG11c3QgYmU6CisgICJzdGUsbWNkZS1kc2kiCistIHJl
-ZzogbXVzdCBzcGVjaWZ5IHRoZSByZWdpc3RlciByYW5nZSBmb3IgdGhlIERTSSBob3N0CistIHZh
-bmEtc3VwcGx5OiBwaGFuZGxlIHRvIHRoZSBWQU5BIHZvbHRhZ2UgcmVndWxhdG9yCistIGNsb2Nr
-czogcGhhbmRsZXMgdG8gdGhlIGhpZ2ggc3BlZWQgYW5kIGxvdyBwb3dlciAoZW5lcmd5IHNhdmUp
-IGNsb2NrcworICB0aGUgaGlnaCBzcGVlZCBjbG9jayBpcyBub3QgcHJlc2VudCBvbiB0aGUgdGhp
-cmQgKGRzaTIpIGJsb2NrLCBzbyBpdAorICBzaG91bGQgb25seSBoYXZlIHRoZSAibHAiIGNsb2Nr
-CistIGNsb2NrLW5hbWVzOiAiaHMiIGZvciB0aGUgaGlnaCBzcGVlZCBjbG9jayBhbmQgImxwIiBm
-b3IgdGhlIGxvdyBwb3dlcgorICAoZW5lcmd5IHNhdmUpIGNsb2NrCistICNhZGRyZXNzLWNlbGxz
-OiBzaG91bGQgYmUgPDE+CistICNzaXplLWNlbGxzOiBzaG91bGQgYmUgPDA+CisKK0Rpc3BsYXkg
-cGFuZWxzIGFuZCBicmlkZ2VzIHdpbGwgYXBwZWFyIGFzIGNoaWxkcmVuIG9uIHRoZSBEU0kgaG9z
-dHMsIGFuZAordGhlIGRpc3BsYXlzIGFyZSBjb25uZWN0ZWQgdG8gdGhlIERTSSBob3N0cyB1c2lu
-ZyB0aGUgY29tbW9uIGJpbmRpbmcKK2ZvciB2aWRlbyB0cmFuc21pdHRlciBpbnRlcmZhY2VzOyBz
-ZWUKK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZh
-Y2VzLnR4dAorCitJZiBhIERTSSBob3N0IGlzIHVudXNlZCAobm90IGNvbm5lY3RlZCkgaXQgd2ls
-bCBoYXZlIG5vIGNoaWxkcmVuIGRlZmluZWQuCisKK0V4YW1wbGU6CisKK21jZGVAYTAzNTAwMDAg
-eworCWNvbXBhdGlibGUgPSAic3RlLG1jZGUiOworCXJlZyA9IDwweGEwMzUwMDAwIDB4MTAwMD47
-CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ4IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCWVwb2Qt
-c3VwcGx5ID0gPCZkYjg1MDBfYjJyMl9tY2RlX3JlZz47CisJdmFuYS1zdXBwbHkgPSA8JmFiODUw
-MF9sZG9fYW5hX3JlZz47CisJY2xvY2tzID0gPCZwcmNtdV9jbGsgUFJDTVVfTUNERUNMSz4sIC8q
-IE1haW4gTUNERSBjbG9jayAqLworCQkgPCZwcmNtdV9jbGsgUFJDTVVfTENEQ0xLPiwgLyogTENE
-IGNsb2NrICovCisJCSA8JnByY211X2NsayBQUkNNVV9QTExEU0k+OyAvKiBIRE1JIGNsb2NrICov
-CisJY2xvY2stbmFtZXMgPSAibWNkZSIsICJsY2QiLCAiaGRtaSI7CisJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJI3NpemUtY2VsbHMgPSA8MT47CisJcmFuZ2VzOworCisJZHNpMDogZHNpQGEwMzUx
-MDAwIHsKKwkJY29tcGF0aWJsZSA9ICJzdGUsbWNkZS1kc2kiOworCQlyZWcgPSA8MHhhMDM1MTAw
-MCAweDEwMDA+OworCQl2YW5hLXN1cHBseSA9IDwmYWI4NTAwX2xkb19hbmFfcmVnPjsKKwkJY2xv
-Y2tzID0gPCZwcmNtdV9jbGsgUFJDTVVfRFNJMENMSz4sIDwmcHJjbXVfY2xrIFBSQ01VX0RTSTBF
-U0NDTEs+OworCQljbG9jay1uYW1lcyA9ICJocyIsICJscCI7CisJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQlwYW5lbCB7CisJCQljb21wYXRpYmxlID0g
-InNhbXN1bmcsczZkMTZkMCI7CisJCQlyZWcgPSA8MD47CisJCQl2ZGQxLXN1cHBseSA9IDwmYWI4
-NTAwX2xkb19hdXgxX3JlZz47CisJCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzIgMSBHUElPX0FDVElW
-RV9MT1c+OworCQl9OworCisJfTsKKwlkc2kxOiBkc2lAYTAzNTIwMDAgeworCQljb21wYXRpYmxl
-ID0gInN0ZSxtY2RlLWRzaSI7CisJCXJlZyA9IDwweGEwMzUyMDAwIDB4MTAwMD47CisJCXZhbmEt
-c3VwcGx5ID0gPCZhYjg1MDBfbGRvX2FuYV9yZWc+OworCQljbG9ja3MgPSA8JnByY211X2NsayBQ
-UkNNVV9EU0kxQ0xLPiwgPCZwcmNtdV9jbGsgUFJDTVVfRFNJMUVTQ0NMSz47CisJCWNsb2NrLW5h
-bWVzID0gImhzIiwgImxwIjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxz
-ID0gPDA+OworCX07CisJZHNpMjogZHNpQGEwMzUzMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJzdGUs
-bWNkZS1kc2kiOworCQlyZWcgPSA8MHhhMDM1MzAwMCAweDEwMDA+OworCQl2YW5hLXN1cHBseSA9
-IDwmYWI4NTAwX2xkb19hbmFfcmVnPjsKKwkJLyogVGhpcyBEU0kgcG9ydCBvbmx5IGhhcyB0aGUg
-TG93IFBvd2VyIC8gRW5lcmd5IFNhdmUgY2xvY2sgKi8KKwkJY2xvY2tzID0gPCZwcmNtdV9jbGsg
-UFJDTVVfRFNJMkVTQ0NMSz47CisJCWNsb2NrLW5hbWVzID0gImxwIjsKKwkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCX07Cit9OwotLSAKMi4yMC4xCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Add sunxi nvmem based CPU scaling driver, refers to qcom-cpufreq-kryo.
+
+Yangtao Li (2):
+  cpufreq: Add sunxi nvmem based CPU scaling driver
+  dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
+
+ .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 +++++++++++++
+ MAINTAINERS                                   |   7 +
+ drivers/cpufreq/Kconfig.arm                   |  12 +
+ drivers/cpufreq/Makefile                      |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c        | 226 ++++++++++++++++++
+ 6 files changed, 415 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+ create mode 100644 drivers/cpufreq/sun50i-cpufreq-nvmem.c
+
+---
+v4:
+-I removed this sunxi_cpufreq_soc_data structure for now.
+-Convert to less generic name.
+-Update soc_bin xlate.
+v3:
+-update changelog and title
+-convert compatibles to allwinner,cpu-operating-points-v2
+-document the valid names for opp-microvolt-<name>
+v2:
+-update changelog
+-convert to dev_pm_opp_set_prop_name instead of
+ dev_pm_opp_set_supported_hw
+-some change in OPP Node  
+---
+2.17.0
