@@ -1,264 +1,59 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH RESEND v3 4/4] pinctrl: add drive for I2C related pins on
- MT8183
-Date: Tue, 16 Apr 2019 10:08:49 +0200
-Message-ID: <206361ee-b238-4017-83fe-702ea59ae9c5@gmail.com>
-References: <20190325124137.6117-1-zhiyong.tao@mediatek.com>
- <20190325124137.6117-5-zhiyong.tao@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 18/24] dt-bindings: timer: mtk-timer: add support for
+ MT8516
+Date: Tue, 16 Apr 2019 10:09:47 +0200
+Message-ID: <e4895191-c267-7b0b-6203-8e4ff44927e0@linaro.org>
+References: <20190323211612.860-1-fparent@baylibre.com>
+ <20190323211612.860-19-fparent@baylibre.com>
+ <182f1ae5-9f4f-8ef4-695f-353bbd1966c6@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190325124137.6117-5-zhiyong.tao@mediatek.com>
+In-Reply-To: <182f1ae5-9f4f-8ef4-695f-353bbd1966c6@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>, robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, sean.wang@kernel.org
-Cc: srv_heupstream@mediatek.com, hui.liu@mediatek.com, eddie.huang@mediatek.com, chuanjia.liu@mediatek.com, biao.huang@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, sean.wang@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: sean.wang@kernel.org, ryder.lee@mediatek.com, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, chaotian.jing@mediatek.com, yong.mao@mediatek.com, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25/03/2019 13:41, Zhiyong Tao wrote:
-> This patch provides the advanced drive for I2C used pins on MT8183.
-> The detail strength specification description of the I2C pin:
-> When E1=0/E0=0, the strength is 0.125mA.
-> When E1=0/E0=1, the strength is 0.25mA.
-> When E1=1/E0=0, the strength is 0.5mA.
-> When E1=1/E0=1, the strength is 1mA.
-> For I2C pins, there are existing generic driving setup and the above
-> specific driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA
-> driving adjustment in generic driving setup. But in specific driving
-> setup, they can support 0.125/0.25/0.5/1mA adjustment.
-> If we enable specific driving setup for I2C pins,
-> the existing generic driving setup will be disabled.
-> For some special features, we need the I2C pins specific driving setup.
-> The specific driving setup is controlled by E1E0EN.
-> So we need add extra vendor driving preperty instead of the generic
-> driving property. We can add "mediatek,drive-strength-adv = <XXX>;"
-> to describe the specific driving setup property.
-> "XXX" means the value of E1E0EN. So the valid arguments of
-> "mediatek,drive-strength-adv" are from 0 to 7.
+On 16/04/2019 09:54, Matthias Brugger wrote:
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 47 ++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 11 ++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 12 ++++++
->  4 files changed, 120 insertions(+)
 > 
-
-Linus, did that fall through the cracks? Do you have any comments on this driver?
-
-Regards,
-Matthias
-
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> index 6262fd3678ea..2c7409ed16fa 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> @@ -472,6 +472,51 @@ static const struct mtk_pin_field_calc mt8183_pin_r1_range[] = {
->  	PIN_FIELD_BASE(133, 133, 8, 0x0D0, 0x10, 13, 1),
->  };
->  
-> +static const struct mtk_pin_field_calc mt8183_pin_e1e0en_range[] = {
-> +	PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 20, 1),
-> +	PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 15, 1),
-> +	PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 12, 1),
-> +	PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 7, 1),
-> +	PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 12, 1),
-> +	PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 9, 1),
-> +	PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 19, 1),
-> +	PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 22, 1),
-> +	PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 24, 1),
-> +	PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 14, 1),
-> +	PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 27, 1),
-> +	PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 17, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8183_pin_e0_range[] = {
-> +	PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 21, 1),
-> +	PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 16, 1),
-> +	PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 13, 1),
-> +	PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 8, 1),
-> +	PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 13, 1),
-> +	PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 10, 1),
-> +	PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 20, 1),
-> +	PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 23, 1),
-> +	PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 25, 1),
-> +	PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 15, 1),
-> +	PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 28, 1),
-> +	PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 18, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8183_pin_e1_range[] = {
-> +	PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 22, 1),
-> +	PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 17, 1),
-> +	PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 14, 1),
-> +	PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 9, 1),
-> +	PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 14, 1),
-> +	PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 11, 1),
-> +	PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 21, 1),
-> +	PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 24, 1),
-> +	PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 26, 1),
-> +	PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 16, 1),
-> +	PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 29, 1),
-> +	PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 19, 1),
-> +};
-> +
->  static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->  	[PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8183_pin_mode_range),
->  	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8183_pin_dir_range),
-> @@ -485,6 +530,9 @@ static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->  	[PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt8183_pin_pupd_range),
->  	[PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8183_pin_r0_range),
->  	[PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8183_pin_r1_range),
-> +	[PINCTRL_PIN_REG_DRV_EN] = MTK_RANGE(mt8183_pin_e1e0en_range),
-> +	[PINCTRL_PIN_REG_DRV_E0] = MTK_RANGE(mt8183_pin_e0_range),
-> +	[PINCTRL_PIN_REG_DRV_E1] = MTK_RANGE(mt8183_pin_e1_range),
->  };
->  
->  static const char * const mt8183_pinctrl_register_base_names[] = {
-> @@ -517,6 +565,8 @@ static const struct mtk_pin_soc mt8183_data = {
->  	.drive_get = mtk_pinconf_drive_get_rev1,
->  	.adv_pull_get = mtk_pinconf_adv_pull_get,
->  	.adv_pull_set = mtk_pinconf_adv_pull_set,
-> +	.adv_drive_get = mtk_pinconf_adv_drive_get,
-> +	.adv_drive_set = mtk_pinconf_adv_drive_set,
->  };
->  
->  static const struct of_device_id mt8183_pinctrl_of_match[] = {
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index b1c368455d30..ef8732e8966b 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -674,3 +674,50 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +
-> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> +			      const struct mtk_pin_desc *desc, u32 arg)
-> +{
-> +	int err;
-> +
-> +	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, arg & 1);
-> +	if (err)
-> +		return err;
-> +
-> +	if (arg & 1) {
-> +		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E0,
-> +				       !!(arg & 2));
-> +		if (err)
-> +			return err;
-> +
-> +		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E1,
-> +				       !!(arg & 4));
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> +			      const struct mtk_pin_desc *desc, u32 *val)
-> +{
-> +	u32 en, e0, e1;
-> +	int err;
-> +
-> +	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, &en);
-> +	if (err)
-> +		return err;
-> +
-> +	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E0, &e0);
-> +	if (err)
-> +		return err;
-> +
-> +	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E1, &e1);
-> +	if (err)
-> +		return err;
-> +
-> +	*val = (e0 | e1 << 1 | en << 2) & 0x7;
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 6d24522739d9..1b7da42aa1d5 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -63,6 +63,9 @@ enum {
->  	PINCTRL_PIN_REG_IES,
->  	PINCTRL_PIN_REG_PULLEN,
->  	PINCTRL_PIN_REG_PULLSEL,
-> +	PINCTRL_PIN_REG_DRV_EN,
-> +	PINCTRL_PIN_REG_DRV_E0,
-> +	PINCTRL_PIN_REG_DRV_E1,
->  	PINCTRL_PIN_REG_MAX,
->  };
->  
-> @@ -224,6 +227,10 @@ struct mtk_pin_soc {
->  	int (*adv_pull_get)(struct mtk_pinctrl *hw,
->  			    const struct mtk_pin_desc *desc, bool pullup,
->  			    u32 *val);
-> +	int (*adv_drive_set)(struct mtk_pinctrl *hw,
-> +			     const struct mtk_pin_desc *desc, u32 arg);
-> +	int (*adv_drive_get)(struct mtk_pinctrl *hw,
-> +			     const struct mtk_pin_desc *desc, u32 *val);
->  
->  	/* Specific driver data */
->  	void				*driver_data;
-> @@ -287,5 +294,9 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
->  			     u32 *val);
-> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> +			      const struct mtk_pin_desc *desc, u32 arg);
-> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> +			      const struct mtk_pin_desc *desc, u32 *val);
->  
->  #endif /* __PINCTRL_MTK_COMMON_V2_H */
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index b59e10852bfb..dcd295f0eb4b 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -20,12 +20,14 @@
->  #define MTK_PIN_CONFIG_RDSEL	(PIN_CONFIG_END + 2)
->  #define MTK_PIN_CONFIG_PU_ADV	(PIN_CONFIG_END + 3)
->  #define MTK_PIN_CONFIG_PD_ADV	(PIN_CONFIG_END + 4)
-> +#define MTK_PIN_CONFIG_DRV_ADV	(PIN_CONFIG_END + 5)
->  
->  static const struct pinconf_generic_params mtk_custom_bindings[] = {
->  	{"mediatek,tdsel",	MTK_PIN_CONFIG_TDSEL,		0},
->  	{"mediatek,rdsel",	MTK_PIN_CONFIG_RDSEL,		0},
->  	{"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,		1},
->  	{"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,	1},
-> +	{"mediatek,drive-strength-adv", MTK_PIN_CONFIG_DRV_ADV,	2},
->  };
->  
->  #ifdef CONFIG_DEBUG_FS
-> @@ -34,6 +36,7 @@ static const struct pin_config_item mtk_conf_items[] = {
->  	PCONFDUMP(MTK_PIN_CONFIG_RDSEL, "rdsel", NULL, true),
->  	PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
->  	PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
-> +	PCONFDUMP(MTK_PIN_CONFIG_DRV_ADV, "drive-strengt-adv", NULL, true),
->  };
->  #endif
->  
-> @@ -311,6 +314,15 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->  			return -ENOTSUPP;
->  		}
->  		break;
-> +	case MTK_PIN_CONFIG_DRV_ADV:
-> +		if (hw->soc->adv_drive_set) {
-> +			err = hw->soc->adv_drive_set(hw, desc, arg);
-> +			if (err)
-> +				return err;
-> +		} else {
-> +			return -ENOTSUPP;
-> +		}
-> +		break;
->  	default:
->  		err = -ENOTSUPP;
->  	}
+> On 23/03/2019 22:16, Fabien Parent wrote:
+>> Add binding documentation of mtk-timer for MT8516 SoC.
+>>
+>> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+>> ---
+>>  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
+>>  1 file changed, 1 insertion(+)
 > 
+> applied to v5.1-next/dts64
+> 
+> Daniel let me know if you want to take it through your tree and I drop the patch.
+
+It is ok.
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+>> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>> index ff7c567a7972..74c3eadad844 100644
+>> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>> @@ -17,6 +17,7 @@ Required properties:
+>>  	* "mediatek,mt8127-timer" for MT8127 compatible timers (GPT)
+>>  	* "mediatek,mt8135-timer" for MT8135 compatible timers (GPT)
+>>  	* "mediatek,mt8173-timer" for MT8173 compatible timers (GPT)
+>> +	* "mediatek,mt8516-timer" for MT8516 compatible timers (GPT)
+>>  	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
+>>  
+>>  	For those SoCs that use SYST
+>>
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
