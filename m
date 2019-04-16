@@ -1,34 +1,50 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH] dt-bindings: Add vendor prefix for intersil
-Date: Tue, 16 Apr 2019 07:52:57 -0700
-Message-ID: <20190416145257.101945-1-venture@google.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v2 0/8] stm32 m4 remoteproc on STM32MP157c
+Date: Tue, 16 Apr 2019 16:58:11 +0200
+Message-ID: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: treding@nvidia.com, khilman@baylibre.com, manivannan.sadhasivam@linaro.org, heiko@sntech.de, martin.blumenstingl@googlemail.com, johan@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for intersil, known as Intersil, a subsidiary of
-Renesas Electronic Corporation.
+STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
+Cortex-M4.
+This patchset adds the support of the stm32_rproc driver allowing to control
+the M4 remote processor.
 
-Signed-off-by: Patrick Venture <venture@google.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v1:
+- Gave details about the memory mapping (in bindings).
+- Used 'dma-ranges' instead of 'ranges'.
+- Updated the 'compatible' property.
+- Remove the 'recovery', 'reset-names' and 'interrupt-names' properties.
+- Clarified why / when mailboxes are optional.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 8162b0eb4b50..ffc69a8bedaf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -191,6 +191,7 @@ innolux	Innolux Corporation
- inside-secure	INSIDE Secure
- intel	Intel Corporation
- intercontrol	Inter Control Group
-+intersil	Intersil
- invensense	InvenSense Inc.
- inversepath	Inverse Path
- iom	Iomega Corporation
+Fabien Dessenne (8):
+  dt-bindings: stm32: add bindings for ML-AHB interconnect
+  dt-bindings: remoteproc: add bindings for stm32 remote processor
+    driver
+  remoteproc: stm32: add an ST stm32_rproc driver
+  ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
+  ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+  ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+  ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
+  ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+
+ .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 ++
+ .../devicetree/bindings/remoteproc/stm32-rproc.txt |  64 +++
+ arch/arm/boot/dts/stm32mp157a-dk1.dts              |  52 ++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts              |  52 ++
+ arch/arm/boot/dts/stm32mp157c.dtsi                 |  20 +
+ drivers/remoteproc/Kconfig                         |  15 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/stm32_rproc.c                   | 628 +++++++++++++++++++++
+ 8 files changed, 869 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+ create mode 100644 drivers/remoteproc/stm32_rproc.c
+
 -- 
-2.21.0.392.gf8f6787159e-goog
+2.7.4
