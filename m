@@ -1,44 +1,127 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [v2 5/5] drm/mediatek: add mt8183 dsi driver support
-Date: Tue, 16 Apr 2019 14:05:01 +0800
-Message-ID: <20190416060501.76276-6-jitao.shi@mediatek.com>
-References: <20190416060501.76276-1-jitao.shi@mediatek.com>
+From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Subject: [PATCH V1 2/3] Documentation: devicetree: regulator: add binding for
+ slg51000
+Date: Tue, 16 Apr 2019 13:37:26 +0900
+Message-ID: <969035f30e614fd68288a0e21b729ae53ef3fca0.1555389447.git.eric.jeong.opensource@diasemi.com>
+References: <cover.1555389447.git.eric.jeong.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190416060501.76276-1-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1555389447.git.eric.jeong.opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIG10ODE4MyBkc2kgZHJpdmVyIGRhdGEuIEVuYWJsZSBzaXplIGNvbnRyb2wgYW5kCnJlZyBj
-b21taXQgY29udHJvbC4KClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
-dGVrLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIHwgOCArKysr
-KysrKwogMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RzaS5jCmluZGV4IDQ1OGE3MDBjZTc0Yy4uZjBiMzZlYzM4ZTRmIDEwMDY0NAotLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHNpLmMKQEAgLTExMDQsMTEgKzExMDQsMTkgQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBtdGtfZHNpX2RyaXZlcl9kYXRhIG10MjcwMV9kc2lfZHJpdmVyX2RhdGEgPSB7CiAJLnJl
-Z19jbWRxX29mZiA9IDB4MTgwLAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZHNpX2Ry
-aXZlcl9kYXRhIG10ODE4M19kc2lfZHJpdmVyX2RhdGEgPSB7CisJLnJlZ19jbWRxX29mZiA9IDB4
-MjAwLAorCS5oYXNfc2hhZG93X2N0bCA9IHRydWUsCisJLmhhc19zaXplX2N0bCA9IHRydWUsCit9
-OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfZHNpX29mX21hdGNoW10g
-PSB7CiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZHNpIiwKIAkgIC5kYXRhID0g
-Jm10MjcwMV9kc2lfZHJpdmVyX2RhdGEgfSwKIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
-ODE3My1kc2kiLAogCSAgLmRhdGEgPSAmbXQ4MTczX2RzaV9kcml2ZXJfZGF0YSB9LAorCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLWRzaSIsCisJICAuZGF0YSA9ICZtdDgxODNfZHNp
-X2RyaXZlcl9kYXRhIH0sCiAJeyB9LAogfTsKIAotLSAKMi4yMS4wCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+
+From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+
+Add device tree binding information for slg51000 regulator driver.
+
+
+Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
+
+---
+This patch applies against linux-next and next-20190415
+
+
+ .../devicetree/bindings/regulator/slg51000.txt     |   88 ++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/slg51000.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/slg51000.txt b/Documentation/devicetree/bindings/regulator/slg51000.txt
+new file mode 100644
+index 0000000..aa0733e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -0,0 +1,88 @@
++* Dialog Semiconductor SLG51000 Voltage Regulator
++
++Required properties:
++- compatible : Should be "dlg,slg51000" for SLG51000
++- reg : Specifies the I2C slave address.
++- xxx-supply: Input voltage supply regulator for ldo3 to ldo7.
++  These entries are required if regulators are enabled for a device.
++  An absence of these properties can cause the regulator registration to fail.
++  If some of input supply is powered through battery or always-on supply then
++  also it is required to have these parameters with proper node handle of always
++  on power supply.
++    vin3-supply: Input supply for ldo3
++    vin4-supply: Input supply for ldo4
++    vin5-supply: Input supply for ldo5
++    vin6-supply: Input supply for ldo6
++    vin7-supply: Input supply for ldo7
++
++Optional properties:
++- interrupt-parent : Specifies the reference to the interrupt controller.
++- interrupts : IRQ line information.
++- dlg,cs-gpios : Specify a valid GPIO for chip select
++
++Sub-nodes:
++- regulators : This node defines the settings for the regulators.
++  The content of the sub-node is defined by the standard binding
++  for regulators; see regulator.txt.
++
++  The SLG51000 regulators are bound using their names listed below:
++    ldo1
++    ldo2
++    ldo3
++    ldo4
++    ldo5
++    ldo6
++    ldo7
++
++Optional properties for regulators:
++- enable-gpios : Specify a valid GPIO for platform control of the regulator.
++
++Example:
++	pmic: slg51000@75 {
++		compatible = "dlg,slg51000";
++		reg = <0x75>;
++
++		regulators {
++			ldo1 {
++			        regulator-name = "ldo1";
++			        regulator-min-microvolt = <2400000>;
++			        regulator-max-microvolt = <3300000>;
++			};
++
++			ldo2 {
++			        regulator-name = "ldo2";
++			        regulator-min-microvolt = <2400000>;
++			        regulator-max-microvolt = <3300000>;
++			};
++
++			ldo3 {
++			        regulator-name = "ldo3";
++			        regulator-min-microvolt = <1200000>;
++			        regulator-max-microvolt = <3750000>;
++			};
++
++			ldo4 {
++			        regulator-name = "ldo4";
++			        regulator-min-microvolt = <1200000>;
++			        regulator-max-microvolt = <3750000>;
++			};
++
++			ldo5 {
++			        regulator-name = "ldo5";
++			        regulator-min-microvolt = <500000>;
++			        regulator-max-microvolt = <1200000>;
++			};
++
++			ldo6 {
++			        regulator-name = "ldo6";
++			        regulator-min-microvolt = <500000>;
++			        regulator-max-microvolt = <1200000>;
++			};
++
++			ldo7 {
++			        regulator-name = "ldo7";
++			        regulator-min-microvolt = <1200000>;
++			        regulator-max-microvolt = <3750000>;
++			};
++		};
++	};
+-- 
+end-of-patch for PATCH V1
