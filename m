@@ -1,74 +1,100 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V2 02/16] PCI/PME: Export pcie_pme_disable_msi() API
-Date: Tue, 16 Apr 2019 19:00:50 +0530
-Message-ID: <f47408e4-c02d-bd28-31f9-96b92be02df5@nvidia.com>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
- <1554407683-31580-3-git-send-email-vidyas@nvidia.com>
- <20190411101657.GF4633@ulmo>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 23/26] PCI: designware-ep: Configure RESBAR to
+ advertise the smallest size
+Date: Tue, 16 Apr 2019 14:36:04 +0100
+Message-ID: <20190416133604.GA14705@red-moon>
+References: <20190325083501.8088-1-kishon@ti.com>
+ <20190325083501.8088-24-kishon@ti.com>
+ <20190413160053.GI126710@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411101657.GF4633@ulmo>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190413160053.GI126710@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com
 List-Id: devicetree@vger.kernel.org
 
-On 4/11/2019 3:46 PM, Thierry Reding wrote:
-> On Fri, Apr 05, 2019 at 01:24:29AM +0530, Vidya Sagar wrote:
->> Export pcie_pme_disable_msi() API to enable drivers using this API be able to
->> build as loadable modules
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes from [v1]:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/pcie/pme.c     | 6 ++++++
->>   drivers/pci/pcie/portdrv.h | 5 +----
->>   2 files changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
->> index 54d593d10396..18e815c1e3c9 100644
->> --- a/drivers/pci/pcie/pme.c
->> +++ b/drivers/pci/pcie/pme.c
->> @@ -27,6 +27,12 @@
->>    */
->>   bool pcie_pme_msi_disabled;
->>   
->> +void pcie_pme_disable_msi(void)
->> +{
->> +	pcie_pme_msi_disabled = true;
->> +}
->> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
->> +
->>   static int __init pcie_pme_setup(char *str)
->>   {
->>   	if (!strncmp(str, "nomsi", 5))
->> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
->> index 1d50dc58ac40..2be7b7e9a784 100644
->> --- a/drivers/pci/pcie/portdrv.h
->> +++ b/drivers/pci/pcie/portdrv.h
->> @@ -127,10 +127,7 @@ struct pci_dev;
->>   #ifdef CONFIG_PCIE_PME
->>   extern bool pcie_pme_msi_disabled;
->>   
->> -static inline void pcie_pme_disable_msi(void)
->> -{
->> -	pcie_pme_msi_disabled = true;
->> -}
->> +void pcie_pme_disable_msi(void);
->>   
->>   static inline bool pcie_pme_no_msi(void)
->>   {
+On Sat, Apr 13, 2019 at 11:00:53AM -0500, Bjorn Helgaas wrote:
+> On Mon, Mar 25, 2019 at 02:04:58PM +0530, Kishon Vijay Abraham I wrote:
+> > Configure RESBAR capability to advertise the smallest size (1MB) for
+> > couple of reasons. A) Host side resource allocation of BAR fails for
+> > larger sizes. B) Endpoint function driver does not allocate memory
+> > for all supported sizes in RESBAR capability.
+> > If and when there is a usecase required to add more flexibility using
+> > RESBAR, this can be revisited.
 > 
-> Perhaps also export pcie_pme_no_msi()? That way you could get rid of the
-> extern declaration of the pcie_pme_msi_disabled variable and make it
-> static to drivers/pci/pcie/pme.c?
-Agree. I'll take care of this in V3 patch series.
+> The #define used in the code below is "REBAR"; maybe spell it out
+> once and then use REBAR instead of RESBAR?
 
-> 
-> Thierry
-> 
+I think we should just name the capability as it is (Resizable BAR) the
+kernel defines are there already anyway. I will rewrite the log
+accordingly.
+
+Lorenzo
+
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   | 34 +++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 74477ad7467f..0c208b9bda43 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -504,10 +504,32 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+> >  	pci_epc_mem_exit(epc);
+> >  }
+> >  
+> > +static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+> > +{
+> > +	u32 header;
+> > +	int pos = PCI_CFG_SPACE_SIZE;
+> > +
+> > +	while (pos) {
+> > +		header = dw_pcie_readl_dbi(pci, pos);
+> > +		if (PCI_EXT_CAP_ID(header) == cap)
+> > +			return pos;
+> > +
+> > +		pos = PCI_EXT_CAP_NEXT(header);
+> > +		if (!pos)
+> > +			break;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  {
+> > +	int i;
+> >  	int ret;
+> > +	u32 reg;
+> >  	void *addr;
+> > +	unsigned int nbars;
+> > +	unsigned int offset;
+> >  	struct pci_epc *epc;
+> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> >  	struct device *dev = pci->dev;
+> > @@ -591,6 +613,18 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  
+> >  	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
+> >  
+> > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> > +	if (offset) {
+> > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> > +			PCI_REBAR_CTRL_NBAR_SHIFT;
+> > +
+> > +		dw_pcie_dbi_ro_wr_en(pci);
+> > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> > +		dw_pcie_dbi_ro_wr_dis(pci);
+> > +	}
+> > +
+> >  	dw_pcie_setup(pci);
+> >  
+> >  	return 0;
+> > -- 
+> > 2.17.1
+> > 
