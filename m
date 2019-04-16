@@ -1,7 +1,7 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v2 14/15] [media] mtk-mipicsi: add debug message for mipicsi driver
-Date: Tue, 16 Apr 2019 17:30:14 +0800
-Message-ID: <1555407015-18130-15-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v2 10/15] [media] mtk-mipicsi: add ISR for writing the data to buffer
+Date: Tue, 16 Apr 2019 17:30:10 +0800
+Message-ID: <1555407015-18130-11-git-send-email-stu.hsieh@mediatek.com>
 References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,162 +12,177 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add debug message for mipicsi driver.
+This patch add ISR for writing the data to buffer
+
+When mipicsi HW complete to write the data in buffer,
+the interrupt woulb be trigger.
+So, the ISR need to clear interrupt status for next interrupt.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 54 ++++++++++++++++++-
- 1 file changed, 52 insertions(+), 2 deletions(-)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 112 ++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 5db9c68b0da9..321bb4c88027 100644
+index 7331543d400a..3624186206bd 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -27,6 +27,7 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/moduleparam.h>
-+#include <linux/time64.h>
- #include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
-@@ -117,6 +118,15 @@
+@@ -35,6 +35,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/iommu.h>
+ #include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-dev.h>
+@@ -97,6 +98,8 @@
+ #define CAMSV_MODULE_EN					0x10
+ #define CAMSV_FMT_SEL					0x14
+ #define CAMSV_INT_EN					0x18
++#define CAMSV_INT_STATUS				0x1C
++#define PASS1_DONE_STATUS				10
+ #define CAMSV_SW_CTL					0x20
+ #define CAMSV_CLK_EN					0x30
  
- #define SerDes_support 1
- 
-+static int mtk_mipicsi_dbg_level;
-+#define mtk_mipicsi_dbg(level, fmt, args...)				 \
-+	do {								 \
-+		if (mtk_mipicsi_dbg_level >= level)			\
-+			pr_info("[MTK_MIPICSI%d] L%d %s %d: " fmt "\n", \
-+				mipicsi->id, level,  __func__, __LINE__, \
-+				##args);	\
-+	} while (0)
-+
- /* buffer for one video frame */
- struct mtk_mipicsi_buf {
- 	struct list_head queue;
-@@ -154,6 +164,8 @@ struct mtk_mipicsi_dev {
- 	unsigned long enqueue_cnt;
- 	unsigned long dequeue_cnt;
- 	struct v4l2_ctrl_handler ctrl_hdl;
-+	struct timespec64 fps_time_cur;
-+	struct timespec64 fps_time_pre;
- 	char drv_name[16];
- 	u32 id;
- 	int clk_num;
-@@ -429,6 +441,8 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 
- 	mipicsi->width = width;
- 	mipicsi->height = height;
-+	mtk_mipicsi_dbg(1, "sub device width/height/bytesperline %d/%d/%d",
-+		width, height, mipicsi->bytesperline);
- 
- 	/*
- 	 * If power domain was closed before, it will be open.
-@@ -565,6 +579,9 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
- 	if (pix->pixelformat == V4L2_PIX_FMT_YUYV)
- 		pix->sizeimage = pix->width * pix->height * 2U;
- 
-+	mtk_mipicsi_dbg(0, "width/height/sizeimage %u/%u/%u",
-+		pix->width, pix->height, pix->sizeimage);
-+
- 	if (mf->code != xlate->code)
- 		return -EINVAL;
- 
-@@ -690,6 +707,9 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
- 			vb2_dma_contig_plane_dma_addr(vb, 0);
- #endif
- 		va = vb2_plane_vaddr(vb, 0);
-+		mtk_mipicsi_dbg(1, "va=%p vb_dma_addr_phy=%lx size=%d",
-+			va, (unsigned long)buf->vb_dma_addr_phy,
-+			vb->planes[0].bytesused);
- 		buf->vb = vb;
- 	}
- 
-@@ -735,6 +755,8 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 		}
- 
- 	++(mipicsi->enqueue_cnt);
-+	mtk_mipicsi_dbg(2, "enqueue NO.%d buffer(%p). Total %lu buffer",
-+		vb->index, vb, mipicsi->enqueue_cnt);
- }
- 
- static int mtk_mipicsi_vb2_start_streaming(struct vb2_queue *vq,
-@@ -1119,8 +1141,10 @@ static int mtk_mipicsi_pm_resume(struct device *dev)
- 
- 	if (mipicsi->larb_pdev != NULL) {
- 		ret = mtk_smi_larb_get(mipicsi->larb_pdev);
--		if (ret != 0)
-+		if (ret != 0) {
-+			mtk_mipicsi_dbg(0, "failed to get larb, err %d", ret);
- 			return ret;
-+		}
- 	}
- 
- 	mtk_mipicsi_ana_clk_enable(mipicsi->ana, true);
-@@ -1170,6 +1194,7 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	unsigned int next = 0U;
- 	u64 offset = 0ULL;
- 	u8 link_index = 0U;
-+	long time_interval;
- 	void __iomem *base = NULL;
- 	dma_addr_t pa;
- 
-@@ -1179,8 +1204,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	i = 0;
- 
- 	/* only one buffer left */
--	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-+	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list)) {
-+		mtk_mipicsi_dbg(1, "only 1 buffer left, drop frame");
- 		return;
-+	}
- 
- 	/*for each fb_lst 2 times to get the top 2 buffer.*/
- 	list_for_each_entry_safe(new_cam_buf, tmp,
-@@ -1213,6 +1240,27 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	++(mipicsi->dequeue_cnt);
- 
- 	list_del_init(&(mipicsi->cam_buf[index].queue));
-+
-+	if (mtk_mipicsi_dbg_level >= 2) {
-+		ktime_get_real_ts64(&(mipicsi->fps_time_cur));
-+		if (mipicsi->dequeue_cnt == 1) {
-+			mipicsi->fps_time_pre.tv_sec =
-+				mipicsi->fps_time_cur.tv_sec;
-+			mipicsi->fps_time_pre.tv_nsec =
-+				mipicsi->fps_time_cur.tv_nsec;
-+		} else {
-+			time_interval = (mipicsi->fps_time_cur.tv_sec
-+				- mipicsi->fps_time_pre.tv_sec) * 1000000000
-+				+ (mipicsi->fps_time_cur.tv_nsec
-+				- mipicsi->fps_time_pre.tv_nsec);
-+			mtk_mipicsi_dbg(0, "time interval is %ld\n",
-+				time_interval);
-+			mipicsi->fps_time_pre.tv_sec =
-+				mipicsi->fps_time_cur.tv_sec;
-+			mipicsi->fps_time_pre.tv_nsec =
-+				mipicsi->fps_time_cur.tv_nsec;
-+		}
-+	}
- }
- 
- static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-@@ -1227,6 +1275,7 @@ static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
- 
- 	isr_ch = get_irq_channel(mipicsi);
- 	if (isr_ch < 0) {
-+		mtk_mipicsi_dbg(0, "no interrupt occur");
- 		spin_unlock_irqrestore(&mipicsi->lock, flags);
- 		return IRQ_HANDLED;
- 	}
-@@ -1567,5 +1616,6 @@ static struct platform_driver mtk_mipicsi_driver = {
+@@ -127,6 +130,8 @@ struct mtk_mipicsi_dev {
+ 	unsigned int camsv_num;
+ 	struct v4l2_device	v4l2_dev;
+ 	struct device *larb_pdev;
++	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
++	bool irq_status[MTK_CAMDMA_MAX_NUM];
+ 	void __iomem		*ana;
+ 	void __iomem		*seninf_ctrl;
+ 	void __iomem		*seninf;
+@@ -140,6 +145,7 @@ struct mtk_mipicsi_dev {
+ 	spinlock_t		lock;
+ 	spinlock_t		queue_lock;
+ 	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
++	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
+ 	bool streamon;
+ 	unsigned long frame_cnt[MTK_CAMDMA_MAX_NUM];
+ 	unsigned int link;
+@@ -934,9 +940,98 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
+ 		mtk_mipicsi_pm_resume, NULL)
  };
  
- module_platform_driver(mtk_mipicsi_driver);
-+module_param(mtk_mipicsi_dbg_level, int, 0644);
- MODULE_DESCRIPTION("MediaTek SoC Camera Host driver");
- MODULE_LICENSE("GPL v2");
++static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
++{
++	int ch;
++	u32 int_reg_val;
++
++	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
++		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
++		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
++			return ch;
++	}
++
++	return -1;
++}
++
++static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
++{
++	unsigned int i = 0U;
++	struct mtk_mipicsi_buf *new_cam_buf = NULL;
++	struct mtk_mipicsi_buf *tmp = NULL;
++	unsigned int index = 0U;
++	unsigned int next = 0U;
++
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
++		mipicsi->irq_status[i] = false;
++
++	i = 0;
++
++	/* only one buffer left */
++	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
++		return;
++
++	/*for each fb_lst 2 times to get the top 2 buffer.*/
++	list_for_each_entry_safe(new_cam_buf, tmp,
++		&(mipicsi->fb_list), queue) {
++		if (i == 0U) {
++			index = new_cam_buf->vb->index;
++		} else {
++			next = new_cam_buf->vb->index;
++			break;
++		}
++		++i;
++	}
++
++	/*
++	 * fb_list has one more buffer. Free the first buffer to user
++	 * and fill the second buffer to HW.
++	 */
++	vb2_buffer_done(mipicsi->cam_buf[index].vb,
++		VB2_BUF_STATE_DONE);
++	++(mipicsi->dequeue_cnt);
++
++	list_del_init(&(mipicsi->cam_buf[index].queue));
++}
++
++static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
++{
++
++	struct mtk_mipicsi_dev *mipicsi = data;
++	unsigned long flags = 0;
++	int isr_ch;
++	u8 irq_cnt = 0, i = 0;
++
++	spin_lock_irqsave(&mipicsi->lock, flags);
++
++	isr_ch = get_irq_channel(mipicsi);
++	if (isr_ch < 0) {
++		spin_unlock_irqrestore(&mipicsi->lock, flags);
++		return IRQ_HANDLED;
++	}
++
++	/* clear interrupt */
++	writel(1UL << PASS1_DONE_STATUS,
++		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
++	mipicsi->irq_status[isr_ch] = true;
++	++(mipicsi->frame_cnt[isr_ch]);
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
++		if (mipicsi->irq_status[i])
++			++irq_cnt;
++	}
++
++	if (irq_cnt == mipicsi->link)
++		mtk_mipicsi_irq_buf_process(mipicsi);
++	spin_unlock_irqrestore(&mipicsi->lock, flags);
++
++	return IRQ_HANDLED;
++}
++
+ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+ 		int index)
+ {
++	int ret;
++	int irq;
+ 	struct clk *clk = NULL;
+ 	struct device *dev = NULL;
+ 	struct resource *res = NULL;
+@@ -974,6 +1069,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+ 	}
+ 	mipicsi->clk[index] = clk;
+ 
++	irq = of_irq_get(np, 0);
++	if (irq <= 0) {
++		dev_err(dev, "get irq fail in %s node\n", np->full_name);
++		return -ENODEV;
++	}
++	mipicsi->irq[index] = irq;
++
++	ret = devm_request_irq(dev, irq,
++			mtk_mipicsi_isr, 0,
++			mipicsi->drv_name, mipicsi);
++	if (ret != 0) {
++		dev_err(dev, "%s irq register failed\n", np->full_name);
++		return -ENODEV;
++	}
++	disable_irq(mipicsi->irq[index]);
++	mipicsi->irq_status[index] = false;
++
+ 	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
+ 	if (res == NULL) {
+ 		dev_err(dev, "get seninf_mux memory failed in %s node\n",
 -- 
 2.18.0
