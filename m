@@ -1,14 +1,14 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 20/25] drm/mediatek: add ovl0/ovl0_2l usecase
-Date: Tue, 16 Apr 2019 16:20:20 +0800
-Message-ID: <1555402820.11519.6.camel@mtksdaap41>
+Subject: Re: [PATCH v2 22/25] drm/mediatek: adjust ddp clock control flow
+Date: Tue, 16 Apr 2019 16:24:50 +0800
+Message-ID: <1555403090.11519.7.camel@mtksdaap41>
 References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-21-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-23-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553667561-25447-21-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1553667561-25447-23-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: yongqiang.niu@mediatek.com
 Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
@@ -19,111 +19,90 @@ Hi, Yongqiang:
 On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
 > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> This patch add ovl0/ovl0_2l usecase
-> in ovl->ovl0_2l direct link usecase:
-> 1. the crtc support layer number will 4+2
-> 2. ovl0_2l background color input select ovl0 when crtc init
-> and disable it when crtc finish
-> 3. config ovl0_2l layer, if crtc config layer number is
-> bigger than ovl0 support layers(max is 4)
+> display hardware clock will not unprepare when
+> crtc is disable, until crtc is destroyed.
+> with this patch, hard clock will disable and unprepare
+> at the same time.
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
 > 
 > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 26 ++++++--------------------
+>  1 file changed, 6 insertions(+), 20 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index 11e3404..0f97ee3 100644
+> index 0f97ee3..606c6e2 100644
 > --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
 > +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -283,6 +283,13 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+> @@ -195,7 +195,7 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
 >  
+>  	DRM_DEBUG_DRIVER("%s\n", __func__);
 >  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
->  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-> +		enum mtk_ddp_comp_id prev;
-> +
-> +		if (i > 0)
-> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
-> +		else
-> +			prev = DDP_COMPONENT_ID_MAX;
-> +		mtk_ddp_comp_bgclr_in_on(comp, prev);
+> -		ret = clk_enable(mtk_crtc->ddp_comp[i]->clk);
+> +		ret = clk_prepare_enable(mtk_crtc->ddp_comp[i]->clk);
+>  		if (ret) {
+>  			DRM_ERROR("Failed to enable clock %d: %d\n", i, ret);
+>  			goto err;
+> @@ -205,7 +205,7 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
+>  	return 0;
+>  err:
+>  	while (--i >= 0)
+> -		clk_disable(mtk_crtc->ddp_comp[i]->clk);
+> +		clk_disable_unprepare(mtk_crtc->ddp_comp[i]->clk);
+>  	return ret;
+>  }
 >  
->  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
->  		mtk_ddp_comp_start(comp);
-> @@ -292,9 +299,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
->  		struct drm_plane *plane = &mtk_crtc->planes[i];
->  		struct mtk_plane_state *plane_state;
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +		unsigned int local_layer;
+> @@ -215,7 +215,7 @@ static void mtk_crtc_ddp_clk_disable(struct mtk_drm_crtc *mtk_crtc)
 >  
->  		plane_state = to_mtk_plane_state(plane->state);
-> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
-> +
-> +		if (i >= comp_layer_nr) {
-> +			comp = mtk_crtc->ddp_comp[1];
-> +			local_layer = i - comp_layer_nr;
-> +                } else
-> +			local_layer = i;
-> +		mtk_ddp_comp_layer_config(comp , local_layer,
->  					  plane_state);
->  	}
+>  	DRM_DEBUG_DRIVER("%s\n", __func__);
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+> -		clk_disable(mtk_crtc->ddp_comp[i]->clk);
+> +		clk_disable_unprepare(mtk_crtc->ddp_comp[i]->clk);
+>  }
 >  
-> @@ -320,6 +336,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
->  					   mtk_crtc->ddp_comp[i]->id);
->  	mtk_disp_mutex_disable(mtk_crtc->mutex);
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
->  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
->  					      mtk_crtc->mmsys_reg_data,
->  					      mtk_crtc->ddp_comp[i]->id,
-> @@ -340,6 +357,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
->  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	unsigned int i;
-> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +	unsigned int local_layer;
->  
->  	/*
->  	 * TODO: instead of updating the registers here, we should prepare
-> @@ -362,7 +381,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  			plane_state = to_mtk_plane_state(plane->state);
->  
->  			if (plane_state->pending.config) {
-> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
-> +				if (i >= comp_layer_nr) {
-> +					comp = mtk_crtc->ddp_comp[1];
-> +					local_layer = i - comp_layer_nr;
-> +                                } else
-> +					local_layer = i;
-> +
-> +				mtk_ddp_comp_layer_config(comp, local_layer,
-> +							  plane_state);
->  				plane_state->pending.config = false;
->  			}
+>  static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+> @@ -615,15 +615,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  		if (!comp) {
+>  			dev_err(dev, "Component %pOF not initialized\n", node);
+>  			ret = -ENODEV;
+> -			goto unprepare;
+> -		}
+> -
+> -		ret = clk_prepare(comp->clk);
+> -		if (ret) {
+> -			dev_err(dev,
+> -				"Failed to prepare clock for component %pOF: %d\n",
+> -				node, ret);
+> -			goto unprepare;
+> +			return ret;
 >  		}
-> @@ -604,6 +630,14 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  
+>  		mtk_crtc->ddp_comp[i] = comp;
+> @@ -649,23 +641,17 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  		ret = mtk_plane_init(drm_dev, &mtk_crtc->planes[zpos],
+>  				     BIT(pipe), type);
+>  		if (ret)
+> -			goto unprepare;
+> +			return ret;
 >  	}
 >  
->  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-> +        if (mtk_crtc->ddp_comp_nr > 1) {
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
-> +		enum mtk_ddp_comp_type comp_type;
-> +
-> +		comp_type = mtk_ddp_comp_get_type(comp->id);
-> +		if (comp_type == MTK_DISP_OVL || comp_type == MTK_DISP_OVL_2L)
-
-I think you need not to invent the function mtk_ddp_comp_get_type() to
-get the type. Only the component implementing bgclr_in_on() has the
-ability to the extend the ovl layer, so you could judge bgclr_in_on()
-exist or not to extend the ovl layer.
-
-Regards,
-CK
-
-> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-> +        }
->  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
->  					sizeof(struct drm_plane),
->  					GFP_KERNEL);
+>  	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
+>  				mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
+>  				NULL, pipe);
+>  	if (ret < 0)
+> -		goto unprepare;
+> +		return ret;
+>  	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
+>  	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, MTK_LUT_SIZE);
+>  	priv->num_pipes++;
+>  
+>  	return 0;
+> -
+> -unprepare:
+> -	while (--i >= 0)
+> -		clk_unprepare(mtk_crtc->ddp_comp[i]->clk);
+> -
+> -	return ret;
+>  }
