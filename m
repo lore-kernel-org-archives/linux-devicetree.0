@@ -1,73 +1,113 @@
-Return-Path: <SRS0=4paN=ST=nxp.com=ping.bai@kernel.org>
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 12:39:00 +0000
-Message-ID: 
- <VI1PR0402MB35198630CEDCBFCAF4C395E987250@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=Lc6z=SS=gmail.com=thierry.reding@kernel.org>
+Date: Tue, 16 Apr 2019 18:11:18 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 16/30] PCI: tegra: Program AFI_CACHE* registers only for
+ Tegra20
+Message-ID: <20190416161118.GA27141@ulmo>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-17-mmaddireddy@nvidia.com>
+ <20190415132031.GR29254@ulmo>
+ <931047de-ead5-8bdf-cf65-e2d42ecd2b66@nvidia.com>
 MIME-Version: 1.0
-To: Lucas Stach <l.stach@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
-Cc: "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Content-Disposition: inline
+In-Reply-To: <931047de-ead5-8bdf-cf65-e2d42ecd2b66@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PiA+ID4gRnJvbTogSmFja3kgQmFpDQo+ID4gPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE3LCAy
-MDE5IDE6MjcgUE0NCj4gPiA+DQo+ID4gPiBUaGUgaS5NWDhNIGZhbWlseSBpcyBhIHNldCBvZiBO
-WFAgcHJvZHVjdCBmb2N1cyBvbiBkZWxpdmVyaW5nIHRoZQ0KPiA+ID4gbGF0ZXN0IGFuZCBncmVh
-dGVzdCB2aWRlbyBhbmQgYXVkaW8gZXhwZXJpZW5jZSBjb21iaW5pbmcNCj4gPiA+IHN0YXRlLW9m
-LXRoZS1hcnQgbWVkaWEtc3BlY2lmaWMgZmVhdHVyZXMgd2l0aCBoaWdoLXBlcmZvcm1hbmNlDQo+
-ID4gPiBwcm9jZXNzaW5nIHdoaWxlIG9wdGltaXplZCBmb3IgbG93ZXN0IHBvd2VyIGNvbnN1bXB0
-aW9uLg0KPiA+ID4gaS5NWDhNUSwgaS5NWDhNTSwgaS5NWDhNTiwgZXZlbiB0aGUgZnVydHVyZSBp
-Lk1YOE1QIGFyZSBhbGwgYmVsb25nDQo+ID4gPiB0byB0aGlzIGZhbWlseS4NCj4gPiA+DQo+ID4g
-PiBUaGUgR1BDIG1vZHVsZSBpcyB1c2VkIHRvIG1hbmFnZSB0aGUgUFUgcG93ZXIgZG9tYWlucycg
-cG93ZXIgb24vb2ZmLg0KPiA+ID4gRm9yIHRoZSB3aG9sZSBpLk1YOE0gZmFtaWx5LCBkaWZmZXJl
-bnQgU29DIGhhcyBkaWZmZXJudCBwb3dlciBkb21haW4NCj4gPiA+IGRlc2lnbi4gdGhlIHBvd2Vy
-IHVwIHNlcXVlbmNlIGhhcyBzaWduaWZpY2FudCBkaWZmZXJlbmNlLg0KPiA+ID4gYWxsIHRoZSBw
-b3dlciBzZXF1ZW5jZSBtdXN0IGJlIGd1YXJhbnRlZWQgYnkgU1cuIFNvbWUgZG9tYWlucycgcG93
-ZXINCj4gPiA+IHVwIHNlcXVlbmNlIG5lZWQgdG8gYWNjZXNzIHRoZSBTUkMgbW9kdWxlIG9yIHN1
-Yi1zeXN0ZW0gc3BlY2lmaWMgR1BSLg0KPiA+ID4gdGhlIFNSQyByZWdpc3RlciAmIFNTJ3MgcmVn
-aXN0ZXIgYXJlIG5vdCBpbiBpbiB0aGUgR1BDJ3MgbWVtb3J5IHJhbmdlLg0KPiA+ID4NCj4gPiA+
-IGl0IG1ha2VzIHVzIGhhcmQgdG8gdXNlIHRoZSBHUEN2MiBkcml2ZXIgdG8gY292ZXIgYWxsIHRo
-ZSBkaWZmZXJlbnQNCj4gPiA+IHBvd2VyIHVwIHJlcXVpcmVtZW50LiBFYWNoIHRpbWUsIGEgbmV3
-IFNvQyBpcyBhZGRlZCwgd2UgbXVzdCBtb2RpZnkNCj4gPiA+IHRoZSBHUEN2MiBkcml2ZXIgdG8g
-bWFrZSBpdCByZXN1YWJsZSBmb3IgaXQuIGEgbG90IG9mIGNvZGUgbmVlZCB0byBiZSBhZGRlZA0K
-PiBpbiBHUEN2MiB0byBzdXBwb3J0IGl0Lg0KPiA+ID4gd2UgbmVlZCB0byBhY2Nlc3MgdGhlIFNS
-QyAmIFNTJyBHUFIsIHRoZW4gdGhlIEdQQ3YyIGRyaXZlciBjYW4gTk9UDQo+ID4gPiBiZSBzZWxm
-LWNvbnRhaW5lZC4gQWNjZXNzaW5nIHRoZSBub24tZHJpdmVyIHNwZWNpZmljIG1vZHVsZSdzDQo+
-ID4gPiByZWdpc3RlciBpcyBhIGJhZCBwcmFjdGljZS4gQWx0aG91Z2gsIHRoZSBHUEMgbW9kdWxl
-IHByb3ZpZGVkIHRoZQ0KPiA+ID4gc2ltaWxhciBmdW5jdGlvbiBmb3IgUFUgcG93ZXIgZG9tYWlu
-LCBidXQgaXQgaXMgbm90IDEwMCUgY29tcGF0aWJsZSB3aXRoDQo+IEdQQ3YyLg0KPiA+ID4NCj4g
-PiA+IFRoZSBtb3N0IGltcG9ydGFudCB0aGluZyBpcyB0aGF0IHRoZSBHUEMgJiBTUkMgbW9kdWxl
-IGlzIGEgc2VjdXJpdHkNCj4gPiA+IGNyaXRpY2FsIHJlc291cmNlIHRoYXQgc2VjdXJpdHkgcGVy
-bWlzc2lvbiBtdXN0IGJlIGNvbnNpZGVyZWQgd2hlbg0KPiA+ID4gYnVpbGRpbmcgdGhlIHNlY3Vy
-aXR5IHN5c3RlbS4gVGhlIEdQQyBtb2R1bGUgaXMgbm90IG9ubHkgdXNlZCBieSBQVQ0KPiA+ID4g
-cG93ZXIgZG9tYWluIHBvd2VyIG9uL29mZi4gSXQgaXMgYWxzbyB1c2VkIGJ5IHRoZSBURi1BIFBT
-Q0kgY29kZSB0bw0KPiA+ID4gZG8gdGhlIENQVSBjb3JlIHBvd2VyIG1hbmFnZW1lbnQuIHRoZSBT
-UkMgbW9kdWxlIGNvbnRyb2wgdGhlIENQVQ0KPiA+ID4gQ09SRSByZXNldCBhbmQgdGhlIENQVSBy
-ZXNldCB2ZWN0b3IgYWRkcmVzcy4gaWYgd2UgZ2l2ZSB0aGUgbm9uLXNlY3VyZQ0KPiB3b3JsZCB3
-cml0ZSBwZXJtaXNzaW9uIHRvIFNSQy4NCj4gPiA+IFN5c3RlbSBjYW4gYmUgZWFzaWx5IGluZHVj
-ZWQgdG8gbWFsaWNpb3VzIGNvZGUuDQo+ID4gPg0KPiA+DQo+ID4gQ29uc2lkZXJpbmcgdGhlIHNl
-Y3VyaXR5IGlzc3VlLCBpdCBsb29rcyB0byBtZSBhIHJpZ2h0IGRpcmVjdGlvbiB0bw0KPiA+IG1v
-dmUgR1BDIHBvd2VyIGhhbmRsaW5nIGludG8gQVRGLg0KPiA+IEl0IGFsc28gaGVscHMgYnVpbGQg
-YSBtb3JlIGdlbmVyaWMgZHJpdmVyIGFuZCBlYXNlIG90aGVyIE9TDQo+ID4gaW50ZWdyYXRpb24g
-bmVlZGVkIGJ5IGN1c3RvbWVycyAoZS5nLiBRTlgsIFdpbjEwKS4NCj4gPg0KPiA+IEx1Y2FzLA0K
-PiA+IEhvdyBkbyB5b3UgdGhpbmsgb2YgaXQ/DQo+IA0KPiBJIGRvbid0IHlldCBidXkgdGhlIHNl
-Y3VyaXR5IGFyZ3VtZW50LiBUaGVyZSBhcmUgbWFueSBtb3JlIHNoYXJlZCBwYXJ0cyBvbg0KPiB0
-aGUgU29DLCBsaWtlIHRoZSBjbG9jayBjb250cm9sbGVyLCB0aGF0IHdvdWxkIG5lZWQgdG8gYmUg
-dGFrZW4gYXdheSBmcm9tIHRoZQ0KPiBub24tc2VjdXJlIHdvcmxkIGlmIG9uZSB3b3VsZCB3YW50
-IHRvIHJ1biBhbiB1bnRydXN0ZWQgT1Mga2VybmVsIG9uIGENCj4gaS5NWDhNIHN5c3RlbS4NCj4g
-DQo+IFRvIHByb3Blcmx5IGltcGxlbWVudCBzZWN1cml0eSBvbiBhbnkgaS5NWDhNIGJhc2VkIHN5
-c3RlbSB0aGUgZmlybXdhcmUNCj4gd291bGQgbmVlZCB0byBncm93IHNvbWV0aGluZyBsaWtlIGEg
-ZnVsbCBBUk0gU0NQSSBpbXBsZW1lbnRhdGlvbiwgc28gYWxsDQo+IHNoYXJlZCBjcml0aWNhbCBw
-ZXJpcGhlcmFscyBhcmUgc29sZWx5IHVuZGVyIGZpcm13YXJlIGNvbnRyb2wuDQo+IA0KPiBJIGFn
-cmVlIHRoYXQgaXQgbWlnaHQgbWFrZSBzZW5zZSB0byBtb3ZlIHNvbWUgcGFydHMgaW50byB0aGUg
-ZmlybXdhcmUgYW5kDQo+IGhhdmUgbXVjaCBzaW1wbGVyIE9TIGxldmVsIGRyaXZlcnMsIGJ1dCBJ
-IGRvbid0IGFncmVlIG9uIHRoZSBpbXBsZW1lbnRhdGlvbg0KPiBkaXJlY3Rpb24gdGFrZW4gaGVy
-ZS4gR3Jvd2luZyBjdXN0b20gUFNDSSBleHRlbnNpb24gaW50ZXJmYWNlcyB3aWxsIG9ubHkgZ2V0
-DQo+IHVzIHNvIGZhciwgd2l0aG91dCBzb2x2aW5nIHRoZSBzeXN0ZW0gc2VjdXJpdHkgaXNzdWUg
-aW4gYSBob2xpc3RpYyB3YXkuIEl0IGlzIG15DQo+IHN0cm9uZyBiZWxpZXZlIHRoYXQgb25seSBh
-IGNvbXBsZXRlIHJlYXJjaGl0ZWN0dXJlIG9mIHRoZSBPUyBzdXBwb3J0IG9uIHRvcCBvZg0KPiBh
-IEFSTSBTQ1BJIGZpcm13YXJlIGludGVyZmFjZSBjYW4gc29sdmUgdGhpcyBwcm9wZXJseS4NCj4g
-DQoNCk5vIHBsYW4gdG8gaW1wbGVtZW50IFNDUEkgbGlrZSBmaXJtd2FyZSBvbiBpLk1YOE0uIGku
-TVg4TSBkb24ndA0KDQpCUg0KSmFja3kgQmFpDQoNCj4gUmVnYXJkcywNCj4gTHVjYXMNCg==
+
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 16, 2019 at 04:17:46PM +0530, Manikanta Maddireddy wrote:
+>=20
+>=20
+> On 15-Apr-19 6:50 PM, Thierry Reding wrote:
+> > On Thu, Apr 11, 2019 at 10:33:41PM +0530, Manikanta Maddireddy wrote:
+> >> AFI_CACHE* registers are available only in Tegra20, program them only
+> >> for Tegra20.
+> >>
+> >> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> >> ---
+> >>  drivers/pci/controller/pci-tegra.c | 13 ++++++++-----
+> >>  1 file changed, 8 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controll=
+er/pci-tegra.c
+> >> index 8e5fdc8ce3d6..cdaaf13a9fd7 100644
+> >> --- a/drivers/pci/controller/pci-tegra.c
+> >> +++ b/drivers/pci/controller/pci-tegra.c
+> >> @@ -887,6 +887,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *a=
+rg)
+> >>   */
+> >>  static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
+> >>  {
+> >> +	struct device_node *np =3D pcie->dev->of_node;
+> >>  	u32 fpci_bar, size, axi_address;
+> >> =20
+> >>  	/* Bar 0: type 1 extended configuration space */
+> >> @@ -927,11 +928,13 @@ static void tegra_pcie_setup_translations(struct=
+ tegra_pcie *pcie)
+> >>  	afi_writel(pcie, 0, AFI_AXI_BAR5_SZ);
+> >>  	afi_writel(pcie, 0, AFI_FPCI_BAR5);
+> >> =20
+> >> -	/* map all upstream transactions as uncached */
+> >> -	afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
+> >> -	afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
+> >> -	afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
+> >> -	afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
+> >> +	if (of_device_is_compatible(np, "nvidia,tegra20-pcie")) {
+> > At this point we've already matched on that compatible string, so we
+> > could probably get that information from the SoC structure. Why are
+> > these registers not available on later chips? How would we mark
+> > transactions as uncached on later generations of Tegra?
+> >
+> > Also, typically writing to non-existing registers on Tegra186 would
+> > cause an SError exception, but I haven't seen any of those with PCIe
+> > on Tegra186. So do these really not exist, or are they simply not used?
+> >
+> > Thierry
+>=20
+> Do you want me to add new soc flag for AFI_CACHE registers?
+>=20
+> As per the HW team feedback, upstream requests targeting DRAM would
+> be marked as cacheable when the address of the request are within the
+> regions defined by the cache_bar_sz/st registers.
+> All upstream DRAM requests are marked as non-cacheable from T30 to T210
+> as the field is not used by MSS. In Tegra186 cacheable requests are
+> supported by new register AFI_AXCACHE_0*. *
+> These register definitions are not present in Tegra186 TRM, but
+> register offsets are accessible, so these are not used.
+> However Tegra186 simulations traps this register access because
+> it is not defined in register spec.
+
+Yes, I think something like .has_cache_bars or similar would be the best
+solution here.
+
+Thierry
+
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly1/qEACgkQ3SOs138+
+s6GjSg/9G/38RTSGcytMFlZDKlfai4gw1YZAjD26tRmUZYXCE1aihrewjRMIGpLf
+YQNPhfUO4r3YaXsPr0BfZc6Q2uV8blOgx3G3o6HQ7IsCTI8Yq0iTEqPsW10V7QW+
+BNG5qVMZkMIURFslFTv6Tj3MeFobDZ7eNn196OgYNdr1HszMR+boiCGwALSDO5mc
+YiOZONKMyM7E3kWWwxC2IOEy6mDwYN4iStwH4Wa8Pvq6ARe4pbvww5KwPXsgoVKt
+C7eOo74DqrQStSOUxPcf+aRxPc+a3MLa6/aqZngcOJjTZm2eFJ0L9FZ/b4P1+Qmp
++pTugSEbnDYM7bddfLoIamvjRutFZbxNZ3Ah949sg2I7vbu1gr1bY51B7U0xVmZe
+hKIBjKyL5qBmkpEOnvzQUitrGQ0ccsubFTSAvXn71+S+hAtVbqcOQccGHGZZVoJx
+TUeQGN/Q8+YrhPPhej6iuQ69eifEQDX5BodBwI22KTgGojjfl/hFD3wHr0tLpzPG
+kHRcr8R8i+OxBYSNmXzsXN2AN/guXFpaIvHipdvbOO30qv0iW/Zmrf78D6tnCRfV
+7vAr1gvMAPV94U6Mb1B2nC14KM+QzblWwqWnQ7xsDtxP4OHAXcdYUTRt5aH8ilV6
+rPwzrAJb3x88CMMIbZNnQ6AhyCftGYPHjHs57ZG/5Its4YuBKGM=
+=UU8y
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
