@@ -1,33 +1,30 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-Date: Tue, 16 Apr 2019 21:37:55 +0300
-Message-ID: <490f6e80-3930-2885-a08f-93596e210f88@cogentembedded.com>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-3-git-send-email-masonccyang@mxic.com.tw>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/7] arm64: meson: g12a: add audio devices
+Date: Tue, 16 Apr 2019 11:52:43 -0700
+Message-ID: <7h5zrdpytg.fsf@baylibre.com>
+References: <20190412125136.28232-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555313834-15107-3-git-send-email-masonccyang@mxic.com.tw>
-Content-Language: en-MW
+In-Reply-To: <20190412125136.28232-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2019 10:37 AM, Mason Yang wrote:
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> This patchset adds most the audio devices of the g12a SoCs.
+>
+> Kevin, couple of things worth noting:
+>  * This patch depends of the new audio clocks binding recently applied
+>    by Neil [0].
 
-   This patch looked good to me (you seem to have incorporated another patch of mine
-here :-)). Since the patch is already carrying my signoff, I wouldn't add a Reviewed-by:
+Was this supposed to be part of the clk-headers dependency PR I
+received?  /me looks... It looks like it's applied right after the tag I
+pulled, so I doesn't look like it.
+
+If I should queue $SUBJECT series up for 5.2, I'll need another stable
 tag.
-   However, I believe that all manipulations with the RPC-IF hardware need to be moved
-to the MFD driver, to be called from the SPI and HF subdrivers... doesn't seem an easy
-task though...
 
-MBR, Sergei
+Kevin
