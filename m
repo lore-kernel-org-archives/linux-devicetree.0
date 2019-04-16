@@ -1,38 +1,100 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/7] arm64: meson: g12a: add audio devices
-Date: Tue, 16 Apr 2019 12:22:46 -0700
-Message-ID: <CAOi56cU0dHoyRzTXeKGoiFwTms4WuJ7LV2EXTJLoEmOsC8OyrA@mail.gmail.com>
-References: <20190412125136.28232-1-jbrunet@baylibre.com> <7h5zrdpytg.fsf@baylibre.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V3 00/16] Add Tegra194 PCIe support
+Date: Wed, 17 Apr 2019 00:57:14 +0530
+Message-ID: <20190416192730.15681-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7h5zrdpytg.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, patchwork-bot+notify@kernel.org
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 11:52 AM Kevin Hilman <khilman@baylibre.com> wrote:
->
-> Jerome Brunet <jbrunet@baylibre.com> writes:
->
-> > This patchset adds most the audio devices of the g12a SoCs.
-> >
-> > Kevin, couple of things worth noting:
-> >  * This patch depends of the new audio clocks binding recently applied
-> >    by Neil [0].
->
-> Was this supposed to be part of the clk-headers dependency PR I
-> received?  /me looks... It looks like it's applied right after the tag I
-> pulled, so I doesn't look like it.
->
-> If I should queue $SUBJECT series up for 5.2, I'll need another stable
-> tag.
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-Also, this doesn't apply cleanly anymore to my v5.2/dt64 branch.  When
-the stable tag is ready, do you mind doing a rebase? (or telling me
-what it currently applies to, and I will do the rebase.)
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-Thanks,
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
 
-Kevin
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (16):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI/PME: Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs
+  PCI: Export pcie_bus_config symbol
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  Documentation/devicetree: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for T194
+  dt-bindings: PHY: P2U: Add Tegra 194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  187 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  449 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   11 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |    3 -
+ drivers/pci/controller/dwc/pcie-designware.c  |   81 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1760 +++++++++++++++++
+ drivers/pci/pci.c                             |    1 +
+ drivers/pci/pcie/pme.c                        |   14 +-
+ drivers/pci/pcie/portdrv.h                    |   16 +-
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c         |  120 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 22 files changed, 2750 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
+
+-- 
+2.17.1
