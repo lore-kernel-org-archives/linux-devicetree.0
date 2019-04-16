@@ -1,108 +1,74 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT/RFC PATCH v3 3/5] cpu-topology: Move cpu topology code to
- common code.
-Date: Tue, 16 Apr 2019 14:23:24 +0100
-Message-ID: <20190416132324.GB24669@e107155-lin>
-References: <20190320234806.19748-1-atish.patra@wdc.com>
- <20190320234806.19748-4-atish.patra@wdc.com>
- <20190415152741.GA28623@e107155-lin>
- <5c5b720f-414a-706c-3415-642c27baef1f@wdc.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V2 02/16] PCI/PME: Export pcie_pme_disable_msi() API
+Date: Tue, 16 Apr 2019 19:00:50 +0530
+Message-ID: <f47408e4-c02d-bd28-31f9-96b92be02df5@nvidia.com>
+References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
+ <1554407683-31580-3-git-send-email-vidyas@nvidia.com>
+ <20190411101657.GF4633@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5c5b720f-414a-706c-3415-642c27baef1f@wdc.com>
+In-Reply-To: <20190411101657.GF4633@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsl>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 03:08:45PM -0700, Atish Patra wrote:
-> On 4/15/19 8:27 AM, Sudeep Holla wrote:
-> > Hi Atish,
-> >
-> > Thanks again for doing this. Overall changes look good except a couple
-> > of minor nit, see below.
-> >
-> > On Wed, Mar 20, 2019 at 04:48:04PM -0700, Atish Patra wrote:
-> > > Both RISC-V & ARM64 are using cpu-map device tree to describe
-> > > their cpu topology. It's better to move the relevant code to
-> > > a common place instead of duplicate code.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > > ---
-> > >   arch/arm64/include/asm/topology.h |  23 ---
-> > >   arch/arm64/kernel/topology.c      | 303 +-----------------------------
-> > >   drivers/base/arch_topology.c      | 298 ++++++++++++++++++++++++++++-
-> > >   drivers/base/topology.c           |   1 +
-> > >   include/linux/arch_topology.h     |  28 +++
-> > >   5 files changed, 330 insertions(+), 323 deletions(-)
-> > >
-> >
-> > [...]
-> >
-> > > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> > > index edfcf8d9..6cc6a860 100644
-> > > --- a/drivers/base/arch_topology.c
-> > > +++ b/drivers/base/arch_topology.c
-> > > @@ -6,8 +6,8 @@
-> > >    * Written by: Juri Lelli, ARM Ltd.
-> > >    */
-> > > -#include <linux/acpi.h>
-> > >   #include <linux/arch_topology.h>
-> > > +#include <linux/acpi.h>
-> > >   #include <linux/cpu.h>
-> > >   #include <linux/cpufreq.h>
-> > >   #include <linux/device.h>
-> > > @@ -16,6 +16,11 @@
-> > >   #include <linux/string.h>
-> > >   #include <linux/sched/topology.h>
-> > >   #include <linux/cpuset.h>
-> > > +#include <linux/cpumask.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/percpu.h>
-> > > +#include <linux/sched.h>
-> > > +#include <linux/smp.h>
-> > >   DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
-> > > @@ -278,3 +283,294 @@ static void parsing_done_workfn(struct work_struct *work)
-> > >   #else
-> > >   core_initcall(free_raw_capacity);
-> > >   #endif
-> > > +
-> > > +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
-> >
-> > Why can't the above one be just GENERIC_ARCH_TOPOLOGY ?
-> > I may be missing to find it myself, but would like to know.
-> >
-> GENERIC_ARCH_TOPOLOGY is now used for both RISCV, ARM & ARM64.
-> The below functions under this #ifdef have different implementation for ARM
-> and ARM64.
->
-> parse_dt_topology
-> cpu_coregroup_mask
-> update_siblings_masks
->
-> While we can combine the later two functions and move them to common code as
-> well, parse_dt_topology is significantly different.
->
+On 4/11/2019 3:46 PM, Thierry Reding wrote:
+> On Fri, Apr 05, 2019 at 01:24:29AM +0530, Vidya Sagar wrote:
+>> Export pcie_pme_disable_msi() API to enable drivers using this API be able to
+>> build as loadable modules
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes from [v1]:
+>> * This is a new patch in v2 series
+>>
+>>   drivers/pci/pcie/pme.c     | 6 ++++++
+>>   drivers/pci/pcie/portdrv.h | 5 +----
+>>   2 files changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+>> index 54d593d10396..18e815c1e3c9 100644
+>> --- a/drivers/pci/pcie/pme.c
+>> +++ b/drivers/pci/pcie/pme.c
+>> @@ -27,6 +27,12 @@
+>>    */
+>>   bool pcie_pme_msi_disabled;
+>>   
+>> +void pcie_pme_disable_msi(void)
+>> +{
+>> +	pcie_pme_msi_disabled = true;
+>> +}
+>> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
+>> +
+>>   static int __init pcie_pme_setup(char *str)
+>>   {
+>>   	if (!strncmp(str, "nomsi", 5))
+>> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+>> index 1d50dc58ac40..2be7b7e9a784 100644
+>> --- a/drivers/pci/pcie/portdrv.h
+>> +++ b/drivers/pci/pcie/portdrv.h
+>> @@ -127,10 +127,7 @@ struct pci_dev;
+>>   #ifdef CONFIG_PCIE_PME
+>>   extern bool pcie_pme_msi_disabled;
+>>   
+>> -static inline void pcie_pme_disable_msi(void)
+>> -{
+>> -	pcie_pme_msi_disabled = true;
+>> -}
+>> +void pcie_pme_disable_msi(void);
+>>   
+>>   static inline bool pcie_pme_no_msi(void)
+>>   {
+> 
+> Perhaps also export pcie_pme_no_msi()? That way you could get rid of the
+> extern declaration of the pcie_pme_msi_disabled variable and make it
+> static to drivers/pci/pcie/pme.c?
+Agree. I'll take care of this in V3 patch series.
 
-Sure, had a quick glance and indeed they may look different, but won't
-it defeat the purpose of this binding consolidation ?
-
-> That's why we need some kind of #ifdef or renaming of parse_dt_topology for
-> ARM32 code.
->
-
-I am fine if we want to take this up later to keep the impact minimum.
-But cpu_coregroup_mask and update_siblings_masks can and must be unified.
-In fact the existing generic version must work on ARM32 too.
-
-> Thanks for the review!!
->
-
-You are welcome.
-
---
-Regards,
-Sudeep
+> 
+> Thierry
+> 
