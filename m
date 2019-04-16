@@ -1,51 +1,33 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] scripts/dtc: fix spelling mistake "endpont" -> "endpoint"
-Date: Tue, 16 Apr 2019 11:17:09 -0700
-Message-ID: <2c66cb65-fd22-39f8-4446-fc0cfd611e00@gmail.com>
-References: <20190416111214.22107-1-colin.king@canonical.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+Date: Tue, 16 Apr 2019 21:37:55 +0300
+Message-ID: <490f6e80-3930-2885-a08f-93596e210f88@cogentembedded.com>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-3-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416111214.22107-1-colin.king@canonical.com>
-Content-Language: en-US
+In-Reply-To: <1555313834-15107-3-git-send-email-masonccyang@mxic.com.tw>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Colin,
+On 04/15/2019 10:37 AM, Mason Yang wrote:
 
-On 4/16/19 4:12 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
 > 
-> There is a spelling mistake in a FAIL message, fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  scripts/dtc/checks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> index 4834e44b37b2..faddf6a57236 100644
-> --- a/scripts/dtc/checks.c
-> +++ b/scripts/dtc/checks.c
-> @@ -1714,7 +1714,7 @@ static void check_graph_endpoint(struct check *c, struct dt_info *dti,
->  		return;
->  
->  	if (!strprefixeq(node->name, node->basenamelen, "endpoint"))
-> -		FAIL(c, dti, node, "graph endpont node name should be 'endpoint'");
-> +		FAIL(c, dti, node, "graph endpoint node name should be 'endpoint'");
->  
->  	check_graph_reg(c, dti, node);
->  
-> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks for catching the error.
+   This patch looked good to me (you seem to have incorporated another patch of mine
+here :-)). Since the patch is already carrying my signoff, I wouldn't add a Reviewed-by:
+tag.
+   However, I believe that all manipulations with the RPC-IF hardware need to be moved
+to the MFD driver, to be called from the SPI and HF subdrivers... doesn't seem an easy
+task though...
 
-This file is imported from an upstream project.  The error is fixed upstream in
-commit 4762ad051ee0 ("checks: Fix spelling in check_graph_endpoint") in the
-devicetree tools project.  Rob pulls the changes from this project on a
-periodic basis.
-
--Frank
+MBR, Sergei
