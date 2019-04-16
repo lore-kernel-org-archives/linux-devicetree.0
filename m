@@ -1,63 +1,67 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 05/30] PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-Date: Thu, 11 Apr 2019 22:33:30 +0530
-Message-ID: <20190411170355.6882-6-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V4 2/7] dt-bindings: usb: renesas_usb3: Add renesas,usb-role-switch property
+Date: Tue, 16 Apr 2019 10:38:02 +0100
+Message-Id: <1555407487-35394-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
+References: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Default root port setting hides AER capability. This patch enables the
-advertisement of AER capability by root port.
+Add an optional property renesas,usb-role-switch to support
+dual role switch for USB Type-C DRP port controller devices
+using USB role switch class framework.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ V3-->V4
+  * No Change
+ V2-->V3
+  * Added optional renesas,usb-role-switch property.
+ V1-->V2
+  * Added usb-role-switch-property
+  * Updated the example with usb-role-switch property.
+---
+ .../devicetree/bindings/usb/renesas_usb3.txt       | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 6ccda82735f8..9ff1a0e2797f 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -180,6 +180,9 @@
- #define RP_VEND_XP	0x00000f00
- #define  RP_VEND_XP_DL_UP	(1 << 30)
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+index 35039e7..f1cb06a 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+@@ -22,6 +22,7 @@ Required properties:
+ Optional properties:
+   - phys: phandle + phy specifier pair
+   - phy-names: must be "usb"
++  - renesas,usb-role-switch: use USB role switch to handle role switch events
  
-+#define RP_VEND_CTL1	0x00000f48
-+#define  RP_VEND_CTL1_ERPT	(1 << 13)
+ Example of R-Car H3 ES1.x:
+ 	usb3_peri0: usb@ee020000 {
+@@ -39,3 +40,24 @@ Example of R-Car H3 ES1.x:
+ 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg CPG_MOD 327>;
+ 	};
 +
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
-@@ -478,6 +481,16 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 	afi_writel(port->pcie, value, ctrl);
- }
- 
-+static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
-+{
-+	u32 value;
++Example of RZ/G2E:
++	usb3_peri0: usb@ee020000 {
++		compatible = "renesas,r8a774c0-usb3-peri",
++			     "renesas,rcar-gen3-usb3-peri";
++		reg = <0 0xee020000 0 0x400>;
++		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg CPG_MOD 328>;
++		companion = <&xhci0>;
++		renesas,usb-role-switch;
 +
-+	/* Enable AER capability */
-+	value = readl(port->base + RP_VEND_CTL1);
-+	value |= RP_VEND_CTL1_ERPT;
-+	writel(value, port->base + RP_VEND_CTL1);
-+}
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -502,6 +515,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 		value |= RP_VEND_CTL2_PCA_ENABLE;
- 		writel(value, port->base + RP_VEND_CTL2);
- 	}
-+
-+	tegra_pcie_enable_rp_features(port);
- }
- 
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
++			usb3peri_role_switch: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hd3ss3220_ep>;
++			};
++		};
++	};
 -- 
-2.17.1
+2.7.4
