@@ -1,53 +1,121 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 14/26] PCI: keystone: Add support for PCIe RC in
- AM654x Platforms
-Date: Tue, 16 Apr 2019 15:15:25 +0100
-Message-ID: <20190416141525.GD14705@red-moon>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-15-kishon@ti.com>
- <20190413152633.GF126710@google.com>
+From: Patrick Venture <venture@google.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Tue, 16 Apr 2019 07:27:34 -0700
+Message-ID: <CAO=notza3Tz55_dRoTpenY+yP=J=TmvpMoWE58VQG=nvQ_Rpow@mail.gmail.com>
+References: <20190408144216.160082-1-venture@google.com> <998d869d-de1d-4ac9-b4e6-8942945912dd@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190413152633.GF126710@google.com>
+In-Reply-To: <998d869d-de1d-4ac9-b4e6-8942945912dd@www.fastmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 10:26:33AM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 25, 2019 at 03:09:35PM +0530, Kishon Vijay Abraham I wrote:
-> > Add PCIe RC support for AM654x Platforms in pci-keystone.c
-> 
-> > +static int ks_pcie_am654_msi_host_init(struct pcie_port *pp)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +	struct device *dev = pci->dev;
+On Mon, Apr 8, 2019 at 5:48 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Tue, 9 Apr 2019, at 00:12, Patrick Venture wrote:
+> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> >
+> > Signed-off-by: Patrick Venture <venture@google.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+>
+> > ---
+> > Changes for v10:
+> >  - Chopped out nearly identical information.
+> > Changes for v9:
+> >  - Added missing details about syscon parent
+> > Changes for v8:
+> > - None
+> > Changes for v7:
+> > - Moved node under the syscon node it requires
+> > Changes for v6:
+> > - None
+> > Changes for v5:
+> > - None
+> > Changes for v4:
+> > - None
+> > Changes for v3:
+> > - None
+> > Changes for v2:
+> > - Added comment about syscon required parameter.
+> > ---
+> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 47 +++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > new file mode 100644
+> > index 0000000000000..854bd67ffec68
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > @@ -0,0 +1,47 @@
+> > +======================================================================
+> > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge
+> > Control Driver
+> > +======================================================================
 > > +
-> > +	dev_vdbg(dev, "dummy function so that DW core doesn't configure MSI\n");
-> 
-> Drive-by nit: this is the first occurrence of dev_vdbg() in
-> drivers/pci, and while dev_vdbg() might be useful somewhere, I'm not
-> sure this is the place.
-> 
-> It took me 10 minutes of archaeology to figure out what it is and how
-> to use it.  Apparently it does nothing at all unless you define
-> VERBOSE_DEBUG, which can be set via Kconfig in a few cases:
-> 
->   drivers/dma/Makefile:subdir-ccflags-$(CONFIG_DMADEVICES_VDEBUG) += -DVERBOSE_DEBUG
->   drivers/usb/dwc2/Makefile:ccflags-$(CONFIG_USB_DWC2_VERBOSE)    += -DVERBOSE_DEBUG
->   drivers/usb/gadget/Makefile:subdir-ccflags-$(CONFIG_USB_GADGET_VERBOSE) += -DVERBOSE_DEBUG
-> 
-> but is more commonly set by adding "#define VERBOSE_DEBUG" manually
-> in a source file.  Neither one applies here, so I don't think this
-> actually does anything.
-> 
-> Anyway, I suspect this particular message would make a lot of sense as
-> a *comment*, but maybe not as a mysterious dev_vdbg() that never
-> actually does anything.
+> > +The bridge is available on platforms with the VGA enabled on the
+> > Aspeed device.
+> > +In this case, the host has access to a 64KiB window into all of the
+> > BMC's
+> > +memory.  The BMC can disable this bridge.  If the bridge is enabled,
+> > the host
+> > +has read access to all the regions of memory, however the host only
+> > has read
+> > +and write access depending on a register controlled by the BMC.
+> > +
+> > +Required properties:
+> > +===================
+> > +
+> > + - compatible: must be one of:
+> > +     - "aspeed,ast2400-p2a-ctrl"
+> > +     - "aspeed,ast2500-p2a-ctrl"
+> > +
+> > +Optional properties:
+> > +===================
+> > +
+> > +- memory-region: A phandle to a reserved_memory region to be used for
+> > the PCI
+> > +             to AHB mapping
+> > +
+> > +The p2a-control node should be the child of a syscon node with the
+> > required
+> > +property:
+> > +
+> > +- compatible : Should be one of the following:
+> > +             "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > +             "aspeed,g4-scu", "syscon", "simple-mfd"
+> > +             "aspeed,ast2500-scu", "syscon", "simple-mfd"
+> > +             "aspeed,g5-scu", "syscon", "simple-mfd"
+> > +
+> > +Example
+> > +===================
+> > +
+> > +g4 Example
+> > +----------
+> > +
+> > +syscon: scu@1e6e2000 {
+> > +     compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> > +     reg = <0x1e6e2000 0x1a8>;
+> > +
+> > +     p2a: p2a-control {
+> > +             compatible = "aspeed,ast2400-p2a-ctrl";
+> > +             memory-region = <&reserved_memory>;
+> > +     };
+> > +};
+> > --
+> > 2.21.0.392.gf8f6787159e-goog
+> >
+> >
 
-I agree. Kishon ? I would do what Bjorn suggests here, please let me
-know.
+I'm sorry, is there something more I need to do with the patch series?
+ Sometimes I miss emails.
 
-Lorenzo
+Thanks,
+Patrick
