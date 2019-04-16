@@ -1,87 +1,50 @@
-From: Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 13/15] [media] mtk-mipicsi: add the function for Get/Set
- PARM for application
-Date: Tue, 16 Apr 2019 17:27:41 +0800
-Message-ID: <1555406863-18069-14-git-send-email-stu.hsieh@mediatek.com>
-References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: [PATCH v2 00/15] Add mediatek mipicsi driver for Mediatek SOC MT2712
+Date: Tue, 16 Apr 2019 17:27:28 +0800
+Message-ID: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add the function for Get/Set PARM for application.
+Add mediatek mipicsi driver for Mediatek SOC MT2712
 
-Application can get the information about number of link.
+Change in v2:
+- Add the dt-binding document for mediatek mipicsi driver
+- Modify the logic about "is_support" function in patch
+  "[media] mtk-mipicsi: add color format support for mt2712"
 
-Signed-off-by: Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Stu Hsieh (15):
+  dt-bindings: media: Add binding for MT2712 MIPI-CSI2
+  [media] mtk-mipicsi: add mediatek mipicsi driver for mt2712
+  [media] mtk-mipicsi: add pm function
+  [media] mtk-mipicsi: add color format support for mt2712
+  [media] mtk-mipicsi: get the w/h/bytepwerline for mtk_mipicsi
+  [media] mtk-mipicsi: add function to support SerDes for link number
+  [media] mtk-mipicsi: add mipicsi reg setting for mt2712
+  [media] mtk-mipicsi: enable/disable ana clk
+  [media] mtk-mipicsi: enable/disable cmos for mt2712
+  [media] mtk-mipicsi: add ISR for writing the data to buffer
+  [media] mtk-mipicsi: set the output address in HW reg
+  [media] mtk-mipicsi: add function to get the format
+  [media] mtk-mipicsi: add the function for Get/Set PARM for application
+  [media] mtk-mipicsi: add debug message for mipicsi driver
+  [media] mtk-mipicsi: add debugfs for mipicsi driver
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 5e4028d0d5e1..5db9c68b0da9 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -346,6 +346,38 @@ static int get_subdev_link(const struct soc_camera_device *icd,
- 	return 0;
- }
- 
-+static int mtk_mipicsi_get_parm(struct soc_camera_device *icd,
-+	struct v4l2_streamparm *a)
-+{
-+	unsigned int link = 0U;
-+	u8 link_reg_val = 0x0U;
-+	int ret = 0;
-+
-+	/*get camera link number*/
-+	ret = get_subdev_link(icd, &link, &link_reg_val);
-+	if (ret < 0)
-+		return ret;
-+
-+	a->parm.capture.timeperframe.numerator = 1;
-+	a->parm.capture.timeperframe.denominator = 30;
-+	a->parm.capture.reserved[0] = link_reg_val;
-+	a->parm.capture.reserved[1] = (u32)(icd->use_count);
-+	dev_info(icd->parent, "use count %d\n", icd->use_count);
-+
-+	return 0;
-+}
-+
-+static int mtk_mipicsi_set_param(struct soc_camera_device *icd,
-+	struct v4l2_streamparm *a)
-+{
-+	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
-+
-+	if (ici->ops->get_parm == NULL)
-+		return ici->ops->get_parm(icd, a);
-+
-+	return 0;
-+}
-+
- static u32 get_bytesperline(const u32 fmt, const u32 width)
- {
- 	u32 bytesperline = 0;
-@@ -884,6 +916,8 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
- 	.poll			= vb2_fop_poll,
- 	.querycap		= mtk_mipicsi_querycap,
- 	.set_bus_param		= mtk_mipicsi_set_bus_param,
-+	.get_parm		= mtk_mipicsi_get_parm,
-+	.set_parm		= mtk_mipicsi_set_param,
- };
- 
- static void mtk_mipicsi_ana_init(void __iomem *base)
+ .../bindings/media/mediatek-mipicsi-camsv.txt |   53 +
+ .../media/mediatek-mipicsi-common.txt         |   19 +
+ .../bindings/media/mediatek-mipicsi.txt       |   54 +
+ drivers/media/platform/mtk-mipicsi/Makefile   |    4 +
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 1686 +++++++++++++++++
+ 5 files changed, 1816 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+ create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
+ create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+
 -- 
 2.18.0
