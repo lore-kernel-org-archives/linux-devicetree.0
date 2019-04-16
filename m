@@ -1,8 +1,8 @@
 From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Subject: [PATCH V1 2/3] Documentation: devicetree: regulator: add binding for
- slg51000
+Subject: [PATCH V1 1/3] MAINTAINERS: slg51000 updates to the Dialog
+ Semiconductor search terms
 Date: Tue, 16 Apr 2019 13:37:26 +0900
-Message-ID: <969035f30e614fd68288a0e21b729ae53ef3fca0.1555389447.git.eric.jeong.opensource@diasemi.com>
+Message-ID: <60d306ce39a78df0d00f7be72d83d1e646592b6c.1555389447.git.eric.jeong.opensource@diasemi.com>
 References: <cover.1555389447.git.eric.jeong.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -16,112 +16,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Eric Jeong <eric.jeong.opensource@diasemi.com>
 
-Add device tree binding information for slg51000 regulator driver.
-
+This patch adds the slg51000 bindings doc and driver to the Dialog
+Semiconductor support list.
 
 Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
 
 ---
-This patch applies against linux-next and next-20190415
 
+ MAINTAINERS |    2 ++
+ 1 file changed, 2 insertions(+)
 
- .../devicetree/bindings/regulator/slg51000.txt     |   88 ++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/slg51000.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/slg51000.txt b/Documentation/devicetree/bindings/regulator/slg51000.txt
-new file mode 100644
-index 0000000..aa0733e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/slg51000.txt
-@@ -0,0 +1,88 @@
-+* Dialog Semiconductor SLG51000 Voltage Regulator
-+
-+Required properties:
-+- compatible : Should be "dlg,slg51000" for SLG51000
-+- reg : Specifies the I2C slave address.
-+- xxx-supply: Input voltage supply regulator for ldo3 to ldo7.
-+  These entries are required if regulators are enabled for a device.
-+  An absence of these properties can cause the regulator registration to fail.
-+  If some of input supply is powered through battery or always-on supply then
-+  also it is required to have these parameters with proper node handle of always
-+  on power supply.
-+    vin3-supply: Input supply for ldo3
-+    vin4-supply: Input supply for ldo4
-+    vin5-supply: Input supply for ldo5
-+    vin6-supply: Input supply for ldo6
-+    vin7-supply: Input supply for ldo7
-+
-+Optional properties:
-+- interrupt-parent : Specifies the reference to the interrupt controller.
-+- interrupts : IRQ line information.
-+- dlg,cs-gpios : Specify a valid GPIO for chip select
-+
-+Sub-nodes:
-+- regulators : This node defines the settings for the regulators.
-+  The content of the sub-node is defined by the standard binding
-+  for regulators; see regulator.txt.
-+
-+  The SLG51000 regulators are bound using their names listed below:
-+    ldo1
-+    ldo2
-+    ldo3
-+    ldo4
-+    ldo5
-+    ldo6
-+    ldo7
-+
-+Optional properties for regulators:
-+- enable-gpios : Specify a valid GPIO for platform control of the regulator.
-+
-+Example:
-+	pmic: slg51000@75 {
-+		compatible = "dlg,slg51000";
-+		reg = <0x75>;
-+
-+		regulators {
-+			ldo1 {
-+			        regulator-name = "ldo1";
-+			        regulator-min-microvolt = <2400000>;
-+			        regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo2 {
-+			        regulator-name = "ldo2";
-+			        regulator-min-microvolt = <2400000>;
-+			        regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo3 {
-+			        regulator-name = "ldo3";
-+			        regulator-min-microvolt = <1200000>;
-+			        regulator-max-microvolt = <3750000>;
-+			};
-+
-+			ldo4 {
-+			        regulator-name = "ldo4";
-+			        regulator-min-microvolt = <1200000>;
-+			        regulator-max-microvolt = <3750000>;
-+			};
-+
-+			ldo5 {
-+			        regulator-name = "ldo5";
-+			        regulator-min-microvolt = <500000>;
-+			        regulator-max-microvolt = <1200000>;
-+			};
-+
-+			ldo6 {
-+			        regulator-name = "ldo6";
-+			        regulator-min-microvolt = <500000>;
-+			        regulator-max-microvolt = <1200000>;
-+			};
-+
-+			ldo7 {
-+			        regulator-name = "ldo7";
-+			        regulator-min-microvolt = <1200000>;
-+			        regulator-max-microvolt = <3750000>;
-+			};
-+		};
-+	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 002d564..9783eba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4632,6 +4632,7 @@ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
++F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+ F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
+ F:	Documentation/devicetree/bindings/sound/da[79]*.txt
+ F:	drivers/gpio/gpio-da90??.c
+@@ -4647,6 +4648,7 @@ F:	drivers/power/supply/da9052-battery.c
+ F:	drivers/power/supply/da91??-*.c
+ F:	drivers/regulator/da903x.c
+ F:	drivers/regulator/da9???-regulator.[ch]
++F:	drivers/regulator/slg51000-regulator.[ch]
+ F:	drivers/thermal/da90??-thermal.c
+ F:	drivers/rtc/rtc-da90??.c
+ F:	drivers/video/backlight/da90??_bl.c
 -- 
 end-of-patch for PATCH V1
