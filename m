@@ -1,66 +1,50 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V1 3/3] regulator: slg51000: add slg51000 regulator driver
-Date: Tue, 16 Apr 2019 16:24:48 +0100
-Message-ID: <20190416152448.GC4834@sirena.org.uk>
+Subject: Re: [PATCH V1 2/3] Documentation: devicetree: regulator: add binding
+ for slg51000
+Date: Tue, 16 Apr 2019 16:25:13 +0100
+Message-ID: <20190416152513.GD4834@sirena.org.uk>
 References: <cover.1555389447.git.eric.jeong.opensource@diasemi.com>
- <5e4a6a007e45feac6d35203305cafd865be48755.1555389447.git.eric.jeong.opensource@diasemi.com>
+ <969035f30e614fd68288a0e21b729ae53ef3fca0.1555389447.git.eric.jeong.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
+        protocol="application/pgp-signature"; boundary="MAH+hnPXVZWQ5cD/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5e4a6a007e45feac6d35203305cafd865be48755.1555389447.git.eric.jeong.opensource@diasemi.com>
+In-Reply-To: <969035f30e614fd68288a0e21b729ae53ef3fca0.1555389447.git.eric.jeong.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Eric Jeong <eric.jeong.opensource@diasemi.com>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
 
---s9fJI615cBHmzTOP
+--MAH+hnPXVZWQ5cD/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2019 at 01:37:27PM +0900, Eric Jeong wrote:
+On Tue, Apr 16, 2019 at 01:37:26PM +0900, Eric Jeong wrote:
+>=20
+> From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+>=20
+> Add device tree binding information for slg51000 regulator driver.
 
-> +static int slg51000_regulator_is_enabled(struct regulator_dev *rdev)
-> +{
-> +	struct slg51000 *chip =3D rdev_get_drvdata(rdev);
-> +	int ret, id =3D rdev_get_id(rdev);
-> +	unsigned int state;
-> +
-> +	ret =3D regmap_read(chip->regmap, es_reg[id].sreg, &state);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "Failed to read status register(%d)\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!(state & SLG51000_STA_ILIM_FLAG_MASK) &&
-> +	    (state & SLG51000_STA_VOUT_OK_FLAG_MASK))
-> +		return 1;
-> +	else
-> +		return 0;
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.  The binding
+itself looks good, just the subject for the patch.
 
-This looks like it should be a get_status() operation as it's reading
-status bits rather than the command we sent to the device - for that
-just use regulator_is_enabled_regmap(). =20
-
-Otherwise this all looks great.
-
---s9fJI615cBHmzTOP
+--MAH+hnPXVZWQ5cD/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly188AACgkQJNaLcl1U
-h9A9kgf/SxzEZiZ5nf8g1+aL08hUyDRPIRQDtAHgEU9JWSsQXFe/aVf4ofnAVIo/
-N+oy8hSnaOanH3WXRikr4FqJ61ola2ffeugPM5rT3Tw55CSwgqLPaEOMSn+XzXPd
-y37fxJR/x+ebkcYwzzOIM/R6xMcn8LMrCZHH6X4eZGKYnB9+FlmUMzWt1oVxkdVI
-9TPDB6Lskkplp8DFTv08A1sCC5giDARen1gBNIGYGueryRjAoU+K2+8ChoEi+IWf
-Qq4vPgrqWdiwNQXmHSvW76gtkzWKZWCiPFvXMPZWlzy2l/mmUGl6K+eEcMVMPWpF
-ICzk5mRS58a90vDSNOmTgisvnxgvnQ==
-=shk/
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly189gACgkQJNaLcl1U
+h9BW4gf/ZSbFJ35+XH3l4hbuO2Z72nfkvFx+gVrWx0cOy8sG9V7hp+YM1skdVwRN
+x1H+eySCuBZ34hBsQ4E3+u8L+5ZuiTyufAPoErTGjNzrRWkJcNdEC+tPiP3OcnI4
+FnblZe/sfxRmYEoI/3LYqgDCNEw0JPoAyXlFLf0MbFF16F1COlsptNswjMMCej0p
+pS0JT9jeXM9a/snOaK+cQKm/TKUEAK5GjWou96KOPMha+3IOWrRpH8wz59JJ2oQu
+bES1viNPAF9ABipn5s6mCcT2pPMvOFstdK+Q3DWFcnMk4T9O0/4Oo/emOppTxsY6
+TvepcSNVIbSVpo+QfXnIVBRbk9Mryg==
+=PBl8
 -----END PGP SIGNATURE-----
 
---s9fJI615cBHmzTOP--
+--MAH+hnPXVZWQ5cD/--
