@@ -1,157 +1,42 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8183: add usb node
-Date: Tue, 16 Apr 2019 13:44:04 +0800
-Message-ID: <47a4d808c5f90f229b8bd132493138023c02ee01.1555392560.git.chunfeng.yun@mediatek.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [v3 1/3] dt-bindings: display: mediatek: update dpi  supported chips
+Date: Tue, 16 Apr 2019 13:52:40 +0800
+Message-ID: <20190416055242.75764-2-jitao.shi@mediatek.com>
+References: <20190416055242.75764-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Jumin Li <jumin.li@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190416055242.75764-1-jitao.shi@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jumin Li <jumin.li@mediatek.com>
-
-Add USB DTS node to the mt8183 and mt8183-evb.
-
-Signed-off-by: Jumin Li <jumin.li@mediatek.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-this patch is based on v5.1-rc1 and these patches:
-https://patchwork.kernel.org/patch/10856987/
-https://patchwork.kernel.org/patch/10839021/
-https://patchwork.kernel.org/patch/10879015/
-https://patchwork.kernel.org/patch/10878999/
-https://patchwork.kernel.org/patch/10858941/
-https://patchwork.kernel.org/patch/10846685/
-https://patchwork.kernel.org/patch/10893519/
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 21 +++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 52 +++++++++++++++++++++
- 2 files changed, 73 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 465cdabafd7c..8f88fd7457a1 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -6,6 +6,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "mt8183.dtsi"
- #include "mt6358.dtsi"
- 
-@@ -25,6 +26,16 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+
-+	usb_p0_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbus";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		gpio = <&pio 42 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
- };
- 
- &mmc0 {
-@@ -175,6 +186,16 @@
- 	};
- };
- 
-+&ssusb {
-+	vusb33-supply = <&mt6358_vusb_reg>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usb_host {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index b36e37fcdfe3..c6970e688869 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/mt8183-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/phy/phy.h>
- #include <dt-bindings/power/mt8183-power.h>
- #include "mt8183-pinfunc.h"
- / {
-@@ -323,6 +324,33 @@
- 			status = "disabled";
- 		};
- 
-+		ssusb: usb@11201000 {
-+			compatible ="mediatek,mt8183-mtu3", "mediatek,mtu3";
-+			reg = <0 0x11201000 0 0x2e00>,
-+			      <0 0x11203e00 0 0x0100>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-+			phys = <&u2port0 PHY_TYPE_USB2>;
-+			clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-+				 <&infracfg CLK_INFRA_USB>;
-+			clock-names = "sys_ck", "ref_ck";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			usb_host: xhci@11200000 {
-+				compatible = "mediatek,mtk-xhci";
-+				reg = <0 0x11200000 0 0x1000>;
-+				reg-names = "mac";
-+				interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
-+				clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-+					 <&infracfg CLK_INFRA_USB>;
-+				clock-names = "sys_ck", "ref_ck";
-+				status = "disabled";
-+			};
-+		};
-+
- 		audiosys: syscon@11220000 {
- 			compatible = "mediatek,mt8183-audiosys", "syscon";
- 			reg = <0 0x11220000 0 0x1000>;
-@@ -353,6 +381,30 @@
- 			status = "disabled";
- 		};
- 
-+		u3phy: usb-phy@11f40000 {
-+			compatible = "mediatek,generic-tphy-v2";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "okay";
-+
-+			u2port0: usb-phy@11f40000 {
-+				reg = <0 0x11f40000 0 0x700>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+
-+			u3port0: usb-phy@11f40700 {
-+				reg = <0 0x11f40700 0 0x900>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+		};
-+
- 		mfgcfg: syscon@13000000 {
- 			compatible = "mediatek,mt8183-mfgcfg", "syscon";
- 			reg = <0 0x13000000 0 0x1000>;
--- 
-2.21.0
+QWRkIGRlY3JpcHRpb25zIGFib3V0IHN1cHBvcnRlZCBjaGlwcywgaW5jbHVkaW5nIE1UMjcwMSAm
+IE1UODE3MyAmCm10ODE4MwoKU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVk
+aWF0ZWsuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsv
+bWVkaWF0ZWssZHBpLnR4dCAgICAgICAgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
+bigrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0CmluZGV4IGI2YTdlNzM5
+N2I4Yi4uNTg5MTRjZjY4MWI4IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0CisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50
+eHQKQEAgLTcsNiArNyw3IEBAIG91dHB1dCBidXMuCiAKIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAt
+IGNvbXBhdGlibGU6ICJtZWRpYXRlayw8Y2hpcD4tZHBpIgorICB0aGUgc3VwcG9ydGVkIGNoaXBz
+IGFyZSBtdDI3MDEgLCBtdDgxNzMgYW5kIG10ODE4My4KIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFk
+ZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycwogLSBpbnRlcnJ1
+cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBmdW5jdGlvbiBibG9jay4KIC0gY2xv
+Y2tzOiBkZXZpY2UgY2xvY2tzCi0tIAoyLjIxLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbA==
