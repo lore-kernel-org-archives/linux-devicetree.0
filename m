@@ -1,70 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: tegra114: fix PIO transfer" to the spi tree
-Date: Tue, 16 Apr 2019 17:32:57 +0100 (BST)
-Message-ID: <20190416163257.956F211281C6@debutante.sirena.org.uk>
-References: <1555363834-32155-2-git-send-email-skomatineni@nvidia.com>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v4 0/2] Add support for the Purism Librem5 devkit
+Date: Tue, 16 Apr 2019 09:38:22 -0700
+Message-ID: <665773559cd9449a27fc9bc40cf73792@www.akkea.ca>
+References: <20190415235343.16565-1-angus@akkea.ca>
+ <20190416075834.6wurd6nq4ow5woyn@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555363834-32155-2-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190416075834.6wurd6nq4ow5woyn@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: broonie@kernel.org, devicetree@vger.kernel.org, jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-tegra@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org, skomatineni@nvidia.com, talho@nvidia.com, thierry.reding@gmail.com
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 2019-04-16 00:58, Marco Felsch wrote:
+> Hi Agnus,
+> 
+> On 19-04-15 16:53, Angus Ainslie (Purism) wrote:
+>> The Librem5 devkit is based on the imx8mq from NXP. This is a default
+>> devicetree to boot the board to a command prompt.
+> 
+> You should also provide a patch which adds the devicetree to the yaml
+> file, see: Documentation/devicetree/bindings/arm/fsl.yaml.
+> 
 
-   spi: tegra114: fix PIO transfer
+Sure, what is that yaml file for ?
 
-has been applied to the spi tree at
+Angus
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3f6e3f7843a6a1667ed890ca51a1388fc7bf3429 Mon Sep 17 00:00:00 2001
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Mon, 15 Apr 2019 14:30:26 -0700
-Subject: [PATCH] spi: tegra114: fix PIO transfer
-
-This patch fixes PIO mode transfer to use PIO bit in SPI_COMMAND1 register.
-Current driver uses DMA_EN instead of PIO bit.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-tegra114.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index b57f10182fae..21e4fdad013f 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -641,8 +641,9 @@ static int tegra_spi_start_cpu_based_transfer(
- 
- 	tspi->is_curr_dma_xfer = false;
- 
--	val |= SPI_DMA_EN;
--	tegra_spi_writel(tspi, val, SPI_DMA_CTL);
-+	val = tspi->command1_reg;
-+	val |= SPI_PIO;
-+	tegra_spi_writel(tspi, val, SPI_COMMAND1);
- 	return 0;
- }
- 
--- 
-2.20.1
+> Thanks,
+>   Marco
+> 
+>> 
+>> Changes since v3:
+>> 
+>> Freshly sorted and pressed nodes.
+>> Change the backlight to an interpolated scale.
+>> Dropped i2c2.
+>> Dropped devkit version number to match debian MR.
+>> 
+>> Changes since v2:
+>> 
+>> Fixed incorrect phy-supply for the fsl-fec.
+>> Dropped unused regulator property.
+>> Fixup Makefile for linux-next.
+>> 
+>> Changes since v1:
+>> 
+>> Dropped config file.
+>> Updated the board compatible label.
+>> Changed node names to follow naming conventions.
+>> Added a more complete regulator hierachy.
+>> Removed unused nodes.
+>> Removed unknown devices.
+>> Fixed comment style.
+>> Dropped undocumented properties.
+>> 
+>> Angus Ainslie (Purism) (2):
+>>   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+>>   dt-bindings: Add an entry for Purism SPC
+>> 
+>>  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+>>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 822 
+>> ++++++++++++++++++
+>>  3 files changed, 824 insertions(+)
+>>  create mode 100644 
+>> arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+>> 
+>> --
+>> 2.17.1
+>> 
+>> 
+>> 
