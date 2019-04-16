@@ -1,37 +1,86 @@
-Return-Path: <SRS0=dKdi=SG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729261AbfDDQCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:02:52 -0400
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH 2/2] dt-bindings: iio: imu: st_lsm6dsx: add lsm6dsr device bindings
-Date: Thu,  4 Apr 2019 18:02:35 +0200
-Message-Id: <d72fe86f431bbf68ebeec0b234f4c57881e86c82.1554393394.git.lorenzo@kernel.org>
-In-Reply-To: <cover.1554393393.git.lorenzo@kernel.org>
-References: <cover.1554393393.git.lorenzo@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lorenzo.bianconi@redhat.com
+Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V4 7/7] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
+Date: Tue, 16 Apr 2019 10:38:07 +0100
+Message-Id: <1555407487-35394-8-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
+References: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
- 1 file changed, 1 insertion(+)
+This patch enables TI HD3SS3220 device and support usb role switch
+for the CAT 874 platform.
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-index 4640a012c17a..efec9ece034a 100644
---- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-@@ -10,6 +10,7 @@ Required properties:
-   "st,lsm6dso"
-   "st,asm330lhh"
-   "st,lsm6dsox"
-+  "st,lsm6dsr"
- - reg: i2c address of the sensor / spi cs line
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+V3-->V4
+  * No change
+V2-->V3
+  * Used "renesas,usb-role-switch" instead of generic "usb-role-switch"
+    property
+V1-->V2
+  * New patch
+---
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index b9ae7db..746826c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -85,6 +85,34 @@
+ 	clock-frequency = <48000000>;
+ };
  
- Optional properties:
++&i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
++
++	hd3ss3220@47 {
++		compatible = "ti,hd3ss3220";
++		reg = <0x47>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++		};
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hd3ss3220_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&usb3peri_role_switch>;
++			};
++		};
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
+@@ -175,6 +203,17 @@
+ &usb3_peri0 {
+ 	companion = <&xhci0>;
+ 	status = "okay";
++	renesas,usb-role-switch;
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usb3peri_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&hd3ss3220_ep>;
++		};
++	};
+ };
+ 
+ &xhci0 {
 -- 
-2.20.1
+2.7.4
