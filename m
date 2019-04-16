@@ -1,96 +1,70 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH 3/3] ARM: dts: aspeed: zaius: fixed I2C bus numbers for pcie slots
-Date: Tue, 16 Apr 2019 09:21:51 -0700
-Message-ID: <20190416162150.150154-4-venture@google.com>
-References: <20190416162150.150154-1-venture@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: tegra114: fix PIO transfer" to the spi tree
+Date: Tue, 16 Apr 2019 17:32:57 +0100 (BST)
+Message-ID: <20190416163257.956F211281C6@debutante.sirena.org.uk>
+References: <1555363834-32155-2-git-send-email-skomatineni@nvidia.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416162150.150154-1-venture@google.com>
+In-Reply-To: <1555363834-32155-2-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au
-Cc: Robert Lippert <rlippert@google.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: broonie@kernel.org, devicetree@vger.kernel.org, jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-tegra@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org, skomatineni@nvidia.com, talho@nvidia.com, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Robert Lippert <rlippert@google.com>
+The patch
 
-The change to include ibm-power9-cfam.dtsi resulted in a renumbering
-of all of the I2C bus numbers behind the on-board muxes.  This breaks
-some tools which have hardcoded the bus numbers.
+   spi: tegra114: fix PIO transfer
 
-Add device tree aliases for the I2C buses routed through the PCIe slots
-so that they return to their former numbers before the cfam change.
+has been applied to the spi tree at
 
-Signed-off-by: Robert Lippert <rlippert@google.com>
-Signed-off-by: Patrick Venture <venture@google.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 3f6e3f7843a6a1667ed890ca51a1388fc7bf3429 Mon Sep 17 00:00:00 2001
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Date: Mon, 15 Apr 2019 14:30:26 -0700
+Subject: [PATCH] spi: tegra114: fix PIO transfer
+
+This patch fixes PIO mode transfer to use PIO bit in SPI_COMMAND1 register.
+Current driver uses DMA_EN instead of PIO bit.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/spi/spi-tegra114.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-index 51265af622574..c12f89e042efc 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-@@ -7,6 +7,14 @@
- 	model = "Zaius BMC";
- 	compatible = "ingrasys,zaius-bmc", "aspeed,ast2500";
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index b57f10182fae..21e4fdad013f 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -641,8 +641,9 @@ static int tegra_spi_start_cpu_based_transfer(
  
-+	aliases {
-+		i2c15 = &i2cpcie0;
-+		i2c16 = &i2cpcie1;
-+		i2c17 = &i2cpcie2;
-+		i2c19 = &i2cpcie3;
-+		i2c20 = &i2cpcie4;
-+	};
-+
- 	chosen {
- 		stdout-path = &uart5;
- 		bootargs = "console=ttyS4,115200 earlyprintk";
-@@ -223,6 +231,27 @@
- 		reg = <0x71>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+
-+		i2cpcie0: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+		i2cpcie1: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+		i2cpcie2: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+		i2ctpm: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
- 	};
+ 	tspi->is_curr_dma_xfer = false;
  
- 	/* MUX1 PCA9546A @71h
-@@ -253,6 +282,17 @@
- 		reg = <0x71>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+
-+		i2cpcie3: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+		i2cpcie4: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
- 	};
+-	val |= SPI_DMA_EN;
+-	tegra_spi_writel(tspi, val, SPI_DMA_CTL);
++	val = tspi->command1_reg;
++	val |= SPI_PIO;
++	tegra_spi_writel(tspi, val, SPI_COMMAND1);
+ 	return 0;
+ }
  
- 	/* MUX1 PCA9546A @71h
 -- 
-2.21.0.392.gf8f6787159e-goog
+2.20.1
