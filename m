@@ -1,122 +1,120 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFT/RFC PATCH v3 3/5] cpu-topology: Move cpu topology code to
- common code.
-Date: Tue, 16 Apr 2019 11:54:49 -0700
-Message-ID: <ad175efb-9545-5772-e0dc-ac0b0ae5139b@wdc.com>
-References: <20190320234806.19748-1-atish.patra@wdc.com>
- <20190320234806.19748-4-atish.patra@wdc.com>
- <20190415152741.GA28623@e107155-lin>
- <5c5b720f-414a-706c-3415-642c27baef1f@wdc.com>
- <20190416132324.GB24669@e107155-lin>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
+ driver
+Date: Tue, 16 Apr 2019 21:57:30 +0300
+Message-ID: <770002ab-7e08-b695-b5a5-fce772b600a5@cogentembedded.com>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
+ <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
+ <OF8A9D093C.B3035121-ON482583DE.00065F23-482583DE.00074AC0@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416132324.GB24669@e107155-lin>
-Content-Language: en-US
+In-Reply-To: <OF8A9D093C.B3035121-ON482583DE.00065F23-482583DE.00074AC0@mxic.com.tw>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsl>
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/16/19 6:23 AM, Sudeep Holla wrote:
-> On Mon, Apr 15, 2019 at 03:08:45PM -0700, Atish Patra wrote:
->> On 4/15/19 8:27 AM, Sudeep Holla wrote:
->>> Hi Atish,
->>>
->>> Thanks again for doing this. Overall changes look good except a couple
->>> of minor nit, see below.
->>>
->>> On Wed, Mar 20, 2019 at 04:48:04PM -0700, Atish Patra wrote:
->>>> Both RISC-V & ARM64 are using cpu-map device tree to describe
->>>> their cpu topology. It's better to move the relevant code to
->>>> a common place instead of duplicate code.
->>>>
->>>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->>>> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
->>>> ---
->>>>    arch/arm64/include/asm/topology.h |  23 ---
->>>>    arch/arm64/kernel/topology.c      | 303 +-----------------------------
->>>>    drivers/base/arch_topology.c      | 298 ++++++++++++++++++++++++++++-
->>>>    drivers/base/topology.c           |   1 +
->>>>    include/linux/arch_topology.h     |  28 +++
->>>>    5 files changed, 330 insertions(+), 323 deletions(-)
->>>>
->>>
->>> [...]
->>>
->>>> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
->>>> index edfcf8d9..6cc6a860 100644
->>>> --- a/drivers/base/arch_topology.c
->>>> +++ b/drivers/base/arch_topology.c
->>>> @@ -6,8 +6,8 @@
->>>>     * Written by: Juri Lelli, ARM Ltd.
->>>>     */
->>>> -#include <linux/acpi.h>
->>>>    #include <linux/arch_topology.h>
->>>> +#include <linux/acpi.h>
->>>>    #include <linux/cpu.h>
->>>>    #include <linux/cpufreq.h>
->>>>    #include <linux/device.h>
->>>> @@ -16,6 +16,11 @@
->>>>    #include <linux/string.h>
->>>>    #include <linux/sched/topology.h>
->>>>    #include <linux/cpuset.h>
->>>> +#include <linux/cpumask.h>
->>>> +#include <linux/init.h>
->>>> +#include <linux/percpu.h>
->>>> +#include <linux/sched.h>
->>>> +#include <linux/smp.h>
->>>>    DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
->>>> @@ -278,3 +283,294 @@ static void parsing_done_workfn(struct work_struct *work)
->>>>    #else
->>>>    core_initcall(free_raw_capacity);
->>>>    #endif
->>>> +
->>>> +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
->>>
->>> Why can't the above one be just GENERIC_ARCH_TOPOLOGY ?
->>> I may be missing to find it myself, but would like to know.
->>>
->> GENERIC_ARCH_TOPOLOGY is now used for both RISCV, ARM & ARM64.
->> The below functions under this #ifdef have different implementation for ARM
->> and ARM64.
->>
->> parse_dt_topology
->> cpu_coregroup_mask
->> update_siblings_masks
->>
->> While we can combine the later two functions and move them to common code as
->> well, parse_dt_topology is significantly different.
->>
-> 
-> Sure, had a quick glance and indeed they may look different, but won't
-> it defeat the purpose of this binding consolidation ?
-> 
-I didn't want change too much at first go.
+On 04/16/2019 04:19 AM, masonccyang@mxic.com.tw wrote:
 
->> That's why we need some kind of #ifdef or renaming of parse_dt_topology for
->> ARM32 code.
+>> Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller driver
 >>
+>> The patch name is somewhat misleading -- there's no "MFD controller".
 > 
-> I am fine if we want to take this up later to keep the impact minimum.
-> But cpu_coregroup_mask and update_siblings_masks can and must be unified.
-
-Sure. I will just leave parse_dt_topology as it is for now and unify 
-other two functions.
-
-I think we should unify parse_dt_topology in separate series.
-
-Regards,
-Atish
-> In fact the existing generic version must work on ARM32 too.
+> Can't get your point ?
 > 
->> Thanks for the review!!
+> RPC-IF support SPI and HF, it's a MFD controller and
+> that's why I patch it to MFD as Marek's comments.
+
+   I'd like the "controller" word dropped, as MFD stands for multi-function device
+anyway. "Controller" seems to be superfluous here...
+
+>> On 04/15/2019 10:37 AM, Mason Yang wrote:
 >>
+>> > Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
+>> >
+>> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> [...]
+>> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> > index 26ad646..7914349 100644
+>> > --- a/drivers/mfd/Kconfig
+>> > +++ b/drivers/mfd/Kconfig
+>> > @@ -978,6 +978,15 @@ config MFD_RDC321X
+>> >       southbridge which provides access to GPIOs and Watchdog using the
+>> >       southbridge PCI device configuration space.
+>> >  
+>> > +config MFD_RENESAS_RPC
+>> > +   tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
+>> > +   select MFD_CORE
+>> > +   depends on ARCH_RENESAS
+>> > +   help
+>> > +     This supports for Renesas R-Car Gen3 RPC-IF multifunction device
+>>
+>>    "For" node needed here.
 > 
-> You are welcome.
+> ?
+
+   Sorry, that was a typo: s/node/not/.
+
+>> [...]
+>> > diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/
+>> renesas-rpc.h
+>> > new file mode 100644
+>> > index 0000000..61ada14
+>> > --- /dev/null
+>> > +++ b/include/linux/mfd/renesas-rpc.h
+>> > @@ -0,0 +1,153 @@
+>> > +// SPDX-License-Identifier: GPL-2.0
+>> > +//
+>> > +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+>> > +// Copyright (C) 2019 Macronix International Co., Ltd.
+>> > +//
+>> > +// R-Car Gen3 RPC-IF MFD driver
+>> > +//
+>> > +// Author:
+>> > +//   Mason Yang <masonccyang@mxic.com.tw>
+>> > +//
+>> > +
+>> > +#ifndef __MFD_RENESAS_RPC_H
+>> > +#define __MFD_RENESAS_RPC_H
+>> > +
+>> > +#include <linux/clk.h>
+>> > +#include <linux/io.h>
+>> > +#include <linux/log2.h>
+>> > +#include <linux/iopoll.h>
+>> > +#include <linux/module.h>
+>> > +#include <linux/mtd/mtd.h>
+>> > +#include <linux/platform_device.h>
+>> > +#include <linux/pm_runtime.h>
+>> > +#include <linux/of.h>
+>> > +#include <linux/regmap.h>
+>> > +#include <linux/reset.h>
+>>
+>>    NAK. I have already told you that these #include's are only needed in the
+>> drivers, not in this header.
 > 
-> --
-> Regards,
-> Sudeep
+> why ?
+
+   Why what? As a rule of thumb, we #include only headers necessary to build
+the file in question.
+
+> I think these #include files are still needed in HyperFlash driver.
+
+   Hopefully not. Though that doesn't really matter much.
+
+> i.e,. clk controller, mtd and so on.
 > 
+>>
+>>    My idea is to contain all hardware manipulation in the MFD driver,
+>> with SPI/HF drivers calling that code via a set of APIs declared in
+>> this header.
+>> The registers (declared below) would end up only needed by that
+>> common MFD driver...
+> 
+> best regards,
+> Mason
+
+MBR, Sergei
