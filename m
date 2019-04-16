@@ -1,71 +1,74 @@
-Return-Path: <SRS0=/0v1=SU=nxp.com=ping.bai@kernel.org>
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Thu, 18 Apr 2019 01:54:18 +0000
-Message-ID: 
- <VI1PR0402MB35196D5E9D4E261C0153556D87260@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
+Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V4 1/7] dt-bindings: usb: hd3ss3220 device tree binding document
+Date: Tue, 16 Apr 2019 10:38:01 +0100
+Message-Id: <1555407487-35394-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
+References: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
->=20
-> On Wed, Apr 17, 2019 at 02:30:53PM +0000, Jacky Bai wrote:
-> >
-> > Hi Lucas,
-> >
-> > Either SCMI or SCPI, I think it is initially designed for SOC that has
-> > dedicated SCP to manage the SOC resource, but for i.MX8M, we don't
-> > have such support. so just for the power domain support, do you have
-> > other suggestion for it.
-> >
->=20
-> I disagree, I thought it was clear from my earlier email. All OSPM like L=
-inux
-> kernel cares is conformance to the interface. And SCMI/SCPI kind of inter=
-face
-> doesn't mandate how to implement either at the hardware (you may or may
-> not have dedicated processor) or software level(can do it in TF-A through=
- SMC,
-> or some remote process through mailbox)
->=20
+Add device tree binding document for TI HD3SS3220 Type-C DRP port
+controller driver.
 
-For the current SCMI/SCPI driver in mainline kernel, no SCMI/SCPI over SMC =
-support, right?
-If we want to make SCMI over SMC as a standard support, does ARM have some =
-suggestion
-or plan? :)
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+V3-->V4
+  * No Change.
+V2-->V3
+  * Added Rob's Reviewed by tag.
+V1-->V2
+  * Added connector node.
+  * updated the example with connector node.
+---
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
 
-> I am clearly against the custom SMC:
->=20
-> 1. It will never end and it's put together without much design thoughts
->    just to address specific need of the hour.
-> 2. It gets obsolete very soon, mainly because of (1) 3. Very platform and
-> vendor specific and soon we will find ourselves
->    in ocean of such custom calls
->=20
-> And I can definitely continue the list, but I have made the point.
-> I think we already have enough of those custom SMC already now and it's
-> high time to stop that non-sense for OSPM.
->=20
-
->From the ARM SMC calling convention, the SIP service call is designed to
-provide SOC specific service, for example, Secure platform initialization,
-configuration and some power control. I am confused if upstream kernel will=
- never
-accept SIP service patch.
-
->From the SCMI spec, it provide the clock management for enable/disable/set_=
-rate,
-But don't have set_parent support, for i.MX8M platform, we have the require=
-ment to
-set clock parent explicitly. If we move to use SCMI framework, how do handl=
-e
-the set parent?
-
-> --
-> Regards,
-> Sudeep
+diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+new file mode 100644
+index 0000000..7f41400
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+@@ -0,0 +1,37 @@
++TI HD3SS3220 TypeC DRP Port Controller.
++
++Required properties:
++ - compatible: Must be "ti,hd3ss3220".
++ - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
++ - interrupts: <a b> where a is the interrupt number and b represents an
++   encoding of the sense and level information for the interrupt.
++
++Required sub-node:
++ - connector : The "usb-c-connector" attached to the hd3ss3220 chip. The
++   bindings of the connector node are specified in:
++
++	Documentation/devicetree/bindings/connector/usb-connector.txt
++
++Example:
++hd3ss3220@47 {
++	compatible = "ti,hd3ss3220";
++	reg = <0x47>;
++	interrupt-parent = <&gpio6>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++	};
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		hd3ss3220_ep: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&usb3peri_role_switch>;
++		};
++	};
++};
+-- 
+2.7.4
