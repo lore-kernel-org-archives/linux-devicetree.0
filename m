@@ -1,66 +1,69 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v9] arm64: dts: Add Mediatek SoC MT8183 and evaluation
- board dts and Makefile
-Date: Tue, 16 Apr 2019 10:29:42 +0200
-Message-ID: <135d7e3a-d5a3-0f13-05c9-4a8ec0524256@gmail.com>
-References: <1552898552-13045-2-git-send-email-erin.lo@mediatek.com>
- <201903190247.QZDwfpLQ%lkp@intel.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
+Date: Tue, 16 Apr 2019 10:30:58 +0200
+Message-ID: <CAJiuCcdXeaXPD9k8QTL3C+CYnMhSgrx-We=s0pVBhS2rprcDNw@mail.gmail.com>
+References: <20190411214422.2267-1-peron.clem@gmail.com> <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea> <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+ <20190415081816.2pay4pioc5d4mojf@flea> <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
+ <20190415145135.fjbcaldwy7w3eqcs@flea> <CAJiuCcdrQ64jC8UH1eDKKhFdcOtk=bkWTAzoYOQ1ut3He+j2GQ@mail.gmail.com>
+ <20190416073449.qzl3uyjgvjgd3tai@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201903190247.QZDwfpLQ%lkp@intel.com>
-Content-Language: en-US
+In-Reply-To: <20190416073449.qzl3uyjgvjgd3tai@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, mars.cheng@mediatek.com, eddie.huang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Tue, 16 Apr 2019 at 09:34, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Mon, Apr 15, 2019 at 06:30:10PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > > > I didn't change the driver and the SPDIF is working what's irreleva=
+nt
+> > > > in declaring the driver as compatible ?
+> > >
+> > > It's working by accident.
+> > >
+> > > This won't work for example:
+> > > https://elixir.bootlin.com/linux/latest/source/sound/soc/sunxi/sun4i-=
+spdif.c#L181
+> > >
+> > > > If some feature are missing they can be introduce later as there is=
+ a
+> > > > special binding for H6 no ?
+> > >
+> > > Again, that's irrelevant. The only question you need to ask yourself
+> > > is whether, if you take an imaginary source code that would support
+> > > all the H3 SPDIF features and run it on an H6, it works just as well.
+> > >
+> > > The examples above that it's not the case, so you can't claim that th=
+e
+> > > device is compatible.
+> >
+> > Is it ok if I fix the TX Fifo flush bit and remove the compatible with =
+H3 ?
+> > (Looking at the driver this is the only bit used that is incompatible w=
+ith H6)
+>
+> Sure
+>
+> > Or should I send a new driver with the correct mapping ?
+>
+> No, we definitely don't want to duplicate a driver just for a single
+> bit offset that changes.
 
-On 18/03/2019 19:42, kbuild test robot wrote:
-> Hi Erin,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on v5.1-rc1 next-20190318]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Erin-Lo/arm64-dts-Add-Mediatek-SoC-MT8183-and-evaluation-board-dts-and-Makefile/20190318-170422
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> config: arm64-allyesconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.2.0 make.cross ARCH=arm64 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from arch/arm64/boot/dts/mediatek/mt8183-evb.dts:9:0:
->>> arch/arm64/boot/dts/mediatek/mt8183.dtsi:8:10: fatal error: dt-bindings/clock/mt8183-clk.h: No such file or directory
->     #include <dt-bindings/clock/mt8183-clk.h>
->              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    compilation terminated.
-> 
-> vim +8 arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> 
->    > 8	#include <dt-bindings/clock/mt8183-clk.h>
->      9	#include <dt-bindings/interrupt-controller/arm-gic.h>
->     10	#include <dt-bindings/interrupt-controller/irq.h>
->     11	
-> 
+Thanks for the advice, I will try to submit a new version with this fix.
+Clement
 
-Stephen queued the corresponding patch for v5.2.
-I propose we wait for v5.2-rc1 and then apply the basic support and the others
-based on this one.
-
-Erin: There are may mt8183 dts patches floating around that depend on this or
-more patches. Can you coordinate with your colleagues to resend them as a
-series? Then it will be easier for me to take them for v5.3, as some have
-dependencies on other series etc.
-
-Thanks a lot.
-Matthias
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
