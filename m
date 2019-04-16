@@ -1,96 +1,52 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining
- down after PHY disconnect
-Date: Tue, 16 Apr 2019 13:51:15 +0300
-Message-ID: <CA+h21hqnF5+VXZnHeipKMEHRmxmgRkXuQQQuiDE4-gKj6OAO4w@mail.gmail.com>
-References: <20190411232315.19588-1-olteanv@gmail.com> <20190411232315.19588-2-olteanv@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 22/24] dt-bindings: i2c: i2c-mtk: add support for MT8516
+Date: Tue, 16 Apr 2019 13:05:34 +0200
+Message-ID: <20190416110534.ndcnjjy3dzdb6xbv@ninjato>
+References: <20190323211612.860-1-fparent@baylibre.com>
+ <20190323211612.860-23-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vcxgegcyuczhk53y"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411232315.19588-2-olteanv@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190323211612.860-23-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, leoyang.li@nxp.com, Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev <netdev@vger.kernel.org>, davem@davemloft.net
+To: Fabien Parent <fparent@baylibre.com>
+Cc: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, sean.wang@kernel.org, ryder.lee@mediatek.com, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, chaotian.jing@mediatek.com, yong.mao@mediatek.com, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Apr 2019 at 02:27, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-> are pointing towards the same internal PCS. Therefore nobody is
-> controlling the internal PCS of eTSEC0.
->
-> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-> initialization. But upon an ifdown/ifup sequence, the code path from
-> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-> failure condition, the PHY driver keeps printing
-> '803x_aneg_done: SGMII link is not ok'.
->
-> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
->  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
->  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-> index 97e1fb7ea932..9b1fe99d55b1 100644
-> --- a/arch/arm/boot/dts/ls1021a-twr.dts
-> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
-> @@ -145,7 +145,7 @@
->  };
->
->  &enet0 {
-> -       tbi-handle = <&tbi1>;
-> +       tbi-handle = <&tbi0>;
->         phy-handle = <&sgmii_phy2>;
->         phy-connection-type = "sgmii";
->         status = "okay";
-> @@ -225,6 +225,13 @@
->         sgmii_phy2: ethernet-phy@2 {
->                 reg = <0x2>;
->         };
-> +       tbi0: tbi-phy@1f {
-> +               reg = <0x1f>;
-> +               device_type = "tbi-phy";
-> +       };
-> +};
-> +
-> +&mdio1 {
->         tbi1: tbi-phy@1f {
->                 reg = <0x1f>;
->                 device_type = "tbi-phy";
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 1a2a9509d9c2..89eab1fd1f7f 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -709,6 +709,15 @@
->                               <0x0 0x2d10030 0x0 0x4>;
->                 };
->
-> +               mdio1: mdio@2d64000 {
-> +                       compatible = "fsl,etsec2-mdio";
-> +                       device_type = "mdio";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0x0 0x2d64000 0x0 0x4000>,
-> +                             <0x0 0x2d50030 0x0 0x4>;
-> +               };
-> +
->                 ptp_clock@2d10e00 {
->                         compatible = "fsl,etsec-ptp";
->                         reg = <0x0 0x2d10e00 0x0 0xb0>;
-> --
-> 2.17.1
->
 
-Hi Leo,
+--vcxgegcyuczhk53y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just a reminder that I resent this patch rebased on top of the
-compatible string change.
+On Sat, Mar 23, 2019 at 10:16:10PM +0100, Fabien Parent wrote:
+> Add binding documentation of i2c-mtk for MT8516 SoC.
+>=20
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-Thanks,
--Vladimir
+Applied to for-next, thanks!
+
+
+--vcxgegcyuczhk53y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly1tv4ACgkQFA3kzBSg
+Kba07w/+KTVnldbBtdAYM6iGz11cWe28Ofxfurg1FNf4t6S9ar2RYhtGMYaJpNwQ
+YYKURH2tM7i8cAB2sVG+h6TbSPr+WeXmeqXFtgdste+rlcHcU7W8xJG0DUgvjVUa
+uC5cJlB9nFzpwX4AVsyhlZHmlT6lwccvtbVE0ZhO9HF3QAAGyzCLTrcwz9upiw06
+uXASUNd8vbNt+Wxh1I5d+bhlmFHtn88+cOm5G2u7wibcOhStgJnqo/VXs11ha48E
+TQdT+WiMSE1JBMq5szsrjaCA094yEh2muSKBTyKi7uOdxAdN3qv8HJHReM9q5HH8
+coLVq8RYb6I7BgbDnuYMTCO2K/GqVstsIp8F/3Mq6ea6uh/5mFME/p5EGHeKBKDM
+sGYj2wehgWE/qsVs3NUJiy/Z7lDpuzkgRo0ULpSx64evmwQWmtHeOuGuTny51G44
+S/0B1boZJerOLpoJTKctG8Eq6lRkUWvRQzX9fZZmhtiyeEGbXE7sRTLeiLTaDvuc
+ma8cDNp7VKfDob4SJeRszjMmgyjOIRtGOutjeS8MipNlKrO8b4AkiiKXoZDWmTt1
+q3tDg1hBsfV5T/Pawr4QJHOEXoZ/sh5AT7fh4HdE0aqYTqNZ5jt11dVVktO56U4X
+VG54fSn9KZ1GIiAFAyhSG9hac8ldBwxR9tdn2DSHmx0Qh6HYg28=
+=TvId
+-----END PGP SIGNATURE-----
+
+--vcxgegcyuczhk53y--
