@@ -1,69 +1,77 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
-Date: Tue, 16 Apr 2019 10:30:58 +0200
-Message-ID: <CAJiuCcdXeaXPD9k8QTL3C+CYnMhSgrx-We=s0pVBhS2rprcDNw@mail.gmail.com>
-References: <20190411214422.2267-1-peron.clem@gmail.com> <20190411214422.2267-2-peron.clem@gmail.com>
- <20190415080443.frubh4ln4agrdsfe@flea> <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
- <20190415081816.2pay4pioc5d4mojf@flea> <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
- <20190415145135.fjbcaldwy7w3eqcs@flea> <CAJiuCcdrQ64jC8UH1eDKKhFdcOtk=bkWTAzoYOQ1ut3He+j2GQ@mail.gmail.com>
- <20190416073449.qzl3uyjgvjgd3tai@flea>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 23/25] drm/mediatek: add vmap support for mediatek drm
+Date: Tue, 16 Apr 2019 16:30:56 +0800
+Message-ID: <1555403456.11519.10.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1553667561-25447-24-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416073449.qzl3uyjgvjgd3tai@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1553667561-25447-24-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, 16 Apr 2019 at 09:34, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Mon, Apr 15, 2019 at 06:30:10PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > > > I didn't change the driver and the SPDIF is working what's irreleva=
-nt
-> > > > in declaring the driver as compatible ?
-> > >
-> > > It's working by accident.
-> > >
-> > > This won't work for example:
-> > > https://elixir.bootlin.com/linux/latest/source/sound/soc/sunxi/sun4i-=
-spdif.c#L181
-> > >
-> > > > If some feature are missing they can be introduce later as there is=
- a
-> > > > special binding for H6 no ?
-> > >
-> > > Again, that's irrelevant. The only question you need to ask yourself
-> > > is whether, if you take an imaginary source code that would support
-> > > all the H3 SPDIF features and run it on an H6, it works just as well.
-> > >
-> > > The examples above that it's not the case, so you can't claim that th=
-e
-> > > device is compatible.
-> >
-> > Is it ok if I fix the TX Fifo flush bit and remove the compatible with =
-H3 ?
-> > (Looking at the driver this is the only bit used that is incompatible w=
-ith H6)
->
-> Sure
->
-> > Or should I send a new driver with the correct mapping ?
->
-> No, we definitely don't want to duplicate a driver just for a single
-> bit offset that changes.
-
-Thanks for the advice, I will try to submit a new version with this fix.
-Clement
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+SGksIFlvbmdxaWFuZzoKCk9uIFdlZCwgMjAxOS0wMy0yNyBhdCAxNDoxOSArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgYWRkIHZtYXAgc3VwcG9y
+dCBmb3IgbWVkaWF0ZWsgZHJtCgpJIHRoaW5rIHRoZSB1cHN0cmVhbWVkIHBhdGNoICdkcm0vbWVk
+aWF0ZWs6IEltcGxlbWVudCBnZW0gcHJpbWUKdm1hcC92dW5tYXAgZnVuY3Rpb24nIFsxXSBoYXMg
+dGhlIHNhbWUgZnVuY3Rpb24gb2YgdGhpcyBwYXRjaC4gWW91IGNvdWxkCmNoZXJyeS1waWNrIHRo
+YXQgcGF0Y2ggdG8geW91ciBsb2NhbCBhbmQgbmVlZCBub3QgdG8gdXBzdHJlYW0gdGhpcwpwYXRj
+aC4KClsxXQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90
+b3J2YWxkcy9saW51eC5naXQvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlaz9oPXY1LjEt
+cmM1JmlkPTNkZjY0ZDdiMGE0ZjcwZjE3OTdmMjNjZmQ0Y2NhNWM0ZDQ4MTMxZmUKClJlZ2FyZHMs
+CkNLCgo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVk
+aWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYu
+YyB8IDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyB8IDcgKysr
+KysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uaCB8IDEgKwo+ICAz
+IGZpbGVzIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2Rydi5jCj4gaW5kZXggODRjNjYyNi4uOTQyNzg5ZCAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gQEAgLTM3MCw2ICszNzAsNyBAQCBzdGF0aWMg
+dm9pZCBtdGtfZHJtX2ttc19kZWluaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSkKPiAgCS5nZW1f
+cHJpbWVfZ2V0X3NnX3RhYmxlID0gbXRrX2dlbV9wcmltZV9nZXRfc2dfdGFibGUsCj4gIAkuZ2Vt
+X3ByaW1lX2ltcG9ydF9zZ190YWJsZSA9IG10a19nZW1fcHJpbWVfaW1wb3J0X3NnX3RhYmxlLAo+
+ICAJLmdlbV9wcmltZV9tbWFwID0gbXRrX2RybV9nZW1fbW1hcF9idWYsCj4gKwkuZ2VtX3ByaW1l
+X3ZtYXAgPSBtdGtfZHJtX2dlbV92bWFwX2J1ZiwKPiAgCS5mb3BzID0gJm10a19kcm1fZm9wcywK
+PiAgCj4gIAkubmFtZSA9IERSSVZFUl9OQU1FLAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2dlbS5jCj4gaW5kZXggMjU5YjdiMC4uYzIzMDIzNyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2dlbS5jCj4gQEAgLTE2NSw2ICsxNjUsMTMgQEAgaW50IG10a19kcm1f
+Z2VtX21tYXBfYnVmKHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqLCBzdHJ1Y3Qgdm1fYXJlYV9z
+dHJ1Y3QgKnZtYSkKPiAgCXJldHVybiBtdGtfZHJtX2dlbV9vYmplY3RfbW1hcChvYmosIHZtYSk7
+Cj4gIH0KPiAgCj4gK3ZvaWQgKm10a19kcm1fZ2VtX3ZtYXBfYnVmKHN0cnVjdCBkcm1fZ2VtX29i
+amVjdCAqb2JqKQo+ICt7Cj4gKwlzdHJ1Y3QgbXRrX2RybV9nZW1fb2JqICptdGtfZ2VtID0gdG9f
+bXRrX2dlbV9vYmoob2JqKTsKPiArCj4gKwlyZXR1cm4gbXRrX2dlbS0+Y29va2llOwo+ICt9Cj4g
+Kwo+ICBpbnQgbXRrX2RybV9nZW1fbW1hcChzdHJ1Y3QgZmlsZSAqZmlscCwgc3RydWN0IHZtX2Fy
+ZWFfc3RydWN0ICp2bWEpCj4gIHsKPiAgCXN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqOwo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uaCBiL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oCj4gaW5kZXggNTM0NjM5Yi4uM2M0OGFm
+OSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uaAo+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oCj4gQEAgLTQ5LDYg
+KzQ5LDcgQEAgaW50IG10a19kcm1fZ2VtX2R1bWJfY3JlYXRlKHN0cnVjdCBkcm1fZmlsZSAqZmls
+ZV9wcml2LCBzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICBpbnQgbXRrX2RybV9nZW1fbW1hcChz
+dHJ1Y3QgZmlsZSAqZmlscCwgc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEpOwo+ICBpbnQgbXRr
+X2RybV9nZW1fbW1hcF9idWYoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmosCj4gIAkJCSBzdHJ1
+Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSk7Cj4gK3ZvaWQgKm10a19kcm1fZ2VtX3ZtYXBfYnVmKHN0
+cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqKTsKPiAgc3RydWN0IHNnX3RhYmxlICptdGtfZ2VtX3By
+aW1lX2dldF9zZ190YWJsZShzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaik7Cj4gIHN0cnVjdCBk
+cm1fZ2VtX29iamVjdCAqbXRrX2dlbV9wcmltZV9pbXBvcnRfc2dfdGFibGUoc3RydWN0IGRybV9k
+ZXZpY2UgKmRldiwKPiAgCQkJc3RydWN0IGRtYV9idWZfYXR0YWNobWVudCAqYXR0YWNoLCBzdHJ1
+Y3Qgc2dfdGFibGUgKnNnKTsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
