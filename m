@@ -1,67 +1,77 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: mt8173: correct cpu type of cpu2 and
- cpu3 to cortex-a72
-Date: Tue, 16 Apr 2019 10:10:55 +0200
-Message-ID: <faf684e7-e4a0-32be-185e-f9b3b2c7a88b@gmail.com>
-References: <20190225065112.3400-1-seiya.wang@mediatek.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v10] Add basic and clock support for Mediatek MT8183 SoC
+Date: Tue, 16 Apr 2019 16:12:10 +0800
+Message-ID: <1555402331-5343-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225065112.3400-1-seiya.wang@mediatek.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Seiya Wang <seiya.wang@mediatek.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+MT8183 is a SoC based on 64bit ARMv8 architecture.
+It contains 4 CA53 and 4 CA73 cores.
+MT8183 share many HW IP with MT65xx series.
+This patchset was tested on MT8183 evaluation board and use correct clock to shell.
 
+Based on v5.1-rc1 and
+http://lists.infradead.org/pipermail/linux-mediatek/2019-March/017963.html
 
-On 25/02/2019 07:51, Seiya Wang wrote:
-> The cpu type of cpu2 and cpu3 should be cortex-a72, not cortex-a57.
-> 
-> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
+Change in v10:
+Add the L2 cache node to prevent warning on unable to detect cache
+hierarchy.
 
-applied to v5.1-next/dts64
+Change in v9:
+Remove pio node since binding is not documented yet
 
-Sorry for the late answer.
+Change in v8:
+1. Fix interrupt-parent of pio node
+2. Remove pinfunc.h and spi node patches
 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 44374c506a1c..99675c51577a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -178,12 +178,12 @@
->  
->  		cpu2: cpu@100 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a57";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x100>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> -			clocks = <&infracfg CLK_INFRA_CA57SEL>,
-> +			clocks = <&infracfg CLK_INFRA_CA72SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cluster1_opp>;
-> @@ -191,12 +191,12 @@
->  
->  		cpu3: cpu@101 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a57";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x101>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
->  			#cooling-cells = <2>;
-> -			clocks = <&infracfg CLK_INFRA_CA57SEL>,
-> +			clocks = <&infracfg CLK_INFRA_CA72SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cluster1_opp>;
-> 
+Change in v7:
+1. Place all the MMIO peripherals under one or more simple-bus nodes
+2. Make the pinfunc.h and spi node into seperate patch
+3. Modify SPIs pamerater from 4 back to 3
+   and remove patch "support 4 interrupt parameters for sysirq"
+4. Rename intpol-controller to interrupt-controller
+5. Rename pinctrl@1000b000 to pinctrl@10005000
+
+Change in v6:
+1. Remove power and iommu nodes
+2. Fix dtb build warning
+3. Fix pinctrl binding doc
+4. Fix '_' in node names
+
+Change in v5:
+1. Collect all device tree nodes to the last patch
+2. Add PMU
+3. Add Signed-off-by
+4. Remove clock driver code and binding doc
+5. Add pinctrl, iommu, spi, and pwrap nodes
+
+Change in v4:
+1. Correct syntax error in dtsi
+2. Add MT8183 clock support
+
+Change in v3:
+1. Fill out GICC, GICH, GICV regions
+2. Update Copyright to 2018
+
+Change in v2:
+1. Split dt-bindings into different patches
+2. Correct bindings for supported SoCs (mtk-uart.txt)
+
+Ben Ho (1):
+  arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
+    Makefile
+
+ arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 329 ++++++++++++++++++++++++++++
+ 3 files changed, 361 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+
+--
+1.9.1
