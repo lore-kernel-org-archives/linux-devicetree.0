@@ -1,100 +1,80 @@
-Return-Path: <SRS0=U7QJ=SF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfDCKOS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:14:18 -0400
-Date: Wed, 3 Apr 2019 17:14:10 +0700
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: ls1028a: Add properties for Mali DP500
- node
-Message-ID: <20190403101409.GH7932@X250>
-References: <20190328035309.18703-1-wen.he_1@nxp.com>
+Return-Path: <SRS0=vr9i=SS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr150075.outbound.protection.outlook.com ([40.107.15.75]:41537
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727938AbfDPCF0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Apr 2019 22:05:26 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [v2] arm64: dts: ls1028a: Add properties for Mali DP500 node
+Date: Tue, 16 Apr 2019 02:04:43 +0000
+Message-ID: <AM6PR0402MB3382ACB98D42A626EADBF99CE2240@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+References: <20190415074215.1119-1-wen.he_1@nxp.com>
+ <AM6PR04MB58638CB0F076D61E247C21F98F2B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB58638CB0F076D61E247C21F98F2B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328035309.18703-1-wen.he_1@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "brian.starkey@arm.com" <brian.starkey@arm.com>
+To: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "liviu.dudau@arm.com" <liviu.dudau@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Mar 28, 2019 at 03:51:46AM +0000, Wen He wrote:
-> The LS1028A has a LCD controller and Displayport interface that
-> connects to eDP and Displayport connectors on the LS1028A board.
-> 
-> This patch enables the LCD controller driver on the LS1028A.
-> 
-> Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> ---
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 8dd3501b1333..0d5963bb46c5 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -70,6 +70,27 @@
->  		clock-output-names = "sysclk";
->  	};
->  
-> +	dpclk: dpclk {
-
-Please follow the naming convention "clock-xxx".
-
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <27000000>;
-> +		clock-output-names= "dpclk";
-> +	};
-> +
-> +	aclk: aclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <650000000>;
-> +		clock-output-names= "aclk";
-> +	};
-> +
-> +	pclk: pclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <650000000>;
-> +		clock-output-names= "pclk";
-> +	};
-> +
->  	reboot {
->  		compatible ="syscon-reboot";
->  		regmap = <&dcfg>;
-> @@ -433,4 +454,20 @@
->  			};
->  		};
->  	};
-> +
-> +	dp0: malidp@f080000 {
-
-The node name should be something generic.  The recommendation from
-Devicetree Specification is 'display'.
-
-> +		compatible = "arm,mali-dp500";
-> +		reg = <0x0 0xf080000 0x0 0x10000>;
-> +		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "DE", "SE";
-> +		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
-> +		clock-names = "pxlclk", "mclk", "aclk", "pclk";
-> +		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-
-Please have a newline between properties and child node.
-
-Shawn
-
-> +		port {
-> +			dp0_out: endpoint {
-> +
-> +			};
-> +		};
-> +	};
->  };
-> -- 
-> 2.17.1
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvIExpDQo+IFNlbnQ6
+IDIwMTnlubQ05pyIMTbml6UgMTowNA0KPiBUbzogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPjsg
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmcNCj4gQ2M6
+IGxpdml1LmR1ZGF1QGFybS5jb20NCj4gU3ViamVjdDogUkU6IFt2Ml0gYXJtNjQ6IGR0czogbHMx
+MDI4YTogQWRkIHByb3BlcnRpZXMgZm9yIE1hbGkgRFA1MDAgbm9kZQ0KPiANCj4gDQo+IA0KPiA+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogV2VuIEhlDQo+ID4gU2VudDog
+TW9uZGF5LCBBcHJpbCAxNSwgMjAxOSAyOjQxIEFNDQo+ID4gVG86IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnDQo+ID4gQ2M6IExlbyBMaSA8bGVveWFuZy5s
+aUBueHAuY29tPjsgbGl2aXUuZHVkYXVAYXJtLmNvbTsgV2VuIEhlDQo+ID4gPHdlbi5oZV8xQG54
+cC5jb20+DQo+ID4gU3ViamVjdDogW3YyXSBhcm02NDogZHRzOiBsczEwMjhhOiBBZGQgcHJvcGVy
+dGllcyBmb3IgTWFsaSBEUDUwMCBub2RlDQo+ID4NCj4gPiBUaGUgTFMxMDI4QSBoYXMgYSBMQ0Qg
+Y29udHJvbGxlciBhbmQgRGlzcGxheXBvcnQgaW50ZXJmYWNlIHRoYXQNCj4gPiBjb25uZWN0cyB0
+byBlRFAgYW5kIERpc3BsYXlwb3J0IGNvbm5lY3RvcnMgb24gdGhlIExTMTAyOEEgYm9hcmQuDQo+
+ID4NCj4gPiBUaGlzIHBhdGNoIGVuYWJsZXMgdGhlIExDRCBjb250cm9sbGVyIGRyaXZlciBvbiB0
+aGUgTFMxMDI4QS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsaXNvbiBXYW5nIDxhbGlzb24u
+d2FuZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNv
+bT4NCj4gPiBSZXZpZXdlZC1ieTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+DQo+
+ID4gLS0tDQo+ID4gY2hhbmdlIGluIHYyOg0KPiA+ICAgICAgICAgLSByZW5hbWVkIG5vZGUgbmFt
+ZSAnZHAwJyB0byBiZSBnZW5lcmljIG5hbWUgJ2Rpc3BsYXktMCcuDQo+ID4gICAgICAgICAtIHJl
+cGxhY2UgY2xrIG5hbWUgJ3h4Y2xrJyB0byAnY2xvY2steHgnLg0KPiA+ICAgICAgICAgLSBhZGQg
+bmV3bGluZSBiZXR3ZWVuIHByb3BlcnRpZXMgYW5kIGNoaWxkIG5vZGUuDQo+ID4NCj4gPiAgLi4u
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpIHwgMzgNCj4gPiArKysr
+KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTAyOGEuZHRzaQ0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAy
+OGEuZHRzaQ0KPiA+IGluZGV4IDhkZDM1MDFiMTMzMy4uNjQzYjFiYjQzNWI2IDEwMDY0NA0KPiA+
+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4g
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+
+ID4gQEAgLTcwLDYgKzcwLDI3IEBADQo+ID4gIAkJY2xvY2stb3V0cHV0LW5hbWVzID0gInN5c2Ns
+ayI7DQo+ID4gIAl9Ow0KPiA+DQo+ID4gKwlkcGNsazogY2xvY2stZHAgew0KPiA+ICsJCWNvbXBh
+dGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiAr
+CQljbG9jay1mcmVxdWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJCWNsb2NrLW91dHB1dC1uYW1l
+cz0gImRwY2xrIjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJYWNsazogY2xvY2stYXhpIHsNCj4g
+PiArCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCj4gPiArCQkjY2xvY2stY2VsbHMgPSA8
+MD47DQo+ID4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDY1MDAwMDAwMD47DQo+ID4gKwkJY2xvY2st
+b3V0cHV0LW5hbWVzPSAiYWNsayI7DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCXBjbGs6IGNsb2Nr
+LWFwYiB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkJI2Nsb2Nr
+LWNlbGxzID0gPDA+Ow0KPiA+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDw2NTAwMDAwMDA+Ow0KPiA+
+ICsJCWNsb2NrLW91dHB1dC1uYW1lcz0gInBjbGsiOw0KPiA+ICsJfTsNCj4gDQo+IEFyZSB0aGVz
+ZSBjbG9ja3MgcmVhbGx5IGZpeGVkIGF0IHRoZSBTb0MgbGV2ZWw/ICBDYW4gaXQgYmUgY2hhbmdp
+bmcgYmV0d2Vlbg0KPiBkaWZmZXJlbnQgYm9hcmRzIG9yIGRpZmZlcmVudCBjb25maWd1cmF0aW9u
+cz8NCj4gDQoNClllcywgaXQncyBmaXhlZC4gYW5kIHRoZXNlIGNsb2NrIHZhbHVlIG5vdCBoYXZl
+IGNoYW5nZSBiZXR3ZWVuIGRpZmZlcmVudCBib2FyZC4NCg0KPiA+ICsNCj4gPiAgCXJlYm9vdCB7
+DQo+ID4gIAkJY29tcGF0aWJsZSA9InN5c2Nvbi1yZWJvb3QiOw0KPiA+ICAJCXJlZ21hcCA9IDwm
+ZGNmZz47DQo+ID4gQEAgLTQzMyw0ICs0NTQsMjEgQEANCj4gPiAgCQkJfTsNCj4gPiAgCQl9Ow0K
+PiA+ICAJfTsNCj4gPiArDQo+ID4gKwlkaXNwbGF5LTA6IG1hbGlkcEBmMDgwMDAwIHsNCg0KU29y
+cnkgZm9yIHRoYXQsIG5vZGUgbmFtZSBkaXNwbGF5LTAgaGFzIHN5bnRheCBlcnJvciwgSSB3aWxs
+IHVzaW5nICdkaXNwbGF5MCcgdG8gcmVwbGFjZSBpdC4NCkFuZCB3aWxsIHNlbnQgbmV4dCB2ZXJz
+aW9uIHBhdGNoLg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW4NCg0KPiA+ICsJCWNvbXBhdGlibGUgPSAi
+YXJtLG1hbGktZHA1MDAiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmMDgwMDAwIDB4MCAweDEwMDAw
+PjsNCj4gPiArCQlpbnRlcnJ1cHRzID0gPDAgMjIyIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+
+ICsJCQkgICAgIDwwIDIyMyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQlpbnRlcnJ1cHQt
+bmFtZXMgPSAiREUiLCAiU0UiOw0KPiA+ICsJCWNsb2NrcyA9IDwmZHBjbGs+LCA8JmFjbGs+LCA8
+JmFjbGs+LCA8JnBjbGs+Ow0KPiA+ICsJCWNsb2NrLW5hbWVzID0gInB4bGNsayIsICJtY2xrIiwg
+ImFjbGsiLCAicGNsayI7DQo+ID4gKwkJYXJtLG1hbGlkcC1vdXRwdXQtcG9ydC1saW5lcyA9IC9i
+aXRzLyA4IDw4IDggOD47DQo+ID4gKw0KPiA+ICsJCXBvcnQgew0KPiA+ICsJCQlkcDBfb3V0OiBl
+bmRwb2ludCB7DQo+ID4gKw0KPiA+ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICB9
+Ow0KPiA+IC0tDQo+ID4gMi4xNy4xDQoNCg==
