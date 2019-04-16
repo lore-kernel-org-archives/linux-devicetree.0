@@ -1,59 +1,52 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2 3/4] ARM: dts: rockchip: Hook resets up to USB PHYs on rk3288.
-Date: Tue, 16 Apr 2019 14:53:50 -0700
-Message-ID: <20190416215351.242246-4-dianders@chromium.org>
+From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 1/4] dt-bindings: usb: dwc2: Document quirk to reset PHY
+ upon wakeup
+Date: Tue, 16 Apr 2019 14:53:48 -0700
+Message-ID: <20190416215351.242246-2-dianders@chromium.org>
 References: <20190416215351.242246-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416215351.242246-1-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Minas Harutyunyan <hminas@synopsys.com>, Heiko Stuebner <heiko@sntech.de>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: amstan@chromium.org, linux-rockchip@lists.infradead.org, linux-usb@vger.kernel.org, Randy Li <ayaka@soulik.info>, mka@chromium.org, ryandcase@chromium.org, jwerner@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190416215351.242246-1-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Minas Harutyunyan <hminas-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ryandcase-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Let's hook up the resets to the three USB PHYs on rk3288 as per the
-bindings.  This is in preparation for a future patch that will set the
-"snps,reset-phy-on-wake" on the host port.
+On Rockchip rk3288 there's a hardware quirk where we need to assert
+the reset signal to the PHY when we get a remote wakeup on one of the
+two ports.  Document this quirk in the bindings.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Reviewed-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
 Changes in v2: None
 
- arch/arm/boot/dts/rk3288.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 74c9517c4f92..7e70ecf2b95a 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -909,6 +909,8 @@
- 				clocks = <&cru SCLK_OTGPHY0>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBOTG_PHY>;
-+				reset-names = "phy-reset";
- 			};
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 6dc3c4a34483..f70f3aee4bfc 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -37,6 +37,8 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - g-rx-fifo-size: size of rx fifo size in gadget mode.
+ - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+ - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++- snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
++                          we detect a wakeup.  This is due to a hardware errata.
  
- 			usbphy1: usb-phy@334 {
-@@ -917,6 +919,8 @@
- 				clocks = <&cru SCLK_OTGPHY1>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBHOST0_PHY>;
-+				reset-names = "phy-reset";
- 			};
- 
- 			usbphy2: usb-phy@348 {
-@@ -925,6 +929,8 @@
- 				clocks = <&cru SCLK_OTGPHY2>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBHOST1_PHY>;
-+				reset-names = "phy-reset";
- 			};
- 		};
- 	};
+ Deprecated properties:
+ - g-use-dma: gadget DMA mode is automatically detected
 -- 
 2.21.0.593.g511ec345e18-goog
