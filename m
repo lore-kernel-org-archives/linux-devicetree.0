@@ -1,77 +1,106 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 2/3] mtd: rawnand: sunxi: Add DMA support for sun8i
-Date: Tue, 16 Apr 2019 18:53:45 +0200
-Message-ID: <20190416185345.5553923f@xps13>
-References: <20190404162111.22618-1-miquel.raynal@bootlin.com>
- <20190404162111.22618-3-miquel.raynal@bootlin.com>
- <20190414110549.5c91829d@collabora.com>
- <20190415085859.21f69396@xps13>
- <20190415091420.3fb86ef7@collabora.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH V4 2/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Tue, 16 Apr 2019 14:51:16 +0100
+Message-ID: <20190416135116.GC3313@fuggles.cambridge.arm.com>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-2-git-send-email-Frank.Li@nxp.com>
+ <20190404111714.GA26392@fuggles.cambridge.arm.com>
+ <CAHrpEqT67OpeGXB7wgYSsTD9ibG_jk7xO5zMFyxcG5PHFP-bJg@mail.gmail.com>
+ <20190405143846.GB7313@fuggles.cambridge.arm.com>
+ <CAHrpEqSerorArZwSgj5qkFQQgwit5mqPWp5DD6PmYJiLejPJfw@mail.gmail.com>
+ <20190405150319.GA7704@fuggles.cambridge.arm.com>
+ <CAHrpEqQnJAdUeKLUFE0r6DxnCtitEumvgd5xOzKmJmYXy3mQ4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190415091420.3fb86ef7@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqQnJAdUeKLUFE0r6DxnCtitEumvgd5xOzKmJmYXy3mQ4w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsCgpCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29t
-PiB3cm90ZSBvbiBNb24sIDE1IEFwcgoyMDE5IDA5OjE0OjIwICswMjAwOgoKPiBPbiBNb24sIDE1
-IEFwciAyMDE5IDA4OjU4OjU5ICswMjAwCj4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBi
-b290bGluLmNvbT4gd3JvdGU6Cj4gCj4gPiBIaSBCb3JpcywKPiA+IAo+ID4gQm9yaXMgQnJlemls
-bG9uIDxib3Jpcy5icmV6aWxsb25AY29sbGFib3JhLmNvbT4gd3JvdGUgb24gU3VuLCAxNCBBcHIK
-PiA+IDIwMTkgMTE6MDU6NDkgKzAyMDA6Cj4gPiAgIAo+ID4gPiBPbiBUaHUsICA0IEFwciAyMDE5
-IDE4OjIxOjEwICswMjAwCj4gPiA+IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxp
-bi5jb20+IHdyb3RlOgo+ID4gPiAgICAgCj4gPiA+ID4gQWxsd2lubmVyIE5BTkQgY29udHJvbGxl
-cnMgY2FuIG1ha2UgdXNlIG9mIERNQSB0byBlbmhhbmNlIHRoZSBJL08KPiA+ID4gPiB0aHJvdWdo
-cHV0IHRoYW5rcyB0byBFQ0MgcGlwZWxpbmluZy4gRE1BIGhhbmRsaW5nIHdpdGggc3VuOGkgTkFO
-RCBJUAo+ID4gPiA+IGlzIGEgYml0IGRpZmZlcmVudCB0aGFuIHdpdGggdGhlIG9sZGVyIFNvQ3Ms
-IGhlbmNlIHRoZSBpbnRyb2R1Y3Rpb24gb2YKPiA+ID4gPiBhIG5ldyBjb21wYXRpYmxlIHRvIGhh
-bmRsZToKPiA+ID4gPiAqIHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHJlZ2lzdGVyIG9mZnNldHMs
-Cj4gPiA+ID4gKiB0aGUgYnVyc3QgbGVuZ3RoIGNoYW5nZSBmcm9tIDQgdG8gbWluaW11bSA4LAo+
-ID4gPiA+ICogZHJpdmUgU1JBTSBhY2Nlc3NlcyB0aHJvdWdoIHRoZSBBSEIgYnVzIGluc3RlYWQg
-b2YgdGhlIE1CVVMuICAgICAgCj4gPiA+IAo+ID4gPiBIbSwgbm93IHRoYXQgeW91IGtub3cgTUJV
-UyBhY2Nlc3NlcyBhcmUgd29ya2luZyBmaW5lIChJSVJDLCB0aGF0J3Mgd2hhdAo+ID4gPiB5b3Ug
-dXNlZCBmb3IgdGhlIFNQTCBETUEtYmFzZWQgaW1wbGVtZW50YXRpb24pLCB3aHkgbm90IGRpcmVj
-dGx5IHVzZQo+ID4gPiBNQlVTIGFjY2Vzc2VzIG9uIEEzMz8gSSBtZWFuLCBpdCdzIGxpa2VseSBm
-YXN0ZXIgdGhhbiBnb2luZyB0aHJvdWdoCj4gPiA+IHRoZSBETUEgZW5naW5lICh3aGljaCBpcyBz
-aGFyZWQgYnkgc2V2ZXJhbCBJUHMpLCBhbmQgQUZBSVIsIHRoZSBNQlVTCj4gPiA+IHNldHVwIGlz
-IHByZXR0eSBzaW1wbGUuICAgIAo+ID4gCj4gPiBCZWNhdXNlIGFsbCB0aGUgZHJpdmVyIGlzIGFs
-cmVhZHkgaW4gc2hhcGUgdG8gdXNlIHRoZSBleHRlcm5hbCBETUEKPiA+IGVuZ2luZSBhbmQgaXQg
-d2FzIHZlcnkgZWFzeSBhbmQgcXVpY2sgKGhhdmUgYSBsb29rIGF0IHRoZSBkaWZmIG9mIHRoZQo+
-ID4gdjMpIHRvIHVzZSBpdCBhZ2Fpbi4gIAo+IAo+IFllcywgSSBzZWUgdGhhdC4gSSBtaWdodCBi
-ZSB3cm9uZyBidXQgSSdkIGV4cGVjdCB0aGUgTURNQSB2ZXJzaW9uIHRvIGJlCj4ganVzdCBhcyBz
-aW1wbGUgYXMgdGhpcyBvbmUuCj4gCj4gPiAKPiA+IEhvd2V2ZXIsIHRoZSBjaG9pY2UgSSBhbSBk
-ZXNjcmliaW5nIGhlcmUgaXMgbm90IERNQSB2cy4gTUJVUyAob3IgTURNQSksCj4gPiBpdCBpcyBN
-QlVTIHZzLiBBSEIsIGl0IGlzIGp1c3QgYWJvdXQgdGhlIGJ1cyB0aGF0IHdpbGwgYWNjZXNzIHRo
-ZSBTUkFNCj4gPiAodGhpcyBpcyB3aGF0IHdlIGhhdmUgdW5kZXJzdG9vZCB3aXRoIE1heGltZSBm
-cm9tIHRoZSBkYXRhc2hlZXRzIGFuZAo+ID4gdGhlIHRlc3RzIHdlIGhhdmUgZG9uZSkuICAKPiAK
-PiBZZXMsIHNvcnJ5LCBJIG1lYW50IE1ETUEgdnMgc2hhcmVkIERNQSBlbmdpbmUsIGJ1dCBJIGd1
-ZXNzIE1CVVMgaXMgb25seQo+IHVzZWQgdGhyb3VnaCBNRE1BIGFjY2Vzc2VzIGFueXdheSwgcmln
-aHQ/CgpJIGhhdmUgbm8gcHJvb2YgdGhhdCBJIGFjdHVhbGx5IHVzZWQgTUJVUywgYnV0IHRoZXJl
-IGlzIGEgYml0IHdoaWNoIGNhbgpiZSBzZXQgdG8gdXNlIE1CVVMgdG8gYWNjZXNzIHRoZSBTUkFN
-IGV2ZW4gd2hlbiBub3QgdXNpbmcgTURNQS4gSW4gdGhpcwpjYXNlLCBNQlVTIHBheWxvYWQgbGVu
-Z3RoIGhhZCB0byBiZSBmaWxsZWQgb3IgdGhlIG9wZXJhdGlvbiB3b3VsZCBub3QKc3VjY2VlZC4g
-SG93ZXZlciB3aGVuIHVzaW5nIEFIQiwgdGhlcmUgaXMgbm8gbmVlZCBmb3IgdGhpcyBleHRyYQpj
-b25maWd1cmF0aW9uLiBUaGF0J3Mgd2h5IEkgZGVjaWRlZCB0byB1c2UgdGhlIEFIQi4KCj4gCj4g
-PiBGb3IgdGhpcyBjaG9pY2UsIHdlIHRlc3RlZCB3aXRoIGJvdGggYnVzZXM6IG5vCj4gPiB0aHJv
-dWdocHV0IGNoYW5nZSBzbyB3ZSB0aGluayB0aGF0IGl0IGlzIG5vdCBhIGJvdHRsZW5lY2sgYW55
-d2F5LiAgCj4gCj4gV2VsbCwgeW91J2QgbmVlZCB0byB0ZXN0IHdpdGggYSBsb3Qgb2YgdHJhZmZp
-YyBnb2luZyB0aHJvdWdoIHRoZSBETUEKPiBlbmdpbmUgdG8gY2hlY2sgaWYgdGhhdCBtYWtlcyBh
-IGRpZmZlcmVuY2UuCgpUcnVlLCBJIHByb2JhYmx5IGRpZG4ndCBzdHJlc3NlZCB0aGUgcGxhdGZv
-cm0gZW5vdWdoIHRvIHNlZSB0aGUKZGlmZmVyZW5jZS4KCj4gCj4gQW55d2F5LCBpdCB3YXMganVz
-dCBhIHN1Z2dlc3Rpb24sIGtlZXAgaXQgbGlrZSB0aGF0IGlmIHlvdSB0aGluayB1c2luZwo+IE1E
-TUEgaXMgbm90IHdvcnRod2hpbGUuCgoKVGhhbmtzLApNaXF1w6hsCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Np
-b24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtbXRkLwo=
+On Mon, Apr 08, 2019 at 02:10:28PM -0500, Zhi Li wrote:
+> On Fri, Apr 5, 2019 at 10:03 AM Will Deacon <will.deacon@arm.com> wrote:
+> >
+> > On Fri, Apr 05, 2019 at 09:58:38AM -0500, Zhi Li wrote:
+> > > On Fri, Apr 5, 2019 at 9:38 AM Will Deacon <will.deacon@arm.com> wrote:
+> > > > On Fri, Apr 05, 2019 at 09:34:38AM -0500, Zhi Li wrote:
+> > > > > On Thu, Apr 4, 2019 at 6:17 AM Will Deacon <will.deacon@arm.com> wrote:
+> > > > > > On Fri, Feb 15, 2019 at 06:03:11PM +0000, Frank Li wrote:
+> > > > > > > Add ddr performance monitor support for iMX8QXP
+> > > > > > >
+> > > > > > > There are 4 counters for ddr perfomance events.
+> > > > > > > counter 0 is dedicated for cycles.
+> > > > > > > you choose any up to 3 no cycles events.
+> > > > > > >
+> > > > > > > for example:
+> > > > > > >
+> > > > > > > perf stat -a -e ddr0/read-access/,ddr0/write-access/,ddr0/precharge/ ls
+> > > > > > > perf stat -a -e ddr0/cycles/,ddr0/read-access/,ddr0/write-access/ ls
+> > > > > >
+> > > > > > Could you elaborate a bit on DDR_CAP_AXI_ID, please? Specifically, how
+> > >
+> > > Only imx845 have AXID filter capability now.
+> > >
+> > > > > > does the COUNTER_DPCR1 register work and what happens if I specify two
+> > > > > > simultaneous events with different values in config1? I'm a little wary
+> > >
+> > > There are difference match register for each event.
+> > > 1. Read event with config 1 A
+> > > 2. Read event with config 1 B
+> > >
+> > > 1 will show read count with filter A
+> > > 2 will show read count with filter B.
+> >
+> > Thanks, that makes sense, but I can't see how that corresponds to the code
+> > in the patch:
+> >
+> > +static void ddr_perf_event_start(struct perf_event *event, int flags)
+> > +{
+> > +       struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
+> > +       struct hw_perf_event *hwc = &event->hw;
+> > +       int counter = hwc->idx;
+> > +
+> > +       if (pmu->flags & DDR_CAP_AXI_ID) {
+> > +               if (event->attr.config == EVENT_AXI_READ ||
+> > +                   event->attr.config == EVENT_AXI_WRITE) {
+> > +                       int val = event->attr.config1;
+> > +
+> > +                       writel(val, pmu->base + COUNTER_DPCR1);
+> > +               }
+> > +       }
+> > +
+> > +       local64_set(&hwc->prev_count, 0);
+> > +
+> > +       ddr_perf_event_enable(pmu, event->attr.config, counter, true);
+> >
+> > ddr_perf_event_enable() does what you'd expect, and uses hwc->idx to
+> > allocate a counter, but the code before it just always writes to DPCR1.
+> >
+> > What am I missing?
+> 
+> I double check with our IC design team. My previous answer is wrong.
+> Only one DPCR1. It will impact all event EVENT_AXI_READ and  EVENT_AXI_WRITE.
+> 
+> Thank means just choose one config1 for event EVENT_AXI_READ or EVENT_AXI_WRITE
+
+I think you need either to enforce that in the driver, or drop this
+filtering capability for now. We shouldn't just tell userspace "oh yeah,
+don't do that."
+
+Given that your patch 3 (which updates a .dts file) doesn't appear to
+support the filtering, I suggest just dropping that support initially so
+that we can queue the rest of this driver for 5.2.
+
+Will
