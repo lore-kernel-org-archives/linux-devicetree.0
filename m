@@ -1,48 +1,89 @@
-Return-Path: <SRS0=S1EI=SR=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v6 13/13] media: tvp5150: make debug output more readable
-Date: Mon, 15 Apr 2019 14:44:13 +0200
-Message-Id: <20190415124413.18456-14-m.felsch@pengutronix.de>
-In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=9N3P=SS=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V12 2/5] thermal: of-thermal: add API for getting sensor ID
+ from DT
+Date: Tue, 16 Apr 2019 03:22:17 +0000
+Message-ID: <1555384609-7030-2-git-send-email-Anson.Huang@nxp.com>
+References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "agross@kernel.org" <agross@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The debug output for tvp5150_selmux() isn't really intuitive. Register
-values are printed decimal formatted and the input/output driver states
-are printed as enum. Even more the "normal" output enum mapps to zero so
-a active output will printing output=0 and a inactive output=1.
-
-Change this by brinting the register values hex formatted and the states
-as more readable string.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index c0ee08546643..13ee6d781efb 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -302,9 +302,12 @@ static void tvp5150_selmux(struct v4l2_subdev *sd)
- 		break;
- 	}
- 
--	dev_dbg_lvl(sd->dev, 1, debug, "Selecting video route: route input=%i, output=%i => tvp5150 input=%i, opmode=%i\n",
--			decoder->input, decoder->output,
--			input, opmode);
-+	dev_dbg_lvl(sd->dev, 1, debug,
-+		    "Selecting video route: route input=%s, output=%s => tvp5150 input=0x%02x, opmode=0x%02x\n",
-+		    decoder->input == 0 ? "aip1a" :
-+		    decoder->input == 2 ? "aip1b" : "svideo",
-+		    decoder->output == 0 ? "normal" : "black-frame-gen",
-+		    input, opmode);
- 
- 	regmap_write(decoder->regmap, TVP5150_OP_MODE_CTL, opmode);
- 	regmap_write(decoder->regmap, TVP5150_VD_IN_SRC_SEL_1, input);
--- 
-2.20.1
+T24gc29tZSBwbGF0Zm9ybXMgbGlrZSBpLk1YOFFYUCwgdGhlIHRoZXJtYWwgZHJpdmVyIG5lZWRz
+IGENCnJlYWwgSFcgc2Vuc29yIElEIGZyb20gRFQgdGhlcm1hbCB6b25lLCB0aGUgSFcgc2Vuc29y
+IElEIGlzDQp1c2VkIHRvIGdldCB0ZW1wZXJhdHVyZSBmcm9tIFNDVSBmaXJtd2FyZSwgYW5kIHRo
+ZSB2aXJ0dWFsDQpzZW5zb3IgSUQgc3RhcnRpbmcgZnJvbSAwIHRvIE4gaXMgTk9UIHVzZWQgYXQg
+YWxsLCB0aGlzIHBhdGNoDQphZGRzIG5ldyBBUEkgdGhlcm1hbF96b25lX29mX2dldF9zZW5zb3Jf
+aWQoKSB0byBwcm92aWRlIHRoZQ0KZmVhdHVyZSBvZiBnZXR0aW5nIHNlbnNvciBJRCBmcm9tIERU
+IHRoZXJtYWwgem9uZSdzIG5vZGUuDQoNClNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KLS0tDQpOZXcgcGF0Y2guDQotLS0NCiBkcml2ZXJzL3RoZXJtYWwv
+b2YtdGhlcm1hbC5jIHwgNTMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0t
+LS0tLS0NCiBpbmNsdWRlL2xpbnV4L3RoZXJtYWwuaCAgICAgIHwgMTAgKysrKysrKysrDQogMiBm
+aWxlcyBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9vZi10aGVybWFsLmMgYi9kcml2ZXJzL3RoZXJtYWwvb2Yt
+dGhlcm1hbC5jDQppbmRleCAyZGYwNTljLi4yZTQzMjBjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy90
+aGVybWFsL29mLXRoZXJtYWwuYw0KKysrIGIvZHJpdmVycy90aGVybWFsL29mLXRoZXJtYWwuYw0K
+QEAgLTQ0Niw2ICs0NDYsNDYgQEAgdGhlcm1hbF96b25lX29mX2FkZF9zZW5zb3Ioc3RydWN0IGRl
+dmljZV9ub2RlICp6b25lLA0KIH0NCiANCiAvKioNCisgKiB0aGVybWFsX3pvbmVfb2ZfZ2V0X3Nl
+bnNvcl9pZCAtIGdldCBzZW5zb3IgSUQgZnJvbSBhIERUIHRoZXJtYWwgem9uZQ0KKyAqIEB0el9u
+cDogYSB2YWxpZCB0aGVybWFsIHpvbmUgZGV2aWNlIG5vZGUuDQorICogQHNlbnNvcl9zcGVjczog
+cG9pbnRlciB0byBvdXRwdXQgYXJndW1lbnRzIHN0cnVjdHVyZSB3aWxsIGJlIHBhc3NlZCBiYWNr
+Lg0KKyAqIEBpZDogYSBzZW5zb3IgSUQgcG9pbnRlciB3aWxsIGJlIHBhc3NlZCBiYWNrLg0KKyAq
+DQorICogVGhpcyBmdW5jdGlvbiB3aWxsIGdldCBzZW5zb3IgSUQgZnJvbSBhIGdpdmVuIHRoZXJt
+YWwgem9uZSBub2RlLCB1c2UNCisgKiAidGhlcm1hbC1zZW5zb3JzIiBhcyBsaXN0IG5hbWUsIGFu
+ZCBnZXQgc2Vuc29yIElEIGZyb20gZmlyc3QgcGhhbmRsZSdzDQorICogYXJndW1lbnQuDQorICoN
+CisgKiBSZXR1cm46IDAgb24gc3VjY2VzcywgcHJvcGVyIGVycm9yIGNvZGUgb3RoZXJ3aXNlLg0K
+KyAqLw0KKw0KK2ludCB0aGVybWFsX3pvbmVfb2ZfZ2V0X3NlbnNvcl9pZChzdHJ1Y3QgZGV2aWNl
+X25vZGUgKnR6X25wLA0KKwkJCQkgIHN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgKnNlbnNvcl9zcGVj
+cywNCisJCQkJICB1MzIgKmlkKQ0KK3sNCisJaW50IHJldDsNCisNCisJcmV0ID0gb2ZfcGFyc2Vf
+cGhhbmRsZV93aXRoX2FyZ3ModHpfbnAsDQorCQkJCQkgInRoZXJtYWwtc2Vuc29ycyIsDQorCQkJ
+CQkgIiN0aGVybWFsLXNlbnNvci1jZWxscyIsDQorCQkJCQkgMCwNCisJCQkJCSBzZW5zb3Jfc3Bl
+Y3MpOw0KKwlpZiAocmV0KQ0KKwkJcmV0dXJuIHJldDsNCisNCisJaWYgKHNlbnNvcl9zcGVjcy0+
+YXJnc19jb3VudCA+PSAxKSB7DQorCQkqaWQgPSBzZW5zb3Jfc3BlY3MtPmFyZ3NbMF07DQorCQlX
+QVJOKHNlbnNvcl9zcGVjcy0+YXJnc19jb3VudCA+IDEsDQorCQkgICAgICIlcE9GbjogdG9vIG1h
+bnkgY2VsbHMgaW4gc2Vuc29yIHNwZWNpZmllciAlZFxuIiwNCisJCSAgICAgc2Vuc29yX3NwZWNz
+LT5ucCwgc2Vuc29yX3NwZWNzLT5hcmdzX2NvdW50KTsNCisJfSBlbHNlIHsNCisJCSppZCA9IDA7
+DQorCX0NCisNCisJcmV0dXJuIDA7DQorfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKHRoZXJtYWxfem9u
+ZV9vZl9nZXRfc2Vuc29yX2lkKTsNCisNCisvKioNCiAgKiB0aGVybWFsX3pvbmVfb2Zfc2Vuc29y
+X3JlZ2lzdGVyIC0gcmVnaXN0ZXJzIGEgc2Vuc29yIHRvIGEgRFQgdGhlcm1hbCB6b25lDQogICog
+QGRldjogYSB2YWxpZCBzdHJ1Y3QgZGV2aWNlIHBvaW50ZXIgb2YgYSBzZW5zb3IgZGV2aWNlLiBN
+dXN0IGNvbnRhaW4NCiAgKiAgICAgICBhIHZhbGlkIC5vZl9ub2RlLCBmb3IgdGhlIHNlbnNvciBu
+b2RlLg0KQEAgLTUwMCwyMSArNTQwLDEwIEBAIHRoZXJtYWxfem9uZV9vZl9zZW5zb3JfcmVnaXN0
+ZXIoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgc2Vuc29yX2lkLCB2b2lkICpkYXRhLA0KIAkJaW50
+IHJldCwgaWQ7DQogDQogCQkvKiBGb3Igbm93LCB0aGVybWFsIGZyYW1ld29yayBzdXBwb3J0cyBv
+bmx5IDEgc2Vuc29yIHBlciB6b25lICovDQotCQlyZXQgPSBvZl9wYXJzZV9waGFuZGxlX3dpdGhf
+YXJncyhjaGlsZCwgInRoZXJtYWwtc2Vuc29ycyIsDQotCQkJCQkJICIjdGhlcm1hbC1zZW5zb3It
+Y2VsbHMiLA0KLQkJCQkJCSAwLCAmc2Vuc29yX3NwZWNzKTsNCisJCXJldCA9IHRoZXJtYWxfem9u
+ZV9vZl9nZXRfc2Vuc29yX2lkKGNoaWxkLCAmc2Vuc29yX3NwZWNzLCAmaWQpOw0KIAkJaWYgKHJl
+dCkNCiAJCQljb250aW51ZTsNCiANCi0JCWlmIChzZW5zb3Jfc3BlY3MuYXJnc19jb3VudCA+PSAx
+KSB7DQotCQkJaWQgPSBzZW5zb3Jfc3BlY3MuYXJnc1swXTsNCi0JCQlXQVJOKHNlbnNvcl9zcGVj
+cy5hcmdzX2NvdW50ID4gMSwNCi0JCQkgICAgICIlcE9GbjogdG9vIG1hbnkgY2VsbHMgaW4gc2Vu
+c29yIHNwZWNpZmllciAlZFxuIiwNCi0JCQkgICAgIHNlbnNvcl9zcGVjcy5ucCwgc2Vuc29yX3Nw
+ZWNzLmFyZ3NfY291bnQpOw0KLQkJfSBlbHNlIHsNCi0JCQlpZCA9IDA7DQotCQl9DQotDQogCQlp
+ZiAoc2Vuc29yX3NwZWNzLm5wID09IHNlbnNvcl9ucCAmJiBpZCA9PSBzZW5zb3JfaWQpIHsNCiAJ
+CQl0emQgPSB0aGVybWFsX3pvbmVfb2ZfYWRkX3NlbnNvcihjaGlsZCwgc2Vuc29yX25wLA0KIAkJ
+CQkJCQkgZGF0YSwgb3BzKTsNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3RoZXJtYWwuaCBi
+L2luY2x1ZGUvbGludXgvdGhlcm1hbC5oDQppbmRleCA1ZjQ3MDVmLi45NzBmYjM3IDEwMDY0NA0K
+LS0tIGEvaW5jbHVkZS9saW51eC90aGVybWFsLmgNCisrKyBiL2luY2x1ZGUvbGludXgvdGhlcm1h
+bC5oDQpAQCAtMzc1LDYgKzM3NSw5IEBAIHN0cnVjdCB0aGVybWFsX3RyaXAgew0KIA0KIC8qIEZ1
+bmN0aW9uIGRlY2xhcmF0aW9ucyAqLw0KICNpZmRlZiBDT05GSUdfVEhFUk1BTF9PRg0KK2ludCB0
+aGVybWFsX3pvbmVfb2ZfZ2V0X3NlbnNvcl9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKnR6X25wLA0K
+KwkJCQkgIHN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgKnNlbnNvcl9zcGVjcywNCisJCQkJICB1MzIg
+KmlkKTsNCiBzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqDQogdGhlcm1hbF96b25lX29mX3Nl
+bnNvcl9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpZCwgdm9pZCAqZGF0YSwNCiAJ
+CQkJY29uc3Qgc3RydWN0IHRoZXJtYWxfem9uZV9vZl9kZXZpY2Vfb3BzICpvcHMpOw0KQEAgLTM4
+Niw2ICszODksMTMgQEAgc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKmRldm1fdGhlcm1hbF96
+b25lX29mX3NlbnNvcl9yZWdpc3RlcigNCiB2b2lkIGRldm1fdGhlcm1hbF96b25lX29mX3NlbnNv
+cl91bnJlZ2lzdGVyKHN0cnVjdCBkZXZpY2UgKmRldiwNCiAJCQkJCSAgICBzdHJ1Y3QgdGhlcm1h
+bF96b25lX2RldmljZSAqdHopOw0KICNlbHNlDQorDQorc3RhdGljIGludCB0aGVybWFsX3pvbmVf
+b2ZfZ2V0X3NlbnNvcl9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKnR6X25wLA0KKwkJCQkJIHN0cnVj
+dCBvZl9waGFuZGxlX2FyZ3MgKnNlbnNvcl9zcGVjcywNCisJCQkJCSB1MzIgKmlkKQ0KK3sNCisJ
+cmV0dXJuIC1FTk9FTlQ7DQorfQ0KIHN0YXRpYyBpbmxpbmUgc3RydWN0IHRoZXJtYWxfem9uZV9k
+ZXZpY2UgKg0KIHRoZXJtYWxfem9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIoc3RydWN0IGRldmljZSAq
+ZGV2LCBpbnQgaWQsIHZvaWQgKmRhdGEsDQogCQkJCWNvbnN0IHN0cnVjdCB0aGVybWFsX3pvbmVf
+b2ZfZGV2aWNlX29wcyAqb3BzKQ0KLS0gDQoyLjcuNA0KDQo=
