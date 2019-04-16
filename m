@@ -1,100 +1,59 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 23/26] PCI: designware-ep: Configure RESBAR to
- advertise the smallest size
-Date: Tue, 16 Apr 2019 14:36:04 +0100
-Message-ID: <20190416133604.GA14705@red-moon>
-References: <20190325083501.8088-1-kishon@ti.com>
- <20190325083501.8088-24-kishon@ti.com>
- <20190413160053.GI126710@google.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [5.2][PATCH 0/3] Ingenic JZ47xx KMS driver
+Date: Tue, 16 Apr 2019 11:02:35 -0300
+Message-ID: <16b99f4040a1837bcdbf860d0e9517eb53002aed.camel@collabora.com>
+References: <20190228220756.20262-1-paul@crapouillou.net>
+         <fce3f17981cda6a263abcce6b2902591e7984fa4.camel@collabora.com>
+         <1552304705.1929.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190413160053.GI126710@google.com>
+In-Reply-To: <1552304705.1929.0@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 11:00:53AM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 25, 2019 at 02:04:58PM +0530, Kishon Vijay Abraham I wrote:
-> > Configure RESBAR capability to advertise the smallest size (1MB) for
-> > couple of reasons. A) Host side resource allocation of BAR fails for
-> > larger sizes. B) Endpoint function driver does not allocate memory
-> > for all supported sizes in RESBAR capability.
-> > If and when there is a usecase required to add more flexibility using
-> > RESBAR, this can be revisited.
+On Mon, 2019-03-11 at 12:45 +0100, Paul Cercueil wrote:
+> Hi Ezequiel,
 > 
-> The #define used in the code below is "REBAR"; maybe spell it out
-> once and then use REBAR instead of RESBAR?
-
-I think we should just name the capability as it is (Resizable BAR) the
-kernel defines are there already anyway. I will rewrite the log
-accordingly.
-
-Lorenzo
-
-> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > ---
-> >  .../pci/controller/dwc/pcie-designware-ep.c   | 34 +++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
+> On Mon, Mar 11, 2019 at 1:02 AM, Ezequiel Garcia 
+> <ezequiel@collabora.com> wrote:
+> > On Thu, 2019-02-28 at 19:07 -0300, Paul Cercueil wrote:
+> > >  Hi,
+> > > 
+> > >  This is a first attempt at a KMS driver for the JZ47xx MIPS SoCs by
+> > >  Ingenic. It is aimed to replace the aging jz4740-fb driver.
+> > > 
+> > >  The driver will later be updated with new features (overlays, TV-out
+> > >  etc.), that's why I didn't go with the simple/tiny DRM driver.
+> > > 
+> > >  The driver has been tested on the Ben Nanonote (JZ4740) and the
+> > >  RetroMini RS-90 (JZ4725B) handheld gaming console.
+> > > 
 > > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > index 74477ad7467f..0c208b9bda43 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > @@ -504,10 +504,32 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
-> >  	pci_epc_mem_exit(epc);
-> >  }
-> >  
-> > +static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
-> > +{
-> > +	u32 header;
-> > +	int pos = PCI_CFG_SPACE_SIZE;
-> > +
-> > +	while (pos) {
-> > +		header = dw_pcie_readl_dbi(pci, pos);
-> > +		if (PCI_EXT_CAP_ID(header) == cap)
-> > +			return pos;
-> > +
-> > +		pos = PCI_EXT_CAP_NEXT(header);
-> > +		if (!pos)
-> > +			break;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  {
-> > +	int i;
-> >  	int ret;
-> > +	u32 reg;
-> >  	void *addr;
-> > +	unsigned int nbars;
-> > +	unsigned int offset;
-> >  	struct pci_epc *epc;
-> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> >  	struct device *dev = pci->dev;
-> > @@ -591,6 +613,18 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  
-> >  	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
-> >  
-> > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > +	if (offset) {
-> > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> > +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> > +
-> > +		dw_pcie_dbi_ro_wr_en(pci);
-> > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> > +		dw_pcie_dbi_ro_wr_dis(pci);
-> > +	}
-> > +
-> >  	dw_pcie_setup(pci);
-> >  
-> >  	return 0;
-> > -- 
-> > 2.17.1
+> > Does this support JZ4780? Or otherwise,
+> > is there any similarity with JZ4780 display controller?
 > > 
+> > Thanks,
+> > Eze
+> 
+> The JZ4780 LCD controller would in theory work with this driver, but
+> to test on the CI20 you'd need to add support for HDMI first.
+> 
+
+After reviewing a bit this driver and the JZ480 one on the CI20 repo,
+there seems to be some differences.
+
+To begin with, the JZ480 apparently has a new 8-word descriptor.
+
+The HDMI looks pretty much a Synopsys DW HDMI, mostly compatible
+with the dw-hdmi encoder.
+
+I'll try to put together some patches to enable JZ4780 support.
+Won't happen anytime soon, so if anyone wants to give it
+a shot, be my guest :-)
+
+Regards,
+Eze
