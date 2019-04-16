@@ -1,37 +1,59 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] scripts/dtc: fix spelling mistake "endpont" -> "endpoint"
-Date: Tue, 16 Apr 2019 12:12:14 +0100
-Message-ID: <20190416111214.22107-1-colin.king@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v2 1/2] dt-binding: misc: Add common LPC snoop documentation
+Date: Tue, 16 Apr 2019 14:16:30 +0300
+Message-ID: <20190416111631.356803-2-tmaimon77@gmail.com>
+References: <20190416111631.356803-1-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190416111631.356803-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: gregkh@linuxfoundation.org, arnd@arnd.de, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Added device tree binding documentation for Nuvoton BMC
+NPCM BIOS Post Code (BPC) and Apeed AST2500 LPC snoop.
+The LPC snoop monitoring two configurable I/O addresses
+written by the host on Low Pin Count (LPC) bus.
 
-There is a spelling mistake in a FAIL message, fix it.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- scripts/dtc/checks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/misc/lpc-snoop.txt         | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/lpc-snoop.txt
 
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index 4834e44b37b2..faddf6a57236 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -1714,7 +1714,7 @@ static void check_graph_endpoint(struct check *c, struct dt_info *dti,
- 		return;
- 
- 	if (!strprefixeq(node->name, node->basenamelen, "endpoint"))
--		FAIL(c, dti, node, "graph endpont node name should be 'endpoint'");
-+		FAIL(c, dti, node, "graph endpoint node name should be 'endpoint'");
- 
- 	check_graph_reg(c, dti, node);
- 
+diff --git a/Documentation/devicetree/bindings/misc/lpc-snoop.txt b/Documentation/devicetree/bindings/misc/lpc-snoop.txt
+new file mode 100644
+index 000000000000..c21cb8df4ffb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/lpc-snoop.txt
+@@ -0,0 +1,27 @@
++LPC snoop interface
++
++The LPC snoop (BIOS Post Code) interface can monitor
++two configurable I/O addresses written by the host on
++the Low Pin Count (LPC) bus.
++
++Nuvoton NPCM7xx LPC snoop supports capture double words,
++when using capture double word only I/O address 1 is monitored.
++
++Required properties for lpc-snoop node
++- compatible   : "nuvoton,npcm750-lpc-bpc-snoop" for Poleg NPCM7XX
++                 "aspeed,ast2500-lpc-snoop" for Aspeed AST2500.
++- reg          : specifies physical base address and size of the registers.
++- interrupts   : contain the LPC snoop interrupt with flags for falling edge.
++- snoop-ports  : contain monitor I/O addresses, at least one monitor I/O
++                 address required
++
++Optional property for NPCM7xx lpc-snoop node
++- nuvoton,lpc-en-dwcapture : enable capture double words support.
++
++Example:
++	lpc-snoop: lpc_snoop@f0007040 {
++		compatible = "nuvoton,npcm750-lpc-bpc-snoop";
++		reg = <0xf0007040 0x14>;
++		snoop-ports = <0x80>;
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++	};
 -- 
-2.20.1
+2.14.1
