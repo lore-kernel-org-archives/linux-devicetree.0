@@ -1,81 +1,105 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
- compatible
-Date: Tue, 16 Apr 2019 09:34:49 +0200
-Message-ID: <20190416073449.qzl3uyjgvjgd3tai@flea>
-References: <20190411214422.2267-1-peron.clem@gmail.com>
- <20190411214422.2267-2-peron.clem@gmail.com>
- <20190415080443.frubh4ln4agrdsfe@flea>
- <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
- <20190415081816.2pay4pioc5d4mojf@flea>
- <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
- <20190415145135.fjbcaldwy7w3eqcs@flea>
- <CAJiuCcdrQ64jC8UH1eDKKhFdcOtk=bkWTAzoYOQ1ut3He+j2GQ@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 17/25] drm/mediatek: add background color input
+ select function for ovl/ovl_2l
+Date: Tue, 16 Apr 2019 15:38:17 +0800
+Message-ID: <1555400297.29874.2.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-18-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dreprrpoxkojozhw"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcdrQ64jC8UH1eDKKhFdcOtk=bkWTAzoYOQ1ut3He+j2GQ@mail.gmail.com>
+In-Reply-To: <1553667561-25447-18-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: yongqiang.niu@mediatek.com
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+Hi, Yongqiang:
 
---dreprrpoxkojozhw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add background color input select function for ovl/ovl_2l
+> 
+> ovl include 4 DRAM layer and 1 background color layer
+> ovl_2l include 4 DRAM layer and 1 background color layer
+> DRAM layer frame buffer data from render hardware, GPU for example.
+> backgournd color layer is embed in ovl/ovl_2l, we can only set
+> it color, but not support DRAM frame buffer.
+> 
+> for ovl0->ovl0_2l direct link usecase,
+> we need set ovl0_2l background color intput select from ovl0
+> if render send DRAM buffer layer number <=4, all these layer read
+> by ovl.
+> layer0 is at the bottom of all layers.
+> layer3 is at the top of all layers.
+> if render send DRAM buffer layer numbfer >=4 && <=6
+> ovl0 read layer0~3
+> ovl0_2l read layer4~5
+> layer5 is at the top ot all these layers.
+> 
+> the decision of how to setting ovl0/ovl0_2l read these layer data
+> is controlled in mtk crtc, which will be another patch
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> index a0ab760..c226284 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -27,6 +27,8 @@
+>  #define DISP_REG_OVL_EN				0x000c
+>  #define DISP_REG_OVL_RST			0x0014
+>  #define DISP_REG_OVL_ROI_SIZE			0x0020
+> +#define DISP_REG_OVL_DATAPATH_CON		0x0024
+> +#define OVL_BGCLR_SEL_IN                        BIT(2)
+>  #define DISP_REG_OVL_ROI_BGCLR			0x0028
+>  #define DISP_REG_OVL_SRC_CON			0x002c
+>  #define DISP_REG_OVL_CON(n)			(0x0030 + 0x20 * (n))
+> @@ -245,6 +247,26 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
+>  		mtk_ovl_layer_on(comp, idx);
+>  }
+>  
+> +static void mtk_ovl_bgclr_in_on(struct mtk_ddp_comp *comp,
+> +				enum mtk_ddp_comp_id prev)
+> +{
+> +	int is_ovl = 0;
+> +
+> +        if (prev == DDP_COMPONENT_OVL0 ||
+> +            prev == DDP_COMPONENT_OVL0_2L ||
+> +            prev == DDP_COMPONENT_OVL1_2L)
+> +		is_ovl = 1;
 
-On Mon, Apr 15, 2019 at 06:30:10PM +0200, Cl=E9ment P=E9ron wrote:
-> > > I didn't change the driver and the SPDIF is working what's irrelevant
-> > > in declaring the driver as compatible ?
-> >
-> > It's working by accident.
-> >
-> > This won't work for example:
-> > https://elixir.bootlin.com/linux/latest/source/sound/soc/sunxi/sun4i-sp=
-dif.c#L181
-> >
-> > > If some feature are missing they can be introduce later as there is a
-> > > special binding for H6 no ?
-> >
-> > Again, that's irrelevant. The only question you need to ask yourself
-> > is whether, if you take an imaginary source code that would support
-> > all the H3 SPDIF features and run it on an H6, it works just as well.
-> >
-> > The examples above that it's not the case, so you can't claim that the
-> > device is compatible.
->
-> Is it ok if I fix the TX Fifo flush bit and remove the compatible with H3=
- ?
-> (Looking at the driver this is the only bit used that is incompatible wit=
-h H6)
+I think this logic should be moved to mtk crtc and OVL need not to care
+about which component is in front of it.
 
-Sure
+Regards,
+CK
 
-> Or should I send a new driver with the correct mapping ?
-
-No, we definitely don't want to duplicate a driver just for a single
-bit offset that changes.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---dreprrpoxkojozhw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLWFmQAKCRDj7w1vZxhR
-xbwSAP4yo3KgkfxUrGPdnBM72F56+bA+1mMwG98vKpWTUgVHwQEAuTweyDqrCXY6
-OG3tkkix1uS2CpWCLw52E3RgcOp+1wk=
-=4IzS
------END PGP SIGNATURE-----
-
---dreprrpoxkojozhw--
+> +
+> +	mtk_ddp_write_mask((is_ovl << 2), comp,
+> +			   DISP_REG_OVL_DATAPATH_CON, OVL_BGCLR_SEL_IN);
+> +}
+> +
+> +static void mtk_ovl_bgclr_in_off(struct mtk_ddp_comp *comp)
+> +{
+> +        mtk_ddp_write_mask(0, comp,
+> +                           DISP_REG_OVL_DATAPATH_CON, OVL_BGCLR_SEL_IN);
+> +}
+> +
+>  static const struct mtk_ddp_comp_funcs mtk_disp_ovl_funcs = {
+>  	.config = mtk_ovl_config,
+>  	.start = mtk_ovl_start,
+> @@ -255,6 +277,8 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
+>  	.layer_on = mtk_ovl_layer_on,
+>  	.layer_off = mtk_ovl_layer_off,
+>  	.layer_config = mtk_ovl_layer_config,
+> +	.bgclr_in_on = mtk_ovl_bgclr_in_on,
+> +	.bgclr_in_off = mtk_ovl_bgclr_in_off,
+>  };
+>  
+>  static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
