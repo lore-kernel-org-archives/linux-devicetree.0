@@ -1,7 +1,7 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v2 05/15] [media] mtk-mipicsi: get the w/h/bytepwerline for mtk_mipicsi
-Date: Tue, 16 Apr 2019 17:30:05 +0800
-Message-ID: <1555407015-18130-6-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v2 11/15] [media] mtk-mipicsi: set the output address in HW reg
+Date: Tue, 16 Apr 2019 17:30:11 +0800
+Message-ID: <1555407015-18130-12-git-send-email-stu.hsieh@mediatek.com>
 References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,7 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch get the w/h/bytepwerline to save in mtk_mipicsi.
+This patch set the output address in HW reg when buffer queue and ISR.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
@@ -20,75 +20,88 @@ Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
  1 file changed, 39 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 16f6bc480f4e..10782fccca79 100644
+index 3624186206bd..4027ed9c94f3 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -99,6 +99,9 @@ struct mtk_mipicsi_dev {
- 	u32 id;
- 	int clk_num;
- 	struct clk		*clk[MIPICSI_CLK];
-+	u32 width;
-+	u32 height;
-+	u32 bytesperline;
- };
+@@ -109,6 +109,7 @@
+ #define CAMSV_TG_SEN_GRAB_LIN				0x50C
+ #define CAMSV_TG_PATH_CFG				0x510
  
- #define MTK_MIPICSI_BUS_PARAM (V4L2_MBUS_MASTER |	\
-@@ -110,13 +113,36 @@ struct mtk_mipicsi_dev {
- 		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
- 		V4L2_MBUS_DATA_ACTIVE_HIGH)
++#define IMGO_BASE_ADDR					0x220
+ #define IMGO_XSIZE					0x230
+ #define IMGO_YSIZE					0x234
+ #define IMGO_STRIDE					0x238
+@@ -516,12 +517,22 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
+ 	return 0;
+ }
  
-+static u32 get_bytesperline(const u32 fmt, const u32 width)
++static void mtk_mipicsi_fill_buffer(void __iomem *base, dma_addr_t dma_handle)
 +{
-+	u32 bytesperline = 0;
-+
-+	switch (fmt) {
-+	case MEDIA_BUS_FMT_UYVY8_2X8:
-+	case MEDIA_BUS_FMT_VYUY8_2X8:
-+	case MEDIA_BUS_FMT_YUYV8_2X8:
-+	case MEDIA_BUS_FMT_YVYU8_2X8:
-+		bytesperline = width * 2U;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return bytesperline;
++	writel(dma_handle, base + IMGO_BASE_ADDR);
 +}
 +
- static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
+ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
  {
-+	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
-+	struct mtk_mipicsi_dev *mipicsi = ici->priv;
- 	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
- 	struct v4l2_subdev_format format = {
- 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
- 	int ret;
-+	u32 width;
-+	u32 height;
-+	u32 fmt;
+ 	struct soc_camera_device *icd = soc_camera_from_vb2q(vb->vb2_queue);
+ 	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
+ 	struct mtk_mipicsi_dev *mipicsi = ici->priv;
++	unsigned int i = 0;
++	u64 offset = 0;
++	u8 link_index = 0U;
+ 	char *va = NULL;
++	u32 bytesperline = mipicsi->bytesperline;
++	u32 height = mipicsi->height;
  
- 	/* Get width/height info from subdev. Then use them to set register */
- 	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &format);
-@@ -125,6 +151,19 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 		return ret;
+ 	spin_lock(&mipicsi->queue_lock);
+ 	list_add_tail(&(mipicsi->cam_buf[vb->index].queue),
+@@ -530,6 +541,20 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
+ 
+ 	va = vb2_plane_vaddr(vb, 0);
+ 
++	for (i = 0U; (mipicsi->enqueue_cnt == 0UL) && (i < MTK_CAMDMA_MAX_NUM);
++		++i)
++		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
++			offset = (u64)link_index * bytesperline * height;
++
++			spin_lock(&mipicsi->lock);
++			mtk_mipicsi_fill_buffer(mipicsi->camsv[i],
++				mipicsi->cam_buf[vb->index].vb_dma_addr_phy
++					+ offset);
++			spin_unlock(&mipicsi->lock);
++
++			link_index++;
++		}
++
+ 	++(mipicsi->enqueue_cnt);
+ }
+ 
+@@ -961,6 +986,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+ 	struct mtk_mipicsi_buf *tmp = NULL;
+ 	unsigned int index = 0U;
+ 	unsigned int next = 0U;
++	u64 offset = 0ULL;
++	u8 link_index = 0U;
++	void __iomem *base = NULL;
++	dma_addr_t pa;
+ 
+ 	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
+ 		mipicsi->irq_status[i] = false;
+@@ -983,6 +1012,16 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+ 		++i;
  	}
  
-+	width = format.format.width;
-+	height = format.format.height;
-+	fmt = format.format.code;
-+	mipicsi->bytesperline = get_bytesperline(fmt, width);
-+	if ((width == 0U) || (height == 0U) || (mipicsi->bytesperline == 0U)) {
-+		dev_err(icd->parent, "invalid sub device width/height/bytesperline %d/%d/%d\n",
-+			width, height, mipicsi->bytesperline);
-+		return -EINVAL;
++	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
++		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
++			offset = (u64)link_index *
++				mipicsi->bytesperline * mipicsi->height;
++			base = mipicsi->camsv[i];
++			pa = mipicsi->cam_buf[next].vb_dma_addr_phy;
++			mtk_mipicsi_fill_buffer(base, pa + offset);
++			link_index++;
++		}
 +	}
-+
-+	mipicsi->width = width;
-+	mipicsi->height = height;
-+
  	/*
- 	 * If power domain was closed before, it will be open.
- 	 * Then clock will be open and register will be set
+ 	 * fb_list has one more buffer. Free the first buffer to user
+ 	 * and fill the second buffer to HW.
 -- 
 2.18.0
