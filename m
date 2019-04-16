@@ -1,85 +1,28 @@
-Return-Path: <SRS0=S1EI=SR=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v6 10/13] media: dt-bindings: tvp5150: cleanup bindings stlye
-Date: Mon, 15 Apr 2019 14:44:10 +0200
-Message-Id: <20190415124413.18456-11-m.felsch@pengutronix.de>
-In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=iaot=SS=cogentembedded.com=sergei.shtylyov@kernel.org>
+Subject: Re: [PATCH 4/4] dt-bindings: pwm: renesas: tpu: Document
+ R8A779{5|6|65} bindings
+References: <1555379752-5980-1-git-send-email-cv-dong@jinso.co.jp>
+ <1555379752-5980-5-git-send-email-cv-dong@jinso.co.jp>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <7af00b07-f904-982f-7f05-255429e7cfb5@cogentembedded.com>
+Date: Tue, 16 Apr 2019 11:11:21 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+In-Reply-To: <1555379752-5980-5-git-send-email-cv-dong@jinso.co.jp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Cao Van Dong <cv-dong@jinso.co.jp>, linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, broonie@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Use underlines to highlight optional and required properties. This is
-quite common for all bindings. Align descriptions and start sentence
-with uppercase letter. Also reword the usage of the required
-endpoint properties for the output port in case BT.656 should be used.
+On 16.04.2019 4:55, Cao Van Dong wrote:
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/media/i2c/tvp5150.txt | 30 +++++++++++--------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+> Document the R-Car H3/M3-W/M3-N (R8A779{5|6|65}) SoC in the Renesas TPU bindings;
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-index bdd273d8b44d..82fff80fa63a 100644
---- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -5,12 +5,14 @@ The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
- with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
- 
- Required Properties:
--- compatible: value must be "ti,tvp5150"
--- reg: I2C slave address
-+====================
-+- compatible:	Value must be "ti,tvp5150".
-+- reg:		I2C slave address.
- 
- Optional Properties:
--- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
--- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
-+====================
-+- pdn-gpios:	Phandle for the GPIO connected to the PDN pin, if any.
-+- reset-gpios:	Phandle for the GPIO connected to the RESETB pin, if any.
- 
- The device node must contain one 'port' child node per device physical input
- and output port, in accordance with the video interface bindings defined in
-@@ -24,9 +26,8 @@ are numbered as follows
- 	  Y-OUT		src		2
- 
- The device node must contain at least one sink port and the src port. Each input
--port must be linked to an endpoint defined in
--Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
--port/connector layout is as follows
-+port must be linked to an endpoint defined in [1]. The port/connector layout is
-+as follows
- 
- tvp-5150 port@0 (AIP1A)
- 	endpoint@0 -----------> Comp0-Con  port
-@@ -37,14 +38,17 @@ tvp-5150 port@2
- 	endpoint (video bitstream output at YOUT[0-7] parallel bus)
- 
- Required Endpoint Properties for parallel synchronization on output port:
-+=========================================================================
- 
--- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
--- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
--- field-even-active: field signal level during the even field data
--  transmission. Must be <0>.
-+- hsync-active:		Active state of the HSYNC signal. Must be <1> (HIGH).
-+- vsync-active:		Active state of the VSYNC signal. Must be <1> (HIGH).
-+- field-even-active:	Field signal level during the even field data
-+			transmission. Must be <0>.
- 
--If none of hsync-active, vsync-active and field-even-active is specified,
--the endpoint is assumed to use embedded BT.656 synchronization.
-+Note: Do not specify any of these properties if you want to use the embedded
-+      BT.656 synchronization.
-+
-+[1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
- 
- Example - three input sources:
- 
--- 
-2.20.1
+    s/;/./
+
+> 
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+[...]
+
+MBR, Sergei
