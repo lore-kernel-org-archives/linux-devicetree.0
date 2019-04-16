@@ -1,92 +1,96 @@
-From: =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
-Subject: Re: [PATCH v2 2/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable
- GMAC ethernet controller
-Date: Tue, 16 Apr 2019 07:47:09 -0300
-Message-ID: <eb80d64f-7355-071b-c1d1-04e0eb4475ce@centosproject.org>
-References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
- <1555065186-8154-3-git-send-email-pgreco@centosproject.org>
- <20190415075309.p7pgj62mmtmxsnnr@flea>
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining
+ down after PHY disconnect
+Date: Tue, 16 Apr 2019 13:51:15 +0300
+Message-ID: <CA+h21hqnF5+VXZnHeipKMEHRmxmgRkXuQQQuiDE4-gKj6OAO4w@mail.gmail.com>
+References: <20190411232315.19588-1-olteanv@gmail.com> <20190411232315.19588-2-olteanv@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415075309.p7pgj62mmtmxsnnr@flea>
-Content-Language: en-US
+In-Reply-To: <20190411232315.19588-2-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com
-Cc: linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: shawnguo@kernel.org, leoyang.li@nxp.com, Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev <netdev@vger.kernel.org>, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-
-El 15/4/19 a las 04:53, Maxime Ripard escribió:
-> On Fri, Apr 12, 2019 at 07:33:01AM -0300, Pablo Greco wrote:
->> Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
->> RTL8211E RGMII PHY tied to the GMAC.
->> The PMIC's DC1SW output provides power for the PHY, while the ALDO2
->> output provides I/O voltages on both sides.
->>
->> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
->> ---
->>   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 +++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> index f05cabd..0d79e91 100644
->> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> @@ -50,6 +50,7 @@
->>   	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
->>
->>   	aliases {
->> +		ethernet0 = &gmac;
->>   		serial0 = &uart0;
->>   	};
->>
->> @@ -92,6 +93,22 @@
->>   	status = "okay";
->>   };
->>
->> +&gmac {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&gmac_rgmii_pins>;
->> +	phy-handle = <&phy1>;
->> +	phy-mode = "rgmii";
->> +	phy-supply = <&reg_dc1sw>;
->> +	status = "okay";
->> +};
->> +
->> +&gmac_mdio {
->> +	phy1: ethernet-phy@1 {
->> +		compatible = "ethernet-phy-ieee802.3-c22";
->> +		reg = <1>;
->> +	};
->> +};
->> +
->>   &i2c0 {
->>   	status = "okay";
->>
->> @@ -123,6 +140,13 @@
->>   	status = "okay";
->>   };
->>
->> +&reg_aldo2 {
->> +	regulator-always-on;
->> +	regulator-min-microvolt = <2500000>;
->> +	regulator-max-microvolt = <2500000>;
->> +	regulator-name = "vcc-pa";
->> +};
->> +
-> If this one provides power to the pins, it should be tied to the PIO
-> node.
-In that case, I should fix the bananapi-m2-ultra the same way. Do you 
-prefer me to add those fixes to this series?
-Or is it better to apply this like it is, and I fix both together in a 
-separated series?
-> Maxime
+On Fri, 12 Apr 2019 at 02:27, Vladimir Oltean <olteanv@gmail.com> wrote:
 >
+> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+> are pointing towards the same internal PCS. Therefore nobody is
+> controlling the internal PCS of eTSEC0.
+>
+> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
+> initialization. But upon an ifdown/ifup sequence, the code path from
+> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
+> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
+> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
+> failure condition, the PHY driver keeps printing
+> '803x_aneg_done: SGMII link is not ok'.
+>
+> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> ---
+>  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
+>  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+> index 97e1fb7ea932..9b1fe99d55b1 100644
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -145,7 +145,7 @@
+>  };
+>
+>  &enet0 {
+> -       tbi-handle = <&tbi1>;
+> +       tbi-handle = <&tbi0>;
+>         phy-handle = <&sgmii_phy2>;
+>         phy-connection-type = "sgmii";
+>         status = "okay";
+> @@ -225,6 +225,13 @@
+>         sgmii_phy2: ethernet-phy@2 {
+>                 reg = <0x2>;
+>         };
+> +       tbi0: tbi-phy@1f {
+> +               reg = <0x1f>;
+> +               device_type = "tbi-phy";
+> +       };
+> +};
+> +
+> +&mdio1 {
+>         tbi1: tbi-phy@1f {
+>                 reg = <0x1f>;
+>                 device_type = "tbi-phy";
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 1a2a9509d9c2..89eab1fd1f7f 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -709,6 +709,15 @@
+>                               <0x0 0x2d10030 0x0 0x4>;
+>                 };
+>
+> +               mdio1: mdio@2d64000 {
+> +                       compatible = "fsl,etsec2-mdio";
+> +                       device_type = "mdio";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0x0 0x2d64000 0x0 0x4000>,
+> +                             <0x0 0x2d50030 0x0 0x4>;
+> +               };
+> +
+>                 ptp_clock@2d10e00 {
+>                         compatible = "fsl,etsec-ptp";
+>                         reg = <0x0 0x2d10e00 0x0 0xb0>;
 > --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> 2.17.1
 >
-Pablo.
+
+Hi Leo,
+
+Just a reminder that I resent this patch rebased on top of the
+compatible string change.
+
+Thanks,
+-Vladimir
