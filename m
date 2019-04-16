@@ -1,71 +1,64 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 18/25] drm/mediatek: add RDMA fifo size error handle
-Date: Tue, 16 Apr 2019 16:00:47 +0800
-Message-ID: <1555401647.11519.2.camel@mtksdaap41>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-19-git-send-email-yongqiang.niu@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Tue, 16 Apr 2019 11:02:10 +0300
+Message-ID: <8720224d-76f4-c620-9e3f-91605d6fa1e3@cogentembedded.com>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
+ <907f2e87-1cb4-fa37-5406-82bf2bf71188@cogentembedded.com>
+ <OF2F61A6E6.AA7717A3-ON482583DE.0005C1EE-482583DE.00061474@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1553667561-25447-19-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <OF2F61A6E6.AA7717A3-ON482583DE.0005C1EE-482583DE.00061474@mxic.com.tw>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yongqiang.niu@mediatek.com
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, matthias.bgg@gmail.com, airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Bibby.Hsieh@mediatek.com, yt.shen@mediatek.com
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
+On 16.04.2019 4:06, masonccyang@mxic.com.tw wrote:
 
-On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+>  > > Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD controller.
+>  > >
+>  > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>  > > ---
+>  > >  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt  | 37 +++++++++
+>  > +++++++++++++
+>  > >  1 file changed, 37 insertions(+)
+>  > >  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
+>  > renesas-rpc.txt
+>  > >
+>  > > diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
+>  > rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>  > > new file mode 100644
+>  > > index 0000000..bfb3d29
+>  > > --- /dev/null
+>  > > +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>  > > @@ -0,0 +1,37 @@
+>  > > +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
+>  > > +-------------------------------------------------------------
+>  > > +
+>  > > +Required properties:
+>  > > +- compatible: should be an SoC-specific compatible value, followed by
+>  > > +      "renesas,rcar-gen3-rpc" as a fallback.
+>  > > +      supported SoC-specific values are:
+>  > > +      "renesas,r8a77995-rpc" (R-Car D3)
+>  > > +- reg: should contain 2 entries, one for the base address of rpc-
+>  > if registers,
+>  > > +   and one for the direct mapping area
+>  > > +- reg-names: should contain "regs", and "dirmap"
+>  >
+>  >    The device tree describes the hardware, not the driver. Why did you remove
+>  > the "wbuf" area?
 > 
-> This patch add RDMA fifo size error handle
-> rdma fifo size will not always bigger than the calculated threshold
-> if that case happened, we need set fifo size as the threshold
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> index b0a5cff..ead38ba 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> @@ -137,11 +137,14 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp, unsigned int width,
->  {
->  	unsigned int threshold;
->  	unsigned int reg;
-> +	unsigned int rdma_fifo_size;
->  	struct mtk_disp_rdma *rdma = comp_to_rdma(comp);
->  
->  	rdma_update_bits(comp, DISP_REG_RDMA_SIZE_CON_0, 0xfff, width);
->  	rdma_update_bits(comp, DISP_REG_RDMA_SIZE_CON_1, 0xfffff, height);
->  
-> +	rdma_fifo_size = RDMA_FIFO_SIZE(rdma);
-> +
->  	/*
->  	 * Enable FIFO underflow since DSI and DPI can't be blocked.
->  	 * Keep the FIFO pseudo size reset default of 8 KiB. Set the
-> @@ -149,8 +152,12 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp, unsigned int width,
->  	 * account for blanking, and with a pixel depth of 4 bytes:
->  	 */
->  	threshold = width * height * vrefresh * 4 * 7 / 1000000;
-> +
-> +	if (threshold > rdma_fifo_size)
-> +		threshold = rdma_fifo_size;
+> I don't think we should describe the hardware that driver did not implement it
+> because there are still many RPC registers we don't use them.
 
-I think this is a work around not a correct solution. Why MT8173 has no
-this problem but MT8183 has? Is the formula of threshold different in
-MT8173 and MT8183?
+    I have to repeat: we describe the hardware, not the driver capabilities.
 
-Regards,
-CK
+> best regards,
+> Mason
 
-> +
->  	reg = RDMA_FIFO_UNDERFLOW_EN |
-> -	      RDMA_FIFO_PSEUDO_SIZE(RDMA_FIFO_SIZE(rdma)) |
-> +	      RDMA_FIFO_PSEUDO_SIZE(rdma_fifo_size) |
->  	      RDMA_OUTPUT_VALID_FIFO_THRESHOLD(threshold);
->  	writel(reg, comp->regs + DISP_REG_RDMA_FIFO_CON);
->  }
+MBR, Sergei
