@@ -1,15 +1,15 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: Aw: Re: [PATCH v1 0/4] make hdmi work on bananapi-r2
-Date: Wed, 17 Apr 2019 13:40:11 +0800
-Message-ID: <1555479611.3515.2.camel@mtksdaap41>
+Subject: Re: [PATCH v1 3/4] drm/mediatek: fix boot up for 720 and 480 but
+ 1080
+Date: Wed, 17 Apr 2019 13:47:08 +0800
+Message-ID: <1555480028.3515.4.camel@mtksdaap41>
 References: <20190416145848.11932-1-frank-w@public-files.de>
-         <1555470607.16005.12.camel@mtksdaap41>
-         <trinity-366430bd-b9d1-487b-80c7-1796b602ca6b-1555479050979@3c-app-gmx-bs70>
+         <20190416145848.11932-4-frank-w@public-files.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <trinity-366430bd-b9d1-487b-80c7-1796b602ca6b-1555479050979@3c-app-gmx-bs70>
+In-Reply-To: <20190416145848.11932-4-frank-w@public-files.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Frank Wunderlich <frank-w@public-files.de>
 Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, chunhui dai <chunhui.dai@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
@@ -17,20 +17,67 @@ List-Id: devicetree@vger.kernel.org
 
 Hi, Frank:
 
-On Wed, 2019-04-17 at 07:30 +0200, Frank Wunderlich wrote:
-> Hi CK Hu,
+On Tue, 2019-04-16 at 16:58 +0200, Frank Wunderlich wrote:
+> From: chunhui dai <chunhui.dai@mediatek.com>
 > 
-> you mean the problematic patch is fix possible_crtcs (4/4) and the others are ok?
-> 
-> can you push the first 3 while working on the last one?
+> - 1080 plg in/out with ng/ok
+> - support other resolutions like 1280x1024
 
-I think 3 patches is related to possible crtc problem: (1/4), (2/4), and
-(4/4).
-
-And I have comment on (3/4) also.
+The description is so simple and I could not understand why
+pll_default_off could fix this problem. And why only MT2701 has this
+problem? Please describe more clear about this patch.
 
 Regards,
 CK
 
 > 
-> regards Frank
+> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 3 +++
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        | 1 +
+>  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 1 +
+>  3 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> index 5223498502c4..edadb7a700f1 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> @@ -184,6 +184,9 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+>  		return PTR_ERR(phy_provider);
+>  	}
+> 
+> +	if (hdmi_phy->conf->pll_default_off)
+> +		hdmi_phy->conf->hdmi_phy_disable_tmds(hdmi_phy);
+> +
+>  	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
+>  				   hdmi_phy->pll);
+>  }
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> index 2d8b3182470d..f472fdeb63dc 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> @@ -22,6 +22,7 @@ struct mtk_hdmi_phy;
+>  struct mtk_hdmi_phy_conf {
+>  	bool tz_disabled;
+>  	unsigned long flags;
+> +	bool pll_default_off;
+>  	const struct clk_ops *hdmi_phy_clk_ops;
+>  	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+>  	void (*hdmi_phy_disable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> index d3cc4022e988..6fbedacfc1e8 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> @@ -239,6 +239,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
+>  struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
+>  	.tz_disabled = true,
+>  	.flags = CLK_SET_RATE_GATE,
+> +	.pll_default_off = true,
+>  	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
+>  	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+>  	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
+> --
+> 2.17.1
+> 
