@@ -1,181 +1,79 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH] of_net: add mtd-mac-address support to
- of_get_mac_address()
-Date: Wed, 17 Apr 2019 07:00:45 +0200
-Message-ID: <4f8b582f-6df5-81eb-d03c-84b4ca9a2ae7@gmail.com>
-References: <1555445100-30936-1-git-send-email-ynezz@true.cz>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Date: Wed, 17 Apr 2019 05:27:24 +0000
+Message-ID: <20190417053211.2195-1-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1555445100-30936-1-git-send-email-ynezz@true.cz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.04.2019 22:05, Petr Štetiar wrote:
-> From: John Crispin <john@phrozen.org>
-> 
-> Many embedded devices have information such as MAC addresses stored
-> inside MTD devices. This patch allows us to add a property inside a node
-> describing a network interface. The new property points at a MTD
-> partition with an offset where the MAC address can be found.
-> 
-> This patch has originated in OpenWrt some time ago, so in order to
-> consider usefulness of this patch, here are some real-world numbers
-> which hopefully speak for themselves:
-> 
->  * mtd-mac-address                used 497 times in 357 device tree files
->  * mtd-mac-address-increment      used  74 times in  58 device tree files
->  * mtd-mac-address-increment-byte used   1 time  in   1 device tree file
-> 
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> [cleanup of the patch for upstream submission]
-> Signed-off-by: Petr Štetiar <ynezz@true.cz>
-> ---
->  Documentation/devicetree/bindings/net/ethernet.txt |  5 ++
->  drivers/of/of_net.c                                | 82 +++++++++++++++++++++-
->  2 files changed, 86 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-> index cfc376b..8a7891e 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet.txt
-> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
-> @@ -10,6 +10,11 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
->    the boot program; should be used in cases where the MAC address assigned to
->    the device by the boot program is different from the "local-mac-address"
->    property;
-> +- mtd-mac-address: specify a MTD partition + offset containing array of 6 bytes
-> +- mtd-mac-address-increment: specify number by which we should increment the
-> +  MAC address stored in the MTD partition
-> +- mtd-mac-address-increment-byte: specify octet/byte(0-5) in the MAC address,
-> +  where we should increment the value, defaults to octet 5 (the last one)
->  - nvmem-cells: phandle, reference to an nvmem node for the MAC address;
->  - nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
->  - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index 810ab0f..01b24d6 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-> @@ -11,6 +11,7 @@
->  #include <linux/of_net.h>
->  #include <linux/phy.h>
->  #include <linux/export.h>
-> +#include <linux/mtd/mtd.h>
->  
->  /**
->   * of_get_phy_mode - Get phy mode for given device_node
-> @@ -39,7 +40,7 @@ int of_get_phy_mode(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(of_get_phy_mode);
->  
-> -static const void *of_get_mac_addr(struct device_node *np, const char *name)
-> +static void *of_get_mac_addr(struct device_node *np, const char *name)
->  {
->  	struct property *pp = of_find_property(np, name, NULL);
->  
-> @@ -48,6 +49,78 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
->  	return NULL;
->  }
->  
-> +static const void *of_get_mac_address_mtd(struct device_node *np)
-> +{
-> +#ifdef CONFIG_MTD
-> +	void *addr;
-> +	size_t retlen;
-> +	int size, ret;
-> +	u8 mac[ETH_ALEN];
-> +	phandle phandle;
-> +	const char *part;
-> +	const __be32 *list;
-> +	struct mtd_info *mtd;
-> +	struct property *prop;
-> +	u32 mac_inc = 0;
-> +	u32 inc_idx = ETH_ALEN-1;
-> +	struct device_node *mtd_np = NULL;
-> +
-> +	list = of_get_property(np, "mtd-mac-address", &size);
-> +	if (!list || (size != (2 * sizeof(*list))))
-> +		return NULL;
-> +
-> +	phandle = be32_to_cpup(list++);
-> +	if (phandle)
-> +		mtd_np = of_find_node_by_phandle(phandle);
-> +
-> +	if (!mtd_np)
-> +		return NULL;
-> +
-> +	part = of_get_property(mtd_np, "label", NULL);
-> +	if (!part)
-> +		part = mtd_np->name;
-> +
-> +	mtd = get_mtd_device_nm(part);
-> +	if (IS_ERR(mtd))
-> +		return NULL;
-> +
-> +	ret = mtd_read(mtd, be32_to_cpup(list), ETH_ALEN, &retlen, mac);
+The i.MX8M family is a set of NXP product focus on delivering
+the latest and greatest video and audio experience combining
+state-of-the-art media-specific features with high-performance
+processing while optimized for lowest power consumption.
+i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all
+belong to this family.
 
-ret doesn't seem to be checked. And checking retlen wouldn't be bad too.
+The GPC module is used to manage the PU power domains' power
+on/off. For the whole i.MX8M family, different SoC has differnt
+power domain design. the power up sequence has significant difference.
+all the power sequence must be guaranteed by SW. Some domains' power
+up sequence need to access the SRC module or sub-system specific GPR.
+the SRC register & SS's register are not in in the GPC's memory range.
 
-> +	put_mtd_device(mtd);
-> +
-> +	of_property_read_u32(np, "mtd-mac-address-increment-byte", &inc_idx);
-> +	if (inc_idx > ETH_ALEN-1)
-> +		return NULL;
-> +
-> +	if (!of_property_read_u32(np, "mtd-mac-address-increment", &mac_inc))
-> +		mac[inc_idx] += mac_inc;
-> +
-> +	if (!is_valid_ether_addr(mac))
-> +		return NULL;
-> +
-> +	addr = of_get_mac_addr(np, "mac-address");
-> +	if (addr) {
-> +		memcpy(addr, mac, ETH_ALEN);
-> +		return addr;
-> +	}
-> +
-> +	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-> +	if (!prop)
-> +		return NULL;
-> +
-> +	prop->name = "mac-address";
-> +	prop->length = ETH_ALEN;
-> +	prop->value = kmemdup(mac, ETH_ALEN, GFP_KERNEL);
-> +	if (!prop->value || of_add_property(np, prop))
-> +		goto free;
-> +
-> +	return prop->value;
-> +free:
-> +	kfree(prop->value);
-> +	kfree(prop);
-> +#endif
-> +	return NULL;
-> +}
-> +
->  /**
->   * Search the device tree for the best MAC address to use.  'mac-address' is
->   * checked first, because that is supposed to contain to "most recent" MAC
-> @@ -65,11 +138,18 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
->   * addresses.  Some older U-Boots only initialized 'local-mac-address'.  In
->   * this case, the real MAC is in 'local-mac-address', and 'mac-address' exists
->   * but is all zeros.
-> + *
-> + * If a mtd-mac-address property exists, try to fetch the MAC address from the
-> + * specified MTD device, and store it as a 'mac-address' property.
->  */
->  const void *of_get_mac_address(struct device_node *np)
->  {
->  	const void *addr;
->  
-> +	addr = of_get_mac_address_mtd(np);
-> +	if (addr)
-> +		return addr;
-> +
->  	addr = of_get_mac_addr(np, "mac-address");
->  	if (addr)
->  		return addr;
-> 
+it makes us hard to use the GPCv2 driver to cover all the different
+power up requirement. Each time, a new SoC is added, we must modify
+the GPCv2 driver to make it resuable for it. a lot of code need to
+be added in GPCv2 to support it. we need to access the SRC & SS' GPR,
+then the GPCv2 driver can NOT be self-contained. Accessing the non-driver
+specific module's register is a bad practice. Although, the GPC module
+provided the similar function for PU power domain, but it is not 100%
+compatible with GPCv2.
+
+The most important thing is that the GPC & SRC module is a security
+critical resource that security permission must be considered when
+building the security system. The GPC module is not only used by
+PU power domain power on/off. It is also used by the TF-A PSCI code
+to do the CPU core power management. the SRC module control the
+CPU CORE reset and the CPU reset vector address. if we give the
+non-secure world write permission to SRC. System can be easily
+induced to malicious code.
+
+This patchset add a more generic power domain driver that give
+us the possibility to use one driver to cover the whole i.MX8M
+family power domain in kernel side. kernel side doesn't need to
+handle the power domain difference anymore, all the sequence can be
+abstracted & handled in TF-A side. Most important, We don't need to
+care if the GPC & SRC is security protected.
+
+Jacky Bai (3):
+  dt-bindings: power: Add power domain binding for i.mx8m family
+  soc: imx: Add power domain driver support for i.mx8m family
+  arm64: dts: freescale: Add power domain nodes for i.mx8mm
+
+ .../bindings/power/fsl,imx8m-genpd.txt        |  46 ++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 103 ++++++++
+ drivers/soc/imx/Kconfig                       |   6 +
+ drivers/soc/imx/Makefile                      |   1 +
+ drivers/soc/imx/imx8m_pm_domains.c            | 224 ++++++++++++++++++
+ include/soc/imx/imx_sip.h                     |  12 +
+ 6 files changed, 392 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+ create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
+ create mode 100644 include/soc/imx/imx_sip.h
+
+-- 
+2.21.0
