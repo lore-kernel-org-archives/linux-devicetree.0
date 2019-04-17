@@ -1,106 +1,58 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of_net: add mtd-mac-address support to
- of_get_mac_address()
-Date: Tue, 16 Apr 2019 20:01:56 -0700
-Message-ID: <93770c6a-5f99-38f6-276b-316c00176cac@gmail.com>
-References: <1555445100-30936-1-git-send-email-ynezz@true.cz>
- <d29bcf08-9299-8f2c-00bc-791b60658581@gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v1 0/4] make hdmi work on bananapi-r2
+Date: Wed, 17 Apr 2019 11:10:07 +0800
+Message-ID: <1555470607.16005.12.camel@mtksdaap41>
+References: <20190416145848.11932-1-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <d29bcf08-9299-8f2c-00bc-791b60658581@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190416145848.11932-1-frank-w@public-files.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, chunhui dai <chunhui.dai@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 4/16/19 5:29 PM, Florian Fainelli wrote:
-> 
-> 
-> On 16/04/2019 13:05, Petr Štetiar wrote:
->> From: John Crispin <john@phrozen.org>
->>
->> Many embedded devices have information such as MAC addresses stored
->> inside MTD devices. This patch allows us to add a property inside a node
->> describing a network interface. The new property points at a MTD
->> partition with an offset where the MAC address can be found.
->>
->> This patch has originated in OpenWrt some time ago, so in order to
->> consider usefulness of this patch, here are some real-world numbers
->> which hopefully speak for themselves:
->>
->>   * mtd-mac-address                used 497 times in 357 device tree files
->>   * mtd-mac-address-increment      used  74 times in  58 device tree files
->>   * mtd-mac-address-increment-byte used   1 time  in   1 device tree file
->>
->> Signed-off-by: John Crispin <john@phrozen.org>
->> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->> [cleanup of the patch for upstream submission]
->> Signed-off-by: Petr Štetiar <ynezz@true.cz>
->> ---
-> 
-> [snip]
-> 
->> +static const void *of_get_mac_address_mtd(struct device_node *np)
->> +{
->> +#ifdef CONFIG_MTD
->> +    void *addr;
->> +    size_t retlen;
->> +    int size, ret;
->> +    u8 mac[ETH_ALEN];
->> +    phandle phandle;
->> +    const char *part;
->> +    const __be32 *list;
->> +    struct mtd_info *mtd;
->> +    struct property *prop;
->> +    u32 mac_inc = 0;
->> +    u32 inc_idx = ETH_ALEN-1;
->> +    struct device_node *mtd_np = NULL;
-> 
-> Reverse christmas tree would look a bit nicer here.
-
-Do we a variable declaration format preference for drivers/of/*?
-
--Frank
-
-
-> 
->> +
->> +    list = of_get_property(np, "mtd-mac-address", &size);
->> +    if (!list || (size != (2 * sizeof(*list))))
->> +        return NULL;
->> +
->> +    phandle = be32_to_cpup(list++);
->> +    if (phandle)
->> +        mtd_np = of_find_node_by_phandle(phandle);
->> +
->> +    if (!mtd_np)
->> +        return NULL;
->> +
->> +    part = of_get_property(mtd_np, "label", NULL);
->> +    if (!part)
->> +        part = mtd_np->name;
->> +
->> +    mtd = get_mtd_device_nm(part);
->> +    if (IS_ERR(mtd))
->> +        return NULL;
->> +
->> +    ret = mtd_read(mtd, be32_to_cpup(list), ETH_ALEN, &retlen, mac);
->> +    put_mtd_device(mtd);
->> +
->> +    of_property_read_u32(np, "mtd-mac-address-increment-byte", &inc_idx);
-> 
-> of_property_read_u8() would probably be good here since this can't be bigger than 5 anyway.
-> 
->> +    if (inc_idx > ETH_ALEN-1)
->> +        return NULL; >
->> +    if (!of_property_read_u32(np, "mtd-mac-address-increment", &mac_inc))
->> +        mac[inc_idx] += mac_inc;
-> 
-> If I use a number greater than and included 128; this will cause a roll over, should this be range checked? Similarly, using of_property_read_u8() might be a better fit?
-> 
-> Other than those, LGTM
+SGksIEZyYW5rOgoKT24gVHVlLCAyMDE5LTA0LTE2IGF0IDE2OjU4ICswMjAwLCBGcmFuayBXdW5k
+ZXJsaWNoIHdyb3RlOgo+IFRoaXMgUGF0Y2gtU2VyaWVzIGFkZHMgbWlzc2luZyBQYXRjaGVzL0J1
+Z2ZpeGVzIHRvIGdldCBoZG1pIHdvcmtpbmcgb24gQlBJLVIyCj4gCj4gZmlyc3QgMiBQYXRjaGVz
+IHdlcmUgYWxyZWFkeSBwb3N0ZWQsIGJ1dCBub3QgeWV0IG1lcmdlZCBpbnRvIG1haW5saW5lCj4g
+aSBmb3VuZCBubyBoaW50IHdoeQo+IC0gY29uZmlnIGNvbXBvbmVudCBvdXRwdXQgYnkgZGV2aWNl
+IG5vZGUgcG9ydAo+ICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDYwOTAw
+Ny8KPiAtIGFkZCBkaXNwbGF5IHN1YnN5c3RlbSByZWxhdGVkIGRldmljZSBub2RlcyAocmVzZW5k
+KQo+ICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDU4ODk1MS8KPiAKClRo
+ZXNlIHBhdGNoZXMgbmVlZCB0byBtb2RpZnkgYmluZGluZyBkb2N1bWVudCBhbmQgbmVlZCBsb25n
+IHRlcm0KZGlzY3Vzcy4gSSBoYXZlIGFuIGlkZWEgbm90IHRvIG1vZGlmeSBiaW5kaW5nIGRvY3Vt
+ZW50IHNvIHlvdSBjb3VsZCBiZQpxdWlja2VyIHRvIG1lcmdlIHRoZXNlIHBhdGNoZXMuIFRoZSBp
+ZGVhIGlzOgoKMS4gS2VlcCB0aGUgcGF0Y2ggJ2RybS9tZWRpYXRlazogZml4IHBvc3NpYmxlX2Ny
+dGNzJywgbGV0IERQSSBlbmNvZGVyCnN1cHBvcnQgYm90aCBjcnRjMCBhbmQgY3J0YzEuCjIuIEZv
+ciBlbmNvZGVyIGFuZCBjcnRjLCBpdCBjb3VsZCBmaW5kIGVhY2ggb3RoZXIgYnkgZW5jb2Rlci0+
+Y3J0YyBhbmQKY3J0Yy0+ZW5jb2Rlcl9tYXNrIHRvIGNvbmZpZ3VyZSBoYXJkd2FyZSBjb3JyZWN0
+bHkuCgpSZWdhcmRzLApDSwoKPiBCaWJieSBIc2llaCAoMSk6Cj4gICBkcm0vbWVkaWF0ZWs6IGNv
+bmZpZyBjb21wb25lbnQgb3V0cHV0IGJ5IGRldmljZSBub2RlIHBvcnQKPiAKPiBSeWRlciBMZWUg
+KDIpOgo+ICAgYXJtOiBkdHM6IG10NzYyMzogYWRkIGRpc3BsYXkgc3Vic3lzdGVtIHJlbGF0ZWQg
+ZGV2aWNlIG5vZGVzCj4gICBkcm0vbWVkaWF0ZWs6IGZpeCBwb3NzaWJsZV9jcnRjcwo+IAo+IGNo
+dW5odWkgZGFpICgxKToKPiAgIGRybS9tZWRpYXRlazogZml4IGJvb3QgdXAgZm9yIDcyMCBhbmQg
+NDgwIGJ1dCAxMDgwCj4gCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL210NzYyMy5kdHNpICAgICAgICAg
+ICAgICAgICB8IDE3NyArKysrKysrKysrKysrKysrKysKPiAgYXJjaC9hcm0vYm9vdC9kdHMvbXQ3
+NjIzbi1iYW5hbmFwaS1icGktcjIuZHRzIHwgIDg1ICsrKysrKysrKwo+ICBhcmNoL2FybS9ib290
+L2R0cy9tdDc2MjNuLXJmYi1lbW1jLmR0cyAgICAgICAgfCAgODUgKysrKysrKysrCj4gIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMgICAgICAgICAgICB8ICAgMiArLQo+ICBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgfCAgNDEgKysrLQo+ICBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgICAgfCAgIDQgKy0KPiAg
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX3BoeS5jICAgICAgIHwgICAzICsKPiAg
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX3BoeS5oICAgICAgIHwgICAxICsKPiAg
+Li4uL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX210MjcwMV9oZG1pX3BoeS5jICAgIHwgICAxICsKPiAg
+OSBmaWxlcyBjaGFuZ2VkLCAzOTAgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKPiAKPiAt
+LQo+IDIuMTcuMQo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbA==
