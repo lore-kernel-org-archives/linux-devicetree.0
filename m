@@ -1,69 +1,64 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Convert Allwinner SPDIF binding
- to YAML
-Date: Wed, 17 Apr 2019 11:04:22 -0500
-Message-ID: <CAL_Jsq+3rJqFjz-n3b3OUXRewpEh2-uFFDExnhEvPH0-t-gFJQ@mail.gmail.com>
-References: <4060ec46117ccf3cd643b8f1b9759ed44d38c5e7.1555330005.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqLuMObaNzrRMGDi-m=0B8AA7CYqJkrvD_K3cTmH7rdE4Q@mail.gmail.com>
- <20190417064338.wuzjkixbg7noolwx@flea>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH] of_net: add mtd-mac-address support to
+ of_get_mac_address()
+Date: Wed, 17 Apr 2019 18:06:00 +0200
+Message-ID: <20190417160600.GD79403@meh.true.cz>
+References: <1555445100-30936-1-git-send-email-ynezz@true.cz>
+ <20190417080614.edt25ynuvae5fn64@flea>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190417064338.wuzjkixbg7noolwx@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190417080614.edt25ynuvae5fn64@flea>
+Sender: netdev-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 1:43 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Rob,
->
-> On Tue, Apr 16, 2019 at 04:36:18PM -0500, Rob Herring wrote:
-> > On Mon, Apr 15, 2019 at 7:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > The Allwinner SoCs feature an SPDIF controller across multiple SoC
-> > > generations.
-> > >
-> > > However, earlier generations were a bit simpler than the subsequent ones,
-> > > and for example would always have RX and TX capabilities, and no reset
-> > > lines.
-> > >
-> > > In order to express this, let's create two YAML schemas instead of the free
-> > > form text we had before.
-> >
-> > The only difference is 'reset' is required in one? Perhaps better to
-> > just not make 'reset' required til we figure out how to handle a
-> > conditional like this. Seems like we discussed this and I probably
-> > said to split things?
->
-> We indeed discussed this, and this was one of the solutions to support
-> this. I wanted to get the discussion started as of how exactly we want
-> to support this kind of construct.
->
-> I looked it up a bit, and it looks like json schema 7 introduces
-> conditionals that would allow us to deal with this nicely.
->
-> https://json-schema.org/understanding-json-schema/reference/conditionals.html
->
-> Is that something we can switch to while we have not a lot of schemas,
-> or would that require some significant work?
+Maxime Ripard <maxime.ripard@bootlin.com> [2019-04-17 10:06:14]:
 
-We need check if the json-schema library supports this yet. I think it
-should as there was an issue for it which is closed now.
+> NVMEM is supported by of_net already
 
-We'll then need to update the meta-schema and maybe the schema fixups
-to handle this case. We should have a test case in the library too.
-Test cases are important given that if you get schemas wrong, the
-result is silence.
+Well, not anymore:
 
-Rob
+ commit afa64a72b862a7a9d04f8d07fba632eaf06b23f8
+ Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+ Date:   Fri Nov 30 09:20:59 2018 +0100
+
+    of: net: kill of_get_nvmem_mac_address()
+
+Now, I'm really confused.
+
+Documentation/devicetree/bindings/net/ethernet.txt states following:
+
+ - nvmem-cells: phandle, reference to an nvmem node for the MAC address;
+ - nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
+
+which is actually misleading and confusing. There are only two ethernet
+drivers in the tree cadence and davinci which support this properties. Well
+there's nixge, but this one is special, because it has renamed `mac-address`
+to `address` with it's own implementation in `nixge_get_nvmem_address`.
+
+All other ethernet drivers (and few others) simply use `of_get_mac_address`
+which doesn't support NVMEM and the documented nvmem-cells* properties.
+
+> so it doesn't look really necessary to create additional properties that
+> cover the same use case.
+
+NVMEM could be reused for this purpose and it seems like a way to go, probably
+if we could wire `nvmem_get_mac_address` into `of_get_mac_address` and find a
+way how to handle the remaining use cases currently not handled in NVMEM:
+
+ * MAC address (octet/byte) incrementation (already handled by the proposed patch)
+ * MAC address stored as ascii/text (0090FEC9CBE4 and 00:90:FE:C9:CB:E4
+   formats) which is currently missing but would be nice to have
+
+I can prepare patches for that, just don't want to waste more time then really
+necessary, so it would really help me if someone could tell me how this should
+be implemented in NVMEM and I'll simply do it in this acceptable way and call
+it a day.
+
+Thanks!
+
+-- ynezz
