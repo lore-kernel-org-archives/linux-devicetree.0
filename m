@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/8] dt-bindings: gpu: mali-midgard: Add bus
- clock bindings
-Date: Wed, 17 Apr 2019 19:30:25 +0200
-Message-ID: <20190417173031.9920-3-peron.clem@gmail.com>
+Subject: [PATCH v3 7/8] arm64: dts: allwinner: Add mali GPU
+ supply for OrangePi Boards
+Date: Wed, 17 Apr 2019 19:30:30 +0200
+Message-ID: <20190417173031.9920-8-peron.clem@gmail.com>
 References: <20190417173031.9920-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBLWF3XSQKGQE7G3GEMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBNWF3XSQKGQET7ETNDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190417173031.9920-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,39 +18,34 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Enable and add supply to the Mali GPU node on the
+Orange Pi One Plus and Lite2 boards.
 
-Some SoCs adds a bus clock gate to the Mali Midgard GPU.
-
-Add the binding for the bus clock.
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
-ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 1b1a74129141..2e8bbce35695 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -31,6 +31,12 @@ Optional properties:
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/a=
+rm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+index 62e27948a3fa..bd13297555ab 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+@@ -55,6 +55,11 @@
+ 	status =3D "okay";
+ };
 =20
- - clocks : Phandle to clock for the Mali Midgard device.
-=20
-+- clock-names : Specify the names of the clocks specified in clocks
-+  when multiple clocks are present.
-+    * core: clock driving the GPU itself (When only one clock is present,
-+      assume it's this clock.)
-+    * bus: bus clock for the GPU
++&gpu {
++	mali-supply =3D <&reg_dcdcc>;
++	status =3D "okay";
++};
 +
- - mali-supply : Phandle to regulator for the Mali device. Refer to
-   Documentation/devicetree/bindings/regulator/regulator.txt for details.
-=20
+ &mmc0 {
+ 	vmmc-supply =3D <&reg_cldo1>;
+ 	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
 --=20
 2.17.1
 
