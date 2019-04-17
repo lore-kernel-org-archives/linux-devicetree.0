@@ -1,86 +1,73 @@
-Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/6] arm64: dts: r8a774a1: Add VSP instances
-Date: Tue, 16 Apr 2019 16:31:52 +0100
-Message-Id: <1555428717-18376-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
-References: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=4paN=ST=nxp.com=ping.bai@kernel.org>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Date: Wed, 17 Apr 2019 12:39:00 +0000
+Message-ID: 
+ <VI1PR0402MB35198630CEDCBFCAF4C395E987250@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Lucas Stach <l.stach@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Cc: "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The r8a774a1 soc has 5 VSP instances similar to r8a7796.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 55 +++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index de282c4..f71bd22 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -1877,6 +1877,61 @@
- 			iommus = <&ipmmu_vc0 19>;
- 		};
- 
-+		vspb: vsp@fe960000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe960000 0 0x8000>;
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 626>;
-+			power-domains = <&sysc R8A774A1_PD_A3VC>;
-+			resets = <&cpg 626>;
-+
-+			renesas,fcp = <&fcpvb0>;
-+		};
-+
-+		vspd0: vsp@fea20000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea20000 0 0x5000>;
-+			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 623>;
-+			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
-+			resets = <&cpg 623>;
-+
-+			renesas,fcp = <&fcpvd0>;
-+		};
-+
-+		vspd1: vsp@fea28000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea28000 0 0x5000>;
-+			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 622>;
-+			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
-+			resets = <&cpg 622>;
-+
-+			renesas,fcp = <&fcpvd1>;
-+		};
-+
-+		vspd2: vsp@fea30000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea30000 0 0x5000>;
-+			interrupts = <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 621>;
-+			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
-+			resets = <&cpg 621>;
-+
-+			renesas,fcp = <&fcpvd2>;
-+		};
-+
-+		vspi0: vsp@fe9a0000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe9a0000 0 0x8000>;
-+			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 631>;
-+			power-domains = <&sysc R8A774A1_PD_A3VC>;
-+			resets = <&cpg 631>;
-+
-+			renesas,fcp = <&fcpvi0>;
-+		};
-+
- 		csi20: csi2@fea80000 {
- 			compatible = "renesas,r8a774a1-csi2";
- 			reg = <0 0xfea80000 0 0x10000>;
--- 
-2.7.4
+PiA+ID4gRnJvbTogSmFja3kgQmFpDQo+ID4gPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE3LCAy
+MDE5IDE6MjcgUE0NCj4gPiA+DQo+ID4gPiBUaGUgaS5NWDhNIGZhbWlseSBpcyBhIHNldCBvZiBO
+WFAgcHJvZHVjdCBmb2N1cyBvbiBkZWxpdmVyaW5nIHRoZQ0KPiA+ID4gbGF0ZXN0IGFuZCBncmVh
+dGVzdCB2aWRlbyBhbmQgYXVkaW8gZXhwZXJpZW5jZSBjb21iaW5pbmcNCj4gPiA+IHN0YXRlLW9m
+LXRoZS1hcnQgbWVkaWEtc3BlY2lmaWMgZmVhdHVyZXMgd2l0aCBoaWdoLXBlcmZvcm1hbmNlDQo+
+ID4gPiBwcm9jZXNzaW5nIHdoaWxlIG9wdGltaXplZCBmb3IgbG93ZXN0IHBvd2VyIGNvbnN1bXB0
+aW9uLg0KPiA+ID4gaS5NWDhNUSwgaS5NWDhNTSwgaS5NWDhNTiwgZXZlbiB0aGUgZnVydHVyZSBp
+Lk1YOE1QIGFyZSBhbGwgYmVsb25nDQo+ID4gPiB0byB0aGlzIGZhbWlseS4NCj4gPiA+DQo+ID4g
+PiBUaGUgR1BDIG1vZHVsZSBpcyB1c2VkIHRvIG1hbmFnZSB0aGUgUFUgcG93ZXIgZG9tYWlucycg
+cG93ZXIgb24vb2ZmLg0KPiA+ID4gRm9yIHRoZSB3aG9sZSBpLk1YOE0gZmFtaWx5LCBkaWZmZXJl
+bnQgU29DIGhhcyBkaWZmZXJudCBwb3dlciBkb21haW4NCj4gPiA+IGRlc2lnbi4gdGhlIHBvd2Vy
+IHVwIHNlcXVlbmNlIGhhcyBzaWduaWZpY2FudCBkaWZmZXJlbmNlLg0KPiA+ID4gYWxsIHRoZSBw
+b3dlciBzZXF1ZW5jZSBtdXN0IGJlIGd1YXJhbnRlZWQgYnkgU1cuIFNvbWUgZG9tYWlucycgcG93
+ZXINCj4gPiA+IHVwIHNlcXVlbmNlIG5lZWQgdG8gYWNjZXNzIHRoZSBTUkMgbW9kdWxlIG9yIHN1
+Yi1zeXN0ZW0gc3BlY2lmaWMgR1BSLg0KPiA+ID4gdGhlIFNSQyByZWdpc3RlciAmIFNTJ3MgcmVn
+aXN0ZXIgYXJlIG5vdCBpbiBpbiB0aGUgR1BDJ3MgbWVtb3J5IHJhbmdlLg0KPiA+ID4NCj4gPiA+
+IGl0IG1ha2VzIHVzIGhhcmQgdG8gdXNlIHRoZSBHUEN2MiBkcml2ZXIgdG8gY292ZXIgYWxsIHRo
+ZSBkaWZmZXJlbnQNCj4gPiA+IHBvd2VyIHVwIHJlcXVpcmVtZW50LiBFYWNoIHRpbWUsIGEgbmV3
+IFNvQyBpcyBhZGRlZCwgd2UgbXVzdCBtb2RpZnkNCj4gPiA+IHRoZSBHUEN2MiBkcml2ZXIgdG8g
+bWFrZSBpdCByZXN1YWJsZSBmb3IgaXQuIGEgbG90IG9mIGNvZGUgbmVlZCB0byBiZSBhZGRlZA0K
+PiBpbiBHUEN2MiB0byBzdXBwb3J0IGl0Lg0KPiA+ID4gd2UgbmVlZCB0byBhY2Nlc3MgdGhlIFNS
+QyAmIFNTJyBHUFIsIHRoZW4gdGhlIEdQQ3YyIGRyaXZlciBjYW4gTk9UDQo+ID4gPiBiZSBzZWxm
+LWNvbnRhaW5lZC4gQWNjZXNzaW5nIHRoZSBub24tZHJpdmVyIHNwZWNpZmljIG1vZHVsZSdzDQo+
+ID4gPiByZWdpc3RlciBpcyBhIGJhZCBwcmFjdGljZS4gQWx0aG91Z2gsIHRoZSBHUEMgbW9kdWxl
+IHByb3ZpZGVkIHRoZQ0KPiA+ID4gc2ltaWxhciBmdW5jdGlvbiBmb3IgUFUgcG93ZXIgZG9tYWlu
+LCBidXQgaXQgaXMgbm90IDEwMCUgY29tcGF0aWJsZSB3aXRoDQo+IEdQQ3YyLg0KPiA+ID4NCj4g
+PiA+IFRoZSBtb3N0IGltcG9ydGFudCB0aGluZyBpcyB0aGF0IHRoZSBHUEMgJiBTUkMgbW9kdWxl
+IGlzIGEgc2VjdXJpdHkNCj4gPiA+IGNyaXRpY2FsIHJlc291cmNlIHRoYXQgc2VjdXJpdHkgcGVy
+bWlzc2lvbiBtdXN0IGJlIGNvbnNpZGVyZWQgd2hlbg0KPiA+ID4gYnVpbGRpbmcgdGhlIHNlY3Vy
+aXR5IHN5c3RlbS4gVGhlIEdQQyBtb2R1bGUgaXMgbm90IG9ubHkgdXNlZCBieSBQVQ0KPiA+ID4g
+cG93ZXIgZG9tYWluIHBvd2VyIG9uL29mZi4gSXQgaXMgYWxzbyB1c2VkIGJ5IHRoZSBURi1BIFBT
+Q0kgY29kZSB0bw0KPiA+ID4gZG8gdGhlIENQVSBjb3JlIHBvd2VyIG1hbmFnZW1lbnQuIHRoZSBT
+UkMgbW9kdWxlIGNvbnRyb2wgdGhlIENQVQ0KPiA+ID4gQ09SRSByZXNldCBhbmQgdGhlIENQVSBy
+ZXNldCB2ZWN0b3IgYWRkcmVzcy4gaWYgd2UgZ2l2ZSB0aGUgbm9uLXNlY3VyZQ0KPiB3b3JsZCB3
+cml0ZSBwZXJtaXNzaW9uIHRvIFNSQy4NCj4gPiA+IFN5c3RlbSBjYW4gYmUgZWFzaWx5IGluZHVj
+ZWQgdG8gbWFsaWNpb3VzIGNvZGUuDQo+ID4gPg0KPiA+DQo+ID4gQ29uc2lkZXJpbmcgdGhlIHNl
+Y3VyaXR5IGlzc3VlLCBpdCBsb29rcyB0byBtZSBhIHJpZ2h0IGRpcmVjdGlvbiB0bw0KPiA+IG1v
+dmUgR1BDIHBvd2VyIGhhbmRsaW5nIGludG8gQVRGLg0KPiA+IEl0IGFsc28gaGVscHMgYnVpbGQg
+YSBtb3JlIGdlbmVyaWMgZHJpdmVyIGFuZCBlYXNlIG90aGVyIE9TDQo+ID4gaW50ZWdyYXRpb24g
+bmVlZGVkIGJ5IGN1c3RvbWVycyAoZS5nLiBRTlgsIFdpbjEwKS4NCj4gPg0KPiA+IEx1Y2FzLA0K
+PiA+IEhvdyBkbyB5b3UgdGhpbmsgb2YgaXQ/DQo+IA0KPiBJIGRvbid0IHlldCBidXkgdGhlIHNl
+Y3VyaXR5IGFyZ3VtZW50LiBUaGVyZSBhcmUgbWFueSBtb3JlIHNoYXJlZCBwYXJ0cyBvbg0KPiB0
+aGUgU29DLCBsaWtlIHRoZSBjbG9jayBjb250cm9sbGVyLCB0aGF0IHdvdWxkIG5lZWQgdG8gYmUg
+dGFrZW4gYXdheSBmcm9tIHRoZQ0KPiBub24tc2VjdXJlIHdvcmxkIGlmIG9uZSB3b3VsZCB3YW50
+IHRvIHJ1biBhbiB1bnRydXN0ZWQgT1Mga2VybmVsIG9uIGENCj4gaS5NWDhNIHN5c3RlbS4NCj4g
+DQo+IFRvIHByb3Blcmx5IGltcGxlbWVudCBzZWN1cml0eSBvbiBhbnkgaS5NWDhNIGJhc2VkIHN5
+c3RlbSB0aGUgZmlybXdhcmUNCj4gd291bGQgbmVlZCB0byBncm93IHNvbWV0aGluZyBsaWtlIGEg
+ZnVsbCBBUk0gU0NQSSBpbXBsZW1lbnRhdGlvbiwgc28gYWxsDQo+IHNoYXJlZCBjcml0aWNhbCBw
+ZXJpcGhlcmFscyBhcmUgc29sZWx5IHVuZGVyIGZpcm13YXJlIGNvbnRyb2wuDQo+IA0KPiBJIGFn
+cmVlIHRoYXQgaXQgbWlnaHQgbWFrZSBzZW5zZSB0byBtb3ZlIHNvbWUgcGFydHMgaW50byB0aGUg
+ZmlybXdhcmUgYW5kDQo+IGhhdmUgbXVjaCBzaW1wbGVyIE9TIGxldmVsIGRyaXZlcnMsIGJ1dCBJ
+IGRvbid0IGFncmVlIG9uIHRoZSBpbXBsZW1lbnRhdGlvbg0KPiBkaXJlY3Rpb24gdGFrZW4gaGVy
+ZS4gR3Jvd2luZyBjdXN0b20gUFNDSSBleHRlbnNpb24gaW50ZXJmYWNlcyB3aWxsIG9ubHkgZ2V0
+DQo+IHVzIHNvIGZhciwgd2l0aG91dCBzb2x2aW5nIHRoZSBzeXN0ZW0gc2VjdXJpdHkgaXNzdWUg
+aW4gYSBob2xpc3RpYyB3YXkuIEl0IGlzIG15DQo+IHN0cm9uZyBiZWxpZXZlIHRoYXQgb25seSBh
+IGNvbXBsZXRlIHJlYXJjaGl0ZWN0dXJlIG9mIHRoZSBPUyBzdXBwb3J0IG9uIHRvcCBvZg0KPiBh
+IEFSTSBTQ1BJIGZpcm13YXJlIGludGVyZmFjZSBjYW4gc29sdmUgdGhpcyBwcm9wZXJseS4NCj4g
+DQoNCk5vIHBsYW4gdG8gaW1wbGVtZW50IFNDUEkgbGlrZSBmaXJtd2FyZSBvbiBpLk1YOE0uIGku
+TVg4TSBkb24ndA0KDQpCUg0KSmFja3kgQmFpDQoNCj4gUmVnYXJkcywNCj4gTHVjYXMNCg==
