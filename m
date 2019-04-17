@@ -1,70 +1,51 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/8] dt-bindings: gpu: mali-midgard: Add h6
- mali gpu compatible
-Date: Wed, 17 Apr 2019 19:30:26 +0200
-Message-ID: <20190417173031.9920-4-peron.clem@gmail.com>
-References: <20190417173031.9920-1-peron.clem@gmail.com>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 0/8] Allwinner H6 Mali GPU support
+Date: Wed, 17 Apr 2019 19:30:23 +0200
+Message-ID: <20190417173031.9920-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBMGF3XSQKGQE7OX4USQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190417173031.9920-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This add the H6 mali compatible in the dt-bindings to later support
-specific implementation.
-
-Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
-ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 2e8bbce35695..4bf17e1cf555 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -15,6 +15,7 @@ Required properties:
-     + "arm,mali-t860"
-     + "arm,mali-t880"
-   * which must be preceded by one of the following vendor specifics:
-+    + "allwinner,sun50i-h6-mali"
-     + "amlogic,meson-gxm-mali"
-     + "rockchip,rk3288-mali"
-     + "rockchip,rk3399-mali"
-@@ -49,9 +50,15 @@ Vendor-specific bindings
- ------------------------
-=20
- The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
-+another. In order to accommodate those differences, you have the option
- to specify one more vendor-specific compatible, among:
-=20
-+- "allwinner,sun50i-h6-mali"
-+  Required properties:
-+  - clocks : phandles to core and bus clocks
-+  - clock-names : must contain "core" and "bus"
-+  - resets: phandle to GPU reset line
-+
- - "amlogic,meson-gxm-mali"
-   Required properties:
-   - resets : Should contain phandles of :
---=20
-2.17.1
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGksCgpUaGUgQWxsd2lubmVyIEg2IGhhcyBhIE1hbGktVDcyMCBNUDIuIFRoZSBkcml2ZXJzIGFy
+ZQpvdXQtb2YtdHJlZSBzbyB0aGlzIHNlcmllcyBvbmx5IGludHJvZHVjZSB0aGUgZHQtYmluZGlu
+Z3MuCgpUaGUgZmlyc3QgcGF0Y2ggaXMgZnJvbSBOZWlsIEFtc3Ryb25nIGFuZCBoYXMgYmVlbiBh
+bHJlYWR5Cm1lcmdlZCBpbiBsaW51eC1hbWxvZ2ljLiBJdCBpcyByZXF1aXJlZCBmb3IgdGhpcyBz
+ZXJpZXMuCgpUaGUgc2Vjb25kIHBhdGNoIGlzIGZyb20gSWNlbm93eSBaaGVuZyB3aGVyZSBJIGNo
+YW5nZWQgdGhlCm9yZGVyIGhhcyByZXF1aXJlZCBieSBSb2IgSGVycmluZy4KU2VlOiBodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNjk5ODI5LwoKVGhhbmtzLApDbGVtZW50CgpD
+aGFuZ2VzIGluIHYzIChUaGFua3MgdG8gTWF4aW1lIFJpcGFyZCk6CiAtIFJlYXV0aG9yIEljZW5v
+d3kgZm9yIGhlciBwYXRoCgpDaGFuZ2VzIGluIHYyIChUaGFua3MgdG8gTWF4aW1lIFJpcGFyZCk6
+CiAtIERyb3AgR1BVIE9QUCBUYWJsZQogLSBBZGQgY2xvY2tzIGFuZCBjbG9jay1uYW1lcyBpbiBy
+ZXF1aXJlZAoKQ2zDqW1lbnQgUMOpcm9uICg2KToKICBkdC1iaW5kaW5nczogZ3B1OiBtYWxpLW1p
+ZGdhcmQ6IEFkZCBoNiBtYWxpIGdwdSBjb21wYXRpYmxlCiAgYXJtNjQ6IGR0czogYWxsd2lubmVy
+OiBBZGQgQVJNIE1hbGkgR1BVIG5vZGUgZm9yIEg2CiAgYXJtNjQ6IGR0czogYWxsd2lubmVyOiBB
+ZGQgbWFsaSBHUFUgc3VwcGx5IGZvciBQaW5lIEg2NAogIGFybTY0OiBkdHM6IGFsbHdpbm5lcjog
+QWRkIG1hbGkgR1BVIHN1cHBseSBmb3IgQmVlbGluayBHUzEKICBhcm02NDogZHRzOiBhbGx3aW5u
+ZXI6IEFkZCBtYWxpIEdQVSBzdXBwbHkgZm9yIE9yYW5nZVBpIEJvYXJkcwogIGFybTY0OiBkdHM6
+IGFsbHdpbm5lcjogQWRkIG1hbGkgR1BVIHN1cHBseSBmb3IgT3JhbmdlUGkgMwoKSWNlbm93eSBa
+aGVuZyAoMSk6CiAgZHQtYmluZGluZ3M6IGdwdTogbWFsaS1taWRnYXJkOiBBZGQgYnVzIGNsb2Nr
+IGJpbmRpbmdzCgpOZWlsIEFybXN0cm9uZyAoMSk6CiAgZHQtYmluZGluZ3M6IGdwdTogbWFsaS1t
+aWRnYXJkOiBBZGQgcmVzZXRzIHByb3BlcnR5CgogLi4uL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1t
+aWRnYXJkLnR4dCAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKwogLi4uL2R0cy9hbGx3
+aW5uZXIvc3VuNTBpLWg2LWJlZWxpbmstZ3MxLmR0cyAgIHwgIDUgKysrKwogLi4uL2R0cy9hbGx3
+aW5uZXIvc3VuNTBpLWg2LW9yYW5nZXBpLTMuZHRzICAgIHwgIDUgKysrKwogLi4uL2R0cy9hbGx3
+aW5uZXIvc3VuNTBpLWg2LW9yYW5nZXBpLmR0c2kgICAgIHwgIDUgKysrKwogLi4uL2Jvb3QvZHRz
+L2FsbHdpbm5lci9zdW41MGktaDYtcGluZS1oNjQuZHRzIHwgIDUgKysrKwogYXJjaC9hcm02NC9i
+b290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWg2LmR0c2kgIHwgMTQgKysrKysrKysrKwogNiBmaWxl
+cyBjaGFuZ2VkLCA2MSBpbnNlcnRpb25zKCspCgotLSAKMi4xNy4xCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
