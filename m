@@ -1,15 +1,16 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 12:40:19 +0000
-Message-ID: <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+Date: Wed, 17 Apr 2019 14:54:15 +0200
+Message-ID: <1555505655.2317.21.camel@pengutronix.de>
 References: <20190417053211.2195-1-ping.bai@nxp.com>
  <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
  <1555503195.2317.19.camel@pengutronix.de>
+ <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
+In-Reply-To: <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,82 +20,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment_Faure?= <clement.faure@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Silvano Di Ninno <silvano.dininno@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, =?ISO-8859-1?Q?Cl=E9ment?= Faure <clement.faure@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Silvano Di Ninno <silvano.dininno@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/17/2019 3:13 PM, Lucas Stach wrote:
-> Am Mittwoch, den 17.04.2019, 11:16 +0000 schrieb Aisheng Dong:
->>> From: Jacky Bai
->>> Sent: Wednesday, April 17, 2019 1:27 PM
->>>
->>> The i.MX8M family is a set of NXP product focus on delivering the latest and
->>> greatest video and audio experience combining state-of-the-art media-specific
->>> features with high-performance processing while optimized for lowest power
->>> consumption.
->>> i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all belong to
->>> this family.
->>>
->>> The GPC module is used to manage the PU power domains' power on/off. For
->>> the whole i.MX8M family, different SoC has differnt power domain design. the
->>> power up sequence has significant difference.
->>> all the power sequence must be guaranteed by SW. Some domains' power up
->>> sequence need to access the SRC module or sub-system specific GPR.
->>> the SRC register & SS's register are not in in the GPC's memory range.
->>>
->>> it makes us hard to use the GPCv2 driver to cover all the different power up
->>> requirement. Each time, a new SoC is added, we must modify the GPCv2 driver
->>> to make it resuable for it. a lot of code need to be added in GPCv2 to support it.
->>> we need to access the SRC & SS' GPR, then the GPCv2 driver can NOT be
->>> self-contained. Accessing the non-driver specific module's register is a bad
->>> practice. Although, the GPC module provided the similar function for PU power
->>> domain, but it is not 100% compatible with GPCv2.
->>>
->>> The most important thing is that the GPC & SRC module is a security critical
->>> resource that security permission must be considered when building the
->>> security system. The GPC module is not only used by PU power domain power
->>> on/off. It is also used by the TF-A PSCI code to do the CPU core power
->>> management. the SRC module control the CPU CORE reset and the CPU reset
->>> vector address. if we give the non-secure world write permission to SRC.
->>> System can be easily induced to malicious code.
->>
->> Considering the security issue, it looks to me a right direction to move GPC
->> power handling into ATF.
->> It also helps build a more generic driver and ease other OS integration
->> needed by customers (e.g. QNX, Win10).
->>
->> Lucas,
->> How do you think of it?
-> 
-> I don't yet buy the security argument. There are many more shared parts
-> on the SoC, like the clock controller, that would need to be taken away
-> from the non-secure world if one would want to run an untrusted OS
-> kernel on a i.MX8M system.
-> 
-> To properly implement security on any i.MX8M based system the firmware
-> would need to grow something like a full ARM SCPI implementation, so
-> all shared critical peripherals are solely under firmware control.
-
-It might be possible to rework this to use some form of SCMI-over-SMC 
-instead of vendor-specific SMCCC SIP calls
-
-+SCMI maintainer
-
-> I agree that it might make sense to move some parts into the firmware
-> and have much simpler OS level drivers, but I don't agree on the
-> implementation direction taken here. Growing custom PSCI extension
-> interfaces will only get us so far, without solving the system security
-> issue in a holistic way. It is my strong believe that only a complete
-> rearchitecture of the OS support on top of a ARM SCPI firmware
-> interface can solve this properly.
-Hiding everything critical for security (especially CCM) behind a SCMI 
-interface would be a large amount of work but introducing SCMI 
-incrementally (starting with imx8mm power) would be useful by itself 
-because it simplifies OS implementation.
-
-Many at NXP have attempted to evaluate SCMI and their conclusion has 
-always been that "many extensions are required".
-
---
-Regards,
-Leonard
+QW0gTWl0dHdvY2gsIGRlbiAxNy4wNC4yMDE5LCAxMjo0MCArMDAwMCBzY2hyaWViIExlb25hcmQg
+Q3Jlc3RlejoKPiBPbiA0LzE3LzIwMTkgMzoxMyBQTSwgTHVjYXMgU3RhY2ggd3JvdGU6Cj4gPiBB
+bSBNaXR0d29jaCwgZGVuIDE3LjA0LjIwMTksIDExOjE2ICswMDAwIHNjaHJpZWIgQWlzaGVuZyBE
+b25nOgo+ID4gPiA+IEZyb206IEphY2t5IEJhaQo+ID4gPiA+IFNlbnQ6IFdlZG5lc2RheSwgQXBy
+aWwgMTcsIDIwMTkgMToyNyBQTQo+ID4gPiA+IAo+ID4gPiA+IFRoZSBpLk1YOE0gZmFtaWx5IGlz
+IGEgc2V0IG9mIE5YUCBwcm9kdWN0IGZvY3VzIG9uIGRlbGl2ZXJpbmcgdGhlIGxhdGVzdCBhbmQK
+PiA+ID4gPiBncmVhdGVzdCB2aWRlbyBhbmQgYXVkaW8gZXhwZXJpZW5jZSBjb21iaW5pbmcgc3Rh
+dGUtb2YtdGhlLWFydCBtZWRpYS1zcGVjaWZpYwo+ID4gPiA+IGZlYXR1cmVzIHdpdGggaGlnaC1w
+ZXJmb3JtYW5jZSBwcm9jZXNzaW5nIHdoaWxlIG9wdGltaXplZCBmb3IgbG93ZXN0IHBvd2VyCj4g
+PiA+ID4gY29uc3VtcHRpb24uCj4gPiA+ID4gaS5NWDhNUSwgaS5NWDhNTSwgaS5NWDhNTiwgZXZl
+biB0aGUgZnVydHVyZSBpLk1YOE1QIGFyZSBhbGwgYmVsb25nIHRvCj4gPiA+ID4gdGhpcyBmYW1p
+bHkuCj4gPiA+ID4gCj4gPiA+ID4gVGhlIEdQQyBtb2R1bGUgaXMgdXNlZCB0byBtYW5hZ2UgdGhl
+IFBVIHBvd2VyIGRvbWFpbnMnIHBvd2VyIG9uL29mZi4gRm9yCj4gPiA+ID4gdGhlIHdob2xlIGku
+TVg4TSBmYW1pbHksIGRpZmZlcmVudCBTb0MgaGFzIGRpZmZlcm50IHBvd2VyIGRvbWFpbiBkZXNp
+Z24uIHRoZQo+ID4gPiA+IHBvd2VyIHVwIHNlcXVlbmNlIGhhcyBzaWduaWZpY2FudCBkaWZmZXJl
+bmNlLgo+ID4gPiA+IGFsbCB0aGUgcG93ZXIgc2VxdWVuY2UgbXVzdCBiZSBndWFyYW50ZWVkIGJ5
+IFNXLiBTb21lIGRvbWFpbnMnIHBvd2VyIHVwCj4gPiA+ID4gc2VxdWVuY2UgbmVlZCB0byBhY2Nl
+c3MgdGhlIFNSQyBtb2R1bGUgb3Igc3ViLXN5c3RlbSBzcGVjaWZpYyBHUFIuCj4gPiA+ID4gdGhl
+IFNSQyByZWdpc3RlciAmIFNTJ3MgcmVnaXN0ZXIgYXJlIG5vdCBpbiBpbiB0aGUgR1BDJ3MgbWVt
+b3J5IHJhbmdlLgo+ID4gPiA+IAo+ID4gPiA+IGl0IG1ha2VzIHVzIGhhcmQgdG8gdXNlIHRoZSBH
+UEN2MiBkcml2ZXIgdG8gY292ZXIgYWxsIHRoZSBkaWZmZXJlbnQgcG93ZXIgdXAKPiA+ID4gPiBy
+ZXF1aXJlbWVudC4gRWFjaCB0aW1lLCBhIG5ldyBTb0MgaXMgYWRkZWQsIHdlIG11c3QgbW9kaWZ5
+IHRoZSBHUEN2MiBkcml2ZXIKPiA+ID4gPiB0byBtYWtlIGl0IHJlc3VhYmxlIGZvciBpdC4gYSBs
+b3Qgb2YgY29kZSBuZWVkIHRvIGJlIGFkZGVkIGluIEdQQ3YyIHRvIHN1cHBvcnQgaXQuCj4gPiA+
+ID4gd2UgbmVlZCB0byBhY2Nlc3MgdGhlIFNSQyAmIFNTJyBHUFIsIHRoZW4gdGhlIEdQQ3YyIGRy
+aXZlciBjYW4gTk9UIGJlCj4gPiA+ID4gc2VsZi1jb250YWluZWQuIEFjY2Vzc2luZyB0aGUgbm9u
+LWRyaXZlciBzcGVjaWZpYyBtb2R1bGUncyByZWdpc3RlciBpcyBhIGJhZAo+ID4gPiA+IHByYWN0
+aWNlLiBBbHRob3VnaCwgdGhlIEdQQyBtb2R1bGUgcHJvdmlkZWQgdGhlIHNpbWlsYXIgZnVuY3Rp
+b24gZm9yIFBVIHBvd2VyCj4gPiA+ID4gZG9tYWluLCBidXQgaXQgaXMgbm90IDEwMCUgY29tcGF0
+aWJsZSB3aXRoIEdQQ3YyLgo+ID4gPiA+IAo+ID4gPiA+IFRoZSBtb3N0IGltcG9ydGFudCB0aGlu
+ZyBpcyB0aGF0IHRoZSBHUEMgJiBTUkMgbW9kdWxlIGlzIGEgc2VjdXJpdHkgY3JpdGljYWwKPiA+
+ID4gPiByZXNvdXJjZSB0aGF0IHNlY3VyaXR5IHBlcm1pc3Npb24gbXVzdCBiZSBjb25zaWRlcmVk
+IHdoZW4gYnVpbGRpbmcgdGhlCj4gPiA+ID4gc2VjdXJpdHkgc3lzdGVtLiBUaGUgR1BDIG1vZHVs
+ZSBpcyBub3Qgb25seSB1c2VkIGJ5IFBVIHBvd2VyIGRvbWFpbiBwb3dlcgo+ID4gPiA+IG9uL29m
+Zi4gSXQgaXMgYWxzbyB1c2VkIGJ5IHRoZSBURi1BIFBTQ0kgY29kZSB0byBkbyB0aGUgQ1BVIGNv
+cmUgcG93ZXIKPiA+ID4gPiBtYW5hZ2VtZW50LiB0aGUgU1JDIG1vZHVsZSBjb250cm9sIHRoZSBD
+UFUgQ09SRSByZXNldCBhbmQgdGhlIENQVSByZXNldAo+ID4gPiA+IHZlY3RvciBhZGRyZXNzLiBp
+ZiB3ZSBnaXZlIHRoZSBub24tc2VjdXJlIHdvcmxkIHdyaXRlIHBlcm1pc3Npb24gdG8gU1JDLgo+
+ID4gPiA+IFN5c3RlbSBjYW4gYmUgZWFzaWx5IGluZHVjZWQgdG8gbWFsaWNpb3VzIGNvZGUuCj4g
+PiA+IAo+ID4gPiBDb25zaWRlcmluZyB0aGUgc2VjdXJpdHkgaXNzdWUsIGl0IGxvb2tzIHRvIG1l
+IGEgcmlnaHQgZGlyZWN0aW9uIHRvIG1vdmUgR1BDCj4gPiA+IHBvd2VyIGhhbmRsaW5nIGludG8g
+QVRGLgo+ID4gPiBJdCBhbHNvIGhlbHBzIGJ1aWxkIGEgbW9yZSBnZW5lcmljIGRyaXZlciBhbmQg
+ZWFzZSBvdGhlciBPUyBpbnRlZ3JhdGlvbgo+ID4gPiBuZWVkZWQgYnkgY3VzdG9tZXJzIChlLmcu
+IFFOWCwgV2luMTApLgo+ID4gPiAKPiA+ID4gTHVjYXMsCj4gPiA+IEhvdyBkbyB5b3UgdGhpbmsg
+b2YgaXQ/Cj4gPiAKPiA+IEkgZG9uJ3QgeWV0IGJ1eSB0aGUgc2VjdXJpdHkgYXJndW1lbnQuIFRo
+ZXJlIGFyZSBtYW55IG1vcmUgc2hhcmVkIHBhcnRzCj4gPiBvbiB0aGUgU29DLCBsaWtlIHRoZSBj
+bG9jayBjb250cm9sbGVyLCB0aGF0IHdvdWxkIG5lZWQgdG8gYmUgdGFrZW4gYXdheQo+ID4gZnJv
+bSB0aGUgbm9uLXNlY3VyZSB3b3JsZCBpZiBvbmUgd291bGQgd2FudCB0byBydW4gYW4gdW50cnVz
+dGVkIE9TCj4gPiBrZXJuZWwgb24gYSBpLk1YOE0gc3lzdGVtLgo+ID4gCj4gPiBUbyBwcm9wZXJs
+eSBpbXBsZW1lbnQgc2VjdXJpdHkgb24gYW55IGkuTVg4TSBiYXNlZCBzeXN0ZW0gdGhlIGZpcm13
+YXJlCj4gPiB3b3VsZCBuZWVkIHRvIGdyb3cgc29tZXRoaW5nIGxpa2UgYSBmdWxsIEFSTSBTQ1BJ
+IGltcGxlbWVudGF0aW9uLCBzbwo+ID4gYWxsIHNoYXJlZCBjcml0aWNhbCBwZXJpcGhlcmFscyBh
+cmUgc29sZWx5IHVuZGVyIGZpcm13YXJlIGNvbnRyb2wuCj4gCj4gSXQgbWlnaHQgYmUgcG9zc2li
+bGUgdG8gcmV3b3JrIHRoaXMgdG8gdXNlIHNvbWUgZm9ybSBvZiBTQ01JLW92ZXItU01DwqAKPiBp
+bnN0ZWFkIG9mIHZlbmRvci1zcGVjaWZpYyBTTUNDQyBTSVAgY2FsbHMKPiAKPiArU0NNSSBtYWlu
+dGFpbmVyCj4gCj4gPiBJIGFncmVlIHRoYXQgaXQgbWlnaHQgbWFrZSBzZW5zZSB0byBtb3ZlIHNv
+bWUgcGFydHMgaW50byB0aGUgZmlybXdhcmUKPiA+IGFuZCBoYXZlIG11Y2ggc2ltcGxlciBPUyBs
+ZXZlbCBkcml2ZXJzLCBidXQgSSBkb24ndCBhZ3JlZSBvbiB0aGUKPiA+IGltcGxlbWVudGF0aW9u
+IGRpcmVjdGlvbiB0YWtlbiBoZXJlLiBHcm93aW5nIGN1c3RvbSBQU0NJIGV4dGVuc2lvbgo+ID4g
+aW50ZXJmYWNlcyB3aWxsIG9ubHkgZ2V0IHVzIHNvIGZhciwgd2l0aG91dCBzb2x2aW5nIHRoZSBz
+eXN0ZW0gc2VjdXJpdHkKPiA+IGlzc3VlIGluIGEgaG9saXN0aWMgd2F5LiBJdCBpcyBteSBzdHJv
+bmcgYmVsaWV2ZSB0aGF0IG9ubHkgYSBjb21wbGV0ZQo+ID4gcmVhcmNoaXRlY3R1cmUgb2YgdGhl
+IE9TIHN1cHBvcnQgb24gdG9wIG9mIGEgQVJNIFNDUEkgZmlybXdhcmUKPiA+IGludGVyZmFjZSBj
+YW4gc29sdmUgdGhpcyBwcm9wZXJseS4KPiAKPiBIaWRpbmcgZXZlcnl0aGluZyBjcml0aWNhbCBm
+b3Igc2VjdXJpdHkgKGVzcGVjaWFsbHkgQ0NNKSBiZWhpbmQgYSBTQ01JwqAKPiBpbnRlcmZhY2Ug
+d291bGQgYmUgYSBsYXJnZSBhbW91bnQgb2Ygd29yayBidXQgaW50cm9kdWNpbmcgU0NNScKgCj4g
+aW5jcmVtZW50YWxseSAoc3RhcnRpbmcgd2l0aCBpbXg4bW0gcG93ZXIpIHdvdWxkIGJlIHVzZWZ1
+bCBieSBpdHNlbGbCoAo+IGJlY2F1c2UgaXQgc2ltcGxpZmllcyBPUyBpbXBsZW1lbnRhdGlvbi4K
+CkknbSB0b3RhbGx5IG9uLWJvYXJkIHdpdGggYmFieSBzdGVwcyBpZiBpdCBnZXRzIHVzIGludG8g
+dGhlIHJpZ2h0CmRpcmVjdGlvbiwgc28gd2hhdCB5b3UgcHJvcG9zZSBtYWtlcyBzZW5zZSB0byBt
+ZS4KCldoYXQgSSdtIG5vdCBva2F5IHdpdGggaXMgdHlpbmcgdGhlIHVwc3RyZWFtIGtlcm5lbCBp
+bnRvIGFuIGFkLWhvYwpmaXJtd2FyZSBpbnRlcmZhY2UgaW4gdGhlIG5hbWUgb2Ygc3lzdGVtIHNl
+Y3VyaXR5LCBpZiB0aGVyZSBpcyBubwpjaGFuY2UgdGhhdCBwcm9wZXIgc2VjdXJpdHkgd2lsbCBl
+dmVyIGJlIGFibGUgdG8gYmUgYWNoaWV2ZWQgd2l0aCB0aGUKYWQtaG9jIGludGVyZmFjZS4gSGF2
+aW5nIGRlcGVuZGVuY2llcyBiZXR3ZWVuIHRoZSBPUyBrZXJuZWwgYW5kIHN5c3RlbQpmaXJtd2Fy
+ZSBpcyBhIGJ1cmRlbiBvbiBzeXN0ZW0gaW50ZWdyYXRvcnMgYW5kIEknbSBvbmx5IHdpbGxpbmcg
+dG8KYWNjZXB0IHRoYXQgYnVyZGVuIGlmIGl0J3MgY2xlYXIgdGhhdCB0aGVyZSBpcyBzb21lIHJl
+YWwgdmFsdWUgdG8gaXQuCgpSZWdhcmRzLApMdWNhcwoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
