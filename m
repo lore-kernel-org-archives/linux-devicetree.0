@@ -1,86 +1,164 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
- driver
-Date: Wed, 17 Apr 2019 23:26:51 +0300
-Message-ID: <76e9c2a8-1537-04ad-17e0-ebd9fa9b7b91@cogentembedded.com>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
- <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
- <OF8A9D093C.B3035121-ON482583DE.00065F23-482583DE.00074AC0@mxic.com.tw>
- <770002ab-7e08-b695-b5a5-fce772b600a5@cogentembedded.com>
- <OF2BD84B79.FBC5E822-ON482583DF.0020009F-482583DF.0022E315@mxic.com.tw>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: [PATCH v4 00/26] Add generic support for composing LED class device name
+Date: Wed, 17 Apr 2019 22:54:13 +0200
+Message-ID: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OF2BD84B79.FBC5E822-ON482583DF.0020009F-482583DF.0022E315@mxic.com.tw>
-Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
+To: linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2019 09:21 AM, masonccyang@mxic.com.tw wrote:
+Changes from v3:
 
->> >> Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD
->> controller driver
->> >>
->> >> The patch name is somewhat misleading -- there's no "MFD controller".
->> >
->> > Can't get your point ?
->> >
->> > RPC-IF support SPI and HF, it's a MFD controller and
->> > that's why I patch it to MFD as Marek's comments.
->>
->>    I'd like the "controller" word dropped, as MFD stands for multi-
->> function device
->> anyway. "Controller" seems to be superfluous here...
-> 
-> okay, will rename to:
-> 
-> [PATCH v11 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
+- allow for devicename section for hot-pluggable devices
+- move led_colors array to led-core.c to avoid build break
+  due to Kconfig dependency issue
+- add a patch fixing led_colors array name clash with ALSA driver
+- change led-enumerator DT property name to more meaningful function-enumerator
+- add LED_FUNCTION_KBD_BACKLIGHT
+- change naming and add new proprties to struct led_init_data
+  and struct led_properties
 
-   Thanx!
+Changes from v2:
 
->> >> On 04/15/2019 10:37 AM, Mason Yang wrote:
->> >>
->> >> > Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
->> >> >
->> >> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> >> [...]
->> >> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> >> > index 26ad646..7914349 100644
->> >> > --- a/drivers/mfd/Kconfig
->> >> > +++ b/drivers/mfd/Kconfig
->> >> > @@ -978,6 +978,15 @@ config MFD_RDC321X
->> >> >       southbridge which provides access to GPIOs and Watchdog using the
->> >> >       southbridge PCI device configuration space.
->> >> >  
->> >> > +config MFD_RENESAS_RPC
->> >> > +   tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
->> >> > +   select MFD_CORE
->> >> > +   depends on ARCH_RENESAS
->> >> > +   help
->> >> > +     This supports for Renesas R-Car Gen3 RPC-IF multifunction device
->> >>
->> >>    "For" node needed here.
->> >
->> > ?
->>
->>    Sorry, that was a typo: s/node/not/.
-> 
-> Oops, still don't know what do you mean to ?
-> 
-> Will change to:
->          help
->            This supports for Renesas R-Car Gen3 RPC-IF multifunction device
->            which provides either SPI host or HyperFlash.
->            You have to select individual components under the corresponding menu.
-> 
-> is it ok ?
+- removed from drivers the responsibility of calling led_compose_name()
+- added struct device* argument to led_compose_name() to allow using
+  dev_<level> logging functions for more informative logs
+- adjusted the list of LED_FUNCTION definitions according to the v2 review
+  remarks
+- renamed default_desc to default_label in the struct led_init_data
+- added led-enumerator DT property to the common LED bindings
+- removed LED_COLOR_NAME definitions from include/dt-bindings/leds/common.h
+- change DT color property type from string to integer
+- change struct initialization list to explicit property assignment in leds-sc27xx-bltc.c
+- use led->client->name for led_hw_name in leds-lm3692x.c
+- few other minor improvements to docs etc.
 
-   Should be "This supports Renesas..."
+Changes from v1:
 
-[...]
+- improved led_parse_properties() to parse label property at first
+  and return immediately after parsing succeeds
+- added tool get_led_device_info.sh for retrieving LED class device's
+  parent device related information
+- extended LED naming section of Documentation/leds/leds-class.txt
+- adjusted the list of LED_FUNCTION definitions according to the v1 review
+  remarks
+- added standard LED_COLOR_NAME definitions
+- removed functions.h and moved both LED_FUNCTION and LED_COLOR_NAME
+  definitions to include/dt-bindings/common.h
+- rebased leds-as3645a changes on top of the patch switching to fwnode
+  property API
+- updated DT bindings to use new LED_COLOR_NAME definitions
+- improved common LED bindings to not use address unit for sub-nodes
+  without reg property
 
-MBR, Sergei
+Generally I still insist on deprecating label property and devicename
+section of LED name. The tool I added for obtaining LED device name
+proves availability of the related information in other places in
+the sysfs. Other discussed use cases are covered in the updated
+Documentation/leds/leds-class.txt.
+
+Beside that, I tried also to create macros for automatic composition
+of "-N" suffixed LED functions, so that it would not be necessary
+to pollute common.h with plenty repetitions of the same function,
+differing only with the postfix. Unfortunately, the preprocessor
+of the dtc compiler seems not to accept string concatenetation.
+I.e. it is not possible to to the following assighment:
+
+function = "hdd""-1"
+
+If anyone knows how to obviate this shortocoming please let me know.
+
+Original cover letter:
+
+LED class device naming pattern included devicename section, which had
+unpleasant effect of varying userspace interface dependent on underlaying
+hardware. Moreover, this information was redundant in the LED name, since
+the LED controller name could have been obtained from sysfs device group
+
+This patch set introduces a led_compose_name() function in the LED core,
+which unifies and simplifies LED class device name composition. This
+change is accompanied by the improvements in the common LED DT bindings
+where two new properties are introduced: "function" and "color" . The two
+deprecate the old "label" property which was leaving too much room for
+interpretation, leading to inconsistent LED naming.
+
+There are also changes in LED DT node naming, which are in line with
+DT maintainer's request from [0].
+
+Since some DT LED naming unification, related to not including devicename
+section in "label" DT property, is being requested during reviews of new
+LED class drivers for almost a year now, then those drivers are the first
+candidates for optimalization and the first users of the new
+led_compose_name() API. The modifications were tested with Qemu,
+by stubbing the driver internals where hardware interaction was needed
+for proper probing.
+
+Thanks,
+Jacek Anaszewski
+
+Jacek Anaszewski (26):
+  ALSA: line6: Avoid polluting led_* namespace
+  leds: class: Improve LED and LED flash class registration API
+  dt-bindings: leds: Add LED_FUNCTION definitions
+  dt-bindings: leds: Add LED_COLOR_ID definitions
+  dt-bindings: leds: Add properties for LED name construction
+  leds: core: Add support for composing LED class device names
+  dt-bindings: sc27xx-blt: Add function and color properties
+  leds: sc27xx-blt: Use generic support for composing LED names
+  dt-bindings: lt3593: Add function and color properties
+  leds: lt3593: Use generic support for composing LED names
+  dt-bindings: lp8860: Add function and color properties
+  leds: lp8860: Use generic support for composing LED names
+  dt-bindings: lm3692x: Add function and color properties
+  leds: lm3692x: Use generic support for composing LED names
+  dt-bindings: lm36010: Add function and color properties
+  leds: lm3601x: Use generic support for composing LED names
+  dt-bindings: cr0014114: Add function and color properties
+  leds: cr0014114: Use generic support for composing LED names
+  dt-bindings: aat1290: Add function and color properties
+  leds: aat1290: Use generic support for composing LED names
+  dt-bindings: as3645a: Add function and color properties
+  leds: as3645a: Use generic support for composing LED names
+  dt-bindings: leds-gpio: Add function and color properties
+  leds: gpio: Use generic support for composing LED names
+  dt-bindings: an30259a: Add function and color properties
+  leds: an30259a: Use generic support for composing LED names
+
+ .../devicetree/bindings/leds/ams,as3645a.txt       |  22 ++--
+ Documentation/devicetree/bindings/leds/common.txt  |  62 ++++++++--
+ .../devicetree/bindings/leds/leds-aat1290.txt      |  12 +-
+ .../devicetree/bindings/leds/leds-an30259a.txt     |  22 +++-
+ .../devicetree/bindings/leds/leds-cr0014114.txt    |  26 +++--
+ .../devicetree/bindings/leds/leds-gpio.txt         |  23 ++--
+ .../devicetree/bindings/leds/leds-lm3601x.txt      |  10 +-
+ .../devicetree/bindings/leds/leds-lm3692x.txt      |   9 +-
+ .../devicetree/bindings/leds/leds-lp8860.txt       |   9 +-
+ .../devicetree/bindings/leds/leds-lt3593.txt       |  11 +-
+ .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |  10 +-
+ Documentation/leds/leds-class.txt                  |  56 ++++++++-
+ drivers/leds/led-class-flash.c                     |   9 +-
+ drivers/leds/led-class.c                           |  45 +++++---
+ drivers/leds/led-core.c                            | 127 +++++++++++++++++++++
+ drivers/leds/leds-aat1290.c                        |  14 ++-
+ drivers/leds/leds-an30259a.c                       |  25 ++--
+ drivers/leds/leds-as3645a.c                        |  69 ++++-------
+ drivers/leds/leds-cr0014114.c                      |  33 ++----
+ drivers/leds/leds-gpio.c                           |  23 ++--
+ drivers/leds/leds-lm3601x.c                        |  38 +++---
+ drivers/leds/leds-lm3692x.c                        |  22 +---
+ drivers/leds/leds-lp8860.c                         |  35 +++---
+ drivers/leds/leds-lt3593.c                         |  20 ++--
+ drivers/leds/leds-pwm.c                            |   2 +-
+ drivers/leds/leds-sc27xx-bltc.c                    |  22 ++--
+ drivers/leds/leds.h                                |   1 +
+ include/dt-bindings/leds/common.h                  |  48 ++++++++
+ include/linux/led-class-flash.h                    |  15 ++-
+ include/linux/leds.h                               |  81 +++++++++++--
+ sound/usb/line6/toneport.c                         |   8 +-
+ tools/leds/get_led_device_info.sh                  |  81 +++++++++++++
+ 32 files changed, 718 insertions(+), 272 deletions(-)
+ create mode 100755 tools/leds/get_led_device_info.sh
+
+-- 
+2.11.0
