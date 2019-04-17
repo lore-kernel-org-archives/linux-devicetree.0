@@ -1,107 +1,89 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V3 06/16] PCI: dwc: Add ext config space capability search
- API
-Date: Wed, 17 Apr 2019 15:04:52 +0530
-Message-ID: <97924cc1-0ccb-52c3-5396-accd516f91d4@nvidia.com>
+From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: RE: [PATCH V3 08/16] PCI: dwc: Add support to enable CDM register
+ check
+Date: Wed, 17 Apr 2019 09:39:10 +0000
+Message-ID: <305100E33629484CBB767107E4246BBB0A22C0EC@de02wembxa.internal.synopsys.com>
 References: <20190416192730.15681-1-vidyas@nvidia.com>
- <20190416192730.15681-7-vidyas@nvidia.com>
- <305100E33629484CBB767107E4246BBB0A22C0A7@de02wembxa.internal.synopsys.com>
+ <20190416192730.15681-9-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <305100E33629484CBB767107E4246BBB0A22C0A7@de02wembxa.internal.synopsys.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190416192730.15681-9-vidyas@nvidia.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>
-Cc: "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kthota@nvidia.com" <kthota@nvidia.com>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "kthota@nvidia.com" <kthota@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sagar.tv@gmail.com" <sagar.tv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/17/2019 2:57 PM, Gustavo Pimentel wrote:
-> On Tue, Apr 16, 2019 at 20:27:20, Vidya Sagar <vidyas@nvidia.com> wrote:
+On Tue, Apr 16, 2019 at 20:27:22, Vidya Sagar <vidyas@nvidia.com> wrote:
+
+> Add support to enable CDM (Configuration Dependent Module) register check
+> for any data corruption based on the device-tree flag 'enable-cdm-check'.
 > 
->> Add extended configuration space capability search API using struct dw_pcie *
->> pointer
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes from [v2]:
->> * None
->>
->> Changes from [v1]:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
->>   2 files changed, 42 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index d68c123e409c..44c0ba078452 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->>   	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->>   }
->>   
->> +static int dw_pcie_find_next_ext_capability(struct dw_pcie *pci, int start,
->> +					    int cap)
->> +{
->> +	u32 header;
->> +	int ttl;
->> +	int pos = PCI_CFG_SPACE_SIZE;
->> +
->> +	/* minimum 8 bytes per capability */
->> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
->> +
->> +	if (start)
->> +		pos = start;
->> +
->> +	header = dw_pcie_readl_dbi(pci, pos);
->> +	/*
->> +	 * If we have no capabilities, this is indicated by cap ID,
->> +	 * cap version and next pointer all being 0.
->> +	 */
->> +	if (header == 0)
->> +		return 0;
->> +
->> +	while (ttl-- > 0) {
->> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
->> +			return pos;
->> +
->> +		pos = PCI_EXT_CAP_NEXT(header);
->> +		if (pos < PCI_CFG_SPACE_SIZE)
->> +			break;
->> +
->> +		header = dw_pcie_readl_dbi(pci, pos);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap)
->> +{
->> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 4ccd4c706ddb..fa41d675c48f 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -248,6 +248,7 @@ struct dw_pcie {
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap);
->>   
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->> -- 
->> 2.17.1
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v2]:
+> * Changed code and commit description to reflect change in flag from
+>   'cdm-check' to 'enable-cdm-check'
 > 
-> This ext capability function is aimed to be used by the EP also?
+> Changes since [v1]:
+> * This is a new patch in v2 series
 > 
-Yes. It can be used by EP also. Hence I added it in common files.
+>  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
+>  drivers/pci/controller/dwc/pcie-designware.h | 9 +++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 44c0ba078452..5b416f483426 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -503,4 +503,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		break;
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +
+> +	if (of_property_read_bool(np, "enable-cdm-check")) {
+> +		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
+> +		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
+> +		       PCIE_PL_CHK_REG_CHK_REG_START;
+> +		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+> +	}
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index fa41d675c48f..7f57fe019fbf 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -83,6 +83,15 @@
+>  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
+>  #define PCIE_DBI_RO_WR_EN		BIT(0)
+>  
+> +#define PCIE_PL_CHK_REG_CONTROL_STATUS			0xB20
+> +#define PCIE_PL_CHK_REG_CHK_REG_START			BIT(0)
+> +#define PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS		BIT(1)
+> +#define PCIE_PL_CHK_REG_CHK_REG_COMPARISON_ERROR	BIT(16)
+> +#define PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR		BIT(17)
+> +#define PCIE_PL_CHK_REG_CHK_REG_COMPLETE		BIT(18)
+> +
+> +#define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
+> +
+>  /*
+>   * iATU Unroll-specific register definitions
+>   * From 4.80 core version the address translation will be made by unroll
+> -- 
+> 2.17.1
+
+Nice.
+
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
+Thanks,
+Gustavo
