@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v5 3/5] ARM: dts: da850-lcdk: enable cpufreq
-Date: Wed, 17 Apr 2019 17:26:59 +0200
-Message-ID: <20190417152701.23391-4-brgl@bgdev.pl>
+Subject: [PATCH v5 2/5] ARM: dts: da850-lego-ev3: enable cpufreq
+Date: Wed, 17 Apr 2019 17:26:58 +0200
+Message-ID: <20190417152701.23391-3-brgl@bgdev.pl>
 References: <20190417152701.23391-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,35 +14,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: David Lechner <david@lechnology.com>
 
-Add a fixed regulator for the da850-lcdk board along with board-specific
+Add a fixed regulator for the LEGO EV3 board along with board-specific
 CPU configuration.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/boot/dts/da850-lcdk.dts | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/da850-lego-ev3.dts | 30 ++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 26f453dc8370..b36d5e36bcf1 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -155,12 +155,48 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index 66fcadf0ba91..553717f84483 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -125,6 +125,15 @@
+ 		amp-supply = <&amp>;
  	};
-+
+ 
 +	cvdd: regulator0 {
 +		compatible = "regulator-fixed";
 +		regulator-name = "cvdd";
-+		regulator-min-microvolt = <1300000>;
-+		regulator-max-microvolt = <1300000>;
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
 +		regulator-always-on;
 +		regulator-boot-on;
 +	};
- };
- 
- &ref_clk {
++
+ 	/*
+ 	 * This is a 5V current limiting regulator that is shared by USB,
+ 	 * the sensor (input) ports, the motor (output) ports and the A/DC.
+@@ -204,6 +213,27 @@
  	clock-frequency = <24000000>;
  };
  
@@ -50,13 +51,7 @@ index 26f453dc8370..b36d5e36bcf1 100644
 +	cpu-supply = <&cvdd>;
 +};
 +
-+/*
-+ * LCDK has a fixed CVDD of 1.3V, so only operating points >= 300MHz are
-+ * valid. Unfortunately due to a problem with the DA8XX OHCI controller, we
-+ * can't enable more than one OPP by default, since the controller sometimes
-+ * becomes unresponsive after a transition. Fix the frequency at 456 MHz.
-+ */
-+
++/* since we have a fixed regulator, we can't run at these points */
 +&opp_100 {
 +	status = "disabled";
 +};
@@ -65,11 +60,11 @@ index 26f453dc8370..b36d5e36bcf1 100644
 +	status = "disabled";
 +};
 +
-+&opp_300 {
-+	status = "disabled";
-+};
-+
-+&opp_456 {
++/*
++ * The SoC is actually the 456MHz version, but because of the fixed regulator
++ * This is the fastest we can go.
++ */
++&opp_375 {
 +	status = "okay";
 +};
 +
