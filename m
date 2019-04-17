@@ -1,34 +1,74 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
- to DT
-Date: Wed, 17 Apr 2019 13:54:30 +0530
-Message-ID: <b4ac6b17-2aa7-4b58-4cc3-969a9676e3e7@ti.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl>
- <20190408075924.2284-2-brgl@bgdev.pl>
- <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com>
- <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
- <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com>
- <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
- <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
- <CAMRc=Mfb4xrpLkJoX0SyoCPU6Au1TPxCtr29EhvU=VsKkSt2xQ@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 3/3] Documentation: devicetree: add PPMU events
+ description
+Date: Wed, 17 Apr 2019 17:26:52 +0900
+Message-ID: <0d867843-ec56-f30b-8a3f-b3172f325bef@samsung.com>
+References: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190417074835eucas1p19319bedd176d55e10b272881b7c68919@eucas1p1.samsung.com>
+        <1555487288-4777-4-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Mfb4xrpLkJoX0SyoCPU6Au1TPxCtr29EhvU=VsKkSt2xQ@mail.gmail.com>
+In-Reply-To: <1555487288-4777-4-git-send-email-l.luba@partner.samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/04/19 2:07 PM, Bartosz Golaszewski wrote:
+Hi Lukasz,
 
-> If we agree on the direction of these patches, then I can go with a
-> single enabled OPP for lcdk (456 MHz) and all OPPs up to 375 MHz
-> enabled for da850-evm.
+On 19. 4. 17. 오후 4:48, Lukasz Luba wrote:
+> Extend the documenation by events description with new 'event-data-type'
+> field. Add example how the event might be defined in DT.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
+> index 3e36c1d..47feb5f 100644
+> --- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
+> +++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
+> @@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
+>  			reg = <0x104d0000 0x2000>;
+>  			status = "disabled";
+>  		};
+> +
+> +The 'event' type specified in the PPMU node defines 'event-name'
+> +which also contains 'id' number and optionally 'event-data-type'.
+> +
+> +Example:
+> +
+> +		events {
+> +			ppmu_leftbus_0: ppmu-event0-leftbus {
+> +				event-name = "ppmu-event0-leftbus";
+> +				event-data-type = <PPMU_RO_DATA_CNT>;
+> +			};
+> +		};
+> +
+> +The 'event-data-type' defines the type of data which shell be counted
+> +by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
 
-Sounds good to me.
+I replied about 'pmu' name on patch2. Please check it.
 
-Thanks,
-Sekhar
+> +all possible type, i.e. count read requests, count write data in bytes,
+> +etc. This field is optional and when it is missing, the driver code will
+> +use default data type.
+> 
+Looks good to me.
+But, If you want to add the new 'event-data-type' property,
+you better to add 'event-data-type' to Exynos dts file including
+PPMU device.
+
+If the dts file contain the data type information,
+I think it is easy to understand for the user
+what is monitoring on PPMU device.
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
