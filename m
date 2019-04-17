@@ -1,65 +1,58 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
-Date: Wed, 17 Apr 2019 18:42:46 +0100
-Message-ID: <CACvgo52rD4+gUfXjmO=+Bc5uA18H5ikuNtmtJdYL0JEXmHkHTw@mail.gmail.com>
-References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
- <20190117123320.GD3271@phenom.ffwll.local>
- <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
- <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
- <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
- <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
+ to *.rst
+Date: Wed, 17 Apr 2019 10:43:37 -0700
+Message-ID: <20190417174337.GA16749@roeck-us.net>
+References: <cover.1555494108.git.mchehab+samsung@kernel.org>
+ <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
+ <20190417164741.GA12147@roeck-us.net>
+ <20190417141352.3225bbb3@coco.lan>
+ <20190417142215.791df5e7@coco.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190417142215.791df5e7@coco.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@infradead.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Eibach <eibach@gdsys.de>, George Joseph <george.joseph@fairview5.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Fenghua Yu <fenghua.yu@intel.com>, Support Opensource <support.opensource@diasemi.com>, Juerg Haefliger <juergh@gmail.com>, Steve Glendinning <steve.glendinning@shawell.net>, Huang Rui <ray.huang@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Clemens Ladisch <clemens@ladisch.de>, Rudolf Marek <r.marek>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKCk9uIEZyaSwgMTggSmFuIDIwMTkgYXQgMDg6MjksIFRvbWkgVmFsa2VpbmVuIDx0
-b21pLnZhbGtlaW5lbkB0aS5jb20+IHdyb3RlOgo+Cj4gT24gMTgvMDEvMTkgMDA6MDQsIFJvYiBI
-ZXJyaW5nIHdyb3RlOgo+Cj4gPiBNZXNhL2xpYmRybSBhbHJlYWR5IGhhcyBsb3RzIG9mIGNvZGUg
-dG8gb3BlbiB0aGUgY29ycmVjdCBkZXZpY2VzIGFuZAo+ID4gbm90IGNhcmUgYWJvdXQgbWlub3Ig
-bnVtYmVycy4gV2hhdCdzIHRoZSBwcm9ibGVtIGhlcmU/Cj4KPiBXZWxsLCBtYXliZSB0aGUgcHJv
-YmxlbSBpcyB0aGF0IEkgZG9uJ3Qga25vdyBob3cgdG8gZG8gdGhpcyA9KS4KPgo+IFNvLCBpZiB3
-ZSBoYXZlIG11bHRpcGxlIERSTSBkZXZpY2VzLCBob3cgZG9lcyBvbmUgbWFuYWdlIHRob3NlPwo+
-IEl0ZXJhdGluZyBvdmVyIHRoZW0gYW5kIGxvb2tpbmcgZm9yIGttcy1jYXBhYmxlIG9uZXMgaXMg
-ZWFzeSBlbm91Z2guIEJ1dAo+IGlmIHRoZXJlIGFyZSBtdWx0aXBsZSBrbXMtY2FwYWJsZSBvbmVz
-LCBob3cgc2hvdWxkIHRoZSB1c2Vyc3BhY2UgY2hvb3NlCj4gYmV0d2VlbiB0aG9zZT8KPgo+IEkg
-c2VlIHRoYXQgdWRldiBjcmVhdGVzIC9kZXYvZHJpL2J5LXBhdGgvIGxpbmtzIHRvIHRoZSBjYXJk
-cywgc2hvdWxkIHRoZQo+IHVzZXJzcGFjZSB1c2UgdGhvc2UgdG8gaGF2ZSBhIHBlcnNpc3RlbnQg
-bGluayB0byB0aGUgY2FyZD8gRS5nLiBmaXJzdAo+IHRpbWUgdGhlIGFwcCBpcyByYW4sIGl0J2xs
-IGNvbGxlY3QgYWxsIHRoZSBrbXMtY2FwYWJsZSBjYXJkcywgYW5kIHN0b3JlCj4gdGhlIGJ5LXBh
-dGggbmFtZXMgc29tZXdoZXJlLCBhbmQgaW4gc3Vic2VxdWVudCBydW5zIGl0IHdpbGwgaW5zdGVh
-ZCB1c2UKPiB0aGUgYnktcGF0aCBuYW1lcyB0byBrZWVwIHRoZSBvcmRlciB0aGUgc2FtZS4KPgo+
-IElmIEkgaGF2ZSBhIHByb2R1Y3Qgd2l0aCB0d28gZGlzcGxheSBjb250cm9sbGVycywgYW5kIG9u
-ZSBvZiB0aGVtIGhhcwo+IHRoZSBtYWluIGRpc3BsYXkgY29ubmVjdGVkLCBob3cgZG9lcyBteSBj
-dXN0b20gYXBwIGtub3cgd2hpY2ggY2FyZCB0bwo+IHVzZT8gSGFyZGNvZGluZyB0aGUgYnktcGF0
-aCBpbiB0aGUgYXBwPwo+Cj4gSWYgdWRldi9zeXN0ZW1kIGlzIG5vdCBhdmFpbGFibGUsIGhvdyBk
-b2VzIHRoZSB1c2Vyc3BhY2UgZG8gdGhpcz8gSQo+IHRyaWVkIHRvIHNlZSBpZiBvbmUgY2FuIGdl
-dCBlbm91Z2ggaW5mb3JtYXRpb24gZnJvbSB0aGUgY2FyZCBkZXZpY2Ugd2l0aAo+IGlvY3RscyB0
-byBmaWd1cmUgdGhlc2UgdGhpbmdzIG91dCwgYnV0IEkgZGlkbid0IGZpZ3VyZSB0aGlzIG91dC4g
-U2hvdWxkCj4gdGhlIGRybUdldEJ1c2lkKCkgcmV0dXJuIHNvbWV0aGluZyBmb3IgcGxhdGZvcm0g
-ZGV2aWNlcyB0b28/IE1heWJlIEkndmUKPiBnb3Qgc29tZXRoaW5nIG1pc3NpbmcgZnJvbSB0aGUg
-ZGlzcGxheSBkcml2ZXIsIGFuZCBkcm1HZXRCdXNpZCgpIHNob3VsZAo+IHJldHVybiBzb21ldGhp
-bmcgc2ltaWxhciBhcyB3aGF0IGlzIGluIHRoZSBieS1wYXRoIG5hbWUuCj4KSGF2ZSB5b3UgbG9v
-a2VkIGF0IHRoZSBsaWJkcm0gZHJtRGV2aWNlMiAoeWVzIHVzZSB0aGUgc2Vjb25kIHZlcnNpb24p
-IEFQST8KSXQgcHJvdmlkZXMgdmFyaW91cyBpbmZvcm1hdGlvbiBhYm91dCB0aGUgZGlmZmVyZW50
-IGRldmljZXMsIHlldCBpZgppdCdzIG1pc3NpbmcgYW55dGhpbmcgZG8gc2VuZCB1cyBhIHBhdGNo
-IDstKQoKSXQgd2FzIGludHJvZHVjZWQgZXhwbGljaXRseSB3L28gZGVwZW5kaW5nIG9uIHVkZXYv
-c3lzdGVtZCwgc2luY2UgdGhleQphcmUgbm90IGFsd2F5cyBhdmFpbGFibGUuCk9uIHRoZSB0b3Bp
-YyBvZiBkcm1HZXRCdXNpZCgpIC0gSSB3b3VsZCBzdGF5IGF3YXkgZnJvbSBpdCwgc2luY2UgaXQn
-cwptb3JlIG9yIGxlc3MgYSBsZWdhY3kgYXJ0ZWZhY3QuCgpIVEgKRW1pbApfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Wed, Apr 17, 2019 at 02:22:15PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 17 Apr 2019 14:13:52 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+> 
+> > Em Wed, 17 Apr 2019 09:47:41 -0700
+> > Guenter Roeck <linux@roeck-us.net> escreveu:
+> > 
+> > > On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:  
+> > > > Now that all files were converted to ReST format, rename them
+> > > > and add an index.
+> > > > 
+> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > > Acked-by: Liviu Dudau <liviu.dudau@arm.com>    
+> > > 
+> > > I applied all patches except this one, which fails due to a conflict in
+> > > ab8500. I also notice that this file has not been touched by your series,
+> > > which is odd. At the same time, patch 20/21 is missing from your series,
+> > > and has been missing all along. Does the missing patch possibly touch
+> > > Documentation/hwmon/ab8500 ?  
+> > 
+> > Patch 20/21 is the biggest one. Maybe vger rejected it either due to
+> > its size or due to the number of c/c.
+> > 
+> > Just bounced it to you. Please let me know if you didn't receive it
+> > yet.
+> 
+> Btw, LKML got it:
+> 
+> https://lore.kernel.org/lkml/cccc2a52363a5aaeea10e186ead8570503ea648e.1555494108.git.mchehab+samsung@kernel.org/
+> 
+patchwork didn't get it (or didn't accept it). I got it now.
+All patches applied, and pushed out to hwmon-next.
+
+We have one (new) unconverted file left - Documentation/hwmon/lochnagar.
+Can you by any chance have a look into that as well ?
+
+Thanks!
+Guenter
