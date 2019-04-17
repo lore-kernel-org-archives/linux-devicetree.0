@@ -1,57 +1,65 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 8/8] arm64: dts: allwinner: Add mali GPU
- supply for OrangePi 3
-Date: Wed, 17 Apr 2019 19:30:31 +0200
-Message-ID: <20190417173031.9920-9-peron.clem@gmail.com>
-References: <20190417173031.9920-1-peron.clem@gmail.com>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
+Date: Wed, 17 Apr 2019 18:42:46 +0100
+Message-ID: <CACvgo52rD4+gUfXjmO=+Bc5uA18H5ikuNtmtJdYL0JEXmHkHTw@mail.gmail.com>
+References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
+ <20190117123320.GD3271@phenom.ffwll.local>
+ <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
+ <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
+ <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
+ <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBOGF3XSQKGQEG2TXWMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190417173031.9920-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-Enable and add supply to the Mali GPU node on the
-Orange Pi 3 board.
-
-Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/=
-arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 17d496990108..d4c989cc92a7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -58,6 +58,11 @@
- 	status =3D "okay";
- };
-=20
-+&gpu {
-+	mali-supply =3D <&reg_dcdcc>;
-+	status =3D "okay";
-+};
-+
- &mmc0 {
- 	vmmc-supply =3D <&reg_cldo1>;
- 	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
---=20
-2.17.1
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGkgVG9taSwKCk9uIEZyaSwgMTggSmFuIDIwMTkgYXQgMDg6MjksIFRvbWkgVmFsa2VpbmVuIDx0
+b21pLnZhbGtlaW5lbkB0aS5jb20+IHdyb3RlOgo+Cj4gT24gMTgvMDEvMTkgMDA6MDQsIFJvYiBI
+ZXJyaW5nIHdyb3RlOgo+Cj4gPiBNZXNhL2xpYmRybSBhbHJlYWR5IGhhcyBsb3RzIG9mIGNvZGUg
+dG8gb3BlbiB0aGUgY29ycmVjdCBkZXZpY2VzIGFuZAo+ID4gbm90IGNhcmUgYWJvdXQgbWlub3Ig
+bnVtYmVycy4gV2hhdCdzIHRoZSBwcm9ibGVtIGhlcmU/Cj4KPiBXZWxsLCBtYXliZSB0aGUgcHJv
+YmxlbSBpcyB0aGF0IEkgZG9uJ3Qga25vdyBob3cgdG8gZG8gdGhpcyA9KS4KPgo+IFNvLCBpZiB3
+ZSBoYXZlIG11bHRpcGxlIERSTSBkZXZpY2VzLCBob3cgZG9lcyBvbmUgbWFuYWdlIHRob3NlPwo+
+IEl0ZXJhdGluZyBvdmVyIHRoZW0gYW5kIGxvb2tpbmcgZm9yIGttcy1jYXBhYmxlIG9uZXMgaXMg
+ZWFzeSBlbm91Z2guIEJ1dAo+IGlmIHRoZXJlIGFyZSBtdWx0aXBsZSBrbXMtY2FwYWJsZSBvbmVz
+LCBob3cgc2hvdWxkIHRoZSB1c2Vyc3BhY2UgY2hvb3NlCj4gYmV0d2VlbiB0aG9zZT8KPgo+IEkg
+c2VlIHRoYXQgdWRldiBjcmVhdGVzIC9kZXYvZHJpL2J5LXBhdGgvIGxpbmtzIHRvIHRoZSBjYXJk
+cywgc2hvdWxkIHRoZQo+IHVzZXJzcGFjZSB1c2UgdGhvc2UgdG8gaGF2ZSBhIHBlcnNpc3RlbnQg
+bGluayB0byB0aGUgY2FyZD8gRS5nLiBmaXJzdAo+IHRpbWUgdGhlIGFwcCBpcyByYW4sIGl0J2xs
+IGNvbGxlY3QgYWxsIHRoZSBrbXMtY2FwYWJsZSBjYXJkcywgYW5kIHN0b3JlCj4gdGhlIGJ5LXBh
+dGggbmFtZXMgc29tZXdoZXJlLCBhbmQgaW4gc3Vic2VxdWVudCBydW5zIGl0IHdpbGwgaW5zdGVh
+ZCB1c2UKPiB0aGUgYnktcGF0aCBuYW1lcyB0byBrZWVwIHRoZSBvcmRlciB0aGUgc2FtZS4KPgo+
+IElmIEkgaGF2ZSBhIHByb2R1Y3Qgd2l0aCB0d28gZGlzcGxheSBjb250cm9sbGVycywgYW5kIG9u
+ZSBvZiB0aGVtIGhhcwo+IHRoZSBtYWluIGRpc3BsYXkgY29ubmVjdGVkLCBob3cgZG9lcyBteSBj
+dXN0b20gYXBwIGtub3cgd2hpY2ggY2FyZCB0bwo+IHVzZT8gSGFyZGNvZGluZyB0aGUgYnktcGF0
+aCBpbiB0aGUgYXBwPwo+Cj4gSWYgdWRldi9zeXN0ZW1kIGlzIG5vdCBhdmFpbGFibGUsIGhvdyBk
+b2VzIHRoZSB1c2Vyc3BhY2UgZG8gdGhpcz8gSQo+IHRyaWVkIHRvIHNlZSBpZiBvbmUgY2FuIGdl
+dCBlbm91Z2ggaW5mb3JtYXRpb24gZnJvbSB0aGUgY2FyZCBkZXZpY2Ugd2l0aAo+IGlvY3RscyB0
+byBmaWd1cmUgdGhlc2UgdGhpbmdzIG91dCwgYnV0IEkgZGlkbid0IGZpZ3VyZSB0aGlzIG91dC4g
+U2hvdWxkCj4gdGhlIGRybUdldEJ1c2lkKCkgcmV0dXJuIHNvbWV0aGluZyBmb3IgcGxhdGZvcm0g
+ZGV2aWNlcyB0b28/IE1heWJlIEkndmUKPiBnb3Qgc29tZXRoaW5nIG1pc3NpbmcgZnJvbSB0aGUg
+ZGlzcGxheSBkcml2ZXIsIGFuZCBkcm1HZXRCdXNpZCgpIHNob3VsZAo+IHJldHVybiBzb21ldGhp
+bmcgc2ltaWxhciBhcyB3aGF0IGlzIGluIHRoZSBieS1wYXRoIG5hbWUuCj4KSGF2ZSB5b3UgbG9v
+a2VkIGF0IHRoZSBsaWJkcm0gZHJtRGV2aWNlMiAoeWVzIHVzZSB0aGUgc2Vjb25kIHZlcnNpb24p
+IEFQST8KSXQgcHJvdmlkZXMgdmFyaW91cyBpbmZvcm1hdGlvbiBhYm91dCB0aGUgZGlmZmVyZW50
+IGRldmljZXMsIHlldCBpZgppdCdzIG1pc3NpbmcgYW55dGhpbmcgZG8gc2VuZCB1cyBhIHBhdGNo
+IDstKQoKSXQgd2FzIGludHJvZHVjZWQgZXhwbGljaXRseSB3L28gZGVwZW5kaW5nIG9uIHVkZXYv
+c3lzdGVtZCwgc2luY2UgdGhleQphcmUgbm90IGFsd2F5cyBhdmFpbGFibGUuCk9uIHRoZSB0b3Bp
+YyBvZiBkcm1HZXRCdXNpZCgpIC0gSSB3b3VsZCBzdGF5IGF3YXkgZnJvbSBpdCwgc2luY2UgaXQn
+cwptb3JlIG9yIGxlc3MgYSBsZWdhY3kgYXJ0ZWZhY3QuCgpIVEgKRW1pbApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
