@@ -1,318 +1,2055 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v8 2/2] phy: Add driver for mixel mipi dphy found on NXP's
- i.MX8 SoCs
-Date: Wed, 17 Apr 2019 12:00:14 +0530
-Message-ID: <be440322-ea04-ccf4-d6d6-15780db32517@ti.com>
-References: <cover.1554113192.git.agx@sigxcpu.org>
- <78f5a30d1c86d23686c9ce3e7e9144403faf2bec.1554113192.git.agx@sigxcpu.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v1 3/3] net: ethernet: add ag71xx driver
+Date: Wed, 17 Apr 2019 08:37:38 +0200
+Message-ID: <bfcaf2a9-0fa5-fa77-741f-2949beb01877@gmail.com>
+References: <20190417062201.15745-1-o.rempel@pengutronix.de>
+ <20190417062201.15745-4-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <78f5a30d1c86d23686c9ce3e7e9144403faf2bec.1554113192.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190417062201.15745-4-o.rempel@pengutronix.de>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lLAoKT24gMDEvMDQvMTkgMzo0MyBQTSwgR3VpZG8gR8O8bnRoZXIgd3JvdGU6Cj4g
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBNaXhlbCBEUEhZIGFzIGZvdW5kIG9uIGkuTVg4IENQ
-VXMgYnV0IHNpbmNlCj4gdGhpcyBpcyBhbiBJUCBjb3JlIGl0IHdpbGwgbGlrZWx5IGJlIGZvdW5k
-IG9uIG90aGVycyBpbiB0aGUgZnV0dXJlLiBTbwo+IGluc3RlYWQgb2YgYWRkaW5nIHRoaXMgdG8g
-dGhlIG53bCBob3N0IGRyaXZlciBtYWtlIGl0IGEgZ2VuZXJpYyBQSFkKPiBkcml2ZXIuCj4gCj4g
-VGhlIGRyaXZlciBzdXBwb3J0cyB0aGUgaS5NWDhNUS4gU3VwcG9ydCBmb3IgaS5NWDhRTSBhbmQg
-aS5NWDhRWFAgY2FuIGJlCj4gYWRkZWQgb25jZSB0aGUgbmVjZXNzYXJ5IHN5c3RlbSBjb250cm9s
-bGVyIGJpdHMgYXJlIGluIHZpYQo+IG1peGVsX2RwaHlfZGV2ZGF0YS4KPiAKPiBDby1hdXRob3Jl
-ZC1ieTogUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tPgo+IFNpZ25lZC1vZmYt
-Ynk6IEd1aWRvIEfDvG50aGVyIDxhZ3hAc2lneGNwdS5vcmc+CgpUaGlzIGRyaXZlciB1c2VzIHRo
-ZSBuZXcgaW50ZXJmYWNlIHRoYXQgeW91IGludHJvZHVjZWQuIENhbiB5b3UgcmV2aWV3IHRoaXMK
-cGF0Y2ggYW5kIGdpdmUgeW91ciBBY2tlZC1ieT8KClRoYW5rcwpLaXNob24KPiAtLS0KPiAgZHJp
-dmVycy9waHkvZnJlZXNjYWxlL0tjb25maWcgICAgICAgICAgICAgICAgIHwgIDExICsKPiAgZHJp
-dmVycy9waHkvZnJlZXNjYWxlL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsKPiAgLi4u
-L3BoeS9mcmVlc2NhbGUvcGh5LWZzbC1pbXg4LW1pcGktZHBoeS5jICAgIHwgNTA2ICsrKysrKysr
-KysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDUxOCBpbnNlcnRpb25zKCspCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9mcmVlc2NhbGUvcGh5LWZzbC1pbXg4LW1pcGktZHBo
-eS5jCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L2ZyZWVzY2FsZS9LY29uZmlnIGIvZHJp
-dmVycy9waHkvZnJlZXNjYWxlL0tjb25maWcKPiBpbmRleCA4MzI2NzBiNDk1MmIuLmExMTFiMTMw
-ZjlkMiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3BoeS9mcmVlc2NhbGUvS2NvbmZpZwo+ICsrKyBi
-L2RyaXZlcnMvcGh5L2ZyZWVzY2FsZS9LY29uZmlnCj4gQEAgLTMsMyArMywxNCBAQCBjb25maWcg
-UEhZX0ZTTF9JTVg4TVFfVVNCCj4gIAlkZXBlbmRzIG9uIE9GICYmIEhBU19JT01FTQo+ICAJc2Vs
-ZWN0IEdFTkVSSUNfUEhZCj4gIAlkZWZhdWx0IEFSQ0hfTVhDICYmIEFSTTY0Cj4gKwo+ICtjb25m
-aWcgUEhZX01JWEVMX01JUElfRFBIWQo+ICsJdHJpc3RhdGUgIk1peGVsIE1JUEkgRFNJIFBIWSBz
-dXBwb3J0Igo+ICsJZGVwZW5kcyBvbiBPRiAmJiBIQVNfSU9NRU0KPiArCXNlbGVjdCBHRU5FUklD
-X1BIWQo+ICsJc2VsZWN0IEdFTkVSSUNfUEhZX01JUElfRFBIWQo+ICsJc2VsZWN0IFJFR01BUF9N
-TUlPCj4gKwlkZWZhdWx0IEFSQ0hfTVhDICYmIEFSTTY0Cj4gKwloZWxwCj4gKwkgIEVuYWJsZSB0
-aGlzIHRvIGFkZCBzdXBwb3J0IGZvciB0aGUgTWl4ZWwgRFNJIFBIWSBhcyBmb3VuZAo+ICsJICBv
-biBOWFAncyBpLk1YOCBmYW1pbHkgb2YgU09Dcy4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waHkv
-ZnJlZXNjYWxlL01ha2VmaWxlIGIvZHJpdmVycy9waHkvZnJlZXNjYWxlL01ha2VmaWxlCj4gaW5k
-ZXggZGMyYjNmMWYyZjgwLi4wNzQ5MWM5MjZhMmMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9waHkv
-ZnJlZXNjYWxlL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9waHkvZnJlZXNjYWxlL01ha2VmaWxl
-Cj4gQEAgLTEgKzEsMiBAQAo+ICBvYmotJChDT05GSUdfUEhZX0ZTTF9JTVg4TVFfVVNCKQkrPSBw
-aHktZnNsLWlteDhtcS11c2Iubwo+ICtvYmotJChDT05GSUdfUEhZX01JWEVMX01JUElfRFBIWSkJ
-Kz0gcGh5LWZzbC1pbXg4LW1pcGktZHBoeS5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L2Zy
-ZWVzY2FsZS9waHktZnNsLWlteDgtbWlwaS1kcGh5LmMgYi9kcml2ZXJzL3BoeS9mcmVlc2NhbGUv
-cGh5LWZzbC1pbXg4LW1pcGktZHBoeS5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
-MDAwMDAwMDAwMDAuLjJmNGY0YWZkMWNmNQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJz
-L3BoeS9mcmVlc2NhbGUvcGh5LWZzbC1pbXg4LW1pcGktZHBoeS5jCj4gQEAgLTAsMCArMSw1MDYg
-QEAKPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArCj4gKy8qCj4gKyAqIENv
-cHlyaWdodCAyMDE3LDIwMTggTlhQCj4gKyAqIENvcHlyaWdodCAyMDE5IFB1cmlzbSBTUEMKPiAr
-ICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jbGst
-cHJvdmlkZXIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4gKyNpbmNsdWRlIDxsaW51
-eC9pby5oPgo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9t
-b2R1bGUuaD4KPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9w
-bGF0Zm9ybS5oPgo+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4gKyNpbmNsdWRlIDxsaW51
-eC9waHkvcGh5Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPiArCj4g
-Ky8qIERQSFkgcmVnaXN0ZXJzICovCj4gKyNkZWZpbmUgRFBIWV9QRF9EUEhZCQkJMHgwMAo+ICsj
-ZGVmaW5lIERQSFlfTV9QUkdfSFNfUFJFUEFSRQkJMHgwNAo+ICsjZGVmaW5lIERQSFlfTUNfUFJH
-X0hTX1BSRVBBUkUJCTB4MDgKPiArI2RlZmluZSBEUEhZX01fUFJHX0hTX1pFUk8JCTB4MGMKPiAr
-I2RlZmluZSBEUEhZX01DX1BSR19IU19aRVJPCQkweDEwCj4gKyNkZWZpbmUgRFBIWV9NX1BSR19I
-U19UUkFJTAkJMHgxNAo+ICsjZGVmaW5lIERQSFlfTUNfUFJHX0hTX1RSQUlMCQkweDE4Cj4gKyNk
-ZWZpbmUgRFBIWV9QRF9QTEwJCQkweDFjCj4gKyNkZWZpbmUgRFBIWV9UU1QJCQkweDIwCj4gKyNk
-ZWZpbmUgRFBIWV9DTgkJCQkweDI0Cj4gKyNkZWZpbmUgRFBIWV9DTQkJCQkweDI4Cj4gKyNkZWZp
-bmUgRFBIWV9DTwkJCQkweDJjCj4gKyNkZWZpbmUgRFBIWV9MT0NLCQkJMHgzMAo+ICsjZGVmaW5l
-IERQSFlfTE9DS19CWVAJCQkweDM0Cj4gKyNkZWZpbmUgRFBIWV9SRUdfQllQQVNTX1BMTAkJMHg0
-Qwo+ICsKPiArI2RlZmluZSBNQlBTKHgpICgoeCkgKiAxMDAwMDAwKQo+ICsKPiArI2RlZmluZSBE
-QVRBX1JBVEVfTUFYX1NQRUVEIE1CUFMoMTUwMCkKPiArI2RlZmluZSBEQVRBX1JBVEVfTUlOX1NQ
-RUVEIE1CUFMoODApCj4gKwo+ICsjZGVmaW5lIFBMTF9MT0NLX1NMRUVQIDEwCj4gKyNkZWZpbmUg
-UExMX0xPQ0tfVElNRU9VVCAxMDAwCj4gKwo+ICsjZGVmaW5lIENOX0JVRgkweGNiN2E4OWMwCj4g
-KyNkZWZpbmUgQ09fQlVGCTB4NjMKPiArI2RlZmluZSBDTSh4KQkoCQkJCVwKPiArCQkoKHgpIDwJ
-MzIpPzB4ZTB8KCh4KS0xNikgOglcCj4gKwkJKCh4KSA8CTY0KT8weGMwfCgoeCktMzIpIDoJXAo+
-ICsJCSgoeCkgPCAxMjgpPzB4ODB8KCh4KS02NCkgOglcCj4gKwkJKCh4KSAtIDEyOCkpCj4gKyNk
-ZWZpbmUgQ04oeCkJKCgoeCkgPT0gMSk/MHgxZiA6ICgoKENOX0JVRik+PigoeCktMSkpJjB4MWYp
-KQo+ICsjZGVmaW5lIENPKHgpCSgoQ09fQlVGKT4+KDgtKHgpKSYweDMpCj4gKwo+ICsvKiBQSFkg
-cG93ZXIgb24gaXMgYWN0aXZlIGxvdyAqLwo+ICsjZGVmaW5lIFBXUl9PTgkwCj4gKyNkZWZpbmUg
-UFdSX09GRgkxCj4gKwo+ICtlbnVtIG1peGVsX2RwaHlfZGV2dHlwZSB7Cj4gKwlNSVhFTF9JTVg4
-TVEsCj4gK307Cj4gKwo+ICtzdHJ1Y3QgbWl4ZWxfZHBoeV9kZXZkYXRhIHsKPiArCXU4IHJlZ190
-eF9yY2FsOwo+ICsJdTggcmVnX2F1dG9fcGRfZW47Cj4gKwl1OCByZWdfcnhscHJwOwo+ICsJdTgg
-cmVnX3J4Y2RycDsKPiArCXU4IHJlZ19yeGhzX3NldHRsZTsKPiArfTsKPiArCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgbWl4ZWxfZHBoeV9kZXZkYXRhIG1peGVsX2RwaHlfZGV2ZGF0YVtdID0gewo+
-ICsJW01JWEVMX0lNWDhNUV0gPSB7Cj4gKwkJLnJlZ190eF9yY2FsID0gMHgzOCwKPiArCQkucmVn
-X2F1dG9fcGRfZW4gPSAweDNjLAo+ICsJCS5yZWdfcnhscHJwID0gMHg0MCwKPiArCQkucmVnX3J4
-Y2RycCA9IDB4NDQsCj4gKwkJLnJlZ19yeGhzX3NldHRsZSA9IDB4NDgsCj4gKwl9LAo+ICt9Owo+
-ICsKPiArc3RydWN0IG1peGVsX2RwaHlfY2ZnIHsKPiArCS8qIERQSFkgUExMIHBhcmFtZXRlcnMg
-Ki8KPiArCXUzMiBjbTsKPiArCXUzMiBjbjsKPiArCXUzMiBjbzsKPiArCS8qIERQSFkgcmVnaXN0
-ZXIgdmFsdWVzICovCj4gKwl1OCBtY19wcmdfaHNfcHJlcGFyZTsKPiArCXU4IG1fcHJnX2hzX3By
-ZXBhcmU7Cj4gKwl1OCBtY19wcmdfaHNfemVybzsKPiArCXU4IG1fcHJnX2hzX3plcm87Cj4gKwl1
-OCBtY19wcmdfaHNfdHJhaWw7Cj4gKwl1OCBtX3ByZ19oc190cmFpbDsKPiArCXU4IHJ4aHNfc2V0
-dGxlOwo+ICt9Owo+ICsKPiArc3RydWN0IG1peGVsX2RwaHlfcHJpdiB7Cj4gKwlzdHJ1Y3QgbWl4
-ZWxfZHBoeV9jZmcgY2ZnOwo+ICsJc3RydWN0IHJlZ21hcCAqcmVnczsKPiArCXN0cnVjdCBjbGsg
-KnBoeV9yZWZfY2xrOwo+ICsJY29uc3Qgc3RydWN0IG1peGVsX2RwaHlfZGV2ZGF0YSAqZGV2ZGF0
-YTsKPiArfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyBtaXhlbF9k
-cGh5X3JlZ21hcF9jb25maWcgPSB7Cj4gKwkucmVnX2JpdHMgPSA4LAo+ICsJLnZhbF9iaXRzID0g
-MzIsCj4gKwkucmVnX3N0cmlkZSA9IDQsCj4gKwkubWF4X3JlZ2lzdGVyID0gRFBIWV9SRUdfQllQ
-QVNTX1BMTCwKPiArCS5uYW1lID0gIm1pcGktZHBoeSIsCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50
-IHBoeV93cml0ZShzdHJ1Y3QgcGh5ICpwaHksIHUzMiB2YWx1ZSwgdW5zaWduZWQgaW50IHJlZykK
-PiArewo+ICsJc3RydWN0IG1peGVsX2RwaHlfcHJpdiAqcHJpdiA9IHBoeV9nZXRfZHJ2ZGF0YShw
-aHkpOwo+ICsJaW50IHJldDsKPiArCj4gKwlyZXQgPSByZWdtYXBfd3JpdGUocHJpdi0+cmVncywg
-cmVnLCB2YWx1ZSk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlkZXZfZXJyKCZwaHktPmRldiwgIkZh
-aWxlZCB0byB3cml0ZSBEUEhZIHJlZyAlZDogJWQiLCByZWcsIHJldCk7Cj4gKwlyZXR1cm4gcmV0
-Owo+ICt9Cj4gKwo+ICsvKgo+ICsgKiBGaW5kIGEgcmF0aW8gY2xvc2UgdG8gdGhlIGRlc2lyZWQg
-b25lIHVzaW5nIGNvbnRpbnVlZCBmcmFjdGlvbgo+ICsgKiBhcHByb3hpbWF0aW9uIGVuZGluZyBl
-aXRoZXIgYXQgZXhhY3QgbWF0Y2ggb3IgbWF4aW11bSBhbGxvd2VkCj4gKyAqIG5vbWluYXRvciwg
-ZGVub21pbmF0b3IuCj4gKyAqLwo+ICtzdGF0aWMgdm9pZCBnZXRfYmVzdF9yYXRpbyh1MzIgKnBu
-dW0sIHUzMiAqcGRlbm9tLCB1bnNpZ25lZCBpbnQgbWF4X24sCj4gKwkJCSAgIHVuc2lnbmVkIGlu
-dCBtYXhfZCkKPiArewo+ICsJdTMyIGEgPSAqcG51bTsKPiArCXUzMiBiID0gKnBkZW5vbTsKPiAr
-CXUzMiBjOwo+ICsJdTMyIG5bXSA9IHswLCAxfTsKPiArCXUzMiBkW10gPSB7MSwgMH07Cj4gKwl1
-MzIgd2hvbGU7Cj4gKwl1bnNpZ25lZCBpbnQgaSA9IDE7Cj4gKwo+ICsJd2hpbGUgKGIpIHsKPiAr
-CQlpIF49IDE7Cj4gKwkJd2hvbGUgPSBhIC8gYjsKPiArCQluW2ldICs9IChuW2kgXiAxXSAqIHdo
-b2xlKTsKPiArCQlkW2ldICs9IChkW2kgXiAxXSAqIHdob2xlKTsKPiArCQlpZiAoKG5baV0gPiBt
-YXhfbikgfHwgKGRbaV0gPiBtYXhfZCkpIHsKPiArCQkJaSBePSAxOwo+ICsJCQlicmVhazsKPiAr
-CQl9Cj4gKwkJYyA9IGEgLSAoYiAqIHdob2xlKTsKPiArCQlhID0gYjsKPiArCQliID0gYzsKPiAr
-CX0KPiArCSpwbnVtID0gbltpXTsKPiArCSpwZGVub20gPSBkW2ldOwo+ICt9Cj4gKwo+ICtzdGF0
-aWMgaW50IG1peGVsX2RwaHlfY29uZmlnX2Zyb21fb3B0cyhzdHJ1Y3QgcGh5ICpwaHksCj4gKwkg
-ICAgICAgc3RydWN0IHBoeV9jb25maWd1cmVfb3B0c19taXBpX2RwaHkgKmRwaHlfb3B0cywKPiAr
-CSAgICAgICBzdHJ1Y3QgbWl4ZWxfZHBoeV9jZmcgKmNmZykKPiArewo+ICsJc3RydWN0IG1peGVs
-X2RwaHlfcHJpdiAqcHJpdiA9IGRldl9nZXRfZHJ2ZGF0YShwaHktPmRldi5wYXJlbnQpOwo+ICsJ
-dW5zaWduZWQgbG9uZyByZWZfY2xrID0gY2xrX2dldF9yYXRlKHByaXYtPnBoeV9yZWZfY2xrKTsK
-PiArCXUzMiBscF90LCBudW1lcmF0b3IsIGRlbm9taW5hdG9yOwo+ICsJdW5zaWduZWQgbG9uZyBs
-b25nIHRtcDsKPiArCXUzMiBuOwo+ICsJaW50IGk7Cj4gKwo+ICsJaWYgKGRwaHlfb3B0cy0+aHNf
-Y2xrX3JhdGUgPiBEQVRBX1JBVEVfTUFYX1NQRUVEIHx8Cj4gKwkgICAgZHBoeV9vcHRzLT5oc19j
-bGtfcmF0ZSA8IERBVEFfUkFURV9NSU5fU1BFRUQpCj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwo+
-ICsJbnVtZXJhdG9yID0gZHBoeV9vcHRzLT5oc19jbGtfcmF0ZTsKPiArCWRlbm9taW5hdG9yID0g
-cmVmX2NsazsKPiArCWdldF9iZXN0X3JhdGlvKCZudW1lcmF0b3IsICZkZW5vbWluYXRvciwgMjU1
-LCAyNTYpOwo+ICsJaWYgKCFudW1lcmF0b3IgfHwgIWRlbm9taW5hdG9yKSB7Cj4gKwkJZGV2X2Vy
-cigmcGh5LT5kZXYsICJJbnZhbGlkICVkLyVkIGZvciAlbGQvJWxkXG4iLAo+ICsJCQludW1lcmF0
-b3IsIGRlbm9taW5hdG9yLAo+ICsJCQlkcGh5X29wdHMtPmhzX2Nsa19yYXRlLCByZWZfY2xrKTsK
-PiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwl3aGlsZSAoKG51bWVyYXRvciA8IDE2
-KSAmJiAoZGVub21pbmF0b3IgPD0gMTI4KSkgewo+ICsJCW51bWVyYXRvciA8PD0gMTsKPiArCQlk
-ZW5vbWluYXRvciA8PD0gMTsKPiArCX0KPiArCS8qCj4gKwkgKiBDTSByYW5nZXMgYmV0d2VlbiAx
-NiBhbmQgMjU1Cj4gKwkgKiBDTiByYW5nZXMgYmV0d2VlbiAxIGFuZCAzMgo+ICsJICogQ08gaXMg
-cG93ZXIgb2YgMjogMSwgMiwgNCwgOAo+ICsJICovCj4gKwlpID0gX19mZnMoZGVub21pbmF0b3Ip
-Owo+ICsJaWYgKGkgPiAzKQo+ICsJCWkgPSAzOwo+ICsJY2ZnLT5jbiA9IGRlbm9taW5hdG9yID4+
-IGk7Cj4gKwljZmctPmNvID0gMSA8PCBpOwo+ICsJY2ZnLT5jbSA9IG51bWVyYXRvcjsKPiArCj4g
-KwlpZiAoY2ZnLT5jbSA8IDE2IHx8IGNmZy0+Y20gPiAyNTUgfHwKPiArCSAgICBjZmctPmNuIDwg
-MSB8fCBjZmctPmNuID4gMzIgfHwKPiArCSAgICBjZmctPmNvIDwgMSB8fCBjZmctPmNvID4gOCkg
-ewo+ICsJCWRldl9lcnIoJnBoeS0+ZGV2LCAiSW52YWxpZCBDTS9DTi9DTyB2YWx1ZXM6ICV1LyV1
-LyV1XG4iLAo+ICsJCQljZmctPmNtLCBjZmctPmNuLCBjZmctPmNvKTsKPiArCQlkZXZfZXJyKCZw
-aHktPmRldiwgImZvciBoc19jbGsvcmVmX2Nsaz0lbGQvJWxkIOKpsCAlZC8lZFxuIiwKPiArCQkJ
-ZHBoeV9vcHRzLT5oc19jbGtfcmF0ZSwgcmVmX2NsaywKPiArCQkJbnVtZXJhdG9yLCBkZW5vbWlu
-YXRvcik7Cj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwl9Cj4gKwo+ICsJZGV2X2RiZygmcGh5LT5k
-ZXYsICJoc19jbGsvcmVmX2Nsaz0lbGQvJWxkIOKpsCAlZC8lZFxuIiwKPiArCQlkcGh5X29wdHMt
-PmhzX2Nsa19yYXRlLCByZWZfY2xrLCBudW1lcmF0b3IsIGRlbm9taW5hdG9yKTsKPiArCj4gKwkv
-KiBMUCBjbG9jayBwZXJpb2QgKi8KPiArCXRtcCA9IDEwMDAwMDAwMDAwMDBMTDsKPiArCWRvX2Rp
-dih0bXAsIGRwaHlfb3B0cy0+bHBfY2xrX3JhdGUpOyAvKiBwcyAqLwo+ICsJaWYgKHRtcCA+IFVM
-T05HX01BWCkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4gKwlscF90ID0gdG1wOwo+ICsJZGV2
-X2RiZygmcGh5LT5kZXYsICJMUCBjbG9jayAlbHUsIHBlcmlvZDogJXUgcHNcbiIsCj4gKwkJZHBo
-eV9vcHRzLT5scF9jbGtfcmF0ZSwgbHBfdCk7Cj4gKwo+ICsJLyogaHNfcHJlcGFyZTogaW4gbHAg
-Y2xvY2sgcGVyaW9kcyAqLwo+ICsJaWYgKDIgKiBkcGh5X29wdHMtPmhzX3ByZXBhcmUgPiA1ICog
-bHBfdCkgewo+ICsJCWRldl9lcnIoJnBoeS0+ZGV2LAo+ICsJCQkiaHNfcHJlcGFyZSAoJXUpID4g
-Mi41ICogbHAgY2xvY2sgcGVyaW9kICgldSkiLAo+ICsJCQlkcGh5X29wdHMtPmhzX3ByZXBhcmUs
-IGxwX3QpOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+ICsJLyogMDA6IGxwX3QsIDAxOiAx
-LjUgKiBscF90LCAxMDogMiAqIGxwX3QsIDExOiAyLjUgKiBscF90ICovCj4gKwlpZiAoZHBoeV9v
-cHRzLT5oc19wcmVwYXJlIDwgbHBfdCkgewo+ICsJCW4gPSAwOwo+ICsJfSBlbHNlIHsKPiArCQl0
-bXAgPSAyICogKGRwaHlfb3B0cy0+aHNfcHJlcGFyZSAtIGxwX3QpOwo+ICsJCWRvX2Rpdih0bXAs
-IGxwX3QpOwo+ICsJCW4gPSB0bXA7Cj4gKwl9Cj4gKwljZmctPm1fcHJnX2hzX3ByZXBhcmUgPSBu
-Owo+ICsKPiArCS8qIGNsa19wcmVwYXJlOiBpbiBscCBjbG9jayBwZXJpb2RzICovCj4gKwlpZiAo
-MiAqIGRwaHlfb3B0cy0+Y2xrX3ByZXBhcmUgPiAzICogbHBfdCkgewo+ICsJCWRldl9lcnIoJnBo
-eS0+ZGV2LAo+ICsJCQkiY2xrX3ByZXBhcmUgKCV1KSA+IDEuNSAqIGxwIGNsb2NrIHBlcmlvZCAo
-JXUpIiwKPiArCQkJZHBoeV9vcHRzLT5jbGtfcHJlcGFyZSwgbHBfdCk7Cj4gKwkJcmV0dXJuIC1F
-SU5WQUw7Cj4gKwl9Cj4gKwkvKiAwMDogbHBfdCwgMDE6IDEuNSAqIGxwX3QgKi8KPiArCWNmZy0+
-bWNfcHJnX2hzX3ByZXBhcmUgPSBkcGh5X29wdHMtPmNsa19wcmVwYXJlID4gbHBfdCA/IDEgOiAw
-Owo+ICsKPiArCS8qIGhzX3plcm86IGZvcm11bGEgZnJvbSBOWFAgQlNQICovCj4gKwluID0gKDE0
-NCAqIChkcGh5X29wdHMtPmhzX2Nsa19yYXRlIC8gMTAwMDAwMCkgLSA0NzUwMCkgLyAxMDAwMDsK
-PiArCWNmZy0+bV9wcmdfaHNfemVybyA9IG4gPCAxID8gMSA6IG47Cj4gKwo+ICsJLyogY2xrX3pl
-cm86IGZvcm11bGEgZnJvbSBOWFAgQlNQICovCj4gKwluID0gKDM0ICogKGRwaHlfb3B0cy0+aHNf
-Y2xrX3JhdGUgLyAxMDAwMDAwKSAtIDI1MDApIC8gMTAwMDsKPiArCWNmZy0+bWNfcHJnX2hzX3pl
-cm8gPSBuIDwgMSA/IDEgOiBuOwo+ICsKPiArCS8qIGNsa190cmFpbCwgaHNfdHJhaWw6IGZvcm11
-bGEgZnJvbSBOWFAgQlNQICovCj4gKwluID0gKDEwMyAqIChkcGh5X29wdHMtPmhzX2Nsa19yYXRl
-IC8gMTAwMDAwMCkgKyAxMDAwMCkgLyAxMDAwMDsKPiArCWlmIChuID4gMTUpCj4gKwkJbiA9IDE1
-Owo+ICsJaWYgKG4gPCAxKQo+ICsJCW4gPSAxOwo+ICsJY2ZnLT5tX3ByZ19oc190cmFpbCA9IG47
-Cj4gKwljZmctPm1jX3ByZ19oc190cmFpbCA9IG47Cj4gKwo+ICsJLyogcnhoc19zZXR0bGU6IGZv
-cm11bGEgZnJvbSBOWFAgQlNQICovCj4gKwlpZiAoZHBoeV9vcHRzLT5oc19jbGtfcmF0ZSA8IE1C
-UFMoODApKQo+ICsJCWNmZy0+cnhoc19zZXR0bGUgPSAweDBkOwo+ICsJZWxzZSBpZiAoZHBoeV9v
-cHRzLT5oc19jbGtfcmF0ZSA8IE1CUFMoOTApKQo+ICsJCWNmZy0+cnhoc19zZXR0bGUgPSAweDBj
-Owo+ICsJZWxzZSBpZiAoZHBoeV9vcHRzLT5oc19jbGtfcmF0ZSA8IE1CUFMoMTI1KSkKPiArCQlj
-ZmctPnJ4aHNfc2V0dGxlID0gMHgwYjsKPiArCWVsc2UgaWYgKGRwaHlfb3B0cy0+aHNfY2xrX3Jh
-dGUgPCBNQlBTKDE1MCkpCj4gKwkJY2ZnLT5yeGhzX3NldHRsZSA9IDB4MGE7Cj4gKwllbHNlIGlm
-IChkcGh5X29wdHMtPmhzX2Nsa19yYXRlIDwgTUJQUygyMjUpKQo+ICsJCWNmZy0+cnhoc19zZXR0
-bGUgPSAweDA5Owo+ICsJZWxzZSBpZiAoZHBoeV9vcHRzLT5oc19jbGtfcmF0ZSA8IE1CUFMoNTAw
-KSkKPiArCQljZmctPnJ4aHNfc2V0dGxlID0gMHgwODsKPiArCWVsc2UKPiArCQljZmctPnJ4aHNf
-c2V0dGxlID0gMHgwNzsKPiArCj4gKwlkZXZfZGJnKCZwaHktPmRldiwgImhzX3ByZXBhcmU6ICV1
-LCBjbGtfcHJlcGFyZTogJXUsICIKPiArCQkiaHNfcHJlcGFyZTogJXUsIGNsa19wcmVwYXJlOiAl
-dSwgIgo+ICsJCSJoc190cmFpbDogJXUsIGNsa190cmFpbDogJXUsICIKPiArCQkicnhoc19zZXR0
-bGU6ICV1XG4iLAo+ICsJCWNmZy0+bV9wcmdfaHNfcHJlcGFyZSwgY2ZnLT5tY19wcmdfaHNfcHJl
-cGFyZSwKPiArCQljZmctPm1fcHJnX2hzX3plcm8sIGNmZy0+bWNfcHJnX2hzX3plcm8sCj4gKwkJ
-Y2ZnLT5tX3ByZ19oc190cmFpbCwgY2ZnLT5tY19wcmdfaHNfdHJhaWwsCj4gKwkJY2ZnLT5yeGhz
-X3NldHRsZSk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyB2b2lkIG1peGVs
-X3BoeV9zZXRfaHNfdGltaW5ncyhzdHJ1Y3QgcGh5ICpwaHkpCj4gK3sKPiArCXN0cnVjdCBtaXhl
-bF9kcGh5X3ByaXYgKnByaXYgPSBwaHlfZ2V0X2RydmRhdGEocGh5KTsKPiArCj4gKwlwaHlfd3Jp
-dGUocGh5LCBwcml2LT5jZmcubV9wcmdfaHNfcHJlcGFyZSwgRFBIWV9NX1BSR19IU19QUkVQQVJF
-KTsKPiArCXBoeV93cml0ZShwaHksIHByaXYtPmNmZy5tY19wcmdfaHNfcHJlcGFyZSwgRFBIWV9N
-Q19QUkdfSFNfUFJFUEFSRSk7Cj4gKwlwaHlfd3JpdGUocGh5LCBwcml2LT5jZmcubV9wcmdfaHNf
-emVybywgRFBIWV9NX1BSR19IU19aRVJPKTsKPiArCXBoeV93cml0ZShwaHksIHByaXYtPmNmZy5t
-Y19wcmdfaHNfemVybywgRFBIWV9NQ19QUkdfSFNfWkVSTyk7Cj4gKwlwaHlfd3JpdGUocGh5LCBw
-cml2LT5jZmcubV9wcmdfaHNfdHJhaWwsIERQSFlfTV9QUkdfSFNfVFJBSUwpOwo+ICsJcGh5X3dy
-aXRlKHBoeSwgcHJpdi0+Y2ZnLm1jX3ByZ19oc190cmFpbCwgRFBIWV9NQ19QUkdfSFNfVFJBSUwp
-Owo+ICsJcGh5X3dyaXRlKHBoeSwgcHJpdi0+Y2ZnLnJ4aHNfc2V0dGxlLCBwcml2LT5kZXZkYXRh
-LT5yZWdfcnhoc19zZXR0bGUpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IG1peGVsX2RwaHlfc2V0
-X3BsbF9wYXJhbXMoc3RydWN0IHBoeSAqcGh5KQo+ICt7Cj4gKwlzdHJ1Y3QgbWl4ZWxfZHBoeV9w
-cml2ICpwcml2ID0gZGV2X2dldF9kcnZkYXRhKHBoeS0+ZGV2LnBhcmVudCk7Cj4gKwo+ICsJaWYg
-KHByaXYtPmNmZy5jbSA8IDE2IHx8IHByaXYtPmNmZy5jbSA+IDI1NSB8fAo+ICsJICAgIHByaXYt
-PmNmZy5jbiA8IDEgfHwgcHJpdi0+Y2ZnLmNuID4gMzIgfHwKPiArCSAgICBwcml2LT5jZmcuY28g
-PCAxIHx8IHByaXYtPmNmZy5jbyA+IDgpIHsKPiArCQlkZXZfZXJyKCZwaHktPmRldiwgIkludmFs
-aWQgQ00vQ04vQ08gdmFsdWVzISAoJXUvJXUvJXUpXG4iLAo+ICsJCQlwcml2LT5jZmcuY20sIHBy
-aXYtPmNmZy5jbiwgcHJpdi0+Y2ZnLmNvKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiAr
-CWRldl9kYmcoJnBoeS0+ZGV2LCAiVXNpbmcgQ006JXUgQ046JXUgQ086JXVcbiIsCj4gKwkJcHJp
-di0+Y2ZnLmNtLCBwcml2LT5jZmcuY24sIHByaXYtPmNmZy5jbyk7Cj4gKwlwaHlfd3JpdGUocGh5
-LCBDTShwcml2LT5jZmcuY20pLCBEUEhZX0NNKTsKPiArCXBoeV93cml0ZShwaHksIENOKHByaXYt
-PmNmZy5jbiksIERQSFlfQ04pOwo+ICsJcGh5X3dyaXRlKHBoeSwgQ08ocHJpdi0+Y2ZnLmNvKSwg
-RFBIWV9DTyk7Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBtaXhlbF9kcGh5
-X2NvbmZpZ3VyZShzdHJ1Y3QgcGh5ICpwaHksIHVuaW9uIHBoeV9jb25maWd1cmVfb3B0cyAqb3B0
-cykKPiArewo+ICsJc3RydWN0IG1peGVsX2RwaHlfcHJpdiAqcHJpdiA9IHBoeV9nZXRfZHJ2ZGF0
-YShwaHkpOwo+ICsJc3RydWN0IG1peGVsX2RwaHlfY2ZnIGNmZyA9IHsgMCB9Owo+ICsJaW50IHJl
-dDsKPiArCj4gKwlyZXQgPSBtaXhlbF9kcGh5X2NvbmZpZ19mcm9tX29wdHMocGh5LCAmb3B0cy0+
-bWlwaV9kcGh5LCAmY2ZnKTsKPiArCWlmIChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwkv
-KiBVcGRhdGUgdGhlIGNvbmZpZ3VyYXRpb24gKi8KPiArCW1lbWNweSgmcHJpdi0+Y2ZnLCAmY2Zn
-LCBzaXplb2Yoc3RydWN0IG1peGVsX2RwaHlfY2ZnKSk7Cj4gKwo+ICsJcGh5X3dyaXRlKHBoeSwg
-MHgwMCwgRFBIWV9MT0NLX0JZUCk7Cj4gKwlwaHlfd3JpdGUocGh5LCAweDAxLCBwcml2LT5kZXZk
-YXRhLT5yZWdfdHhfcmNhbCk7Cj4gKwlwaHlfd3JpdGUocGh5LCAweDAwLCBwcml2LT5kZXZkYXRh
-LT5yZWdfYXV0b19wZF9lbik7Cj4gKwlwaHlfd3JpdGUocGh5LCAweDAyLCBwcml2LT5kZXZkYXRh
-LT5yZWdfcnhscHJwKTsKPiArCXBoeV93cml0ZShwaHksIDB4MDIsIHByaXYtPmRldmRhdGEtPnJl
-Z19yeGNkcnApOwo+ICsJcGh5X3dyaXRlKHBoeSwgMHgyNSwgRFBIWV9UU1QpOwo+ICsKPiArCW1p
-eGVsX3BoeV9zZXRfaHNfdGltaW5ncyhwaHkpOwo+ICsJcmV0ID0gbWl4ZWxfZHBoeV9zZXRfcGxs
-X3BhcmFtcyhwaHkpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwly
-ZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBtaXhlbF9kcGh5X3ZhbGlkYXRlKHN0cnVj
-dCBwaHkgKnBoeSwgZW51bSBwaHlfbW9kZSBtb2RlLCBpbnQgc3VibW9kZSwKPiArCQkJICAgICAg
-IHVuaW9uIHBoeV9jb25maWd1cmVfb3B0cyAqb3B0cykKPiArewo+ICsJc3RydWN0IG1peGVsX2Rw
-aHlfY2ZnIGNmZyA9IHsgMCB9Owo+ICsKPiArCWlmIChtb2RlICE9IFBIWV9NT0RFX01JUElfRFBI
-WSkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4gKwlyZXR1cm4gbWl4ZWxfZHBoeV9jb25maWdf
-ZnJvbV9vcHRzKHBoeSwgJm9wdHMtPm1pcGlfZHBoeSwgJmNmZyk7Cj4gK30KPiArCj4gKwo+ICtz
-dGF0aWMgaW50IG1peGVsX2RwaHlfaW5pdChzdHJ1Y3QgcGh5ICpwaHkpCj4gK3sKPiArCXBoeV93
-cml0ZShwaHksIFBXUl9PRkYsIERQSFlfUERfUExMKTsKPiArCXBoeV93cml0ZShwaHksIFBXUl9P
-RkYsIERQSFlfUERfRFBIWSk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gKwo+ICtzdGF0
-aWMgaW50IG1peGVsX2RwaHlfZXhpdChzdHJ1Y3QgcGh5ICpwaHkpCj4gK3sKPiArCXBoeV93cml0
-ZShwaHksIDAsIERQSFlfQ00pOwo+ICsJcGh5X3dyaXRlKHBoeSwgMCwgRFBIWV9DTik7Cj4gKwlw
-aHlfd3JpdGUocGh5LCAwLCBEUEhZX0NPKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAr
-Cj4gK3N0YXRpYyBpbnQgbWl4ZWxfZHBoeV9wb3dlcl9vbihzdHJ1Y3QgcGh5ICpwaHkpCj4gK3sK
-PiArCXN0cnVjdCBtaXhlbF9kcGh5X3ByaXYgKnByaXYgPSBwaHlfZ2V0X2RydmRhdGEocGh5KTsK
-PiArCXUzMiBsb2NrZWQ7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCXJldCA9IGNsa19wcmVwYXJlX2Vu
-YWJsZShwcml2LT5waHlfcmVmX2Nsayk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlyZXR1cm4gcmV0
-Owo+ICsKPiArCXBoeV93cml0ZShwaHksIFBXUl9PTiwgRFBIWV9QRF9QTEwpOwo+ICsJcmV0ID0g
-cmVnbWFwX3JlYWRfcG9sbF90aW1lb3V0KHByaXYtPnJlZ3MsIERQSFlfTE9DSywgbG9ja2VkLAo+
-ICsJCQkJICAgICAgIGxvY2tlZCwgUExMX0xPQ0tfU0xFRVAsCj4gKwkJCQkgICAgICAgUExMX0xP
-Q0tfVElNRU9VVCk7Cj4gKwlpZiAocmV0IDwgMCkgewo+ICsJCWRldl9lcnIoJnBoeS0+ZGV2LCAi
-Q291bGQgbm90IGdldCBEUEhZIGxvY2sgKCVkKSFcbiIsIHJldCk7Cj4gKwkJZ290byBjbG9ja19k
-aXNhYmxlOwo+ICsJfQo+ICsJcGh5X3dyaXRlKHBoeSwgUFdSX09OLCBEUEhZX1BEX0RQSFkpOwo+
-ICsKPiArCXJldHVybiAwOwo+ICtjbG9ja19kaXNhYmxlOgo+ICsJY2xrX2Rpc2FibGVfdW5wcmVw
-YXJlKHByaXYtPnBoeV9yZWZfY2xrKTsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRp
-YyBpbnQgbWl4ZWxfZHBoeV9wb3dlcl9vZmYoc3RydWN0IHBoeSAqcGh5KQo+ICt7Cj4gKwlzdHJ1
-Y3QgbWl4ZWxfZHBoeV9wcml2ICpwcml2ID0gcGh5X2dldF9kcnZkYXRhKHBoeSk7Cj4gKwo+ICsJ
-cGh5X3dyaXRlKHBoeSwgUFdSX09GRiwgRFBIWV9QRF9QTEwpOwo+ICsJcGh5X3dyaXRlKHBoeSwg
-UFdSX09GRiwgRFBIWV9QRF9EUEhZKTsKPiArCj4gKwljbGtfZGlzYWJsZV91bnByZXBhcmUocHJp
-di0+cGh5X3JlZl9jbGspOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICsKPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBwaHlfb3BzIG1peGVsX2RwaHlfcGh5X29wcyA9IHsKPiArCS5pbml0ID0g
-bWl4ZWxfZHBoeV9pbml0LAo+ICsJLmV4aXQgPSBtaXhlbF9kcGh5X2V4aXQsCj4gKwkucG93ZXJf
-b24gPSBtaXhlbF9kcGh5X3Bvd2VyX29uLAo+ICsJLnBvd2VyX29mZiA9IG1peGVsX2RwaHlfcG93
-ZXJfb2ZmLAo+ICsJLmNvbmZpZ3VyZSA9IG1peGVsX2RwaHlfY29uZmlndXJlLAo+ICsJLnZhbGlk
-YXRlID0gbWl4ZWxfZHBoeV92YWxpZGF0ZSwKPiArCS5vd25lciA9IFRISVNfTU9EVUxFLAo+ICt9
-Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbWl4ZWxfZHBoeV9vZl9t
-YXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLW1pcGktZHBoeSIsCj4g
-KwkgIC5kYXRhID0gJm1peGVsX2RwaHlfZGV2ZGF0YVtNSVhFTF9JTVg4TVFdIH0sCj4gKwl7IC8q
-IHNlbnRpbmVsICovIH0sCj4gK307Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG1peGVsX2Rw
-aHlfb2ZfbWF0Y2gpOwo+ICsKPiArc3RhdGljIGludCBtaXhlbF9kcGh5X3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gK3sKPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2
-LT5kZXY7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gZGV2LT5vZl9ub2RlOwo+ICsJc3Ry
-dWN0IHBoeV9wcm92aWRlciAqcGh5X3Byb3ZpZGVyOwo+ICsJc3RydWN0IG1peGVsX2RwaHlfcHJp
-diAqcHJpdjsKPiArCXN0cnVjdCByZXNvdXJjZSAqcmVzOwo+ICsJc3RydWN0IHBoeSAqcGh5Owo+
-ICsJdm9pZCBfX2lvbWVtICpyZWdzOwo+ICsKPiArCWlmICghbnApCj4gKwkJcmV0dXJuIC1FTk9E
-RVY7Cj4gKwo+ICsJcHJpdiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJpdiksIEdGUF9L
-RVJORUwpOwo+ICsJaWYgKCFwcml2KQo+ICsJCXJldHVybiAtRU5PTUVNOwo+ICsKPiArCXByaXYt
-PmRldmRhdGEgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJnBkZXYtPmRldik7Cj4gKwlpZiAo
-IXByaXYtPmRldmRhdGEpCj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwo+ICsJcmVzID0gcGxhdGZv
-cm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKPiArCXJlZ3MgPSBkZXZt
-X2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOwo+ICsJaWYgKElTX0VSUihyZWdzKSkgewo+ICsJ
-CWRldl9lcnIoZGV2LCAiQ291bGRuJ3QgbWFwIHRoZSBEUEhZIHJlZ2lzdGVyc1xuIik7Cj4gKwkJ
-cmV0dXJuIFBUUl9FUlIocmVncyk7Cj4gKwl9Cj4gKwo+ICsJcHJpdi0+cmVncyA9IGRldm1fcmVn
-bWFwX2luaXRfbW1pbygmcGRldi0+ZGV2LCByZWdzLAo+ICsJCQkJCSAgICZtaXhlbF9kcGh5X3Jl
-Z21hcF9jb25maWcpOwo+ICsJaWYgKElTX0VSUihwcml2LT5yZWdzKSkgewo+ICsJCWRldl9lcnIo
-ZGV2LCAiQ291bGRuJ3QgY3JlYXRlIHRoZSBEUEhZIHJlZ21hcFxuIik7Cj4gKwkJcmV0dXJuIFBU
-Ul9FUlIocHJpdi0+cmVncyk7Cj4gKwl9Cj4gKwo+ICsJcHJpdi0+cGh5X3JlZl9jbGsgPSBkZXZt
-X2Nsa19nZXQoJnBkZXYtPmRldiwgInBoeV9yZWYiKTsKPiArCWlmIChJU19FUlIocHJpdi0+cGh5
-X3JlZl9jbGspKSB7Cj4gKwkJZGV2X2VycihkZXYsICJObyBwaHlfcmVmIGNsb2NrIGZvdW5kXG4i
-KTsKPiArCQlyZXR1cm4gUFRSX0VSUihwcml2LT5waHlfcmVmX2Nsayk7Cj4gKwl9Cj4gKwlkZXZf
-ZGJnKGRldiwgInBoeV9yZWYgY2xvY2sgcmF0ZTogJWx1XG4iLAo+ICsJCWNsa19nZXRfcmF0ZShw
-cml2LT5waHlfcmVmX2NsaykpOwo+ICsKPiArCWRldl9zZXRfZHJ2ZGF0YShkZXYsIHByaXYpOwo+
-ICsKPiArCXBoeSA9IGRldm1fcGh5X2NyZWF0ZShkZXYsIG5wLCAmbWl4ZWxfZHBoeV9waHlfb3Bz
-KTsKPiArCWlmIChJU19FUlIocGh5KSkgewo+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGNy
-ZWF0ZSBwaHkgJWxkXG4iLCBQVFJfRVJSKHBoeSkpOwo+ICsJCXJldHVybiBQVFJfRVJSKHBoeSk7
-Cj4gKwl9Cj4gKwlwaHlfc2V0X2RydmRhdGEocGh5LCBwcml2KTsKPiArCj4gKwlwaHlfcHJvdmlk
-ZXIgPSBkZXZtX29mX3BoeV9wcm92aWRlcl9yZWdpc3RlcihkZXYsIG9mX3BoeV9zaW1wbGVfeGxh
-dGUpOwo+ICsKPiArCXJldHVybiBQVFJfRVJSX09SX1pFUk8ocGh5X3Byb3ZpZGVyKTsKPiArfQo+
-ICsKPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbWl4ZWxfZHBoeV9kcml2ZXIgPSB7
-Cj4gKwkucHJvYmUJPSBtaXhlbF9kcGh5X3Byb2JlLAo+ICsJLmRyaXZlciA9IHsKPiArCQkubmFt
-ZSA9ICJtaXhlbC1taXBpLWRwaHkiLAo+ICsJCS5vZl9tYXRjaF90YWJsZQk9IG1peGVsX2RwaHlf
-b2ZfbWF0Y2gsCj4gKwl9Cj4gK307Cj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIobWl4ZWxfZHBo
-eV9kcml2ZXIpOwo+ICsKPiArTU9EVUxFX0FVVEhPUigiTlhQIFNlbWljb25kdWN0b3IiKTsKPiAr
-TU9EVUxFX0RFU0NSSVBUSU9OKCJNaXhlbCBNSVBJLURTSSBQSFkgZHJpdmVyIik7Cj4gK01PRFVM
-RV9MSUNFTlNFKCJHUEwgdjIiKTsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 17.04.2019 08:22, Oleksij Rempel wrote:
+> Add support for Atheros/QCA AR7XXX/AR9XXX/QCA95XX built-in ethernet mac support
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/ethernet/atheros/Kconfig  |   11 +-
+>  drivers/net/ethernet/atheros/Makefile |    1 +
+>  drivers/net/ethernet/atheros/ag71xx.c | 1971 +++++++++++++++++++++++++
+>  3 files changed, 1982 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/net/ethernet/atheros/ag71xx.c
+> 
+> diff --git a/drivers/net/ethernet/atheros/Kconfig b/drivers/net/ethernet/atheros/Kconfig
+> index e05b25675333..1aa4af3721d6 100644
+> --- a/drivers/net/ethernet/atheros/Kconfig
+> +++ b/drivers/net/ethernet/atheros/Kconfig
+> @@ -5,7 +5,7 @@
+>  config NET_VENDOR_ATHEROS
+>  	bool "Atheros devices"
+>  	default y
+> -	depends on PCI
+> +	depends on (PCI || ATH79)
+>  	---help---
+>  	  If you have a network (Ethernet) card belonging to this class, say Y.
+>  
+> @@ -16,6 +16,15 @@ config NET_VENDOR_ATHEROS
+>  
+>  if NET_VENDOR_ATHEROS
+>  
+> +config AG71XX
+> +	tristate "Atheros AR7XXX/AR9XXX built-in ethernet mac support"
+> +	depends on ATH79
+> +	select PHYLIB
+> +	select MDIO_BITBANG
+> +	help
+> +	  If you wish to compile a kernel for AR7XXX/91XXX and enable
+> +	  ethernet support, then you should always answer Y to this.
+> +
+>  config ATL2
+>  	tristate "Atheros L2 Fast Ethernet support"
+>  	depends on PCI
+> diff --git a/drivers/net/ethernet/atheros/Makefile b/drivers/net/ethernet/atheros/Makefile
+> index aa3d394b87e6..aca696cb6425 100644
+> --- a/drivers/net/ethernet/atheros/Makefile
+> +++ b/drivers/net/ethernet/atheros/Makefile
+> @@ -3,6 +3,7 @@
+>  # Makefile for the Atheros network device drivers.
+>  #
+>  
+> +obj-$(CONFIG_AG71XX) += ag71xx.o
+>  obj-$(CONFIG_ATL1) += atlx/
+>  obj-$(CONFIG_ATL2) += atlx/
+>  obj-$(CONFIG_ATL1E) += atl1e/
+> diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+> new file mode 100644
+> index 000000000000..0e1374ddac63
+> --- /dev/null
+> +++ b/drivers/net/ethernet/atheros/ag71xx.c
+> @@ -0,0 +1,1971 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Atheros AR71xx built-in ethernet mac driver
+> + *
+> + *  Copyright (C) 2019 Oleksij Rempel <o.rempel@pengutronix.de>
+> + *  Copyright (C) 2008-2010 Gabor Juhos <juhosg@openwrt.org>
+> + *  Copyright (C) 2008 Imre Kaloz <kaloz@openwrt.org>
+> + *
+> + *  Based on Atheros' AG7100 driver
+> + */
+> +
+> +#include <linux/if_vlan.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/of_net.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/clk.h>
+> +
+> +/*
+> + * For our NAPI weight bigger does *NOT* mean better - it means more
+> + * D-cache misses and lots more wasted cycles than we'll ever
+> + * possibly gain from saving instructions.
+> + */
+> +#define AG71XX_NAPI_WEIGHT	32
+> +#define AG71XX_OOM_REFILL	(1 + HZ/10)
+> +
+> +#define AG71XX_INT_ERR	(AG71XX_INT_RX_BE | AG71XX_INT_TX_BE)
+> +#define AG71XX_INT_TX	(AG71XX_INT_TX_PS)
+> +#define AG71XX_INT_RX	(AG71XX_INT_RX_PR | AG71XX_INT_RX_OF)
+> +
+> +#define AG71XX_INT_POLL	(AG71XX_INT_RX | AG71XX_INT_TX)
+> +#define AG71XX_INT_INIT	(AG71XX_INT_ERR | AG71XX_INT_POLL)
+> +
+> +#define AG71XX_TX_MTU_LEN	1540
+> +
+> +#define AG71XX_TX_RING_SPLIT		512
+> +#define AG71XX_TX_RING_DS_PER_PKT	DIV_ROUND_UP(AG71XX_TX_MTU_LEN, \
+> +						     AG71XX_TX_RING_SPLIT)
+> +#define AG71XX_TX_RING_SIZE_DEFAULT	128
+> +#define AG71XX_RX_RING_SIZE_DEFAULT	256
+> +
+> +#define AG71XX_MDIO_RETRY	1000
+> +#define AG71XX_MDIO_DELAY	5
+> +#define AG71XX_MDIO_MAX_CLK	5000000
+> +
+> +/* quirks */
+> +#define AG71XX_ETH0_NO_MDIO	BIT(0)
+> +
+> +/* Register offsets */
+> +#define AG71XX_REG_MAC_CFG1	0x0000
+> +#define MAC_CFG1_TXE		BIT(0)	/* Tx Enable */
+> +#define MAC_CFG1_STX		BIT(1)	/* Synchronize Tx Enable */
+> +#define MAC_CFG1_RXE		BIT(2)	/* Rx Enable */
+> +#define MAC_CFG1_SRX		BIT(3)	/* Synchronize Rx Enable */
+> +#define MAC_CFG1_TFC		BIT(4)	/* Tx Flow Control Enable */
+> +#define MAC_CFG1_RFC		BIT(5)	/* Rx Flow Control Enable */
+> +#define MAC_CFG1_SR		BIT(31)	/* Soft Reset */
+> +#define MAC_CFG1_INIT	(MAC_CFG1_RXE | MAC_CFG1_TXE | \
+> +			 MAC_CFG1_SRX | MAC_CFG1_STX)
+> +
+> +#define AG71XX_REG_MAC_CFG2	0x0004
+> +#define MAC_CFG2_FDX		BIT(0)
+> +#define MAC_CFG2_PAD_CRC_EN	BIT(2)
+> +#define MAC_CFG2_LEN_CHECK	BIT(4)
+> +#define MAC_CFG2_IF_1000	BIT(9)
+> +#define MAC_CFG2_IF_10_100	BIT(8)
+> +
+> +#define AG71XX_REG_MAC_MFL	0x0010
+> +
+> +#define AG71XX_REG_MII_CFG	0x0020
+> +#define MII_CFG_CLK_DIV_4	0
+> +#define MII_CFG_CLK_DIV_6	2
+> +#define MII_CFG_CLK_DIV_8	3
+> +#define MII_CFG_CLK_DIV_10	4
+> +#define MII_CFG_CLK_DIV_14	5
+> +#define MII_CFG_CLK_DIV_20	6
+> +#define MII_CFG_CLK_DIV_28	7
+> +#define MII_CFG_CLK_DIV_34	8
+> +#define MII_CFG_CLK_DIV_42	9
+> +#define MII_CFG_CLK_DIV_50	10
+> +#define MII_CFG_CLK_DIV_58	11
+> +#define MII_CFG_CLK_DIV_66	12
+> +#define MII_CFG_CLK_DIV_74	13
+> +#define MII_CFG_CLK_DIV_82	14
+> +#define MII_CFG_CLK_DIV_98	15
+> +#define MII_CFG_RESET		BIT(31)
+> +
+> +#define AG71XX_REG_MII_CMD	0x0024
+> +#define MII_CMD_WRITE		0x0
+> +#define MII_CMD_READ		0x1
+> +
+> +#define AG71XX_REG_MII_ADDR	0x0028
+> +#define MII_ADDR_SHIFT		8
+> +
+> +#define AG71XX_REG_MII_CTRL	0x002c
+> +#define AG71XX_REG_MII_STATUS	0x0030
+> +#define AG71XX_REG_MII_IND	0x0034
+> +#define MII_IND_BUSY		BIT(0)
+> +#define MII_IND_INVALID		BIT(2)
+> +
+> +#define AG71XX_REG_MAC_IFCTL	0x0038
+> +#define MAC_IFCTL_SPEED		BIT(16)
+> +
+> +#define AG71XX_REG_MAC_ADDR1	0x0040
+> +#define AG71XX_REG_MAC_ADDR2	0x0044
+> +#define AG71XX_REG_FIFO_CFG0	0x0048
+> +#define FIFO_CFG0_WTM		BIT(0)	/* Watermark Module */
+> +#define FIFO_CFG0_RXS		BIT(1)	/* Rx System Module */
+> +#define FIFO_CFG0_RXF		BIT(2)	/* Rx Fabric Module */
+> +#define FIFO_CFG0_TXS		BIT(3)	/* Tx System Module */
+> +#define FIFO_CFG0_TXF		BIT(4)	/* Tx Fabric Module */
+> +#define FIFO_CFG0_ALL	(FIFO_CFG0_WTM | FIFO_CFG0_RXS | FIFO_CFG0_RXF \
+> +			| FIFO_CFG0_TXS | FIFO_CFG0_TXF)
+> +#define FIFO_CFG0_INIT	(FIFO_CFG0_ALL << FIFO_CFG0_ENABLE_SHIFT)
+> +
+> +#define FIFO_CFG0_ENABLE_SHIFT	8
+> +
+> +#define AG71XX_REG_FIFO_CFG1	0x004c
+> +#define AG71XX_REG_FIFO_CFG2	0x0050
+> +#define AG71XX_REG_FIFO_CFG3	0x0054
+> +#define AG71XX_REG_FIFO_CFG4	0x0058
+> +#define FIFO_CFG4_DE		BIT(0)	/* Drop Event */
+> +#define FIFO_CFG4_DV		BIT(1)	/* RX_DV Event */
+> +#define FIFO_CFG4_FC		BIT(2)	/* False Carrier */
+> +#define FIFO_CFG4_CE		BIT(3)	/* Code Error */
+> +#define FIFO_CFG4_CR		BIT(4)	/* CRC error */
+> +#define FIFO_CFG4_LM		BIT(5)	/* Length Mismatch */
+> +#define FIFO_CFG4_LO		BIT(6)	/* Length out of range */
+> +#define FIFO_CFG4_OK		BIT(7)	/* Packet is OK */
+> +#define FIFO_CFG4_MC		BIT(8)	/* Multicast Packet */
+> +#define FIFO_CFG4_BC		BIT(9)	/* Broadcast Packet */
+> +#define FIFO_CFG4_DR		BIT(10)	/* Dribble */
+> +#define FIFO_CFG4_LE		BIT(11)	/* Long Event */
+> +#define FIFO_CFG4_CF		BIT(12)	/* Control Frame */
+> +#define FIFO_CFG4_PF		BIT(13)	/* Pause Frame */
+> +#define FIFO_CFG4_UO		BIT(14)	/* Unsupported Opcode */
+> +#define FIFO_CFG4_VT		BIT(15)	/* VLAN tag detected */
+> +#define FIFO_CFG4_FT		BIT(16)	/* Frame Truncated */
+> +#define FIFO_CFG4_UC		BIT(17)	/* Unicast Packet */
+> +#define FIFO_CFG4_INIT	(FIFO_CFG4_DE | FIFO_CFG4_DV | FIFO_CFG4_FC | \
+> +			 FIFO_CFG4_CE | FIFO_CFG4_CR | FIFO_CFG4_LM | \
+> +			 FIFO_CFG4_LO | FIFO_CFG4_OK | FIFO_CFG4_MC | \
+> +			 FIFO_CFG4_BC | FIFO_CFG4_DR | FIFO_CFG4_LE | \
+> +			 FIFO_CFG4_CF | FIFO_CFG4_PF | FIFO_CFG4_UO | \
+> +			 FIFO_CFG4_VT)
+> +
+> +#define AG71XX_REG_FIFO_CFG5	0x005c
+> +#define FIFO_CFG5_DE		BIT(0)	/* Drop Event */
+> +#define FIFO_CFG5_DV		BIT(1)	/* RX_DV Event */
+> +#define FIFO_CFG5_FC		BIT(2)	/* False Carrier */
+> +#define FIFO_CFG5_CE		BIT(3)	/* Code Error */
+> +#define FIFO_CFG5_LM		BIT(4)	/* Length Mismatch */
+> +#define FIFO_CFG5_LO		BIT(5)	/* Length Out of Range */
+> +#define FIFO_CFG5_OK		BIT(6)	/* Packet is OK */
+> +#define FIFO_CFG5_MC		BIT(7)	/* Multicast Packet */
+> +#define FIFO_CFG5_BC		BIT(8)	/* Broadcast Packet */
+> +#define FIFO_CFG5_DR		BIT(9)	/* Dribble */
+> +#define FIFO_CFG5_CF		BIT(10)	/* Control Frame */
+> +#define FIFO_CFG5_PF		BIT(11)	/* Pause Frame */
+> +#define FIFO_CFG5_UO		BIT(12)	/* Unsupported Opcode */
+> +#define FIFO_CFG5_VT		BIT(13)	/* VLAN tag detected */
+> +#define FIFO_CFG5_LE		BIT(14)	/* Long Event */
+> +#define FIFO_CFG5_FT		BIT(15)	/* Frame Truncated */
+> +#define FIFO_CFG5_16		BIT(16)	/* unknown */
+> +#define FIFO_CFG5_17		BIT(17)	/* unknown */
+> +#define FIFO_CFG5_SF		BIT(18)	/* Short Frame */
+> +#define FIFO_CFG5_BM		BIT(19)	/* Byte Mode */
+> +#define FIFO_CFG5_INIT	(FIFO_CFG5_DE | FIFO_CFG5_DV | FIFO_CFG5_FC | \
+> +			 FIFO_CFG5_CE | FIFO_CFG5_LO | FIFO_CFG5_OK | \
+> +			 FIFO_CFG5_MC | FIFO_CFG5_BC | FIFO_CFG5_DR | \
+> +			 FIFO_CFG5_CF | FIFO_CFG5_PF | FIFO_CFG5_VT | \
+> +			 FIFO_CFG5_LE | FIFO_CFG5_FT | FIFO_CFG5_16 | \
+> +			 FIFO_CFG5_17 | FIFO_CFG5_SF)
+> +
+> +#define AG71XX_REG_TX_CTRL	0x0180
+> +#define TX_CTRL_TXE		BIT(0)	/* Tx Enable */
+> +
+> +#define AG71XX_REG_TX_DESC	0x0184
+> +#define AG71XX_REG_TX_STATUS	0x0188
+> +#define TX_STATUS_PS		BIT(0)	/* Packet Sent */
+> +#define TX_STATUS_UR		BIT(1)	/* Tx Underrun */
+> +#define TX_STATUS_BE		BIT(3)	/* Bus Error */
+> +
+> +#define AG71XX_REG_RX_CTRL	0x018c
+> +#define RX_CTRL_RXE		BIT(0)	/* Rx Enable */
+> +
+> +#define AG71XX_REG_RX_DESC	0x0190
+> +#define AG71XX_REG_RX_STATUS	0x0194
+> +#define RX_STATUS_PR		BIT(0)	/* Packet Received */
+> +#define RX_STATUS_OF		BIT(2)	/* Rx Overflow */
+> +#define RX_STATUS_BE		BIT(3)	/* Bus Error */
+> +
+> +#define AG71XX_REG_INT_ENABLE	0x0198
+> +#define AG71XX_REG_INT_STATUS	0x019c
+> +#define AG71XX_INT_TX_PS	BIT(0)
+> +#define AG71XX_INT_TX_UR	BIT(1)
+> +#define AG71XX_INT_TX_BE	BIT(3)
+> +#define AG71XX_INT_RX_PR	BIT(4)
+> +#define AG71XX_INT_RX_OF	BIT(6)
+> +#define AG71XX_INT_RX_BE	BIT(7)
+> +
+> +#define AG71XX_REG_FIFO_DEPTH	0x01a8
+> +#define AG71XX_REG_RX_SM	0x01b0
+> +#define AG71XX_REG_TX_SM	0x01b4
+> +
+> +#define ETH_SWITCH_HEADER_LEN	2
+> +
+> +#define AG71XX_DEFAULT_MSG_ENABLE	\
+> +	(NETIF_MSG_DRV			\
+> +	| NETIF_MSG_PROBE		\
+> +	| NETIF_MSG_LINK		\
+> +	| NETIF_MSG_TIMER		\
+> +	| NETIF_MSG_IFDOWN		\
+> +	| NETIF_MSG_IFUP		\
+> +	| NETIF_MSG_RX_ERR		\
+> +	| NETIF_MSG_TX_ERR)
+> +
+> +static int ag71xx_msg_enable = -1;
+> +
+> +module_param_named(msg_enable, ag71xx_msg_enable, uint,
+> +		   (S_IRUSR|S_IRGRP|S_IROTH));
+> +MODULE_PARM_DESC(msg_enable, "Debug message level (see linux/netdevice.h for bitmap)");
+> +
+> +struct ag71xx_desc {
+> +	u32	data;
+> +	u32	ctrl;
+> +#define DESC_EMPTY	BIT(31)
+> +#define DESC_MORE	BIT(24)
+> +#define DESC_PKTLEN_M	0xfff
+> +	u32	next;
+> +	u32	pad;
+> +} __attribute__((aligned(4)));
+> +
+> +#define AG71XX_DESC_SIZE	roundup(sizeof(struct ag71xx_desc), \
+> +					L1_CACHE_BYTES)
+> +
+> +struct ag71xx_buf {
+> +	union {
+> +		struct sk_buff	*skb;
+> +		void		*rx_buf;
+> +	};
+> +	union {
+> +		dma_addr_t	dma_addr;
+> +		unsigned int		len;
+> +	};
+> +};
+> +
+> +struct ag71xx_ring {
+> +	/* "Hot" fields in the data path. */
+> +	unsigned int		curr;
+> +	unsigned int		dirty;
+> +
+> +	/* "Cold" fields - not used in the data path. */
+> +	struct ag71xx_buf	*buf;
+> +	u16			order;
+> +	u16			desc_split;
+> +	dma_addr_t		descs_dma;
+> +	u8 *descs_cpu;
+> +};
+> +
+> +enum ag71xx_type {
+> +	AR7100,
+> +	AR7240,
+> +	AR9130,
+> +	AR9330,
+> +	AR9340,
+> +	QCA9530,
+> +	QCA9550,
+> +};
+> +
+> +struct ag71xx_dcfg {
+> +	u32			max_frame_len;
+> +	const u32		*fifodata;
+> +	u32			quirks;
+> +	u16			desc_pktlen_mask;
+> +	bool			tx_hang_workaround;
+> +	enum ag71xx_type	type;
+> +};
+> +
+> +struct ag71xx {
+> +	/*
+> +	 * Critical data related to the per-packet data path are clustered
+> +	 * early in this structure to help improve the D-cache footprint.
+> +	 */
+> +	struct ag71xx_ring	rx_ring ____cacheline_aligned;
+> +	struct ag71xx_ring	tx_ring ____cacheline_aligned;
+> +
+> +	u16			rx_buf_size;
+> +	u8			rx_buf_offset;
+> +
+> +	struct net_device	*ndev;
+> +	struct platform_device  *pdev;
+> +	spinlock_t		lock;
+> +	struct napi_struct	napi;
+> +	u32			msg_enable;
+> +	const struct ag71xx_dcfg	*dcfg;
+> +
+> +	/*
+> +	 * From this point onwards we're not looking at per-packet fields.
+> +	 */
+> +	void __iomem		*mac_base;
+> +
+> +	struct ag71xx_desc	*stop_desc;
+> +	dma_addr_t		stop_desc_dma;
+> +
+> +	struct phy_device	*phy_dev;
+> +	int			phy_if_mode;
+> +
+> +	unsigned int		link;
+> +	unsigned int		speed;
+> +	int			duplex;
+> +
+> +	struct delayed_work	restart_work;
+> +	struct timer_list	oom_timer;
+> +
+> +	struct reset_control	*mac_reset;
+> +
+> +	u32			fifodata[3];
+> +	int			mac_idx;
+> +
+> +	struct reset_control	*mdio_reset;
+> +	struct mii_bus		*mii_bus;
+> +};
+> +
+> +static int ag71xx_desc_empty(struct ag71xx_desc *desc)
+> +{
+> +	return (desc->ctrl & DESC_EMPTY) != 0;
+> +}
+> +
+> +static struct ag71xx_desc *ag71xx_ring_desc(struct ag71xx_ring *ring, int idx)
+> +{
+> +	return (struct ag71xx_desc *) &ring->descs_cpu[idx * AG71XX_DESC_SIZE];
+> +}
+> +
+> +static int ag71xx_ring_size_order(int size)
+> +{
+> +	return fls(size - 1);
+> +}
+> +
+> +static bool ag71xx_is(struct ag71xx *ag, enum ag71xx_type type)
+> +{
+> +	return ag->dcfg->type == type;
+> +}
+> +
+> +static void ag71xx_wr(struct ag71xx *ag, unsigned reg, u32 value)
+> +{
+> +	__raw_writel(value, ag->mac_base + reg);
+> +	/* flush write */
+> +	(void) __raw_readl(ag->mac_base + reg);
+> +}
+> +
+> +static u32 ag71xx_rr(struct ag71xx *ag, unsigned reg)
+> +{
+> +	return __raw_readl(ag->mac_base + reg);
+> +}
+> +
+> +static void ag71xx_sb(struct ag71xx *ag, unsigned reg, u32 mask)
+> +{
+> +	void __iomem *r;
+> +
+> +	r = ag->mac_base + reg;
+> +	__raw_writel(__raw_readl(r) | mask, r);
+> +	/* flush write */
+> +	(void) __raw_readl(r);
+> +}
+> +
+> +static void ag71xx_cb(struct ag71xx *ag, unsigned reg, u32 mask)
+> +{
+> +	void __iomem *r;
+> +
+> +	r = ag->mac_base + reg;
+> +	__raw_writel(__raw_readl(r) & ~mask, r);
+> +	/* flush write */
+> +	(void) __raw_readl(r);
+> +}
+> +
+> +static void ag71xx_int_enable(struct ag71xx *ag, u32 ints)
+> +{
+> +	ag71xx_sb(ag, AG71XX_REG_INT_ENABLE, ints);
+> +}
+> +
+> +static void ag71xx_int_disable(struct ag71xx *ag, u32 ints)
+> +{
+> +	ag71xx_cb(ag, AG71XX_REG_INT_ENABLE, ints);
+> +}
+> +
+> +static int ag71xx_mdio_wait_busy(struct ag71xx *ag)
+> +{
+> +	struct net_device *ndev = ag->ndev;
+> +	int i;
+> +
+> +	for (i = 0; i < AG71XX_MDIO_RETRY; i++) {
+> +		u32 busy;
+> +
+> +		udelay(AG71XX_MDIO_DELAY);
+> +
+> +		busy = ag71xx_rr(ag, AG71XX_REG_MII_IND);
+> +		if (!busy)
+> +			return 0;
+> +
+> +		udelay(AG71XX_MDIO_DELAY);
+> +	}
+> +
+> +	netif_err(ag, link, ndev, "MDIO operation timed out\n");
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int ag71xx_mdio_mii_read(struct mii_bus *bus, int addr, int reg)
+> +{
+> +	struct ag71xx *ag = bus->priv;
+> +	struct net_device *ndev = ag->ndev;
+> +	int err;
+> +	int ret;
+> +
+> +	err = ag71xx_mdio_wait_busy(ag);
+> +	if (err)
+> +		return 0xffff;
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
+> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_READ);
+> +
+> +	err = ag71xx_mdio_wait_busy(ag);
+> +	if (err)
+> +		return 0xffff;
+> +
+> +	ret = ag71xx_rr(ag, AG71XX_REG_MII_STATUS);
+> +	ret &= 0xffff;
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+> +
+> +	netif_dbg(ag, link, ndev, "mii_read: addr=%04x, reg=%04x, value=%04x\n",
+> +		  addr, reg, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ag71xx_mdio_mii_write(struct mii_bus *bus, int addr, int reg,
+> +				 u16 val)
+> +{
+> +	struct ag71xx *ag = bus->priv;
+> +	struct net_device *ndev = ag->ndev;
+> +
+> +	netif_dbg(ag, link, ndev, "mii_write: addr=%04x, reg=%04x, value=%04x\n",
+> +		  addr, reg, val);
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
+> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CTRL, val);
+> +
+> +	ag71xx_mdio_wait_busy(ag);
+> +
+> +	return 0;
+> +}
+> +
+> +static const u32 ar71xx_mdio_div_table[] = {
+> +	4, 4, 6, 8, 10, 14, 20, 28,
+> +};
+> +
+> +static const u32 ar7240_mdio_div_table[] = {
+> +	2, 2, 4, 6, 8, 12, 18, 26, 32, 40, 48, 56, 62, 70, 78, 96,
+> +};
+> +
+> +static const u32 ar933x_mdio_div_table[] = {
+> +	4, 4, 6, 8, 10, 14, 20, 28, 34, 42, 50, 58, 66, 74, 82, 98,
+> +};
+> +
+> +static int ag71xx_mdio_get_divider(struct ag71xx *ag, u32 *div)
+> +{
+> +	struct device *dev = &ag->pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct clk *ref_clk = of_clk_get(np, 0);
+> +	unsigned long ref_clock;
+> +	const u32 *table;
+> +	int ndivs, i;
+> +
+> +	if (IS_ERR(ref_clk))
+> +		return -EINVAL;
+> +
+> +	ref_clock = clk_get_rate(ref_clk);
+> +	clk_put(ref_clk);
+> +
+> +	if (ag71xx_is(ag, AR9330) || ag71xx_is(ag, AR9340)) {
+> +		table = ar933x_mdio_div_table;
+> +		ndivs = ARRAY_SIZE(ar933x_mdio_div_table);
+> +	} else if (ag71xx_is(ag, AR7240)) {
+> +		table = ar7240_mdio_div_table;
+> +		ndivs = ARRAY_SIZE(ar7240_mdio_div_table);
+> +	} else {
+> +		table = ar71xx_mdio_div_table;
+> +		ndivs = ARRAY_SIZE(ar71xx_mdio_div_table);
+> +	}
+> +
+> +	for (i = 0; i < ndivs; i++) {
+> +		unsigned long t;
+> +
+> +		t = ref_clock / table[i];
+> +		if (t <= AG71XX_MDIO_MAX_CLK) {
+> +			*div = i;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -ENOENT;
+> +}
+> +
+> +static int ag71xx_mdio_reset(struct mii_bus *bus)
+> +{
+> +	struct ag71xx *ag = bus->priv;
+> +	u32 t;
+> +
+> +	if (ag71xx_mdio_get_divider(ag, &t)) {
+> +		if (ag71xx_is(ag, AR9340))
+> +			t = MII_CFG_CLK_DIV_58;
+> +		else
+> +			t = MII_CFG_CLK_DIV_10;
+> +	}
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CFG, t | MII_CFG_RESET);
+> +	udelay(100);
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CFG, t);
+> +	udelay(100);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ag71xx_mdio_probe(struct ag71xx *ag)
+> +{
+> +	static struct mii_bus *mii_bus;
+> +	struct device *dev = &ag->pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int i, err;
+> +
+> +	ag->mii_bus = NULL;
+> +
+> +	/*
+> +	 * On most (all?) Atheros/QCA SoCs dual eth interfaces are not equal.
+> +	 *
+> +	 * That is to say eth0 can not work independently. It only works
+> +	 * when eth1 is working.
+> +	 */
+> +	if ((ag->dcfg->quirks & AG71XX_ETH0_NO_MDIO) && !ag->mac_idx)
+> +		return 0;
+> +
+> +	mii_bus = devm_mdiobus_alloc(dev);
+> +	if (!mii_bus)
+> +		return -ENOMEM;
+> +
+> +	ag->mdio_reset = of_reset_control_get_exclusive(np, "mdio");
+> +
+> +	mii_bus->name = "ag71xx_mdio";
+> +	mii_bus->read = ag71xx_mdio_mii_read;
+> +	mii_bus->write = ag71xx_mdio_mii_write;
+> +	mii_bus->reset = ag71xx_mdio_reset;
+> +	mii_bus->priv = ag;
+> +	mii_bus->parent = dev;
+> +	snprintf(mii_bus->id, MII_BUS_ID_SIZE, "%s.%d", np->name, ag->mac_idx);
+> +
+> +	for (i = 0; i < PHY_MAX_ADDR; i++)
+> +		mii_bus->irq[i] = PHY_POLL;
+> +
+This isn't needed, see mdiobus_alloc_size().
+
+> +	if (!IS_ERR(ag->mdio_reset)) {
+> +		reset_control_assert(ag->mdio_reset);
+> +		msleep(100);
+> +		reset_control_deassert(ag->mdio_reset);
+> +		msleep(200);
+> +	}
+> +
+> +	err = of_mdiobus_register(mii_bus, np);
+> +	if (err)
+> +		return err;
+> +
+> +	ag->mii_bus = mii_bus;
+> +
+> +	return 0;
+> +}
+> +
+> +static void ag71xx_mdio_remove(struct ag71xx *ag)
+> +{
+> +	if (ag->mii_bus)
+> +		mdiobus_unregister(ag->mii_bus);
+> +}
+> +
+> +static void ag71xx_hw_stop(struct ag71xx *ag)
+> +{
+> +	/* disable all interrupts and stop the rx/tx engine */
+> +	ag71xx_wr(ag, AG71XX_REG_INT_ENABLE, 0);
+> +	ag71xx_wr(ag, AG71XX_REG_RX_CTRL, 0);
+> +	ag71xx_wr(ag, AG71XX_REG_TX_CTRL, 0);
+> +}
+> +
+> +static bool ag71xx_check_dma_stuck(struct ag71xx *ag)
+> +{
+> +	unsigned long timestamp;
+> +	u32 rx_sm, tx_sm, rx_fd;
+> +
+> +	timestamp = netdev_get_tx_queue(ag->ndev, 0)->trans_start;
+> +	if (likely(time_before(jiffies, timestamp + HZ/10)))
+> +		return false;
+> +
+> +	if (!netif_carrier_ok(ag->ndev))
+> +		return false;
+> +
+> +	rx_sm = ag71xx_rr(ag, AG71XX_REG_RX_SM);
+> +	if ((rx_sm & 0x7) == 0x3 && ((rx_sm >> 4) & 0x7) == 0x6)
+> +		return true;
+> +
+> +	tx_sm = ag71xx_rr(ag, AG71XX_REG_TX_SM);
+> +	rx_fd = ag71xx_rr(ag, AG71XX_REG_FIFO_DEPTH);
+> +	if (((tx_sm >> 4) & 0x7) == 0 && ((rx_sm & 0x7) == 0) &&
+> +	    ((rx_sm >> 4) & 0x7) == 0 && rx_fd == 0)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static int ag71xx_tx_packets(struct ag71xx *ag, bool flush)
+> +{
+> +	struct ag71xx_ring *ring = &ag->tx_ring;
+> +	struct net_device *ndev = ag->ndev;
+> +	bool dma_stuck = false;
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	int ring_size = BIT(ring->order);
+> +	int sent = 0;
+> +	int bytes_compl = 0;
+> +	int n = 0;
+> +
+> +	netif_dbg(ag, tx_queued, ndev, "processing TX ring\n");
+> +
+> +	while (ring->dirty + n != ring->curr) {
+> +		unsigned int i = (ring->dirty + n) & ring_mask;
+> +		struct ag71xx_desc *desc = ag71xx_ring_desc(ring, i);
+> +		struct sk_buff *skb = ring->buf[i].skb;
+> +
+> +		if (!flush && !ag71xx_desc_empty(desc)) {
+> +			if (ag->dcfg->tx_hang_workaround &&
+> +			    ag71xx_check_dma_stuck(ag)) {
+> +				schedule_delayed_work(&ag->restart_work, HZ / 2);
+> +				dma_stuck = true;
+> +			}
+> +			break;
+> +		}
+> +
+> +		if (flush)
+> +			desc->ctrl |= DESC_EMPTY;
+> +
+> +		n++;
+> +		if (!skb)
+> +			continue;
+> +
+> +		dev_kfree_skb_any(skb);
+> +		ring->buf[i].skb = NULL;
+> +
+> +		bytes_compl += ring->buf[i].len;
+> +
+> +		sent++;
+> +		ring->dirty += n;
+> +
+> +		while (n > 0) {
+> +			ag71xx_wr(ag, AG71XX_REG_TX_STATUS, TX_STATUS_PS);
+> +			n--;
+> +		}
+> +	}
+> +
+> +	netif_dbg(ag, tx_done, ndev, "%d packets sent out\n", sent);
+> +
+> +	if (!sent)
+> +		return 0;
+> +
+> +	ag->ndev->stats.tx_bytes += bytes_compl;
+> +	ag->ndev->stats.tx_packets += sent;
+> +
+> +	netdev_completed_queue(ag->ndev, sent, bytes_compl);
+> +	if ((ring->curr - ring->dirty) < (ring_size * 3) / 4)
+> +		netif_wake_queue(ag->ndev);
+> +
+> +	if (!dma_stuck)
+> +		cancel_delayed_work(&ag->restart_work);
+> +
+> +	return sent;
+> +}
+> +
+> +static void ag71xx_dma_reset(struct ag71xx *ag)
+> +{
+> +	u32 val;
+> +	int i;
+> +
+> +
+> +	/* stop RX and TX */
+> +	ag71xx_wr(ag, AG71XX_REG_RX_CTRL, 0);
+> +	ag71xx_wr(ag, AG71XX_REG_TX_CTRL, 0);
+> +
+> +	/*
+> +	 * give the hardware some time to really stop all rx/tx activity
+> +	 * clearing the descriptors too early causes random memory corruption
+> +	 */
+> +	mdelay(1);
+> +
+> +	/* clear descriptor addresses */
+> +	ag71xx_wr(ag, AG71XX_REG_TX_DESC, ag->stop_desc_dma);
+> +	ag71xx_wr(ag, AG71XX_REG_RX_DESC, ag->stop_desc_dma);
+> +
+> +	/* clear pending RX/TX interrupts */
+> +	for (i = 0; i < 256; i++) {
+> +		ag71xx_wr(ag, AG71XX_REG_RX_STATUS, RX_STATUS_PR);
+> +		ag71xx_wr(ag, AG71XX_REG_TX_STATUS, TX_STATUS_PS);
+> +	}
+> +
+> +	/* clear pending errors */
+> +	ag71xx_wr(ag, AG71XX_REG_RX_STATUS, RX_STATUS_BE | RX_STATUS_OF);
+> +	ag71xx_wr(ag, AG71XX_REG_TX_STATUS, TX_STATUS_BE | TX_STATUS_UR);
+> +
+> +	val = ag71xx_rr(ag, AG71XX_REG_RX_STATUS);
+> +	if (val)
+> +		pr_alert("%s: unable to clear DMA Rx status: %08x\n",
+> +			 ag->ndev->name, val);
+> +
+> +	val = ag71xx_rr(ag, AG71XX_REG_TX_STATUS);
+> +
+> +	/* mask out reserved bits */
+> +	val &= ~0xff000000;
+> +
+> +	if (val)
+> +		pr_alert("%s: unable to clear DMA Tx status: %08x\n",
+> +			 ag->ndev->name, val);
+> +
+> +}
+> +
+> +static void ag71xx_hw_setup(struct ag71xx *ag)
+> +{
+> +	u32 init = MAC_CFG1_INIT;
+> +
+> +	/* setup MAC configuration registers */
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_CFG1, init);
+> +
+> +	ag71xx_sb(ag, AG71XX_REG_MAC_CFG2,
+> +		  MAC_CFG2_PAD_CRC_EN | MAC_CFG2_LEN_CHECK);
+> +
+> +	/* setup max frame length to zero */
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_MFL, 0);
+> +
+> +	/* setup FIFO configuration registers */
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG0, FIFO_CFG0_INIT);
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG1, ag->fifodata[0]);
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG2, ag->fifodata[1]);
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG4, FIFO_CFG4_INIT);
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG5, FIFO_CFG5_INIT);
+> +}
+> +
+> +static inline unsigned int ag71xx_max_frame_len(unsigned int mtu)
+> +{
+> +	return ETH_SWITCH_HEADER_LEN + ETH_HLEN + VLAN_HLEN + mtu + ETH_FCS_LEN;
+> +}
+> +
+> +static void ag71xx_hw_set_macaddr(struct ag71xx *ag, unsigned char *mac)
+> +{
+> +	u32 t;
+> +
+> +	t = (((u32) mac[5]) << 24) | (((u32) mac[4]) << 16)
+> +	  | (((u32) mac[3]) << 8) | ((u32) mac[2]);
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_ADDR1, t);
+> +
+> +	t = (((u32) mac[1]) << 24) | (((u32) mac[0]) << 16);
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_ADDR2, t);
+> +}
+> +
+> +static void ag71xx_fast_reset(struct ag71xx *ag)
+> +{
+> +	struct net_device *dev = ag->ndev;
+> +	u32 rx_ds;
+> +	u32 mii_reg;
+> +
+> +	ag71xx_hw_stop(ag);
+> +	wmb();
+> +
+> +	mii_reg = ag71xx_rr(ag, AG71XX_REG_MII_CFG);
+> +	rx_ds = ag71xx_rr(ag, AG71XX_REG_RX_DESC);
+> +
+> +	ag71xx_tx_packets(ag, true);
+> +
+> +	reset_control_assert(ag->mac_reset);
+> +	udelay(10);
+> +	reset_control_deassert(ag->mac_reset);
+> +	udelay(10);
+> +
+> +	ag71xx_dma_reset(ag);
+> +	ag71xx_hw_setup(ag);
+> +	ag->tx_ring.curr = 0;
+> +	ag->tx_ring.dirty = 0;
+> +	netdev_reset_queue(ag->ndev);
+> +
+> +	/* setup max frame length */
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_MFL,
+> +		  ag71xx_max_frame_len(ag->ndev->mtu));
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_RX_DESC, rx_ds);
+> +	ag71xx_wr(ag, AG71XX_REG_TX_DESC, ag->tx_ring.descs_dma);
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CFG, mii_reg);
+> +
+> +	ag71xx_hw_set_macaddr(ag, dev->dev_addr);
+> +}
+> +
+> +static void ag71xx_hw_start(struct ag71xx *ag)
+> +{
+> +	/* start RX engine */
+> +	ag71xx_wr(ag, AG71XX_REG_RX_CTRL, RX_CTRL_RXE);
+> +
+> +	/* enable interrupts */
+> +	ag71xx_wr(ag, AG71XX_REG_INT_ENABLE, AG71XX_INT_INIT);
+> +
+> +	netif_wake_queue(ag->ndev);
+> +}
+> +
+> +static unsigned char *ag71xx_speed_str(struct ag71xx *ag)
+> +{
+> +	switch (ag->speed) {
+> +	case SPEED_1000:
+> +		return "1000";
+> +	case SPEED_100:
+> +		return "100";
+> +	case SPEED_10:
+> +		return "10";
+> +	}
+> +
+> +	return "?";
+> +}
+> +
+> +static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
+> +{
+> +	struct net_device *ndev = ag->ndev;
+> +	u32 cfg2;
+> +	u32 ifctl;
+> +	u32 fifo5;
+> +
+> +	if (!ag->link && update) {
+> +		ag71xx_hw_stop(ag);
+> +		netif_carrier_off(ag->ndev);
+> +		netif_info(ag, link, ndev, "link down\n");
+> +		return;
+> +	}
+> +
+> +	if (!ag71xx_is(ag, AR7100) && !ag71xx_is(ag, AR9130))
+> +		ag71xx_fast_reset(ag);
+> +
+> +	cfg2 = ag71xx_rr(ag, AG71XX_REG_MAC_CFG2);
+> +	cfg2 &= ~(MAC_CFG2_IF_1000 | MAC_CFG2_IF_10_100 | MAC_CFG2_FDX);
+> +	cfg2 |= (ag->duplex) ? MAC_CFG2_FDX : 0;
+> +
+> +	ifctl = ag71xx_rr(ag, AG71XX_REG_MAC_IFCTL);
+> +	ifctl &= ~(MAC_IFCTL_SPEED);
+> +
+> +	fifo5 = ag71xx_rr(ag, AG71XX_REG_FIFO_CFG5);
+> +	fifo5 &= ~FIFO_CFG5_BM;
+> +
+> +	switch (ag->speed) {
+> +	case SPEED_1000:
+> +		cfg2 |= MAC_CFG2_IF_1000;
+> +		fifo5 |= FIFO_CFG5_BM;
+> +		break;
+> +	case SPEED_100:
+> +		cfg2 |= MAC_CFG2_IF_10_100;
+> +		ifctl |= MAC_IFCTL_SPEED;
+> +		break;
+> +	case SPEED_10:
+> +		cfg2 |= MAC_CFG2_IF_10_100;
+> +		break;
+> +	default:
+> +		BUG();
+> +		return;
+> +	}
+> +
+> +	if (ag->tx_ring.desc_split) {
+> +		ag->fifodata[2] &= 0xffff;
+> +		ag->fifodata[2] |= ((2048 - ag->tx_ring.desc_split) / 4) << 16;
+> +	}
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG3, ag->fifodata[2]);
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_CFG2, cfg2);
+> +	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG5, fifo5);
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_IFCTL, ifctl);
+> +
+> +	ag71xx_hw_start(ag);
+> +
+> +	netif_carrier_on(ag->ndev);
+> +	if (update)
+> +		netif_info(ag, link, ndev, "link up (%sMbps/%s duplex)\n",
+> +			   ag71xx_speed_str(ag),
+> +			   (DUPLEX_FULL == ag->duplex) ? "Full" : "Half");
+> +}
+> +
+> +static void ag71xx_phy_link_adjust(struct net_device *ndev)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +	struct phy_device *phydev = ag->phy_dev;
+> +	unsigned long flags;
+> +	int status_change = 0;
+> +
+> +	spin_lock_irqsave(&ag->lock, flags);
+> +
+> +	if (phydev->link) {
+> +		if (ag->duplex != phydev->duplex
+> +		    || ag->speed != phydev->speed) {
+> +			status_change = 1;
+> +		}
+> +	}
+> +
+> +	if (phydev->link != ag->link)
+> +		status_change = 1;
+> +
+> +	ag->link = phydev->link;
+> +	ag->duplex = phydev->duplex;
+> +	ag->speed = phydev->speed;
+> +
+> +	if (status_change)
+> +		ag71xx_link_adjust(ag, true);
+> +
+> +	spin_unlock_irqrestore(&ag->lock, flags);
+> +}
+> +
+> +static int ag71xx_phy_connect(struct ag71xx *ag)
+> +{
+> +	struct device_node *np = ag->pdev->dev.of_node;
+> +	struct net_device *ndev = ag->ndev;
+> +	struct device_node *phy_node;
+> +	int ret;
+> +
+> +	if (of_phy_is_fixed_link(np)) {
+> +		ret = of_phy_register_fixed_link(np);
+> +		if (ret < 0) {
+> +			netif_err(ag, probe, ndev, "Failed to register fixed PHY link: %d\n",
+> +				  ret);
+> +			return ret;
+> +		}
+> +
+> +		phy_node = of_node_get(np);
+> +	} else {
+> +		phy_node = of_parse_phandle(np, "phy-handle", 0);
+> +	}
+> +
+> +	if (!phy_node) {
+> +		netif_err(ag, probe, ndev, "Could not find valid phy node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ag->phy_dev = of_phy_connect(ag->ndev, phy_node, ag71xx_phy_link_adjust,
+> +				     0, ag->phy_if_mode);
+> +
+> +	of_node_put(phy_node);
+> +
+> +	if (!ag->phy_dev) {
+> +		netif_err(ag, probe, ndev, "Could not connect to PHY device\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	netif_info(ag, probe, ndev, "connected to PHY at %s [uid=%08x, driver=%s]\n",
+> +		    phydev_name(ag->phy_dev),
+> +		    ag->phy_dev->phy_id, ag->phy_dev->drv->name);
+> +
+phy_attached_info() may be used instead.
+
+> +	return 0;
+> +}
+> +
+> +void ag71xx_phy_disconnect(struct ag71xx *ag)
+> +{
+> +	phy_disconnect(ag->phy_dev);
+> +}
+> +
+> +static void ag71xx_ring_tx_clean(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *ring = &ag->tx_ring;
+> +	struct net_device *ndev = ag->ndev;
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	u32 bytes_compl = 0, pkts_compl = 0;
+> +
+> +	while (ring->curr != ring->dirty) {
+> +		struct ag71xx_desc *desc;
+> +		u32 i = ring->dirty & ring_mask;
+> +
+> +		desc = ag71xx_ring_desc(ring, i);
+> +		if (!ag71xx_desc_empty(desc)) {
+> +			desc->ctrl = 0;
+> +			ndev->stats.tx_errors++;
+> +		}
+> +
+> +		if (ring->buf[i].skb) {
+> +			bytes_compl += ring->buf[i].len;
+> +			pkts_compl++;
+> +			dev_kfree_skb_any(ring->buf[i].skb);
+> +		}
+> +		ring->buf[i].skb = NULL;
+> +		ring->dirty++;
+> +	}
+> +
+> +	/* flush descriptors */
+> +	wmb();
+> +
+> +	netdev_completed_queue(ndev, pkts_compl, bytes_compl);
+> +}
+> +
+> +static void ag71xx_ring_tx_init(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *ring = &ag->tx_ring;
+> +	int ring_size = BIT(ring->order);
+> +	int ring_mask = ring_size - 1;
+> +	int i;
+> +
+> +	for (i = 0; i < ring_size; i++) {
+> +		struct ag71xx_desc *desc = ag71xx_ring_desc(ring, i);
+> +
+> +		desc->next = (u32) (ring->descs_dma +
+> +			AG71XX_DESC_SIZE * ((i + 1) & ring_mask));
+> +
+> +		desc->ctrl = DESC_EMPTY;
+> +		ring->buf[i].skb = NULL;
+> +	}
+> +
+> +	/* flush descriptors */
+> +	wmb();
+> +
+> +	ring->curr = 0;
+> +	ring->dirty = 0;
+> +	netdev_reset_queue(ag->ndev);
+> +}
+> +
+> +static void ag71xx_ring_rx_clean(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *ring = &ag->rx_ring;
+> +	int ring_size = BIT(ring->order);
+> +	int i;
+> +
+> +	if (!ring->buf)
+> +		return;
+> +
+> +	for (i = 0; i < ring_size; i++)
+> +		if (ring->buf[i].rx_buf) {
+> +			dma_unmap_single(&ag->pdev->dev, ring->buf[i].dma_addr,
+> +					 ag->rx_buf_size, DMA_FROM_DEVICE);
+> +			skb_free_frag(ring->buf[i].rx_buf);
+> +		}
+> +}
+> +
+> +static int ag71xx_buffer_size(struct ag71xx *ag)
+> +{
+> +	return ag->rx_buf_size +
+> +	       SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> +}
+> +
+> +static bool ag71xx_fill_rx_buf(struct ag71xx *ag, struct ag71xx_buf *buf,
+> +			       int offset,
+> +			       void *(*alloc)(unsigned int size))
+> +{
+> +	struct ag71xx_ring *ring = &ag->rx_ring;
+> +	struct ag71xx_desc *desc = ag71xx_ring_desc(ring, buf - &ring->buf[0]);
+> +	void *data;
+> +
+> +	data = alloc(ag71xx_buffer_size(ag));
+> +	if (!data)
+> +		return false;
+> +
+> +	buf->rx_buf = data;
+> +	buf->dma_addr = dma_map_single(&ag->pdev->dev, data, ag->rx_buf_size,
+> +				       DMA_FROM_DEVICE);
+> +	desc->data = (u32) buf->dma_addr + offset;
+> +	return true;
+> +}
+> +
+> +static int ag71xx_ring_rx_init(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *ring = &ag->rx_ring;
+> +	struct net_device *ndev = ag->ndev;
+> +	int ring_size = BIT(ring->order);
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = 0;
+> +	for (i = 0; i < ring_size; i++) {
+> +		struct ag71xx_desc *desc = ag71xx_ring_desc(ring, i);
+> +
+> +		desc->next = (u32) (ring->descs_dma +
+> +			AG71XX_DESC_SIZE * ((i + 1) & ring_mask));
+> +
+> +		netif_dbg(ag, rx_status, ndev, "RX desc at %p, next is %08x\n",
+> +			  desc, desc->next);
+> +	}
+> +
+> +	for (i = 0; i < ring_size; i++) {
+> +		struct ag71xx_desc *desc = ag71xx_ring_desc(ring, i);
+> +
+> +		if (!ag71xx_fill_rx_buf(ag, &ring->buf[i], ag->rx_buf_offset,
+> +					netdev_alloc_frag)) {
+> +			ret = -ENOMEM;
+> +			break;
+> +		}
+> +
+> +		desc->ctrl = DESC_EMPTY;
+> +	}
+> +
+> +	/* flush descriptors */
+> +	wmb();
+> +
+> +	ring->curr = 0;
+> +	ring->dirty = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +static int ag71xx_ring_rx_refill(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *ring = &ag->rx_ring;
+> +	struct net_device *ndev = ag->ndev;
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	unsigned int count;
+> +	int offset = ag->rx_buf_offset;
+> +
+> +	count = 0;
+> +	for (; ring->curr - ring->dirty > 0; ring->dirty++) {
+> +		struct ag71xx_desc *desc;
+> +		unsigned int i;
+> +
+> +		i = ring->dirty & ring_mask;
+> +		desc = ag71xx_ring_desc(ring, i);
+> +
+> +		if (!ring->buf[i].rx_buf &&
+> +		    !ag71xx_fill_rx_buf(ag, &ring->buf[i], offset,
+> +					napi_alloc_frag))
+> +			break;
+> +
+> +		desc->ctrl = DESC_EMPTY;
+> +		count++;
+> +	}
+> +
+> +	/* flush descriptors */
+> +	wmb();
+> +
+> +	netif_dbg(ag, rx_status, ndev, "%u rx descriptors refilled\n", count);
+> +
+> +	return count;
+> +}
+> +
+> +static int ag71xx_rings_init(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *tx = &ag->tx_ring;
+> +	struct ag71xx_ring *rx = &ag->rx_ring;
+> +	int ring_size = BIT(tx->order) + BIT(rx->order);
+> +	int tx_size = BIT(tx->order);
+> +
+> +	tx->buf = kzalloc(ring_size * sizeof(*tx->buf), GFP_KERNEL);
+> +	if (!tx->buf)
+> +		return -ENOMEM;
+> +
+> +	tx->descs_cpu = dma_alloc_coherent(&ag->pdev->dev, ring_size * AG71XX_DESC_SIZE,
+> +					   &tx->descs_dma, GFP_ATOMIC);
+> +	if (!tx->descs_cpu) {
+> +		kfree(tx->buf);
+> +		tx->buf = NULL;
+> +		return -ENOMEM;
+> +	}
+> +
+> +	rx->buf = &tx->buf[BIT(tx->order)];
+> +	rx->descs_cpu = ((void *)tx->descs_cpu) + tx_size * AG71XX_DESC_SIZE;
+> +	rx->descs_dma = tx->descs_dma + tx_size * AG71XX_DESC_SIZE;
+> +
+> +	ag71xx_ring_tx_init(ag);
+> +	return ag71xx_ring_rx_init(ag);
+> +}
+> +
+> +static void ag71xx_rings_free(struct ag71xx *ag)
+> +{
+> +	struct ag71xx_ring *tx = &ag->tx_ring;
+> +	struct ag71xx_ring *rx = &ag->rx_ring;
+> +	int ring_size = BIT(tx->order) + BIT(rx->order);
+> +
+> +	if (tx->descs_cpu)
+> +		dma_free_coherent(&ag->pdev->dev, ring_size * AG71XX_DESC_SIZE,
+> +				  tx->descs_cpu, tx->descs_dma);
+> +
+> +	kfree(tx->buf);
+> +
+> +	tx->descs_cpu = NULL;
+> +	rx->descs_cpu = NULL;
+> +	tx->buf = NULL;
+> +	rx->buf = NULL;
+> +}
+> +
+> +static void ag71xx_rings_cleanup(struct ag71xx *ag)
+> +{
+> +	ag71xx_ring_rx_clean(ag);
+> +	ag71xx_ring_tx_clean(ag);
+> +	ag71xx_rings_free(ag);
+> +
+> +	netdev_reset_queue(ag->ndev);
+> +}
+> +
+> +static void ag71xx_hw_init(struct ag71xx *ag)
+> +{
+> +	ag71xx_hw_stop(ag);
+> +
+> +	ag71xx_sb(ag, AG71XX_REG_MAC_CFG1, MAC_CFG1_SR);
+> +	udelay(20);
+> +
+> +	reset_control_assert(ag->mac_reset);
+> +	msleep(100);
+> +	reset_control_deassert(ag->mac_reset);
+> +	msleep(200);
+> +
+> +	ag71xx_hw_setup(ag);
+> +
+> +	ag71xx_dma_reset(ag);
+> +}
+> +
+> +static int ag71xx_hw_enable(struct ag71xx *ag)
+> +{
+> +	int ret;
+> +
+> +	ret = ag71xx_rings_init(ag);
+> +	if (ret)
+> +		return ret;
+> +
+> +	napi_enable(&ag->napi);
+> +	ag71xx_wr(ag, AG71XX_REG_TX_DESC, ag->tx_ring.descs_dma);
+> +	ag71xx_wr(ag, AG71XX_REG_RX_DESC, ag->rx_ring.descs_dma);
+> +	netif_start_queue(ag->ndev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void ag71xx_hw_disable(struct ag71xx *ag)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&ag->lock, flags);
+> +
+> +	netif_stop_queue(ag->ndev);
+> +
+> +	ag71xx_hw_stop(ag);
+> +	ag71xx_dma_reset(ag);
+> +
+> +	napi_disable(&ag->napi);
+> +	del_timer_sync(&ag->oom_timer);
+> +
+> +	spin_unlock_irqrestore(&ag->lock, flags);
+> +
+> +	ag71xx_rings_cleanup(ag);
+> +}
+> +
+> +static int ag71xx_open(struct net_device *ndev)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +	unsigned int max_frame_len;
+> +	int ret;
+> +
+> +	netif_carrier_off(ndev);
+> +	max_frame_len = ag71xx_max_frame_len(ndev->mtu);
+> +	ag->rx_buf_size = SKB_DATA_ALIGN(max_frame_len + NET_SKB_PAD + NET_IP_ALIGN);
+> +
+> +	/* setup max frame length */
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_MFL, max_frame_len);
+> +	ag71xx_hw_set_macaddr(ag, ndev->dev_addr);
+> +
+> +	ret = ag71xx_hw_enable(ag);
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret = ag71xx_phy_connect(ag);
+> +	if (ret)
+> +		goto err;
+> +
+> +	phy_start(ag->phy_dev);
+> +
+> +	return 0;
+> +
+> +err:
+> +	ag71xx_rings_cleanup(ag);
+> +	return ret;
+> +}
+> +
+> +static int ag71xx_stop(struct net_device *ndev)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +
+> +	netif_carrier_off(ndev);
+
+netif_carrier_off() is called implicitly by phy_stop(), this call
+shouldn't be needed here.
+
+> +	phy_stop(ag->phy_dev);
+> +	ag71xx_hw_disable(ag);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ag71xx_fill_dma_desc(struct ag71xx_ring *ring, u32 addr, int len)
+> +{
+> +	int i;
+> +	struct ag71xx_desc *desc;
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	int ndesc = 0;
+> +	int split = ring->desc_split;
+> +
+> +	if (!split)
+> +		split = len;
+> +
+> +	while (len > 0) {
+> +		unsigned int cur_len = len;
+> +
+> +		i = (ring->curr + ndesc) & ring_mask;
+> +		desc = ag71xx_ring_desc(ring, i);
+> +
+> +		if (!ag71xx_desc_empty(desc))
+> +			return -1;
+> +
+> +		if (cur_len > split) {
+> +			cur_len = split;
+> +
+> +			/*
+> +			 * TX will hang if DMA transfers <= 4 bytes,
+> +			 * make sure next segment is more than 4 bytes long.
+> +			 */
+> +			if (len <= split + 4)
+> +				cur_len -= 4;
+> +		}
+> +
+> +		desc->data = addr;
+> +		addr += cur_len;
+> +		len -= cur_len;
+> +
+> +		if (len > 0)
+> +			cur_len |= DESC_MORE;
+> +
+> +		/* prevent early tx attempt of this descriptor */
+> +		if (!ndesc)
+> +			cur_len |= DESC_EMPTY;
+> +
+> +		desc->ctrl = cur_len;
+> +		ndesc++;
+> +	}
+> +
+> +	return ndesc;
+> +}
+> +
+> +static netdev_tx_t ag71xx_hard_start_xmit(struct sk_buff *skb,
+> +					  struct net_device *ndev)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +	struct ag71xx_ring *ring = &ag->tx_ring;
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	int ring_size = BIT(ring->order);
+> +	struct ag71xx_desc *desc;
+> +	dma_addr_t dma_addr;
+> +	int i, n, ring_min;
+> +
+> +	if (skb->len <= 4) {
+> +		netif_dbg(ag, tx_err, ndev, "packet len is too small\n");
+> +		goto err_drop;
+> +	}
+> +
+> +	dma_addr = dma_map_single(&ag->pdev->dev, skb->data, skb->len,
+> +				  DMA_TO_DEVICE);
+> +
+> +	i = ring->curr & ring_mask;
+> +	desc = ag71xx_ring_desc(ring, i);
+> +
+> +	/* setup descriptor fields */
+> +	n = ag71xx_fill_dma_desc(ring, (u32) dma_addr,
+> +				 skb->len & ag->dcfg->desc_pktlen_mask);
+> +	if (n < 0)
+> +		goto err_drop_unmap;
+> +
+> +	i = (ring->curr + n - 1) & ring_mask;
+> +	ring->buf[i].len = skb->len;
+> +	ring->buf[i].skb = skb;
+> +
+> +	netdev_sent_queue(ndev, skb->len);
+> +
+> +	skb_tx_timestamp(skb);
+> +
+> +	desc->ctrl &= ~DESC_EMPTY;
+> +	ring->curr += n;
+> +
+> +	/* flush descriptor */
+> +	wmb();
+> +
+> +	ring_min = 2;
+> +	if (ring->desc_split)
+> +	    ring_min *= AG71XX_TX_RING_DS_PER_PKT;
+> +
+> +	if (ring->curr - ring->dirty >= ring_size - ring_min) {
+> +		netif_dbg(ag, tx_err, ndev, "tx queue full\n");
+> +		netif_stop_queue(ndev);
+> +	}
+> +
+> +	netif_dbg(ag, tx_queued, ndev, "packet injected into TX queue\n");
+> +
+> +	/* enable TX engine */
+> +	ag71xx_wr(ag, AG71XX_REG_TX_CTRL, TX_CTRL_TXE);
+> +
+> +	return NETDEV_TX_OK;
+> +
+> +err_drop_unmap:
+> +	dma_unmap_single(&ag->pdev->dev, dma_addr, skb->len, DMA_TO_DEVICE);
+> +
+> +err_drop:
+> +	ndev->stats.tx_dropped++;
+> +
+> +	dev_kfree_skb(skb);
+> +	return NETDEV_TX_OK;
+> +}
+> +
+> +static int ag71xx_do_ioctl(struct net_device *ndev, struct ifreq *ifr, int cmd)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +
+> +	switch (cmd) {
+> +	case SIOCSIFHWADDR:
+> +		if (copy_from_user
+> +			(ndev->dev_addr, ifr->ifr_data, sizeof(ndev->dev_addr)))
+> +			return -EFAULT;
+> +		return 0;
+> +
+> +	case SIOCGIFHWADDR:
+> +		if (copy_to_user
+> +			(ifr->ifr_data, ndev->dev_addr, sizeof(ndev->dev_addr)))
+> +			return -EFAULT;
+> +		return 0;
+> +
+> +	case SIOCGMIIPHY:
+> +	case SIOCGMIIREG:
+> +	case SIOCSMIIREG:
+> +		if (ag->phy_dev == NULL)
+> +			break;
+> +
+> +		return phy_mii_ioctl(ag->phy_dev, ifr, cmd);
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static void ag71xx_oom_timer_handler(struct timer_list *t)
+> +{
+> +	struct ag71xx *ag = from_timer(ag, t, oom_timer);
+> +
+> +	napi_schedule(&ag->napi);
+> +}
+> +
+> +static void ag71xx_tx_timeout(struct net_device *ndev)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +
+> +	netif_err(ag, tx_err, ndev, "tx timeout\n");
+> +
+> +	schedule_delayed_work(&ag->restart_work, 1);
+> +}
+> +
+> +static void ag71xx_restart_work_func(struct work_struct *work)
+> +{
+> +	struct ag71xx *ag = container_of(work, struct ag71xx, restart_work.work);
+> +
+> +	rtnl_lock();
+> +	ag71xx_hw_disable(ag);
+> +	ag71xx_hw_enable(ag);
+> +	if (ag->link)
+> +		ag71xx_link_adjust(ag, false);
+> +	rtnl_unlock();
+> +}
+> +
+> +static int ag71xx_rx_packets(struct ag71xx *ag, int limit)
+> +{
+> +	struct net_device *ndev = ag->ndev;
+> +	struct ag71xx_ring *ring = &ag->rx_ring;
+> +	unsigned int pktlen_mask = ag->dcfg->desc_pktlen_mask;
+> +	unsigned int offset = ag->rx_buf_offset;
+> +	int ring_mask = BIT(ring->order) - 1;
+> +	int ring_size = BIT(ring->order);
+> +	struct list_head rx_list;
+> +	struct sk_buff *next;
+> +	struct sk_buff *skb;
+> +	int done = 0;
+> +
+> +	netif_dbg(ag, rx_status, ndev, "rx packets, limit=%d, curr=%u, dirty=%u\n",
+> +		  limit, ring->curr, ring->dirty);
+> +
+> +	INIT_LIST_HEAD(&rx_list);
+> +
+> +	while (done < limit) {
+> +		unsigned int i = ring->curr & ring_mask;
+> +		struct ag71xx_desc *desc = ag71xx_ring_desc(ring, i);
+> +		int pktlen;
+> +		int err = 0;
+> +
+> +		if (ag71xx_desc_empty(desc))
+> +			break;
+> +
+> +		if ((ring->dirty + ring_size) == ring->curr) {
+> +			WARN_ONCE(1, "RX out of ring");
+> +			break;
+> +		}
+> +
+> +		ag71xx_wr(ag, AG71XX_REG_RX_STATUS, RX_STATUS_PR);
+> +
+> +		pktlen = desc->ctrl & pktlen_mask;
+> +		pktlen -= ETH_FCS_LEN;
+> +
+> +		dma_unmap_single(&ag->pdev->dev, ring->buf[i].dma_addr,
+> +				 ag->rx_buf_size, DMA_FROM_DEVICE);
+> +
+> +		ndev->stats.rx_packets++;
+> +		ndev->stats.rx_bytes += pktlen;
+> +
+> +		skb = build_skb(ring->buf[i].rx_buf, ag71xx_buffer_size(ag));
+> +		if (!skb) {
+> +			skb_free_frag(ring->buf[i].rx_buf);
+> +			goto next;
+> +		}
+> +
+> +		skb_reserve(skb, offset);
+> +		skb_put(skb, pktlen);
+> +
+> +		if (err) {
+> +			ndev->stats.rx_dropped++;
+> +			kfree_skb(skb);
+> +		} else {
+> +			skb->dev = ndev;
+> +			skb->ip_summed = CHECKSUM_NONE;
+> +			list_add_tail(&skb->list, &rx_list);
+> +		}
+> +
+> +next:
+> +		ring->buf[i].rx_buf = NULL;
+> +		done++;
+> +
+> +		ring->curr++;
+> +	}
+> +
+> +	ag71xx_ring_rx_refill(ag);
+> +
+> +	list_for_each_entry_safe(skb, next, &rx_list, list)
+> +		skb->protocol = eth_type_trans(skb, ndev);
+> +	netif_receive_skb_list(&rx_list);
+> +
+> +	netif_dbg(ag, rx_status, ndev, "rx finish, curr=%u, dirty=%u, done=%d\n",
+> +		  ring->curr, ring->dirty, done);
+> +
+> +	return done;
+> +}
+> +
+> +static int ag71xx_poll(struct napi_struct *napi, int limit)
+> +{
+> +	struct ag71xx *ag = container_of(napi, struct ag71xx, napi);
+> +	struct net_device *ndev = ag->ndev;
+> +	struct ag71xx_ring *rx_ring = &ag->rx_ring;
+> +	int rx_ring_size = BIT(rx_ring->order);
+> +	unsigned long flags;
+> +	u32 status;
+> +	int tx_done;
+> +	int rx_done;
+> +
+> +	tx_done = ag71xx_tx_packets(ag, false);
+> +
+> +	netif_dbg(ag, rx_status, ndev, "processing RX ring\n");
+> +	rx_done = ag71xx_rx_packets(ag, limit);
+> +
+> +	if (rx_ring->buf[rx_ring->dirty % rx_ring_size].rx_buf == NULL)
+> +		goto oom;
+> +
+> +	status = ag71xx_rr(ag, AG71XX_REG_RX_STATUS);
+> +	if (unlikely(status & RX_STATUS_OF)) {
+> +		ag71xx_wr(ag, AG71XX_REG_RX_STATUS, RX_STATUS_OF);
+> +		ndev->stats.rx_fifo_errors++;
+> +
+> +		/* restart RX */
+> +		ag71xx_wr(ag, AG71XX_REG_RX_CTRL, RX_CTRL_RXE);
+> +	}
+> +
+> +	if (rx_done < limit) {
+> +		if (status & RX_STATUS_PR)
+> +			goto more;
+> +
+> +		status = ag71xx_rr(ag, AG71XX_REG_TX_STATUS);
+> +		if (status & TX_STATUS_PS)
+> +			goto more;
+> +
+> +		netif_dbg(ag, rx_status, ndev, "disable polling mode, rx=%d, tx=%d,limit=%d\n",
+> +			  rx_done, tx_done, limit);
+> +
+> +		napi_complete(napi);
+> +
+> +		/* enable interrupts */
+> +		spin_lock_irqsave(&ag->lock, flags);
+> +		ag71xx_int_enable(ag, AG71XX_INT_POLL);
+> +		spin_unlock_irqrestore(&ag->lock, flags);
+> +		return rx_done;
+> +	}
+> +
+> +more:
+> +	netif_dbg(ag, rx_status, ndev, "stay in polling mode, rx=%d, tx=%d, limit=%d\n",
+> +		  rx_done, tx_done, limit);
+> +	return limit;
+> +
+> +oom:
+> +	netif_err(ag, rx_err, ndev, "out of memory\n");
+> +
+> +	mod_timer(&ag->oom_timer, jiffies + AG71XX_OOM_REFILL);
+> +	napi_complete(napi);
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t ag71xx_interrupt(int irq, void *dev_id)
+> +{
+> +	struct net_device *ndev = dev_id;
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +	u32 status;
+> +
+> +	status = ag71xx_rr(ag, AG71XX_REG_INT_STATUS);
+> +
+> +	if (unlikely(!status))
+> +		return IRQ_NONE;
+> +
+> +	if (unlikely(status & AG71XX_INT_ERR)) {
+> +		if (status & AG71XX_INT_TX_BE) {
+> +			ag71xx_wr(ag, AG71XX_REG_TX_STATUS, TX_STATUS_BE);
+> +			netif_err(ag, intr, ndev, "TX BUS error\n");
+> +		}
+> +		if (status & AG71XX_INT_RX_BE) {
+> +			ag71xx_wr(ag, AG71XX_REG_RX_STATUS, RX_STATUS_BE);
+> +			netif_err(ag, intr, ndev, "RX BUS error\n");
+> +		}
+> +	}
+> +
+> +	if (likely(status & AG71XX_INT_POLL)) {
+> +		ag71xx_int_disable(ag, AG71XX_INT_POLL);
+> +		netif_dbg(ag, intr, ndev, "enable polling mode\n");
+> +		napi_schedule(&ag->napi);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +#ifdef CONFIG_NET_POLL_CONTROLLER
+> +/*
+> + * Polling 'interrupt' - used by things like netconsole to send skbs
+> + * without having to re-enable interrupts. It's not called while
+> + * the interrupt routine is executing.
+> + */
+> +static void ag71xx_netpoll(struct net_device *ndev)
+> +{
+> +	disable_irq(ndev->irq);
+> +	ag71xx_interrupt(ndev->irq, ndev);
+> +	enable_irq(ndev->irq);
+> +}
+> +#endif
+> +
+> +static int ag71xx_change_mtu(struct net_device *ndev, int new_mtu)
+> +{
+> +	struct ag71xx *ag = netdev_priv(ndev);
+> +
+> +	ndev->mtu = new_mtu;
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_MFL,
+> +		  ag71xx_max_frame_len(ndev->mtu));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct net_device_ops ag71xx_netdev_ops = {
+> +	.ndo_open		= ag71xx_open,
+> +	.ndo_stop		= ag71xx_stop,
+> +	.ndo_start_xmit		= ag71xx_hard_start_xmit,
+> +	.ndo_do_ioctl		= ag71xx_do_ioctl,
+> +	.ndo_tx_timeout		= ag71xx_tx_timeout,
+> +	.ndo_change_mtu		= ag71xx_change_mtu,
+> +	.ndo_set_mac_address	= eth_mac_addr,
+> +	.ndo_validate_addr	= eth_validate_addr,
+> +#ifdef CONFIG_NET_POLL_CONTROLLER
+> +	.ndo_poll_controller	= ag71xx_netpoll,
+> +#endif
+> +};
+> +
+> +static const char *ag71xx_get_phy_if_mode_name(phy_interface_t mode)
+> +{
+> +	switch (mode) {
+> +	case PHY_INTERFACE_MODE_MII:
+> +		return "MII";
+> +	case PHY_INTERFACE_MODE_GMII:
+> +		return "GMII";
+> +	case PHY_INTERFACE_MODE_RMII:
+> +		return "RMII";
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		return "RGMII";
+> +	case PHY_INTERFACE_MODE_SGMII:
+> +		return "SGMII";
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return "unknown";
+> +}
+> +
+> +static const u32 ar71xx_addr_ar7100[] = {
+> +	0x19000000, 0x1a000000,
+> +};
+> +
+> +static int ag71xx_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const struct ag71xx_dcfg *dcfg;
+> +	struct net_device *ndev;
+> +	struct resource *res;
+> +	struct ag71xx *ag;
+> +	const void *mac_addr;
+> +	int tx_size, err, i;
+> +
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	ndev = devm_alloc_etherdev(&pdev->dev, sizeof(*ag));
+> +	if (!ndev)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	dcfg = of_device_get_match_data(&pdev->dev);
+> +	if (!dcfg)
+> +		return -EINVAL;
+> +
+> +	ag = netdev_priv(ndev);
+> +	ag->mac_idx = -1;
+> +	for (i = 0; i < ARRAY_SIZE(ar71xx_addr_ar7100); i++) {
+> +		if (ar71xx_addr_ar7100[i] == res->start)
+> +			ag->mac_idx = i;
+> +	}
+> +
+> +	if (ag->mac_idx < 0) {
+> +		netif_err(ag, probe, ndev, "unknown mac idx\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	SET_NETDEV_DEV(ndev, &pdev->dev);
+> +
+> +	ag->pdev = pdev;
+> +	ag->ndev = ndev;
+> +	ag->dcfg = dcfg;
+> +	ag->msg_enable = netif_msg_init(ag71xx_msg_enable,
+> +					AG71XX_DEFAULT_MSG_ENABLE);
+> +	memcpy(ag->fifodata, dcfg->fifodata, sizeof(ag->fifodata));
+> +	spin_lock_init(&ag->lock);
+> +
+> +	ag->mac_reset = devm_reset_control_get(&pdev->dev, "mac");
+> +	if (IS_ERR(ag->mac_reset)) {
+> +		netif_err(ag, probe, ndev, "missing mac reset\n");
+> +		err = PTR_ERR(ag->mac_reset);
+> +		goto err_free;
+> +	}
+> +
+> +	ag->mac_base = devm_ioremap_nocache(&pdev->dev, res->start,
+> +					    res->end - res->start + 1);
+> +	if (!ag->mac_base) {
+> +		err = -ENOMEM;
+> +		goto err_free;
+> +	}
+> +
+> +	ndev->irq = platform_get_irq(pdev, 0);
+> +	err = devm_request_irq(&pdev->dev, ndev->irq, ag71xx_interrupt,
+> +			       0x0, dev_name(&pdev->dev), ndev);
+> +	if (err) {
+> +		netif_err(ag, probe, ndev, "unable to request IRQ %d\n",
+> +			  ndev->irq);
+> +		goto err_free;
+> +	}
+> +
+> +	ndev->netdev_ops = &ag71xx_netdev_ops;
+> +
+> +	INIT_DELAYED_WORK(&ag->restart_work, ag71xx_restart_work_func);
+> +	timer_setup(&ag->oom_timer, ag71xx_oom_timer_handler, 0);
+> +
+> +	tx_size = AG71XX_TX_RING_SIZE_DEFAULT;
+> +	ag->rx_ring.order = ag71xx_ring_size_order(AG71XX_RX_RING_SIZE_DEFAULT);
+> +
+> +	ndev->min_mtu = 68;
+> +	ndev->max_mtu = dcfg->max_frame_len - ag71xx_max_frame_len(0);
+> +
+> +	ag->rx_buf_offset = NET_SKB_PAD;
+> +	if (!ag71xx_is(ag, AR7100) && !ag71xx_is(ag, AR9130))
+> +		ag->rx_buf_offset += NET_IP_ALIGN;
+> +
+> +	if (ag71xx_is(ag, AR7100)) {
+> +		ag->tx_ring.desc_split = AG71XX_TX_RING_SPLIT;
+> +		tx_size *= AG71XX_TX_RING_DS_PER_PKT;
+> +	}
+> +	ag->tx_ring.order = ag71xx_ring_size_order(tx_size);
+> +
+> +	ag->stop_desc = dmam_alloc_coherent(&pdev->dev,
+> +					    sizeof(struct ag71xx_desc),
+> +					    &ag->stop_desc_dma, GFP_KERNEL);
+> +	if (!ag->stop_desc)
+> +		goto err_free;
+> +
+> +	ag->stop_desc->data = 0;
+> +	ag->stop_desc->ctrl = 0;
+> +	ag->stop_desc->next = (u32) ag->stop_desc_dma;
+> +
+> +	mac_addr = of_get_mac_address(np);
+> +	if (mac_addr)
+> +		memcpy(ndev->dev_addr, mac_addr, ETH_ALEN);
+> +	if (!mac_addr || !is_valid_ether_addr(ndev->dev_addr)) {
+> +		netif_err(ag, probe, ndev, "invalid MAC address, using random address\n");
+> +		eth_random_addr(ndev->dev_addr);
+> +	}
+> +
+> +	ag->phy_if_mode = of_get_phy_mode(np);
+> +	if (ag->phy_if_mode < 0) {
+> +		netif_err(ag, probe, ndev, "missing phy-mode property in DT\n");
+> +		err = ag->phy_if_mode;
+> +		goto err_free;
+> +	}
+> +
+> +	netif_napi_add(ndev, &ag->napi, ag71xx_poll, AG71XX_NAPI_WEIGHT);
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MAC_CFG1, 0);
+> +
+> +	ag71xx_hw_init(ag);
+> +
+> +
+> +	err = ag71xx_mdio_probe(ag);
+> +	if (err)
+> +		goto err_free;
+> +
+> +	platform_set_drvdata(pdev, ndev);
+> +
+> +	err = register_netdev(ndev);
+> +	if (err) {
+> +		netif_err(ag, probe, ndev, "unable to register net device\n");
+> +		platform_set_drvdata(pdev, NULL);
+> +		goto err_mdio_remove;
+> +	}
+> +
+> +	netif_info(ag, probe, ndev, "Atheros AG71xx at 0x%08lx, irq %d, mode:%s\n",
+> +		   (unsigned long) ag->mac_base, ndev->irq,
+> +		   ag71xx_get_phy_if_mode_name(ag->phy_if_mode));
+> +
+> +	return 0;
+> +
+> +err_mdio_remove:
+> +	ag71xx_mdio_remove(ag);
+> +err_free:
+> +	free_netdev(ndev);
+> +	return err;
+> +}
+> +
+> +static int ag71xx_remove(struct platform_device *pdev)
+> +{
+> +	struct net_device *ndev = platform_get_drvdata(pdev);
+> +	struct ag71xx *ag;
+> +
+> +	if (!ndev)
+> +		return 0;
+> +
+> +	ag = netdev_priv(ndev);
+> +	ag71xx_phy_disconnect(ag);
+> +	ag71xx_mdio_remove(ag);
+> +	unregister_netdev(ndev);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static const u32 ar71xx_fifo_ar7100[] = {
+> +	0x0fff0000, 0x00001fff, 0x00780fff,
+> +};
+> +
+> +static const u32 ar71xx_fifo_ar9130[] = {
+> +	0x0fff0000, 0x00001fff, 0x008001ff,
+> +};
+> +
+> +static const u32 ar71xx_fifo_ar9330[] = {
+> +	0x0010ffff, 0x015500aa, 0x01f00140,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_ar7100 = {
+> +	.type = AR7100,
+> +	.fifodata = ar71xx_fifo_ar7100,
+> +	.max_frame_len = 1540,
+> +	.desc_pktlen_mask = SZ_4K - 1,
+> +	.tx_hang_workaround = false,
+> +	.quirks = 0,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_ar7240 = {
+> +	.type = AR7240,
+> +	.fifodata = ar71xx_fifo_ar7100,
+> +	.max_frame_len = 1540,
+> +	.desc_pktlen_mask = SZ_4K - 1,
+> +	.tx_hang_workaround = true,
+> +	.quirks = 0,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_ar9130 = {
+> +	.type = AR9130,
+> +	.fifodata = ar71xx_fifo_ar9130,
+> +	.max_frame_len = 1540,
+> +	.desc_pktlen_mask = SZ_4K - 1,
+> +	.tx_hang_workaround = false,
+> +	.quirks = 0,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_ar9330 = {
+> +	.type = AR9330,
+> +	.fifodata = ar71xx_fifo_ar9330,
+> +	.max_frame_len = 1540,
+> +	.desc_pktlen_mask = SZ_4K - 1,
+> +	.tx_hang_workaround = true,
+> +	.quirks = AG71XX_ETH0_NO_MDIO,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_ar9340 = {
+> +	.type = AR9340,
+> +	.fifodata = ar71xx_fifo_ar9330,
+> +	.max_frame_len = SZ_16K - 1,
+> +	.desc_pktlen_mask = SZ_16K - 1,
+> +	.tx_hang_workaround = true,
+> +	.quirks = 0,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_qca9530 = {
+> +	.type = QCA9530,
+> +	.fifodata = ar71xx_fifo_ar9330,
+> +	.max_frame_len = SZ_16K - 1,
+> +	.desc_pktlen_mask = SZ_16K - 1,
+> +	.tx_hang_workaround = true,
+> +	.quirks = 0,
+> +};
+> +
+> +static const struct ag71xx_dcfg ag71xx_dcfg_qca9550 = {
+> +	.type = QCA9550,
+> +	.fifodata = ar71xx_fifo_ar9330,
+> +	.max_frame_len = 1540,
+> +	.desc_pktlen_mask = SZ_16K - 1,
+> +	.tx_hang_workaround = true,
+> +	.quirks = 0,
+> +};
+> +
+> +static const struct of_device_id ag71xx_match[] = {
+> +	{ .compatible = "qca,ar7100-eth", .data = &ag71xx_dcfg_ar7100 },
+> +	{ .compatible = "qca,ar7240-eth", .data = &ag71xx_dcfg_ar7240 },
+> +	{ .compatible = "qca,ar7241-eth", .data = &ag71xx_dcfg_ar7240 },
+> +	{ .compatible = "qca,ar7242-eth", .data = &ag71xx_dcfg_ar7240 },
+> +	{ .compatible = "qca,ar9130-eth", .data = &ag71xx_dcfg_ar9130 },
+> +	{ .compatible = "qca,ar9330-eth", .data = &ag71xx_dcfg_ar9330 },
+> +	{ .compatible = "qca,ar9340-eth", .data = &ag71xx_dcfg_ar9340 },
+> +	{ .compatible = "qca,qca9530-eth", .data = &ag71xx_dcfg_qca9530 },
+> +	{ .compatible = "qca,qca9550-eth", .data = &ag71xx_dcfg_qca9550 },
+> +	{ .compatible = "qca,qca9560-eth", .data = &ag71xx_dcfg_qca9550 },
+> +	{}
+> +};
+> +
+> +static struct platform_driver ag71xx_driver = {
+> +	.probe		= ag71xx_probe,
+> +	.remove		= ag71xx_remove,
+> +	.driver = {
+> +		.name	= "ag71xx",
+> +		.of_match_table = ag71xx_match,
+> +	}
+> +};
+> +
+> +module_platform_driver(ag71xx_driver);
+> +MODULE_LICENSE("GPL v2");
+> 
