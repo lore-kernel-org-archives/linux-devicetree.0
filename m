@@ -1,48 +1,88 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] ARM: dts: sun8i: v40:
- bananapi-m2-berry: Enable GMAC ethernet controller
-Date: Wed, 17 Apr 2019 12:19:47 +0200
-Message-ID: <20190417101947.xzper4dbxo4c7vyj@flea>
-References: <1555492863-88860-1-git-send-email-pgreco@centosproject.org>
- <1555492863-88860-4-git-send-email-pgreco@centosproject.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Frederic Chen <frederic.chen@mediatek.com>
+Subject: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for DIP shared
+ memory
+Date: Wed, 17 Apr 2019 18:45:06 +0800
+Message-ID: <20190417104511.21514-2-frederic.chen@mediatek.com>
+References: <20190417104511.21514-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="j4bmablfkqbqicv6"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRP33PSQKGQEGZHVSOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1555492863-88860-4-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190417104511.21514-1-frederic.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the binding for describing the shared memory
+used to exchange configuration and tuning data between the
+co-processor and Digital Image Processing (DIP) unit of the
+camera ISP system on Mediatek SoCs.
 
---j4bmablfkqbqicv6
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
+---
+ .../mediatek,reserve-memory-dip_smem.txt      | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
 
-On Wed, Apr 17, 2019 at 06:20:58AM -0300, Pablo Greco wrote:
->  &pio {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&clk_out_a_pin>;
-> +	vcc-pa-supply = <&reg_aldo2>;
-> +	vcc-gmac-phy-supply = <&reg_dc1sw>;
-> +};
-
-The PIO banks regulators addition should be in a separate
-patch. Otherwise, the comments I made on patch 1 still apply.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---j4bmablfkqbqicv6--
+diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+new file mode 100644
+index 000000000000..64c001b476b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+@@ -0,0 +1,45 @@
++Mediatek DIP Shared Memory binding
++
++This binding describes the shared memory, which serves the purpose of
++describing the shared memory region used to exchange data between Digital
++Image Processing (DIP) and co-processor in Mediatek SoCs.
++
++The co-processor doesn't have the iommu so we need to use the physical
++address to access the shared buffer in the firmware.
++
++The Digital Image Processing (DIP) can access memory through mt8183 IOMMU so
++it can use dma address to access the memory region.
++(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
++
++
++Required properties:
++
++- compatible: must be "mediatek,reserve-memory-dip_smem"
++
++- reg: required for static allocation (see reserved-memory.txt for
++  the detailed usage)
++
++- alloc-range: required for dynamic allocation. The range must
++  between 0x00000400 and 0x100000000 due to the co-processer's
++  addressing limitation
++
++- size: required for dynamic allocation. The unit is bytes.
++  If you want to enable the full feature of Digital Processing Unit,
++  you need 20 MB at least.
++
++
++Example:
++
++The following example shows the DIP shared memory setup for MT8183.
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		reserve-memory-dip_smem {
++			compatible = "mediatek,reserve-memory-dip_smem";
++			size = <0 0x1400000>;
++			alignment = <0 0x1000>;
++			alloc-ranges = <0 0x40000000 0 0x50000000>;
++		};
++	};
+-- 
+2.18.0
