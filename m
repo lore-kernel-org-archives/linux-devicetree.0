@@ -1,123 +1,358 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Convert Allwinner SPDIF binding
- to YAML
-Date: Wed, 17 Apr 2019 08:43:38 +0200
-Message-ID: <20190417064338.wuzjkixbg7noolwx@flea>
-References: <4060ec46117ccf3cd643b8f1b9759ed44d38c5e7.1555330005.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqLuMObaNzrRMGDi-m=0B8AA7CYqJkrvD_K3cTmH7rdE4Q@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 07/13] phy: Add usb phy support for hi3660 Soc of
+ Hisilicon
+Date: Wed, 17 Apr 2019 12:12:35 +0530
+Message-ID: <2be3f2cf-ce16-d4b4-0d07-dda2a25c76d8@ti.com>
+References: <20190329041409.70138-1-chenyu56@huawei.com>
+ <20190329041409.70138-8-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4551636563125464164=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLuMObaNzrRMGDi-m=0B8AA7CYqJkrvD_K3cTmH7rdE4Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190329041409.70138-8-chenyu56@huawei.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Pengcheng Li <lpc.li@hisilicon.com>, Jianguo Sun <sunjianguo1@huawei.com>, Masahiro Yamada <yamada.masahiro@s>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============4551636563125464164==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t6senhmj6w2pwdjy"
-Content-Disposition: inline
+On 29/03/19 9:44 AM, Yu Chen wrote:
+> This driver handles usb phy power on and shutdown for hi3660 Soc of
+> Hisilicon.
+> 
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Pengcheng Li <lpc.li@hisilicon.com>
+> Cc: Jianguo Sun <sunjianguo1@huawei.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+> v1:
+> * Remove unused code and add comment for time delay as suggested by
+> Kishon Vijay Abraham I.
+> v2:
+> * Fix license declaration.
+> * Remove redundant parens.
+> * Remove unused member variables in struct hi3660_priv.
+> v4:
+> * Add comments for HI3660_USB_DEFAULT_PHY_PARAM.
+> * Add margin for usleep_range.
+> * Get regmap of otg_bc from parent's of_node.
+> ---
+> ---
+>  MAINTAINERS                             |   8 ++
+>  drivers/phy/hisilicon/Kconfig           |  10 ++
+>  drivers/phy/hisilicon/Makefile          |   1 +
+>  drivers/phy/hisilicon/phy-hi3660-usb3.c | 233 ++++++++++++++++++++++++++++++++
+>  4 files changed, 252 insertions(+)
+>  create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3e5a5d263f29..c0057dd82dbd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16084,6 +16084,14 @@ L:	linux-usb@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/usb/roles/intel-xhci-usb-role-switch.c
+>  
+> +USB IP DRIVER FOR HISILICON KIRIN
+> +M:	Yu Chen <chenyu56@huawei.com>
+> +M:	Binghui Wang <wangbinghui@hisilicon.com>
+> +L:	linux-usb@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
 
+I don't seem to have received the dt-binding patch. Can you please resend with
+updated tags?
 
---t6senhmj6w2pwdjy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks
+Kishon
 
-Hi Rob,
-
-On Tue, Apr 16, 2019 at 04:36:18PM -0500, Rob Herring wrote:
-> On Mon, Apr 15, 2019 at 7:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > The Allwinner SoCs feature an SPDIF controller across multiple SoC
-> > generations.
-> >
-> > However, earlier generations were a bit simpler than the subsequent ones,
-> > and for example would always have RX and TX capabilities, and no reset
-> > lines.
-> >
-> > In order to express this, let's create two YAML schemas instead of the free
-> > form text we had before.
->
-> The only difference is 'reset' is required in one? Perhaps better to
-> just not make 'reset' required til we figure out how to handle a
-> conditional like this. Seems like we discussed this and I probably
-> said to split things?
-
-We indeed discussed this, and this was one of the solutions to support
-this. I wanted to get the discussion started as of how exactly we want
-to support this kind of construct.
-
-I looked it up a bit, and it looks like json schema 7 introduces
-conditionals that would allow us to deal with this nicely.
-
-https://json-schema.org/understanding-json-schema/reference/conditionals.html
-
-Is that something we can switch to while we have not a lot of schemas,
-or would that require some significant work?
-
-> I guess it's a judgement call depending on how different things are.
->
-> Possibly, we could handle this case like this:
->
-> allOf:
->   - $ref: allwinner,sun4i-a10-spdif.yaml
->
-> properties:
->   resets:
->     maxItems: 1
->
-> required:
->   - resets
->
->
-> Plus we'd need the 'allwinner,sun6i-a31-spdif' and other compatibles
-> in both files. Note that you can't use 'additionalProperties: false'
-> in either file in this case.
->
-> I don't really love this solution though.
-
-Yeah, I'm not a big fan of it either.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---t6senhmj6w2pwdjy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLbLGgAKCRDj7w1vZxhR
-xRGAAP0U23WPhLTRpZ+eW+5Wzh7YCHPRMtHNG1jIeLxH0gqA/AEA1MyB95x5ranG
-LwOVx9QR2/eNwj5DqTrEMGZrQCLJGgA=
-=Zr3Z
------END PGP SIGNATURE-----
-
---t6senhmj6w2pwdjy--
-
-
---===============4551636563125464164==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4551636563125464164==--
+> +F:	drivers/phy/hisilicon/phy-hi3660-usb3.c
+> +
+>  USB ISP116X DRIVER
+>  M:	Olav Kongas <ok@artecdesign.ee>
+>  L:	linux-usb@vger.kernel.org
+> diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
+> index b40ee54a1a50..3c142f08987c 100644
+> --- a/drivers/phy/hisilicon/Kconfig
+> +++ b/drivers/phy/hisilicon/Kconfig
+> @@ -12,6 +12,16 @@ config PHY_HI6220_USB
+>  
+>  	  To compile this driver as a module, choose M here.
+>  
+> +config PHY_HI3660_USB
+> +	tristate "hi3660 USB PHY support"
+> +	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
+> +	select GENERIC_PHY
+> +	select MFD_SYSCON
+> +	help
+> +	  Enable this to support the HISILICON HI3660 USB PHY.
+> +
+> +	  To compile this driver as a module, choose M here.
+> +
+>  config PHY_HISTB_COMBPHY
+>  	tristate "HiSilicon STB SoCs COMBPHY support"
+>  	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
+> diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
+> index f662a4fe18d8..75ba64e2faf8 100644
+> --- a/drivers/phy/hisilicon/Makefile
+> +++ b/drivers/phy/hisilicon/Makefile
+> @@ -1,4 +1,5 @@
+>  obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
+> +obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
+>  obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
+>  obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
+>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+> diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
+> new file mode 100644
+> index 000000000000..cc0af2c044d0
+> --- /dev/null
+> +++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
+> @@ -0,0 +1,233 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Phy provider for USB 3.0 controller on HiSilicon 3660 platform
+> + *
+> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
+> + *		http://www.huawei.com
+> + *
+> + * Authors: Yu Chen <chenyu56@huawei.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define PERI_CRG_CLK_EN4			0x40
+> +#define PERI_CRG_CLK_DIS4			0x44
+> +#define GT_CLK_USB3OTG_REF			BIT(0)
+> +#define GT_ACLK_USB3OTG				BIT(1)
+> +
+> +#define PERI_CRG_RSTEN4				0x90
+> +#define PERI_CRG_RSTDIS4			0x94
+> +#define IP_RST_USB3OTGPHY_POR			BIT(3)
+> +#define IP_RST_USB3OTG				BIT(5)
+> +
+> +#define PERI_CRG_ISODIS				0x148
+> +#define USB_REFCLK_ISO_EN			BIT(25)
+> +
+> +#define PCTRL_PERI_CTRL3			0x10
+> +#define PCTRL_PERI_CTRL3_MSK_START		16
+> +#define USB_TCXO_EN				BIT(1)
+> +
+> +#define PCTRL_PERI_CTRL24			0x64
+> +#define SC_CLK_USB3PHY_3MUX1_SEL		BIT(25)
+> +
+> +#define USBOTG3_CTRL0				0x00
+> +#define SC_USB3PHY_ABB_GT_EN			BIT(15)
+> +
+> +#define USBOTG3_CTRL2				0x08
+> +#define USBOTG3CTRL2_POWERDOWN_HSP		BIT(0)
+> +#define USBOTG3CTRL2_POWERDOWN_SSP		BIT(1)
+> +
+> +#define USBOTG3_CTRL3				0x0C
+> +#define USBOTG3_CTRL3_VBUSVLDEXT		BIT(6)
+> +#define USBOTG3_CTRL3_VBUSVLDEXTSEL		BIT(5)
+> +
+> +#define USBOTG3_CTRL4				0x10
+> +
+> +#define USBOTG3_CTRL7				0x1c
+> +#define REF_SSP_EN				BIT(16)
+> +
+> +/* This value config the default txtune parameter of the usb 2.0 phy */
+> +#define HI3660_USB_DEFAULT_PHY_PARAM		0x1c466e3
+> +
+> +struct hi3660_priv {
+> +	struct device *dev;
+> +	struct regmap *peri_crg;
+> +	struct regmap *pctrl;
+> +	struct regmap *otg_bc;
+> +	u32 eye_diagram_param;
+> +};
+> +
+> +static int hi3660_phy_init(struct phy *phy)
+> +{
+> +	struct hi3660_priv *priv = phy_get_drvdata(phy);
+> +	u32 val, mask;
+> +	int ret;
+> +
+> +	/* usb refclk iso disable */
+> +	ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS, USB_REFCLK_ISO_EN);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* enable usb_tcxo_en */
+> +	val = USB_TCXO_EN | (USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
+> +	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* assert phy */
+> +	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
+> +	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* enable phy ref clk */
+> +	val = SC_USB3PHY_ABB_GT_EN;
+> +	mask = val;
+> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL0, mask, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	val = REF_SSP_EN;
+> +	mask = val;
+> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL7, mask, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* exit from IDDQ mode */
+> +	mask = USBOTG3CTRL2_POWERDOWN_HSP | USBOTG3CTRL2_POWERDOWN_SSP;
+> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL2, mask, 0);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* delay for exit from IDDQ mode */
+> +	usleep_range(100, 120);
+> +
+> +	/* deassert phy */
+> +	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
+> +	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTDIS4, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* delay for phy deasserted */
+> +	usleep_range(10000, 15000);
+> +
+> +	/* fake vbus valid signal */
+> +	val = USBOTG3_CTRL3_VBUSVLDEXT | USBOTG3_CTRL3_VBUSVLDEXTSEL;
+> +	mask = val;
+> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL3, mask, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* delay for vbus valid */
+> +	usleep_range(100, 120);
+> +
+> +	ret = regmap_write(priv->otg_bc, USBOTG3_CTRL4,
+> +			priv->eye_diagram_param);
+> +	if (ret)
+> +		goto out;
+> +
+> +	return 0;
+> +out:
+> +	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
+> +	return ret;
+> +}
+> +
+> +static int hi3660_phy_exit(struct phy *phy)
+> +{
+> +	struct hi3660_priv *priv = phy_get_drvdata(phy);
+> +	u32 val;
+> +	int ret;
+> +
+> +	/* assert phy */
+> +	val = IP_RST_USB3OTGPHY_POR;
+> +	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* disable usb_tcxo_en */
+> +	val = USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START;
+> +	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	return 0;
+> +out:
+> +	dev_err(priv->dev, "failed to exit phy ret: %d\n", ret);
+> +	return ret;
+> +}
+> +
+> +static struct phy_ops hi3660_phy_ops = {
+> +	.init		= hi3660_phy_init,
+> +	.exit		= hi3660_phy_exit,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int hi3660_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *phy_provider;
+> +	struct device *dev = &pdev->dev;
+> +	struct phy *phy;
+> +	struct hi3660_priv *priv;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->dev = dev;
+> +	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +					"hisilicon,pericrg-syscon");
+> +	if (IS_ERR(priv->peri_crg)) {
+> +		dev_err(dev, "no hisilicon,pericrg-syscon\n");
+> +		return PTR_ERR(priv->peri_crg);
+> +	}
+> +
+> +	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +					"hisilicon,pctrl-syscon");
+> +	if (IS_ERR(priv->pctrl)) {
+> +		dev_err(dev, "no hisilicon,pctrl-syscon\n");
+> +		return PTR_ERR(priv->pctrl);
+> +	}
+> +
+> +	/* node of hi3660 phy is a sub-node of usb3_otg_bc */
+> +	priv->otg_bc = syscon_node_to_regmap(dev->parent->of_node);
+> +	if (IS_ERR(priv->otg_bc)) {
+> +		dev_err(dev, "no hisilicon,usb3-otg-bc-syscon\n");
+> +		return PTR_ERR(priv->otg_bc);
+> +	}
+> +
+> +	if (of_property_read_u32(dev->of_node, "hisilicon,eye-diagram-param",
+> +		&(priv->eye_diagram_param)))
+> +		priv->eye_diagram_param = HI3660_USB_DEFAULT_PHY_PARAM;
+> +
+> +	phy = devm_phy_create(dev, NULL, &hi3660_phy_ops);
+> +	if (IS_ERR(phy))
+> +		return PTR_ERR(phy);
+> +
+> +	phy_set_drvdata(phy, priv);
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static const struct of_device_id hi3660_phy_of_match[] = {
+> +	{.compatible = "hisilicon,hi3660-usb-phy",},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, hi3660_phy_of_match);
+> +
+> +static struct platform_driver hi3660_phy_driver = {
+> +	.probe	= hi3660_phy_probe,
+> +	.driver = {
+> +		.name	= "hi3660-usb-phy",
+> +		.of_match_table	= hi3660_phy_of_match,
+> +	}
+> +};
+> +module_platform_driver(hi3660_phy_driver);
+> +
+> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Hilisicon Hi3660 USB3 PHY Driver");
+> 
