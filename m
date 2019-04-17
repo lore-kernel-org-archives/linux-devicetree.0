@@ -1,75 +1,61 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: [PATCH v4 03/26] dt-bindings: leds: Add LED_FUNCTION definitions
-Date: Wed, 17 Apr 2019 22:54:16 +0200
-Message-ID: <20190417205439.17685-4-jacek.anaszewski@gmail.com>
-References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net, jacek.anaszewski@gmail.com, Baolin Wang <baolin.wang@linaro.org>, Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Subject: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
+Date: Thu, 18 Apr 2019 00:01:00 +0300
+Message-ID: <20190417210059.26262-1-papadakospan@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jose Abreu <jose.abreu@synopsys.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, "Leonidas P. Papadakos" <papadakospan@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial set of common LED function definitions.
+Some rockchip boards have issues with tx checksumming for packets
+larger than 1498 B.
 
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Simon Shields <simon@lineageos.org>
+An iperf test will tell you that transmissions stop almost immediately.
+
+A workaround to this issue is disabling TX checksumming offload,
+and one of the ways to do that is snps,force_thresh_dma_mode.
+
+But after some discussion here it seems there is another path:
+https://lkml.org/lkml/2019/4/5/148
+
+Setting txpbl is a better-performing (maybe temporary) solution
+compared to disabling T offload.
+
+In my testing with a Libre Computer Renegade, this was the best
+all-around option, and increasing the MTU doesn't cause a queue timeout anymore.
+
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
 ---
- include/dt-bindings/leds/common.h | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-index e171d0a6beb2..da0539490cea 100644
---- a/include/dt-bindings/leds/common.h
-+++ b/include/dt-bindings/leds/common.h
-@@ -19,4 +19,41 @@
- #define LEDS_BOOST_ADAPTIVE	1
- #define LEDS_BOOST_FIXED	2
- 
-+/* Standard LED functions */
-+#define LED_FUNCTION_ACTIVITY "activity"
-+#define LED_FUNCTION_ALARM "alarm"
-+#define LED_FUNCTION_BACKLIGHT "backlight"
-+#define LED_FUNCTION_BLUETOOTH "bluetooth"
-+#define LED_FUNCTION_BOOT "boot"
-+#define LED_FUNCTION_CHARGE "charge"
-+#define LED_FUNCTION_DEBUG "debug"
-+#define LED_FUNCTION_DISK "disk"
-+#define LED_FUNCTION_DISK_ERR "disk-err"
-+#define LED_FUNCTION_DISK_READ "disk-read"
-+#define LED_FUNCTION_DISK_WRITE "disk-write"
-+#define LED_FUNCTION_FAULT "fault"
-+#define LED_FUNCTION_FLASH "flash"
-+#define LED_FUNCTION_HEARTBEAT "heartbeat"
-+#define LED_FUNCTION_INDICATOR "indicator"
-+#define LED_FUNCTION_KBD_BACKLIGHT "kbd_backlight"
-+#define LED_FUNCTION_KEYBOARD "keyboard"
-+#define LED_FUNCTION_KEYPAD "keypad"
-+#define LED_FUNCTION_LAN "lan"
-+#define LED_FUNCTION_MMC "mmc"
-+#define LED_FUNCTION_NAND "nand"
-+#define LED_FUNCTION_ON "on"
-+#define LED_FUNCTION_PROGRAMMING "programming"
-+#define LED_FUNCTION_POWER "power"
-+#define LED_FUNCTION_RX "rx"
-+#define LED_FUNCTION_SD "sd"
-+#define LED_FUNCTION_STANDBY "standby"
-+#define LED_FUNCTION_STATUS "status"
-+#define LED_FUNCTION_TORCH "torch"
-+#define LED_FUNCTION_TV "tv"
-+#define LED_FUNCTION_TX "tx"
-+#define LED_FUNCTION_USB "usb"
-+#define LED_FUNCTION_WAN "wan"
-+#define LED_FUNCTION_WLAN "wlan"
-+#define LED_FUNCTION_WPS "wps"
-+
- #endif /* __DT_BINDINGS_LEDS_H */
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 5d499c908..974f2dcdf 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -141,10 +141,10 @@
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmiim1_pins>;
+-	snps,force_thresh_dma_mode;
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
++	snps,txpbl = <0x4>;
+ 	tx_delay = <0x24>;
+ 	rx_delay = <0x18>;
+ 	status = "okay";
 -- 
-2.11.0
+2.21.0
