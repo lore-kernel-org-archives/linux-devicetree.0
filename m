@@ -1,52 +1,45 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 0/2] cpufreq: Add sunxi nvmem based CPU scaling driver
-Date: Wed, 17 Apr 2019 19:57:43 +0530
-Message-ID: <20190417142629.uckz42ufxywcbeez@vireshk-mac-ubuntu>
-References: <20190416155209.24216-1-tiny.windzz@gmail.com>
- <20190417020830.f5empr3rr3ifbstl@vireshk-mac-ubuntu>
- <20190417083116.xgwglxogy2zqdghh@flea>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 03/10] of/irq: document properties for wakeup interrupt parent
+Date: Wed, 17 Apr 2019 16:36:36 +0200
+Message-ID: <CACRpkdZW8OhqmNdeC8KmiAN6iTDAm7NUzGGmu5+-3utdT+dtCg@mail.gmail.com>
+References: <20190313211844.29416-1-ilina@codeaurora.org> <20190313211844.29416-4-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190417083116.xgwglxogy2zqdghh@flea>
+In-Reply-To: <20190313211844.29416-4-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yangtao Li <tiny.windzz@gmail.com>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17-04-19, 10:31, Maxime Ripard wrote:
-> On Wed, Apr 17, 2019 at 07:38:30AM +0530, Viresh Kumar wrote:
-> > On 16-04-19, 11:52, Yangtao Li wrote:
-> > > Add sunxi nvmem based CPU scaling driver, refers to qcom-cpufreq-kryo.
-> > >
-> > > Yangtao Li (2):
-> > >   cpufreq: Add sunxi nvmem based CPU scaling driver
-> > >   dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
-> > >
-> > >  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 +++++++++++++
-> > >  MAINTAINERS                                   |   7 +
-> > >  drivers/cpufreq/Kconfig.arm                   |  12 +
-> > >  drivers/cpufreq/Makefile                      |   1 +
-> > >  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
-> > >  drivers/cpufreq/sun50i-cpufreq-nvmem.c        | 226 ++++++++++++++++++
-> > >  6 files changed, 415 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> > >  create mode 100644 drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > >
-> > > ---
-> > > v4:
-> > > -I removed this sunxi_cpufreq_soc_data structure for now.
-> >
-> > Why this change ?
-> 
-> It's used on a single SoC for now, so it's impossible to know at this
-> point what to put in that structure in the first place.
-> 
-> Of course, that would need to be brought back if we ever have two SoCs
-> to support and that we know which differences there is.
+On Wed, Mar 13, 2019 at 10:19 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-Okay, I was surprised that you dropped that in v4, which was quite late :)
+> +Mapping the interrupt specifiers in the device tree can be done using the
+> +"irqdomain-map" property. The property contains interrupt specifier at the
+> +current interrupt controller followed by the interrupt specifier at the mapped
+> +interrupt controller.
+> +
+> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
+> +
+> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
+> +be provided to help interpret the valid bits of the incoming and mapped
+> +interrupt specifiers respectively.
+> +
+> +   Example:
+> +       irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
+> +       irqdomain-map-mask = <0xff 0>;
+> +       irqdomain-map-pass-thru = <0 0xff>;
 
--- 
-viresh
+This is looking a bit familiar to the existing interrupt-map that is
+used for PCI interrupts and Swizzling back to a set of PCI
+host interrupts.
+
+I tried to document interrupt-map here:
+https://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+
+interrupt-map is a bit convoluted, so I don't know if it would be subject
+to reuse for this. I suspect that interrupt-map, despite the name,
+is for PCI only.
+
+Yours,
+Linus Walleij
