@@ -1,261 +1,1208 @@
-Return-Path: <SRS0=T9D/=SR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37451 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfDOMod (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Apr 2019 08:44:33 -0400
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v6 04/13] partial revert of "[media] tvp5150: add HW input connectors support"
-Date: Mon, 15 Apr 2019 14:44:04 +0200
-Message-Id: <20190415124413.18456-5-m.felsch@pengutronix.de>
-In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=imBe=ST=ziswiler.com=marcel@kernel.org>
+Date: Wed, 17 Apr 2019 08:15:01 +0200
+In-Reply-To: <20190410071007.13276-1-igor.opaniuk@toradex.com>
+References: <20190410071007.13276-1-igor.opaniuk@toradex.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Javier Martinez Canillas <javierm@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: multipart/alternative; boundary="----ADY3BQGTWPF54EBVBLO6X3AYXYRJUF"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/2] ARM: dts: colibri/apalis: convert to SPDX license tags
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Message-ID: <8F22A611-7CC6-4C74-8369-748FD8DB8073@ziswiler.com>
+To: Igor Opaniuk <igor.opaniuk@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-imx@nxp.com
+Cc: jonathanh@nvidia.com, thierry.reding@gmail.com, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, marcel.ziswiler@toradex.com, stefan@agner.ch
 List-ID: <devicetree@vger.kernel.org>
 
-From: Javier Martinez Canillas <javierm@redhat.com>
+------ADY3BQGTWPF54EBVBLO6X3AYXYRJUF
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Commit f7b4b54e6364 ("[media] tvp5150: add HW input connectors support")
-added input signals support for the tvp5150, but the approach was found
-to be incorrect so the corresponding DT binding commit 82c2ffeb217a
-("[media] tvp5150: document input connectors DT bindings") was reverted.
+With them parentheses removed:
 
-This left the driver with an undocumented (and wrong) DT parsing logic,
-so lets get rid of this code as well until the input connectors support
-is implemented properly.
+Acked-by: Marcel Ziswiler <marcel=2Eziswiler@toradex=2Ecom>
 
-It's a partial revert due other patches added on top of mentioned commit
-not allowing the commit to be reverted cleanly anymore. But all the code
-related to the DT parsing logic and input entities creation are removed.
+On April 10, 2019 9:10:06 AM GMT+02:00, Igor Opaniuk <igor=2Eopaniuk@torad=
+ex=2Ecom> wrote:
+>Replace boiler plate licenses texts with the SPDX license
+>identifiers in Colibri/Apalis DTS files=2E
+>
+>Signed-off-by: Igor Opaniuk <igor=2Eopaniuk@toradex=2Ecom>
+>---
+> arch/arm/boot/dts/imx6q-apalis-eval=2Edts       | 40 +-----------------
+> arch/arm/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts | 40 +----------------=
+-
+> arch/arm/boot/dts/imx6q-apalis-ixora=2Edts      | 40 +-----------------
+> arch/arm/boot/dts/imx6qdl-apalis=2Edtsi         | 40 +-----------------
+> arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi   | 39 +-----------------
+> arch/arm/boot/dts/imx7-colibri=2Edtsi           | 39 +-----------------
+> arch/arm/boot/dts/imx7d-colibri-eval-v3=2Edts   | 39 +-----------------
+> arch/arm/boot/dts/imx7d-colibri=2Edtsi          | 41 +------------------
+> arch/arm/boot/dts/imx7s-colibri-eval-v3=2Edts   | 41 +------------------
+> arch/arm/boot/dts/imx7s-colibri=2Edtsi          | 41 +------------------
+> arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi     | 40 +-----------------
+> arch/arm/boot/dts/vf-colibri=2Edtsi             | 38 +----------------
+> arch/arm/boot/dts/vf500-colibri-eval-v3=2Edts   | 40 +-----------------
+> arch/arm/boot/dts/vf500-colibri=2Edtsi          | 39 +-----------------
+> arch/arm/boot/dts/vf610-colibri-eval-v3=2Edts   | 38 +----------------
+> arch/arm/boot/dts/vf610-colibri=2Edtsi          | 40 +-----------------
+> arch/arm/boot/dts/vf610m4-colibri=2Edts         | 40 +-----------------
+> 17 files changed, 29 insertions(+), 646 deletions(-)
+>
+>diff --git a/arch/arm/boot/dts/imx6q-apalis-eval=2Edts
+>b/arch/arm/boot/dts/imx6q-apalis-eval=2Edts
+>index 0edd3043d9c1=2E=2E621e9ee5bbeb 100644
+>--- a/arch/arm/boot/dts/imx6q-apalis-eval=2Edts
+>+++ b/arch/arm/boot/dts/imx6q-apalis-eval=2Edts
+>@@ -1,44 +1,8 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014-2017 Toradex AG
+>+ * Copyright 2014-2019 Toradex AG
+>  * Copyright 2012 Freescale Semiconductor, Inc=2E
+>  * Copyright 2011 Linaro Ltd=2E
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> /dts-v1/;
+>diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts
+>b/arch/arm/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts
+>index b94bb687be6b=2E=2E1e365e2636c4 100644
+>--- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts
+>+++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts
+>@@ -1,44 +1,8 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014-2017 Toradex AG
+>+ * Copyright 2014-2019 Toradex AG
+>  * Copyright 2012 Freescale Semiconductor, Inc=2E
+>  * Copyright 2011 Linaro Ltd=2E
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> /dts-v1/;
+>diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora=2Edts
+>b/arch/arm/boot/dts/imx6q-apalis-ixora=2Edts
+>index 302fd6adc8a7=2E=2Edeb5509d3597 100644
+>--- a/arch/arm/boot/dts/imx6q-apalis-ixora=2Edts
+>+++ b/arch/arm/boot/dts/imx6q-apalis-ixora=2Edts
+>@@ -1,44 +1,8 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014-2017 Toradex AG
+>+ * Copyright 2014-2019 Toradex AG
+>  * Copyright 2012 Freescale Semiconductor, Inc=2E
+>  * Copyright 2011 Linaro Ltd=2E
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> /dts-v1/;
+>diff --git a/arch/arm/boot/dts/imx6qdl-apalis=2Edtsi
+>b/arch/arm/boot/dts/imx6qdl-apalis=2Edtsi
+>index 7c4ad541c3f5=2E=2E031c021a7fc5 100644
+>--- a/arch/arm/boot/dts/imx6qdl-apalis=2Edtsi
+>+++ b/arch/arm/boot/dts/imx6qdl-apalis=2Edtsi
+>@@ -1,44 +1,8 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014-2017 Toradex AG
+>+ * Copyright 2014-2019 Toradex AG
+>  * Copyright 2012 Freescale Semiconductor, Inc=2E
+>  * Copyright 2011 Linaro Ltd=2E
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> #include <dt-bindings/gpio/gpio=2Eh>
+>diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi
+>b/arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi
+>index 3f2746169181=2E=2E43b6be76941b 100644
+>--- a/arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi
+>+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi
+>@@ -1,43 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)
+> /*
+>  * Copyright 2016 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License as
+>- *     published by the Free Software Foundation; either version 2 of
+>the
+>- *     License, or (at your option) any later version=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> / {
+>diff --git a/arch/arm/boot/dts/imx7-colibri=2Edtsi
+>b/arch/arm/boot/dts/imx7-colibri=2Edtsi
+>index 895fbde4d433=2E=2Ec53e9576813b 100644
+>--- a/arch/arm/boot/dts/imx7-colibri=2Edtsi
+>+++ b/arch/arm/boot/dts/imx7-colibri=2Edtsi
+>@@ -1,43 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)
+> /*
+>  * Copyright 2016 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License as
+>- *     published by the Free Software Foundation; either version 2 of
+>the
+>- *     License, or (at your option) any later version=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> / {
+>diff --git a/arch/arm/boot/dts/imx7d-colibri-eval-v3=2Edts
+>b/arch/arm/boot/dts/imx7d-colibri-eval-v3=2Edts
+>index 136e11ab4893=2E=2E5077ec355725 100644
+>--- a/arch/arm/boot/dts/imx7d-colibri-eval-v3=2Edts
+>+++ b/arch/arm/boot/dts/imx7d-colibri-eval-v3=2Edts
+>@@ -1,43 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)
+> /*
+>  * Copyright 2016 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License as
+>- *     published by the Free Software Foundation; either version 2 of
+>the
+>- *     License, or (at your option) any later version=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> /dts-v1/;
+>diff --git a/arch/arm/boot/dts/imx7d-colibri=2Edtsi
+>b/arch/arm/boot/dts/imx7d-colibri=2Edtsi
+>index e2e327f437e3=2E=2Efc5573171114 100644
+>--- a/arch/arm/boot/dts/imx7d-colibri=2Edtsi
+>+++ b/arch/arm/boot/dts/imx7d-colibri=2Edtsi
+>@@ -1,43 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)
+> /*
+>- * Copyright 2016 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License as
+>- *     published by the Free Software Foundation; either version 2 of
+>the
+>- *     License, or (at your option) any later version=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>+ * Copyright 2016-2019 Toradex AG
+>  */
+>=20
+> #include "imx7d=2Edtsi"
+>diff --git a/arch/arm/boot/dts/imx7s-colibri-eval-v3=2Edts
+>b/arch/arm/boot/dts/imx7s-colibri-eval-v3=2Edts
+>index bd2a49c1ade6=2E=2Ec12bb60b6acb 100644
+>--- a/arch/arm/boot/dts/imx7s-colibri-eval-v3=2Edts
+>+++ b/arch/arm/boot/dts/imx7s-colibri-eval-v3=2Edts
+>@@ -1,43 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)
+> /*
+>- * Copyright 2016 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License as
+>- *     published by the Free Software Foundation; either version 2 of
+>the
+>- *     License, or (at your option) any later version=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>+ * Copyright 2016-2019 Toradex AG
+>  */
+>=20
+> /dts-v1/;
+>diff --git a/arch/arm/boot/dts/imx7s-colibri=2Edtsi
+>b/arch/arm/boot/dts/imx7s-colibri=2Edtsi
+>index 1fb1ec5d3d70=2E=2E3f3e0fbc8597 100644
+>--- a/arch/arm/boot/dts/imx7s-colibri=2Edtsi
+>+++ b/arch/arm/boot/dts/imx7s-colibri=2Edtsi
+>@@ -1,43 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)
+> /*
+>- * Copyright 2016 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License as
+>- *     published by the Free Software Foundation; either version 2 of
+>the
+>- *     License, or (at your option) any later version=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>+ * Copyright 2016-2019 Toradex AG
+>  */
+>=20
+> #include "imx7s=2Edtsi"
+>diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi
+>b/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi
+>index e2da122a63f4=2E=2Ee5337a93c3d1 100644
+>--- a/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi
+>+++ b/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi
+>@@ -1,42 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>+ * Copyright 2014-2016 Toradex AG
+>  */
+>=20
+> / {
+>diff --git a/arch/arm/boot/dts/vf-colibri=2Edtsi
+>b/arch/arm/boot/dts/vf-colibri=2Edtsi
+>index b6a1eeeb2bb4=2E=2E34a93fe90a5c 100644
+>--- a/arch/arm/boot/dts/vf-colibri=2Edtsi
+>+++ b/arch/arm/boot/dts/vf-colibri=2Edtsi
+>@@ -1,42 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>  * Copyright 2014 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>  */
+>=20
+> / {
+>diff --git a/arch/arm/boot/dts/vf500-colibri-eval-v3=2Edts
+>b/arch/arm/boot/dts/vf500-colibri-eval-v3=2Edts
+>index 076998968fb5=2E=2Ea4b97e9d22d9 100644
+>--- a/arch/arm/boot/dts/vf500-colibri-eval-v3=2Edts
+>+++ b/arch/arm/boot/dts/vf500-colibri-eval-v3=2Edts
+>@@ -1,42 +1,6 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014 Toradex AG
+>- *
+>- * This file is dual-licensed: you can use it either under the terms
+>- * of the GPL or the X11 license, at your option=2E Note that this dual
+>- * licensing only applies to this file, and not this project as a
+>- * whole=2E
+>- *
+>- *  a) This file is free software; you can redistribute it and/or
+>- *     modify it under the terms of the GNU General Public License
+>- *     version 2 as published by the Free Software Foundation=2E
+>- *
+>- *     This file is distributed in the hope that it will be useful,
+>- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the
+>- *     GNU General Public License for more details=2E
+>- *
+>- * Or, alternatively,
+>- *
+>- *  b) Permission is hereby granted, free of charge, to any person
+>- *     obtaining a copy of this software and associated documentation
+>- *     files (the "Software"), to deal in the Software without
+>- *     restriction, including without limitation the rights to use,
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or
+>- *     sell copies of the Software, and to permit persons to whom the
+>- *     Software is furnished to do so, subject to the following
+>- *     conditions:
+>- *
+>- *     The above copyright notice and this permission notice shall be
+>- *     included in all copies or substantial portions of the Software=2E
+>- *
+>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>- *     OTHER DEALINGS IN THE SOFTWARE=2E
+>+ * Copyright 2014-2019 Toradex AG
+>  */
+>=20
+> /dts-v1/;
+>diff --git a/arch/arm/boot/dts/vf500-colibri=2Edtsi
+>b/arch/arm/boot/dts/vf500-colibri=2Edtsi
+>index 237b0246fa84=2E=2E54e96b311a48 100644
+>--- a/arch/arm/boot/dts/vf500-colibri=2Edtsi
+>+++ b/arch/arm/boot/dts/vf500-colibri=2Edtsi
+>@@ -1,42 +1,7 @@
+>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)
+> /*
+>- * Copyright 2014 Toradex AG
+>+ * Copyright 2014-2019 Toradex AG
+>  *
+>- * This file is dual-licensed: you can use it either under the terms
+>-=20
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-[m.felsch@pengutronix.de: rm TVP5150_INPUT_NUM define]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- drivers/media/i2c/tvp5150.c         | 141 ----------------------------
- include/dt-bindings/media/tvp5150.h |   2 -
- 2 files changed, 143 deletions(-)
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+------ADY3BQGTWPF54EBVBLO6X3AYXYRJUF
+Content-Type: text/html;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index eaddd977ba40..89da921c8886 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -53,8 +53,6 @@ struct tvp5150 {
- 	struct v4l2_subdev sd;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pads[TVP5150_NUM_PADS];
--	struct media_entity input_ent[TVP5150_INPUT_NUM];
--	struct media_pad input_pad[TVP5150_INPUT_NUM];
- #endif
- 	struct v4l2_ctrl_handler hdl;
- 	struct v4l2_rect rect;
-@@ -1169,40 +1167,6 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
--/****************************************************************************
--			Media entity ops
-- ****************************************************************************/
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--static int tvp5150_link_setup(struct media_entity *entity,
--			      const struct media_pad *local,
--			      const struct media_pad *remote, u32 flags)
--{
--	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
--	struct tvp5150 *decoder = to_tvp5150(sd);
--	int i;
--
--	for (i = 0; i < TVP5150_INPUT_NUM; i++) {
--		if (remote->entity == &decoder->input_ent[i])
--			break;
--	}
--
--	/* Do nothing for entities that are not input connectors */
--	if (i == TVP5150_INPUT_NUM)
--		return 0;
--
--	decoder->input = i;
--
--	tvp5150_selmux(sd);
--
--	return 0;
--}
--
--static const struct media_entity_operations tvp5150_sd_media_ops = {
--	.link_setup = tvp5150_link_setup,
--};
--#endif
--
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-@@ -1350,42 +1314,6 @@ static int tvp5150_g_tuner(struct v4l2_subdev *sd, struct v4l2_tuner *vt)
- 	return 0;
- }
- 
--static int tvp5150_registered(struct v4l2_subdev *sd)
--{
--#ifdef CONFIG_MEDIA_CONTROLLER
--	struct tvp5150 *decoder = to_tvp5150(sd);
--	int ret = 0;
--	int i;
--
--	for (i = 0; i < TVP5150_INPUT_NUM; i++) {
--		struct media_entity *input = &decoder->input_ent[i];
--		struct media_pad *pad = &decoder->input_pad[i];
--
--		if (!input->name)
--			continue;
--
--		decoder->input_pad[i].flags = MEDIA_PAD_FL_SOURCE;
--
--		ret = media_entity_pads_init(input, 1, pad);
--		if (ret < 0)
--			return ret;
--
--		ret = media_device_register_entity(sd->v4l2_dev->mdev, input);
--		if (ret < 0)
--			return ret;
--
--		ret = media_create_pad_link(input, 0, &sd->entity,
--					    TVP5150_PAD_IF_INPUT, 0);
--		if (ret < 0) {
--			media_device_unregister_entity(input);
--			return ret;
--		}
--	}
--#endif
--
--	return 0;
--}
--
- /* ----------------------------------------------------------------------- */
- 
- static const struct v4l2_ctrl_ops tvp5150_ctrl_ops = {
-@@ -1439,10 +1367,6 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
- 	.pad = &tvp5150_pad_ops,
- };
- 
--static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
--	.registered = tvp5150_registered,
--};
--
- /****************************************************************************
- 			I2C Client & Driver
-  ****************************************************************************/
-@@ -1595,12 +1519,6 @@ static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
- {
- 	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
- 	struct device_node *ep;
--#ifdef CONFIG_MEDIA_CONTROLLER
--	struct device_node *connectors, *child;
--	struct media_entity *input;
--	const char *name;
--	u32 input_type;
--#endif
- 	unsigned int flags;
- 	int ret = 0;
- 
-@@ -1624,63 +1542,6 @@ static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
- 
- 	decoder->mbus_type = bus_cfg.bus_type;
- 
--#ifdef CONFIG_MEDIA_CONTROLLER
--	connectors = of_get_child_by_name(np, "connectors");
--
--	if (!connectors)
--		goto err;
--
--	for_each_available_child_of_node(connectors, child) {
--		ret = of_property_read_u32(child, "input", &input_type);
--		if (ret) {
--			dev_err(decoder->sd.dev,
--				 "missing type property in node %pOFn\n",
--				 child);
--			goto err_connector;
--		}
--
--		if (input_type >= TVP5150_INPUT_NUM) {
--			ret = -EINVAL;
--			goto err_connector;
--		}
--
--		input = &decoder->input_ent[input_type];
--
--		/* Each input connector can only be defined once */
--		if (input->name) {
--			dev_err(decoder->sd.dev,
--				 "input %s with same type already exists\n",
--				 input->name);
--			ret = -EINVAL;
--			goto err_connector;
--		}
--
--		switch (input_type) {
--		case TVP5150_COMPOSITE0:
--		case TVP5150_COMPOSITE1:
--			input->function = MEDIA_ENT_F_CONN_COMPOSITE;
--			break;
--		case TVP5150_SVIDEO:
--			input->function = MEDIA_ENT_F_CONN_SVIDEO;
--			break;
--		}
--
--		input->flags = MEDIA_ENT_FL_CONNECTOR;
--
--		ret = of_property_read_string(child, "label", &name);
--		if (ret < 0) {
--			dev_err(decoder->sd.dev,
--				 "missing label property in node %pOFn\n",
--				 child);
--			goto err_connector;
--		}
--
--		input->name = name;
--	}
--
--err_connector:
--	of_node_put(connectors);
--#endif
- err:
- 	of_node_put(ep);
- 	return ret;
-@@ -1732,7 +1593,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 	}
- 
- 	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
--	sd->internal_ops = &tvp5150_internal_ops;
- 	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- #if defined(CONFIG_MEDIA_CONTROLLER)
-@@ -1747,7 +1607,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 	if (res < 0)
- 		return res;
- 
--	sd->entity.ops = &tvp5150_sd_media_ops;
- #endif
- 
- 	res = tvp5150_detect_version(core);
-diff --git a/include/dt-bindings/media/tvp5150.h b/include/dt-bindings/media/tvp5150.h
-index c852a35e916e..8637910aae76 100644
---- a/include/dt-bindings/media/tvp5150.h
-+++ b/include/dt-bindings/media/tvp5150.h
-@@ -26,8 +26,6 @@
- #define TVP5150_COMPOSITE1 1
- #define TVP5150_SVIDEO     2
- 
--#define TVP5150_INPUT_NUM  3
--
- /* TVP5150 HW outputs */
- #define TVP5150_NORMAL       0
- #define TVP5150_BLACK_SCREEN 1
--- 
-2.20.1
+<html><head></head><body>With them parentheses removed:<br><br>Acked-by: Ma=
+rcel Ziswiler &lt;marcel=2Eziswiler@toradex=2Ecom&gt;<br><br><div class=3D"=
+gmail_quote">On April 10, 2019 9:10:06 AM GMT+02:00, Igor Opaniuk &lt;igor=
+=2Eopaniuk@toradex=2Ecom&gt; wrote:<blockquote class=3D"gmail_quote" style=
+=3D"margin: 0pt 0pt 0pt 0=2E8ex; border-left: 1px solid rgb(204, 204, 204);=
+ padding-left: 1ex;">
+<pre class=3D"k9mail">Replace boiler plate licenses texts with the SPDX li=
+cense<br>identifiers in Colibri/Apalis DTS files=2E<br><br>Signed-off-by: I=
+gor Opaniuk &lt;igor=2Eopaniuk@toradex=2Ecom&gt;<hr> arch/arm/boot/dts/imx6=
+q-apalis-eval=2Edts       | 40 +-----------------<br> arch/arm/boot/dts/imx=
+6q-apalis-ixora-v1=2E1=2Edts | 40 +-----------------<br> arch/arm/boot/dts/=
+imx6q-apalis-ixora=2Edts      | 40 +-----------------<br> arch/arm/boot/dts=
+/imx6qdl-apalis=2Edtsi         | 40 +-----------------<br> arch/arm/boot/dt=
+s/imx7-colibri-eval-v3=2Edtsi   | 39 +-----------------<br> arch/arm/boot/d=
+ts/imx7-colibri=2Edtsi           | 39 +-----------------<br> arch/arm/boot/=
+dts/imx7d-colibri-eval-v3=2Edts   | 39 +-----------------<br> arch/arm/boot=
+/dts/imx7d-colibri=2Edtsi          | 41 +------------------<br> arch/arm/bo=
+ot/dts/imx7s-colibri-eval-v3=2Edts   | 41 +------------------<br> arch/arm/=
+boot/dts/imx7s-colibri=2Edtsi          | 41 +------------------<br> arch/ar=
+m/boot/dts/vf-colibri-eval-v3=2Edtsi     | 40 +-----------------<br> arch/a=
+rm/boot/dts/vf-colibri=2Edtsi             | 38 +----------------<br> arch/a=
+rm/boot/dts/vf500-colibri-eval-v3=2Edts   | 40 +-----------------<br> arch/=
+arm/boot/dts/vf500-colibri=2Edtsi          | 39 +-----------------<br> arch=
+/arm/boot/dts/vf610-colibri-eval-v3=2Edts   | 38 +----------------<br> arch=
+/arm/boot/dts/vf610-colibri=2Edtsi          | 40 +-----------------<br> arc=
+h/arm/boot/dts/vf610m4-colibri=2Edts         | 40 +-----------------<br> 17=
+ files changed, 29 insertions(+), 646 deletions(-)<br><br>diff --git a/arch=
+/arm/boot/dts/imx6q-apalis-eval=2Edts b/arch/arm/boot/dts/imx6q-apalis-eval=
+=2Edts<br>index 0edd3043d9c1=2E=2E621e9ee5bbeb 100644<br>--- a/arch/arm/boo=
+t/dts/imx6q-apalis-eval=2Edts<br>+++ b/arch/arm/boot/dts/imx6q-apalis-eval=
+=2Edts<br>@@ -1,44 +1,8 @@<br>+// SPDX-License-Identifier: (GPL-2=2E0 OR X1=
+1)<br> /*<br>- * Copyright 2014-2017 Toradex AG<br>+ * Copyright 2014-2019 =
+Toradex AG<br>  * Copyright 2012 Freescale Semiconductor, Inc=2E<br>  * Cop=
+yright 2011 Linaro Ltd=2E<br>- *<br>- * This file is dual-licensed: you can=
+ use it either under the terms<br>- * of the GPL or the X11 license, at you=
+r option=2E Note that this dual<br>- * licensing only applies to this file,=
+ and not this project as a<br>- * whole=2E<br>- *<br>- *  a) This file is f=
+ree software; you can redistribute it and/or<br>- *     modify it under the=
+ terms of the GNU General Public License<br>- *     version 2 as published =
+by the Free Software Foundation=2E<br>- *<br>- *     This file is distribut=
+ed in the hope that it will be useful,<br>- *     but WITHOUT ANY WARRANTY;=
+ without even the implied warranty of<br>- *     MERCHANTABILITY or FITNESS=
+ FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU General Public License=
+ for more details=2E<br>- *<br>- * Or, alternatively,<br>- *<br>- *  b) Per=
+mission is hereby granted, free of charge, to any person<br>- *     obtaini=
+ng a copy of this software and associated documentation<br>- *     files (t=
+he "Software"), to deal in the Software without<br>- *     restriction, inc=
+luding without limitation the rights to use,<br>- *     copy, modify, merge=
+, publish, distribute, sublicense, and/or<br>- *     sell copies of the Sof=
+tware, and to permit persons to whom the<br>- *     Software is furnished t=
+o do so, subject to the following<br>- *     conditions:<br>- *<br>- *     =
+The above copyright notice and this permission notice shall be<br>- *     i=
+ncluded in all copies or substantial portions of the Software=2E<br>- *<br>=
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<br>=
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES<br>=
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br>- *    =
+ NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br>- *     H=
+OLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br>- *     WHET=
+HER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br>- *     FROM, O=
+UT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>- *     OTHER DEA=
+LINGS IN THE SOFTWARE=2E<br>  */<br> <br> /dts-v1/;<br>diff --git a/arch/ar=
+m/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts b/arch/arm/boot/dts/imx6q-apalis=
+-ixora-v1=2E1=2Edts<br>index b94bb687be6b=2E=2E1e365e2636c4 100644<br>--- a=
+/arch/arm/boot/dts/imx6q-apalis-ixora-v1=2E1=2Edts<br>+++ b/arch/arm/boot/d=
+ts/imx6q-apalis-ixora-v1=2E1=2Edts<br>@@ -1,44 +1,8 @@<br>+// SPDX-License-=
+Identifier: (GPL-2=2E0 OR X11)<br> /*<br>- * Copyright 2014-2017 Toradex AG=
+<br>+ * Copyright 2014-2019 Toradex AG<br>  * Copyright 2012 Freescale Semi=
+conductor, Inc=2E<br>  * Copyright 2011 Linaro Ltd=2E<br>- *<br>- * This fi=
+le is dual-licensed: you can use it either under the terms<br>- * of the GP=
+L or the X11 license, at your option=2E Note that this dual<br>- * licensin=
+g only applies to this file, and not this project as a<br>- * whole=2E<br>-=
+ *<br>- *  a) This file is free software; you can redistribute it and/or<br=
+>- *     modify it under the terms of the GNU General Public License<br>- *=
+     version 2 as published by the Free Software Foundation=2E<br>- *<br>- =
+*     This file is distributed in the hope that it will be useful,<br>- *  =
+   but WITHOUT ANY WARRANTY; without even the implied warranty of<br>- *   =
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *   =
+  GNU General Public License for more details=2E<br>- *<br>- * Or, alternat=
+ively,<br>- *<br>- *  b) Permission is hereby granted, free of charge, to a=
+ny person<br>- *     obtaining a copy of this software and associated docum=
+entation<br>- *     files (the "Software"), to deal in the Software without=
+<br>- *     restriction, including without limitation the rights to use,<br=
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or<br>- =
+*     sell copies of the Software, and to permit persons to whom the<br>- *=
+     Software is furnished to do so, subject to the following<br>- *     co=
+nditions:<br>- *<br>- *     The above copyright notice and this permission =
+notice shall be<br>- *     included in all copies or substantial portions o=
+f the Software=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHO=
+UT WARRANTY OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT L=
+IMITED TO THE WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTI=
+CULAR PURPOSE AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHO=
+RS OR COPYRIGHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHE=
+R LIABILITY,<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE=
+, ARISING<br>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE=
+ USE OR<br>- *     OTHER DEALINGS IN THE SOFTWARE=2E<br>  */<br> <br> /dts-=
+v1/;<br>diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora=2Edts b/arch/arm/=
+boot/dts/imx6q-apalis-ixora=2Edts<br>index 302fd6adc8a7=2E=2Edeb5509d3597 1=
+00644<br>--- a/arch/arm/boot/dts/imx6q-apalis-ixora=2Edts<br>+++ b/arch/arm=
+/boot/dts/imx6q-apalis-ixora=2Edts<br>@@ -1,44 +1,8 @@<br>+// SPDX-License-=
+Identifier: (GPL-2=2E0 OR X11)<br> /*<br>- * Copyright 2014-2017 Toradex AG=
+<br>+ * Copyright 2014-2019 Toradex AG<br>  * Copyright 2012 Freescale Semi=
+conductor, Inc=2E<br>  * Copyright 2011 Linaro Ltd=2E<br>- *<br>- * This fi=
+le is dual-licensed: you can use it either under the terms<br>- * of the GP=
+L or the X11 license, at your option=2E Note that this dual<br>- * licensin=
+g only applies to this file, and not this project as a<br>- * whole=2E<br>-=
+ *<br>- *  a) This file is free software; you can redistribute it and/or<br=
+>- *     modify it under the terms of the GNU General Public License<br>- *=
+     version 2 as published by the Free Software Foundation=2E<br>- *<br>- =
+*     This file is distributed in the hope that it will be useful,<br>- *  =
+   but WITHOUT ANY WARRANTY; without even the implied warranty of<br>- *   =
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *   =
+  GNU General Public License for more details=2E<br>- *<br>- * Or, alternat=
+ively,<br>- *<br>- *  b) Permission is hereby granted, free of charge, to a=
+ny person<br>- *     obtaining a copy of this software and associated docum=
+entation<br>- *     files (the "Software"), to deal in the Software without=
+<br>- *     restriction, including without limitation the rights to use,<br=
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or<br>- =
+*     sell copies of the Software, and to permit persons to whom the<br>- *=
+     Software is furnished to do so, subject to the following<br>- *     co=
+nditions:<br>- *<br>- *     The above copyright notice and this permission =
+notice shall be<br>- *     included in all copies or substantial portions o=
+f the Software=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHO=
+UT WARRANTY OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT L=
+IMITED TO THE WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTI=
+CULAR PURPOSE AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHO=
+RS OR COPYRIGHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHE=
+R LIABILITY,<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE=
+, ARISING<br>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE=
+ USE OR<br>- *     OTHER DEALINGS IN THE SOFTWARE=2E<br>  */<br> <br> /dts-=
+v1/;<br>diff --git a/arch/arm/boot/dts/imx6qdl-apalis=2Edtsi b/arch/arm/boo=
+t/dts/imx6qdl-apalis=2Edtsi<br>index 7c4ad541c3f5=2E=2E031c021a7fc5 100644<=
+br>--- a/arch/arm/boot/dts/imx6qdl-apalis=2Edtsi<br>+++ b/arch/arm/boot/dts=
+/imx6qdl-apalis=2Edtsi<br>@@ -1,44 +1,8 @@<br>+// SPDX-License-Identifier: =
+(GPL-2=2E0 OR X11)<br> /*<br>- * Copyright 2014-2017 Toradex AG<br>+ * Copy=
+right 2014-2019 Toradex AG<br>  * Copyright 2012 Freescale Semiconductor, I=
+nc=2E<br>  * Copyright 2011 Linaro Ltd=2E<br>- *<br>- * This file is dual-l=
+icensed: you can use it either under the terms<br>- * of the GPL or the X11=
+ license, at your option=2E Note that this dual<br>- * licensing only appli=
+es to this file, and not this project as a<br>- * whole=2E<br>- *<br>- *  a=
+) This file is free software; you can redistribute it and/or<br>- *     mod=
+ify it under the terms of the GNU General Public License<br>- *     version=
+ 2 as published by the Free Software Foundation=2E<br>- *<br>- *     This f=
+ile is distributed in the hope that it will be useful,<br>- *     but WITHO=
+UT ANY WARRANTY; without even the implied warranty of<br>- *     MERCHANTAB=
+ILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU Genera=
+l Public License for more details=2E<br>- *<br>- * Or, alternatively,<br>- =
+*<br>- *  b) Permission is hereby granted, free of charge, to any person<br=
+>- *     obtaining a copy of this software and associated documentation<br>=
+- *     files (the "Software"), to deal in the Software without<br>- *     =
+restriction, including without limitation the rights to use,<br>- *     cop=
+y, modify, merge, publish, distribute, sublicense, and/or<br>- *     sell c=
+opies of the Software, and to permit persons to whom the<br>- *     Softwar=
+e is furnished to do so, subject to the following<br>- *     conditions:<br=
+>- *<br>- *     The above copyright notice and this permission notice shall=
+ be<br>- *     included in all copies or substantial portions of the Softwa=
+re=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY =
+OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO TH=
+E WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOS=
+E AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRI=
+GHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,=
+<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br=
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>-=
+ *     OTHER DEALINGS IN THE SOFTWARE=2E<br>  */<br> <br> #include &lt;dt-b=
+indings/gpio/gpio=2Eh&gt;<br>diff --git a/arch/arm/boot/dts/imx7-colibri-ev=
+al-v3=2Edtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi<br>index 3f274=
+6169181=2E=2E43b6be76941b 100644<br>--- a/arch/arm/boot/dts/imx7-colibri-ev=
+al-v3=2Edtsi<br>+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3=2Edtsi<br>@@ -=
+1,43 +1,6 @@<br>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)<br> /*<br>=
+  * Copyright 2016 Toradex AG<br>- *<br>- * This file is dual-licensed: you=
+ can use it either under the terms<br>- * of the GPL or the X11 license, at=
+ your option=2E Note that this dual<br>- * licensing only applies to this f=
+ile, and not this project as a<br>- * whole=2E<br>- *<br>- *  a) This file =
+is free software; you can redistribute it and/or<br>- *     modify it under=
+ the terms of the GNU General Public License as<br>- *     published by the=
+ Free Software Foundation; either version 2 of the<br>- *     License, or (=
+at your option) any later version=2E<br>- *<br>- *     This file is distrib=
+uted in the hope that it will be useful,<br>- *     but WITHOUT ANY WARRANT=
+Y; without even the implied warranty of<br>- *     MERCHANTABILITY or FITNE=
+SS FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU General Public Licen=
+se for more details=2E<br>- *<br>- * Or, alternatively,<br>- *<br>- *  b) P=
+ermission is hereby granted, free of charge, to any person<br>- *     obtai=
+ning a copy of this software and associated documentation<br>- *     files =
+(the "Software"), to deal in the Software without<br>- *     restriction, i=
+ncluding without limitation the rights to use,<br>- *     copy, modify, mer=
+ge, publish, distribute, sublicense, and/or<br>- *     sell copies of the S=
+oftware, and to permit persons to whom the<br>- *     Software is furnished=
+ to do so, subject to the following<br>- *     conditions:<br>- *<br>- *   =
+  The above copyright notice and this permission notice shall be<br>- *    =
+ included in all copies or substantial portions of the Software=2E<br>- *<b=
+r>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<b=
+r>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES<b=
+r>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br>- *  =
+   NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br>- *    =
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br>- *     WH=
+ETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br>- *     FROM,=
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>- *     OTHER D=
+EALINGS IN THE SOFTWARE=2E<br>  */<br> <br> / {<br>diff --git a/arch/arm/bo=
+ot/dts/imx7-colibri=2Edtsi b/arch/arm/boot/dts/imx7-colibri=2Edtsi<br>index=
+ 895fbde4d433=2E=2Ec53e9576813b 100644<br>--- a/arch/arm/boot/dts/imx7-coli=
+bri=2Edtsi<br>+++ b/arch/arm/boot/dts/imx7-colibri=2Edtsi<br>@@ -1,43 +1,6 =
+@@<br>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)<br> /*<br>  * Copyri=
+ght 2016 Toradex AG<br>- *<br>- * This file is dual-licensed: you can use i=
+t either under the terms<br>- * of the GPL or the X11 license, at your opti=
+on=2E Note that this dual<br>- * licensing only applies to this file, and n=
+ot this project as a<br>- * whole=2E<br>- *<br>- *  a) This file is free so=
+ftware; you can redistribute it and/or<br>- *     modify it under the terms=
+ of the GNU General Public License as<br>- *     published by the Free Soft=
+ware Foundation; either version 2 of the<br>- *     License, or (at your op=
+tion) any later version=2E<br>- *<br>- *     This file is distributed in th=
+e hope that it will be useful,<br>- *     but WITHOUT ANY WARRANTY; without=
+ even the implied warranty of<br>- *     MERCHANTABILITY or FITNESS FOR A P=
+ARTICULAR PURPOSE=2E  See the<br>- *     GNU General Public License for mor=
+e details=2E<br>- *<br>- * Or, alternatively,<br>- *<br>- *  b) Permission =
+is hereby granted, free of charge, to any person<br>- *     obtaining a cop=
+y of this software and associated documentation<br>- *     files (the "Soft=
+ware"), to deal in the Software without<br>- *     restriction, including w=
+ithout limitation the rights to use,<br>- *     copy, modify, merge, publis=
+h, distribute, sublicense, and/or<br>- *     sell copies of the Software, a=
+nd to permit persons to whom the<br>- *     Software is furnished to do so,=
+ subject to the following<br>- *     conditions:<br>- *<br>- *     The abov=
+e copyright notice and this permission notice shall be<br>- *     included =
+in all copies or substantial portions of the Software=2E<br>- *<br>- *     =
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<br>- *     =
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES<br>- *     =
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br>- *     NONINFR=
+INGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br>- *     HOLDERS B=
+E LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br>- *     WHETHER IN A=
+N ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br>- *     FROM, OUT OF OR=
+ IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>- *     OTHER DEALINGS IN=
+ THE SOFTWARE=2E<br>  */<br> <br> / {<br>diff --git a/arch/arm/boot/dts/imx=
+7d-colibri-eval-v3=2Edts b/arch/arm/boot/dts/imx7d-colibri-eval-v3=2Edts<br=
+>index 136e11ab4893=2E=2E5077ec355725 100644<br>--- a/arch/arm/boot/dts/imx=
+7d-colibri-eval-v3=2Edts<br>+++ b/arch/arm/boot/dts/imx7d-colibri-eval-v3=
+=2Edts<br>@@ -1,43 +1,6 @@<br>+// SPDX-License-Identifier: (GPL-2=2E0+ OR X=
+11)<br> /*<br>  * Copyright 2016 Toradex AG<br>- *<br>- * This file is dual=
+-licensed: you can use it either under the terms<br>- * of the GPL or the X=
+11 license, at your option=2E Note that this dual<br>- * licensing only app=
+lies to this file, and not this project as a<br>- * whole=2E<br>- *<br>- * =
+ a) This file is free software; you can redistribute it and/or<br>- *     m=
+odify it under the terms of the GNU General Public License as<br>- *     pu=
+blished by the Free Software Foundation; either version 2 of the<br>- *    =
+ License, or (at your option) any later version=2E<br>- *<br>- *     This f=
+ile is distributed in the hope that it will be useful,<br>- *     but WITHO=
+UT ANY WARRANTY; without even the implied warranty of<br>- *     MERCHANTAB=
+ILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU Genera=
+l Public License for more details=2E<br>- *<br>- * Or, alternatively,<br>- =
+*<br>- *  b) Permission is hereby granted, free of charge, to any person<br=
+>- *     obtaining a copy of this software and associated documentation<br>=
+- *     files (the "Software"), to deal in the Software without<br>- *     =
+restriction, including without limitation the rights to use,<br>- *     cop=
+y, modify, merge, publish, distribute, sublicense, and/or<br>- *     sell c=
+opies of the Software, and to permit persons to whom the<br>- *     Softwar=
+e is furnished to do so, subject to the following<br>- *     conditions:<br=
+>- *<br>- *     The above copyright notice and this permission notice shall=
+ be<br>- *     included in all copies or substantial portions of the Softwa=
+re=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY =
+OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO TH=
+E WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOS=
+E AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRI=
+GHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,=
+<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br=
+>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>-=
+ *     OTHER DEALINGS IN THE SOFTWARE=2E<br>  */<br> <br> /dts-v1/;<br>diff=
+ --git a/arch/arm/boot/dts/imx7d-colibri=2Edtsi b/arch/arm/boot/dts/imx7d-c=
+olibri=2Edtsi<br>index e2e327f437e3=2E=2Efc5573171114 100644<br>--- a/arch/=
+arm/boot/dts/imx7d-colibri=2Edtsi<br>+++ b/arch/arm/boot/dts/imx7d-colibri=
+=2Edtsi<br>@@ -1,43 +1,6 @@<br>+// SPDX-License-Identifier: (GPL-2=2E0+ OR =
+X11)<br> /*<br>- * Copyright 2016 Toradex AG<br>- *<br>- * This file is dua=
+l-licensed: you can use it either under the terms<br>- * of the GPL or the =
+X11 license, at your option=2E Note that this dual<br>- * licensing only ap=
+plies to this file, and not this project as a<br>- * whole=2E<br>- *<br>- *=
+  a) This file is free software; you can redistribute it and/or<br>- *     =
+modify it under the terms of the GNU General Public License as<br>- *     p=
+ublished by the Free Software Foundation; either version 2 of the<br>- *   =
+  License, or (at your option) any later version=2E<br>- *<br>- *     This =
+file is distributed in the hope that it will be useful,<br>- *     but WITH=
+OUT ANY WARRANTY; without even the implied warranty of<br>- *     MERCHANTA=
+BILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU Gener=
+al Public License for more details=2E<br>- *<br>- * Or, alternatively,<br>-=
+ *<br>- *  b) Permission is hereby granted, free of charge, to any person<b=
+r>- *     obtaining a copy of this software and associated documentation<br=
+>- *     files (the "Software"), to deal in the Software without<br>- *    =
+ restriction, including without limitation the rights to use,<br>- *     co=
+py, modify, merge, publish, distribute, sublicense, and/or<br>- *     sell =
+copies of the Software, and to permit persons to whom the<br>- *     Softwa=
+re is furnished to do so, subject to the following<br>- *     conditions:<b=
+r>- *<br>- *     The above copyright notice and this permission notice shal=
+l be<br>- *     included in all copies or substantial portions of the Softw=
+are=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY=
+ OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO T=
+HE WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPO=
+SE AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYR=
+IGHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY=
+,<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<b=
+r>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>=
+- *     OTHER DEALINGS IN THE SOFTWARE=2E<br>+ * Copyright 2016-2019 Torade=
+x AG<br>  */<br> <br> #include "imx7d=2Edtsi"<br>diff --git a/arch/arm/boot=
+/dts/imx7s-colibri-eval-v3=2Edts b/arch/arm/boot/dts/imx7s-colibri-eval-v3=
+=2Edts<br>index bd2a49c1ade6=2E=2Ec12bb60b6acb 100644<br>--- a/arch/arm/boo=
+t/dts/imx7s-colibri-eval-v3=2Edts<br>+++ b/arch/arm/boot/dts/imx7s-colibri-=
+eval-v3=2Edts<br>@@ -1,43 +1,6 @@<br>+// SPDX-License-Identifier: (GPL-2=2E=
+0+ OR X11)<br> /*<br>- * Copyright 2016 Toradex AG<br>- *<br>- * This file =
+is dual-licensed: you can use it either under the terms<br>- * of the GPL o=
+r the X11 license, at your option=2E Note that this dual<br>- * licensing o=
+nly applies to this file, and not this project as a<br>- * whole=2E<br>- *<=
+br>- *  a) This file is free software; you can redistribute it and/or<br>- =
+*     modify it under the terms of the GNU General Public License as<br>- *=
+     published by the Free Software Foundation; either version 2 of the<br>=
+- *     License, or (at your option) any later version=2E<br>- *<br>- *    =
+ This file is distributed in the hope that it will be useful,<br>- *     bu=
+t WITHOUT ANY WARRANTY; without even the implied warranty of<br>- *     MER=
+CHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU=
+ General Public License for more details=2E<br>- *<br>- * Or, alternatively=
+,<br>- *<br>- *  b) Permission is hereby granted, free of charge, to any pe=
+rson<br>- *     obtaining a copy of this software and associated documentat=
+ion<br>- *     files (the "Software"), to deal in the Software without<br>-=
+ *     restriction, including without limitation the rights to use,<br>- * =
+    copy, modify, merge, publish, distribute, sublicense, and/or<br>- *    =
+ sell copies of the Software, and to permit persons to whom the<br>- *     =
+Software is furnished to do so, subject to the following<br>- *     conditi=
+ons:<br>- *<br>- *     The above copyright notice and this permission notic=
+e shall be<br>- *     included in all copies or substantial portions of the=
+ Software=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WA=
+RRANTY OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITE=
+D TO THE WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR=
+ PURPOSE AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR=
+ COPYRIGHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIA=
+BILITY,<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARI=
+SING<br>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE =
+OR<br>- *     OTHER DEALINGS IN THE SOFTWARE=2E<br>+ * Copyright 2016-2019 =
+Toradex AG<br>  */<br> <br> /dts-v1/;<br>diff --git a/arch/arm/boot/dts/imx=
+7s-colibri=2Edtsi b/arch/arm/boot/dts/imx7s-colibri=2Edtsi<br>index 1fb1ec5=
+d3d70=2E=2E3f3e0fbc8597 100644<br>--- a/arch/arm/boot/dts/imx7s-colibri=2Ed=
+tsi<br>+++ b/arch/arm/boot/dts/imx7s-colibri=2Edtsi<br>@@ -1,43 +1,6 @@<br>=
++// SPDX-License-Identifier: (GPL-2=2E0+ OR X11)<br> /*<br>- * Copyright 20=
+16 Toradex AG<br>- *<br>- * This file is dual-licensed: you can use it eith=
+er under the terms<br>- * of the GPL or the X11 license, at your option=2E =
+Note that this dual<br>- * licensing only applies to this file, and not thi=
+s project as a<br>- * whole=2E<br>- *<br>- *  a) This file is free software=
+; you can redistribute it and/or<br>- *     modify it under the terms of th=
+e GNU General Public License as<br>- *     published by the Free Software F=
+oundation; either version 2 of the<br>- *     License, or (at your option) =
+any later version=2E<br>- *<br>- *     This file is distributed in the hope=
+ that it will be useful,<br>- *     but WITHOUT ANY WARRANTY; without even =
+the implied warranty of<br>- *     MERCHANTABILITY or FITNESS FOR A PARTICU=
+LAR PURPOSE=2E  See the<br>- *     GNU General Public License for more deta=
+ils=2E<br>- *<br>- * Or, alternatively,<br>- *<br>- *  b) Permission is her=
+eby granted, free of charge, to any person<br>- *     obtaining a copy of t=
+his software and associated documentation<br>- *     files (the "Software")=
+, to deal in the Software without<br>- *     restriction, including without=
+ limitation the rights to use,<br>- *     copy, modify, merge, publish, dis=
+tribute, sublicense, and/or<br>- *     sell copies of the Software, and to =
+permit persons to whom the<br>- *     Software is furnished to do so, subje=
+ct to the following<br>- *     conditions:<br>- *<br>- *     The above copy=
+right notice and this permission notice shall be<br>- *     included in all=
+ copies or substantial portions of the Software=2E<br>- *<br>- *     THE SO=
+FTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<br>- *     EXPRES=
+S OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES<br>- *     OF MER=
+CHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br>- *     NONINFRINGEME=
+NT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br>- *     HOLDERS BE LIAB=
+LE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br>- *     WHETHER IN AN ACTI=
+ON OF CONTRACT, TORT OR OTHERWISE, ARISING<br>- *     FROM, OUT OF OR IN CO=
+NNECTION WITH THE SOFTWARE OR THE USE OR<br>- *     OTHER DEALINGS IN THE S=
+OFTWARE=2E<br>+ * Copyright 2016-2019 Toradex AG<br>  */<br> <br> #include =
+"imx7s=2Edtsi"<br>diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi =
+b/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi<br>index e2da122a63f4=2E=2Ee5=
+337a93c3d1 100644<br>--- a/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi<br>+=
+++ b/arch/arm/boot/dts/vf-colibri-eval-v3=2Edtsi<br>@@ -1,42 +1,6 @@<br>+//=
+ SPDX-License-Identifier: (GPL-2=2E0 OR X11)<br> /*<br>- * Copyright 2014 T=
+oradex AG<br>- *<br>- * This file is dual-licensed: you can use it either u=
+nder the terms<br>- * of the GPL or the X11 license, at your option=2E Note=
+ that this dual<br>- * licensing only applies to this file, and not this pr=
+oject as a<br>- * whole=2E<br>- *<br>- *  a) This file is free software; yo=
+u can redistribute it and/or<br>- *     modify it under the terms of the GN=
+U General Public License<br>- *     version 2 as published by the Free Soft=
+ware Foundation=2E<br>- *<br>- *     This file is distributed in the hope t=
+hat it will be useful,<br>- *     but WITHOUT ANY WARRANTY; without even th=
+e implied warranty of<br>- *     MERCHANTABILITY or FITNESS FOR A PARTICULA=
+R PURPOSE=2E  See the<br>- *     GNU General Public License for more detail=
+s=2E<br>- *<br>- * Or, alternatively,<br>- *<br>- *  b) Permission is hereb=
+y granted, free of charge, to any person<br>- *     obtaining a copy of thi=
+s software and associated documentation<br>- *     files (the "Software"), =
+to deal in the Software without<br>- *     restriction, including without l=
+imitation the rights to use,<br>- *     copy, modify, merge, publish, distr=
+ibute, sublicense, and/or<br>- *     sell copies of the Software, and to pe=
+rmit persons to whom the<br>- *     Software is furnished to do so, subject=
+ to the following<br>- *     conditions:<br>- *<br>- *     The above copyri=
+ght notice and this permission notice shall be<br>- *     included in all c=
+opies or substantial portions of the Software=2E<br>- *<br>- *     THE SOFT=
+WARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<br>- *     EXPRESS =
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES<br>- *     OF MERCH=
+ANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br>- *     NONINFRINGEMENT=
+=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br>- *     HOLDERS BE LIABLE=
+ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br>- *     WHETHER IN AN ACTION=
+ OF CONTRACT, TORT OR OTHERWISE, ARISING<br>- *     FROM, OUT OF OR IN CONN=
+ECTION WITH THE SOFTWARE OR THE USE OR<br>- *     OTHER DEALINGS IN THE SOF=
+TWARE=2E<br>+ * Copyright 2014-2016 Toradex AG<br>  */<br> <br> / {<br>diff=
+ --git a/arch/arm/boot/dts/vf-colibri=2Edtsi b/arch/arm/boot/dts/vf-colibri=
+=2Edtsi<br>index b6a1eeeb2bb4=2E=2E34a93fe90a5c 100644<br>--- a/arch/arm/bo=
+ot/dts/vf-colibri=2Edtsi<br>+++ b/arch/arm/boot/dts/vf-colibri=2Edtsi<br>@@=
+ -1,42 +1,6 @@<br>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)<br> /*<br=
+>  * Copyright 2014 Toradex AG<br>- *<br>- * This file is dual-licensed: yo=
+u can use it either under the terms<br>- * of the GPL or the X11 license, a=
+t your option=2E Note that this dual<br>- * licensing only applies to this =
+file, and not this project as a<br>- * whole=2E<br>- *<br>- *  a) This file=
+ is free software; you can redistribute it and/or<br>- *     modify it unde=
+r the terms of the GNU General Public License<br>- *     version 2 as publi=
+shed by the Free Software Foundation=2E<br>- *<br>- *     This file is dist=
+ributed in the hope that it will be useful,<br>- *     but WITHOUT ANY WARR=
+ANTY; without even the implied warranty of<br>- *     MERCHANTABILITY or FI=
+TNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *     GNU General Public Li=
+cense for more details=2E<br>- *<br>- * Or, alternatively,<br>- *<br>- *  b=
+) Permission is hereby granted, free of charge, to any person<br>- *     ob=
+taining a copy of this software and associated documentation<br>- *     fil=
+es (the "Software"), to deal in the Software without<br>- *     restriction=
+, including without limitation the rights to use,<br>- *     copy, modify, =
+merge, publish, distribute, sublicense, and/or<br>- *     sell copies of th=
+e Software, and to permit persons to whom the<br>- *     Software is furnis=
+hed to do so, subject to the following<br>- *     conditions:<br>- *<br>- *=
+     The above copyright notice and this permission notice shall be<br>- * =
+    included in all copies or substantial portions of the Software=2E<br>- =
+*<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND=
+,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIE=
+S<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br>- =
+*     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT<br>- * =
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,<br>- *    =
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING<br>- *     FR=
+OM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR<br>- *     OTHE=
+R DEALINGS IN THE SOFTWARE=2E<br>  */<br> <br> / {<br>diff --git a/arch/arm=
+/boot/dts/vf500-colibri-eval-v3=2Edts b/arch/arm/boot/dts/vf500-colibri-eva=
+l-v3=2Edts<br>index 076998968fb5=2E=2Ea4b97e9d22d9 100644<br>--- a/arch/arm=
+/boot/dts/vf500-colibri-eval-v3=2Edts<br>+++ b/arch/arm/boot/dts/vf500-coli=
+bri-eval-v3=2Edts<br>@@ -1,42 +1,6 @@<br>+// SPDX-License-Identifier: (GPL-=
+2=2E0 OR X11)<br> /*<br>- * Copyright 2014 Toradex AG<br>- *<br>- * This fi=
+le is dual-licensed: you can use it either under the terms<br>- * of the GP=
+L or the X11 license, at your option=2E Note that this dual<br>- * licensin=
+g only applies to this file, and not this project as a<br>- * whole=2E<br>-=
+ *<br>- *  a) This file is free software; you can redistribute it and/or<br=
+>- *     modify it under the terms of the GNU General Public License<br>- *=
+     version 2 as published by the Free Software Foundation=2E<br>- *<br>- =
+*     This file is distributed in the hope that it will be useful,<br>- *  =
+   but WITHOUT ANY WARRANTY; without even the implied warranty of<br>- *   =
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE=2E  See the<br>- *   =
+  GNU General Public License for more details=2E<br>- *<br>- * Or, alternat=
+ively,<br>- *<br>- *  b) Permission is hereby granted, free of charge, to a=
+ny person<br>- *     obtaining a copy of this software and associated docum=
+entation<br>- *     files (the "Software"), to deal in the Software without=
+<br>- *     restriction, including without limitation the rights to use,<br=
+>- *     copy, modify, merge, publish, distribute, sublicense, and/or<br>- =
+*     sell copies of the Software, and to permit persons to whom the<br>- *=
+     Software is furnished to do so, subject to the following<br>- *     co=
+nditions:<br>- *<br>- *     The above copyright notice and this permission =
+notice shall be<br>- *     included in all copies or substantial portions o=
+f the Software=2E<br>- *<br>- *     THE SOFTWARE IS PROVIDED "AS IS", WITHO=
+UT WARRANTY OF ANY KIND,<br>- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT L=
+IMITED TO THE WARRANTIES<br>- *     OF MERCHANTABILITY, FITNESS FOR A PARTI=
+CULAR PURPOSE AND<br>- *     NONINFRINGEMENT=2E IN NO EVENT SHALL THE AUTHO=
+RS OR COPYRIGHT<br>- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHE=
+R LIABILITY,<br>- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE=
+, ARISING<br>- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE=
+ USE OR<br>- *     OTHER DEALINGS IN THE SOFTWARE=2E<br>+ * Copyright 2014-=
+2019 Toradex AG<br>  */<br> <br> /dts-v1/;<br>diff --git a/arch/arm/boot/dt=
+s/vf500-colibri=2Edtsi b/arch/arm/boot/dts/vf500-colibri=2Edtsi<br>index 23=
+7b0246fa84=2E=2E54e96b311a48 100644<br>--- a/arch/arm/boot/dts/vf500-colibr=
+i=2Edtsi<br>+++ b/arch/arm/boot/dts/vf500-colibri=2Edtsi<br>@@ -1,42 +1,7 @=
+@<br>+// SPDX-License-Identifier: (GPL-2=2E0 OR X11)<br> /*<br>- * Copyrigh=
+t 2014 Toradex AG<br>+ * Copyright 2014-2019 Toradex AG<br>  *<br>- * This =
+file is dual-licensed: you can use it either under the terms<br>- </pre></b=
+lockquote></div><br>-- <br>Sent from my Android device with K-9 Mail=2E Ple=
+ase excuse my brevity=2E</body></html>
+------ADY3BQGTWPF54EBVBLO6X3AYXYRJUF--
