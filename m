@@ -1,52 +1,66 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
-Date: Wed, 17 Apr 2019 10:32:12 +0200
-Message-ID: <20190417083212.mng5p276kyot3nvw@flea>
-References: <20190416155209.24216-1-tiny.windzz@gmail.com>
- <20190416155209.24216-2-tiny.windzz@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 3/3] dt-bindings: power: supply: Add bindings for Microchip UCS1002
+Date: Wed, 17 Apr 2019 01:44:57 -0700
+Message-ID: <20190417084457.28747-4-andrew.smirnov@gmail.com>
+References: <20190417084457.28747-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="psruohnblxprxqcd"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190416155209.24216-2-tiny.windzz@gmail.com>
+In-Reply-To: <20190417084457.28747-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Chris Health <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add bindings for Microchip UCS1002 Programmable USB Port Power
+Controller with Charger Emulation.
 
---psruohnblxprxqcd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Health <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+---
+ .../power/supply/microchip,ucs1002.txt        | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
 
-On Tue, Apr 16, 2019 at 11:52:08AM -0400, Yangtao Li wrote:
-> For some SoCs, the CPU frequency subset and voltage value of each OPP
-> varies based on the silicon variant in use. The sun50i-cpufreq-nvmem
-> driver reads the efuse value from the SoC to provide the OPP framework
-> with required information.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---psruohnblxprxqcd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLbkjAAKCRDj7w1vZxhR
-xbzdAQDVXEZNf6LbdNqHjBzS2ujcjdlY6nI4E2lZas2cnk9DJwEA3E3en227I2pT
-ZdgykUAdmZ0iSc8o2PioP61AY2DvqA0=
-=+DVI
------END PGP SIGNATURE-----
-
---psruohnblxprxqcd--
+diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+new file mode 100644
+index 000000000000..bef5be47d73e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+@@ -0,0 +1,26 @@
++Microchip UCS1002 USB Port Power Controller
++
++Required properties:
++- compatible		: Should be "microchip,ucs1002";
++- reg			: I2C slave address
++
++Optional properties:
++- interrupts-extended	: A list of interrupts lines present (could be either
++			  corresponding to A_DET# pin, ALERT# pin, or both)
++- interrupt-names	: A list of interrupt names. Should contain (if
++			  present):
++			  - "a_det" for line connected to A_DET# pin
++			  - "alert" for line connected to ALERT# pin
++Example:
++
++&i2c3 {
++	charger@32 {
++		compatible = "microchip,ucs1002";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ucs1002_pins>;
++		reg = <0x32>;
++		interrupts-extended = <&gpio5 2 IRQ_TYPE_NONE>,
++				      <&gpio3 21 IRQ_TYPE_NONE>;
++		interrupt-names = "a_det", "alert";
++	};
++};
+-- 
+2.20.1
