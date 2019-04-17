@@ -1,98 +1,95 @@
-From: David Bauer <mail@david-bauer.net>
-Subject: [PATCH v2 3/3] net: mdio: rename mdio_device reset to reset_gpio
-Date: Wed, 17 Apr 2019 13:00:32 +0200
-Message-ID: <20190417110032.17727-4-mail@david-bauer.net>
-References: <20190417110032.17727-1-mail@david-bauer.net>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Date: Wed, 17 Apr 2019 11:16:38 +0000
+Message-ID: <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190417053211.2195-1-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190417110032.17727-1-mail@david-bauer.net>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190417053211.2195-1-ping.bai@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This renames the GPIO reset of mdio devices from 'reset' to
-'reset_gpio' to better differentiate between GPIO and
-reset-controller driven reset line.
+> From: Jacky Bai
+> Sent: Wednesday, April 17, 2019 1:27 PM
+> 
+> The i.MX8M family is a set of NXP product focus on delivering the latest and
+> greatest video and audio experience combining state-of-the-art media-specific
+> features with high-performance processing while optimized for lowest power
+> consumption.
+> i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all belong to
+> this family.
+> 
+> The GPC module is used to manage the PU power domains' power on/off. For
+> the whole i.MX8M family, different SoC has differnt power domain design. the
+> power up sequence has significant difference.
+> all the power sequence must be guaranteed by SW. Some domains' power up
+> sequence need to access the SRC module or sub-system specific GPR.
+> the SRC register & SS's register are not in in the GPC's memory range.
+> 
+> it makes us hard to use the GPCv2 driver to cover all the different power up
+> requirement. Each time, a new SoC is added, we must modify the GPCv2 driver
+> to make it resuable for it. a lot of code need to be added in GPCv2 to support it.
+> we need to access the SRC & SS' GPR, then the GPCv2 driver can NOT be
+> self-contained. Accessing the non-driver specific module's register is a bad
+> practice. Although, the GPC module provided the similar function for PU power
+> domain, but it is not 100% compatible with GPCv2.
+> 
+> The most important thing is that the GPC & SRC module is a security critical
+> resource that security permission must be considered when building the
+> security system. The GPC module is not only used by PU power domain power
+> on/off. It is also used by the TF-A PSCI code to do the CPU core power
+> management. the SRC module control the CPU CORE reset and the CPU reset
+> vector address. if we give the non-secure world write permission to SRC.
+> System can be easily induced to malicious code.
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David Bauer <mail@david-bauer.net>
----
- drivers/net/phy/at803x.c      | 2 +-
- drivers/net/phy/mdio_bus.c    | 6 +++---
- drivers/net/phy/mdio_device.c | 6 +++---
- include/linux/mdio.h          | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+Considering the security issue, it looks to me a right direction to move GPC
+power handling into ATF.
+It also helps build a more generic driver and ease other OS integration
+needed by customers (e.g. QNX, Win10).
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index f3e96191eb6f..16c5a83e2a60 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -334,7 +334,7 @@ static void at803x_link_change_notify(struct phy_device *phydev)
- 	 * cannot recover from by software.
- 	 */
- 	if (phydev->state == PHY_NOLINK) {
--		if (phydev->mdio.reset && !priv->phy_reset) {
-+		if (phydev->mdio.reset_gpio && !priv->phy_reset) {
- 			struct at803x_context context;
- 
- 			at803x_context_save(phydev, &context);
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index e5428951dfe1..5fd2295cf621 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -56,7 +56,7 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
- 			return PTR_ERR(gpiod);
- 	}
- 
--	mdiodev->reset = gpiod;
-+	mdiodev->reset_gpio = gpiod;
- 
- 	return 0;
- }
-@@ -468,8 +468,8 @@ void mdiobus_unregister(struct mii_bus *bus)
- 		if (!mdiodev)
- 			continue;
- 
--		if (mdiodev->reset)
--			gpiod_put(mdiodev->reset);
-+		if (mdiodev->reset_gpio)
-+			gpiod_put(mdiodev->reset_gpio);
- 
- 		mdiodev->device_remove(mdiodev);
- 		mdiodev->device_free(mdiodev);
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index 57668e0f9256..e282600bd83e 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -117,11 +117,11 @@ void mdio_device_reset(struct mdio_device *mdiodev, int value)
- {
- 	unsigned int d;
- 
--	if (!mdiodev->reset && !mdiodev->reset_ctrl)
-+	if (!mdiodev->reset_gpio && !mdiodev->reset_ctrl)
- 		return;
- 
--	if (mdiodev->reset)
--		gpiod_set_value(mdiodev->reset, value);
-+	if (mdiodev->reset_gpio)
-+		gpiod_set_value(mdiodev->reset_gpio, value);
- 
- 	if (mdiodev->reset_ctrl) {
- 		if (value)
-diff --git a/include/linux/mdio.h b/include/linux/mdio.h
-index 6eaf71500ef6..9dc16d5705a1 100644
---- a/include/linux/mdio.h
-+++ b/include/linux/mdio.h
-@@ -39,7 +39,7 @@ struct mdio_device {
- 	/* Bus address of the MDIO device (0-31) */
- 	int addr;
- 	int flags;
--	struct gpio_desc *reset;
-+	struct gpio_desc *reset_gpio;
- 	struct reset_control *reset_ctrl;
- 	unsigned int reset_assert_delay;
- 	unsigned int reset_deassert_delay;
--- 
-2.21.0
+Lucas,
+How do you think of it?
+
+Regards
+Dong Aisheng
+
+> This patchset add a more generic power domain driver that give us the
+> possibility to use one driver to cover the whole i.MX8M family power domain
+> in kernel side. kernel side doesn't need to handle the power domain difference
+> anymore, all the sequence can be abstracted & handled in TF-A side. Most
+> important, We don't need to care if the GPC & SRC is security protected.
+> 
+> Jacky Bai (3):
+>   dt-bindings: power: Add power domain binding for i.mx8m family
+>   soc: imx: Add power domain driver support for i.mx8m family
+>   arm64: dts: freescale: Add power domain nodes for i.mx8mm
+> 
+>  .../bindings/power/fsl,imx8m-genpd.txt        |  46 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 103 ++++++++
+>  drivers/soc/imx/Kconfig                       |   6 +
+>  drivers/soc/imx/Makefile                      |   1 +
+>  drivers/soc/imx/imx8m_pm_domains.c            | 224
+> ++++++++++++++++++
+>  include/soc/imx/imx_sip.h                     |  12 +
+>  6 files changed, 392 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+>  create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
+>  create mode 100644 include/soc/imx/imx_sip.h
+> 
+> --
+> 2.21.0
