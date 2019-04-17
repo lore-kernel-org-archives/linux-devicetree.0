@@ -1,12 +1,12 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver bindings
-Date: Wed, 17 Apr 2019 08:47:57 -0500
-Message-ID: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
-References: <20190414200824.28348-1-paul@crapouillou.net> <20190414200824.28348-2-paul@crapouillou.net>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Add doc for the ingenic-drm driver
+Date: Wed, 17 Apr 2019 08:48:26 -0500
+Message-ID: <CAL_JsqJk1qdKzeM+1n3ve65S43-B4Q93ns7Z7mOKidbFPA7KWw@mail.gmail.com>
+References: <20190414200824.28348-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190414200824.28348-2-paul@crapouillou.net>
+In-Reply-To: <20190414200824.28348-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
 Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -14,75 +14,90 @@ List-Id: devicetree@vger.kernel.org
 
 On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil <paul@crapouillou.net> wrote:
 >
-> Add macros that can be used with the ingenic,lcd-mode property in the
-> devicetree node that corresponds to the ingenic-drm driver.
+> Add documentation for the devicetree bindings of the DRM driver for the
 
-DRM is a Linuxism.
+DRM is a Linuxism. What is the LCD controller h/w block called?
 
+> JZ47xx family of SoCs from Ingenic.
 >
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > Tested-by: Artur Rojek <contact@artur-rojek.eu>
 > ---
 >
 > Notes:
->     v2: No change
+>     v2: Remove ingenic,panel property.
 >
->     v3: s/_DRM//
+>     v3: - Rename compatible strings from ingenic,jz47XX-drm to ingenic,jz47XX-lcd
+>         - The ingenic,lcd-mode property is now read from the panel node instead
+>           of from the driver node
 >
->  include/dt-bindings/display/ingenic,drm.h | 28 ++++++++++++++++++++++++++++
-
-DRM is a Linuxism...
-
->  1 file changed, 28 insertions(+)
->  create mode 100644 include/dt-bindings/display/ingenic,drm.h
+>  .../devicetree/bindings/display/ingenic,drm.txt    | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,drm.txt
 >
-> diff --git a/include/dt-bindings/display/ingenic,drm.h b/include/dt-bindings/display/ingenic,drm.h
+> diff --git a/Documentation/devicetree/bindings/display/ingenic,drm.txt b/Documentation/devicetree/bindings/display/ingenic,drm.txt
 > new file mode 100644
-> index 000000000000..c749b8c346fc
+> index 000000000000..9de47db8a515
 > --- /dev/null
-> +++ b/include/dt-bindings/display/ingenic,drm.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + *  Ingenic JZ47xx KMS driver
-
-Pretty sure this file is not a KMS driver.
-
-> + *
-> + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
-> + */
-> +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
-> +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> +++ b/Documentation/devicetree/bindings/display/ingenic,drm.txt
+> @@ -0,0 +1,53 @@
+> +Ingenic JZ47xx DRM driver
 > +
-> +#define JZ_LCD_GENERIC_16BIT                   0
-> +#define JZ_LCD_GENERIC_18BIT                   16
-
-We have some generic properties for defining the bus width already.
-Plus, in many cases this can be implied by the panel compatible. The
-exceptions are cases such as when both the ctrlr and panel support
-multiple modes.
-
+> +Required properties:
+> +- compatible: one of:
+> +  * ingenic,jz4740-lcd
+> +  * ingenic,jz4725b-lcd
+> +- reg: LCD registers location and length
+> +- clocks: LCD pixclock and device clock specifiers.
+> +          The device clock is only required on the JZ4740.
+> +- clock-names: "lcd_pclk" and "lcd"
+> +- interrupts: Specifies the interrupt line the LCD controller is connected to.
 > +
-> +#define JZ_LCD_SPECIAL_TFT_1                   1
-> +#define JZ_LCD_SPECIAL_TFT_2                   2
-> +#define JZ_LCD_SPECIAL_TFT_3                   3
+> +Optional properties in the panel mode:
+> +- ingenic,lcd-mode: LCD mode to use with the display panel.
+> +                   See <dt-bindings/display/ingenic,drm.h> for all the
+> +                   possible values.
 > +
-> +#define JZ_LCD_NON_INTERLACED_TV_OUT           4
-> +#define JZ_LCD_INTERLACED_TV_OUT               6
+> +Example:
+> +
+> +#include <dt-bindings/display/ingenic,drm.h>
+> +
+> +panel {
+> +       compatible = "sharp,ls020b1dd01d", "simple-panel";
 
-Wouldn't this be determined by the type of connector (composite vs.
-s-video/component)
+'simple-panel' is not a valid compatible string.
+
 
 > +
-> +#define JZ_LCD_SINGLE_COLOR_STN                        8
-> +#define JZ_LCD_SINGLE_MONOCHROME_STN           9
-> +#define JZ_LCD_DUAL_COLOR_STN                  10
-> +#define JZ_LCD_DUAL_MONOCHROME_STN             11
+> +       backlight = <&backlight>;
+> +       power-supply = <&vcc>;
 > +
-> +#define JZ_LCD_8BIT_SERIAL                     12
-> +#define JZ_LCD_LCM                             13
+> +       ingenic,lcd-mode = <JZ_LCD_SPECIAL_TFT_2>;
 > +
-> +#endif /* __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__ */
+> +       port {
+> +               panel_input: endpoint {
+> +                       remote-endpoint = <&panel_output>;
+> +               };
+> +       };
+> +};
+> +
+> +
+> +lcd: lcd-controller@13050000 {
+> +       compatible = "ingenic,jz4725b-lcd";
+> +       reg = <0x13050000 0x1000>;
+> +
+> +       interrupt-parent = <&intc>;
+> +       interrupts = <31>;
+> +
+> +       clocks = <&cgu JZ4725B_CLK_LCD>;
+> +       clock-names = "lcd";
+> +
+> +       port {
+> +               panel_output: endpoint {
+> +                       remote-endpoint = <&panel_input>;
+> +               };
+> +       };
+> +};
 > --
 > 2.11.0
 >
