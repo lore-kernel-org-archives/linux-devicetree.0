@@ -1,75 +1,58 @@
-From: Frederic Chen <frederic.chen@mediatek.com>
-Subject: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added DIP dt-bindings
-Date: Wed, 17 Apr 2019 18:45:08 +0800
-Message-ID: <20190417104511.21514-4-frederic.chen@mediatek.com>
+From: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC PATCH V1 2/6] dts: arm64: mt8183: Add DIP shared memory node
+Date: Wed, 17 Apr 2019 18:45:07 +0800
+Message-ID: <20190417104511.21514-3-frederic.chen@mediatek.com>
 References: <20190417104511.21514-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190417104511.21514-1-frederic.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190417104511.21514-1-frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for the Digital Image
-Processing (DIP) unit of camera ISP system on Mediatek's SoCs.
+This patch adds a shared memory region used on mt8183 for
+exchanging tuning data between co-processor and
+Digital Image Processing(DIP) unit.
 
-Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
+Signed-off-by: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../bindings/media/mediatek,mt8183-dip.txt    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
-new file mode 100644
-index 000000000000..0e1994bf82f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
-@@ -0,0 +1,35 @@
-+* Mediatek Digital Image Processor (DIP)
-+
-+Digital Image Processor (DIP) unit in Mediatek ISP system is responsible for
-+image content adjustment according to the tuning parameters. DIP can process
-+the image form memory buffer and output the processed image to multiple output
-+buffers. Furthermore, it can support demosaicing and noise reduction on the
-+images.
-+
-+Required properties:
-+- compatible: "mediatek,mt8183-dip"
-+- reg: Physical base address and length of the function block register space
-+- interrupts: interrupt number to the cpu
-+- iommus: should point to the respective IOMMU block with master port as
-+  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+- mediatek,larb: must contain the local arbiters in the current Socs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+- clocks: must contain the local arbiters 5 (LARB5) and DIP clock
-+- clock-names: must contain DIP_CG_IMG_LARB5 and DIP_CG_IMG_DIP
-+
-+Example:
-+	dip: dip@15022000 {
-+		compatible = "mediatek,mt8183-dip";
-+		mediatek,larb = <&larb5>;
-+		mediatek,mdp3 = <&mdp_rdma0>;
-+		mediatek,vpu = <&vpu>;
-+		iommus = <&iommu M4U_PORT_CAM_IMGI>;
-+		reg = <0 0x15022000 0 0x6000>;
-+		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&imgsys CLK_IMG_LARB5>,
-+			 <&imgsys CLK_IMG_DIP>;
-+		clock-names = "DIP_CG_IMG_LARB5",
-+			      "DIP_CG_IMG_DIP";
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c3a516e63141..aec68c6b4571 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -134,6 +134,19 @@
+ 		clock-output-names = "clk26m";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		reserve-memory-dip_smem {
++			compatible = "mediatek,reserve-memory-dip_smem";
++			no-map;
++			size = <0 0x01400000>;  /*20 MB share mem size */
++			alignment = <0 0x1000>;
++			alloc-ranges = <0 0x40000000 0 0x10000000>;
++		};
 +	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
 -- 
 2.18.0
