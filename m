@@ -1,122 +1,60 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 12:54:49 +0000
-Message-ID: <AM0PR04MB44815BC135E68DEC3E7A81A888250@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190417053211.2195-1-ping.bai@nxp.com>
- <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <1555503195.2317.19.camel@pengutronix.de>
- <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 14/26] PCI: keystone: Add support for PCIe RC in AM654x
+ Platforms
+Date: Wed, 17 Apr 2019 18:36:58 +0530
+Message-ID: <fd5c114b-5a67-cca9-d9fb-750557f14970@ti.com>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-15-kishon@ti.com> <20190413152633.GF126710@google.com>
+ <20190416141525.GD14705@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190416141525.GD14705@red-moon>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment_Faure?= <clement.faure@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Silvano Di Ninno <silvano.dininno@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Jesper Nilsson <jesper.nilsson@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
-> 
-> On 4/17/2019 3:13 PM, Lucas Stach wrote:
-> > Am Mittwoch, den 17.04.2019, 11:16 +0000 schrieb Aisheng Dong:
-> >>> From: Jacky Bai
-> >>> Sent: Wednesday, April 17, 2019 1:27 PM
-> >>>
-> >>> The i.MX8M family is a set of NXP product focus on delivering the
-> >>> latest and greatest video and audio experience combining
-> >>> state-of-the-art media-specific features with high-performance
-> >>> processing while optimized for lowest power consumption.
-> >>> i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all belong
-> >>> to this family.
-> >>>
-> >>> The GPC module is used to manage the PU power domains' power on/off.
-> >>> For the whole i.MX8M family, different SoC has differnt power domain
-> >>> design. the power up sequence has significant difference.
-> >>> all the power sequence must be guaranteed by SW. Some domains'
-> power
-> >>> up sequence need to access the SRC module or sub-system specific GPR.
-> >>> the SRC register & SS's register are not in in the GPC's memory range.
-> >>>
-> >>> it makes us hard to use the GPCv2 driver to cover all the different
-> >>> power up requirement. Each time, a new SoC is added, we must modify
-> >>> the GPCv2 driver to make it resuable for it. a lot of code need to be added
-> in GPCv2 to support it.
-> >>> we need to access the SRC & SS' GPR, then the GPCv2 driver can NOT
-> >>> be self-contained. Accessing the non-driver specific module's
-> >>> register is a bad practice. Although, the GPC module provided the
-> >>> similar function for PU power domain, but it is not 100% compatible with
-> GPCv2.
-> >>>
-> >>> The most important thing is that the GPC & SRC module is a security
-> >>> critical resource that security permission must be considered when
-> >>> building the security system. The GPC module is not only used by PU
-> >>> power domain power on/off. It is also used by the TF-A PSCI code to
-> >>> do the CPU core power management. the SRC module control the CPU
-> >>> CORE reset and the CPU reset vector address. if we give the non-secure
-> world write permission to SRC.
-> >>> System can be easily induced to malicious code.
-> >>
-> >> Considering the security issue, it looks to me a right direction to
-> >> move GPC power handling into ATF.
-> >> It also helps build a more generic driver and ease other OS
-> >> integration needed by customers (e.g. QNX, Win10).
-> >>
-> >> Lucas,
-> >> How do you think of it?
-> >
-> > I don't yet buy the security argument. There are many more shared
-> > parts on the SoC, like the clock controller, that would need to be
-> > taken away from the non-secure world if one would want to run an
-> > untrusted OS kernel on a i.MX8M system.
-> >
-> > To properly implement security on any i.MX8M based system the firmware
-> > would need to grow something like a full ARM SCPI implementation, so
-> > all shared critical peripherals are solely under firmware control.
-> 
-> It might be possible to rework this to use some form of SCMI-over-SMC
-> instead of vendor-specific SMCCC SIP calls
+Hi Lorenzo,
 
-Whether SCMI or just SIP, it will make it easy to support virtualization(partition)
-or TEE.
-
+On 16/04/19 7:45 PM, Lorenzo Pieralisi wrote:
+> On Sat, Apr 13, 2019 at 10:26:33AM -0500, Bjorn Helgaas wrote:
+>> On Mon, Mar 25, 2019 at 03:09:35PM +0530, Kishon Vijay Abraham I wrote:
+>>> Add PCIe RC support for AM654x Platforms in pci-keystone.c
+>>
+>>> +static int ks_pcie_am654_msi_host_init(struct pcie_port *pp)
+>>> +{
+>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>> +	struct device *dev = pci->dev;
+>>> +
+>>> +	dev_vdbg(dev, "dummy function so that DW core doesn't configure MSI\n");
+>>
+>> Drive-by nit: this is the first occurrence of dev_vdbg() in
+>> drivers/pci, and while dev_vdbg() might be useful somewhere, I'm not
+>> sure this is the place.
+>>
+>> It took me 10 minutes of archaeology to figure out what it is and how
+>> to use it.  Apparently it does nothing at all unless you define
+>> VERBOSE_DEBUG, which can be set via Kconfig in a few cases:
+>>
+>>   drivers/dma/Makefile:subdir-ccflags-$(CONFIG_DMADEVICES_VDEBUG) += -DVERBOSE_DEBUG
+>>   drivers/usb/dwc2/Makefile:ccflags-$(CONFIG_USB_DWC2_VERBOSE)    += -DVERBOSE_DEBUG
+>>   drivers/usb/gadget/Makefile:subdir-ccflags-$(CONFIG_USB_GADGET_VERBOSE) += -DVERBOSE_DEBUG
+>>
+>> but is more commonly set by adding "#define VERBOSE_DEBUG" manually
+>> in a source file.  Neither one applies here, so I don't think this
+>> actually does anything.
+>>
+>> Anyway, I suspect this particular message would make a lot of sense as
+>> a *comment*, but maybe not as a mysterious dev_vdbg() that never
+>> actually does anything.
 > 
-> +SCMI maintainer
+> I agree. Kishon ? I would do what Bjorn suggests here, please let me
+> know.
 
-We need implement firmware in ATF, and use SMC as the mailbox.
-I have taken Andre's previous patch to support smc mailbox and addressed
-some comments, and trying integrate with SCMI.
-The major issue is SCMI spec does not include SMC support.
+Sure.
 
-Sudeep, do you have any suggestions?
-
-Thanks,
-Peng.
-> 
-> > I agree that it might make sense to move some parts into the firmware
-> > and have much simpler OS level drivers, but I don't agree on the
-> > implementation direction taken here. Growing custom PSCI extension
-> > interfaces will only get us so far, without solving the system
-> > security issue in a holistic way. It is my strong believe that only a
-> > complete rearchitecture of the OS support on top of a ARM SCPI
-> > firmware interface can solve this properly.
-> Hiding everything critical for security (especially CCM) behind a SCMI
-> interface would be a large amount of work but introducing SCMI
-> incrementally (starting with imx8mm power) would be useful by itself because
-> it simplifies OS implementation.
-> 
-> Many at NXP have attempted to evaluate SCMI and their conclusion has
-> always been that "many extensions are required".
-> 
-> --
-> Regards,
-> Leonard
+Thanks
+Kishon
