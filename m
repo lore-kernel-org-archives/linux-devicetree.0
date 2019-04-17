@@ -1,44 +1,84 @@
-Return-Path: <SRS0=cJdl=SO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54237 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfDLLhv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Apr 2019 07:37:51 -0400
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 0/2] media: rcar-vin: Add "renesas,id" to V3H
-Date: Fri, 12 Apr 2019 13:38:30 +0200
-Message-Id: <20190412113832.30075-1-jacopo+renesas@jmondi.org>
+Return-Path: <SRS0=TMsB=ST=ti.com=kishon@kernel.org>
+Subject: Re: [PATCH V5 00/13] Add USB2.0 support
+References: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <5a8762df-265a-03f9-5b85-925dd731df8a@ti.com>
+Date: Wed, 17 Apr 2019 11:37:46 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, sergei.shtylyov@cogentembedded.com, geert+renesas@glider.be
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+In-Reply-To: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-These two patches add the mandatory "renesas,id" property to
-V3H device tree.
 
-As the property is mandatory and the driver checks for its presence,
-this might actually fix VIN probe on V3H boards.
 
-In order to support V3H, which has 16 VIN instances, modify the way the
-VIN driver handles the maximum number of VIN, making it a per-SoC property.
+On 10/04/19 8:18 PM, Biju Das wrote:
+> This series adds USB 2.0 support for the RZ/G1C SoC. RZ/G1C
+> SoC is similar to R-Car Gen2 SoC, but there are some differences
+> 
+> - It has a shared pll reset register for hsusb0/hsusb1 and this register 
+>   reside in hsusb0 block.
+> 
+> - Each USB host needs to deassert the pll reset of hsusb block apart from
+>   initializing interrupt enable,OVC detection timer and suspend/resume timer
+>   register.
+> 
+> To address the above scenarios, created a ehci-r8a77470 host controller
+> driver.
+> 
+> This patchset is based on linux_next next-20190410 branch.
+> V4-->V5
+>    * Incoporated Shimoda-san's review comment
+>      (https://patchwork.kernel.org/patch/10879893/)
+> V3-->V4
+>   * Incoporated Kishon and Shimoda-san's review comment
+>     (https://patchwork.kernel.org/patch/10883265/)
+>   * Added missing rcar-gen3-phy-usb2 phy in ohci1 node.
+> 
+> V2-->V3
+>  * Incorporated Alan's review comment for dropping ehci-r8a77470 host driver
+>  * Incorporated shimoda-san's comments.
+>    Ref: https://patchwork.kernel.org/patch/10879899/
+> 
+> V1-->V2
+>  * Incorporated Rob's review comment
+>    Ref: https://patchwork.kernel.org/patch/10655853/
+>  * Incorporated Shimoda-San's review comment
+>    Ref: https://patchwork.kernel.org/patch/10655855/
+>  * Created ehci-r8a77470 host driver.
+> 
+> Biju Das (13):
+>   dt-bindings: phy: rcar-gen2: Add r8a77470 support
+>   phy: renesas: phy-rcar-gen2: Add support for r8a77470
+>   dt-bindings: rcar-gen3-phy-usb2: Add r8a77470 support
+>   phy: rcar-gen3-usb2: Add support for r8a77470
 
-As explained in the commit message of [2/2] if anyone with an V3H board could
-provide a Tested-by tag, these two patches might actually be tagged as fixes.
+merged the PHY patches, thanks.
 
-Tested on Salvator-x M3-W and Ebisu E3.
+-Kishon
 
-Thanks
-  j
-
-Jacopo Mondi (2):
-  media: rcar-vin: Make the number of VIN SoC-dependent
-  arm64: dts: renesas: r8a77980: Add "renesas,id" to VIN
-
- arch/arm64/boot/dts/renesas/r8a77980.dtsi   | 16 ++++++++++++++
- drivers/media/platform/rcar-vin/rcar-core.c | 23 +++++++++++++++------
- drivers/media/platform/rcar-vin/rcar-vin.h  |  5 ++++-
- 3 files changed, 37 insertions(+), 7 deletions(-)
-
---
-2.21.0
+>   ARM: shmobile: Enable PHY_RCAR_GEN3_USB2 in shmobile_defconfig
+>   dt-bindings: usb: renesas_usbhs: Add support for r8a77470
+>   ARM: shmobile: Enable USB [EO]HCI HCD PLATFORM support in
+>     shmobile_defconfig
+>   ARM: dts: r8a77470: Add USB PHY DT support
+>   ARM: dts: iwg23s-sbc: Enable USB Phy[01]
+>   ARM: dts: r8a77470: Add USB2.0 Host (EHCI/OHCI) device
+>   ARM: dts: iwg23s-sbc: Enable USB USB2.0 Host
+>   ARM: dts: r8a77470: Add HSUSB device nodes
+>   ARM: dts: iwg23s-sbc: Enable HS-USB
+> 
+>  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |  57 ++++++++-
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |   6 +-
+>  .../devicetree/bindings/usb/renesas_usbhs.txt      |   1 +
+>  arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          |  44 +++++++
+>  arch/arm/boot/dts/r8a77470.dtsi                    | 141 +++++++++++++++++++++
+>  arch/arm/configs/shmobile_defconfig                |   3 +
+>  drivers/phy/renesas/Kconfig                        |   2 +-
+>  drivers/phy/renesas/phy-rcar-gen2.c                | 130 +++++++++++++++++--
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c           |  39 +++++-
+>  9 files changed, 398 insertions(+), 25 deletions(-)
+> 
