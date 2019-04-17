@@ -1,44 +1,58 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Wed, 17 Apr 2019 11:10:49 -0400
-Message-ID: <20190417151049.GA18138@basecamp>
-References: <20190416235350.13742-1-masneyb@onstation.org>
- <20190416235350.13742-3-masneyb@onstation.org>
- <CAL_Jsq+YnjDGmLODXy6M1GpixMV=spfc809atGkrighvy=QPHg@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v5 0/5] ARM: da850: enable cpufreq in DT mode
+Date: Wed, 17 Apr 2019 17:26:56 +0200
+Message-ID: <20190417152701.23391-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+YnjDGmLODXy6M1GpixMV=spfc809atGkrighvy=QPHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 08:34:33AM -0500, Rob Herring wrote:
-> On Tue, Apr 16, 2019 at 6:54 PM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > Add new backlight bindings for the TI LM3630A dual-string white LED.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> > Rob: Since the common bindings aren't converted to the new JSON schema
-> > yet, I'm not sure how to do led-sources here. I would expect that we'd
-> > have the uint32-array on the common binding once it exists. I had to
-> > add it here to keep 'make dt_binding_check' happy. I left the
-> > description off though for that property since that'll come from common
-> > once its converted.
-> 
-> What was the error? '$ref' shouldn't be needed for this. The tooling
-> has no knowledge whether there's common schema or not. So you probably
-> have some pattern the meta-schema doesn't like and we need to fix.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Ahh, you're right... it works without the $ref. I just needed the
-minItems and maxItems to fix the error I originally saw.
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm).
 
-I'll wait for feedback from Dan before I send out another version with
-your changes.
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
 
-Thanks,
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
 
-Brian
+v2 -> v3:
+- drop patch 1, as the revision tag is in fact correctly passed to the kernel
+  by u-boot
+- only enable the 375 operating point for da850-evm as this is the standard
+  frequency for this board
+
+v3 -> v4:
+- split the first patch into three separate changesets: one adding the
+  operating points to the main dtsi and two enabling cpufreq on da850-lego-ev3
+  and da850-lcdk
+- remove the operating point not mentioned in the datasheet (415 MHz)
+- fix commit message in patch 4/5
+
+v4 -> v5:
+- only enable a single OPP for da850-lcdk due to the problem with the OHCI
+  controller becoming unresponsive after cpufreq transitions
+- fix the name of the pmic on da850-evm
+
+Bartosz Golaszewski (1):
+  ARM: dts: da850-evm: enable cpufreq
+
+David Lechner (4):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: dts: da850-lego-ev3: enable cpufreq
+  ARM: dts: da850-lcdk: enable cpufreq
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+
+ arch/arm/boot/dts/da850-evm.dts        | 13 +++++++
+ arch/arm/boot/dts/da850-lcdk.dts       | 36 +++++++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts   | 30 ++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi           | 50 ++++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig |  1 +
+ 5 files changed, 130 insertions(+)
+
+-- 
+2.21.0
