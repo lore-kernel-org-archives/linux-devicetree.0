@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v5 4/5] ARM: dts: da850-evm: enable cpufreq
-Date: Wed, 17 Apr 2019 17:27:00 +0200
-Message-ID: <20190417152701.23391-5-brgl@bgdev.pl>
+Subject: [PATCH v5 5/5] ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+Date: Wed, 17 Apr 2019 17:27:01 +0200
+Message-ID: <20190417152701.23391-6-brgl@bgdev.pl>
 References: <20190417152701.23391-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,42 +12,28 @@ To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: David Lechner <david@lechnology.com>
 
-Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-tps65070 pmic with configurable output voltage. By default da850-evm
-boards support frequencies up to 375MHz so enable this operating
-point.
+This sets CONFIG_CPUFREQ_DT=m in davinci_all_defconfig. This is used for
+frequency scaling on device tree boards.
 
+Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Adam Ford <aford173@gmail.com>
 ---
- arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/configs/davinci_all_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index f04bc3e15332..f94bb38fdad9 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -191,6 +191,19 @@
- 	};
- };
- 
-+&cpu {
-+	cpu-supply = <&vdcdc3_reg>;
-+};
-+
-+/*
-+ * The standard da850-evm kits and SOM's are 375MHz so enable this operating
-+ * point by default. Higher frequencies must be enabled for custom boards with
-+ * other variants of the SoC.
-+ */
-+&opp_375 {
-+	status = "okay";
-+};
-+
- &sata {
- 	status = "okay";
- };
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index 207962a656a2..c3502236132e 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -45,6 +45,7 @@ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
+ CONFIG_CPU_FREQ_GOV_PERFORMANCE=m
+ CONFIG_CPU_FREQ_GOV_POWERSAVE=m
+ CONFIG_CPU_FREQ_GOV_ONDEMAND=m
++CONFIG_CPUFREQ_DT=m
+ CONFIG_CPU_IDLE=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
 -- 
 2.21.0
