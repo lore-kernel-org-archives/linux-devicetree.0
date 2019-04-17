@@ -1,97 +1,86 @@
-From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH] of_net: Fix residues after of_get_nvmem_mac_address removal
-Date: Wed, 17 Apr 2019 22:09:12 +0200
-Message-ID: <1555531752-22813-1-git-send-email-ynezz@true.cz>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
+ driver
+Date: Wed, 17 Apr 2019 23:26:51 +0300
+Message-ID: <76e9c2a8-1537-04ad-17e0-ebd9fa9b7b91@cogentembedded.com>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
+ <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
+ <OF8A9D093C.B3035121-ON482583DE.00065F23-482583DE.00074AC0@mxic.com.tw>
+ <770002ab-7e08-b695-b5a5-fce772b600a5@cogentembedded.com>
+ <OF2BD84B79.FBC5E822-ON482583DF.0020009F-482583DF.0022E315@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <OF2BD84B79.FBC5E822-ON482583DF.0020009F-482583DF.0022E315@mxic.com.tw>
+Content-Language: en-MW
+Sender: linux-kernel-owner@vger.kernel.org
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I've discovered following discrepancy in the bindings/net/ethernet.txt
-documentation, where it states following:
+On 04/17/2019 09:21 AM, masonccyang@mxic.com.tw wrote:
 
- - nvmem-cells: phandle, reference to an nvmem node for the MAC address;
- - nvmem-cell-names: string, should be "mac-address" if nvmem is to be..
+>> >> Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD
+>> controller driver
+>> >>
+>> >> The patch name is somewhat misleading -- there's no "MFD controller".
+>> >
+>> > Can't get your point ?
+>> >
+>> > RPC-IF support SPI and HF, it's a MFD controller and
+>> > that's why I patch it to MFD as Marek's comments.
+>>
+>>    I'd like the "controller" word dropped, as MFD stands for multi-
+>> function device
+>> anyway. "Controller" seems to be superfluous here...
+> 
+> okay, will rename to:
+> 
+> [PATCH v11 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
 
-which is actually misleading and confusing. There are only two ethernet
-drivers in the tree, cadence/macb and davinci which supports this
-properties.
+   Thanx!
 
-This nvmem-cell* properties were introduced in commit 9217e566bdee
-("of_net: Implement of_get_nvmem_mac_address helper"), but
-commit afa64a72b862 ("of: net: kill of_get_nvmem_mac_address()")
-forget to properly clean up this parts.
+>> >> On 04/15/2019 10:37 AM, Mason Yang wrote:
+>> >>
+>> >> > Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
+>> >> >
+>> >> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> >> [...]
+>> >> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> >> > index 26ad646..7914349 100644
+>> >> > --- a/drivers/mfd/Kconfig
+>> >> > +++ b/drivers/mfd/Kconfig
+>> >> > @@ -978,6 +978,15 @@ config MFD_RDC321X
+>> >> >       southbridge which provides access to GPIOs and Watchdog using the
+>> >> >       southbridge PCI device configuration space.
+>> >> >  
+>> >> > +config MFD_RENESAS_RPC
+>> >> > +   tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
+>> >> > +   select MFD_CORE
+>> >> > +   depends on ARCH_RENESAS
+>> >> > +   help
+>> >> > +     This supports for Renesas R-Car Gen3 RPC-IF multifunction device
+>> >>
+>> >>    "For" node needed here.
+>> >
+>> > ?
+>>
+>>    Sorry, that was a typo: s/node/not/.
+> 
+> Oops, still don't know what do you mean to ?
+> 
+> Will change to:
+>          help
+>            This supports for Renesas R-Car Gen3 RPC-IF multifunction device
+>            which provides either SPI host or HyperFlash.
+>            You have to select individual components under the corresponding menu.
+> 
+> is it ok ?
 
-So this patch fixes the documentation by moving the nvmem-cell*
-properties at the appropriate places.  While at it, I've removed unused
-include as well.
+   Should be "This supports Renesas..."
 
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Fixes: afa64a72b862 ("of: net: kill of_get_nvmem_mac_address()")
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
- Documentation/devicetree/bindings/net/davinci_emac.txt | 2 ++
- Documentation/devicetree/bindings/net/ethernet.txt     | 2 --
- Documentation/devicetree/bindings/net/macb.txt         | 4 ++++
- drivers/of/of_net.c                                    | 1 -
- 4 files changed, 6 insertions(+), 3 deletions(-)
+[...]
 
-diff --git a/Documentation/devicetree/bindings/net/davinci_emac.txt b/Documentation/devicetree/bindings/net/davinci_emac.txt
-index 24c5cda..ca83dcc 100644
---- a/Documentation/devicetree/bindings/net/davinci_emac.txt
-+++ b/Documentation/devicetree/bindings/net/davinci_emac.txt
-@@ -20,6 +20,8 @@ Required properties:
- Optional properties:
- - phy-handle: See ethernet.txt file in the same directory.
-               If absent, davinci_emac driver defaults to 100/FULL.
-+- nvmem-cells: phandle, reference to an nvmem node for the MAC address
-+- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
- - ti,davinci-rmii-en: 1 byte, 1 means use RMII
- - ti,davinci-no-bd-ram: boolean, does EMAC have BD RAM?
- 
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index cfc376b..2974e63 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -10,8 +10,6 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
-   the boot program; should be used in cases where the MAC address assigned to
-   the device by the boot program is different from the "local-mac-address"
-   property;
--- nvmem-cells: phandle, reference to an nvmem node for the MAC address;
--- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
- - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
- - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
-   the maximum frame size (there's contradiction in the Devicetree
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 174f292..8b80515 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -26,6 +26,10 @@ Required properties:
- 	Optional elements: 'tsu_clk'
- - clocks: Phandles to input clocks.
- 
-+Optional properties:
-+- nvmem-cells: phandle, reference to an nvmem node for the MAC address
-+- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
-+
- Optional properties for PHY child node:
- - reset-gpios : Should specify the gpio for phy reset
- - magic-packet : If present, indicates that the hardware supports waking
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index 810ab0f..d820f3e 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -7,7 +7,6 @@
-  */
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
--#include <linux/nvmem-consumer.h>
- #include <linux/of_net.h>
- #include <linux/phy.h>
- #include <linux/export.h>
--- 
-1.9.1
+MBR, Sergei
