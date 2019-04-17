@@ -1,58 +1,91 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v5 0/5] ARM: da850: enable cpufreq in DT mode
-Date: Wed, 17 Apr 2019 17:26:56 +0200
-Message-ID: <20190417152701.23391-1-brgl@bgdev.pl>
+Subject: [PATCH v5 1/5] ARM: dts: da850: add cpu node and operating points to DT
+Date: Wed, 17 Apr 2019 17:26:57 +0200
+Message-ID: <20190417152701.23391-2-brgl@bgdev.pl>
+References: <20190417152701.23391-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190417152701.23391-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Adam Ford <aford173@gmail.com>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: David Lechner <david@lechnology.com>
 
-This series adds cpufreq-dt operating points for da850 boards supported
-with device tree (da850-lcdk, da850-lego-ev3, da850-evm).
+This adds a cpu node and operating points to the common da850.dtsi file.
 
-Last patch enables CPUFREQ_DT in davinci_all_defconfig.
+All operating points above 300MHz are disabled by default.
 
-v1 -> v2:
-- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
+Regulators need to be hooked up on a per-board basis.
 
-v2 -> v3:
-- drop patch 1, as the revision tag is in fact correctly passed to the kernel
-  by u-boot
-- only enable the 375 operating point for da850-evm as this is the standard
-  frequency for this board
+Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/boot/dts/da850.dtsi | 50 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-v3 -> v4:
-- split the first patch into three separate changesets: one adding the
-  operating points to the main dtsi and two enabling cpufreq on da850-lego-ev3
-  and da850-lcdk
-- remove the operating point not mentioned in the datasheet (415 MHz)
-- fix commit message in patch 4/5
-
-v4 -> v5:
-- only enable a single OPP for da850-lcdk due to the problem with the OHCI
-  controller becoming unresponsive after cpufreq transitions
-- fix the name of the pmic on da850-evm
-
-Bartosz Golaszewski (1):
-  ARM: dts: da850-evm: enable cpufreq
-
-David Lechner (4):
-  ARM: dts: da850: add cpu node and operating points to DT
-  ARM: dts: da850-lego-ev3: enable cpufreq
-  ARM: dts: da850-lcdk: enable cpufreq
-  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
-
- arch/arm/boot/dts/da850-evm.dts        | 13 +++++++
- arch/arm/boot/dts/da850-lcdk.dts       | 36 +++++++++++++++++++
- arch/arm/boot/dts/da850-lego-ev3.dts   | 30 ++++++++++++++++
- arch/arm/boot/dts/da850.dtsi           | 50 ++++++++++++++++++++++++++
- arch/arm/configs/davinci_all_defconfig |  1 +
- 5 files changed, 130 insertions(+)
-
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 559659b399d0..0c9a8e78f748 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -20,6 +20,56 @@
+ 		reg = <0xc0000000 0x0>;
+ 	};
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu: cpu@0 {
++			compatible = "arm,arm926ej-s";
++			device_type = "cpu";
++			reg = <0>;
++			clocks = <&psc0 14>;
++			operating-points-v2 = <&opp_table>;
++		};
++	};
++
++	opp_table: opp-table {
++		compatible = "operating-points-v2";
++
++		opp_100: opp100-100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++			opp-microvolt = <1000000 950000 1050000>;
++		};
++
++		opp_200: opp110-200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <1100000 1050000 1160000>;
++		};
++
++		opp_300: opp120-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			opp-microvolt = <1200000 1140000 1320000>;
++		};
++
++		/*
++		 * Original silicon was 300MHz max, so higher frequencies
++		 * need to be enabled on a per-board basis if the chip is
++		 * capable.
++		 */
++
++		opp_375: opp120-375000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <375000000>;
++			opp-microvolt = <1200000 1140000 1320000>;
++		};
++
++		opp_456: opp130-456000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <456000000>;
++			opp-microvolt = <1300000 1250000 1350000>;
++		};
++	};
++
+ 	arm {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.21.0
