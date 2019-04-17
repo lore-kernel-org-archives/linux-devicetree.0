@@ -1,90 +1,198 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 14:33:05 +0100
-Message-ID: <68aaace3-f66e-b4b8-30a0-57b8b66a7524@arm.com>
-References: <20190417053211.2195-1-ping.bai@nxp.com>
- <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <1555503195.2317.19.camel@pengutronix.de>
- <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Wed, 17 Apr 2019 08:34:33 -0500
+Message-ID: <CAL_Jsq+YnjDGmLODXy6M1GpixMV=spfc809atGkrighvy=QPHg@mail.gmail.com>
+References: <20190416235350.13742-1-masneyb@onstation.org> <20190416235350.13742-3-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Faure?= <clement.faure@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>, Silvano Di Ninno <silvano.dininno@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190416235350.13742-3-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 16, 2019 at 6:54 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Add new backlight bindings for the TI LM3630A dual-string white LED.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Rob: Since the common bindings aren't converted to the new JSON schema
+> yet, I'm not sure how to do led-sources here. I would expect that we'd
+> have the uint32-array on the common binding once it exists. I had to
+> add it here to keep 'make dt_binding_check' happy. I left the
+> description off though for that property since that'll come from common
+> once its converted.
 
+What was the error? '$ref' shouldn't be needed for this. The tooling
+has no knowledge whether there's common schema or not. So you probably
+have some pattern the meta-schema doesn't like and we need to fix.
 
+>
+> Changes since v3:
+> - Add label. I didn't add a description for it since that'll come from
+>   the common properties once its converted.
+>
+> Changes since v2:
+> - Update description of max-brightness
+> - Add description for reg
+> - Correct typo: s/tranisiton/transition
+> - add reg to control banks
+> - add additionalProperties
+>
+>  .../leds/backlight/lm3630a-backlight.yaml     | 128 ++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> new file mode 100644
+> index 000000000000..5067038ca637
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> @@ -0,0 +1,128 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LM3630A High-Efficiency Dual-String White LED
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +description: |
+> +  The LM3630A is a current-mode boost converter which supplies the power and
+> +  controls the current in up to two strings of 10 LEDs per string.
+> +  https://www.ti.com/product/LM3630A
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,lm3630a
+> +
+> +  reg:
+> +    description: The I2C address of the device
 
-On 17/04/2019 13:40, Leonard Crestez wrote:
-> On 4/17/2019 3:13 PM, Lucas Stach wrote:
+No need to describe a common property if there's nothing specific for
+this device.
 
-[...]
+> +    maxItems: 1
+> +
+> +  ti,linear-mapping-mode:
+> +    description: |
+> +      Enable linear mapping mode. If disabled, then it will use exponential
+> +      mapping mode in which the ramp up/down appears to have a more uniform
+> +      transition to the human eye.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^led@[01]$":
+> +    type: object
+> +    description: |
+> +      Properties for a string of connected LEDs.
+> +
+> +    properties:
+> +      reg:
+> +        description: Control Bank
 
->>
->> I don't yet buy the security argument. There are many more shared parts
->> on the SoC, like the clock controller, that would need to be taken away
->> from the non-secure world if one would want to run an untrusted OS
->> kernel on a i.MX8M system.
->>
->> To properly implement security on any i.MX8M based system the firmware
->> would need to grow something like a full ARM SCPI implementation, so
->> all shared critical peripherals are solely under firmware control.
-> 
-> It might be possible to rework this to use some form of SCMI-over-SMC 
-> instead of vendor-specific SMCCC SIP calls
-> 
+Probably makes sense to have description here since this isn't a
+standard type of address.
 
-Sounds feasible and good if all the custom IDs/calls/..etc are well
-hidden in the firmware(TF-A in this case) behind the existing
-abstraction in Linux kernel.
+> +        maxItems: 1
+> +        minimum: 0
+> +        maximum: 1
+> +
+> +      label:
+> +        maxItems: 1
+> +
+> +      led-sources:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +          - minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              minimum: 0
+> +              maximum: 1
+> +
+> +      default-brightness:
+> +        description: Default brightness level on boot.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +      max-brightness:
+> +        description: Maximum brightness that is allowed during runtime.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties: false
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        lm3630a_bl@38 {
 
-> +SCMI maintainer
-> 
+led-controller@38
 
-Thanks for including.
+> +                compatible = "ti,lm3630a";
+> +                status = "ok";
 
->> I agree that it might make sense to move some parts into the firmware
->> and have much simpler OS level drivers, but I don't agree on the
->> implementation direction taken here. Growing custom PSCI extension
->> interfaces will only get us so far, without solving the system security
->> issue in a holistic way. It is my strong believe that only a complete
->> rearchitecture of the OS support on top of a ARM SCPI firmware
->> interface can solve this properly.
+Don't show status in examples.
 
-+1 again, just to re-iterate the emphasis on the above and the degree to
-which I align with it.
-
-> Hiding everything critical for security (especially CCM) behind a SCMI 
-> interface would be a large amount of work but introducing SCMI 
-> incrementally (starting with imx8mm power) would be useful by itself 
-> because it simplifies OS implementation.
-> 
-
-Agreed, but not at the expense of introducing and maintaining *random*
-*one-off* *custom* SMC extensions. Sorry, that's not open to debate.
-
-> Many at NXP have attempted to evaluate SCMI and their conclusion has 
-> always been that "many extensions are required".
-> 
-
-I would like to hear the evaluation. Don't assume that you need to
-implement something similar to ARM SCMI reference design. All OSPM like
-Linux kernel cares is conformance to the interface, what/how you
-implement on the other side is left to you.
-
--- 
-Regards,
-Sudeep
+> +                reg = <0x38>;
+> +
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                        reg = <0>;
+> +                        led-sources = <0 1>;
+> +                        label = "lcd-backlight";
+> +                        default-brightness = <200>;
+> +                        max-brightness = <255>;
+> +                };
+> +        };
+> +    };
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        lm3630a_bl@38 {
+> +                compatible = "ti,lm3630a";
+> +                status = "ok";
+> +                reg = <0x38>;
+> +
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                        reg = <0>;
+> +                        default-brightness = <150>;
+> +                        ti,linear-mapping-mode;
+> +                };
+> +
+> +                led@1 {
+> +                        reg = <1>;
+> +                        default-brightness = <225>;
+> +                        ti,linear-mapping-mode;
+> +                };
+> +        };
+> +    };
+> --
+> 2.20.1
+>
