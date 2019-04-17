@@ -1,31 +1,36 @@
-From: "Frank Wunderlich" <frank-w@public-files.de>
-Subject: Aw: Re: [PATCH v1 0/4] make hdmi work on bananapi-r2
-Date: Wed, 17 Apr 2019 07:30:51 +0200
-Message-ID: <trinity-366430bd-b9d1-487b-80c7-1796b602ca6b-1555479050979@3c-app-gmx-bs70>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: Aw: Re: [PATCH v1 0/4] make hdmi work on bananapi-r2
+Date: Wed, 17 Apr 2019 13:40:11 +0800
+Message-ID: <1555479611.3515.2.camel@mtksdaap41>
 References: <20190416145848.11932-1-frank-w@public-files.de>
- <1555470607.16005.12.camel@mtksdaap41>
+         <1555470607.16005.12.camel@mtksdaap41>
+         <trinity-366430bd-b9d1-487b-80c7-1796b602ca6b-1555479050979@3c-app-gmx-bs70>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1555470607.16005.12.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, chunhui dai <chunhui.dai@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <trinity-366430bd-b9d1-487b-80c7-1796b602ca6b-1555479050979@3c-app-gmx-bs70>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, chunhui dai <chunhui.dai@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi CK Hu,
+Hi, Frank:
 
-you mean the problematic patch is fix possible_crtcs (4/4) and the others are ok?
+On Wed, 2019-04-17 at 07:30 +0200, Frank Wunderlich wrote:
+> Hi CK Hu,
+> 
+> you mean the problematic patch is fix possible_crtcs (4/4) and the others are ok?
+> 
+> can you push the first 3 while working on the last one?
 
-can you push the first 3 while working on the last one?
+I think 3 patches is related to possible crtc problem: (1/4), (2/4), and
+(4/4).
 
-regards Frank
+And I have comment on (3/4) also.
+
+Regards,
+CK
+
+> 
+> regards Frank
