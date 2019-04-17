@@ -1,134 +1,161 @@
-Return-Path: <SRS0=Uozk=SO=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v6 0/6] iio: gyro: add core driver for fxas21002c
-Date: Fri, 12 Apr 2019 17:48:55 +0100
-Message-Id: <20190412164901.2321-1-rui.silva@linaro.org>
+Return-Path: <SRS0=FFnO=ST=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 26/30] dt-bindings: pci: tegra: Document nvidia,plat-gpios
+ optional prop
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-27-mmaddireddy@nvidia.com> <20190415141654.GA29254@ulmo>
+ <b575fd56-0d31-bbe2-deef-5a21d6e4b33e@nvidia.com>
+ <20190416153443.GA30777@ulmo>
+ <51957dce-5e0b-647b-d6b8-0cc118ee95bc@nvidia.com>
+ <20190417151956.GF26626@ulmo>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <be8d689f-73f7-5418-600a-53a2032aef37@nvidia.com>
+Date: Wed, 17 Apr 2019 23:56:24 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+In-Reply-To: <20190417151956.GF26626@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-This series introduce a NXP fxas21002c tri axis gyroscope driver [0]
-It add a core implementaiton plus an i2c and spi.
-
-This device can be found in the warp7 board [1], where it was tested.
-
----
-Cheers,
-   Rui
-
-v5->v6:
-Jonathan Cameron:
-  -  restore devm_ to some init calls
-  -  remove blank line in .h header
-  -  fix lock in trigger handler
-  - use _chained
-
-Rob Herring:
-  - add reviewed by tag: 
-
-v4->v5:
-Jonathan Cameron:
-  - remove init ret
-  - change handle of iio register, buffer and trigger in probe and
-   remove (I think this is what you mean, Jonathan)
-
-v3->v4:
-Tomasz Duszynski:
-  - mention irq flags in bindings
-  - add reference to drive-open-drain in bindings
-  - fix headers files
-  - drop comas in of_device_id sentinel
-  - drop of_match_ptr
-  - use probe_new
-
-Jonathan Cameron:
-  - disable vdd regulator in case of vddio fail
-  - use devm_add_action_or_reset
-  - simpler functions returns
-  - remove noisy dev_info
-  - remove EAGAIN from runtime_suspend
-
-v2->v3:
-Jonathan Cameron:
-  - cacheline aligned (DMA safe buffer)
-     Great presentation [2] and links in the presentation, thanks
-  - global renaming, including filenames, fxas2100x->fxas21002c
-  - provide spi info in dts bidings
-  - Remove SPI_MASTER in Kconfig i2c patch and move it to right patch
-  - remove extra blank line in comment
-  - add break range_value_from_fs after found
-  - in range_value_from_fs use local variable
-  - remove mode check at mode_set
-  - combine two if statements in mode_set
-  - in scale_get return 0 and let caller to set IIO_VAL_FRACTIONAL
-  - remove dev_err from vdd_io regulator get
-  - handle regulator error path
-  - devm_add_action
-  - check unwind order
-  - simplify data in _suspend and alike
-  - disable regulators at suspend
-  - error handling at _resume
-  - return -EAGAIN at runtime_resume
-
-Rob Herring:
-   - Set label as gyroscope
-
-- add interrupt to bindings
-- add entry to maintainers
 
 
-v1->v2:
-Peter Meerwal-Stadler:
-  - changed (c) to current year
-  - add regmap include file in .h
-  - fix comments s/cuttof/cutoff/
-  - add more info in mutex comment
-  - check value in range_fs_from_value
-  - ret not checked in range_value_from_fs
-  - move mode to enum type
-  - remove line between value get and validation of value in all file
-  - pre-write, regmap_field_write, post_write refactoring
-  - check val2 and val == 0 in write raw
-  - check in_anglvel_scale: 7.8125?
-  - trigger_handler: 2 => sizeof(s16)
-  - check buffer size
-  - print %02% to output chip id
-  - remove !! as state is bool
-  - trigger probe return devm_iio_trigger_register
-  - remove error msg in case of devm_iio_device_register
-Fabio Estebam:
-  - rename FXAS2100X to FXAS21002
-  - change compatible nxp,fxas2100x to the exact support
-  - add VDD and VDDIO regulators in bindings and driver
+On 17-Apr-19 8:49 PM, Thierry Reding wrote:
+> On Wed, Apr 17, 2019 at 04:52:46PM +0530, Manikanta Maddireddy wrote:
+>>
+>> On 16-Apr-19 9:04 PM, Thierry Reding wrote:
+>>> On Mon, Apr 15, 2019 at 11:28:29PM +0530, Manikanta Maddireddy wrote:
+>>>> On 15-Apr-19 7:46 PM, Thierry Reding wrote:
+>>>>> On Thu, Apr 11, 2019 at 10:33:51PM +0530, Manikanta Maddireddy wrote:
+>>>>>> Document "nvidia,plat-gpios" optional property which supports configuring
+>>>>>> of platform specific gpios.
+>>>>>>
+>>>>>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt | 3 +++
+>>>>>>  1 file changed, 3 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+>>>>>> index fbbd3bcb3435..dca8393b86d1 100644
+>>>>>> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+>>>>>> @@ -73,6 +73,8 @@ Optional properties:
+>>>>>>    pinctrl phandle to allow driver to explicitly put PCIe IO in DPD state.
+>>>>>>  - pinctrl-1: PCIe IO(bias & REFCLK) deep power down(DPD) enable state.
+>>>>>>    Pass pinctrl phandle to allow driver bring PCIe IO out of DPD state.
+>>>>>> +- nvidia,plat-gpios: A list of platform specific gpios which controls
+>>>>>> +  endpoint's internal regulator or PCIe logic.
+>>>>> We discussed this with Vidya during review of the Tegra194 PCIe device
+>>>>> tree bindings and arrived at the conclusion that all of the GPIOs that
+>>>>> need to be controlled for PCI to work can be modelled as proper device
+>>>>> nodes (I think regulator and GPIO-controlled muxes were the only two
+>>>>> use-cases for which we need this).
+>>>>>
+>>>>> Can the same be done for this PCI controller? What use-cases are we
+>>>>> talking about?
+>>>> In Tegra194 case it is apt to use regulator framework because gpios are used
+>>>> to control regulators. However I published this patch to control vendor defined
+>>>> gpios in endpoints. For ex: isolate gpio in RTL8111. Since I am not sure if
+>>>> regulator framework is apt, I published as gpio patch.
+>>>>>>  Required properties on Tegra124 and later (deprecated):
+>>>>>>  - phys: Must contain an entry for each entry in phy-names.
+>>>>>> @@ -567,6 +569,7 @@ Board DTS:
+>>>>>>  		pci@2,0 {
+>>>>>>  			phys = <&{/padctl@7009f000/pads/pcie/lanes/pcie-4}>;
+>>>>>>  			phy-names = "pcie-0";
+>>>>>> +			nvidia,plat-gpios = <&gpio TEGRA_GPIO(X, 3) GPIO_ACTIVE_HIGH>;
+>>>>>>  			status = "okay";
+>>>>>>  		};
+>>>>>>  	};
+>>>>> I recall this being the setup for Jetson Nano and the X.3 GPIO going to
+>>>>> an Ethernet device. Let's find out what exactly this GPIO is used for
+>>>>> and why we need it to be set up as part of the PCI controller driver
+>>>>> rather than the Ethernet device.
+>>>>>
+>>>>> If it turns out we can't model this other than with a generic GPIO type
+>>>>> of property we need a better explanation than the above, and the Jetson
+>>>>> Nano use-case would provide that explanation.
+>>>>>
+>>>>> And if indeed we cannot model this more accurately, I think we should
+>>>>> use something like the gpio-hog binding rather than some custom PCI
+>>>>> controller property.
+>>>>>
+>>>>> Thierry
+>>>> Yes, in Jetson Nano gpio x.3 is controlling isolate pin of RTL8111.
+>>>> RTL8111 datasheet available online says that as long as isolate
+>>>> pin is asserted it'll not sample RX lanes and doesn't drive TX lanes.
+>>>> Since RTL8111 PCIe IP should be active when PCIe host driver is
+>>>> attempting link up, this gpio can be controlled by host driver only.
+>>>>
+>>>> I didn't go for gpio-hog because this gpio should be asserted
+>>>> during suspend, to enable wake on LAN.
+>>> I don't see code in gpiolib that would cause this to be deasserted
+>>> during suspend.
+>>>
+>>> Is there ever a need to manipulate this GPIO at all? Or do we just
+>>> need to make sure that it's always asserted?
+>> Following steps
+>> 1) ISOLATEB gpio should be deasserted during boot to enable PCIe section
+>> of RTL8111
+>> 2) PCIe host driver enumerates RTL8111
+>> 3) When suspend is initiated, ISOLATEB gpio should be asserted after PCIe
+>> host controller suspend is completed to disable PCIe section of RTL8111
+>> and enable Wake on LAN
+>> 4) During resume, first ISOLATE gpio should be deasserted to get PCIe link up
+> I think it's important that we be very clear here. If ISOLATEB is
+> asserted, does that mean the PCIe link is down? Or does it only mean
+> that the RTL8111 cannot be enumerated.
+>
+> If the PCIe link remains down as long as ISOLATEB is asserted, then it
+> sounds like there's more going on than this GPIO just keeping the
+> RTL8111 from talking on the PCI bus. In that case we would probably have
+> to model this as some sort of power regulator for the bus.
+>
+> However, if the PCIe link can be brought up if the RTL8111 is isolated,
+> but if the device can only not be enumerated, then we could still have
+> the RTL8111 driver deassert ISOLATEB early during resume. We only have
+> to make sure that it happens before any PCI requests are sent to the
+> device.
+>
+> Thierry
 
+RTL8111 will not drive PCIe outputs(except WAKE#) and will not sample PCIe
+input as long as ISOLATEB is asserted. So PCIe link up doesn't happen if
+ISOLATEB is asserted.
 
+Manikanta
 
-Rui Miguel Silva (6):
-  iio: gyro: add DT bindings to fxas21002c
-  iio: gyro: add core driver for fxas21002c
-  iio: gyro: fxas21002c: add i2c driver
-  iio: gyro: fxas21002c: add spi driver
-  ARM: dts: imx7s-warp: add fxas21002c gyroscope
-  MAINTAINERS: add entry for fxas21002c gyro driver
-
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt |   31 +
- MAINTAINERS                                   |   10 +
- arch/arm/boot/dts/imx7s-warp.dts              |    7 +
- drivers/iio/gyro/Kconfig                      |   22 +
- drivers/iio/gyro/Makefile                     |    3 +
- drivers/iio/gyro/fxas21002c.h                 |  150 +++
- drivers/iio/gyro/fxas21002c_core.c            | 1006 +++++++++++++++++
- drivers/iio/gyro/fxas21002c_i2c.c             |   69 ++
- drivers/iio/gyro/fxas21002c_spi.c             |   70 ++
- 9 files changed, 1368 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
- create mode 100644 drivers/iio/gyro/fxas21002c.h
- create mode 100644 drivers/iio/gyro/fxas21002c_core.c
- create mode 100644 drivers/iio/gyro/fxas21002c_i2c.c
- create mode 100644 drivers/iio/gyro/fxas21002c_spi.c
-
--- 
-2.21.0
+>
+>>> The problem with adding this to nvidia,plat-gpios in the PCI root port
+>>> node is that there's no context at all, so the PCI host driver can't
+>>> really do anything with this, other than perhaps exactly one fixed
+>>> operation, but then it's pretty much equivalent to a gpio-hog.
+>>>
+>>> If we do need control over the pin, I think it might be worth looking at
+>>> adding support to gpiolib for initial pin configuration (so that it does
+>>> not hog the GPIO, but still configures it). That would allow us to take
+>>> the PCI device out of isolation initially and once the device has been
+>>> probed we can control the GPIO from the PCI device. That way the device
+>>> driver has the necessary context to assert and deassert the pin at the
+>>> appropriate time, while still giving us the possibility to make the
+>>> device appear on the PCI bus.
+>> ISOLATEB gpio disables the PCIe section in RTL8111(Rx is not sampled &
+>> doesn't drive Tx), if PCI client driver controls it, then it has
+>> to do it after host controller suspend_noirq callback is completed.
+>> Only suspend callback available after suspend_noirq is syscore_ops.
+>> I didn't go with it because it is take void arguments, so client
+>> driver has to maintain global pointers and I see only core drivers
+>> like irqchip, clk, etc are using it.
+>>
+>> Manikanta
+>>
+>>> As a side-note, I think it would've been better if the ISOLATEB signal
+>>> was wired up such that it would've been active by default. That would
+>>> mean that if the bootloader and/or OS were not aware of the ISOLATEB
+>>> signal, they would still be able to use the Ethernet device. I think
+>>> that would've been a more sensible default, especially if the bus that
+>>> the device is on requires the signal to be controlled without even
+>>> knowing that the device exists.
+>>>
+>>> Thierry
