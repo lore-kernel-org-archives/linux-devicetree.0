@@ -1,64 +1,96 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH] of_net: add mtd-mac-address support to
- of_get_mac_address()
-Date: Wed, 17 Apr 2019 18:06:00 +0200
-Message-ID: <20190417160600.GD79403@meh.true.cz>
-References: <1555445100-30936-1-git-send-email-ynezz@true.cz>
- <20190417080614.edt25ynuvae5fn64@flea>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Date: Wed, 17 Apr 2019 16:21:55 +0000
+Message-ID: <VI1PR04MB5533A1F87436C0839A772D03EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+References: <20190417053211.2195-1-ping.bai@nxp.com>
+ <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <1555503195.2317.19.camel@pengutronix.de>
+ <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+ <68aaace3-f66e-b4b8-30a0-57b8b66a7524@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190417080614.edt25ynuvae5fn64@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment_Faure?= <clement.faure@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Andre Przywara <andre.przywara@arm.com>, Silvano Di Ninno <silvano.dininno@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> [2019-04-17 10:06:14]:
+On 4/17/2019 4:33 PM, Sudeep Holla wrote:
+>>> I don't yet buy the security argument. There are many more shared parts
+>>> on the SoC, like the clock controller, that would need to be taken away
+>>> from the non-secure world if one would want to run an untrusted OS
+>>> kernel on a i.MX8M system.
+>>>
+>>> To properly implement security on any i.MX8M based system the firmware
+>>> would need to grow something like a full ARM SCPI implementation, so
+>>> all shared critical peripherals are solely under firmware control.
+>>
+>> It might be possible to rework this to use some form of SCMI-over-SMC
+>> instead of vendor-specific SMCCC SIP calls
+> 
+> Sounds feasible and good if all the custom IDs/calls/..etc are well
+> hidden in the firmware(TF-A in this case) behind the existing
+> abstraction in Linux kernel.
 
-> NVMEM is supported by of_net already
+>> Hiding everything critical for security (especially CCM) behind a SCMI
+>> interface would be a large amount of work but introducing SCMI
+>> incrementally (starting with imx8mm power) would be useful by itself
+>> because it simplifies OS implementation.
+> 
+> Agreed, but not at the expense of introducing and maintaining *random*
+> *one-off* *custom* SMC extensions. Sorry, that's not open to debate.
+> 
+>> Many at NXP have attempted to evaluate SCMI and their conclusion has
+>> always been that "many extensions are required".
+> 
+> I would like to hear the evaluation. Don't assume that you need to
+> implement something similar to ARM SCMI reference design. All OSPM like
+> Linux kernel cares is conformance to the interface, what/how you
+> implement on the other side is left to you.
 
-Well, not anymore:
+Brief summary from some attempts at nudging NXP devs towards SCMI:
 
- commit afa64a72b862a7a9d04f8d07fba632eaf06b23f8
- Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
- Date:   Fri Nov 30 09:20:59 2018 +0100
 
-    of: net: kill of_get_nvmem_mac_address()
+There is no SCMI-over-SMC support specified? This would make it possible 
+to use SCMI as a purely software solution on platforms which did not 
+take SCMI into account at hardware design time or which don't have a 
+dedicated SCP inside the SOC. This applies to all imx.
 
-Now, I'm really confused.
+Peng has been looking at some out-of-tree arm-smc-mailbox patches so 
+it's not just NXP which would like the option of implementing SCMI 
+vendor side in ATF. Like this: https://lwn.net/Articles/726861/
 
-Documentation/devicetree/bindings/net/ethernet.txt states following:
+Blessing SCMI-over-SMC would allow stuff like intercepting a SCMI 
+message in EL2; checking if the guest is allowed to use that resource 
+and then either forward to EL3 or return an error.
 
- - nvmem-cells: phandle, reference to an nvmem node for the MAC address;
- - nvmem-cell-names: string, should be "mac-address" if nvmem is to be used;
 
-which is actually misleading and confusing. There are only two ethernet
-drivers in the tree cadence and davinci which support this properties. Well
-there's nixge, but this one is special, because it has renamed `mac-address`
-to `address` with it's own implementation in `nixge_get_nvmem_address`.
+SCMI clock protocol does not cover muxes? On imx the clk hierarchy is 
+very intricate and it relies on many clk core features (including 
+notifiers) and occasional assigned-clocks-parents properties to control 
+muxes from linux. Moving all that to firmware would be a huge amount of 
+effort.
 
-All other ethernet drivers (and few others) simply use `of_get_mac_address`
-which doesn't support NVMEM and the documented nvmem-cells* properties.
+If SCMI included a generic clk mux and allowed keeping the clk hierarchy 
+inside linux then the effort required for hiding the CCM would still be 
+large, but more approachable. It would not "simplify the rich OS" but it 
+would still improve security.
 
-> so it doesn't look really necessary to create additional properties that
-> cover the same use case.
 
-NVMEM could be reused for this purpose and it seems like a way to go, probably
-if we could wire `nvmem_get_mac_address` into `of_get_mac_address` and find a
-way how to handle the remaining use cases currently not handled in NVMEM:
+Last point is that SCMI does not cover pinctrl? This is a large chunk of 
+firmware functionality on some imx and security control over individual 
+pins is desirable.
 
- * MAC address (octet/byte) incrementation (already handled by the proposed patch)
- * MAC address stored as ascii/text (0090FEC9CBE4 and 00:90:FE:C9:CB:E4
-   formats) which is currently missing but would be nice to have
-
-I can prepare patches for that, just don't want to waste more time then really
-necessary, so it would really help me if someone could tell me how this should
-be implemented in NVMEM and I'll simply do it in this acceptable way and call
-it a day.
-
-Thanks!
-
--- ynezz
+--
+Regards,
+Leonard
