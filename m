@@ -1,11 +1,14 @@
 From: Jacky Bai <ping.bai@nxp.com>
-Subject: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 05:27:24 +0000
-Message-ID: <20190417053211.2195-1-ping.bai@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: power: Add power domain binding for i.mx8m
+ family
+Date: Wed, 17 Apr 2019 05:27:30 +0000
+Message-ID: <20190417053211.2195-2-ping.bai@nxp.com>
+References: <20190417053211.2195-1-ping.bai@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190417053211.2195-1-ping.bai@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,60 +23,65 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX8M family is a set of NXP product focus on delivering
-the latest and greatest video and audio experience combining
-state-of-the-art media-specific features with high-performance
-processing while optimized for lowest power consumption.
-i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all
-belong to this family.
+Add the binding doc of power domain for i.MX8M SOC family.
 
-The GPC module is used to manage the PU power domains' power
-on/off. For the whole i.MX8M family, different SoC has differnt
-power domain design. the power up sequence has significant difference.
-all the power sequence must be guaranteed by SW. Some domains' power
-up sequence need to access the SRC module or sub-system specific GPR.
-the SRC register & SS's register are not in in the GPC's memory range.
-
-it makes us hard to use the GPCv2 driver to cover all the different
-power up requirement. Each time, a new SoC is added, we must modify
-the GPCv2 driver to make it resuable for it. a lot of code need to
-be added in GPCv2 to support it. we need to access the SRC & SS' GPR,
-then the GPCv2 driver can NOT be self-contained. Accessing the non-driver
-specific module's register is a bad practice. Although, the GPC module
-provided the similar function for PU power domain, but it is not 100%
-compatible with GPCv2.
-
-The most important thing is that the GPC & SRC module is a security
-critical resource that security permission must be considered when
-building the security system. The GPC module is not only used by
-PU power domain power on/off. It is also used by the TF-A PSCI code
-to do the CPU core power management. the SRC module control the
-CPU CORE reset and the CPU reset vector address. if we give the
-non-secure world write permission to SRC. System can be easily
-induced to malicious code.
-
-This patchset add a more generic power domain driver that give
-us the possibility to use one driver to cover the whole i.MX8M
-family power domain in kernel side. kernel side doesn't need to
-handle the power domain difference anymore, all the sequence can be
-abstracted & handled in TF-A side. Most important, We don't need to
-care if the GPC & SRC is security protected.
-
-Jacky Bai (3):
-  dt-bindings: power: Add power domain binding for i.mx8m family
-  soc: imx: Add power domain driver support for i.mx8m family
-  arm64: dts: freescale: Add power domain nodes for i.mx8mm
-
- .../bindings/power/fsl,imx8m-genpd.txt        |  46 ++++
- arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 103 ++++++++
- drivers/soc/imx/Kconfig                       |   6 +
- drivers/soc/imx/Makefile                      |   1 +
- drivers/soc/imx/imx8m_pm_domains.c            | 224 ++++++++++++++++++
- include/soc/imx/imx_sip.h                     |  12 +
- 6 files changed, 392 insertions(+)
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+---
+ .../bindings/power/fsl,imx8m-genpd.txt        | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
- create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
- create mode 100644 include/soc/imx/imx_sip.h
 
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt b/Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+new file mode 100644
+index 000000000000..a92a7103de38
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+@@ -0,0 +1,46 @@
++Device Tree Bindings for Freescale i.MX8M Generic Power Domain
++==============================================================
++The binding for the i.MX8M Generic power Domain[1].
++
++[1] Documentation/devicetree/bindings/power/power_domain.txt
++
++Required properties:
++
++ - compatible: should be of:
++	- "fsl,imx8m-power-domain"
++ - #power-domain-cells: Number of cells in a PM domain Specifier, must be 0
++ - domain-index: should be the domain index number need to pass to TF-A
++ - domain-name: the name of this pm domain
++
++Optional properties:
++ - clocks: a number of phandles to clocks that need to be enabled during
++   domain power-up sequence to ensure reset propagation into devices
++   located inside this power domain
++ - power-supply: Power supply used to power the domain
++ - parent-domains: the phandle to the parent power domain
++
++example:
++	vpu_g1_pd: vpug1-pd {
++		compatible = "fsl,imx8mm-pm-domain";
++		#power-domain-cells = <0>;
++		domain-index = <6>;
++		domain-name = "vpu_g1";
++		parent-domains = <&vpumix_pd>;
++		clocks = <&clk IMX8MM_CLK_VPU_G1_ROOT>;
++	};
++
++
++Specifying Power domain for IP modules
++======================================
++
++IP cores belonging to a power domain should contain a 'power-domains'
++property that is a phandle for PGC node representing the domain.
++
++Example of a device that is part of the vpu_g1 power domain:
++	vpu_g1: vpu_g1@38300000 {
++		/* ... */
++		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "irq_hantro";
++		/* ... */
++		power-domains = <&vpu_g1_pd>;
++	};
 -- 
 2.21.0
