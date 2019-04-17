@@ -1,106 +1,184 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 14:25:09 +0100
-Message-ID: <67efa650-1cdf-e396-1716-2d7cff9c6b2a@arm.com>
-References: <20190417053211.2195-1-ping.bai@nxp.com>
- <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <1555503195.2317.19.camel@pengutronix.de>
- <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
- <1555505655.2317.21.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1555505655.2317.21.camel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Faure?= <clement.faure@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>, Silvano Di Ninno <silvano.dininno@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Igor Opaniuk <igor.opaniuk@toradex.com>
+Subject: [PATCH v4 2/2] ARM: dts: tegra124-apalis: convert to SPDX license tags
+Date: Wed, 17 Apr 2019 15:30:15 +0200
+Message-ID: <20190417133015.6168-2-igor.opaniuk@toradex.com>
+References: <20190417133015.6168-1-igor.opaniuk@toradex.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190417133015.6168-1-igor.opaniuk@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-imx@nxp.com
+Cc: marc.w.gonzalez@free.fr, jonathanh@nvidia.com, thierry.reding@gmail.com, festevam@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, marcel@ziswiler.com, marcel.ziswiler@toradex.com, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxNy8wNC8yMDE5IDEzOjU0LCBMdWNhcyBTdGFjaCB3cm90ZToKPiBBbSBNaXR0d29jaCwg
-ZGVuIDE3LjA0LjIwMTksIDEyOjQwICswMDAwIHNjaHJpZWIgTGVvbmFyZCBDcmVzdGV6Ogo+PiBP
-biA0LzE3LzIwMTkgMzoxMyBQTSwgTHVjYXMgU3RhY2ggd3JvdGU6Cj4+PiBBbSBNaXR0d29jaCwg
-ZGVuIDE3LjA0LjIwMTksIDExOjE2ICswMDAwIHNjaHJpZWIgQWlzaGVuZyBEb25nOgo+Pj4+PiBG
-cm9tOiBKYWNreSBCYWkKPj4+Pj4gU2VudDogV2VkbmVzZGF5LCBBcHJpbCAxNywgMjAxOSAxOjI3
-IFBNCj4+Pj4+Cj4+Pj4+IFRoZSBpLk1YOE0gZmFtaWx5IGlzIGEgc2V0IG9mIE5YUCBwcm9kdWN0
-IGZvY3VzIG9uIGRlbGl2ZXJpbmcgdGhlIGxhdGVzdCBhbmQKPj4+Pj4gZ3JlYXRlc3QgdmlkZW8g
-YW5kIGF1ZGlvIGV4cGVyaWVuY2UgY29tYmluaW5nIHN0YXRlLW9mLXRoZS1hcnQgbWVkaWEtc3Bl
-Y2lmaWMKPj4+Pj4gZmVhdHVyZXMgd2l0aCBoaWdoLXBlcmZvcm1hbmNlIHByb2Nlc3Npbmcgd2hp
-bGUgb3B0aW1pemVkIGZvciBsb3dlc3QgcG93ZXIKPj4+Pj4gY29uc3VtcHRpb24uCj4+Pj4+IGku
-TVg4TVEsIGkuTVg4TU0sIGkuTVg4TU4sIGV2ZW4gdGhlIGZ1cnR1cmUgaS5NWDhNUCBhcmUgYWxs
-IGJlbG9uZyB0bwo+Pj4+PiB0aGlzIGZhbWlseS4KPj4+Pj4KPj4+Pj4gVGhlIEdQQyBtb2R1bGUg
-aXMgdXNlZCB0byBtYW5hZ2UgdGhlIFBVIHBvd2VyIGRvbWFpbnMnIHBvd2VyIG9uL29mZi4gRm9y
-Cj4+Pj4+IHRoZSB3aG9sZSBpLk1YOE0gZmFtaWx5LCBkaWZmZXJlbnQgU29DIGhhcyBkaWZmZXJu
-dCBwb3dlciBkb21haW4gZGVzaWduLiB0aGUKPj4+Pj4gcG93ZXIgdXAgc2VxdWVuY2UgaGFzIHNp
-Z25pZmljYW50IGRpZmZlcmVuY2UuCj4+Pj4+IGFsbCB0aGUgcG93ZXIgc2VxdWVuY2UgbXVzdCBi
-ZSBndWFyYW50ZWVkIGJ5IFNXLiBTb21lIGRvbWFpbnMnIHBvd2VyIHVwCj4+Pj4+IHNlcXVlbmNl
-IG5lZWQgdG8gYWNjZXNzIHRoZSBTUkMgbW9kdWxlIG9yIHN1Yi1zeXN0ZW0gc3BlY2lmaWMgR1BS
-Lgo+Pj4+PiB0aGUgU1JDIHJlZ2lzdGVyICYgU1MncyByZWdpc3RlciBhcmUgbm90IGluIGluIHRo
-ZSBHUEMncyBtZW1vcnkgcmFuZ2UuCj4+Pj4+Cj4+Pj4+IGl0IG1ha2VzIHVzIGhhcmQgdG8gdXNl
-IHRoZSBHUEN2MiBkcml2ZXIgdG8gY292ZXIgYWxsIHRoZSBkaWZmZXJlbnQgcG93ZXIgdXAKPj4+
-Pj4gcmVxdWlyZW1lbnQuIEVhY2ggdGltZSwgYSBuZXcgU29DIGlzIGFkZGVkLCB3ZSBtdXN0IG1v
-ZGlmeSB0aGUgR1BDdjIgZHJpdmVyCj4+Pj4+IHRvIG1ha2UgaXQgcmVzdWFibGUgZm9yIGl0LiBh
-IGxvdCBvZiBjb2RlIG5lZWQgdG8gYmUgYWRkZWQgaW4gR1BDdjIgdG8gc3VwcG9ydCBpdC4KPj4+
-Pj4gd2UgbmVlZCB0byBhY2Nlc3MgdGhlIFNSQyAmIFNTJyBHUFIsIHRoZW4gdGhlIEdQQ3YyIGRy
-aXZlciBjYW4gTk9UIGJlCj4+Pj4+IHNlbGYtY29udGFpbmVkLiBBY2Nlc3NpbmcgdGhlIG5vbi1k
-cml2ZXIgc3BlY2lmaWMgbW9kdWxlJ3MgcmVnaXN0ZXIgaXMgYSBiYWQKPj4+Pj4gcHJhY3RpY2Uu
-IEFsdGhvdWdoLCB0aGUgR1BDIG1vZHVsZSBwcm92aWRlZCB0aGUgc2ltaWxhciBmdW5jdGlvbiBm
-b3IgUFUgcG93ZXIKPj4+Pj4gZG9tYWluLCBidXQgaXQgaXMgbm90IDEwMCUgY29tcGF0aWJsZSB3
-aXRoIEdQQ3YyLgo+Pj4+Pgo+Pj4+PiBUaGUgbW9zdCBpbXBvcnRhbnQgdGhpbmcgaXMgdGhhdCB0
-aGUgR1BDICYgU1JDIG1vZHVsZSBpcyBhIHNlY3VyaXR5IGNyaXRpY2FsCj4+Pj4+IHJlc291cmNl
-IHRoYXQgc2VjdXJpdHkgcGVybWlzc2lvbiBtdXN0IGJlIGNvbnNpZGVyZWQgd2hlbiBidWlsZGlu
-ZyB0aGUKPj4+Pj4gc2VjdXJpdHkgc3lzdGVtLiBUaGUgR1BDIG1vZHVsZSBpcyBub3Qgb25seSB1
-c2VkIGJ5IFBVIHBvd2VyIGRvbWFpbiBwb3dlcgo+Pj4+PiBvbi9vZmYuIEl0IGlzIGFsc28gdXNl
-ZCBieSB0aGUgVEYtQSBQU0NJIGNvZGUgdG8gZG8gdGhlIENQVSBjb3JlIHBvd2VyCj4+Pj4+IG1h
-bmFnZW1lbnQuIHRoZSBTUkMgbW9kdWxlIGNvbnRyb2wgdGhlIENQVSBDT1JFIHJlc2V0IGFuZCB0
-aGUgQ1BVIHJlc2V0Cj4+Pj4+IHZlY3RvciBhZGRyZXNzLiBpZiB3ZSBnaXZlIHRoZSBub24tc2Vj
-dXJlIHdvcmxkIHdyaXRlIHBlcm1pc3Npb24gdG8gU1JDLgo+Pj4+PiBTeXN0ZW0gY2FuIGJlIGVh
-c2lseSBpbmR1Y2VkIHRvIG1hbGljaW91cyBjb2RlLgo+Pj4+Cj4+Pj4gQ29uc2lkZXJpbmcgdGhl
-IHNlY3VyaXR5IGlzc3VlLCBpdCBsb29rcyB0byBtZSBhIHJpZ2h0IGRpcmVjdGlvbiB0byBtb3Zl
-IEdQQwo+Pj4+IHBvd2VyIGhhbmRsaW5nIGludG8gQVRGLgo+Pj4+IEl0IGFsc28gaGVscHMgYnVp
-bGQgYSBtb3JlIGdlbmVyaWMgZHJpdmVyIGFuZCBlYXNlIG90aGVyIE9TIGludGVncmF0aW9uCj4+
-Pj4gbmVlZGVkIGJ5IGN1c3RvbWVycyAoZS5nLiBRTlgsIFdpbjEwKS4KPj4+Pgo+Pj4+IEx1Y2Fz
-LAo+Pj4+IEhvdyBkbyB5b3UgdGhpbmsgb2YgaXQ/Cj4+Pgo+Pj4gSSBkb24ndCB5ZXQgYnV5IHRo
-ZSBzZWN1cml0eSBhcmd1bWVudC4gVGhlcmUgYXJlIG1hbnkgbW9yZSBzaGFyZWQgcGFydHMKPj4+
-IG9uIHRoZSBTb0MsIGxpa2UgdGhlIGNsb2NrIGNvbnRyb2xsZXIsIHRoYXQgd291bGQgbmVlZCB0
-byBiZSB0YWtlbiBhd2F5Cj4+PiBmcm9tIHRoZSBub24tc2VjdXJlIHdvcmxkIGlmIG9uZSB3b3Vs
-ZCB3YW50IHRvIHJ1biBhbiB1bnRydXN0ZWQgT1MKPj4+IGtlcm5lbCBvbiBhIGkuTVg4TSBzeXN0
-ZW0uCj4+Pgo+Pj4gVG8gcHJvcGVybHkgaW1wbGVtZW50IHNlY3VyaXR5IG9uIGFueSBpLk1YOE0g
-YmFzZWQgc3lzdGVtIHRoZSBmaXJtd2FyZQo+Pj4gd291bGQgbmVlZCB0byBncm93IHNvbWV0aGlu
-ZyBsaWtlIGEgZnVsbCBBUk0gU0NQSSBpbXBsZW1lbnRhdGlvbiwgc28KPj4+IGFsbCBzaGFyZWQg
-Y3JpdGljYWwgcGVyaXBoZXJhbHMgYXJlIHNvbGVseSB1bmRlciBmaXJtd2FyZSBjb250cm9sLgo+
-Pgo+PiBJdCBtaWdodCBiZSBwb3NzaWJsZSB0byByZXdvcmsgdGhpcyB0byB1c2Ugc29tZSBmb3Jt
-IG9mIFNDTUktb3Zlci1TTUPCoAo+PiBpbnN0ZWFkIG9mIHZlbmRvci1zcGVjaWZpYyBTTUNDQyBT
-SVAgY2FsbHMKPj4KPj4gK1NDTUkgbWFpbnRhaW5lcgo+Pgo+Pj4gSSBhZ3JlZSB0aGF0IGl0IG1p
-Z2h0IG1ha2Ugc2Vuc2UgdG8gbW92ZSBzb21lIHBhcnRzIGludG8gdGhlIGZpcm13YXJlCj4+PiBh
-bmQgaGF2ZSBtdWNoIHNpbXBsZXIgT1MgbGV2ZWwgZHJpdmVycywgYnV0IEkgZG9uJ3QgYWdyZWUg
-b24gdGhlCj4+PiBpbXBsZW1lbnRhdGlvbiBkaXJlY3Rpb24gdGFrZW4gaGVyZS4gR3Jvd2luZyBj
-dXN0b20gUFNDSSBleHRlbnNpb24KPj4+IGludGVyZmFjZXMgd2lsbCBvbmx5IGdldCB1cyBzbyBm
-YXIsIHdpdGhvdXQgc29sdmluZyB0aGUgc3lzdGVtIHNlY3VyaXR5Cj4+PiBpc3N1ZSBpbiBhIGhv
-bGlzdGljIHdheS4gSXQgaXMgbXkgc3Ryb25nIGJlbGlldmUgdGhhdCBvbmx5IGEgY29tcGxldGUK
-Pj4+IHJlYXJjaGl0ZWN0dXJlIG9mIHRoZSBPUyBzdXBwb3J0IG9uIHRvcCBvZiBhIEFSTSBTQ1BJ
-IGZpcm13YXJlCj4+PiBpbnRlcmZhY2UgY2FuIHNvbHZlIHRoaXMgcHJvcGVybHkuCj4+Cj4+IEhp
-ZGluZyBldmVyeXRoaW5nIGNyaXRpY2FsIGZvciBzZWN1cml0eSAoZXNwZWNpYWxseSBDQ00pIGJl
-aGluZCBhIFNDTUnCoAo+PiBpbnRlcmZhY2Ugd291bGQgYmUgYSBsYXJnZSBhbW91bnQgb2Ygd29y
-ayBidXQgaW50cm9kdWNpbmcgU0NNScKgCj4+IGluY3JlbWVudGFsbHkgKHN0YXJ0aW5nIHdpdGgg
-aW14OG1tIHBvd2VyKSB3b3VsZCBiZSB1c2VmdWwgYnkgaXRzZWxmwqAKPj4gYmVjYXVzZSBpdCBz
-aW1wbGlmaWVzIE9TIGltcGxlbWVudGF0aW9uLgo+IAo+IEknbSB0b3RhbGx5IG9uLWJvYXJkIHdp
-dGggYmFieSBzdGVwcyBpZiBpdCBnZXRzIHVzIGludG8gdGhlIHJpZ2h0Cj4gZGlyZWN0aW9uLCBz
-byB3aGF0IHlvdSBwcm9wb3NlIG1ha2VzIHNlbnNlIHRvIG1lLgo+IAo+IFdoYXQgSSdtIG5vdCBv
-a2F5IHdpdGggaXMgdHlpbmcgdGhlIHVwc3RyZWFtIGtlcm5lbCBpbnRvIGFuIGFkLWhvYwo+IGZp
-cm13YXJlIGludGVyZmFjZSBpbiB0aGUgbmFtZSBvZiBzeXN0ZW0gc2VjdXJpdHksCgpFeGFjdGx5
-LCBzb3JyeSBJIHNob3VsZCBoYXZlIHJlYWQgdGhyb3VnaCB0aGUgdGhyZWFkLiBJIGp1c3QgcmVz
-cG9uZGVkCmluIG90aGVyIGVtYWlsIHdpdGggc2ltaWxhciB0aG91Z2h0cy9jb25jZXJucy4KCi0t
-IApSZWdhcmRzLApTdWRlZXAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Replace boiler plate licenses texts with the SPDX license
+identifiers in Colibri/Apalis DTS files.
+
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+---
+v4:
+- Fix typo in the SPDX tag, noticed by Marc (probably was introduced when
+  manually removing unneeded brackets)
+
+v3:
+- Add Marcel's Acked-by tag
+- Remove un-needed parentheses in SPDX line
+- Replace MIT with GPL-2.0 in tegra124-apalis-emc.dtsi
+
+v2:
+- Address Stefan's comment: replace GPL-2.0+ instead GPL-2.0
+
+ arch/arm/boot/dts/tegra124-apalis-emc.dtsi | 39 ++-------------------
+ arch/arm/boot/dts/tegra124-apalis-eval.dts | 40 ++--------------------
+ arch/arm/boot/dts/tegra124-apalis.dtsi     | 40 ++--------------------
+ 3 files changed, 6 insertions(+), 113 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+index ca2c3a557895..d18eaf4a4a3a 100644
+--- a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+@@ -1,42 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2016 Toradex AG
++ * Copyright 2016-2019 Toradex AG
+  *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ / {
+diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+index eaee10ef6512..ceb3f6388c7d 100644
+--- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
++++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2016-2018 Toradex AG
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * Copyright 2016-2019 Toradex AG
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
+index 13c93cd507d8..fdc8a4c5aab6 100644
+--- a/arch/arm/boot/dts/tegra124-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2016-2018 Toradex AG
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * Copyright 2016-2019 Toradex AG
+  */
+ 
+ #include "tegra124.dtsi"
+-- 
+2.17.1
