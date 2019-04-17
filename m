@@ -1,69 +1,43 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
- Exynos542x SoCs
-Date: Wed, 17 Apr 2019 09:44:47 +0200
-Message-ID: <CAJKOXPf-CLMh1kLux0ev4FkT4x8CB+5O1wSNFmkjhFtVatX8jQ@mail.gmail.com>
-References: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
- <CANAwSgSX6q4M2EcWvEA3B6zQuY0DBrh-0_r3v__R--p7dzjs7w@mail.gmail.com>
- <CAJKOXPeUYw2DNEzRfKGzTmNAtg5mHJObVFHygKJ2eUdDpAFmOQ@mail.gmail.com> <CANAwSgR7a_gNGUSCkp1MH=t+V0iUfBEByn0UpO7=5xJXDHv7FA@mail.gmail.com>
+From: John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v1 3/3] net: ethernet: add ag71xx driver
+Date: Wed, 17 Apr 2019 09:46:25 +0200
+Message-ID: <e7b75751-85fe-db7a-a39e-d1991e104403@phrozen.org>
+References: <20190417062201.15745-1-o.rempel@pengutronix.de>
+ <20190417062201.15745-4-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgR7a_gNGUSCkp1MH=t+V0iUfBEByn0UpO7=5xJXDHv7FA@mail.gmail.com>
+In-Reply-To: <20190417062201.15745-4-o.rempel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Willy Wolff <willy.mh.wolff.ml@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Apr 2019 at 06:26, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Hi Krzysztof,
->
-> On Tue, 16 Apr 2019 at 15:49, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Mon, 15 Apr 2019 at 14:24, Anand Moon <linux.amoon@gmail.com> wrote:
-> > > Cache Coherent Interface (CCI) among Cortex-A15 and Cortex-A7, G2D, G3D and SSS
-> > >
-> > > Level 0 > CPU blocks such as Cortex-A15 (CA15), Cortex-A7 (CA7) are
-> > > joined as the member of Level 0 CCI bus
-> > >
-> > > Level 1 > Display engine block (DISP) and 2D graphic engines (G2D) are
-> > > directly connected to Level 1.
-> > >   DISP, MDMA, SSS.
-> > >
-> > > Level 2 > While all the other IP is connected to Level 1 bus via Level 2 bus
-> > >    G3D, MSCL, MFC, ISP, JPEG/Rotator/DMA/PERI, NAND/SD/EMMC.
-> > >
-> > > So my question is the mapped with the cci ip block correct.
-> > > Level 0 (cci_control0)
-> > > Level 1 (cci_control1)
-> > > Level 2 (cci_control1)
-> >
-> > Hi Anand,
-> >
-> > I do not understand the question - what is mapped with correctly or not?
-> >
-> > Best regards,
-> > Krzysztof
->
-> Following the https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/cci.txt
-> CCI node linked to CPU and DMA nodes for example.
->
-> On this line below diagram from Exynos 5422 UM show various IP block
-> linked to CCI level.
-> Below image just elaborate overall architecture of Exynos 5422 CCI.
->
-> [0] https://imgur.com/gallery/0xJSwGQ
->
-> So we should map the various IP block to corresponding CCI level.
 
-Willy's patch did not touch cci_control{0,1} nor any other CCI levels
-so I do not get what are you commenting. As for other CCI ports - we
-do not define them and I do not see any users of device CCI API
-(cci_enable_port_by_device() and cci_disable_port_by_device()). But
-feel free to propose patches changing this. In general - it is easier
-to discuss if you show the code/patch, not talk about some theoretical
-change.
+On 17/04/2019 08:22, Oleksij Rempel wrote:
+> index 000000000000..0e1374ddac63
+> --- /dev/null
+> +++ b/drivers/net/ethernet/atheros/ag71xx.c
+> @@ -0,0 +1,1971 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Atheros AR71xx built-in ethernet mac driver
+> + *
+> + *  Copyright (C) 2019 Oleksij Rempel<o.rempel@pengutronix.de>
+> + *  Copyright (C) 2008-2010 Gabor Juhos<juhosg@openwrt.org>
+> + *  Copyright (C) 2008 Imre Kaloz<kaloz@openwrt.org>
+> + *
 
-Best regards,
-Krzysztof
+Hi,
+
+I think this list needs to be extended by quite a bit. we should to a 
+git log --follow inside the openwrt tree. a ton of people have done a 
+lot of work on the codebase over the years.
+
+     John
+
+
+> + *  Based on Atheros' AG7100 driver
+> + */
