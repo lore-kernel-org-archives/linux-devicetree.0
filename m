@@ -1,106 +1,42 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
- for static replicator
-Date: Wed, 17 Apr 2019 07:57:50 -0600
-Message-ID: <CANLsYkwEBmn519ey-Vg-4-yfKFCaZv8kTDZ4sWpVzNTBOdtC=g@mail.gmail.com>
-References: <20190412102738.12679-1-leo.yan@linaro.org> <20190412102738.12679-2-leo.yan@linaro.org>
- <CANLsYkw1vaevcJZfjQfF9BeUvi1THGNtu+SH+LR008LjZOc7fA@mail.gmail.com> <20190417000959.GB6202@leoy-ThinkPad-X240s>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4 v2] drm/mcde: Add device tree bindings
+Date: Wed, 17 Apr 2019 09:00:32 -0500
+Message-ID: <CAL_Jsq+7yRD0NWF1RDMobe6rzKNoYB98Rqach3P+2oA47u8JRQ@mail.gmail.com>
+References: <20190416142844.12038-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190417000959.GB6202@leoy-ThinkPad-X240s>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190416142844.12038-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sean Paul <sean@poorly.run>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Apr 2019 at 18:10, Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Tue, Apr 16, 2019 at 02:18:40PM -0600, Mathieu Poirier wrote:
-> > Hi Leo,
-> >
-> > On Fri, 12 Apr 2019 at 04:28, Leo Yan <leo.yan@linaro.org> wrote:
-> > >
-> > > CoreSight uses below bindings for replicator:
-> > >
-> > >   Dynamic replicator, aka. configurable replicator:
-> > >     "arm,coresight-dynamic-replicator", "arm,primecell";
-> > >
-> > >   Static replicator, aka. non-configurable replicator:
-> > >     "arm,coresight-replicator";
-> > >
-> > > The compatible string "arm,coresight-replicator" is not an explicit
-> > > naming to express the replicator is 'static'.  To unify the naming
-> > > convention, this patch introduces a new compatible string
-> > > "arm,coresight-static-replicator" for the static replicator; the
-> > > compatible string "arm,coresight-replicator" is kept for backward
-> > > compatibility, but tag it as obsolete and suggest to use the new
-> > > compatible string.
-> > >
-> > > As result CoreSight replicator have below bindings:
-> > >
-> > >   Dynamic replicator:
-> > >     "arm,coresight-dynamic-replicator", "arm,primecell";
-> > >
-> > >   Static replicator:
-> > >     "arm,coresight-static-replicator";
-> > >     "arm,coresight-replicator"; (obsolete)
-> > >
-> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > > index f8aff65ab921..d02d160fa8ac 100644
-> > > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > > @@ -69,7 +69,10 @@ its hardware characteristcs.
-> > >
-> > >         * compatible: Currently supported value is (note the absence of the
-> > >           AMBA markee):
-> > > -               - "arm,coresight-replicator"
-> > > +               - Coresight Non-configurable Replicator:
-> > > +                       "arm,coresight-static-replicator";
-> > > +                       "arm,coresight-replicator"; (OBSOLETE. For backward
-> > > +                               compatibility and will be removed)
-> > >
-> > >         * port or ports: see "Graph bindings for Coresight" below.
-> > >
-> > > @@ -169,7 +172,7 @@ Example:
-> > >                 /* non-configurable replicators don't show up on the
-> > >                  * AMBA bus.  As such no need to add "arm,primecell".
-> > >                  */
-> > > -               compatible = "arm,coresight-replicator";
-> > > +               compatible = "arm,coresight-static-replicator";
-> > >
-> > >                 out-ports {
-> > >                         #address-cells = <1>;
-> > > --
-> > > 2.17.1
-> >
-> > Since this is a binding patch it needs to be sent on its own.
->
-> Thanks for reminding, Mathieu.
->
-> Since this is the second time you remind me to send DT binding related
-> patches separately, so I may misunderstand your meaning and want to get
-> clarification to avoid making the same mistake for many times.
->
-> Before I remembered in one patch set we need to organise patches with
-> sending document patch (or document changing patch) ahead and then
-> followed by the corresponding code change patch.  So this can give the
-> reviewers more clear context;  and this also can present the merging
-> dependency between document change patches and the code change patches.
->
-> This is the rule I followed in this patch set and I sent to CoreSight
-> and DT maintainers (and mailing lists) together.
->
-> Please let me know what you think about this?  And also welcome
-> Rob/Mark's suggestions.
-
-https://www.kernel.org/doc/Documentation/devicetree/bindings/submitting-patches.txt
-
->
-> Thanks,
-> Leo Yan
+T24gVHVlLCBBcHIgMTYsIDIwMTkgYXQgOToyOCBBTSBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxs
+ZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+Cj4gVGhpcyBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5k
+aW5ncyBmb3IgdGhlIFNULUVyaWNzc29uCj4gTXVsdGkgQ2hhbm5lbCBEaXNwbGF5IEVuZ2luZSBN
+Q0RFIGFzIGZvdW5kIGluIHRoZSBVODUwMAo+IFNvQ3MuCj4KPiBDYzogZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
+QGxpbmFyby5vcmc+Cj4gLS0tCj4gQ2hhbmdlTG9nIHYxLT52MjoKPiAtIERyb3AgdGhlIGdyYXBo
+IHJlcHJlc2VudGF0aW9uIG9mIGEgcG9ydCBmcm9tIERTSSBob3N0Cj4gICB0byBwYW5lbCBjaGls
+ZC4gSnVzdCBoYXZlIHBhbmVscyBvciBicmlkZ2VzIGJlIGNoaWxkcmVuCj4gICBvZiB0aGUgRFNJ
+IGhvc3QuCj4gLSBKdXN0IG5hbWUgdGhlIHBhbmVsIG5vZGUgInBhbmVsIi4KPiAtIE1vdmUgdGhl
+IEhTIGFuZCBMUC9FUyBjbG9ja3MgdG8gYmUgcHJvcGVydGllcyBvbiB0aGVpcgo+ICAgcmVzcGVj
+dGl2ZSBEU0kgaG9zdCBkZXZpY2Ugbm9kZXMuCj4gLSBDbGFyaWZ5IHRoYXQgdGhlIHRoaXJkIERT
+SSBibG9jayAoRFNJMikgZG9lcyBub3QgaGF2ZQo+ICAgYW55IGhpZ2ggc3BlZWQgY2xvY2suCj4g
+LS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3RlLG1jZGUudHh0ICB8IDEw
+NCArKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEwNCBpbnNlcnRpb25zKCsp
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9zdGUsbWNkZS50eHQKClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
