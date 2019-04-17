@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 4/8] arm64: dts: allwinner: Add ARM Mali GPU
- node for H6
-Date: Wed, 17 Apr 2019 19:30:27 +0200
-Message-ID: <20190417173031.9920-5-peron.clem@gmail.com>
+Subject: [PATCH v3 2/8] dt-bindings: gpu: mali-midgard: Add bus
+ clock bindings
+Date: Wed, 17 Apr 2019 19:30:25 +0200
+Message-ID: <20190417173031.9920-3-peron.clem@gmail.com>
 References: <20190417173031.9920-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBMOF3XSQKGQECYQJFCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBLWF3XSQKGQE7G3GEMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190417173031.9920-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,42 +18,39 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the mali gpu node to the H6 device-tree.
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
+Some SoCs adds a bus clock gate to the Mali Midgard GPU.
+
+Add the binding for the bus clock.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
-/dts/allwinner/sun50i-h6.dtsi
-index 16c5c3d0fd81..6aad06095c40 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -157,6 +157,20 @@
- 			allwinner,sram =3D <&ve_sram 1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
+ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 1b1a74129141..2e8bbce35695 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -31,6 +31,12 @@ Optional properties:
 =20
-+		gpu: gpu@1800000 {
-+			compatible =3D "allwinner,sun50i-h6-mali",
-+				     "arm,mali-t720";
-+			reg =3D <0x01800000 0x4000>;
-+			interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "job", "mmu", "gpu";
-+			clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-+			clock-names =3D "core", "bus";
-+			resets =3D <&ccu RST_BUS_GPU>;
-+			status =3D "disabled";
-+		};
+ - clocks : Phandle to clock for the Mali Midgard device.
+=20
++- clock-names : Specify the names of the clocks specified in clocks
++  when multiple clocks are present.
++    * core: clock driving the GPU itself (When only one clock is present,
++      assume it's this clock.)
++    * bus: bus clock for the GPU
 +
- 		syscon: syscon@3000000 {
- 			compatible =3D "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+ - mali-supply : Phandle to regulator for the Mali device. Refer to
+   Documentation/devicetree/bindings/regulator/regulator.txt for details.
+=20
 --=20
 2.17.1
 
