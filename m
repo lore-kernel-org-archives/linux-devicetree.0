@@ -1,50 +1,44 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/7] arm64: meson: g12a: add audio devices
-Date: Wed, 17 Apr 2019 07:58:19 -0700
-Message-ID: <7hmukon0fo.fsf@baylibre.com>
-References: <20190412125136.28232-1-jbrunet@baylibre.com> <7h5zrdpytg.fsf@baylibre.com> <CAOi56cU0dHoyRzTXeKGoiFwTms4WuJ7LV2EXTJLoEmOsC8OyrA@mail.gmail.com> <3eec8b122aa4912dfa67aeb37ad2c941c34c0a38.camel@baylibre.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Wed, 17 Apr 2019 11:10:49 -0400
+Message-ID: <20190417151049.GA18138@basecamp>
+References: <20190416235350.13742-1-masneyb@onstation.org>
+ <20190416235350.13742-3-masneyb@onstation.org>
+ <CAL_Jsq+YnjDGmLODXy6M1GpixMV=spfc809atGkrighvy=QPHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3eec8b122aa4912dfa67aeb37ad2c941c34c0a38.camel@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+YnjDGmLODXy6M1GpixMV=spfc809atGkrighvy=QPHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, patchwork-bot+notify@kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Wed, Apr 17, 2019 at 08:34:33AM -0500, Rob Herring wrote:
+> On Tue, Apr 16, 2019 at 6:54 PM Brian Masney <masneyb@onstation.org> wrote:
+> >
+> > Add new backlight bindings for the TI LM3630A dual-string white LED.
+> >
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > ---
+> > Rob: Since the common bindings aren't converted to the new JSON schema
+> > yet, I'm not sure how to do led-sources here. I would expect that we'd
+> > have the uint32-array on the common binding once it exists. I had to
+> > add it here to keep 'make dt_binding_check' happy. I left the
+> > description off though for that property since that'll come from common
+> > once its converted.
+> 
+> What was the error? '$ref' shouldn't be needed for this. The tooling
+> has no knowledge whether there's common schema or not. So you probably
+> have some pattern the meta-schema doesn't like and we need to fix.
 
-> On Tue, 2019-04-16 at 12:22 -0700, Kevin Hilman wrote:
->> On Tue, Apr 16, 2019 at 11:52 AM Kevin Hilman <khilman@baylibre.com> wrote:
->> > Jerome Brunet <jbrunet@baylibre.com> writes:
->> > 
->> > > This patchset adds most the audio devices of the g12a SoCs.
->> > > 
->> > > Kevin, couple of things worth noting:
->> > >  * This patch depends of the new audio clocks binding recently applied
->> > >    by Neil [0].
->> > 
->> > Was this supposed to be part of the clk-headers dependency PR I
->> > received?  /me looks... It looks like it's applied right after the tag I
->> > pulled, so I doesn't look like it.
->> > 
->> > If I should queue $SUBJECT series up for 5.2, I'll need another stable
->> > tag.
->> 
->> Also, this doesn't apply cleanly anymore to my v5.2/dt64 branch.  When
->> the stable tag is ready, do you mind doing a rebase? (or telling me
->> what it currently applies to, and I will do the rebase.)
->
-> Hi Kevin,
->
-> Until we have a solution for the drive strength in pinctrl, I won't be able to
-> submit the audio pins. I doubt it will happen in this cycle.
->
-> Without the pins, audio won't work anyway ... so no rush
->
-> If it is ok with you, I'll resend at the beginning of the next cycle. Clk and
-> ASoC deps will be merged by then, so things should be more straight forward.
+Ahh, you're right... it works without the $ref. I just needed the
+minItems and maxItems to fix the error I originally saw.
 
-Works for me, thanks.
+I'll wait for feedback from Dan before I send out another version with
+your changes.
 
-Kevin
+Thanks,
+
+Brian
