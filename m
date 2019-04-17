@@ -1,36 +1,88 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
-Date: Wed, 17 Apr 2019 14:36:01 +0100
-Message-ID: <CAPKp9uYun5VDxz9tYyF1O0jPN9Wwh5axUh5aNjyAX4NZJUNmBw@mail.gmail.com>
-References: <20190417053211.2195-1-ping.bai@nxp.com>
- <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <1555503195.2317.19.camel@pengutronix.de>
- <07e60b3e-7920-a79c-133e-6d0e21804ebc@arm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver bindings
+Date: Wed, 17 Apr 2019 08:47:57 -0500
+Message-ID: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+References: <20190414200824.28348-1-paul@crapouillou.net> <20190414200824.28348-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <07e60b3e-7920-a79c-133e-6d0e21804ebc@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190414200824.28348-2-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 2:23 PM Sudeep Holla <Sudeep.Holla@arm.com> wrote:
+On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil <paul@crapouillou.net> wrote:
 >
+> Add macros that can be used with the ingenic,lcd-mode property in the
+> devicetree node that corresponds to the ingenic-drm driver.
 
-[...]
+DRM is a Linuxism.
 
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>
+> Notes:
+>     v2: No change
+>
+>     v3: s/_DRM//
+>
+>  include/dt-bindings/display/ingenic,drm.h | 28 ++++++++++++++++++++++++++++
 
-Sorry, the above disclaimer was completely unintentional. I must have
-done something by mistake
-for this to happen once in series of replies on this thread.
+DRM is a Linuxism...
+
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 include/dt-bindings/display/ingenic,drm.h
+>
+> diff --git a/include/dt-bindings/display/ingenic,drm.h b/include/dt-bindings/display/ingenic,drm.h
+> new file mode 100644
+> index 000000000000..c749b8c346fc
+> --- /dev/null
+> +++ b/include/dt-bindings/display/ingenic,drm.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Ingenic JZ47xx KMS driver
+
+Pretty sure this file is not a KMS driver.
+
+> + *
+> + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
+> + */
+> +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> +
+> +#define JZ_LCD_GENERIC_16BIT                   0
+> +#define JZ_LCD_GENERIC_18BIT                   16
+
+We have some generic properties for defining the bus width already.
+Plus, in many cases this can be implied by the panel compatible. The
+exceptions are cases such as when both the ctrlr and panel support
+multiple modes.
+
+> +
+> +#define JZ_LCD_SPECIAL_TFT_1                   1
+> +#define JZ_LCD_SPECIAL_TFT_2                   2
+> +#define JZ_LCD_SPECIAL_TFT_3                   3
+> +
+> +#define JZ_LCD_NON_INTERLACED_TV_OUT           4
+> +#define JZ_LCD_INTERLACED_TV_OUT               6
+
+Wouldn't this be determined by the type of connector (composite vs.
+s-video/component)
+
+> +
+> +#define JZ_LCD_SINGLE_COLOR_STN                        8
+> +#define JZ_LCD_SINGLE_MONOCHROME_STN           9
+> +#define JZ_LCD_DUAL_COLOR_STN                  10
+> +#define JZ_LCD_DUAL_MONOCHROME_STN             11
+> +
+> +#define JZ_LCD_8BIT_SERIAL                     12
+> +#define JZ_LCD_LCM                             13
+> +
+> +#endif /* __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__ */
+> --
+> 2.11.0
+>
