@@ -1,148 +1,82 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH 2/3] drivers: devfreq: events: extend events by type of
- counted data
-Date: Wed, 17 Apr 2019 09:48:07 +0200
-Message-ID: <1555487288-4777-3-git-send-email-l.luba@partner.samsung.com>
-References: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190417074834eucas1p1faa327cb6394d899a8e107ba61f28fda@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, l.luba@partner.samsung.com
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 6/6] arm64: dts: allwinner: Remove useless phy-names from
+ EHCI and OHCI
+Date: Wed, 17 Apr 2019 09:58:29 +0200
+Message-ID: <20190417075829.u3oww5jtuhy3lxll@flea>
+References: <d930537cfe3124de37b8ecf4eaa02b68ec94cb40.1555403233.git-series.maxime.ripard@bootlin.com>
+ <587c094b69f88c2b534e1de5b441cf823ecf4d8e.1555403233.git-series.maxime.ripard@bootlin.com>
+ <CAGb2v64AP6MurTo7c0y+MvjMKm-TT6Jxxgiz=UMLCk26mr7VFg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5003271031061066867=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v64AP6MurTo7c0y+MvjMKm-TT6Jxxgiz=UMLCk26mr7VFg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb <linux-usb@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds posibility to choose what type of data should be counted
-by the PPMU counter. Now the type comes from DT where the event has been
-defined. When there is no 'event-data-type' the default value is used,
-which is 'read data in bytes'.
-It is needed when you want to know not only read+write data bytes but
-i.e. only write data in byte, or number of read requests, etc.
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/devfreq/event/exynos-ppmu.c | 38 +++++++++++++++++++++++++------------
- include/linux/devfreq-event.h       |  6 ++++++
- 2 files changed, 32 insertions(+), 12 deletions(-)
+--===============5003271031061066867==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eba47hpznmvzb4f6"
+Content-Disposition: inline
 
-diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-index c61de0b..e5f81a5 100644
---- a/drivers/devfreq/event/exynos-ppmu.c
-+++ b/drivers/devfreq/event/exynos-ppmu.c
-@@ -140,6 +140,7 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
- 	int id = exynos_ppmu_find_ppmu_id(edev);
- 	int ret;
- 	u32 pmnc, cntens;
-+	u32 evt_sel = edev->desc->data_type;
- 
- 	if (id < 0)
- 		return id;
-@@ -154,9 +155,12 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
- 	if (ret < 0)
- 		return ret;
- 
--	/* Set the event of Read/Write data count  */
--	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id),
--				PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT);
-+	/* Check if the data type has been defined in DT, use default if not */
-+	if (evt_sel == UINT_MAX)
-+		evt_sel = PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT;
-+
-+	/* Set the event of Read or Write or both (RDWR) data count  */
-+	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id), evt_sel);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -357,6 +361,7 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
- 	unsigned int pmnc, cntens;
- 	int id = exynos_ppmu_find_ppmu_id(edev);
- 	int ret;
-+	u32 evt_sel = edev->desc->data_type;
- 
- 	/* Enable all counters */
- 	ret = regmap_read(info->regmap, PPMU_V2_CNTENS, &cntens);
-@@ -368,24 +373,28 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
- 	if (ret < 0)
- 		return ret;
- 
--	/* Set the event of Read/Write data count  */
-+
-+	/* Set the event of proper data type counting.
-+	 * Check if the data type has been defined in DT,
-+	 * use default if not.
-+	 */
- 	switch (id) {
- 	case PPMU_PMNCNT0:
- 	case PPMU_PMNCNT1:
- 	case PPMU_PMNCNT2:
--		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
--				PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT);
--		if (ret < 0)
--			return ret;
-+		if (evt_sel == UINT_MAX)
-+			evt_sel = PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT;
- 		break;
- 	case PPMU_PMNCNT3:
--		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
--				PPMU_V2_EVT3_RW_DATA_CNT);
--		if (ret < 0)
--			return ret;
-+		if (evt_sel == UINT_MAX)
-+			evt_sel = PPMU_V2_EVT3_RW_DATA_CNT;
- 		break;
- 	}
- 
-+	ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id), evt_sel);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* Reset cycle counter/performance counter and enable PPMU */
- 	ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
- 	if (ret < 0)
-@@ -508,6 +517,7 @@ static int of_get_devfreq_events(struct device_node *np,
- 	struct device *dev = info->dev;
- 	struct device_node *events_np, *node;
- 	int i, j, count;
-+	int ret;
- 
- 	events_np = of_get_child_by_name(np, "events");
- 	if (!events_np) {
-@@ -544,6 +554,10 @@ static int of_get_devfreq_events(struct device_node *np,
- 		desc[j].driver_data = info;
- 
- 		of_property_read_string(node, "event-name", &desc[j].name);
-+		ret = of_property_read_u32(node, "event-data-type",
-+					   &desc[j].data_type);
-+		if (!ret)
-+			desc[i].data_type = UINT_MAX;
- 
- 		j++;
- 	}
-diff --git a/include/linux/devfreq-event.h b/include/linux/devfreq-event.h
-index 4db00b0..cc160b1 100644
---- a/include/linux/devfreq-event.h
-+++ b/include/linux/devfreq-event.h
-@@ -81,14 +81,20 @@ struct devfreq_event_ops {
-  * struct devfreq_event_desc - the descriptor of devfreq-event device
-  *
-  * @name	: the name of devfreq-event device.
-+ * @data_type	: the data type which is going to be counted in the register.
-  * @driver_data	: the private data for devfreq-event driver.
-  * @ops		: the operation to control devfreq-event device.
-  *
-  * Each devfreq-event device is described with a this structure.
-  * This structure contains the various data for devfreq-event device.
-+ * The data_type describes what is going to be counted in the register.
-+ * It might choose to count e.g. read requests, write data in bytes, etc.
-+ * The full supported list of types is present in specyfic header in:
-+ * include/dt-bindings/pmu/.
-  */
- struct devfreq_event_desc {
- 	const char *name;
-+	u32 data_type;
- 	void *driver_data;
- 
- 	const struct devfreq_event_ops *ops;
--- 
-2.7.4
+
+--eba47hpznmvzb4f6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Apr 16, 2019 at 04:43:48PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Apr 16, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > Neither the OHCI or EHCI bindings are using the phy-names property, so we
+> > can just drop it.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+>
+> for all the DT patches in this series.
+
+Applied 4, 5 and 6, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--eba47hpznmvzb4f6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLbcpQAKCRDj7w1vZxhR
+xSknAP46wW+xjJk4ujXBKrw2YeCaBRQPeNeoGmTT313kvTnjJQD+N+HQ+4lZ+rML
+KHcEOLC/HfFn1kq0OwG8WtmELDlmzQI=
+=E/As
+-----END PGP SIGNATURE-----
+
+--eba47hpznmvzb4f6--
+
+
+--===============5003271031061066867==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5003271031061066867==--
