@@ -1,76 +1,105 @@
-From: Frederic Chen <frederic.chen@mediatek.com>
-Subject: [RFC PATCH V1 5/6] media: platform: Add Mediatek DIP driver KConfig
-Date: Wed, 17 Apr 2019 18:45:10 +0800
-Message-ID: <20190417104511.21514-6-frederic.chen@mediatek.com>
-References: <20190417104511.21514-1-frederic.chen@mediatek.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 1/3] include: dt-bindings: add Performance Monitoring
+ Unit for Exynos
+Date: Wed, 17 Apr 2019 12:50:57 +0200
+Message-ID: <ed9df324-33ef-2e58-8b77-9a2561a4d6a4@partner.samsung.com>
+References: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190417074832eucas1p26eca3ed8bf754787b4860206ba542e1c@eucas1p2.samsung.com>
+        <1555487288-4777-2-git-send-email-l.luba@partner.samsung.com>
+        <3fcb6dde-7ccc-4da6-5f8b-c8338edaa155@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190417104511.21514-1-frederic.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3fcb6dde-7ccc-4da6-5f8b-c8338edaa155@samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds KConfig for Mediatek Digital Image Processing
-driver(DIP). DIP is embedded in Mediatek SoCs. It provides
-image format conversion, resizing, and rotation function.
+Hi Chanwoo,
 
-Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
----
- drivers/media/platform/Kconfig         |  2 ++
- drivers/media/platform/mtk-isp/Kconfig | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+)
- create mode 100644 drivers/media/platform/mtk-isp/Kconfig
+On 4/17/19 10:10 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> On 19. 4. 17. 오후 4:48, Lukasz Luba wrote:
+>> This patch add support of a new feature which can be used in DT:
+>> Performance Monitoring Unit with defined event data type.
+>> In this patch the event data types are defined for Exynos PPMU.
+>> The patch also updates the MAINTAINERS file accordingly.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   MAINTAINERS                           |  5 +++++
+>>   include/dt-bindings/pmu/exynos_ppmu.h | 24 ++++++++++++++++++++++++
+>>   2 files changed, 29 insertions(+)
+>>   create mode 100644 include/dt-bindings/pmu/exynos_ppmu.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 3671fde..f4aac78 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -12376,6 +12376,11 @@ L:	linux-scsi@vger.kernel.org
+>>   S:	Supported
+>>   F:	drivers/scsi/pm8001/
+>>   
+>> +PMU EXYNOS DT BINDINGS
+>> +M:	Lukasz Luba <l.luba@partner.samsung.com>
+>> +S:	Maintained
+>> +F:	include/dt-bindings/pmu/exynos_ppmu.h
+>> +
+> 
+> IMHO, I'm not sure that it is right of adding one dt-binding header file
+> to MAINTAINERS file. If right, I'm OK.
+> 
+> 
+>>   PNP SUPPORT
+>>   M:	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>>   S:	Maintained
+>> diff --git a/include/dt-bindings/pmu/exynos_ppmu.h b/include/dt-bindings/pmu/exynos_ppmu.h
+>> new file mode 100644
+>> index 0000000..a6971eb
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pmu/exynos_ppmu.h
+>> @@ -0,0 +1,24 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Samsung Exynos PPMU event types for counting in regs
+>> + *
+>> + * Copyright (c) 2019, Samsung
+>> + * Author: Lukasz Luba <l.luba@partner.samsung.com>
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_PMU_EXYNOS_PPMU_H
+>> +#define __DT_BINDINGS_PMU_EXYNOS_PPMU_H
+>> +
+>> +
+>> +#define PPMU_RO_BUSY_CYCLE_CNT		0x0
+>> +#define PPMU_WO_BUSY_CYCLE_CNT		0x1
+>> +#define PPMU_RW_BUSY_CYCLE_CNT		0x2
+>> +#define PPMU_RO_REQUEST_CNT		0x3
+>> +#define PPMU_WO_REQUEST_CNT		0x4
+>> +#define PPMU_RO_DATA_CNT		0x5
+>> +#define PPMU_WO_DATA_CNT		0x6
+>> +#define PPMU_RO_LATENCY			0x12
+>> +#define PPMU_WO_LATENCY			0x16
+>> +#define PPMU_V2_EVT3_RW_DATA_CNT	0x22
+> 
+> If we can select the data type for monitoring, it looks good to me.
+> But, when I developed the Exynos PPMU, I has not tested other data type
+> except for PPMU_RO_DATA_CNT and PPMU_WO_DATA_CNT.
+> 
+> Do you test all data types with PPMU device?
+Yes, I have tested all - 1 of them on Odroid XU4 with memory controller
+and they work. I haven't checked the last option for Exynos5433,
+but it should work since it was default option in your driver.
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index a505e9f5a1e2..ef08d48589a4 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -32,6 +32,8 @@ source "drivers/media/platform/davinci/Kconfig"
- 
- source "drivers/media/platform/omap/Kconfig"
- 
-+source "drivers/media/platform/mtk-isp/Kconfig"
-+
- config VIDEO_ASPEED
- 	tristate "Aspeed AST2400 and AST2500 Video Engine driver"
- 	depends on VIDEO_V4L2
-diff --git a/drivers/media/platform/mtk-isp/Kconfig b/drivers/media/platform/mtk-isp/Kconfig
-new file mode 100644
-index 000000000000..e5f36d1070ee
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/Kconfig
-@@ -0,0 +1,21 @@
-+config VIDEO_MEDIATEK_ISP_DIP_SUPPORT
-+	bool "Mediatek Digital Image Processing function"
-+	select DMA_SHARED_BUFFER
-+	select VIDEO_V4L2_SUBDEV_API
-+	select VIDEOBUF2_DMA_CONTIG
-+	select VIDEOBUF2_CORE
-+	select VIDEOBUF2_V4L2
-+	select VIDEOBUF2_MEMOPS
-+	select VIDEOBUF2_VMALLOC
-+	select MEDIA_CONTROLLER
-+
-+	default n
-+	help
-+	    Support the basic Digital Image Processing (DIP) driver.
-+
-+	    DIP driver provides image format conversion, resizing,
-+	    and rotation function through the low power hardware.
-+	    DIP also supports multiple output feature. It can
-+	    generate two or more output image with different effect
-+	    based on a single input image at the same time.
-+
--- 
-2.18.0
+Regards,
+Lukasz
+> 
+>> +
+>> +#endif
+>>
+> 
+> 
