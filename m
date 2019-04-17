@@ -1,372 +1,441 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v5 07/13] phy: Add usb phy support for hi3660 Soc of
- Hisilicon
-Date: Wed, 17 Apr 2019 15:19:06 +0800
-Message-ID: <be736cec-78ce-6d64-77a5-ff2aad5bbaf9@huawei.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com>
- <20190329041409.70138-8-chenyu56@huawei.com>
- <2be3f2cf-ce16-d4b4-0d07-dda2a25c76d8@ti.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH v2 2/2] phy: ralink: Add PHY driver for MT7621 PCIe PHY
+Date: Wed, 17 Apr 2019 09:33:42 +0200
+Message-ID: <CAMhs-H-4O0U1Fcn49yZdX9Uyv+DqTnkLkReKRXUqzrugMGWL8A@mail.gmail.com>
+References: <20190330055038.18958-1-sergio.paracuellos@gmail.com>
+ <20190330055038.18958-3-sergio.paracuellos@gmail.com> <a5236ba2-4403-d871-b0fe-1675356b4c0f@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2be3f2cf-ce16-d4b4-0d07-dda2a25c76d8@ti.com>
-Content-Language: en-US
+In-Reply-To: <a5236ba2-4403-d871-b0fe-1675356b4c0f@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: liuyu712@hisilicon.com, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Pengcheng Li <lpc.li@hisilicon.com>, Jianguo Sun <sunjianguo1@huawei.com>, Masahiro Yamada <yamada.masahiro>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, driverdev-devel@linuxdriverproject.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
 Hi Kishon,
 
-On 2019/4/17 14:42, Kishon Vijay Abraham I wrote:
+On Wed, Apr 17, 2019 at 7:58 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
 > Hi,
-> 
-> On 29/03/19 9:44 AM, Yu Chen wrote:
->> This driver handles usb phy power on and shutdown for hi3660 Soc of
->> Hisilicon.
->>
->> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Shawn Guo <shawnguo@kernel.org>
->> Cc: Pengcheng Li <lpc.li@hisilicon.com>
->> Cc: Jianguo Sun <sunjianguo1@huawei.com>
->> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->> Cc: Jiancheng Xue <xuejiancheng@hisilicon.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->> v1:
->> * Remove unused code and add comment for time delay as suggested by
->> Kishon Vijay Abraham I.
->> v2:
->> * Fix license declaration.
->> * Remove redundant parens.
->> * Remove unused member variables in struct hi3660_priv.
->> v4:
->> * Add comments for HI3660_USB_DEFAULT_PHY_PARAM.
->> * Add margin for usleep_range.
->> * Get regmap of otg_bc from parent's of_node.
->> ---
->> ---
->>  MAINTAINERS                             |   8 ++
->>  drivers/phy/hisilicon/Kconfig           |  10 ++
->>  drivers/phy/hisilicon/Makefile          |   1 +
->>  drivers/phy/hisilicon/phy-hi3660-usb3.c | 233 ++++++++++++++++++++++++++++++++
->>  4 files changed, 252 insertions(+)
->>  create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 3e5a5d263f29..c0057dd82dbd 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -16084,6 +16084,14 @@ L:	linux-usb@vger.kernel.org
->>  S:	Maintained
->>  F:	drivers/usb/roles/intel-xhci-usb-role-switch.c
->>  
->> +USB IP DRIVER FOR HISILICON KIRIN
->> +M:	Yu Chen <chenyu56@huawei.com>
->> +M:	Binghui Wang <wangbinghui@hisilicon.com>
->> +L:	linux-usb@vger.kernel.org
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> 
-> I don't seem to have received the dt-binding patch. Can you please resend with
-> updated tags?
-> 
+>
+> On 30/03/19 11:20 AM, Sergio Paracuellos wrote:
+> > This patch adds a driver for the PCIe PHY of MT7621 SoC.
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >  drivers/phy/ralink/Kconfig          |   7 +
+> >  drivers/phy/ralink/Makefile         |   1 +
+> >  drivers/phy/ralink/phy-mt7621-pci.c | 401 ++++++++++++++++++++++++++++
+> >  3 files changed, 409 insertions(+)
+> >  create mode 100644 drivers/phy/ralink/phy-mt7621-pci.c
+> >
+> > diff --git a/drivers/phy/ralink/Kconfig b/drivers/phy/ralink/Kconfig
+> > index 14fd219535ef..87943a10f210 100644
+> > --- a/drivers/phy/ralink/Kconfig
+> > +++ b/drivers/phy/ralink/Kconfig
+> > @@ -1,6 +1,13 @@
+> >  #
+> >  # PHY drivers for Ralink platforms.
+> >  #
+> > +config PHY_MT7621_PCI
+> > +     tristate "MediaTek MT7621 PCI PHY Driver"
+>
+> Shouldn't this be in drivers/phy/mediatek/ then?
+
+I am not sure about this, it is mediatek but it only appears on ralink so,
+I don't know where it should be placed. Maybe Neil has an opinion about this.
+
+> > +     depends on RALINK && OF
+>
+> Add depends on COMPILE_TEST.
+
+Will do.
+
+> > +     select GENERIC_PHY
+> > +     help
+> > +       Say 'Y' here to add support for MediaTek MT7621 PCI PHY driver,
+> > +
+> >  config PHY_RALINK_USB
+> >       tristate "Ralink USB PHY driver"
+> >       depends on RALINK || COMPILE_TEST
+> > diff --git a/drivers/phy/ralink/Makefile b/drivers/phy/ralink/Makefile
+> > index 5c9e326e8757..2052d5649863 100644
+> > --- a/drivers/phy/ralink/Makefile
+> > +++ b/drivers/phy/ralink/Makefile
+> > @@ -1 +1,2 @@
+> > +obj-$(CONFIG_PHY_MT7621_PCI) += phy-mt7621-pci.o
+> >  obj-$(CONFIG_PHY_RALINK_USB) += phy-ralink-usb.o
+> > diff --git a/drivers/phy/ralink/phy-mt7621-pci.c b/drivers/phy/ralink/phy-mt7621-pci.c
+> > new file mode 100644
+> > index 000000000000..118302c122ee
+> > --- /dev/null
+> > +++ b/drivers/phy/ralink/phy-mt7621-pci.c
+> > @@ -0,0 +1,401 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Mediatek MT7621 PCI PHY Driver
+> > + * Author: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > + */
+> > +
+> > +#include <dt-bindings/phy/phy.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +#include <mt7621.h>
+> > +#include <ralink_regs.h>
+> > +
+> > +#define RALINK_CLKCFG1                               0x30
+> > +#define CHIP_REV_MT7621_E2                   0x0101
+>
+> Is this PHY specific or SoC revision? If it is SoC, we should use
+> soc_device_attribute and soc_device_match.
+
+Depending on revision reset lines are inverted and somebypasses need
+to be performed to properly initialize the phy. I'll take a look of
+how this can be
+done better using soc_device_attribute and soc_device_match as you are
+pointing out here.
+
+> > +
+> > +#define PCIE_PORT_CLK_EN(x)                  BIT(24 + (x))
+> > +
+> > +#define RG_PE1_PIPE_REG                              0x02c
+> > +#define RG_PE1_PIPE_RST                              BIT(12)
+> > +#define RG_PE1_PIPE_CMD_FRC                  BIT(4)
+> > +
+> > +#define RG_P0_TO_P1_WIDTH                    0x100
+> > +#define RG_PE1_H_LCDDS_REG                   0x49c
+> > +#define RG_PE1_H_LCDDS_PCW                   GENMASK(30, 0)
+> > +#define RG_PE1_H_LCDDS_PCW_VAL(x)            ((0x7fffffff & (x)) << 0)
+> > +
+> > +#define RG_PE1_FRC_H_XTAL_REG                        0x400
+> > +#define RG_PE1_FRC_H_XTAL_TYPE                       BIT(8)
+> > +#define RG_PE1_H_XTAL_TYPE                   GENMASK(10, 9)
+> > +#define RG_PE1_H_XTAL_TYPE_VAL(x)            ((0x3 & (x)) << 9)
+> > +
+> > +#define RG_PE1_FRC_PHY_REG                   0x000
+> > +#define RG_PE1_FRC_PHY_EN                    BIT(4)
+> > +#define RG_PE1_PHY_EN                                BIT(5)
+> > +
+> > +#define RG_PE1_H_PLL_REG                     0x490
+> > +#define RG_PE1_H_PLL_BC                              GENMASK(23, 22)
+> > +#define RG_PE1_H_PLL_BC_VAL(x)                       ((0x3 & (x)) << 22)
+> > +#define RG_PE1_H_PLL_BP                              GENMASK(21, 18)
+> > +#define RG_PE1_H_PLL_BP_VAL(x)                       ((0xf & (x)) << 18)
+> > +#define RG_PE1_H_PLL_IR                              GENMASK(15, 12)
+> > +#define RG_PE1_H_PLL_IR_VAL(x)                       ((0xf & (x)) << 12)
+> > +#define RG_PE1_H_PLL_IC                              GENMASK(11, 8)
+> > +#define RG_PE1_H_PLL_IC_VAL(x)                       ((0xf & (x)) << 8)
+> > +#define RG_PE1_H_PLL_PREDIV                  GENMASK(7, 6)
+> > +#define RG_PE1_H_PLL_PREDIV_VAL(x)           ((0x3 & (x)) << 6)
+> > +#define RG_PE1_PLL_DIVEN                     GENMASK(3, 1)
+> > +#define RG_PE1_PLL_DIVEN_VAL(x)                      ((0x7 & (x)) << 1)
+> > +
+> > +#define RG_PE1_H_PLL_FBKSEL_REG                      0x4bc
+> > +#define RG_PE1_H_PLL_FBKSEL                  GENMASK(5, 4)
+> > +#define RG_PE1_H_PLL_FBKSEL_VAL(x)           ((0x3 & (x)) << 4)
+> > +
+> > +#define      RG_PE1_H_LCDDS_SSC_PRD_REG              0x4a4
+> > +#define RG_PE1_H_LCDDS_SSC_PRD                       GENMASK(15, 0)
+> > +#define RG_PE1_H_LCDDS_SSC_PRD_VAL(x)                ((0xffff & (x)) << 0)
+> > +
+> > +#define RG_PE1_H_LCDDS_SSC_DELTA_REG         0x4a8
+> > +#define RG_PE1_H_LCDDS_SSC_DELTA             GENMASK(11, 0)
+> > +#define RG_PE1_H_LCDDS_SSC_DELTA_VAL(x)              ((0xfff & (x)) << 0)
+> > +#define RG_PE1_H_LCDDS_SSC_DELTA1            GENMASK(27, 16)
+> > +#define RG_PE1_H_LCDDS_SSC_DELTA1_VAL(x)     ((0xff & (x)) << 16)
+> > +
+> > +#define RG_PE1_LCDDS_CLK_PH_INV_REG          0x4a0
+> > +#define RG_PE1_LCDDS_CLK_PH_INV                      BIT(5)
+> > +
+> > +#define RG_PE1_H_PLL_BR_REG                  0x4ac
+> > +#define RG_PE1_H_PLL_BR                              GENMASK(18, 16)
+> > +#define RG_PE1_H_PLL_BR_VAL(x)                       ((0x7 & (x)) << 16)
+> > +
+> > +#define      RG_PE1_MSTCKDIV_REG                     0x414
+> > +#define RG_PE1_MSTCKDIV                              GENMASK(7, 6)
+> > +#define RG_PE1_MSTCKDIV_VAL(x)                       ((0x3 & (x)) << 6)
+> > +
+> > +#define RG_PE1_FRC_MSTCKDIV                  BIT(5)
+> > +
+> > +#define MAX_PHYS     2
+> > +
+> > +/**
+> > + * struct mt7621_pci_phy_instance - Mt7621 Pcie PHY device
+> > + * @phy: pointer to the kernel PHY device
+> > + * @port_base: base register
+> > + * @index: internal ID to identify the Mt7621 PCIe PHY
+> > + */
+> > +struct mt7621_pci_phy_instance {
+> > +     struct phy *phy;
+> > +     void __iomem *port_base;
+> > +     u32 index;
+> > +};
+> > +
+> > +/**
+> > + * struct mt7621_pci_phy - Mt7621 Pcie PHY core
+> > + * @dev: pointer to device
+> > + * @phys: pointer to Mt7621 PHY device
+> > + * @nphys: number of PHY devices for this core
+> > + */
+> > +struct mt7621_pci_phy {
+> > +     struct device *dev;
+> > +     struct mt7621_pci_phy_instance **phys;
+> > +     int nphys;
+> > +};
+> > +
+> > +static inline u32 phy_read(struct mt7621_pci_phy_instance *instance, u32 reg)
+> > +{
+> > +     return readl(instance->port_base + reg);
+> > +}
+> > +
+> > +static inline void phy_write(struct mt7621_pci_phy_instance *instance,
+> > +                          u32 val, u32 reg)
+> > +{
+> > +     writel(val, instance->port_base + reg);
+> > +}
+> > +
+> > +static void mt7621_bypass_pipe_rst(struct mt7621_pci_phy *phy,
+> > +                                struct mt7621_pci_phy_instance *instance)
+> > +{
+> > +     u32 offset = (instance->index != 1) ?
+> > +             RG_PE1_PIPE_REG : RG_PE1_PIPE_REG + RG_P0_TO_P1_WIDTH;
+> > +     u32 reg;
+> > +
+> > +     reg = phy_read(instance, offset);
+> > +     reg &= ~(RG_PE1_PIPE_RST | RG_PE1_PIPE_CMD_FRC);
+> > +     reg |= (RG_PE1_PIPE_RST | RG_PE1_PIPE_CMD_FRC);
+> > +     phy_write(instance, reg, offset);
+> > +}
+> > +
+> > +static void mt7621_set_phy_for_ssc(struct mt7621_pci_phy *phy,
+> > +                                struct mt7621_pci_phy_instance *instance)
+> > +{
+> > +     struct device *dev = phy->dev;
+> > +     u32 reg = rt_sysc_r32(SYSC_REG_SYSTEM_CONFIG0);
+> > +     u32 offset;
+> > +     u32 val;
+> > +
+> > +     reg = (reg >> 6) & 0x7;
+> > +     /* Set PCIe Port PHY to disable SSC */
+> > +     /* Debug Xtal Type */
+> > +     val = phy_read(instance, RG_PE1_FRC_H_XTAL_REG);
+> > +     val &= ~(RG_PE1_FRC_H_XTAL_TYPE | RG_PE1_H_XTAL_TYPE);
+> > +     val |= RG_PE1_FRC_H_XTAL_TYPE;
+> > +     val |= RG_PE1_H_XTAL_TYPE_VAL(0x00);
+>
+> All this will be easier to maintain if regmap reg_field is used instead of
+> using readl/writel directly.
+
+I'll take a look of how phy_read and phy_write can be changed to use regmap.
+
+> > +     phy_write(instance, val, RG_PE1_FRC_H_XTAL_REG);
+> > +
+> > +     /* disable port */
+> > +     offset = (instance->index != 1) ?
+> > +             RG_PE1_FRC_PHY_REG : RG_PE1_FRC_PHY_REG + RG_P0_TO_P1_WIDTH;
+> > +     val = phy_read(instance, offset);
+> > +     val &= ~(RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
+> > +     val |= RG_PE1_FRC_PHY_EN;
+> > +     phy_write(instance, val, offset);
+> > +
+> > +     /* Set Pre-divider ratio (for host mode) */
+> > +     val = phy_read(instance, RG_PE1_H_PLL_REG);
+> > +     val &= ~(RG_PE1_H_PLL_PREDIV);
+> > +
+> > +     if (reg <= 5 && reg >= 3) { /* 40MHz Xtal */
+> > +             val |= RG_PE1_H_PLL_PREDIV_VAL(0x01);
+> > +             phy_write(instance, val, RG_PE1_H_PLL_REG);
+> > +             dev_info(dev, "Xtal is 40MHz\n");
+> > +     } else { /* 25MHz | 20MHz Xtal */
+> > +             val |= RG_PE1_H_PLL_PREDIV_VAL(0x00);
+> > +             phy_write(instance, val, RG_PE1_H_PLL_REG);
+> > +             if (reg >= 6) {
+> > +                     dev_info(dev, "Xtal is 25MHz\n");
+> > +
+> > +                     /* Select feedback clock */
+> > +                     val = phy_read(instance, RG_PE1_H_PLL_FBKSEL_REG);
+> > +                     val &= ~(RG_PE1_H_PLL_FBKSEL);
+> > +                     val |= RG_PE1_H_PLL_FBKSEL_VAL(0x01);
+> > +                     phy_write(instance, val, RG_PE1_H_PLL_FBKSEL_REG);
+> > +
+> > +                     /* DDS NCPO PCW (for host mode) */
+> > +                     val = phy_read(instance, RG_PE1_H_LCDDS_SSC_PRD_REG);
+> > +                     val &= ~(RG_PE1_H_LCDDS_SSC_PRD);
+> > +                     val |= RG_PE1_H_LCDDS_SSC_PRD_VAL(0x18000000);
+> > +                     phy_write(instance, val, RG_PE1_H_LCDDS_SSC_PRD_REG);
+> > +
+> > +                     /* DDS SSC dither period control */
+> > +                     val = phy_read(instance, RG_PE1_H_LCDDS_SSC_PRD_REG);
+> > +                     val &= ~(RG_PE1_H_LCDDS_SSC_PRD);
+> > +                     val |= RG_PE1_H_LCDDS_SSC_PRD_VAL(0x18d);
+> > +                     phy_write(instance, val, RG_PE1_H_LCDDS_SSC_PRD_REG);
+> > +
+> > +                     /* DDS SSC dither amplitude control */
+> > +                     val = phy_read(instance, RG_PE1_H_LCDDS_SSC_DELTA_REG);
+> > +                     val &= ~(RG_PE1_H_LCDDS_SSC_DELTA |
+> > +                              RG_PE1_H_LCDDS_SSC_DELTA1);
+> > +                     val |= RG_PE1_H_LCDDS_SSC_DELTA_VAL(0x4a);
+> > +                     val |= RG_PE1_H_LCDDS_SSC_DELTA1_VAL(0x4a);
+> > +                     phy_write(instance, val, RG_PE1_H_LCDDS_SSC_DELTA_REG);
+> > +             } else {
+> > +                     dev_info(dev, "Xtal is 20MHz\n");
+> > +             }
+> > +     }
+> > +
+> > +     /* DDS clock inversion */
+> > +     val = phy_read(instance, RG_PE1_LCDDS_CLK_PH_INV_REG);
+> > +     val &= ~(RG_PE1_LCDDS_CLK_PH_INV);
+> > +     val |= RG_PE1_LCDDS_CLK_PH_INV;
+> > +     phy_write(instance, val, RG_PE1_LCDDS_CLK_PH_INV_REG);
+> > +
+> > +     /* Set PLL bits */
+> > +     val = phy_read(instance, RG_PE1_H_PLL_REG);
+> > +     val &= ~(RG_PE1_H_PLL_BC | RG_PE1_H_PLL_BP | RG_PE1_H_PLL_IR |
+> > +              RG_PE1_H_PLL_IC | RG_PE1_PLL_DIVEN);
+> > +     val |= RG_PE1_H_PLL_BC_VAL(0x02);
+> > +     val |= RG_PE1_H_PLL_BP_VAL(0x06);
+> > +     val |= RG_PE1_H_PLL_IR_VAL(0x02);
+> > +     val |= RG_PE1_H_PLL_IC_VAL(0x01);
+> > +     val |= RG_PE1_PLL_DIVEN_VAL(0x02);
+> > +     phy_write(instance, val, RG_PE1_H_PLL_REG);
+> > +
+> > +     val = phy_read(instance, RG_PE1_H_PLL_BR_REG);
+> > +     val &= ~(RG_PE1_H_PLL_BR);
+> > +     val |= RG_PE1_H_PLL_BR_VAL(0x00);
+> > +     phy_write(instance, val, RG_PE1_H_PLL_BR_REG);
+> > +
+> > +     if (reg <= 5 && reg >= 3) { /* 40MHz Xtal */
+> > +             /* set force mode enable of da_pe1_mstckdiv */
+> > +             val = phy_read(instance, RG_PE1_MSTCKDIV_REG);
+> > +             val &= ~(RG_PE1_MSTCKDIV | RG_PE1_FRC_MSTCKDIV);
+> > +             val |= (RG_PE1_MSTCKDIV_VAL(0x01) | RG_PE1_FRC_MSTCKDIV);
+> > +             phy_write(instance, val, RG_PE1_MSTCKDIV_REG);
+> > +     }
+> > +}
+> > +
+> > +static int mt7621_pci_phy_init(struct phy *phy)
+> > +{
+> > +     struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
+> > +     struct mt7621_pci_phy *mphy = dev_get_drvdata(phy->dev.parent);
+> > +     u32 chip_rev_id = rt_sysc_r32(SYSC_REG_CHIP_REV);
+> > +
+> > +     if ((chip_rev_id & 0xFFFF) == CHIP_REV_MT7621_E2)
+> > +             mt7621_bypass_pipe_rst(mphy, instance);
+> > +
+> > +     mt7621_set_phy_for_ssc(mphy, instance);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int mt7621_pci_phy_power_on(struct phy *phy)
+> > +{
+> > +     struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
+> > +     u32 offset = (instance->index != 1) ?
+> > +             RG_PE1_FRC_PHY_REG : RG_PE1_FRC_PHY_REG + RG_P0_TO_P1_WIDTH;
+> > +     u32 val;
+> > +
+> > +     /* Enable PHY and disable force mode */
+> > +     val = phy_read(instance, offset);
+> > +     val &= ~(RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
+> > +     val |= (RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
+> > +     phy_write(instance, val, offset);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int mt7621_pci_phy_power_off(struct phy *phy)
+> > +{
+> > +     struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
+> > +     u32 offset = (instance->index != 1) ?
+> > +             RG_PE1_FRC_PHY_REG : RG_PE1_FRC_PHY_REG + RG_P0_TO_P1_WIDTH;
+> > +     u32 val;
+> > +
+> > +     /* Disable PHY */
+> > +     val = phy_read(instance, offset);
+> > +     val &= ~(RG_PE1_FRC_PHY_EN | RG_PE1_PHY_EN);
+> > +     val |= RG_PE1_FRC_PHY_EN;
+> > +     phy_write(instance, val, offset);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int mt7621_pci_phy_exit(struct phy *phy)
+> > +{
+> > +     struct mt7621_pci_phy_instance *instance = phy_get_drvdata(phy);
+> > +
+> > +     rt_sysc_m32(PCIE_PORT_CLK_EN(instance->index), 0, RALINK_CLKCFG1);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct phy_ops mt7621_pci_phy_ops = {
+> > +     .init           = mt7621_pci_phy_init,
+> > +     .exit           = mt7621_pci_phy_exit,
+> > +     .power_on       = mt7621_pci_phy_power_on,
+> > +     .power_off      = mt7621_pci_phy_power_off,
+> > +     .owner          = THIS_MODULE,
+> > +};
+> > +
+> > +static struct phy *mt7621_pcie_phy_of_xlate(struct device *dev,
+> > +                                         struct of_phandle_args *args)
+> > +{
+> > +     struct mt7621_pci_phy *mt7621_phy = dev_get_drvdata(dev);
+> > +
+> > +     if (args->args_count == 0)
+> > +             return mt7621_phy->phys[0]->phy;
+> > +
+> > +     if (WARN_ON(args->args[0] >= MAX_PHYS))
+> > +             return ERR_PTR(-ENODEV);
+> > +
+> > +     return mt7621_phy->phys[args->args[0]]->phy;
+> > +}
+> > +
+> > +static int mt7621_pci_phy_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct device_node *np = dev->of_node;
+> > +     struct device_node *child_np;
+> > +     struct phy_provider *provider;
+> > +     struct mt7621_pci_phy *phy;
+> > +     struct resource res;
+> > +     int port, ret;
+> > +     void __iomem *port_base;
+> > +
+> > +     phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> > +     if (!phy)
+> > +             return -ENOMEM;
+> > +
+> > +     phy->nphys = MAX_PHYS;
+> > +     phy->phys = devm_kcalloc(dev, phy->nphys,
+> > +                              sizeof(*phy->phys), GFP_KERNEL);
+> > +     if (!phy->phys)
+> > +             return -ENOMEM;
+> > +
+> > +     phy->dev = dev;
+> > +     platform_set_drvdata(pdev, phy);
+> > +
+> > +     ret = of_address_to_resource(np, 0, &res);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to get address resource(id-%d)\n", port);
+> > +             return ret;
+> > +     }
+>
+> Use platform_get_resource instead?
+
+Ok, I'll change this also to use platform_get_resource.
+
+>
 > Thanks
 > Kishon
-> 
-I were not add you to the cc list of the dt-binding patch before.
-This is the patch that you can find on patchwork:
-https://patchwork.kernel.org/patch/10876391/
 
-Thanks
-Yu Chen
+Thank you very much for the review. I will post all this changes to
+staging to be properly
+tested and resend a v3 with the final result.
 
->> +F:	drivers/phy/hisilicon/phy-hi3660-usb3.c
->> +
->>  USB ISP116X DRIVER
->>  M:	Olav Kongas <ok@artecdesign.ee>
->>  L:	linux-usb@vger.kernel.org
->> diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
->> index b40ee54a1a50..3c142f08987c 100644
->> --- a/drivers/phy/hisilicon/Kconfig
->> +++ b/drivers/phy/hisilicon/Kconfig
->> @@ -12,6 +12,16 @@ config PHY_HI6220_USB
->>  
->>  	  To compile this driver as a module, choose M here.
->>  
->> +config PHY_HI3660_USB
->> +	tristate "hi3660 USB PHY support"
->> +	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
->> +	select GENERIC_PHY
->> +	select MFD_SYSCON
->> +	help
->> +	  Enable this to support the HISILICON HI3660 USB PHY.
->> +
->> +	  To compile this driver as a module, choose M here.
->> +
->>  config PHY_HISTB_COMBPHY
->>  	tristate "HiSilicon STB SoCs COMBPHY support"
->>  	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
->> diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
->> index f662a4fe18d8..75ba64e2faf8 100644
->> --- a/drivers/phy/hisilicon/Makefile
->> +++ b/drivers/phy/hisilicon/Makefile
->> @@ -1,4 +1,5 @@
->>  obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
->> +obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
->>  obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
->>  obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
->>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
->> diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
->> new file mode 100644
->> index 000000000000..cc0af2c044d0
->> --- /dev/null
->> +++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
->> @@ -0,0 +1,233 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Phy provider for USB 3.0 controller on HiSilicon 3660 platform
->> + *
->> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
->> + *		http://www.huawei.com
->> + *
->> + * Authors: Yu Chen <chenyu56@huawei.com>
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#define PERI_CRG_CLK_EN4			0x40
->> +#define PERI_CRG_CLK_DIS4			0x44
->> +#define GT_CLK_USB3OTG_REF			BIT(0)
->> +#define GT_ACLK_USB3OTG				BIT(1)
->> +
->> +#define PERI_CRG_RSTEN4				0x90
->> +#define PERI_CRG_RSTDIS4			0x94
->> +#define IP_RST_USB3OTGPHY_POR			BIT(3)
->> +#define IP_RST_USB3OTG				BIT(5)
->> +
->> +#define PERI_CRG_ISODIS				0x148
->> +#define USB_REFCLK_ISO_EN			BIT(25)
->> +
->> +#define PCTRL_PERI_CTRL3			0x10
->> +#define PCTRL_PERI_CTRL3_MSK_START		16
->> +#define USB_TCXO_EN				BIT(1)
->> +
->> +#define PCTRL_PERI_CTRL24			0x64
->> +#define SC_CLK_USB3PHY_3MUX1_SEL		BIT(25)
->> +
->> +#define USBOTG3_CTRL0				0x00
->> +#define SC_USB3PHY_ABB_GT_EN			BIT(15)
->> +
->> +#define USBOTG3_CTRL2				0x08
->> +#define USBOTG3CTRL2_POWERDOWN_HSP		BIT(0)
->> +#define USBOTG3CTRL2_POWERDOWN_SSP		BIT(1)
->> +
->> +#define USBOTG3_CTRL3				0x0C
->> +#define USBOTG3_CTRL3_VBUSVLDEXT		BIT(6)
->> +#define USBOTG3_CTRL3_VBUSVLDEXTSEL		BIT(5)
->> +
->> +#define USBOTG3_CTRL4				0x10
->> +
->> +#define USBOTG3_CTRL7				0x1c
->> +#define REF_SSP_EN				BIT(16)
->> +
->> +/* This value config the default txtune parameter of the usb 2.0 phy */
->> +#define HI3660_USB_DEFAULT_PHY_PARAM		0x1c466e3
->> +
->> +struct hi3660_priv {
->> +	struct device *dev;
->> +	struct regmap *peri_crg;
->> +	struct regmap *pctrl;
->> +	struct regmap *otg_bc;
->> +	u32 eye_diagram_param;
->> +};
->> +
->> +static int hi3660_phy_init(struct phy *phy)
->> +{
->> +	struct hi3660_priv *priv = phy_get_drvdata(phy);
->> +	u32 val, mask;
->> +	int ret;
->> +
->> +	/* usb refclk iso disable */
->> +	ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS, USB_REFCLK_ISO_EN);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* enable usb_tcxo_en */
->> +	val = USB_TCXO_EN | (USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
->> +	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* assert phy */
->> +	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
->> +	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* enable phy ref clk */
->> +	val = SC_USB3PHY_ABB_GT_EN;
->> +	mask = val;
->> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL0, mask, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	val = REF_SSP_EN;
->> +	mask = val;
->> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL7, mask, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* exit from IDDQ mode */
->> +	mask = USBOTG3CTRL2_POWERDOWN_HSP | USBOTG3CTRL2_POWERDOWN_SSP;
->> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL2, mask, 0);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* delay for exit from IDDQ mode */
->> +	usleep_range(100, 120);
->> +
->> +	/* deassert phy */
->> +	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
->> +	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTDIS4, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* delay for phy deasserted */
->> +	usleep_range(10000, 15000);
->> +
->> +	/* fake vbus valid signal */
->> +	val = USBOTG3_CTRL3_VBUSVLDEXT | USBOTG3_CTRL3_VBUSVLDEXTSEL;
->> +	mask = val;
->> +	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL3, mask, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* delay for vbus valid */
->> +	usleep_range(100, 120);
->> +
->> +	ret = regmap_write(priv->otg_bc, USBOTG3_CTRL4,
->> +			priv->eye_diagram_param);
->> +	if (ret)
->> +		goto out;
->> +
->> +	return 0;
->> +out:
->> +	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
->> +	return ret;
->> +}
->> +
->> +static int hi3660_phy_exit(struct phy *phy)
->> +{
->> +	struct hi3660_priv *priv = phy_get_drvdata(phy);
->> +	u32 val;
->> +	int ret;
->> +
->> +	/* assert phy */
->> +	val = IP_RST_USB3OTGPHY_POR;
->> +	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	/* disable usb_tcxo_en */
->> +	val = USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START;
->> +	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
->> +	if (ret)
->> +		goto out;
->> +
->> +	return 0;
->> +out:
->> +	dev_err(priv->dev, "failed to exit phy ret: %d\n", ret);
->> +	return ret;
->> +}
->> +
->> +static struct phy_ops hi3660_phy_ops = {
->> +	.init		= hi3660_phy_init,
->> +	.exit		= hi3660_phy_exit,
->> +	.owner		= THIS_MODULE,
->> +};
->> +
->> +static int hi3660_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct phy_provider *phy_provider;
->> +	struct device *dev = &pdev->dev;
->> +	struct phy *phy;
->> +	struct hi3660_priv *priv;
->> +
->> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->dev = dev;
->> +	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +					"hisilicon,pericrg-syscon");
->> +	if (IS_ERR(priv->peri_crg)) {
->> +		dev_err(dev, "no hisilicon,pericrg-syscon\n");
->> +		return PTR_ERR(priv->peri_crg);
->> +	}
->> +
->> +	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +					"hisilicon,pctrl-syscon");
->> +	if (IS_ERR(priv->pctrl)) {
->> +		dev_err(dev, "no hisilicon,pctrl-syscon\n");
->> +		return PTR_ERR(priv->pctrl);
->> +	}
->> +
->> +	/* node of hi3660 phy is a sub-node of usb3_otg_bc */
->> +	priv->otg_bc = syscon_node_to_regmap(dev->parent->of_node);
->> +	if (IS_ERR(priv->otg_bc)) {
->> +		dev_err(dev, "no hisilicon,usb3-otg-bc-syscon\n");
->> +		return PTR_ERR(priv->otg_bc);
->> +	}
->> +
->> +	if (of_property_read_u32(dev->of_node, "hisilicon,eye-diagram-param",
->> +		&(priv->eye_diagram_param)))
->> +		priv->eye_diagram_param = HI3660_USB_DEFAULT_PHY_PARAM;
->> +
->> +	phy = devm_phy_create(dev, NULL, &hi3660_phy_ops);
->> +	if (IS_ERR(phy))
->> +		return PTR_ERR(phy);
->> +
->> +	phy_set_drvdata(phy, priv);
->> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->> +	return PTR_ERR_OR_ZERO(phy_provider);
->> +}
->> +
->> +static const struct of_device_id hi3660_phy_of_match[] = {
->> +	{.compatible = "hisilicon,hi3660-usb-phy",},
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, hi3660_phy_of_match);
->> +
->> +static struct platform_driver hi3660_phy_driver = {
->> +	.probe	= hi3660_phy_probe,
->> +	.driver = {
->> +		.name	= "hi3660-usb-phy",
->> +		.of_match_table	= hi3660_phy_of_match,
->> +	}
->> +};
->> +module_platform_driver(hi3660_phy_driver);
->> +
->> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("Hilisicon Hi3660 USB3 PHY Driver");
->>
-> 
-> .
-> 
+Best regards,
+    Sergio Paracuellos
