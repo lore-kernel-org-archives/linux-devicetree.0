@@ -1,45 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 03/10] of/irq: document properties for wakeup interrupt parent
-Date: Wed, 17 Apr 2019 16:36:36 +0200
-Message-ID: <CACRpkdZW8OhqmNdeC8KmiAN6iTDAm7NUzGGmu5+-3utdT+dtCg@mail.gmail.com>
-References: <20190313211844.29416-1-ilina@codeaurora.org> <20190313211844.29416-4-ilina@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] dt-bindings: spi: spi-mt65xx: add support for MT8516
+Date: Wed, 17 Apr 2019 15:38:46 +0100
+Message-ID: <20190417143846.GA5703@sirena.org.uk>
+References: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313211844.29416-4-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Doug Anderson <dianders@chromium.org>
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, fparent@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 10:19 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-> +Mapping the interrupt specifiers in the device tree can be done using the
-> +"irqdomain-map" property. The property contains interrupt specifier at the
-> +current interrupt controller followed by the interrupt specifier at the mapped
-> +interrupt controller.
-> +
-> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
-> +
-> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
-> +be provided to help interpret the valid bits of the incoming and mapped
-> +interrupt specifiers respectively.
-> +
-> +   Example:
-> +       irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
-> +       irqdomain-map-mask = <0xff 0>;
-> +       irqdomain-map-pass-thru = <0 0xff>;
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is looking a bit familiar to the existing interrupt-map that is
-used for PCI interrupts and Swizzling back to a set of PCI
-host interrupts.
+On Wed, Apr 17, 2019 at 04:47:16PM +0800, Leilk Liu wrote:
+> Add binding documentation of spi-mt65xx for MT8516 SOC.
 
-I tried to document interrupt-map here:
-https://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
-interrupt-map is a bit convoluted, so I don't know if it would be subject
-to reuse for this. I suspect that interrupt-map, despite the name,
-is for PCI only.
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yours,
-Linus Walleij
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly3OnMACgkQJNaLcl1U
+h9CDkgf7Bx0bnRJJVFtQpite9Bwk7qhLVPQLE2niAQnuTpnQfiPcVJNEYN1NZY77
+JJgxEgnbj2h9umXbA3LRx3dGJ7CzkEoJ+3UGI5nL8LA12cMpzT5xCfa+7wMgxnzh
+x06IziNXB7fkG7TWnk98S45A5ULUAHXOo24znTbZz+5SxfGw5H2E6lGKOaMBJhd9
+oMMqefjcLLQK+AGEk97o8crtziPHYHukAg5twenB9qQdOlSqHuywFQ7G+gStSRmO
+tSDUWRInPf6sJfRmoNw13qzP/ESvbq5onFc+dsoLfRDfqyhy/DMV7DAYAh4UJj9D
+3i/gX2LDoJmrRbIHACBjllcgOPV9wQ==
+=JoPM
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
