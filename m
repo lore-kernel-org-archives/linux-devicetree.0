@@ -1,73 +1,39 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 04/15] [media] mtk-mipicsi: add color format support
- for mt2712
-Date: Thu, 18 Apr 2019 09:39:44 +0800
-Message-ID: <1555551584.2407.10.camel@mtksdaap41>
-References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
-         <1555407015-18130-5-git-send-email-stu.hsieh@mediatek.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] ARM: sun8i: a83t: Enable USB OTG
+Date: Wed, 17 Apr 2019 23:27:03 +0200
+Message-ID: <20190417212703.7qq3nzjdvnceaim2@earth.universe>
+References: <20190416064024.20414-1-wens@kernel.org>
+Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555407015-18130-5-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="igqa3fbpnirkgubc"
+Return-path: <linux-sunxi+bncBDXMLNOH5ANRBY6E37SQKGQEADFYSMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190416064024.20414-1-wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stu:
 
-On Tue, 2019-04-16 at 17:30 +0800, Stu Hsieh wrote:
-> This patch add color format support for mt2712
+--igqa3fbpnirkgubc
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Without this patch, I think this driver still support these color
-format. In this patch, you just check for the non-supported color
-format.
+Hi,
 
-Regards,
-CK
+On Tue, Apr 16, 2019 at 02:40:17PM +0800, Chen-Yu Tsai wrote:
+> This is v4 of my A83T USB power supply / OTG series. Hopefully this is
+> the last revision even though it's kind of late in the -rc cycle for
+> the patches to make the next release. Fingers crossed.
 
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> ---
->  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> index ec4f6b503b32..16f6bc480f4e 100644
-> --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> @@ -138,6 +138,20 @@ static void mtk_mipicsi_remove_device(struct soc_camera_device *icd)
->  	(void)pm_runtime_put_sync(icd->parent);
->  }
->  
-> +static bool is_supported(const u32 pixformat)
-> +{
-> +	switch (pixformat) {
-> +	/* YUV422 */
-> +	case V4L2_PIX_FMT_YUYV:
-> +	case V4L2_PIX_FMT_UYVY:
-> +	case V4L2_PIX_FMT_YVYU:
-> +	case V4L2_PIX_FMT_VYUY:
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
->  				struct v4l2_format *f)
->  {
-> @@ -153,6 +167,12 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
->  	struct v4l2_mbus_framefmt *mf = &format.format;
->  	int ret = 0;
->  
-> +	if (!is_supported(pix->pixelformat)) {
-> +		dev_err(dev, "Format %x not support. set V4L2_PIX_FMT_YUYV as default\n",
-> +			pix->pixelformat);
-> +		pix->pixelformat = V4L2_PIX_FMT_YUYV;
-> +	}
-> +
->  	xlate = soc_camera_xlate_by_fourcc(icd, pix->pixelformat);
->  	if (xlate == NULL) {
->  		dev_err(dev, "Format 0x%x not found\n", pix->pixelformat);
+Patches 1-5 (i.e. all except DTS) queued to power-supply subsystem.
+
+-- Sebastian
+--igqa3fbpnirkgubc--
