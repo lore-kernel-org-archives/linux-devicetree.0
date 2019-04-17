@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 5/8] arm64: dts: allwinner: Add mali GPU
- supply for Pine H64
-Date: Wed, 17 Apr 2019 19:30:28 +0200
-Message-ID: <20190417173031.9920-6-peron.clem@gmail.com>
+Subject: [PATCH v3 6/8] arm64: dts: allwinner: Add mali GPU
+ supply for Beelink GS1
+Date: Wed, 17 Apr 2019 19:30:29 +0200
+Message-ID: <20190417173031.9920-7-peron.clem@gmail.com>
 References: <20190417173031.9920-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBM6F3XSQKGQEXYQ4P2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBNGF3XSQKGQEO2IIXHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190417173031.9920-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,19 +22,19 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY
 List-Id: devicetree@vger.kernel.org
 
 Enable and add supply to the Mali GPU node on the
-Pine H64 board.
+Beelink GS1 board.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/ar=
-m64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..e16a8c6738f9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -85,6 +85,11 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch=
+/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 0dc33c90dd60..21440d572f0a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -70,6 +70,11 @@
  	status =3D "okay";
  };
 =20
