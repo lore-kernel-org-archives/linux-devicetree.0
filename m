@@ -1,11 +1,16 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 29/31 v4] soc: ixp4xx: qmgr: Add DT bindings for IXP4xx qmgr
-Date: Wed, 17 Apr 2019 20:06:21 +0200
-Message-ID: <20190417180621.2818-1-linus.walleij@linaro.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Convert Allwinner SPDIF binding
+ to YAML
+Date: Wed, 17 Apr 2019 20:22:29 +0200
+Message-ID: <20190417182229.ih4c76zlktoz43no@flea>
+References: <4060ec46117ccf3cd643b8f1b9759ed44d38c5e7.1555330005.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqLuMObaNzrRMGDi-m=0B8AA7CYqJkrvD_K3cTmH7rdE4Q@mail.gmail.com>
+ <20190417064338.wuzjkixbg7noolwx@flea>
+ <CAL_Jsq+3rJqFjz-n3b3OUXRewpEh2-uFFDExnhEvPH0-t-gFJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1240814916174229661=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+3rJqFjz-n3b3OUXRewpEh2-uFFDExnhEvPH0-t-gFJQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,82 +20,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Intel IXP4xx AHB
-Queue Manager.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v3->v4:
-- Drop #queue-cells and just use a fixed resource size.
-ChangeLog v2->v3:
-- Rebased on v5.1-rc1
-- Drop oneOf in compatible, just list items.
-- Drop description on reg, just use maxItems: 1
-- Set '#queue-cells' as required
----
- .../misc/intel,ixp4xx-queue-manager.yaml      | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+--===============1240814916174229661==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tefkikc4bxoaaatp"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml b/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
-new file mode 100644
-index 000000000000..d2313b1d9405
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/misc/intel-ixp4xx-ahb-queue-manager.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Intel IXP4xx AHB Queue Manager
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  The IXP4xx AHB Queue Manager maintains queues as circular buffers in
-+  an 8KB embedded SRAM along with hardware pointers. It is used by both
-+  the XScale processor and the NPEs (Network Processing Units) in the
-+  IXP4xx for accelerating queues, especially for networking. Clients pick
-+  queues from the queue manager with foo-queue = <&qmgr N> where the
-+  &qmgr is a phandle to the queue manager and N is the queue resource
-+  number. The queue resources available and their specific purpose
-+  on a certain IXP4xx system will vary.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: intel,ixp4xx-ahb-queue-manager
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: Interrupt for queues 0-31
-+      - description: Interrupt for queues 32-63
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    qmgr: queue-manager@60000000 {
-+         compatible = "intel,ixp4xx-ahb-queue-manager";
-+         reg = <0x60000000 0x4000>;
-+         interrupts = <3 IRQ_TYPE_LEVEL_HIGH>, <4 IRQ_TYPE_LEVEL_HIGH>;
-+    };
--- 
-2.20.1
+
+--tefkikc4bxoaaatp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Wed, Apr 17, 2019 at 11:04:22AM -0500, Rob Herring wrote:
+> On Wed, Apr 17, 2019 at 1:43 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > On Tue, Apr 16, 2019 at 04:36:18PM -0500, Rob Herring wrote:
+> > > On Mon, Apr 15, 2019 at 7:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > >
+> > > > The Allwinner SoCs feature an SPDIF controller across multiple SoC
+> > > > generations.
+> > > >
+> > > > However, earlier generations were a bit simpler than the subsequent ones,
+> > > > and for example would always have RX and TX capabilities, and no reset
+> > > > lines.
+> > > >
+> > > > In order to express this, let's create two YAML schemas instead of the free
+> > > > form text we had before.
+> > >
+> > > The only difference is 'reset' is required in one? Perhaps better to
+> > > just not make 'reset' required til we figure out how to handle a
+> > > conditional like this. Seems like we discussed this and I probably
+> > > said to split things?
+> >
+> > We indeed discussed this, and this was one of the solutions to support
+> > this. I wanted to get the discussion started as of how exactly we want
+> > to support this kind of construct.
+> >
+> > I looked it up a bit, and it looks like json schema 7 introduces
+> > conditionals that would allow us to deal with this nicely.
+> >
+> > https://json-schema.org/understanding-json-schema/reference/conditionals.html
+> >
+> > Is that something we can switch to while we have not a lot of schemas,
+> > or would that require some significant work?
+>
+> We need check if the json-schema library supports this yet. I think it
+> should as there was an issue for it which is closed now.
+
+Apparently, it's supported since 3.0.0, that got released on the 24th
+of february.
+
+I mass converted the yaml-bindings code to use the draft 7, and the
+tests are passing (and a dtbs_check run seems legit too). So that went
+smoothly...
+
+> We'll then need to update the meta-schema and maybe the schema fixups
+> to handle this case.
+
+... except that after adding if, then and else to the meta-schemas, a
+schema using that construct doesn't do anything (well, anything more
+than what it is doing without if / then / else).
+
+Apart from the fact that it doesn't work as expected (yet), the syntax
+is pretty elegant, so I guess we should go for that.
+
+> We should have a test case in the library too.
+> Test cases are important given that if you get schemas wrong, the
+> result is silence.
+
+ACK
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--tefkikc4bxoaaatp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLdu5QAKCRDj7w1vZxhR
+xYlgAP97IqVF5fO1aPEzM1HFWtt8n6MTmx0022LTZi37wna52AEA1qrL1/YURm5l
+mRRl+31fa94EWSCcqxm7arPTopF0Iwk=
+=gP91
+-----END PGP SIGNATURE-----
+
+--tefkikc4bxoaaatp--
+
+
+--===============1240814916174229661==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1240814916174229661==--
