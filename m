@@ -1,103 +1,101 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
- for static replicator
-Date: Wed, 17 Apr 2019 08:09:59 +0800
-Message-ID: <20190417000959.GB6202@leoy-ThinkPad-X240s>
-References: <20190412102738.12679-1-leo.yan@linaro.org>
- <20190412102738.12679-2-leo.yan@linaro.org>
- <CANLsYkw1vaevcJZfjQfF9BeUvi1THGNtu+SH+LR008LjZOc7fA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of_net: add mtd-mac-address support to
+ of_get_mac_address()
+Date: Tue, 16 Apr 2019 17:29:16 -0700
+Message-ID: <d29bcf08-9299-8f2c-00bc-791b60658581@gmail.com>
+References: <1555445100-30936-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANLsYkw1vaevcJZfjQfF9BeUvi1THGNtu+SH+LR008LjZOc7fA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1555445100-30936-1-git-send-email-ynezz@true.cz>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 02:18:40PM -0600, Mathieu Poirier wrote:
-> Hi Leo,
+
+
+On 16/04/2019 13:05, Petr Štetiar wrote:
+> From: John Crispin <john@phrozen.org>
 > 
-> On Fri, 12 Apr 2019 at 04:28, Leo Yan <leo.yan@linaro.org> wrote:
-> >
-> > CoreSight uses below bindings for replicator:
-> >
-> >   Dynamic replicator, aka. configurable replicator:
-> >     "arm,coresight-dynamic-replicator", "arm,primecell";
-> >
-> >   Static replicator, aka. non-configurable replicator:
-> >     "arm,coresight-replicator";
-> >
-> > The compatible string "arm,coresight-replicator" is not an explicit
-> > naming to express the replicator is 'static'.  To unify the naming
-> > convention, this patch introduces a new compatible string
-> > "arm,coresight-static-replicator" for the static replicator; the
-> > compatible string "arm,coresight-replicator" is kept for backward
-> > compatibility, but tag it as obsolete and suggest to use the new
-> > compatible string.
-> >
-> > As result CoreSight replicator have below bindings:
-> >
-> >   Dynamic replicator:
-> >     "arm,coresight-dynamic-replicator", "arm,primecell";
-> >
-> >   Static replicator:
-> >     "arm,coresight-static-replicator";
-> >     "arm,coresight-replicator"; (obsolete)
-> >
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > index f8aff65ab921..d02d160fa8ac 100644
-> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > @@ -69,7 +69,10 @@ its hardware characteristcs.
-> >
-> >         * compatible: Currently supported value is (note the absence of the
-> >           AMBA markee):
-> > -               - "arm,coresight-replicator"
-> > +               - Coresight Non-configurable Replicator:
-> > +                       "arm,coresight-static-replicator";
-> > +                       "arm,coresight-replicator"; (OBSOLETE. For backward
-> > +                               compatibility and will be removed)
-> >
-> >         * port or ports: see "Graph bindings for Coresight" below.
-> >
-> > @@ -169,7 +172,7 @@ Example:
-> >                 /* non-configurable replicators don't show up on the
-> >                  * AMBA bus.  As such no need to add "arm,primecell".
-> >                  */
-> > -               compatible = "arm,coresight-replicator";
-> > +               compatible = "arm,coresight-static-replicator";
-> >
-> >                 out-ports {
-> >                         #address-cells = <1>;
-> > --
-> > 2.17.1
+> Many embedded devices have information such as MAC addresses stored
+> inside MTD devices. This patch allows us to add a property inside a node
+> describing a network interface. The new property points at a MTD
+> partition with an offset where the MAC address can be found.
 > 
-> Since this is a binding patch it needs to be sent on its own.
+> This patch has originated in OpenWrt some time ago, so in order to
+> consider usefulness of this patch, here are some real-world numbers
+> which hopefully speak for themselves:
+> 
+>   * mtd-mac-address                used 497 times in 357 device tree files
+>   * mtd-mac-address-increment      used  74 times in  58 device tree files
+>   * mtd-mac-address-increment-byte used   1 time  in   1 device tree file
+> 
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> [cleanup of the patch for upstream submission]
+> Signed-off-by: Petr Štetiar <ynezz@true.cz>
+> ---
 
-Thanks for reminding, Mathieu.
+[snip]
 
-Since this is the second time you remind me to send DT binding related
-patches separately, so I may misunderstand your meaning and want to get
-clarification to avoid making the same mistake for many times.
+> +static const void *of_get_mac_address_mtd(struct device_node *np)
+> +{
+> +#ifdef CONFIG_MTD
+> +	void *addr;
+> +	size_t retlen;
+> +	int size, ret;
+> +	u8 mac[ETH_ALEN];
+> +	phandle phandle;
+> +	const char *part;
+> +	const __be32 *list;
+> +	struct mtd_info *mtd;
+> +	struct property *prop;
+> +	u32 mac_inc = 0;
+> +	u32 inc_idx = ETH_ALEN-1;
+> +	struct device_node *mtd_np = NULL;
 
-Before I remembered in one patch set we need to organise patches with
-sending document patch (or document changing patch) ahead and then
-followed by the corresponding code change patch.  So this can give the
-reviewers more clear context;  and this also can present the merging
-dependency between document change patches and the code change patches.
+Reverse christmas tree would look a bit nicer here.
 
-This is the rule I followed in this patch set and I sent to CoreSight
-and DT maintainers (and mailing lists) together.
+> +
+> +	list = of_get_property(np, "mtd-mac-address", &size);
+> +	if (!list || (size != (2 * sizeof(*list))))
+> +		return NULL;
+> +
+> +	phandle = be32_to_cpup(list++);
+> +	if (phandle)
+> +		mtd_np = of_find_node_by_phandle(phandle);
+> +
+> +	if (!mtd_np)
+> +		return NULL;
+> +
+> +	part = of_get_property(mtd_np, "label", NULL);
+> +	if (!part)
+> +		part = mtd_np->name;
+> +
+> +	mtd = get_mtd_device_nm(part);
+> +	if (IS_ERR(mtd))
+> +		return NULL;
+> +
+> +	ret = mtd_read(mtd, be32_to_cpup(list), ETH_ALEN, &retlen, mac);
+> +	put_mtd_device(mtd);
+> +
+> +	of_property_read_u32(np, "mtd-mac-address-increment-byte", &inc_idx);
 
-Please let me know what you think about this?  And also welcome
-Rob/Mark's suggestions.
+of_property_read_u8() would probably be good here since this can't be 
+bigger than 5 anyway.
 
-Thanks,
-Leo Yan
+> +	if (inc_idx > ETH_ALEN-1)
+> +		return NULL; >
+> +	if (!of_property_read_u32(np, "mtd-mac-address-increment", &mac_inc))
+> +		mac[inc_idx] += mac_inc;
+
+If I use a number greater than and included 128; this will cause a roll 
+over, should this be range checked? Similarly, using 
+of_property_read_u8() might be a better fit?
+
+Other than those, LGTM
+-- 
+Florian
