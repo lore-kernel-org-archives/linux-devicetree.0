@@ -1,43 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt-bindings: spi: spi-mt65xx: add support for MT8516
-Date: Wed, 17 Apr 2019 15:38:46 +0100
-Message-ID: <20190417143846.GA5703@sirena.org.uk>
-References: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Date: Wed, 17 Apr 2019 15:43:20 +0100
+Message-ID: <20190417144309.GA21117@e107155-lin>
+References: <VI1PR0402MB3519F2EBBDB8DAB002EAAA2E87250@VI1PR0402MB3519.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, fparent@baylibre.com
+In-Reply-To: <VI1PR0402MB3519F2EBBDB8DAB002EAAA2E87250@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 17, 2019 at 02:30:53PM +0000, Jacky Bai wrote:
+>
+> Hi Lucas,
+>
+> Either SCMI or SCPI, I think it is initially designed for SOC that has
+> dedicated SCP to manage the SOC resource, but for i.MX8M, we don't have such
+> support. so just for the power domain support, do you have other suggestion
+> for it.
+>
 
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I disagree, I thought it was clear from my earlier email. All OSPM like
+Linux kernel cares is conformance to the interface. And SCMI/SCPI kind
+of interface doesn't mandate how to implement either at the hardware
+(you may or may not have dedicated processor) or software level(can do
+it in TF-A through SMC, or some remote process through mailbox)
 
-On Wed, Apr 17, 2019 at 04:47:16PM +0800, Leilk Liu wrote:
-> Add binding documentation of spi-mt65xx for MT8516 SOC.
+I am clearly against the custom SMC:
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+1. It will never end and it's put together without much design thoughts
+   just to address specific need of the hour.
+2. It gets obsolete very soon, mainly because of (1)
+3. Very platform and vendor specific and soon we will find ourselves
+   in ocean of such custom calls
 
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
+And I can definitely continue the list, but I have made the point.
+I think we already have enough of those custom SMC already now and it's
+high time to stop that non-sense for OSPM.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly3OnMACgkQJNaLcl1U
-h9CDkgf7Bx0bnRJJVFtQpite9Bwk7qhLVPQLE2niAQnuTpnQfiPcVJNEYN1NZY77
-JJgxEgnbj2h9umXbA3LRx3dGJ7CzkEoJ+3UGI5nL8LA12cMpzT5xCfa+7wMgxnzh
-x06IziNXB7fkG7TWnk98S45A5ULUAHXOo24znTbZz+5SxfGw5H2E6lGKOaMBJhd9
-oMMqefjcLLQK+AGEk97o8crtziPHYHukAg5twenB9qQdOlSqHuywFQ7G+gStSRmO
-tSDUWRInPf6sJfRmoNw13qzP/ESvbq5onFc+dsoLfRDfqyhy/DMV7DAYAh4UJj9D
-3i/gX2LDoJmrRbIHACBjllcgOPV9wQ==
-=JoPM
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
+--
+Regards,
+Sudeep
