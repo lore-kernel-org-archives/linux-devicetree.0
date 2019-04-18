@@ -1,48 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V2 0/4] Add RZ/G2M DU support
-Date: Thu, 18 Apr 2019 08:51:38 +0300
-Message-ID: <20190418055138.GA4806@pendragon.ideasonboard.com>
-References: <1555072685-59276-1-git-send-email-biju.das@bp.renesas.com>
+From: Nandor Han <nandor.han@vaisala.com>
+Subject: Re: [PATCH v2 1/2] power: reset: nvmem-reboot-mode: use NVMEM as
+ reboot mode write interface
+Date: Thu, 18 Apr 2019 09:29:08 +0300
+Message-ID: <b046dc29-002c-39a9-5a54-562c49adb691@vaisala.com>
+References: <20190411055341.9263-1-nandor.han@vaisala.com>
+ <20190411055341.9263-2-nandor.han@vaisala.com>
+ <20190417215649.ejrvd6zekfmvjtn5@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1555072685-59276-1-git-send-email-biju.das@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190417215649.ejrvd6zekfmvjtn5@earth.universe>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmlqdSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoZXMuCgpPbiBGcmksIEFwciAxMiwgMjAx
-OSBhdCAwMTozODowMVBNICswMTAwLCBCaWp1IERhcyB3cm90ZToKPiBUaGlzIHBhdGNoIHNlcmll
-cyBhaW1zIHRvIGFkZCBiaW5kaW5nL2RyaXZlciBzdXBwb3J0IGZvcgo+IFI4QTc3NEExKGEuay5h
-IFJaL0cyTSkgRFUgKHdoaWNoIGlzIHZlcnkgc2ltaWxhciB0byB0aGUgUjhBNzc5NiBEVSk7Cj4g
-aXQgaGFzIG9uZSBSR0Igb3V0cHV0LCBvbmUgTFZEUyBvdXRwdXQgYW5kIG9uZSBIRE1JIG91dHB1
-dC4KPiAKPiBUaGlzIHBhdGNoc2V0IGlzIGJhc2VkIG9uIGxpbnV4X25leHQgbmV4dC0yMDE5MDQx
-MSBicmFuY2guCj4gCj4gVjEtLT5WMgo+ICAgKiBJbmNvcnBvcmF0ZWQgS2llcmFuJ3MgcmV2aWV3
-IGNvbW1lbnQuCj4gICAgIChodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODk2
-MTY1LykKPiAKPiBCaWp1IERhcyAoNCk6Cj4gICBkdC1iaW5kaW5nczogZGlzcGxheTogcmVuZXNh
-czogZHU6IERvY3VtZW50IHRoZSByOGE3NzRhMSBiaW5kaW5ncwo+ICAgZHQtYmluZGluZ3M6IGRp
-c3BsYXk6IHJlbmVzYXM6IGx2ZHM6IERvY3VtZW50IHI4YTc3NGExIGJpbmRpbmdzCj4gICBkcm06
-IHJjYXItZHU6IEFkZCBSOEE3NzRBMSBzdXBwb3J0Cj4gICBkcm06IHJjYXItZHU6IGx2ZHM6IEFk
-ZCByOGE3NzRhMSBzdXBwb3J0CgpGb3IgdGhlIHdob2xlIHNlcmllcywKClJldmlld2VkLWJ5OiBM
-YXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+CgpJJ3Zl
-IHRha2VuIGl0IHRvIG15IHRyZWUgYW5kIHdpbGwgc3VibWl0IGEgcHVsbCByZXF1ZXN0LgoKPiAg
-Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgICAgfCAgMSAr
-Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgICAgIHwg
-IDIgKysKPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyAgICAgICAgICAg
-ICAgfCAzMCArKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
-L3JjYXJfbHZkcy5jICAgICAgICAgICAgICAgIHwgIDEgKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDM0
-IGluc2VydGlvbnMoKykKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On 4/18/19 12:56 AM, Sebastian Reichel wrote:
+> On Thu, Apr 11, 2019 at 05:54:09AM +0000, Han Nandor wrote:
+>> Add a new reboot mode write interface that is using an NVMEM cell
+>> to store the reboot mode magic.
+>>
+>> Signed-off-by: Nandor Han <nandor.han@vaisala.com>
+>> ---
+
+<snip>
+
+>> +module_platform_driver(nvmem_reboot_mode_driver);
+>> +
+>> +MODULE_AUTHOR("Nandor Han <nandor.han@vaisala.com>");
+>> +MODULE_DESCRIPTION("NVMEM reboot mode driver");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> I suppose as of bf7fbeeae6db "GPL v2" is deprecated, before it was
+> often read as GPL v2 only. In both cases it makes sense to just
+> use "GPL". Otherwise the driver looks fine to me, but I'm waiting
+> for Rob's review of the DT bindings before merging this.
+> 
+> -- Sebastian
+> 
+
+Thanks Sebastian.
+
+Do you want me to send a new revision with license changed to "GPL"?..or 
+will you change it when it's merged?
+
+Nandor
