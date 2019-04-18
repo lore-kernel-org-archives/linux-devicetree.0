@@ -1,121 +1,45 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v3 1/7] ARM: dts: sun8i: r40:
- bananapi-m2-ultra: Tie GMAC regulators to the PIO
-Date: Thu, 18 Apr 2019 14:45:12 +0200
-Message-ID: <20190418124512.theixlxnsghidpjp@flea>
-References: <1555492863-88860-1-git-send-email-pgreco@centosproject.org>
- <1555492863-88860-2-git-send-email-pgreco@centosproject.org>
- <20190417101757.traviffiulwnzr6x@flea>
- <666caeac-4297-17b0-065e-00b7fd9623b4@centosproject.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zqgbvc2dvbkaqti4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWXC4HSQKGQEWMUVHDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <666caeac-4297-17b0-065e-00b7fd9623b4-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Pablo =?utf-8?Q?Sebasti=C3=A1n?= Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v2 0/4]  Add drive-strength in Meson pinctrl driver
+Date: Thu, 18 Apr 2019 14:47:54 +0200
+Message-ID: <20190418124758.24022-1-glaroque@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
 
---zqgbvc2dvbkaqti4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-uA". The change to do so
+would be minimal and could be benefit to other platforms later on.
 
-Hi,
+Cheers
+Guillaume
 
-On Thu, Apr 18, 2019 at 09:25:19AM -0300, Pablo Sebasti=C3=A1n Greco wrote:
-> El 17/4/19 a las 07:17, Maxime Ripard escribi=C3=B3:
-> > On Wed, Apr 17, 2019 at 06:20:56AM -0300, Pablo Greco wrote:
-> > > When the GMAC support was added to the bananapi-m2-ultra, regulators
-> > > weren't tied to the pinctrl. Fix that.
-> > >
-> > > Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-> > > ---
-> > >   arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch=
-/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > > index c488aaa..3da3598 100644
-> > > --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > > +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > > @@ -201,6 +201,8 @@
-> > >   &pio {
-> > >   	pinctrl-names =3D "default";
-> > >   	pinctrl-0 =3D <&clk_out_a_pin>;
-> > > +	vcc-pa-supply =3D <&reg_aldo2>;
-> > You should list all the regulators that are needed for all the pin
-> > banks to operate properly, not just PA
-> Ok, I "think" I finally understand what you mean, so according to schemat=
-ics
-> in https://drive.google.com/file/d/0B4PAo2nW2KfndFpmZG1OOWJ5NEU/view, it
-> should look like this
-> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> index c488aaa..699579d 100644
-> --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> @@ -201,6 +201,12 @@
-> =C2=A0&pio {
-> =C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
-> =C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&clk_out_a_pin>;
-> +=C2=A0=C2=A0=C2=A0 vcc-pa-supply =3D <&reg_aldo2>;
-> +=C2=A0=C2=A0=C2=A0 vcc-pc-supply =3D <&reg_dcdc1>;
-> +=C2=A0=C2=A0=C2=A0 vcc-pd-supply =3D <&reg_dcdc1>;
-> +=C2=A0=C2=A0=C2=A0 vcc-pe-supply =3D <&reg_eldo1>;
-> +=C2=A0=C2=A0=C2=A0 vcc-pf-supply =3D <&reg_dcdc1>;
-> +=C2=A0=C2=A0=C2=A0 vcc-pg-supply =3D <&reg_dldo1>;
-> =C2=A0};
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
 
-That makes sense yep
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
 
-> =C2=A0&reg_aldo2 {
-> --
->
-> I couldn't find vcc-pb, vcc-ph or vcc-pi.
+Guillaume La Roque (4):
+  dt-bindings: pinctrl: add a 'drive-strength-uA' property
+  pinctrl: generic: add new 'drive-strength-uA' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-uA property
+  pinctrl: meson: add support of drive-strength-uA
 
-The R40 doesn't have them, so there's no suprise there :)
+ .../bindings/pinctrl/meson,pinctrl.txt        |   3 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 166 ++++++++++++++----
+ drivers/pinctrl/meson/pinctrl-meson.h         |  20 ++-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 174 insertions(+), 59 deletions(-)
 
-(if you ever want to find that info again in the future, the various
-vcc-p* that you need to find are in the datasheet)
-
-> If this is ok, I'll generate a v4 based on v2, and throw v3 in the trash
-> where it belongs
-
-Sounds good, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---zqgbvc2dvbkaqti4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLhxWAAKCRDj7w1vZxhR
-xYjxAP96S50pe+i0RxcXurVb6Gq6P3wILPZgfw2YZfFlBOqBVQD/Y3JUzQSgyTUg
-sFcR27YRufsmqYO5Euh1nl5UpP4MDAE=
-=6Yuo
------END PGP SIGNATURE-----
-
---zqgbvc2dvbkaqti4--
+-- 
+2.17.1
