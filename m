@@ -1,52 +1,76 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 3/3] regulator: slg51000: add slg51000 regulator driver
-Date: Thu, 18 Apr 2019 11:16:06 +0100
-Message-ID: <20190418101606.GC6702@sirena.org.uk>
-References: <cover.1555567784.git.eric.jeong.opensource@diasemi.com>
- <2e7559c6ad3fdc3c3b99690ebd7dbb4e35c0d184.1555567784.git.eric.jeong.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
+Subject: Applied "MAINTAINERS: slg51000 updates to the Dialog Semiconductor search terms" to the regulator tree
+Date: Thu, 18 Apr 2019 11:26:07 +0100 (BST)
+Message-ID: <20190418102607.5AFC811279BB@debutante.sirena.org.uk>
+References: <878724615d6edf4d1d8960fd4aa9058aaedab026.1555567784.git.eric.jeong.opensource@diasemi.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2e7559c6ad3fdc3c3b99690ebd7dbb4e35c0d184.1555567784.git.eric.jeong.opensource@diasemi.com>
+In-Reply-To: <878724615d6edf4d1d8960fd4aa9058aaedab026.1555567784.git.eric.jeong.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---oJ71EGRlYNjSvfq7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   MAINTAINERS: slg51000 updates to the Dialog Semiconductor search terms
 
-On Thu, Apr 18, 2019 at 03:09:44PM +0900, Eric Jeong wrote:
+has been applied to the regulator tree at
 
-> I updated regulator_ops structure to use use the helper function=20
-> which is regulator_is_enabled_regmap() instead reading status bits
-> for is_enabled() operation.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
-> v2: use regulator helper function for is_enabled()
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-There's also the get_status() operation which you should be able to
-implement using the status bits you were reading before - that lets
-the framework know if the regualtor is actually working which can help
-with error handling so it's good to do.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---oJ71EGRlYNjSvfq7
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly4TmYACgkQJNaLcl1U
-h9ANEwf/WWzURfos+VWeKjS1bNQaogms1MLqzXWk5S8SHI1/ND+lrwudCVJ4UXJ0
-kXg3qPfxyALM2k/7Ex2W1QaZ4WKoN/YbnEQPle9Ag79YTapMM74OMGt75O+hgbK7
-+jnsN+QwGYKfW1yUIKlH85OXbVpzvVjeJe83/QIR1hcEG5G0zMEeIRk0zTMILrGq
-DqwYKI/Y9eC85JYiEGTnR3ItFKE4ToWz0MOqqaaiGVUZqUGpYQDTHWdVkQXAdtLA
-amgNQaw+6NQ1JszQP86G145i9hez0O1tCE5d04yDYWEpP8/nh15ZoOLrmSW7rDG8
-ra0PO4F1Gciublx/QZGqV9R+bVLBQQ==
-=ZrKl
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---oJ71EGRlYNjSvfq7--
+>From 4b01c5afc1817a966065d7da0fb962cc591c6fad Mon Sep 17 00:00:00 2001
+From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Date: Thu, 18 Apr 2019 15:09:43 +0900
+Subject: [PATCH] MAINTAINERS: slg51000 updates to the Dialog Semiconductor
+ search terms
+
+This patch adds the slg51000 bindings doc and driver to the Dialog
+Semiconductor support list.
+
+Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf70b548..656c1cc6431e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4603,6 +4603,7 @@ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
++F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+ F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
+ F:	Documentation/devicetree/bindings/sound/da[79]*.txt
+ F:	drivers/gpio/gpio-da90??.c
+@@ -4618,6 +4619,7 @@ F:	drivers/power/supply/da9052-battery.c
+ F:	drivers/power/supply/da91??-*.c
+ F:	drivers/regulator/da903x.c
+ F:	drivers/regulator/da9???-regulator.[ch]
++F:	drivers/regulator/slg51000-regulator.[ch]
+ F:	drivers/thermal/da90??-thermal.c
+ F:	drivers/rtc/rtc-da90??.c
+ F:	drivers/video/backlight/da90??_bl.c
+-- 
+2.20.1
