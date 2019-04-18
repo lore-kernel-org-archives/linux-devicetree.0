@@ -1,41 +1,35 @@
-From: Chen-Yu Tsai <wens@kernel.org>
-Subject: [PATCH 2/3] arm64: dts: allwinner: axp803: add USB power supply node
-Date: Fri, 19 Apr 2019 00:18:03 +0800
-Message-ID: <20190418161804.17723-3-wens@kernel.org>
-References: <20190418161804.17723-1-wens@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: mtd: Add YAML schemas for the
+ generic NAND options
+Date: Thu, 18 Apr 2019 18:18:17 +0200
+Message-ID: <20190418181817.07969ae0@xps13>
+References: <88ac1ca97bc5dd0a0e40d7d828199331b3e01fb9.1554277681.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418161804.17723-1-wens@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <88ac1ca97bc5dd0a0e40d7d828199331b3e01fb9.1554277681.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Boris Brezillon <boris.brezillon@collabora.com>, linux-mtd@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
-
-The AXP803 has a VBUS power input. Add a device node for it,
-now that we support it.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm64/boot/dts/allwinner/axp803.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-index c3a618e1279a..f0349ef4bfdd 100644
---- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-@@ -185,4 +185,10 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	usb_power_supply: usb-power-supply {
-+		compatible = "x-powers,axp803-usb-power-supply",
-+			     "x-powers,axp813-usb-power-supply";
-+		status = "disabled";
-+	};
- };
--- 
-2.20.1
+SGkgTWF4aW1lLAoKTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4gd3Jv
+dGUgb24gV2VkLCAgMyBBcHIgMjAxOQowOTo0ODowNCArMDIwMDoKCj4gVGhlIE5BTkQgY2hpcHMg
+aW4gTVREIGhhdmUgYSBidW5jaCBvZiBnZW5lcmljIG9wdGlvbnMgdGhhdCBhcmUgbmVlZGVkIGlu
+IGEKPiBkZXZpY2UgdHJlZS4gQWRkIGEgWUFNTCBzY2hlbWFzIGZvciB0aG9zZS4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgo+IAo+
+IC0tLQo+IAoKU2VyaWVzIGFwcGxpZWQgdG8gCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3Nj
+bS9saW51eC9rZXJuZWwvZ2l0L210ZC9saW51eC5naXQgCmJyYW5jaCBuYW5kL25leHQuCgpUaGFu
+a3MsCk1pcXXDqGwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
