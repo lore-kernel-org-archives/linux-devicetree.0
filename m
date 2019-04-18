@@ -1,64 +1,67 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: Re: [PATCH v2 2/3] dmaengine: imx-sdma: Only check ratio on parts
- that support 1:1
-Date: Thu, 18 Apr 2019 08:54:07 +0000
-Message-ID: <1555577278.24617.6.camel@nxp.com>
-References: <20190328133828.20999-1-angus@akkea.ca>
-         <20190329152130.18411-1-angus@akkea.ca>
-         <20190329152130.18411-3-angus@akkea.ca>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v3 2/3] HID: quirks: Fix keyboard + touchpad on Lenovo
+ Miix 630 for DT
+Date: Thu, 18 Apr 2019 11:34:47 +0200
+Message-ID: <CAO-hwJKeACBPW52ej6mVeG4aVDYvGF8zEMtegonVwFjT-ZoLOQ@mail.gmail.com>
+References: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com> <20190415161108.16419-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190329152130.18411-3-angus@akkea.ca>
-Content-Language: en-US
-Content-ID: <180C68F3FABDB24BB48245062CAFE008@eurprd04.prod.outlook.com>
+In-Reply-To: <20190415161108.16419-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Angus Ainslie <angus.ainslie@puri.sm>, "angus@akkea.ca" <angus@akkea.ca>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "vkoul@kernel.org" <vkoul@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>"kernel@pengutronix.de" <kern>
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Jiri Kosina <jikos@kernel.org>, Lee Jones <lee.jones@linaro.org>, bjorn.andersson@linaro.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, agross@kernel.org, david.brown@linaro.org, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QWNrZWQtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCk9uIDIwMTktMDMtMjkg
-YXQgMTU6MjEgKzAwMDAsIEFuZ3VzIEFpbnNsaWUgKFB1cmlzbSkgd3JvdGU6DQo+IE9uIGlteDht
-cSBCMCBjaGlwLCBBSEIvU0RNQSBjbG9jayByYXRpbyAyOjEgY2FuJ3QgYmUgc3VwcG9ydGVkLA0K
-PiBzaW5jZSBTRE1BIGNsb2NrIHJhdGlvIGhhcyB0byBiZSBpbmNyZWFzZWQgdG8gMjUwTWh6LCBB
-SEIgY2FuJ3QgcmVhY2gNCj4gdG8gNTAwTWh6LCBzbyB1c2UgMToxIGluc3RlYWQuDQo+IA0KPiBU
-byBsaW1pdCB0aGlzIGNoYW5nZSB0byB0aGUgaW14OG1xIGZvciBub3cgdGhpcyBwYXRjaCBhbHNv
-IGFkZHMgYW4NCj4gaW04bXEtc2RtYSBjb21wYXRpYmxlIHN0cmluZy4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IEFuZ3VzIEFpbnNsaWUgKFB1cmlzbSkgPGFuZ3VzQGFra2VhLmNhPg0KPiAtLS0NCj4g
-wqBkcml2ZXJzL2RtYS9pbXgtc2RtYS5jIHwgMTUgKysrKysrKysrKysrKystDQo+IMKgMSBmaWxl
-IGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jIGIvZHJpdmVycy9kbWEvaW14LXNkbWEuYw0KPiBp
-bmRleCA1ZjNjMTM3OGI5MGUuLjk5ZDlmNDMxYWUyYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9k
-bWEvaW14LXNkbWEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jDQo+IEBAIC00MTks
-NiArNDE5LDcgQEAgc3RydWN0IHNkbWFfZHJpdmVyX2RhdGEgew0KPiDCoAlpbnQgY2huZW5ibDA7
-DQo+IMKgCWludCBudW1fZXZlbnRzOw0KPiDCoAlzdHJ1Y3Qgc2RtYV9zY3JpcHRfc3RhcnRfYWRk
-cnMJKnNjcmlwdF9hZGRyczsNCj4gKwlib29sIGNoZWNrX3JhdGlvOw0KPiDCoH07DQo+IMKgDQo+
-IMKgc3RydWN0IHNkbWFfZW5naW5lIHsNCj4gQEAgLTU1Nyw2ICs1NTgsMTMgQEAgc3RhdGljIHN0
-cnVjdCBzZG1hX2RyaXZlcl9kYXRhIHNkbWFfaW14N2QgPSB7DQo+IMKgCS5zY3JpcHRfYWRkcnMg
-PSAmc2RtYV9zY3JpcHRfaW14N2QsDQo+IMKgfTsNCj4gwqANCj4gK3N0YXRpYyBzdHJ1Y3Qgc2Rt
-YV9kcml2ZXJfZGF0YSBzZG1hX2lteDhtcSA9IHsNCj4gKwkuY2huZW5ibDAgPSBTRE1BX0NITkVO
-QkwwX0lNWDM1LA0KPiArCS5udW1fZXZlbnRzID0gNDgsDQo+ICsJLnNjcmlwdF9hZGRycyA9ICZz
-ZG1hX3NjcmlwdF9pbXg3ZCwNCj4gKwkuY2hlY2tfcmF0aW8gPSAxLA0KPiArfTsNCj4gKw0KPiDC
-oHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlX2lkIHNkbWFfZGV2dHlwZXNbXSA9
-IHsNCj4gwqAJew0KPiDCoAkJLm5hbWUgPSAiaW14MjUtc2RtYSIsDQo+IEBAIC01NzksNiArNTg3
-LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2VfaWQNCj4gc2RtYV9kZXZ0
-eXBlc1tdID0gew0KPiDCoAl9LCB7DQo+IMKgCQkubmFtZSA9ICJpbXg3ZC1zZG1hIiwNCj4gwqAJ
-CS5kcml2ZXJfZGF0YSA9ICh1bnNpZ25lZCBsb25nKSZzZG1hX2lteDdkLA0KPiArCX0sIHsNCj4g
-KwkJLm5hbWUgPSAiaW14OG1xLXNkbWEiLA0KPiArCQkuZHJpdmVyX2RhdGEgPSAodW5zaWduZWQg
-bG9uZykmc2RtYV9pbXg4bXEsDQo+IMKgCX0sIHsNCj4gwqAJCS8qIHNlbnRpbmVsICovDQo+IMKg
-CX0NCj4gQEAgLTU5Myw2ICs2MDQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBzZG1hX2R0X2lkc1tdID0NCj4gew0KPiDCoAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXgzMS1z
-ZG1hIiwgLmRhdGEgPSAmc2RtYV9pbXgzMSwgfSwNCj4gwqAJeyAuY29tcGF0aWJsZSA9ICJmc2ws
-aW14MjUtc2RtYSIsIC5kYXRhID0gJnNkbWFfaW14MjUsIH0sDQo+IMKgCXsgLmNvbXBhdGlibGUg
-PSAiZnNsLGlteDdkLXNkbWEiLCAuZGF0YSA9ICZzZG1hX2lteDdkLCB9LA0KPiArCXsgLmNvbXBh
-dGlibGUgPSAiZnNsLGlteDhtcS1zZG1hIiwgLmRhdGEgPSAmc2RtYV9pbXg4bXEsIH0sDQo+IMKg
-CXsgLyogc2VudGluZWwgKi8gfQ0KPiDCoH07DQo+IMKgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
-c2RtYV9kdF9pZHMpOw0KPiBAQCAtMTg1Miw3ICsxODY0LDggQEAgc3RhdGljIGludCBzZG1hX2lu
-aXQoc3RydWN0IHNkbWFfZW5naW5lICpzZG1hKQ0KPiDCoAlpZiAocmV0KQ0KPiDCoAkJZ290byBk
-aXNhYmxlX2Nsa19pcGc7DQo+IMKgDQo+IC0JaWYgKGNsa19nZXRfcmF0ZShzZG1hLT5jbGtfYWhi
-KSA9PSBjbGtfZ2V0X3JhdGUoc2RtYS0NCj4gPmNsa19pcGcpKQ0KPiArCWlmIChzZG1hLT5kcnZk
-YXRhLT5jaGVja19yYXRpbyAmJg0KPiArCcKgwqDCoMKgKGNsa19nZXRfcmF0ZShzZG1hLT5jbGtf
-YWhiKSA9PSBjbGtfZ2V0X3JhdGUoc2RtYS0NCj4gPmNsa19pcGcpKSkNCj4gwqAJCXNkbWEtPmNs
-a19yYXRpbyA9IDE7DQo+IMKgDQo+IMKgCS8qIEJlIHN1cmUgU0RNQSBoYXMgbm90IHN0YXJ0ZWQg
-eWV0ICov
+On Mon, Apr 15, 2019 at 6:11 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> Following up on commit 2bafa1e96254 ("HID: quirks: Fix keyboard + touchpad
+> on Lenovo Miix 630"), the devicetree (DT) identifier for the combo keyboard
+> + touchpad device is "elan,combo400-i2c", which differs from the ACPI ID,
+> thus if we want the quirk to work properly when booting via DT instead of
+> ACPI, we need to key off the DT id as well.
+>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/hid/hid-quirks.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> index 77ffba48cc73..00c08f8318b8 100644
+> --- a/drivers/hid/hid-quirks.c
+> +++ b/drivers/hid/hid-quirks.c
+> @@ -997,7 +997,8 @@ bool hid_ignore(struct hid_device *hdev)
+>                         return true;
+>                 /* Same with product id 0x0400 */
+>                 if (hdev->product == 0x0400 &&
+> -                   strncmp(hdev->name, "QTEC0001", 8) != 0)
+> +                   (strncmp(hdev->name, "QTEC0001", 8) != 0 ||
+> +                    strncmp(hdev->name, "elan,combo400-i2c", 17) != 0))
+
+I think we are taking the problem the wrong way here.
+
+When I first introduced 6ccfe64, I thought 0x0400 would be reserved
+for the elan_i2c touchpads only. But it turns out we are deliberately
+disabling valid HID touchpads hoping that they would be picked up by
+elan_i2c when elan_i2c has its own whitelist of devices.
+
+How about we turn this into list with the matching ones from elan_i2c:
+if ((hdev->product == 0x0400 || hdev->product == 0x0401) &&
+   (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
+    strncmp(hdev->name, "ELAN0100", 8) == 0 ||
+    ...
+    strncmp(hdev->name, "ELAN1000", 8) == 0))
+      return true;
+
+So next time we need to force binding a HID touchpad to elan_i2c, we
+can just blacklist here and whitelist it in elan_i2c.
+
+Cheers,
+Benjamin
+
+>                         return true;
+>                 break;
+>         }
+> --
+> 2.17.1
+>
