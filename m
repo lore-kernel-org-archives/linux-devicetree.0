@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] ARM: dts: sun8i: v40:
- bananapi-m2-berry: Enable GMAC ethernet controller
-Date: Thu, 18 Apr 2019 17:55:15 +0200
-Message-ID: <20190418155515.cb2saxlvthzhaozq@flea>
+Subject: Re: [PATCH v4 5/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Add Bluetooth device node
+Date: Thu, 18 Apr 2019 17:56:13 +0200
+Message-ID: <20190418155613.shiv7geoqyzfy4kf@flea>
 References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
- <1555600282-9405-2-git-send-email-pgreco@centosproject.org>
+ <1555600282-9405-6-git-send-email-pgreco@centosproject.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zbzvrvpxfhwci4pw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZV34LSQKGQETGCQHOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="7gshplb6vboqs5gc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBH544LSQKGQERJAERVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1555600282-9405-2-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+In-Reply-To: <1555600282-9405-6-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,68 +24,43 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-Dg
 List-Id: devicetree@vger.kernel.org
 
 
---zbzvrvpxfhwci4pw
+--7gshplb6vboqs5gc
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Thu, Apr 18, 2019 at 12:11:16PM -0300, Pablo Greco wrote:
-> Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
-> RTL8211E RGMII PHY tied to the GMAC.
-> The PMIC's DC1SW output provides power for the PHY, while the ALDO2
-> output provides I/O voltages on both sides.
+On Thu, Apr 18, 2019 at 12:11:20PM -0300, Pablo Greco wrote:
+> Since the bananapi-m2-ultra and the bananapi-m2-berry have the same
+> WiFi/Bluetooth, add the required nodes to the bananapi-m2-berry.
 >
 > Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 +++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+>  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 26 +++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 >
 > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-> index f05cabd..0d79e91 100644
+> index 78f4a1a..3d0bb7e 100644
 > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-> @@ -50,6 +50,7 @@
->  	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
->
->  	aliases {
-> +		ethernet0 = &gmac;
->  		serial0 = &uart0;
+> @@ -96,6 +96,8 @@
+>  	wifi_pwrseq: wifi_pwrseq {
+>  		compatible = "mmc-pwrseq-simple";
+>  		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+> +		clocks = <&ccu CLK_OUTA>;
+> +		clock-names = "ext_clock";
 >  	};
+>  };
 >
-> @@ -92,6 +93,22 @@
+> @@ -171,6 +173,11 @@
 >  	status = "okay";
 >  };
 >
-> +&gmac {
+> +&pio {
 > +	pinctrl-names = "default";
-> +	pinctrl-0 = <&gmac_rgmii_pins>;
-> +	phy-handle = <&phy1>;
-> +	phy-mode = "rgmii";
-> +	phy-supply = <&reg_dc1sw>;
-> +	status = "okay";
+> +	pinctrl-0 = <&clk_out_a_pin>;
 > +};
 > +
-> +&gmac_mdio {
-> +	phy1: ethernet-phy@1 {
-> +		compatible = "ethernet-phy-ieee802.3-c22";
-> +		reg = <1>;
-> +	};
-> +};
-> +
->  &i2c0 {
->  	status = "okay";
->
-> @@ -123,6 +140,13 @@
->  	status = "okay";
->  };
->
-> +&reg_aldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <2500000>;
-> +	regulator-max-microvolt = <2500000>;
-> +	regulator-name = "vcc-pa";
 
-And if patches 6 and 7 become the first one, you can drop the
-always-on here.
+I'm not sure you answered my question about why that is needed?
 
 Maxime
 
@@ -93,4 +68,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---zbzvrvpxfhwci4pw--
+--7gshplb6vboqs5gc--
