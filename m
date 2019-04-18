@@ -1,176 +1,179 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v2 1/2] power: reset: nvmem-reboot-mode: use NVMEM as
- reboot mode write interface
-Date: Wed, 17 Apr 2019 23:56:49 +0200
-Message-ID: <20190417215649.ejrvd6zekfmvjtn5@earth.universe>
-References: <20190411055341.9263-1-nandor.han@vaisala.com>
- <20190411055341.9263-2-nandor.han@vaisala.com>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal
+ zone node
+Date: Thu, 18 Apr 2019 03:28:56 +0000
+Message-ID: <VI1PR04MB4333D0D121B60E2CDCE820BEF3260@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20190411083236.9377-1-andy.tang@nxp.com>
+ <915c86d8-d00e-f1e1-e7f5-24bc225c8e42@linaro.org>
+ <AM6PR04MB4326561F037194D84CEB011AF3280@AM6PR04MB4326.eurprd04.prod.outlook.com>
+ <6be740a0-aaa7-6b49-ba82-8d04d47b2339@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fcbbndneer5y2eeg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190411055341.9263-2-nandor.han@vaisala.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Han Nandor <nandor.han@vaisala.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6be740a0-aaa7-6b49-ba82-8d04d47b2339@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---fcbbndneer5y2eeg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 11, 2019 at 05:54:09AM +0000, Han Nandor wrote:
-> Add a new reboot mode write interface that is using an NVMEM cell
-> to store the reboot mode magic.
->=20
-> Signed-off-by: Nandor Han <nandor.han@vaisala.com>
-> ---
->  drivers/power/reset/Kconfig             |  9 +++
->  drivers/power/reset/Makefile            |  1 +
->  drivers/power/reset/nvmem-reboot-mode.c | 76 +++++++++++++++++++++++++
->  3 files changed, 86 insertions(+)
->  create mode 100644 drivers/power/reset/nvmem-reboot-mode.c
->=20
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 6533aa560aa1..bb4a4e854f96 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -245,5 +245,14 @@ config POWER_RESET_SC27XX
->  	  PMICs includes the SC2720, SC2721, SC2723, SC2730
->  	  and SC2731 chips.
-> =20
-> +config NVMEM_REBOOT_MODE
-> +	tristate "Generic NVMEM reboot mode driver"
-> +	select REBOOT_MODE
-> +	help
-> +	  Say y here will enable reboot mode driver. This will
-> +	  get reboot mode arguments and store it in a NVMEM cell,
-> +	  then the bootloader can read it and take different
-> +	  action according to the mode.
-> +
->  endif
-> =20
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 0aebee954ac1..85da3198e4e0 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -29,3 +29,4 @@ obj-$(CONFIG_POWER_RESET_ZX) +=3D zx-reboot.o
->  obj-$(CONFIG_REBOOT_MODE) +=3D reboot-mode.o
->  obj-$(CONFIG_SYSCON_REBOOT_MODE) +=3D syscon-reboot-mode.o
->  obj-$(CONFIG_POWER_RESET_SC27XX) +=3D sc27xx-poweroff.o
-> +obj-$(CONFIG_NVMEM_REBOOT_MODE) +=3D nvmem-reboot-mode.o
-> diff --git a/drivers/power/reset/nvmem-reboot-mode.c b/drivers/power/rese=
-t/nvmem-reboot-mode.c
-> new file mode 100644
-> index 000000000000..816cfdab16a7
-> --- /dev/null
-> +++ b/drivers/power/reset/nvmem-reboot-mode.c
-> @@ -0,0 +1,76 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) Vaisala Oyj. All rights reserved.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot-mode.h>
-> +
-> +struct nvmem_reboot_mode {
-> +	struct reboot_mode_driver reboot;
-> +	struct nvmem_cell *cell;
-> +};
-> +
-> +static int nvmem_reboot_mode_write(struct reboot_mode_driver *reboot,
-> +				    unsigned int magic)
-> +{
-> +	int ret;
-> +	struct nvmem_reboot_mode *nvmem_rbm;
-> +
-> +	nvmem_rbm =3D container_of(reboot, struct nvmem_reboot_mode, reboot);
-> +
-> +	ret =3D nvmem_cell_write(nvmem_rbm->cell, &magic, sizeof(magic));
-> +	if (ret < 0)
-> +		dev_err(reboot->dev, "update reboot mode bits failed\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int nvmem_reboot_mode_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct nvmem_reboot_mode *nvmem_rbm;
-> +
-> +	nvmem_rbm =3D devm_kzalloc(&pdev->dev, sizeof(*nvmem_rbm), GFP_KERNEL);
-> +	if (!nvmem_rbm)
-> +		return -ENOMEM;
-> +
-> +	nvmem_rbm->reboot.dev =3D &pdev->dev;
-> +	nvmem_rbm->reboot.write =3D nvmem_reboot_mode_write;
-> +
-> +	nvmem_rbm->cell =3D devm_nvmem_cell_get(&pdev->dev, "reboot-mode");
-> +	if (IS_ERR(nvmem_rbm->cell)) {
-> +		dev_err(&pdev->dev, "failed to get the nvmem cell reboot-mode\n");
-> +		return PTR_ERR(nvmem_rbm->cell);
-> +	}
-> +
-> +	ret =3D devm_reboot_mode_register(&pdev->dev, &nvmem_rbm->reboot);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "can't register reboot mode\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id nvmem_reboot_mode_of_match[] =3D {
-> +	{ .compatible =3D "nvmem-reboot-mode" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, nvmem_reboot_mode_of_match);
-> +
-> +static struct platform_driver nvmem_reboot_mode_driver =3D {
-> +	.probe =3D nvmem_reboot_mode_probe,
-> +	.driver =3D {
-> +		.name =3D "nvmem-reboot-mode",
-> +		.of_match_table =3D nvmem_reboot_mode_of_match,
-> +	},
-> +};
-> +module_platform_driver(nvmem_reboot_mode_driver);
-> +
-> +MODULE_AUTHOR("Nandor Han <nandor.han@vaisala.com>");
-> +MODULE_DESCRIPTION("NVMEM reboot mode driver");
-> +MODULE_LICENSE("GPL v2");
-
-I suppose as of bf7fbeeae6db "GPL v2" is deprecated, before it was
-often read as GPL v2 only. In both cases it makes sense to just
-use "GPL". Otherwise the driver looks fine to me, but I'm waiting
-for Rob's review of the DT bindings before merging this.
-
--- Sebastian
-
---fcbbndneer5y2eeg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly3oR0ACgkQ2O7X88g7
-+pqQqA//TtgCVsWgzSVRHdGqQGgMQVbza8ej172YepxnzqwpQpzEYGQ6nuX69F2l
-wC2i4Spxj+0in0ckEm/oPbQO8yIjwQRKs07Frj2NCPzvsv9p6Y9SQYbu4HLWcF8A
-FFjQYllOdFR6T0ORRC0iVKADzVwKIoPXItEeVK7QVZxBF+Z7WhJj2L+LHtNcEyaQ
-jUV5WKcCbbLOh83t9+SkrD2K8iR6qq2AVLsPHT4Jnmjez0lGOe07jVRDVAv0PMq3
-ChRIs60bYb2wdRy82CtEiBDUymS4pXX6BQVpLLKf3tnf4vE2QhAC59zDhVa/58h7
-/bFnrV/bsf0iVaeGIIngrHt4byRfAyx8nRVf6Wl/2hn8V4mtRdPdmy5G7EfvNkBq
-HawK4jGh/2Krnp3T+NuJEgmvZ7gx+ZhLlok8Pwrh62FO/2F6fluVXcpcmaD49xkE
-y3EC8U+7+YV/kUk9YCiTIliGWetsO0pUFsn23Qj8NwJD0vg83p4AlKGlO/NCYZzj
-k25OO9IWRCIyRJKMwMqQziTTdKoLs6ja2g9dNeiw0kdfU3pE0Y1jg1H4R1KpNMuQ
-G6XYq7ibBPm7F7Qd+47e1qKQXyaROze/eckokN/E3tYnZoKIERJjkA8R91nlIRl8
-C1pU2CuO2QU65NIz9RcUHED558LpjfWnHwsOylowHZc3eD/PvN0=
-=tI3H
------END PGP SIGNATURE-----
-
---fcbbndneer5y2eeg--
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhbmllbCBMZXpjYW5vIDxk
+YW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPg0KPiBTZW50OiAyMDE55bm0NOaciDEy5pelIDIwOjE5
+DQo+IFRvOiBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9y
+Zw0KPiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7
+IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IHJ1aS56aGFuZ0BpbnRlbC5jb207
+DQo+IGVkdWJlenZhbEBnbWFpbC5jb20NCj4gU3ViamVjdDogUmU6IFtFWFRdIFJlOiBbUEFUQ0gg
+djVdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBvbmUgbW9yZSB0aGVybWFsDQo+IHpvbmUgbm9k
+ZQ0KPiANCj4gV0FSTklORzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5YUC4g
+RE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXpl
+IHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4gDQo+IA0KPiANCj4g
+T24gMTIvMDQvMjAxOSAwOTo0NywgQW5keSBUYW5nIHdyb3RlOg0KPiA+DQo+ID4+IC0tLS0tT3Jp
+Z2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6
+Y2Fub0BsaW5hcm8ub3JnPg0KPiA+PiBTZW50OiAyMDE55bm0NOaciDEy5pelIDM6MTUNCj4gPj4g
+VG86IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBzaGF3bmd1b0BrZXJuZWwub3JnDQo+
+ID4+IENjOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsN
+Cj4gPj4gbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsNCj4gPj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsgcnVpLnpoYW5n
+QGludGVsLmNvbTsgZWR1YmV6dmFsQGdtYWlsLmNvbQ0KPiA+PiBTdWJqZWN0OiBbRVhUXSBSZTog
+W1BBVENIIHY1XSBhcm02NDogZHRzOiBsczEwODhhOiBhZGQgb25lIG1vcmUNCj4gPj4gdGhlcm1h
+bCB6b25lIG5vZGUNCj4gPj4NCj4gPj4gV0FSTklORzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBv
+dXRzaWRlIG9mIE5YUC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+ID4+IGF0dGFjaG1lbnRzIHVu
+bGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2Fm
+ZS4NCj4gPj4NCj4gPj4NCj4gPj4NCj4gPj4gT24gMTEvMDQvMjAxOSAxMDozMiwgWXVhbnRpYW4g
+VGFuZyB3cm90ZToNCj4gPj4+IExzMTA4OGEgaGFzIDIgdGhlcm1hbCBzZW5zb3JzLCBjb3JlIGNs
+dXN0ZXIgYW5kIFNvQyBwbGF0Zm9ybS4gQ29yZQ0KPiA+Pj4gY2x1c3RlciBzZW5zb3IgaXMgdXNl
+ZCB0byBtb25pdG9yIHRoZSB0ZW1wZXJhdHVyZSBvZiBjb3JlIGFuZCBTb0MNCj4gPj4+IHBsYXRm
+b3JtIGlzIGZvciBwbGF0Zm9ybS4gVGhlIGN1cnJlbnQgZHRzIG9ubHkgc3VwcG9ydCB0aGUgZmly
+c3Qgc2Vuc29yLg0KPiA+Pj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBzZWNvbmQgc2Vuc29yIG5vZGUg
+dG8gZHRzIHRvIGVuYWJsZSBpdC4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlh
+biBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gPj4+IC0tLQ0KPiA+Pj4gdjU6DQo+ID4+PiAg
+ICAgICAtIHVwZGF0ZSB0aGUgdGhlcm1hbCB6b25lIG5hbWUgZHVlIHRvIHRoZSBsZW5ndGggbGlt
+aXRhdGlvbg0KPiA+Pj4gICAgICAgLSByZW1vdmUgY29vbGluZyBtYXAgaW4gcGxhdGZvcm0gem9u
+ZQ0KPiA+Pj4gdjQ6DQo+ID4+PiAgICAgICAtIHVzZSBoeXBoZW4gaW5zdGVhZCBvZiB1bmRlcnNj
+b3JlIGluIG5vZGUgbmFtZQ0KPiA+Pj4gdjM6DQo+ID4+PiAgICAgICAtIHVzZSBtb3JlIGRlc2Ny
+aXB0aXZlIG5hbWUgZm9yIGVhY2ggem9uZQ0KPiA+Pj4gdjI6DQo+ID4+PiAgICAgICAtIEFkZCBt
+b3JlIGluZm9ybWF0aW9uIGFib3V0IHNlbnNvcnMgdG8gZGVzY3JpcHRpb24NCj4gPj4+ICBhcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5kdHNpIHwgICAyOA0KPiA+PiAr
+KysrKysrKysrKysrKysrKysrKy0tLQ0KPiA+Pj4gIDEgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0
+aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiA+Pj4gYi9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5kdHNpDQo+ID4+PiBpbmRleCBkZTkz
+YjQyLi5kZTM5NjcyIDEwMDY0NA0KPiA+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiA+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiA+Pj4gQEAgLTEyOSwxOSArMTI5LDE5IEBADQo+
+ID4+PiAgICAgICB9Ow0KPiA+Pj4NCj4gPj4+ICAgICAgIHRoZXJtYWwtem9uZXMgew0KPiA+Pj4g
+LSAgICAgICAgICAgICBjcHVfdGhlcm1hbDogY3B1LXRoZXJtYWwgew0KPiA+Pj4gKyAgICAgICAg
+ICAgICBjb3JlLWNsdXN0ZXIgew0KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgIHBvbGxpbmct
+ZGVsYXktcGFzc2l2ZSA9IDwxMDAwPjsNCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICBwb2xs
+aW5nLWRlbGF5ID0gPDUwMDA+Ow0KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgIHRoZXJtYWwt
+c2Vuc29ycyA9IDwmdG11IDA+Ow0KPiA+Pj4NCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICB0
+cmlwcyB7DQo+ID4+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcHVfYWxlcnQ6IGNw
+dS1hbGVydCB7DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb3JlX2NsdXN0
+ZXJfYWxlcnQ6IGNvcmUtY2x1c3Rlci1hbGVydA0KPiA+Pj4gKyB7DQo+ID4+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJlID0gPDg1MDAwPjsNCj4gPj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9IDwyMDAw
+PjsNCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJw
+YXNzaXZlIjsNCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4+Pg0K
+PiA+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY3B1X2NyaXQ6IGNwdS1jcml0IHsN
+Cj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvcmVfY2x1c3Rlcl9jcml0OiBj
+b3JlLWNsdXN0ZXItY3JpdCB7DQo+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHRlbXBlcmF0dXJlID0gPDk1MDAwPjsNCj4gPj4+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9IDwyMDAwPjsNCj4gPj4+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJjcml0aWNhbCI7IEBAIC0xNTAsNw0K
+PiA+Pj4gKzE1MCw3IEBADQo+ID4+Pg0KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgIGNvb2xp
+bmctbWFwcyB7DQo+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXAwIHsNCj4g
+Pj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHJpcCA9IDwmY3B1X2Fs
+ZXJ0PjsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHJpcCA9
+IDwmY29yZV9jbHVzdGVyX2FsZXJ0PjsNCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgY29vbGluZy1kZXZpY2UgPQ0KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDwmY3B1MA0KPiA+PiBUSEVSTUFMX05PX0xJTUlUIFRI
+RVJNQUxfTk9fTElNSVQ+LA0KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDwmY3B1MQ0KPiA+PiBUSEVSTUFMX05PX0xJTUlUDQo+ID4+PiBUSEVSTUFM
+X05PX0xJTUlUPiwgQEAgLTE2Myw2ICsxNjMsMjYgQEANCj4gPj4+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH07DQo+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPj4+ICAg
+ICAgICAgICAgICAgfTsNCj4gPj4+ICsNCj4gPj4+ICsgICAgICAgICAgICAgcGxhdGZvcm0gew0K
+PiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwxMDAw
+PjsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICBwb2xsaW5nLWRlbGF5ID0gPDUwMDA+Ow0K
+PiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHRoZXJtYWwtc2Vuc29ycyA9IDwmdG11IDE+Ow0K
+PiA+Pj4gKw0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHRyaXBzIHsNCj4gPj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHBsYXRmb3JtLWFsZXJ0IHsNCj4gPj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGVtcGVyYXR1cmUgPSA8ODUwMDA+Ow0KPiA+
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoeXN0ZXJlc2lzID0gPDIw
+MDA+Ow0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlID0g
+InBhc3NpdmUiOw0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPj4+
+ICsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBsYXRmb3JtLWNyaXQgew0K
+PiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0ZW1wZXJhdHVyZSA9
+IDw5NTAwMD47DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh5
+c3RlcmVzaXMgPSA8MjAwMD47DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHR5cGUgPSAiY3JpdGljYWwiOw0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfTsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+Pj4gKyAgICAgICAg
+ICAgICB9Ow0KPiA+Pg0KPiA+Pg0KPiA+PiBVbmZvcnR1bmF0ZWx5LCB0aGUgZG9jdW1lbnRhdGlv
+biBzYXlzIHRoZSB0aGVybWFsIHpvbmUgbm9kZSBtdXN0DQo+ID4+IGNvbnRhaW4gYSAiY29vbGlu
+Zy1tYXBzIiBlbnRyeS4NCj4gPiBUaGF0J3MgYSBxdWVzdGlvbi4NCj4gPiBJZiBJIGFkZCAiY29v
+bGluZy1tYXBzIiwgdGhlbiBtdWx0aXBsZSB6b25lcyB3aWxsIHVzZSBzYW1lIGNvb2xpbmcgZGV2
+aWNlLg0KPiA+IElmIEkgZG9uJ3QsIGRvY3VtZW50YXRpb24gc2F5cyBpdCBpcyBhICIgUmVxdWly
+ZWQgcHJvcGVydGllcyIuDQo+ID4gSSBhbSB3b25kZXJpbmcgaG93IGl0IHdhcyBkZWFsdCB3aXRo
+IG9uIG90aGVyIHBsYXRmb3JtIHN1cHBvcnRpbmcgbXVsdGlwbGUNCj4gem9uZXMuDQo+IA0KPiBJ
+IHRoaW5rIHRoZSBwcm9ibGVtIGNvbWVzIGZyb20gdGhlIGZhY3QgdGhlcmUgYXJlIG5vIGdvdmVy
+bm9ycyBjYXBhYmxlIG9mDQo+IGhhbmRsaW5nIG11bHRpcGxlIHRoZXJtYWwgem9uZXMuDQo+IA0K
+PiBUaGUgYWRkaXRpb25hbCBjb29saW5nIGRldmljZSBpcyB0aGUgZGV2ZnJlcSBidXQgYXMgdGhl
+IG1hbGkgZHJpdmVyIGlzIG5vdA0KPiB1cHN0cmVhbSwgdGhlIGNvb2xpbmcgbWFwIGZvciB0aGlz
+IGRldmljZSBkb2VzIG5vdCBhcHBlYXIuIFdlIGNhbiBmaW5kIHRoZQ0KPiBkZWZpbml0aW9ucyBh
+bmQgdGhlIGRyaXZlciBpbiB0aGUgQU9TUCBbMV0uDQo+IA0KPiBNb3Jlb3ZlciwgdGhlIHBvd2Vy
+IGlzIHVzdWFsbHkgbWFuYWdlZCBieSB0aGUgSVBBIGdvdmVybm9yLCBidXQgdGhpcyBvbmUgY2Fu
+DQo+IG5vdCBoYW5kbGUgbXVsdGlwbGUgdGhlcm1hbCB6b25lcywgc28gdGhlIGNvb2xpbmcgZGV2
+aWNlcyBhcmUgam9pbmVkIHRvZ2V0aGVyDQo+IGludG8gYSBzaW5nbGUgdGhlcm1hbCB6b25lIHdp
+dGggdGhlaXIgY29udHJpYnV0aW9uIHRvIHRoZSBjb29saW5nIGVmZmVjdC4NCj4gDQo+IE90aGVy
+IGRlZmluaXRpb25zIEkgaGF2ZSBzZWVuIHVwc3RyZWFtIGFyZSBpbmNvbXBsZXRlIG9yIGJyb2tl
+bi4NCj4gDQo+IFsxXQ0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
+b2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZhbmRyb2lkLmcNCj4gb29nbGVzb3VyY2UuY29tJTJG
+a2VybmVsJTJGaGlrZXktbGluYXJvJTJGJTJCJTJGcmVmcyUyRmhlYWRzJTJGYW5kcg0KPiBvaWQt
+aGlrZXktbGluYXJvLTQuMTQlMkZhcmNoJTJGYXJtNjQlMkZib290JTJGZHRzJTJGaGlzaWxpY29u
+JTJGaGkzNjYwLg0KPiBkdHNpJTIzMTM0MCZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5keS50YW5nJTQw
+bnhwLmNvbSU3QzU1OTIxOGIxNjIyZQ0KPiA0NjAzMjUxOTA4ZDZiZjQxMGU0YiU3QzY4NmVhMWQz
+YmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlNw0KPiBDNjM2OTA2NjgzNDY2ODM2OTg1
+JmFtcDtzZGF0YT05NTJ4SWNycjExZyUyQjBubDJsZ0tyRzE4U2xSVmdHVjZMJTINCj4gQk1CTDNV
+NlVhaVElM0QmYW1wO3Jlc2VydmVkPTANCkludGVyZXN0aW5nLiBJIHRoaW5rIHdlIGhhdmUgdG8g
+YWNjZXB0IHRoZSBpbXBlcmZlY3QgZm9yIG5vdy4NCg0KSGkgU2hhd24sDQpBbnkgY29tbWVudHM/
+DQoNCkJSLA0KQW5keQ0KPiANCj4gPiBIaSBTaGF3biwNCj4gPiBXaGF0J3MgeW91ciBvcGluaW9u
+cyBhYm91dCB0aGlzPw0KPiANCj4gDQo+IA0KPiAtLQ0KPiANCj4gPGh0dHBzOi8vZXVyMDEuc2Fm
+ZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3Lmxpbg0K
+PiBhcm8ub3JnJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRhbmclNDBueHAuY29tJTdDNTU5
+MjE4YjE2MjJlNA0KPiA2MDMyNTE5MDhkNmJmNDEwZTRiJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNk
+OTljNWMzMDE2MzUlN0MwJTdDMCU3Qw0KPiA2MzY5MDY2ODM0NjY4MzY5ODUmYW1wO3NkYXRhPUFK
+dklYOFhKN2oxSmtwV2dEMUd1RWNQMmtlTzBSMW11QXp0OQ0KPiBuMnFnVTNBJTNEJmFtcDtyZXNl
+cnZlZD0wPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNDQo+IFNv
+Q3MNCj4gDQo+IEZvbGxvdyBMaW5hcm86DQo+IDxodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90
+ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy5mYWMNCj4gZWJvb2suY29t
+JTJGcGFnZXMlMkZMaW5hcm8mYW1wO2RhdGE9MDIlN0MwMSU3Q2FuZHkudGFuZyU0MG54cC5jb20N
+Cj4gJTdDNTU5MjE4YjE2MjJlNDYwMzI1MTkwOGQ2YmY0MTBlNGIlN0M2ODZlYTFkM2JjMmI0YzZm
+YTkyY2Q5OWM1YzMwDQo+IDE2MzUlN0MwJTdDMCU3QzYzNjkwNjY4MzQ2NjgzNjk4NSZhbXA7c2Rh
+dGE9Y1NVQjVIN3NxcFVQJTJCMEVQDQo+IEhnWEVnYVJaeFlpdCUyRkdOOVZ0NlhyUXV5MERBJTNE
+JmFtcDtyZXNlcnZlZD0wPiBGYWNlYm9vayB8DQo+IDxodHRwczovL2V1cjAxLnNhZmVsaW5rcy5w
+cm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnR3aXR0ZXIuYw0KPiBvbSUy
+RiUyMyElMkZsaW5hcm9vcmcmYW1wO2RhdGE9MDIlN0MwMSU3Q2FuZHkudGFuZyU0MG54cC5jb20l
+N0M1DQo+IDU5MjE4YjE2MjJlNDYwMzI1MTkwOGQ2YmY0MTBlNGIlN0M2ODZlYTFkM2JjMmI0YzZm
+YTkyY2Q5OWM1YzMwMTYzNQ0KPiAlN0MwJTdDMCU3QzYzNjkwNjY4MzQ2NjgzNjk4NSZhbXA7c2Rh
+dGE9T0g3dzMlMkZVd01FQXVCUzUlMg0KPiBCd1BmSmw5VVN6OWdUNkxwVEl3MU9SbU1lYVhBJTNE
+JmFtcDtyZXNlcnZlZD0wPiBUd2l0dGVyIHwNCj4gPGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnBy
+b3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3Lmxpbg0KPiBhcm8ub3Jn
+JTJGbGluYXJvLWJsb2clMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2FuZHkudGFuZyU0MG54cC5jb20l
+N0MNCj4gNTU5MjE4YjE2MjJlNDYwMzI1MTkwOGQ2YmY0MTBlNGIlN0M2ODZlYTFkM2JjMmI0YzZm
+YTkyY2Q5OWM1YzMwMTYzDQo+IDUlN0MwJTdDMCU3QzYzNjkwNjY4MzQ2NjgzNjk4NSZhbXA7c2Rh
+dGE9THR5UW4lMkJWbGlhd3IydHVSaENCODQNCj4gV0gxUk1FaW8zYUZRMkV4Q2ZLbjdvayUzRCZh
+bXA7cmVzZXJ2ZWQ9MD4gQmxvZw0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
