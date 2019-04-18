@@ -1,92 +1,90 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v7 07/10] power: supply: olpc_battery: Use devm_power_supply_register()
-Date: Thu, 18 Apr 2019 16:46:52 +0200
-Message-ID: <20190418144655.18758-8-lkundrak@v3.sk>
-References: <20190418144655.18758-1-lkundrak@v3.sk>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: allwinner: a64-amarula-relic: Add
+ GT5663 CTP node
+Date: Thu, 18 Apr 2019 16:51:14 +0200
+Message-ID: <20190418145114.jjt4ouulzkf2bwy2@flea>
+References: <20190418134838.8806-1-jagan@amarulasolutions.com>
+ <20190418140423.ch43fz2xuk5teqyl@flea>
+ <CAMty3ZAGWOtkGRXLLZ14XgNYDX7-XtEbt+y53eqCJJKgfxwNuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2ek6fkqp3kfa4mc4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418144655.18758-1-lkundrak@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAGWOtkGRXLLZ14XgNYDX7-XtEbt+y53eqCJJKgfxwNuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-This simplifies the error handling.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+--2ek6fkqp3kfa4mc4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
----
-Changes since v1:
-- This was split off the "power: supply: olpc_battery: Move priv data to
-  a struct" patch.
+On Thu, Apr 18, 2019 at 07:39:28PM +0530, Jagan Teki wrote:
+> On Thu, Apr 18, 2019 at 7:34 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Thu, Apr 18, 2019 at 07:18:37PM +0530, Jagan Teki wrote:
+> > > Add Goodix GT5663 capacitive touch controller node on
+> > > Amarula A64-Relic board.
+> > >
+> > > The CTP connected to board with,
+> > > - SDA, SCK from i2c1
+> > > - GPIO-LD0 as AVDD28 supply
+> > > - PH4 gpio as interrupt pin
+> > > - PH8 gpio as reset pin
+> > > - X axis is inverted
+> > > - Y axis is inverted
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > > Changes for v3:
+> > > - Use 2.8v for reg_ldo_io0
+> > > Changes for v2:
+> > > - drop i2c1, bias-pull-up
+> > >
+> > >  .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > index 3575db216016..bd31a4385bc1 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > @@ -49,6 +49,24 @@
+> > >       bias-pull-up;
+> > >  };
+> > >
+> > > +&i2c1 {
+> > > +     pinctrl-names = "default";
+> > > +     pinctrl-0 = <&i2c1_pins>;
+> >
+> > You haven't fixed this, and you didn't either in the second patch.
+>
+> Sorry, I interpreted previous comment to keep this pinctrl.
+>
+> Since i2c1 node in sun50i-a64.dtsi doesn't have pinctrl attached to
+> it, added here like i2c0 is it something wrong?
 
- drivers/power/supply/olpc_battery.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+If that's the only muxing option, it should be in the DTSI. If it's
+not the only muxing option, then the name is wrong.
 
-diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
-lpc_battery.c
-index f7bb9bedd893..d83c77c2a0ec 100644
---- a/drivers/power/supply/olpc_battery.c
-+++ b/drivers/power/supply/olpc_battery.c
-@@ -634,7 +634,7 @@ static int olpc_battery_probe(struct platform_device =
-*pdev)
- 	psy_cfg.of_node =3D pdev->dev.of_node;
- 	psy_cfg.drv_data =3D data;
-=20
--	data->olpc_ac =3D power_supply_register(&pdev->dev, &olpc_ac_desc, &psy=
-_cfg);
-+	data->olpc_ac =3D devm_power_supply_register(&pdev->dev, &olpc_ac_desc,=
- &psy_cfg);
- 	if (IS_ERR(data->olpc_ac))
- 		return PTR_ERR(data->olpc_ac);
-=20
-@@ -648,15 +648,13 @@ static int olpc_battery_probe(struct platform_devic=
-e *pdev)
- 		olpc_bat_desc.num_properties =3D ARRAY_SIZE(olpc_xo1_bat_props);
- 	}
-=20
--	data->olpc_bat =3D power_supply_register(&pdev->dev, &olpc_bat_desc, &p=
-sy_cfg);
--	if (IS_ERR(data->olpc_bat)) {
--		ret =3D PTR_ERR(data->olpc_bat);
--		goto battery_failed;
--	}
-+	data->olpc_bat =3D devm_power_supply_register(&pdev->dev, &olpc_bat_des=
-c, &psy_cfg);
-+	if (IS_ERR(data->olpc_bat))
-+		return PTR_ERR(data->olpc_bat);
-=20
- 	ret =3D device_create_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
- 	if (ret)
--		goto eeprom_failed;
-+		return ret;
-=20
- 	ret =3D device_create_file(&data->olpc_bat->dev, &olpc_bat_error);
- 	if (ret)
-@@ -671,10 +669,6 @@ static int olpc_battery_probe(struct platform_device=
- *pdev)
-=20
- error_failed:
- 	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
--eeprom_failed:
--	power_supply_unregister(data->olpc_bat);
--battery_failed:
--	power_supply_unregister(data->olpc_ac);
- 	return ret;
- }
-=20
-@@ -684,9 +678,6 @@ static int olpc_battery_remove(struct platform_device=
- *pdev)
-=20
- 	device_remove_file(&data->olpc_bat->dev, &olpc_bat_error);
- 	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
--	power_supply_unregister(data->olpc_bat);
--	power_supply_unregister(data->olpc_ac);
--
- 	return 0;
- }
-=20
---=20
-2.21.0
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2ek6fkqp3kfa4mc4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLiO4gAKCRDj7w1vZxhR
+xS0mAQD4IVU/86937ZZmemkvkJR7fyQmmvDJLYb1Xkg+8dzUIwD/Tw2+o/9iJa5a
+nIldDvlMqJmaZp2Lf5nbZN+vzwjiFA0=
+=5EIs
+-----END PGP SIGNATURE-----
+
+--2ek6fkqp3kfa4mc4--
