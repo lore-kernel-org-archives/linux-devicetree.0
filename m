@@ -1,69 +1,70 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend; enable for rk3288-veyron
-Date: Wed, 17 Apr 2019 17:13:51 -0700
-Message-ID: <20190418001356.124334-1-dianders@chromium.org>
+Subject: [PATCH v2 3/5] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+Date: Wed, 17 Apr 2019 17:13:54 -0700
+Message-ID: <20190418001356.124334-4-dianders@chromium.org>
+References: <20190418001356.124334-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190418001356.124334-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Minas Harutyunyan <hminas@synopsys.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de
-Cc: Alan Stern <stern@rowland.harvard.edu>, Artur Petrosyan <Arthur.Petrosyan@synopsys.com>, amstan@chromium.org, linux-rockchip@lists.infradead.org, William Wu <william.wu@rock-chips.com>, linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Randy Li <ayaka@soulik.info>, zyw@rock-chips.com, mka@chromium.org, ryandcase@chromium.org, Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org, dinguyen@opensource.altera.com, Elaine Zhang <zhangqing@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, linux-arm-kernel@lists.infradead.org, Kai-Heng Feng <kai.heng.feng@canonical.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Jon Flatley <jf>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Artur Petrosyan <Arthur.Petrosyan@synopsys.com>, amstan@chromium.org, linux-rockchip@lists.infradead.org, William Wu <william.wu@rock-chips.com>, linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Randy Li <ayaka@soulik.info>, zyw@rock-chips.com, mka@chromium.org, ryandcase@chromium.org, Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org, dinguyen@opensource.altera.com, Elaine Zhang <zhangqing@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This re-hashes two older series I posted a long time ago, re-basing
-them to mainline.  ...well, technically, atop another dwc2 series I
-recently posted:
+Some SoCs with a dwc2 USB controller may need to keep the PHY on to
+support remote wakeup.  Allow specifying this as a device tree
+property.
 
-* usb: dwc2: Another attempt handling rk3288's remote wake quirk
-  https://lkml.kernel.org/r/20190416215351.242246-1-dianders@chromium.org
-  https://lore.kernel.org/patchwork/cover/1062972/
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+For relevant prior discussion on this patch, see:
 
-In general I've tried to add links to each patch pointing to relevant
-older discussion.  Here are overall links to the cover letters though.
-Note that for the previous "allow wakeup" series the discussion was
-scattered a bit between the original post and the repost.
+https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders@chromium.org
 
-* usb: dwc2: bus suspend/resume that's not hibernate
-  https://lkml.kernel.org/r/1446237173-15263-1-git-send-email-dianders@chromium.org
-  https://lore.kernel.org/patchwork/patch/613761/
+I didn't make any changes from the prior version since I never found
+out what Rob thought of my previous arguments.  If folks want a
+change, perhaps they could choose from these options:
 
-* dwc2 patches to allow wakeup on Rockchip rk3288
-  https://lkml.kernel.org/r/1435017144-2971-1-git-send-email-dianders@chromium.org
-  https://lore.kernel.org/patchwork/cover/572944/
+1. Assume that all dwc2 hosts would like to keep their PHY on for
+   suspend if there's a USB wakeup enabled, thus we totally drop this
+   binding.  This doesn't seem super great to me since I'd bet that
+   many devices that use dwc2 weren't designed for USB wakeup (they
+   may not keep enough clocks or rails on) so we might be wasting
+   power for nothing.
+2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
+   it more obvious that this property is intended both to document
+   that wakeup from suspend is possible and that we need the PHY for
+   said wakeup.
+3. Rename this property to "snps,can-wakeup-from-suspend" and assume
+   it's implicit that if we can wakeup from suspend that we need to
+   keep the PHY on.  If/when someone shows that a device exists using
+   dwc2 where we can wakeup from suspend without the PHY they can add
+   a new property.
 
-* dwc2 patches to allow wakeup on Rockchip rk3288 (REPOST)
-  https://lkml.kernel.org/r/1436207224-21849-1-git-send-email-dianders@chromium.org
-  https://lore.kernel.org/patchwork/cover/576120/
+Changes in v2: None
 
-I'm hoping there's a better chance of these things landing this time
-around, but I guess we'll see.  ;-)
+ Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-In case it's helpful I've put what I tested (which is based on Heiko's
-for-next branch and includes patches to enable deep suspend plus two
-other s2r fixes) at:
-
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+log/refs/sandbox/dianders/190417-testing-dwc2-wakeup
-
-Changes in v2:
-- Rebased to mainline atop rk3288 remote wake quirk series.
-- rk3288-veyron dts patch new for v2.
-
-Douglas Anderson (5):
-  usb: dwc2: bus suspend/resume for hosts with
-    DWC2_POWER_DOWN_PARAM_NONE
-  USB: Export usb_wakeup_enabled_descendants()
-  Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
-  USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
-  ARM: dts: rockchip: Allow wakeup from rk3288-veyron's dwc2 USB ports
-
- .../devicetree/bindings/usb/dwc2.txt          |  3 +
- arch/arm/boot/dts/rk3288-veyron.dtsi          |  2 +
- drivers/usb/core/hub.c                        |  7 +-
- drivers/usb/dwc2/core.h                       |  5 ++
- drivers/usb/dwc2/hcd.c                        | 84 ++++++++++++-------
- drivers/usb/dwc2/platform.c                   | 43 +++++++++-
- include/linux/usb/hcd.h                       |  5 ++
- 7 files changed, 113 insertions(+), 36 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index f70f3aee4bfc..1c5e29d23c51 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -37,6 +37,8 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - g-rx-fifo-size: size of rx fifo size in gadget mode.
+ - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+ - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++- snps,need-phy-for-wake: If present indicates that the phy needs to be left
++                          on for remote wakeup during suspend.
+ - snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
+                           we detect a wakeup.  This is due to a hardware errata.
+ 
+@@ -53,4 +55,5 @@ Example:
+ 		clock-names = "otg";
+ 		phys = <&usbphy>;
+ 		phy-names = "usb2-phy";
++		snps,need-phy-for-wake;
+         };
 -- 
 2.21.0.593.g511ec345e18-goog
