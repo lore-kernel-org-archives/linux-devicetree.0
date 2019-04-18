@@ -1,53 +1,55 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: input: add Elan 400 combo
- keyboard/touchpad over i2c
-Date: Thu, 18 Apr 2019 11:35:42 +0200
-Message-ID: <CAO-hwJJ_BRRHL44yaZ=d_K-9iq1cyONn0rR+VW3ukW1M2Ma0ug@mail.gmail.com>
-References: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com> <20190415161055.16372-1-jeffrey.l.hugo@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [RESEND PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
+Date: Thu, 18 Apr 2019 11:37:44 +0200
+Message-ID: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415161055.16372-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Lee Jones <lee.jones@linaro.org>, bjorn.andersson@linaro.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, agross@kernel.org, David Brown <david.brown@linaro.org>, Jiri Kosina <jikos@kernel.org>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+To: thierry.reding@gmail.com
+Cc: robh+dt@kernel.org, u.kleine-koenig@pengutronix.de, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 6:11 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> The Elan 400 combo keyboard/touchpad over i2c device is a distinct device
-> from the Elan 400 standalone touchpad device.  The combo device has been
-> found in the Lenovo Miix 630 and HP Envy x2 laptops.
->
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
+This patch series adds power management support for STM32 LP Timer:
+- PWM driver
+- Document the pinctrl states for sleep mode
 
-With my comments in 2/3, I wonder if you need this patch at all then.
+It also adds device link between the PWM consumer and the PWM provider.
+This allows proper sequencing for suspend/resume (e.g. user will likely
+do a pwm_disable() before the PWM provider suspend executes), see [1].
 
-Cheers,
-Benjamin
+[1] https://lkml.org/lkml/2019/2/5/770
 
->  .../devicetree/bindings/input/elan,combo400-i2c.txt   | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
->
-> diff --git a/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt b/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
-> new file mode 100644
-> index 000000000000..fb700a29148d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
-> @@ -0,0 +1,11 @@
-> +Elantech 0400 I2C combination Keyboard/Touchpad
-> +
-> +This binding describes an Elan device with pid 0x0400, that is a combination
-> +keyboard + touchpad device.  This binding does not cover an Elan device with
-> +pid 0x0400 that is solely a standalone touchpad device.
-> +
-> +Required properties:
-> +- compatible: should be "elan,combo400-i2c"
-> +
-> +This binding is compatible with the HID over I2C binding, which is specified
-> +in hid-over-i2c.txt in this directory.
-> --
-> 2.17.1
->
+---
+resend v5:
+- update collected acks
+
+Changes in v5:
+- improve a warning message, fix a style issue.
+
+Changes in v4:
+- improve error handling when adding the PWM consumer device link.
+
+Changes in v3:
+- Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
+
+Changes in v2:
+- Don't disable PWM channel in PWM provider: rather refuse to suspend
+  and report an error as suggested by Uwe and Thierry.
+- Add patch 3/3 to propose device link addition.
+- No updates for STM32 LP Timer IIO driver. Patches can be send separately.
+
+Fabrice Gasnier (3):
+  dt-bindings: pwm-stm32-lp: document pinctrl sleep state
+  pwm: stm32-lp: Add power management support
+  pwm: core: add consumer device link
+
+ .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
+ drivers/pwm/core.c                                 | 50 ++++++++++++++++++++--
+ drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
+ include/linux/pwm.h                                |  6 ++-
+ 4 files changed, 82 insertions(+), 8 deletions(-)
+
+-- 
+2.7.4
