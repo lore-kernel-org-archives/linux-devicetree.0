@@ -1,51 +1,102 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v5 1/3] backlight: lm3630a: return 0 on success in update_status functions
-Date: Thu, 18 Apr 2019 11:11:41 -0400
-Message-ID: <20190418151143.26068-2-masneyb@onstation.org>
-References: <20190418151143.26068-1-masneyb@onstation.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/3] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Date: Thu, 18 Apr 2019 10:13:50 -0500
+Message-ID: <20190418151350.GC32345@bogus>
+References: <20190417165514.18689-1-angus@akkea.ca>
+ <20190417165514.18689-2-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418151143.26068-1-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <20190417165514.18689-2-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: angus.ainslie@puri.sm, m.felsch@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, Matthias Brugger <matthias.bgg@gmail.com>, Guo Ren <guoren@kernel.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Ja
 List-Id: devicetree@vger.kernel.org
 
-lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-both return the brightness value if the brightness was successfully
-updated. Writing to these attributes via sysfs would cause a 'Bad
-address' error to be returned. These functions should return 0 on
-success, so let's change it to correct that error.
+On Wed, Apr 17, 2019 at 09:55:12AM -0700, Angus Ainslie (Purism) wrote:
+> This is the development kit board for the Librem 5. The current level of
+> support yields a working console and is able to boot userspace from the
+> Network or eMMC.
+> 
+> Additional subsystems that are active :
+> 
+> - Both USB ports
+> - SD card socket
+> - WiFi usdhc
+> - WWAN modem
+> - GNSS
+> - GPIO keys
+> - LEDs
+> - gyro
+> - magnetometer
+> - touchscreen
+> - pwm
+> - backlight
+> - haptic motor
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 833 ++++++++++++++++++
+>  2 files changed, 834 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 0bd122f60549..c043aca66572 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+>  
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> new file mode 100644
+> index 000000000000..846a72dc7640
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/video/backlight/lm3630a_bl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +&usb3_phy0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	port@0 {
+> +		reg = <0>;
+> +
+> +		typec_hs: endpoint {
+> +			remote-endpoint = <&usb_con_hs>;
+> +		};
+> +	};
+> +
+> +	port@1 {
+> +		reg = <1>;
+> +
+> +		typec_ss: endpoint {
+> +			remote-endpoint = <&usb_con_ss>;
+> +		};
+> +	};
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 2030a6b77a09..ef2553f452ca 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -201,7 +201,7 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
- 
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access\n");
-@@ -278,7 +278,7 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
- 
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
--- 
-2.20.1
+This is wrong. The graph should be between the USB controller and the 
+connector. The phy is not involved.
+
+> +};
+> +
+> +&usb3_phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_dwc3_0 {
+> +	extcon = <&typec_ptn5100>;
+
+extcon is deprecated and you should only have the usb-connector binding. 
+>From the controller, you can walk the graph to the connector.
+
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
