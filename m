@@ -1,66 +1,45 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: input: add GPIO controllable vibrator
-Date: Wed, 17 Apr 2019 20:35:27 -0500
-Message-ID: <CAL_JsqL7awWWLK3G6u2yzse2aU7KUSuUELuacCnCpfErWA_UaQ@mail.gmail.com>
-References: <20190412150625.28384-1-luca@z3ntu.xyz> <15255825.75VNnaJK3T@g550jk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 29/31 v4] soc: ixp4xx: qmgr: Add DT bindings for IXP4xx
+ qmgr
+Date: Wed, 17 Apr 2019 20:36:26 -0500
+Message-ID: <CAL_JsqJpU_XuRzGbqSnSWqE8we=LUjiQqTd27XZdXnSkAHWD5Q@mail.gmail.com>
+References: <20190417180621.2818-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <15255825.75VNnaJK3T@g550jk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190417180621.2818-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 11:02 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+On Wed, Apr 17, 2019 at 1:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On Freitag, 12. April 2019 17:06:23 CEST Luca Weiss wrote:
-> > Provide a simple driver for GPIO controllable vibrators.
-> > It will be used by the Fairphone 2.
-> >
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > ---
-> >  .../bindings/input/gpio-vibrator.txt          | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/input/gpio-vibrator.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-> > b/Documentation/devicetree/bindings/input/gpio-vibrator.txt new file mode
-> > 100644
-> > index 000000000000..93e5a8e7622d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-> > @@ -0,0 +1,20 @@
-> > +* GPIO vibrator device tree bindings
-> > +
-> > +Registers a GPIO device as vibrator, where the vibration motor just has the
-> > +capability to turn on or off. If the device is connected to a pwm, you
-> > should +use the pwm-vibrator driver instead.
-> > +
-> > +Required properties:
-> > +- compatible: should contain "gpio-vibrator"
-> > +- enable-gpios: Should contain a GPIO handle
-> > +
-> > +Optional properties:
-> > +- vcc-supply: Phandle for the regulator supplying power
-> > +
-> > +Example from Fairphone 2:
-> > +
-> > +vibrator {
-> > +     compatible = "gpio-vibrator";
-> > +     enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
-> > +     vcc-supply = <&pm8941_l18>;
-> > +};
+> This adds device tree bindings for the Intel IXP4xx AHB
+> Queue Manager.
 >
-> I see that the yaml based device tree binding docs seem to be the new hotness?
-> Is there any "policy" / preference about new drivers?
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v3->v4:
+> - Drop #queue-cells and just use a fixed resource size.
+> ChangeLog v2->v3:
+> - Rebased on v5.1-rc1
+> - Drop oneOf in compatible, just list items.
+> - Drop description on reg, just use maxItems: 1
+> - Set '#queue-cells' as required
+> ---
+>  .../misc/intel,ixp4xx-queue-manager.yaml      | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
 
-Not required yet, but welcomed. It's still a trickle so we can work
-out any issues and in some cases the common bindings still need to be
-done. I'm starting to ask subsystem maintainers to require DT schemas
-though.
-
-This one looks straightforward to use the schema.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
