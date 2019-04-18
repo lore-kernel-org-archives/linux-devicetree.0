@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 2/3] arm64: dts: allwinner:
- a64-amarula-relic: Add GT5663 CTP node
-Date: Thu, 18 Apr 2019 23:17:19 +0530
-Message-ID: <20190418174720.17230-2-jagan@amarulasolutions.com>
+Subject: [PATCH v4 3/3] arm64: dts: allwinner:
+ a64-oceanic-5205-5inmfd: Enable GT911 CTP
+Date: Thu, 18 Apr 2019 23:17:20 +0530
+Message-ID: <20190418174720.17230-3-jagan@amarulasolutions.com>
 References: <20190418174720.17230-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBOHQ4LSQKGQEJ2AXNBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBO7Q4LSQKGQEUQQTBZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190418174720.17230-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,69 +20,68 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Goodix GT5663 capacitive touch controller node on
-Amarula A64-Relic board.
+Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
 
 The CTP connected to board with,
-- SDA, SCK from i2c1
+- SDA, SCK from i2c0
 - GPIO-LD0 as AVDD28 supply
 - PH4 gpio as interrupt pin
-- PH8 gpio as reset pin
+- PH11 gpio as reset pin
 - X axis is inverted
 - Y axis is inverted
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v4:
-- drop i2c1 pinctrl
+- drop i2c0 pinctrl
 Changes for v3:
 - Use 2.8v for reg_ldo_io0
 Changes for v2:
 - drop i2c1, bias-pull-up
 
- .../allwinner/sun50i-a64-amarula-relic.dts    | 23 +++++++++++++++++++
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 23 +++++++++++++++++++
  1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index c41131c03231..5634245d11db 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -97,6 +97,22 @@
- 	bias-pull-up;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index 6a2154525d1e..787ebd805a3b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -37,6 +37,22 @@
+ 	status = "okay";
  };
  
-+&i2c1 {
++&i2c0 {
 +	status = "okay";
 +
 +	touchscreen@5d {
-+		compatible = "goodix,gt5663";
++		compatible = "goodix,gt911";
 +		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
 +		interrupt-parent = <&pio>;
 +		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
 +		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
 +		touchscreen-inverted-x;
 +		touchscreen-inverted-y;
 +	};
 +};
 +
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
-@@ -260,6 +276,13 @@
- 	regulator-name = "vdd-cpus";
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
+@@ -52,6 +68,13 @@
+ 	regulator-name = "vcc-phy";
  };
  
 +&reg_ldo_io0 {
 +	regulator-min-microvolt = <2800000>;
 +	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vcc-ctp";
++	regulator-name = "vdd-ctp";
 +	status = "okay";
 +};
 +
- &reg_rtc_ldo {
- 	regulator-name = "vcc-rtc";
- };
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 2.18.0.321.gffc6fa0e3
