@@ -1,77 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
- to *.rst
-Date: Thu, 18 Apr 2019 06:36:28 -0700
-Message-ID: <55790eec-a81e-75af-dbab-e4f15ad14274@roeck-us.net>
-References: <cover.1555494108.git.mchehab+samsung@kernel.org>
- <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
- <20190417164741.GA12147@roeck-us.net> <20190417141352.3225bbb3@coco.lan>
- <20190417142215.791df5e7@coco.lan> <20190417174337.GA16749@roeck-us.net>
- <20190417174728.GA17706@roeck-us.net> <20190418064436.1803bf3a@coco.lan>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Reading MAC addresses with NVMEM under MTD partition [Was: Re:
+ [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for the cells
+ list]
+Date: Thu, 18 Apr 2019 15:36:46 +0200
+Message-ID: <20190418133646.GA94236@meh.true.cz>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418064436.1803bf3a@coco.lan>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@infradead.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Eibach <eibach@gdsys.de>, George Joseph <george.joseph@fairview5.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Fenghua Yu <fenghua.yu@intel.com>, Support Opensource <support.opensource@diasemi.com>, Juerg Haefliger <juergh@gmail.com>, Steve Glendinning <steve.glendinning@shawell.net>, Huang Rui <ray.huang@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Clemens Ladisch <clemens@ladisch.de>, Rudolf Marek <r.marek>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1521933899-362-1-git-send-email-albeu@free.fr>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Alban Bedel <albeu@free.fr>, Maxime Ripard <maxime.ripard@bootlin.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-mtd@lists.infradead.org, netdev@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/18/19 2:44 AM, Mauro Carvalho Chehab wrote:
-> Em Wed, 17 Apr 2019 10:47:28 -0700
-> Guenter Roeck <linux@roeck-us.net> escreveu:
-> 
->> On Wed, Apr 17, 2019 at 10:43:37AM -0700, Guenter Roeck wrote:
->>> On Wed, Apr 17, 2019 at 02:22:15PM -0300, Mauro Carvalho Chehab wrote:
->>>> Em Wed, 17 Apr 2019 14:13:52 -0300
->>>> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
->>>>    
->>>>> Em Wed, 17 Apr 2019 09:47:41 -0700
->>>>> Guenter Roeck <linux@roeck-us.net> escreveu:
->>>>>    
->>>>>> On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:
->>>>>>> Now that all files were converted to ReST format, rename them
->>>>>>> and add an index.
->>>>>>>
->>>>>>> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->>>>>>> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
->>>>>>
->>>>>> I applied all patches except this one, which fails due to a conflict in
->>>>>> ab8500. I also notice that this file has not been touched by your series,
->>>>>> which is odd. At the same time, patch 20/21 is missing from your series,
->>>>>> and has been missing all along. Does the missing patch possibly touch
->>>>>> Documentation/hwmon/ab8500 ?
->>>>>
->>>>> Patch 20/21 is the biggest one. Maybe vger rejected it either due to
->>>>> its size or due to the number of c/c.
->>>>>
->>>>> Just bounced it to you. Please let me know if you didn't receive it
->>>>> yet.
->>>>
->>>> Btw, LKML got it:
->>>>
->>>> https://lore.kernel.org/lkml/cccc2a52363a5aaeea10e186ead8570503ea648e.1555494108.git.mchehab+samsung@kernel.org/
->>>>    
->>> patchwork didn't get it (or didn't accept it). I got it now.
->>> All patches applied, and pushed out to hwmon-next.
->>>
->>> We have one (new) unconverted file left - Documentation/hwmon/lochnagar.
->>
->> Plus ir38064 and isl68137. Lots of new drivers recently.
-> 
-> Ok, just sent a patch for those three new files. I wrote a more
-> detailed description about what steps I followed at the conversion
-> of those tree files, and why I did it.
-> 
-Did the patches get lost ?
+Hi,
 
-> Hopefully, this would help hwmon developers
-> that may already be preparing a new driver for submission.
-> 
+I'm wondering what is the status of this patch? I'm currently trying to do
+following with modified of_get_mac_address[1] which uses nvmem_get_mac_address
+under the hood:
 
-That would be very useful.
+flash@0 {
+	partitions {
+		compatible = "fixed-partitions";
 
-Thanks,
-Guenter
+		art: partition@fe0000 {
+			label = "art";
+			reg = <0xff0000 0x010000>;
+			read-only;
+
+			eth0_addr: ethernet-address@0 {
+				reg = <0x0 0x6>;
+			};
+
+			eth1_addr: ethernet-address@6 {
+				reg = <0x6 0x6>;
+			};
+
+			wmac_addr: ethernet-address@1002 {
+				reg = <0x1002 0x6>;
+			};
+	};
+};
+
+&eth0 {
+        nvmem-cells = <&eth0_addr>;
+        nvmem-cell-names = "mac-address";
+};
+
+&eth1 {
+        nvmem-cells = <&eth1_addr>;
+        nvmem-cell-names = "mac-address";
+};
+
+&wmac {
+        nvmem-cells = <&wmac_addr>;
+        nvmem-cell-names = "mac-address";
+};
+
+It seems to me, that this use case is not supported yet, but it could be
+probably handled with this proposed patch or something similar. What could be
+done in order to move forward? Thanks!
+
+1. https://github.com/ynezz/linux/commit/919e9a943af4cdf9b78b0ead17e9855be90d9466
+
+-- ynezz
