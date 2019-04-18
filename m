@@ -1,84 +1,59 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Thu, 18 Apr 2019 19:55:59 +0300
-Message-ID: <9bc4847f-8e7e-3627-5394-6f2b5c5972bc@cogentembedded.com>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
- <907f2e87-1cb4-fa37-5406-82bf2bf71188@cogentembedded.com>
- <OF2F61A6E6.AA7717A3-ON482583DE.0005C1EE-482583DE.00061474@mxic.com.tw>
- <8720224d-76f4-c620-9e3f-91605d6fa1e3@cogentembedded.com>
- <OFCBCE0527.706EB4F2-ON482583E0.00200707-482583E0.00208EAD@mxic.com.tw>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v4 01/26] ALSA: line6: Avoid polluting led_* namespace
+Date: Thu, 18 Apr 2019 19:12:13 +0200
+Message-ID: <b0d841c4-f027-d99d-ab76-721fba4a2a1e@gmail.com>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-2-jacek.anaszewski@gmail.com>
+ <s5h8sw7riwt.wl-tiwai@suse.de> <20190418122135.GA6925@amd>
+ <s5htvevh56y.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OFCBCE0527.706EB4F2-ON482583E0.00200707-482583E0.00208EAD@mxic.com.tw>
-Content-Language: en-MW
+In-Reply-To: <s5htvevh56y.wl-tiwai@suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
+To: Takashi Iwai <tiwai@suse.de>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, dtor@google.com, robh@kernel.org, Jaroslav Kysela <perex@perex.cz>, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 04/18/2019 08:55 AM, masonccyang@mxic.com.tw wrote:
-
->> >  > > Document the bindings used by the Renesas R-Car Gen3 RPC-IF
->> MFD controller.
->> >  > >
->> >  > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> >  > > ---
->> >  > >  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt  | 37 +++++++++
->> >  > +++++++++++++
->> >  > >  1 file changed, 37 insertions(+)
->> >  > >  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
->> >  > renesas-rpc.txt
->> >  > >
->> >  > > diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
->> >  > rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->> >  > > new file mode 100644
->> >  > > index 0000000..bfb3d29
->> >  > > --- /dev/null
->> >  > > +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->> >  > > @@ -0,0 +1,37 @@
->> >  > > +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
->> >  > > +-------------------------------------------------------------
->> >  > > +
->> >  > > +Required properties:
->> >  > > +- compatible: should be an SoC-specific compatible value, followed by
->> >  > > +      "renesas,rcar-gen3-rpc" as a fallback.
->> >  > > +      supported SoC-specific values are:
->> >  > > +      "renesas,r8a77995-rpc" (R-Car D3)
->> >  > > +- reg: should contain 2 entries, one for the base address of rpc-
->> >  > if registers,
->> >  > > +   and one for the direct mapping area
->> >  > > +- reg-names: should contain "regs", and "dirmap"
->> >  >
->> >  >    The device tree describes the hardware, not the driver. Why
->> did you remove
->> >  > the "wbuf" area?
->> >
->> > I don't think we should describe the hardware that driver did not
->> implement it
->> > because there are still many RPC registers we don't use them.
+On 4/18/19 2:24 PM, Takashi Iwai wrote:
+> On Thu, 18 Apr 2019 14:21:35 +0200,
+> Pavel Machek wrote:
 >>
->>     I have to repeat: we describe the hardware, not the driver capabilities.
-> 
-> how about:
-> 
-> - reg: should contain three register areas:
->           first for the base address of rpc-if registers,
->           second for the direct mapping read mode and
->           third for an optional write buffer area.
->  - reg-names: should contain "regs", "dirmap" and "wbuf"(optional).
-> 
-> is it OK ?
+>> On Thu 2019-04-18 07:17:54, Takashi Iwai wrote:
+>>> On Wed, 17 Apr 2019 22:54:14 +0200,
+>>> Jacek Anaszewski wrote:
+>>>>
+>>>> led_colors clashes with the array of the same name being added
+>>>> to the LED class. Do the following amendments to fix this issue
+>>>> and the other prospective one.
+>>>>
+>>>> led_colors -> toneport_led_colors
+>>>> led_init_vals -> toneport_led_init_vals
+>>>>
+>>>> Fixes: f44edd7b2bbed ("ALSA: line6/toneport: Implement LED controls via LED class")
+>>>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>>> Cc: Jaroslav Kysela <perex@perex.cz>
+>>>> Cc: Takashi Iwai <tiwai@suse.com>
+>>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>>
+>>> Looks good.
+>>>
+>>> Feel free to take my ack:
+>>>    Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-   No, the write buffer area is always there, at least on the gen3 chips.
-(I forgot which other Renesas SoC has RPC-IF as well).
+Thanks.
 
-> thanks & best regards,
-> Mason
+>> I guess this is independend of pretty much everything, and should be
+>> taken through the sound tree?
+> 
+> I don't mind either way.  If it's easier for you to take through sound
+> tree, just let me know.
 
-MBR, Sergei
+I prefer to take it via LED tree as this patch is needed
+by the LED naming set.
+
+-- 
+Best regards,
+Jacek Anaszewski
