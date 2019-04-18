@@ -1,183 +1,126 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [PATCH v5 1/3] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
-Date: Thu, 18 Apr 2019 10:44:50 -0700
-Message-ID: <79d43377285d6897847ac1452afbb18a@www.akkea.ca>
-References: <20190417165514.18689-1-angus@akkea.ca>
- <20190417165514.18689-2-angus@akkea.ca> <20190418151350.GC32345@bogus>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v4 1/3] arm64: dts: allwinner: a64: Move I2C
+ pinctrl to dtsi
+Date: Thu, 18 Apr 2019 23:17:18 +0530
+Message-ID: <20190418174720.17230-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418151350.GC32345@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: angus.ainslie@puri.sm, m.felsch@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, Matthias Brugger <matthias.bgg@gmail.com>, Guo Ren <guoren@kernel.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Jack
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBNPQ4LSQKGQE2QF3BDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+There is only one pinmuxing available for each I2C controller.
 
+So, move pinctrl for i2c0, i2c1 from board dts files into SoC dtsi.
 
-On 2019-04-18 08:13, Rob Herring wrote:
-> On Wed, Apr 17, 2019 at 09:55:12AM -0700, Angus Ainslie (Purism) wrote:
->> This is the development kit board for the Librem 5. The current level 
->> of
->> support yields a working console and is able to boot userspace from 
->> the
->> Network or eMMC.
->> 
->> Additional subsystems that are active :
->> 
->> - Both USB ports
->> - SD card socket
->> - WiFi usdhc
->> - WWAN modem
->> - GNSS
->> - GPIO keys
->> - LEDs
->> - gyro
->> - magnetometer
->> - touchscreen
->> - pwm
->> - backlight
->> - haptic motor
->> 
->> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
->> ---
->>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 833 
->> ++++++++++++++++++
->>  2 files changed, 834 insertions(+)
->>  create mode 100644 
->> arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->> 
->> diff --git a/arch/arm64/boot/dts/freescale/Makefile 
->> b/arch/arm64/boot/dts/freescale/Makefile
->> index 0bd122f60549..c043aca66572 100644
->> --- a/arch/arm64/boot/dts/freescale/Makefile
->> +++ b/arch/arm64/boot/dts/freescale/Makefile
->> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
->> 
->>  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
->>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
->> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
->>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
->>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
->> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts 
->> b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->> new file mode 100644
->> index 000000000000..846a72dc7640
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> 
->> +&usb3_phy0 {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	status = "okay";
->> +
->> +	port@0 {
->> +		reg = <0>;
->> +
->> +		typec_hs: endpoint {
->> +			remote-endpoint = <&usb_con_hs>;
->> +		};
->> +	};
->> +
->> +	port@1 {
->> +		reg = <1>;
->> +
->> +		typec_ss: endpoint {
->> +			remote-endpoint = <&usb_con_ss>;
->> +		};
->> +	};
-> 
-> This is wrong. The graph should be between the USB controller and the
-> connector. The phy is not involved.
-> 
->> +};
->> +
->> +&usb3_phy1 {
->> +	status = "okay";
->> +};
->> +
->> +&usb_dwc3_0 {
->> +	extcon = <&typec_ptn5100>;
-> 
-> extcon is deprecated and you should only have the usb-connector 
-> binding.
-> From the controller, you can walk the graph to the connector.
-> 
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v4:
+- new patch
 
-I not sure that I'm clear on what you mean. Here's what I think you want 
-it changed to.
+ arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts | 2 --
+ arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts  | 2 --
+ arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts    | 2 --
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts        | 2 --
+ arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts       | 2 --
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi              | 4 ++++
+ 6 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts 
-b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 846a72dc7640..7b8770fdc5fb 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -755,51 +755,50 @@
-  };
-
-  &uart4 { /* BT */
-         pinctrl-names = "default";
-         pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
-         uart-has-rtscts;
-         status = "okay";
-  };
-
-  &usb3_phy0 {
-+       status = "okay";
-+};
-+
-+&usb3_phy1 {
-+       status = "okay";
-+};
-+
-+&usb_dwc3_0 {
-         #address-cells = <1>;
-         #size-cells = <0>;
-+       dr_mode = "otg";
-         status = "okay";
-
-         port@0 {
-                 reg = <0>;
-
-                 typec_hs: endpoint {
-                         remote-endpoint = <&usb_con_hs>;
-                 };
-         };
-
-         port@1 {
-                 reg = <1>;
-
-                 typec_ss: endpoint {
-                         remote-endpoint = <&usb_con_ss>;
-                 };
-         };
-  };
-
--&usb3_phy1 {
--       status = "okay";
--};
--
--&usb_dwc3_0 {
--       extcon = <&typec_ptn5100>;
--       dr_mode = "otg";
--       status = "okay";
--};
--
-  &usb_dwc3_1 {
-         dr_mode = "host";
-         status = "okay";
-  };
-
-
-
-Thanks
-Angus
-
->> +	dr_mode = "otg";
->> +	status = "okay";
->> +};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 019ae09ea0fd..c41131c03231 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -85,8 +85,6 @@
+ };
+ 
+ &i2c0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+ 	status = "okay";
+ 
+ 	sensor@48 {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 0a56c0c23ba1..c2a6b73b17cf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -145,8 +145,6 @@
+ };
+ 
+ &i2c1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+index f4e78531f639..bef4abf6fa25 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+@@ -121,8 +121,6 @@
+ 
+ /* i2c1 connected with gpio headers like pine64, bananapi */
+ &i2c1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+ 	status = "disabled";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index b7ac6374b178..409523cb0950 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -122,8 +122,6 @@
+ };
+ 
+ &i2c1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index 0ec46b969a75..12afc52e169e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -92,8 +92,6 @@
+  */
+ &i2c0 {
+ 	clock-frequency = <100000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 8c5b521e6389..b275c6d35420 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -842,6 +842,8 @@
+ 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_BUS_I2C0>;
+ 			resets = <&ccu RST_BUS_I2C0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -853,6 +855,8 @@
+ 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_BUS_I2C1>;
+ 			resets = <&ccu RST_BUS_I2C1>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c1_pins>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-- 
+2.18.0.321.gffc6fa0e3
