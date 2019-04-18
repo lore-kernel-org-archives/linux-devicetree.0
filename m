@@ -1,69 +1,55 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Reading MAC addresses with NVMEM under MTD partition [Was: Re:
- [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for the cells
- list]
-Date: Thu, 18 Apr 2019 15:36:46 +0200
-Message-ID: <20190418133646.GA94236@meh.true.cz>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1521933899-362-1-git-send-email-albeu@free.fr>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Alban Bedel <albeu@free.fr>, Maxime Ripard <maxime.ripard@bootlin.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-mtd@lists.infradead.org, netdev@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, John Crispin <john@phrozen.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 0/4] Exynos Performance Monitoring Counters enhancements
+Date: Thu, 18 Apr 2019 15:38:28 +0200
+Message-ID: <1555594712-18341-1-git-send-email-l.luba@partner.samsung.com>
+References: <CGME20190418133849eucas1p11666819084daed6e9585a4f6faa124ed@eucas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, l.luba@partner.samsung.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all,
 
-I'm wondering what is the status of this patch? I'm currently trying to do
-following with modified of_get_mac_address[1] which uses nvmem_get_mac_address
-under the hood:
+This patch set extends PPMU on Samsung Exynos by choosing type of data
+which shell be counter in the PPMU registers.
+It is possible to count e.g. read or write requests, read or write data
+or latency.
+A new field has been added in the DT 'event' node called 'event-data-type'.
+It is them used during the setup of the counter. In the prevoius
+implementation there was always one option used: count read+write data.
+Sometimes we need more precised information and this patch set tries to
+address it.
 
-flash@0 {
-	partitions {
-		compatible = "fixed-partitions";
+Changes:
+v2:
+ - removed new entry in MAINTAINERS file as suggested by Bartek Zolnierkiewicz
+   and added new file to existing list for devfreq events
+ - added in the dt-bindings/pmu/exynos_ppmu.h 2 new entries for RO and WO for
+   counters in Exynos5433
+ - changed initialization with default values when data_type is not provided
+   in DT (as sugessted by Chanwoo)
+ - added 4th patch which adds 'event-data-type' to 'event' node for Exynos4412
+   PPMU events (asked by Chanwoo)
 
-		art: partition@fe0000 {
-			label = "art";
-			reg = <0xff0000 0x010000>;
-			read-only;
+Regards,
+Lukasz Luba
 
-			eth0_addr: ethernet-address@0 {
-				reg = <0x0 0x6>;
-			};
+Lukasz Luba (4):
+  include: dt-bindings: add Performance Monitoring Unit for Exynos
+  drivers: devfreq: events: extend events by type of counted data
+  Documentation: devicetree: add PPMU events description
+  DT: arm: exynos4412: add event data type which is monitored
 
-			eth1_addr: ethernet-address@6 {
-				reg = <0x6 0x6>;
-			};
+ .../bindings/devfreq/event/exynos-ppmu.txt         | 18 +++++++
+ MAINTAINERS                                        |  1 +
+ arch/arm/boot/dts/exynos4412-ppmu-common.dtsi      | 10 ++++
+ drivers/devfreq/event/exynos-ppmu.c                | 61 +++++++++++++++-------
+ include/dt-bindings/pmu/exynos_ppmu.h              | 26 +++++++++
+ include/linux/devfreq-event.h                      |  6 +++
+ 6 files changed, 103 insertions(+), 19 deletions(-)
+ create mode 100644 include/dt-bindings/pmu/exynos_ppmu.h
 
-			wmac_addr: ethernet-address@1002 {
-				reg = <0x1002 0x6>;
-			};
-	};
-};
-
-&eth0 {
-        nvmem-cells = <&eth0_addr>;
-        nvmem-cell-names = "mac-address";
-};
-
-&eth1 {
-        nvmem-cells = <&eth1_addr>;
-        nvmem-cell-names = "mac-address";
-};
-
-&wmac {
-        nvmem-cells = <&wmac_addr>;
-        nvmem-cell-names = "mac-address";
-};
-
-It seems to me, that this use case is not supported yet, but it could be
-probably handled with this proposed patch or something similar. What could be
-done in order to move forward? Thanks!
-
-1. https://github.com/ynezz/linux/commit/919e9a943af4cdf9b78b0ead17e9855be90d9466
-
--- ynezz
+-- 
+2.7.4
