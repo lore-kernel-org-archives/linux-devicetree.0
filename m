@@ -1,47 +1,48 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] ARM: sun8i: a83t: Enable USB OTG
-Date: Thu, 18 Apr 2019 17:49:22 +0200
-Message-ID: <20190418154922.rvvxpiznjiv7kpee@flea>
-References: <20190416064024.20414-1-wens@kernel.org>
- <20190417212703.7qq3nzjdvnceaim2@earth.universe>
+Subject: Re: [PATCH v4 6/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Add GPIO pin-bank regulator supplies
+Date: Thu, 18 Apr 2019 17:54:30 +0200
+Message-ID: <20190418155430.d465dkmboojnxzxn@flea>
+References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+ <1555600282-9405-7-git-send-email-pgreco@centosproject.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4s2awzwutf52hbae"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBFZ4LSQKGQEDEATTIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="favmzngd5yhwh63n"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBON34LSQKGQE4K3EVGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190417212703.7qq3nzjdvnceaim2-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+In-Reply-To: <1555600282-9405-7-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---4s2awzwutf52hbae
+--favmzngd5yhwh63n
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Apr 17, 2019 at 11:27:03PM +0200, Sebastian Reichel wrote:
-> Hi,
->
-> On Tue, Apr 16, 2019 at 02:40:17PM +0800, Chen-Yu Tsai wrote:
-> > This is v4 of my A83T USB power supply / OTG series. Hopefully this is
-> > the last revision even though it's kind of late in the -rc cycle for
-> > the patches to make the next release. Fingers crossed.
->
-> Patches 1-5 (i.e. all except DTS) queued to power-supply subsystem.
+Hi,
 
-Applied 6 and 7, thanks!
+On Thu, Apr 18, 2019 at 12:11:21PM -0300, Pablo Greco wrote:
+> The bananapi-m2-berry has the PMIC providing voltage to all the pin-bank
+> supply rails from its various regulator outputs, tie them to the pio
+> node.
+>
+> Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+
+This one and the patch 7 should be the first patch in your series
+
 Maxime
 
 --
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---4s2awzwutf52hbae--
+--favmzngd5yhwh63n--
