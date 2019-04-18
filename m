@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@kernel.org>
-Subject: [PATCH 1/3] mfd: axp20x: add USB power supply mfd cell to AXP803
-Date: Fri, 19 Apr 2019 00:18:02 +0800
-Message-ID: <20190418161804.17723-2-wens@kernel.org>
+Subject: [PATCH 2/3] arm64: dts: allwinner: axp803: add USB power supply node
+Date: Fri, 19 Apr 2019 00:18:03 +0800
+Message-ID: <20190418161804.17723-3-wens@kernel.org>
 References: <20190418161804.17723-1-wens@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,30 +14,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The AXP803 has a VBUS power input. Its functionality is the same as the
-one found in the AXP813. Now that the axp20x_usb_power driver supports
-this variant, we can add an mfd cell for it to use it.
+The AXP803 has a VBUS power input. Add a device node for it,
+now that we support it.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/mfd/axp20x.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/allwinner/axp803.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 902f9f27e748..2215660dfa05 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -747,6 +747,11 @@ static const struct mfd_cell axp803_cells[] = {
- 		.of_compatible	= "x-powers,axp813-ac-power-supply",
- 		.num_resources	= ARRAY_SIZE(axp20x_ac_power_supply_resources),
- 		.resources	= axp20x_ac_power_supply_resources,
-+	}, {
-+		.name		= "axp20x-usb-power-supply",
-+		.num_resources	= ARRAY_SIZE(axp803_usb_power_supply_resources),
-+		.resources	= axp803_usb_power_supply_resources,
-+		.of_compatible	= "x-powers,axp813-usb-power-supply",
- 	},
- 	{	.name		= "axp20x-regulator" },
+diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+index c3a618e1279a..f0349ef4bfdd 100644
+--- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
++++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+@@ -185,4 +185,10 @@
+ 			status = "disabled";
+ 		};
+ 	};
++
++	usb_power_supply: usb-power-supply {
++		compatible = "x-powers,axp803-usb-power-supply",
++			     "x-powers,axp813-usb-power-supply";
++		status = "disabled";
++	};
  };
 -- 
 2.20.1
