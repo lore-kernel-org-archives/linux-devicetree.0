@@ -1,106 +1,59 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [v2 2/5] drm/mediatek: CMDQ reg address of mt8173 is different
- with mt2701
-Date: Thu, 18 Apr 2019 15:51:03 +0800
-Message-ID: <CANMq1KBpi-O=XMBcc8QKN+2SNDvHaiHdUNX0La_ZuPMWx_tNMg@mail.gmail.com>
-References: <20190416060501.76276-1-jitao.shi@mediatek.com>
- <20190416060501.76276-3-jitao.shi@mediatek.com>
+From: Fabien Parent <fparent@baylibre.com>
+Subject: Re: [PATCH 19/24] dt-bindings: spi: spi-mt65xx: add support for MT8516
+Date: Thu, 18 Apr 2019 10:05:13 +0200
+Message-ID: <CAOwMV_yKAm1zar6buhe25O56AkAX8e0nXnm4GmqhvHC-yagKfQ@mail.gmail.com>
+References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-20-fparent@baylibre.com>
+ <5bc3fbfa-6d7e-08d3-116c-a8f78bc680cd@gmail.com> <1555403151.7441.4.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190416060501.76276-3-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream <srv_heupstream@mediatek.com>, lk
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1555403151.7441.4.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lei liu <leilk.liu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, ryder.lee@mediatek.com, linux-watchdog@vger.kernel.org, jjian.zhou@mediatek.com, wenzhen.yu@mediatek.com, Stephane Le Provost <stephane.leprovost@mediatek.com>, sean.wang@kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, yong.mao@mediatek.com, linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, hsin-hsiung.wang@mediatek.com, linux-serial@vger.kernel.org, linux-clk@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTYsIDIwMTkgYXQgMjowNSBQTSBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRp
-YXRlay5jb20+IHdyb3RlOgo+Cj4gQ29uZmlnIHRoZSBkaWZmZXJlbnQgQ01EUSByZWcgYWRkcmVz
-cyBpbiBkcml2ZXIgZGF0YS4KPgo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hp
-QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2ku
-YyB8IDM5ICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwg
-MzAgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kc2kuYwo+IGluZGV4IDZjNGFjMzdmOTgzZC4uNTczZTZiZWM2ZDM2IDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gQEAgLTEzMSw3ICsxMzEsNiBAQAo+ICAjZGVmaW5lIFZN
-X0NNRF9FTiAgICAgICAgICAgICAgICAgICAgICBCSVQoMCkKPiAgI2RlZmluZSBUU19WRlBfRU4g
-ICAgICAgICAgICAgICAgICAgICAgQklUKDUpCj4KPiAtI2RlZmluZSBEU0lfQ01EUTAgICAgICAg
-ICAgICAgIDB4MTgwCj4gICNkZWZpbmUgQ09ORklHICAgICAgICAgICAgICAgICAgICAgICAgICgw
-eGZmIDw8IDApCj4gICNkZWZpbmUgU0hPUlRfUEFDS0VUICAgICAgICAgICAgICAgICAgIDAKPiAg
-I2RlZmluZSBMT05HX1BBQ0tFVCAgICAgICAgICAgICAgICAgICAgMgo+IEBAIC0xNTYsNiArMTU1
-LDEwIEBACj4KPiAgc3RydWN0IHBoeTsKPgo+ICtzdHJ1Y3QgbXRrX2RzaV9kcml2ZXJfZGF0YSB7
-Cj4gKyAgICAgICBjb25zdCB1MzIgcmVnX2NtZHFfb2ZmOwo+ICt9Owo+ICsKPiAgc3RydWN0IG10
-a19kc2kgewo+ICAgICAgICAgc3RydWN0IG10a19kZHBfY29tcCBkZHBfY29tcDsKPiAgICAgICAg
-IHN0cnVjdCBkZXZpY2UgKmRldjsKPiBAQCAtMTgyLDYgKzE4NSw3IEBAIHN0cnVjdCBtdGtfZHNp
-IHsKPiAgICAgICAgIGJvb2wgZW5hYmxlZDsKPiAgICAgICAgIHUzMiBpcnFfZGF0YTsKPiAgICAg
-ICAgIHdhaXRfcXVldWVfaGVhZF90IGlycV93YWl0X3F1ZXVlOwo+ICsgICAgICAgc3RydWN0IG10
-a19kc2lfZHJpdmVyX2RhdGEgKmRyaXZlcl9kYXRhOwoKQXMgaGlnaGxpZ2h0ZWQgYnkga2J1aWxk
-LCB5b3UncmUgbWlzc2luZyBhIGNvbnN0IGhlcmUuCgo+ICB9Owo+Cj4gIHN0YXRpYyBpbmxpbmUg
-c3RydWN0IG10a19kc2kgKmVuY29kZXJfdG9fZHNpKHN0cnVjdCBkcm1fZW5jb2RlciAqZSkKPiBA
-QCAtOTM0LDYgKzkzOCw3IEBAIHN0YXRpYyB2b2lkIG10a19kc2lfY21kcShzdHJ1Y3QgbXRrX2Rz
-aSAqZHNpLCBjb25zdCBzdHJ1Y3QgbWlwaV9kc2lfbXNnICptc2cpCj4gICAgICAgICBjb25zdCBj
-aGFyICp0eF9idWYgPSBtc2ctPnR4X2J1ZjsKPiAgICAgICAgIHU4IGNvbmZpZywgY21kcV9zaXpl
-LCBjbWRxX29mZiwgdHlwZSA9IG1zZy0+dHlwZTsKPiAgICAgICAgIHUzMiByZWdfdmFsLCBjbWRx
-X21hc2ssIGk7Cj4gKyAgICAgICB1MzIgcmVnX2NtZHFfb2ZmID0gZHNpLT5kcml2ZXJfZGF0YS0+
-cmVnX2NtZHFfb2ZmOwo+Cj4gICAgICAgICBpZiAoTVRLX0RTSV9IT1NUX0lTX1JFQUQodHlwZSkp
-Cj4gICAgICAgICAgICAgICAgIGNvbmZpZyA9IEJUQTsKPiBAQCAtOTUzLDkgKzk1OCwxMSBAQCBz
-dGF0aWMgdm9pZCBtdGtfZHNpX2NtZHEoc3RydWN0IG10a19kc2kgKmRzaSwgY29uc3Qgc3RydWN0
-IG1pcGlfZHNpX21zZyAqbXNnKQo+ICAgICAgICAgfQo+Cj4gICAgICAgICBmb3IgKGkgPSAwOyBp
-IDwgbXNnLT50eF9sZW47IGkrKykKPiAtICAgICAgICAgICAgICAgd3JpdGViKHR4X2J1ZltpXSwg
-ZHNpLT5yZWdzICsgRFNJX0NNRFEwICsgY21kcV9vZmYgKyBpKTsKPiArICAgICAgICAgICAgICAg
-bXRrX2RzaV9tYXNrKGRzaSwgKHJlZ19jbWRxX29mZiArIGNtZHFfb2ZmICsgaSkgJiAofjB4M1Up
-LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDB4ZmZVTCA8PCAoKChpICsgY21kcV9v
-ZmYpICYgM1UpICogOFUpKSwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR4X2J1Zltp
-XSA8PCAoKChpICsgY21kcV9vZmYpICYgM1UpICogOFUpKTsKClRoZSB3cml0ZWIgY2FsbCBsb29r
-ZWQgc2lnbmlmaWNhbnRseSBjbGVhbmVyLi4uCgp3cml0ZWIodHhfYnVmW2ldLCBkc2ktPnJlZ3Mg
-KyByZWdfY21kcV9vZmYgKyBjbWRxX29mZiArIGkpOwpzaG91bGQganVzdCB3b3JrLCByaWdodD8K
-Cj4KPiAtICAgICAgIG10a19kc2lfbWFzayhkc2ksIERTSV9DTURRMCwgY21kcV9tYXNrLCByZWdf
-dmFsKTsKPiArICAgICAgIG10a19kc2lfbWFzayhkc2ksIHJlZ19jbWRxX29mZiwgY21kcV9tYXNr
-LCByZWdfdmFsKTsKPiAgICAgICAgIG10a19kc2lfbWFzayhkc2ksIERTSV9DTURRX1NJWkUsIENN
-RFFfU0laRSwgY21kcV9zaXplKTsKPiAgfQo+Cj4gQEAgLTEwNzQsMTAgKzEwODEsMjcgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBjb21wb25lbnRfb3BzIG10a19kc2lfY29tcG9uZW50X29wcyA9IHsK
-PiAgICAgICAgIC51bmJpbmQgPSBtdGtfZHNpX3VuYmluZCwKPiAgfTsKPgo+ICtzdGF0aWMgY29u
-c3Qgc3RydWN0IG10a19kc2lfZHJpdmVyX2RhdGEgbXQ4MTczX2RzaV9kcml2ZXJfZGF0YSA9IHsK
-PiArICAgICAgIC5yZWdfY21kcV9vZmYgPSAweDIwMCwKPiArfTsKPiArCj4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX2RzaV9kcml2ZXJfZGF0YSBtdDI3MDFfZHNpX2RyaXZlcl9kYXRhID0gewo+
-ICsgICAgICAgLnJlZ19jbWRxX29mZiA9IDB4MTgwLAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2RzaV9vZl9tYXRjaFtdID0gewo+ICsgICAgICAgeyAu
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZHNpIiwKPiArICAgICAgICAgLmRhdGEgPSAm
-bXQyNzAxX2RzaV9kcml2ZXJfZGF0YSB9LAo+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDgxNzMtZHNpIiwKPiArICAgICAgICAgLmRhdGEgPSAmbXQ4MTczX2RzaV9kcml2ZXJf
-ZGF0YSB9LAo+ICsgICAgICAgeyB9LAo+ICt9Owo+ICsKPiAgc3RhdGljIGludCBtdGtfZHNpX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIHsKPiAgICAgICAgIHN0cnVjdCBt
-dGtfZHNpICpkc2k7Cj4gICAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+
-ICsgICAgICAgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2ZfaWQ7Cj4gICAgICAgICBzdHJ1
-Y3QgcmVzb3VyY2UgKnJlZ3M7Cj4gICAgICAgICBpbnQgaXJxX251bTsKPiAgICAgICAgIGludCBj
-b21wX2lkOwo+IEBAIC0xMTAxLDYgKzExMjUsOSBAQCBzdGF0aWMgaW50IG10a19kc2lfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgIGlmIChyZXQpCj4gICAgICAg
-ICAgICAgICAgIGdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPgo+ICsgICAgICAgb2ZfaWQgPSBv
-Zl9tYXRjaF9kZXZpY2UobXRrX2RzaV9vZl9tYXRjaCwgJnBkZXYtPmRldik7Cj4gKyAgICAgICBk
-c2ktPmRyaXZlcl9kYXRhID0gb2ZfaWQtPmRhdGE7Cj4gKwo+ICAgICAgICAgZHNpLT5lbmdpbmVf
-Y2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImVuZ2luZSIpOwo+ICAgICAgICAgaWYgKElTX0VSUihk
-c2ktPmVuZ2luZV9jbGspKSB7Cj4gICAgICAgICAgICAgICAgIHJldCA9IFBUUl9FUlIoZHNpLT5l
-bmdpbmVfY2xrKTsKPiBAQCAtMTE5MywxMiArMTIyMCw2IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9y
-ZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgIHJldHVybiAwOwo+
-ICB9Cj4KPiAtc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2RzaV9vZl9tYXRj
-aFtdID0gewo+IC0gICAgICAgeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZHNpIiB9
-LAo+IC0gICAgICAgeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtZHNpIiB9LAo+IC0g
-ICAgICAgeyB9LAo+IC19Owo+IC0KPiAgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBtdGtfZHNpX2Ry
-aXZlciA9IHsKPiAgICAgICAgIC5wcm9iZSA9IG10a19kc2lfcHJvYmUsCj4gICAgICAgICAucmVt
-b3ZlID0gbXRrX2RzaV9yZW1vdmUsCj4gLS0KPiAyLjIxLjAKPgo+IF9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+
-IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Tue, Apr 16, 2019 at 10:25 AM lei liu <leilk.liu@mediatek.com> wrote:
+>
+> On Tue, 2019-04-16 at 09:55 +0200, Matthias Brugger wrote:
+> >
+> > On 23/03/2019 22:16, Fabien Parent wrote:
+> > > Add binding documentation of spi-mt65xx for MT8516 SoC.
+> > >
+> > > Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> >
+> >
+> > applied to v5.1-next/dts64
+> >
+> > Mark let me know if you want to take it through your tree and I drop the patch.
+> >
+> > > diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> > > index 69c356767cf8..69ac5976b952 100644
+> > > --- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> > > +++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> > > @@ -10,6 +10,7 @@ Required properties:
+> > >      - mediatek,mt8135-spi: for mt8135 platforms
+> > >      - mediatek,mt8173-spi: for mt8173 platforms
+> > >      - mediatek,mt8183-spi: for mt8183 platforms
+> > > +    - "mediatek,mt8516-spi", "mediatek,mt2701-spi": for mt8516 platforms
+> Hi Fabien,
+> mt8516 SPI design comes from mt2712 and it's different from mt2701. Here
+> it should compatible with mt2712.
+
+Ok, thanks. I will retry with the mt2712 compatible.
+
+> > >
+> > >  - #address-cells: should be 1.
+> > >
+> > >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
+>
