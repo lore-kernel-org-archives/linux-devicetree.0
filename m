@@ -1,85 +1,89 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: allwinner: a64-amarula-relic: Add
- GT5663 CTP node
-Date: Thu, 18 Apr 2019 14:57:29 +0200
-Message-ID: <20190418125729.ihsdhtclcv7loftm@flea>
-References: <20190418083543.11695-1-jagan@amarulasolutions.com>
- <20190418112357.qic227rdwordmzyh@flea>
- <CAMty3ZDwhB+63i_Cy90n0Y_Ra6XdTXbsX+z5q6swnj=FLH976g@mail.gmail.com>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
+Date: Thu, 18 Apr 2019 21:10:25 +0800
+Message-ID: <CAEExFWvmpnJ8EyvAejVtvBQHdVVGFhpSn7zCMmx1BSre-gt+Ug@mail.gmail.com>
+References: <20190416155209.24216-1-tiny.windzz@gmail.com> <20190416155209.24216-3-tiny.windzz@gmail.com>
+ <20190417083000.cwzvhlpbxqoifosw@flea>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fqcutytxrihg6l4f"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDwhB+63i_Cy90n0Y_Ra6XdTXbsX+z5q6swnj=FLH976g@mail.gmail.com>
+In-Reply-To: <20190417083000.cwzvhlpbxqoifosw@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---fqcutytxrihg6l4f
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Apr 18, 2019 at 06:00:27PM +0530, Jagan Teki wrote:
-> On Thu, Apr 18, 2019 at 4:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Thu, Apr 18, 2019 at 02:05:42PM +0530, Jagan Teki wrote:
-> > > Add Goodix GT5663 capacitive touch controller node on
-> > > Amarula A64-Relic board.
-> > >
-> > > The CTP connected to board with,
-> > > - SDA, SCK from i2c1
-> > > - GPIO-LD0 as AVDD28 supply
-> > > - PH4 gpio as interrupt pin
-> > > - PH8 gpio as reset pin
-> > > - X axis is inverted
-> > > - Y axis is inverted
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Changes for v2:
-> > > - drop i2c1, bias-pull-up
-> > >
-> > >  .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > index 3575db216016..3819ce396073 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > @@ -49,6 +49,24 @@
-> > >       bias-pull-up;
-> > >  };
-> > >
-> > > +&i2c1 {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&i2c1_pins>;
-> >
-> > That's the default already
+On Wed, Apr 17, 2019 at 4:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> Yes, and i2c1 node in sun50i-a64.dtsi is not attaching pinctrl. So I
-> attached here.
+> On Tue, Apr 16, 2019 at 11:52:09AM -0400, Yangtao Li wrote:
+> > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > frequency value based on the speedbin blown in the efuse combination.
+> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > provide the OPP framework with required information.
+> > This is used to determine the voltage and frequency value for each
+> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> >
+> > The "allwinner,sun50i-h6-operating-points" DT extends the
+> > "operating-points-v2"
+> > with following parameters:
+> > - nvmem-cells (NVMEM area containig the speedbin information)
+> > - opp-microvolt-<name>: voltage in micro Volts.
+> >   At runtime, the platform can pick a <name> and matching
+> >   opp-microvolt-<name> property.
+> >                       HW:             <name>:
+> >                       sun50iw-h6      speed0 speed1 speed2
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
+> >  1 file changed, 167 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> > new file mode 100644
+> > index 000000000000..3cb39c6caec3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> > @@ -0,0 +1,167 @@
+> > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+> > +===================================
+> > +
+> > +For some SoCs, the CPU frequency subset and voltage value of each OPP
+> > +varies based on the silicon variant in use. Allwinner Process Voltage
+> > +Scaling Tables defines the voltage and frequency value based on the
+> > +speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
+> > +reads the efuse value from the SoC to provide the OPP framework with
+> > +required information.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +In 'cpus' nodes:
+> > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+> > +
+> > +In 'operating-points-v2' table:
+> > +- compatible: Should be
+> > +     - 'allwinner,sun50i-h6-operating-points'.
+> > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+> > +             efuse registers that has information about the speedbin
+> > +             that is used to select the right frequency/voltage value
+> > +             pair. Please refer the for nvmem-cells bindings
+> > +             Documentation/devicetree/bindings/nvmem/nvmem.txt and
+> > +             also examples below.
+> > +
+> > +In every OPP node:
+> > +- opp-microvolt-<name>: Voltage in micro Volts.
+> > +                     At runtime, the platform can pick a <name> and
+> > +                     matching opp-microvolt-<name> property.
+> > +                     [See: opp.txt]
+> > +                     HW:             <name>:
+> > +                     sun50iw-h6      speed0 speed1 speed2
+>
+> There's a typo here (and in your commit log), it should be sun50i-h6
+> instead of sun50iw-h6
+>
+> Once fixed:
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Another has been sent.
 
-If that's the only muxing option, it should then.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---fqcutytxrihg6l4f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLh0OQAKCRDj7w1vZxhR
-xXUFAP90TQofLCGvEH4XjS5PMg99z8RKJ6oVSIdJa2nJk5v/eQEA7surluc2rFnp
-dimL+VhNIlxTgQvD4IUcX9UO80Ij8ww=
-=pU/7
------END PGP SIGNATURE-----
-
---fqcutytxrihg6l4f--
+Regards,
+Yangtao
