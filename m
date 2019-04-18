@@ -1,25 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] dt-bindings: Add an entry for Purism SPC
-Date: Thu, 18 Apr 2019 10:05:03 -0500
-Message-ID: <20190418150503.GB32345@bogus>
-References: <20190417165514.18689-1-angus@akkea.ca>
- <20190417165514.18689-3-angus@akkea.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Pablo Greco <pgreco@centosproject.org>
+Subject: [PATCH v4 0/7] ARM: dts: sun8i: v40 Rewrite BPi M2 Berry DTS based on BPi M2 Ultra
+Date: Thu, 18 Apr 2019 12:11:15 -0300
+Message-ID: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190417165514.18689-3-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, m.felsch@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, Matthias Brugger <matthias.bgg@gmail.com>, Guo Ren <guoren@kernel.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Ja
+To: linux-sunxi@googlegroups.com
+Cc: Pablo Greco <pgreco@centosproject.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 09:55:13AM -0700, Angus Ainslie (Purism) wrote:
-> Add an entry for Purism, SPC
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+BPi M2 Berry is a trimmed down version of the BPi M2 Ultra, completely
+software compatible.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes include:
+- 2GiB -> 1GiB
+- no eMMC
+- no onboard microphone
+- no IR
+- no blue LED
+- no charging (and power jack to USB)
+- dropped USB2 and connect USB1 to a 4-port HUB.
+
+Changes in v4:
+- Went back to v2
+- Added GPIO pin-bank regulators (both m2-ultra and m2-berry)
+
+Changes in v3:
+- Removed "Sort device node dereferences" (already applied)
+- Added basic pio node
+- Tied GMAC regulators to the pio (both m2-ultra and m2-berry)
+
+Changes in v2:
+- Split into smaller patches
+
+Pablo Greco (7):
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable GMAC ethernet
+    controller
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable HDMI output
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable AHCI
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Fix WiFi regulator
+    definitions
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Add Bluetooth device node
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Add GPIO pin-bank regulator  
+      supplies
+  ARM: dts: sun8i: r40: bananapi-m2-ultra: Add GPIO pin-bank regulator  
+      supplies
+
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts |   6 ++
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 124 ++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
+
+-- 
+1.8.3.1
