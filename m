@@ -1,81 +1,46 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH] arm64: dts: lx2160a: add cpu idle support
-Date: Thu, 18 Apr 2019 03:42:25 +0000
-Message-ID: <20190418034401.26480-1-ran.wang_1@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 3/7] phy: qcom: Add Qualcomm PCIe2 PHY driver
+Date: Thu, 18 Apr 2019 10:29:18 +0530
+Message-ID: <20190418045918.GV28103@vkoul-mobl>
+References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+ <20190219060407.15263-4-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190219060407.15263-4-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-bHgyMTYwYSBzdXBwb3J0cyBwdzIwIHdoaWNoIGNvdWxkIGhlbHAgc2F2ZSBtb3JlIHBvd2VyIGR1
-cmluZyBjcHUgaXMNCmRpbGUuIEl0IG5lZWRzIHN5c3RlbSBmaXJtd2FyZSBzdXBwb3J0IHZpYSBQ
-U0NJLg0KDQpTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8cmFuLndhbmdfMUBueHAuY29tPg0KLS0t
-DQogYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSB8ICAgMjUg
-KysrKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25z
-KCspLCAwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1seDIxNjBhLmR0c2kNCmluZGV4IGZlODcyMDQuLjFlMDcxNTUgMTAwNjQ0DQotLS0gYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS5kdHNpDQorKysgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS5kdHNpDQpAQCAtMzMsNiArMzMs
-NyBAQA0KIAkJCWktY2FjaGUtbGluZS1zaXplID0gPDY0PjsNCiAJCQlpLWNhY2hlLXNldHMgPSA8
-MTkyPjsNCiAJCQluZXh0LWxldmVsLWNhY2hlID0gPCZjbHVzdGVyMF9sMj47DQorCQkJY3B1LWlk
-bGUtc3RhdGVzID0gPCZjcHVfcHcyMD47DQogCQl9Ow0KIA0KIAkJY3B1QDEgew0KQEAgLTQ4LDYg
-KzQ5LDcgQEANCiAJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQogCQkJaS1jYWNoZS1zZXRz
-ID0gPDE5Mj47DQogCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmY2x1c3RlcjBfbDI+Ow0KKwkJCWNw
-dS1pZGxlLXN0YXRlcyA9IDwmY3B1X3B3MjA+Ow0KIAkJfTsNCiANCiAJCWNwdUAxMDAgew0KQEAg
-LTYzLDYgKzY1LDcgQEANCiAJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQogCQkJaS1jYWNo
-ZS1zZXRzID0gPDE5Mj47DQogCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmY2x1c3RlcjFfbDI+Ow0K
-KwkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmY3B1X3B3MjA+Ow0KIAkJfTsNCiANCiAJCWNwdUAxMDEg
-ew0KQEAgLTc4LDYgKzgxLDcgQEANCiAJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQogCQkJ
-aS1jYWNoZS1zZXRzID0gPDE5Mj47DQogCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmY2x1c3RlcjFf
-bDI+Ow0KKwkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmY3B1X3B3MjA+Ow0KIAkJfTsNCiANCiAJCWNw
-dUAyMDAgew0KQEAgLTkzLDYgKzk3LDcgQEANCiAJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47
-DQogCQkJaS1jYWNoZS1zZXRzID0gPDE5Mj47DQogCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmY2x1
-c3RlcjJfbDI+Ow0KKwkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmY3B1X3B3MjA+Ow0KIAkJfTsNCiAN
-CiAJCWNwdUAyMDEgew0KQEAgLTEwOCw2ICsxMTMsNyBAQA0KIAkJCWktY2FjaGUtbGluZS1zaXpl
-ID0gPDY0PjsNCiAJCQlpLWNhY2hlLXNldHMgPSA8MTkyPjsNCiAJCQluZXh0LWxldmVsLWNhY2hl
-ID0gPCZjbHVzdGVyMl9sMj47DQorCQkJY3B1LWlkbGUtc3RhdGVzID0gPCZjcHVfcHcyMD47DQog
-CQl9Ow0KIA0KIAkJY3B1QDMwMCB7DQpAQCAtMTIzLDYgKzEyOSw3IEBADQogCQkJaS1jYWNoZS1s
-aW5lLXNpemUgPSA8NjQ+Ow0KIAkJCWktY2FjaGUtc2V0cyA9IDwxOTI+Ow0KIAkJCW5leHQtbGV2
-ZWwtY2FjaGUgPSA8JmNsdXN0ZXIzX2wyPjsNCisJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JmNwdV9w
-dzIwPjsNCiAJCX07DQogDQogCQljcHVAMzAxIHsNCkBAIC0xMzgsNiArMTQ1LDcgQEANCiAJCQlp
-LWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQogCQkJaS1jYWNoZS1zZXRzID0gPDE5Mj47DQogCQkJ
-bmV4dC1sZXZlbC1jYWNoZSA9IDwmY2x1c3RlcjNfbDI+Ow0KKwkJCWNwdS1pZGxlLXN0YXRlcyA9
-IDwmY3B1X3B3MjA+Ow0KIAkJfTsNCiANCiAJCWNwdUA0MDAgew0KQEAgLTE1Myw2ICsxNjEsNyBA
-QA0KIAkJCWktY2FjaGUtbGluZS1zaXplID0gPDY0PjsNCiAJCQlpLWNhY2hlLXNldHMgPSA8MTky
-PjsNCiAJCQluZXh0LWxldmVsLWNhY2hlID0gPCZjbHVzdGVyNF9sMj47DQorCQkJY3B1LWlkbGUt
-c3RhdGVzID0gPCZjcHVfcHcyMD47DQogCQl9Ow0KIA0KIAkJY3B1QDQwMSB7DQpAQCAtMTY4LDYg
-KzE3Nyw3IEBADQogCQkJaS1jYWNoZS1saW5lLXNpemUgPSA8NjQ+Ow0KIAkJCWktY2FjaGUtc2V0
-cyA9IDwxOTI+Ow0KIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmNsdXN0ZXI0X2wyPjsNCisJCQlj
-cHUtaWRsZS1zdGF0ZXMgPSA8JmNwdV9wdzIwPjsNCiAJCX07DQogDQogCQljcHVANTAwIHsNCkBA
-IC0xODMsNiArMTkzLDcgQEANCiAJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQogCQkJaS1j
-YWNoZS1zZXRzID0gPDE5Mj47DQogCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmY2x1c3RlcjVfbDI+
-Ow0KKwkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmY3B1X3B3MjA+Ow0KIAkJfTsNCiANCiAJCWNwdUA1
-MDEgew0KQEAgLTE5OCw2ICsyMDksNyBAQA0KIAkJCWktY2FjaGUtbGluZS1zaXplID0gPDY0PjsN
-CiAJCQlpLWNhY2hlLXNldHMgPSA8MTkyPjsNCiAJCQluZXh0LWxldmVsLWNhY2hlID0gPCZjbHVz
-dGVyNV9sMj47DQorCQkJY3B1LWlkbGUtc3RhdGVzID0gPCZjcHVfcHcyMD47DQogCQl9Ow0KIA0K
-IAkJY3B1QDYwMCB7DQpAQCAtMjEzLDYgKzIyNSw3IEBADQogCQkJaS1jYWNoZS1saW5lLXNpemUg
-PSA8NjQ+Ow0KIAkJCWktY2FjaGUtc2V0cyA9IDwxOTI+Ow0KIAkJCW5leHQtbGV2ZWwtY2FjaGUg
-PSA8JmNsdXN0ZXI2X2wyPjsNCisJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JmNwdV9wdzIwPjsNCiAJ
-CX07DQogDQogCQljcHVANjAxIHsNCkBAIC0yMjgsNiArMjQxLDcgQEANCiAJCQlpLWNhY2hlLWxp
-bmUtc2l6ZSA9IDw2ND47DQogCQkJaS1jYWNoZS1zZXRzID0gPDE5Mj47DQogCQkJbmV4dC1sZXZl
-bC1jYWNoZSA9IDwmY2x1c3RlcjZfbDI+Ow0KKwkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmY3B1X3B3
-MjA+Ow0KIAkJfTsNCiANCiAJCWNwdUA3MDAgew0KQEAgLTI0Myw2ICsyNTcsNyBAQA0KIAkJCWkt
-Y2FjaGUtbGluZS1zaXplID0gPDY0PjsNCiAJCQlpLWNhY2hlLXNldHMgPSA8MTkyPjsNCiAJCQlu
-ZXh0LWxldmVsLWNhY2hlID0gPCZjbHVzdGVyN19sMj47DQorCQkJY3B1LWlkbGUtc3RhdGVzID0g
-PCZjcHVfcHcyMD47DQogCQl9Ow0KIA0KIAkJY3B1QDcwMSB7DQpAQCAtMjU4LDYgKzI3Myw3IEBA
-DQogCQkJaS1jYWNoZS1saW5lLXNpemUgPSA8NjQ+Ow0KIAkJCWktY2FjaGUtc2V0cyA9IDwxOTI+
-Ow0KIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmNsdXN0ZXI3X2wyPjsNCisJCQljcHUtaWRsZS1z
-dGF0ZXMgPSA8JmNwdV9wdzIwPjsNCiAJCX07DQogDQogCQljbHVzdGVyMF9sMjogbDItY2FjaGUw
-IHsNCkBAIC0zMjMsNiArMzM5LDE1IEBADQogCQkJY2FjaGUtc2V0cyA9IDwxMDI0PjsNCiAJCQlj
-YWNoZS1sZXZlbCA9IDwyPjsNCiAJCX07DQorDQorCQljcHVfcHcyMDogY3B1LXB3MjAgew0KKwkJ
-CWNvbXBhdGlibGUgPSAiYXJtLGlkbGUtc3RhdGUiOw0KKwkJCWlkbGUtc3RhdGUtbmFtZSA9ICJQ
-VzIwIjsNCisJCQlhcm0scHNjaS1zdXNwZW5kLXBhcmFtID0gPDB4MD47DQorCQkJZW50cnktbGF0
-ZW5jeS11cyA9IDwyMDAwPjsNCisJCQlleGl0LWxhdGVuY3ktdXMgPSA8MjAwMD47DQorCQkJbWlu
-LXJlc2lkZW5jeS11cyA9IDw2MDAwPjsNCisJCSAgfTsNCiAJfTsNCiANCiAJZ2ljOiBpbnRlcnJ1
-cHQtY29udHJvbGxlckA2MDAwMDAwIHsNCi0tIA0KMS43LjENCg0K
+On 18-02-19, 22:04, Bjorn Andersson wrote:
+
+> +static int qcom_pcie2_phy_power_on(struct phy *phy)
+> +{
+> +	struct qcom_phy *qphy = phy_get_drvdata(phy);
+> +	int ret;
+> +	u32 val;
+> +
+> +	/* Program REF_CLK source */
+> +	val = readl(qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
+> +	val &= ~BIT(1);
+> +	writel(val, qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
+> +
+> +	usleep_range(1000, 2000);
+> +
+> +	/* Don't use PAD for refclock */
+> +	val = readl(qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
+> +	val &= ~BIT(0);
+> +	writel(val, qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
+> +
+> +	/* Program SSP ENABLE */
+> +	val = readl(qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL3);
+> +	val |= BIT(0);
+> +	writel(val, qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL3);
+
+we have this readl, modify and writel pattern in the file. I guess it
+makes sense to add a modifyl() with mask and value as args..
+
+-- 
+~Vinod
