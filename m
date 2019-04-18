@@ -1,51 +1,79 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v2 3/4] Documentation: devicetree: add PPMU events
- description
-Date: Thu, 18 Apr 2019 15:38:31 +0200
-Message-ID: <1555594712-18341-4-git-send-email-l.luba@partner.samsung.com>
-References: <1555594712-18341-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190418133854eucas1p11bd927755163f0030a1748a023099a06@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v3 2/2] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable GT911 CTP
+Date: Thu, 18 Apr 2019 19:18:38 +0530
+Message-ID: <20190418134838.8806-2-jagan@amarulasolutions.com>
+References: <20190418134838.8806-1-jagan@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555594712-18341-1-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <20190418134838.8806-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, l.luba@partner.samsung.com, willy.mh.wolff.ml@gmail.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Extend the documenation by events description with new 'event-data-type'
-field. Add example how the event might be defined in DT.
+Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+The CTP connected to board with,
+- SDA, SCK from i2c0
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH11 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Changes for v3:
+- Use 2.8v for reg_ldo_io0
+Changes for v2:
+- drop i2c1, bias-pull-up
 
-diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-index 3e36c1d..47feb5f 100644
---- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-+++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-@@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
- 			reg = <0x104d0000 0x2000>;
- 			status = "disabled";
- 		};
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index 6a2154525d1e..f0cd6587f619 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -37,6 +37,24 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
 +
-+The 'event' type specified in the PPMU node defines 'event-name'
-+which also contains 'id' number and optionally 'event-data-type'.
++	touchscreen@5d {
++		compatible = "goodix,gt911";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
 +
-+Example:
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
+@@ -52,6 +70,13 @@
+ 	regulator-name = "vcc-phy";
+ };
+ 
++&reg_ldo_io0 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vdd-ctp";
++	status = "okay";
++};
 +
-+		events {
-+			ppmu_leftbus_0: ppmu-event0-leftbus {
-+				event-name = "ppmu-event0-leftbus";
-+				event-data-type = <PPMU_RO_DATA_CNT>;
-+			};
-+		};
-+
-+The 'event-data-type' defines the type of data which shell be counted
-+by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
-+all possible type, i.e. count read requests, count write data in bytes,
-+etc. This field is optional and when it is missing, the driver code will
-+use default data type.
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
-2.7.4
+2.18.0.321.gffc6fa0e3
