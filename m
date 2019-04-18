@@ -1,22 +1,21 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "MAINTAINERS: slg51000 updates to the Dialog Semiconductor search terms" to the regulator tree
-Date: Thu, 18 Apr 2019 11:26:07 +0100 (BST)
-Message-ID: <20190418102607.5AFC811279BB@debutante.sirena.org.uk>
-References: <878724615d6edf4d1d8960fd4aa9058aaedab026.1555567784.git.eric.jeong.opensource@diasemi.com>
+Subject: Applied "spi: expand mode support" to the spi tree
+Date: Thu, 18 Apr 2019 11:26:08 +0100 (BST)
+Message-ID: <20190418102608.0CC9F1126DCF@debutante.sirena.org.uk>
+References: <1555363834-32155-3-git-send-email-skomatineni@nvidia.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <878724615d6edf4d1d8960fd4aa9058aaedab026.1555567784.git.eric.jeong.opensource@diasemi.com>
+In-Reply-To: <1555363834-32155-3-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Cc: broonie@kernel.org, devicetree@vger.kernel.org, jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-tegra@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org, skomatineni@nvidia.com, talho@nvidia.com, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   MAINTAINERS: slg51000 updates to the Dialog Semiconductor search terms
+   spi: expand mode support
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,40 +36,50 @@ to this mail.
 Thanks,
 Mark
 
->From 4b01c5afc1817a966065d7da0fb962cc591c6fad Mon Sep 17 00:00:00 2001
-From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Date: Thu, 18 Apr 2019 15:09:43 +0900
-Subject: [PATCH] MAINTAINERS: slg51000 updates to the Dialog Semiconductor
- search terms
+>From 4b490710d4d24f95e95a07baac6f3f98bb94cf3b Mon Sep 17 00:00:00 2001
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Date: Mon, 15 Apr 2019 14:30:27 -0700
+Subject: [PATCH] spi: expand mode support
 
-This patch adds the slg51000 bindings doc and driver to the Dialog
-Semiconductor support list.
+This patch changes mode and mode_bits from u16 to u32 to allow more
+mode configurations.
 
-Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/spi/spi.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf70b548..656c1cc6431e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4603,6 +4603,7 @@ F:	Documentation/devicetree/bindings/mfd/da90*.txt
- F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
- F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
-+F:	Documentation/devicetree/bindings/regulator/slg51000.txt
- F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
- F:	Documentation/devicetree/bindings/sound/da[79]*.txt
- F:	drivers/gpio/gpio-da90??.c
-@@ -4618,6 +4619,7 @@ F:	drivers/power/supply/da9052-battery.c
- F:	drivers/power/supply/da91??-*.c
- F:	drivers/regulator/da903x.c
- F:	drivers/regulator/da9???-regulator.[ch]
-+F:	drivers/regulator/slg51000-regulator.[ch]
- F:	drivers/thermal/da90??-thermal.c
- F:	drivers/rtc/rtc-da90??.c
- F:	drivers/video/backlight/da90??_bl.c
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 589f9dc9ac2b..053abd22ad31 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -143,7 +143,7 @@ struct spi_device {
+ 	u32			max_speed_hz;
+ 	u8			chip_select;
+ 	u8			bits_per_word;
+-	u16			mode;
++	u32			mode;
+ #define	SPI_CPHA	0x01			/* clock phase */
+ #define	SPI_CPOL	0x02			/* clock polarity */
+ #define	SPI_MODE_0	(0|0)			/* (original MicroWire) */
+@@ -443,7 +443,7 @@ struct spi_controller {
+ 	u16			dma_alignment;
+ 
+ 	/* spi_device.mode flags understood by this controller driver */
+-	u16			mode_bits;
++	u32			mode_bits;
+ 
+ 	/* bitmask of supported bits_per_word for transfers */
+ 	u32			bits_per_word_mask;
+@@ -1291,7 +1291,7 @@ struct spi_board_info {
+ 	/* mode becomes spi_device.mode, and is essential for chips
+ 	 * where the default of SPI_CS_HIGH = 0 is wrong.
+ 	 */
+-	u16		mode;
++	u32		mode;
+ 
+ 	/* ... may need additional spi_device chip config data here.
+ 	 * avoid stuff protocol drivers can set; but include stuff
 -- 
 2.20.1
