@@ -1,54 +1,96 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend;
- enable for rk3288-veyron
-Date: Thu, 18 Apr 2019 08:54:48 -0700
-Message-ID: <CAD=FV=XDLqcdq_BypUYsJHKX+DY0VWvCACYgZiHeG8E3Dbwxcw@mail.gmail.com>
-References: <20190418001356.124334-1-dianders@chromium.org>
- <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Enable GMAC ethernet controller
+Date: Thu, 18 Apr 2019 17:55:15 +0200
+Message-ID: <20190418155515.cb2saxlvthzhaozq@flea>
+References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+ <1555600282-9405-2-git-send-email-pgreco@centosproject.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>, Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Amelie Delaunay <amelie.delaunay@st.com>, "heiko@sntech.de" <heiko@sntech.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>, "zyw@rock-chips.com" <zyw@rock-chips.com>, Stefan Wahren <stefan.wahren@i2se.com>, Nicolas Boichat <drinkcat@chromium.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "mka@chromium.org" <mka@chromium.org>, Alan Stern <stern@rowland.harvard.edu>, Jon Flatley <jflat@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Elaine Zhang <zhangqing@rock-chips.com>, "amstan@chromium.org" <amstan@chromium.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Randy Li <ayaka@soulik.info>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, Greg Kroah-Hartman <gregkh@>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zbzvrvpxfhwci4pw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZV34LSQKGQETGCQHOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1555600282-9405-2-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thu, Apr 18, 2019 at 5:41 AM Minas Harutyunyan
-<Minas.Harutyunyan@synopsys.com> wrote:
-> Did you consider/reviewed patch series from Artur Petrosyan "[PATCH
-> 00/14] usb: dwc2: Fix and improve power saving modes" (submitted on
-> April 12) which fixing partial power down and hibernation flows for both
-> modes: host and device?
-> I suspect that this both patch series can be in conflict.
+--zbzvrvpxfhwci4pw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-No, I wasn't aware of them.  I'd like to try them out, but it looks
-like it's currently impossible because they're not archived anywhere
-that I can find.
+On Thu, Apr 18, 2019 at 12:11:16PM -0300, Pablo Greco wrote:
+> Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
+> RTL8211E RGMII PHY tied to the GMAC.
+> The PMIC's DC1SW output provides power for the PHY, while the ALDO2
+> output provides I/O voltages on both sides.
+>
+> Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 +++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> index f05cabd..0d79e91 100644
+> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> @@ -50,6 +50,7 @@
+>  	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+>
+>  	aliases {
+> +		ethernet0 = &gmac;
+>  		serial0 = &uart0;
+>  	};
+>
+> @@ -92,6 +93,22 @@
+>  	status = "okay";
+>  };
+>
+> +&gmac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&gmac_rgmii_pins>;
+> +	phy-handle = <&phy1>;
+> +	phy-mode = "rgmii";
+> +	phy-supply = <&reg_dc1sw>;
+> +	status = "okay";
+> +};
+> +
+> +&gmac_mdio {
+> +	phy1: ethernet-phy@1 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <1>;
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>
+> @@ -123,6 +140,13 @@
+>  	status = "okay";
+>  };
+>
+> +&reg_aldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <2500000>;
+> +	regulator-max-microvolt = <2500000>;
+> +	regulator-name = "vcc-pa";
 
-1. LKML wasn't copied, so I can't find them on lore.kernel.org.  It is
-suggested to CC LKML on all patches.
+And if patches 6 and 7 become the first one, you can drop the
+always-on here.
 
-2. The Linux USB patchwork only has the cover letter plus the first 6
-patches.  See <https://patchwork.kernel.org/cover/10898333/>
+Maxime
 
-3. Searching my own archives I only see the cover letter plus the
-first 6 patches.
-
-Maybe you have some other pointer to how I can retrieve them?  I guess
-I could try the first 6 patches without the later 8 but I'd rather get
-the whole set...
-
-
--Doug
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--zbzvrvpxfhwci4pw--
