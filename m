@@ -1,81 +1,70 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH 3/3] Documentation: devicetree: add PPMU events
- description
-Date: Thu, 18 Apr 2019 11:50:46 +0200
-Message-ID: <ec6c7ce1-ee13-6921-2656-8a027c3c0686@partner.samsung.com>
-References: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190417074835eucas1p19319bedd176d55e10b272881b7c68919@eucas1p1.samsung.com>
-        <1555487288-4777-4-git-send-email-l.luba@partner.samsung.com>
-        <0d867843-ec56-f30b-8a3f-b3172f325bef@samsung.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 2/3] HID: quirks: Fix keyboard + touchpad on Lenovo
+ Miix 630 for DT
+Date: Thu, 18 Apr 2019 11:51:56 +0200
+Message-ID: <a47672ed-fc25-dd07-0ddf-2deca08283ef@redhat.com>
+References: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com>
+ <20190415161108.16419-1-jeffrey.l.hugo@gmail.com>
+ <CAO-hwJKeACBPW52ej6mVeG4aVDYvGF8zEMtegonVwFjT-ZoLOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0d867843-ec56-f30b-8a3f-b3172f325bef@samsung.com>
+In-Reply-To: <CAO-hwJKeACBPW52ej6mVeG4aVDYvGF8zEMtegonVwFjT-ZoLOQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Jiri Kosina <jikos@kernel.org>, Lee Jones <lee.jones@linaro.org>, bjorn.andersson@linaro.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, agross@kernel.org, david.brown@linaro.org, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi,
 
-On 4/17/19 10:26 AM, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> On 19. 4. 17. 오후 4:48, Lukasz Luba wrote:
->> Extend the documenation by events description with new 'event-data-type'
->> field. Add example how the event might be defined in DT.
+On 18-04-19 11:34, Benjamin Tissoires wrote:
+> On Mon, Apr 15, 2019 at 6:11 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
 >>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> Following up on commit 2bafa1e96254 ("HID: quirks: Fix keyboard + touchpad
+>> on Lenovo Miix 630"), the devicetree (DT) identifier for the combo keyboard
+>> + touchpad device is "elan,combo400-i2c", which differs from the ACPI ID,
+>> thus if we want the quirk to work properly when booting via DT instead of
+>> ACPI, we need to key off the DT id as well.
+>>
+>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 >> ---
->>   .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
+>>   drivers/hid/hid-quirks.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> index 3e36c1d..47feb5f 100644
->> --- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> +++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> @@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
->>   			reg = <0x104d0000 0x2000>;
->>   			status = "disabled";
->>   		};
->> +
->> +The 'event' type specified in the PPMU node defines 'event-name'
->> +which also contains 'id' number and optionally 'event-data-type'.
->> +
->> +Example:
->> +
->> +		events {
->> +			ppmu_leftbus_0: ppmu-event0-leftbus {
->> +				event-name = "ppmu-event0-leftbus";
->> +				event-data-type = <PPMU_RO_DATA_CNT>;
->> +			};
->> +		};
->> +
->> +The 'event-data-type' defines the type of data which shell be counted
->> +by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
+>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>> index 77ffba48cc73..00c08f8318b8 100644
+>> --- a/drivers/hid/hid-quirks.c
+>> +++ b/drivers/hid/hid-quirks.c
+>> @@ -997,7 +997,8 @@ bool hid_ignore(struct hid_device *hdev)
+>>                          return true;
+>>                  /* Same with product id 0x0400 */
+>>                  if (hdev->product == 0x0400 &&
+>> -                   strncmp(hdev->name, "QTEC0001", 8) != 0)
+>> +                   (strncmp(hdev->name, "QTEC0001", 8) != 0 ||
+>> +                    strncmp(hdev->name, "elan,combo400-i2c", 17) != 0))
 > 
-> I replied about 'pmu' name on patch2. Please check it.
-Yes, I've seen it and responded.
+> I think we are taking the problem the wrong way here.
 > 
->> +all possible type, i.e. count read requests, count write data in bytes,
->> +etc. This field is optional and when it is missing, the driver code will
->> +use default data type.
->>
-> Looks good to me.
-> But, If you want to add the new 'event-data-type' property,
-> you better to add 'event-data-type' to Exynos dts file including
-> PPMU device.
+> When I first introduced 6ccfe64, I thought 0x0400 would be reserved
+> for the elan_i2c touchpads only. But it turns out we are deliberately
+> disabling valid HID touchpads hoping that they would be picked up by
+> elan_i2c when elan_i2c has its own whitelist of devices.
 > 
-> If the dts file contain the data type information,
-> I think it is easy to understand for the user
-> what is monitoring on PPMU device.
+> How about we turn this into list with the matching ones from elan_i2c:
+> if ((hdev->product == 0x0400 || hdev->product == 0x0401) &&
+>     (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
+>      strncmp(hdev->name, "ELAN0100", 8) == 0 ||
+>      ...
+>      strncmp(hdev->name, "ELAN1000", 8) == 0))
+>        return true;
+> 
+> So next time we need to force binding a HID touchpad to elan_i2c, we
+> can just blacklist here and whitelist it in elan_i2c.
 
-Make sense, I will do that. It will be explicitly telling the user what
-is currently monitored in the PPMU device event.
+This indeed sounds like a better way forward with this.
 
 Regards,
-Lukasz
-> 
-> 
+
+Hans
