@@ -1,96 +1,61 @@
-From: =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Subject: Re: Re: [PATCH v3 1/7] ARM: dts: sun8i: r40:
- bananapi-m2-ultra: Tie GMAC regulators to the PIO
-Date: Thu, 18 Apr 2019 09:25:19 -0300
-Message-ID: <666caeac-4297-17b0-065e-00b7fd9623b4@centosproject.org>
-References: <1555492863-88860-1-git-send-email-pgreco@centosproject.org>
- <1555492863-88860-2-git-send-email-pgreco@centosproject.org>
- <20190417101757.traviffiulwnzr6x@flea>
-Reply-To: pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/6] arm64: dts: meson: mmc clean-up
+Date: Thu, 18 Apr 2019 14:27:08 +0200
+Message-ID: <20190418122714.30805-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBC53DWXR44JBBNWZ4HSQKGQETN4BXZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190417101757.traviffiulwnzr6x@flea>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patchset is bunch of clean-up found while debugging meson mmc.
 
-El 17/4/19 a las 07:17, Maxime Ripard escribi=C3=B3:
-> Hi,
->
-> On Wed, Apr 17, 2019 at 06:20:56AM -0300, Pablo Greco wrote:
->> When the GMAC support was added to the bananapi-m2-ultra, regulators
->> weren't tied to the pinctrl. Fix that.
->>
->> Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/ar=
-m/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
->> index c488aaa..3da3598 100644
->> --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
->> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
->> @@ -201,6 +201,8 @@
->>   &pio {
->>   	pinctrl-names =3D "default";
->>   	pinctrl-0 =3D <&clk_out_a_pin>;
->> +	vcc-pa-supply =3D <&reg_aldo2>;
-> You should list all the regulators that are needed for all the pin
-> banks to operate properly, not just PA
-Ok, I "think" I finally understand what you mean, so according to=20
-schematics in=20
-https://drive.google.com/file/d/0B4PAo2nW2KfndFpmZG1OOWJ5NEU/view, it=20
-should look like this
-diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts=20
-b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-index c488aaa..699579d 100644
---- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-+++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-@@ -201,6 +201,12 @@
- =C2=A0&pio {
- =C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
- =C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&clk_out_a_pin>;
-+=C2=A0=C2=A0=C2=A0 vcc-pa-supply =3D <&reg_aldo2>;
-+=C2=A0=C2=A0=C2=A0 vcc-pc-supply =3D <&reg_dcdc1>;
-+=C2=A0=C2=A0=C2=A0 vcc-pd-supply =3D <&reg_dcdc1>;
-+=C2=A0=C2=A0=C2=A0 vcc-pe-supply =3D <&reg_eldo1>;
-+=C2=A0=C2=A0=C2=A0 vcc-pf-supply =3D <&reg_dcdc1>;
-+=C2=A0=C2=A0=C2=A0 vcc-pg-supply =3D <&reg_dldo1>;
- =C2=A0};
+* The first 2 patches address the libretech-cc which actually uses 1.8v
+  eMMC modules.
+* Patch 3 is a pin bias fixup depending on mmc pins.
+* Patch 4 lower the mmc max frequencies on gx chips. It was not easy
+  to spot but, according to the datasheet, the maximum UHS rate
+  supported by these chips is 100MHz (SDR50). This explains why we
+  never really managed to get a stable SDR104. SDIO is limited to HS.
+* Patch 5 adds missing pinctrl definition on the vim2
+* Patch 6 remove hs400 from the supported modes of the vim2. This mode is
+  mode reliable enough with HW/SW ATM.
 
- =C2=A0&reg_aldo2 {
---=20
+When/If the series on the mmc drivers goes through, I'll send the
+following updates:
+* Push odroid-c2 eMMC max rate from 100Mhz to 200Mhz. With the new tuning
+  method, this mode is finally stable on the OC2 (so far...)
+* Enable SD UHS modes on the odroid-c2
+* Enable SD UHS DDR50 on the nanopi k2
 
-I couldn't find vcc-pb, vcc-ph or vcc-pi.
-If this is ok, I'll generate a v4 based on v2, and throw v3 in the trash=20
-where it belongs
->> +	vcc-gmac-phy-supply =3D <&reg_dc1sw>;
-> I'm not sure what that is supposed to do?
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
-Pablo.
+Jerome Brunet (6):
+  arm64: dts: meson: libretech-cc: set eMMC as removable
+  arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
+  arm64: dts: meson: fix mmc pin bias
+  arm64: dts: meson: fix mmc v2 chips max frequencies
+  arm64: dts: meson: vim2: add missing clk-gate pinctrl
+  arm64: dts: meson: vim2: remove sd hs and hs400 modes from emmc
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+ .../arm64/boot/dts/amlogic/meson-axg-s400.dts |  4 +--
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 31 ++++++++++++----
+ .../boot/dts/amlogic/meson-gx-p23x-q20x.dtsi  |  4 +--
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |  5 ++-
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi |  4 +--
+ .../boot/dts/amlogic/meson-gxbb-wetek.dtsi    |  4 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   | 35 +++++++++++++------
+ .../boot/dts/amlogic/meson-gxl-s805x-p241.dts |  2 +-
+ .../amlogic/meson-gxl-s905x-libretech-cc.dts  | 14 ++++----
+ .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |  2 +-
+ .../dts/amlogic/meson-gxl-s905x-p212.dtsi     |  4 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    | 35 +++++++++++++------
+ .../dts/amlogic/meson-gxm-khadas-vim2.dts     | 15 ++++----
+ .../boot/dts/amlogic/meson-gxm-nexbox-a1.dts  |  2 +-
+ .../boot/dts/amlogic/meson-gxm-rbox-pro.dts   |  4 +--
+ 17 files changed, 109 insertions(+), 60 deletions(-)
+
+-- 
+2.20.1
