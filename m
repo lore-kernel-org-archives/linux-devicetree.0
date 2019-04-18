@@ -1,82 +1,72 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [RESEND PATCH v5 2/3] pwm: stm32-lp: Add power management support
-Date: Thu, 18 Apr 2019 11:37:46 +0200
-Message-ID: <1555580267-29299-3-git-send-email-fabrice.gasnier@st.com>
-References: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
+From: Mauro Carvalho Chehab <mchehab@infradead.org>
+Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
+ to *.rst
+Date: Thu, 18 Apr 2019 06:44:36 -0300
+Message-ID: <20190418064436.1803bf3a@coco.lan>
+References: <cover.1555494108.git.mchehab+samsung@kernel.org>
+        <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
+        <20190417164741.GA12147@roeck-us.net>
+        <20190417141352.3225bbb3@coco.lan>
+        <20190417142215.791df5e7@coco.lan>
+        <20190417174337.GA16749@roeck-us.net>
+        <20190417174728.GA17706@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20190417174728.GA17706@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com
-Cc: robh+dt@kernel.org, u.kleine-koenig@pengutronix.de, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Eibach <eibach@gdsys.de>, George Joseph <george.joseph@fairview5.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Fenghua Yu <fenghua.yu@intel.com>, Support Opensource <support.opensource@diasemi.com>, Juerg Haefliger <juergh@gmail.com>, Steve Glendinning <steve.glendinning@shawell.net>, Huang Rui <ray.huang@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Clemens Ladisch <clemens@ladisch.de>, Rudolf Marek <r.marek>
 List-Id: devicetree@vger.kernel.org
 
-Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
-channel isn't active. Let the PWM consumers disable it during their own
-suspend sequence. Only perform a check here, and handle the pinctrl states.
-See [1].
-[1] https://lkml.org/lkml/2019/2/5/770
+Em Wed, 17 Apr 2019 10:47:28 -0700
+Guenter Roeck <linux@roeck-us.net> escreveu:
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
-Changes in v2:
-- Don't disable PWM channel: let the PWM user disable it. Refuse to
-  suspend in case it's been left enabled.
-- Drop the ifdefs, use __maybe_unused instead.
----
- drivers/pwm/pwm-stm32-lp.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> On Wed, Apr 17, 2019 at 10:43:37AM -0700, Guenter Roeck wrote:
+> > On Wed, Apr 17, 2019 at 02:22:15PM -0300, Mauro Carvalho Chehab wrote:  
+> > > Em Wed, 17 Apr 2019 14:13:52 -0300
+> > > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+> > >   
+> > > > Em Wed, 17 Apr 2019 09:47:41 -0700
+> > > > Guenter Roeck <linux@roeck-us.net> escreveu:
+> > > >   
+> > > > > On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:    
+> > > > > > Now that all files were converted to ReST format, rename them
+> > > > > > and add an index.
+> > > > > > 
+> > > > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > > > > Acked-by: Liviu Dudau <liviu.dudau@arm.com>      
+> > > > > 
+> > > > > I applied all patches except this one, which fails due to a conflict in
+> > > > > ab8500. I also notice that this file has not been touched by your series,
+> > > > > which is odd. At the same time, patch 20/21 is missing from your series,
+> > > > > and has been missing all along. Does the missing patch possibly touch
+> > > > > Documentation/hwmon/ab8500 ?    
+> > > > 
+> > > > Patch 20/21 is the biggest one. Maybe vger rejected it either due to
+> > > > its size or due to the number of c/c.
+> > > > 
+> > > > Just bounced it to you. Please let me know if you didn't receive it
+> > > > yet.  
+> > > 
+> > > Btw, LKML got it:
+> > > 
+> > > https://lore.kernel.org/lkml/cccc2a52363a5aaeea10e186ead8570503ea648e.1555494108.git.mchehab+samsung@kernel.org/
+> > >   
+> > patchwork didn't get it (or didn't accept it). I got it now.
+> > All patches applied, and pushed out to hwmon-next.
+> > 
+> > We have one (new) unconverted file left - Documentation/hwmon/lochnagar.  
+> 
+> Plus ir38064 and isl68137. Lots of new drivers recently.
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 0059b24c..2211a64 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -13,6 +13,7 @@
- #include <linux/mfd/stm32-lptimer.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- 
-@@ -223,6 +224,29 @@ static int stm32_pwm_lp_remove(struct platform_device *pdev)
- 	return pwmchip_remove(&priv->chip);
- }
- 
-+static int __maybe_unused stm32_pwm_lp_suspend(struct device *dev)
-+{
-+	struct stm32_pwm_lp *priv = dev_get_drvdata(dev);
-+	struct pwm_state state;
-+
-+	pwm_get_state(&priv->chip.pwms[0], &state);
-+	if (state.enabled) {
-+		dev_err(dev, "The consumer didn't stop us (%s)\n",
-+			priv->chip.pwms[0].label);
-+		return -EBUSY;
-+	}
-+
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
-+
-+static int __maybe_unused stm32_pwm_lp_resume(struct device *dev)
-+{
-+	return pinctrl_pm_select_default_state(dev);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(stm32_pwm_lp_pm_ops, stm32_pwm_lp_suspend,
-+			 stm32_pwm_lp_resume);
-+
- static const struct of_device_id stm32_pwm_lp_of_match[] = {
- 	{ .compatible = "st,stm32-pwm-lp", },
- 	{},
-@@ -235,6 +259,7 @@ static struct platform_driver stm32_pwm_lp_driver = {
- 	.driver	= {
- 		.name = "stm32-pwm-lp",
- 		.of_match_table = of_match_ptr(stm32_pwm_lp_of_match),
-+		.pm = &stm32_pwm_lp_pm_ops,
- 	},
- };
- module_platform_driver(stm32_pwm_lp_driver);
--- 
-2.7.4
+Ok, just sent a patch for those three new files. I wrote a more
+detailed description about what steps I followed at the conversion
+of those tree files, and why I did it. 
+
+Hopefully, this would help hwmon developers
+that may already be preparing a new driver for submission.
+
+Thanks,
+Mauro
