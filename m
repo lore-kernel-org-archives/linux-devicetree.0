@@ -1,49 +1,51 @@
-From: Nandor Han <nandor.han@vaisala.com>
-Subject: Re: [PATCH v2 1/2] power: reset: nvmem-reboot-mode: use NVMEM as
- reboot mode write interface
-Date: Thu, 18 Apr 2019 09:29:08 +0300
-Message-ID: <b046dc29-002c-39a9-5a54-562c49adb691@vaisala.com>
-References: <20190411055341.9263-1-nandor.han@vaisala.com>
- <20190411055341.9263-2-nandor.han@vaisala.com>
- <20190417215649.ejrvd6zekfmvjtn5@earth.universe>
+From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Subject: [PATCH V2 1/3] MAINTAINERS: slg51000 updates to the Dialog
+ Semiconductor search terms
+Date: Thu, 18 Apr 2019 15:09:43 +0900
+Message-ID: <878724615d6edf4d1d8960fd4aa9058aaedab026.1555567784.git.eric.jeong.opensource@diasemi.com>
+References: <cover.1555567784.git.eric.jeong.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190417215649.ejrvd6zekfmvjtn5@earth.universe>
-Content-Language: en-US
+In-Reply-To: <cover.1555567784.git.eric.jeong.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/18/19 12:56 AM, Sebastian Reichel wrote:
-> On Thu, Apr 11, 2019 at 05:54:09AM +0000, Han Nandor wrote:
->> Add a new reboot mode write interface that is using an NVMEM cell
->> to store the reboot mode magic.
->>
->> Signed-off-by: Nandor Han <nandor.han@vaisala.com>
->> ---
 
-<snip>
 
->> +module_platform_driver(nvmem_reboot_mode_driver);
->> +
->> +MODULE_AUTHOR("Nandor Han <nandor.han@vaisala.com>");
->> +MODULE_DESCRIPTION("NVMEM reboot mode driver");
->> +MODULE_LICENSE("GPL v2");
-> 
-> I suppose as of bf7fbeeae6db "GPL v2" is deprecated, before it was
-> often read as GPL v2 only. In both cases it makes sense to just
-> use "GPL". Otherwise the driver looks fine to me, but I'm waiting
-> for Rob's review of the DT bindings before merging this.
-> 
-> -- Sebastian
-> 
+This patch adds the slg51000 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-Thanks Sebastian.
+Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
 
-Do you want me to send a new revision with license changed to "GPL"?..or 
-will you change it when it's merged?
+---
+v2: No changes.
 
-Nandor
+
+ MAINTAINERS |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 349e5d8..ae6b6f9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4632,6 +4632,7 @@ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
++F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+ F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
+ F:	Documentation/devicetree/bindings/sound/da[79]*.txt
+ F:	drivers/gpio/gpio-da90??.c
+@@ -4647,6 +4648,7 @@ F:	drivers/power/supply/da9052-battery.c
+ F:	drivers/power/supply/da91??-*.c
+ F:	drivers/regulator/da903x.c
+ F:	drivers/regulator/da9???-regulator.[ch]
++F:	drivers/regulator/slg51000-regulator.[ch]
+ F:	drivers/thermal/da90??-thermal.c
+ F:	drivers/rtc/rtc-da90??.c
+ F:	drivers/video/backlight/da90??_bl.c
+-- 
+end-of-patch for PATCH V2
