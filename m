@@ -1,87 +1,258 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 3/3] arm64: dts: allwinner:
- a64-oceanic-5205-5inmfd: Enable GT911 CTP
-Date: Thu, 18 Apr 2019 23:17:20 +0530
-Message-ID: <20190418174720.17230-3-jagan@amarulasolutions.com>
-References: <20190418174720.17230-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v3] power: supply: add Ingenic JZ47xx battery driver.
+Date: Thu, 18 Apr 2019 20:24:04 +0200
+Message-ID: <20190418182404.20183-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBO7Q4LSQKGQEUQQTBZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190418174720.17230-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
+Add a driver for battery present on Ingenic JZ47xx SoCs.
 
-The CTP connected to board with,
-- SDA, SCK from i2c0
-- GPIO-LD0 as AVDD28 supply
-- PH4 gpio as interrupt pin
-- PH11 gpio as reset pin
-- X axis is inverted
-- Y axis is inverted
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
-Changes for v4:
-- drop i2c0 pinctrl
-Changes for v3:
-- Use 2.8v for reg_ldo_io0
-Changes for v2:
-- drop i2c1, bias-pull-up
 
- .../sun50i-a64-oceanic-5205-5inmfd.dts        | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Changes:
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index 6a2154525d1e..787ebd805a3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -37,6 +37,22 @@
- 	status = "okay";
- };
+v2: - rework the return logic in ingenic_battery_get_property,
+    - make index offsets point forward in ingenic_battery_set_scale,
+    - fix spacing around scale_raw[best_idx + 1]
+
+v3: Add the missing MODULE_LICENSE & Co.
+
+ drivers/power/supply/Kconfig           |  11 ++
+ drivers/power/supply/Makefile          |   1 +
+ drivers/power/supply/ingenic-battery.c | 184 +++++++++++++++++++++++++
+ 3 files changed, 196 insertions(+)
+ create mode 100644 drivers/power/supply/ingenic-battery.c
+
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index b6a4265bf0ec..81b0c20b24dd 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -169,6 +169,17 @@ config BATTERY_COLLIE
+ 	  Say Y to enable support for the battery on the Sharp Zaurus
+ 	  SL-5500 (collie) models.
  
-+&i2c0 {
-+	status = "okay";
++config BATTERY_INGENIC
++	tristate "Ingenic JZ47xx SoCs battery driver"
++	depends on MIPS || COMPILE_TEST
++	depends on INGENIC_ADC
++	help
++	  Choose this option if you want to monitor battery status on
++	  Ingenic JZ47xx SoC based devices.
 +
-+	touchscreen@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
++	  This driver can also be built as a module. If so, the module will be
++	  called ingenic-battery.
++
+ config BATTERY_IPAQ_MICRO
+ 	tristate "iPAQ Atmel Micro ASIC battery driver"
+ 	depends on MFD_IPAQ_MICRO
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index 1cdce3ded839..976dc1698134 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
+ obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
+ obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
+ obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
++obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
+ obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
+ obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
+ obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
+diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
+new file mode 100644
+index 000000000000..35816d4b3012
+--- /dev/null
++++ b/drivers/power/supply/ingenic-battery.c
+@@ -0,0 +1,184 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Battery driver for the Ingenic JZ47xx SoCs
++ * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
++ *
++ * based on drivers/power/supply/jz4740-battery.c
++ */
++
++#include <linux/iio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/power_supply.h>
++#include <linux/property.h>
++
++struct ingenic_battery {
++	struct device *dev;
++	struct iio_channel *channel;
++	struct power_supply_desc desc;
++	struct power_supply *battery;
++	struct power_supply_battery_info info;
++};
++
++static int ingenic_battery_get_property(struct power_supply *psy,
++					enum power_supply_property psp,
++					union power_supply_propval *val)
++{
++	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
++	struct power_supply_battery_info *info = &bat->info;
++	int ret;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_HEALTH:
++		ret = iio_read_channel_processed(bat->channel, &val->intval);
++		val->intval *= 1000;
++		if (val->intval < info->voltage_min_design_uv)
++			val->intval = POWER_SUPPLY_HEALTH_DEAD;
++		else if (val->intval > info->voltage_max_design_uv)
++			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
++		else
++			val->intval = POWER_SUPPLY_HEALTH_GOOD;
++		return ret;
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++		ret = iio_read_channel_processed(bat->channel, &val->intval);
++		val->intval *= 1000;
++		return ret;
++	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
++		val->intval = info->voltage_min_design_uv;
++		return 0;
++	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
++		val->intval = info->voltage_max_design_uv;
++		return 0;
++	default:
++		return -EINVAL;
 +	};
++}
++
++/* Set the most appropriate IIO channel voltage reference scale
++ * based on the battery's max voltage.
++ */
++static int ingenic_battery_set_scale(struct ingenic_battery *bat)
++{
++	const int *scale_raw;
++	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
++	u64 max_mV;
++
++	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
++	if (ret) {
++		dev_err(bat->dev, "Unable to read max raw channel value\n");
++		return ret;
++	}
++
++	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
++					       &scale_type, &scale_len,
++					       IIO_CHAN_INFO_SCALE);
++	if (ret < 0) {
++		dev_err(bat->dev, "Unable to read channel avail scale\n");
++		return ret;
++	}
++	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
++		return -EINVAL;
++
++	max_mV = bat->info.voltage_max_design_uv / 1000;
++
++	for (i = 0; i < scale_len; i += 2) {
++		u64 scale_mV = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
++
++		if (scale_mV < max_mV)
++			continue;
++
++		if (best_idx >= 0 && scale_mV > best_mV)
++			continue;
++
++		best_mV = scale_mV;
++		best_idx = i;
++	}
++
++	if (best_idx < 0) {
++		dev_err(bat->dev, "Unable to find matching voltage scale\n");
++		return -EINVAL;
++	}
++
++	return iio_write_channel_attribute(bat->channel,
++					   scale_raw[best_idx],
++					   scale_raw[best_idx + 1],
++					   IIO_CHAN_INFO_SCALE);
++}
++
++static enum power_supply_property ingenic_battery_properties[] = {
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
++	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
 +};
 +
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
-@@ -52,6 +68,13 @@
- 	regulator-name = "vcc-phy";
- };
- 
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vdd-ctp";
-+	status = "okay";
-+};
++static int ingenic_battery_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct ingenic_battery *bat;
++	struct power_supply_config psy_cfg = {};
++	struct power_supply_desc *desc;
++	int ret;
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
++	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
++	if (!bat)
++		return -ENOMEM;
++
++	bat->dev = dev;
++	bat->channel = devm_iio_channel_get(dev, "battery");
++	if (IS_ERR(bat->channel))
++		return PTR_ERR(bat->channel);
++
++	desc = &bat->desc;
++	desc->name = "jz-battery";
++	desc->type = POWER_SUPPLY_TYPE_BATTERY;
++	desc->properties = ingenic_battery_properties;
++	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
++	desc->get_property = ingenic_battery_get_property;
++	psy_cfg.drv_data = bat;
++	psy_cfg.of_node = dev->of_node;
++
++	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
++	if (IS_ERR(bat->battery)) {
++		dev_err(dev, "Unable to register battery\n");
++		return PTR_ERR(bat->battery);
++	}
++
++	ret = power_supply_get_battery_info(bat->battery, &bat->info);
++	if (ret) {
++		dev_err(dev, "Unable to get battery info: %d\n", ret);
++		return ret;
++	}
++	if (bat->info.voltage_min_design_uv < 0) {
++		dev_err(dev, "Unable to get voltage min design\n");
++		return bat->info.voltage_min_design_uv;
++	}
++	if (bat->info.voltage_max_design_uv < 0) {
++		dev_err(dev, "Unable to get voltage max design\n");
++		return bat->info.voltage_max_design_uv;
++	}
++
++	return ingenic_battery_set_scale(bat);
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id ingenic_battery_of_match[] = {
++	{ .compatible = "ingenic,jz4740-battery", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
++#endif
++
++static struct platform_driver ingenic_battery_driver = {
++	.driver = {
++		.name = "ingenic-battery",
++		.of_match_table = of_match_ptr(ingenic_battery_of_match),
++	},
++	.probe = ingenic_battery_probe,
++};
++module_platform_driver(ingenic_battery_driver);
++
++MODULE_DESCRIPTION("Battery driver for Ingenic JZ47xx SoCs");
++MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
++MODULE_LICENSE("GPL");
 -- 
-2.18.0.321.gffc6fa0e3
+2.21.0
