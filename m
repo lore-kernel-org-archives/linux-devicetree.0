@@ -1,40 +1,39 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mtd: sunxi: Add new compatible
-Date: Thu, 18 Apr 2019 18:18:50 +0200
-Message-ID: <20190418181850.76c867d5@xps13>
-References: <20190408074147.26797-1-miquel.raynal@bootlin.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 0/5] MTD: Add Initial Hyperbus support
+Date: Thu, 18 Apr 2019 19:39:02 +0300
+Message-ID: <9ec33aa3-91aa-15f1-bd25-f94eccc65fcb@cogentembedded.com>
+References: <20190412092923.24919-1-vigneshr@ti.com>
+ <9e8575e2-b8de-341d-7ab5-08055b84c805@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190408074147.26797-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9e8575e2-b8de-341d-7ab5-08055b84c805@ti.com>
+Content-Language: en-MW
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh Raghavendra <vigneshr@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8KCk1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+IHdyb3RlIG9u
-IE1vbiwgIDggQXByIDIwMTkKMDk6NDE6NDQgKzAyMDA6Cgo+IFRoZSBBMzMgTkFORCBjb250cm9s
-bGVyIGlzIHNsaWdodGx5IGRpZmZlcmVudCB0aGFuIHRoZSBBMTArIG9uZXMsCj4gZWcuIERNQSBo
-YW5kbGluZyBpcyBhIGJpdCBkaWZmZXJlbnQgYW5kIGEgZmV3IHJlZ2lzdGVyIG9mZnNldHMKPiBj
-aGFuZ2VkLgo+IAo+IEludHJvZHVjZSBhIG5ldyBjb21wYXRpYmxlIHRvIHJlcHJlc2VudCB0aGlz
-IHZlcnNpb24gb2YgdGhlIElQLgo+IAo+IEFsc28gYXBwZW5kICctY29udHJvbGxlcicgdG8gdGhl
-IG5ldyBjb21wYXRpYmxlICh3aGljaCBpcyByZXF1aXJlZCBmb3IKPiBuZXcgY29tcGF0aWJsZXMp
-IGFzIHRoaXMgaXMgZGVzY3JpYmluZyBhIE5BTkQgY29udHJvbGxlciBhbmQgbm90IGEKPiBOQU5E
-IGNoaXAuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBi
-b290bGluLmNvbT4KPiAtLS0KPiAKClNlcmllcyBhcHBsaWVkIHdpdGggdGhlIGNvbXBhdGlibGUg
-YmVpbmcgQTIzIGluc3RlYWQgb2YgQTMzCmFuZCB0aGUgY29tcGF0aWJsZSBlbnVtZXJhdGlvbiBh
-ZGFwdGVkIHRvIGZpdCB0aGUgeWFtbCBzeW50YXgKKGNoYW5nZSBmcm9tIGFub3RoZXIgc2VyaWVz
-KSB0bzogCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L210
-ZC9saW51eC5naXQgCmJyYW5jaCBuYW5kL25leHQuCgpUaGFua3MsCk1pcXXDqGwKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQg
-ZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1tdGQvCg==
+Hello!
+
+On 04/17/2019 08:24 PM, Vignesh Raghavendra wrote:
+
+>> Vignesh Raghavendra (5):
+>>    mtd: cfi_cmdset_0002: Add support for polling status register
+>>    dt-bindings: mtd: Add binding documentation for HyperFlash
+>>    mtd: Add support for HyperBus memory devices
+>>    dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory
+>>      controller
+>>    mtd: hyperbus: Add driver for TI's HyperBus memory controller
+>>
+> 
+> Thanks for all the reviews!
+> Were you able to test this series with your hardware? Would like to get this into v5.2-rc1 if possible
+
+   Not yet, and I still haven't ported my driver to use your HyperBus code.
+
+> Regards
+> Vignesh
+
+MBR, Sergei
