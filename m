@@ -1,89 +1,77 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
-Date: Thu, 18 Apr 2019 21:10:25 +0800
-Message-ID: <CAEExFWvmpnJ8EyvAejVtvBQHdVVGFhpSn7zCMmx1BSre-gt+Ug@mail.gmail.com>
-References: <20190416155209.24216-1-tiny.windzz@gmail.com> <20190416155209.24216-3-tiny.windzz@gmail.com>
- <20190417083000.cwzvhlpbxqoifosw@flea>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
+ to *.rst
+Date: Thu, 18 Apr 2019 06:36:28 -0700
+Message-ID: <55790eec-a81e-75af-dbab-e4f15ad14274@roeck-us.net>
+References: <cover.1555494108.git.mchehab+samsung@kernel.org>
+ <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
+ <20190417164741.GA12147@roeck-us.net> <20190417141352.3225bbb3@coco.lan>
+ <20190417142215.791df5e7@coco.lan> <20190417174337.GA16749@roeck-us.net>
+ <20190417174728.GA17706@roeck-us.net> <20190418064436.1803bf3a@coco.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190417083000.cwzvhlpbxqoifosw@flea>
+In-Reply-To: <20190418064436.1803bf3a@coco.lan>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mauro Carvalho Chehab <mchehab@infradead.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Eibach <eibach@gdsys.de>, George Joseph <george.joseph@fairview5.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Fenghua Yu <fenghua.yu@intel.com>, Support Opensource <support.opensource@diasemi.com>, Juerg Haefliger <juergh@gmail.com>, Steve Glendinning <steve.glendinning@shawell.net>, Huang Rui <ray.huang@amd.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Clemens Ladisch <clemens@ladisch.de>, Rudolf Marek <r.marek>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 4:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Tue, Apr 16, 2019 at 11:52:09AM -0400, Yangtao Li wrote:
-> > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > frequency value based on the speedbin blown in the efuse combination.
-> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > provide the OPP framework with required information.
-> > This is used to determine the voltage and frequency value for each
-> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> >
-> > The "allwinner,sun50i-h6-operating-points" DT extends the
-> > "operating-points-v2"
-> > with following parameters:
-> > - nvmem-cells (NVMEM area containig the speedbin information)
-> > - opp-microvolt-<name>: voltage in micro Volts.
-> >   At runtime, the platform can pick a <name> and matching
-> >   opp-microvolt-<name> property.
-> >                       HW:             <name>:
-> >                       sun50iw-h6      speed0 speed1 speed2
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
-> >  1 file changed, 167 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> > new file mode 100644
-> > index 000000000000..3cb39c6caec3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> > @@ -0,0 +1,167 @@
-> > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> > +===================================
-> > +
-> > +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> > +varies based on the silicon variant in use. Allwinner Process Voltage
-> > +Scaling Tables defines the voltage and frequency value based on the
-> > +speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
-> > +reads the efuse value from the SoC to provide the OPP framework with
-> > +required information.
-> > +
-> > +Required properties:
-> > +--------------------
-> > +In 'cpus' nodes:
-> > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> > +
-> > +In 'operating-points-v2' table:
-> > +- compatible: Should be
-> > +     - 'allwinner,sun50i-h6-operating-points'.
-> > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-> > +             efuse registers that has information about the speedbin
-> > +             that is used to select the right frequency/voltage value
-> > +             pair. Please refer the for nvmem-cells bindings
-> > +             Documentation/devicetree/bindings/nvmem/nvmem.txt and
-> > +             also examples below.
-> > +
-> > +In every OPP node:
-> > +- opp-microvolt-<name>: Voltage in micro Volts.
-> > +                     At runtime, the platform can pick a <name> and
-> > +                     matching opp-microvolt-<name> property.
-> > +                     [See: opp.txt]
-> > +                     HW:             <name>:
-> > +                     sun50iw-h6      speed0 speed1 speed2
->
-> There's a typo here (and in your commit log), it should be sun50i-h6
-> instead of sun50iw-h6
->
-> Once fixed:
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Another has been sent.
+On 4/18/19 2:44 AM, Mauro Carvalho Chehab wrote:
+> Em Wed, 17 Apr 2019 10:47:28 -0700
+> Guenter Roeck <linux@roeck-us.net> escreveu:
+> 
+>> On Wed, Apr 17, 2019 at 10:43:37AM -0700, Guenter Roeck wrote:
+>>> On Wed, Apr 17, 2019 at 02:22:15PM -0300, Mauro Carvalho Chehab wrote:
+>>>> Em Wed, 17 Apr 2019 14:13:52 -0300
+>>>> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+>>>>    
+>>>>> Em Wed, 17 Apr 2019 09:47:41 -0700
+>>>>> Guenter Roeck <linux@roeck-us.net> escreveu:
+>>>>>    
+>>>>>> On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:
+>>>>>>> Now that all files were converted to ReST format, rename them
+>>>>>>> and add an index.
+>>>>>>>
+>>>>>>> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>>>>>>> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+>>>>>>
+>>>>>> I applied all patches except this one, which fails due to a conflict in
+>>>>>> ab8500. I also notice that this file has not been touched by your series,
+>>>>>> which is odd. At the same time, patch 20/21 is missing from your series,
+>>>>>> and has been missing all along. Does the missing patch possibly touch
+>>>>>> Documentation/hwmon/ab8500 ?
+>>>>>
+>>>>> Patch 20/21 is the biggest one. Maybe vger rejected it either due to
+>>>>> its size or due to the number of c/c.
+>>>>>
+>>>>> Just bounced it to you. Please let me know if you didn't receive it
+>>>>> yet.
+>>>>
+>>>> Btw, LKML got it:
+>>>>
+>>>> https://lore.kernel.org/lkml/cccc2a52363a5aaeea10e186ead8570503ea648e.1555494108.git.mchehab+samsung@kernel.org/
+>>>>    
+>>> patchwork didn't get it (or didn't accept it). I got it now.
+>>> All patches applied, and pushed out to hwmon-next.
+>>>
+>>> We have one (new) unconverted file left - Documentation/hwmon/lochnagar.
+>>
+>> Plus ir38064 and isl68137. Lots of new drivers recently.
+> 
+> Ok, just sent a patch for those three new files. I wrote a more
+> detailed description about what steps I followed at the conversion
+> of those tree files, and why I did it.
+> 
+Did the patches get lost ?
 
-Regards,
-Yangtao
+> Hopefully, this would help hwmon developers
+> that may already be preparing a new driver for submission.
+> 
+
+That would be very useful.
+
+Thanks,
+Guenter
