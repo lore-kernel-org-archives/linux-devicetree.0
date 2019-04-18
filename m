@@ -1,69 +1,76 @@
-From: lei liu <leilk.liu@mediatek.com>
-Subject: Re: [PATCH 19/24] dt-bindings: spi: spi-mt65xx: add support for
- MT8516
-Date: Thu, 18 Apr 2019 16:18:07 +0800
-Message-ID: <1555575487.7441.6.camel@mhfsdcap03>
-References: <20190323211612.860-1-fparent@baylibre.com>
-         <20190323211612.860-20-fparent@baylibre.com>
-         <5bc3fbfa-6d7e-08d3-116c-a8f78bc680cd@gmail.com>
-         <1555403151.7441.4.camel@mhfsdcap03>
-         <CAOwMV_yKAm1zar6buhe25O56AkAX8e0nXnm4GmqhvHC-yagKfQ@mail.gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
+Date: Thu, 18 Apr 2019 14:05:42 +0530
+Message-ID: <20190418083543.11695-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOwMV_yKAm1zar6buhe25O56AkAX8e0nXnm4GmqhvHC-yagKfQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Parent <fparent@baylibre.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, ryder.lee@mediatek.com, linux-watchdog@vger.kernel.org, jjian.zhou@mediatek.com, wenzhen.yu@mediatek.com, Stephane Le Provost <stephane.leprovost@mediatek.com>, sean.wang@kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, yong.mao@mediatek.com, linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, hsin-hsiung.wang@mediatek.com, linux-serial@vger.kernel.org, linux-clk@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>, linux-i2c@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-04-18 at 10:05 +0200, Fabien Parent wrote:
-> On Tue, Apr 16, 2019 at 10:25 AM lei liu <leilk.liu@mediatek.com> wrote:
-> >
-> > On Tue, 2019-04-16 at 09:55 +0200, Matthias Brugger wrote:
-> > >
-> > > On 23/03/2019 22:16, Fabien Parent wrote:
-> > > > Add binding documentation of spi-mt65xx for MT8516 SoC.
-> > > >
-> > > > Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > >
-> > >
-> > > applied to v5.1-next/dts64
-> > >
-> > > Mark let me know if you want to take it through your tree and I drop the patch.
-> > >
-> > > > diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-> > > > index 69c356767cf8..69ac5976b952 100644
-> > > > --- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-> > > > +++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-> > > > @@ -10,6 +10,7 @@ Required properties:
-> > > >      - mediatek,mt8135-spi: for mt8135 platforms
-> > > >      - mediatek,mt8173-spi: for mt8173 platforms
-> > > >      - mediatek,mt8183-spi: for mt8183 platforms
-> > > > +    - "mediatek,mt8516-spi", "mediatek,mt2701-spi": for mt8516 platforms
-> > Hi Fabien,
-> > mt8516 SPI design comes from mt2712 and it's different from mt2701. Here
-> > it should compatible with mt2712.
-> 
-> Ok, thanks. I will retry with the mt2712 compatible.
-> 
+Add Goodix GT5663 capacitive touch controller node on
+Amarula A64-Relic board.
 
-Hi, I already send mt8516 spi patch and it's applied by Mark. Please
-don't do it again. Thanks.
+The CTP connected to board with,
+- SDA, SCK from i2c1
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH8 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
 
-> > > >
-> > > >  - #address-cells: should be 1.
-> > > >
-> > > >
-> > >
-> > > _______________________________________________
-> > > Linux-mediatek mailing list
-> > > Linux-mediatek@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> >
-> >
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- drop i2c1, bias-pull-up 
+
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 3575db216016..3819ce396073 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -49,6 +49,24 @@
+ 	bias-pull-up;
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt5663";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
++
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+@@ -212,6 +230,13 @@
+ 	regulator-name = "vdd-cpus";
+ };
+ 
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
+ &reg_rtc_ldo {
+ 	regulator-name = "vcc-rtc";
+ };
+-- 
+2.18.0.321.gffc6fa0e3
