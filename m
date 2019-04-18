@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
-Date: Thu, 18 Apr 2019 19:18:37 +0530
-Message-ID: <20190418134838.8806-1-jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/2] arm64: dts: allwinner: a64: Add pinmux setting for CSI MCLK on PE1
+Date: Thu, 18 Apr 2019 19:22:31 +0530
+Message-ID: <20190418135232.9368-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -10,69 +10,38 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob
 Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Goodix GT5663 capacitive touch controller node on
-Amarula A64-Relic board.
+Some camera modules have the SoC feeding a master clock to the sensor
+instead of having a standalone crystal. This clock signal is generated
+from the clock control unit and output from the CSI MCLK function of
+pin PE1.
 
-The CTP connected to board with,
-- SDA, SCK from i2c1
-- GPIO-LD0 as AVDD28 supply
-- PH4 gpio as interrupt pin
-- PH8 gpio as reset pin
-- X axis is inverted
-- Y axis is inverted
+Add a pinmux setting for it for camera sensors to reference.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
-Changes for v3:
-- Use 2.8v for reg_ldo_io0
 Changes for v2:
-- drop i2c1, bias-pull-up
+- add /omit-if-no-ref/
+- add pin name as csi-mclk-pin instead of csi-mclk 
 
- .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 3575db216016..bd31a4385bc1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -49,6 +49,24 @@
- 	bias-pull-up;
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 728f70018c51..8c5b521e6389 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -595,6 +595,12 @@
+ 				function = "csi";
+ 			};
  
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
++			/omit-if-no-ref/
++			csi_mclk_pin: csi-mclk-pin {
++				pins = "PE1";
++				function = "csi";
++			};
 +
-+	touchscreen@5d {
-+		compatible = "goodix,gt5663";
-+		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+	};
-+};
-+
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
-@@ -212,6 +230,13 @@
- 	regulator-name = "vdd-cpus";
- };
- 
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vcc-ctp";
-+	status = "okay";
-+};
-+
- &reg_rtc_ldo {
- 	regulator-name = "vcc-rtc";
- };
+ 			i2c0_pins: i2c0-pins {
+ 				pins = "PH0", "PH1";
+ 				function = "i2c0";
 -- 
 2.18.0.321.gffc6fa0e3
