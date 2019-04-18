@@ -1,169 +1,66 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v2 02/15] [media] mtk-mipicsi: add mediatek mipicsi
- driver for mt2712
-Date: Thu, 18 Apr 2019 09:34:29 +0800
-Message-ID: <1555551269.2407.9.camel@mtksdaap41>
-References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
- <1555407015-18130-3-git-send-email-stu.hsieh@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: input: add GPIO controllable vibrator
+Date: Wed, 17 Apr 2019 20:35:27 -0500
+Message-ID: <CAL_JsqL7awWWLK3G6u2yzse2aU7KUSuUELuacCnCpfErWA_UaQ@mail.gmail.com>
+References: <20190412150625.28384-1-luca@z3ntu.xyz> <15255825.75VNnaJK3T@g550jk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1555407015-18130-3-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <15255825.75VNnaJK3T@g550jk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stu:
+On Wed, Apr 17, 2019 at 11:02 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> On Freitag, 12. April 2019 17:06:23 CEST Luca Weiss wrote:
+> > Provide a simple driver for GPIO controllable vibrators.
+> > It will be used by the Fairphone 2.
+> >
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> >  .../bindings/input/gpio-vibrator.txt          | 20 +++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> > b/Documentation/devicetree/bindings/input/gpio-vibrator.txt new file mode
+> > 100644
+> > index 000000000000..93e5a8e7622d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> > @@ -0,0 +1,20 @@
+> > +* GPIO vibrator device tree bindings
+> > +
+> > +Registers a GPIO device as vibrator, where the vibration motor just has the
+> > +capability to turn on or off. If the device is connected to a pwm, you
+> > should +use the pwm-vibrator driver instead.
+> > +
+> > +Required properties:
+> > +- compatible: should contain "gpio-vibrator"
+> > +- enable-gpios: Should contain a GPIO handle
+> > +
+> > +Optional properties:
+> > +- vcc-supply: Phandle for the regulator supplying power
+> > +
+> > +Example from Fairphone 2:
+> > +
+> > +vibrator {
+> > +     compatible = "gpio-vibrator";
+> > +     enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
+> > +     vcc-supply = <&pm8941_l18>;
+> > +};
+>
+> I see that the yaml based device tree binding docs seem to be the new hotness?
+> Is there any "policy" / preference about new drivers?
 
-On Tue, 2019-04-16 at 17:30 +0800, Stu Hsieh wrote:
-> This patch add mediatek mipicsi driver for mt2712,
-> including probe function to get the value from device tree,
-> and register to v4l2 the host device.
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> ---
->  drivers/media/platform/mtk-mipicsi/Makefile   |   4 +
->  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 767 ++++++++++++++++++
->  2 files changed, 771 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
->  create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> 
-> diff --git a/drivers/media/platform/mtk-mipicsi/Makefile b/drivers/media/platform/mtk-mipicsi/Makefile
-> new file mode 100644
-> index 000000000000..326a5e3808fa
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-mipicsi/Makefile
-> @@ -0,0 +1,4 @@
-> +mtk-mipicsi-y += mtk_mipicsi.o
-> +
-> +obj-$(CONFIG_VIDEO_MEDIATEK_MIPICSI) += mtk-mipicsi.o
-> +
-> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> new file mode 100644
-> index 000000000000..e26bebe17fe5
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> @@ -0,0 +1,767 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2017 MediaTek Inc.
-> + * Author: Ricky Zhang <ricky.zhang@mediatek.com>
-> + *         Baoyin Zhang <baoyin.zhang@mediatek.com>
-> + *         Alan Yue <alan.yue@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/fs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/sched.h>
-> +#include <linux/slab.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/iommu.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <media/v4l2-common.h>
-> +#include <media/v4l2-dev.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +#include <media/soc_camera.h>
-> +#include <media/drv-intf/soc_mediabus.h>
-> +#include <media/videobuf2-core.h>
-> +#include <linux/videodev2.h>
-> +#include <soc/mediatek/smi.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +#ifdef CONFIG_VB2_MEDIATEK_DMA_SG
-> +#include "mtkbuf-dma-cache-sg.h"
-> +#endif
-> +
-> +#define MTK_MIPICSI_DRV_NAME "mtk-mipicsi"
-> +#define MTK_PLATFORM_STR "platform:mt2712"
-> +#define MIPICSI_COMMON_CLK 2
-> +#define MTK_CAMDMA_MAX_NUM 4U
-> +#define MIPICSI_CLK (MIPICSI_COMMON_CLK + MTK_CAMDMA_MAX_NUM)
-> +#define MTK_DATAWIDTH_8					(0x01U << 7U)
-> +#define MAX_SUPPORT_WIDTH             4096U
-> +#define MAX_SUPPORT_HEIGHT            4096U
-> +#define MAX_BUFFER_NUM			32U
-> +#define VID_LIMIT_BYTES			(100U * 1024U * 1024U)
-> +
-> +/* buffer for one video frame */
-> +struct mtk_mipicsi_buf {
-> +	struct list_head queue;
-> +	struct vb2_buffer *vb;
-> +	dma_addr_t vb_dma_addr_phy;
-> +	int prepare_flag;
-> +};
-> +
-> +struct mtk_mipicsi_dev {
-> +	struct soc_camera_host	soc_host;
-> +	struct platform_device *pdev;
-> +	unsigned int camsv_num;
-> +	struct v4l2_device	v4l2_dev;
-> +	struct device *larb_pdev;
-> +	void __iomem		*ana;
-> +	void __iomem		*seninf_ctrl;
+Not required yet, but welcomed. It's still a trickle so we can work
+out any issues and in some cases the common bindings still need to be
+done. I'm starting to ask subsystem maintainers to require DT schemas
+though.
 
-Separating register control to another patch looks strange to me.
-Register control is the bottom part and this patch is the top part. You
-send a top part first then the bottom part. 'seninf_ctrl' is useless in
-this patch, you may move this to the patch that use this variable or
-merge that patch into this patch.
+This one looks straightforward to use the schema.
 
-Regards,
-CK
-
-> +	void __iomem		*seninf;
-> +	struct regmap		*seninf_top;
-> +	void __iomem		*seninf_mux[MTK_CAMDMA_MAX_NUM];
-> +	void __iomem		*camsv[MTK_CAMDMA_MAX_NUM];
-> +	const struct soc_camera_format_xlate *current_fmt;
-> +	u16				width_flags;	/* max 12 bits */
-> +	struct list_head	capture_list[MTK_CAMDMA_MAX_NUM];
-> +	struct list_head	fb_list;
-> +	spinlock_t		lock;
-> +	spinlock_t		queue_lock;
-> +	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
-> +	bool streamon;
-> +	unsigned long frame_cnt[MTK_CAMDMA_MAX_NUM];
-> +	unsigned int link;
-> +	unsigned long enqueue_cnt;
-> +	unsigned long dequeue_cnt;
-> +	struct v4l2_ctrl_handler ctrl_hdl;
-> +	char drv_name[16];
-> +	u32 id;
-> +	int clk_num;
-> +	struct clk		*clk[MIPICSI_CLK];
-> +};
-> +
+Rob
