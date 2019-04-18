@@ -1,216 +1,85 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [RESEND] dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
-Date: Thu, 18 Apr 2019 08:55:38 -0400
-Message-ID: <20190418125538.25722-1-tiny.windzz@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: allwinner: a64-amarula-relic: Add
+ GT5663 CTP node
+Date: Thu, 18 Apr 2019 14:57:29 +0200
+Message-ID: <20190418125729.ihsdhtclcv7loftm@flea>
+References: <20190418083543.11695-1-jagan@amarulasolutions.com>
+ <20190418112357.qic227rdwordmzyh@flea>
+ <CAMty3ZDwhB+63i_Cy90n0Y_Ra6XdTXbsX+z5q6swnj=FLH976g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fqcutytxrihg6l4f"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZDwhB+63i_Cy90n0Y_Ra6XdTXbsX+z5q6swnj=FLH976g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tiny.windzz@gmail.com, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-Allwinner Process Voltage Scaling Tables defines the voltage and
-frequency value based on the speedbin blown in the efuse combination.
-The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-provide the OPP framework with required information.
-This is used to determine the voltage and frequency value for each
-OPP of operating-points-v2 table when it is parsed by the OPP framework.
 
-The "allwinner,sun50i-h6-operating-points" DT extends the
-"operating-points-v2"
-with following parameters:
-- nvmem-cells (NVMEM area containig the speedbin information)
-- opp-microvolt-<name>: voltage in micro Volts.
-  At runtime, the platform can pick a <name> and matching
-  opp-microvolt-<name> property.
-			HW:		<name>:
-			sun50i-h6      speed0 speed1 speed2
+--fqcutytxrihg6l4f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
-just fix a typo:
-sun50iw-h6 -> sun50i-h6
+On Thu, Apr 18, 2019 at 06:00:27PM +0530, Jagan Teki wrote:
+> On Thu, Apr 18, 2019 at 4:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Thu, Apr 18, 2019 at 02:05:42PM +0530, Jagan Teki wrote:
+> > > Add Goodix GT5663 capacitive touch controller node on
+> > > Amarula A64-Relic board.
+> > >
+> > > The CTP connected to board with,
+> > > - SDA, SCK from i2c1
+> > > - GPIO-LD0 as AVDD28 supply
+> > > - PH4 gpio as interrupt pin
+> > > - PH8 gpio as reset pin
+> > > - X axis is inverted
+> > > - Y axis is inverted
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > > Changes for v2:
+> > > - drop i2c1, bias-pull-up
+> > >
+> > >  .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > index 3575db216016..3819ce396073 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > @@ -49,6 +49,24 @@
+> > >       bias-pull-up;
+> > >  };
+> > >
+> > > +&i2c1 {
+> > > +     pinctrl-names = "default";
+> > > +     pinctrl-0 = <&i2c1_pins>;
+> >
+> > That's the default already
+>
+> Yes, and i2c1 node in sun50i-a64.dtsi is not attaching pinctrl. So I
+> attached here.
 
-This patch is [2/2].
-for [1/2]:
-https://patchwork.kernel.org/patch/10903381/
----
- .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
- 1 file changed, 167 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+If that's the only muxing option, it should then.
 
-diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-new file mode 100644
-index 000000000000..7deae57a587b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-@@ -0,0 +1,167 @@
-+Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-+===================================
-+
-+For some SoCs, the CPU frequency subset and voltage value of each OPP
-+varies based on the silicon variant in use. Allwinner Process Voltage
-+Scaling Tables defines the voltage and frequency value based on the
-+speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
-+reads the efuse value from the SoC to provide the OPP framework with
-+required information.
-+
-+Required properties:
-+--------------------
-+In 'cpus' nodes:
-+- operating-points-v2: Phandle to the operating-points-v2 table to use.
-+
-+In 'operating-points-v2' table:
-+- compatible: Should be
-+	- 'allwinner,sun50i-h6-operating-points'.
-+- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-+		efuse registers that has information about the speedbin
-+		that is used to select the right frequency/voltage value
-+		pair. Please refer the for nvmem-cells bindings
-+		Documentation/devicetree/bindings/nvmem/nvmem.txt and
-+		also examples below.
-+
-+In every OPP node:
-+- opp-microvolt-<name>: Voltage in micro Volts.
-+			At runtime, the platform can pick a <name> and
-+			matching opp-microvolt-<name> property.
-+			[See: opp.txt]
-+			HW:		<name>:
-+			sun50i-h6	speed0 speed1 speed2
-+
-+Example 1:
-+---------
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <1>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <2>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <3>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+        };
-+
-+        cpu_opp_table: opp_table {
-+                compatible = "allwinner,sun50i-h6-operating-points";
-+                nvmem-cells = <&speedbin_efuse>;
-+                opp-shared;
-+
-+                opp@480000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <480000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@720000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <720000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@816000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <816000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@888000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <888000000>;
-+
-+                        opp-microvolt-speed0 = <940000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@1080000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1080000000>;
-+
-+                        opp-microvolt-speed0 = <1060000>;
-+                        opp-microvolt-speed1 = <880000>;
-+                        opp-microvolt-speed2 = <840000>;
-+                };
-+
-+                opp@1320000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1320000000>;
-+
-+                        opp-microvolt-speed0 = <1160000>;
-+                        opp-microvolt-speed1 = <940000>;
-+                        opp-microvolt-speed2 = <900000>;
-+                };
-+
-+                opp@1488000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1488000000>;
-+
-+                        opp-microvolt-speed0 = <1160000>;
-+                        opp-microvolt-speed1 = <1000000>;
-+                        opp-microvolt-speed2 = <960000>;
-+                };
-+        };
-+....
-+soc {
-+....
-+	sid: sid@3006000 {
-+		compatible = "allwinner,sun50i-h6-sid";
-+		reg = <0x03006000 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		....
-+		speedbin_efuse: speed@1c {
-+			reg = <0x1c 4>;
-+		};
-+        };
-+};
--- 
-2.17.0
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--fqcutytxrihg6l4f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLh0OQAKCRDj7w1vZxhR
+xXUFAP90TQofLCGvEH4XjS5PMg99z8RKJ6oVSIdJa2nJk5v/eQEA7surluc2rFnp
+dimL+VhNIlxTgQvD4IUcX9UO80Ij8ww=
+=pU/7
+-----END PGP SIGNATURE-----
+
+--fqcutytxrihg6l4f--
