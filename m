@@ -1,8 +1,8 @@
 Return-Path: <SRS0=WG84=SV=martin.sperl.org=kernel@kernel.org>
 From: kernel@martin.sperl.org
-Subject: [PATCH V7 RESEND 06/10] can: mcp25xxfd: optimize TEF read avoiding unnecessary SPI transfers
-Date: Fri, 19 Apr 2019 05:14:28 +0000
-Message-Id: <20190419051432.13538-7-kernel@martin.sperl.org>
+Subject: [PATCH V7 RESEND 01/10] dt-binding: can: mcp25xxfd: document device tree bindings
+Date: Fri, 19 Apr 2019 05:14:23 +0000
+Message-Id: <20190419051432.13538-2-kernel@martin.sperl.org>
 In-Reply-To: <20190419051432.13538-1-kernel@martin.sperl.org>
 References: <20190419051432.13538-1-kernel@martin.sperl.org>
 To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
@@ -11,74 +11,61 @@ List-ID: <devicetree@vger.kernel.org>
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-We have already enough information to know how many tx-messages have
-been terminated so that we do not have to query TEF every time if
-there is anything pending but we can read the tefs blindly.
-
-This avoids 1 SPI transfer per TEF read.
+Add device-tree bindings for Microcip CanFD Controller mcp2517fd
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+--
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of dt custom properties removing (most) gpio functions
+  V2 -> V3: added vendor-prefix for gpio-opendrain
+            s/_/-/
+            added gpio-controller
+  V3 -> V4: resend
+            added: Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c | 33 ++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
 
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-index 04c32b91cee1..0d08bc9768d9 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-@@ -274,6 +274,13 @@ int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv)
- 					MCP25XXFD_CAN_TEFCON_UINC);
- }
-
-+/* reading TEF entries can be made even more efficient by reading
-+ * multiple TEF entries in one go.
-+ * Under the assumption that we have count(TEF) >= count(TX_FIFO)
-+ * we can even release TEFs early (before we read them)
-+ * (and potentially restarting the transmit-queue early aswell)
-+ */
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+new file mode 100644
+index 000000000000..b388b3eb3905
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+@@ -0,0 +1,32 @@
++* Microchip MCP2517 stand-alone CAN controller device tree bindings
 +
- static int
- mcp25xxfd_can_tx_handle_int_tefif_conservative(struct mcp25xxfd_can_priv *cpriv)
- {
-@@ -304,6 +311,25 @@ mcp25xxfd_can_tx_handle_int_tefif_conservative(struct mcp25xxfd_can_priv *cpriv)
- 	return 0;
- }
-
-+static int
-+mcp25xxfd_can_tx_handle_int_tefif_optimized(struct mcp25xxfd_can_priv *cpriv,
-+					    u32 finished)
-+{
-+	int i, fifo, ret;
++Required properties:
++ - compatible: Should be one of the following:
++   - "microchip,mcp2517fd" for MCP2517fd.
++ - reg: SPI chip select.
++ - clocks: The clock feeding the CAN controller.
++ - interrupt-parent: The parent interrupt controller.
++ - interrupts: Should contain IRQ line for the CAN controller.
++ - gpio-controller: Marks the device node as a GPIO controller
 +
-+	/* now iterate those */
-+	for (i = 0, fifo = cpriv->fifos.tx.start; i < cpriv->fifos.tx.count;
-+	     i++, fifo++) {
-+		if (finished & BIT(fifo)) {
-+			ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv);
-+			if (ret)
-+				return ret;
-+		}
-+	}
++Optional properties:
++ - vdd-supply: Regulator that powers the CAN controller.
++ - xceiver-supply: Regulator that powers the CAN transceiver.
++ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
++					   0 = Start of Frame output
++					   default: 10
++ - microchip,clock-div2: bool: divide the internal clock by 2
++ - microchip,gpio-open-drain: bool: enable open-drain for all pins
++                                    (except cantx)
 +
-+	return 0;
-+}
-+
- int mcp25xxfd_can_tx_handle_int_tefif(struct mcp25xxfd_can_priv *cpriv)
- {
- 	unsigned long flags;
-@@ -323,6 +349,13 @@ int mcp25xxfd_can_tx_handle_int_tefif(struct mcp25xxfd_can_priv *cpriv)
-
- 	spin_unlock_irqrestore(&cpriv->fifos.tx_queue->lock, flags);
-
-+	/* run in optimized mode if possible */
-+	if (finished)
-+		return mcp25xxfd_can_tx_handle_int_tefif_optimized(cpriv,
-+								   finished);
-+	/* otherwise play it safe */
-+	netdev_warn(cpriv->can.dev,
-+		    "Something is wrong - we got a TEF interrupt but we were not able to detect a finished fifo\n");
- 	return mcp25xxfd_can_tx_handle_int_tefif_conservative(cpriv);
- }
-
++Example:
++	can0: can@1 {
++		compatible = "microchip,mcp2517fd";
++		reg = <1>;
++		clocks = <&clk24m>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <13 0x8>;
++		vdd-supply = <&reg5v0>;
++		xceiver-supply = <&reg5v0>;
++		gpio-controller;
++	};
 --
 2.11.0
