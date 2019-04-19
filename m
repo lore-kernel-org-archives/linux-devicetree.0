@@ -1,14 +1,15 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 6/6] drm/lima: handle shared irq case for
- lima_pp_bcast_irq_handler
-Date: Fri, 19 Apr 2019 09:33:01 +0100
-Message-ID: <1555662781-22570-7-git-send-email-peter.griffin@linaro.org>
-References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [v3 PATCH 2/6] dt-bindings: usb: add binding for Type-B GPIO
+ connector driver
+Date: Fri, 19 Apr 2019 16:43:30 +0800
+Message-ID: <1555663410.10179.205.camel@mhfsdcap03>
+References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1554257354-7440-3-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1554257354-7440-3-git-send-email-chunfeng.yun@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +19,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org, yuq825@gmail.com
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Hikey board all lima ip blocks are shared with one irq.
-This patch avoids a NULL ptr deref crash on this platform
-on startup. Tested with Weston and kmscube.
+Hi Rob,
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Qiang Yu <yuq825@gmail.com>
----
- drivers/gpu/drm/lima/lima_pp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Gentle ping, could you please comment on this patch?
 
-diff --git a/drivers/gpu/drm/lima/lima_pp.c b/drivers/gpu/drm/lima/lima_pp.c
-index d29721e..8fef224 100644
---- a/drivers/gpu/drm/lima/lima_pp.c
-+++ b/drivers/gpu/drm/lima/lima_pp.c
-@@ -64,7 +64,13 @@ static irqreturn_t lima_pp_bcast_irq_handler(int irq, void *data)
- 	struct lima_ip *pp_bcast = data;
- 	struct lima_device *dev = pp_bcast->dev;
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_pp;
--	struct drm_lima_m450_pp_frame *frame = pipe->current_task->frame;
-+	struct drm_lima_m450_pp_frame *frame;
-+
-+	/* for shared irq case */
-+	if (!pipe->current_task)
-+		return IRQ_NONE;
-+
-+	frame = pipe->current_task->frame;
- 
- 	for (i = 0; i < frame->num_pp; i++) {
- 		struct lima_ip *ip = pipe->processor[i];
--- 
-2.7.4
+Thanks a lot
+
+On Wed, 2019-04-03 at 10:09 +0800, Chunfeng Yun wrote:
+> It's used to support dual role switch via GPIO when use Type-B
+> receptacle, typically the USB ID pin is connected to an input
+> GPIO pin
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v3 changes:
+>  1. treat type-B connector as a virtual device, but not child device of
+>     USB controller's
+> 
+> v2 changes:
+>   1. new patch to make binding clear suggested by Hans
+> ---
+>  .../bindings/usb/typeb-conn-gpio.txt          | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+> new file mode 100644
+> index 000000000000..d2e1c4e01b6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+> @@ -0,0 +1,49 @@
+> +USB Type-B GPIO Connector
+> +
+> +This is a virtual device used to switch dual role mode from the USB ID pin
+> +connected to an input GPIO pin.
+> +
+> +Required properties:
+> +- compatible : Should be "linux,typeb-conn-gpio"
+> +
+> +Sub-nodes:
+> +- connector : should be present.
+> +	- compatible : should be "usb-b-connector".
+> +	- id-gpios, vbus-gpios : either one of them must be present,
+> +		and both can be present as well.
+> +	- vbus-supply : can be present if needed when supports dual role mode.
+> +	see connector/usb-connector.txt
+> +
+> +- port : should be present.
+> +	see graph.txt
+> +
+> +Example:
+> +
+> +rsw_iddig: role_sw_iddig {
+> +	compatible = "linux,typeb-conn-gpio";
+> +	status = "okay";
+> +
+> +	connector {
+> +		compatible = "usb-b-connector";
+> +		label = "micro-USB";
+> +		type = "micro";
+> +		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+> +		vbus-supply = <&usb_p0_vbus>;
+> +	};
+> +
+> +	port {
+> +		bconn_ep: endpoint@0 {
+> +			remote-endpoint = <&usb_role_sw>;
+> +		};
+> +	};
+> +};
+> +
+> +&mtu3 {
+> +	status = "okay";
+> +
+> +	port {
+> +		usb_role_sw: endpoint@0 {
+> +			remote-endpoint = <&bconn_ep>;
+> +		};
+> +	};
+> +};
