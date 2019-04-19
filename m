@@ -1,86 +1,66 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v7 00/10] Add support for XO 1.75 to OLPC battery driver
-Date: Fri, 19 Apr 2019 14:42:22 +0200
-Message-ID: <20190419124222.yizj6krkdi236x74@earth.universe>
-References: <20190418144655.18758-1-lkundrak@v3.sk>
- <20190418202000.hcojhcf2f47te44u@earth.universe>
- <20190419075716.GB6795@gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add r_watchog node
+Date: Fri, 19 Apr 2019 21:00:42 +0200
+Message-ID: <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com>
+References: <20190411154534.25563-1-peron.clem@gmail.com> <20190411154534.25563-3-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fjpcncqz7gjt75yj"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190419075716.GB6795@gmail.com>
+In-Reply-To: <20190411154534.25563-3-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---fjpcncqz7gjt75yj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> Allwinner H6 has a r_watchdog similar to A64.
+>
+> Declare it in the device-tree.
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
+ot/dts/allwinner/sun50i-h6.dtsi
+> index 5c2f5451227b..66dc684a378e 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -622,6 +622,13 @@
+>                         #reset-cells =3D <1>;
+>                 };
+>
+> +               r_watchdog: watchdog@7020400 {
+> +                       compatible =3D "allwinner,sun50i-a64-wdt",
+> +                                    "allwinner,sun6i-a31-wdt";
+> +                       reg =3D <0x07020400 0x20>;
+> +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> +               };
 
-Hi Ingo,
+I have set the same compatible as A64 because regarding the User
+Manual they have exactly the same memory mapping.
+However we don't know really if it's the same IP version, maybe there
+will be an errata one day.
+So I would like to know if it's better to define the h6-wdt also
+  compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt",
+                                 "allwinner,sun6i-a31-wdt";
 
-On Fri, Apr 19, 2019 at 09:57:16AM +0200, Ingo Molnar wrote:
-> > On Thu, Apr 18, 2019 at 04:46:45PM +0200, Lubomir Rintel wrote:
-> > > This patch set modifies the OLPC battery driver so that it could even=
-tually
-> > > be used on an Arm-based OLPC XO 1.75 machine.
-> > >=20
-> > > Compared to the previous version, it addresses review comments for the
-> > > x86 platform parts from Thomas Gleixner. Details in individual patche=
-s'
-> > > change logs.
-> > >=20
-> > > I've failed to version the previous iteration of the set that should'=
-ve
-> > > been "v6" for the change logs to make sense. Sorry for that.
-> > >=20
-> > > Thank you,
-> > > Lubo
-> >=20
-> > I queued up the complete patchset via an immutable branch based on
-> > v5.1-rc1. X86 maintainers can pull this signed immutable branch as
-> > required. Thanks for the patches,
->=20
-> Would you mind sending these patches to Linus yourself, as part of the=20
-> power-supply tree?
->=20
-> That's where it really belongs, the impact on arch/x86/ was mostly=20
-> drive-by (and it's now all Acked-by Thomas), the meat of the changes is=
-=20
-> in the OLPC battery driver.
+I would say Yes, but with this logic we would have to had a new
+compatible each time there is a  new SoC.
 
-Yes, I merged the immutable branch into power-supply. You can either
-also merge it (e.g. when you plan to add other changes), or just ignore
-it :) This is what I usually do with other subsystems to avoid
-pointless merge conflicts.
+Thanks,
+Clement
 
-TLDR: Yes.
-
--- Sebastian
-
---fjpcncqz7gjt75yj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly5wiQACgkQ2O7X88g7
-+pohFhAAnMvGVvpZWUjOCSBeX6SHrawPkrxXf0+MNl9LXP58EPyPdlLep8CkDTWM
-3l2z2RuOdWyPdUjRuJquk0GdiSum+DtTiUPj+E0c1TjgFxzqOxV5p+sY1J1aGlMP
-ES6x5K1d3CFVDDYKY+e+0+SS8vU4Bhfxb+n1jOBQsEQDa6MdP7HDXDFt0QGDCqoM
-2CdNIGWPjefYvwMJD7HthEoe7Rkahv81EVGv8RbkojNSd4vr5k7pTlYyNHsrv8sR
-K3/+1BMQ+bDuvfwYFXO7FmR1UivLq+gNE+q0+TA+AkKZMpIJ6+P8fjxgspn2T8UI
-PC8XR2HVmvVVA6VeiM/gcvPbX6GnVAlnXCxeLUkGwF+NZvyIIEgg1TIsDrmV21Nn
-DQ02ELgvIXX5QdbBREP0aL83HqK4i5C0bJRO/+4kTrClP3clthuoA5GSEppOWxmP
-2kZJUMdiWCU5Q9ReGjOaXq63HMNRMwrFi+2jABbM2FSc9+shv3M+O9tr2heJi1Kx
-+e8RQkQ+iZn4w/Uz8EVIvwdfHgHKLMrip38A3iXqQABmIEk7nvI9/UXoC7nNcxDM
-8E1FXpN5hoK+b2pTaTWMCfTlsjXM7kFg2J4Pgq4KMJIp2xcLmxMkrl/9cQg0pWwb
-uO8IXoUm8ChpHvXHrS7wWPcbQCGTrV0LoVwMpbUyVF1vtVB8+Ck=
-=NiHD
------END PGP SIGNATURE-----
-
---fjpcncqz7gjt75yj--
+> +
+>                 r_intc: interrupt-controller@7021000 {
+>                         compatible =3D "allwinner,sun50i-h6-r-intc",
+>                                      "allwinner,sun6i-a31-r-intc";
+> --
+> 2.17.1
+>
