@@ -1,8 +1,8 @@
 Return-Path: <SRS0=WG84=SV=martin.sperl.org=kernel@kernel.org>
 From: kernel@martin.sperl.org
-Subject: [PATCH V7 RESEND 07/10] can: mcp25xxfd: optimize TEF reads reading multiple TEFs in one go
-Date: Fri, 19 Apr 2019 05:14:29 +0000
-Message-Id: <20190419051432.13538-8-kernel@martin.sperl.org>
+Subject: [PATCH V7 RESEND 10/10] can: mcp25xxfd: optimize reception of big CanFD frame reception with BRS
+Date: Fri, 19 Apr 2019 05:14:32 +0000
+Message-Id: <20190419051432.13538-11-kernel@martin.sperl.org>
 In-Reply-To: <20190419051432.13538-1-kernel@martin.sperl.org>
 References: <20190419051432.13538-1-kernel@martin.sperl.org>
 To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
@@ -11,236 +11,116 @@ List-ID: <devicetree@vger.kernel.org>
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-To reduce the amount of spi_messages send this patch optimizes the
-read TEF so that multiple TEFs are read together.
+In case of predicted DLC=15 and in case at least 33% of those are
+sent via BRS be aggressive and use bulk fifo reads to avoid missing
+any frames due to releasing FIFOs not as fast as possible.
 
-Statistics in debugfs show for 100000 DLC=0 can messages sent:
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_conservative_reads
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads
-44691
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_1
-1862
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_2
-30349
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_3
-12480
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_4
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_5
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_6
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_7
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_8+
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_reads
-100000
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_read_splits
-0
-
-So to read all of those 100000 TEF frames to read we formerly have
-scheduled 100000 spi_messages.
-While with this patch we have only scheduled 44691 spi_messages, so
-only 44.6% of the former value.
-This also means we have not been transferring 110618 (=2*30349+2*2*12480)
-unnecessary command bytes over the SPI bus.
+This would be of most impact when having a 1MHz Can Bus with
+a 8MHz data bitrate.
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c  | 18 +++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  7 ++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c   | 85 +++++++++++++++++++---
- 3 files changed, 101 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
-index 4f7d5d8633c3..90034ea21c49 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
-@@ -43,6 +43,9 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
- 					struct dentry *root)
- {
- 	struct dentry *dir = debugfs_create_dir("stats", root);
-+	char name[32];
-+	u64 *data;
-+	int i;
-
- # define DEBUGFS_CREATE(name, var) debugfs_create_u64(name, 0444, dir, \
- 						      &cpriv->stats.var)
-@@ -62,6 +65,21 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
- 	DEBUGFS_CREATE("int_rx_invalid_message", int_ivm_count);
- 	DEBUGFS_CREATE("int_crcerror",		 int_cerr_count);
-
-+	DEBUGFS_CREATE("tef_reads",		 tef_reads);
-+	DEBUGFS_CREATE("tef_conservative_reads", tef_conservative_reads);
-+	DEBUGFS_CREATE("tef_optimized_reads",	 tef_optimized_reads);
-+	DEBUGFS_CREATE("tef_read_splits",	 tef_read_splits);
-+
-+	for (i = 0; i < MCP25XXFD_CAN_TEF_READ_BINS - 1; i++) {
-+		snprintf(name, sizeof(name),
-+			 "tef_optimized_reads_%i", i + 1);
-+		data = &cpriv->stats.tef_optimized_read_sizes[i];
-+		debugfs_create_u64(name, 0444, dir, data);
-+	}
-+	snprintf(name, sizeof(name), "tef_optimized_reads_%i+", i + 1);
-+	debugfs_create_u64(name, 0444, dir,
-+			   &cpriv->stats.tef_optimized_read_sizes[i]);
-+
- 	DEBUGFS_CREATE("tx_frames_fd",		 tx_fd_count);
- 	DEBUGFS_CREATE("tx_frames_brs",		 tx_brs_count);
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  1 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 48 +++++++++++++++-------
+ 2 files changed, 35 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-index 5727d4608dfd..766bec350e1e 100644
+index 1a48e801065d..eeb9c88c7e97 100644
 --- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
 +++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-@@ -155,6 +155,13 @@ struct mcp25xxfd_can_priv {
- 		u64 tx_fd_count;
- 		u64 tx_brs_count;
+@@ -178,6 +178,7 @@ struct mcp25xxfd_can_priv {
+ 	struct {
+ #define MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE 32
+ 		u8 dlc[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
++		u8 brs[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
+ 		u8 index;
+ 		u32 predicted_len;
+ 	} rx_history;
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+index e2102aa00578..11bf12461e58 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+@@ -104,6 +104,8 @@ int mcp25xxfd_can_rx_submit_frame(struct mcp25xxfd_can_priv *cpriv, int fifo)
 
-+		u64 tef_reads;
-+		u64 tef_read_splits;
-+		u64 tef_conservative_reads;
-+		u64 tef_optimized_reads;
-+#define MCP25XXFD_CAN_TEF_READ_BINS 8
-+		u64 tef_optimized_read_sizes[MCP25XXFD_CAN_TEF_READ_BINS];
-+
- 		u64 rx_reads;
- 		u64 rx_reads_prefetched_too_few;
- 		u64 rx_reads_prefetched_too_few_bytes;
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-index 0d08bc9768d9..13cb898247fe 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-@@ -233,21 +233,62 @@ void mcp25xxfd_can_tx_queue_restart(struct mcp25xxfd_can_priv *cpriv)
+ 	/* add to rx_history */
+ 	cpriv->rx_history.dlc[cpriv->rx_history.index] = dlc;
++	cpriv->rx_history.brs[cpriv->rx_history.index] =
++		(rx->flags & MCP25XXFD_CAN_OBJ_FLAGS_BRS) ? CANFD_BRS : 0;
+ 	cpriv->rx_history.index++;
+ 	if (cpriv->rx_history.index >= MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE)
+ 		cpriv->rx_history.index = 0;
+@@ -395,19 +397,10 @@ static int mcp25xxfd_can_rx_predict_prefetch(struct mcp25xxfd_can_priv *cpriv)
+  * reading multiple rx fifos is a realistic option of optimization
+  */
+
+-/* right now we only optimize for sd (can2.0) frame case,
+- * but in principle it could be also be valuable for CANFD
+- * frames when we receive lots of 64 byte packets with BRS set
+- * and a big difference between nominal and data bitrates
+- */
+-
+-int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
++static int mcp25xxfd_can_rx_read_single_frames(struct mcp25xxfd_can_priv *cpriv,
++					       int prefetch)
+ {
+-	int i, f, prefetch;
+-	int ret;
+-
+-	/* calculate optimal prefetch to use */
+-	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
++	int i, f, ret;
+
+ 	/* loop all frames */
+ 	for (i = 0, f = cpriv->fifos.rx.start; i < cpriv->fifos.rx.count;
+@@ -424,7 +417,7 @@ int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
+ 	return 0;
  }
 
- static
--int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv)
-+int mcp25xxfd_can_tx_tef_read(struct mcp25xxfd_can_priv *cpriv,
-+			      int start, int count)
+-static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
++static int mcp25xxfd_can_rx_read_bulk_frames(struct mcp25xxfd_can_priv *cpriv)
  {
--	u32 tef_offset = cpriv->fifos.tef.index * cpriv->fifos.tef.size;
-+	u32 tef_offset = start * cpriv->fifos.tef.size;
- 	struct mcp25xxfd_can_obj_tef *tef =
- 		(struct mcp25xxfd_can_obj_tef *)(cpriv->sram + tef_offset);
--	int fifo, ret;
--	unsigned long flags;
-+	int last, read, ret;
+ 	int i, start, end;
+ 	int ret;
+@@ -447,12 +440,39 @@ static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
+ 	return 0;
+ }
 
--	/* read the next TEF entry to get the transmit timestamp and fifo */
-+	/* compute how many we can read in one go */
-+	last = start + count;
-+	read = (last > cpriv->fifos.tef.count) ?
-+		(cpriv->fifos.tef.count - start) :
-+		count;
++static int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
++{
++	int i, count_dlc15, count_brs, prefetch;
 +
-+	/* and read it */
- 	ret = mcp25xxfd_cmd_read_regs(cpriv->priv->spi,
- 				      MCP25XXFD_SRAM_ADDR(tef_offset),
--				      &tef->id, sizeof(*tef));
-+				      &tef->id, sizeof(*tef) * read);
- 	if (ret)
- 		return ret;
-
-+	/* and read a second part on wrap */
-+	if (read != count) {
-+		/* update stats */
-+		MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_read_splits);
-+		/* compute the addresses  */
-+		read = count - read;
-+		tef = (struct mcp25xxfd_can_obj_tef *)(cpriv->sram);
-+		/* and read again */
-+		ret = mcp25xxfd_cmd_read_regs(cpriv->priv->spi,
-+					      MCP25XXFD_SRAM_ADDR(0),
-+					      &tef->id,
-+					      sizeof(*tef) * read);
-+	}
++	/* get a prediction on prefetch */
++	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
 +
-+	return ret;
++	/* if the prefetch is < 64 then just read single */
++	if (prefetch < 64)
++		return mcp25xxfd_can_rx_read_single_frames(cpriv, prefetch);
++
++	/* check if we have mostly brs frames of those DLC=15 frames */
++	for (i = 0, count_brs = 0, count_dlc15 = 0;
++	     i < MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE; i++)
++		if (cpriv->rx_history.dlc[i] == 15) {
++			count_dlc15++;
++			if (cpriv->rx_history.brs[i])
++				count_brs++;
++		}
++
++	/* if we have at least 33% brs frames then run bulk */
++	if (count_brs * 3 >= count_dlc15)
++		return mcp25xxfd_can_rx_read_bulk_frames(cpriv);
++	else
++		return mcp25xxfd_can_rx_read_single_frames(cpriv, prefetch);
 +}
 +
-+static
-+int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv,
-+					   bool read_data)
-+{
-+	u32 tef_offset = cpriv->fifos.tef.index * cpriv->fifos.tef.size;
-+	struct mcp25xxfd_can_obj_tef *tef =
-+		(struct mcp25xxfd_can_obj_tef *)(cpriv->sram + tef_offset);
-+	int fifo, ret;
-+	unsigned long flags;
-+
-+	/* read the next TEF entry to get the transmit timestamp and fifo */
-+	if (read_data) {
-+		ret = mcp25xxfd_can_tx_tef_read(cpriv,
-+						cpriv->fifos.tef.index, 1);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* get the fifo from tef */
- 	fifo = (tef->flags & MCP25XXFD_CAN_OBJ_FLAGS_SEQ_MASK) >>
- 		MCP25XXFD_CAN_OBJ_FLAGS_SEQ_SHIFT;
-@@ -260,6 +301,9 @@ int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv)
- 			   fifo, tef->id, tef->flags, tef->ts);
- 	spin_unlock_irqrestore(&cpriv->fifos.tx_queue->lock, flags);
-
-+	/* update stats */
-+	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_reads);
-+
- 	/* now we can schedule the fifo for echo submission */
- 	mcp25xxfd_can_queue_frame(cpriv, fifo, tef->ts, false);
-
-@@ -296,10 +340,12 @@ mcp25xxfd_can_tx_handle_int_tefif_conservative(struct mcp25xxfd_can_priv *cpriv)
- 	/* read the tef in an inefficient loop */
- 	while (tefsta & MCP25XXFD_CAN_TEFSTA_TEFNEIF) {
- 		/* read one tef */
--		ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv);
-+		ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv, true);
- 		if (ret)
- 			return ret;
-
-+		MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_conservative_reads);
-+
- 		/* read the TEF status */
- 		ret = mcp25xxfd_cmd_read_mask(cpriv->priv->spi,
- 					      MCP25XXFD_CAN_TEFSTA, &tefsta,
-@@ -315,13 +361,34 @@ static int
- mcp25xxfd_can_tx_handle_int_tefif_optimized(struct mcp25xxfd_can_priv *cpriv,
- 					    u32 finished)
+ static int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
  {
--	int i, fifo, ret;
-+	int i, fifo, count, ret;
-+
-+	/* count the number of fifos that have terminated */
-+	for (i = 0, fifo = cpriv->fifos.tx.start, count = 0;
-+	     i < cpriv->fifos.tx.count; i++, fifo++)
-+		if (finished & BIT(fifo))
-+			count++;
-+
-+	/* read them in one go if possible
-+	 * we also assume that we have count(TEF) >= count(TX-FIFOS)
-+	 * this may require 2 reads when we wrap arround
-+	 * (that is unless count(TEF) == count(TX-FIFOS))
-+	 */
-+	ret = mcp25xxfd_can_tx_tef_read(cpriv, cpriv->fifos.tef.index, count);
-+	if (ret)
-+		return ret;
-+
-+	/* update stats */
-+	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_optimized_reads);
-+	i = min_t(int, MCP25XXFD_CAN_TEF_READ_BINS - 1, count - 1);
-+	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_optimized_read_sizes[i]);
+ 	if (cpriv->can.dev->mtu == CANFD_MTU)
+ 		return mcp25xxfd_can_rx_read_fd_frames(cpriv);
+ 	else
+-		return mcp25xxfd_can_rx_read_sd_frames(cpriv);
++		return mcp25xxfd_can_rx_read_bulk_frames(cpriv);
+ }
 
- 	/* now iterate those */
- 	for (i = 0, fifo = cpriv->fifos.tx.start; i < cpriv->fifos.tx.count;
- 	     i++, fifo++) {
- 		if (finished & BIT(fifo)) {
--			ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv);
-+			ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv,
-+								     false);
- 			if (ret)
- 				return ret;
- 		}
+ int mcp25xxfd_can_rx_handle_int_rxif(struct mcp25xxfd_can_priv *cpriv)
 --
 2.11.0
