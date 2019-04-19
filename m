@@ -1,71 +1,52 @@
-From: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
- Exynos542x SoCs
-Date: Fri, 19 Apr 2019 18:53:44 +0100
-Message-ID: <CACfOrNdEpC2vNgCOBXtrW-HjGHNG_6iLAFUCtVoZstGASPtcsA@mail.gmail.com>
-References: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V3 3/9] spi: add SPI_LSBYTE_FIRST mode
+Date: Fri, 19 Apr 2019 16:22:08 +0100
+Message-ID: <20190419152208.GT2803@sirena.org.uk>
+References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
+ <1555363834-32155-4-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pnDjx0H/VpusRTEI"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1555363834-32155-4-git-send-email-skomatineni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-This patch can be dropped, as it needs more work.
+--pnDjx0H/VpusRTEI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In fact, the interrupts seems to be wrong. The interrupts suggested by
-Anand Moon gave the same following results.
+On Mon, Apr 15, 2019 at 02:30:28PM -0700, Sowjanya Komatineni wrote:
+> Some SPI slaves expect bytes to be in least significant first order
+> and some expects most significant first oder.
+>=20
+> This patch adds support for requesting SPI master controllers for
+> least significant first order using SPI_LSBYTE_FIRST mode.
 
-export CCI_DEV=CCI_400
-export OMP_NUM_THREADS=2
-sudo --preserve-env ./perf stat -a \
-  -e armv7_cortex_a7/config=0x11,name=a7_cycles/ \
-  -e armv7_cortex_a15/config=0x11,name=a15_cycles/ \
-  -e armv7_cortex_a7/config=0x19,name=a7_bus/ \
-  -e armv7_cortex_a15/config=0x19,name=a15_bus/ \
-  -e ${CCI_DEV}/config=0xff,name=cci400_cycles/ \
-  -e ${CCI_DEV}/config=0x0,name=cci400_si_rrq_hs_any/ \
-  -e ${CCI_DEV}/config=0xc,name=cci400_si_wrq_hs_any/ \
-  taskset -c 0,7 /home/user/cg.x.A 1
+This is byte ordering as opposed to bit ordering which the core already
+supports.  Do you have any examples of devices that need this or is it
+just being added for completeness?  If devices are going to rely on this
+we probably need emulation support in the core I guess given that this
+is a pretty unusual controller feature.
 
-[..]
+--pnDjx0H/VpusRTEI
+Content-Type: application/pgp-signature; name="signature.asc"
 
- Performance counter stats for 'system wide':
+-----BEGIN PGP SIGNATURE-----
 
-     9,362,850,550      a7_cycles
-     1,682,125,760      a15_cycles
-        68,920,347      a7_bus
-        61,484,352      a15_bus
-     3,789,936,935      cci400_cycles
-                 0      cci400_si_rrq_hs_any
-                 0      cci400_si_wrq_hs_any
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly5558ACgkQJNaLcl1U
+h9ABdAf/VSTPgRMQCRuu5mKG7sETGap2gcwbgefEWavIGVVyUwfycisAdwMX7fnz
+o9BCutybIvNC09o6dTuMEwJEVfYDMDQGdLY337ofB/O1lOKbFNp51bOC5knj69Rn
+rX1O0T5DP9pHAbAWle473JCt4QXoLjw6bfasqZww/g6GQBQVFTMFw5RAI6Tbdwci
+OSEmszHN/b8s6u5oty9GmPjc0kn2SPoahgM4myTvTBNFrzabvsfyXhV7XeaHOox8
+kmMRDhZ2X8hrOkBpno4nFW63ZmVzKgqKkcrNoERIPmzw6awYpNCaWmvIA88Ba/es
+TMw7K+3CDCo+OOrDtOWR/CQ2VCUNAw==
+=00zp
+-----END PGP SIGNATURE-----
 
-       9.541340558 seconds time elapsed
-
-cg.x.A comes from NAS benchmark suite, compiled with fopenmp support, setup
-to run 2 threads and taskmapped to ran on both a7 and a15 clusters.
-a7_bus and a15_bus report main memory accesses.
-
-Only cci400_cycles seems to be correct. However, all pmcs from the master
-interface are reported as unsupported and all pmcs from the slave interface
-return 0, which is probably not correct.
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0470f/CJHICFBF.html
-
-Would it be possible that someone from Samsung provide the right
-interrupts values?
-Many thanks.
-
-Regards,
-Willy
+--pnDjx0H/VpusRTEI--
