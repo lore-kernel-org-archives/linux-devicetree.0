@@ -1,47 +1,28 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: soc: sprd: Add Spreadtrum MCDT documentation
-Date: Fri, 19 Apr 2019 18:54:31 +0800
-Message-ID: <f7edc4078b2d6f44ed5ad47c14dd58da5cc50f21.1555670768.git.baolin.wang@linaro.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 4/6] reset: hi6220: Add support for AO reset controller
+Date: Fri, 19 Apr 2019 13:13:46 -0700
+Message-ID: <155570482647.15276.10153086772852393750@swboyd.mtv.corp.google.com>
+References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org> <1555662781-22570-5-git-send-email-peter.griffin@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1555662781-22570-5-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: broonie@kernel.org, orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, airlied@linux.ie, daniel@ffwll.ch, john.stultz@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, xuwei5@hisilicon.com, yuq825@gmail.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, lima@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for Spreadtrum multi-channel data transfer controller,
-which is used for sound stream transmission between audio subsystem and
-other AP/CP subsystems.
+Quoting Peter Griffin (2019-04-19 01:32:59)
+> This is required to bring Mali450 gpu out of reset. Also
+> we now use CLK_OF_DECLARE_DRIVER to probe in both the
+> clock and reset drivers. The clock and reset parts have
+> been done as one atomic commit to avoid a bisection hole.
+>=20
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- .../devicetree/bindings/soc/sprd/sprd-mcdt.txt     |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt
+>  drivers/clk/hisilicon/clk-hi6220.c        |  3 +-
 
-diff --git a/Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt b/Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt
-new file mode 100644
-index 0000000..274ba0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt
-@@ -0,0 +1,19 @@
-+Spreadtrum Multi-Channel Data Transfer Binding
-+
-+The Multi-channel data transfer controller is used for sound stream
-+transmission between audio subsystem and other AP/CP subsystem. It
-+supports 10 DAC channel and 10 ADC channel, and each channel can be
-+configured with DMA mode or interrupt mode.
-+
-+Required properties:
-+- compatible: Should be "sprd,sc9860-mcdt".
-+- reg: Should contain registers address and length.
-+- interrupts: Should contain one interrupt shared by all channel.
-+
-+Example:
-+
-+mcdt@41490000 {
-+	compatible = "sprd,sc9860-mcdt";
-+	reg = <0 0x41490000 0 0x170>;
-+	interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+};
--- 
-1.7.9.5
+Acked-by: Stephen Boyd <sboyd@kernel.org>
