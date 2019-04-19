@@ -1,49 +1,60 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v7 00/10] Add support for XO 1.75 to OLPC battery driver
-Date: Fri, 19 Apr 2019 09:57:16 +0200
-Message-ID: <20190419075716.GB6795@gmail.com>
-References: <20190418144655.18758-1-lkundrak@v3.sk>
- <20190418202000.hcojhcf2f47te44u@earth.universe>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 0/3] drm/msm/a6xx: Add support for zap shader
+Date: Fri, 19 Apr 2019 13:46:13 -0600
+Message-ID: <1555703176-5499-1-git-send-email-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190418202000.hcojhcf2f47te44u@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sharat Masetty <smasetty-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mamta Shukla <mamtashukla555-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Zimmermann <tzimmermann-l3A5Bk7waGM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Wen Yang <wen.yang99-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-* Sebastian Reichel <sre@kernel.org> wrote:
-
-> Hi,
-> 
-> On Thu, Apr 18, 2019 at 04:46:45PM +0200, Lubomir Rintel wrote:
-> > This patch set modifies the OLPC battery driver so that it could eventually
-> > be used on an Arm-based OLPC XO 1.75 machine.
-> > 
-> > Compared to the previous version, it addresses review comments for the
-> > x86 platform parts from Thomas Gleixner. Details in individual patches'
-> > change logs.
-> > 
-> > I've failed to version the previous iteration of the set that should've
-> > been "v6" for the change logs to make sense. Sorry for that.
-> > 
-> > Thank you,
-> > Lubo
-> 
-> I queued up the complete patchset via an immutable branch based on
-> v5.1-rc1. X86 maintainers can pull this signed immutable branch as
-> required. Thanks for the patches,
-
-Would you mind sending these patches to Linus yourself, as part of the 
-power-supply tree?
-
-That's where it really belongs, the impact on arch/x86/ was mostly 
-drive-by (and it's now all Acked-by Thomas), the meat of the changes is 
-in the OLPC battery driver.
-
-Thanks,
-
-	Ingo
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBsb2FkaW5nIHRoZSB6YXAgc2hhZGVy
+IG9uIGE2eHggYW5kIHVzaW5nIGl0CnRvIGdldCB0aGUgR1BVIG91dCBvZiBzZWN1cmUgbW9kZS4K
+ClRoZSBBZHJlbm8gYTV4eCBhbmQgYTZ4eCBHUFVzIGJvb3QgaW4gInNlY3VyZSIgbW9kZSB3aGlj
+aCByZXN0cmljdHMgdGhlIG1lbW9yeQp0aGUgR1BVIGlzIGFsbG93ZWQgdG8gdXNlLiBUbyBnZXQg
+dGhlIEdQVSBvdXQgb2Ygc2VjdXJlIG1vZGUgd2UgbmVlZCB0byB3cml0ZQp0byBhIHJlZ2lzdGVy
+LiBIb3dldmVyIHNvbWUgYm9vdGxvYWRlcnMgYmxvY2sgYWNjZXNzIHRvIHRoaXMgcmVnaXN0ZXIg
+YW5kCnJlcXVpcmUgdGhhdCB0aGUgR1BVIGluc3RlYWQgcGVyZm9ybSBhIHNlcXVlbmNlIHRvIHB1
+bGwgdGhlIEdQVSBvdXQgb2Ygc2VjdXJlCm1vZGUuIFRoaXMgc2VxdWVuY2UgcmVxdWlyZXMgYSBz
+cGVjaWFsICJ6YXAiIHNoYWRlciB0aGF0IHdpbGwgZXhlY3V0ZSBpbgpzZWN1cmUgbW9kZSwgY2xl
+YXIgb3V0IGFsbCB0aGUgaW50ZXJuYWwgR1BVIHNldHRpbmdzIGFuZCB0aGVuIHRyYW5zaXRpb24g
+dG8KaW4tc2VjdXJlIG1vZGUuCgpUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIGxvYWRpbmcg
+YW5kIHVzaW5nIHRoZSB6YXAgc2hhZGVyIG9uIGE2eHggYXNzdW1pbmcKdGhhdCB0aGUgc2hhZGVy
+IGV4aXN0cyBhbmQgdGhhdCB0aGUgYm9vdGxvYWRlciBzdXBwb3J0cyB0aGUgc2VjdXJlIG1vZGUu
+IElmIGFueQpwYXJ0IG9mIHRoZSBzZXF1ZW5jZSBmYWlscyB0aGVuIGZhbGwgYmFjayB0byB3cml0
+aW5nIHRoZSByZWdpc3Rlci4gSWYgd2UgZ2V0IGl0Cndyb25nLCB0aGVuIHdyaXRpbmcgdG8gdGhl
+IHJlZ2lzdGVyIHdpbGwgdHJpZ2dlciBhIHByb3RlY3Rpb24gbW9kZSBlcnJvciBhbmQKdGhlIHN5
+c3RlbSB3aWxsIGdvIGRvd24uCgpUaGUgYWN0dWFsIHphcCBzaGFkZXIgd29ya3MgYWxtb3N0IGlk
+ZW50aWNhbGx5IHRvIHRoZSBvbmUgb24gNXh4IG91dHNpZGUgb2YKYSBtaW5vciB3b3JrYXJvdW5k
+IGZvciBzeXN0ZW0gcmVzdW1lLiBUaGUgZmlyc3QgcGF0Y2ggbW92ZXMgdGhlIGE1eHggc3BlY2lm
+aWMKc3VwcG9ydCB0byB0aGUgZ2VuZXJpYyBhZHJlbm8gZHJpdmVyLiBUaGUgc2Vjb25kIHBhdGNo
+IGFkZCBzdXBwb3J0IGZvciB0aGUKemFwIHNoYWRlciBhbmQgdGhlIGZpbmFsIHR3byBwYXRjaGVz
+IGFkZCB0aGUgRFQgYmluZGluZ3MgYW5kIERUIHNldHRpbmdzIGZvcgpzZXR0aW5nIHVwIHRoZSBy
+ZXNlcnZlZCBtZW1vcnkgdGhhdCB0aGUgc2hhZGVyIHJlcXVpcmVzLgoKdjI6IFJlZHVjZWQgdGhl
+IHJlZHVuZGFudCBsb2cgbWVzc2FnZXMgZm9yIHRhcmdldHMgdGhhdCBkb24ndCBuZWVkIHRoZSB6
+YXAKc2hhZGVyCgpKb3JkYW4gQ3JvdXNlICgzKToKICBkcm0vbXNtL2dwdTogTW92ZSB6YXAgc2hh
+ZGVyIGxvYWRpbmcgdG8gYWRyZW5vCiAgZHJtL21zbS9hNnh4OiBBZGQgemFwIHNoYWRlciBsb2Fk
+CiAgZHQtYmluZGluZ3M6IGRybS9tc20vZ3B1OiBEb2N1bWVudCBhNXh4IC8gYTZ4eCB6YXAgc2hh
+ZGVyIHJlZ2lvbgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQg
+ICAgICAgIHwgICA3ICsrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNXh4X2dwdS5jICAg
+ICAgICAgICAgICB8IDExMSArLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9h
+ZHJlbm8vYTZ4eF9ncHUuYyAgICAgICAgICAgICAgfCAgMzggKysrKystCiBkcml2ZXJzL2dwdS9k
+cm0vbXNtL2FkcmVuby9hZHJlbm9fZGV2aWNlLmMgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dw
+dS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1LmMgICAgICAgICAgICB8IDEzNSArKysrKysrKysr
+KysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuaCAgICAg
+ICAgICAgIHwgICA2ICsKIDYgZmlsZXMgY2hhbmdlZCwgMTg3IGluc2VydGlvbnMoKyksIDExMSBk
+ZWxldGlvbnMoLSkKCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZnJlZWRyZW5v
