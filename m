@@ -1,66 +1,43 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add r_watchog node
-Date: Fri, 19 Apr 2019 21:00:42 +0200
-Message-ID: <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com>
-References: <20190411154534.25563-1-peron.clem@gmail.com> <20190411154534.25563-3-peron.clem@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] of_net: Fix residues after of_get_nvmem_mac_address
+ removal
+Date: Fri, 19 Apr 2019 11:58:44 -0700 (PDT)
+Message-ID: <20190419.115844.903040716308076686.davem@davemloft.net>
+References: <1555531752-22813-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411154534.25563-3-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: Text/Plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1555531752-22813-1-git-send-email-ynezz@true.cz>
+Sender: netdev-owner@vger.kernel.org
+To: ynezz@true.cz
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, frowand.list@gmail.com, bgolaszewski@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Petr ¦tetiar <ynezz@true.cz>
+Date: Wed, 17 Apr 2019 22:09:12 +0200
 
-On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Allwinner H6 has a r_watchdog similar to A64.
->
-> Declare it in the device-tree.
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index 5c2f5451227b..66dc684a378e 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -622,6 +622,13 @@
->                         #reset-cells =3D <1>;
->                 };
->
-> +               r_watchdog: watchdog@7020400 {
-> +                       compatible =3D "allwinner,sun50i-a64-wdt",
-> +                                    "allwinner,sun6i-a31-wdt";
-> +                       reg =3D <0x07020400 0x20>;
-> +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
+> I've discovered following discrepancy in the bindings/net/ethernet.txt
+> documentation, where it states following:
+> 
+>  - nvmem-cells: phandle, reference to an nvmem node for the MAC address;
+>  - nvmem-cell-names: string, should be "mac-address" if nvmem is to be..
+> 
+> which is actually misleading and confusing. There are only two ethernet
+> drivers in the tree, cadence/macb and davinci which supports this
+> properties.
+> 
+> This nvmem-cell* properties were introduced in commit 9217e566bdee
+> ("of_net: Implement of_get_nvmem_mac_address helper"), but
+> commit afa64a72b862 ("of: net: kill of_get_nvmem_mac_address()")
+> forget to properly clean up this parts.
+> 
+> So this patch fixes the documentation by moving the nvmem-cell*
+> properties at the appropriate places.  While at it, I've removed unused
+> include as well.
+> 
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Fixes: afa64a72b862 ("of: net: kill of_get_nvmem_mac_address()")
+> Signed-off-by: Petr ¦tetiar <ynezz@true.cz>
 
-I have set the same compatible as A64 because regarding the User
-Manual they have exactly the same memory mapping.
-However we don't know really if it's the same IP version, maybe there
-will be an errata one day.
-So I would like to know if it's better to define the h6-wdt also
-  compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt",
-                                 "allwinner,sun6i-a31-wdt";
-
-I would say Yes, but with this logic we would have to had a new
-compatible each time there is a  new SoC.
-
-Thanks,
-Clement
-
-> +
->                 r_intc: interrupt-controller@7021000 {
->                         compatible =3D "allwinner,sun50i-h6-r-intc",
->                                      "allwinner,sun6i-a31-r-intc";
-> --
-> 2.17.1
->
+Applied, thanks.
