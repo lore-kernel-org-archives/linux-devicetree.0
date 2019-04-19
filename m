@@ -1,49 +1,54 @@
-From: Horia Geanta <horia.geanta@nxp.com>
-Subject: Re: [PATCH] powerpc/dts/fsl: add crypto node alias for B4
-Date: Fri, 19 Apr 2019 09:54:54 +0000
-Message-ID: <VI1PR0402MB34857D2DAF16A611B11A119598270@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190320125516.12277-1-horia.geanta@nxp.com>
+From: Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH v2 6/6] drm/lima: handle shared irq case for
+ lima_pp_bcast_irq_handler
+Date: Fri, 19 Apr 2019 18:14:26 +0800
+Message-ID: <CAKGbVbsueZLySqsyPLJLG2mMPH6q=3_ivCU3ma1-EgwtJuuOCg@mail.gmail.com>
+References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
+ <1555662781-22570-7-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Scott Wood <oss@buserror.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1555662781-22570-7-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lima@lists.freedesktop.org, David Airlie <airlied@linux.ie>, mturquette@baylibre.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, xuwei5@hisilicon.com, sboyd@kernel.org, robh+dt@kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Has this slipped through?=0A=
-=0A=
-On 3/20/2019 2:57 PM, Horia Geant=E3 wrote:=0A=
-> crypto node alias is needed by U-boot to identify the node and=0A=
-> perform fix-ups, like adding "fsl,sec-era" property.=0A=
-> =0A=
-> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> ---=0A=
->  arch/powerpc/boot/dts/fsl/b4qds.dtsi | 1 +=0A=
->  1 file changed, 1 insertion(+)=0A=
-> =0A=
-> diff --git a/arch/powerpc/boot/dts/fsl/b4qds.dtsi b/arch/powerpc/boot/dts=
-/fsl/b4qds.dtsi=0A=
-> index 999efd3bc167..05be919f3545 100644=0A=
-> --- a/arch/powerpc/boot/dts/fsl/b4qds.dtsi=0A=
-> +++ b/arch/powerpc/boot/dts/fsl/b4qds.dtsi=0A=
-> @@ -40,6 +40,7 @@=0A=
->  	interrupt-parent =3D <&mpic>;=0A=
->  =0A=
->  	aliases {=0A=
-> +		crypto =3D &crypto;=0A=
->  		phy_sgmii_10 =3D &phy_sgmii_10;=0A=
->  		phy_sgmii_11 =3D &phy_sgmii_11;=0A=
->  		phy_sgmii_1c =3D &phy_sgmii_1c;=0A=
-> =0A=
+TG9va3MgZ29vZCBmb3IgbWUsIHBhdGNoIGlzOgpSZXZpZXdlZC1ieTogUWlhbmcgWXUgPHl1cTgy
+NUBnbWFpbC5jb20+CgpJJ2xsIHB1c2ggdGhpcyBwYXRjaCB0byBkcm0tbWlzYy1uZXh0LgoKUmVn
+YXJkcywKUWlhbmcKCgpPbiBGcmksIEFwciAxOSwgMjAxOSBhdCA0OjM1IFBNIFBldGVyIEdyaWZm
+aW4gPHBldGVyLmdyaWZmaW5AbGluYXJvLm9yZz4gd3JvdGU6Cj4KPiBPbiBIaWtleSBib2FyZCBh
+bGwgbGltYSBpcCBibG9ja3MgYXJlIHNoYXJlZCB3aXRoIG9uZSBpcnEuCj4gVGhpcyBwYXRjaCBh
+dm9pZHMgYSBOVUxMIHB0ciBkZXJlZiBjcmFzaCBvbiB0aGlzIHBsYXRmb3JtCj4gb24gc3RhcnR1
+cC4gVGVzdGVkIHdpdGggV2VzdG9uIGFuZCBrbXNjdWJlLgo+Cj4gU2lnbmVkLW9mZi1ieTogUGV0
+ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgo+IENjOiBSb2IgSGVycmluZyA8
+cm9iaEBrZXJuZWwub3JnPgo+IENjOiBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+Cj4g
+Q2M6IFFpYW5nIFl1IDx5dXE4MjVAZ21haWwuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0v
+bGltYS9saW1hX3BwLmMgfCA4ICsrKysrKystCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbGlt
+YS9saW1hX3BwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BwLmMKPiBpbmRleCBkMjk3
+MjFlLi44ZmVmMjI0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAu
+Ywo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAuYwo+IEBAIC02NCw3ICs2NCwx
+MyBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgbGltYV9wcF9iY2FzdF9pcnFfaGFuZGxlcihpbnQgaXJx
+LCB2b2lkICpkYXRhKQo+ICAgICAgICAgc3RydWN0IGxpbWFfaXAgKnBwX2JjYXN0ID0gZGF0YTsK
+PiAgICAgICAgIHN0cnVjdCBsaW1hX2RldmljZSAqZGV2ID0gcHBfYmNhc3QtPmRldjsKPiAgICAg
+ICAgIHN0cnVjdCBsaW1hX3NjaGVkX3BpcGUgKnBpcGUgPSBkZXYtPnBpcGUgKyBsaW1hX3BpcGVf
+cHA7Cj4gLSAgICAgICBzdHJ1Y3QgZHJtX2xpbWFfbTQ1MF9wcF9mcmFtZSAqZnJhbWUgPSBwaXBl
+LT5jdXJyZW50X3Rhc2stPmZyYW1lOwo+ICsgICAgICAgc3RydWN0IGRybV9saW1hX200NTBfcHBf
+ZnJhbWUgKmZyYW1lOwo+ICsKPiArICAgICAgIC8qIGZvciBzaGFyZWQgaXJxIGNhc2UgKi8KPiAr
+ICAgICAgIGlmICghcGlwZS0+Y3VycmVudF90YXNrKQo+ICsgICAgICAgICAgICAgICByZXR1cm4g
+SVJRX05PTkU7Cj4gKwo+ICsgICAgICAgZnJhbWUgPSBwaXBlLT5jdXJyZW50X3Rhc2stPmZyYW1l
+Owo+Cj4gICAgICAgICBmb3IgKGkgPSAwOyBpIDwgZnJhbWUtPm51bV9wcDsgaSsrKSB7Cj4gICAg
+ICAgICAgICAgICAgIHN0cnVjdCBsaW1hX2lwICppcCA9IHBpcGUtPnByb2Nlc3NvcltpXTsKPiAt
+LQo+IDIuNy40Cj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
