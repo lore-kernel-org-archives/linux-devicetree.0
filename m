@@ -1,59 +1,41 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Date: Fri, 19 Apr 2019 20:20:40 +0000
-Message-ID: <20190419202024.27314-3-daniel.baluta@nxp.com>
-References: <20190419202024.27314-1-daniel.baluta@nxp.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 0/5] ARM: dts: lpc32xx: minor fixes and clean-ups
+Date: Fri, 19 Apr 2019 23:54:42 +0300
+Message-ID: <20190419205447.6357-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190419202024.27314-1-daniel.baluta@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-aS5NWDhNTSBFVksgaGFzIG9uZSB3bTg1MjQgYXVkaW8gY29kZWMgY29ubmVjdGVkIHdpdGgNClNB
-STMgZGlnaXRhbCBhdWRpbyBpbnRlcmZhY2UuDQoNClRoaXMgcGF0Y2ggdXNlcyBzaW1wbGUtY2Fy
-ZCBtYWNoaW5lIGRyaXZlciBpbiBvcmRlcg0KdG8gZW5hYmxlIHdtODUyNCBjb2RlYy4NCg0KV2Ug
-bmVlZCB0byBzZXQ6DQoJKiBTQUkzIHBpbmN0cmwgY29uZmlndXJhdGlvbg0KCSogY2xvY2sgaGll
-cmFyY2h5DQoJKiBjb2RlYyBub2RlDQoJKiBzaW1wbGUtY2FyZCBjb25maWd1cmF0aW9uDQoNClNp
-Z25lZC1vZmYtYnk6IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCi0tLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS1ldmsuZHRzIHwgNDggKysrKysr
-KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLWV2ay5kdHMgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0tZXZrLmR0cw0KaW5kZXggMmQ1ZDg5
-NDc1Yjc2Li4yMDdiMTMyNjZhOTYgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4bW0tZXZrLmR0cw0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvaW14OG1tLWV2ay5kdHMNCkBAIC0zNyw2ICszNywzNSBAQA0KIAkJZ3BpbyA9IDwmZ3BpbzIg
-MTkgR1BJT19BQ1RJVkVfSElHSD47DQogCQllbmFibGUtYWN0aXZlLWhpZ2g7DQogCX07DQorDQor
-CXdtODUyNDogYXVkaW8tY29kZWMgew0KKwkJI3NvdW5kLWRhaS1jZWxscyA9IDwwPjsNCisJCWNv
-bXBhdGlibGUgPSAid2xmLHdtODUyNCI7DQorCQl3bGYsbXV0ZS1ncGlvcyA9IDwmZ3BpbzUgMjEg
-R1BJT19BQ1RJVkVfTE9XPjsNCisJfTsNCisNCisJc291bmQtd204NTI0IHsNCisJCWNvbXBhdGli
-bGUgPSAic2ltcGxlLWF1ZGlvLWNhcmQiOw0KKwkJc2ltcGxlLWF1ZGlvLWNhcmQsbmFtZSA9ICJ3
-bTg1MjQtYXVkaW8iOw0KKwkJc2ltcGxlLWF1ZGlvLWNhcmQsZm9ybWF0ID0gImkycyI7DQorCQlz
-aW1wbGUtYXVkaW8tY2FyZCxmcmFtZS1tYXN0ZXIgPSA8JmNwdWRhaT47DQorCQlzaW1wbGUtYXVk
-aW8tY2FyZCxiaXRjbG9jay1tYXN0ZXIgPSA8JmNwdWRhaT47DQorCQlzaW1wbGUtYXVkaW8tY2Fy
-ZCx3aWRnZXRzID0NCisJCQkiTGluZSIsICJMZWZ0IExpbmUgT3V0IEphY2siLA0KKwkJCSJMaW5l
-IiwgIlJpZ2h0IExpbmUgT3V0IEphY2siOw0KKwkJc2ltcGxlLWF1ZGlvLWNhcmQscm91dGluZyA9
-DQorCQkJIkxlZnQgTGluZSBPdXQgSmFjayIsICJMSU5FVk9VVEwiLA0KKwkJCSJSaWdodCBMaW5l
-IE91dCBKYWNrIiwgIkxJTkVWT1VUUiI7DQorDQorCQljcHVkYWk6IHNpbXBsZS1hdWRpby1jYXJk
-LGNwdSB7DQorCQkJc291bmQtZGFpID0gPCZzYWkzPjsNCisJCX07DQorDQorCQlsaW5rX2NvZGVj
-OiBzaW1wbGUtYXVkaW8tY2FyZCxjb2RlYyB7DQorCQkJc291bmQtZGFpID0gPCZ3bTg1MjQ+Ow0K
-KwkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfU0FJM19ST09UPjsNCisJCX07DQorCX07DQog
-fTsNCiANCiAmZmVjMSB7DQpAQCAtNjEsNiArOTAsMTUgQEANCiAJfTsNCiB9Ow0KIA0KKyZzYWkz
-IHsNCisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCisJcGluY3RybC0wID0gPCZwaW5jdHJs
-X3NhaTM+Ow0KKwlhc3NpZ25lZC1jbG9ja3MgPSA8JmNsayBJTVg4TU1fQ0xLX1NBSTM+Ow0KKwlh
-c3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZjbGsgSU1YOE1NX0FVRElPX1BMTDFfT1VUPjsNCisJ
-YXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MjQ1NzYwMDA+Ow0KKwlzdGF0dXMgPSAib2theSI7DQor
-fTsNCisNCiAmdWFydDIgeyAvKiBjb25zb2xlICovDQogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7DQogCXBpbmN0cmwtMCA9IDwmcGluY3RybF91YXJ0Mj47DQpAQCAtMTMwLDYgKzE2OCwxNiBA
-QA0KIAkJPjsNCiAJfTsNCiANCisJcGluY3RybF9zYWkzOiBzYWkzZ3JwIHsNCisJCWZzbCxwaW5z
-ID0gPA0KKwkJCU1YOE1NX0lPTVVYQ19TQUkzX1RYRlNfU0FJM19UWF9TWU5DICAgICAweGQ2DQor
-CQkJTVg4TU1fSU9NVVhDX1NBSTNfVFhDX1NBSTNfVFhfQkNMSyAgICAgIDB4ZDYNCisJCQlNWDhN
-TV9JT01VWENfU0FJM19NQ0xLX1NBSTNfTUNMSyAgICAgICAgMHhkNg0KKwkJCU1YOE1NX0lPTVVY
-Q19TQUkzX1RYRF9TQUkzX1RYX0RBVEEwICAgICAweGQ2DQorCQkJTVg4TU1fSU9NVVhDX0kyQzRf
-U0RBX0dQSU81X0lPMjEgICAgICAgIDB4ZDYNCisJCT47DQorCX07DQorDQogCXBpbmN0cmxfdWFy
-dDI6IHVhcnQyZ3JwIHsNCiAJCWZzbCxwaW5zID0gPA0KIAkJCU1YOE1NX0lPTVVYQ19VQVJUMl9S
-WERfVUFSVDJfRENFX1JYCTB4MTQwDQotLSANCjIuMTcuMQ0KDQo=
+The changeset continues a series of clean-ups in NXP LPC32xx platform code:
+* disabled I2S and MAC controllers by default,
+* set default #address-cells = <1> / #size-cells = <0> for SPI slaves,
+* fix notation of hexadecimal values,
+* switched lpc32xx.dtsi to SPDX license identifier.
+
+Vladimir Zapolskiy (5):
+  ARM: dts: lpc32xx: change hexadecimal values to lower case
+  ARM: dts: lpc32xx: disable I2S controllers by default
+  ARM: dts: lpc32xx: disable MAC controller by default
+  ARM: dts: lpc32xx: add address and size cell values to SPI controller nodes
+  ARM: dts: lpc32xx: use SPDX license identifier
+
+ arch/arm/boot/dts/lpc3250-ea3250.dts  |  1 +
+ arch/arm/boot/dts/lpc3250-phy3250.dts |  3 +--
+ arch/arm/boot/dts/lpc32xx.dtsi        | 38 ++++++++++++++++-----------
+ 3 files changed, 24 insertions(+), 18 deletions(-)
+
+-- 
+2.20.1
