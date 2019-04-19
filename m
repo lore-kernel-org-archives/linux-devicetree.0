@@ -1,28 +1,23 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 4/6] reset: hi6220: Add support for AO reset controller
-Date: Fri, 19 Apr 2019 13:13:46 -0700
-Message-ID: <155570482647.15276.10153086772852393750@swboyd.mtv.corp.google.com>
-References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org> <1555662781-22570-5-git-send-email-peter.griffin@linaro.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/2] Enable wm8524 codec on i.MX8MM EVK
+Date: Fri, 19 Apr 2019 20:20:38 +0000
+Message-ID: <20190419202024.27314-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555662781-22570-5-git-send-email-peter.griffin@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, airlied@linux.ie, daniel@ffwll.ch, john.stultz@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, xuwei5@hisilicon.com, yuq825@gmail.com
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, lima@lists.freedesktop.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Griffin (2019-04-19 01:32:59)
-> This is required to bring Mali450 gpu out of reset. Also
-> we now use CLK_OF_DECLARE_DRIVER to probe in both the
-> clock and reset drivers. The clock and reset parts have
-> been done as one atomic commit to avoid a bisection hole.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> ---
-
->  drivers/clk/hisilicon/clk-hi6220.c        |  3 +-
-
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+VGhpcyBwYXRjaCBzZXJpZXMgaW50cm9kdWNlcyB0aGUgU0FJIG5vZGVzIG9uIGkuTVg4TU0gRVZL
+IHRoZW4NCmNyZWF0ZXMgdGhlIHdtODUyNCBjb2RlYyBub2RlIGFuZCBmaW5hbGx5IHVzZXMgc2lt
+cGxlIGNhcmQgbWFjaGluZQ0KZHJpdmVyIHRvIGNyZWF0ZSBhIHNvdW5kIGNhcmQuDQoNCkRhbmll
+bCBCYWx1dGEgKDIpOg0KICBhcm02NDogZHRzOiBpbXg4bW06IEFkZCBTQUkgbm9kZXMNCiAgYXJt
+NjQ6IGR0czogaW14OG1tLWV2azogRW5hYmxlIGF1ZGlvIGNvZGVjIHdtODUyNA0KDQogYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLWV2ay5kdHMgfCA0OCArKysrKysrKysrKysr
+Kw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpICAgIHwgNjggKysr
+KysrKysrKysrKysrKysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDExNiBpbnNlcnRpb25zKCspDQoN
+Ci0tIA0KMi4xNy4xDQoNCg==
