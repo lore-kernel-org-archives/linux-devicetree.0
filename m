@@ -1,7 +1,8 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 5/6] dt-bindings: reset: hisilicon: Add ao reset controller
-Date: Fri, 19 Apr 2019 09:33:00 +0100
-Message-ID: <1555662781-22570-6-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 6/6] drm/lima: handle shared irq case for
+ lima_pp_bcast_irq_handler
+Date: Fri, 19 Apr 2019 09:33:01 +0100
+Message-ID: <1555662781-22570-7-git-send-email-peter.griffin@linaro.org>
 References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,32 +19,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org, yuq825@gmail.com
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-This is required to bring Mali450 gpu out of reset.
+On Hikey board all lima ip blocks are shared with one irq.
+This patch avoids a NULL ptr deref crash on this platform
+on startup. Tested with Weston and kmscube.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Qiang Yu <yuq825@gmail.com>
 ---
- include/dt-bindings/reset/hisi,hi6220-resets.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/lima/lima_pp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
-index e7c362a8..63aff7d 100644
---- a/include/dt-bindings/reset/hisi,hi6220-resets.h
-+++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
-@@ -73,4 +73,11 @@
- #define MEDIA_MMU                       6
- #define MEDIA_XG2RAM1                   7
- 
-+#define AO_G3D                          1
-+#define AO_CODECISP                     2
-+#define AO_MCPU                         4
-+#define AO_BBPHARQMEM                   5
-+#define AO_HIFI                         8
-+#define AO_ACPUSCUL2C                   12
+diff --git a/drivers/gpu/drm/lima/lima_pp.c b/drivers/gpu/drm/lima/lima_pp.c
+index d29721e..8fef224 100644
+--- a/drivers/gpu/drm/lima/lima_pp.c
++++ b/drivers/gpu/drm/lima/lima_pp.c
+@@ -64,7 +64,13 @@ static irqreturn_t lima_pp_bcast_irq_handler(int irq, void *data)
+ 	struct lima_ip *pp_bcast = data;
+ 	struct lima_device *dev = pp_bcast->dev;
+ 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_pp;
+-	struct drm_lima_m450_pp_frame *frame = pipe->current_task->frame;
++	struct drm_lima_m450_pp_frame *frame;
 +
- #endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
++	/* for shared irq case */
++	if (!pipe->current_task)
++		return IRQ_NONE;
++
++	frame = pipe->current_task->frame;
+ 
+ 	for (i = 0; i < frame->num_pp; i++) {
+ 		struct lima_ip *ip = pipe->processor[i];
 -- 
 2.7.4
