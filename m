@@ -1,71 +1,51 @@
-Return-Path: <SRS0=WG84=SV=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V7 RESEND 01/10] dt-binding: can: mcp25xxfd: document device tree bindings
-Date: Fri, 19 Apr 2019 05:14:23 +0000
-Message-Id: <20190419051432.13538-2-kernel@martin.sperl.org>
-In-Reply-To: <20190419051432.13538-1-kernel@martin.sperl.org>
-References: <20190419051432.13538-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-Path: <SRS0=Pzvf=SV=ucw.cz=pavel@kernel.org>
+Date: Fri, 19 Apr 2019 20:10:06 +0200
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 leds-next 2/2] dt-bindings: leds: Document Turris
+ Omnia LED controller binding
+Message-ID: <20190419181006.GA25060@amd>
+References: <20190328193428.19273-1-marek.behun@nic.cz>
+ <20190328193428.19273-3-marek.behun@nic.cz>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+In-Reply-To: <20190328193428.19273-3-marek.behun@nic.cz>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc: linux-leds@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
 
-Add device-tree bindings for Microcip CanFD Controller mcp2517fd
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
---
-Changelog:
-  V1 -> V2: new more generic name based on feedback from microchip
-            cleanup of dt custom properties removing (most) gpio functions
-  V2 -> V3: added vendor-prefix for gpio-opendrain
-            s/_/-/
-            added gpio-controller
-  V3 -> V4: resend
-            added: Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+On Thu 2019-03-28 20:34:28, Marek Beh=FAn wrote:
+> This adds device tree binding documentation for the front panel LEDs
+> controller of CZ.NIC's Turris Omnia router.
+>=20
+> Signed-off-by: Marek Beh=FAn <marek.behun@nic.cz>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-new file mode 100644
-index 000000000000..b388b3eb3905
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-@@ -0,0 +1,32 @@
-+* Microchip MCP2517 stand-alone CAN controller device tree bindings
-+
-+Required properties:
-+ - compatible: Should be one of the following:
-+   - "microchip,mcp2517fd" for MCP2517fd.
-+ - reg: SPI chip select.
-+ - clocks: The clock feeding the CAN controller.
-+ - interrupt-parent: The parent interrupt controller.
-+ - interrupts: Should contain IRQ line for the CAN controller.
-+ - gpio-controller: Marks the device node as a GPIO controller
-+
-+Optional properties:
-+ - vdd-supply: Regulator that powers the CAN controller.
-+ - xceiver-supply: Regulator that powers the CAN transceiver.
-+ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
-+					   0 = Start of Frame output
-+					   default: 10
-+ - microchip,clock-div2: bool: divide the internal clock by 2
-+ - microchip,gpio-open-drain: bool: enable open-drain for all pins
-+                                    (except cantx)
-+
-+Example:
-+	can0: can@1 {
-+		compatible = "microchip,mcp2517fd";
-+		reg = <1>;
-+		clocks = <&clk24m>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <13 0x8>;
-+		vdd-supply = <&reg5v0>;
-+		xceiver-supply = <&reg5v0>;
-+		gpio-controller;
-+	};
---
-2.11.0
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAly6Dv4ACgkQMOfwapXb+vKHdQCgkYxbKOF18wO1agFxoFrMGdOE
+BwUAoJdMPd+ADFTclO16t/kHXMWHbn+2
+=a8jm
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
