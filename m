@@ -1,104 +1,49 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [v3 PATCH 2/6] dt-bindings: usb: add binding for Type-B GPIO
- connector driver
-Date: Fri, 19 Apr 2019 16:43:30 +0800
-Message-ID: <1555663410.10179.205.camel@mhfsdcap03>
-References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
- <1554257354-7440-3-git-send-email-chunfeng.yun@mediatek.com>
+From: Horia Geanta <horia.geanta@nxp.com>
+Subject: Re: [PATCH] powerpc/dts/fsl: add crypto node alias for B4
+Date: Fri, 19 Apr 2019 09:54:54 +0000
+Message-ID: <VI1PR0402MB34857D2DAF16A611B11A119598270@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190320125516.12277-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1554257354-7440-3-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Scott Wood <oss@buserror.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Gentle ping, could you please comment on this patch?
-
-Thanks a lot
-
-On Wed, 2019-04-03 at 10:09 +0800, Chunfeng Yun wrote:
-> It's used to support dual role switch via GPIO when use Type-B
-> receptacle, typically the USB ID pin is connected to an input
-> GPIO pin
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v3 changes:
->  1. treat type-B connector as a virtual device, but not child device of
->     USB controller's
-> 
-> v2 changes:
->   1. new patch to make binding clear suggested by Hans
-> ---
->  .../bindings/usb/typeb-conn-gpio.txt          | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> new file mode 100644
-> index 000000000000..d2e1c4e01b6d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> @@ -0,0 +1,49 @@
-> +USB Type-B GPIO Connector
-> +
-> +This is a virtual device used to switch dual role mode from the USB ID pin
-> +connected to an input GPIO pin.
-> +
-> +Required properties:
-> +- compatible : Should be "linux,typeb-conn-gpio"
-> +
-> +Sub-nodes:
-> +- connector : should be present.
-> +	- compatible : should be "usb-b-connector".
-> +	- id-gpios, vbus-gpios : either one of them must be present,
-> +		and both can be present as well.
-> +	- vbus-supply : can be present if needed when supports dual role mode.
-> +	see connector/usb-connector.txt
-> +
-> +- port : should be present.
-> +	see graph.txt
-> +
-> +Example:
-> +
-> +rsw_iddig: role_sw_iddig {
-> +	compatible = "linux,typeb-conn-gpio";
-> +	status = "okay";
-> +
-> +	connector {
-> +		compatible = "usb-b-connector";
-> +		label = "micro-USB";
-> +		type = "micro";
-> +		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-> +		vbus-supply = <&usb_p0_vbus>;
-> +	};
-> +
-> +	port {
-> +		bconn_ep: endpoint@0 {
-> +			remote-endpoint = <&usb_role_sw>;
-> +		};
-> +	};
-> +};
-> +
-> +&mtu3 {
-> +	status = "okay";
-> +
-> +	port {
-> +		usb_role_sw: endpoint@0 {
-> +			remote-endpoint = <&bconn_ep>;
-> +		};
-> +	};
-> +};
+Has this slipped through?=0A=
+=0A=
+On 3/20/2019 2:57 PM, Horia Geant=E3 wrote:=0A=
+> crypto node alias is needed by U-boot to identify the node and=0A=
+> perform fix-ups, like adding "fsl,sec-era" property.=0A=
+> =0A=
+> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+> ---=0A=
+>  arch/powerpc/boot/dts/fsl/b4qds.dtsi | 1 +=0A=
+>  1 file changed, 1 insertion(+)=0A=
+> =0A=
+> diff --git a/arch/powerpc/boot/dts/fsl/b4qds.dtsi b/arch/powerpc/boot/dts=
+/fsl/b4qds.dtsi=0A=
+> index 999efd3bc167..05be919f3545 100644=0A=
+> --- a/arch/powerpc/boot/dts/fsl/b4qds.dtsi=0A=
+> +++ b/arch/powerpc/boot/dts/fsl/b4qds.dtsi=0A=
+> @@ -40,6 +40,7 @@=0A=
+>  	interrupt-parent =3D <&mpic>;=0A=
+>  =0A=
+>  	aliases {=0A=
+> +		crypto =3D &crypto;=0A=
+>  		phy_sgmii_10 =3D &phy_sgmii_10;=0A=
+>  		phy_sgmii_11 =3D &phy_sgmii_11;=0A=
+>  		phy_sgmii_1c =3D &phy_sgmii_1c;=0A=
+> =0A=
