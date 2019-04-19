@@ -1,8 +1,8 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add hisilicon,
- hi6220-mali compatible
-Date: Fri, 19 Apr 2019 09:32:56 +0100
-Message-ID: <1555662781-22570-2-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 2/6] dt-bindings: reset: hisilicon: Update compatible
+ documentation
+Date: Fri, 19 Apr 2019 09:32:57 +0100
+Message-ID: <1555662781-22570-3-git-send-email-peter.griffin@linaro.org>
 References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,37 +22,26 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, john.stu
 Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
-a compatible for it.
+The reset driver now supports the ao reset controller, so update the
+documentation to match.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-index 3f128e4..2a16b0c 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-@@ -21,6 +21,7 @@ Required properties:
-       + rockchip,rk3228-mali
-       + rockchip,rk3328-mali
-       + stericsson,db8500-mali
-+      + hisilicon,hi6220-mali
- 
-   - reg: Physical base address and length of the GPU registers
- 
-@@ -91,6 +92,10 @@ to specify one more vendor-specific compatible, among:
-       * interrupt-names and interrupts:
-         + combined: combined interrupt of all of the above lines
- 
-+  - hisilicon,hi6220-mali
-+    Required properties:
-+      * resets: phandles to the reset lines for the GPU
-+
- Example:
- 
- mali: gpu@1c40000 {
+diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+index c25da39..ea0a6a9 100644
+--- a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
++++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+@@ -11,6 +11,7 @@ Required properties:
+ - compatible: should be one of the following:
+   - "hisilicon,hi6220-sysctrl", "syscon" : For peripheral reset controller.
+   - "hisilicon,hi6220-mediactrl", "syscon" : For media reset controller.
++  - "hisilicon,hi6220-aoctrl", "syscon" : For ao reset controller.
+ - reg: should be register base and length as documented in the
+   datasheet
+ - #reset-cells: 1, see below
 -- 
 2.7.4
