@@ -1,11 +1,14 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 0/6] Add HiKey / HI6220 SoC Mali-450 support
-Date: Fri, 19 Apr 2019 09:32:55 +0100
-Message-ID: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add hisilicon,
+ hi6220-mali compatible
+Date: Fri, 19 Apr 2019 09:32:56 +0100
+Message-ID: <1555662781-22570-2-git-send-email-peter.griffin@linaro.org>
+References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,44 +22,37 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, john.stu
 Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi folks,
+The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
+a compatible for it.
 
-This series adds support for the Mali450 MP4 GPU found on the
-hi6220 SoC from HiSilicon. It has been tested with the
-lima drm/mesa driver hosted on freedesktop.org gitlab,
-and validated using Weston and kmscube.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-As lima drm driver has now been merged this v2 series includes
-one extra patch to avoid Oops when all Mali ip blocks share the
-same irq.
-
-regards,
-
-Peter.
-
-Changes since v1:
-* Additional drm/lima patch to avoid Oops in shared irq case (Peter Griffin)
-* Squash clock and reset driver parts to avoid bisection hole (Stephen Boyd)
-* Add comment as to what other driver is probing same dt node (Stephen Boyd)
-* Check regmap_write error code and return individually (Philipp Zabel)
-* Add Rob Herring Reviewed by tags
-
-Peter Griffin (6):
-  dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
-  dt-bindings: reset: hisilicon: Update compatible documentation
-  arm64: dts: hisilicon: Add Mali-450 MP4 GPU DT entry
-  reset: hi6220: Add support for AO reset controller
-  dt-bindings: reset: hisilicon: Add ao reset controller
-  drm/lima: handle shared irq case for lima_pp_bcast_irq_handler
-
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    |  5 ++
- .../bindings/reset/hisilicon,hi6220-reset.txt      |  1 +
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 38 +++++++++++++
- drivers/clk/hisilicon/clk-hi6220.c                 |  3 +-
- drivers/gpu/drm/lima/lima_pp.c                     |  8 ++-
- drivers/reset/hisilicon/hi6220_reset.c             | 65 +++++++++++++++++++++-
- include/dt-bindings/reset/hisi,hi6220-resets.h     |  7 +++
- 7 files changed, 124 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index 3f128e4..2a16b0c 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -21,6 +21,7 @@ Required properties:
+       + rockchip,rk3228-mali
+       + rockchip,rk3328-mali
+       + stericsson,db8500-mali
++      + hisilicon,hi6220-mali
+ 
+   - reg: Physical base address and length of the GPU registers
+ 
+@@ -91,6 +92,10 @@ to specify one more vendor-specific compatible, among:
+       * interrupt-names and interrupts:
+         + combined: combined interrupt of all of the above lines
+ 
++  - hisilicon,hi6220-mali
++    Required properties:
++      * resets: phandles to the reset lines for the GPU
++
+ Example:
+ 
+ mali: gpu@1c40000 {
 -- 
 2.7.4
