@@ -1,16 +1,15 @@
-From: Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-Subject: Re: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend; enable for
- rk3288-veyron
-Date: Fri, 19 Apr 2019 16:44:34 +0000
-Message-ID: <SN1PR12MB24319D0BF93E22B6B913E6CAA7270@SN1PR12MB2431.namprd12.prod.outlook.com>
-References: <20190418001356.124334-1-dianders@chromium.org>
- <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
- <CAD=FV=XDLqcdq_BypUYsJHKX+DY0VWvCACYgZiHeG8E3Dbwxcw@mail.gmail.com>
- <SN1PR12MB2431F918E4731FAA50A373B6A7270@SN1PR12MB2431.namprd12.prod.outlook.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
+Date: Fri, 19 Apr 2019 19:29:48 +0200
+Message-ID: <95276ca0-6896-a595-867a-184a518fa31f@linaro.org>
+References: <1548675904-18324-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1548675904-18324-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20190204090301.GC23441@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190204090301.GC23441@sirena.org.uk>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +20,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>, Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Amelie Delaunay <amelie.delaunay@st.com>, "heiko@sntech.de" <heiko@sntech.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>, "zyw@rock-chips.com" <zyw@rock-chips.com>, Stefan Wahren <stefan.wahren@i2se.com>, Nicolas Boichat <drinkcat@chromium.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "mka@chromium.org" <mka@chromium.org>, Alan Stern <stern@rowland.harvard.edu>, Jon Flatley <jflat@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Elaine Zhang <zhangqing@rock-chips.com>, "amstan@chromium.org" <amstan@chromium.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Randy Li <ayaka@soulik.info>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, Greg Kroah-Hartman <gregkh@>
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@linaro.org, linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org, lgirdwood@gmail.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, niklas.cassel@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+On 2/4/19 10:03, Mark Brown wrote:
+> On Mon, Jan 28, 2019 at 12:45:03PM +0100, Jorge Ramirez-Ortiz wrote:
+> 
+>> @@ -653,6 +708,10 @@ spmi_regulator_find_range(struct spmi_regulator *vreg)
+>>  	range = vreg->set_points->range;
+>>  	end = range + vreg->set_points->count;
+>>  
+>> +	/* we know we only have one range for this type */
+>> +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430)
+>> +		return range;
+>> +
+>>  	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
+>>  
+>>  	for (; range < end; range++)
+> 
+> Rather than have special casing for the logical type in here it seems
+> better to just provide a specific op for this logical type, you could
+> always make _find_range() call into that one if you really want code
+> reuse here.  You already have separate ops for this regulator type
+> anyway.
 
-On 4/19/2019 15:43, Artur Petrosyan wrote:
-> Hi,
+sorry I dont quite understand your point.
+
+static struct regulator_ops spmi_hfs430_ops = {
+	/* always on regulators */
+	.set_voltage_sel	= spmi_regulator_hfs430_set_voltage, *
+	.set_voltage_time_sel	= spmi_regulator_set_voltage_time_sel, *
+	.get_voltage		= spmi_regulator_hfs430_get_voltage,
+	.map_voltage		= spmi_regulator_common_map_voltage, *
+	.list_voltage		= spmi_regulator_common_list_voltage,
+	.get_mode		= spmi_regulator_hfs430_get_mode,
+	.set_mode		= spmi_regulator_hfs430_set_mode,
+};
+
+find_range affects the functions above with *
+
+You are right and I can easily adjust the private
+spmi_regulator_hfs430_set_voltage. And since it is quite small I can
+also _duplicate_ the common function spmi_regulator_set_voltage_time_sel
+with a small change for hfs430.
+
+But spmi_regulator_common_map_voltage ends up being a large function and
+I dont see the point in replicating it to save the "if" statement above.
+
+why cant different logical_types extend spmi_regulator_find_range(..)?
+
+Or maybe are you saying that I should add a new interface to struct
+spmi_regulator that implements priv_find_range(..) for the logical types
+that dont want to use the common implementation?
+
+But also I am not sure I see the benefits with respect to the proposed
+change...
+
+
 > 
-> On 4/18/2019 19:55, Doug Anderson wrote:
->> Hi,
->>
->> On Thu, Apr 18, 2019 at 5:41 AM Minas Harutyunyan
->> <Minas.Harutyunyan@synopsys.com> wrote:
->>> Did you consider/reviewed patch series from Artur Petrosyan "[PATCH
->>> 00/14] usb: dwc2: Fix and improve power saving modes" (submitted on
->>> April 12) which fixing partial power down and hibernation flows for both
->>> modes: host and device?
->>> I suspect that this both patch series can be in conflict.
->>
->> No, I wasn't aware of them.  I'd like to try them out, but it looks
->> like it's currently impossible because they're not archived anywhere
->> that I can find.
->>
->> 1. LKML wasn't copied, so I can't find them on lore.kernel.org.  It is
->> suggested to CC LKML on all patches.
->>
->> 2. The Linux USB patchwork only has the cover letter plus the first 6
->> patches.  See <https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.kernel.org_cover_10898333_&d=DwIBaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D7niMJI&m=rJbofHXqjP3sUBgEikaZ89fRWtsquvhFUkhSPguCiWw&s=_CrI0uolquXIYC5SuoZ1vBs7BM19VfCceI96qZm9kAY&e=>
->>
->> 3. Searching my own archives I only see the cover letter plus the
->> first 6 patches.
->>
->> Maybe you have some other pointer to how I can retrieve them?  I guess
->> I could try the first 6 patches without the later 8 but I'd rather get
->> the whole set...
->>
->>
->> -Doug
->>
+>> +static unsigned int spmi_regulator_hfs430_get_mode(struct regulator_dev *rdev)
+>> +{
+>> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+>> +	u8 reg;
+>> +	int ret;
+>> +
+>> +	ret = spmi_vreg_read(vreg, SPMI_HFS430_REG_MODE, &reg, 1);
+>> +	if (ret) {
+>> +		dev_err(&rdev->dev, "failed to get mode");
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (reg == SPMI_HFS430_MODE_PWM)
+>> +		return REGULATOR_MODE_NORMAL;
+>> +
+>> +	return REGULATOR_MODE_IDLE;
+>> +}
 > 
+> I'd have expected a switch statement here, ideally flagging a warning or
+> error if we get a surprising value in there.
+
+this implementation follows what the common function
+spmi_regulator_common_get_mode implements (ie, checks for a case and
+defaults if that is not the one; and when defaulting,  there is no
+reporting that it is actually defaulting: ie, defaulting is not being
+interpreted as an error..should it?)
+
 > 
-> I have resend the patch set. You can find it with cover letter
-> "[PATCH v1 00/14] usb: dwc2: Fix and improve power saving modes."
+>> +static int spmi_regulator_hfs430_set_mode(struct regulator_dev *rdev,
+>> +					  unsigned int mode)
+>> +{
+>> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+>> +	u8 reg = mode == REGULATOR_MODE_NORMAL ? SPMI_HFS430_MODE_PWM :
+>> +						 SPMI_HFS430_MODE_AUTO;
 > 
-> Let me know if you need any help.
+> Please write a normal if statement (or switch statement) to help
+> legibility.
 > 
 
-I am so sorry to inform you that the patches have not reached to LKML.
-Looks like there is a problem with the kernel mailing list servers or 
-our local servers.
-Will try to fix this as soon as possible and let you know about it.
-
--- 
-Regards,
-Artur
+ok.
