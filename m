@@ -1,54 +1,85 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] soc: sprd: Add Spreadtrum multi-channel data
- transfer support
-Date: Fri, 19 Apr 2019 15:41:25 +0100
-Message-ID: <20190419144125.GQ2803@sirena.org.uk>
-References: <f7edc4078b2d6f44ed5ad47c14dd58da5cc50f21.1555670768.git.baolin.wang@linaro.org>
- <64ca5af0373c35590d8ac9f2b62e3c9fa46e3551.1555670768.git.baolin.wang@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Fri, 19 Apr 2019 18:44:38 +0300
+Message-ID: <d4e7b0b3-f69e-0513-84b0-076210aa4548@cogentembedded.com>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
+ <907f2e87-1cb4-fa37-5406-82bf2bf71188@cogentembedded.com>
+ <OF2F61A6E6.AA7717A3-ON482583DE.0005C1EE-482583DE.00061474@mxic.com.tw>
+ <8720224d-76f4-c620-9e3f-91605d6fa1e3@cogentembedded.com>
+ <OFCBCE0527.706EB4F2-ON482583E0.00200707-482583E0.00208EAD@mxic.com.tw>
+ <9bc4847f-8e7e-3627-5394-6f2b5c5972bc@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KHqYxKoy+XnO4RVf"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <64ca5af0373c35590d8ac9f2b62e3c9fa46e3551.1555670768.git.baolin.wang@linaro.org>
+In-Reply-To: <9bc4847f-8e7e-3627-5394-6f2b5c5972bc@cogentembedded.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/18/2019 07:55 PM, Sergei Shtylyov wrote:
 
---KHqYxKoy+XnO4RVf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>>  > > Document the bindings used by the Renesas R-Car Gen3 RPC-IF
+>>> MFD controller.
+>>>>  > >
+>>>>  > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>>>>  > > ---
+>>>>  > >  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt  | 37 +++++++++
+>>>>  > +++++++++++++
+>>>>  > >  1 file changed, 37 insertions(+)
+>>>>  > >  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
+>>>>  > renesas-rpc.txt
+>>>>  > >
+>>>>  > > diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
+>>>>  > rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>>  > > new file mode 100644
+>>>>  > > index 0000000..bfb3d29
+>>>>  > > --- /dev/null
+>>>>  > > +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>>  > > @@ -0,0 +1,37 @@
+>>>>  > > +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
+>>>>  > > +-------------------------------------------------------------
+>>>>  > > +
+>>>>  > > +Required properties:
+>>>>  > > +- compatible: should be an SoC-specific compatible value, followed by
+>>>>  > > +      "renesas,rcar-gen3-rpc" as a fallback.
+>>>>  > > +      supported SoC-specific values are:
+>>>>  > > +      "renesas,r8a77995-rpc" (R-Car D3)
+>>>>  > > +- reg: should contain 2 entries, one for the base address of rpc-
+>>>>  > if registers,
+>>>>  > > +   and one for the direct mapping area
+>>>>  > > +- reg-names: should contain "regs", and "dirmap"
+>>>>  >
+>>>>  >    The device tree describes the hardware, not the driver. Why
+>>> did you remove
+>>>>  > the "wbuf" area?
+>>>>
+>>>> I don't think we should describe the hardware that driver did not
+>>> implement it
+>>>> because there are still many RPC registers we don't use them.
+>>>
+>>>     I have to repeat: we describe the hardware, not the driver capabilities.
+>>
+>> how about:
+>>
+>> - reg: should contain three register areas:
+>>           first for the base address of rpc-if registers,
+>>           second for the direct mapping read mode and
+>>           third for an optional write buffer area.
+>>  - reg-names: should contain "regs", "dirmap" and "wbuf"(optional).
+>>
+>> is it OK ?
+> 
+>    No, the write buffer area is always there, at least on the gen3 chips.
+> (I forgot which other Renesas SoC has RPC-IF as well).
 
-On Fri, Apr 19, 2019 at 06:54:32PM +0800, Baolin Wang wrote:
-> On Spreadtrum platform, the audio subsystem will use the multi-channel
-> data transfer controller to transfer sound stream between audio subsystem
-> and other AP/CP subsystem.
->=20
-> It can support 10 DAC channel and 10 ADC channel, and each channel has
-> 512 bytes depth data fifo. Moreover each channel can be used DMA mode
-> or interrupt mode to transfer data.
+   So it was RZ/A1. But it didn't have the HyperFlash mode...
 
-Acked-by: Mark Brown <broonie@kernel.org>
+>> thanks & best regards,
+>> Mason
 
-However if there's no non-audio users of this DSP then it's probably
-better to just move the driver into sound/soc.
-
---KHqYxKoy+XnO4RVf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly53hQACgkQJNaLcl1U
-h9CrfAgAgKhtRYO2+kmMmBkcuQ/s8uuZSLrUMumTD7DYz2Vtma0W2005NnVL4HmS
-VlRKRuE2DMY+czRQDuAoCZ8sAupwNKTaNFJoxdxoU10BB9j7Uf9FcWCyBM/wq+1y
-WXJi9FnDo+80YMci4EJnmWihO0CBcoRle1mJKgktTn0J0XFvVdLFxh0pTYrIA4KM
-rNFkryGnXfwUqRwG0+px1d8nETvQyn4TR+noq5TQZXUQvOuJTMi9aGU8/arwwt2F
-bgep8AhfF77ekw2szZKHtAxjSjUfRppqzTV+rIW+Nh9ud5jks92sUlqVZVS/J8Yq
-fUwNiz8qRuE2qxDpqZb1Y7wjVsluhA==
-=dgnu
------END PGP SIGNATURE-----
-
---KHqYxKoy+XnO4RVf--
+MBR, Sergei
