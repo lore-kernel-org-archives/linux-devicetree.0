@@ -1,74 +1,72 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v6 00/13] Add support for usb on Hikey960
-Date: Sat, 20 Apr 2019 14:40:06 +0800
-Message-ID: <20190420064019.57522-1-chenyu56@huawei.com>
+Subject: [PATCH v6 01/13] dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
+Date: Sat, 20 Apr 2019 14:40:07 +0800
+Message-ID: <20190420064019.57522-2-chenyu56@huawei.com>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190420064019.57522-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-The patchset adds support for usb functionality of Hikey960, includes:
-- usb phy driver for Hisilicon Kirin Soc hi3660
-- usb driver for HiKey960 board
-- some adjustment in dwc3 and usb role driver
-- dts for support usb of HiKey960
+This patch adds binding documentation for supporting the hi3660 usb
+phy on boards like the HiKey960.
 
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
-v5:
-* Split modification of usb role into two patches, the first one introduces
-  stubs for the exiting functions, and the second adds notifier functions.
-v6:
-* Add a fix of usb_role_switch_register_notifier initialization from
-  John Stultz <john.stultz@linaro.org>
+v1:
+* Fix some format error as suggested by Rob.
+v2:
+* Change hi3660 usb PHY to hi3660 USB PHY
+v3:
+* Make device node a subnode of usb3_otg_bc register.
+v4:
+* Remove "hisilicon,usb3-otg-bc-syscon" property
 ---
-
-Yu Chen (13):
-  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
-  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
-    switch functionality on HiKey960
-  usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
-    Platform
-  usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
-  usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
-    Hisilicon Kirin Soc
-  usb: dwc3: Increase timeout for CmdAct cleared by device controller
-  phy: Add usb phy support for hi3660 Soc of Hisilicon
-  usb: roles: Introduce stubs for the exiting functions in role.h.
-  usb: roles: Add usb role switch notifier.
-  usb: dwc3: Registering a role switch in the DRD code.
-  hikey960: Support usb functionality of Hikey960
-  usb: gadget: Add configfs attribuite for controling
-    match_existing_only
-  dts: hi3660: Add support for usb on Hikey960
-
- .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
- .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
- MAINTAINERS                                        |   8 +
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  73 +++++++
- drivers/misc/Kconfig                               |   6 +
- drivers/misc/Makefile                              |   1 +
- drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
- drivers/phy/hisilicon/Kconfig                      |  10 +
- drivers/phy/hisilicon/Makefile                     |   1 +
- drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
- drivers/usb/dwc3/Kconfig                           |   1 +
- drivers/usb/dwc3/core.c                            |  45 ++++
- drivers/usb/dwc3/core.h                            |  15 ++
- drivers/usb/dwc3/drd.c                             |  78 ++++++-
- drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
- drivers/usb/dwc3/gadget.c                          |   2 +-
- drivers/usb/gadget/configfs.c                      |  32 +++
- drivers/usb/roles/class.c                          |  35 +++-
- include/linux/usb/role.h                           |  46 ++++
- 20 files changed, 879 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+---
+ .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
- create mode 100644 drivers/misc/hisi_hikey_usb.c
- create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
 
+diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+new file mode 100644
+index 000000000000..e88ba7d92dcb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+@@ -0,0 +1,26 @@
++Hisilicon hi3660 USB PHY
++-----------------------
++
++Required properties:
++- compatible: should be "hisilicon,hi3660-usb-phy"
++- #phy-cells: must be 0
++- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
++- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
++- hisilicon,eye-diagram-param: parameter set for phy
++Refer to phy/phy-bindings.txt for the generic PHY binding properties
++
++This is a subnode of usb3_otg_bc register node.
++
++Example:
++	usb3_otg_bc: usb3_otg_bc@ff200000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x0 0xff200000 0x0 0x1000>;
++
++		usb-phy {
++			compatible = "hisilicon,hi3660-usb-phy";
++			#phy-cells = <0>;
++			hisilicon,pericrg-syscon = <&crg_ctrl>;
++			hisilicon,pctrl-syscon = <&pctrl>;
++			hisilicon,eye-diagram-param = <0x22466e4>;
++		};
++	};
 -- 
 2.15.0-rc2
