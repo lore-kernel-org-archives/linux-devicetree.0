@@ -1,40 +1,74 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 3/3] net: ethernet: add ag71xx driver
-Date: Fri, 19 Apr 2019 14:35:19 -0700 (PDT)
-Message-ID: <20190419.143519.94034508850689697.davem@davemloft.net>
-References: <20190418052620.20835-1-o.rempel@pengutronix.de>
-        <20190418052620.20835-4-o.rempel@pengutronix.de>
+From: Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH v6 00/13] Add support for usb on Hikey960
+Date: Sat, 20 Apr 2019 14:40:06 +0800
+Message-ID: <20190420064019.57522-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418052620.20835-4-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: o.rempel@pengutronix.de
-Cc: paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com, mark.rutland@arm.com, kernel@pengutronix.de, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name, netdev@vger.kernel.org
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Date: Thu, 18 Apr 2019 07:26:20 +0200
+The patchset adds support for usb functionality of Hikey960, includes:
+- usb phy driver for Hisilicon Kirin Soc hi3660
+- usb driver for HiKey960 board
+- some adjustment in dwc3 and usb role driver
+- dts for support usb of HiKey960
 
-> +static int ag71xx_remove(struct platform_device *pdev)
-> +{
-> +	struct net_device *ndev = platform_get_drvdata(pdev);
-> +	struct ag71xx *ag;
-> +
-> +	if (!ndev)
-> +		return 0;
-> +
-> +	ag = netdev_priv(ndev);
-> +	ag71xx_phy_disconnect(ag);
-> +	ag71xx_mdio_remove(ag);
-> +	unregister_netdev(ndev);
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return 0;
-> +}
+---
+v5:
+* Split modification of usb role into two patches, the first one introduces
+  stubs for the exiting functions, and the second adds notifier functions.
+v6:
+* Add a fix of usb_role_switch_register_notifier initialization from
+  John Stultz <john.stultz@linaro.org>
+---
 
-You should unregister the netdev before you disconnect the PHY and remove
-the MDIO.
+Yu Chen (13):
+  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
+  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
+    switch functionality on HiKey960
+  usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
+    Platform
+  usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
+  usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
+    Hisilicon Kirin Soc
+  usb: dwc3: Increase timeout for CmdAct cleared by device controller
+  phy: Add usb phy support for hi3660 Soc of Hisilicon
+  usb: roles: Introduce stubs for the exiting functions in role.h.
+  usb: roles: Add usb role switch notifier.
+  usb: dwc3: Registering a role switch in the DRD code.
+  hikey960: Support usb functionality of Hikey960
+  usb: gadget: Add configfs attribuite for controling
+    match_existing_only
+  dts: hi3660: Add support for usb on Hikey960
 
-Also you need to call free_netdev() afterwards otherwise you will leak it.
+ .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
+ .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  73 +++++++
+ drivers/misc/Kconfig                               |   6 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
+ drivers/phy/hisilicon/Kconfig                      |  10 +
+ drivers/phy/hisilicon/Makefile                     |   1 +
+ drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
+ drivers/usb/dwc3/Kconfig                           |   1 +
+ drivers/usb/dwc3/core.c                            |  45 ++++
+ drivers/usb/dwc3/core.h                            |  15 ++
+ drivers/usb/dwc3/drd.c                             |  78 ++++++-
+ drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
+ drivers/usb/dwc3/gadget.c                          |   2 +-
+ drivers/usb/gadget/configfs.c                      |  32 +++
+ drivers/usb/roles/class.c                          |  35 +++-
+ include/linux/usb/role.h                           |  46 ++++
+ 20 files changed, 879 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+ create mode 100644 drivers/misc/hisi_hikey_usb.c
+ create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+
+-- 
+2.15.0-rc2
