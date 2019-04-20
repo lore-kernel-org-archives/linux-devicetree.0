@@ -1,63 +1,281 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver
- bindings
-Date: Sat, 20 Apr 2019 09:23:13 -0300
-Message-ID: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
-References: <20190414200824.28348-1-paul@crapouillou.net>
- <20190414200824.28348-2-paul@crapouillou.net>
- <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH v4 2/3] Input: add a driver for GPIO controllable vibrators
+Date: Sat, 20 Apr 2019 14:23:32 +0200
+Message-ID: <20190420122333.23662-2-luca@z3ntu.xyz>
+References: <20190420122333.23662-1-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Cercueil <paul@crapouillou.net>, Maxime Ripard <maxime.ripard@bootlin.com>, od@zcrc.me, Sean Paul <sean@poorly.run>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190420122333.23662-1-luca@z3ntu.xyz>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Luca Weiss <luca@z3ntu.xyz>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxNyBBcHIgMjAxOSBhdCAxMDo0OCwgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4KPiBPbiBTdW4sIEFwciAxNCwgMjAxOSBhdCAzOjA4IFBNIFBhdWwgQ2Vy
-Y3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PiB3cm90ZToKPiA+Cj4gPiBBZGQgbWFjcm9zIHRo
-YXQgY2FuIGJlIHVzZWQgd2l0aCB0aGUgaW5nZW5pYyxsY2QtbW9kZSBwcm9wZXJ0eSBpbiB0aGUK
-PiA+IGRldmljZXRyZWUgbm9kZSB0aGF0IGNvcnJlc3BvbmRzIHRvIHRoZSBpbmdlbmljLWRybSBk
-cml2ZXIuCj4KPiBEUk0gaXMgYSBMaW51eGlzbS4KPgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFBh
-dWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0Pgo+ID4gVGVzdGVkLWJ5OiBBcnR1ciBS
-b2playA8Y29udGFjdEBhcnR1ci1yb2play5ldT4KPiA+IC0tLQo+ID4KPiA+IE5vdGVzOgo+ID4g
-ICAgIHYyOiBObyBjaGFuZ2UKPiA+Cj4gPiAgICAgdjM6IHMvX0RSTS8vCj4gPgo+ID4gIGluY2x1
-ZGUvZHQtYmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS5oIHwgMjggKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKwo+Cj4gRFJNIGlzIGEgTGludXhpc20uLi4KPgo+ID4gIDEgZmlsZSBjaGFu
-Z2VkLCAyOCBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQt
-YmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS5oCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvZHQtYmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS5oIGIvaW5jbHVkZS9kdC1iaW5kaW5n
-cy9kaXNwbGF5L2luZ2VuaWMsZHJtLmgKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRl
-eCAwMDAwMDAwMDAwMDAuLmM3NDliOGMzNDZmYwo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIv
-aW5jbHVkZS9kdC1iaW5kaW5ncy9kaXNwbGF5L2luZ2VuaWMsZHJtLmgKPiA+IEBAIC0wLDAgKzEs
-MjggQEAKPiA+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAqLwo+ID4gKy8q
-Cj4gPiArICogIEluZ2VuaWMgSlo0N3h4IEtNUyBkcml2ZXIKPgo+IFByZXR0eSBzdXJlIHRoaXMg
-ZmlsZSBpcyBub3QgYSBLTVMgZHJpdmVyLgo+Cj4gPiArICoKPiA+ICsgKiAgQ29weXJpZ2h0IChD
-KSAyMDE5LCBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBvdWlsbG91Lm5ldD4KPiA+ICsgKi8KPiA+
-ICsjaWZuZGVmIF9fSU5DTFVERV9EVF9CSU5ESU5HU19ESVNQTEFZX0lOR0VOSUNfRFJNX0hfXwo+
-ID4gKyNkZWZpbmUgX19JTkNMVURFX0RUX0JJTkRJTkdTX0RJU1BMQVlfSU5HRU5JQ19EUk1fSF9f
-Cj4gPiArCj4gPiArI2RlZmluZSBKWl9MQ0RfR0VORVJJQ18xNkJJVCAgICAgICAgICAgICAgICAg
-ICAwCj4gPiArI2RlZmluZSBKWl9MQ0RfR0VORVJJQ18xOEJJVCAgICAgICAgICAgICAgICAgICAx
-Ngo+Cj4gV2UgaGF2ZSBzb21lIGdlbmVyaWMgcHJvcGVydGllcyBmb3IgZGVmaW5pbmcgdGhlIGJ1
-cyB3aWR0aCBhbHJlYWR5Lgo+IFBsdXMsIGluIG1hbnkgY2FzZXMgdGhpcyBjYW4gYmUgaW1wbGll
-ZCBieSB0aGUgcGFuZWwgY29tcGF0aWJsZS4gVGhlCj4gZXhjZXB0aW9ucyBhcmUgY2FzZXMgc3Vj
-aCBhcyB3aGVuIGJvdGggdGhlIGN0cmxyIGFuZCBwYW5lbCBzdXBwb3J0Cj4gbXVsdGlwbGUgbW9k
-ZXMuCj4KCkluIHRoZSBzYW1lIGRpcmVjdGlvbiBhcyBSb2IncyBjb21tZW50LCBJJ2QgbGlrZSB0
-byBzZWUgdGhlc2UgZGVjb3VwbGVkCmZyb20gdGhlIHJlZ2lzdGVyIHZhbHVlLgoKSWRlYWxseSwg
-d2UnZCBsaWtlIHRvIHJldXNlIHRoaXMgZHJpdmVyIGFuZCBpdHMgYmluZGluZ3MgZm9yIEpaNDc4
-MCwKYW5kIHRoZXNlIHZhbHVlcyBhcmUgYWxyZWFkeSBkaWZmZXJlbnQuCgpUaGFua3MhCi0tIApF
-emVxdWllbCBHYXJjw61hLCBWYW5ndWFyZGlhU3VyCnd3dy52YW5ndWFyZGlhc3VyLmNvbS5hcgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Provide a simple driver for GPIO controllable vibrators.
+It will be used by the Fairphone 2.
+
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+Changes from v3:
+- Apply suggestions from Stephen Boyd
+
+ drivers/input/misc/Kconfig      |  12 ++
+ drivers/input/misc/Makefile     |   1 +
+ drivers/input/misc/gpio-vibra.c | 209 ++++++++++++++++++++++++++++++++
+ 3 files changed, 222 insertions(+)
+ create mode 100644 drivers/input/misc/gpio-vibra.c
+
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index e15ed1bb8558..6dfe9e2fe5b1 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
+ 	 To compile this driver as a module, choose M here: the module
+ 	 will be called gpio_decoder.
+ 
++config INPUT_GPIO_VIBRA
++	tristate "GPIO vibrator support"
++	depends on GPIOLIB || COMPILE_TEST
++	select INPUT_FF_MEMLESS
++	help
++	  Say Y here to get support for GPIO based vibrator devices.
++
++	  If unsure, say N.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called gpio-vibra.
++
+ config INPUT_IXP4XX_BEEPER
+ 	tristate "IXP4XX Beeper support"
+ 	depends on ARCH_IXP4XX
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index b936c5b1d4ac..f38ebbdb05e2 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+ obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+ obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+ obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
++obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
+ obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+ obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+ obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+new file mode 100644
+index 000000000000..b76c81015de9
+--- /dev/null
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -0,0 +1,209 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ *  GPIO vibrator driver
++ *
++ *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
++ *
++ *  Based on PWM vibrator driver:
++ *  Copyright (C) 2017 Collabora Ltd.
++ *
++ *  Based on previous work from:
++ *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
++ *
++ *  Based on PWM beeper driver:
++ *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
++ */
++
++#include <linux/gpio/consumer.h>
++#include <linux/input.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++
++struct gpio_vibrator {
++	struct input_dev *input;
++	struct gpio_desc *gpio;
++	struct regulator *vcc;
++
++	struct work_struct play_work;
++	bool running;
++	bool vcc_on;
++};
++
++static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
++{
++	struct device *pdev = vibrator->input->dev.parent;
++	int err;
++
++	if (!vibrator->vcc_on) {
++		err = regulator_enable(vibrator->vcc);
++		if (err) {
++			dev_err(pdev, "failed to enable regulator: %d\n", err);
++			return err;
++		}
++		vibrator->vcc_on = true;
++	}
++
++	gpiod_set_value_cansleep(vibrator->gpio, 1);
++
++	return 0;
++}
++
++static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
++{
++	gpiod_set_value_cansleep(vibrator->gpio, 0);
++
++	if (vibrator->vcc_on) {
++		regulator_disable(vibrator->vcc);
++		vibrator->vcc_on = false;
++	}
++}
++
++static void gpio_vibrator_play_work(struct work_struct *work)
++{
++	struct gpio_vibrator *vibrator =
++		container_of(work, struct gpio_vibrator, play_work);
++
++	if (vibrator->running)
++		gpio_vibrator_start(vibrator);
++	else
++		gpio_vibrator_stop(vibrator);
++}
++
++static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
++				     struct ff_effect *effect)
++{
++	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
++
++	int level = effect->u.rumble.strong_magnitude;
++
++	if (!level)
++		level = effect->u.rumble.weak_magnitude;
++
++	if (level)
++		vibrator->running = true;
++	else
++		vibrator->running = false;
++
++	schedule_work(&vibrator->play_work);
++
++	return 0;
++}
++
++static void gpio_vibrator_close(struct input_dev *input)
++{
++	struct gpio_vibrator *vibrator = input_get_drvdata(input);
++
++	cancel_work_sync(&vibrator->play_work);
++	gpio_vibrator_stop(vibrator);
++	vibrator->running = false;
++}
++
++static int gpio_vibrator_probe(struct platform_device *pdev)
++{
++	struct gpio_vibrator *vibrator;
++	int err;
++
++	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
++	if (!vibrator)
++		return -ENOMEM;
++
++	vibrator->input = devm_input_allocate_device(&pdev->dev);
++	if (!vibrator->input)
++		return -ENOMEM;
++
++	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
++	err = PTR_ERR_OR_ZERO(vibrator->vcc);
++	if (err) {
++		if (err != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
++				err);
++		return err;
++	}
++
++	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
++	err = PTR_ERR_OR_ZERO(vibrator->gpio);
++	if (err) {
++		if (err != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
++				err);
++		return err;
++	}
++
++	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
++
++	vibrator->input->name = "gpio-vibrator";
++	vibrator->input->id.bustype = BUS_HOST;
++	vibrator->input->close = gpio_vibrator_close;
++
++	input_set_drvdata(vibrator->input, vibrator);
++	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
++
++	err = input_ff_create_memless(vibrator->input, NULL,
++				      gpio_vibrator_play_effect);
++	if (err) {
++		dev_err(&pdev->dev, "Couldn't create FF dev: %d\n", err);
++		return err;
++	}
++
++	err = input_register_device(vibrator->input);
++	if (err) {
++		dev_err(&pdev->dev, "Couldn't register input dev: %d\n", err);
++		return err;
++	}
++
++	platform_set_drvdata(pdev, vibrator);
++
++	return 0;
++}
++
++static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
++{
++	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
++
++	cancel_work_sync(&vibrator->play_work);
++	if (vibrator->running)
++		gpio_vibrator_stop(vibrator);
++
++	return 0;
++}
++
++static int __maybe_unused gpio_vibrator_resume(struct device *dev)
++{
++	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
++
++	if (vibrator->running)
++		gpio_vibrator_start(vibrator);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
++			 gpio_vibrator_suspend, gpio_vibrator_resume);
++
++#ifdef CONFIG_OF
++static const struct of_device_id gpio_vibra_dt_match_table[] = {
++	{ .compatible = "gpio-vibrator" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
++#endif
++
++static struct platform_driver gpio_vibrator_driver = {
++	.probe	= gpio_vibrator_probe,
++	.driver	= {
++		.name	= "gpio-vibrator",
++		.pm	= &gpio_vibrator_pm_ops,
++		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
++	},
++};
++module_platform_driver(gpio_vibrator_driver);
++
++MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
++MODULE_DESCRIPTION("GPIO vibrator driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:gpio-vibrator");
+-- 
+2.21.0
