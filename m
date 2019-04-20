@@ -1,37 +1,83 @@
-From: Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] dt-bindings: add an explanation for internal phy-mode
-Date: Sat, 20 Apr 2019 18:14:33 +0000
-Message-ID: <1555784073-21679-1-git-send-email-clabbe@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 5/6] dt-bindings: display: sii902x: Add HDMI audio
+ bindings
+Date: Sun, 21 Apr 2019 02:08:03 +0300
+Message-ID: <20190420230803.GB4964@pendragon.ideasonboard.com>
+References: <cover.1553241734.git.jsarha@ti.com>
+ <1013f1f5383bafff4ca345ac223719a9815405b2.1553241734.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1013f1f5383bafff4ca345ac223719a9815405b2.1553241734.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Songjun.Wu@atmel.com, architt@codeaurora.org, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-When working on the Allwinner internal PHY, the first work was to use
-the "internal" mode, but some answer was made my mail on what are really
-internal mean for PHY.
-
-This patch write that in the doc.
-
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- Documentation/devicetree/bindings/net/ethernet.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index cfc376bc977a..78b098d2d4e9 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -18,7 +18,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
-   Specification).
- - phy-mode: string, operation mode of the PHY interface. This is now a de-facto
-   standard property; supported values are:
--  * "internal"
-+  * "internal" (Internal means there is not a standard bus between the MAC and
-+     the PHY, something proprietary is being used to embed the PHY in the MAC.)
-   * "mii"
-   * "gmii"
-   * "sgmii"
--- 
-2.21.0
+SGkgSnlyaSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gRnJpLCBNYXIgMjIsIDIwMTkg
+YXQgMTA6MDY6MTRBTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90ZToKPiBUaGUgc2lpOTAyeCBjaGlw
+IGZhbWlseSBzdXBwb3J0cyBhbHNvIEhETUkgYXVkaW8uIEFkZCBiaW5kaW5nIGZvcgo+IGRlc2Ny
+aWJpbmcgdGhlIG5lY2Vzc2FyeSBpMnMgYW5kIG1jbGsgd2lyaW5nIGZvciBpdC4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+IC0tLQo+ICAuLi4vYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgICAgICAgfCAzMyArKysrKysrKysrKysrKysr
+KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9z
+aWk5MDJ4LnR4dAo+IGluZGV4IGM0YzE4NTVjYTY1NC4uZTc4ZDA2OWRhNDM5IDEwMDY0NAo+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5
+MDJ4LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IEBAIC05LDYgKzksMzMgQEAgT3B0aW9uYWwgcHJvcGVydGll
+czoKPiAgCSAgYWJvdXQgaG90cGx1ZyBldmVudHMuCj4gIAktIHJlc2V0LWdwaW9zOiBPRiBkZXZp
+Y2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIFJTVF9OIHBpbi4KPiAgCj4gKwlIRE1JIGF1
+ZGlvIHByb3BlcnRpZXM6Cj4gKwktIHNpbCxpMnMtZGF0YS1sYW5lczogQXJyYXkgb2YgdXAgdG8g
+NCBpbnRlZ2VycyB3aXRoIHZhbHVlcyBvZiAwLTMKPiArCSAgIEVhY2ggaW50ZWdlciBpbmRpY2F0
+ZXMgd2hpY2ggaTJzIHBpbiBpcyBjb25uZWN0ZWQgdG8gd2hpY2gKPiArCSAgIGF1ZGlvIGZpZm8u
+IFRoZSBmaXJzdCBpbnRlZ2VyIHNlbGVjdHMgaTJzIGF1ZGlvIHBpbiBmb3IgdGhlCj4gKwkgICBm
+aXJzdCBhdWRpbyBmaWZvIzAgKEhETUkgY2hhbm5lbHMgMSYyKSwgc2Vjb25kIGZvciBmaWZvIzEK
+PiArCSAgIChIRE1JIGNoYW5uZWxzIDMmNCksIGFuZCBzbyBvbi4gVGhlcmUgaXMgNCBmaWZvcyBh
+bmQgNCBpMnMKPiArCSAgIHBpbnMgKFNEMCAtIFNEMykuIEFueSBpMnMgcGluIGNhbiBiZSBjb25u
+ZWN0ZWQgdG8gYW55IGZpZm8sCj4gKwkgICBidXQgdGhlcmUgY2FuIGJlIG5vIGdhcHMuIEUuZy4g
+YW4gaTJzIHBpbiBtdXN0IGJlIG1hcHBlZCB0bwo+ICsJICAgZmlmbyMwIGFuZCBmaWZvIzEgYmVm
+b3JlIG1hcHBpbmcgYSBjaGFubmVsIHRvIGZpZm8jMi4KPiArCSAgIEkyUyBIRE1JIGF1ZGlvIGlz
+IGNvbmZpZ3VyZWQgb25seSBpZiB0aGlzIHByb3BlcnR5IGlzIGZvdW5kLgo+ICsJLSBjbG9ja3M6
+IHBoYW5kbGUgYW5kIGNsb2NrIHNwZWNpZmllciBmb3IgZWFjaCBjbG9jayBsaXN0ZWQgaW4KPiAr
+ICAgICAgICAgIHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eQo+ICsJLSBjbG9jay1uYW1lczogIm1j
+bGsiCj4gKwkgICAgRGVzY3JpYmVzIFNJSTkwMnggTUNMSyBpbnB1dC4gTUNMSyBpcyB1c2VkIHRv
+IHByb2R1Y2UKPiArCSAgICBIRE1JIGF1ZGlvIENUUyB2YWx1ZXMuIFRoaXMgcHJvcGVydHkgaXMg
+cmVxdWlyZWQgaWYKPiArCSAgICAiaTJzLWRhdGEtbGFuZXMiLXByb3BlcnR5IGlzIHByZXNlbnQu
+IFRoaXMgcHJvcGVydHkgZm9sbG93cwo+ICsJICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiArCSAgICBjb25zdW1lciBiaW5kaW5n
+Lgo+ICsKPiArCUlmIEhETUkgYXVkaW8gaXMgY29uZmlndXJlZCB0aGUgc2lpOTAyeCBkZXZpY2Ug
+YmVjb21lcyBhbiBBU29DCj4gKwljb2RlYyBjb21wb25lbnQsIHRoYXQgY2FuIGJlIHVzZWQgaW4g
+Y29uZmlndXJpbmcgZnVsbCBhdWRpbwo+ICsJZGV2aWNlcyB3aXRoIEFTb0Mgc2ltcGxlLWNhcmQg
+b3IgYXVkaW8tZ3JhcGgtY2FyZC4gU2VlIHRoZWlyCj4gKwliaW5kaW5nIGRvY3VtZW50cyBvbiBo
+b3cgdG8gZGVzY3JpYmUgaG93IHRoZSBzaWk5MDJ4IGRldmljZSBpcwo+ICsJY29ubmVjdGVkIHRv
+IHRoZSByZXN0IG9mIHRoZSBhdWRpbyBzeXN0ZW06Cj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0Cj4gKwlEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvc291bmQvYXVkaW8tZ3JhcGgtY2FyZC50eHQKPiArCj4gIE9wdGlvbmFs
+IHN1Ym5vZGVzOgo+ICAJLSB2aWRlbyBpbnB1dDogdGhpcyBzdWJub2RlIGNhbiBjb250YWluIGEg
+dmlkZW8gaW5wdXQgcG9ydCBub2RlCj4gIAkgIHRvIGNvbm5lY3QgdGhlIGJyaWRnZSB0byBhIGRp
+c3BsYXkgY29udHJvbGxlciBvdXRwdXQgKFNlZSB0aGlzCj4gQEAgLTIxLDYgKzQ4LDEyIEBAIEV4
+YW1wbGU6Cj4gIAkJY29tcGF0aWJsZSA9ICJzaWwsc2lpOTAyMiI7Cj4gIAkJcmVnID0gPDB4Mzk+
+Owo+ICAJCXJlc2V0LWdwaW9zID0gPCZwaW9BIDEgMD47Cj4gKwo+ICsJCSNzb3VuZC1kYWktY2Vs
+bHMgPSA8MD47Cj4gKwkJaTJzLWRhdGEtbGFuZXMgPSA8IDAgMSAyID47CgpUaGlzIGRvZXNuJ3Qg
+aGF2ZSB0aGUgc2lsLCBwcmVmaXggZG9jdW1lbnRlZCBhYm92ZS4gQXMgc3RhdGVkIGluIGEKcHJl
+dmlvdXMgcmV2aWV3LCBJIHdvdWxkbid0IGFkZCBhIHZlbmRvciBwcmVmaXggdG8gdGhpcyBwcm9w
+ZXJ0eSBhcyBpdAppc24ndCB2ZW5kb3Itc3BlY2lmaWMsIGJ1dCBJIHdvdWxkIHRoZW4gZG9jdW1l
+bnQgaXQgaW4gYSBzZXBhcmF0ZSBmaWxlCmZvciBjb21tb24gSTJTIHByb3BlcnRpZXMuCgpSb2Is
+IHdoYXQncyB5b3VyIG9waW5pb24gPwoKPiArCQljbG9ja3MgPSA8Jm1jbGs+Owo+ICsJCWNsb2Nr
+LW5hbWVzID0gIm1jbGsiOwo+ICsKPiAgCQlwb3J0cyB7Cj4gIAkJCSNhZGRyZXNzLWNlbGxzID0g
+PDE+Owo+ICAJCQkjc2l6ZS1jZWxscyA9IDwwPjsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5j
+aGFydApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
