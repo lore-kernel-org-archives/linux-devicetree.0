@@ -1,7 +1,7 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v6 09/13] usb: roles: Add usb role switch notifier.
-Date: Sat, 20 Apr 2019 14:40:15 +0800
-Message-ID: <20190420064019.57522-10-chenyu56@huawei.com>
+Subject: [PATCH v6 12/13] usb: gadget: Add configfs attribuite for controling match_existing_only
+Date: Sat, 20 Apr 2019 14:40:18 +0800
+Message-ID: <20190420064019.57522-13-chenyu56@huawei.com>
 References: <20190420064019.57522-1-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,133 +9,86 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190420064019.57522-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds notifier for drivers want to be informed of the usb role
-switch.
+Currently the "match_existing_only" of usb_gadget_driver in configfs is
+set to one which is not flexible.
+Dwc3 udc will be removed when usb core switch to host mode. This causes
+failure of writing name of dwc3 udc to configfs's UDC attribuite.
+To fix this we need to add a way to change the config of
+"match_existing_only".
+There are systems like Android do not support udev, so adding
+"match_existing_only" attribute to allow configuration by user is cost little.
+This patch adds a configfs attribuite for controling match_existing_only
+which allow user to config "match_existing_only".
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: John Stultz <john.stultz@linaro.org>
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
-v5:
-* Split the patch into two patches, the first one introduces stubs for
-* the
-exiting functions, and this patch adds notifier functions.
-v6:
-* Fold a fix in form John Stultz <john.stultz@linaro.org>.
----
----
- drivers/usb/roles/class.c | 35 ++++++++++++++++++++++++++++++++++-
- include/linux/usb/role.h  | 16 ++++++++++++++++
- 2 files changed, 50 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/configfs.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index f45d8df5cfb8..5bc60f478725 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -20,6 +20,7 @@ struct usb_role_switch {
- 	struct device dev;
- 	struct mutex lock; /* device lock*/
- 	enum usb_role role;
-+	struct blocking_notifier_head nh;
- 
- 	/* From descriptor */
- 	struct device *usb2_port;
-@@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
- 
- 	ret = sw->set(sw->dev.parent, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		blocking_notifier_call_chain(&sw->nh, role, NULL);
-+	}
- 
- 	mutex_unlock(&sw->lock);
- 
-@@ -58,6 +61,35 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
+index 025129942894..be85104bfab9 100644
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -291,6 +291,36 @@ static ssize_t gadget_dev_desc_UDC_store(struct config_item *item,
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
  
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
++static ssize_t gadget_driver_match_existing_only_store(struct config_item *item,
++		const char *page, size_t len)
 +{
-+	int ret = blocking_notifier_chain_register(&sw->nh, nb);
-+	enum usb_role role;
++	struct gadget_info *gi = to_gadget_info(item);
++	struct usb_gadget_driver *gadget_driver = &(gi->composite.gadget_driver);
++	bool match_existing_only;
++	int ret;
 +
++	ret = kstrtobool(page, &match_existing_only);
 +	if (ret)
 +		return ret;
 +
-+	/* Initialize the notifier that was just registered */
-+	mutex_lock(&sw->lock);
-+	if (sw->get)
-+		role = sw->get(sw->dev.parent);
++	if (match_existing_only)
++		gadget_driver->match_existing_only = 1;
 +	else
-+		role = sw->role;
-+	blocking_notifier_call_chain(&sw->nh, role, NULL);
-+	mutex_unlock(&sw->lock);
++		gadget_driver->match_existing_only = 0;
 +
-+	return 0;
++	return len;
 +}
-+EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
 +
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
++static ssize_t gadget_driver_match_existing_only_show(struct config_item *item,
++		char *page)
 +{
-+	return blocking_notifier_chain_unregister(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
++	struct gadget_info *gi = to_gadget_info(item);
++	struct usb_gadget_driver *gadget_driver = &(gi->composite.gadget_driver);
++	bool match_existing_only = !!gadget_driver->match_existing_only;
 +
- /**
-  * usb_role_switch_get_role - Get the USB role for a switch
-  * @sw: USB role switch
-@@ -271,6 +303,7 @@ usb_role_switch_register(struct device *parent,
- 		return ERR_PTR(-ENOMEM);
- 
- 	mutex_init(&sw->lock);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
- 
- 	sw->allow_userspace_control = desc->allow_userspace_control;
- 	sw->usb2_port = desc->usb2_port;
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index da2b9641b877..99d8b8e4fe61 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -53,6 +53,10 @@ struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc);
- void usb_role_switch_unregister(struct usb_role_switch *sw);
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb);
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb);
- #else
- static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
- 		enum usb_role role)
-@@ -80,6 +84,18 @@ usb_role_switch_register(struct device *parent,
- }
- 
- static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-+
-+static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
-+{
-+	return -ENODEV;
++	return sprintf(page, "%s\n", match_existing_only ? "true" : "false");
 +}
 +
-+static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
- #endif
+ CONFIGFS_ATTR(gadget_dev_desc_, bDeviceClass);
+ CONFIGFS_ATTR(gadget_dev_desc_, bDeviceSubClass);
+ CONFIGFS_ATTR(gadget_dev_desc_, bDeviceProtocol);
+@@ -300,6 +330,7 @@ CONFIGFS_ATTR(gadget_dev_desc_, idProduct);
+ CONFIGFS_ATTR(gadget_dev_desc_, bcdDevice);
+ CONFIGFS_ATTR(gadget_dev_desc_, bcdUSB);
+ CONFIGFS_ATTR(gadget_dev_desc_, UDC);
++CONFIGFS_ATTR(gadget_, driver_match_existing_only);
  
- #endif /* __LINUX_USB_ROLE_H */
+ static struct configfs_attribute *gadget_root_attrs[] = {
+ 	&gadget_dev_desc_attr_bDeviceClass,
+@@ -311,6 +342,7 @@ static struct configfs_attribute *gadget_root_attrs[] = {
+ 	&gadget_dev_desc_attr_bcdDevice,
+ 	&gadget_dev_desc_attr_bcdUSB,
+ 	&gadget_dev_desc_attr_UDC,
++	&gadget_attr_driver_match_existing_only,
+ 	NULL,
+ };
+ 
 -- 
 2.15.0-rc2
