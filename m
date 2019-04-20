@@ -1,106 +1,170 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH] ARM: dts: imx: Add mclk0 clock for SAI
-Date: Sat, 20 Apr 2019 09:12:52 +0000
-Message-ID: <20190420091239.3793-1-daniel.baluta@nxp.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v7 01/14] firmware: ti_sci: Add support to get TISCI handle using of_phandle
+Date: Sat, 20 Apr 2019 15:39:37 +0530
+Message-ID: <20190420100950.7997-2-lokeshvutla@ti.com>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190420100950.7997-1-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0KDQpTQUkgaGFzIDQg
-Y2xvY2sgc291cmNlcywgd2hpY2ggY2FuIGJlIHNlbGVjdGVkIHVzaW5nIE1TRUwNCmJpdCBvZiBT
-QUkgVENSMiByZWdpc3Rlci4NCg0KT24gaW14Ni83IG1jbGswIGFuZCBtY2xrMSBhbHdheXMgcG9p
-bnQgdG8gdGhlIHNhbWUgY2xvY2sNCnNvdXJjZS4gQW55aG93LCB0aGlzIGlzIG5vIGxvbmdlciB0
-cnVlIGZvciBpbXg4Lg0KDQpGb3IgdGhpcyByZWFzb24sIHdlIG5lZWQgdG8gYWRkIG1jbGswIGFu
-ZCBoYW5kbGUgaXQNCmluIGEgZ2VuZXJpYyB3YXkgaW4gU0FJIGRyaXZlci4NCg0KU2lnbmVkLW9m
-Zi1ieTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0KU2lnbmVkLW9mZi1i
-eTogRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPg0KLS0tDQogYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnN4LmR0c2kgfCA2ICsrKystLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1
-bC5kdHNpIHwgOSArKysrKystLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg3cy5kdHNpICB8IDkg
-KysrKysrLS0tDQogMyBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9u
-cygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kgYi9hcmNo
-L2FybS9ib290L2R0cy9pbXg2c3guZHRzaQ0KaW5kZXggYjE2YTEyMzk5MGEyLi42ODIyMDdiNWQ4
-NjggMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2c3guZHRzaQ0KKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kNCkBAIC0xMDcxLDkgKzEwNzEsMTAgQEANCiAJCQkJ
-cmVnID0gPDB4MDIxZDQwMDAgMHg0MDAwPjsNCiAJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDk3
-IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KIAkJCQljbG9ja3MgPSA8JmNsa3MgSU1YNlNYX0NMS19T
-QUkxX0lQRz4sDQorCQkJCQkgPCZjbGtzIElNWDZTWF9DTEtfU0FJMT4sDQogCQkJCQkgPCZjbGtz
-IElNWDZTWF9DTEtfU0FJMT4sDQogCQkJCQkgPCZjbGtzIDA+LCA8JmNsa3MgMD47DQotCQkJCWNs
-b2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xrMyI7DQorCQkJCWNsb2Nr
-LW5hbWVzID0gImJ1cyIsICJtY2xrMCIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xrMyI7DQogCQkJ
-CWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7DQogCQkJCWRtYXMgPSA8JnNkbWEgMzEgMjQgMD4sIDwm
-c2RtYSAzMiAyNCAwPjsNCiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCkBAIC0xMDkwLDkgKzEw
-OTEsMTAgQEANCiAJCQkJcmVnID0gPDB4MDIxZGMwMDAgMHg0MDAwPjsNCiAJCQkJaW50ZXJydXB0
-cyA9IDxHSUNfU1BJIDk4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KIAkJCQljbG9ja3MgPSA8JmNs
-a3MgSU1YNlNYX0NMS19TQUkyX0lQRz4sDQorCQkJCQkgPCZjbGtzIElNWDZTWF9DTEtfU0FJMj4s
-DQogCQkJCQkgPCZjbGtzIElNWDZTWF9DTEtfU0FJMj4sDQogCQkJCQkgPCZjbGtzIDA+LCA8JmNs
-a3MgMD47DQotCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xr
-MyI7DQorCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMCIsICJtY2xrMSIsICJtY2xrMiIs
-ICJtY2xrMyI7DQogCQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7DQogCQkJCWRtYXMgPSA8JnNk
-bWEgMzMgMjQgMD4sIDwmc2RtYSAzNCAyNCAwPjsNCiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsN
-CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDZ1bC5kdHNpDQppbmRleCBiYmYwMTBjNzMzMzYuLmU5NjkxMzA2ZjU1NyAxMDA2
-NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpDQorKysgYi9hcmNoL2FybS9i
-b290L2R0cy9pbXg2dWwuZHRzaQ0KQEAgLTMwNCw5ICszMDQsMTAgQEANCiAJCQkJCXJlZyA9IDww
-eDAyMDI4MDAwIDB4NDAwMD47DQogCQkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTcgSVJRX1RZ
-UEVfTEVWRUxfSElHSD47DQogCQkJCQljbG9ja3MgPSA8JmNsa3MgSU1YNlVMX0NMS19TQUkxX0lQ
-Rz4sDQorCQkJCQkJIDwmY2xrcyBJTVg2VUxfQ0xLX1NBSTE+LA0KIAkJCQkJCSA8JmNsa3MgSU1Y
-NlVMX0NMS19TQUkxPiwNCiAJCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfRFVNTVk+LCA8JmNsa3Mg
-SU1YNlVMX0NMS19EVU1NWT47DQotCQkJCQljbG9jay1uYW1lcyA9ICJidXMiLCAibWNsazEiLCAi
-bWNsazIiLCAibWNsazMiOw0KKwkJCQkJY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1jbGswIiwgIm1j
-bGsxIiwgIm1jbGsyIiwgIm1jbGszIjsNCiAJCQkJCWRtYXMgPSA8JnNkbWEgMzUgMjQgMD4sDQog
-CQkJCQkgICAgICAgPCZzZG1hIDM2IDI0IDA+Ow0KIAkJCQkJZG1hLW5hbWVzID0gInJ4IiwgInR4
-IjsNCkBAIC0zMTksOSArMzIwLDEwIEBADQogCQkJCQlyZWcgPSA8MHgwMjAyYzAwMCAweDQwMDA+
-Ow0KIAkJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDk4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
-IAkJCQkJY2xvY2tzID0gPCZjbGtzIElNWDZVTF9DTEtfU0FJMl9JUEc+LA0KKwkJCQkJCSA8JmNs
-a3MgSU1YNlVMX0NMS19TQUkyPiwNCiAJCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfU0FJMj4sDQog
-CQkJCQkJIDwmY2xrcyBJTVg2VUxfQ0xLX0RVTU1ZPiwgPCZjbGtzIElNWDZVTF9DTEtfRFVNTVk+
-Ow0KLQkJCQkJY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1jbGsxIiwgIm1jbGsyIiwgIm1jbGszIjsN
-CisJCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMCIsICJtY2xrMSIsICJtY2xrMiIsICJt
-Y2xrMyI7DQogCQkJCQlkbWFzID0gPCZzZG1hIDM3IDI0IDA+LA0KIAkJCQkJICAgICAgIDwmc2Rt
-YSAzOCAyNCAwPjsNCiAJCQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7DQpAQCAtMzM0LDkgKzMz
-NiwxMCBAQA0KIAkJCQkJcmVnID0gPDB4MDIwMzAwMDAgMHg0MDAwPjsNCiAJCQkJCWludGVycnVw
-dHMgPSA8R0lDX1NQSSAyNCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCiAJCQkJCWNsb2NrcyA9IDwm
-Y2xrcyBJTVg2VUxfQ0xLX1NBSTNfSVBHPiwNCisJCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfU0FJ
-Mz4sDQogCQkJCQkJIDwmY2xrcyBJTVg2VUxfQ0xLX1NBSTM+LA0KIAkJCQkJCSA8JmNsa3MgSU1Y
-NlVMX0NMS19EVU1NWT4sIDwmY2xrcyBJTVg2VUxfQ0xLX0RVTU1ZPjsNCi0JCQkJCWNsb2NrLW5h
-bWVzID0gImJ1cyIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xrMyI7DQorCQkJCQljbG9jay1uYW1l
-cyA9ICJidXMiLCAibWNsazAiLCAibWNsazEiLCAibWNsazIiLCAibWNsazMiOw0KIAkJCQkJZG1h
-cyA9IDwmc2RtYSAzOSAyNCAwPiwNCiAJCQkJCSAgICAgICA8JnNkbWEgNDAgMjQgMD47DQogCQkJ
-CQlkbWEtbmFtZXMgPSAicngiLCAidHgiOw0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDdzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3cy5kdHNpDQppbmRleCAwYjAxMTA5
-YWMwYTkuLjY5M2I4OGUzNzc5OSAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdz
-LmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdzLmR0c2kNCkBAIC04ODQsMTAgKzg4
-NCwxMSBAQA0KIAkJCQkJcmVnID0gPDB4MzA4YTAwMDAgMHgxMDAwMD47DQogCQkJCQlpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgOTUgSVJRX1RZUEVfTEVWRUxfSElHSD47DQogCQkJCQljbG9ja3MgPSA8
-JmNsa3MgSU1YN0RfU0FJMV9JUEdfQ0xLPiwNCisJCQkJCQkgPCZjbGtzIElNWDdEX1NBSTFfUk9P
-VF9DTEs+LA0KIAkJCQkJCSA8JmNsa3MgSU1YN0RfU0FJMV9ST09UX0NMSz4sDQogCQkJCQkJIDwm
-Y2xrcyBJTVg3RF9DTEtfRFVNTVk+LA0KIAkJCQkJCSA8JmNsa3MgSU1YN0RfQ0xLX0RVTU1ZPjsN
-Ci0JCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xrMyI7DQor
-CQkJCQljbG9jay1uYW1lcyA9ICJidXMiLCAibWNsazAiLCAibWNsazEiLCAibWNsazIiLCAibWNs
-azMiOw0KIAkJCQkJZG1hLW5hbWVzID0gInJ4IiwgInR4IjsNCiAJCQkJCWRtYXMgPSA8JnNkbWEg
-OCAyNCAwPiwgPCZzZG1hIDkgMjQgMD47DQogCQkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KQEAg
-LTg5OSwxMCArOTAwLDExIEBADQogCQkJCQlyZWcgPSA8MHgzMDhiMDAwMCAweDEwMDAwPjsNCiAJ
-CQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA5NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCiAJCQkJ
-CWNsb2NrcyA9IDwmY2xrcyBJTVg3RF9TQUkyX0lQR19DTEs+LA0KKwkJCQkJCSA8JmNsa3MgSU1Y
-N0RfU0FJMl9ST09UX0NMSz4sDQogCQkJCQkJIDwmY2xrcyBJTVg3RF9TQUkyX1JPT1RfQ0xLPiwN
-CiAJCQkJCQkgPCZjbGtzIElNWDdEX0NMS19EVU1NWT4sDQogCQkJCQkJIDwmY2xrcyBJTVg3RF9D
-TEtfRFVNTVk+Ow0KLQkJCQkJY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1jbGsxIiwgIm1jbGsyIiwg
-Im1jbGszIjsNCisJCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMCIsICJtY2xrMSIsICJt
-Y2xrMiIsICJtY2xrMyI7DQogCQkJCQlkbWEtbmFtZXMgPSAicngiLCAidHgiOw0KIAkJCQkJZG1h
-cyA9IDwmc2RtYSAxMCAyNCAwPiwgPCZzZG1hIDExIDI0IDA+Ow0KIAkJCQkJc3RhdHVzID0gImRp
-c2FibGVkIjsNCkBAIC05MTQsMTAgKzkxNiwxMSBAQA0KIAkJCQkJcmVnID0gPDB4MzA4YzAwMDAg
-MHgxMDAwMD47DQogCQkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNTAgSVJRX1RZUEVfTEVWRUxf
-SElHSD47DQogCQkJCQljbG9ja3MgPSA8JmNsa3MgSU1YN0RfU0FJM19JUEdfQ0xLPiwNCisJCQkJ
-CQkgPCZjbGtzIElNWDdEX1NBSTNfUk9PVF9DTEs+LA0KIAkJCQkJCSA8JmNsa3MgSU1YN0RfU0FJ
-M19ST09UX0NMSz4sDQogCQkJCQkJIDwmY2xrcyBJTVg3RF9DTEtfRFVNTVk+LA0KIAkJCQkJCSA8
-JmNsa3MgSU1YN0RfQ0xLX0RVTU1ZPjsNCi0JCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xr
-MSIsICJtY2xrMiIsICJtY2xrMyI7DQorCQkJCQljbG9jay1uYW1lcyA9ICJidXMiLCAibWNsazAi
-LCAibWNsazEiLCAibWNsazIiLCAibWNsazMiOw0KIAkJCQkJZG1hLW5hbWVzID0gInJ4IiwgInR4
-IjsNCiAJCQkJCWRtYXMgPSA8JnNkbWEgMTIgMjQgMD4sIDwmc2RtYSAxMyAyNCAwPjsNCiAJCQkJ
-CXN0YXR1cyA9ICJkaXNhYmxlZCI7DQotLSANCjIuMTcuMQ0KDQo=
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+
+TISCI has been updated to have support for Resource management(like
+interrupts etc..). And there can be multiple device instances of a
+resource type in a SoC. So every driver corresponding to a resource type
+should get a TISCI handle so that it can make TISCI calls. And each
+DT node corresponding to a device should exist under its corresponding
+bus node as per the SoC architecture.
+
+But existing apis in TISCI library assumes that all TISCI users are
+child nodes of TISCI. Which is not true in the above case. So introduce
+(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
+to get TISCI handle using of phandle property.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+Changes since v6:
+- None
+
+ drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
+ 2 files changed, 100 insertions(+)
+
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 3fbbb61012c4..852043531233 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -1764,6 +1764,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
+ 
++/**
++ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
++ * @np:		device node
++ * @property:	property name containing phandle on TISCI node
++ *
++ * NOTE: The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
++ * Return: pointer to handle if successful, else:
++ * -EPROBE_DEFER if the instance is not ready
++ * -ENODEV if the required node handler is missing
++ * -EINVAL if invalid conditions are encountered.
++ */
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	struct ti_sci_handle *handle = NULL;
++	struct device_node *ti_sci_np;
++	struct ti_sci_info *info;
++	struct list_head *p;
++
++	if (!np) {
++		pr_err("I need a device pointer\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	ti_sci_np = of_parse_phandle(np, property, 0);
++	if (!ti_sci_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&ti_sci_list_mutex);
++	list_for_each(p, &ti_sci_list) {
++		info = list_entry(p, struct ti_sci_info, node);
++		if (ti_sci_np == info->dev->of_node) {
++			handle = &info->handle;
++			info->users++;
++			break;
++		}
++	}
++	mutex_unlock(&ti_sci_list_mutex);
++	of_node_put(ti_sci_np);
++
++	if (!handle)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
++
++/**
++ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
++ * @dev:	Device pointer requesting TISCI handle
++ * @property:	property name containing phandle on TISCI node
++ *
++ * NOTE: This releases the handle once the device resources are
++ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
++ * The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ *
++ * Return: 0 if all went fine, else corresponding error.
++ */
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	const struct ti_sci_handle *handle;
++	const struct ti_sci_handle **ptr;
++
++	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
++
++	if (!IS_ERR(handle)) {
++		*ptr = handle;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..515587e9d373 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -217,6 +217,10 @@ struct ti_sci_handle {
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property);
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static inline
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
+-- 
+2.21.0
