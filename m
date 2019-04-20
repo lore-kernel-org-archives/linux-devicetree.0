@@ -1,73 +1,37 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH] arm64: dts: allwinner: h6: Enable HDMI output on orangepi 3
-Date: Sat, 20 Apr 2019 10:52:40 -0400
-Message-ID: <20190420145240.27400-1-tiny.windzz@gmail.com>
+From: Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] dt-bindings: add an explanation for internal phy-mode
+Date: Sat, 20 Apr 2019 18:14:33 +0000
+Message-ID: <1555784073-21679-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: davem@davemloft.net, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Orangepi 3 has HDMI type A connector.
+When working on the Allwinner internal PHY, the first work was to use
+the "internal" mode, but some answer was made my mail on what are really
+internal mean for PHY.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
-rebase:
-sunxi/dt64-for-5.2 arm64: dts: allwinner: a64-amarula-relic: Add OV5640
-camera node
----
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+This patch write that in the doc.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 17d496990108..6ed3a1ee297d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -21,6 +21,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -50,6 +61,10 @@
- 	cpu-supply = <&reg_dcdca>;
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -58,6 +73,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_cldo1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ Documentation/devicetree/bindings/net/ethernet.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index cfc376bc977a..78b098d2d4e9 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -18,7 +18,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
+   Specification).
+ - phy-mode: string, operation mode of the PHY interface. This is now a de-facto
+   standard property; supported values are:
+-  * "internal"
++  * "internal" (Internal means there is not a standard bus between the MAC and
++     the PHY, something proprietary is being used to embed the PHY in the MAC.)
+   * "mii"
+   * "gmii"
+   * "sgmii"
 -- 
-2.17.0
+2.21.0
