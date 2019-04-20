@@ -1,41 +1,63 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] ASoC: simple-card: Read pin switches conf from devicetree
-Date: Sat, 20 Apr 2019 12:45:53 +0200
-Message-ID: <20190420104553.5071-3-paul@crapouillou.net>
-References: <20190420104553.5071-1-paul@crapouillou.net>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver
+ bindings
+Date: Sat, 20 Apr 2019 09:23:13 -0300
+Message-ID: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
+References: <20190414200824.28348-1-paul@crapouillou.net>
+ <20190414200824.28348-2-paul@crapouillou.net>
+ <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190420104553.5071-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Paul Cercueil <paul@crapouillou.net>, Maxime Ripard <maxime.ripard@bootlin.com>, od@zcrc.me, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-When the routing path between a widget (e.g. "Speaker") and the codec
-goes through an external amplifier, having a pin switch for this widget
-allows the amplifier to be disabled when the widget is not to be used
-(e.g. when using headphones).
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- sound/soc/generic/simple-card.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 34de32efc4c4..d34adb1518e7 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -556,6 +556,10 @@ static int simple_parse_of(struct simple_priv *priv)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = asoc_simple_card_of_parse_pin_switches(card, PREFIX);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* Single/Muti DAI link(s) & New style of DT node */
- 	memset(&li, 0, sizeof(li));
- 	for (li.cpu = 1; li.cpu >= 0; li.cpu--) {
--- 
-2.21.0.593.g511ec345e18
+T24gV2VkLCAxNyBBcHIgMjAxOSBhdCAxMDo0OCwgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
+Lm9yZz4gd3JvdGU6Cj4KPiBPbiBTdW4sIEFwciAxNCwgMjAxOSBhdCAzOjA4IFBNIFBhdWwgQ2Vy
+Y3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PiB3cm90ZToKPiA+Cj4gPiBBZGQgbWFjcm9zIHRo
+YXQgY2FuIGJlIHVzZWQgd2l0aCB0aGUgaW5nZW5pYyxsY2QtbW9kZSBwcm9wZXJ0eSBpbiB0aGUK
+PiA+IGRldmljZXRyZWUgbm9kZSB0aGF0IGNvcnJlc3BvbmRzIHRvIHRoZSBpbmdlbmljLWRybSBk
+cml2ZXIuCj4KPiBEUk0gaXMgYSBMaW51eGlzbS4KPgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFBh
+dWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0Pgo+ID4gVGVzdGVkLWJ5OiBBcnR1ciBS
+b2playA8Y29udGFjdEBhcnR1ci1yb2play5ldT4KPiA+IC0tLQo+ID4KPiA+IE5vdGVzOgo+ID4g
+ICAgIHYyOiBObyBjaGFuZ2UKPiA+Cj4gPiAgICAgdjM6IHMvX0RSTS8vCj4gPgo+ID4gIGluY2x1
+ZGUvZHQtYmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS5oIHwgMjggKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKwo+Cj4gRFJNIGlzIGEgTGludXhpc20uLi4KPgo+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCAyOCBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQt
+YmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS5oCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2luY2x1
+ZGUvZHQtYmluZGluZ3MvZGlzcGxheS9pbmdlbmljLGRybS5oIGIvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9kaXNwbGF5L2luZ2VuaWMsZHJtLmgKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRl
+eCAwMDAwMDAwMDAwMDAuLmM3NDliOGMzNDZmYwo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIv
+aW5jbHVkZS9kdC1iaW5kaW5ncy9kaXNwbGF5L2luZ2VuaWMsZHJtLmgKPiA+IEBAIC0wLDAgKzEs
+MjggQEAKPiA+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAqLwo+ID4gKy8q
+Cj4gPiArICogIEluZ2VuaWMgSlo0N3h4IEtNUyBkcml2ZXIKPgo+IFByZXR0eSBzdXJlIHRoaXMg
+ZmlsZSBpcyBub3QgYSBLTVMgZHJpdmVyLgo+Cj4gPiArICoKPiA+ICsgKiAgQ29weXJpZ2h0IChD
+KSAyMDE5LCBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBvdWlsbG91Lm5ldD4KPiA+ICsgKi8KPiA+
+ICsjaWZuZGVmIF9fSU5DTFVERV9EVF9CSU5ESU5HU19ESVNQTEFZX0lOR0VOSUNfRFJNX0hfXwo+
+ID4gKyNkZWZpbmUgX19JTkNMVURFX0RUX0JJTkRJTkdTX0RJU1BMQVlfSU5HRU5JQ19EUk1fSF9f
+Cj4gPiArCj4gPiArI2RlZmluZSBKWl9MQ0RfR0VORVJJQ18xNkJJVCAgICAgICAgICAgICAgICAg
+ICAwCj4gPiArI2RlZmluZSBKWl9MQ0RfR0VORVJJQ18xOEJJVCAgICAgICAgICAgICAgICAgICAx
+Ngo+Cj4gV2UgaGF2ZSBzb21lIGdlbmVyaWMgcHJvcGVydGllcyBmb3IgZGVmaW5pbmcgdGhlIGJ1
+cyB3aWR0aCBhbHJlYWR5Lgo+IFBsdXMsIGluIG1hbnkgY2FzZXMgdGhpcyBjYW4gYmUgaW1wbGll
+ZCBieSB0aGUgcGFuZWwgY29tcGF0aWJsZS4gVGhlCj4gZXhjZXB0aW9ucyBhcmUgY2FzZXMgc3Vj
+aCBhcyB3aGVuIGJvdGggdGhlIGN0cmxyIGFuZCBwYW5lbCBzdXBwb3J0Cj4gbXVsdGlwbGUgbW9k
+ZXMuCj4KCkluIHRoZSBzYW1lIGRpcmVjdGlvbiBhcyBSb2IncyBjb21tZW50LCBJJ2QgbGlrZSB0
+byBzZWUgdGhlc2UgZGVjb3VwbGVkCmZyb20gdGhlIHJlZ2lzdGVyIHZhbHVlLgoKSWRlYWxseSwg
+d2UnZCBsaWtlIHRvIHJldXNlIHRoaXMgZHJpdmVyIGFuZCBpdHMgYmluZGluZ3MgZm9yIEpaNDc4
+MCwKYW5kIHRoZXNlIHZhbHVlcyBhcmUgYWxyZWFkeSBkaWZmZXJlbnQuCgpUaGFua3MhCi0tIApF
+emVxdWllbCBHYXJjw61hLCBWYW5ndWFyZGlhU3VyCnd3dy52YW5ndWFyZGlhc3VyLmNvbS5hcgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
