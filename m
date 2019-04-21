@@ -1,163 +1,515 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx: Add mclk0 clock for SAI
-Date: Sun, 21 Apr 2019 01:20:57 -0700
-Message-ID: <20190421082038.GA8304@Asurada>
-References: <20190420091239.3793-1-daniel.baluta@nxp.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v4] arm64: dts: hi3660: Add CoreSight support
+Date: Sun, 21 Apr 2019 20:46:06 +0800
+Message-ID: <20190421124606.GA12134@leoy-ThinkPad-X240s>
+References: <1555768835-68555-1-git-send-email-shiwanglai@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190420091239.3793-1-daniel.baluta@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>
+In-Reply-To: <1555768835-68555-1-git-send-email-shiwanglai@hisilicon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wanglai Shi <shiwanglai@hisilicon.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, suzuki.poulose@arm.com, suzhuangluan@hisilicon.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 09:12:52AM +0000, Daniel Baluta wrote:
-> From: Shengjiu Wang <shengjiu.wang@nxp.com>
+On Sat, Apr 20, 2019 at 10:00:35PM +0800, Wanglai Shi wrote:
+> This patch adds DT bindings for the CoreSight trace components
+> on hi3660, which is used by 96boards Hikey960.
 > 
-> SAI has 4 clock sources, which can be selected using MSEL
-> bit of SAI TCR2 register.
+> Signed-off-by: Wanglai Shi <shiwanglai@hisilicon.com>
 
-I have a doubt at this statement. As far as I can understand,
-this MSEL is probably used by its internal clock MUX, so it's
-not really proving that SAI has 4 MCLK inputs. What I know is
-that SAI block itself only has 3 MCLK inputs as we defined in
-DT. It's just internally connects bus clock or MCLK1 to input0
-of clock MUX's and connects MCLK[1-3] to input[1-3]. So adding
-an MCLK0 here doesn't sound a right way to me. Unless someone
-can justify for it, I think we should just fix it from driver
-side.
+Reviewed this patch and tested on my Hikey960 board, FWIW:
 
-Thanks
-Nicolin
+Reviewed-and-tested-by: Leo Yan <leo.yan@linaro.org>
 
-> 
-> On imx6/7 mclk0 and mclk1 always point to the same clock
-> source. Anyhow, this is no longer true for imx8.
-> 
-> For this reason, we need to add mclk0 and handle it
-> in a generic way in SAI driver.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 > ---
->  arch/arm/boot/dts/imx6sx.dtsi | 6 ++++--
->  arch/arm/boot/dts/imx6ul.dtsi | 9 ++++++---
->  arch/arm/boot/dts/imx7s.dtsi  | 9 ++++++---
->  3 files changed, 16 insertions(+), 8 deletions(-)
+>  .../arm64/boot/dts/hisilicon/hi3660-coresight.dtsi | 456 +++++++++++++++++++++
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   2 +
+>  2 files changed, 458 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
 > 
-> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-> index b16a123990a2..682207b5d868 100644
-> --- a/arch/arm/boot/dts/imx6sx.dtsi
-> +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> @@ -1071,9 +1071,10 @@
->  				reg = <0x021d4000 0x4000>;
->  				interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&clks IMX6SX_CLK_SAI1_IPG>,
-> +					 <&clks IMX6SX_CLK_SAI1>,
->  					 <&clks IMX6SX_CLK_SAI1>,
->  					 <&clks 0>, <&clks 0>;
-> -				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +				clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  				dma-names = "rx", "tx";
->  				dmas = <&sdma 31 24 0>, <&sdma 32 24 0>;
->  				status = "disabled";
-> @@ -1090,9 +1091,10 @@
->  				reg = <0x021dc000 0x4000>;
->  				interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&clks IMX6SX_CLK_SAI2_IPG>,
-> +					 <&clks IMX6SX_CLK_SAI2>,
->  					 <&clks IMX6SX_CLK_SAI2>,
->  					 <&clks 0>, <&clks 0>;
-> -				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +				clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  				dma-names = "rx", "tx";
->  				dmas = <&sdma 33 24 0>, <&sdma 34 24 0>;
->  				status = "disabled";
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index bbf010c73336..e9691306f557 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -304,9 +304,10 @@
->  					reg = <0x02028000 0x4000>;
->  					interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->  					clocks = <&clks IMX6UL_CLK_SAI1_IPG>,
-> +						 <&clks IMX6UL_CLK_SAI1>,
->  						 <&clks IMX6UL_CLK_SAI1>,
->  						 <&clks IMX6UL_CLK_DUMMY>, <&clks IMX6UL_CLK_DUMMY>;
-> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  					dmas = <&sdma 35 24 0>,
->  					       <&sdma 36 24 0>;
->  					dma-names = "rx", "tx";
-> @@ -319,9 +320,10 @@
->  					reg = <0x0202c000 0x4000>;
->  					interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
->  					clocks = <&clks IMX6UL_CLK_SAI2_IPG>,
-> +						 <&clks IMX6UL_CLK_SAI2>,
->  						 <&clks IMX6UL_CLK_SAI2>,
->  						 <&clks IMX6UL_CLK_DUMMY>, <&clks IMX6UL_CLK_DUMMY>;
-> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  					dmas = <&sdma 37 24 0>,
->  					       <&sdma 38 24 0>;
->  					dma-names = "rx", "tx";
-> @@ -334,9 +336,10 @@
->  					reg = <0x02030000 0x4000>;
->  					interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
->  					clocks = <&clks IMX6UL_CLK_SAI3_IPG>,
-> +						 <&clks IMX6UL_CLK_SAI3>,
->  						 <&clks IMX6UL_CLK_SAI3>,
->  						 <&clks IMX6UL_CLK_DUMMY>, <&clks IMX6UL_CLK_DUMMY>;
-> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  					dmas = <&sdma 39 24 0>,
->  					       <&sdma 40 24 0>;
->  					dma-names = "rx", "tx";
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 0b01109ac0a9..693b88e37799 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -884,10 +884,11 @@
->  					reg = <0x308a0000 0x10000>;
->  					interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
->  					clocks = <&clks IMX7D_SAI1_IPG_CLK>,
-> +						 <&clks IMX7D_SAI1_ROOT_CLK>,
->  						 <&clks IMX7D_SAI1_ROOT_CLK>,
->  						 <&clks IMX7D_CLK_DUMMY>,
->  						 <&clks IMX7D_CLK_DUMMY>;
-> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  					dma-names = "rx", "tx";
->  					dmas = <&sdma 8 24 0>, <&sdma 9 24 0>;
->  					status = "disabled";
-> @@ -899,10 +900,11 @@
->  					reg = <0x308b0000 0x10000>;
->  					interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
->  					clocks = <&clks IMX7D_SAI2_IPG_CLK>,
-> +						 <&clks IMX7D_SAI2_ROOT_CLK>,
->  						 <&clks IMX7D_SAI2_ROOT_CLK>,
->  						 <&clks IMX7D_CLK_DUMMY>,
->  						 <&clks IMX7D_CLK_DUMMY>;
-> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  					dma-names = "rx", "tx";
->  					dmas = <&sdma 10 24 0>, <&sdma 11 24 0>;
->  					status = "disabled";
-> @@ -914,10 +916,11 @@
->  					reg = <0x308c0000 0x10000>;
->  					interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
->  					clocks = <&clks IMX7D_SAI3_IPG_CLK>,
-> +						 <&clks IMX7D_SAI3_ROOT_CLK>,
->  						 <&clks IMX7D_SAI3_ROOT_CLK>,
->  						 <&clks IMX7D_CLK_DUMMY>,
->  						 <&clks IMX7D_CLK_DUMMY>;
-> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
->  					dma-names = "rx", "tx";
->  					dmas = <&sdma 12 24 0>, <&sdma 13 24 0>;
->  					status = "disabled";
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+> new file mode 100644
+> index 0000000..d607f2f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
+> @@ -0,0 +1,456 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * dtsi for Hisilicon Hi3660 Coresight
+> + *
+> + * Copyright (C) 2016-2018 Hisilicon Ltd.
+> + *
+> + * Author: Wanglai Shi <shiwanglai@hisilicon.com>
+> + *
+> + */
+> +/ {
+> +	soc {
+> +		/* A53 cluster internals */
+> +		etm@ecc40000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xecc40000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu0>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm0_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_funnel_in0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@ecd40000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xecd40000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu1>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm1_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_funnel_in1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@ece40000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xece40000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu2>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm2_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_funnel_in2>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@ecf40000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xecf40000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu3>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm3_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_funnel_in3>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		funnel@ec801000 {
+> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> +			reg = <0 0xec801000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			out-ports {
+> +				port {
+> +					cluster0_funnel_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_etf_in>;
+> +					};
+> +				};
+> +			};
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					cluster0_funnel_in0: endpoint {
+> +						remote-endpoint = <&etm0_out>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					cluster0_funnel_in1: endpoint {
+> +						remote-endpoint = <&etm1_out>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					cluster0_funnel_in2: endpoint {
+> +						remote-endpoint = <&etm2_out>;
+> +					};
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					cluster0_funnel_in3: endpoint {
+> +						remote-endpoint = <&etm3_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etf@ec802000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0xec802000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					cluster0_etf_in: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_funnel_out>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				port {
+> +					cluster0_etf_out: endpoint {
+> +						remote-endpoint =
+> +							<&combo_funnel_in0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		/* A73 cluster internals */
+> +		etm@ed440000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xed440000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu4>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm4_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_funnel_in0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@ed540000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xed540000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu5>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm5_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_funnel_in1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@ed640000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xed640000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu6>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm6_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_funnel_in2>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@ed740000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0xed740000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu7>;
+> +
+> +			out-ports {
+> +				port {
+> +					etm7_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_funnel_in3>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		funnel@ed001000 {
+> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> +			reg = <0 0xed001000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +			out-ports {
+> +				port {
+> +					cluster1_funnel_out: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_etf_in>;
+> +					};
+> +				};
+> +			};
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					cluster1_funnel_in0: endpoint {
+> +						remote-endpoint = <&etm4_out>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					cluster1_funnel_in1: endpoint {
+> +						remote-endpoint = <&etm5_out>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					cluster1_funnel_in2: endpoint {
+> +						remote-endpoint = <&etm6_out>;
+> +					};
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					cluster1_funnel_in3: endpoint {
+> +						remote-endpoint = <&etm7_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etf@ed002000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0xed002000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					cluster1_etf_in: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_funnel_out>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				port {
+> +					cluster1_etf_out: endpoint {
+> +						remote-endpoint =
+> +							<&combo_funnel_in1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		/* An invisible combo funnel between clusters and top funnel */
+> +		funnel {
+> +			compatible = "arm,coresight-static-funnel";
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			out-ports {
+> +				port {
+> +					combo_funnel_out: endpoint {
+> +						remote-endpoint =
+> +							<&top_funnel_in>;
+> +					};
+> +				};
+> +			};
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					combo_funnel_in0: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_etf_out>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					combo_funnel_in1: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_etf_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		/* Top internals */
+> +		funnel@ec031000 {
+> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> +			reg = <0 0xec031000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			out-ports {
+> +				port {
+> +					top_funnel_out: endpoint {
+> +						remote-endpoint =
+> +							<&top_etf_in>;
+> +					};
+> +				};
+> +			};
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					top_funnel_in: endpoint {
+> +						remote-endpoint =
+> +							<&combo_funnel_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etf@ec036000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0xec036000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					top_etf_in: endpoint {
+> +						remote-endpoint =
+> +							<&top_funnel_out>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				port {
+> +					top_etf_out: endpoint {
+> +						remote-endpoint =
+> +							<&replicator_in>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		replicator {
+> +			compatible = "arm,coresight-static-replicator";
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					replicator_in: endpoint {
+> +						remote-endpoint =
+> +							<&top_etf_out>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					replicator0_out0: endpoint {
+> +						remote-endpoint = <&etr_in>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					replicator0_out1: endpoint {
+> +						remote-endpoint = <&tpiu_in>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etr@ec033000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0xec033000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					etr_in: endpoint {
+> +						remote-endpoint =
+> +							<&replicator0_out0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		tpiu@ec032000 {
+> +			compatible = "arm,coresight-tpiu", "arm,primecell";
+> +			reg = <0 0xec032000 0 0x1000>;
+> +			clocks = <&crg_ctrl HI3660_PCLK>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					tpiu_in: endpoint {
+> +						remote-endpoint =
+> +							<&replicator0_out1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index a4a3d08..8f2fede 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -1246,3 +1246,5 @@
+>  		};
+>  	};
+>  };
+> +
+> +#include "hi3660-coresight.dtsi"
 > -- 
-> 2.17.1
+> 2.7.4
 > 
