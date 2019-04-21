@@ -1,39 +1,37 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining
- down after PHY disconnect
-Date: Sun, 21 Apr 2019 15:59:41 +0800
-Message-ID: <20190421075939.GE19962@dragon>
-References: <20190411232315.19588-1-olteanv@gmail.com>
- <20190411232315.19588-2-olteanv@gmail.com>
+Subject: Re: [PATCH V5 1/3] dt-bindings: arm: fsl: Add devicetree binding for
+ M53 Menlo board.
+Date: Sun, 21 Apr 2019 16:02:51 +0800
+Message-ID: <20190421080248.GF19962@dragon>
+References: <20190412104953.9454-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190411232315.19588-2-olteanv@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: leoyang.li@nxp.com, claudiu.manoil@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net
+In-Reply-To: <20190412104953.9454-1-marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 02:23:15AM +0300, Vladimir Oltean wrote:
-> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-> are pointing towards the same internal PCS. Therefore nobody is
-> controlling the internal PCS of eTSEC0.
+On Fri, Apr 12, 2019 at 12:49:51PM +0200, Marek Vasut wrote:
+> Add devicetree binding for iMX53 SoC based M53 Menlo board.
 > 
-> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-> initialization. But upon an ifdown/ifup sequence, the code path from
-> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-> failure condition, the PHY driver keeps printing
-> '803x_aneg_done: SGMII link is not ok'.
-> 
-> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: devicetree@vger.kernel.org
+> To: linux-arm-kernel@lists.infradead.org
 
-To get it land as fix a bit easier, I squashed both patches into one
-(with a little edit on commit log), and applied it.
-
-Shawn
+Applied all, thanks.
