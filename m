@@ -1,57 +1,88 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v2 1/3] ARM: dts: armada-38x: add interrupts for watchdog
-Date: Sun, 21 Apr 2019 19:24:35 +0200
-Message-ID: <874l6r8e5o.fsf@FE-laptop>
-References: <20190305201924.14853-1-chris.packham@alliedtelesis.co.nz> <20190305201924.14853-2-chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH] arm64: dts: clearfog-gt-8k: add wlan_disable signal hog
+Date: Sun, 21 Apr 2019 19:25:06 +0200
+Message-ID: <871s1v8e4t.fsf@FE-laptop>
+References: <936a9930fee3f285ee5538205181ca2ef1f5cbe5.1551163571.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190305201924.14853-2-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jason@lakedaemon.net, andrew@lunn.ch, linux@roeck-us.net
-Cc: linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <936a9930fee3f285ee5538205181ca2ef1f5cbe5.1551163571.git.baruch@tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Thomas Schreiber <tschreibe@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Hi Baruch,
 
-> The first interrupt is for the regular watchdog timeout. Normally the
-> RSTOUT line will trigger a reset before this interrupt fires but on
-> systems with a non-standard reset it may still trigger.
+> From: Thomas Schreiber <tschreibe@gmail.com>
 >
-> The second interrupt is for a timer1 which is used as a pre-timeout for
-> the watchdog.
+> There is currently no DT binding for GPIO rfkill signals. To make
+> mini-PCIe attached WiFi devices work, use gpio-hog to hold the
+> wlan_disable signal de-asserted.
 >
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> Changes in v2:
-> - new, split out from "watchdog: orion_wdt: use timer1 as a pretimeout"
->
->  arch/arm/boot/dts/armada-38x.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->
+> Signed-off-by: Thomas Schreiber <tschreibe@gmail.com>
+> [baruch: add pinctrl node; rename tag]
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 
-Applied on mvebu/dt
+Applied on mvebu/dt64
 
 Thanks,
 
 Gregory
 
-
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 929459c42760..fc550c640ca8 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -376,6 +376,8 @@
->  				reg = <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
->  				clocks = <&coreclk 2>, <&refclk>;
->  				clock-names = "nbclk", "fixed";
-> +				interrupts-extended = <&gic GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-> +						      <&gic GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>;
->  			};
+> ---
+>  .../boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+> index 2468762283a5..9143aa13ceb1 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+> @@ -226,6 +226,11 @@
+>  		marvell,function = "gpio";
+>  	};
 >  
->  			cpurst: cpurst@20800 {
+> +	cp0_wlan_disable_pins: wlan-disable-pins {
+> +		marvell,pins = "mpp51";
+> +		marvell,function = "gpio";
+> +	};
+> +
+>  	cp0_sdhci_pins: sdhci-pins {
+>  		marvell,pins = "mpp55", "mpp56", "mpp57", "mpp58", "mpp59",
+>  			       "mpp60", "mpp61";
+> @@ -235,7 +240,7 @@
+>  
+>  &cp0_pcie0 {
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&cp0_pci0_reset_pins>;
+> +	pinctrl-0 = <&cp0_pci0_reset_pins &cp0_wlan_disable_pins>;
+>  	reset-gpios = <&cp0_gpio2 0 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+>  };
+> @@ -253,6 +258,12 @@
+>  		output-low;
+>  	};
+>  
+> +	wlan_disable {
+> +		gpio-hog;
+> +		gpios = <19 GPIO_ACTIVE_LOW>;
+> +		output-low;
+> +	};
+> +
+>  	lte_disable {
+>  		gpio-hog;
+>  		gpios = <21 GPIO_ACTIVE_LOW>;
 > -- 
-> 2.21.0
+> 2.20.1
 >
 
 -- 
