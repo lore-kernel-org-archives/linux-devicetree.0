@@ -1,82 +1,183 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 5/6] dt-bindings: display: sii902x: Add HDMI audio
- bindings
-Date: Sun, 21 Apr 2019 02:12:03 +0300
-Message-ID: <20190420231203.GC4964@pendragon.ideasonboard.com>
-References: <cover.1552562385.git.jsarha@ti.com>
- <da7c2a4f469a81d8cdc5c04ab245529a094dbfd3.1552562385.git.jsarha@ti.com>
- <20190317161609.GD17898@pendragon.ideasonboard.com>
- <70d217c1-801f-dd4e-a37e-4d4a8550293f@ti.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal
+ zone node
+Date: Sun, 21 Apr 2019 14:45:19 +0800
+Message-ID: <20190421064517.GA19962@dragon>
+References: <20190411083236.9377-1-andy.tang@nxp.com>
+ <915c86d8-d00e-f1e1-e7f5-24bc225c8e42@linaro.org>
+ <AM6PR04MB4326561F037194D84CEB011AF3280@AM6PR04MB4326.eurprd04.prod.outlook.com>
+ <6be740a0-aaa7-6b49-ba82-8d04d47b2339@linaro.org>
+ <VI1PR04MB4333D0D121B60E2CDCE820BEF3260@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <70d217c1-801f-dd4e-a37e-4d4a8550293f@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: fabrizio.castro@bp.renesas.com, devicetree@vger.kernel.org, architt@codeaurora.org, Songjun.Wu@atmel.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, voice.shen@atmel.com
+In-Reply-To: <VI1PR04MB4333D0D121B60E2CDCE820BEF3260@VI1PR04MB4333.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Tang <andy.tang@nxp.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnlyaSwKCk9uIFR1ZSwgTWFyIDE5LCAyMDE5IGF0IDA0OjM4OjQ1UE0gKzAyMDAsIEp5cmkg
-U2FyaGEgd3JvdGU6Cj4gT24gMTcvMDMvMjAxOSAxODoxNiwgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToKPiA+IE9uIFRodSwgTWFyIDE0LCAyMDE5IGF0IDAxOjI3OjUxUE0gKzAyMDAsIEp5cmkgU2Fy
-aGEgd3JvdGU6Cj4gPj4gVGhlIHNpaTkwMnggY2hpcCBmYW1pbHkgc3VwcG9ydHMgYWxzbyBIRE1J
-IGF1ZGlvLiBBZGQgYmluZGluZyBmb3IKPiA+PiBkZXNjcmliaW5nIHRoZSBuZWNlc3NhcnkgaTJz
-IGFuZCBtY2xrIHdpcmluZyBmb3IgaXQuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNh
-cmhhIDxqc2FyaGFAdGkuY29tPgo+ID4+IC0tLQo+ID4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2Uvc2lpOTAyeC50eHQgICAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrCj4gPj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkw
-MngudHh0Cj4gPj4gaW5kZXggYzRjMTg1NWNhNjU0Li4xYTM3YmJlN2M1OTcgMTAwNjQ0Cj4gPj4g
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Np
-aTkwMngudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3NpaTkwMngudHh0Cj4gPj4gQEAgLTksNiArOSwzMyBAQCBPcHRpb25hbCBw
-cm9wZXJ0aWVzOgo+ID4+ICAJICBhYm91dCBob3RwbHVnIGV2ZW50cy4KPiA+PiAgCS0gcmVzZXQt
-Z3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+
-ID4+ICAKPiA+PiArCUhETUkgYXVkaW8gcHJvcGVydGllczoKPiA+PiArCS0gaTJzLWRhdGEtbGFu
-ZXM6IEFycmF5IG9mIHVwIHRvIDQgaW50ZWdlcnMgd2l0aCB2YWx1ZXMgb2YgMC0zCj4gPj4gKwkg
-ICBFYWNoIGludGVnZXIgaW5kaWNhdGVzIHdoaWNoIGkycyBwaW4gaXMgY29ubmVjdGVkIHRvIHdo
-aWNoCj4gPj4gKwkgICBhdWRpbyBmaWZvLiBUaGUgZmlyc3QgaW50ZWdlciBzZWxlY3RzIGkycyBh
-dWRpbyBwaW4gZm9yIHRoZQo+ID4+ICsJICAgZmlyc3QgYXVkaW8gZmlmbyMwIChIRE1JIGNoYW5u
-ZWxzIDEmMiksIHNlY29uZCBmb3IgZmlmbyMxCj4gPj4gKwkgICAoSERNSSBjaGFubmVscyAzJjQp
-LCBhbmQgc28gb24uIFRoZXJlIGlzIDQgZmlmb3MgYW5kIDQgaTJzCj4gPj4gKwkgICBwaW5zIChT
-RDAgLSBTRDMpLiBBbnkgaTJzIHBpbiBjYW4gYmUgY29ubmVjdGVkIHRvIGFueSBmaWZvLAo+ID4+
-ICsJICAgYnV0IHRoZXJlIGNhbiBiZSBubyBnYXBzLiBFLmcuIGFuIGkycyBwaW4gbXVzdCBiZSBt
-YXBwZWQgdG8KPiA+PiArCSAgIGZpZm8jMCBhbmQgZmlmbyMxIGJlZm9yZSBtYXBwaW5nIGEgY2hh
-bm5lbCB0byBmaWZvIzIuCj4gPj4gKwkgICBJMlMgSERNSSBhdWRpbyBpcyBjb25maWd1cmVkIG9u
-bHkgaWYgdGhpcyBwcm9wZXJ0eSBpcyBmb3VuZC4KPiA+IAo+ID4gVGhpcyBsb29rcyBnb29kIHRv
-IG1lLCBidXQgc2hvdWxkbid0IHRoZSBwcm9wZXJ0eSBiZSBkZWZpbmVkIHNvbWV3aGVyZQo+ID4g
-aW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kLyA/IFRoZSBzb3VuZCBi
-aW5kaW5ncyBzZWVtIHRvCj4gPiBiZSBhIGJpdCBtZXNzeSB0aG91Z2gsIHdpdGggbGl0dGxlIGNv
-bW1vbiBvciBoaWdoLWxldmVsIGRvY3VtZW50YXRpb24sCj4gPiBzbyBJIGRvbid0IHdhbnQgdG8g
-YXNrIHlvdSB0byBmaXggYWxsIHRoYXQgOi0pIE1heWJlIGp1c3QgYWRkaW5nIGEKPiA+IGNvbW1v
-bi1pMnMudHh0IGZpbGUgdGhlcmUgd291bGQgYmUgZW5vdWdoID8gCj4gPiAKPiA+IEFwYXJ0IGZy
-b20gdGhpcyB0aGUgcmVzdCBsb29rcyBnb29kIHRvIG1lLCBidXQgSSdkIGFwcHJlY2lhdGUgaWYg
-aXQKPiA+IGNvdWxkIGJlIHJldmlld2VkIGJ5IGF1ZGlvIHBlb3BsZS4KPiA+IAo+IFdoZW4gSSB0
-aGluayBhYm91dCB0aGlzIHByb3BlcnR5LCBpdCBoYXJkbHkgaXMgYSBnZW5lcmljIGVub3VnaCB0
-byBmb3IKPiBhbGwgaTJzIGRldmljZXMgb3IgZXZlbiBjb2RlY3MuIFRoYXQgd291bGQgcHJvYmFi
-bHkgcmVxdWlyZSBnYXBzIGluIHRoZQo+IGkycy1kYXRhLWxhbmUgb3JkZXIuCgpXZSBjYW4gc3Rh
-cnQgYnkgZG9jdW1lbnRpbmcgaXQgd2l0aG91dCBnYXBzIGFsbG93ZWQsIGFuZCB0aGVuIGFsbG93
-IGdhcHMKaWYgbmVlZGVkLCBsZWF2aW5nIHRoZSBzdXBwb3J0IG9mIGdhcHMgZGVmaW5lZCBpbiBk
-ZXZpY2UgYmluZGluZ3MuCgo+IEkgd291bGQgbm90IHdhbnQgdG8gY3JlYXRlIGNvbW1vbi1pMnMu
-dHh0IGp1c3QgZm9yIHRoaXMgcHJvcGVydHkuIFRoZQo+IGlzIHNvbWUgbWFueSBvdGhlciBwcm9w
-ZXJ0aWVzIHRoYXQgc2hvdWxkIGJlIGFkZGVkIHRoZXJlIGZpcnN0LiBNYXliZQo+IHRoaXMgc2hv
-dWxkIGJlIG1hZGUgdmVuZG9yIHNwZWNpZmljIHByb3BlcnR5IGFmdGVyIGFsbC4KCllvdSBkb24n
-dCBuZWVkIHRvIHBvcHVsYXRlIGNvbW1vbi1pMnMudHh0IHdpdGggYWxsIEkyUyBwcm9wZXJ0aWVz
-LgpDcmVhdGluZyB0aGUgZmlsZSBmb3IgaTJzLWRhdGEtbGFuZXMgd291bGQgYmUgYSBuaWNlIGZp
-cnN0IHN0ZXAsIHlvdSBjYW4KdGhlbiBsZXQgb3RoZXIgYXVkaW8gZGV2ZWxvcGVycyB0YWtlIG92
-ZXIgOi0pCgo+IEkgdGhpbmsgSSBtYWtlIGEgcmVzZW5kIHdpdGggYWxzYS1kZXZlbCBpbmNsdWRl
-ZC4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydApfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Thu, Apr 18, 2019 at 03:28:56AM +0000, Andy Tang wrote:
+> 
+> > -----Original Message-----
+> > From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Sent: 2019年4月12日 20:19
+> > To: Andy Tang <andy.tang@nxp.com>; shawnguo@kernel.org
+> > Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org; rui.zhang@intel.com;
+> > edubezval@gmail.com
+> > Subject: Re: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal
+> > zone node
+> > 
+> > WARNING: This email was created outside of NXP. DO NOT CLICK links or
+> > attachments unless you recognize the sender and know the content is safe.
+> > 
+> > 
+> > 
+> > On 12/04/2019 09:47, Andy Tang wrote:
+> > >
+> > >> -----Original Message-----
+> > >> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > >> Sent: 2019年4月12日 3:15
+> > >> To: Andy Tang <andy.tang@nxp.com>; shawnguo@kernel.org
+> > >> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> > >> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >> linux-pm@vger.kernel.org; rui.zhang@intel.com; edubezval@gmail.com
+> > >> Subject: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more
+> > >> thermal zone node
+> > >>
+> > >> WARNING: This email was created outside of NXP. DO NOT CLICK links or
+> > >> attachments unless you recognize the sender and know the content is safe.
+> > >>
+> > >>
+> > >>
+> > >> On 11/04/2019 10:32, Yuantian Tang wrote:
+> > >>> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
+> > >>> cluster sensor is used to monitor the temperature of core and SoC
+> > >>> platform is for platform. The current dts only support the first sensor.
+> > >>> This patch adds the second sensor node to dts to enable it.
+> > >>>
+> > >>> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > >>> ---
+> > >>> v5:
+> > >>>       - update the thermal zone name due to the length limitation
+> > >>>       - remove cooling map in platform zone
+> > >>> v4:
+> > >>>       - use hyphen instead of underscore in node name
+> > >>> v3:
+> > >>>       - use more descriptive name for each zone
+> > >>> v2:
+> > >>>       - Add more information about sensors to description
+> > >>>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   28
+> > >> ++++++++++++++++++++---
+> > >>>  1 files changed, 24 insertions(+), 4 deletions(-)
+> > >>>
+> > >>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> index de93b42..de39672 100644
+> > >>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> @@ -129,19 +129,19 @@
+> > >>>       };
+> > >>>
+> > >>>       thermal-zones {
+> > >>> -             cpu_thermal: cpu-thermal {
+> > >>> +             core-cluster {
+> > >>>                       polling-delay-passive = <1000>;
+> > >>>                       polling-delay = <5000>;
+> > >>>                       thermal-sensors = <&tmu 0>;
+> > >>>
+> > >>>                       trips {
+> > >>> -                             cpu_alert: cpu-alert {
+> > >>> +                             core_cluster_alert: core-cluster-alert
+> > >>> + {
+> > >>>                                       temperature = <85000>;
+> > >>>                                       hysteresis = <2000>;
+> > >>>                                       type = "passive";
+> > >>>                               };
+> > >>>
+> > >>> -                             cpu_crit: cpu-crit {
+> > >>> +                             core_cluster_crit: core-cluster-crit {
+> > >>>                                       temperature = <95000>;
+> > >>>                                       hysteresis = <2000>;
+> > >>>                                       type = "critical"; @@ -150,7
+> > >>> +150,7 @@
+> > >>>
+> > >>>                       cooling-maps {
+> > >>>                               map0 {
+> > >>> -                                     trip = <&cpu_alert>;
+> > >>> +                                     trip = <&core_cluster_alert>;
+> > >>>                                       cooling-device =
+> > >>>                                               <&cpu0
+> > >> THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > >>>                                               <&cpu1
+> > >> THERMAL_NO_LIMIT
+> > >>> THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
+> > >>>                               };
+> > >>>                       };
+> > >>>               };
+> > >>> +
+> > >>> +             platform {
+> > >>> +                     polling-delay-passive = <1000>;
+> > >>> +                     polling-delay = <5000>;
+> > >>> +                     thermal-sensors = <&tmu 1>;
+> > >>> +
+> > >>> +                     trips {
+> > >>> +                             platform-alert {
+> > >>> +                                     temperature = <85000>;
+> > >>> +                                     hysteresis = <2000>;
+> > >>> +                                     type = "passive";
+> > >>> +                             };
+> > >>> +
+> > >>> +                             platform-crit {
+> > >>> +                                     temperature = <95000>;
+> > >>> +                                     hysteresis = <2000>;
+> > >>> +                                     type = "critical";
+> > >>> +                             };
+> > >>> +                     };
+> > >>> +             };
+> > >>
+> > >>
+> > >> Unfortunately, the documentation says the thermal zone node must
+> > >> contain a "cooling-maps" entry.
+> > > That's a question.
+> > > If I add "cooling-maps", then multiple zones will use same cooling device.
+> > > If I don't, documentation says it is a " Required properties".
+> > > I am wondering how it was dealt with on other platform supporting multiple
+> > zones.
+> > 
+> > I think the problem comes from the fact there are no governors capable of
+> > handling multiple thermal zones.
+> > 
+> > The additional cooling device is the devfreq but as the mali driver is not
+> > upstream, the cooling map for this device does not appear. We can find the
+> > definitions and the driver in the AOSP [1].
+> > 
+> > Moreover, the power is usually managed by the IPA governor, but this one can
+> > not handle multiple thermal zones, so the cooling devices are joined together
+> > into a single thermal zone with their contribution to the cooling effect.
+> > 
+> > Other definitions I have seen upstream are incomplete or broken.
+> > 
+> > [1]
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fandroid.g
+> > ooglesource.com%2Fkernel%2Fhikey-linaro%2F%2B%2Frefs%2Fheads%2Fandr
+> > oid-hikey-linaro-4.14%2Farch%2Farm64%2Fboot%2Fdts%2Fhisilicon%2Fhi3660.
+> > dtsi%231340&amp;data=02%7C01%7Candy.tang%40nxp.com%7C559218b1622e
+> > 4603251908d6bf410e4b%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7
+> > C636906683466836985&amp;sdata=952xIcrr11g%2B0nl2lgKrG18SlRVgGV6L%2
+> > BMBL3U6UaiQ%3D&amp;reserved=0
+> Interesting. I think we have to accept the imperfect for now.
+> 
+> Hi Shawn,
+> Any comments?
+
+Sorry.  I'm not going to take a DTS change that contradicts with
+bindings.  If you think bindings is not reasonable, change the bindings
+first.
+
+Shawn
