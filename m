@@ -1,515 +1,83 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4] arm64: dts: hi3660: Add CoreSight support
-Date: Sun, 21 Apr 2019 20:46:06 +0800
-Message-ID: <20190421124606.GA12134@leoy-ThinkPad-X240s>
-References: <1555768835-68555-1-git-send-email-shiwanglai@hisilicon.com>
+From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
+Date: Sun, 21 Apr 2019 12:00:45 -0400
+Message-ID: <8865b046-fb3a-4071-335c-66abb344d7f4@gmail.com>
+References: <20190417210059.26262-1-papadakospan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1555768835-68555-1-git-send-email-shiwanglai@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wanglai Shi <shiwanglai@hisilicon.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, suzuki.poulose@arm.com, suzhuangluan@hisilicon.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190417210059.26262-1-papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 10:00:35PM +0800, Wanglai Shi wrote:
-> This patch adds DT bindings for the CoreSight trace components
-> on hi3660, which is used by 96boards Hikey960.
-> 
-> Signed-off-by: Wanglai Shi <shiwanglai@hisilicon.com>
+Thanks for sharing that thread, it's nice to finally have an answer to 
+why we have these issues.
+I've tested this on *my* Firefly rk3328-roc-cc, and while this patch 
+succeeds in preventing the tx lockup, iperf3 drops to a delightful 15mbps.
 
-Reviewed this patch and tested on my Hikey960 board, FWIW:
+It would seem we have significant differences between manufacturing runs 
+of the various boards.
+The auto adjustment feature that was discussed in that thread is 
+probably the only thing that will solve this for all boards.
+Until then I don't think we are going to get a solution that works for all.
 
-Reviewed-and-tested-by: Leo Yan <leo.yan@linaro.org>
-
+On Wed, Apr 17, 2019 at 5:01 PM Leonidas P. Papadakos 
+<papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> Some rockchip boards have issues with tx checksumming for packets
+> larger than 1498 B.
+>
+> An iperf test will tell you that transmissions stop almost immediately.
+>
+> A workaround to this issue is disabling TX checksumming offload,
+> and one of the ways to do that is snps,force_thresh_dma_mode.
+>
+> But after some discussion here it seems there is another path:
+> https://lkml.org/lkml/2019/4/5/148
+>
+> Setting txpbl is a better-performing (maybe temporary) solution
+> compared to disabling T offload.
+>
+> In my testing with a Libre Computer Renegade, this was the best
+> all-around option, and increasing the MTU doesn't cause a queue timeout anymore.
+>
+> Signed-off-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../arm64/boot/dts/hisilicon/hi3660-coresight.dtsi | 456 +++++++++++++++++++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   2 +
->  2 files changed, 458 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-> new file mode 100644
-> index 0000000..d607f2f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-> @@ -0,0 +1,456 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * dtsi for Hisilicon Hi3660 Coresight
-> + *
-> + * Copyright (C) 2016-2018 Hisilicon Ltd.
-> + *
-> + * Author: Wanglai Shi <shiwanglai@hisilicon.com>
-> + *
-> + */
-> +/ {
-> +	soc {
-> +		/* A53 cluster internals */
-> +		etm@ecc40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xecc40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu0>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm0_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ecd40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xecd40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu1>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm1_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ece40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xece40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu2>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm2_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ecf40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xecf40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu3>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm3_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@ec801000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0xec801000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					cluster0_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_etf_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					cluster0_funnel_in0: endpoint {
-> +						remote-endpoint = <&etm0_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					cluster0_funnel_in1: endpoint {
-> +						remote-endpoint = <&etm1_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					cluster0_funnel_in2: endpoint {
-> +						remote-endpoint = <&etm2_out>;
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					cluster0_funnel_in3: endpoint {
-> +						remote-endpoint = <&etm3_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@ec802000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xec802000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					cluster0_etf_in: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					cluster0_etf_out: endpoint {
-> +						remote-endpoint =
-> +							<&combo_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		/* A73 cluster internals */
-> +		etm@ed440000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed440000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu4>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm4_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ed540000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed540000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu5>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm5_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ed640000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed640000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu6>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm6_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ed740000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed740000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu7>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm7_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@ed001000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0xed001000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			out-ports {
-> +				port {
-> +					cluster1_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_etf_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					cluster1_funnel_in0: endpoint {
-> +						remote-endpoint = <&etm4_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					cluster1_funnel_in1: endpoint {
-> +						remote-endpoint = <&etm5_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					cluster1_funnel_in2: endpoint {
-> +						remote-endpoint = <&etm6_out>;
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					cluster1_funnel_in3: endpoint {
-> +						remote-endpoint = <&etm7_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@ed002000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xed002000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					cluster1_etf_in: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					cluster1_etf_out: endpoint {
-> +						remote-endpoint =
-> +							<&combo_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		/* An invisible combo funnel between clusters and top funnel */
-> +		funnel {
-> +			compatible = "arm,coresight-static-funnel";
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					combo_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&top_funnel_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					combo_funnel_in0: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_etf_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					combo_funnel_in1: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_etf_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		/* Top internals */
-> +		funnel@ec031000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +			reg = <0 0xec031000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					top_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&top_etf_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					top_funnel_in: endpoint {
-> +						remote-endpoint =
-> +							<&combo_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@ec036000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xec036000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					top_etf_in: endpoint {
-> +						remote-endpoint =
-> +							<&top_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					top_etf_out: endpoint {
-> +						remote-endpoint =
-> +							<&replicator_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		replicator {
-> +			compatible = "arm,coresight-static-replicator";
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					replicator_in: endpoint {
-> +						remote-endpoint =
-> +							<&top_etf_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					replicator0_out0: endpoint {
-> +						remote-endpoint = <&etr_in>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					replicator0_out1: endpoint {
-> +						remote-endpoint = <&tpiu_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etr@ec033000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xec033000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					etr_in: endpoint {
-> +						remote-endpoint =
-> +							<&replicator0_out0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tpiu@ec032000 {
-> +			compatible = "arm,coresight-tpiu", "arm,primecell";
-> +			reg = <0 0xec032000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					tpiu_in: endpoint {
-> +						remote-endpoint =
-> +							<&replicator0_out1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index a4a3d08..8f2fede 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -1246,3 +1246,5 @@
->  		};
->  	};
->  };
-> +
-> +#include "hi3660-coresight.dtsi"
-> -- 
-> 2.7.4
-> 
+>  arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> index 5d499c908..974f2dcdf 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+> @@ -141,10 +141,10 @@
+>         phy-mode = "rgmii";
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&rgmiim1_pins>;
+> -       snps,force_thresh_dma_mode;
+>         snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+>         snps,reset-active-low;
+>         snps,reset-delays-us = <0 10000 50000>;
+> +       snps,txpbl = <0x4>;
+>         tx_delay = <0x24>;
+>         rx_delay = <0x18>;
+>         status = "okay";
+> --
+> 2.21.0
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
