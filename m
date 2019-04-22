@@ -1,54 +1,320 @@
-From: andy.tang@nxp.com
-Subject: [PATCH 2/2] clk: qoriq: add more PLL divider clocks support
-Date: Mon, 22 Apr 2019 17:15:09 +0800
-Message-ID: <20190422091509.3181-2-andy.tang@nxp.com>
-References: <20190422091509.3181-1-andy.tang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422091509.3181-1-andy.tang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v3 2/2] iio: adc: Add driver for the TI ADS8344 A/DC chips
+Date: Mon, 22 Apr 2019 10:32:39 +0100
+Message-ID: <20190422103239.6f584054@archlinux>
+References: <20190412091537.14657-1-gregory.clement@bootlin.com>
+ <20190412091537.14657-3-gregory.clement@bootlin.com>
+ <20190414145152.3d5da272@archlinux>
+ <20190414145524.1fe459c6@archlinux> <87bm0z8ede.fsf@FE-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87bm0z8ede.fsf@FE-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+On Sun, 21 Apr 2019 19:19:57 +0200
+Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-More PLL divider clocks are needed by clock consumer IP. So enlarge
-the PLL divider array to accommodate more divider clocks.
+> Hi Jonathan,
+> 
+> > On Sun, 14 Apr 2019 14:51:52 +0100
+> > Jonathan Cameron <jic23@kernel.org> wrote:
+> >  
+> >> On Fri, 12 Apr 2019 11:15:37 +0200
+> >> Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
+> >>   
+> >> > This adds support for the Texas Instruments ADS8344 ADC chip. This chip
+> >> > has a 16-bit 8-Channel ADC and is access directly through SPI.
+> >> > 
+> >> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>    
+> >> Applied to the togreg branch of iio.git and pushed out as testing
+> >> for the autobuilders to play with it.  
+> > I spoke too soon. See below.
+> >
+> > Fixed up.  
+> 
+> Thanks, I don't know how I missed it...
+> 
+> Do you confirmed that, this series is OK for 5.2 and you don't expect
+> any more change from my side?
+Yes it's fine.
+> 
+> Gregory
+Jonathan
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
- drivers/clk/clk-qoriq.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 1212a9b..5e2b3ac 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -34,6 +34,7 @@
- #define CGA_PLL4	4	/* only on clockgen-1.0, which lacks CGB */
- #define CGB_PLL1	4
- #define CGB_PLL2	5
-+#define MAX_PLL_DIV	16
- 
- struct clockgen_pll_div {
- 	struct clk *clk;
-@@ -41,7 +42,7 @@ struct clockgen_pll_div {
- };
- 
- struct clockgen_pll {
--	struct clockgen_pll_div div[8];
-+	struct clockgen_pll_div div[MAX_PLL_DIV];
- };
- 
- #define CLKSEL_VALID	1
-@@ -1128,7 +1129,7 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
- 		int ret;
- 
- 		/*
--		 * For platform PLL, there are 8 divider clocks.
-+		 * For platform PLL, there are MAX_PLL_DIV divider clocks.
- 		 * For core PLL, there are 4 divider clocks at most.
- 		 */
- 		if (idx != PLATFORM_PLL && i >= 4)
--- 
-1.7.1
+> 
+> >
+> > Jonathan
+> >  
+> >> 
+> >> Thanks,
+> >> 
+> >> Jonathan
+> >>   
+> >> > ---
+> >> >  drivers/iio/adc/Kconfig      |  10 ++
+> >> >  drivers/iio/adc/Makefile     |   1 +
+> >> >  drivers/iio/adc/ti-ads8344.c | 204 +++++++++++++++++++++++++++++++++++
+> >> >  3 files changed, 215 insertions(+)
+> >> >  create mode 100644 drivers/iio/adc/ti-ads8344.c
+> >> > 
+> >> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> >> > index 76db6e5cc296..447d3a871746 100644
+> >> > --- a/drivers/iio/adc/Kconfig
+> >> > +++ b/drivers/iio/adc/Kconfig
+> >> > @@ -967,6 +967,16 @@ config TI_ADS7950
+> >> >  	  To compile this driver as a module, choose M here: the
+> >> >  	  module will be called ti-ads7950.
+> >> >  
+> >> > +config TI_ADS8344
+> >> > +	tristate "Texas Instruments ADS8344"
+> >> > +	depends on SPI && OF
+> >> > +	help
+> >> > +	  If you say yes here you get support for Texas Instruments ADS8344
+> >> > +	  ADC chips
+> >> > +
+> >> > +	  This driver can also be built as a module. If so, the module will be
+> >> > +	  called ti-ads8344.
+> >> > +
+> >> >  config TI_ADS8688
+> >> >  	tristate "Texas Instruments ADS8688"
+> >> >  	depends on SPI && OF
+> >> > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> >> > index 6fcebd167524..1f3ae934111d 100644
+> >> > --- a/drivers/iio/adc/Makefile
+> >> > +++ b/drivers/iio/adc/Makefile
+> >> > @@ -87,6 +87,7 @@ obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+> >> >  obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+> >> >  obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+> >> >  obj-$(CONFIG_TI_ADS7950) += ti-ads7950.o
+> >> > +obj-$(CONFIG_TI_ADS8344) += ti-ads8344.o
+> >> >  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+> >> >  obj-$(CONFIG_TI_ADS124S08) += ti-ads124s08.o
+> >> >  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
+> >> > diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+> >> > new file mode 100644
+> >> > index 000000000000..e1649e237edc
+> >> > --- /dev/null
+> >> > +++ b/drivers/iio/adc/ti-ads8344.c
+> >> > @@ -0,0 +1,204 @@
+> >> > +// SPDX-License-Identifier: GPL-2.0+
+> >> > +/*
+> >> > + * ADS8344 16-bit 8-Channel ADC driver
+> >> > + *
+> >> > + * Author: Gregory CLEMENT <gregory.clement@bootlin.com>
+> >> > + *
+> >> > + * Datasheet: http://www.ti.com/lit/ds/symlink/ads8344.pdf
+> >> > + */
+> >> > +
+> >> > +#include <linux/delay.h>
+> >> > +#include <linux/iio/buffer.h>
+> >> > +#include <linux/iio/iio.h>
+> >> > +#include <linux/module.h>
+> >> > +#include <linux/regulator/consumer.h>
+> >> > +#include <linux/spi/spi.h>
+> >> > +
+> >> > +#define ADS8344_START BIT(7)
+> >> > +#define ADS8344_SINGLE_END BIT(2)
+> >> > +#define ADS8344_CHANNEL(channel) ((channel) << 4)
+> >> > +#define ADS8344_CLOCK_INTERNAL 0x2 /* PD1 = 1 and PD0 = 0 */
+> >> > +
+> >> > +struct ads8344 {
+> >> > +	struct spi_device *spi;
+> >> > +	struct regulator *reg;
+> >> > +	/*
+> >> > +	 * Lock protecting access to adc->tx_buff and rx_buff,
+> >> > +	 * especially from concurrent read on sysfs file.
+> >> > +	 */
+> >> > +	struct mutex lock;
+> >> > +
+> >> > +	u8 tx_buf ____cacheline_aligned;
+> >> > +	u16 rx_buf;
+> >> > +};
+> >> > +
+> >> > +#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+> >> > +	{								\
+> >> > +		.type = IIO_VOLTAGE,					\
+> >> > +		.indexed = 1,						\
+> >> > +		.channel = chan,					\
+> >> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> >> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> >> > +	}
+> >> > +
+> >> > +#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
+> >> > +	{								\
+> >> > +		.type = IIO_VOLTAGE,					\
+> >> > +		.indexed = 1,						\
+> >> > +		.channel = (chan1),					\
+> >> > +		.channel2 = (chan2),					\
+> >> > +		.differential = 1,					\
+> >> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> >> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> >> > +	}
+> >> > +
+> >> > +static const struct iio_chan_spec ads8344_channels[] = {
+> >> > +	ADS8344_VOLTAGE_CHANNEL(0, 0),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(1, 4),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(2, 1),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(3, 5),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(4, 2),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(5, 6),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(6, 3),
+> >> > +	ADS8344_VOLTAGE_CHANNEL(7, 7),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(0, 1, 8),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(2, 3, 9),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(4, 5, 10),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(6, 7, 11),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(1, 0, 12),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(3, 2, 13),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(5, 4, 14),
+> >> > +	ADS8344_VOLTAGE_CHANNEL_DIFF(7, 6, 15),
+> >> > +};
+> >> > +
+> >> > +static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+> >> > +				  bool differential)
+> >> > +{
+> >> > +	struct spi_device *spi = adc->spi;
+> >> > +	int ret;
+> >> > +
+> >> > +	adc->tx_buf = ADS8344_START;
+> >> > +	if (!differential)
+> >> > +		adc->tx_buf |= ADS8344_SINGLE_END;
+> >> > +	adc->tx_buf |= ADS8344_CHANNEL(channel);
+> >> > +	adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
+> >> > +
+> >> > +	ret = spi_write(spi, &adc->tx_buf, 1);
+> >> > +	if (ret)
+> >> > +		return ret;
+> >> > +
+> >> > +	udelay(9);
+> >> > +
+> >> > +	ret = spi_read(spi, &adc->rx_buf, 2);
+> >> > +	if (ret)
+> >> > +		return ret;
+> >> > +
+> >> > +	return adc->rx_buf;
+> >> > +}
+> >> > +
+> >> > +static int ads8344_read_raw(struct iio_dev *iio,
+> >> > +			    struct iio_chan_spec const *channel, int *value,
+> >> > +			    int *shift, long mask)
+> >> > +{
+> >> > +	struct ads8344 *adc = iio_priv(iio);
+> >> > +
+> >> > +	switch (mask) {
+> >> > +	case IIO_CHAN_INFO_RAW:
+> >> > +		mutex_lock(&adc->lock);
+> >> > +		*value = ads8344_adc_conversion(adc, channel->scan_index,
+> >> > +						channel->differential);
+> >> > +		mutex_unlock(&adc->lock);
+> >> > +		if (*value < 0)
+> >> > +			return *value;
+> >> > +
+> >> > +		return IIO_VAL_INT;
+> >> > +	case IIO_CHAN_INFO_SCALE:
+> >> > +		*value = regulator_get_voltage(adc->reg);
+> >> > +		if (*value < 0)
+> >> > +			return *value;
+> >> > +
+> >> > +		/* convert regulator output voltage to mV */
+> >> > +		*value /= 1000;
+> >> > +		*shift = 16;
+> >> > +
+> >> > +		return IIO_VAL_FRACTIONAL_LOG2;
+> >> > +	default:
+> >> > +		return -EINVAL;
+> >> > +	}
+> >> > +}
+> >> > +
+> >> > +static const struct iio_info ads8344_info = {
+> >> > +	.read_raw = ads8344_read_raw,
+> >> > +};
+> >> > +
+> >> > +static int ads8344_probe(struct spi_device *spi)
+> >> > +{
+> >> > +	struct iio_dev *indio_dev;
+> >> > +	struct ads8344 *adc;
+> >> > +	int ret;
+> >> > +
+> >> > +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> >> > +	if (!indio_dev)
+> >> > +		return -ENOMEM;
+> >> > +
+> >> > +	adc = iio_priv(indio_dev);
+> >> > +	adc->spi = spi;
+> >> > +	mutex_init(&adc->lock);
+> >> > +
+> >> > +	indio_dev->name = dev_name(&spi->dev);
+> >> > +	indio_dev->dev.parent = &spi->dev;
+> >> > +	indio_dev->dev.of_node = spi->dev.of_node;
+> >> > +	indio_dev->info = &ads8344_info;
+> >> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> >> > +	indio_dev->channels = ads8344_channels;
+> >> > +	indio_dev->num_channels = ARRAY_SIZE(ads8344_channels);
+> >> > +
+> >> > +	adc->reg = devm_regulator_get(&spi->dev, "vref");
+> >> > +	if (IS_ERR(adc->reg))
+> >> > +		return PTR_ERR(adc->reg);
+> >> > +
+> >> > +	ret = regulator_enable(adc->reg);
+> >> > +	if (ret)
+> >> > +		return ret;
+> >> > +
+> >> > +	spi_set_drvdata(spi, indio_dev);
+> >> > +
+> >> > +	ret = iio_device_register(indio_dev);
+> >> > +	if (ret) {
+> >> > +		regulator_disable(adc->reg);
+> >> > +		return ret;
+> >> > +	}
+> >> > +
+> >> > +	return 0;
+> >> > +}
+> >> > +
+> >> > +static int ads8344_remove(struct spi_device *spi)
+> >> > +{
+> >> > +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> >> > +	struct ads8344 *adc = iio_priv(indio_dev);
+> >> > +
+> >> > +	iio_device_unregister(indio_dev);
+> >> > +	regulator_disable(adc->reg);
+> >> > +
+> >> > +	return 0;
+> >> > +}
+> >> > +
+> >> > +static const struct of_device_id ads8344_of_match[] = {
+> >> > +	{ .compatible = "ti,ads8344", },
+> >> > +	{}
+> >> > +};
+> >> > +MODULE_DEVICE_TABLE(of, ads8344_dt_ids);  
+> > no such variable... fixed as ads8344_of_match.
+> >  
+> >> > +
+> >> > +static struct spi_driver ads8344_driver = {
+> >> > +	.driver = {
+> >> > +		.name = "ads8344",
+> >> > +		.of_match_table = ads8344_of_match,
+> >> > +	},
+> >> > +	.probe = ads8344_probe,
+> >> > +	.remove = ads8344_remove,
+> >> > +};
+> >> > +module_spi_driver(ads8344_driver);
+> >> > +
+> >> > +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@bootlin.com>");
+> >> > +MODULE_DESCRIPTION("ADS8344 driver");
+> >> > +MODULE_LICENSE("GPL");    
+> >>   
+> >  
+> 
