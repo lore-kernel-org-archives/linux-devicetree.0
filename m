@@ -1,47 +1,76 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 1/3] dt-bindings: display: Add GiantPlus GPM940B0 panel documentation
-Date: Mon, 22 Apr 2019 11:37:20 +0200
-Message-ID: <20190422093722.4344-1-paul@crapouillou.net>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names
+ from DT
+Date: Mon, 22 Apr 2019 13:44:50 +0200
+Message-ID: <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
+References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Hans Verkuil <hansverk@cisco.com>
-Cc: od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
+Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The GPM940B0 is a 3.0" 320x240 24-bit TFT LCD panel.
+On 2/22/19 19:11, Stephen Boyd wrote:
+> Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
+>> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+>>         if (!a53cc)
+>>                 return -ENOMEM;
+>>  
+>> +       /* check if the parent names are present in the device tree */
+> 
+> This looks odd.
+> 
+>> +       ret = devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
+>> +       if (ret == -EPROBE_DEFER)
+>> +               return ret;
+> 
+> Why can't we use of_clk_parent_fill() if we know this is always a DT
+> platform?  The parent clks may not be registered at the time of probe?
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+yes, and AFAICS the important thing at this point is that the clock is
+registered hence the handling of defer.
 
-Notes:
-    v2: New patch
-    
-    v3: Add Rob's ack
+I could use of_clk_parent_fill and then - if needed - call
+devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
+this just make the code more confusing?)
 
- .../bindings/display/panel/giantplus,gpm940b0.txt    | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
-new file mode 100644
-index 000000000000..3dab52f92c26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
-@@ -0,0 +1,12 @@
-+GiantPlus 3.0" (320x240 pixels) 24-bit TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "giantplus,gpm940b0"
-+- power-supply: as specified in the base binding
-+
-+Optional properties:
-+- backlight: as specified in the base binding
-+- enable-gpios: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
--- 
-2.21.0.593.g511ec345e18
+> Maybe this series should wait for the parent registration stuff I'm
+> working on so that this can be made simpler.
+
+the need for the clock name is not intrinsic to this driver (the driver
+itself doesnt use these names) but it just feeds these to the framework.
+
+I was looking into your parent registration code and I am not sure how
+can I use it in this particular driver other than simply removing the
+names and hoping that things are handled properly at the lower
+levels.... could you clarify please?
+
+
+> 
+>> +
+>> +       if (!ret) {
+>> +               gpll0_a53cc[0] = __clk_get_name(pclks[0].clk);
+>> +               gpll0_a53cc[1] = __clk_get_name(pclks[1].clk);
+>> +               a53cc->pclk = pclks[1].clk;
+>> +       } else {
+>> +               /* support old binding where only pll was explicitily defined */
+>> +               a53cc->pclk = devm_clk_get(parent, NULL);
+>> +               if (IS_ERR(a53cc->pclk)) {
+>> +                       ret = PTR_ERR(a53cc->pclk);
+>> +                       dev_err(dev, "failed to get clk: %d\n", ret);
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +
+>>         init.name = "a53mux";
+>>         init.parent_names = gpll0_a53cc;
+>>         init.num_parents = ARRAY_SIZE(gpll0_a53cc);
+> 
