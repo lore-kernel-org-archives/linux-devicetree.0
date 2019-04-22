@@ -1,55 +1,75 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v3 0/3] MIPS: ath79: add ag71xx support
-Date: Mon, 22 Apr 2019 08:40:43 +0200
-Message-ID: <20190422064046.2822-1-o.rempel@pengutronix.de>
+Subject: [PATCH v3 1/3] dt-bindings: net: add qca,ar71xx.txt documentation
+Date: Mon, 22 Apr 2019 08:40:44 +0200
+Message-ID: <20190422064046.2822-2-o.rempel@pengutronix.de>
+References: <20190422064046.2822-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190422064046.2822-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2019.04.22 v3:
-- ag71xx: use phy_modes() instead of ag71xx_get_phy_if_mode_name()
-- ag71xx: remove .ndo_poll_controller support
-- ag71xx: unregister_netdev before disconnecting phy.
+Add binding documentation for Atheros/QCA networking IP core used
+in many routers.
 
-2019.04.18 v2:
-- ag71xx: add list of openwrt authors
-- ag71xx: remove redundant PHY_POLL assignment
-- ag71xx: use phy_attached_info instead of netif_info
-- ag71xx: remove redundant netif_carrier_off() on .stop.
-- DT: use "ethernet" instead of "eth"
-
-This patch series provide ethernet support for many Atheros/QCA
-MIPS based SoCs.
-
-I reworked ag71xx driver which was previously maintained within OpenWRT
-repository. So far, following changes was made to make upstreaming
-easier:
-- everything what can be some how used in user space was removed. Most
-  of it was debug functionality.
-- most of deficetree bindings was removed. Not every thing made sense
-  and most of it is SoC specific, so it is possible to detect it by
-  compatible.
-- mac and mdio parts are merged in to one driver. It makes easier to
-  maintaine SoC specific quirks.
-
-Oleksij Rempel (3):
-  dt-bindings: net: add qca,ar71xx.txt documentation
-  MIPS: ath79: ar9331: add Ethernet nodes
-  net: ethernet: add ag71xx driver
-
- .../devicetree/bindings/net/qca,ar71xx.txt    |   44 +
- arch/mips/boot/dts/qca/ar9331.dtsi            |   25 +
- arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |    8 +
- drivers/net/ethernet/atheros/Kconfig          |   11 +-
- drivers/net/ethernet/atheros/Makefile         |    1 +
- drivers/net/ethernet/atheros/ag71xx.c         | 1946 +++++++++++++++++
- 6 files changed, 2034 insertions(+), 1 deletion(-)
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../devicetree/bindings/net/qca,ar71xx.txt    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
- create mode 100644 drivers/net/ethernet/atheros/ag71xx.c
 
+diff --git a/Documentation/devicetree/bindings/net/qca,ar71xx.txt b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
+new file mode 100644
+index 000000000000..56abf224de2c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
+@@ -0,0 +1,44 @@
++Required properties:
++- compatible:	Should be "qca,<soc>-eth". Currently support compatibles are:
++		qca,ar7100-eth - Atheros AR7100
++		qca,ar7240-eth - Atheros AR7240
++		qca,ar7241-eth - Atheros AR7241
++		qca,ar7242-eth - Atheros AR7242
++		qca,ar9130-eth - Atheros AR9130
++		qca,ar9330-eth - Atheros AR9330
++		qca,ar9340-eth - Atheros AR9340
++		qca,qca9530-eth - Qualcomm Atheros QCA9530
++		qca,qca9550-eth - Qualcomm Atheros QCA9550
++		qca,qca9560-eth - Qualcomm Atheros QCA9560
++
++- reg : Address and length of the register set for the device
++- interrupts : Should contain eth interrupt
++- phy-mode : See ethernet.txt file in the same directory
++- clocks: the clock used by the core
++- clock-names: the names of the clock listed in the clocks property. These are
++	"mdio".
++- resets: Should contain phandles to the reset signals
++- reset-names: Should contain the names of reset signal listed in the resets
++		property. These are "mac" and "mdio"
++
++Optional properties:
++- phy-handle : phandle to the PHY device connected to this device.
++- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
++  Use instead of phy-handle.
++
++Optional subnodes:
++- mdio : specifies the mdio bus, used as a container for phy nodes
++  according to phy.txt in the same directory
++
++Example:
++
++ethernet@1a000000 {
++	compatible = "qca,ar9330-eth";
++	reg = <0x1a000000 0x200>;
++	interrupts = <5>;
++	resets = <&rst 13>, <&rst 23>;
++	reset-names = "mac", "mdio";
++	clocks = <&pll ATH79_CLK_MDIO>;
++	clock-names = "mdio";
++	phy-mode = "gmii";
++};
 -- 
 2.20.1
