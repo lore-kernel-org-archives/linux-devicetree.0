@@ -1,51 +1,55 @@
-From: Yong Liang <yong.liang@mediatek.com>
-Subject: [PATCH 2/2] arm64: dts: mt8183: Add watchdog device node
-Date: Mon, 22 Apr 2019 14:08:04 +0800
-Message-ID: <1555913284-5591-2-git-send-email-yong.liang@mediatek.com>
-References: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v3 0/3] MIPS: ath79: add ag71xx support
+Date: Mon, 22 Apr 2019 08:40:43 +0200
+Message-ID: <20190422064046.2822-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com
-Cc: devicetree@vger.kernel.org, "yong.liang" <yong.liang@mediatek.com>, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "yong.liang" <yong.liang@mediatek.com>
+2019.04.22 v3:
+- ag71xx: use phy_modes() instead of ag71xx_get_phy_if_mode_name()
+- ag71xx: remove .ndo_poll_controller support
+- ag71xx: unregister_netdev before disconnecting phy.
 
-Add watchdog device node in dtsi file.
+2019.04.18 v2:
+- ag71xx: add list of openwrt authors
+- ag71xx: remove redundant PHY_POLL assignment
+- ag71xx: use phy_attached_info instead of netif_info
+- ag71xx: remove redundant netif_carrier_off() on .stop.
+- DT: use "ethernet" instead of "eth"
 
-Signed-off-by: yong.liang <yong.liang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi |    6 ++++++
- 1 file changed, 6 insertions(+)
+This patch series provide ethernet support for many Atheros/QCA
+MIPS based SoCs.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 75c4881..491bef0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -253,6 +253,12 @@
- 			smi_comm = <&smi_common>;
- 		};
- 
-+		watchdog: watchdog@10007000 {
-+			compatible = "mediatek,mt8183-wdt",
-+				      "mediatek,mt6589-wdt";
-+			reg = <0 0x10007000 0 0x100>;
-+		};
-+
- 		apmixedsys: syscon@1000c000 {
- 			compatible = "mediatek,mt8183-apmixedsys", "syscon";
- 			reg = <0 0x1000c000 0 0x1000>;
+I reworked ag71xx driver which was previously maintained within OpenWRT
+repository. So far, following changes was made to make upstreaming
+easier:
+- everything what can be some how used in user space was removed. Most
+  of it was debug functionality.
+- most of deficetree bindings was removed. Not every thing made sense
+  and most of it is SoC specific, so it is possible to detect it by
+  compatible.
+- mac and mdio parts are merged in to one driver. It makes easier to
+  maintaine SoC specific quirks.
+
+Oleksij Rempel (3):
+  dt-bindings: net: add qca,ar71xx.txt documentation
+  MIPS: ath79: ar9331: add Ethernet nodes
+  net: ethernet: add ag71xx driver
+
+ .../devicetree/bindings/net/qca,ar71xx.txt    |   44 +
+ arch/mips/boot/dts/qca/ar9331.dtsi            |   25 +
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |    8 +
+ drivers/net/ethernet/atheros/Kconfig          |   11 +-
+ drivers/net/ethernet/atheros/Makefile         |    1 +
+ drivers/net/ethernet/atheros/ag71xx.c         | 1946 +++++++++++++++++
+ 6 files changed, 2034 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
+ create mode 100644 drivers/net/ethernet/atheros/ag71xx.c
+
 -- 
-1.7.9.5
+2.20.1
