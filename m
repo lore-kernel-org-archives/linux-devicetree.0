@@ -1,85 +1,49 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v4 05/12] soc: mediatek: cmdq: move the CMDQ_IRQ_MASK
- into cmdq driver data
-Date: Mon, 22 Apr 2019 11:51:38 +0800
-Message-ID: <1555905098.25149.0.camel@mtksdaap41>
+Subject: Re: [PATCH v4 06/12] soc: mediatek: cmdq: support mt8183 gce function
+Date: Mon, 22 Apr 2019 11:53:06 +0800
+Message-ID: <1555905186.25149.1.camel@mtksdaap41>
 References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
-         <20190415125833.38704-6-bibby.hsieh@mediatek.com>
+ <20190415125833.38704-7-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415125833.38704-6-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190415125833.38704-7-bibby.hsieh@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, kendrick.hsu@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Frederic Chen <Frederic.Chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 Hi, Bibby:
 
 On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
-> The interrupt mask and thread number has positive correlation,
-> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-> it by thread number.
+> add mt8183 compatible name for supporting gce function
 
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
 > 
 > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->  drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
+>  drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 22811784dc7d..87617dc7504d 100644
+> index 87617dc7504d..6db1e2dd2dea 100644
 > --- a/drivers/mailbox/mtk-cmdq-mailbox.c
 > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -17,7 +17,6 @@
->  #include <linux/of_device.h>
+> @@ -538,6 +538,7 @@ static const struct dev_pm_ops cmdq_pm_ops = {
 >  
->  #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
-> -#define CMDQ_IRQ_MASK			0xffff
->  #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+>  static const struct of_device_id cmdq_of_ids[] = {
+>  	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
+> +	{.compatible = "mediatek,mt8183-gce", .data = (void *)24},
+>  	{}
+>  };
 >  
->  #define CMDQ_CURR_IRQ_STATUS		0x10
-> @@ -71,6 +70,7 @@ struct cmdq {
->  	void __iomem		*base;
->  	u32			irq;
->  	u32			thread_nr;
-> +	u32			irq_mask;
->  	struct cmdq_thread	*thread;
->  	struct clk		*clock;
->  	bool			suspended;
-> @@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
->  	unsigned long irq_status, flags = 0L;
->  	int bit;
->  
-> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
-> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
-> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-> +	if (!(irq_status ^ cmdq->irq_mask))
->  		return IRQ_NONE;
->  
-> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-> +	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
->  		struct cmdq_thread *thread = &cmdq->thread[bit];
->  
->  		spin_lock_irqsave(&thread->chan->lock, flags);
-> @@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
->  		dev_err(dev, "failed to get irq\n");
->  		return -EINVAL;
->  	}
-> +
-> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
->  	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
->  			       "mtk_cmdq", cmdq);
->  	if (err < 0) {
-> @@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
->  		return PTR_ERR(cmdq->clock);
->  	}
->  
-> -	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
->  	cmdq->mbox.dev = dev;
->  	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
->  					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
