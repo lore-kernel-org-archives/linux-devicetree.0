@@ -1,116 +1,58 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Date: Mon, 22 Apr 2019 19:36:00 +0000
-Message-ID: <20190422193542.2853-3-daniel.baluta@nxp.com>
-References: <20190422193542.2853-1-daniel.baluta@nxp.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 34/98] ARM: dts: pfla02: increase phy reset duration
+Date: Mon, 22 Apr 2019 15:41:01 -0400
+Message-ID: <20190422194205.10404-34-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190422193542.2853-1-daniel.baluta@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Marco Felsch <m.felsch@pengutronix.de>, Stefan Christ <s.christ@phytec.de>, Christian Hemp <c.hemp@phytec.de>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MM has one wm8524 audio codec connected with
-SAI3 digital audio interface.
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-This patch uses simple-card machine driver in order
-to enable wm8524 codec.
+[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
 
-We need to set:
-	* SAI3 pinctrl configuration
-	* clock hierarchy
-	* codec node
-	* simple-card configuration
+Increase the reset duration to ensure correct phy functionality. The
+reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
+pfla02: use long enough reset for ethernet phy"):
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
+  small percentage of modules have 'transmission timeouts' errors like
+
+  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
+  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
+  eth0: 1000Mbps full duplex link detected
+  eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+
+Cc: Stefan Christ <s.christ@phytec.de>
+Cc: Christian Hemp <c.hemp@phytec.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 48 ++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-index 2d5d89475b76..207b13266a96 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -37,6 +37,35 @@
- 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	wm8524: audio-codec {
-+		#sound-dai-cells = <0>;
-+		compatible = "wlf,wm8524";
-+		wlf,mute-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sound-wm8524 {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8524-audio";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&cpudai>;
-+		simple-audio-card,bitclock-master = <&cpudai>;
-+		simple-audio-card,widgets =
-+			"Line", "Left Line Out Jack",
-+			"Line", "Right Line Out Jack";
-+		simple-audio-card,routing =
-+			"Left Line Out Jack", "LINEVOUTL",
-+			"Right Line Out Jack", "LINEVOUTR";
-+
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai = <&sai3>;
-+		};
-+
-+		link_codec: simple-audio-card,codec {
-+			sound-dai = <&wm8524>;
-+			clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
-+		};
-+	};
- };
- 
- &fec1 {
-@@ -61,6 +90,15 @@
- 	};
- };
- 
-+&sai3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai3>;
-+	assigned-clocks = <&clk IMX8MM_CLK_SAI3>;
-+	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <24576000>;
-+	status = "okay";
-+};
-+
- &uart2 { /* console */
+diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+index 1b50b01e9bac..65d03c5d409b 100644
+--- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+@@ -90,6 +90,7 @@
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart2>;
-@@ -130,6 +168,16 @@
- 		>;
- 	};
- 
-+	pinctrl_sai3: sai3grp {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC     0xd6
-+			MX8MM_IOMUXC_SAI3_TXC_SAI3_TX_BCLK      0xd6
-+			MX8MM_IOMUXC_SAI3_MCLK_SAI3_MCLK        0xd6
-+			MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
-+			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21        0xd6
-+		>;
-+	};
-+
- 	pinctrl_uart2: uart2grp {
- 		fsl,pins = <
- 			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii";
++	phy-reset-duration = <10>; /* in msecs */
+ 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
+ 	phy-supply = <&vdd_eth_io_reg>;
+ 	status = "disabled";
 -- 
-2.17.1
+2.19.1
