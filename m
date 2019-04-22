@@ -1,52 +1,85 @@
-From: "S.j. Wang" <shengjiu.wang@nxp.com>
-Subject: Re: [PATCH] ARM: dts: imx: Add mclk0 clock for SAI
-Date: Mon, 22 Apr 2019 03:30:26 +0000
-Message-ID: <VE1PR04MB647951B20E0F334FF1CC3B7AE3220@VE1PR04MB6479.eurprd04.prod.outlook.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v4 05/12] soc: mediatek: cmdq: move the CMDQ_IRQ_MASK
+ into cmdq driver data
+Date: Mon, 22 Apr 2019 11:51:38 +0800
+Message-ID: <1555905098.25149.0.camel@mtksdaap41>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+         <20190415125833.38704-6-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190415125833.38704-6-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi, Bibby:
 
->=20
->=20
-> On Sat, Apr 20, 2019 at 09:12:52AM +0000, Daniel Baluta wrote:
-> > From: Shengjiu Wang <shengjiu.wang@nxp.com>
-> >
-> > SAI has 4 clock sources, which can be selected using MSEL bit of SAI
-> > TCR2 register.
->=20
-> I have a doubt at this statement. As far as I can understand, this MSEL i=
-s
-> probably used by its internal clock MUX, so it's not really proving that =
-SAI
-> has 4 MCLK inputs. What I know is that SAI block itself only has 3 MCLK
-> inputs as we defined in DT. It's just internally connects bus clock or MC=
-LK1
-> to input0 of clock MUX's and connects MCLK[1-3] to input[1-3]. So adding =
-an
-> MCLK0 here doesn't sound a right way to me. Unless someone can justify
-> for it, I think we should just fix it from driver side.
->=20
-> Thanks
-> Nicolin
->
+On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
+> The interrupt mask and thread number has positive correlation,
+> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+> it by thread number.
 
-The MSEL bit width is 2 bit, so there is 4 options,  the MCLK0 maybe the sa=
-me input as
-MCLK1 or bus clock as you said, so we think may be better to show this rela=
-tion in DT,=20
-And this is DT's capability.  Driver don't care about which clock connect t=
-o MCLK0,=20
-it only need to know there is 4 MCLK from DT.=20
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Best regards
-Wang shengjiu
-
-=20
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 22811784dc7d..87617dc7504d 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/of_device.h>
+>  
+>  #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+> -#define CMDQ_IRQ_MASK			0xffff
+>  #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+>  
+>  #define CMDQ_CURR_IRQ_STATUS		0x10
+> @@ -71,6 +70,7 @@ struct cmdq {
+>  	void __iomem		*base;
+>  	u32			irq;
+>  	u32			thread_nr;
+> +	u32			irq_mask;
+>  	struct cmdq_thread	*thread;
+>  	struct clk		*clock;
+>  	bool			suspended;
+> @@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+>  	unsigned long irq_status, flags = 0L;
+>  	int bit;
+>  
+> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
+> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
+> +	if (!(irq_status ^ cmdq->irq_mask))
+>  		return IRQ_NONE;
+>  
+> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
+> +	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+>  		struct cmdq_thread *thread = &cmdq->thread[bit];
+>  
+>  		spin_lock_irqsave(&thread->chan->lock, flags);
+> @@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		dev_err(dev, "failed to get irq\n");
+>  		return -EINVAL;
+>  	}
+> +
+> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+>  	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+>  			       "mtk_cmdq", cmdq);
+>  	if (err < 0) {
+> @@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		return PTR_ERR(cmdq->clock);
+>  	}
+>  
+> -	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+>  	cmdq->mbox.dev = dev;
+>  	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+>  					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
