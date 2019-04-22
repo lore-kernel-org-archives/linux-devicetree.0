@@ -1,58 +1,51 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Add SAI nodes
-Date: Mon, 22 Apr 2019 22:09:25 +0300
-Message-ID: <CAEnQRZAZ4b2ykdfMc-egdT6rbq+uxbqzC8RwQEcd_uRWY3UWmQ@mail.gmail.com>
-References: <20190419202024.27314-1-daniel.baluta@nxp.com> <20190419202024.27314-2-daniel.baluta@nxp.com>
- <20190422024427.GU19962@dragon> <CAEnQRZAA9_Worz8taLC_zWanx2vdujb8YWqi+1VV99bRTueWow@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v2 0/7] Add support for Maxim 77663 MFD
+Date: Mon, 22 Apr 2019 22:13:43 +0300
+Message-ID: <20190422191350.27527-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEnQRZAA9_Worz8taLC_zWanx2vdujb8YWqi+1VV99bRTueWow@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 9:51 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
->
-> On Mon, Apr 22, 2019 at 5:45 AM Shawn Guo <shawnguo@kernel.org> wrote:
-> >
-> > On Fri, Apr 19, 2019 at 08:20:39PM +0000, Daniel Baluta wrote:
-> > > i.MX8MM has 5 SAI instances with the following base
-> > > addresses according to RM.
-> > >
-> > > SAI1 base address: 3001_0000h
-> > > SAI2 base address: 3002_0000h
-> > > SAI3 base address: 3003_0000h
-> > > SAI5 base address: 3005_0000h
-> > > SAI6 base address: 3006_0000h
-> > >
-> > > Signed-off-by: Bai Ping <ping.bai@nxp.com>
-> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 68 +++++++++++++++++++++++
-> > >  1 file changed, 68 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > index de3498c2dd44..e9a0b2b6063a 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > @@ -171,6 +171,74 @@
-> > >                       #size-cells = <1>;
-> > >                       ranges;
-> > >
-> > > +                     sai1: sai@30010000 {
-> > > +                             compatible = "fsl,imx8mq-sai",
-> >
-> > Should be "fsl,imx8mm-sai"?
->
-> SAI IP on imx8mm is identical with the one on imx8mq. There is no need
-> to differentiate with a compatible string.
+Hello,
 
-On a second thought sai on i.MX8M is not compatible with SAI on i.MX6.
-So, the correct
-compatbile should be:
+This series adds support for the Maxim 77663 chip that provides PMIC, RTC,
+GPIO and watchdog timer functionality. The hardware is very similar to the
+Maxim 77620/20024 hardware units that are already supported by the kernel,
+hence we will reuse the existing drivers for 77663. The GPIO, regulator,
+RTC and watchdog timer functionality was tested on a Nexus 7 tablet that
+has the Max77663 chip, everything is working perfectly fine. I'm looking
+at upstreaming support for that tablet device and Max77663 is one of the
+core components that are currently missing in the upstream kernel.
 
-     compatible = "fsl,imx8mm-sai", "fsl,imx8mq-sai";
+Changelog:
 
-Will fix this in v2.
+v2: Added PINCTRL sub-device to Max77663 MFD as it looks compatible with
+    77620.
+
+    Added new "maxim,system-power-controller" OF property.
+
+    Patch "Support device-tree properly" now doesn't remove driver's
+    "id_table" since potentially it could have some use in the downstream
+    kernel forks and it doesn't hurt to keep it around.
+
+Dmitry Osipenko (7):
+  mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
+  mfd: max77620: Support Maxim 77663
+  regulator: max77620: Support Maxim 77663
+  dt-bindings: mfd: max77620: Add compatible for Maxim 77663
+  dt-bindings: mfd: max77620: Add maxim,system-power-controller property
+  mfd: max77620: Support device-tree properly
+  mfd: max77620: Provide system power-off functionality
+
+ .../devicetree/bindings/mfd/max77620.txt      |   7 +-
+ drivers/mfd/max77620.c                        | 117 +++++++++++++++++-
+ drivers/regulator/max77620-regulator.c        |  26 +++-
+ include/linux/mfd/max77620.h                  |   5 +-
+ 4 files changed, 150 insertions(+), 5 deletions(-)
+
+-- 
+2.21.0
