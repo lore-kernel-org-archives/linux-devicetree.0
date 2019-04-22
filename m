@@ -1,54 +1,40 @@
-From: Han Nandor <nandor.han@vaisala.com>
-Subject: [PATCH v3 0/2] Use NVMEM as reboot-mode write interface
-Date: Sun, 21 Apr 2019 19:09:28 +0000
-Message-ID: <20190421190913.1478-1-nandor.han@vaisala.com>
-References: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: bugfix tqma7 soft reset issue
+Date: Mon, 22 Apr 2019 08:52:07 +0800
+Message-ID: <20190422005206.GJ19962@dragon>
+References: <20190414120629.8912-1-bruno.thomsen@gmail.com>
+ <20190416090805.13166-1-bruno.thomsen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "sre@kernel.org" <sre@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Han Nandor <nandor.han@vaisala.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190416090805.13166-1-bruno.thomsen@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc: markus.niebel@tq-group.com, devicetree@vger.kernel.org, laa@kamstrup.com, s.hauer@pengutronix.de, clemens.ml@gmx.net, ksc@kamstrup.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RGVzY3JpcHRpb24NCi0tLS0tLS0tLS0tDQpFeHRlbmQgdGhlIHJlYm9vdCBtb2RlIGRyaXZlciB0
-byB1c2UgYSBOVk1FTSBjZWxsIGFzIHdyaXRpbmcgaW50ZXJmYWNlLg0KDQpUZXN0aW5nDQotLS0t
-LS0tDQpUaGUgdGVzdGluZyBpcyBkb25lIGJ5IGNvbmZpZ3VyaW5nIERUIGZyb20gYSBjdXN0b20g
-Ym9hcmQuDQpUaGUgTlZNRU0gY2VsbCBpcyBjb25maWd1cmVkIGluIGFuIFJUQyBub24tdm9sYXRp
-bGUgbWVtb3J5Lg0KS2VybmVsOiA0LjE0LjYwICh0aGUgcGF0Y2hzZXQgd2FzIHJlYmFzZWQgb24g
-a2VybmVsIG1hc3RlcikNCg0KRFQgY29uZmlndXJhdGlvbnM6DQpgDQouLi4NCnJlYm9vdC1tb2Rl
-LW52bWVtQDAgew0KICAgIGNvbXBhdGlibGUgPSAic2ltcGxlLW1mZCI7DQogICAgcmVib290LW1v
-ZGUgew0KICAgICAgICBjb21wYXRpYmxlID0gIm52bWVtLXJlYm9vdC1tb2RlIjsNCiAgICAgICAg
-bnZtZW0tY2VsbHMgPSA8JnJlYm9vdF9tb2RlPjsNCiAgICAgICAgbnZtZW0tY2VsbC1uYW1lcyA9
-ICJyZWJvb3QtbW9kZSI7DQoNCiAgICAgICAgbW9kZS10ZXN0ICAgICAgID0gPDB4MjE5NjkxNDc+
-Ow0KICAgIH07DQp9Ow0KLi4uDQpyZWJvb3RfbW9kZTogbnZtZW1fcmVib290X21vZGVAMCB7DQog
-ICAgICAgIHJlZyA9IDwweDAwIDB4ND47DQp9Ow0KLi4uDQpgDQoNCjEuIFJlYm9vdCB0aGUgc3lz
-dGVtIHVzaW5nIHRoZSBjb21tYW5kIGByZWJvb3QgdGVzdGANCg0KMi4gVmVyaWZ5IHRoYXQga2Vy
-bmVsIGxvZ3Mgc2hvdyB0aGF0IHJlYm9vdCB3YXMgZG9uZSBpbiBtb2RlIGB0ZXN0YDoNClBBU1MN
-CmBbICA0MTMuOTU3MTcyXSByZWJvb3Q6IFJlc3RhcnRpbmcgc3lzdGVtIHdpdGggY29tbWFuZCAn
-dGVzdCcgYA0KDQozLiBTdG9wIGluIFUtQm9vdCBhbmQgdmVyaWZ5IHRoYXQgbW9kZSBgdGVzdGAg
-bWFnaWMgdmFsdWUgaXMgcHJlc2VudA0KaW4gUlRDcyBub24tdm9sYXRpbGUgbWVtb3J5OiBQQVNT
-DQoNCktlcm5lbDogNS4xLjAtcmMzDQoNCjEuIENvbmZpZ3VyZSBgYXJjaC9hcm0vY29uZmlncy9p
-bXhfdjZfdjdfZGVmY29uZmlnYCB0byBjb250YWluIA0KYENPTkZJR19OVk1FTV9SRUJPT1RfTU9E
-RT15YA0KMi4gVmVyaWZ5IHRoYXQgS2VybmVsIGNvbXBpbGVzIHN1Y2Nlc3NmdWw6IFBBU1MNCmAN
-Cm1ha2UgQVJDSD1hcm0gQ1JPU1NfQ09NUElMRT1hcm0tbGludXgtZ251LSBpbXhfdjZfdjdfZGVm
-Y29uZmlnIHpJbWFnZQ0KLi4uDQpDQyAgICAgIGRyaXZlcnMvcG93ZXIvcmVzZXQvbnZtZW0tcmVi
-b290LW1vZGUubw0KLi4uDQpLZXJuZWw6IGFyY2gvYXJtL2Jvb3QvekltYWdlIGlzIHJlYWR5DQpg
-DQpDaGFuZ2VzIHNpbmNlIHYxOg0KLS0tLS0tLS0tLS0tLS0tLS0NCiAtIHNwbGl0IHRoZSBkb2N1
-bWVudGF0aW9uIG9uIGEgc2VwYXJhdGUgcGF0Y2gNCiAtIGFkZCBhIG1pc3NpbmcgaGVhZGVyDQoN
-CkNoYW5nZXMgc2luY2UgdjI6DQotLS0tLS0tLS0tLS0tLS0tDQogLSBjaGFuZ2UgdGhlIG1vZHVs
-ZSBsaWNlbnNlIHRvIEdQTCBzaW5jZSBHUEwgdjIgaXMgZGVwcmVjYXRlZA0KDQpOYW5kb3IgSGFu
-ICgyKToNCiAgcG93ZXI6IHJlc2V0OiBudm1lbS1yZWJvb3QtbW9kZTogdXNlIE5WTUVNIGFzIHJl
-Ym9vdCBtb2RlIHdyaXRlDQogICAgaW50ZXJmYWNlDQogIGR0LWJpbmRpbmdzOiBwb3dlcjogcmVz
-ZXQ6IGFkZCBkb2N1bWVudCBmb3IgTlZNRU0gYmFzZWQgcmVib290LW1vZGUNCg0KIC4uLi9wb3dl
-ci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS50eHQgICAgICAgICB8IDMyICsrKysrKysrDQogZHJp
-dmVycy9wb3dlci9yZXNldC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgIDkgKysrDQogZHJp
-dmVycy9wb3dlci9yZXNldC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgIDEgKw0KIGRyaXZl
-cnMvcG93ZXIvcmVzZXQvbnZtZW0tcmVib290LW1vZGUuYyAgICAgICB8IDc2ICsrKysrKysrKysr
-KysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDExOCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9yZXNldC9u
-dm1lbS1yZWJvb3QtbW9kZS50eHQNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wb3dlci9y
-ZXNldC9udm1lbS1yZWJvb3QtbW9kZS5jDQoNCi0tIA0KMi4xNy4yDQoNCg==
+On Tue, Apr 16, 2019 at 11:08:05AM +0200, Bruno Thomsen wrote:
+> Running reboot command on the TQMa7 board would just hang infinite
+> at the end of the system shutdown process.
+> 
+> Handling of i.MX7 errata e10574:
+> Watchdog: A watchdog timeout or software trigger will not reset the SOC.
+> 
+> Moved pinctrl from common mba7 to common tqma7 dtsi as it improves
+> readability of errata handling. Most integrators of this SoM will
+> likely use the development board as inspiration for handling this
+> SoC issue.
+> 
+> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+
+Applied, thanks.
