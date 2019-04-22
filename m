@@ -1,94 +1,58 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v4 07/12] soc: mediatek: cmdq: clear the event in cmdq
- initial flow
-Date: Mon, 22 Apr 2019 12:10:03 +0800
-Message-ID: <1555906203.26524.1.camel@mtksdaap41>
-References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
-         <20190415125833.38704-8-bibby.hsieh@mediatek.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add mclk0 clock for SAI
+Date: Sun, 21 Apr 2019 21:25:20 -0700
+Message-ID: <20190422042519.GA4304@Asurada>
+References: <VE1PR04MB647951B20E0F334FF1CC3B7AE3220@VE1PR04MB6479.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415125833.38704-8-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB647951B20E0F334FF1CC3B7AE3220@VE1PR04MB6479.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+On Mon, Apr 22, 2019 at 03:30:26AM +0000, S.j. Wang wrote:
+> > > SAI has 4 clock sources, which can be selected using MSEL bit of SAI
+> > > TCR2 register.
+> > 
+> > I have a doubt at this statement. As far as I can understand, this MSEL is
+> > probably used by its internal clock MUX, so it's not really proving that SAI
+> > has 4 MCLK inputs. What I know is that SAI block itself only has 3 MCLK
+> > inputs as we defined in DT. It's just internally connects bus clock or MCLK1
+> > to input0 of clock MUX's and connects MCLK[1-3] to input[1-3]. So adding an
+> > MCLK0 here doesn't sound a right way to me. Unless someone can justify
+> > for it, I think we should just fix it from driver side.
+> > 
+> > Thanks
+> > Nicolin
+> >
+> 
+> The MSEL bit width is 2 bit, so there is 4 options,  the MCLK0 maybe the same input as
+> MCLK1 or bus clock as you said, so we think may be better to show this relation in DT, 
+> And this is DT's capability.  Driver don't care about which clock connect to MCLK0, 
+> it only need to know there is 4 MCLK from DT. 
 
-On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
-> GCE hardware stored event information in own internal sysram,
-> if the initial value in those sysram is not zero value
-> it will cause a situation that gce can wait the event immediately
-> after client ask gce to wait event but not really trigger the
-> corresponding hardware.
-> 
-> In order to make sure that the wait event function is
-> exactly correct, we need to clear the sysram value in
-> cmdq initial flow.
-> 
-> Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+I know what it is. But it feels weird that we add an MCLK0 just
+because of what a register filed has, and there's no "MCLK0" be
+mentioned in the RM at all. My point is that if SAI doesn't have
+a port named "MCLK0", I don't feel it's that convincing to have
+it in the DT.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
->  include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
->  3 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 6db1e2dd2dea..4e744cf2c3fb 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -33,6 +33,7 @@
->  #define CMDQ_THR_END_ADDR		0x24
->  #define CMDQ_THR_WAIT_TOKEN		0x30
->  #define CMDQ_THR_PRIORITY		0x40
-> +#define CMDQ_SYNC_TOKEN_UPDATE		0x68
->  
->  #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
->  #define CMDQ_THR_ENABLED		0x1
-> @@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
->  
->  static void cmdq_init(struct cmdq *cmdq)
->  {
-> +	int i;
-> +
->  	WARN_ON(clk_enable(cmdq->clock) < 0);
->  	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-> +	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-> +		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
->  	clk_disable(cmdq->clock);
->  }
->  
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index ccb73422c2fa..911475da7a53 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -19,6 +19,8 @@
->  #define CMDQ_WFE_UPDATE			BIT(31)
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
-> +/** cmdq event maximum */
-> +#define CMDQ_MAX_EVENT			0x3ff
->  
->  /*
->   * CMDQ_CODE_MASK:
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 54ade13a9b15..4e8899972db4 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -13,9 +13,6 @@
->  
->  #define CMDQ_NO_TIMEOUT		0xffffffffu
->  
-> -/** cmdq event maximum */
-> -#define CMDQ_MAX_EVENT				0x3ff
-> -
->  struct cmdq_pkt;
->  
->  struct cmdq_client {
+Usually in DT we define the clock sources of an entire IP block
+in audio use cases, not for an internal clock MUX. But taking a
+step back, it might not be really wrong to do so, since the MUX
+is a part of the hardware. If we redefine the MCLK[0-4] as "four
+clock sources of SAI's clock MUX selecting a clock for bit clock
+and frame clock providing" in the binding doc, I feel it'd make
+a lot of sense.
