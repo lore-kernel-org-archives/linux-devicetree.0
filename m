@@ -1,55 +1,331 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] net: ethernet: add ag71xx driver
-Date: Mon, 22 Apr 2019 07:13:49 +0200
-Message-ID: <20190422051349.67awwpyat5sjbd7j@pengutronix.de>
-References: <20190418052620.20835-1-o.rempel@pengutronix.de>
- <20190418052620.20835-4-o.rempel@pengutronix.de>
- <20190419.143519.94034508850689697.davem@davemloft.net>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v4 08/12] soc: mediatek: cmdq: add packet encoder function
+Date: Mon, 22 Apr 2019 13:31:04 +0800
+Message-ID: <1555911064.26524.14.camel@mtksdaap41>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+ <20190415125833.38704-9-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190419.143519.94034508850689697.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com, mark.rutland@arm.com, kernel@pengutronix.de, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190415125833.38704-9-bibby.hsieh@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, kendrick.hsu@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Frederic Chen <Frederic.Chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi, Bibby:
 
-On Fri, Apr 19, 2019 at 02:35:19PM -0700, David Miller wrote:
-> From: Oleksij Rempel <o.rempel@pengutronix.de>
-> Date: Thu, 18 Apr 2019 07:26:20 +0200
+On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
+> Implement a function can encode the GCE instructions
 > 
-> > +static int ag71xx_remove(struct platform_device *pdev)
-> > +{
-> > +	struct net_device *ndev = platform_get_drvdata(pdev);
-> > +	struct ag71xx *ag;
-> > +
-> > +	if (!ndev)
-> > +		return 0;
-> > +
-> > +	ag = netdev_priv(ndev);
-> > +	ag71xx_phy_disconnect(ag);
-> > +	ag71xx_mdio_remove(ag);
-> > +	unregister_netdev(ndev);
-> > +	platform_set_drvdata(pdev, NULL);
-> > +
-> > +	return 0;
-> > +}
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 125 ++++++++++++++++-------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    |  14 +--
+>  3 files changed, 99 insertions(+), 42 deletions(-)
 > 
-> You should unregister the netdev before you disconnect the PHY and remove
-> the MDIO.
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index ff9fef5a032b..d3873ab21db3 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,11 +9,43 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+> +#define CMDQ_GET_ARG_B(arg)	(((arg) & GENMASK(31, 16)) >> 16)
+> +#define CMDQ_GET_ARG_C(arg)	((arg) & GENMASK(15, 0))
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+> +#define CMDQ_IMMEDIATE_VALUE	0
+> +#define CMDQ_REG_TYPE		1
+> +
+> +struct cmdq_instruction {
+> +	s16 arg_c:16;
+> +	s16 arg_b:16;
+> +	s16 arg_a:16;
+> +	u8 s_op:5;
+> +	u8 arg_c_type:1;
+> +	u8 arg_b_type:1;
+> +	u8 arg_a_type:1;
+> +	u8 op:8;
+> +};
+> +
+> +static void cmdq_pkt_instr_encoder(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
+> +				   s16 arg_a, u8 s_op, u8 arg_c_type,
+> +				   u8 arg_b_type, u8 arg_a_type, u8 op)
+> +{
+> +	struct cmdq_instruction *cmdq_inst;
+> +
+> +	cmdq_inst = pkt->va_base + pkt->cmd_buf_size;
+> +	cmdq_inst->op = op;
+> +	cmdq_inst->arg_a_type = arg_a_type;
+> +	cmdq_inst->arg_b_type = arg_b_type;
+> +	cmdq_inst->arg_c_type = arg_c_type;
+> +	cmdq_inst->s_op = s_op;
+> +	cmdq_inst->arg_a = arg_a;
+> +	cmdq_inst->arg_b = arg_b;
+> +	cmdq_inst->arg_c = arg_c;
+> +	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> +}
+>  
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+> @@ -110,10 +142,11 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
+> +				   s16 arg_a, u8 s_op, u8 arg_c_type,
+> +				   u8 arg_b_type, u8 arg_a_type,
+> +				   enum cmdq_code code)
+>  {
+> -	u64 *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -129,65 +162,72 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  			__func__, (u32)pkt->buf_size);
+>  		return -ENOMEM;
+>  	}
+> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> -	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> +	cmdq_pkt_instr_encoder(pkt, arg_c, arg_b, arg_a, s_op, arg_c_type,
+> +			       arg_b_type, arg_a_type, code);
+>  
+>  	return 0;
+>  }
+>  
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> -
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
+> +				       CMDQ_GET_ARG_B(value), offset, subsys,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE, CMDQ_CODE_WRITE);
 
-ok.
+I do not understand why you invent a encoder function. It neither reduce
+the code size, nor make code easier for reading. If for easier reading,
+I suggest this way:
 
-> Also you need to call free_netdev() afterwards otherwise you will leak it.
+struct cmdq_instruction {
+	union {
+		struct {
+			u32 value;
+			u16 offset;
+			u8 subsys;
+		};
 
-ndev is allocated with devm_alloc_etherdev(). Are you sure free_netdev()
-should be used here?
+		struct {
+			...
+		};
+	};
+	u8 op;
+};
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+struct cmdq_instruction *inst;
+
+inst = cmdq_pkt_append_command(pkt);
+if (!inst)
+	return -ENOMEM;
+
+inst->op = CMDQ_CODE_WRITE;
+inst->subsys = subsys;
+inst->offset = offset;
+inst->value = value;
+
+Regards,
+CK
+
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask)
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
+> +			u32 value, u32 mask)
+>  {
+>  	u32 offset_mask = offset;
+>  	int err = 0;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
+> +					      CMDQ_GET_ARG_B(~mask),
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_CODE_MASK);
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+> +	err |= cmdq_pkt_write(pkt, subsys, offset_mask, value);
+>  
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> -
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> -
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_WFE_OPTION),
+> +				       CMDQ_GET_ARG_B(CMDQ_WFE_OPTION), event,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_CODE_WFE);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_WFE_UPDATE),
+> +				       CMDQ_GET_ARG_B(CMDQ_WFE_UPDATE), event,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_CODE_WFE);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+> @@ -196,10 +236,25 @@ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  	int err;
+>  
+>  	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> -
+> +	err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_EOC_IRQ_EN),
+> +				      CMDQ_GET_ARG_B(CMDQ_EOC_IRQ_EN),
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_CODE_EOC);
+> +	if (err < 0)
+> +		return err;
+>  	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_JUMP_PASS),
+> +				      CMDQ_GET_ARG_B(CMDQ_JUMP_PASS),
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_CODE_JUMP);
+>  
+>  	return err;
+>  }
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 911475da7a53..f21801d32a3a 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +#define CMDQ_WFE_OPTION                 (CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 4e8899972db4..52f69c8db8de 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+>  /**
+>   * cmdq_pkt_write() - append write command to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
+>  
+>  /**
+>   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   * @mask:	the specified target register mask
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask);
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
+> +			u32 value, u32 mask);
+>  
+>  /**
+>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
