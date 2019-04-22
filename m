@@ -1,141 +1,111 @@
-From: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST files
-	to *.rst
-Date: Mon, 22 Apr 2019 10:37:35 -0600
-Message-ID: <3e26b3a0-bcd3-93a1-d21c-ac1041f93697@deltatee.com>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+Date: Mon, 22 Apr 2019 19:44:04 +0300
+Message-ID: <529fe004-63e2-43c3-0382-9aaa86d0c3a9@cogentembedded.com>
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+ <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
+ <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
+ <cdee3d53-6ee3-4435-117e-8ba4a58ca72b@cogentembedded.com>
+ <OF82CE76E9.E6395EF7-ON482583DD.000E37D7-482583DD.000E5077@mxic.com.tw>
+ <3d334751-8fd4-7db1-9deb-e6c94936df13@cogentembedded.com>
+ <OF4ABCC306.B053BA23-ON482583E0.000F480C-482583E0.000FAD4A@mxic.com.tw>
+ <3971c669-9095-9d18-d029-37f9663a54b2@cogentembedded.com>
+ <OF58AAFF49.C4593DEB-ON482583E1.001D551E-482583E1.001F089D@LocalDomain>
+ <OFE74649D4.F69BB5EF-ON482583E1.0033F73F-482583E1.00344ED2@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-CA
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Doc Mailing List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, kernel-hardening-ZwoEplunGu1jrUoiu81ncdBPR1lH4CV8@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless@v
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <OFE74649D4.F69BB5EF-ON482583E1.0033F73F-482583E1.00344ED2@mxic.com.tw>
+Content-Language: en-MW
+Sender: linux-kernel-owner@vger.kernel.org
+To: masonccyang@mxic.com.tw
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
+On 04/19/2019 12:31 PM, masonccyang@mxic.com.tw wrote:
 
-
-On 2019-04-22 7:27 a.m., Mauro Carvalho Chehab wrote:
-
+>> > Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
+>> >
+>> > On 04/18/2019 05:51 AM, masonccyang@mxic.com.tw wrote:
+>> >
+>> > >> >> >> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+>> > >> >> >>
+>> > >> >> >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> > >> >> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> > >> >> > [...]
+>> > >> >> >> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-
+>> > >> renesas-rpc.c
+>> > >> >> >> new file mode 100644
+>> > >> >> >> index 0000000..037f273
+>> > >> >> >> --- /dev/null
+>> > >> >> >> +++ b/drivers/spi/spi-renesas-rpc.c
+>> > >> >> > [...]
+>> > >> >> >> +static int rpc_spi_probe(struct platform_device *pdev)
+>> > >> >> >> +{
+>> > >> >> >> +   struct spi_controller *ctlr;
+>> > >> >> >> +   struct rpc_mfd *rpc_mfd = dev_get_drvdata(pdev->dev.parent);
+>> > >> >> >> +   struct rpc_spi *rpc;
+>> > >> >> >> +   int ret;
+>> > >> >> >> +
+>> > >> >> >> +   ctlr = spi_alloc_master(&pdev->dev, sizeof(*rpc));
+>> > >> >> >> +   if (!ctlr)
+>> > >> >> >> +      return -ENOMEM;
+>> > >> >> >> +
+>> > >> >> >> +   platform_set_drvdata(pdev, ctlr);
+>> > >> >> >> +
+>> > >> >> >> +   rpc = spi_controller_get_devdata(ctlr);
+>> > >> >> >> +
+>> > >> >> >> +   ctlr->dev.of_node = pdev->dev.of_node;
+>> > >> >> > [...]
+>> > >> >> >> +
+>> > >> >> >> +   pm_runtime_enable(&pdev->dev);
+>> > >> >> >> +   ctlr->auto_runtime_pm = true;
+>> > >> >> >
+>> > >> >> >    I think this line no longer works as expected with the new
+>> > >> >> probing scheme.
+>> > >>
+>> > >>    That's because we added another (SPI) device under our MFD.
+>> > >
+>> > > Do you mean just to remove one line
+>> > > ctlr->auto_runtime_pm = true;
+>> > > ?
 > 
-> Later patches will move them to a better place and remove the
-> :orphan: markup.
+>> how did you test it ?
+>> what is your testing flow ?
+
+   I think I've patched drivers/spi/spi-mem.c to get spi_mem_access_{start|end}()
+to be called with ctlr->dev.parent->parent as an arg...
+
+>> >    No, you should explicitly call RPM for the MFD (not the SPI device).
+>>
+>> okay, patch RPM to RPC MFD and will remove SPI RPM enable part.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/ABI/removed/sysfs-class-rfkill  |  2 +-
->  Documentation/ABI/stable/sysfs-class-rfkill   |  2 +-
->  Documentation/ABI/stable/sysfs-devices-node   |  2 +-
->  Documentation/ABI/testing/procfs-diskstats    |  2 +-
->  Documentation/ABI/testing/sysfs-block         |  2 +-
->  .../ABI/testing/sysfs-class-switchtec         |  2 +-
->  .../ABI/testing/sysfs-devices-system-cpu      |  4 +-
->  .../{DMA-API-HOWTO.txt => DMA-API-HOWTO.rst}  |  2 +
->  Documentation/{DMA-API.txt => DMA-API.rst}    |  8 ++-
->  .../{DMA-ISA-LPC.txt => DMA-ISA-LPC.rst}      |  4 +-
->  ...{DMA-attributes.txt => DMA-attributes.rst} |  2 +
->  Documentation/{IPMI.txt => IPMI.rst}          |  2 +
->  .../{IRQ-affinity.txt => IRQ-affinity.rst}    |  2 +
->  .../{IRQ-domain.txt => IRQ-domain.rst}        |  2 +
->  Documentation/{IRQ.txt => IRQ.rst}            |  2 +
->  .../{Intel-IOMMU.txt => Intel-IOMMU.rst}      |  2 +
->  Documentation/PCI/pci.txt                     |  8 +--
->  Documentation/{SAK.txt => SAK.rst}            |  2 +
->  Documentation/{SM501.txt => SM501.rst}        |  2 +
->  .../admin-guide/kernel-parameters.txt         |  6 +-
->  Documentation/admin-guide/l1tf.rst            |  2 +-
->  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +
->  Documentation/block/biodoc.txt                |  2 +-
->  .../{bt8xxgpio.txt => bt8xxgpio.rst}          |  2 +
->  Documentation/{btmrvl.txt => btmrvl.rst}      |  2 +
->  ...-mapping.txt => bus-virt-phys-mapping.rst} |  4 +-
->  ...g-warn-once.txt => clearing-warn-once.rst} |  2 +
->  Documentation/{cpu-load.txt => cpu-load.rst}  |  2 +
->  .../{cputopology.txt => cputopology.rst}      |  2 +
->  Documentation/{crc32.txt => crc32.rst}        |  2 +
->  Documentation/{dcdbas.txt => dcdbas.rst}      |  2 +
->  ...ging-modules.txt => debugging-modules.rst} |  2 +
->  ...hci1394.txt => debugging-via-ohci1394.rst} |  2 +
->  Documentation/{dell_rbu.txt => dell_rbu.rst}  |  2 +
->  Documentation/device-mapper/statistics.rst    |  4 +-
->  .../devicetree/bindings/phy/phy-bindings.txt  |  2 +-
->  Documentation/{digsig.txt => digsig.rst}      |  2 +
->  Documentation/driver-api/usb/dma.rst          |  6 +-
->  Documentation/driver-model/device.rst         |  2 +-
->  Documentation/{efi-stub.txt => efi-stub.rst}  |  2 +
->  Documentation/{eisa.txt => eisa.rst}          |  2 +
->  Documentation/fb/vesafb.rst                   |  2 +-
->  Documentation/filesystems/sysfs.txt           |  2 +-
->  ...ex-requeue-pi.txt => futex-requeue-pi.rst} |  2 +
->  .../{gcc-plugins.txt => gcc-plugins.rst}      |  2 +
->  Documentation/gpu/drm-mm.rst                  |  2 +-
->  Documentation/{highuid.txt => highuid.rst}    |  2 +
->  .../{hw_random.txt => hw_random.rst}          |  2 +
->  .../{hwspinlock.txt => hwspinlock.rst}        |  2 +
->  Documentation/ia64/IRQ-redir.txt              |  2 +-
->  .../{intel_txt.txt => intel_txt.rst}          |  2 +
->  .../{io-mapping.txt => io-mapping.rst}        |  2 +
->  .../{io_ordering.txt => io_ordering.rst}      |  2 +
->  Documentation/{iostats.txt => iostats.rst}    |  2 +
->  ...flags-tracing.txt => irqflags-tracing.rst} |  2 +
->  Documentation/{isa.txt => isa.rst}            |  2 +
->  Documentation/{isapnp.txt => isapnp.rst}      |  2 +
->  ...hreads.txt => kernel-per-CPU-kthreads.rst} |  4 +-
->  Documentation/{kobject.txt => kobject.rst}    |  4 +-
->  Documentation/{kprobes.txt => kprobes.rst}    |  2 +
->  Documentation/{kref.txt => kref.rst}          |  2 +
->  Documentation/laptops/thinkpad-acpi.txt       |  6 +-
->  Documentation/{ldm.txt => ldm.rst}            |  2 +
->  Documentation/locking/rt-mutex.rst            |  2 +-
->  ...kup-watchdogs.txt => lockup-watchdogs.rst} |  2 +
->  Documentation/{lsm.txt => lsm.rst}            |  2 +
->  Documentation/{lzo.txt => lzo.rst}            |  2 +
->  Documentation/{mailbox.txt => mailbox.rst}    |  2 +
->  Documentation/memory-barriers.txt             |  6 +-
->  ...hameleon-bus.txt => men-chameleon-bus.rst} |  2 +
->  Documentation/networking/scaling.rst          |  4 +-
->  .../{nommu-mmap.txt => nommu-mmap.rst}        |  2 +
->  Documentation/{ntb.txt => ntb.rst}            |  2 +
->  Documentation/{numastat.txt => numastat.rst}  |  2 +
->  Documentation/{padata.txt => padata.rst}      |  2 +
->  ...port-lowlevel.txt => parport-lowlevel.rst} |  2 +
->  ...-semaphore.txt => percpu-rw-semaphore.rst} |  2 +
->  Documentation/{phy.txt => phy.rst}            |  2 +
->  Documentation/{pi-futex.txt => pi-futex.rst}  |  2 +
->  Documentation/{pnp.txt => pnp.rst}            |  2 +
->  ...reempt-locking.txt => preempt-locking.rst} |  2 +
->  Documentation/{pwm.txt => pwm.rst}            |  2 +
->  Documentation/{rbtree.txt => rbtree.rst}      |  2 +
->  .../{remoteproc.txt => remoteproc.rst}        |  4 +-
->  Documentation/{rfkill.txt => rfkill.rst}      |  2 +
->  ...ust-futex-ABI.txt => robust-futex-ABI.rst} |  2 +
->  ...{robust-futexes.txt => robust-futexes.rst} |  2 +
->  Documentation/{rpmsg.txt => rpmsg.rst}        |  2 +
->  Documentation/{rtc.txt => rtc.rst}            |  2 +
->  Documentation/s390/vfio-ccw.rst               |  6 +-
->  Documentation/{sgi-ioc4.txt => sgi-ioc4.rst}  |  2 +
->  Documentation/{siphash.txt => siphash.rst}    |  2 +
->  .../{smsc_ece1099.txt => smsc_ece1099.rst}    |  2 +
->  .../{speculation.txt => speculation.rst}      |  2 +
->  .../{static-keys.txt => static-keys.rst}      |  2 +
->  Documentation/{svga.txt => svga.rst}          |  2 +
->  .../{switchtec.txt => switchtec.rst}          |  4 +-
+> wait! I test it ok.
+> 
+> Don't need to patch RPM to RPC MFD, just keep RPM in SPI.
+> 
+> root@draak:/sys/power# echo mem > state
+> [  135.848711] PM: suspend entry (s2idle)
+> [  135.852777] PM: Syncing filesystems ... done.
+> [  135.869468] Freezing user space processes ... (elapsed 0.002 seconds) done.
+> [  135.879962] OOM killer disabled.
+> [  135.883257] Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
+> [  135.893474] Suspending console(s) (use no_console_suspend to debug)
+> [  135.910946] [Mason] rpc_spi_suspend
+> [  135.986022] PM: suspend devices took 0.084 seconds
+> [  135.986047] PM: suspend debug: Waiting for 5 second(s).
+> [  141.142024] [Mason] rpc_spi_resume
+> [  141.220859] PM: resume devices took 0.116 seconds
+> [  141.243179] OOM killer enabled.
+> [  141.246417] Restarting tasks ... done.
+> [  141.266579] PM: suspend exit
+> root@draak:/sys/power#
 
-For all the switchtec changes:
+   That's not *runtime* PM, it's the *plain* PM you're testing here...
 
-Acked-by: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+> thanks & best regards,
+> Mason
 
-Thanks,
-
-Logan
+MBR, Sergei
