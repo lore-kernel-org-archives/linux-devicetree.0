@@ -1,11 +1,13 @@
 From: Yong Liang <yong.liang@mediatek.com>
-Subject: [PATCH 1/2] dt-bindings: mt8183: Add watchdog dt-binding
-Date: Mon, 22 Apr 2019 14:08:03 +0800
-Message-ID: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
+Subject: [PATCH 2/2] arm64: dts: mt8183: Add watchdog device node
+Date: Mon, 22 Apr 2019 14:08:04 +0800
+Message-ID: <1555913284-5591-2-git-send-email-yong.liang@mediatek.com>
+References: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,25 +23,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: "yong.liang" <yong.liang@mediatek.com>
 
-This patch add watchdog binding documentation for
-watchdog on MTK Socs.
+Add watchdog device node in dtsi file.
 
 Signed-off-by: yong.liang <yong.liang@mediatek.com>
 ---
- .../devicetree/bindings/watchdog/mtk-wdt.txt       |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-index 8682d6a..f0824aa 100644
---- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
- 	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
- 	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
-+	"mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 75c4881..491bef0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -253,6 +253,12 @@
+ 			smi_comm = <&smi_common>;
+ 		};
  
- - reg : Specifies base physical address and size of the registers.
- 
++		watchdog: watchdog@10007000 {
++			compatible = "mediatek,mt8183-wdt",
++				      "mediatek,mt6589-wdt";
++			reg = <0 0x10007000 0 0x100>;
++		};
++
+ 		apmixedsys: syscon@1000c000 {
+ 			compatible = "mediatek,mt8183-apmixedsys", "syscon";
+ 			reg = <0 0x1000c000 0 0x1000>;
 -- 
 1.7.9.5
