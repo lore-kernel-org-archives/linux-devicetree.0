@@ -1,96 +1,115 @@
-From: Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-Subject: Re: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend; enable for
- rk3288-veyron
-Date: Mon, 22 Apr 2019 15:50:29 +0000
-Message-ID: <SN1PR12MB2431362F11279C1C0E9E7793A7220@SN1PR12MB2431.namprd12.prod.outlook.com>
-References: <20190418001356.124334-1-dianders@chromium.org>
- <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
- <CAD=FV=XDLqcdq_BypUYsJHKX+DY0VWvCACYgZiHeG8E3Dbwxcw@mail.gmail.com>
- <SN1PR12MB2431F918E4731FAA50A373B6A7270@SN1PR12MB2431.namprd12.prod.outlook.com>
- <SN1PR12MB24319D0BF93E22B6B913E6CAA7270@SN1PR12MB2431.namprd12.prod.outlook.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver
+ bindings
+Date: Mon, 22 Apr 2019 18:13:02 +0200
+Message-ID: <1555949582.1483.0@crapouillou.net>
+References: <20190414200824.28348-1-paul@crapouillou.net>
+        <20190414200824.28348-2-paul@crapouillou.net>
+        <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+        <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, "heiko@sntech.de" <heiko@sntech.de>, Alan Stern <stern@rowland.harvard.edu>, "amstan@chromium.org" <amstan@chromium.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, William Wu <william.wu@rock-chips.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Randy Li <ayaka@soulik.info>, "zyw@rock-chips.com" <zyw@rock-chips.com>, "mka@chromium.org" <mka@chromium.org>, "ryandcase@chromium.org" <ryandcase@chromium.org>, Amelie Delaunay <amelie.delaunay@st.com>, "jwerner@chromium.org" <jwerner@chromium.org>, Elaine Zhang <zhangqing@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,=0A=
-=0A=
-On 4/19/2019 20:44, Artur Petrosyan wrote:=0A=
-> Hi Doug,=0A=
-> =0A=
-> On 4/19/2019 15:43, Artur Petrosyan wrote:=0A=
->> Hi,=0A=
->>=0A=
->> On 4/18/2019 19:55, Doug Anderson wrote:=0A=
->>> Hi,=0A=
->>>=0A=
->>> On Thu, Apr 18, 2019 at 5:41 AM Minas Harutyunyan=0A=
->>> <Minas.Harutyunyan@synopsys.com> wrote:=0A=
->>>> Did you consider/reviewed patch series from Artur Petrosyan "[PATCH=0A=
->>>> 00/14] usb: dwc2: Fix and improve power saving modes" (submitted on=0A=
->>>> April 12) which fixing partial power down and hibernation flows for bo=
-th=0A=
->>>> modes: host and device?=0A=
->>>> I suspect that this both patch series can be in conflict.=0A=
->>>=0A=
->>> No, I wasn't aware of them.  I'd like to try them out, but it looks=0A=
->>> like it's currently impossible because they're not archived anywhere=0A=
->>> that I can find.=0A=
->>>=0A=
->>> 1. LKML wasn't copied, so I can't find them on lore.kernel.org.  It is=
-=0A=
->>> suggested to CC LKML on all patches.=0A=
->>>=0A=
->>> 2. The Linux USB patchwork only has the cover letter plus the first 6=
-=0A=
->>> patches.  See <https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__p=
-atchwork.kernel.org_cover_10898333_&d=3DDwIBaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=
-=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D7niMJI&m=3DrJbofHXqjP3sUBgEikaZ89fR=
-WtsquvhFUkhSPguCiWw&s=3D_CrI0uolquXIYC5SuoZ1vBs7BM19VfCceI96qZm9kAY&e=3D>=
-=0A=
->>>=0A=
->>> 3. Searching my own archives I only see the cover letter plus the=0A=
->>> first 6 patches.=0A=
->>>=0A=
->>> Maybe you have some other pointer to how I can retrieve them?  I guess=
-=0A=
->>> I could try the first 6 patches without the later 8 but I'd rather get=
-=0A=
->>> the whole set...=0A=
->>>=0A=
->>>=0A=
->>> -Doug=0A=
->>>=0A=
->>=0A=
->>=0A=
->> I have resend the patch set. You can find it with cover letter=0A=
->> "[PATCH v1 00/14] usb: dwc2: Fix and improve power saving modes."=0A=
->>=0A=
->> Let me know if you need any help.=0A=
->>=0A=
-> =0A=
-> I am so sorry to inform you that the patches have not reached to LKML.=0A=
-> Looks like there is a problem with the kernel mailing list servers or=0A=
-> our local servers.=0A=
-> Will try to fix this as soon as possible and let you know about it.=0A=
-> =0A=
-=0A=
-My patches has reached to LKML. You can find them with the patch set =0A=
-title "[PATCH v1 00/14] usb: dwc2: Fix and improve power saving modes."=0A=
-=0A=
-This is the link to the patch set in marc.info=0A=
-"https://marc.info/?l=3Dlinux-usb&m=3D155570003924638&w=3D2"=0A=
-and a link in patchwork.kernel.org=0A=
-"https://patchwork.kernel.org/project/linux-usb/list/?submitter=3D180003"=
-=0A=
-=0A=
-Sorry for the delay.=0A=
-=0A=
--- =0A=
-Regards,=0A=
-Artur=0A=
+Hi,
+
+Le sam. 20 avril 2019 =E0 14:23, Ezequiel Garcia=20
+<ezequiel@vanguardiasur.com.ar> a =E9crit :
+> On Wed, 17 Apr 2019 at 10:48, Rob Herring <robh+dt@kernel.org> wrote:
+>>=20
+>>  On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil=20
+>> <paul@crapouillou.net> wrote:
+>>  >
+>>  > Add macros that can be used with the ingenic,lcd-mode property in=20
+>> the
+>>  > devicetree node that corresponds to the ingenic-drm driver.
+>>=20
+>>  DRM is a Linuxism.
+>>=20
+>>  >
+>>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  > Tested-by: Artur Rojek <contact@artur-rojek.eu>
+>>  > ---
+>>  >
+>>  > Notes:
+>>  >     v2: No change
+>>  >
+>>  >     v3: s/_DRM//
+>>  >
+>>  >  include/dt-bindings/display/ingenic,drm.h | 28=20
+>> ++++++++++++++++++++++++++++
+>>=20
+>>  DRM is a Linuxism...
+>>=20
+>>  >  1 file changed, 28 insertions(+)
+>>  >  create mode 100644 include/dt-bindings/display/ingenic,drm.h
+>>  >
+>>  > diff --git a/include/dt-bindings/display/ingenic,drm.h=20
+>> b/include/dt-bindings/display/ingenic,drm.h
+>>  > new file mode 100644
+>>  > index 000000000000..c749b8c346fc
+>>  > --- /dev/null
+>>  > +++ b/include/dt-bindings/display/ingenic,drm.h
+>>  > @@ -0,0 +1,28 @@
+>>  > +/* SPDX-License-Identifier: GPL-2.0 */
+>>  > +/*
+>>  > + *  Ingenic JZ47xx KMS driver
+>>=20
+>>  Pretty sure this file is not a KMS driver.
+>>=20
+>>  > + *
+>>  > + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
+>>  > + */
+>>  > +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+>>  > +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+>>  > +
+>>  > +#define JZ_LCD_GENERIC_16BIT                   0
+>>  > +#define JZ_LCD_GENERIC_18BIT                   16
+>>=20
+>>  We have some generic properties for defining the bus width already.
+>>  Plus, in many cases this can be implied by the panel compatible. The
+>>  exceptions are cases such as when both the ctrlr and panel support
+>>  multiple modes.
+>>=20
+>=20
+> In the same direction as Rob's comment, I'd like to see these=20
+> decoupled
+> from the register value.
+>=20
+> Ideally, we'd like to reuse this driver and its bindings for JZ4780,
+> and these values are already different.
+
+Well they are not any different on the JZ4780, I just checked on the=20
+manual.
+But yes, I don't mind getting rid of that devicetree property and its
+corresponding bindings file.
+
+The major problem is that we don't have a way to map some of the values=20
+there
+to DRM macros. I sumitted a PR to add a MEDIA_BUS_FMT_RGB888_3X8_BE bus=20
+format
+(that I could detect to support 8-bit serial TFT panels, which is what=20
+the
+Ben Nanonote uses), but I miss a way to detect the special* TFT panels.
+I will leave these aside for now, but I want to support them eventually.
+
+Thanks,
+-Paul
+
+* "special" TFT panels have extra pins (CLS, SPL, REV, PS) and seem to=20
+be a
+thing from Sharp. Ingenic SoCs (as well as i.MX SoCs) have the required
+hardware to drive these panels.
+
+> Thanks!
+> --
+> Ezequiel Garc=EDa, VanguardiaSur
+> www.vanguardiasur.com.ar
+
+=
