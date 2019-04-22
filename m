@@ -1,76 +1,84 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names
- from DT
-Date: Mon, 22 Apr 2019 13:44:50 +0200
-Message-ID: <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
-References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v11 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+Date: Mon, 22 Apr 2019 14:45:56 +0300
+Message-ID: <2714b406-1038-c3e2-be6b-326c073497ea@cogentembedded.com>
+References: <1555903925-15292-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555903925-15292-4-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <1555903925-15292-4-git-send-email-masonccyang@mxic.com.tw>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
-Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-On 2/22/19 19:11, Stephen Boyd wrote:
-> Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
->> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
->>         if (!a53cc)
->>                 return -ENOMEM;
->>  
->> +       /* check if the parent names are present in the device tree */
+Hello!
+
+On 04/22/2019 06:32 AM, Mason Yang wrote:
+
+> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
 > 
-> This looks odd.
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
 > 
->> +       ret = devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
->> +       if (ret == -EPROBE_DEFER)
->> +               return ret;
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> new file mode 100644
+> index 0000000..ee3bad8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> @@ -0,0 +1,39 @@
+> +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
+> +-------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +		"renesas,rcar-gen3-rpc" as a fallback.
+> +		supported SoC-specific values are:
+> +		"renesas,r8a77995-rpc"	(R-Car D3)
+> +- reg: should contain three register areas:
+> +	first for the base address of rpc-if registers,
+
+   RPC-IF.
+
+> +	second for the direct mapping read mode and
+> +	third for the write buffer area.
+> +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> +- clocks: should contain 1 entries for the module's clock
+> +- clock-names: should contain "rpc"
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +
+> +Example:
+> +
+> +	rpc: rpc-if@ee200000 {
+> +		compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
+> +		reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>;
+> +		reg-names = "regs", "dirmap";
+
+  You forgot to add back the "wbuf" entrees above.
+
+> +		clocks = <&cpg CPG_MOD 917>;
+> +		clock-names = "rpc";
+> +		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +		resets = <&cpg 917>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		flash@0 {
+> +			compatible = "jedec,spi-nor";
+> +			reg = <0>;
+> +			spi-max-frequency = <40000000>;
+> +			spi-tx-bus-width = <1>;
+> +			spi-rx-bus-width = <1>;
+> +		};
+> +	};
 > 
-> Why can't we use of_clk_parent_fill() if we know this is always a DT
-> platform?  The parent clks may not be registered at the time of probe?
 
-yes, and AFAICS the important thing at this point is that the clock is
-registered hence the handling of defer.
-
-I could use of_clk_parent_fill and then - if needed - call
-devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
-this just make the code more confusing?)
-
-
-> Maybe this series should wait for the parent registration stuff I'm
-> working on so that this can be made simpler.
-
-the need for the clock name is not intrinsic to this driver (the driver
-itself doesnt use these names) but it just feeds these to the framework.
-
-I was looking into your parent registration code and I am not sure how
-can I use it in this particular driver other than simply removing the
-names and hoping that things are handled properly at the lower
-levels.... could you clarify please?
-
-
-> 
->> +
->> +       if (!ret) {
->> +               gpll0_a53cc[0] = __clk_get_name(pclks[0].clk);
->> +               gpll0_a53cc[1] = __clk_get_name(pclks[1].clk);
->> +               a53cc->pclk = pclks[1].clk;
->> +       } else {
->> +               /* support old binding where only pll was explicitily defined */
->> +               a53cc->pclk = devm_clk_get(parent, NULL);
->> +               if (IS_ERR(a53cc->pclk)) {
->> +                       ret = PTR_ERR(a53cc->pclk);
->> +                       dev_err(dev, "failed to get clk: %d\n", ret);
->> +                       return ret;
->> +               }
->> +       }
->> +
->>         init.name = "a53mux";
->>         init.parent_names = gpll0_a53cc;
->>         init.num_parents = ARRAY_SIZE(gpll0_a53cc);
-> 
+MBR, Sergei
