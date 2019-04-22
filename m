@@ -1,7 +1,7 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v3 1/3] dt-bindings: net: add qca,ar71xx.txt documentation
-Date: Mon, 22 Apr 2019 08:40:44 +0200
-Message-ID: <20190422064046.2822-2-o.rempel@pengutronix.de>
+Subject: [PATCH v3 2/3] MIPS: ath79: ar9331: add Ethernet nodes
+Date: Mon, 22 Apr 2019 08:40:45 +0200
+Message-ID: <20190422064046.2822-3-o.rempel@pengutronix.de>
 References: <20190422064046.2822-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,64 +12,65 @@ To: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Jame
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Atheros/QCA networking IP core used
-in many routers.
+Add ethernet nodes supported by ag71xx driver.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- .../devicetree/bindings/net/qca,ar71xx.txt    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
+ arch/mips/boot/dts/qca/ar9331.dtsi           | 25 ++++++++++++++++++++
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts |  8 +++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/qca,ar71xx.txt b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
-new file mode 100644
-index 000000000000..56abf224de2c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
-@@ -0,0 +1,44 @@
-+Required properties:
-+- compatible:	Should be "qca,<soc>-eth". Currently support compatibles are:
-+		qca,ar7100-eth - Atheros AR7100
-+		qca,ar7240-eth - Atheros AR7240
-+		qca,ar7241-eth - Atheros AR7241
-+		qca,ar7242-eth - Atheros AR7242
-+		qca,ar9130-eth - Atheros AR9130
-+		qca,ar9330-eth - Atheros AR9330
-+		qca,ar9340-eth - Atheros AR9340
-+		qca,qca9530-eth - Qualcomm Atheros QCA9530
-+		qca,qca9550-eth - Qualcomm Atheros QCA9550
-+		qca,qca9560-eth - Qualcomm Atheros QCA9560
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index 2bae201aa365..2f56fd894df9 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -116,6 +116,31 @@
+ 			};
+ 		};
+ 
++		eth0: ethernet@19000000 {
++			compatible = "qca,ar9330-eth";
++			reg = <0x19000000 0x200>;
++			interrupts = <4>;
 +
-+- reg : Address and length of the register set for the device
-+- interrupts : Should contain eth interrupt
-+- phy-mode : See ethernet.txt file in the same directory
-+- clocks: the clock used by the core
-+- clock-names: the names of the clock listed in the clocks property. These are
-+	"mdio".
-+- resets: Should contain phandles to the reset signals
-+- reset-names: Should contain the names of reset signal listed in the resets
-+		property. These are "mac" and "mdio"
++			resets = <&rst 9>;
++			reset-names = "mac";
 +
-+Optional properties:
-+- phy-handle : phandle to the PHY device connected to this device.
-+- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-+  Use instead of phy-handle.
++			status = "disabled";
++		};
 +
-+Optional subnodes:
-+- mdio : specifies the mdio bus, used as a container for phy nodes
-+  according to phy.txt in the same directory
++		eth1: ethernet@1a000000 {
++			compatible = "qca,ar9330-eth";
++			reg = <0x1a000000 0x200>;
++			interrupts = <5>;
 +
-+Example:
++			resets = <&rst 13>, <&rst 23>;
++			reset-names = "mac", "mdio";
 +
-+ethernet@1a000000 {
-+	compatible = "qca,ar9330-eth";
-+	reg = <0x1a000000 0x200>;
-+	interrupts = <5>;
-+	resets = <&rst 13>, <&rst 23>;
-+	reset-names = "mac", "mdio";
-+	clocks = <&pll ATH79_CLK_MDIO>;
-+	clock-names = "mdio";
-+	phy-mode = "gmii";
++			clocks = <&pll ATH79_CLK_MDIO>;
++			clock-names = "mdio";
++
++			status = "disabled";
++		};
++
+ 		usb: usb@1b000100 {
+ 			compatible = "chipidea,usb2";
+ 			reg = <0x1b000000 0x200>;
+diff --git a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
+index e7af2cf5f4c1..77bab823eb3b 100644
+--- a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
++++ b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
+@@ -76,3 +76,11 @@
+ 		reg = <0>;
+ 	};
+ };
++
++&eth0 {
++	status = "okay";
++};
++
++&eth1 {
++	status = "okay";
 +};
 -- 
 2.20.1
