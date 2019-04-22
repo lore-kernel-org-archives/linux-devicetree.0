@@ -1,33 +1,46 @@
-Return-Path: <SRS0=xtDS=SZ=gmail.com=dmitry.torokhov@kernel.org>
-Date: Tue, 23 Apr 2019 03:17:05 +0000
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/2] input: touch: eeti: read hardware state once after
- wakeup
-Message-ID: <20190423031705.gllzrreptvphdrc3@penguin>
+Return-Path: <SRS0=1iwi=SY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.bugwerft.de ([46.23.86.59]:50092 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfDVIgE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Apr 2019 04:36:04 -0400
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 2/2] input: touch: eeti: read hardware state once after wakeup
+Date: Mon, 22 Apr 2019 10:35:40 +0200
+Message-Id: <20190422083540.8380-2-daniel@zonque.org>
+In-Reply-To: <20190422083540.8380-1-daniel@zonque.org>
 References: <20190422083540.8380-1-daniel@zonque.org>
- <20190422083540.8380-2-daniel@zonque.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422083540.8380-2-daniel@zonque.org>
-To: Daniel Mack <daniel@zonque.org>
-Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Sven Neumann <Sven.Neumann@teufel.de>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Sven Neumann <Sven.Neumann@teufel.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Daniel,
+For systems in which the touch IRQ is acting as wakeup source, the interrupt
+controller might not latch the GPIO IRQ during sleep. In such cases, the
+interrupt will never occur again after resume, hence the touch screen
+appears dead.
 
-On Mon, Apr 22, 2019 at 10:35:40AM +0200, Daniel Mack wrote:
-> For systems in which the touch IRQ is acting as wakeup source, the interrupt
-> controller might not latch the GPIO IRQ during sleep. In such cases, the
-> interrupt will never occur again after resume, hence the touch screen
-> appears dead.
-> 
-> To fix this, call into eeti_ts_read() once to read the hardware status and
-> to arm the IRQ again.
+To fix this, call into eeti_ts_read() once to read the hardware status and
+to arm the IRQ again.
 
-Can you instead make the interrupt level-triggered?
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Reported-by: Sven Neumann <Sven.Neumann@teufel.de>
+---
+ drivers/input/touchscreen/eeti_ts.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks.
-
+diff --git a/drivers/input/touchscreen/eeti_ts.c b/drivers/input/touchscreen/eeti_ts.c
+index f5724aaa815b..674386f910ba 100644
+--- a/drivers/input/touchscreen/eeti_ts.c
++++ b/drivers/input/touchscreen/eeti_ts.c
+@@ -117,6 +117,7 @@ static void eeti_ts_start(struct eeti_ts *eeti)
+ 	eeti->running = true;
+ 	wmb();
+ 	enable_irq(eeti->client->irq);
++	eeti_ts_read(eeti);
+ }
+ 
+ static void eeti_ts_stop(struct eeti_ts *eeti)
 -- 
-Dmitry
+2.20.1
