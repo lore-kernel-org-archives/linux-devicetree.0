@@ -1,59 +1,58 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 18/28] PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-Date: Tue, 23 Apr 2019 14:58:15 +0530
-Message-ID: <20190423092825.759-19-mmaddireddy@nvidia.com>
-In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=1iwi=SY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:42478
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726675AbfDVKSO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Apr 2019 06:18:14 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v4] arm64: dts: ls1028a: Add properties for Mali DP500 node
+Date: Mon, 22 Apr 2019 10:18:10 +0000
+Message-ID: <20190422101941.11335-1-wen.he_1@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, Wen He <wen.he_1@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Cacheable upstream transactions are supported in Tegra20 and Tegra186 only.
-AFI_CACHE* registers are available in Tegra20 to support cacheable upstream
-transactions. In Tegra186, AFI_AXCACHE register is defined instead of
-AFI_CACHE* to be in line with its MSS design. Therefore, program AFI_CACHE*
-registers only for Tegra20.
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
-V2: Used soc variable for comparision instead of compatible string.
-
- drivers/pci/controller/pci-tegra.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f74930654443..9b841b0392ac 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -323,6 +323,7 @@ struct tegra_pcie_soc {
- 	bool program_deskew_time;
- 	bool raw_violation_fixup;
- 	bool update_fc_timer;
-+	bool has_cache_bars;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -932,11 +933,13 @@ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
- 	afi_writel(pcie, 0, AFI_AXI_BAR5_SZ);
- 	afi_writel(pcie, 0, AFI_FPCI_BAR5);
- 
--	/* map all upstream transactions as uncached */
--	afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
--	afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
--	afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
--	afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
-+	if (pcie->soc->has_cache_bars) {
-+		/* map all upstream transactions as uncached */
-+		afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
-+	}
- 
- 	/* MSI translations are setup only when needed */
- 	afi_writel(pcie, 0, AFI_MSI_FPCI_BAR_ST);
--- 
-2.17.1
+VGhlIExTMTAyOEEgaGFzIGEgTENEIGNvbnRyb2xsZXIgYW5kIERpc3BsYXlwb3J0IGludGVyZmFj
+ZSB0aGF0DQpjb25uZWN0cyB0byBlRFAgYW5kIERpc3BsYXlwb3J0IGNvbm5lY3RvcnMgb24gdGhl
+IExTMTAyOEEgYm9hcmQuDQoNClRoaXMgcGF0Y2ggZW5hYmxlcyB0aGUgTENEIGNvbnRyb2xsZXIg
+ZHJpdmVyIG9uIHRoZSBMUzEwMjhBLg0KDQpTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YWxp
+c29uLndhbmdAbnhwLmNvbT4NClNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNv
+bT4NClJldmlld2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4NCi0tLQ0K
+Y2hhbmdlIGluIHY0Og0KICAgICAgICAtIHVzaW5nICdtYWxpZHAwOmRpc3BsYXknIGluc3RlYWQg
+b2YgdGhlIG5vZGUgbmFtZQ0KICAgICAgICAnZGlzcGxheTA6bWFsaWRwJy4NCmNoYW5nZSBpbiB2
+MzoNCiAgICAgICAgLSB1c2luZyAnZGlzcGxheTAnIGluc3RlYWQgb2Ygbm9kZSBuYW1lICdkaXNw
+bGF5LTAnIHRvDQogICAgICAgIGZpeGVkIHN5bnRheCBlcnJvci4NCg0KY2hhbmdlIGluIHYyOg0K
+ICAgICAgICAtIHJlbmFtZWQgbm9kZSBuYW1lICdkcDAnIHRvIGJlIGdlbmVyaWMgbmFtZSAnZGlz
+cGxheS0wJy4NCiAgICAgICAgLSByZXBsYWNlIGNsayBuYW1lICd4eGNsaycgdG8gJ2Nsb2NrLXh4
+Jy4NCiAgICAgICAgLSBhZGQgbmV3bGluZSBiZXR3ZWVuIHByb3BlcnRpZXMgYW5kIGNoaWxkIG5v
+ZGUuDQoNCiAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAz
+OCArKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKykN
+Cg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhh
+LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQpp
+bmRleCA4ZGQzNTAxYjEzMzMuLjliMmIzOWViMzdlZiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCkBAIC03MCw2ICs3MCwyNyBAQA0KIAkJ
+Y2xvY2stb3V0cHV0LW5hbWVzID0gInN5c2NsayI7DQogCX07DQogDQorCWRwY2xrOiBjbG9jay1k
+cCB7DQorCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCisJCSNjbG9jay1jZWxscyA9IDww
+PjsNCisJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNzAwMDAwMD47DQorCQljbG9jay1vdXRwdXQtbmFt
+ZXM9ICJkcGNsayI7DQorCX07DQorDQorCWFjbGs6IGNsb2NrLWF4aSB7DQorCQljb21wYXRpYmxl
+ID0gImZpeGVkLWNsb2NrIjsNCisJCSNjbG9jay1jZWxscyA9IDwwPjsNCisJCWNsb2NrLWZyZXF1
+ZW5jeSA9IDw2NTAwMDAwMDA+Ow0KKwkJY2xvY2stb3V0cHV0LW5hbWVzPSAiYWNsayI7DQorCX07
+DQorDQorCXBjbGs6IGNsb2NrLWFwYiB7DQorCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsN
+CisJCSNjbG9jay1jZWxscyA9IDwwPjsNCisJCWNsb2NrLWZyZXF1ZW5jeSA9IDw2NTAwMDAwMDA+
+Ow0KKwkJY2xvY2stb3V0cHV0LW5hbWVzPSAicGNsayI7DQorCX07DQorDQogCXJlYm9vdCB7DQog
+CQljb21wYXRpYmxlID0ic3lzY29uLXJlYm9vdCI7DQogCQlyZWdtYXAgPSA8JmRjZmc+Ow0KQEAg
+LTQzMyw0ICs0NTQsMjEgQEANCiAJCQl9Ow0KIAkJfTsNCiAJfTsNCisNCisJbWFsaWRwMDogZGlz
+cGxheUBmMDgwMDAwIHsNCisJCWNvbXBhdGlibGUgPSAiYXJtLG1hbGktZHA1MDAiOw0KKwkJcmVn
+ID0gPDB4MCAweGYwODAwMDAgMHgwIDB4MTAwMDA+Ow0KKwkJaW50ZXJydXB0cyA9IDwwIDIyMiBJ
+UlFfVFlQRV9MRVZFTF9ISUdIPiwNCisJCQkgICAgIDwwIDIyMyBJUlFfVFlQRV9MRVZFTF9ISUdI
+PjsNCisJCWludGVycnVwdC1uYW1lcyA9ICJERSIsICJTRSI7DQorCQljbG9ja3MgPSA8JmRwY2xr
+PiwgPCZhY2xrPiwgPCZhY2xrPiwgPCZwY2xrPjsNCisJCWNsb2NrLW5hbWVzID0gInB4bGNsayIs
+ICJtY2xrIiwgImFjbGsiLCAicGNsayI7DQorCQlhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVz
+ID0gL2JpdHMvIDggPDggOCA4PjsNCisNCisJCXBvcnQgew0KKwkJCWRwMF9vdXQ6IGVuZHBvaW50
+IHsNCisNCisJCQl9Ow0KKwkJfTsNCisJfTsNCiB9Ow0KLS0gDQoyLjE3LjENCg0K
