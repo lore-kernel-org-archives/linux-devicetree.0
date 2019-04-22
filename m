@@ -1,56 +1,37 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: Re: [PATCH v1 4/4] drm/mediatek: fix possible_crtcs
-Date: Mon, 22 Apr 2019 16:59:19 +0800
-Message-ID: <1555923559.2854.14.camel@mtksdaap41>
-References: <20190416145848.11932-1-frank-w@public-files.de>
- <20190416145848.11932-5-frank-w@public-files.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190416145848.11932-5-frank-w@public-files.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, chunhui dai <chunhui.dai@mediatek.com>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: andy.tang@nxp.com
+Subject: [PATCH 1/2] dt-bindings: qoriq-clock: add more PLL divider clocks support
+Date: Mon, 22 Apr 2019 17:15:08 +0800
+Message-ID: <20190422091509.3181-1-andy.tang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com
+Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCk9uIFR1ZSwgMjAxOS0wNC0xNiBhdCAxNjo1OCArMDIwMCwgRnJhbmsgV3VuZGVy
-bGljaCB3cm90ZToKPiBGcm9tOiBSeWRlciBMZWUgPHJ5ZGVyLmxlZUBtZWRpYXRlay5jb20+Cj4g
-Cj4gd2l0aG91dCB0aGlzIHBhdGNoIHRoZXJlIGlzIHB1cnBsZSBzdHJldGNoZWQgZm9udCBvbiBm
-YmNvbnNvbGUKPiAKPiBzb3VyY2U6IGh0dHA6Ly9mb3J1bS5iYW5hbmEtcGkub3JnL3Qva2VybmVs
-LTQtMTktcmMxLWZvci10ZXN0ZXJzLzY2MTgvNTIKPiAKPiBTaWduZWQtb2ZmLWJ5OiBSeWRlciBM
-ZWUgPHJ5ZGVyLmxlZUBtZWRpYXRlay5jb20+Cj4gVGVzdGVkLWJ5OiBGcmFuayBXdW5kZXJsaWNo
-IDxmcmFuay13QHB1YmxpYy1maWxlcy5kZT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcGkuYyB8IDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHBpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jCj4gaW5kZXggNWQz
-MzMxMzhmOTEzLi5jMTcxYjAxZjc3ZTAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcGkuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBp
-LmMKPiBAQCAtNjEwLDcgKzYxMCw3IEBAIHN0YXRpYyBpbnQgbXRrX2RwaV9iaW5kKHN0cnVjdCBk
-ZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQo+ICAJZHJtX2Vu
-Y29kZXJfaGVscGVyX2FkZCgmZHBpLT5lbmNvZGVyLCAmbXRrX2RwaV9lbmNvZGVyX2hlbHBlcl9m
-dW5jcyk7Cj4gCj4gIAkvKiBDdXJyZW50bHkgRFBJMCBpcyBmaXhlZCB0byBiZSBkcml2ZW4gYnkg
-T1ZMMSAqLwo+IC0JZHBpLT5lbmNvZGVyLnBvc3NpYmxlX2NydGNzID0gQklUKDEpOwo+ICsJZHBp
-LT5lbmNvZGVyLnBvc3NpYmxlX2NydGNzID0gQklUKDApfEJJVCgxKTsKVGhpcyBwYXRjaCBpcyBu
-b3QgYSBnb29kIHNvbHV0aW9uLgoKVGhlIHNvbHV0aW9uIHNob3VsZCBmaW5kIHRoZSBjb21wb25l
-bnRzIGluIHRoZSBhcnJheXMgdG8gZGV0ZXJtaW5lIHRoZQpjb3JyZWN0IGNydGNzLCBub3QganVz
-dCBzZXQgYWxsIGF2YWlsYWJsZSBiaXRzLiAgWW91IHNlZSB0aGUgcHJvYmxlbQpiZWNhdXNlIHRo
-ZSBoYXJkd2FyZSBjb25uZWN0aW9ucyhCSVQwKSBpcyBub3QgdGhlIHNhbWUgYXMgZHJpdmVyCnJl
-cG9ydHMoQklUMSBjaGFuZ2VkIHRvIEJJVDB8QklUMSwgYnV0IEJJVDEgaXMgbm90IHN1cHBvcnRl
-ZCkuCgpSZWdhcmRzLAp5dC5zaGVuCgo+IAo+ICAJcmV0ID0gZHJtX2JyaWRnZV9hdHRhY2goJmRw
-aS0+ZW5jb2RlciwgZHBpLT5icmlkZ2UsIE5VTEwpOwo+ICAJaWYgKHJldCkgewo+IC0tCj4gMi4x
-Ny4xCj4gCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QKPiBMaW51eC1tZWRpYXRla0BsaXN0cy5p
-bmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1tZWRpYXRlawoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbA==
+From: Yuantian Tang <andy.tang@nxp.com>
+
+More PLL divider clocks are needed by clock consumer IP. So update
+the PLL divider description to make it more general.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ .../devicetree/bindings/clock/qoriq-clock.txt      |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+index c655f28..27aeed0 100644
+--- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
++++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+@@ -83,8 +83,8 @@ second cell is the clock index for the specified type.
+ 	1	cmux		index (n in CLKCnCSR)
+ 	2	hwaccel		index (n in CLKCGnHWACSR)
+ 	3	fman		0 for fm1, 1 for fm2
+-	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
+-				4=pll/5, 5=pll/6, 6=pll/7, 7=pll/8
++	4	platform pll	n=pll/(n+1). For example, when n=1,
++				that means output_freq=PLL_freq/2.
+ 	5	coreclk		must be 0
+ 
+ 3. Example
+-- 
+1.7.1
