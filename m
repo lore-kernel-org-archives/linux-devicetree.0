@@ -1,29 +1,88 @@
-From: "Leonidas P. Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: set TX PBL for rk3328-roc-cc gmac
-Date: Mon, 22 Apr 2019 16:13:23 +0300
-Message-ID: <1555938803.1241.1@gmail.com>
-References: <20190417210059.26262-1-papadakospan@gmail.com>
- <8865b046-fb3a-4071-335c-66abb344d7f4@gmail.com>
- <1555915435.1262.1@gmail.com>
- <9a5c62b4-ea75-de4f-9b71-ffa42cb8eaac@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: input: add GPIO controllable vibrator
+Date: Mon, 22 Apr 2019 08:13:29 -0500
+Message-ID: <CAL_Jsq+EJpRFRzh-dmZAJUQ84iMm6rs=sNTYstpQJzsbSboUqg@mail.gmail.com>
+References: <20190420122333.23662-1-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <9a5c62b4-ea75-de4f-9b71-ffa42cb8eaac-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190420122333.23662-1-luca@z3ntu.xyz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Apr 20, 2019 at 7:24 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> Provide a simple driver for GPIO controllable vibrators.
+> It will be used by the Fairphone 2.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+> Changes from v3:
+> - Convert .txt based doc to the new yaml based format
+>
+>  .../bindings/input/gpio-vibrator.yaml         | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> new file mode 100644
+> index 000000000000..bca1b6ea07a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/input/gpio-vibrator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: GPIO vibrator
+> +
+> +maintainers:
+> +  - Luca Weiss <luca@z3ntu.xyz>
+> +
+> +description: |+
+> +  Registers a GPIO device as vibrator, where the on/off capability is controlled by a GPIO.
+> +
+> +properties:
+> +  compatible:
 
-Indeed, at least with that first patch users won't have a crappy 
-experience by default (ssh lags and the like)
+> +    items:
+> +      - const: gpio-vibrator
+
+These 2 lines can be simplified to just 'const: gpio-vibrator'.
+
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +
+> +  vcc-supply:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+This isn't necessary as we can do this for every occurrence of
+'*-supply'. I'll add that to the core schema.
+
+With those 2 changes:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +    description: Regulator that provides power
+> +
+> +required:
+> +  - compatible
+> +  - enable-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    vibrator {
+> +        compatible = "gpio-vibrator";
+> +        enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
+> +        vcc-supply = <&pm8941_l18>;
+> +    };
+> --
+> 2.21.0
+>
