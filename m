@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 11/29] ARM: dts: pfla02: increase phy reset duration
-Date: Mon, 22 Apr 2019 15:48:30 -0400
-Message-ID: <20190422194848.13049-11-sashal@kernel.org>
-References: <20190422194848.13049-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 07/21] ARM: dts: pfla02: increase phy reset duration
+Date: Mon, 22 Apr 2019 15:49:27 -0400
+Message-ID: <20190422194941.13433-7-sashal@kernel.org>
+References: <20190422194941.13433-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
+In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Marco Felsch <m.felsch@pengutronix.de>, Stefan Christ <s.christ@phytec.de>, Christian Hemp <c.hemp@phytec.de>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -43,7 +43,7 @@ Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index e0280cac2484..fed72a5f3ffa 100644
+index d6d98d426384..cae04e806036 100644
 --- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
 @@ -90,6 +90,7 @@
