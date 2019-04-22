@@ -1,174 +1,122 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v2 2/7] mfd: max77620: Support Maxim 77663
-Date: Mon, 22 Apr 2019 22:13:45 +0300
-Message-ID: <20190422191350.27527-3-digetx@gmail.com>
-References: <20190422191350.27527-1-digetx@gmail.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 1/2] arm64: dts: imx8mm: Add SAI nodes
+Date: Mon, 22 Apr 2019 19:35:59 +0000
+Message-ID: <20190422193542.2853-2-daniel.baluta@nxp.com>
+References: <20190422193542.2853-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422191350.27527-1-digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190422193542.2853-1-daniel.baluta@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Maxim 77663 using the Max77620 driver. The hardware
-is very similar to Max77663/20024, although there are couple minor
-differences.
+i.MX8MM has 5 SAI instances with the following base
+addresses according to RM.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+SAI1 base address: 3001_0000h
+SAI2 base address: 3002_0000h
+SAI3 base address: 3003_0000h
+SAI5 base address: 3005_0000h
+SAI6 base address: 3006_0000h
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- drivers/mfd/max77620.c       | 69 +++++++++++++++++++++++++++++++++++-
- include/linux/mfd/max77620.h |  1 +
- 2 files changed, 69 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 71 +++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
-diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
-index d8ddd1a6f304..9b0009c29610 100644
---- a/drivers/mfd/max77620.c
-+++ b/drivers/mfd/max77620.c
-@@ -111,6 +111,26 @@ static const struct mfd_cell max20024_children[] = {
- 	},
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index de3498c2dd44..4d080dc47216 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -171,6 +171,77 @@
+ 			#size-cells = <1>;
+ 			ranges;
  
-+static const struct mfd_cell max77663_children[] = {
-+	{ .name = "max77620-pinctrl", },
-+	{ .name = "max77620-clock", },
-+	{ .name = "max77663-pmic", },
-+	{ .name = "max77620-watchdog", },
-+	{
-+		.name = "max77620-gpio",
-+		.resources = gpio_resources,
-+		.num_resources = ARRAY_SIZE(gpio_resources),
-+	}, {
-+		.name = "max77620-rtc",
-+		.resources = rtc_resources,
-+		.num_resources = ARRAY_SIZE(rtc_resources),
-+	}, {
-+		.name = "max77663-power",
-+		.resources = power_resources,
-+		.num_resources = ARRAY_SIZE(power_resources),
-+	},
-+};
++			sai1: sai@30010000 {
++				compatible = "fsl,imx8mm-sai",
++						"fsl,imx8mq-sai";
++				reg = <0x30010000 0x10000>;
++				interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SAI1_IPG>,
++					 <&clk IMX8MM_CLK_SAI1_ROOT>,
++					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 0 2 0>, <&sdma2 1 2 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
 +
- static const struct regmap_range max77620_readable_ranges[] = {
- 	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
- };
-@@ -171,6 +191,35 @@ static const struct regmap_config max20024_regmap_config = {
- 	.volatile_table = &max77620_volatile_table,
- };
- 
-+static const struct regmap_range max77663_readable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
-+};
++			sai2: sai@30020000 {
++				compatible = "fsl,imx8mm-sai",
++						"fsl,imx8mq-sai";
++				reg = <0x30020000 0x10000>;
++				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SAI2_IPG>,
++					<&clk IMX8MM_CLK_SAI2_ROOT>,
++					<&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 2 2 0>, <&sdma2 3 2 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
 +
-+static const struct regmap_access_table max77663_readable_table = {
-+	.yes_ranges = max77663_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77663_readable_ranges),
-+};
++			sai3: sai@30030000 {
++				#sound-dai-cells = <0>;
++				compatible = "fsl,imx8mm-sai",
++						"fsl,imx8mq-sai";
++				reg = <0x30030000 0x10000>;
++				interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SAI3_IPG>,
++					 <&clk IMX8MM_CLK_SAI3_ROOT>,
++					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 4 2 0>, <&sdma2 5 2 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
 +
-+static const struct regmap_range max77663_writable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
-+};
++			sai5: sai@30050000 {
++				compatible = "fsl,imx8mm-sai",
++						"fsl,imx8mq-sai";
++				reg = <0x30050000 0x10000>;
++				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SAI5_IPG>,
++					 <&clk IMX8MM_CLK_SAI5_ROOT>,
++					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 8 2 0>, <&sdma2 9 2 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
 +
-+static const struct regmap_access_table max77663_writable_table = {
-+	.yes_ranges = max77663_writable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77663_writable_ranges),
-+};
++			sai6: sai@30060000 {
++				compatible = "fsl,imx8mm-sai",
++						"fsl,imx8mq-sai";
++				reg = <0x30060000 0x10000>;
++				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_SAI6_IPG>,
++					 <&clk IMX8MM_CLK_SAI6_ROOT>,
++					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 10 2 0>, <&sdma2 11 2 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
 +
-+static const struct regmap_config max77663_regmap_config = {
-+	.name = "power-slave",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MAX77620_REG_CID5 + 1,
-+	.cache_type = REGCACHE_RBTREE,
-+	.rd_table = &max77663_readable_table,
-+	.wr_table = &max77663_writable_table,
-+	.volatile_table = &max77620_volatile_table,
-+};
-+
- /*
-  * MAX77620 and MAX20024 has the following steps of the interrupt handling
-  * for TOP interrupts:
-@@ -237,6 +286,9 @@ static int max77620_get_fps_period_reg_value(struct max77620_chip *chip,
- 	case MAX20024:
- 		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
- 		break;
-+	case MAX77663:
-+		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
-+		break;
- 	case MAX77620:
- 		fps_min_period = MAX77620_FPS_PERIOD_MIN_US;
- 		break;
-@@ -274,6 +326,9 @@ static int max77620_config_fps(struct max77620_chip *chip,
- 	case MAX77620:
- 		fps_max_period = MAX77620_FPS_PERIOD_MAX_US;
- 		break;
-+	case MAX77663:
-+		fps_max_period = MAX20024_FPS_PERIOD_MAX_US;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -375,6 +430,9 @@ static int max77620_initialise_fps(struct max77620_chip *chip)
- 	}
- 
- skip_fps:
-+	if (chip->chip_id == MAX77663)
-+		return 0;
-+
- 	/* Enable wake on EN0 pin */
- 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
- 				 MAX77620_ONOFFCNFG2_WK_EN0,
-@@ -453,6 +511,11 @@ static int max77620_probe(struct i2c_client *client,
- 		n_mfd_cells = ARRAY_SIZE(max20024_children);
- 		rmap_config = &max20024_regmap_config;
- 		break;
-+	case MAX77663:
-+		mfd_cells = max77663_children;
-+		n_mfd_cells = ARRAY_SIZE(max77663_children);
-+		rmap_config = &max77663_regmap_config;
-+		break;
- 	default:
- 		dev_err(chip->dev, "ChipID is invalid %d\n", chip->chip_id);
- 		return -EINVAL;
-@@ -546,6 +609,9 @@ static int max77620_i2c_suspend(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (chip->chip_id == MAX77663)
-+		goto out;
-+
- 	/* Disable WK_EN0 */
- 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
- 				 MAX77620_ONOFFCNFG2_WK_EN0, 0);
-@@ -581,7 +647,7 @@ static int max77620_i2c_resume(struct device *dev)
- 	 * For MAX20024: No need to configure WKEN0 on resume as
- 	 * it is configured on Init.
- 	 */
--	if (chip->chip_id == MAX20024)
-+	if (chip->chip_id == MAX20024 || chip->chip_id == MAX77663)
- 		goto out;
- 
- 	/* Enable WK_EN0 */
-@@ -603,6 +669,7 @@ static int max77620_i2c_resume(struct device *dev)
- static const struct i2c_device_id max77620_id[] = {
- 	{"max77620", MAX77620},
- 	{"max20024", MAX20024},
-+	{"max77663", MAX77663},
- 	{},
- };
- 
-diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-index b4fd5a7c2aaa..82407fe85ca2 100644
---- a/include/linux/mfd/max77620.h
-+++ b/include/linux/mfd/max77620.h
-@@ -324,6 +324,7 @@ enum max77620_fps_src {
- enum max77620_chip_id {
- 	MAX77620,
- 	MAX20024,
-+	MAX77663,
- };
- 
- struct max77620_chip {
+ 			gpio1: gpio@30200000 {
+ 				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
+ 				reg = <0x30200000 0x10000>;
 -- 
-2.21.0
+2.17.1
