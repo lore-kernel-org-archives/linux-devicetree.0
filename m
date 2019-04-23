@@ -1,15 +1,15 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] pinctrl: sunxi: Prepare for
- alternative bias voltage setting methods
-Date: Tue, 23 Apr 2019 12:31:08 +0200
-Message-ID: <CACRpkdaEptvNTQD+uNmX85kMsgSSiPBnkt3Kt-NzoWT_gioeMQ@mail.gmail.com>
-References: <20190413165418.27880-1-megous@megous.com> <20190413165418.27880-4-megous@megous.com>
+Subject: Re: [PATCH v4 4/9] pinctrl: sunxi: Support I/O bias
+ voltage setting on H6
+Date: Tue, 23 Apr 2019 12:32:22 +0200
+Message-ID: <CACRpkdZH2GLLNnubO8C3S1STbLJ+HJswfz0Uc8kc1VvafQTuWw@mail.gmail.com>
+References: <20190413165418.27880-1-megous@megous.com> <20190413165418.27880-5-megous@megous.com>
 Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARB6OS7PSQKGQE37HGBCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBQ6T7PSQKGQEUZSVBOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190413165418.27880-4-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20190413165418.27880-5-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,8 +24,18 @@ On Sat, Apr 13, 2019 at 6:54 PM <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
 > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 >
-> H6 has a different I/O voltage bias setting method than A80. Prepare
-> existing code for using alternative bias voltage setting methods.
+> H6 SoC has a "pio group withstand voltage mode" register (datasheet
+> description), that needs to be used to select either 1.8V or 3.3V I/O mode,
+> based on what voltage is powering the respective pin banks and is thus used
+> for I/O signals.
+>
+> Add support for configuring this register according to the voltage of the
+> pin bank regulator (if enabled).
+>
+> This is similar to the support for I/O bias voltage setting patch for A80
+> and the same concerns apply. See:
+>
+>   commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
 >
 > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
