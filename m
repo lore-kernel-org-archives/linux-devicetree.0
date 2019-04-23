@@ -1,7 +1,7 @@
 From: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Subject: [RFC PATCH V1 2/6] dts: arm64: mt8183: Add FD shared memory node
-Date: Tue, 23 Apr 2019 18:45:01 +0800
-Message-ID: <20190423104505.38778-3-Jerry-Ch.chen@mediatek.com>
+Subject: [RFC PATCH V1 4/6] dts: arm64: mt8183: Add FD nodes
+Date: Tue, 23 Apr 2019 18:45:03 +0800
+Message-ID: <20190423104505.38778-5-Jerry-Ch.chen@mediatek.com>
 References: <20190423104505.38778-1-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,35 +23,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 
-This patch adds a shared memory region used on mt8183 for
-exchanging meta data between co-processor and
-Face Detection (FD) unit.
+This patch adds nodes for Face Detection (FD) unit. FD is embedded
+in Mediatek SoCs and works with the co-processor to perform face
+detection on the input data and image and output detected face result.
 
 Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c3a516e63141..dc0b4cad5200 100644
+index dc0b4cad5200..04fd590c09b3 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -134,6 +134,16 @@
- 		clock-output-names = "clk26m";
- 	};
+@@ -442,6 +442,19 @@
+ 			#clock-cells = <1>;
+ 		};
  
-+	reserved-memory {
-+		reserve-memory-fd_smem {
-+			compatible = "mediatek,reserve-memory-fd_smem";
-+			no-map;
-+			size = <0 0x00100000>;  /*1 MB share mem size */
-+			alignment = <0 0x1000>;
-+			alloc-ranges = <0 0x40000000 0 0x10000000>;
++		fd:fd@1502b000 {
++			compatible = "mediatek,mt8183-fd";
++			mediatek,larb = <&larb5>;
++			mediatek,scp = <&scp>;
++			iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
++				 <&iommu M4U_PORT_CAM_FDVT_WR>,
++				 <&iommu M4U_PORT_CAM_FDVT_RB>;
++			reg = <0 0x1502b000 0 0x1000>;
++			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&imgsys CLK_IMG_FDVT>;
++			clock-names = "FD_CLK_IMG_FD";
 +		};
-+	};
 +
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupt-parent = <&gic>;
+ 		vdecsys: syscon@16000000 {
+ 			compatible = "mediatek,mt8183-vdecsys", "syscon";
+ 			reg = <0 0x16000000 0 0x1000>;
 -- 
 2.18.0
