@@ -1,65 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v11 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-Date: Tue, 23 Apr 2019 19:09:22 +0300
-Message-ID: <060316c8-7675-cfaf-bfef-c3e6458bfa82@cogentembedded.com>
-References: <1555903925-15292-1-git-send-email-masonccyang@mxic.com.tw>
- <1555903925-15292-3-git-send-email-masonccyang@mxic.com.tw>
- <d2a7a471-2847-b774-42b1-9feb8f4c69f3@cogentembedded.com>
- <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 5/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Add
+ Bluetooth device node
+Date: Tue, 23 Apr 2019 18:12:21 +0200
+Message-ID: <20190423161221.27rvt3zvlobbmptn@flea>
+References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+ <1555600282-9405-6-git-send-email-pgreco@centosproject.org>
+ <20190418155613.shiv7geoqyzfy4kf@flea>
+ <bc5d7e91-74c5-103a-db72-6cb1f3ef53b9@centosproject.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <bc5d7e91-74c5-103a-db72-6cb1f3ef53b9@centosproject.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
+To: Pablo =?utf-8?Q?Sebasti=C3=A1n?= Greco <pgreco@centosproject.org>
+Cc: linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2019 12:22 PM, masonccyang@mxic.com.tw wrote:
+On Thu, Apr 18, 2019 at 01:14:35PM -0300, Pablo Sebastián Greco wrote:
+>
+> El 18/4/19 a las 12:56, Maxime Ripard escribió:
+> > On Thu, Apr 18, 2019 at 12:11:20PM -0300, Pablo Greco wrote:
+> > > Since the bananapi-m2-ultra and the bananapi-m2-berry have the same
+> > > WiFi/Bluetooth, add the required nodes to the bananapi-m2-berry.
+> > >
+> > > Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+> > > ---
+> > >   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 26 +++++++++++++++++++++++
+> > >   1 file changed, 26 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > index 78f4a1a..3d0bb7e 100644
+> > > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > @@ -96,6 +96,8 @@
+> > >   	wifi_pwrseq: wifi_pwrseq {
+> > >   		compatible = "mmc-pwrseq-simple";
+> > >   		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+> > > +		clocks = <&ccu CLK_OUTA>;
+> > > +		clock-names = "ext_clock";
+> > >   	};
+> > >   };
+> > >
+> > > @@ -171,6 +173,11 @@
+> > >   	status = "okay";
+> > >   };
+> > >
+> > > +&pio {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&clk_out_a_pin>;
+> > > +};
+> > > +
+> > I'm not sure you answered my question about why that is needed?
+> Because it is the same case as https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts?id=1e5f1db4ccd8348a21da55bff82f4263000879ef
+> I can repeat that info in this commit log
 
->> > Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
->> >
->> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> [...]
->>
->>   Do dote that I'm opposed to the driver separation as it's presented in
->> this patches, and I have a large patch reworking both MFD and SPI drivers
->> in the works.
->>
-> 
-> Do you mean add your name in both MFD & dt-binding ?
+Yes, please.
 
-   Of course not!
+Maxime
 
-> i.e.,
-> [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF MFD bindings
-> 
-> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> 
-> 
-> [PATCH v12 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
-> 
-> Add a driver for Renesas R-Car Gen3 RPC-IF MFD.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> 
-> Is it ok ?
-
-   I'm not OK with the most of the driver code ending up in the SPI driver,
-I think most of the code should be kept in the MFD driver and just be called
-by SPI/HF drivers.
-
-> best regards,
-> Mason
-
-MBR, Sergei
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
