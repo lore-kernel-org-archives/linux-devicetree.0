@@ -1,141 +1,56 @@
-Return-Path: <SRS0=R7oT=SS=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add HDMI video suport
-Date: Tue, 16 Apr 2019 09:39:37 +0100
-Message-Id: <1555403977-7188-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
+Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V2 11/28] PCI: tegra: Process pending DLL transactions before entering L1 or L2
+Date: Tue, 23 Apr 2019 14:58:08 +0530
+Message-ID: <20190423092825.759-12-mmaddireddy@nvidia.com>
+In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The CAT874 board comes with a HDMI connector, managed by
-a TDA19988BET chip, connected to the RZ/G2E SoC via DPAD.
-This patch adds the necessary support to the board DT.
+PM message are truncated while entering L1 or L2, which is resulting in
+receiver errors. Set the required bit to finish processing DLLP before
+link enter L1 or L2.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 82 +++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+V2: No change
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index 013a48c..0623950 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -22,6 +22,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+ drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 8b62559f5777..1e16bf60d07f 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -212,6 +212,9 @@
+ #define RP_VEND_CTL1	0x00000f48
+ #define  RP_VEND_CTL1_ERPT	(1 << 13)
  
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
++#define RP_VEND_XP_BIST	0x00000f4c
++#define  RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE	(1 << 28)
 +
-+		port {
-+			hdmi_con_out: endpoint {
-+				remote-endpoint = <&tda19988_out>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
+ #define RP_VEND_CTL2 0x00000fa8
+ #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
  
-@@ -74,6 +85,31 @@
- 		states = <3300000 1
- 			  1800000 0>;
- 	};
+@@ -538,6 +541,14 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
+ 	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
+ 	writel(value, port->base + RP_VEND_XP);
 +
-+	x13_clk: x13 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <74250000>;
-+	};
-+};
-+
-+&du {
-+	pinctrl-0 = <&du_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&cpg CPG_MOD 723>,
-+		 <&x13_clk>;
-+	clock-names = "du.0", "du.1", "dclkin.0";
-+
-+	ports {
-+		port@0 {
-+			endpoint {
-+				remote-endpoint = <&tda19988_in>;
-+			};
-+		};
-+	};
- };
++	/*
++	 * LTSSM will wait for DLLP to finish before entering L1 or L2,
++	 * to avoid truncation of PM messages which results in receiver errors
++	 */
++	value = readl(port->base + RP_VEND_XP_BIST);
++	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
++	writel(value, port->base + RP_VEND_XP_BIST);
+ }
  
- &ehci0 {
-@@ -85,6 +121,39 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	tda19988: tda19988@70 {
-+		compatible = "nxp,tda998x";
-+		reg = <0x70>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-+
-+		video-ports = <0x234501>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				tda19988_in: endpoint {
-+					remote-endpoint = <&du_out_rgb>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				tda19988_out: endpoint {
-+					remote-endpoint = <&hdmi_con_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-0 = <&i2c1_pins>;
- 	pinctrl-names = "default";
-@@ -98,6 +167,13 @@
- 	};
- };
- 
-+&lvds0 {
-+	status = "okay";
-+
-+	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
-+	clock-names = "fck", "dclkin.0", "extal";
-+};
-+
- &ohci0 {
- 	dr_mode = "host";
- 	status = "okay";
-@@ -113,6 +189,12 @@
- };
- 
- &pfc {
-+	du_pins: du {
-+		groups = "du_rgb888", "du_clk_out_0", "du_sync", "du_disp",
-+			 "du_clk_in_0";
-+		function = "du";
-+	};
-+
- 	i2c1_pins: i2c1 {
- 		groups = "i2c1_b";
- 		function = "i2c1";
+ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
 -- 
-2.7.4
+2.17.1
