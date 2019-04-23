@@ -1,118 +1,320 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
-Date: Tue, 23 Apr 2019 15:39:57 +0200
-Message-ID: <CAPDyKFoZuQ+hshZpj-qjchKf7enW4ChPd=r_QhK2xtuJcSvqxQ@mail.gmail.com>
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com> <1551802205-32188-2-git-send-email-ludovic.Barre@st.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v5 3/3] backlight: lm3630a: add firmware node support
+Date: Tue, 23 Apr 2019 08:49:20 -0500
+Message-ID: <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
+References: <20190418151143.26068-1-masneyb@onstation.org>
+ <20190418151143.26068-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551802205-32188-2-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <20190418151143.26068-4-masneyb@onstation.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Brian Masney <masneyb@onstation.org>, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> The busy status bit could occurred even if no busy response is
-> expected (example cmd11). On sdmmc variant, the busy_detect_flag
-> reflects inverted value of d0 state, it's sampled at the end of a
-> CMD response and a second time 2 clk cycles after the CMD response.
-> To avoid a fake busy, the busy status could be checked and polled
-> only if the command has RSP_BUSY flag.
+Hello
 
-I would appreciate a better explanation of what this patch really changes.
-
-The above is giving some background to the behavior of sdmmc variant,
-but at this point that variant doesn't even have the
-->variant->busy_detect flag set.
-
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+On 4/18/19 10:11 AM, Brian Masney wrote:
+> Add fwnode support to the lm3630a driver and optionally allow
+> configuring the label, default brightness level, and maximum brightness
+> level. The two outputs can be controlled by bank A and B independently
+> or bank A can control both outputs.
+> 
+> If the platform data was not configured, then the driver defaults to
+> enabling both banks. This patch changes the default value to disable
+> both banks before parsing the firmware node so that just a single bank
+> can be enabled if desired. There are no in-tree users of this driver.
+> 
+> Driver was tested on a LG Nexus 5 (hammerhead) phone.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
->  drivers/mmc/host/mmci.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 387ff14..4901b73 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->              unsigned int status)
->  {
->         void __iomem *base = host->base;
-> -       bool sbc;
-> +       bool sbc, busy_resp;
->
->         if (!cmd)
->                 return;
->
->         sbc = (cmd == host->mrq->sbc);
-> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->
->         /*
->          * We need to be one of these interrupts to be considered worth
-> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->         /*
->          * ST Micro variant: handle busy detection.
->          */
-> -       if (host->variant->busy_detect) {
-> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
-> +       if (busy_resp && host->variant->busy_detect) {
->
->                 /* We are busy with a command, return */
->                 if (host->busy_status &&
-> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->                  * that the special busy status bit is still set before
->                  * proceeding.
->                  */
-> -               if (!host->busy_status && busy_resp &&
-> +               if (!host->busy_status &&
->                     !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
->                     (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
-
-All the changes above makes perfect sense to me, but looks more like a
-cleanup of the code, rather than actually changing the behavior.
-
->
-> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->  {
->         struct mmci_host *host = dev_id;
->         u32 status;
-> +       bool busy_resp;
->         int ret = 0;
->
->         spin_lock(&host->lock);
-> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->                 }
->
->                 /*
-> -                * Don't poll for busy completion in irq context.
-> +                * Don't poll for:
-> +                * -busy completion in irq context.
-> +                * -no busy response expected.
->                  */
-> -               if (host->variant->busy_detect && host->busy_status)
-> +               busy_resp = host->cmd ?
-> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
-
-This doesn't make sense to me, but I may be missing something.
-
-host->busy_status is being updated by mmci_cmd_irq() and only when
-MMC_RSP_BUSY is set for the command in flight. In other words,
-checking for MMC_RSP_BUSY here as well is redundant. No?
-
+> Changes since v4
+> - Added new function lm3630a_parse_bank()
+> - Renamed seen variable to seen_led_sources
+> - Use the bitmask returned from lm3630a_parse_led_sources() to compare
+>   against the seen_led_sources rather than just the control bank. This
+>   eliminated another if statement that was previously present that
+>   checked to see if control bank A should control both sinks.
+> - #define LM3630A_BANK_0, LM3630A_BANK_1, LM3630A_SINK_0,
+>   LM3630A_SINK_1, and LM3630A_NUM_SINKS and use where appropriate.
+> - Changed all occurances of
+>   'if (bank == 0) { BANK_A_WORK } else { BANK_B_WORK }' to
+>   'if (bank) { BANK_B_WORK } else { BANK_A_WORK }'
+> - Dropped unnecessary 'ret = 0' from lm3630a_parse_led_sources().
+> - Changed 'if (ret < 0)' to 'if (ret)' in lm3630a_parse_node().
+> - Dropped kerneldoc from lm3630a_parse_led_sources().
+> 
+> Changes since v3
+> - Add support for label
+> - Changed lm3630a_parse_node() to return -ENODEV if no nodes were found
+> - Remove LM3630A_LED{A,B}_DISABLE
+> - Add two additional newlines for code readability
+> - Remove extra newline
+> 
+> Changes since v2
+> - Separated out control banks and outputs via the reg and led-sources
+>   properties.
+> - Use fwnode instead of of API
+> - Disable both banks by default before calling lm3630a_parse_node()
+> - Add lots of error handling
+> - Check for duplicate source / bank definitions
+> - Remove extra ;
+> - Make probe() method fail if fwnode parsing fails.
+> 
+>  drivers/video/backlight/lm3630a_bl.c     | 149 ++++++++++++++++++++++-
+>  include/linux/platform_data/lm3630a_bl.h |   4 +
+>  2 files changed, 148 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index ef2553f452ca..75d996490cf0 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -35,6 +35,14 @@
+>  #define REG_MAX		0x50
+>  
+>  #define INT_DEBOUNCE_MSEC	10
 > +
-> +               if (host->variant->busy_detect &&
-> +                   (!busy_resp || host->busy_status))
->                         status &= ~host->variant->busy_detect_flag;
->
->                 ret = 1;
-> --
-> 2.7.4
->
+> +#define LM3630A_BANK_0		0
+> +#define LM3630A_BANK_1		1
+> +
+> +#define LM3630A_NUM_SINKS	2
+> +#define LM3630A_SINK_0		0
+> +#define LM3630A_SINK_1		1
+> +
+>  struct lm3630a_chip {
+>  	struct device *dev;
+>  	struct delayed_work work;
+> @@ -329,15 +337,17 @@ static const struct backlight_ops lm3630a_bank_b_ops = {
+>  
+>  static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
+>  {
+> -	struct backlight_properties props;
+>  	struct lm3630a_platform_data *pdata = pchip->pdata;
+> +	struct backlight_properties props;
+> +	const char *label;
+>  
+>  	props.type = BACKLIGHT_RAW;
+>  	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
+>  		props.brightness = pdata->leda_init_brt;
+>  		props.max_brightness = pdata->leda_max_brt;
+> +		label = pdata->leda_label ? pdata->leda_label : "lm3630a_leda";
+>  		pchip->bleda =
+> -		    devm_backlight_device_register(pchip->dev, "lm3630a_leda",
+> +		    devm_backlight_device_register(pchip->dev, label,
+>  						   pchip->dev, pchip,
+>  						   &lm3630a_bank_a_ops, &props);
+>  		if (IS_ERR(pchip->bleda))
+> @@ -348,8 +358,9 @@ static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
+>  	    (pdata->ledb_ctrl != LM3630A_LEDB_ON_A)) {
+>  		props.brightness = pdata->ledb_init_brt;
+>  		props.max_brightness = pdata->ledb_max_brt;
+> +		label = pdata->ledb_label ? pdata->ledb_label : "lm3630a_ledb";
+>  		pchip->bledb =
+> -		    devm_backlight_device_register(pchip->dev, "lm3630a_ledb",
+> +		    devm_backlight_device_register(pchip->dev, label,
+>  						   pchip->dev, pchip,
+>  						   &lm3630a_bank_b_ops, &props);
+>  		if (IS_ERR(pchip->bledb))
+> @@ -364,6 +375,123 @@ static const struct regmap_config lm3630a_regmap = {
+>  	.max_register = REG_MAX,
+>  };
+>  
+> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
+> +				     int default_led_sources)
+> +{
+> +	u32 sources[LM3630A_NUM_SINKS];
+> +	int ret, num_sources, i;
+> +
+> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
+> +						     0);
+> +	if (num_sources < 0)
+> +		return default_led_sources;
+> +	else if (num_sources > ARRAY_SIZE(sources))
+> +		return -EINVAL;
+> +
+> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
+> +					     num_sources);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < num_sources; i++) {
+> +		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
+> +			return -EINVAL;
+> +
+> +		ret |= BIT(sources[i]);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
+> +			      struct fwnode_handle *node, int *seen_led_sources)
 
-Kind regards
-Uffe
+Why is seen_led_sources passed in here?
+It is initialized on the stack in lm3630a_parse_node but the variable is never referenced in that API.
+
+Dan
+
+> +{
+> +	int led_sources, ret;
+> +	const char *label;
+> +	u32 bank, val;
+> +	bool linear;
+> +
+> +	ret = fwnode_property_read_u32(node, "reg", &bank);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (bank < LM3630A_BANK_0 || bank > LM3630A_BANK_1)
+> +		return -EINVAL;
+> +
+> +	led_sources = lm3630a_parse_led_sources(node, BIT(bank));
+> +	if (led_sources < 0)
+> +		return led_sources;
+> +
+> +	if (*seen_led_sources & led_sources)
+> +		return -EINVAL;
+> +
+> +	*seen_led_sources |= led_sources;
+> +
+> +	linear = fwnode_property_read_bool(node,
+> +					   "ti,linear-mapping-mode");
+> +	if (bank) {
+> +		if (led_sources & BIT(LM3630A_SINK_0) ||
+> +		    !(led_sources & BIT(LM3630A_SINK_1)))
+> +			return -EINVAL;
+> +
+> +		pdata->ledb_ctrl = linear ?
+> +			LM3630A_LEDB_ENABLE_LINEAR :
+> +			LM3630A_LEDB_ENABLE;
+> +	} else {
+> +		if (!(led_sources & BIT(LM3630A_SINK_0)))
+> +			return -EINVAL;
+> +
+> +		pdata->leda_ctrl = linear ?
+> +			LM3630A_LEDA_ENABLE_LINEAR :
+> +			LM3630A_LEDA_ENABLE;
+> +
+> +		if (led_sources & BIT(LM3630A_SINK_1))
+> +			pdata->ledb_ctrl = LM3630A_LEDB_ON_A;
+> +	}
+> +
+> +	ret = fwnode_property_read_string(node, "label", &label);
+> +	if (!ret) {
+> +		if (bank)
+> +			pdata->ledb_label = label;
+> +		else
+> +			pdata->leda_label = label;
+> +	}
+> +
+> +	ret = fwnode_property_read_u32(node, "default-brightness",
+> +				       &val);
+> +	if (!ret) {
+> +		if (bank)
+> +			pdata->ledb_init_brt = val;
+> +		else
+> +			pdata->leda_init_brt = val;
+> +	}
+> +
+> +	ret = fwnode_property_read_u32(node, "max-brightness", &val);
+> +	if (!ret) {
+> +		if (bank)
+> +			pdata->ledb_max_brt = val;
+> +		else
+> +			pdata->leda_max_brt = val;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int lm3630a_parse_node(struct lm3630a_chip *pchip,
+> +			      struct lm3630a_platform_data *pdata)
+> +{
+> +	int ret = -ENODEV, seen_led_sources = 0;
+> +	struct fwnode_handle *node;
+> +
+> +	device_for_each_child_node(pchip->dev, node) {
+> +		ret = lm3630a_parse_bank(pdata, node, &seen_led_sources);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int lm3630a_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+> @@ -396,13 +524,18 @@ static int lm3630a_probe(struct i2c_client *client,
+>  				     GFP_KERNEL);
+>  		if (pdata == NULL)
+>  			return -ENOMEM;
+> +
+>  		/* default values */
+> -		pdata->leda_ctrl = LM3630A_LEDA_ENABLE;
+> -		pdata->ledb_ctrl = LM3630A_LEDB_ENABLE;
+>  		pdata->leda_max_brt = LM3630A_MAX_BRIGHTNESS;
+>  		pdata->ledb_max_brt = LM3630A_MAX_BRIGHTNESS;
+>  		pdata->leda_init_brt = LM3630A_MAX_BRIGHTNESS;
+>  		pdata->ledb_init_brt = LM3630A_MAX_BRIGHTNESS;
+> +
+> +		rval = lm3630a_parse_node(pchip, pdata);
+> +		if (rval) {
+> +			dev_err(&client->dev, "fail : parse node\n");
+> +			return rval;
+> +		}
+>  	}
+>  	pchip->pdata = pdata;
+>  
+> @@ -470,11 +603,17 @@ static const struct i2c_device_id lm3630a_id[] = {
+>  	{}
+>  };
+>  
+> +static const struct of_device_id lm3630a_match_table[] = {
+> +	{ .compatible = "ti,lm3630a", },
+> +	{ },
+> +};
+> +
+>  MODULE_DEVICE_TABLE(i2c, lm3630a_id);
+>  
+>  static struct i2c_driver lm3630a_i2c_driver = {
+>  	.driver = {
+>  		   .name = LM3630A_NAME,
+> +		   .of_match_table = lm3630a_match_table,
+>  		   },
+>  	.probe = lm3630a_probe,
+>  	.remove = lm3630a_remove,
+> diff --git a/include/linux/platform_data/lm3630a_bl.h b/include/linux/platform_data/lm3630a_bl.h
+> index 7538e38e270b..762e68956f31 100644
+> --- a/include/linux/platform_data/lm3630a_bl.h
+> +++ b/include/linux/platform_data/lm3630a_bl.h
+> @@ -38,9 +38,11 @@ enum lm3630a_ledb_ctrl {
+>  
+>  #define LM3630A_MAX_BRIGHTNESS 255
+>  /*
+> + *@leda_label    : optional led a label.
+>   *@leda_init_brt : led a init brightness. 4~255
+>   *@leda_max_brt  : led a max brightness.  4~255
+>   *@leda_ctrl     : led a disable, enable linear, enable exponential
+> + *@ledb_label    : optional led b label.
+>   *@ledb_init_brt : led b init brightness. 4~255
+>   *@ledb_max_brt  : led b max brightness.  4~255
+>   *@ledb_ctrl     : led b disable, enable linear, enable exponential
+> @@ -50,10 +52,12 @@ enum lm3630a_ledb_ctrl {
+>  struct lm3630a_platform_data {
+>  
+>  	/* led a config.  */
+> +	const char *leda_label;
+>  	int leda_init_brt;
+>  	int leda_max_brt;
+>  	enum lm3630a_leda_ctrl leda_ctrl;
+>  	/* led b config. */
+> +	const char *ledb_label;
+>  	int ledb_init_brt;
+>  	int ledb_max_brt;
+>  	enum lm3630a_ledb_ctrl ledb_ctrl;
+> 
