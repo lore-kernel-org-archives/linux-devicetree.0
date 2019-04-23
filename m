@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 4/6] dt-bindings: arm: amlogic: add G12B bindings
-Date: Tue, 23 Apr 2019 11:15:01 +0200
-Message-ID: <20190423091503.10847-5-narmstrong@baylibre.com>
+Subject: [PATCH v2 5/6] dt-bindings: arm: amlogic: add Odroid-N2 binding
+Date: Tue, 23 Apr 2019 11:15:02 +0200
+Message-ID: <20190423091503.10847-6-narmstrong@baylibre.com>
 References: <20190423091503.10847-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,27 @@ To: khilman@baylibre.com, devicetree@vger.kernel.org, jbrunet@baylibre.com
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for the Amlogic G12B SoC, sharing most of the
-features and architecture with the G12A SoC.
+Add compatible for the Amlogic G12B (S922X) SoC based Odroid-N2 SBC
+from HardKernel.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/amlogic.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index 061f7b98a07f..94bbcc646e10 100644
+index 94bbcc646e10..eff41128268e 100644
 --- a/Documentation/devicetree/bindings/arm/amlogic.txt
 +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -61,6 +61,10 @@ Boards with the Amlogic Meson G12A S905D2 SoC shall have the following propertie
-   Required root node property:
-     compatible: "amlogic,g12a";
+@@ -116,6 +116,8 @@ Board compatible values (alphabetically, grouped by SoC):
+   - "amediatech,x96-max" (Meson g12a s905x2)
+   - "seirobotics,sei510" (Meson g12a s905x2)
  
-+Boards with the Amlogic Meson G12B S922X SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "amlogic,g12b";
++  - "hardkernel,odroid-n2" (Meson g12b s922x)
 +
- Board compatible values (alphabetically, grouped by SoC):
+ Amlogic Meson Firmware registers Interface
+ ------------------------------------------
  
-   - "geniatech,atv1200" (Meson6)
 -- 
 2.21.0
