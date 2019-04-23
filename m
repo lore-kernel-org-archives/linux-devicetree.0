@@ -1,74 +1,51 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 0/4] drm/panel: Support for OSD101T2045-53TS and
- OSD101T2587-53TS
-Date: Tue, 23 Apr 2019 16:00:26 +0300
-Message-ID: <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
-References: <20190226075523.28997-1-peter.ujfalusi@ti.com>
- <20190423115506.GE23448@ulmo>
+From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Tue, 23 Apr 2019 15:01:32 +0200
+Message-ID: <20190423130132.GT4038@hirez.programming.kicks-ass.net>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190423115506.GE23448@ulmo>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, sam@ravnborg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190423125519.GA7104-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCk9uIDIzLzA0LzIwMTkgMTQuNTUsIFRoaWVycnkgUmVkaW5nIHdyb3RlOgo+
-IE9uIFR1ZSwgRmViIDI2LCAyMDE5IGF0IDA5OjU1OjE5QU0gKzAyMDAsIFBldGVyIFVqZmFsdXNp
-IHdyb3RlOgo+PiBIaSwKPj4KPj4gQ2hhbmdlcyBzaW5jZSB2MjoKPj4gLSBBZGRlZCBSZXZpZXdl
-ZC1ieSBmcm9tIFJvYiB0byB0aGUgYmluZGluZyBwYXRjaGVzCj4+IC0gQWRkZWQgaGVscCB0ZXh0
-IHRvIEtjb25maWcgKG9zZDEwMXQyNTg3LTUzdHMpCj4+IC0gUHJpbnQgdGhlIGVycm9yIHZhbHVl
-cyBpbiBkZXZfZXJyL3dhcm4KPj4gLSBBZGRlZCBSZXZpZXdlZC1ieSBmcm9tIFNhbSB0byB0aGUg
-b3NkMTAxdDI1ODctNTN0cyBwYXRjaAo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYxIChvbmx5IHBhbmVs
-LW9zZC1vc2QxMDF0MjU4Ny01M3RzIGNoYW5nZWQpOgo+PiAtIFJlbW92ZWQgdW51c2VkIG1lbWJl
-cnMgZnJvbSBzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFuZWwKPj4gLSBVc2UgYmFja2xpZ2h0X2VuYWJs
-ZS9iYWNrbGlnaHRfZGlzYWJsZQo+PiAtIFVzZSBkZXZtX29mX2ZpbmRfYmFja2xpZ2h0KCkKPj4g
-LSBvc2QxMDF0MjU4N19vZl9tYXRjaCB0YWJsZSBzdGFuZGFyZGl6ZWQgCj4+IC0gb3NkMTAxdDI1
-ODdfcGFuZWxfdW5wcmVwYXJlKCkgYWRkZWQgdG8gc2h1dGRvd24gYW5kIHJlbW92ZSBjYWxsYmFj
-a3MgdG8gdHVybgo+PiAgIHBvd2VyIG9mZgo+PiAtIEZpeCBwcm9iZSBpbiBjYXNlIG1pcGlfZHNp
-X2F0dGFjaCgpIHdvdWxkIGZhaWwKPj4KPj4gQWRkIHN1cHBvcnQgZm9yIE9TRDEwMVQyMDQ1LTUz
-VFMgYW5kIE9TRDEwMVQyNTg3LTUzVFMgZnJvbSBPbmUgU3RvcCBEaXNwbGF5cy4KPj4KPj4gVGhl
-IHR3byBwYW5lbCBpcyBzaW1pbGFyIHdpdGggb25lIGJpZyBkaWZmZXJlbmNlOiBPU0QxMDFUMjU4
-Ny01M1RTIHJlcXVpcmVzIHRoZQo+PiBNSVBJX0RTSV9UVVJOX09OX1BFUklQSEVSQUwgbWVzc2Fn
-ZSwgdGh1cyBjYW4gbm90IGJlIGhhbmRsZWQgYnkgcGFuZWwtc2ltcGxlLgo+Pgo+PiBSZWdhcmRz
-LAo+PiBQZXRlcgo+PiAtLS0KPj4gUGV0ZXIgVWpmYWx1c2kgKDQpOgo+PiAgIGR0LWJpbmRpbmdz
-OiBkaXNwbGF5OiBBZGQgYmluZGluZ3MgZm9yIE9TRDEwMVQyMDQ1LTUzVFMKPj4gICBkcm0vcGFu
-ZWw6IHNpbXBsZTogQWRkIHN1cHBvcnQgZm9yIE9TRDEwMVQyMDQ1LTUzVFMKPj4gICBkdC1iaW5k
-aW5nczogZGlzcGxheTogQWRkIGJpbmRpbmdzIGZvciBPU0QxMDFUMjU4Ny01M1RTIHBhbmVsCj4+
-ICAgZHJtL3BhbmVsOiBBZGQgT1NEMTAxVDI1ODctNTNUUyBkcml2ZXIKPj4KPj4gIC4uLi9kaXNw
-bGF5L3BhbmVsL29zZCxvc2QxMDF0MjA0NS01M3RzLnR4dCAgICB8ICAxMSArCj4+ICAuLi4vZGlz
-cGxheS9wYW5lbC9vc2Qsb3NkMTAxdDI1ODctNTN0cy50eHQgICAgfCAgMTQgKwo+PiAgZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgICA5ICsKPj4gIGRyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAuLi4v
-ZHJtL3BhbmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01M3RzLmMgICAgfCAyNTQgKysrKysrKysr
-KysrKysrKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAg
-ICAgfCAgMzQgKysrCj4+ICA2IGZpbGVzIGNoYW5nZWQsIDMyMyBpbnNlcnRpb25zKCspCj4+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvb3NkLG9zZDEwMXQyMDQ1LTUzdHMudHh0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkLG9zZDEw
-MXQyNTg3LTUzdHMudHh0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01M3RzLmMKPiAKPiBBcHBsaWVkIGFsbCBmb3VyIHBh
-dGNoZXMuIE5vdGUgdGhhdCBJIGhhZCB0byBjaGFuZ2UgdGhlIG9zZCB2ZW5kb3IKPiBzdHJpbmcg
-dG8gb3NkZGlzcGxheXMsIHdoaWNoIGlzIHRoZSBvbmUgdGhhdCBpcyBkb2N1bWVudGVkIGluCj4g
-dmVuZG9yLXByZWZpeGVzLnR4dC4KCkkgcmVjYWxsIGNoZWNraW5nIHRoZSB2ZW5kb3ItcHJlZml4
-ZXMudHh0IGFuZCBub3QgZmluZGluZyBPU0QgaW4gdGhlcmUuCk9kZCwgYXMgaXQgaXMgaW5kZWVk
-IHRoZXJlLgoKPiBJJ20gYXNzdW1pbmcgdGhhdCB0aGlzIGlzIHRoZSBzYW1lIHZlbmRvciwgYmFz
-ZWQgb24gdGhlIG1vZGVsIG5hbWVzLiBJZgo+IHRoaXMgaXMgYSBkaWZmZXJlbnQgdmVuZG9yLCBk
-byBsZXQgbWUga25vdy4KClllcyBpdCBpcyB0aGUgc2FtZSBvbmUuCgpUaGFuayB5b3UgYW5kIHNv
-cnJ5IGZvciBtaXNzaW5nIGl0LAotIFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
-eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElE
-OiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Tue, Apr 23, 2019 at 08:55:19AM -0400, Mike Snitzer wrote:
+> On Tue, Apr 23 2019 at  4:31am -0400,
+> Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+> 
+> > On Mon, Apr 22, 2019 at 10:27:45AM -0300, Mauro Carvalho Chehab wrote:
+> > 
+> > >  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +
+> > 
+> > What's happend to atomic_t.txt, also NAK, I still occationally touch
+> > these files.
+> 
+> Seems Mauro's point is in the future we need to touch these .rst files
+> in terms of ReST compatible changes.
+> 
+> I'm dreading DM documentation changes in the future.. despite Mauro and
+> Jon Corbet informing me that ReST is simple, etc.
+
+Well, it _can_ be simple, I've seen examples of rst that were not far
+from generated HTML contents. And I must give Jon credit for not
+accepting that atrocious crap.
+
+But yes, I have 0 motivation to learn or abide by rst. It simply doesn't
+give me anything in return. There is no upside, only worse text files :/
