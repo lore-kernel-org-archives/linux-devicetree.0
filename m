@@ -1,52 +1,30 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 37/68] ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
-Date: Mon, 22 Apr 2019 15:44:45 -0400
-Message-ID: <20190422194516.11634-37-sashal@kernel.org>
-References: <20190422194516.11634-1-sashal@kernel.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: imx7d-adc: Add
+ #io-channel-cells to required
+Date: Tue, 23 Apr 2019 09:52:42 +0800
+Message-ID: <20190423015240.GA16166@dragon>
+References: <20190414183403.21538-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190414183403.21538-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Masanari Iida <standby24x7@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Masanari Iida <standby24x7@gmail.com>
+On Sun, Apr 14, 2019 at 11:34:00AM -0700, Andrey Smirnov wrote:
+> Add #io-channel-cells to list of required properties. Needed to be
+> able to reference that node by phandle.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 
-[ Upstream commit 41b37f4c0fa67185691bcbd30201cad566f2f0d1 ]
-
-This patch fixes a spelling typo.
-
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-Fixes: cc42603de320 ("ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index acc3b11fba2a..cde3025d9603 100644
---- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -298,7 +298,7 @@
- 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
- 	vmcc-supply = <&reg_sd3_vmmc>;
- 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
--	bus-witdh = <4>;
-+	bus-width = <4>;
- 	no-1-8-v;
- 	status = "okay";
- };
-@@ -309,7 +309,7 @@
- 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
- 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
- 	vmcc-supply = <&reg_sd4_vmmc>;
--	bus-witdh = <8>;
-+	bus-width = <8>;
- 	no-1-8-v;
- 	non-removable;
- 	status = "okay";
--- 
-2.19.1
+Applied, thanks.
