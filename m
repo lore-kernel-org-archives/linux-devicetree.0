@@ -1,35 +1,38 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/5] ARM: dts: stm32: use dedicated files to manage
- stm32mp157 packages
-Date: Tue, 23 Apr 2019 10:48:41 +0200
-Message-ID: <CACRpkdYYPu=MGwJvswXFX1mb=nfDd7T9bBV+rugT=cBuFKjsUA@mail.gmail.com>
-References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com> <1554895824-25709-6-git-send-email-alexandre.torgue@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v6 1/4] dt-bindings: usb: dwc2: Add Amlogic G12A DWC2 Compatible
+Date: Tue, 23 Apr 2019 10:51:24 +0200
+Message-ID: <20190423085127.3863-2-narmstrong@baylibre.com>
+References: <20190423085127.3863-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554895824-25709-6-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <20190423085127.3863-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, chunfeng.yun@mediatek.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 1:31 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+Adds the specific compatible string for the DWC2 IP found in the
+Amlogic G12A SoC Family.
 
-> Four packages exist for stm32mp157 die. As ball-out is different between
-> them, this patch covers those differences by creating dedicated pinctrl
-> dtsi files. Each dtsi pinctrl package file describes the package ball-out
-> through gpio-ranges.
->
-> stm32mp157a-dk1 / dk2 boards embed a STM32MP_PKG_AC (TFBGA361 (12*12))
-> package.
->
-> stm32mp157c-ed1 / ev1 boards embed a STM32MP_PKG_AA (LFBGA448 (18*18))
-> package.
->
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 6dc3c4a34483..e150b7b227c9 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -14,6 +14,7 @@ Required properties:
+   - "amlogic,meson8-usb": The DWC2 USB controller instance in Amlogic Meson8 SoCs;
+   - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+   - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
++  - "amlogic,meson-g12a-usb": The DWC2 USB controller instance in Amlogic G12A SoCs;
+   - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+   - snps,dwc2: A generic DWC2 USB controller with default parameters.
+   - "st,stm32f4x9-fsotg": The DWC2 USB FS/HS controller instance in STM32F4x9 SoCs
+-- 
+2.21.0
