@@ -1,75 +1,24 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v5 6/6] arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
-Date: Tue, 23 Apr 2019 10:33:54 +0200
-Message-ID: <20190423083354.17785-7-gregory.clement@bootlin.com>
-References: <20190423083354.17785-1-gregory.clement@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/5] Add pin package management on STM32P157
+Date: Tue, 23 Apr 2019 10:47:45 +0200
+Message-ID: <CACRpkdbRgyfVAZ8taoDAZo+QHYYvzOo3mZC4fosxyz0-X37y0Q@mail.gmail.com>
+References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423083354.17785-1-gregory.clement@bootlin.com>
+In-Reply-To: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Add cpu clock node on AP
+On Wed, Apr 10, 2019 at 1:31 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi | 4 ++++
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi      | 7 +++++++
- 2 files changed, 11 insertions(+)
+> The series adds support of chip packages for STM32MP157 SOC.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-index 2baafe12ebd4..472211159979 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-@@ -20,24 +20,28 @@
- 			compatible = "arm,cortex-a72";
- 			reg = <0x000>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu2: cpu@100 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 1>;
- 		};
- 		cpu3: cpu@101 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 1>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 91dad7e4ee59..2db27c89427b 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -280,6 +280,13 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 
-+				cpu_clk: clock-cpu@0 {
-+					compatible = "marvell,ap806-cpu-clock";
-+					clocks = <&ap_clk 0>, <&ap_clk 1>;
-+					#clock-cells = <1>;
-+					reg = <0x0 0x1000>;
-+				};
-+
- 				ap_thermal: thermal-sensor@80 {
- 					compatible = "marvell,armada-ap806-thermal";
- 					reg = <0x80 0x10>;
--- 
-2.20.1
+Patches 1-4 applied to the pin control tree.
+Sorry for slowness :(
+
+Yours,
+Linus Walleij
