@@ -1,8 +1,8 @@
 Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 02/28] PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-Date: Tue, 23 Apr 2019 14:57:59 +0530
-Message-ID: <20190423092825.759-3-mmaddireddy@nvidia.com>
+Subject: [PATCH V2 19/28] PCI: tegra: Change PRSNT_SENSE irq log to debug
+Date: Tue, 23 Apr 2019 14:58:16 +0530
+Message-ID: <20190423092825.759-20-mmaddireddy@nvidia.com>
 In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,81 +11,31 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Unroll the PCIe power on sequence if any one of the steps fail in
-tegra_pcie_power_on().
+PRSNT_MAP bit field is programmed to update the slot present status.
+PRSNT_SENSE irq is triggered when this bit field is programmed, which is
+not an error. Add a new if condition to trap RSNT_SENSE code and print it
+with debug log level.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
-V2: New patch to handle error cleanup in tegra_pcie_power_on().
+V2: If-else to switch-case conversion patch is dropped, this patch is
+rebased to stay with if-else statements
 
- drivers/pci/controller/pci-tegra.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f4f53d092e00..8235d937951b 100644
+index 9b841b0392ac..72634ce6d3da 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -1052,7 +1052,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 		err = clk_prepare_enable(pcie->pex_clk);
- 		if (err) {
- 			dev_err(dev, "failed to enable PEX clock: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 		reset_control_deassert(pcie->pex_rst);
- 	} else {
-@@ -1061,7 +1061,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 							pcie->pex_rst);
- 		if (err) {
- 			dev_err(dev, "powerup sequence failed: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 	}
- 
-@@ -1070,24 +1070,40 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 	err = clk_prepare_enable(pcie->afi_clk);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable AFI clock: %d\n", err);
--		return err;
-+		goto powergate;
- 	}
- 
- 	if (soc->has_cml_clk) {
- 		err = clk_prepare_enable(pcie->cml_clk);
- 		if (err < 0) {
- 			dev_err(dev, "failed to enable CML clock: %d\n", err);
--			return err;
-+			goto disable_afi_clk;
- 		}
- 	}
- 
- 	err = clk_prepare_enable(pcie->pll_e);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable PLLE clock: %d\n", err);
--		return err;
-+		goto disable_cml_clk;
- 	}
- 
- 	return 0;
-+
-+disable_cml_clk:
-+	if (soc->has_cml_clk)
-+		clk_disable_unprepare(pcie->cml_clk);
-+disable_afi_clk:
-+	clk_disable_unprepare(pcie->afi_clk);
-+powergate:
-+	reset_control_assert(pcie->afi_rst);
-+	reset_control_assert(pcie->pex_rst);
-+	clk_disable_unprepare(pcie->pex_clk);
-+	if (!dev->pm_domain)
-+		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
-+regulator_disable:
-+	regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
-+
-+	return err;
- }
- 
- static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
+@@ -864,7 +864,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
+ 	 * do not pollute kernel log with master abort reports since they
+ 	 * happen a lot during enumeration
+ 	 */
+-	if (code == AFI_INTR_MASTER_ABORT)
++	if (code == AFI_INTR_MASTER_ABORT || code == AFI_INTR_PE_PRSNT_SENSE)
+ 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
+ 	else
+ 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
 -- 
 2.17.1
