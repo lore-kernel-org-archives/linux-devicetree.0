@@ -1,118 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 0/4] drm/panel: Support for OSD101T2045-53TS and
- OSD101T2587-53TS
-Date: Tue, 23 Apr 2019 15:18:53 +0200
-Message-ID: <20190423131853.GP23448@ulmo>
-References: <20190226075523.28997-1-peter.ujfalusi@ti.com>
- <20190423115506.GE23448@ulmo>
- <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
+From: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Tue, 23 Apr 2019 09:21:00 -0400
+Message-ID: <20190423132100.GB7132@redhat.com>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
+	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ssZxAlvqSOvXAj81"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, sam@ravnborg.org
+In-Reply-To: <20190423130132.GT4038-Nxj+rRp3nVydTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 23 2019 at  9:01am -0400,
+Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
 
---ssZxAlvqSOvXAj81
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Apr 23, 2019 at 08:55:19AM -0400, Mike Snitzer wrote:
+> > On Tue, Apr 23 2019 at  4:31am -0400,
+> > Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+> > 
+> > > On Mon, Apr 22, 2019 at 10:27:45AM -0300, Mauro Carvalho Chehab wrote:
+> > > 
+> > > >  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +
+> > > 
+> > > What's happend to atomic_t.txt, also NAK, I still occationally touch
+> > > these files.
+> > 
+> > Seems Mauro's point is in the future we need to touch these .rst files
+> > in terms of ReST compatible changes.
+> > 
+> > I'm dreading DM documentation changes in the future.. despite Mauro and
+> > Jon Corbet informing me that ReST is simple, etc.
+> 
+> Well, it _can_ be simple, I've seen examples of rst that were not far
+> from generated HTML contents. And I must give Jon credit for not
+> accepting that atrocious crap.
+> 
+> But yes, I have 0 motivation to learn or abide by rst. It simply doesn't
+> give me anything in return. There is no upside, only worse text files :/
 
-On Tue, Apr 23, 2019 at 04:00:26PM +0300, Peter Ujfalusi wrote:
-> Hi Thierry,
->=20
-> On 23/04/2019 14.55, Thierry Reding wrote:
-> > On Tue, Feb 26, 2019 at 09:55:19AM +0200, Peter Ujfalusi wrote:
-> >> Hi,
-> >>
-> >> Changes since v2:
-> >> - Added Reviewed-by from Rob to the binding patches
-> >> - Added help text to Kconfig (osd101t2587-53ts)
-> >> - Print the error values in dev_err/warn
-> >> - Added Reviewed-by from Sam to the osd101t2587-53ts patch
-> >>
-> >> Changes since v1 (only panel-osd-osd101t2587-53ts changed):
-> >> - Removed unused members from struct osd101t2587_panel
-> >> - Use backlight_enable/backlight_disable
-> >> - Use devm_of_find_backlight()
-> >> - osd101t2587_of_match table standardized=20
-> >> - osd101t2587_panel_unprepare() added to shutdown and remove callbacks=
- to turn
-> >>   power off
-> >> - Fix probe in case mipi_dsi_attach() would fail
-> >>
-> >> Add support for OSD101T2045-53TS and OSD101T2587-53TS from One Stop Di=
-splays.
-> >>
-> >> The two panel is similar with one big difference: OSD101T2587-53TS req=
-uires the
-> >> MIPI_DSI_TURN_ON_PERIPHERAL message, thus can not be handled by panel-=
-simple.
-> >>
-> >> Regards,
-> >> Peter
-> >> ---
-> >> Peter Ujfalusi (4):
-> >>   dt-bindings: display: Add bindings for OSD101T2045-53TS
-> >>   drm/panel: simple: Add support for OSD101T2045-53TS
-> >>   dt-bindings: display: Add bindings for OSD101T2587-53TS panel
-> >>   drm/panel: Add OSD101T2587-53TS driver
-> >>
-> >>  .../display/panel/osd,osd101t2045-53ts.txt    |  11 +
-> >>  .../display/panel/osd,osd101t2587-53ts.txt    |  14 +
-> >>  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> >>  drivers/gpu/drm/panel/Makefile                |   1 +
-> >>  .../drm/panel/panel-osd-osd101t2587-53ts.c    | 254 ++++++++++++++++++
-> >>  drivers/gpu/drm/panel/panel-simple.c          |  34 +++
-> >>  6 files changed, 323 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/display/panel/os=
-d,osd101t2045-53ts.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/display/panel/os=
-d,osd101t2587-53ts.txt
-> >>  create mode 100644 drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
-> >=20
-> > Applied all four patches. Note that I had to change the osd vendor
-> > string to osddisplays, which is the one that is documented in
-> > vendor-prefixes.txt.
->=20
-> I recall checking the vendor-prefixes.txt and not finding OSD in there.
-> Odd, as it is indeed there.
->=20
-> > I'm assuming that this is the same vendor, based on the model names. If
-> > this is a different vendor, do let me know.
->=20
-> Yes it is the same one.
->=20
-> Thank you and sorry for missing it,
+Right, but these changes aren't meant for our benefit.  They are for
+users who get cleaner web accessible Linux kernel docs.  Seems the
+decision has been made that the users' benefit, and broader
+modernization of Linux docs, outweighs the inconvenience for engineers
+who maintain the content of said documentation.
 
-No worries, it was merged (March 18) after you sent out your series
-(February 26).
-
-Thierry
-
---ssZxAlvqSOvXAj81
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly/ELoACgkQ3SOs138+
-s6FHLA//Z+8DwLFrB4bWhdcg9OxhdrF8C2hXzDH0yE1a1rPgcxuAEu/MQvivhvTc
-S2RSk1C+epMUDsHM5eqgSPgGGU4P0vU8tcLWui/ZV1vYIGNgQy0BXFW8jXv5j9E3
-Tj6Hi0fJDeVmUHGo9zr//NBwNSpMFsvNpuhT9nLxXeqFVg1iS9m0grfy6KkX3xUG
-ECfXmSnIKzZQnVeOfvPSNpCzcVJ/6AggRCYsrdX/yQOUMbwqwop3KIBjRm9CmMpa
-gIJj98Ji2U6DOOksNYoSYvBioyWBZ9oZeMepNYHK5iKH8s7BQfT+0TVTEVXXw5EJ
-ide+e4l7JqFtx/Rmb00DytsthMwLsDrv+e542ojPGsAkjkDpNQrEECK3JgEWS50a
-VOujE7LRGrLMglA8iAEjyUKlbbU6Pg1MSj963NN5gSgdO7elOyFtFVFXZVn3B8n+
-KZLhGQxOjoG5RnBY4hJo5CQWirsfQ55VfewxLOeIGLKHwCd0WmrLcFopdakioZ3L
-c7+vmOYir2tHNckW/phpqnoOhW7HiWO1aNn0Bl3GGcUHauoYGUDHMkjCamJYjBSp
-xRhgVZZDWIQBEwIlBhdwFuziebK+95paaXek9At+OHOfibLuAiW1/5CZFqm5DrHW
-hIG0lT9CNfs5gso9qJlHezKcZ5oF+ZS+REmRqbecbTOknTXpzuU=
-=/ZJs
------END PGP SIGNATURE-----
-
---ssZxAlvqSOvXAj81--
+This kind of thing happens a lot these days: pile on engineers, they can
+take it :/
