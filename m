@@ -1,8 +1,8 @@
 Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 12/28] PCI: tegra: Enable PCIe xclk clock clamping
-Date: Tue, 23 Apr 2019 14:58:09 +0530
-Message-ID: <20190423092825.759-13-mmaddireddy@nvidia.com>
+Subject: [PATCH V2 20/28] PCI: tegra: Use legacy irq for port service drivers
+Date: Tue, 23 Apr 2019 14:58:17 +0530
+Message-ID: <20190423092825.759-21-mmaddireddy@nvidia.com>
 In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,116 +11,49 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable xclk clock clamping when entering L1. Clamp threshold will
-determine the time spent waiting for clock module to turn on xclk after
-signaling it. Default threshold value in Tegra124 and Tegra210 is not
-enough to turn on xclk clock. Increase the clamp threshold to meet the
-clock module timing in Tegra124 and Tegra210. Default threshold value is
-enough in Tegra20, Tegra30 and Tegra186.
+Tegra signals PCIe services like AER, PME, etc over legacy IRQ line.
+By default, service drivers register interrupt routine over MSI IRQ line.
+Use pcie_pme_disable_msi() function to disable MSI for service drivers.
+
+PME and AER interrupts registered to MSI without this change,
+cat /proc/interrupts | grep -i pci
+36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
+37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
+76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+
+PME and AER interrupts registered to legacy IRQ with this change,
+cat /proc/interrupts | grep -i pci
+36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
+37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
-V2: Took care of typos in commit log and coding style comments.
+V2: No change
 
- drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 1e16bf60d07f..cad1f651b10b 100644
+index 72634ce6d3da..edc6a0f27397 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -219,8 +219,14 @@
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+@@ -41,6 +41,7 @@
+ #include <soc/tegra/pmc.h>
  
- #define RP_PRIV_MISC	0x00000fe0
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT (0xe << 0)
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT (0xf << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT		(0xe << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT		(0xf << 0)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD		(0xf << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE		(1 << 23)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD		(0xf << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE		(1 << 31)
+ #include "../pci.h"
++#include "../pcie/portdrv.h"
  
- #define RP_LINK_CONTROL_STATUS			0x00000090
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
-@@ -298,6 +304,7 @@ struct tegra_pcie_soc {
- 	bool has_gen2;
- 	bool force_pca_enable;
- 	bool program_uphy;
-+	bool update_clamp_threshold;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -529,6 +536,7 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ #define INT_PCI_MSI_NR (8 * 32)
  
- static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- {
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
- 	u32 value;
+@@ -2721,6 +2722,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 		goto put_resources;
+ 	}
  
- 	/* Enable AER capability */
-@@ -549,6 +557,19 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value = readl(port->base + RP_VEND_XP_BIST);
- 	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
- 	writel(value, port->base + RP_VEND_XP_BIST);
++	/* Switch to legacy IRQ for PCIe services like AER, PME*/
++	pcie_pme_disable_msi();
 +
-+	value = readl(port->base + RP_PRIV_MISC);
-+	value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE;
-+	value |= RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE;
-+
-+	if (soc->update_clamp_threshold) {
-+		value &= ~(RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK |
-+				RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK);
-+		value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD |
-+			RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD;
-+	}
-+
-+	writel(value, port->base + RP_PRIV_MISC);
- }
- 
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
-@@ -2335,6 +2356,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2359,6 +2381,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2376,6 +2399,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2393,6 +2417,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = true,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2429,6 +2454,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = false,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err) {
 -- 
 2.17.1
