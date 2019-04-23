@@ -1,28 +1,83 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 6/7] mfd: max77620: Support device-tree properly
-Date: Tue, 23 Apr 2019 21:27:19 +0300
-Message-ID: <5813f448-590c-0f6a-ec22-d2b5fa36cf03@gmail.com>
-References: <20190422191350.27527-1-digetx@gmail.com>
- <20190422191350.27527-7-digetx@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v5 3/3] backlight: lm3630a: add firmware node support
+Date: Tue, 23 Apr 2019 14:02:51 -0500
+Message-ID: <f8499848-1490-cee5-c943-fa7fb77236ce@ti.com>
+References: <20190418151143.26068-1-masneyb@onstation.org>
+ <20190418151143.26068-4-masneyb@onstation.org>
+ <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
+ <20190423140150.GA10071@basecamp>
+ <dfd59e3f-b60b-da09-bf23-a05de5f4575a@ti.com>
+ <20190423160019.GA10501@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422191350.27527-7-digetx@gmail.com>
+In-Reply-To: <20190423160019.GA10501@basecamp>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-22.04.2019 22:13, Dmitry Osipenko пишет:
-> For some unknown reason the driver for Max77620 doesn't wire up the
-> device-tree support properly and nothing in kernel creates I2C device
-> for the driver (and never did), moreover device-tree files for NVIDIA
-> Tegra210/186/194 boards already have nodes for Max77620. Hence add the
-> missing of_match_table to make driver actually usable.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+Brian
 
-I found out that I2C core actually parses the compatible value of the device-tree node for the driver-device matching and hence it's enough to have the id_table solely. I'll drop this patch in v3.
+On 4/23/19 11:00 AM, Brian Masney wrote:
+> On Tue, Apr 23, 2019 at 10:31:41AM -0500, Dan Murphy wrote:
+>> On 4/23/19 9:01 AM, Brian Masney wrote:
+>>> On Tue, Apr 23, 2019 at 08:49:20AM -0500, Dan Murphy wrote:
+>>>>> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
+>>>>> +				     int default_led_sources)
+>>>>> +{
+>>>>> +	u32 sources[LM3630A_NUM_SINKS];
+>>>>> +	int ret, num_sources, i;
+>>>>> +
+>>>>> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
+>>>>> +						     0);
+>>>>> +	if (num_sources < 0)
+>>>>> +		return default_led_sources;
+>>>>> +	else if (num_sources > ARRAY_SIZE(sources))
+>>>>> +		return -EINVAL;
+>>>>> +
+>>>>> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
+>>>>> +					     num_sources);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	for (i = 0; i < num_sources; i++) {
+>>>>> +		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
+>>>>> +			return -EINVAL;
+>>>>> +
+>>>>> +		ret |= BIT(sources[i]);
+>>>>> +	}
+>>>>> +
+>>>>> +	return ret;
+>>>>> +}
+>>>>> +
+>>>>> +static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
+>>>>> +			      struct fwnode_handle *node, int *seen_led_sources)
+>>>>
+>>>> Why is seen_led_sources passed in here?
+>>>> It is initialized on the stack in lm3630a_parse_node but the variable is never referenced in that API.
+>>>
+>>> It's to see all of the led-sources that are configured across all of the
+>>> banks. If it is just in lm3630a_parse_bank(), then it won't catch the
+>>> following invalid configuration:
+>>>
+>>
+>> Ok I see what it is for now.
+>>
+>> Not sure why it is declared as a pointer though.
+> 
+> It's so that lm3630a_parse_bank() can update that value with the
+> led-sources that have been seen. Otherwise, the changes wouldn't make
+> their way back out to the outer function.
+> 
+
+OK.  Thats another way to do it.  I may have just done a return with the value.
+
+Otherwise
+
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+
+> Brian
+> 
