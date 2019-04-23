@@ -1,56 +1,117 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 11/28] PCI: tegra: Process pending DLL transactions before entering L1 or L2
-Date: Tue, 23 Apr 2019 14:58:08 +0530
-Message-ID: <20190423092825.759-12-mmaddireddy@nvidia.com>
-In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+Return-Path: <helgaas@kernel.org>
+Date: Tue, 23 Apr 2019 15:24:03 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 22/30] PCI: tegra: Access endpoint config only if PCIe
+ link is up
+Message-ID: <20190423202403.GA61751@google.com>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-23-mmaddireddy@nvidia.com>
+ <20190411201535.GS256045@google.com>
+ <e721e7f4-85c9-bee1-7131-12e0b7dfc0d1@nvidia.com>
+ <20190412145003.GE141472@google.com>
+ <1039fbf2-24ad-c31c-93d9-663aab74a26a@nvidia.com>
+ <20190415140430.GK126710@google.com>
+ <ecbf2331-fdb5-fe6c-f1de-6da0d7f88afb@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecbf2331-fdb5-fe6c-f1de-6da0d7f88afb@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Ley Foon Tan <lftan@altera.com>, Michal Simek <michal.simek@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PM message are truncated while entering L1 or L2, which is resulting in
-receiver errors. Set the required bit to finish processing DLLP before
-link enter L1 or L2.
+Sorry, somehow I forgot to respond to this.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V2: No change
+On Mon, Apr 15, 2019 at 09:13:29PM +0530, Manikanta Maddireddy wrote:
+> On 15-Apr-19 7:34 PM, Bjorn Helgaas wrote:
+> > On Mon, Apr 15, 2019 at 05:06:10PM +0530, Manikanta Maddireddy wrote:
+> >> On 12-Apr-19 8:20 PM, Bjorn Helgaas wrote:
+> >>> On Fri, Apr 12, 2019 at 12:30:22PM +0530, Manikanta Maddireddy wrote:
+> >>>> On 12-Apr-19 1:45 AM, Bjorn Helgaas wrote:
+> >>>>> On Thu, Apr 11, 2019 at 10:33:47PM +0530, Manikanta Maddireddy wrote:
+> >>>>>> Add PCIe link up check in config read and write callback functions
+> >>>>>> before accessing endpoint config registers.
+> >>>>>>  static int tegra_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+> >>>>>>  				  int where, int size, u32 *value)
+> >>>>>>  {
+> >>>>>> +	struct tegra_pcie *pcie = bus->sysdata;
+> >>>>>> +	struct pci_dev *bridge;
+> >>>>>> +	struct tegra_pcie_port *port;
+> >>>>>> +
+> >>>>>>  	if (bus->number == 0)
+> >>>>>>  		return pci_generic_config_read32(bus, devfn, where, size,
+> >>>>>>  						 value);
+> >>>>>>  
+> >>>>>> +	bridge = pcie_find_root_port(bus->self);
+> >>>>>> +
+> >>>>>> +	list_for_each_entry(port, &pcie->ports, list)
+> >>>>>> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
+> >>>>>> +			break;
+> >>>>>> +
+> >>>>>> +	/* If there is no link, then there is no device */
+> >>>>>> +	if (!tegra_pcie_link_status(port)) {
+> >>>>> This is racy and you should avoid it if possible.  The link could go down
+> >>>>> between calling tegra_pcie_link_status() and issuing the config read/write.
+> >>>>>
+> >>>>> If your driver is to be reliable, it must be able to handle any bad
+> >>>>> consequence of issuing that config read/write anyway, so I think it's
+> >>>>> better if it doesn't even bother checking whether the link is up.
+> >>>> This change is made based on similar check present in dwc driver
+> >>>> dw_pcie_valid_device(), reasons for making this change in Tegra might
+> >>>> differ dwc.
+> >>> Yes, you won't be surprised to learn that I don't like the similar
+> >>> checks in dwc, altera, xilinx, and xilinx-nwl either :)  I raise this
+> >>> issue every time I see it, but I can't remember if I've mentioned dwc
+> >>> specifically.
+> >>>
+> >>> We need to either eradicate this pattern of checking for link up, or
+> >>> include a comment about why it is absolutely necessary.
+> >> This patch is created to address below scenario in our downstream kernel,
+> >> 1) Our platform has WiFi on one slot and GPU in another.
+> >> 2) During WiFi OFF, link is put in L2 and it goes through hot reset
+> >> when turning ON WiFi (since Tegra doesn't support hot-plug).
+> >> 3) Whenever x11 server is started it scans the PCIe bus for video devices.
+> >> Here PCIe configuration registers of all devices are read to find out
+> >> all available video devices.
+> >> 4) If "x11 server" started with WiFi OFF, then we are seeing "response
+> >> decoding error"(Tegra AFI module specific error).
+> > Probably happens with lspci too.  I guess this is when you try to read
+> > the WiFi device config space?
+> Yes, happens with lspci when trying to read WiFi device config space.
+> >> Best solution we came up with is to have link up check in config access
+> >> callback functions.
+> > Can you check for "response decoding error" in the config accessor and
+> > return 0xffffffff if you see it?
+> "Response decoding error" is informed by an
+> interrupt(tegra_pcie_isr()), we have to add polling logic in config
+> accessor to check if config access caused "response decoding error"
+> or not. This will increase config access time.
 
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Config access is never in a performance path, so the access time
+doesn't matter.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 8b62559f5777..1e16bf60d07f 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -212,6 +212,9 @@
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
- 
-+#define RP_VEND_XP_BIST	0x00000f4c
-+#define  RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE	(1 << 28)
-+
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
-@@ -538,6 +541,14 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
- 	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
- 	writel(value, port->base + RP_VEND_XP);
-+
-+	/*
-+	 * LTSSM will wait for DLLP to finish before entering L1 or L2,
-+	 * to avoid truncation of PM messages which results in receiver errors
-+	 */
-+	value = readl(port->base + RP_VEND_XP_BIST);
-+	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
-+	writel(value, port->base + RP_VEND_XP_BIST);
- }
- 
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
--- 
-2.17.1
+> Also sometimes BAR access can also cause "Response decoding error", so
+> matching "Response decoding error" to a particular config access is
+> going to be difficult.
+
+I'm surprised your hardware can't distinguish a failed config access
+from an unclaimed MMIO access.
+
+> >>>> Intention here is to reduce the number of AER errors when device is
+> >>>> falling off the bus or going through hot reset. So racy condition here is
+> >>>> OK
+> >>> I'm not convinced about this.  The issues you mention need to be
+> >>> solved in a generic way, not a tegra-specific way.
+> >>>
+> >>> We don't want to end up with code that silently avoids the config
+> >>> access 99.99% of the time, but once in a blue moon, we lose the race
+> >>> (the device stops responding after we've determined the link is up)
+> >>> and the access causes a mysterious AER error that we have no way to
+> >>> debug.
+> >>>
+> >>>>>> +		*value = 0xffffffff;
+> >>>>>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>>  	return pci_generic_config_read(bus, devfn, where, size, value);
+> >>>>>>  }
