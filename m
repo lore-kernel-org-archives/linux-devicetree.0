@@ -1,8 +1,8 @@
 Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 23/28] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
-Date: Tue, 23 Apr 2019 14:58:20 +0530
-Message-ID: <20190423092825.759-24-mmaddireddy@nvidia.com>
+Subject: [PATCH V2 03/28] PCI: tegra: Rearrange Tegra PCIe driver functions
+Date: Tue, 23 Apr 2019 14:58:00 +0530
+Message-ID: <20190423092825.759-4-mmaddireddy@nvidia.com>
 In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,34 +11,175 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
-in low power mode.
+Tegra PCIe has register spec for,
+ - AXI to FPCI(AFI) bridge
+ - Multiple PCIe root ports
+ - PCIe PHY
+ - PCIe pad control
+
+Rearrange Tegra PCIe driver functions such that each function programs
+required module only.
+ - tegra_pcie_enable_controller(): Program AFI module and enable PCIe
+controller.
+ - tegra_pcie_phy_power_on(): Bring up PCIe PHY.
+ - tegra_pcie_apply_pad_settings(): Program PCIe REFCLK pad settings.
+ - tegra_pcie_enable_ports(): Program each root port and bring up PCIe
+link.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
-V2: Using standard pinctrl names, default and idle
+V2: This is new patch in V2
 
- .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 70 +++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 40 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-index 145a4f04194f..7939bca47861 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-@@ -65,6 +65,14 @@ Required properties:
-   - afi
-   - pcie_x
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 8235d937951b..bb3c0af9c830 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -852,7 +852,6 @@ static int tegra_pcie_port_phy_power_off(struct tegra_pcie_port *port)
+ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+-	const struct tegra_pcie_soc *soc = pcie->soc;
+ 	struct tegra_pcie_port *port;
+ 	int err;
  
-+Optional properties:
-+- pinctrl-names: A list of pinctrl state names. Must contain the following
-+  entries:
-+  - "default": active state, puts PCIe I/O out of deep power down state
-+  - "idle": puts PCIe I/O into deep power down state
-+- pinctrl-0: phandle for the default/active state of pin configurations.
-+- pinctrl-1: phandle for the idle state of pin configurations.
+@@ -878,12 +877,6 @@ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
+ 		}
+ 	}
+ 
+-	/* Configure the reference clock driver */
+-	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
+-
+-	if (soc->num_ports > 2)
+-		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
+-
+ 	return 0;
+ }
+ 
+@@ -918,13 +911,11 @@ static int tegra_pcie_phy_power_off(struct tegra_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
++static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ {
+-	struct device *dev = pcie->dev;
+ 	const struct tegra_pcie_soc *soc = pcie->soc;
+ 	struct tegra_pcie_port *port;
+ 	unsigned long value;
+-	int err;
+ 
+ 	/* enable PLL power down */
+ 	if (pcie->phy) {
+@@ -958,14 +949,6 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 		afi_writel(pcie, value, AFI_FUSE);
+ 	}
+ 
+-	if (soc->program_uphy) {
+-		err = tegra_pcie_phy_power_on(pcie);
+-		if (err < 0) {
+-			dev_err(dev, "failed to power on PHY(s): %d\n", err);
+-			return err;
+-		}
+-	}
+-
+ 	/* take the PCIe interface module out of reset */
+ 	reset_control_deassert(pcie->pcie_xrst);
+ 
+@@ -989,22 +972,6 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 
+ 	/* disable all exceptions */
+ 	afi_writel(pcie, 0, AFI_FPCI_ERROR_MASKS);
+-
+-	return 0;
+-}
+-
+-static void tegra_pcie_disable_controller(struct tegra_pcie *pcie)
+-{
+-	int err;
+-
+-	reset_control_assert(pcie->pcie_xrst);
+-
+-	if (pcie->soc->program_uphy) {
+-		err = tegra_pcie_phy_power_off(pcie);
+-		if (err < 0)
+-			dev_err(pcie->dev, "failed to power off PHY(s): %d\n",
+-				err);
+-	}
+ }
+ 
+ static void tegra_pcie_power_off(struct tegra_pcie *pcie)
+@@ -1106,6 +1073,17 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+ 	return err;
+ }
+ 
++static void tegra_pcie_apply_pad_settings(struct tegra_pcie *pcie)
++{
++	const struct tegra_pcie_soc *soc = pcie->soc;
 +
- Required properties on Tegra124 and later (deprecated):
- - phys: Must contain an entry for each entry in phy-names.
- - phy-names: Must include the following entries:
++	/* Configure the reference clock driver */
++	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
++
++	if (soc->num_ports > 2)
++		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
++}
++
+ static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+@@ -2482,16 +2460,23 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
+ {
+ 	struct tegra_pcie *pcie = dev_get_drvdata(dev);
+ 	struct tegra_pcie_port *port;
++	int err;
+ 
+ 	list_for_each_entry(port, &pcie->ports, list)
+ 		tegra_pcie_pme_turnoff(port);
+ 
+ 	tegra_pcie_disable_ports(pcie);
+ 
++	if (pcie->soc->program_uphy) {
++		err = tegra_pcie_phy_power_off(pcie);
++		if (err < 0)
++			dev_err(dev, "failed to power off PHY(s): %d\n", err);
++	}
++
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		tegra_pcie_disable_msi(pcie);
+ 
+-	tegra_pcie_disable_controller(pcie);
++	reset_control_assert(pcie->pcie_xrst);
+ 	tegra_pcie_power_off(pcie);
+ 
+ 	return 0;
+@@ -2507,16 +2492,21 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
+ 		dev_err(dev, "tegra pcie power on fail: %d\n", err);
+ 		return err;
+ 	}
+-	err = tegra_pcie_enable_controller(pcie);
+-	if (err) {
+-		dev_err(dev, "tegra pcie controller enable fail: %d\n", err);
+-		goto poweroff;
+-	}
++	tegra_pcie_enable_controller(pcie);
+ 	tegra_pcie_setup_translations(pcie);
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		tegra_pcie_enable_msi(pcie);
+ 
++	if (pcie->soc->program_uphy) {
++		err = tegra_pcie_phy_power_on(pcie);
++		if (err < 0) {
++			dev_err(dev, "failed to power on PHY(s): %d\n", err);
++			goto poweroff;
++		}
++	}
++
++	tegra_pcie_apply_pad_settings(pcie);
+ 	tegra_pcie_enable_ports(pcie);
+ 
+ 	return 0;
 -- 
 2.17.1
