@@ -1,220 +1,74 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 1/4] ARM: dts: exynos: Move pmu and timer nodes out of
- soc
-Date: Tue, 23 Apr 2019 14:58:31 +0200
-Message-ID: <d236bbff-4f99-d492-7591-5f5ca05f4949@samsung.com>
-References: <CGME20190415180530epcas3p4ad1a7ac12f7d7ac3175735995b21d48e@epcas3p4.samsung.com>
-        <20190415180510.6044-1-krzk@kernel.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3 0/4] drm/panel: Support for OSD101T2045-53TS and
+ OSD101T2587-53TS
+Date: Tue, 23 Apr 2019 16:00:26 +0300
+Message-ID: <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
+References: <20190226075523.28997-1-peter.ujfalusi@ti.com>
+ <20190423115506.GE23448@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190415180510.6044-1-krzk@kernel.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190423115506.GE23448@ulmo>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, sam@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 2019-04-15 20:05, Krzysztof Kozlowski wrote:
-> The ARM PMU and ARM architected timer nodes are part of ARM CPU design
-> therefore they should not be inside the soc node.  This also fixes DTC
-> W=1 warnings like:
->
->      arch/arm/boot/dts/exynos3250.dtsi:106.21-135.5:
->          Warning (simple_bus_reg): /soc/fixed-rate-clocks: missing or empty reg/ranges property
->      arch/arm/boot/dts/exynos3250.dtsi:676.7-680.5:
->          Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-> ---
->   arch/arm/boot/dts/exynos3250.dtsi | 12 +++++-----
->   arch/arm/boot/dts/exynos4.dtsi    | 12 +++++-----
->   arch/arm/boot/dts/exynos5250.dtsi | 40 +++++++++++++++----------------
->   arch/arm/boot/dts/exynos54xx.dtsi | 38 ++++++++++++++---------------
->   4 files changed, 51 insertions(+), 51 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 5892a9f7622f..af54b306204b 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -97,6 +97,12 @@
->   		};
->   	};
->   
-> +	pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
->   	soc: soc {
->   		compatible = "simple-bus";
->   		#address-cells = <1>;
-> @@ -673,12 +679,6 @@
->   			status = "disabled";
->   		};
->   
-> -		pmu {
-> -			compatible = "arm,cortex-a7-pmu";
-> -			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> -				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> -		};
-> -
->   		ppmu_dmc0: ppmu_dmc0@106a0000 {
->   			compatible = "samsung,exynos-ppmu";
->   			reg = <0x106a0000 0x2000>;
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index 6085e92ac2d7..1c21627e3c3c 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -51,6 +51,12 @@
->   		serial3 = &serial_3;
->   	};
->   
-> +	pmu: pmu {
-> +		compatible = "arm,cortex-a9-pmu";
-> +		interrupt-parent = <&combiner>;
-> +		interrupts = <2 2>, <3 2>;
-> +	};
-> +
->   	soc: soc {
->   		compatible = "simple-bus";
->   		#address-cells = <1>;
-> @@ -169,12 +175,6 @@
->   			reg = <0x10440000 0x1000>;
->   		};
->   
-> -		pmu: pmu {
-> -			compatible = "arm,cortex-a9-pmu";
-> -			interrupt-parent = <&combiner>;
-> -			interrupts = <2 2>, <3 2>;
-> -		};
-> -
->   		sys_reg: syscon@10010000 {
->   			compatible = "samsung,exynos4-sysreg", "syscon";
->   			reg = <0x10010000 0x400>;
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 80986b97dfe5..96ace6a5e2f9 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -157,6 +157,26 @@
->   		};
->   	};
->   
-> +	pmu {
-> +		compatible = "arm,cortex-a15-pmu";
-> +		interrupt-parent = <&combiner>;
-> +		interrupts = <1 2>, <22 4>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		/*
-> +		 * Unfortunately we need this since some versions
-> +		 * of U-Boot on Exynos don't set the CNTFRQ register,
-> +		 * so we need the value from DT.
-> +		 */
-> +		clock-frequency = <24000000>;
-> +	};
-> +
->   	soc: soc {
->   		sysram@2020000 {
->   			compatible = "mmio-sram";
-> @@ -227,20 +247,6 @@
->   			power-domains = <&pd_mau>;
->   		};
->   
-> -		timer {
-> -			compatible = "arm,armv7-timer";
-> -			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> -				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> -				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> -				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> -			/*
-> -			 * Unfortunately we need this since some versions
-> -			 * of U-Boot on Exynos don't set the CNTFRQ register,
-> -			 * so we need the value from DT.
-> -			 */
-> -			clock-frequency = <24000000>;
-> -		};
-> -
->   		mct@101c0000 {
->   			compatible = "samsung,exynos4210-mct";
->   			reg = <0x101C0000 0x800>;
-> @@ -265,12 +271,6 @@
->   			};
->   		};
->   
-> -		pmu {
-> -			compatible = "arm,cortex-a15-pmu";
-> -			interrupt-parent = <&combiner>;
-> -			interrupts = <1 2>, <22 4>;
-> -		};
-> -
->   		pinctrl_0: pinctrl@11400000 {
->   			compatible = "samsung,exynos5250-pinctrl";
->   			reg = <0x11400000 0x1000>;
-> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-> index de26e5ee0d2d..ae866bcc30c4 100644
-> --- a/arch/arm/boot/dts/exynos54xx.dtsi
-> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
-> @@ -25,27 +25,27 @@
->   		usbdrdphy1 = &usbdrd_phy1;
->   	};
->   
-> -	soc: soc {
-> -		arm_a7_pmu: arm-a7-pmu {
-> -			compatible = "arm,cortex-a7-pmu";
-> -			interrupt-parent = <&gic>;
-> -			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> -				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-> -				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-> -				     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-> -			status = "disabled";
-> -		};
-> +	arm_a7_pmu: arm-a7-pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-> +		status = "disabled";
-> +	};
->   
-> -		arm_a15_pmu: arm-a15-pmu {
-> -			compatible = "arm,cortex-a15-pmu";
-> -			interrupt-parent = <&combiner>;
-> -			interrupts = <1 2>,
-> -				     <7 0>,
-> -				     <16 6>,
-> -				     <19 2>;
-> -			status = "disabled";
-> -		};
-> +	arm_a15_pmu: arm-a15-pmu {
-> +		compatible = "arm,cortex-a15-pmu";
-> +		interrupt-parent = <&combiner>;
-> +		interrupts = <1 2>,
-> +			     <7 0>,
-> +			     <16 6>,
-> +			     <19 2>;
-> +		status = "disabled";
-> +	};
->   
-> +	soc: soc {
->   		sysram@2020000 {
->   			compatible = "mmio-sram";
->   			reg = <0x02020000 0x54000>;
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+SGkgVGhpZXJyeSwKCk9uIDIzLzA0LzIwMTkgMTQuNTUsIFRoaWVycnkgUmVkaW5nIHdyb3RlOgo+
+IE9uIFR1ZSwgRmViIDI2LCAyMDE5IGF0IDA5OjU1OjE5QU0gKzAyMDAsIFBldGVyIFVqZmFsdXNp
+IHdyb3RlOgo+PiBIaSwKPj4KPj4gQ2hhbmdlcyBzaW5jZSB2MjoKPj4gLSBBZGRlZCBSZXZpZXdl
+ZC1ieSBmcm9tIFJvYiB0byB0aGUgYmluZGluZyBwYXRjaGVzCj4+IC0gQWRkZWQgaGVscCB0ZXh0
+IHRvIEtjb25maWcgKG9zZDEwMXQyNTg3LTUzdHMpCj4+IC0gUHJpbnQgdGhlIGVycm9yIHZhbHVl
+cyBpbiBkZXZfZXJyL3dhcm4KPj4gLSBBZGRlZCBSZXZpZXdlZC1ieSBmcm9tIFNhbSB0byB0aGUg
+b3NkMTAxdDI1ODctNTN0cyBwYXRjaAo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYxIChvbmx5IHBhbmVs
+LW9zZC1vc2QxMDF0MjU4Ny01M3RzIGNoYW5nZWQpOgo+PiAtIFJlbW92ZWQgdW51c2VkIG1lbWJl
+cnMgZnJvbSBzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFuZWwKPj4gLSBVc2UgYmFja2xpZ2h0X2VuYWJs
+ZS9iYWNrbGlnaHRfZGlzYWJsZQo+PiAtIFVzZSBkZXZtX29mX2ZpbmRfYmFja2xpZ2h0KCkKPj4g
+LSBvc2QxMDF0MjU4N19vZl9tYXRjaCB0YWJsZSBzdGFuZGFyZGl6ZWQgCj4+IC0gb3NkMTAxdDI1
+ODdfcGFuZWxfdW5wcmVwYXJlKCkgYWRkZWQgdG8gc2h1dGRvd24gYW5kIHJlbW92ZSBjYWxsYmFj
+a3MgdG8gdHVybgo+PiAgIHBvd2VyIG9mZgo+PiAtIEZpeCBwcm9iZSBpbiBjYXNlIG1pcGlfZHNp
+X2F0dGFjaCgpIHdvdWxkIGZhaWwKPj4KPj4gQWRkIHN1cHBvcnQgZm9yIE9TRDEwMVQyMDQ1LTUz
+VFMgYW5kIE9TRDEwMVQyNTg3LTUzVFMgZnJvbSBPbmUgU3RvcCBEaXNwbGF5cy4KPj4KPj4gVGhl
+IHR3byBwYW5lbCBpcyBzaW1pbGFyIHdpdGggb25lIGJpZyBkaWZmZXJlbmNlOiBPU0QxMDFUMjU4
+Ny01M1RTIHJlcXVpcmVzIHRoZQo+PiBNSVBJX0RTSV9UVVJOX09OX1BFUklQSEVSQUwgbWVzc2Fn
+ZSwgdGh1cyBjYW4gbm90IGJlIGhhbmRsZWQgYnkgcGFuZWwtc2ltcGxlLgo+Pgo+PiBSZWdhcmRz
+LAo+PiBQZXRlcgo+PiAtLS0KPj4gUGV0ZXIgVWpmYWx1c2kgKDQpOgo+PiAgIGR0LWJpbmRpbmdz
+OiBkaXNwbGF5OiBBZGQgYmluZGluZ3MgZm9yIE9TRDEwMVQyMDQ1LTUzVFMKPj4gICBkcm0vcGFu
+ZWw6IHNpbXBsZTogQWRkIHN1cHBvcnQgZm9yIE9TRDEwMVQyMDQ1LTUzVFMKPj4gICBkdC1iaW5k
+aW5nczogZGlzcGxheTogQWRkIGJpbmRpbmdzIGZvciBPU0QxMDFUMjU4Ny01M1RTIHBhbmVsCj4+
+ICAgZHJtL3BhbmVsOiBBZGQgT1NEMTAxVDI1ODctNTNUUyBkcml2ZXIKPj4KPj4gIC4uLi9kaXNw
+bGF5L3BhbmVsL29zZCxvc2QxMDF0MjA0NS01M3RzLnR4dCAgICB8ICAxMSArCj4+ICAuLi4vZGlz
+cGxheS9wYW5lbC9vc2Qsb3NkMTAxdDI1ODctNTN0cy50eHQgICAgfCAgMTQgKwo+PiAgZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgICA5ICsKPj4gIGRyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAuLi4v
+ZHJtL3BhbmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01M3RzLmMgICAgfCAyNTQgKysrKysrKysr
+KysrKysrKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAg
+ICAgfCAgMzQgKysrCj4+ICA2IGZpbGVzIGNoYW5nZWQsIDMyMyBpbnNlcnRpb25zKCspCj4+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvb3NkLG9zZDEwMXQyMDQ1LTUzdHMudHh0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkLG9zZDEw
+MXQyNTg3LTUzdHMudHh0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01M3RzLmMKPiAKPiBBcHBsaWVkIGFsbCBmb3VyIHBh
+dGNoZXMuIE5vdGUgdGhhdCBJIGhhZCB0byBjaGFuZ2UgdGhlIG9zZCB2ZW5kb3IKPiBzdHJpbmcg
+dG8gb3NkZGlzcGxheXMsIHdoaWNoIGlzIHRoZSBvbmUgdGhhdCBpcyBkb2N1bWVudGVkIGluCj4g
+dmVuZG9yLXByZWZpeGVzLnR4dC4KCkkgcmVjYWxsIGNoZWNraW5nIHRoZSB2ZW5kb3ItcHJlZml4
+ZXMudHh0IGFuZCBub3QgZmluZGluZyBPU0QgaW4gdGhlcmUuCk9kZCwgYXMgaXQgaXMgaW5kZWVk
+IHRoZXJlLgoKPiBJJ20gYXNzdW1pbmcgdGhhdCB0aGlzIGlzIHRoZSBzYW1lIHZlbmRvciwgYmFz
+ZWQgb24gdGhlIG1vZGVsIG5hbWVzLiBJZgo+IHRoaXMgaXMgYSBkaWZmZXJlbnQgdmVuZG9yLCBk
+byBsZXQgbWUga25vdy4KClllcyBpdCBpcyB0aGUgc2FtZSBvbmUuCgpUaGFuayB5b3UgYW5kIHNv
+cnJ5IGZvciBtaXNzaW5nIGl0LAotIFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
+eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElE
+OiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
