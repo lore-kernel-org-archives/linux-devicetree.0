@@ -1,82 +1,75 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v5 3/3] backlight: lm3630a: add firmware node support
-Date: Tue, 23 Apr 2019 10:31:41 -0500
-Message-ID: <dfd59e3f-b60b-da09-bf23-a05de5f4575a@ti.com>
-References: <20190418151143.26068-1-masneyb@onstation.org>
- <20190418151143.26068-4-masneyb@onstation.org>
- <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
- <20190423140150.GA10071@basecamp>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+Date: Tue, 23 Apr 2019 15:32:59 +0000
+Message-ID: <TY1PR01MB1770DB45DCD263C6933B9210C0230@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <20190301161624.GA19937@kroah.com>
+ <TYXPR01MB17756DBAF2FD7A1F2A9B82B0C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423140150.GA10071@basecamp>
+In-Reply-To: <TYXPR01MB17756DBAF2FD7A1F2A9B82B0C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+To: Simon Horman <horms@verge.net.au>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Brian
+Hello Simon,
 
-On 4/23/19 9:01 AM, Brian Masney wrote:
-> On Tue, Apr 23, 2019 at 08:49:20AM -0500, Dan Murphy wrote:
->>> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
->>> +				     int default_led_sources)
->>> +{
->>> +	u32 sources[LM3630A_NUM_SINKS];
->>> +	int ret, num_sources, i;
->>> +
->>> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
->>> +						     0);
->>> +	if (num_sources < 0)
->>> +		return default_led_sources;
->>> +	else if (num_sources > ARRAY_SIZE(sources))
->>> +		return -EINVAL;
->>> +
->>> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
->>> +					     num_sources);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	for (i = 0; i < num_sources; i++) {
->>> +		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
->>> +			return -EINVAL;
->>> +
->>> +		ret |= BIT(sources[i]);
->>> +	}
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
->>> +			      struct fwnode_handle *node, int *seen_led_sources)
->>
->> Why is seen_led_sources passed in here?
->> It is initialized on the stack in lm3630a_parse_node but the variable is never referenced in that API.
-> 
-> It's to see all of the led-sources that are configured across all of the
-> banks. If it is just in lm3630a_parse_bank(), then it won't catch the
-> following invalid configuration:
-> 
+I know you don't normally take this type of patches, but this one has been =
+around for more than 4 months now, and I am losing hope here...
 
-Ok I see what it is for now.
+Do you think you can this patch?
 
-Not sure why it is declared as a pointer though.
+Thanks,
+Fab
 
-Dan
-
-> led@0 {
-> 	reg = <0>;
-> 	led-sources = <0 1>;
-> 	label = "lcd-backlight";
-> 	default-brightness = <200>;
-> };
-> 
-> led@1 {
-> 	reg = <1>;
-> 	default-brightness = <150>;
-> };
-> 
-> Brian
-> 
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.=
+org> On Behalf Of Fabrizio Castro
+> Sent: 01 March 2019 16:37
+> Subject: RE: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+>=20
+> Hello Greg,
+>=20
+> Thank you for your reply!
+>=20
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Sent: 01 March 2019 16:16
+> > To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel=
+@vger.kernel.org; Simon Horman <horms@verge.net.au>;
+> > Geert Uytterhoeven <geert+renesas@glider.be>; Chris Paterson <Chris.Pat=
+erson2@renesas.com>; Biju Das
+> > <biju.das@bp.renesas.com>; linux-renesas-soc@vger.kernel.org; Rob Herri=
+ng <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>
+> > Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+> >
+> > On Fri, Mar 01, 2019 at 11:25:33AM +0000, Fabrizio Castro wrote:
+> > > Hello Greg,
+> > >
+> > > I am sorry to bother you.
+> > > Do you think you take this patch?
+> >
+> > device tree bindings need an ack from the DT maintainers before I can
+> > take them.  Also, this is for xhci, the xhci maintainer is responsible
+> > for those, not me :)
+>=20
+> I am so sorry.
+>=20
+> The patch has been reviewed by Geert Uytterhoeven, Simon Horman, and Rob =
+Herring already.
+>=20
+> Mathias, are you the one taking the patches for Documentation/devicetree/=
+bindings/usb/usb-xhci.txt now?
+>=20
+> Thanks,
+> Fab
+>=20
+> >
+> > thanks,
+> >
+> > greg k-h
