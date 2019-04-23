@@ -1,88 +1,122 @@
-Return-Path: <SRS0=HVR0=S2=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 9/9] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
-Date: Wed, 24 Apr 2019 10:22:23 +0100
-Message-Id: <1556097743-12717-10-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-References: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH 13/30] PCI: tegra: Update flow control threshold in
+ Tegra210
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+ <20190411170355.6882-14-mmaddireddy@nvidia.com> <20190415114703.GO29254@ulmo>
+ <e55e7850-a960-4b36-7b62-f7ed85d3b17f@nvidia.com>
+Message-ID: <cb1c70a9-39e7-b8f1-d47b-b0e374a016f4@nvidia.com>
+Date: Tue, 23 Apr 2019 14:57:31 +0530
+MIME-Version: 1.0
+In-Reply-To: <e55e7850-a960-4b36-7b62-f7ed85d3b17f@nvidia.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables TI HD3SS3220 device and support usb role switch
-for the CAT 874 platform.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V4-->V5
-  * No change
-V3-->V4
-  * No change
-V2-->V3
-  * Used "renesas,usb-role-switch" instead of generic "usb-role-switch"
-    property
-V1-->V2
-  * New patch
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index b9ae7db..746826c 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -85,6 +85,34 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	hd3ss3220@47 {
-+		compatible = "ti,hd3ss3220";
-+		reg = <0x47>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+		};
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hd3ss3220_ep: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&usb3peri_role_switch>;
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-0 = <&i2c1_pins>;
- 	pinctrl-names = "default";
-@@ -175,6 +203,17 @@
- &usb3_peri0 {
- 	companion = <&xhci0>;
- 	status = "okay";
-+	renesas,usb-role-switch;
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb3peri_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&hd3ss3220_ep>;
-+		};
-+	};
- };
- 
- &xhci0 {
--- 
-2.7.4
+On 15-Apr-19 8:35 PM, Manikanta Maddireddy wrote:
+>
+> On 15-Apr-19 5:17 PM, Thierry Reding wrote:
+>> On Thu, Apr 11, 2019 at 10:33:38PM +0530, Manikanta Maddireddy wrote:
+>>> Recommended update FC threshold in Tegra210 is 0x60 for best performance
+>>> of x1 link. Setting this to 0x60 provides the best balance between number
+>>> of UpdateFC and read data sent over the link.
+>>>
+>>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>>> ---
+>>>  drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+>>>  1 file changed, 15 insertions(+)
+>> Looks to me like part of this patch ended up in 12/30?
+>>
+>> Thierry
+> Ok, I will squash 12/30 & 13/30 and clearly mentioned what it means for T124 and T210
+> in commit message.
+
+12/30 and 13/30 are fixing two independent issues, so I couldn't merge these
+two patches. However I am providing more details in commit log in V2, please
+take a look at V2 and let me know if you have different opinion.
+
+Manikanta
+
+>>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>>> index b74408eeb367..7dc728cc5f51 100644
+>>> --- a/drivers/pci/controller/pci-tegra.c
+>>> +++ b/drivers/pci/controller/pci-tegra.c
+>>> @@ -319,6 +319,7 @@ struct tegra_pcie_soc {
+>>>  	bool update_clamp_threshold;
+>>>  	bool program_deskew_time;
+>>>  	bool raw_violation_fixup;
+>>> +	bool update_fc_threshold;
+>>>  	struct {
+>>>  		struct {
+>>>  			u32 rp_ectl_2_r1;
+>>> @@ -662,6 +663,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+>>>  		value |= soc->update_fc_val;
+>>>  		writel(value, port->base + RP_VEND_XP);
+>>>  	}
+>>> +
+>>> +	if (soc->update_fc_threshold) {
+>>> +		value = readl(port->base + RP_VEND_XP);
+>>> +		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
+>>> +		value |= soc->update_fc_val;
+>>> +		writel(value, port->base + RP_VEND_XP);
+>>> +	}
+>>>  }
+>>>  
+>>>  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+>>> @@ -2409,6 +2417,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+>>>  	.update_clamp_threshold = false,
+>>>  	.program_deskew_time = false,
+>>>  	.raw_violation_fixup = false,
+>>> +	.update_fc_threshold = false,
+>>>  	.ectl.enable = false,
+>>>  };
+>>>  
+>>> @@ -2436,6 +2445,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+>>>  	.update_clamp_threshold = false,
+>>>  	.program_deskew_time = false,
+>>>  	.raw_violation_fixup = false,
+>>> +	.update_fc_threshold = false,
+>>>  	.ectl.enable = false,
+>>>  };
+>>>  
+>>> @@ -2458,6 +2468,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+>>>  	.update_clamp_threshold = true,
+>>>  	.program_deskew_time = false,
+>>>  	.raw_violation_fixup = true,
+>>> +	.update_fc_threshold = false,
+>>>  	.ectl.enable = false,
+>>>  };
+>>>  
+>>> @@ -2468,6 +2479,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+>>>  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+>>>  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+>>>  	.pads_refclk_cfg0 = 0x90b890b8,
+>>> +	/* FC threshold is bit[25:18] */
+>>> +	.update_fc_val = 0x01800000,
+>>>  	.has_pex_clkreq_en = true,
+>>>  	.has_pex_bias_ctrl = true,
+>>>  	.has_intr_prsnt_sense = true,
+>>> @@ -2478,6 +2491,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+>>>  	.update_clamp_threshold = true,
+>>>  	.program_deskew_time = true,
+>>>  	.raw_violation_fixup = false,
+>>> +	.update_fc_threshold = true,
+>>>  	.ectl.regs.rp_ectl_2_r1 = 0x0000000f,
+>>>  	.ectl.regs.rp_ectl_4_r1 = 0x00000067,
+>>>  	.ectl.regs.rp_ectl_5_r1 = 0x55010000,
+>>> @@ -2513,6 +2527,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+>>>  	.update_clamp_threshold = false,
+>>>  	.program_deskew_time = false,
+>>>  	.raw_violation_fixup = false,
+>>> +	.update_fc_threshold = false,
+>>>  	.ectl.enable = false,
+>>>  };
+>>>  
+>>> -- 
+>>> 2.17.1
+>>>
