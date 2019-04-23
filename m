@@ -1,45 +1,89 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mt8183: Add watchdog dt-binding
-Date: Tue, 23 Apr 2019 16:37:49 +0200
-Message-ID: <4a0ad424-f3bf-f6fd-4780-0ba8336e7d82@gmail.com>
-References: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
+Subject: Re: [PATCH v4 05/12] soc: mediatek: cmdq: move the CMDQ_IRQ_MASK into
+ cmdq driver data
+Date: Tue, 23 Apr 2019 16:39:11 +0200
+Message-ID: <8e1b12ca-6928-476b-b3bd-7ee17b57817b@gmail.com>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+ <20190415125833.38704-6-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
+In-Reply-To: <20190415125833.38704-6-bibby.hsieh@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
+Subject should be:
 
+mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
 
-On 22/04/2019 08:08, Yong Liang wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
+Regards,
+Matthias
+
+On 15/04/2019 14:58, Bibby Hsieh wrote:
+> The interrupt mask and thread number has positive correlation,
+> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+> it by thread number.
 > 
-> This patch add watchdog binding documentation for
-> watchdog on MTK Socs.
-> 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->  .../devicetree/bindings/watchdog/mtk-wdt.txt       |    1 +
->  1 file changed, 1 insertion(+)
+>  drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> index 8682d6a..f0824aa 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
->  	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
->  	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
-> +	"mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 22811784dc7d..87617dc7504d 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/of_device.h>
 >  
->  - reg : Specifies base physical address and size of the registers.
+>  #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+> -#define CMDQ_IRQ_MASK			0xffff
+>  #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
 >  
+>  #define CMDQ_CURR_IRQ_STATUS		0x10
+> @@ -71,6 +70,7 @@ struct cmdq {
+>  	void __iomem		*base;
+>  	u32			irq;
+>  	u32			thread_nr;
+> +	u32			irq_mask;
+>  	struct cmdq_thread	*thread;
+>  	struct clk		*clock;
+>  	bool			suspended;
+> @@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+>  	unsigned long irq_status, flags = 0L;
+>  	int bit;
+>  
+> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
+> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
+> +	if (!(irq_status ^ cmdq->irq_mask))
+>  		return IRQ_NONE;
+>  
+> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
+> +	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+>  		struct cmdq_thread *thread = &cmdq->thread[bit];
+>  
+>  		spin_lock_irqsave(&thread->chan->lock, flags);
+> @@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		dev_err(dev, "failed to get irq\n");
+>  		return -EINVAL;
+>  	}
+> +
+> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+>  	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+>  			       "mtk_cmdq", cmdq);
+>  	if (err < 0) {
+> @@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		return PTR_ERR(cmdq->clock);
+>  	}
+>  
+> -	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+>  	cmdq->mbox.dev = dev;
+>  	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+>  					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
 > 
