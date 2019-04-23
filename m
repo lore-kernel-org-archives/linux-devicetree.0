@@ -1,8 +1,8 @@
 Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 03/28] PCI: tegra: Rearrange Tegra PCIe driver functions
-Date: Tue, 23 Apr 2019 14:58:00 +0530
-Message-ID: <20190423092825.759-4-mmaddireddy@nvidia.com>
+Subject: [PATCH V2 15/28] PCI: tegra: Update flow control timer frequency in Tegra210
+Date: Tue, 23 Apr 2019 14:58:12 +0530
+Message-ID: <20190423092825.759-16-mmaddireddy@nvidia.com>
 In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,175 +11,94 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra PCIe has register spec for,
- - AXI to FPCI(AFI) bridge
- - Multiple PCIe root ports
- - PCIe PHY
- - PCIe pad control
+Recommended UpdateFC threshold in Tegra210 is 0x60 for best performance
+of x1 link. Setting this to 0x60 provides the best balance between number
+of UpdateFC packets and read data sent over the link.
 
-Rearrange Tegra PCIe driver functions such that each function programs
-required module only.
- - tegra_pcie_enable_controller(): Program AFI module and enable PCIe
-controller.
- - tegra_pcie_phy_power_on(): Bring up PCIe PHY.
- - tegra_pcie_apply_pad_settings(): Program PCIe REFCLK pad settings.
- - tegra_pcie_enable_ports(): Program each root port and bring up PCIe
-link.
+UpdateFC timer frequency is equal to twice the value of register content
+in nsec, i.e (2 * 0x60) = 192 nsec.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
-V2: This is new patch in V2
+V2: Changed update_fc_val to update_fc_threshold
 
- drivers/pci/controller/pci-tegra.c | 70 +++++++++++++-----------------
- 1 file changed, 30 insertions(+), 40 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 8235d937951b..bb3c0af9c830 100644
+index b170ff20914c..7ab7d1387357 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -852,7 +852,6 @@ static int tegra_pcie_port_phy_power_off(struct tegra_pcie_port *port)
- static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
--	const struct tegra_pcie_soc *soc = pcie->soc;
- 	struct tegra_pcie_port *port;
- 	int err;
- 
-@@ -878,12 +877,6 @@ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
- 		}
+@@ -320,6 +320,7 @@ struct tegra_pcie_soc {
+ 	bool update_clamp_threshold;
+ 	bool program_deskew_time;
+ 	bool raw_violation_fixup;
++	bool update_fc_timer;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -668,6 +669,13 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+ 		value |= soc->update_fc_threshold;
+ 		writel(value, port->base + RP_VEND_XP);
  	}
- 
--	/* Configure the reference clock driver */
--	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
--
--	if (soc->num_ports > 2)
--		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
--
- 	return 0;
- }
- 
-@@ -918,13 +911,11 @@ static int tegra_pcie_phy_power_off(struct tegra_pcie *pcie)
- 	return 0;
- }
- 
--static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
-+static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- {
--	struct device *dev = pcie->dev;
- 	const struct tegra_pcie_soc *soc = pcie->soc;
- 	struct tegra_pcie_port *port;
- 	unsigned long value;
--	int err;
- 
- 	/* enable PLL power down */
- 	if (pcie->phy) {
-@@ -958,14 +949,6 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		afi_writel(pcie, value, AFI_FUSE);
- 	}
- 
--	if (soc->program_uphy) {
--		err = tegra_pcie_phy_power_on(pcie);
--		if (err < 0) {
--			dev_err(dev, "failed to power on PHY(s): %d\n", err);
--			return err;
--		}
--	}
--
- 	/* take the PCIe interface module out of reset */
- 	reset_control_deassert(pcie->pcie_xrst);
- 
-@@ -989,22 +972,6 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 
- 	/* disable all exceptions */
- 	afi_writel(pcie, 0, AFI_FPCI_ERROR_MASKS);
--
--	return 0;
--}
--
--static void tegra_pcie_disable_controller(struct tegra_pcie *pcie)
--{
--	int err;
--
--	reset_control_assert(pcie->pcie_xrst);
--
--	if (pcie->soc->program_uphy) {
--		err = tegra_pcie_phy_power_off(pcie);
--		if (err < 0)
--			dev_err(pcie->dev, "failed to power off PHY(s): %d\n",
--				err);
--	}
- }
- 
- static void tegra_pcie_power_off(struct tegra_pcie *pcie)
-@@ -1106,6 +1073,17 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 	return err;
- }
- 
-+static void tegra_pcie_apply_pad_settings(struct tegra_pcie *pcie)
-+{
-+	const struct tegra_pcie_soc *soc = pcie->soc;
 +
-+	/* Configure the reference clock driver */
-+	pads_writel(pcie, soc->pads_refclk_cfg0, PADS_REFCLK_CFG0);
-+
-+	if (soc->num_ports > 2)
-+		pads_writel(pcie, soc->pads_refclk_cfg1, PADS_REFCLK_CFG1);
-+}
-+
- static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -2482,16 +2460,23 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
- {
- 	struct tegra_pcie *pcie = dev_get_drvdata(dev);
- 	struct tegra_pcie_port *port;
-+	int err;
- 
- 	list_for_each_entry(port, &pcie->ports, list)
- 		tegra_pcie_pme_turnoff(port);
- 
- 	tegra_pcie_disable_ports(pcie);
- 
-+	if (pcie->soc->program_uphy) {
-+		err = tegra_pcie_phy_power_off(pcie);
-+		if (err < 0)
-+			dev_err(dev, "failed to power off PHY(s): %d\n", err);
++	if (soc->update_fc_timer) {
++		value = readl(port->base + RP_VEND_XP);
++		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
++		value |= soc->update_fc_threshold;
++		writel(value, port->base + RP_VEND_XP);
 +	}
-+
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		tegra_pcie_disable_msi(pcie);
+ }
  
--	tegra_pcie_disable_controller(pcie);
-+	reset_control_assert(pcie->pcie_xrst);
- 	tegra_pcie_power_off(pcie);
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+@@ -2411,6 +2419,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
  
- 	return 0;
-@@ -2507,16 +2492,21 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- 		dev_err(dev, "tegra pcie power on fail: %d\n", err);
- 		return err;
- 	}
--	err = tegra_pcie_enable_controller(pcie);
--	if (err) {
--		dev_err(dev, "tegra pcie controller enable fail: %d\n", err);
--		goto poweroff;
--	}
-+	tegra_pcie_enable_controller(pcie);
- 	tegra_pcie_setup_translations(pcie);
+@@ -2438,6 +2447,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
  
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		tegra_pcie_enable_msi(pcie);
+@@ -2460,6 +2470,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = true,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
  
-+	if (pcie->soc->program_uphy) {
-+		err = tegra_pcie_phy_power_on(pcie);
-+		if (err < 0) {
-+			dev_err(dev, "failed to power on PHY(s): %d\n", err);
-+			goto poweroff;
-+		}
-+	}
-+
-+	tegra_pcie_apply_pad_settings(pcie);
- 	tegra_pcie_enable_ports(pcie);
+@@ -2470,6 +2481,8 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0x90b890b8,
++	/* FC threshold is bit[25:18] */
++	.update_fc_threshold = 0x01800000,
+ 	.has_pex_clkreq_en = true,
+ 	.has_pex_bias_ctrl = true,
+ 	.has_intr_prsnt_sense = true,
+@@ -2480,6 +2493,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = true,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = true,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2519,6 +2533,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
++	.update_fc_timer = false,
+ 	.ectl.enable = false,
+ };
  
- 	return 0;
 -- 
 2.17.1
