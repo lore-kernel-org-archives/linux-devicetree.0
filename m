@@ -1,7 +1,8 @@
 From: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Subject: [RFC PATCH V1 4/6] dts: arm64: mt8183: Add FD nodes
-Date: Tue, 23 Apr 2019 18:45:03 +0800
-Message-ID: <20190423104505.38778-5-Jerry-Ch.chen@mediatek.com>
+Subject: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for FD shared
+ memory
+Date: Tue, 23 Apr 2019 18:45:00 +0800
+Message-ID: <20190423104505.38778-2-Jerry-Ch.chen@mediatek.com>
 References: <20190423104505.38778-1-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,38 +24,66 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 
-This patch adds nodes for Face Detection (FD) unit. FD is embedded
-in Mediatek SoCs and works with the co-processor to perform face
-detection on the input data and image and output detected face result.
+This patch adds the binding for describing the shared memory
+used to exchange meta data between the co-processor and Face
+Detection (FD) unit of the camera system on Mediatek SoCs.
 
 Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ .../mediatek,reserve-memory-fd_smem.txt       | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index dc0b4cad5200..04fd590c09b3 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -442,6 +442,19 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		fd:fd@1502b000 {
-+			compatible = "mediatek,mt8183-fd";
-+			mediatek,larb = <&larb5>;
-+			mediatek,scp = <&scp>;
-+			iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
-+				 <&iommu M4U_PORT_CAM_FDVT_WR>,
-+				 <&iommu M4U_PORT_CAM_FDVT_RB>;
-+			reg = <0 0x1502b000 0 0x1000>;
-+			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&imgsys CLK_IMG_FDVT>;
-+			clock-names = "FD_CLK_IMG_FD";
-+		};
+diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+new file mode 100644
+index 000000000000..52ae5071e238
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+@@ -0,0 +1,44 @@
++Mediatek FD Shared Memory binding
 +
- 		vdecsys: syscon@16000000 {
- 			compatible = "mediatek,mt8183-vdecsys", "syscon";
- 			reg = <0 0x16000000 0 0x1000>;
++This binding describes the shared memory, which serves the purpose of
++describing the shared memory region used to exchange data between Face
++Detection hardware (FD) and co-processor in Mediatek SoCs.
++
++The co-processor doesn't have the iommu so we need to use the physical
++address to access the shared buffer in the firmware.
++
++The Face Detection hardware (FD) can access memory through mt8183 IOMMU so
++it can use dma address to access the memory region.
++(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
++
++
++Required properties:
++
++- compatible: must be "mediatek,reserve-memory-fd_smem"
++
++- reg: required for static allocation (see reserved-memory.txt for
++  the detailed usage)
++
++- alloc-range: required for dynamic allocation. The range must
++  between 0x00000400 and 0x100000000 due to the co-processer's
++  addressing limitation
++
++- size: required for dynamic allocation. The unit is bytes.
++  for Face Detection Unit, you need 1 MB at least.
++
++
++Example:
++
++The following example shows the FD shared memory setup for MT8183.
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		reserve-memory-fd_smem {
++			compatible = "mediatek,reserve-memory-fd_smem";
++			size = <0 0x00100000>;
++			alignment = <0 0x1000>;
++			alloc-ranges = <0 0x40000000 0 0x100000000>;
++		};
++	};
+\ No newline at end of file
 -- 
 2.18.0
