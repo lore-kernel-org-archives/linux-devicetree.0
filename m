@@ -1,13 +1,13 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v7 0/2] drm/panel: simple: Add TFC S9700RTWV43TR-01B
- 800x480 panel support
-Date: Tue, 23 Apr 2019 14:16:26 +0200
-Message-ID: <20190423121626.GJ23448@ulmo>
-References: <cover.1553243203.git.jsarha@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: add EDT ET035012DM6 display
+ description
+Date: Tue, 23 Apr 2019 14:23:10 +0200
+Message-ID: <20190423122310.GL23448@ulmo>
+References: <20190416101630.3482-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1408575806=="
+Content-Type: multipart/mixed; boundary="===============0849772843=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1553243203.git.jsarha@ti.com>
+In-Reply-To: <20190416101630.3482-1-m.felsch@pengutronix.de>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,71 +17,61 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kernel@pengutronix.de, sam@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1408575806==
+--===============0849772843==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Do4IU1xF/9sod/r6"
+	protocol="application/pgp-signature"; boundary="/jkxxxtAhYIHVDuh"
 Content-Disposition: inline
 
 
---Do4IU1xF/9sod/r6
+--/jkxxxtAhYIHVDuh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2019 at 10:33:34AM +0200, Jyri Sarha wrote:
-> Changes since v6:
-> - Make power-supply a mandatory property
-> - Split binding to a separate patch
-> - Drop Tomi's reviewed-by, since the patch has changed quite a bit since =
-his
->   review
+On Tue, Apr 16, 2019 at 12:16:29PM +0200, Marco Felsch wrote:
+> Add support for the ET035012DM6 3.5" QVGA TFT LCD panel. The datasheet
+> can be retrieved online:
 >=20
-> Previous round:
-> https://patchwork.kernel.org/patch/10854851/
+> https://www.glynshop.com/erp/owweb/Daten/DSS/EDT/Products/ \
+> Specifications/Active%20Displays/ET035012DM6.pdf
 >=20
-> Jyri Sarha (2):
->   dt-bindings: drm/panel: simple: Add binding for TFC S9700RTWV43TR-01B
->   drm/panel: simple: Add TFC S9700RTWV43TR-01B 800x480 panel support
->=20
->  .../display/panel/tfc,s9700rtwv43tr-01b.txt   | 15 ++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  drivers/gpu/drm/panel/panel-simple.c          | 28 +++++++++++++++++++
->  3 files changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/tfc,s=
-9700rtwv43tr-01b.txt
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  .../devicetree/bindings/display/panel/edt,et-series.txt    | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-Applied, thanks.
+Applied both patches, thanks.
 
 Thierry
 
---Do4IU1xF/9sod/r6
+--/jkxxxtAhYIHVDuh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly/AhoACgkQ3SOs138+
-s6HfSRAAiCQE7bIypboE4Ef2J6oZExrY+dEsnipR9b7AnVockb+YIwFFHyLvdCQM
-tZgLJWZ8M7nPefdz2m/0fq4Vf4ygu1YPb9VeFg5XKn5VXrjLA88j+2yzvtT1dc72
-EtAh10eBc5Et25S+yYur584cMSbVXPpMo+3LeVWjzjy5pgfpw567MDBSvZqAsLDT
-u76++z3hpcsyIGgJkaVxeiqZJFzyhsr6ziQcdJViIyQ+3FVPFvtem1d6Q3kDUmsS
-Bqb+PZblL0CaJEcY8E8szP30OBfmMHDHgKmmmBN8f/fv3fMPA+HvHUSuR+FHlOrL
-sdZdeFTOcH7fT2WIbdIcnRKpFvh8GRcxvow25xdn4QKG3J26xGM/s8ZpOTvU5wB0
-cU843zUJGHHXVyTj6p/uMnnQIEKzqB2JEjIgLUv8j6Bx8+40KDETNJPLeQGgu2fb
-ojb73ba06p3Cto81b7MSs+05e7Pm1tr34Giw/oh1efoatcmZNvl8kH0qnZkP6AKr
-l1fC5sayaUUGn/kPJdsP8JQDuGWU8+tVEWkLRRp6JDDoKUVf3IjAhYR/gW6jEAkK
-lL3RThH/3PsLz/eXiPQ/PfjoTG9D4z35LbsYiivbZP8mYRsW2iqw1VV+rlNaIOwS
-DFrNCoScR0xf6urieknAfzXp4wrLULpGiTjE/z5BiyyIBbktZJU=
-=Y7X6
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly/A64ACgkQ3SOs138+
+s6GoSQ/+KAG8lXvQgxzLAKdPPMGnKePTKRoIj5CAok3n3XelV/sCxcARIWN7W9/C
+AvWZ2YDEdo5HpDxfjA2oqSrRrLj3zOqak3sAipE5+03NAN1dthrcoG0cLUIPClgi
+M+DfuLdh1JkbRcUlxkyzwRuZawnwueLpI7l3PmmuMf0odDRA1YeRenPem4LG+SGS
+WSjE42JdIq2xT2Q5qz4Y5w7gc0skP+WJu832gENvWFCumYPhXYCECekVpuh1otri
+SHVWQPxCxZSubeVUelKIbkz4lFU/6ViQ7OBGx5vFWQIzsgZnVqjHsHWgovolM2JL
+ynAmV1AmQ8rjY5bTlNnfwwpT1FpjnSzlVAbdvcT8zDj1oTvTkYq1rfC5Eq4wSHnK
+S2HwcosaKfpdJGRujblFHmOe5xLkfFAVUHhXOw2L7nbRZtE/p7JiM7E8BeTGV2rP
+dXwlQXW6UhRtmO3EzSC6UACKO2bXQCB0AIalvHnM3Spy15AtNWm47+NN36WpvYJV
+tgqQSmwK/CCVOHdHvF8VkVDw3M4opVKUoG572Rz5mLa2mu9s4kyq3mvicARHdgXC
+GDmzfSq19OhZlaOXbu5f/6YukbWbe/RcemZTV0N5CWisgYo4gXOzOZssN0ZOH7Gq
+UjVGvc2Q5Bfyzu1SfbcdwH3FVNbaQWKCDsze3QizJYr/JuxKlk0=
+=E7nh
 -----END PGP SIGNATURE-----
 
---Do4IU1xF/9sod/r6--
+--/jkxxxtAhYIHVDuh--
 
---===============1408575806==
+--===============0849772843==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -91,4 +81,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
 
---===============1408575806==--
+--===============0849772843==--
