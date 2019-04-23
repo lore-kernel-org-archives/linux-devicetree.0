@@ -1,47 +1,103 @@
-Return-Path: <SRS0=UBGr=S3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:23784 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfDYBZa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Apr 2019 21:25:30 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH v2 3/5] arm64: dts: renesas: r8a7796: Add TPU support
-Date: Thu, 25 Apr 2019 10:25:15 +0900
-Message-Id: <1556155517-5054-4-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, geert+renesas@glider.be, broonie@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
+Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V2 27/28] PCI: tegra: Add support for GPIO based PCIe reset
+Date: Tue, 23 Apr 2019 14:58:24 +0530
+Message-ID: <20190423092825.759-28-mmaddireddy@nvidia.com>
+In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add tpu device node to dtsi for TPU support on r8a7796 SoC.
+Add support for GPIO based PERST# instead of SFIO mode controlled by AFI.
+GPIO number comes from per port PCIe device tree node.
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+V2: Using standard "reset-gpio" property
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index d5e2f4a..a5c6a99 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1319,6 +1319,17 @@
- 			status = "disabled";
- 		};
+ drivers/pci/controller/pci-tegra.c | 36 +++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 72d344858e25..09b3b3e847c5 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -17,6 +17,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/export.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irq.h>
+@@ -26,6 +27,7 @@
+ #include <linux/module.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_platform.h>
+ #include <linux/pci.h>
+@@ -400,6 +402,8 @@ struct tegra_pcie_port {
+ 	unsigned int lanes;
  
-+		tpu: pwm@e6e80000 {
-+			compatible = "renesas,tpu-r8a7796", "renesas,tpu";
-+			reg = <0 0xe6e80000 0 0x148>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 304>;
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 304>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
+ 	struct phy **phys;
 +
- 		msiof0: spi@e6e90000 {
- 			compatible = "renesas,msiof-r8a7796",
- 				     "renesas,rcar-gen3-msiof";
++	int reset_gpio;
+ };
+ 
+ struct tegra_pcie_bus {
+@@ -583,15 +587,23 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 	unsigned long value;
+ 
+ 	/* pulse reset signal */
+-	value = afi_readl(port->pcie, ctrl);
+-	value &= ~AFI_PEX_CTRL_RST;
+-	afi_writel(port->pcie, value, ctrl);
++	if (gpio_is_valid(port->reset_gpio)) {
++		gpiod_set_value(gpio_to_desc(port->reset_gpio), 0);
++	} else {
++		value = afi_readl(port->pcie, ctrl);
++		value &= ~AFI_PEX_CTRL_RST;
++		afi_writel(port->pcie, value, ctrl);
++	}
+ 
+ 	usleep_range(1000, 2000);
+ 
+-	value = afi_readl(port->pcie, ctrl);
+-	value |= AFI_PEX_CTRL_RST;
+-	afi_writel(port->pcie, value, ctrl);
++	if (gpio_is_valid(port->reset_gpio)) {
++		gpiod_set_value(gpio_to_desc(port->reset_gpio), 1);
++	} else {
++		value = afi_readl(port->pcie, ctrl);
++		value |= AFI_PEX_CTRL_RST;
++		afi_writel(port->pcie, value, ctrl);
++	}
+ }
+ 
+ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+@@ -2299,6 +2311,18 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (IS_ERR(rp->base))
+ 			return PTR_ERR(rp->base);
+ 
++		rp->reset_gpio = of_get_named_gpio(port, "reset-gpio", 0);
++		if (gpio_is_valid(rp->reset_gpio)) {
++			err = devm_gpio_request_one(dev, rp->reset_gpio,
++						    GPIOF_OUT_INIT_LOW,
++						    "pex_reset");
++			if (err < 0) {
++				dev_err(dev, "failed to request reset-gpio: %d\n",
++					err);
++				return err;
++			}
++		}
++
+ 		list_add_tail(&rp->list, &pcie->ports);
+ 	}
+ 
 -- 
-2.7.4
+2.17.1
