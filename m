@@ -1,66 +1,126 @@
-Return-Path: <SRS0=dDaQ=S7=nxp.com=haibo.chen@kernel.org>
-From: BOUGH CHEN <haibo.chen@nxp.com>
-Subject: [PATCH 2/3] ARM: dts: imx7d-sdb: add SD3.0 support for USDHC1
-Date: Mon, 29 Apr 2019 12:38:00 +0000
-Message-ID: <20190429124547.19928-2-haibo.chen@nxp.com>
-References: <20190429124547.19928-1-haibo.chen@nxp.com>
-In-Reply-To: <20190429124547.19928-1-haibo.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V2 12/28] PCI: tegra: Enable PCIe xclk clock clamping
+Date: Tue, 23 Apr 2019 14:58:09 +0530
+Message-ID: <20190423092825.759-13-mmaddireddy@nvidia.com>
+In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-aS5NWDdELVNEQiBib2FyZCBzdXBwb3J0IFNEMy4wIGZvciBVU0RIQzEsIHNvIGFkZCBpdCBoZXJl
-Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIYWlibyBDaGVuIDxoYWliby5jaGVuQG54cC5jb20+DQotLS0N
-CiBhcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRzIHwgNTMgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKystLS0tDQogMSBmaWxlIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMoKyksIDUgZGVs
-ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRz
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLmR0cw0KaW5kZXggNmE2MDM1YjJiYzIyLi5m
-NDY4NTU3YzEyMWIgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRz
-DQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRzDQpAQCAtODcsNiArODcsMTcg
-QEANCiAJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Ow0KIAl9Ow0KIA0KKwly
-ZWdfc2QxX3ZtbWM6IHJlZ3VsYXRvci1zZDEtdm1tYyB7DQorCQljb21wYXRpYmxlID0gInJlZ3Vs
-YXRvci1maXhlZCI7DQorCQlyZWd1bGF0b3ItbmFtZSA9ICJWRERfU0QxIjsNCisJCXJlZ3VsYXRv
-ci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KKwkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQg
-PSA8MzMwMDAwMD47DQorCQlncGlvID0gPCZncGlvNSAyIEdQSU9fQUNUSVZFX0hJR0g+Ow0KKwkJ
-c3RhcnR1cC1kZWxheS11cyA9IDwyMDAwMDA+Ow0KKwkJZW5hYmxlLWFjdGl2ZS1oaWdoOw0KKwl9
-Ow0KKw0KKw0KIAlyZWdfYnJjbTogcmVndWxhdG9yLWJyY20gew0KIAkJY29tcGF0aWJsZSA9ICJy
-ZWd1bGF0b3ItZml4ZWQiOw0KIAkJZ3BpbyA9IDwmZ3BpbzQgMjEgR1BJT19BQ1RJVkVfSElHSD47
-DQpAQCAtNDA4LDEyICs0MTksMTYgQEANCiB9Ow0KIA0KICZ1c2RoYzEgew0KLQlwaW5jdHJsLW5h
-bWVzID0gImRlZmF1bHQiOw0KLQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNkaGMxPjsNCisJcGlu
-Y3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgInN0YXRlXzEwMG1oeiIsICJzdGF0ZV8yMDBtaHoiOw0K
-KwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNkaGMxPiwgPCZwaW5jdHJsX3VzZGhjMV9ncGlvPjsN
-CisJcGluY3RybC0xID0gPCZwaW5jdHJsX3VzZGhjMV8xMDBtaHo+LCA8JnBpbmN0cmxfdXNkaGMx
-X2dwaW8+Ow0KKwlwaW5jdHJsLTIgPSA8JnBpbmN0cmxfdXNkaGMxXzIwMG1oej4sIDwmcGluY3Ry
-bF91c2RoYzFfZ3Bpbz47DQogCWNkLWdwaW9zID0gPCZncGlvNSAwIEdQSU9fQUNUSVZFX0xPVz47
-DQogCXdwLWdwaW9zID0gPCZncGlvNSAxIEdQSU9fQUNUSVZFX0hJR0g+Ow0KIAl3YWtldXAtc291
-cmNlOw0KIAlrZWVwLXBvd2VyLWluLXN1c3BlbmQ7DQorCXZtbWMtc3VwcGx5ID0gPCZyZWdfc2Qx
-X3ZtbWM+Ow0KKwlmc2wsdHVuaW5nLXN0ZXAgPSA8Mj47DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9
-Ow0KIA0KQEAgLTYzOCw2ICs2NTMsMTUgQEANCiAJCQk+Ow0KIAkJfTsNCiANCisJCXBpbmN0cmxf
-dXNkaGMxX2dwaW86IHVzZGhjMV9ncGlvZ3JwIHsNCisJCQlmc2wscGlucyA9IDwNCisJCQkJTVg3
-RF9QQURfU0QxX0NEX0JfX0dQSU81X0lPMAkJMHg1OSAvKiBDRCAqLw0KKwkJCQlNWDdEX1BBRF9T
-RDFfV1BfX0dQSU81X0lPMQkJMHg1OSAvKiBXUCAqLw0KKwkJCQlNWDdEX1BBRF9TRDFfUkVTRVRf
-Ql9fR1BJTzVfSU8yCQkweDU5IC8qIFZNTUMgKi8NCisJCQkJIE1YN0RfUEFEX0dQSU8xX0lPMDhf
-X1NEMV9WU0VMRUNUCTB4NTkgLyogVlNFTEVDVCAqLw0KKwkJCT47DQorCQl9Ow0KKw0KIAkJcGlu
-Y3RybF91c2RoYzE6IHVzZGhjMWdycCB7DQogCQkJZnNsLHBpbnMgPSA8DQogCQkJCU1YN0RfUEFE
-X1NEMV9DTURfX1NEMV9DTUQJCTB4NTkNCkBAIC02NDYsOSArNjcwLDI4IEBADQogCQkJCU1YN0Rf
-UEFEX1NEMV9EQVRBMV9fU0QxX0RBVEExCQkweDU5DQogCQkJCU1YN0RfUEFEX1NEMV9EQVRBMl9f
-U0QxX0RBVEEyCQkweDU5DQogCQkJCU1YN0RfUEFEX1NEMV9EQVRBM19fU0QxX0RBVEEzCQkweDU5
-DQotCQkJCU1YN0RfUEFEX1NEMV9DRF9CX19HUElPNV9JTzAJCTB4NTkgLyogQ0QgKi8NCi0JCQkJ
-TVg3RF9QQURfU0QxX1dQX19HUElPNV9JTzEJCTB4NTkgLyogV1AgKi8NCi0JCQkJTVg3RF9QQURf
-U0QxX1JFU0VUX0JfX0dQSU81X0lPMgkJMHg1OSAvKiB2bW1jICovDQorCQkJPjsNCisJCX07DQor
-DQorCQlwaW5jdHJsX3VzZGhjMV8xMDBtaHo6IHVzZGhjMWdycF8xMDBtaHogew0KKwkJCWZzbCxw
-aW5zID0gPA0KKwkJCQlNWDdEX1BBRF9TRDFfQ01EX19TRDFfQ01ECQkweDU5DQorCQkJCU1YN0Rf
-UEFEX1NEMV9DTEtfX1NEMV9DTEsJCTB4MTkNCisJCQkJTVg3RF9QQURfU0QxX0RBVEEwX19TRDFf
-REFUQTAJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QxX0RBVEExX19TRDFfREFUQTEJCTB4NTkNCisJ
-CQkJTVg3RF9QQURfU0QxX0RBVEEyX19TRDFfREFUQTIJCTB4NTkNCisJCQkJTVg3RF9QQURfU0Qx
-X0RBVEEzX19TRDFfREFUQTMJCTB4NTkNCisJCQk+Ow0KKwkJfTsNCisNCisJCXBpbmN0cmxfdXNk
-aGMxXzIwMG1oejogdXNkaGMxZ3JwXzIwMG1oeiB7DQorCQkJZnNsLHBpbnMgPSA8DQorCQkJCU1Y
-N0RfUEFEX1NEMV9DTURfX1NEMV9DTUQJCTB4NWINCisJCQkJTVg3RF9QQURfU0QxX0NMS19fU0Qx
-X0NMSwkJMHgxYg0KKwkJCQlNWDdEX1BBRF9TRDFfREFUQTBfX1NEMV9EQVRBMAkJMHg1Yg0KKwkJ
-CQlNWDdEX1BBRF9TRDFfREFUQTFfX1NEMV9EQVRBMQkJMHg1Yg0KKwkJCQlNWDdEX1BBRF9TRDFf
-REFUQTJfX1NEMV9EQVRBMgkJMHg1Yg0KKwkJCQlNWDdEX1BBRF9TRDFfREFUQTNfX1NEMV9EQVRB
-MwkJMHg1Yg0KIAkJCT47DQogCQl9Ow0KIA0KLS0gDQoyLjE3LjENCg0K
+Enable xclk clock clamping when entering L1. Clamp threshold will
+determine the time spent waiting for clock module to turn on xclk after
+signaling it. Default threshold value in Tegra124 and Tegra210 is not
+enough to turn on xclk clock. Increase the clamp threshold to meet the
+clock module timing in Tegra124 and Tegra210. Default threshold value is
+enough in Tegra20, Tegra30 and Tegra186.
+
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+---
+V2: Took care of typos in commit log and coding style comments.
+
+ drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 1e16bf60d07f..cad1f651b10b 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -219,8 +219,14 @@
+ #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ 
+ #define RP_PRIV_MISC	0x00000fe0
+-#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT (0xe << 0)
+-#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT (0xf << 0)
++#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT		(0xe << 0)
++#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT		(0xf << 0)
++#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 16)
++#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD		(0xf << 16)
++#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE		(1 << 23)
++#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 24)
++#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD		(0xf << 24)
++#define  RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE		(1 << 31)
+ 
+ #define RP_LINK_CONTROL_STATUS			0x00000090
+ #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
+@@ -298,6 +304,7 @@ struct tegra_pcie_soc {
+ 	bool has_gen2;
+ 	bool force_pca_enable;
+ 	bool program_uphy;
++	bool update_clamp_threshold;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -529,6 +536,7 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 
+ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ {
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
+ 	u32 value;
+ 
+ 	/* Enable AER capability */
+@@ -549,6 +557,19 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	value = readl(port->base + RP_VEND_XP_BIST);
+ 	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
+ 	writel(value, port->base + RP_VEND_XP_BIST);
++
++	value = readl(port->base + RP_PRIV_MISC);
++	value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE;
++	value |= RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE;
++
++	if (soc->update_clamp_threshold) {
++		value &= ~(RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK |
++				RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK);
++		value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD |
++			RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD;
++	}
++
++	writel(value, port->base + RP_PRIV_MISC);
+ }
+ 
+ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+@@ -2335,6 +2356,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.has_gen2 = false,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.update_clamp_threshold = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2359,6 +2381,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.has_gen2 = false,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.update_clamp_threshold = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2376,6 +2399,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.update_clamp_threshold = true,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2393,6 +2417,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = true,
+ 	.program_uphy = true,
++	.update_clamp_threshold = true,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2429,6 +2454,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = false,
+ 	.program_uphy = false,
++	.update_clamp_threshold = false,
+ 	.ectl.enable = false,
+ };
+ 
+-- 
+2.17.1
