@@ -1,7 +1,7 @@
 From: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Subject: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added FD dt-bindings
-Date: Tue, 23 Apr 2019 18:45:02 +0800
-Message-ID: <20190423104505.38778-4-Jerry-Ch.chen@mediatek.com>
+Subject: [RFC PATCH V1 5/6] media: platform: Add Mediatek FD driver KConfig
+Date: Tue, 23 Apr 2019 18:45:04 +0800
+Message-ID: <20190423104505.38778-6-Jerry-Ch.chen@mediatek.com>
 References: <20190423104505.38778-1-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,54 +23,53 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 
-This patch adds DT binding documentation for the Face Detection (FD)
-unit of the camera system on Mediatek's SoCs.
+This patch adds KConfig for Mediatek Face Detection driver (FD).
+FD is embedded in Mediatek SoCs. It can provide hardware
+accelerated face detection function.
 
 Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 ---
- .../bindings/media/mediatek,mt8183-fd.txt     | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
+ drivers/media/platform/Kconfig         |  2 ++
+ drivers/media/platform/mtk-isp/Kconfig | 18 ++++++++++++++++++
+ 2 files changed, 20 insertions(+)
+ create mode 100644 drivers/media/platform/mtk-isp/Kconfig
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index a505e9f5a1e2..ef08d48589a4 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -32,6 +32,8 @@ source "drivers/media/platform/davinci/Kconfig"
+ 
+ source "drivers/media/platform/omap/Kconfig"
+ 
++source "drivers/media/platform/mtk-isp/Kconfig"
++
+ config VIDEO_ASPEED
+ 	tristate "Aspeed AST2400 and AST2500 Video Engine driver"
+ 	depends on VIDEO_V4L2
+diff --git a/drivers/media/platform/mtk-isp/Kconfig b/drivers/media/platform/mtk-isp/Kconfig
 new file mode 100644
-index 000000000000..97c12fd93e7e
+index 000000000000..1fecbb4cbdb9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-@@ -0,0 +1,34 @@
-+* Mediatek Face Detection Unit (FD)
++++ b/drivers/media/platform/mtk-isp/Kconfig
+@@ -0,0 +1,18 @@
++config VIDEO_MEDIATEK_FD_SUPPORT
++	bool "Mediatek face detection processing function"
++	select DMA_SHARED_BUFFER
++	select VIDEO_V4L2_SUBDEV_API
++	select VIDEOBUF2_DMA_CONTIG
++	select VIDEOBUF2_CORE
++	select VIDEOBUF2_V4L2
++	select VIDEOBUF2_MEMOPS
++	select VIDEOBUF2_VMALLOC
++	select MEDIA_CONTROLLER
 +
-+Face Detection (FD) unit is a typical memory-to-memory HW device.
-+It provides hardware accelerated face detection function, and it
-+is able to detect different poses of faces. FD will writre result
-+of detected face into memory as output.
++	default n
++	help
++		Support the basic Face Detectioin (FD) feature.
 +
-+Required properties:
-+- compatible: "mediatek,mt8183-fd"
-+- reg: Physical base address and length of the function block register space
-+- interrupts: interrupt number to the cpu.
-+- iommus: should point to the respective IOMMU block with master port as
-+  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+- mediatek,larb: must contain the local arbiters in the current Socs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+- clocks : must contain the FDVT clock
-+- clock-names: must contain FD_CLK_IMG_FD
-+
-+Example:
-+	fd:fd@1502b000 {
-+		compatible = "mediatek,mt8183-fd";
-+		mediatek,larb = <&larb5>;
-+		mediatek,scp = <&scp>;
-+		iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
-+			 <&iommu M4U_PORT_CAM_FDVT_WR>,
-+			 <&iommu M4U_PORT_CAM_FDVT_RB>;
-+		reg = <0 0x1502b000 0 0x1000>;
-+		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&imgsys CLK_IMG_FDVT>;
-+		clock-names = "FD_CLK_IMG_FD";
-+	};
-+
++		FD driver provide face detection function, it can detect
++		faces of Rotation-in-Plane from -180 degrees to +180 degrees
++		and Rotation-off-Plane from -90 degrees to +90 degrees.
 -- 
 2.18.0
