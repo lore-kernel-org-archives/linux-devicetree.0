@@ -1,104 +1,95 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 4/5] ARM: dts: da850-evm: enable cpufreq
-Date: Tue, 23 Apr 2019 11:15:32 +0200
-Message-ID: <CAMpxmJW9yWcQ8497OwOhMN8wj-Cmc3-UP7Rh-yoU_uDaQkVVSw@mail.gmail.com>
-References: <20190417152701.23391-1-brgl@bgdev.pl> <20190417152701.23391-5-brgl@bgdev.pl>
- <CAHCN7xKVaYqd5LLvRx7i8ik+JnTFdpexZf2WXt0R2N1W1skOJA@mail.gmail.com>
+From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: RE: [PATCH V3 04/16] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Date: Tue, 23 Apr 2019 09:40:40 +0000
+Message-ID: <305100E33629484CBB767107E4246BBB0A22FA36@de02wembxa.internal.synopsys.com>
+References: <20190416192730.15681-1-vidyas@nvidia.com>
+        <20190416192730.15681-5-vidyas@nvidia.com>
+        <305100E33629484CBB767107E4246BBB0A22C127@de02wembxa.internal.synopsys.com>
+ <20190422154608.6e6f8ae3@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xKVaYqd5LLvRx7i8ik+JnTFdpexZf2WXt0R2N1W1skOJA@mail.gmail.com>
+In-Reply-To: <20190422154608.6e6f8ae3@xhacker.debian>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "kthota@nvidia.com" <kthota@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=C5=9Br., 17 kwi 2019 o 19:09 Adam Ford <aford173@gmail.com> napisa=C5=82(a=
-):
->
-> On Wed, Apr 17, 2019 at 10:27 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> > tps65070 pmic with configurable output voltage. By default da850-evm
-> > boards support frequencies up to 375MHz so enable this operating
-> > point.
->
-> Have you done any testing with the LCD on any of the devices you have?
->
-> I enabled the ondemand governor, and I got a bunch of splat from the
-> LCD controller:
->
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> differs from the calculated rate (54000000Hz)
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
-> ... [ snip]
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> differs from the calculated rate (54000000Hz)
-> tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
-> differs from the calculated rate (54000000Hz)
-> tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
->
-> It appears to go on forever.  I don't necessarily want to hold it up,
-> but I don't know the clocking system well enough to know where to go
-> investigate it.  I can certainly live without ondemand.  Using
-> userspace as the default governor is fine for me for now.
->
-> adam
+On Mon, Apr 22, 2019 at 8:54:32, Jisheng Zhang=20
+<Jisheng.Zhang@synaptics.com> wrote:
 
-Hi Adam,
+> On Wed, 17 Apr 2019 09:56:33 +0000 Gustavo Pimentel wrote:
+>=20
+> >=20
+> > On Tue, Apr 16, 2019 at 20:27:18, Vidya Sagar <vidyas@nvidia.com> wrote=
+:
+> >=20
+> > > Remove multiple write enable and disable sequences of dbi registers a=
+s
+> > > Tegra194 implements writes to BAR-0 register (offset: 0x10) controlle=
+d by
+> > > DBI write-lock enable bit thereby not allowing any further writes to =
+BAR-0
+> > > register in config space to take place. Hence disabling write permiss=
+ion
+> > > only towards the end.
+> > >
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > > Changes since [v2]:
+> > > * None
+> > >
+> > > Changes since [v1]:
+> > > * None
+> > >
+> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/driv=
+ers/pci/controller/dwc/pcie-designware-host.c
+> > > index 2a5332e5ccfa..c0334c92c1a6 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -683,7 +683,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> > >       val &=3D 0xffff00ff;
+> > >       val |=3D 0x00000100;
+> > >       dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+> > > -     dw_pcie_dbi_ro_wr_dis(pci);
+> > >
+> > >       /* Setup bus numbers */
+> > >       val =3D dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+> > > @@ -723,8 +722,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> > >
+> > >       dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+> > >
+> > > -     /* Enable write permission for the DBI read-only register */
+> > > -     dw_pcie_dbi_ro_wr_en(pci);
+> > >       /* Program correct class for RC */
+> > >       dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_P=
+CI);
+> > >       /* Better disable write permission right after the update */
+> > > --
+> > > 2.17.1 =20
+> >=20
+> > This setup sequence was written by Jingoo Han, let's check if he did th=
+is
+> > by some particular reason.
+> > Jingoo do you remember why you wrote the code like this?
+>=20
+> FWICT, enabling RO writeable in the setup sequence is introduced in
+> commit d91dfe5054d4 ("PCI: dwc: Enable write permission for Class Code,=20
+> Interrupt Pin updates"). The Reason why not towards the end maybe
+> only enable the RO writeable when necessary.
 
-I did test the tilcdc on da850-lcdk. The only message I'm getting
-during transitions is a single:
+I also share that belief, in any case, I just want to confirm with the=20
+original developer if this was coded like this for some good reason,=20
+maybe to force some additional protection. Otherwise, I think the=20
+presented patch is harmless.
 
-tilcdc <name>: tilcdc_crtc_irq(<address>): FIFO underflow
+Gustavo
 
-but this is fairly normal - we also get this during modeset and it
-doesn't affect the display.
-
-The problem with the pixel clock may come from the bootloader - are
-you using a recent version of u-boot?
-
-Bart
-
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Adam Ford <aford173@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-=
-evm.dts
-> > index f04bc3e15332..f94bb38fdad9 100644
-> > --- a/arch/arm/boot/dts/da850-evm.dts
-> > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > @@ -191,6 +191,19 @@
-> >         };
-> >  };
-> >
-> > +&cpu {
-> > +       cpu-supply =3D <&vdcdc3_reg>;
-> > +};
-> > +
-> > +/*
-> > + * The standard da850-evm kits and SOM's are 375MHz so enable this ope=
-rating
-> > + * point by default. Higher frequencies must be enabled for custom boa=
-rds with
-> > + * other variants of the SoC.
-> > + */
-> > +&opp_375 {
-> > +       status =3D "okay";
-> > +};
-> > +
-> >  &sata {
-> >         status =3D "okay";
-> >  };
-> > --
-> > 2.21.0
-> >
+>=20
+> thanks
