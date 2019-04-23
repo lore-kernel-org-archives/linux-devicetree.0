@@ -1,8 +1,8 @@
 Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 07/28] PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-Date: Tue, 23 Apr 2019 14:58:04 +0530
-Message-ID: <20190423092825.759-8-mmaddireddy@nvidia.com>
+Subject: [PATCH V2 23/28] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+Date: Tue, 23 Apr 2019 14:58:20 +0530
+Message-ID: <20190423092825.759-24-mmaddireddy@nvidia.com>
 In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,55 +11,34 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Default root port setting hides AER capability. This patch enables the
-advertisement of AER capability by root port.
+Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
+in low power mode.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
-V2: No change
+V2: Using standard pinctrl names, default and idle
 
- drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 0ae8ebe92bb9..11202fc2c607 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -180,6 +180,9 @@
- #define RP_VEND_XP	0x00000f00
- #define  RP_VEND_XP_DL_UP	(1 << 30)
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index 145a4f04194f..7939bca47861 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -65,6 +65,14 @@ Required properties:
+   - afi
+   - pcie_x
  
-+#define RP_VEND_CTL1	0x00000f48
-+#define  RP_VEND_CTL1_ERPT	(1 << 13)
++Optional properties:
++- pinctrl-names: A list of pinctrl state names. Must contain the following
++  entries:
++  - "default": active state, puts PCIe I/O out of deep power down state
++  - "idle": puts PCIe I/O into deep power down state
++- pinctrl-0: phandle for the default/active state of pin configurations.
++- pinctrl-1: phandle for the idle state of pin configurations.
 +
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
-@@ -479,6 +482,16 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 	afi_writel(port->pcie, value, ctrl);
- }
- 
-+static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
-+{
-+	u32 value;
-+
-+	/* Enable AER capability */
-+	value = readl(port->base + RP_VEND_CTL1);
-+	value |= RP_VEND_CTL1_ERPT;
-+	writel(value, port->base + RP_VEND_CTL1);
-+}
-+
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -503,6 +516,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 		value |= RP_VEND_CTL2_PCA_ENABLE;
- 		writel(value, port->base + RP_VEND_CTL2);
- 	}
-+
-+	tegra_pcie_enable_rp_features(port);
- }
- 
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+ Required properties on Tegra124 and later (deprecated):
+ - phys: Must contain an entry for each entry in phy-names.
+ - phy-names: Must include the following entries:
 -- 
 2.17.1
