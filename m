@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCH 3/4] EDAC, altera: Add Stratix10 SDMMC support
-Date: Tue, 23 Apr 2019 09:36:36 -0500
-Message-ID: <1556030197-24534-4-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCH 1/4] EDAC, altera: Add Stratix10 OCRAM ECC support
+Date: Tue, 23 Apr 2019 09:36:34 -0500
+Message-ID: <1556030197-24534-2-git-send-email-thor.thayer@linux.intel.com>
 References: <1556030197-24534-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1556030197-24534-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,55 +12,62 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Addition of SDMMC EDAC for Stratix10 which has IRQ
-differences from Arria10. Update comment accordingly.
+Use the newer ECC error injection method for Arria10 and
+Stratix10 OCRAM.
+If OCRAM has already been initialized during the boot and
+OCRAM ECC is enabled, ensure the Single Bit Error IRQ is
+enabled.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- drivers/edac/altera_edac.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/edac/altera_edac.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index b7bc8f020df8..c2e693e34d43 100644
+index 8816f74a22b4..b7bc8f020df8 100644
 --- a/drivers/edac/altera_edac.c
 +++ b/drivers/edac/altera_edac.c
-@@ -1583,8 +1583,12 @@ static int altr_portb_setup(struct altr_edac_device_dev *device)
- 	dci->mod_name = ecc_name;
- 	dci->dev_name = ecc_name;
+@@ -1223,8 +1223,31 @@ static const struct edac_device_prv_data ocramecc_data = {
+ 	.inject_fops = &altr_edac_device_inject_fops,
+ };
  
--	/* Update the IRQs for PortB */
-+	/* Update the PortB IRQs - A10 has 4, S10 has 2, Index accordingly */
-+#ifdef CONFIG_ARCH_STRATIX10
-+	altdev->sb_irq = irq_of_parse_and_map(np, 1);
-+#else
- 	altdev->sb_irq = irq_of_parse_and_map(np, 2);
-+#endif
- 	if (!altdev->sb_irq) {
- 		edac_printk(KERN_ERR, EDAC_DEVICE, "Error PortB SBIRQ alloc\n");
- 		rc = -ENODEV;
-@@ -1599,6 +1603,15 @@ static int altr_portb_setup(struct altr_edac_device_dev *device)
- 		goto err_release_group_1;
- 	}
- 
-+#ifdef CONFIG_ARCH_STRATIX10
-+	/* Use IRQ to determine SError origin instead of assigning IRQ */
-+	rc = of_property_read_u32_index(np, "interrupts", 1, &altdev->db_irq);
-+	if (rc) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Error PortB DBIRQ alloc\n");
-+		goto err_release_group_1;
-+	}
-+#else
- 	altdev->db_irq = irq_of_parse_and_map(np, 3);
- 	if (!altdev->db_irq) {
- 		edac_printk(KERN_ERR, EDAC_DEVICE, "Error PortB DBIRQ alloc\n");
-@@ -1613,6 +1626,7 @@ static int altr_portb_setup(struct altr_edac_device_dev *device)
- 		edac_printk(KERN_ERR, EDAC_DEVICE, "PortB DBERR IRQ error\n");
- 		goto err_release_group_1;
- 	}
-+#endif
- 
- 	rc = edac_device_add_device(dci);
- 	if (rc) {
++static int __maybe_unused
++altr_check_ocram_deps_init(struct altr_edac_device_dev *device)
++{
++	void __iomem  *base = device->base;
++	int ret;
++
++	ret = altr_check_ecc_deps(device);
++	if (ret)
++		return ret;
++
++	/* Verify OCRAM has been initialized */
++	if (!ecc_test_bits(ALTR_A10_ECC_INITCOMPLETEA,
++			   (base + ALTR_A10_ECC_INITSTAT_OFST)))
++		return -ENODEV;
++
++	/* Enable IRQ on Single Bit Error */
++	writel(ALTR_A10_ECC_SERRINTEN, (base + ALTR_A10_ECC_ERRINTENS_OFST));
++	/* Ensure all writes complete */
++	wmb();
++
++	return 0;
++}
++
+ static const struct edac_device_prv_data a10_ocramecc_data = {
+-	.setup = altr_check_ecc_deps,
++	.setup = altr_check_ocram_deps_init,
+ 	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
+ 	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
+ 	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_OCRAM,
+@@ -1234,7 +1257,7 @@ static const struct edac_device_prv_data a10_ocramecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ 	/*
+ 	 * OCRAM panic on uncorrectable error because sleep/resume
+ 	 * functions and FPGA contents are stored in OCRAM. Prefer
 -- 
 2.7.4
