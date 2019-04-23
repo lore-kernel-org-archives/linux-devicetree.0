@@ -1,215 +1,116 @@
-From: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
-	files to *.rst
-Date: Tue, 23 Apr 2019 12:07:38 -0300
-Message-ID: <20190423120738.3be8337e@coco.lan>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
-	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
-	<20190423125519.GA7104@redhat.com>
-	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
-	<20190423132100.GB7132@redhat.com>
+From: Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+Subject: Re: [PATCH v4 09/12] soc: mediatek: cmdq: add polling function
+Date: Tue, 23 Apr 2019 23:25:02 +0800
+Message-ID: <1556033102.20906.4.camel@mtkswgap22>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+         <20190415125833.38704-10-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190423132100.GB7132-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, kernel-hardening-ZwoEplunGu1jrUoiu81ncdBPR1lH4CV8@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel@vger.k
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190415125833.38704-10-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@m>
 List-Id: devicetree@vger.kernel.org
 
-Em Tue, 23 Apr 2019 09:21:00 -0400
-Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> escreveu:
+Hi Bibby,
 
-> On Tue, Apr 23 2019 at  9:01am -0400,
-> Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+
+On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
+> add polling function in cmdq helper functions
 > 
-> > On Tue, Apr 23, 2019 at 08:55:19AM -0400, Mike Snitzer wrote:  
-> > > On Tue, Apr 23 2019 at  4:31am -0400,
-> > > Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
-> > >   
-> > > > On Mon, Apr 22, 2019 at 10:27:45AM -0300, Mauro Carvalho Chehab wrote:
-> > > >   
-> > > > >  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +  
-> > > > 
-> > > > What's happend to atomic_t.txt, also NAK, I still occationally touch
-> > > > these files.  
-> > > 
-> > > Seems Mauro's point is in the future we need to touch these .rst files
-> > > in terms of ReST compatible changes.
-> > > 
-> > > I'm dreading DM documentation changes in the future.. despite Mauro and
-> > > Jon Corbet informing me that ReST is simple, etc.  
-
-ReST is simple[1], and neither Jon or me wants to burden developers to
-use complex documents all over the Kernel tree. ReST is just a way to 
-make the documents with similar visual. The main advantage of ReST is
-that documents can be better organized, as they will be inside some
-index.rst file.
-
-[1] Ok, as any document, you could write an easy or hard to read stuff.
-The way we're using on most places is to be just a coding style with
-benefits. I wrote a quick 101 guide to ReST at the end, with all you
-probably need to know about it.
-
-So, for example, in the specific case of atomic_bitops, all it takes for
-it to be parsed by Sphinx is to rename it to .rst. With that, it can be
-added into an index.rst file, like at Documentation/driver-api/index.rst.
-
-The document, as is, will be displayed like this:
-
-	https://www.infradead.org/~mchehab/rst_conversion/driver-api/atomic_bitops.html?highlight=atomic_t
-
-And the original text file can also be seen from the output data:
-
-	https://www.infradead.org/~mchehab/rst_conversion/_sources/driver-api/atomic_bitops.rst.txt
-
-> > 
-> > Well, it _can_ be simple, I've seen examples of rst that were not far
-> > from generated HTML contents. And I must give Jon credit for not
-> > accepting that atrocious crap.
-> > 
-> > But yes, I have 0 motivation to learn or abide by rst. It simply doesn't
-> > give me anything in return. There is no upside, only worse text files :/  
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 30 ++++++++++++++++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    | 15 ++++++++++++
+>  3 files changed, 46 insertions(+)
 > 
-> Right, but these changes aren't meant for our benefit.  They are for
-> users who get cleaner web accessible Linux kernel docs.  Seems the
-> decision has been made that the users' benefit, and broader
-> modernization of Linux docs, outweighs the inconvenience for engineers
-> who maintain the content of said documentation.
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index d3873ab21db3..80856b8c2385 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -231,6 +231,36 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value, u32 mask)
+> +{
+> +	int err;
+> +
+> +	if (mask != 0xffffffff) {
+> +		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
+> +					      CMDQ_GET_ARG_B(~mask),
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_CODE_MASK);
+> +
+> +		if (err != 0)
+> +			return err;
+> +	}
+> +	offset = offset | 0x1;
 
-> This kind of thing happens a lot these days: pile on engineers, they can
-> take it :/
-
-Yes, that's the main goal: ensure that more people will see the
-documents and write less crappy code. So, overall, reducing the
-time we spent with reviews of bad code.
-
-
-----
-
-=================================
-My 101 ReST quick reference guide
-=================================
-
-Basically, a "quick" ReST guide for those that don't want to learn it
-and like to have an easy to read text document would be
-
-1) to format documents like:
-
-	=========
-	Doc Title
-	=========
-
-	foo chapter
-	===========
-
-	bar section
-	-----------
-
-	foobar sub-section
-	^^^^^^^^^^^^^^^^^^
-
-	foobarzeta sub-sub-section
-	..........................
-
-(the actual character used to mark the titles can be different,
-provided that you use the same character for the same title
-level - the above is just the way *I* use, as it makes easier for
-me to remember the title level).
-
-2) remember that ReST considers new lines with same indentation as
-   belonging to the same paragraph. So,
-
-	foo
-	bar
-
-is identical to:
-
-	foo bar
-
-while
-	foo
-	   bar
-
-will make "foo" bold, and write bar on the next line. So, if you
-want to have them on two separate lines on its output, it should
-be either write it as:
-
-	foo
-
-	bar
-
-or you could use a list:
-
-	- foo
-	- bar
-
-Btw, *a lot* of Kernel documents already have the above format.
-
-3) literal values should be either inside ``foo``, `foo` or on an
-   indented line after a ::, like:
-
-	example::
-
-		# some_command_to_be_typed
-
-If you follow those three simple rules, your document will be properly
-parsed. The above covers 90% of what we normally use.
-
-Tables are also easy to write there, as it recognizes two ways to write
-ascii tables, with are already popular ways to write them.
-
-So, those are valid tables:
-
-Without a title:
-
-	===   ===============
-	foo   foo description
-	bar   bar description
-	===   ===============
+Does this "or" operation make gce use mask? If it does, maybe it should
+move into brace?
 
 
-	+-------+-----------------+
-	| foo   | foo description |
-	+-------+-----------------+
-	| bar   | bar description |
-	+-------+-----------------+
+Regards,
+Dennis
 
-(both will produce exactly the same output)
-
-With a title:
-
-	===== ===============
-	field description
-	===== ===============
-	foo   foo description
-	bar   bar description
-	===   ===============
-
-	+-------+-----------------+
-	| field | description     |
-	+=======+=================+
-	| foo   | foo description |
-	+-------+-----------------+
-	| bar   | bar description |
-	+-------+-----------------+
-
-(both will produce exactly the same output)
-
-This is not too different on what we usually do on documents - except that
-some documents sometimes use UTF8, or a different character set to mark the
-table lines. So the "conversion" is simply to follow one of the above
-styles.
-
-Thanks,
-Mauro
+> +
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
+> +				       CMDQ_GET_ARG_B(value),
+> +				       offset, subsys,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_CODE_POLL);
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_poll);
+> +
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+>  	int err;
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index f21801d32a3a..1dfd5ed5c8c5 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -46,6 +46,7 @@
+>  enum cmdq_code {
+>  	CMDQ_CODE_MASK = 0x02,
+>  	CMDQ_CODE_WRITE = 0x04,
+> +	CMDQ_CODE_POLL = 0x08,
+>  	CMDQ_CODE_JUMP = 0x10,
+>  	CMDQ_CODE_WFE = 0x20,
+>  	CMDQ_CODE_EOC = 0x40,
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 52f69c8db8de..0651a0bffa54 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>   */
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+> +/**
+> + * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
+> + *		     execute an instruction that wait for a specified hardware
+> + *		     register to check for the value. All GCE hardware
+> + *		     threads will be blocked by this instruction.
+> + * @pkt:	the CMDQ packet
+> + * @subsys:	the CMDQ sub system code
+> + * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+> + * @mask:	the specified target register mask
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value, u32 mask);
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+>   *                          packet and call back at the end of done packet
