@@ -1,8 +1,8 @@
 Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 09/28] PCI: tegra: Enable opportunistic UpdateFC and ACK
-Date: Tue, 23 Apr 2019 14:58:06 +0530
-Message-ID: <20190423092825.759-10-mmaddireddy@nvidia.com>
+Subject: [PATCH V2 10/28] PCI: tegra: Disable AFI dynamic clock gating
+Date: Tue, 23 Apr 2019 14:58:07 +0530
+Message-ID: <20190423092825.759-11-mmaddireddy@nvidia.com>
 In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,46 +11,55 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable opportunistic UpdateFC and ACK to allow data link layer send
-pending ACKs and UpdateFC packets when link is idle instead of waiting
-for timers to expire. This improves the PCIe performance due to better
-utilization of PCIe bandwidth.
+Outstanding write counter in AFI is used to generate idle signal to
+dynamically gate the AFI clock. When there are 32 outstanding writes
+from AFI to memory, the outstanding write counter overflows and
+indicates that there are "0" outstanding write transactions.
+
+When memory controller is under heavy load, write completions to AFI
+gets delayed and AFI write counter overflows. This causes AFI clock gating
+even when there are outstanding transactions towards memory controller
+resulting in system hang.
+
+Disable dynamic clock gating of AFI clock to avoid system hang.
+
+CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
+programming this bit doesn't cause any side effects. Program this
+bit for all Tegra SoCs to avoid conditional check.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V2: No change
 
- drivers/pci/controller/pci-tegra.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pci-tegra.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index ecb69633febb..c16a87d32bf4 100644
+index c16a87d32bf4..8b62559f5777 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -204,7 +204,9 @@
- #define  RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK	0xffffffff
+@@ -95,7 +95,8 @@
+ #define AFI_MSI_EN_VEC7		0xa8
  
- #define RP_VEND_XP	0x00000f00
--#define  RP_VEND_XP_DL_UP	(1 << 30)
-+#define  RP_VEND_XP_DL_UP			(1 << 30)
-+#define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
-+#define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
+ #define AFI_CONFIGURATION		0xac
+-#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
++#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
++#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
  
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
-@@ -529,6 +531,12 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value = readl(port->base + RP_VEND_CTL1);
- 	value |= RP_VEND_CTL1_ERPT;
- 	writel(value, port->base + RP_VEND_CTL1);
-+
-+	/* Optimal settings to enhance bandwidth */
-+	value = readl(port->base + RP_VEND_XP);
-+	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
-+	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
-+	writel(value, port->base + RP_VEND_XP);
- }
+ #define AFI_FPCI_ERROR_MASKS	0xb0
  
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 		afi_writel(pcie, value, AFI_FUSE);
+ 	}
+ 
+-	/* finally enable PCIe */
++	/* Disable AFI dynamic clock gating and enable PCIe */
+ 	value = afi_readl(pcie, AFI_CONFIGURATION);
+ 	value |= AFI_CONFIGURATION_EN_FPCI;
++	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
+ 	afi_writel(pcie, value, AFI_CONFIGURATION);
+ 
+ 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
 -- 
 2.17.1
