@@ -1,49 +1,45 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: adc: mt8183: add binding document
-Date: Tue, 23 Apr 2019 16:35:49 +0200
-Message-ID: <4c7f244f-4111-9e28-5134-8f108b1dbafa@gmail.com>
-References: <20190422115417.16751-1-zhiyong.tao@mediatek.com>
- <20190422115417.16751-2-zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mt8183: Add watchdog dt-binding
+Date: Tue, 23 Apr 2019 16:37:49 +0200
+Message-ID: <4a0ad424-f3bf-f6fd-4780-0ba8336e7d82@gmail.com>
+References: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422115417.16751-2-zhiyong.tao@mediatek.com>
+In-Reply-To: <1555913284-5591-1-git-send-email-yong.liang@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>, robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: srv_heupstream@mediatek.com, hui.liu@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, erin.lo@mediatek.com, eddie.huang@mediatek.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 22/04/2019 13:54, Zhiyong Tao wrote:
-> The commit adds mt8183 compatible node in binding document.
+On 22/04/2019 08:08, Yong Liang wrote:
+> From: "yong.liang" <yong.liang@mediatek.com>
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> This patch add watchdog binding documentation for
+> watchdog on MTK Socs.
+> 
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
 > ---
->  Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt | 1 +
+>  .../devicetree/bindings/watchdog/mtk-wdt.txt       |    1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> index 0df9befdaecc..05bc79d8483c 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> @@ -15,6 +15,7 @@ Required properties:
->      - "mediatek,mt2712-auxadc": For MT2712 family of SoCs
->      - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
->      - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
-> +    - "mediatek,mt8183-auxadc": For MT8183 family of SoCs
->    - reg: Address range of the AUXADC unit.
->    - clocks: Should contain a clock specifier for each entry in clock-names
->    - clock-names: Should contain "main".
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index 8682d6a..f0824aa 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>  	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+>  	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
+>  	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
+> +	"mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
+>  
+>  - reg : Specifies base physical address and size of the registers.
+>  
 > 
-
-You are missing the logic in the driver to bind against this compatible.
-If there is nothing different from other SoCs then you could add a compatible
-with a fallback, like:
-
-"mediatek,mt8183-auxadc", "mediatek,mt7622-auxadc": For MT8183 family of SoCs
-
-Regards,
-Matthias
