@@ -1,95 +1,82 @@
-From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: RE: [PATCH V3 04/16] PCI: dwc: Perform dbi regs write lock towards
- the end
-Date: Tue, 23 Apr 2019 09:40:40 +0000
-Message-ID: <305100E33629484CBB767107E4246BBB0A22FA36@de02wembxa.internal.synopsys.com>
-References: <20190416192730.15681-1-vidyas@nvidia.com>
-        <20190416192730.15681-5-vidyas@nvidia.com>
-        <305100E33629484CBB767107E4246BBB0A22C127@de02wembxa.internal.synopsys.com>
- <20190422154608.6e6f8ae3@xhacker.debian>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH resend v5 0/6] Add CPU clock support for Armada 7K/8K
+Date: Tue, 23 Apr 2019 11:51:01 +0200
+Message-ID: <20190423095107.21091-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422154608.6e6f8ae3@xhacker.debian>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "kthota@nvidia.com" <kthota@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 8:54:32, Jisheng Zhang=20
-<Jisheng.Zhang@synaptics.com> wrote:
+Hello,
 
-> On Wed, 17 Apr 2019 09:56:33 +0000 Gustavo Pimentel wrote:
->=20
-> >=20
-> > On Tue, Apr 16, 2019 at 20:27:18, Vidya Sagar <vidyas@nvidia.com> wrote=
-:
-> >=20
-> > > Remove multiple write enable and disable sequences of dbi registers a=
-s
-> > > Tegra194 implements writes to BAR-0 register (offset: 0x10) controlle=
-d by
-> > > DBI write-lock enable bit thereby not allowing any further writes to =
-BAR-0
-> > > register in config space to take place. Hence disabling write permiss=
-ion
-> > > only towards the end.
-> > >
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > > Changes since [v2]:
-> > > * None
-> > >
-> > > Changes since [v1]:
-> > > * None
-> > >
-> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ---
-> > >  1 file changed, 3 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/driv=
-ers/pci/controller/dwc/pcie-designware-host.c
-> > > index 2a5332e5ccfa..c0334c92c1a6 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -683,7 +683,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
-> > >       val &=3D 0xffff00ff;
-> > >       val |=3D 0x00000100;
-> > >       dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
-> > > -     dw_pcie_dbi_ro_wr_dis(pci);
-> > >
-> > >       /* Setup bus numbers */
-> > >       val =3D dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
-> > > @@ -723,8 +722,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
-> > >
-> > >       dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
-> > >
-> > > -     /* Enable write permission for the DBI read-only register */
-> > > -     dw_pcie_dbi_ro_wr_en(pci);
-> > >       /* Program correct class for RC */
-> > >       dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_P=
-CI);
-> > >       /* Better disable write permission right after the update */
-> > > --
-> > > 2.17.1 =20
-> >=20
-> > This setup sequence was written by Jingoo Han, let's check if he did th=
-is
-> > by some particular reason.
-> > Jingoo do you remember why you wrote the code like this?
->=20
-> FWICT, enabling RO writeable in the setup sequence is introduced in
-> commit d91dfe5054d4 ("PCI: dwc: Enable write permission for Class Code,=20
-> Interrupt Pin updates"). The Reason why not towards the end maybe
-> only enable the RO writeable when necessary.
+[resent because I used an old non worlking email for Stephen Boyd]
 
-I also share that belief, in any case, I just want to confirm with the=20
-original developer if this was coded like this for some good reason,=20
-maybe to force some additional protection. Otherwise, I think the=20
-presented patch is harmless.
+This is the fifth version of a series allowing to manage the cpu clock
+for Armada 7K/8K. The third version was sent more than 3 months
+without any relevant feedback since this end of december last year.
 
-Gustavo
+For these SoCs, the CPUs share the same clock by cluster, so actually
+the clock management is done at cluster level.
 
->=20
-> thanks
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
+
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
+
+Changelog v4->v5:
+
+ - As requested by the device tree maintainer make the reg property
+   mandatory
+
+ - Updated the device tree files accordingly with the new binding
+
+Changelog v3->v4:
+ - Rebased on v5.1-rc1
+ - Mention in the binding that a reg property can be used to make the
+   device tree maintainer happy in the hope that there will be finally
+   a review on this patch blocking the whole series.
+
+Changelog v2->v3:
+ - Add back the first patch documenting the binding
+
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
+
+Gregory CLEMENT (6):
+  dt-bindings: ap806: add the cluster clock node in the syscon file
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+
+ .../arm/marvell/ap806-system-controller.txt   |  26 ++
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 11 files changed, 362 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
+
+-- 
+2.20.1
