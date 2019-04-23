@@ -1,36 +1,35 @@
-Return-Path: <sashal@kernel.org>
-Date: Mon, 22 Apr 2019 22:29:25 +0000
-From: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v2 1/7] mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-In-Reply-To: <20190422191350.27527-2-digetx@gmail.com>
-References: <20190422191350.27527-2-digetx@gmail.com>
-Message-Id: <20190422222926.2AE9B20643@mail.kernel.org>
-To: Sasha Levin <sashal@kernel.org>, Dmitry Osipenko <digetx@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, stable <stable@vger.kernel.org>stable@vger.kernel.org
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190319133700.23878-2-ckeepax@opensource.cirrus.com>
+References: <20190319133700.23878-1-ckeepax@opensource.cirrus.com> <20190319133700.23878-2-ckeepax@opensource.cirrus.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v7 RESEND 2/2] clk: lochnagar: Add support for the Cirrus Logic Lochnagar
+Message-ID: <155605698860.15276.671362216532944829@swboyd.mtv.corp.google.com>
+Date: Tue, 23 Apr 2019 15:03:08 -0700
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, mturquette@baylibre.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Quoting Charles Keepax (2019-03-19 06:37:00)
+> Lochnagar is an evaluation and development board for Cirrus
+> Logic Smart CODEC and Amp devices. It allows the connection of
+> most Cirrus Logic devices on mini-cards, as well as allowing
+> connection of various application processor systems to provide a
+> full evaluation platform. This driver supports the board
+> controller chip on the Lochnagar board.
+>=20
+> The Lochnagar can take several input clocks from the host system,
+> provides several of its own clock sources, and provides extensive
+> routing options for those clocks to be supplied to the attached
+> CODEC/Amp device.
+>=20
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
 
-[This is an automated email]
+Applied to clk-next
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
-
-The bot has tested the following trees: v5.0.9, v4.19.36, v4.14.113, v4.9.170, v4.4.178, v3.18.138.
-
-v5.0.9: Build OK!
-v4.19.36: Build OK!
-v4.14.113: Build OK!
-v4.9.170: Build OK!
-v4.4.178: Failed to apply! Possible dependencies:
-    327156c59360 ("mfd: max77620: Add core driver for MAX77620/MAX20024")
-
-v3.18.138: Failed to apply! Possible dependencies:
-    327156c59360 ("mfd: max77620: Add core driver for MAX77620/MAX20024")
-
-
-How should we proceed with this patch?
-
---
-Thanks,
-Sasha
+You may want to take a look at the clk-parent-rewrite-1 branch on
+clk.git and see if you can convert this driver to use that method
+instead of of_clk_get_parent_name(). It may simplify some of the driver.
