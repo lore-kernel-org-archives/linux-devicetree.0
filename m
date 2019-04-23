@@ -1,65 +1,169 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 10/28] PCI: tegra: Disable AFI dynamic clock gating
-Date: Tue, 23 Apr 2019 14:58:07 +0530
-Message-ID: <20190423092825.759-11-mmaddireddy@nvidia.com>
-In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=TBo3=SZ=mxic.com.tw=masonccyang@kernel.org>
+In-Reply-To: <d2a7a471-2847-b774-42b1-9feb8f4c69f3@cogentembedded.com>
+References: <1555903925-15292-1-git-send-email-masonccyang@mxic.com.tw> <1555903925-15292-3-git-send-email-masonccyang@mxic.com.tw> <d2a7a471-2847-b774-42b1-9feb8f4c69f3@cogentembedded.com>
+Subject: Re: [PATCH v11 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
+From: masonccyang@mxic.com.tw
+Date: Tue, 23 Apr 2019 17:22:28 +0800
+Content-Type: multipart/alternative; boundary="=_alternative 00337F40482583E5_="
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
 List-ID: <devicetree@vger.kernel.org>
 
-Outstanding write counter in AFI is used to generate idle signal to
-dynamically gate the AFI clock. When there are 32 outstanding writes
-from AFI to memory, the outstanding write counter overflows and
-indicates that there are "0" outstanding write transactions.
+This is a multipart message in MIME format.
+--=_alternative 00337F40482583E5_=
+Content-Type: text/plain; charset="US-ASCII"
 
-When memory controller is under heavy load, write completions to AFI
-gets delayed and AFI write counter overflows. This causes AFI clock gating
-even when there are outstanding transactions towards memory controller
-resulting in system hang.
 
-Disable dynamic clock gating of AFI clock to avoid system hang.
-
-CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
-programming this bit doesn't cause any side effects. Program this
-bit for all Tegra SoCs to avoid conditional check.
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V2: No change
-
- drivers/pci/controller/pci-tegra.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index c16a87d32bf4..8b62559f5777 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -95,7 +95,8 @@
- #define AFI_MSI_EN_VEC7		0xa8
+Hello,
  
- #define AFI_CONFIGURATION		0xac
--#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
-+#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
-+#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
- 
- #define AFI_FPCI_ERROR_MASKS	0xb0
- 
-@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		afi_writel(pcie, value, AFI_FUSE);
- 	}
- 
--	/* finally enable PCIe */
-+	/* Disable AFI dynamic clock gating and enable PCIe */
- 	value = afi_readl(pcie, AFI_CONFIGURATION);
- 	value |= AFI_CONFIGURATION_EN_FPCI;
-+	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
- 	afi_writel(pcie, value, AFI_CONFIGURATION);
- 
- 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
--- 
-2.17.1
+> Subject
+> 
+> Re: [PATCH v11 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller 
+driver
+> 
+> On 04/22/2019 06:32 AM, Mason Yang wrote:
+> 
+> > Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> [...]
+> 
+>   Do dote that I'm opposed to the driver separation as it's presented in
+> this patches, and I have a large patch reworking both MFD and SPI 
+drivers
+> in the works.
+> 
+
+Do you mean add your name in both MFD & dt-binding ?
+
+i.e., 
+[PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF MFD 
+bindings
+
+Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD. 
+
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+
+
+[PATCH v12 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
+
+Add a driver for Renesas R-Car Gen3 RPC-IF MFD.
+
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+
+Is it ok ?
+
+best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+--=_alternative 00337F40482583E5_=
+Content-Type: text/html; charset="US-ASCII"
+
+
+<tt><font size=2>Hello,</font></tt>
+<br><tt><font size=2>&nbsp;<br>
+&gt; Subject</font></tt>
+<br><tt><font size=2>&gt; <br>
+&gt; Re: [PATCH v11 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+driver</font></tt>
+<br><tt><font size=2>&gt; <br>
+&gt; On 04/22/2019 06:32 AM, Mason Yang wrote:<br>
+&gt; <br>
+&gt; &gt; Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.<br>
+&gt; &gt; <br>
+&gt; &gt; Signed-off-by: Mason Yang &lt;masonccyang@mxic.com.tw&gt;<br>
+&gt; &gt; Signed-off-by: Sergei Shtylyov &lt;sergei.shtylyov@cogentembedded.com&gt;<br>
+&gt; [...]<br>
+&gt; <br>
+&gt; &nbsp; Do dote that I'm opposed to the driver separation as it's presented
+in<br>
+&gt; this patches, and I have a large patch reworking both MFD and SPI
+drivers<br>
+&gt; in the works.<br>
+&gt; </font></tt>
+<br>
+<br><tt><font size=2>Do you mean add your name in both MFD &amp; dt-binding
+?</font></tt>
+<br>
+<br><tt><font size=2>i.e., </font></tt>
+<br><tt><font size=2>[PATCH v12 3/3] dt-bindings: mfd: Document Renesas
+R-Car Gen3 RPC-IF MFD bindings</font></tt>
+<br>
+<br><tt><font size=2>Document the bindings used by the Renesas R-Car Gen3
+RPC-IF MFD. </font></tt>
+<br><tt><font size=2><br>
+Signed-off-by: Mason Yang &lt;masonccyang@mxic.com.tw&gt;</font></tt>
+<br><tt><font size=2>Signed-off-by: Sergei Shtylyov &lt;sergei.shtylyov@cogentembedded.com&gt;</font></tt>
+<br>
+<br>
+<br>
+<br><tt><font size=2>[PATCH v12 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF
+MFD driver</font></tt>
+<br>
+<br><tt><font size=2>Add a driver for Renesas R-Car Gen3 RPC-IF MFD.<br>
+<br>
+Signed-off-by: Mason Yang &lt;masonccyang@mxic.com.tw&gt;</font></tt>
+<br><tt><font size=2>Signed-off-by: Sergei Shtylyov &lt;sergei.shtylyov@cogentembedded.com&gt;</font></tt>
+<br>
+<br>
+<br><tt><font size=2>Is it ok ?</font></tt>
+<br>
+<br><tt><font size=2>best regards,</font></tt>
+<br><tt><font size=2>Mason</font></tt>
+<br><tt><font size=2><br>
+<br>
+CONFIDENTIALITY NOTE:<br>
+<br>
+This e-mail and any attachments may contain confidential information and/or
+personal data, which is protected by applicable laws. Please be reminded
+that duplication, disclosure, distribution, or use of this e-mail (and/or
+its attachments) or any part thereof is prohibited. If you receive this
+e-mail in error, please notify us immediately and delete this mail as well
+as its attachment(s) from your system. In addition, please be informed
+that collection, processing, and/or use of personal data is prohibited
+unless expressly permitted by personal data protection laws. Thank you
+for your attention and cooperation.<br>
+<br>
+Macronix International Co., Ltd.<br>
+<br>
+=====================================================================<br>
+</font></tt>
+
+--=_alternative 00337F40482583E5_=--
