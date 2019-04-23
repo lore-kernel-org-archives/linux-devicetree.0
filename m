@@ -1,70 +1,84 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v5 3/3] backlight: lm3630a: add firmware node support
-Date: Tue, 23 Apr 2019 12:00:19 -0400
-Message-ID: <20190423160019.GA10501@basecamp>
-References: <20190418151143.26068-1-masneyb@onstation.org>
- <20190418151143.26068-4-masneyb@onstation.org>
- <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
- <20190423140150.GA10071@basecamp>
- <dfd59e3f-b60b-da09-bf23-a05de5f4575a@ti.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add
+ r_watchog node
+Date: Tue, 23 Apr 2019 18:05:45 +0200
+Message-ID: <20190423160545.muolantrdppz35rz@flea>
+References: <20190411154534.25563-1-peron.clem@gmail.com>
+ <20190411154534.25563-3-peron.clem@gmail.com>
+ <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBW7P7TSQKGQEP7AAXHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <dfd59e3f-b60b-da09-bf23-a05de5f4575a@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+In-Reply-To: <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 10:31:41AM -0500, Dan Murphy wrote:
-> On 4/23/19 9:01 AM, Brian Masney wrote:
-> > On Tue, Apr 23, 2019 at 08:49:20AM -0500, Dan Murphy wrote:
-> >>> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
-> >>> +				     int default_led_sources)
-> >>> +{
-> >>> +	u32 sources[LM3630A_NUM_SINKS];
-> >>> +	int ret, num_sources, i;
-> >>> +
-> >>> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
-> >>> +						     0);
-> >>> +	if (num_sources < 0)
-> >>> +		return default_led_sources;
-> >>> +	else if (num_sources > ARRAY_SIZE(sources))
-> >>> +		return -EINVAL;
-> >>> +
-> >>> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
-> >>> +					     num_sources);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	for (i = 0; i < num_sources; i++) {
-> >>> +		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
-> >>> +			return -EINVAL;
-> >>> +
-> >>> +		ret |= BIT(sources[i]);
-> >>> +	}
-> >>> +
-> >>> +	return ret;
-> >>> +}
-> >>> +
-> >>> +static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
-> >>> +			      struct fwnode_handle *node, int *seen_led_sources)
-> >>
-> >> Why is seen_led_sources passed in here?
-> >> It is initialized on the stack in lm3630a_parse_node but the variable is never referenced in that API.
-> > 
-> > It's to see all of the led-sources that are configured across all of the
-> > banks. If it is just in lm3630a_parse_bank(), then it won't catch the
-> > following invalid configuration:
-> > 
-> 
-> Ok I see what it is for now.
-> 
-> Not sure why it is declared as a pointer though.
+On Fri, Apr 19, 2019 at 09:00:42PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi,
+>
+> On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
+om> wrote:
+> >
+> > Allwinner H6 has a r_watchdog similar to A64.
+> >
+> > Declare it in the device-tree.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index 5c2f5451227b..66dc684a378e 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -622,6 +622,13 @@
+> >                         #reset-cells =3D <1>;
+> >                 };
+> >
+> > +               r_watchdog: watchdog@7020400 {
+> > +                       compatible =3D "allwinner,sun50i-a64-wdt",
+> > +                                    "allwinner,sun6i-a31-wdt";
+> > +                       reg =3D <0x07020400 0x20>;
+> > +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +               };
+>
+> I have set the same compatible as A64 because regarding the User
+> Manual they have exactly the same memory mapping.
+> However we don't know really if it's the same IP version, maybe there
+> will be an errata one day.
+> So I would like to know if it's better to define the h6-wdt also
+>   compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt",
+>                                  "allwinner,sun6i-a31-wdt";
+>
+> I would say Yes, but with this logic we would have to had a new
+> compatible each time there is a  new SoC.
 
-It's so that lm3630a_parse_bank() can update that value with the
-led-sources that have been seen. Otherwise, the changes wouldn't make
-their way back out to the outer function.
+Why not just having the A31 compatible?
 
-Brian
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
