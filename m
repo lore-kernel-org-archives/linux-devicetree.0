@@ -1,56 +1,54 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] media: dt-bindings: media: Add r8a77965 DRIF bindings
-Date: Tue, 23 Apr 2019 12:50:46 +0200
-Message-ID: <20190423105046.cshmwghdufaqp4pj@verge.net.au>
-References: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND v3 4/4] pinctrl: add drive for I2C related pins on MT8183
+Date: Tue, 23 Apr 2019 12:59:13 +0200
+Message-ID: <CACRpkdYV5cYUs21xCDMhMm=kUpFcOipE+3dZOEJYto2-w=8NtQ@mail.gmail.com>
+References: <20190325124137.6117-1-zhiyong.tao@mediatek.com>
+ <20190325124137.6117-5-zhiyong.tao@mediatek.com> <206361ee-b238-4017-83fe-702ea59ae9c5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
+In-Reply-To: <206361ee-b238-4017-83fe-702ea59ae9c5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nguyen An Hoan <na-hoan@jinso.co.jp>
-Cc: linux-renesas-soc@vger.kernel.org, ramesh.shanmugasundaram@bp.renesas.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kuninori.morimoto.gx@renesas.com, magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, h-inayoshi@jinso.co.jp, cv-dong@jinso.co.jp
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Zhiyong Tao <zhiyong.tao@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@kernel.org>, srv_heupstream@mediatek.com, hui.liu@mediatek.com, huang eddie <eddie.huang@mediatek.com>, chuanjia.liu@mediatek.com, Biao Huang <biao.huang@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 07:09:58PM +0900, Nguyen An Hoan wrote:
-> From: Hoan Nguyen An <na-hoan@jinso.co.jp>
-> 
-> Add r8a77965 DRIF bindings.
-> 
-> Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+On Tue, Apr 16, 2019 at 10:08 AM Matthias Brugger
+<matthias.bgg@gmail.com> wrote:
+> On 25/03/2019 13:41, Zhiyong Tao wrote:
+> > This patch provides the advanced drive for I2C used pins on MT8183.
+> > The detail strength specification description of the I2C pin:
+> > When E1=0/E0=0, the strength is 0.125mA.
+> > When E1=0/E0=1, the strength is 0.25mA.
+> > When E1=1/E0=0, the strength is 0.5mA.
+> > When E1=1/E0=1, the strength is 1mA.
+> > For I2C pins, there are existing generic driving setup and the above
+> > specific driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA
+> > driving adjustment in generic driving setup. But in specific driving
+> > setup, they can support 0.125/0.25/0.5/1mA adjustment.
+> > If we enable specific driving setup for I2C pins,
+> > the existing generic driving setup will be disabled.
+> > For some special features, we need the I2C pins specific driving setup.
+> > The specific driving setup is controlled by E1E0EN.
+> > So we need add extra vendor driving preperty instead of the generic
+> > driving property. We can add "mediatek,drive-strength-adv = <XXX>;"
+> > to describe the specific driving setup property.
+> > "XXX" means the value of E1E0EN. So the valid arguments of
+> > "mediatek,drive-strength-adv" are from 0 to 7.
+> >
+> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > ---
+> >  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
+> >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 47 ++++++++++++++++++++++
+> >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 11 ++++++
+> >  drivers/pinctrl/mediatek/pinctrl-paris.c         | 12 ++++++
+> >  4 files changed, 120 insertions(+)
+> >
+>
+> Linus, did that fall through the cracks? Do you have any comments on this driver?
 
-According to the User's Manual Hardware, v1.50 Nov 20 2019,
-the DRIF IP block M3-N (r8a77965) has a BITCTR register which
-is not present on the H3 (r8a7795) or M3-W (r8a77995).
+It's applied AFAICT. Maybe I forgot to push the branch, but its there.
 
-Does the DRIF IP block present on the M3-N (r8a77965) function
-without support for this register in the driver?
+Please confirm so I didn't miss anything!
 
-If not then I think that:
-1) This patch should be updated to note that renesas,rcar-gen3-drif
-   can only be used with H3 (r8a7795) and M3-W (r8a77995).
-2) A driver patch is required
-3) The DT patch, 2/2 of this series, should be updated to
-   i) Not use renesas,rcar-gen3-drif
-   ii) Extend the register aperture from 0x64 to 0x84.
-
-> ---
->  Documentation/devicetree/bindings/media/renesas,drif.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> index 0d8974a..16cdee3 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,drif.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> @@ -41,6 +41,7 @@ Required properties of an internal channel:
->  -------------------------------------------
->  - compatible:	"renesas,r8a7795-drif" if DRIF controller is a part of R8A7795 SoC.
->  		"renesas,r8a7796-drif" if DRIF controller is a part of R8A7796 SoC.
-> +		"renesas,r8a77965-drif" if DRIF controller is a part of R8A77965 SoC.
->  		"renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
->  
->  		When compatible with the generic version, nodes must list the
-> -- 
-> 2.7.4
-> 
+Linus Walleij
