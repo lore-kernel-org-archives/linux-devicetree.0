@@ -1,85 +1,44 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/panel: simple: Add Evervision VGG804821 panel
- support
-Date: Tue, 23 Apr 2019 14:26:30 +0200
-Message-ID: <20190423122630.GO23448@ulmo>
-References: <20190416100645.21689-1-m.felsch@pengutronix.de>
- <20190416100645.21689-4-m.felsch@pengutronix.de>
+From: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Tue, 23 Apr 2019 08:55:19 -0400
+Message-ID: <20190423125519.GA7104@redhat.com>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1818855684=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190416100645.21689-4-m.felsch@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kernel@pengutronix.de, sam@ravnborg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190423083135.GA11158-Nxj+rRp3nVydTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 23 2019 at  4:31am -0400,
+Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
 
---===============1818855684==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OAiy6VLsECigG9dy"
-Content-Disposition: inline
+> On Mon, Apr 22, 2019 at 10:27:45AM -0300, Mauro Carvalho Chehab wrote:
+> 
+> >  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +
+> 
+> What's happend to atomic_t.txt, also NAK, I still occationally touch
+> these files.
 
+Seems Mauro's point is in the future we need to touch these .rst files
+in terms of ReST compatible changes.
 
---OAiy6VLsECigG9dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm dreading DM documentation changes in the future.. despite Mauro and
+Jon Corbet informing me that ReST is simple, etc.
 
-On Tue, Apr 16, 2019 at 12:06:45PM +0200, Marco Felsch wrote:
-> Add support the Evervision VGG804821 800x480 5.0" WVGA TFT panel.
->=20
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> v2:
-> - pixel data should be driven on neg. edge since the panel applies
->   the data on positiv edge.
->=20
->  drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-
-Applied, thanks.
-
-Thierry
-
---OAiy6VLsECigG9dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly/BHYACgkQ3SOs138+
-s6Gu+xAAiEnnEvKgob77G4Gtxj5uLewX3FUPMhEk2d3Ou5Ns/bdnTuDhtqsRx+/o
-WFdhRXl2G1abmQ5v9DwVmzPbeqmDoFuBfOq/ye9tNoqIVtWwjGVyiq1OHKBsr+Qb
-MK1IAQzAEICcNqCicca9TkDH0hYeZ5y+3XD1jy6eCtqw3UfTNPfxSo4LpANChKPe
-pMljrhULlpXxV4OCGJSknyg31QjC8Xsk4eCS7bTc4eHn62dWFYgarTltkDYlPAMc
-Tie8+7DisnuGj7KrmqISadB8PzVa7lbZxc+rpk8pqfLrNlmqergMxzc5ylPfZY4/
-ZiGkHaCN1ZK9EFVZkI9FRFIDXqA/jifwWrN06QFhPccxv/Yzioplu1lcJGjMU9or
-LCNKubLjBDpP8Z7b0m1LtQBa4OBd3RPmmBpukCHCUW9UIgXPLO6037Mrg2NArMrc
-dvhwzjBzu/AiiiyFb3gooZEIG8JjiwTy7advmqa0Ljywc5jS7rsNouzYP76ZprPM
-mUMM4Ch6uWLJqFkoTwotTTYRYQgdJTS82rFWacnFJbPuG7G0yGuof4IIkrpYCFjs
-Mw1Q2kC6yOW3e0i8Eujo5uTebju5GeMogC7Twws2WrgfnuRJvi/zr0tAP5KqsvSN
-egEZOY1jS0Sd5Mv5V1AtKNjo7XoTYZyDhKOfJ2zjSAaq3N+CU9c=
-=qD7f
------END PGP SIGNATURE-----
-
---OAiy6VLsECigG9dy--
-
---===============1818855684==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============1818855684==--
+Mike
