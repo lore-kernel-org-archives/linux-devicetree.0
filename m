@@ -1,95 +1,127 @@
-From: Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v6] arm64: dts: ls1088a: add one more thermal zone node
-Date: Tue, 23 Apr 2019 10:25:07 +0800
-Message-ID: <20190423022507.34969-1-andy.tang@nxp.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
+Date: Tue, 23 Apr 2019 07:17:38 +0200
+Message-ID: <20190423051738.tmyto7nvm4w5zt4r@pengutronix.de>
+References: <20190422193542.2853-1-daniel.baluta@nxp.com>
+ <20190422193542.2853-3-daniel.baluta@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190422193542.2853-3-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, Yuantian Tang <andy.tang@nxp.com>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-sensor is used to monitor the temperature of core and SoC platform is for
-platform. The current dts only support the first sensor.
-This patch adds the second sensor node to dts to enable it.
+Hi Daniel,
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
-v6:
-        - add cooling device map to cpu0-7 in platform node.
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
- 1 files changed, 39 insertions(+), 4 deletions(-)
+On 19-04-22 19:36, Daniel Baluta wrote:
+> i.MX8MM has one wm8524 audio codec connected with
+> SAI3 digital audio interface.
+> 
+> This patch uses simple-card machine driver in order
+> to enable wm8524 codec.
+> 
+> We need to set:
+> 	* SAI3 pinctrl configuration
+> 	* clock hierarchy
+> 	* codec node
+> 	* simple-card configuration
+> 
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 48 ++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> index 2d5d89475b76..207b13266a96 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> @@ -37,6 +37,35 @@
+>  		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
+>  	};
+> +
+> +	wm8524: audio-codec {
+> +		#sound-dai-cells = <0>;
+> +		compatible = "wlf,wm8524";
+> +		wlf,mute-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 661137f..a697a82 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -129,19 +129,19 @@
- 	};
- 
- 	thermal-zones {
--		cpu_thermal: cpu-thermal {
-+		core-cluster {
- 			polling-delay-passive = <1000>;
- 			polling-delay = <5000>;
- 			thermal-sensors = <&tmu 0>;
- 
- 			trips {
--				cpu_alert: cpu-alert {
-+				core_cluster_alert: core-cluster-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit: cpu-crit {
-+				core_cluster_crit: core-cluster-crit {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -150,7 +150,42 @@
- 
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert>;
-+					trip = <&core_cluster_alert>;
-+					cooling-device =
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		platform {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 1>;
-+
-+			trips {
-+				platform_alert: platform-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				platform_crit: platform-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&platform_alert>;
- 					cooling-device =
- 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
- 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+I would mux the gpio where I use them.
+
+> +	};
+> +
+> +	sound-wm8524 {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "wm8524-audio";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,frame-master = <&cpudai>;
+> +		simple-audio-card,bitclock-master = <&cpudai>;
+> +		simple-audio-card,widgets =
+> +			"Line", "Left Line Out Jack",
+> +			"Line", "Right Line Out Jack";
+> +		simple-audio-card,routing =
+> +			"Left Line Out Jack", "LINEVOUTL",
+> +			"Right Line Out Jack", "LINEVOUTR";
+> +
+> +		cpudai: simple-audio-card,cpu {
+> +			sound-dai = <&sai3>;
+> +		};
+> +
+> +		link_codec: simple-audio-card,codec {
+
+Can you drop that phandle?
+
+Regards,
+  Marco
+
+> +			sound-dai = <&wm8524>;
+> +			clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
+> +		};
+> +	};
+>  };
+>  
+>  &fec1 {
+> @@ -61,6 +90,15 @@
+>  	};
+>  };
+>  
+> +&sai3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_sai3>;
+> +	assigned-clocks = <&clk IMX8MM_CLK_SAI3>;
+> +	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
+> +	assigned-clock-rates = <24576000>;
+> +	status = "okay";
+> +};
+> +
+>  &uart2 { /* console */
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart2>;
+> @@ -130,6 +168,16 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_sai3: sai3grp {
+> +		fsl,pins = <
+> +			MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC     0xd6
+> +			MX8MM_IOMUXC_SAI3_TXC_SAI3_TX_BCLK      0xd6
+> +			MX8MM_IOMUXC_SAI3_MCLK_SAI3_MCLK        0xd6
+> +			MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
+> +			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21        0xd6
+> +		>;
+> +	};
+> +
+>  	pinctrl_uart2: uart2grp {
+>  		fsl,pins = <
+>  			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
+> -- 
+> 2.17.1
+> 
+
 -- 
-1.7.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
