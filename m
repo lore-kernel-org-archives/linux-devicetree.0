@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 1/6] dt-bindings: clk: meson: add g12b periph clock controller bindings
-Date: Tue, 23 Apr 2019 11:14:58 +0200
-Message-ID: <20190423091503.10847-2-narmstrong@baylibre.com>
+Subject: [PATCH v2 4/6] dt-bindings: arm: amlogic: add G12B bindings
+Date: Tue, 23 Apr 2019 11:15:01 +0200
+Message-ID: <20190423091503.10847-5-narmstrong@baylibre.com>
 References: <20190423091503.10847-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,29 @@ To: khilman@baylibre.com, devicetree@vger.kernel.org, jbrunet@baylibre.com
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the specific Amlogic G12B clock driver compatible.
-
-G12B clock driver is very close, the main differences are :
-- the clock tree is duplicated for the both clusters, and the
-  SYS_PLL are swapped between the clusters
-- G12A has additional clocks like for CSI an other components
+Add compatible for the Amlogic G12B SoC, sharing most of the
+features and architecture with the G12A SoC.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 5c8b105be4d6..6eaa52092313 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -10,6 +10,7 @@ Required Properties:
- 		"amlogic,gxl-clkc" for GXL and GXM SoC,
- 		"amlogic,axg-clkc" for AXG SoC.
- 		"amlogic,g12a-clkc" for G12A SoC.
-+		"amlogic,g12b-clkc" for G12B SoC.
- - clocks : list of clock phandle, one for each entry clock-names.
- - clock-names : should contain the following:
-   * "xtal": the platform xtal
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 061f7b98a07f..94bbcc646e10 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -61,6 +61,10 @@ Boards with the Amlogic Meson G12A S905D2 SoC shall have the following propertie
+   Required root node property:
+     compatible: "amlogic,g12a";
+ 
++Boards with the Amlogic Meson G12B S922X SoC shall have the following properties:
++  Required root node property:
++    compatible: "amlogic,g12b";
++
+ Board compatible values (alphabetically, grouped by SoC):
+ 
+   - "geniatech,atv1200" (Meson6)
 -- 
 2.21.0
