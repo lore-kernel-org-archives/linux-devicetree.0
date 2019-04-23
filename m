@@ -1,84 +1,60 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add
- r_watchog node
-Date: Tue, 23 Apr 2019 18:05:45 +0200
-Message-ID: <20190423160545.muolantrdppz35rz@flea>
-References: <20190411154534.25563-1-peron.clem@gmail.com>
- <20190411154534.25563-3-peron.clem@gmail.com>
- <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBW7P7TSQKGQEP7AAXHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v4 0/2] Basic DT support for Lenovo Miix 630
+Date: Tue, 23 Apr 2019 09:05:43 -0700
+Message-ID: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: lee.jones@linaro.org, bjorn.andersson@linaro.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org, jikos@kernel.org, benjamin.tissoires@redhat.com, hdegoede@redhat.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 09:00:42PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Hi,
->
-> On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
-om> wrote:
-> >
-> > Allwinner H6 has a r_watchdog similar to A64.
-> >
-> > Declare it in the device-tree.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index 5c2f5451227b..66dc684a378e 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -622,6 +622,13 @@
-> >                         #reset-cells =3D <1>;
-> >                 };
-> >
-> > +               r_watchdog: watchdog@7020400 {
-> > +                       compatible =3D "allwinner,sun50i-a64-wdt",
-> > +                                    "allwinner,sun6i-a31-wdt";
-> > +                       reg =3D <0x07020400 0x20>;
-> > +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH=
->;
-> > +               };
->
-> I have set the same compatible as A64 because regarding the User
-> Manual they have exactly the same memory mapping.
-> However we don't know really if it's the same IP version, maybe there
-> will be an errata one day.
-> So I would like to know if it's better to define the h6-wdt also
->   compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt",
->                                  "allwinner,sun6i-a31-wdt";
->
-> I would say Yes, but with this logic we would have to had a new
-> compatible each time there is a  new SoC.
+The Lenovo Miix 630 is one of three ARM based (specifically Qualcomm
+MSM8998) laptops that comes with Windows, and seems to have a dedicated
+following of folks intrested to get Linux up and running on it.
 
-Why not just having the A31 compatible?
+This series adds support for the basic functionality this is validated
+towork using devicetree.  Although the laptops do feed ACPI to Windows,
+the existing MSM8998 support in mainline is DT based, so DT provides a
+quick path to functionality while ACPI support is investigated.
 
-Maxime
+The three devices are very similar, but do have differences in the set
+of peripherals supported, so the idea is that the vast majority of the
+support for all three can live in a common include, which should reduce
+overall duplication.  Adding support for the other two devices as a
+follow on should involve minimal work.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The bleeding edge work for these laptops and work in progress can be
+found at https://github.com/aarch64-laptops/prebuilt
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+v4:
+-Changed the hid-quirks ELAN handling around per Benjamin Tissoires
+-Dropped new DT binding
+
+v3:
+-Changed "clam" to "clamshell"
+-Defined a dt binding for the combo Elan keyboard + touchpad device
+-Adjusted the HID quirk to be correct for dt boot
+-Removed extranious comment in board dts
+-Fixed board level compatible
+
+v2:
+-Changed "cls" to "clam" since feedback indicated "cls" is too opaque,
+but
+"clamshell" is a mouthfull.  "clam" seems to be a happy medium.
+
+Jeffrey Hugo (3):
+  dt-bindings: input: add Elan 400 combo keyboard/touchpad over i2c
+  HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630 for DT
+  arm64: dts: qcom: Add Lenovo Miix 630
+
+ .../bindings/input/elan,combo400-i2c.txt      |  11 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
+ .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
+ drivers/hid/hid-quirks.c                      |   3 +-
+ 5 files changed, 322 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+
+-- 
+2.17.1
