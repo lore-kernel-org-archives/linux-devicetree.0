@@ -1,114 +1,172 @@
-From: andy.tang@nxp.com
-Subject: [PATCH] clk: qoriq: Add ls1028a clock configuration
-Date: Wed, 24 Apr 2019 09:19:12 +0800
-Message-ID: <20190424011912.2179-1-andy.tang@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: tsl2772: convert bindings to YAML format
+Date: Tue, 23 Apr 2019 20:34:13 -0500
+Message-ID: <CAL_JsqJo4jA=_dLJ7QJ-LOhSYrXDAcVN01119do0a+y4odpFng@mail.gmail.com>
+References: <20190416084552.1538-1-masneyb@onstation.org> <20190422135238.27b9892d@archlinux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190422135238.27b9892d@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Brian Masney <masneyb@onstation.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+On Mon, Apr 22, 2019 at 7:52 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Tue, 16 Apr 2019 04:45:51 -0400
+> Brian Masney <masneyb@onstation.org> wrote:
+>
+> > Convert the tsl2772 device tree bindings to the new YAML format.
+> >
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Hi Brian,
+>
+> Good to see this.  I'm afraid it's all a bit new to me so what
+> I haven't yet understood is how prescriptive we should be.
+> For example, are the phandle references below needed or not?
+>
+> So for a while yet I'm going to be relying on Rob and others
+> to review these and put me on the right track.
+>
+> Jonathan
+>
+> > ---
+> >  .../devicetree/bindings/iio/light/tsl2772.txt | 42 ---------
+> >  .../bindings/iio/light/tsl2772.yaml           | 85 +++++++++++++++++++
+> >  2 files changed, 85 insertions(+), 42 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> >
 
-Enable clock driver by adding clock configuration for ls1028a chip.
+> > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.yaml b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> > new file mode 100644
+> > index 000000000000..b3ac182288d2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> > @@ -0,0 +1,85 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
- drivers/clk/clk-qoriq.c |   68 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 68 insertions(+), 0 deletions(-)
+Do you have the rights on the original file to add BSD license?
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 1212a9b..8b0cb0b 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -245,6 +245,58 @@ static u32 cg_in(struct clockgen *cg, u32 __iomem *reg)
- 	},
- };
- 
-+static const struct clockgen_muxinfo ls1028a_hwa1 = {
-+	{
-+		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV4 },
-+		{},
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
-+	},
-+};
-+
-+static const struct clockgen_muxinfo ls1028a_hwa2 = {
-+	{
-+		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV4 },
-+		{},
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
-+	},
-+};
-+
-+static const struct clockgen_muxinfo ls1028a_hwa3 = {
-+	{
-+		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV4 },
-+		{},
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
-+	},
-+};
-+
-+static const struct clockgen_muxinfo ls1028a_hwa4 = {
-+	{
-+		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
-+		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV4 },
-+		{},
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
-+	},
-+};
-+
- static const struct clockgen_muxinfo ls1043a_hwa1 = {
- 	{
- 		{},
-@@ -508,6 +560,21 @@ static void __init t4240_init_periph(struct clockgen *cg)
- 		.pll_mask = 0x03,
- 	},
- 	{
-+		.compat = "fsl,ls1028a-clockgen",
-+		.cmux_groups = {
-+			&clockgen2_cmux_cga12
-+		},
-+		.hwaccel = {
-+			&ls1028a_hwa1, &ls1028a_hwa2,
-+			&ls1028a_hwa3, &ls1028a_hwa4
-+		},
-+		.cmux_to_group = {
-+			0, 0, 0, 0, -1
-+		},
-+		.pll_mask = 0x07,
-+		.flags = CG_VER3 | CG_LITTLE_ENDIAN,
-+	},
-+	{
- 		.compat = "fsl,ls1043a-clockgen",
- 		.init_periph = t2080_init_periph,
- 		.cmux_groups = {
-@@ -1423,6 +1490,7 @@ static void __init clockgen_init(struct device_node *np)
- CLK_OF_DECLARE(qoriq_clockgen_b4860, "fsl,b4860-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_ls1012a, "fsl,ls1012a-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_ls1021a, "fsl,ls1021a-clockgen", clockgen_init);
-+CLK_OF_DECLARE(qoriq_clockgen_ls1028a, "fsl,ls1028a-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_ls1043a, "fsl,ls1043a-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_ls1046a, "fsl,ls1046a-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_ls1088a, "fsl,ls1088a-clockgen", clockgen_init);
--- 
-1.7.1
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/light/tsl2772.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: AMS/TAOS Ambient Light Sensor (ALS) and Proximity Detector
+> > +
+> > +maintainers:
+> > +  - Brian Masney <masneyb@onstation.org>
+> > +
+> > +description: |
+> > +  Ambient light sensing and proximity detection with an i2c interface.
+> > +  https://ams.com/documents/20143/36005/TSL2772_DS000181_2-00.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - amstaos,tsl2571
+> > +      - amstaos,tsl2671
+> > +      - amstaos,tmd2671
+> > +      - amstaos,tsl2771
+> > +      - amstaos,tmd2771
+> > +      - amstaos,tsl2572
+> > +      - amstaos,tsl2672
+> > +      - amstaos,tmd2672
+> > +      - amstaos,tsl2772
+> > +      - amstaos,tmd2772
+> > +      - avago,apds9930
+> > +
+> > +  reg:
+> > +    description: The I2C address of the device
+
+No need for description on common properties unless you have something
+unique to add.
+
+> > +    maxItems: 1
+> > +
+> > +  amstaos,proximity-diodes:
+> > +    description: Proximity diodes to enable
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +      - minItems: 1
+> > +        maxItems: 2
+> > +        items:
+> > +          minimum: 0
+> > +          maximum: 1
+>
+> Do we need to represent that these can't be <1 0> ?
+> (specified in old docs)
+> We also have a tighter spec than the uint32-array format in types.yaml
+> as don't allow <0>, <1> under the current binding where only <0, 1> is
+> allowed.
+
+The uint32-array definition is loose to avoid lots of warnings on
+common properties where we can't define the exact size. Over time we
+need to tighten up the dts syntax to be consistent (I have a dtc patch
+which can spew out lots of warnings to fix these).
+
+So this case is correct. '<0, 1>' means a single array with 2
+elements. '<0>, <1>' means 2 arrays each with a single element. There
+shouldn't be lots of occurrences.
+
+> > +
+> > +  interrupts:
+> > +    description: Interrupt generated by the device
+
+No need for description.
+
+> > +    maxItems: 1
+> > +
+> > +  led-max-microamp:
+> > +    description: Current for the proximity LED
+
+This device only has proximity LEDs, right?
+
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - enum: [13000, 25000, 50000, 100000]
+
+We should assume a common schema for 'led-max-microamp', so we just
+need the enum.
+
+> > +
+> > +  vdd-supply:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: Regulator that provides power to the sensor
+
+Same here for '*-supply'. So just the description is enough.
+
+> > +
+> > +  vddio-supply:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: Regulator that provides power to the bus
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        tsl2772@39 {
+
+proximity-sensor@39
+
+> > +                compatible = "amstaos,tsl2772";
+> > +                reg = <0x39>;
+> > +                interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
+> > +                vdd-supply = <&pm8941_l17>;
+> > +                vddio-supply = <&pm8941_lvs1>;
+> > +                amstaos,proximity-diodes = <0>;
+> > +                led-max-microamp = <100000>;
+> > +        };
+> > +    };
+> > +...
+>
