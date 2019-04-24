@@ -1,51 +1,178 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 0/5] Aspeed: Enable video engine
-Date: Wed, 24 Apr 2019 12:50:06 +0200
-Message-ID: <b524e352-2e9d-6360-5517-18eee2e02c2c@xs4all.nl>
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH V5 2/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Wed, 24 Apr 2019 11:58:22 +0100
+Message-ID: <20190424105822.GA14614@fuggles.cambridge.arm.com>
+References: <1555447156-28306-1-git-send-email-Frank.Li@nxp.com>
+ <1555447156-28306-2-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1555447156-28306-2-git-send-email-Frank.Li@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Li <frank.li@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+Hi Frank,
 
-On 4/2/19 8:24 PM, Eddie James wrote:
-> This series enables the video engine on Aspeed BMC platforms. The video engine
-> clocking is added to the Aspeed clock driver. The use of the video engine reset
-> line, originally planned to be made externally available in the clock driver,
-> is removed from the video engine driver. Finally a node for the video engine is
-> added to the AST2500 devicetree.
-> The series also includes a missing property for reserved memory in the
-> devicetree documentation, and a small change to make the video engine driver
-> start without reserved memory.
-
-I assume you'll post a v3 since there were some comments?
-
-If you want to get it in for 5.2, then be aware that you should post it tomorrow
-at the latest.
-
-Regards,
-
-	Hans
-
+On Tue, Apr 16, 2019 at 08:39:33PM +0000, Frank Li wrote:
+> Add ddr performance monitor support for iMX8QXP
 > 
-> Eddie James (5):
->   media: platform: Aspeed: Remove use of reset line
->   media: platform: Aspeed: Make reserved memory optional
->   media: dt-bindings: aspeed-video: Add missing memory-region property
->   clk: Aspeed: Setup video engine clocking
->   ARM: dts: aspeed-g5: Add video engine
-> 
->  .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
->  arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 ++++++
->  drivers/clk/clk-aspeed.c                           | 42 ++++++++++++++++++++--
->  drivers/media/platform/aspeed-video.c              | 33 ++++-------------
->  4 files changed, 61 insertions(+), 30 deletions(-)
-> 
+> There are 4 counters for ddr perfomance events.
+> counter 0 is dedicated for cycles.
+> you choose any up to 3 no cycles events.
+
+I was about to pick this up, but I still have a few questions/comments
+on the code:
+
+> +static irqreturn_t ddr_perf_irq_handler(int irq, void *p)
+> +{
+> +	int i;
+> +	u8 reg;
+> +	int val;
+> +	int counter;
+> +	struct ddr_pmu *pmu = (struct ddr_pmu *) p;
+> +	struct perf_event *event;
+> +
+> +	/* Only cycles counter overflowed can issue irq. all counters will
+> +	 * be stopped when cycles counter overflow. but other counter don't stop
+> +	 * when overflow happen. Update all of the local counter values,
+> +	 * then reset the cycles counter, so the others can continue
+> +	 * counting. cycles counter is fastest counter in all events. at last
+> +	 * 4 times than other counters.
+> +	 */
+> +	for (i = 0; i < NUM_COUNTER; i++) {
+> +
+> +		if (!pmu->active_events[i])
+> +			continue;
+> +
+> +		event = pmu->active_events[i];
+> +		counter = event->hw.idx;
+> +		reg = counter * 4 + COUNTER_CNTL;
+> +		val = readl(pmu->base + reg);
+
+Does this read have a side-effect, or can it be removed given that you don't
+use val for anything else?
+
+> +		ddr_perf_event_update(event);
+> +
+> +		if (counter == EVENT_CYCLES_COUNTER) {
+> +			ddr_perf_event_enable(pmu,
+> +					      EVENT_CYCLES_ID,
+> +					      EVENT_CYCLES_COUNTER,
+> +					      true);
+> +			ddr_perf_event_update(event);
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+What stops the IRQ handler running concurrently with perf callbacks? I can't
+see any locking here, or is the IRQ supposed to be affine to the same CPU
+that's handling the perf context?
+
+> +static int ddr_perf_offline_cpu(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct ddr_pmu *pmu = hlist_entry_safe(node, struct ddr_pmu, node);
+> +	int target;
+> +
+> +	if (!cpumask_test_and_clear_cpu(cpu, &pmu->cpu))
+> +		return 0;
+> +
+> +	target = cpumask_any_but(cpu_online_mask, cpu);
+> +	if (target >= nr_cpu_ids)
+> +		return 0;
+> +
+> +	perf_pmu_migrate_context(&pmu->pmu, cpu, target);
+> +	cpumask_set_cpu(target, &pmu->cpu);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ddr_perf_probe(struct platform_device *pdev)
+> +{
+> +	struct ddr_pmu *pmu;
+> +	struct device_node *np;
+> +	void __iomem *base;
+> +	struct resource *iomem;
+> +	char *name;
+> +	char *hpname;
+> +	int num;
+> +	int ret;
+> +	u32 irq;
+> +	const struct of_device_id *of_id =
+> +		of_match_device(imx_ddr_pmu_dt_ids, &pdev->dev);
+> +
+> +	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(&pdev->dev, iomem);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	np = pdev->dev.of_node;
+> +
+> +	pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
+> +	if (!pmu)
+> +		return -ENOMEM;
+> +
+> +	num = ddr_perf_init(pmu, base, &pdev->dev);
+> +
+> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "ddr%d", num);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	hpname = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+> +				"perf/imx/ddr%d:online", num);
+> +	if (!hpname)
+> +		return -ENOMEM;
+> +
+> +	pmu->flags = (uintptr_t) of_id->data;
+> +
+> +	cpumask_set_cpu(raw_smp_processor_id(), &pmu->cpu);
+> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, hpname, NULL,
+> +					 ddr_perf_offline_cpu);
+> +
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
+> +		goto ddr_perf_err;
+> +	}
+> +
+> +	pmu->cpuhp_state = ret;
+> +
+> +	/* Register the pmu instance for cpu hotplug */
+> +	cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+> +
+> +	ret = perf_pmu_register(&(pmu->pmu), name, -1);
+> +	if (ret)
+> +		goto ddr_perf_err;
+> +
+> +	/* Request irq */
+> +	irq = of_irq_get(np, 0);
+> +	if (irq < 0) {
+
+irq is a u32 so this will never execute. You need to make it an int.
+
+> +		dev_err(&pdev->dev, "Failed to get irq: %d", irq);
+> +		ret = irq;
+> +		goto ddr_perf_irq_err;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, irq,
+> +					ddr_perf_irq_handler,
+> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+
+Can you explain why you need to pass these specific IRQ flags, please? I'm
+struggling to see what the ONESHOT is buying you.
+
+Will
