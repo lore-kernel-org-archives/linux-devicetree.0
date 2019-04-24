@@ -1,73 +1,50 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 20/26] leds: aat1290: Use generic support for
- composing LED names
-Date: Wed, 24 Apr 2019 15:57:20 +0200
-Message-ID: <20190424135719.GC14360@amd>
-References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
- <20190417205439.17685-21-jacek.anaszewski@gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 01/66] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
+Date: Wed, 24 Apr 2019 09:56:39 -0400
+Message-ID: <20190424135746.22655-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1SQmhf2mF2YjsYvc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190417205439.17685-21-jacek.anaszewski@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: "Leonidas P. Papadakos" <papadakospan@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
 
---1SQmhf2mF2YjsYvc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
 
-Hi!
+The rk3328-roc-cc board exhibits tx stability issues with large packets,
+as does the rock64 board, which was fixed with this patch
+https://patchwork.kernel.org/patch/10178969/
 
-> Switch to using generic LED support for composing LED class
-> device name.
->=20
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+A similar patch was merged for the rk3328-roc-cc here
+https://patchwork.kernel.org/patch/10804863/
+but it doesn't include the tx/rx_delay tweaks, and I find that they
+help with an issue where large transfers would bring the ethernet
+link down, causing a link reset regularly.
 
-> @@ -257,9 +257,6 @@ static int aat1290_led_parse_dt(struct aat1290_led *l=
-ed,
->  		return -EINVAL;
->  	}
-> =20
-> -	led_cdev->name =3D of_get_property(child_node, "label", NULL) ? :
-> -						child_node->name;
-> -
->  	ret =3D of_property_read_u32(child_node, "led-max-microamp",
->  				&cfg->max_mm_current);
->  	/*
-> @@ -469,6 +466,7 @@ static int aat1290_led_probe(struct platform_device *=
-pdev)
->  	struct aat1290_led *led;
->  	struct led_classdev *led_cdev;
->  	struct led_classdev_flash *fled_cdev;
-> +	struct led_init_data init_data =3D {};
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You can do directly =3D { .devicename =3D ...; }, at least for the name.
-
-Anyway, that's a detail.
-
-8, 10, 12, 14, 16, 18, 20: Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---1SQmhf2mF2YjsYvc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAaz8ACgkQMOfwapXb+vKriQCcDwk6UeJr46HCVI+yRgKifC9c
-4SQAnjIJmctKjqadfYavYRdvrDx2Llk9
-=jlY7
------END PGP SIGNATURE-----
-
---1SQmhf2mF2YjsYvc--
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 99d0d9912950..a91f87df662e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -107,8 +107,8 @@
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	tx_delay = <0x25>;
+-	rx_delay = <0x11>;
++	tx_delay = <0x24>;
++	rx_delay = <0x18>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.19.1
