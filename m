@@ -1,43 +1,41 @@
-From: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Subject: [PATCH] mod_devicetable: helper macro for declaring oftree module device table
-Date: Wed, 24 Apr 2019 13:08:01 +0200
-Message-ID: <1556104081-16217-1-git-send-email-info@metux.net>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/5] Add pinctrl support for BM1880 SoC
+Date: Wed, 24 Apr 2019 17:32:19 +0530
+Message-ID: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, f.fainelli@gmail.com, rpjday@crashcourse.ca, dvhart@infradead.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, linux-gpio@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Little helper macro that declares an oftree module device table,
-if CONFIG_OF is enabled. Otherwise it's just noop.
+Hello,
 
-This is also helpful if some drivers can be built w/ or w/o
-oftree support.
+This patchset adds pinctrl support for Bitmain BM1880 SoC and
+Sophon Edge board. BM1880 SoC can only handle pinmux functionality,
+hence the driver has no pinconf support.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- include/linux/mod_devicetable.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+This patchset has been tested on 96Boards Sophon Edge board.
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 448621c..853e301 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -245,6 +245,15 @@ struct of_device_id {
- 	const void *data;
- };
- 
-+/*
-+ * macro for adding the of module device table only if CONFIG_OF enabled
-+ */
-+#ifdef CONFIG_OF
-+#define MODULE_DEVICE_TABLE_OF(name)	MODULE_DEVICE_TABLE(of,name)
-+#else
-+#define MODULE_DEVICE_TABLE_OF(name)
-+#endif /* CONFIG_OF */
-+
- /* VIO */
- struct vio_device_id {
- 	char type[32];
+Thanks,
+Mani
+
+Manivannan Sadhasivam (5):
+  dt-bindings: pinctrl: Add BM1880 pinctrl binding
+  arm64: dts: bitmain: Add pinctrl support for BM1880 SoC
+  arm64: dts: bitmain: Add UART pinctrl support for Sophon Edge
+  pinctrl: Add pinctrl support for BM1880 SoC
+  MAINTAINERS: Add entry for BM1880 pinctrl
+
+ .../pinctrl/bitmain,bm1880-pinctrl.txt        |  98 ++
+ MAINTAINERS                                   |   2 +
+ .../boot/dts/bitmain/bm1880-sophon-edge.dts   |  29 +
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  14 +
+ drivers/pinctrl/Kconfig                       |   7 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-bm1880.c              | 965 ++++++++++++++++++
+ 7 files changed, 1116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
+ create mode 100644 drivers/pinctrl/pinctrl-bm1880.c
+
 -- 
-1.9.1
+2.17.1
