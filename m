@@ -1,60 +1,58 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: [PATCH v2 2/2] arm64: dts: mt8183: Add auxadc device node
-Date: Wed, 24 Apr 2019 09:11:12 +0800
-Message-ID: <20190424011112.14283-3-zhiyong.tao@mediatek.com>
-References: <20190424011112.14283-1-zhiyong.tao@mediatek.com>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] ARM: dts: qcom-apq8064: Fix DSI PHY ref clk phandle
+Date: Wed, 24 Apr 2019 11:16:15 +1000
+Message-ID: <20190424111615.6fa69e0c@canb.auug.org.au>
+References: <20190424001210.201672-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/+Hh9m.f/Xh.LOt20Y3ngziC"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424011112.14283-1-zhiyong.tao@mediatek.com>
+In-Reply-To: <20190424001210.201672-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: srv_heupstream@mediatek.com, hui.liu@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, erin.lo@mediatek.com, eddie.huang@mediatek.com, matthias.bgg@gmail.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux Next Mailing List <linux-next@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add auxadc device node for MT8183
+--Sig_/+Hh9m.f/Xh.LOt20Y3ngziC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  4 ++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 10 ++++++++++
- 2 files changed, 14 insertions(+)
+Hi Matthias,
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 9b525597e5ec..49909acc6efa 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -26,6 +26,10 @@
- 	};
- };
- 
-+&auxadc {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 75c4881bbe5e..57580d973316 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -269,6 +269,16 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		auxadc: auxadc@11001000 {
-+			compatible = "mediatek,mt8183-auxadc",
-+				     "mediatek,mt8173-auxadc";
-+			reg = <0 0x11001000 0 0x1000>;
-+			clocks = <&infracfg CLK_INFRA_AUXADC>;
-+			clock-names = "main";
-+			#io-channel-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		uart0: serial@11002000 {
- 			compatible = "mediatek,mt8183-uart",
- 				     "mediatek,mt6577-uart";
--- 
-2.12.5
+On Tue, 23 Apr 2019 17:12:10 -0700 Matthias Kaehlcke <mka@chromium.org> wro=
+te:
+>
+> Commit 3560af5a56b5 ("ARM: dts: qcom-apq8064: Set 'xo_board' as
+> ref clock of the DSI PHY") specifies the non-existing phandle
+> 'xo_board' as DSI PHY ref clk. Fix this by using the correct
+> phandle is 'cxo_board'.
+>=20
+> Fixes: 3560af5a56b5 ("ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock=
+ of the DSI PHY")
+>=20
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+
+You should keep the tags in one group (no blank lines between them).
+Also, you might like to add a Reported-by tag when you get reports from
+others (unless you discovered this yourself, of course).
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+Hh9m.f/Xh.LOt20Y3ngziC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/uN8ACgkQAVBC80lX
+0Gy8vQf/UMgtKv/PcwntGHQ83KYFMtIul/9SCrcJUiJ7CIfE8/gfpKdN7U+2DUg7
+H2pv0UI02tPJ/35mk6AgfkrNduW6dEslBVtp2Z04Mq308J10y1ulHXaEQ3Mk0fN9
+Pq1696YSAp8FfsW4H5XR/3xWm47JT5wCc2EeSdhHvAJIJstMZpmh8Z8UU+BI4GuL
+FLwE11g1D3hmiyC7CgVZz7xRa9d73+5TVLoLGlZPXLnpEJBNORNUDCn5LOsVVqOW
+zWJk9uIfR2WzHv+Y5puES+JImPmtJ/CSBDVT8LfbUUQcHNb7kxl1vuCrSQjDvA6g
+ZrXwqxnUe2eryHXy+zFbs1TorTGDZg==
+=g8aX
+-----END PGP SIGNATURE-----
+
+--Sig_/+Hh9m.f/Xh.LOt20Y3ngziC--
