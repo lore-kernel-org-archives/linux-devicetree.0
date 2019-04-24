@@ -1,81 +1,945 @@
-From: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
-	files to *.rst
-Date: Wed, 24 Apr 2019 13:36:27 -0300
-Message-ID: <20190424133627.63d7beed@coco.lan>
-References: <cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
-	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
-	<20190423125519.GA7104@redhat.com>
-	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
-	<20190423103053.07cf2149@lwn.net>
-	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
-	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
-	<20190423213816.GE16353@zn.tnic> <20190423232325.679c100b@coco.lan>
-	<20190424145410.GE30142@zn.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190424145410.GE30142-Jj63ApZU6fQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, kernel-hardening-ZwoEplunGu1jrUoiu81ncdBPR1lH4CV8@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless@v
+From: Andrew Peng <pengms1@lenovo.com>
+Subject: [PATCH v4] ARM: dts: aspeed: Adding Lenovo Hr630 BMC
+Date: Thu, 25 Apr 2019 01:39:10 +0800
+Message-ID: <1556127550-234791-1-git-send-email-pengms1@lenovo.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: venture@google.com, benjaminfair@google.com, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, andrew@aj.id.au, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: pengms1@lenovo.com, liuyj19@lenovo.com, dukh@lenovo.com, liuyh21@lenovo.com, hsung1@lenovo.com, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 24 Apr 2019 16:54:10 +0200
-Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> escreveu:
+Initial introduction of Lenovo Hr630 family equipped with
+Aspeed 2500 BMC SoC. Hr630 is a x86 server development kit
+with a ASPEED ast2500 BMC manufactured by Lenovo.
+Specifically, This adds the Hr630 platform device tree file
+used by the Hr630 BMC machines.
 
-> On Wed, Apr 24, 2019 at 07:40:07AM -0300, Mauro Carvalho Chehab wrote:
-> > Personally, I don't care much with monospaced fonts on this table. After
-> > all, if I want to see it monospaced, I can simply click at the
-> > "View page source" at the browser, and it will display the file as a
-> > plain old monospaced text file.  
-> 
-> Goes to show why kernel people wouldn't want to look at that in
-> the browser. Long hex numbers are hard to read as it is - that's
-> why there's even the 4-digit separator in some docs, for example:
-> 0xffff_ffff_8100_0000.
+This also adds an entry of Hr630 device tree file in Makefile
 
-IMHO, even the 0x and _ would make it harder to read. This is a way
-more easy for my eyes:
+Signed-off-by: Andrew Peng <pengms1@lenovo.com>
+Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
+Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
+---
+Changes in v4:
+ - add pca9546 switch aliases name.
+Changes in v3:
+ - revise i2c switch aliases name.
+Changes in v2:
+ - add i2c switch aliases name.
+ - remove the unused eeprom device from DT file.
+ - remove "Licensed under..." sentence.
 
-	ffff ffff 8100 0000
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts | 890 ++++++++++++++++++++++++++
+ 2 files changed, 892 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
 
-> Not having it monospaced makes the whole thing even less readable.
-
-Yeah, I see your point and agree with it.
-
-Just saying that, if all I want is to check if addresses that start
-with ffff80 belongs to the guard hole, or just to copy a value from 
-a table into some C code, the font doesn't matter much, and, if
-I care, a simple click would show it in monospaced fonts.
-
-Looking from your PoV, something like:
-
-
-|ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0         |
-
-
-is very hard to be parsed by a human eye, even with monospaced fonts.
-In order to make it easier, I would replace it by:
-
-|ffff ffff 8000 0000 |   -2    GB | ffff ffff 9fff ffff |  512 MB | kernel text mapping, mapped to physical address 0         |
-
-
-> 
-> That's why it is important for the markup not to get in the way of
-> people looking at those files in an editor.
-
-Fully agreed. the markups should make things easier and not
-harder for people to read its contents.
-
-Thanks,
-Mauro
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f4f5aea..375e53b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1261,4 +1261,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+ 	aspeed-bmc-opp-zaius.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
+-	aspeed-bmc-quanta-q71l.dtb
++	aspeed-bmc-quanta-q71l.dtb \
++	aspeed-bmc-lenovo-hr630.dtb
+diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+new file mode 100644
+index 0000000..41d5689
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+@@ -0,0 +1,890 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Device Tree file for Lenovo Hr630 platform
++ *
++ * Copyright (C) 2019-present Lenovo
++ */
++
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "HR630 BMC";
++	compatible = "lenovo,hr630-bmc", "aspeed,ast2500";
++
++	aliases {
++		pca9545_i2c0 = &i2c_rbp;
++		pca9545_i2c1 = &i2c_fbp1;
++		pca9545_i2c2 = &i2c_fbp2;
++		pca9545_i2c3 = &i2c_fbp3;
++		pca9546_i2c0 = &i2c_riser2;
++		pca9546_i2c1 = &i2c_pcie4;
++		pca9546_i2c2 = &i2c_riser1;
++		pca9546_i2c3 = &i2c_ocp;
++	};
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x00100000>; /* 1M */
++		};
++
++		gfx_memory: framebuffer {
++			size = <0x01000000>;
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		fault {
++			gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
++		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
++		<&adc 8>, <&adc 9>, <&adc 10>,
++		<&adc 12>, <&adc 13>, <&adc 14>;
++	};
++
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "bmc";
++		spi-max-frequency = <50000000>;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&vuart {
++	status = "okay";
++};
++
++&ibt {
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&mac1 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
++};
++
++&adc {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	/* temp1 inlet */
++	tmp75@4e {
++		compatible = "national,lm75";
++		reg = <0x4e>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++	/* temp2 outlet */
++	tmp75@4d {
++		compatible = "national,lm75";
++		reg = <0x4d>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&i2c6 {
++	status = "okay";
++	/*	Slot 0,
++	 *	Slot 1,
++	 *	Slot 2,
++	 *	Slot 3
++	 */
++
++	i2c-switch@70 {
++		compatible = "nxp,pca9545";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;	/* may use mux@70 next. */
++
++		i2c_rbp: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c_fbp1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		i2c_fbp2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		i2c_fbp3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	/*	Slot 0,
++	 *	Slot 1,
++	 *	Slot 2,
++	 *	Slot 3
++	 */
++	i2c-switch@76 {
++		compatible = "nxp,pca9546";
++		reg = <0x76>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;  /* may use mux@76 next. */
++
++		i2c_riser2: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c_pcie4: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		i2c_riser1: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		i2c_ocp: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c8 {
++	status = "okay";
++
++	eeprom@57 {
++		compatible = "atmel,24c256";
++		reg = <0x57>;
++		pagesize = <16>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++};
++
++&i2c12 {
++	status = "okay";
++};
++
++/*
++ * Enable port A as device (via the virtual hub) and port B as
++ * host by default on the eval board. This can be easily changed
++ * by replacing the override below with &ehci0 { ... } to enable
++ * host on both ports.
++ */
++&vhub {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&uhci {
++	status = "okay";
++};
++
++&gfx {
++	status = "okay";
++	memory-region = <&gfx_memory>;
++};
++
++&pwm_tacho {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default
++	&pinctrl_pwm1_default
++	&pinctrl_pwm2_default
++	&pinctrl_pwm3_default
++	&pinctrl_pwm4_default
++	&pinctrl_pwm5_default
++	&pinctrl_pwm6_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++
++	fan@2 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++
++	fan@3 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
++	};
++
++	fan@4 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++	fan@5 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
++	};
++
++	fan@6 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
++	};
++
++	fan@7 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
++	};
++
++	fan@8 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
++	};
++
++	fan@9 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
++	};
++
++	fan@10 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
++	};
++
++	fan@11 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
++	};
++
++	fan@12 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
++	};
++
++	fan@13 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
++	};
++};
++
++&gpio {
++
++	pin_gpio_a0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "MAC1_INT_N";
++	};
++
++	pin_gpio_a1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "MEZZ_C_PRESENT_N";
++	};
++
++	pin_gpio_a2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_PRST";
++	};
++
++	pin_gpio_a3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_PRST";
++	};
++
++	pin_gpio_b5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "IRQ_BMC_PCH_SMI_LPC_N";
++	};
++
++	pin_gpio_f0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "IRQ_BMC_PCH_NMI_R";
++	};
++
++	pin_gpio_f1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_CPU1_DISABLE_COD_N";
++	};
++
++	pin_gpio_f2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "SMB_LAN_ALERT_N_MEZZ";
++	};
++
++	pin_gpio_f3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_BUS0_RST_OUT_N";
++	};
++
++	pin_gpio_f4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "FM_SKT0_FAULT_LED";
++	};
++
++	pin_gpio_f5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 5) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "FM_SKT1_FAULT_LED";
++	};
++
++	pin_gpio_f6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_BMC_CPLD_NMI";
++	};
++
++	pin_gpio_f7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_ALERT_N";
++	};
++
++	pin_gpio_g0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_CPU_ERR2_LVT3_N";
++	};
++
++	pin_gpio_g1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_CPU_MSMI_CATERR_LVT3_N";
++	};
++
++	pin_gpio_g2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_PCH_BMC_THERMTRIP_N";
++	};
++
++	pin_gpio_g3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_I2C_BUS7_INT_N";
++	};
++
++	pin_gpio_g4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "FAN_PWR_CTL_N";
++	};
++
++	pin_gpio_g5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "NFC_FD_N";
++	};
++
++	pin_gpio_g6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_NMI_EVENT_N";
++	};
++
++	pin_gpio_g7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "RST_BMC_PCIE_I2CMUX_N";
++	};
++
++	pin_gpio_h0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_EPOW_N_R";
++	};
++
++	pin_gpio_h1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_EPOW_N_R";
++	};
++
++	pin_gpio_h2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PSU1_FFS_N_R";
++	};
++
++	pin_gpio_h3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PSU2_FFS_N_R";
++	};
++
++	pin_gpio_h4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_THROTTLE_N_R";
++	};
++
++	pin_gpio_h5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_THROTTLE_N_R";
++	};
++
++	pin_gpio_h6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_SMB_RESET_N";
++	};
++
++	pin_gpio_h7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_SMB_RESET_N";
++	};
++
++	pin_gpio_i1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FP_PWR_BTN_N";
++	};
++
++	pin_gpio_i2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BIOS_RCVR_N";
++	};
++
++	pin_gpio_i3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_INTRUDED_COVER";
++	};
++
++	pin_gpio_j2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_BIOS_UPDATE_N";
++	};
++
++	pin_gpio_j3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "RST_BMC_HDD_I2CMUX_N";
++	};
++
++	pin_gpio_q4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "MEZZ_A_PRESENT_N";
++	};
++
++	pin_gpio_q5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "VGA_FRONT_PRES_N";
++	};
++
++	pin_gpio_q6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "I2C_RISER1_INT_N";
++	};
++
++	pin_gpio_q7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "NCSI_CABLE_DET_N";
++	};
++
++	pin_gpio_r0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FP_RST_BTN_N";
++	};
++
++	pin_gpio_r2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HDDSIG1_DETECT_N";
++	};
++
++	pin_gpio_r3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HDDSIG2_DETECT_N";
++	};
++
++	pin_gpio_r4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HDDSIG3_DETECT_N";
++	};
++
++	pin_gpio_r5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "VIDEO_CABLE_DETECT_N";
++	};
++
++	pin_gpio_s0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_PS_RAPIDON_WAKE_R_N";
++	};
++
++	pin_gpio_s1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HOST_TPM_PP_BUF";
++	};
++
++	pin_gpio_s2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_VGA_SW";
++	};
++
++	pin_gpio_s3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_SML0_ALERT_MUX_N";
++	};
++
++	pin_gpio_s4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 4) GPIO_ACTIVE_HIGH>;
++		output;
++		line-name = "VBAT_EN_N";
++	};
++
++	pin_gpio_s5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_HW_STRAP_4";
++	};
++
++	pin_gpio_s6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PU_BMC_GPIOS6";
++	};
++
++	pin_gpio_s7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "I2C_BUS7_RESET_N";
++	};
++
++	pin_gpio_y0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_NCSI_MUX_CTL_S0";
++	};
++
++	pin_gpio_y1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 1) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_NCSI_MUX_CTL_S1";
++	};
++
++	pin_gpio_y2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "UID_ALERT_N";
++	};
++
++	pin_gpio_z0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 0) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_RISER2_INT_N";
++	};
++
++	pin_gpio_z2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_RISER2_RESET_N";
++	};
++
++	pin_gpio_z3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "FM_BMC_PCH_SCI_LPC_N";
++	};
++
++	pin_gpio_z4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_HW_STRAP_17";
++	};
++
++	pin_gpio_z6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_HW_STRAP_20";
++	};
++
++	pin_gpio_z7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 7) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_POST_CMPLT_N";
++	};
++
++	pin_gpio_aa0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "HOST_BMC_USB_SEL";
++	};
++
++	pin_gpio_aa1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_ALERT_N";
++	};
++
++	pin_gpio_aa2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_PVCCIN_CPU0_PWR_IN_ALERT_N";
++	};
++
++	pin_gpio_aa3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_PVCCIN_CPU1_PWR_IN_ALERT_N";
++	};
++
++	pin_gpio_aa4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "USB_CABLE_DETECT_N";
++	};
++
++	pin_gpio_aa5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 5) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_BUS1_RST_OUT_N";
++	};
++
++	pin_gpio_aa6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_SMI_ACTIVE_N";
++	};
++
++	pin_gpio_aa7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_BIOS_POST_CMPLT_N";
++	};
++
++	pin_gpio_ab0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_TPM_MOD_PRES_N";
++	};
++
++	pin_gpio_ab1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FORCE_NMI_SW_FPGA_N";
++	};
++
++	pin_gpio_ab2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "1U_2U_PCBA_SEL_R";
++	};
++
++	pin_gpio_ab3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "INTRUDED_PRES_N";
++	};
++};
+-- 
+2.7.4
