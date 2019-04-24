@@ -1,261 +1,110 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCH v2 12/12] thermal: tegra: enable OC hw throttle
-Date: Wed, 24 Apr 2019 16:36:54 +0800
-Message-ID: <a9a241aa-1d0b-b1d3-8599-969fe86569eb@nvidia.com>
-References: <1550744327-4677-1-git-send-email-wni@nvidia.com>
- <1550744327-4677-13-git-send-email-wni@nvidia.com>
- <20190423154602.GB16014@localhost.localdomain>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
+ bindings
+Date: Wed, 24 Apr 2019 14:14:29 +0530
+Message-ID: <662bcd9c-abed-23d1-865b-220adfd95ab7@codeaurora.org>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190423132823.7915-2-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423154602.GB16014@localhost.localdomain>
+In-Reply-To: <20190423132823.7915-2-georgi.djakov@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: daniel.lezcano@linaro.org, robh@kernel.org, thierry.reding@gmail.com, linux-tegra@vger.kernel.org, rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc: jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hey Georgi,
 
-
-On 23/4/2019 11:46 PM, Eduardo Valentin wrote:
-> On Thu, Feb 21, 2019 at 06:18:47PM +0800, Wei Ni wrote:
->> Parse Over Current settings from DT and program them to
->> generate interrupts. Also enable hw throttling whenever
->> there are OC events. Log the OC events as debug messages.
->>
->> Signed-off-by: Wei Ni <wni@nvidia.com>
+On 4/23/19 6:58 PM, Georgi Djakov wrote:
+> In addition to frequency and voltage, some devices may have bandwidth
+> requirements for their interconnect throughput - for example a CPU
+> or GPU may also need to increase or decrease their bandwidth to DDR
+> memory based on the current operating performance point.
 > 
-> I applied this series except for this specific patch which:
-> a. does not apply clean
-> b. does not compile.
+> Extend the OPP tables with additional property to describe the bandwidth
+> needs of a device. The average and peak bandwidth values depend on the
+> hardware and its properties.
 > 
-> Please rebase on top of my -linus branch and resend this. remember to 
-> checkpatch and compile and boot test before sending.
-
-Thanks for your comment, will rebase and test it.
-
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>   Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++++++++
+>   .../devicetree/bindings/property-units.txt    |  4 ++
+>   2 files changed, 42 insertions(+)
 > 
->> ---
->>  drivers/thermal/tegra/soctherm.c | 130 ++++++++++++++++++++++++++++++++++++---
->>  1 file changed, 120 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/thermal/tegra/soctherm.c b/drivers/thermal/tegra/soctherm.c
->> index b8c66368e54e..6e3f329d1ac4 100644
->> --- a/drivers/thermal/tegra/soctherm.c
->> +++ b/drivers/thermal/tegra/soctherm.c
->> @@ -106,9 +106,26 @@
->>  #define STATS_CTL_CLR_UP			0x2
->>  #define STATS_CTL_EN_UP				0x1
->>  
->> +#define OC1_CFG					0x310
->> +#define OC1_CFG_LONG_LATENCY_MASK		BIT(6)
->> +#define OC1_CFG_HW_RESTORE_MASK			BIT(5)
->> +#define OC1_CFG_PWR_GOOD_MASK_MASK		BIT(4)
->> +#define OC1_CFG_THROTTLE_MODE_MASK		(0x3 << 2)
->> +#define OC1_CFG_ALARM_POLARITY_MASK		BIT(1)
->> +#define OC1_CFG_EN_THROTTLE_MASK		BIT(0)
->> +
->> +#define OC1_CNT_THRESHOLD			0x314
->> +#define OC1_THROTTLE_PERIOD			0x318
->> +#define OC1_ALARM_COUNT				0x31c
->> +#define OC1_FILTER				0x320
->> +#define OC1_STATS				0x3a8
->> +
->>  #define OC_INTR_STATUS				0x39c
->>  #define OC_INTR_ENABLE				0x3a0
->>  #define OC_INTR_DISABLE				0x3a4
->> +#define OC_STATS_CTL				0x3c4
->> +#define OC_STATS_CTL_CLR_ALL			0x2
->> +#define OC_STATS_CTL_EN_ALL			0x1
->>  
->>  #define OC_INTR_OC1_MASK			BIT(0)
->>  #define OC_INTR_OC2_MASK			BIT(1)
->> @@ -207,6 +224,25 @@
->>  #define THROT_DELAY_CTRL(throt)		(THROT_DELAY_LITE + \
->>  					(THROT_OFFSET * throt))
->>  
->> +#define ALARM_OFFSET			0x14
->> +#define ALARM_CFG(throt)		(OC1_CFG + \
->> +					(ALARM_OFFSET * (throt - THROTTLE_OC1)))
->> +
->> +#define ALARM_CNT_THRESHOLD(throt)	(OC1_CNT_THRESHOLD + \
->> +					(ALARM_OFFSET * (throt - THROTTLE_OC1)))
->> +
->> +#define ALARM_THROTTLE_PERIOD(throt)	(OC1_THROTTLE_PERIOD + \
->> +					(ALARM_OFFSET * (throt - THROTTLE_OC1)))
->> +
->> +#define ALARM_ALARM_COUNT(throt)	(OC1_ALARM_COUNT + \
->> +					(ALARM_OFFSET * (throt - THROTTLE_OC1)))
->> +
->> +#define ALARM_FILTER(throt)		(OC1_FILTER + \
->> +					(ALARM_OFFSET * (throt - THROTTLE_OC1)))
->> +
->> +#define ALARM_STATS(throt)		(OC1_STATS + \
->> +					(4 * (throt - THROTTLE_OC1)))
->> +
->>  /* get CCROC_THROT_PSKIP_xxx offset per HIGH/MED/LOW vect*/
->>  #define CCROC_THROT_OFFSET			0x0c
->>  #define CCROC_THROT_PSKIP_CTRL_CPU_REG(vect)    (CCROC_THROT_PSKIP_CTRL_CPU + \
->> @@ -218,6 +254,9 @@
->>  #define THERMCTL_LVL_REGS_SIZE		0x20
->>  #define THERMCTL_LVL_REG(rg, lv)	((rg) + ((lv) * THERMCTL_LVL_REGS_SIZE))
->>  
->> +#define OC_THROTTLE_MODE_DISABLED	0
->> +#define OC_THROTTLE_MODE_BRIEF		2
->> +
->>  static const int min_low_temp = -127000;
->>  static const int max_high_temp = 127000;
->>  
->> @@ -266,6 +305,15 @@ struct tegra_thermctl_zone {
->>  	const struct tegra_tsensor_group *sg;
->>  };
->>  
->> +struct soctherm_oc_cfg {
->> +	u32 active_low;
->> +	u32 throt_period;
->> +	u32 alarm_cnt_thresh;
->> +	u32 alarm_filter;
->> +	u32 mode;
->> +	bool intr_en;
->> +};
->> +
->>  struct soctherm_throt_cfg {
->>  	const char *name;
->>  	unsigned int id;
->> @@ -273,6 +321,7 @@ struct soctherm_throt_cfg {
->>  	u8 cpu_throt_level;
->>  	u32 cpu_throt_depth;
->>  	u32 gpu_throt_level;
->> +	struct soctherm_oc_cfg oc_cfg;
->>  	struct thermal_cooling_device *cdev;
->>  	bool init;
->>  };
->> @@ -715,7 +764,7 @@ static int tegra_soctherm_set_hwtrips(struct device *dev,
->>  		return 0;
->>  	}
->>  
->> -	for (i = 0; i < THROTTLE_SIZE; i++) {
->> +	for (i = 0; i < THROTTLE_OC1; i++) {
->>  		struct thermal_cooling_device *cdev;
->>  
->>  		if (!ts->throt_cfgs[i].init)
->> @@ -1537,6 +1586,32 @@ static int soctherm_thermtrips_parse(struct platform_device *pdev)
->>  	return 0;
->>  }
->>  
->> +static void soctherm_oc_cfg_parse(struct device *dev,
->> +				struct device_node *np_oc,
->> +				struct soctherm_throt_cfg *stc)
->> +{
->> +	u32 val;
->> +
->> +	if (of_property_read_bool(np_oc, "nvidia,polarity-active-low"))
->> +		stc->oc_cfg.active_low = 1;
->> +	else
->> +		stc->oc_cfg.active_low = 0;
->> +
->> +	if (!of_property_read_u32(np_oc, "nvidia,count-threshold", &val)) {
->> +		stc->oc_cfg.intr_en = 1;
->> +		stc->oc_cfg.alarm_cnt_thresh = val;
->> +	}
->> +
->> +	if (!of_property_read_u32(np_oc, "nvidia,throttle-period-us", &val))
->> +		stc->oc_cfg.throt_period = val;
->> +
->> +	if (!of_property_read_u32(np_oc, "nvidia,alarm-filter", &val))
->> +		stc->oc_cfg.alarm_filter = val;
->> +
->> +	/* BRIEF throttling by default, do not support STICKY */
->> +	stc->oc_cfg.mode = OC_THROTTLE_MODE_BRIEF;
->> +}
->> +
->>  static int soctherm_throt_cfg_parse(struct device *dev,
->>  				    struct device_node *np,
->>  				    struct soctherm_throt_cfg *stc)
->> @@ -1619,24 +1694,34 @@ static void soctherm_init_hw_throt_cdev(struct platform_device *pdev)
->>  			continue;
->>  		}
->>  
->> +		if (stc->init) {
->> +			dev_err(dev, "throttle-cfg: %s: redefined!\n", name);
->> +			of_node_put(np_stcc);
->> +			break;
->> +		}
->>  
->>  		err = soctherm_throt_cfg_parse(dev, np_stcc, stc);
->>  		if (err)
->>  			continue;
->>  
->> -		tcd = thermal_of_cooling_device_register(np_stcc,
->> +		if (stc->id >= THROTTLE_OC1) {
->> +			soctherm_oc_cfg_parse(dev, np_stcc, stc);
->> +			stc->init = true;
->> +		} else {
->> +
->> +			tcd = thermal_of_cooling_device_register(np_stcc,
->>  							 (char *)name, ts,
->>  							 &throt_cooling_ops);
->> -		of_node_put(np_stcc);
->> -		if (IS_ERR_OR_NULL(tcd)) {
->> -			dev_err(dev,
->> -				"throttle-cfg: %s: failed to register cooling device\n",
->> -				name);
->> -			continue;
->> +			if (IS_ERR_OR_NULL(tcd)) {
->> +				dev_err(dev,
->> +					"throttle-cfg: %s: failed to register cooling device\n",
->> +					name);
->> +				continue;
->> +			}
->> +			stc->cdev = tcd;
->> +			stc->init = true;
->>  		}
->>  
->> -		stc->cdev = tcd;
->> -		stc->init = true;
->>  	}
->>  
->>  	of_node_put(np_stc);
->> @@ -1787,6 +1872,28 @@ static void throttlectl_gpu_level_select(struct tegra_soctherm *ts,
->>  	writel(r, ts->regs + THROT_PSKIP_CTRL(throt, THROTTLE_DEV_GPU));
->>  }
->>  
->> +static int soctherm_oc_cfg_program(struct tegra_soctherm *ts,
->> +				      enum soctherm_throttle_id throt)
->> +{
->> +	u32 r;
->> +	struct soctherm_oc_cfg *oc = &ts->throt_cfgs[throt].oc_cfg;
->> +
->> +	if (oc->mode == OC_THROTTLE_MODE_DISABLED)
->> +		return -EINVAL;
->> +
->> +	r = REG_SET_MASK(0, OC1_CFG_HW_RESTORE_MASK, 1);
->> +	r = REG_SET_MASK(r, OC1_CFG_THROTTLE_MODE_MASK, oc->mode);
->> +	r = REG_SET_MASK(r, OC1_CFG_ALARM_POLARITY_MASK, oc->active_low);
->> +	r = REG_SET_MASK(r, OC1_CFG_EN_THROTTLE_MASK, 1);
->> +	writel(r, ts->regs + ALARM_CFG(throt));
->> +	writel(oc->throt_period, ts->regs + ALARM_THROTTLE_PERIOD(throt));
->> +	writel(oc->alarm_cnt_thresh, ts->regs + ALARM_CNT_THRESHOLD(throt));
->> +	writel(oc->alarm_filter, ts->regs + ALARM_FILTER(throt));
->> +	soctherm_oc_intr_enable(ts, throt, oc->intr_en);
->> +
->> +	return 0;
->> +}
->> +
->>  /**
->>   * soctherm_throttle_program() - programs pulse skippers' configuration
->>   * @throt: the LIGHT/HEAVY of the throttle event id.
->> @@ -1803,6 +1910,9 @@ static void soctherm_throttle_program(struct tegra_soctherm *ts,
->>  	if (!stc.init)
->>  		return;
->>  
->> +	if ((throt >= THROTTLE_OC1) && (soctherm_oc_cfg_program(ts, throt)))
->> +		return;
->> +
->>  	/* Setup PSKIP parameters */
->>  	if (ts->soc->use_ccroc)
->>  		throttlectl_cpu_level_select(ts, throt);
->> -- 
->> 2.7.4
->>
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 76b6c79604a5..830f0206aea7 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -132,6 +132,9 @@ Optional properties:
+>   - opp-level: A value representing the performance level of the device,
+>     expressed as a 32-bit integer.
+>   
+> +- bandwidth-MBps: The interconnect bandwidth is specified with an array containing
+> +  the two integer values for average and peak bandwidth in megabytes per second.
+> +
+>   - clock-latency-ns: Specifies the maximum possible transition latency (in
+>     nanoseconds) for switching to this OPP from any other OPP.
+>   
+> @@ -546,3 +549,38 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
+>   		};
+>   	};
+>   };
+> +
+> +Example 7: bandwidth-MBps:
+> +Average and peak bandwidth values for the interconnects between CPU and DDR
+> +memory and also between CPU and L3 are defined per each OPP. Bandwidth of both
+> +interconnects is scaled together with CPU frequency.
+> +
+> +/ {
+> +	cpus {
+> +		CPU0: cpu@0 {
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			...
+> +			operating-points-v2 = <&cpu_opp_table>;
+> +			/* path between CPU and DDR memory and CPU and L3 */
+> +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
+> +					<&noc MASTER_CPU &noc SLAVE_L3>;
+> +		};
+> +	};
+> +
+> +	cpu_opp_table: cpu_opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp-200000000 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
+> +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
+> +			bandwidth-MBps = <457 1525>, <914 3050>;
+> +		};
+> +		opp-400000000 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			/* CPU<->DDR bandwidth: 915 MB/s average, 3051 MB/s peak */
+> +			 * CPU<->L3 bandwidth: 1828 MB/s average, 6102 MB/s peak */
+> +			bandwidth-MBps = <915 3051>, <1828 6102>;
+> +		};
+> +	};
+
+nit: missed closing braces
+
+> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> index bfd33734faca..9c3dbefcdae8 100644
+> --- a/Documentation/devicetree/bindings/property-units.txt
+> +++ b/Documentation/devicetree/bindings/property-units.txt
+> @@ -41,3 +41,7 @@ Temperature
+>   Pressure
+>   ----------------------------------------
+>   -kpascal	: kiloPascal
+> +
+> +Throughput
+> +----------------------------------------
+> +-MBps		: megabytes per second
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
