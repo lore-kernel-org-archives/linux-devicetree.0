@@ -1,50 +1,74 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 3/5] input: edt-ft5x06 - Call devm_of_device_links_add()
- to create links
-Date: Wed, 24 Apr 2019 15:52:35 -0700
-Message-ID: <20190424225235.GA225055@dtor-ws>
-References: <20190424101913.1534-1-benjamin.gaignard@st.com>
- <20190424101913.1534-4-benjamin.gaignard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v7 0/3] Add support for the Purism Librem5 devkit
+Date: Wed, 24 Apr 2019 16:17:08 -0700
+Message-ID: <20190424231711.14156-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190424101913.1534-4-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: rafael.j.wysocki@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, hadess@hadess.net, frowand.list@gmail.com, m.felsch@pengutronix.de, agx@sigxcpu.org, yannick.fertre@st.com, arnd@arndb.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, broonie@kernel.org
+To: angus@akkea.ca
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Aisheng Dong <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.felsch@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin,
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-On Wed, Apr 24, 2019 at 12:19:11PM +0200, Benjamin Gaignard wrote:
-> From: Yannick FertrÃ© <yannick.fertre@st.com>
-> 
-> Add a call to devm_of_device_links_add() to create links with suppliers
-> at probe time.
-> 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/input/touchscreen/edt-ft5x06.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> index 702bfda7ee77..ac9f7e85efb0 100644
-> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> @@ -1167,6 +1167,8 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
->  
->  	i2c_set_clientdata(client, tsdata);
->  
-> +	devm_of_device_links_add(&client->dev);
-> +
+Changes since v6:
 
-This seems pretty generic action and I believe it should be done in
-generic code, either bus (i2c, spi, etc), or in device core.
+Dropped unused regulators.
+Fix regulator phandles case.
+Dropped extra whitespace.
 
-Thanks.
+Changes since v5:
+
+Added reviewed-by tags.
+Moved USB port links to USB controller node.
+
+Changes since v4:
+
+Compiled against linux-next next-20190415.
+Added imx8mq to the arm yaml file.
+Re-arrange regulator nodes to drop undefined supplies.
+Additional ordering for aesthetics.
+Split some long lines.
+Added lots of blank lines.
+Moved pinctl muxes to where they are used.
+Cleaned out reg defintions from regulator nodes.
+
+Changes since v3:
+
+Freshly sorted and pressed nodes.
+Change the backlight to an interpolated scale.
+Dropped i2c2.
+Dropped devkit version number to match debian MR.
+
+Changes since v2:
+
+Fixed incorrect phy-supply for the fsl-fec.
+Dropped unused regulator property.
+Fixup Makefile for linux-next.
+
+Changes since v1:
+
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
+
+
+Angus Ainslie (Purism) (3):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+  dt-bindings: arm: fsl: Add the imx8mq boards
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 812 ++++++++++++++++++
+ 4 files changed, 821 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 
 -- 
-Dmitry
+2.17.1
