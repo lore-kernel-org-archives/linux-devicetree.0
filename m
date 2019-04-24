@@ -1,94 +1,187 @@
-Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/6] arm64: dts: r8a774a1: Add DU device to DT
-Date: Tue, 16 Apr 2019 16:31:53 +0100
-Message-Id: <1555428717-18376-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
-References: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=uhoj=S2=intel.com=rafael.j.wysocki@kernel.org>
+Subject: Re: [PATCH 1/5] of/device: Add of_ functions for
+ device_link_{add,remove}
+References: <20190424101913.1534-1-benjamin.gaignard@st.com>
+ <20190424101913.1534-2-benjamin.gaignard@st.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Message-ID: <d038f078-08dc-41ff-edc2-12f37d88a8a3@intel.com>
+Date: Wed, 24 Apr 2019 15:06:52 +0200
+MIME-Version: 1.0
+In-Reply-To: <20190424101913.1534-2-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Benjamin Gaignard <benjamin.gaignard@st.com>, agx@sigxcpu.org, yannick.fertre@st.com
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, hadess@hadess.net, frowand.list@gmail.com, m.felsch@pengutronix.de, arnd@arndb.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, broonie@kernel.org, Linux PM <linux-pm@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the DU device to r8a774a1.dtsi in a disabled state.
+On 4/24/2019 12:19 PM, Benjamin Gaignard wrote:
+> Allows to create and remove links between consumer and suppliers from
+> device-tree data. Use 'links-add' property from consumer node to setup
+> a link with a list of suppliers.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 63 +++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+One immediate question about this one is why stateless links are better 
+here?
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index f71bd22..e7759ba 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -2043,6 +2043,69 @@
- 			};
- 		};
- 
-+		du: display@feb00000 {
-+			compatible = "renesas,du-r8a774a1";
-+			reg = <0 0xfeb00000 0 0x70000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 724>,
-+				 <&cpg CPG_MOD 723>,
-+				 <&cpg CPG_MOD 722>;
-+			clock-names = "du.0", "du.1", "du.2";
-+			status = "disabled";
-+
-+			vsps = <&vspd0 &vspd1 &vspd2>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					du_out_rgb: endpoint {
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					du_out_hdmi0: endpoint {
-+					};
-+				};
-+				port@2 {
-+					reg = <2>;
-+					du_out_lvds0: endpoint {
-+						remote-endpoint = <&lvds0_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		lvds0: lvds@feb90000 {
-+			compatible = "renesas,r8a774a1-lvds";
-+			reg = <0 0xfeb90000 0 0x14>;
-+			clocks = <&cpg CPG_MOD 727>;
-+			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
-+			resets = <&cpg 727>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					lvds0_in: endpoint {
-+						remote-endpoint = <&du_out_lvds0>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					lvds0_out: endpoint {
-+					};
-+				};
-+			};
-+		};
-+
- 		prr: chipid@fff00044 {
- 			compatible = "renesas,prr";
- 			reg = <0 0xfff00044 0 4>;
--- 
-2.7.4
+> Consumers will be suspend before their suppliers and resume after them.
+>
+> Add devm_of_device_links_add() to automatically remove the links
+> when the device is unbound from the bus.
+
+And this might not be necessary even with managed links.
+
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>   drivers/of/device.c       | 103 ++++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/of_device.h |  20 +++++++++
+>   2 files changed, 123 insertions(+)
+>
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 3717f2a20d0d..011ba9bf7642 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -336,3 +336,106 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+> +
+> +/**
+> + * of_device_links_add - Create links between consumer and suppliers from
+> + * device tree data
+> + *
+> + * @consumer: consumer device
+> + *
+> + * Returns 0 on success, < 0 on failure.
+> + */
+> +int of_device_links_add(struct device *consumer)
+> +{
+> +	struct device_node *np;
+> +	struct platform_device *pdev;
+> +	int i = 0;
+> +
+> +	np = of_parse_phandle(consumer->of_node, "links-add", i++);
+> +	while (np) {
+> +		pdev = of_find_device_by_node(np);
+> +		of_node_put(np);
+> +		if (!pdev)
+> +			return -EINVAL;
+> +
+> +		device_link_add(consumer, &pdev->dev, DL_FLAG_STATELESS);
+> +		platform_device_put(pdev);
+> +
+> +		np = of_parse_phandle(consumer->of_node, "links-add", i++);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_device_links_add);
+> +
+> +/**
+> + * of_device_links_remove - Remove links between consumer and suppliers from
+> + * device tree data
+> + *
+> + * @consumer: consumer device
+> + *
+> + * Returns 0 on success, < 0 on failure.
+> + */
+> +int of_device_links_remove(struct device *consumer)
+> +{
+> +	struct device_node *np;
+> +	struct platform_device *pdev;
+> +	int i = 0;
+> +
+> +	np = of_parse_phandle(consumer->of_node, "links-add", i++);
+> +	while (np) {
+> +		pdev = of_find_device_by_node(np);
+> +		of_node_put(np);
+> +		if (!pdev)
+> +			return -EINVAL;
+> +
+> +		device_link_remove(consumer, &pdev->dev);
+> +		platform_device_put(pdev);
+> +
+> +		np = of_parse_phandle(consumer->of_node, "links-add", i++);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_device_links_remove);
+> +
+> +static void devm_of_device_links_remove(struct device *dev, void *res)
+> +{
+> +	of_device_links_remove(*(struct device **)res);
+> +}
+> +
+> +/**
+> + * devm_of_device_links_add - Create links between consumer and suppliers
+> + * from device tree data
+> + *
+> + * @consumer: consumer device
+> + *
+> + * Returns 0 on success, < 0 on failure.
+> + *
+> + * Similar to of_device_links_add(), but will automatically call
+> + * of_device_links_remove() when the device is unbound from the bus.
+> + */
+> +int devm_of_device_links_add(struct device *consumer)
+> +{
+> +		struct device **ptr;
+> +	int ret;
+> +
+> +	if (!consumer)
+> +		return -EINVAL;
+> +
+> +	ptr = devres_alloc(devm_of_device_links_remove,
+> +			   sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return -ENOMEM;
+> +
+> +	ret = of_device_links_add(consumer);
+> +	if (ret < 0) {
+> +		devres_free(ptr);
+> +	} else {
+> +		*ptr = consumer;
+> +		devres_add(consumer, ptr);
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_of_device_links_add);
+> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+> index 8d31e39dd564..ad01db6828e8 100644
+> --- a/include/linux/of_device.h
+> +++ b/include/linux/of_device.h
+> @@ -41,6 +41,11 @@ extern int of_device_request_module(struct device *dev);
+>   extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
+>   extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+>   
+> +
+> +extern int of_device_links_add(struct device *consumer);
+> +extern int of_device_links_remove(struct device *consumer);
+> +extern int devm_of_device_links_add(struct device *consumer);
+> +
+>   static inline void of_device_node_put(struct device *dev)
+>   {
+>   	of_node_put(dev->of_node);
+> @@ -91,6 +96,21 @@ static inline int of_device_uevent_modalias(struct device *dev,
+>   	return -ENODEV;
+>   }
+>   
+> +static int of_device_links_add(struct device *consumer)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int of_device_links_remove(struct device *consumer)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int devm_of_device_links_add(struct device *consumer)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline void of_device_node_put(struct device *dev) { }
+>   
+>   static inline const struct of_device_id *__of_match_device(
