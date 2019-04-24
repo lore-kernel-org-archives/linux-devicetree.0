@@ -1,58 +1,29 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/5] Aspeed: Enable video engine
-Date: Wed, 24 Apr 2019 10:00:28 -0500
-Message-ID: <f3cacd11-c68d-9097-4a86-3ebeab046b93@linux.vnet.ibm.com>
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
- <b524e352-2e9d-6360-5517-18eee2e02c2c@xs4all.nl>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v3 0/2] Enable wm8524 codec on i.MX8MM EVK
+Date: Wed, 24 Apr 2019 15:04:12 +0000
+Message-ID: <20190424150350.7963-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b524e352-2e9d-6360-5517-18eee2e02c2c@xs4all.nl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Eddie James <eajames@linux.ibm.com>, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 4/24/19 5:50 AM, Hans Verkuil wrote:
-> Hi Eddie,
->
-> On 4/2/19 8:24 PM, Eddie James wrote:
->> This series enables the video engine on Aspeed BMC platforms. The video engine
->> clocking is added to the Aspeed clock driver. The use of the video engine reset
->> line, originally planned to be made externally available in the clock driver,
->> is removed from the video engine driver. Finally a node for the video engine is
->> added to the AST2500 devicetree.
->> The series also includes a missing property for reserved memory in the
->> devicetree documentation, and a small change to make the video engine driver
->> start without reserved memory.
-> I assume you'll post a v3 since there were some comments?
-
-
-Sure... The only change would be a missing semi-colon in the devicetree 
-doc. And we're only on v2 :)
-
-
->
-> If you want to get it in for 5.2, then be aware that you should post it tomorrow
-> at the latest.
->
-> Regards,
->
-> 	Hans
->
->> Eddie James (5):
->>    media: platform: Aspeed: Remove use of reset line
->>    media: platform: Aspeed: Make reserved memory optional
->>    media: dt-bindings: aspeed-video: Add missing memory-region property
->>    clk: Aspeed: Setup video engine clocking
->>    ARM: dts: aspeed-g5: Add video engine
->>
->>   .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
->>   arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 ++++++
->>   drivers/clk/clk-aspeed.c                           | 42 ++++++++++++++++++++--
->>   drivers/media/platform/aspeed-video.c              | 33 ++++-------------
->>   4 files changed, 61 insertions(+), 30 deletions(-)
->>
+VGhpcyBwYXRjaCBzZXJpZXMgaW50cm9kdWNlcyB0aGUgU0FJIG5vZGVzIG9uIGkuTVg4TU0gRVZL
+IHRoZW4NCmNyZWF0ZXMgdGhlIHdtODUyNCBjb2RlYyBub2RlIGFuZCBmaW5hbGx5IHVzZXMgc2lt
+cGxlIGNhcmQgbWFjaGluZQ0KZHJpdmVyIHRvIGNyZWF0ZSBhIHNvdW5kIGNhcmQuDQoNCkNoYW5n
+ZXMgc2luY2UgdjI6DQoJLSBwbGFjZSBjb21wYXRpYmxlIHN0cmluZ3Mgb25lIGEgc2luZ2xlIGxp
+bmVzDQoJLSBtb3ZlIEdQSU8gcGluY3RybCBpbiBhIG5vZGUgb2YgaXRzIG93bg0KCS0gcmVtb3Zl
+IGNvZGVjIHBoYW5kbGUNCg0KQ2hhbmdlcyBzaW5jZSB2MToNCiAgICAgICAgLSB1c2UgImZzbCxp
+bXg4bW0tc2FpIiwgImZzbCxpbXg4bXEtc2FpIiBjb21wYXRiaWxlIHN0cmluZ3MgYW5kDQogICAg
+ICAgICAgcmVtb3ZlICJmc2wsaW14NnN4LXNhaSIgYmVjYXVzZSBTQUkgbW9kdWxlIG9uIGkuTVg4
+TSBpcyBub3QNCiAgICAgICAgICBjb21wYXRiaWxlIHdpdGggU0FJIG1vZHVsZXMgZm9ybSBpLk1Y
+Ng0KDQpEYW5pZWwgQmFsdXRhICgyKToNCiAgYXJtNjQ6IGR0czogaW14OG1tOiBBZGQgU0FJIG5v
+ZGVzDQogIGFybTY0OiBkdHM6IGlteDhtbS1ldms6IEVuYWJsZSBhdWRpbyBjb2RlYyB3bTg1MjQN
+Cg0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS1ldmsuZHRzIHwgNTUgKysr
+KysrKysrKysrKysrKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNp
+ICAgIHwgNjYgKysrKysrKysrKysrKysrKysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDEyMSBpbnNl
+cnRpb25zKCspDQoNCi0tIA0KMi4xNy4xDQoNCg==
