@@ -1,66 +1,109 @@
-From: Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: [PATCH] PCI: altera-msi: Allow building as module
-Date: Wed, 24 Apr 2019 12:57:15 +0800
-Message-ID: <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V5 00/16] Add Tegra194 PCIe support
+Date: Wed, 24 Apr 2019 10:49:48 +0530
+Message-ID: <20190424052004.6270-1-vidyas@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Altera MSI IP is a soft IP and is only available after
-FPGA image is programmed.
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-Make driver modulable to support use case FPGA image is programmed
-after kernel is booted. User proram FPGA image in kernel then only load
-MSI driver module.
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
----
- drivers/pci/controller/Kconfig           |  2 +-
- drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 4b550f9cdd56..920546cb84e2 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -181,7 +181,7 @@ config PCIE_ALTERA
- 	  FPGA.
- 
- config PCIE_ALTERA_MSI
--	bool "Altera PCIe MSI feature"
-+	tristate "Altera PCIe MSI feature"
- 	depends on PCIE_ALTERA
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
-diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-index 025ef7d9a046..16d938920ca5 100644
---- a/drivers/pci/controller/pcie-altera-msi.c
-+++ b/drivers/pci/controller/pcie-altera-msi.c
-@@ -10,6 +10,7 @@
- #include <linux/interrupt.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-@@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
- {
- 	return platform_driver_register(&altera_msi_driver);
- }
-+
-+static void __exit altera_msi_exit(void)
-+{
-+	platform_driver_unregister(&altera_msi_driver);
-+}
-+
- subsys_initcall(altera_msi_init);
-+MODULE_DEVICE_TABLE(of, altera_msi_of_match);
-+module_exit(altera_msi_exit);
-+MODULE_LICENSE("GPL v2");
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
+
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (16):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI/PME: Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs
+  PCI: Export pcie_bus_config symbol
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  Documentation/devicetree: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for T194
+  dt-bindings: PHY: P2U: Add Tegra 194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  187 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  449 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   11 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |    3 -
+ drivers/pci/controller/dwc/pcie-designware.c  |   87 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1760 +++++++++++++++++
+ drivers/pci/pci.c                             |    1 +
+ drivers/pci/pcie/pme.c                        |   14 +-
+ drivers/pci/pcie/portdrv.h                    |   16 +-
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c         |  120 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 22 files changed, 2756 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
+
 -- 
-2.19.0
+2.17.1
