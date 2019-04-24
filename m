@@ -1,47 +1,59 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH RFC 4/8] soc: samsung: Add Exynos Adaptive Supply Voltage driver
-Date: Wed, 24 Apr 2019 10:20:29 +0200
-Message-ID: <CAJKOXPccFqZv6nopRThi1+G1-5LWtFQu53rDXcsO2QXu2DWtwA@mail.gmail.com>
-References: <CGME20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8@epcas2p2.samsung.com>
- <20190404171735.12815-1-s.nawrocki@samsung.com> <20190404171735.12815-5-s.nawrocki@samsung.com>
- <CAJKOXPc9v8bcQs9HmiDWECCkfQCh-Ktzk9Vqq01ccUm7UG54uQ@mail.gmail.com> <1d2238be-1758-2413-42f1-d571706de766@samsung.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
+Date: Wed, 24 Apr 2019 10:31:27 +0200
+Message-ID: <20190424083127.GB6699@amd>
+References: <20190423090451.23711-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d2238be-1758-2413-42f1-d571706de766@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190423090451.23711-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Apr 2019 at 10:10, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> On 4/23/19 12:50, Krzysztof Kozlowski wrote:
-> >> +static int exynos5422_asv_get_table(void)
-> >> +{
-> >> +       unsigned int reg = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
-> >
-> > One more thought: you read this register multiple times in the same
-> > function. I think it is not needed - just read once, store the value
-> > and use the helpers to parse it.
->
-> Yes, I have noticed that as well. I'm not sure though if it is worth
-> to additionally cache registers manually like this when we use the
-> regmap.  I have already converted that code to use the regmap API for
-> v2.  And these are barely few registers reads at the driver
-> initialization time, not any hot path.
 
-By default regmap does not use caching so there is no benefit out of
-it. In the same time reading with regmap involves its layer of
-abstraction with locks, indirect calls etc... I agree that there is no
-point for implementing specific "caching" but with the same code
-readability/simplicity you can have it without multiple regmap
-accesses one after another. Consider this:
-    unsigned int pkgid = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
-    asv->table = exynos5422_asv_get_table(pkgid);
-    asv->is_bin2 = exynos5422_asv_check_bin2(pkgid);
-(and probably renaming the helpers)
-The code is equivalent. The same readability.
+--i0/AhcQY5QxfSsSZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>=20
+> This series adds support for max77650 ultra low-power PMIC. It provides
+> the core mfd driver and a set of five sub-drivers for the regulator,
+> power supply, gpio, leds and input subsystems.
+>=20
+> Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devic=
+es().
+> Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for this
+> device.
+>=20
+> The regulator part is already upstream.
+
+I see v10 in my inbox... and acks from all over the place, but patches
+not going in. Who takes these? I don't think I need another 10
+versions in my inbox...
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--i0/AhcQY5QxfSsSZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAHt8ACgkQMOfwapXb+vL/mgCeOCQVfRMEFE1+NFcHmsDoDLMo
+MjsAoI/6BvVLuAazM6fSVjSB60dlhrmA
+=BJ96
+-----END PGP SIGNATURE-----
+
+--i0/AhcQY5QxfSsSZ--
