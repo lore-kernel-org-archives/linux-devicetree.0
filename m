@@ -1,66 +1,41 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 4/5] OPP: Update the bandwidth on OPP frequency changes
-Date: Wed, 24 Apr 2019 15:35:01 +0530
-Message-ID: <7b0e014e-f6dd-bcc8-9f96-0d589e284bff@codeaurora.org>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-5-georgi.djakov@linaro.org>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 3/5] input: edt-ft5x06 - Call devm_of_device_links_add() to create links
+Date: Wed, 24 Apr 2019 12:19:11 +0200
+Message-ID: <20190424101913.1534-4-benjamin.gaignard@st.com>
+References: <20190424101913.1534-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423132823.7915-5-georgi.djakov@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20190424101913.1534-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
-Cc: jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: rafael.j.wysocki@intel.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, hadess@hadess.net, frowand.list@gmail.com, m.felsch@pengutronix.de, agx@sigxcpu.org, yannick.fertre@st.com, arnd@arndb.de
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, broonie@kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Georgi,
+From: Yannick FertrÃ© <yannick.fertre@st.com>
 
-On 4/23/19 6:58 PM, Georgi Djakov wrote:
-> If the OPP bandwidth values are populated, we want to switch also the
-> interconnect bandwidth in addition to frequency and voltage.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->   drivers/opp/core.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 97ee39ecdebd..91d1c2abfb3e 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -707,7 +707,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->   	unsigned long freq, old_freq;
->   	struct dev_pm_opp *old_opp, *opp;
->   	struct clk *clk;
-> -	int ret;
-> +	int ret, i;
->   
->   	if (unlikely(!target_freq)) {
->   		dev_err(dev, "%s: Invalid target frequency %lu\n", __func__,
-> @@ -780,6 +780,13 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->   		ret = _generic_set_opp_clk_only(dev, clk, freq);
->   	}
->   
-> +	if (!ret && !IS_ERR_OR_NULL(opp_table->paths)) {
-> +		for (i = 0; i < opp_table->path_count; i++) {
-> +			icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
-> +				   opp->bandwidth[i].peak);
-> +		}
-> +	}
+Add a call to devm_of_device_links_add() to create links with suppliers
+at probe time.
 
-An helper funcion dev_pm_opp_set_bw() would be needed by devices that
-use alternative ways of scaling like "qcom-cpufreq-hw". I can probably
-do that when I get ddr scaling working on sdm845 with your series.
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> +
->   	/* Scaling down? Configure required OPPs after frequency */
->   	if (!ret && freq < old_freq) {
->   		ret = _set_required_opps(dev, opp_table, opp);
-> 
-
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 702bfda7ee77..ac9f7e85efb0 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1167,6 +1167,8 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, tsdata);
+ 
++	devm_of_device_links_add(&client->dev);
++
+ 	irq_flags = irq_get_trigger_type(client->irq);
+ 	if (irq_flags == IRQF_TRIGGER_NONE)
+ 		irq_flags = IRQF_TRIGGER_FALLING;
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.15.0
