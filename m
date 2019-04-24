@@ -1,125 +1,117 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 06/28] PCI: tegra: Add PCIe Gen2 link speed support
-Date: Tue, 23 Apr 2019 14:58:03 +0530
-Message-ID: <20190423092825.759-7-mmaddireddy@nvidia.com>
-In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=n3dh=S2=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH V2 22/28] PCI: tegra: Access endpoint config only if PCIe
+ link is up
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-23-mmaddireddy@nvidia.com>
+ <20190423202430.GC14616@google.com>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <5043c67a-1d21-efcd-63ca-7feb270f9fb0@nvidia.com>
+Date: Wed, 24 Apr 2019 09:21:07 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <20190423202430.GC14616@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra124, Tegra132, Tegra210 and Tegra186 support Gen2 link speed. After
-PCIe link is up in Gen1, set target link speed as Gen2 and retrain link.
-Link switches to Gen2 speed if Gen2 capable end point is connected, else
-link stays in Gen1.
 
-Per PCIe 4.0r0.9 sec 7.6.3.7 implementation note, driver need to wait for
-PCIe LTSSM to come back from recovery before retraining the link.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
-V2: Changed "for loop" to "while", to make it compact and handled coding
-style comments.
+On 24-Apr-19 1:54 AM, Bjorn Helgaas wrote:
+> On Tue, Apr 23, 2019 at 02:58:19PM +0530, Manikanta Maddireddy wrote:
+>> Add PCIe link up check in config read and write callback functions
+>> before accessing endpoint config registers.
+> I mentioned before:
+>
+>   We need to either eradicate this pattern of checking for link up, or
+>   include a comment about why it is absolutely necessary.
+>
+> I still think this check should be unnecessary, but if you really
+> think you need it, at least add the comment.
+Sorry, I missed to add comment in V2. I will take care of it in V3.
 
- drivers/pci/controller/pci-tegra.c | 62 ++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index ed0cfd355b28..0ae8ebe92bb9 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -191,6 +191,8 @@
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
- #define  RP_LINK_CONTROL_STATUS_LINKSTAT_MASK	0x3fff0000
- 
-+#define RP_LINK_CONTROL_STATUS_2		0x000000b0
-+
- #define PADS_CTL_SEL		0x0000009c
- 
- #define PADS_CTL		0x000000a0
-@@ -226,6 +228,7 @@
- #define PADS_REFCLK_CFG_DRVI_SHIFT		12 /* 15:12 */
- 
- #define PME_ACK_TIMEOUT 10000
-+#define LINK_RETRAIN_TIMEOUT 100000 /* in usec */
- 
- struct tegra_msi {
- 	struct msi_controller chip;
-@@ -2092,6 +2095,62 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
- 	return false;
- }
- 
-+static void tegra_pcie_change_link_speed(struct tegra_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	struct tegra_pcie_port *port, *tmp;
-+	ktime_t deadline;
-+	u32 value;
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-+		/*
-+		 * "Supported Link Speeds Vector" in "Link Capabilities 2"
-+		 * is not supported by Tegra. tegra_pcie_change_link_speed()
-+		 * is called only for Tegra chips which support Gen2.
-+		 * So there no harm if supported link speed is not verified.
-+		 */
-+		value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+		value &= ~PCI_EXP_LNKSTA_CLS;
-+		value |= PCI_EXP_LNKSTA_CLS_5_0GB;
-+		writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
-+
-+		/*
-+		 * Poll until link comes back from recovery to avoid race
-+		 * condition.
-+		 */
-+		deadline = ktime_add_us(ktime_get(), LINK_RETRAIN_TIMEOUT);
-+
-+		while (ktime_before(ktime_get(), deadline)) {
-+			value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+			if ((value & PCI_EXP_LNKSTA_LT) == 0)
-+				break;
-+
-+			usleep_range(2000, 3000);
-+		}
-+		if (value & PCI_EXP_LNKSTA_LT)
-+			dev_warn(dev, "PCIe port %u link is in recovery\n",
-+				 port->index);
-+
-+		/* Retrain the link */
-+		value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+		value |= PCI_EXP_LNKCTL_RL;
-+		writel(value, port->base + RP_LINK_CONTROL_STATUS);
-+
-+		deadline = ktime_add_us(ktime_get(), LINK_RETRAIN_TIMEOUT);
-+
-+		while (ktime_before(ktime_get(), deadline)) {
-+			value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+			if ((value & PCI_EXP_LNKSTA_LT) == 0)
-+				break;
-+
-+			usleep_range(2000, 3000);
-+		}
-+		if (value & PCI_EXP_LNKSTA_LT)
-+			dev_err(dev, "failed to retrain link of port %u\n",
-+				port->index);
-+	}
-+}
-+
- static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -2116,6 +2175,9 @@ static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
- 		tegra_pcie_port_disable(port);
- 		tegra_pcie_port_free(port);
- 	}
-+
-+	if (pcie->soc->has_gen2)
-+		tegra_pcie_change_link_speed(pcie);
- }
- 
- static void tegra_pcie_disable_ports(struct tegra_pcie *pcie)
--- 
-2.17.1
+Manikanta
+
+>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>> V2: Change tegra_pcie_link_status() to tegra_pcie_link_up()
+>>
+>>  drivers/pci/controller/pci-tegra.c | 38 ++++++++++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+>> index 8ba71e314b1b..05586672a221 100644
+>> --- a/drivers/pci/controller/pci-tegra.c
+>> +++ b/drivers/pci/controller/pci-tegra.c
+>> @@ -428,6 +428,14 @@ static inline u32 pads_readl(struct tegra_pcie *pcie, unsigned long offset)
+>>  	return readl(pcie->pads + offset);
+>>  }
+>>  
+>> +static bool tegra_pcie_link_up(struct tegra_pcie_port *port)
+>> +{
+>> +	u32 value;
+>> +
+>> +	value = readl(port->base + RP_LINK_CONTROL_STATUS);
+>> +	return !!(value & RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE);
+>> +}
+>> +
+>>  /*
+>>   * The configuration space mapping on Tegra is somewhat similar to the ECAM
+>>   * defined by PCIe. However it deviates a bit in how the 4 bits for extended
+>> @@ -493,20 +501,50 @@ static void __iomem *tegra_pcie_map_bus(struct pci_bus *bus,
+>>  static int tegra_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+>>  				  int where, int size, u32 *value)
+>>  {
+>> +	struct tegra_pcie *pcie = bus->sysdata;
+>> +	struct pci_dev *bridge;
+>> +	struct tegra_pcie_port *port;
+>> +
+>>  	if (bus->number == 0)
+>>  		return pci_generic_config_read32(bus, devfn, where, size,
+>>  						 value);
+>>  
+>> +	bridge = pcie_find_root_port(bus->self);
+>> +
+>> +	list_for_each_entry(port, &pcie->ports, list)
+>> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
+>> +			break;
+>> +
+>> +	/* If there is no link, then there is no device */
+>> +	if (!tegra_pcie_link_up(port)) {
+>> +		*value = 0xffffffff;
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +	}
+>> +
+>>  	return pci_generic_config_read(bus, devfn, where, size, value);
+>>  }
+>>  
+>>  static int tegra_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+>>  				   int where, int size, u32 value)
+>>  {
+>> +	struct tegra_pcie *pcie = bus->sysdata;
+>> +	struct tegra_pcie_port *port;
+>> +	struct pci_dev *bridge;
+>> +
+>>  	if (bus->number == 0)
+>>  		return pci_generic_config_write32(bus, devfn, where, size,
+>>  						  value);
+>>  
+>> +	bridge = pcie_find_root_port(bus->self);
+>> +
+>> +	list_for_each_entry(port, &pcie->ports, list)
+>> +		if (port->index + 1 == PCI_SLOT(bridge->devfn))
+>> +			break;
+>> +
+>> +	/* If there is no link, then there is no device */
+>> +	if (!tegra_pcie_link_up(port))
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>>  	return pci_generic_config_write(bus, devfn, where, size, value);
+>>  }
+>>  
+>> -- 
+>> 2.17.1
+>>
