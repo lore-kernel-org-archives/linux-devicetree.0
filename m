@@ -1,77 +1,41 @@
-From: Rocky Liao <rjliao@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
- firmware-name for QCA6174
-Date: Wed, 24 Apr 2019 14:19:08 +0800
-Message-ID: <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
-References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
- <1554888476-17560-1-git-send-email-rjliao@codeaurora.org>
- <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH] arm64: dts: allwinner: h6: add PIO VCC bank supplies for Pine H64
+Date: Wed, 24 Apr 2019 14:25:43 +0800
+Message-ID: <20190424062543.61852-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, thierry.escande@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-04-24 01:06, Marcel Holtmann wrote:
-> Hi Rocky,
-> 
->> This patch adds an optional device property "firmware-name" to allow 
->> the
->> driver to load customized nvm firmware file based on this property.
->> 
->> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->> ---
->> Changes in v3:
->>  * added firmware-name instead of nvm-postfix to specify full firmware 
->> name
->> ---
->> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
->> 1 file changed, 2 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
->> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> index 824c0e2..2bcea50 100644
->> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> @@ -16,6 +16,7 @@ Optional properties for compatible string 
->> qcom,qca6174-bt:
->> 
->>  - enable-gpios: gpio specifier used to enable chip
->>  - clocks: clock provided to the controller (SUSCLK_32KHZ)
->> + - firmware-name: specify the name of nvm firmware to load
->> 
->> Required properties for compatible string qcom,wcn3990-bt:
->> 
->> @@ -39,6 +40,7 @@ serial@7570000 {
->> 
->> 		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
->> 		clocks = <&divclk4>;
->> +		firmware-name = "nvm_00440302.bin";
->> 	};
-> 
-> and how is this a firmware-name property. Wouldn’t this be more like
-> nvm-file or something along these lines. This really needs to be
-> cleared with Rob to pick the right property name.
-> 
-> Regards
-> 
-> Marcel
+The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
+banks.
 
-Hi Rob,
+This patch adds supplies for PC and PD banks on Pine H64 board. PG and
+PM banks are used for Wi-Fi and should be added when Wi-Fi is added; PL
+bank is where PMIC is attached, and currently if a PMIC regulator is
+added for it a dependency loop will happen.
 
-Are you OK to use a property name "nvm-file" or "firmware-nvm-file"? 
-Actually we have two firmware files, one is the patch file which is 
-common to all of the products, the other is the nvm file which is 
-customized. Using a "nvm-file" or "firmware-nvm-file" property name 
-would be more clear.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 4802902e128f..d586a51c657d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -127,6 +127,11 @@
+ 	status = "okay";
+ };
+ 
++&pio {
++	vcc-pc-supply = <&reg_bldo2>;
++	vcc-pd-supply = <&reg_cldo1>;
++};
++
+ &r_i2c {
+ 	status = "okay";
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-a Linux Foundation Collaborative Project
+2.18.1
