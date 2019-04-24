@@ -1,73 +1,35 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 1/2] arm64: dts: imx8mm: Add SAI nodes
-Date: Wed, 24 Apr 2019 15:04:13 +0000
-Message-ID: <20190424150350.7963-2-daniel.baluta@nxp.com>
-References: <20190424150350.7963-1-daniel.baluta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v2 0/4] Aspeed: Enable video engine
+Date: Wed, 24 Apr 2019 10:16:56 -0500
+Message-ID: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424150350.7963-1-daniel.baluta@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-aS5NWDhNTSBoYXMgNSBTQUkgaW5zdGFuY2VzIHdpdGggdGhlIGZvbGxvd2luZyBiYXNlDQphZGRy
-ZXNzZXMgYWNjb3JkaW5nIHRvIFJNLg0KDQpTQUkxIGJhc2UgYWRkcmVzczogMzAwMV8wMDAwaA0K
-U0FJMiBiYXNlIGFkZHJlc3M6IDMwMDJfMDAwMGgNClNBSTMgYmFzZSBhZGRyZXNzOiAzMDAzXzAw
-MDBoDQpTQUk1IGJhc2UgYWRkcmVzczogMzAwNV8wMDAwaA0KU0FJNiBiYXNlIGFkZHJlc3M6IDMw
-MDZfMDAwMGgNCg0KU2lnbmVkLW9mZi1ieTogRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBu
-eHAuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kg
-fCA2NiArKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA2NiBpbnNlcnRp
-b25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4
-bW0uZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQppbmRl
-eCA2YjQwN2E5NGMwNmUuLjUyYWJlMmQwM2YzMSAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4bW0uZHRzaQ0KQEAgLTIwMSw2ICsyMDEsNzIgQEANCiAJCQkjc2l6ZS1jZWxs
-cyA9IDwxPjsNCiAJCQlyYW5nZXM7DQogDQorCQkJc2FpMTogc2FpQDMwMDEwMDAwIHsNCisJCQkJ
-Y29tcGF0aWJsZSA9ICJmc2wsaW14OG1tLXNhaSIsICJmc2wsaW14OG1xLXNhaSI7DQorCQkJCXJl
-ZyA9IDwweDMwMDEwMDAwIDB4MTAwMDA+Ow0KKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTUg
-SVJRX1RZUEVfTEVWRUxfSElHSD47DQorCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfU0FJ
-MV9JUEc+LA0KKwkJCQkJIDwmY2xrIElNWDhNTV9DTEtfU0FJMV9ST09UPiwNCisJCQkJCSA8JmNs
-ayBJTVg4TU1fQ0xLX0RVTU1ZPiwgPCZjbGsgSU1YOE1NX0NMS19EVU1NWT47DQorCQkJCWNsb2Nr
-LW5hbWVzID0gImJ1cyIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xrMyI7DQorCQkJCWRtYXMgPSA8
-JnNkbWEyIDAgMiAwPiwgPCZzZG1hMiAxIDIgMD47DQorCQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0
-eCI7DQorCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQorCQkJfTsNCisNCisJCQlzYWkyOiBzYWlA
-MzAwMjAwMDAgew0KKwkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bW0tc2FpIiwgImZzbCxpbXg4
-bXEtc2FpIjsNCisJCQkJcmVnID0gPDB4MzAwMjAwMDAgMHgxMDAwMD47DQorCQkJCWludGVycnVw
-dHMgPSA8R0lDX1NQSSA5NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCisJCQkJY2xvY2tzID0gPCZj
-bGsgSU1YOE1NX0NMS19TQUkyX0lQRz4sDQorCQkJCQk8JmNsayBJTVg4TU1fQ0xLX1NBSTJfUk9P
-VD4sDQorCQkJCQk8JmNsayBJTVg4TU1fQ0xLX0RVTU1ZPiwgPCZjbGsgSU1YOE1NX0NMS19EVU1N
-WT47DQorCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtY2xrMSIsICJtY2xrMiIsICJtY2xrMyI7
-DQorCQkJCWRtYXMgPSA8JnNkbWEyIDIgMiAwPiwgPCZzZG1hMiAzIDIgMD47DQorCQkJCWRtYS1u
-YW1lcyA9ICJyeCIsICJ0eCI7DQorCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQorCQkJfTsNCisN
-CisJCQlzYWkzOiBzYWlAMzAwMzAwMDAgew0KKwkJCQkjc291bmQtZGFpLWNlbGxzID0gPDA+Ow0K
-KwkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bW0tc2FpIiwgImZzbCxpbXg4bXEtc2FpIjsNCisJ
-CQkJcmVnID0gPDB4MzAwMzAwMDAgMHgxMDAwMD47DQorCQkJCWludGVycnVwdHMgPSA8R0lDX1NQ
-SSA1MCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCisJCQkJY2xvY2tzID0gPCZjbGsgSU1YOE1NX0NM
-S19TQUkzX0lQRz4sDQorCQkJCQkgPCZjbGsgSU1YOE1NX0NMS19TQUkzX1JPT1Q+LA0KKwkJCQkJ
-IDwmY2xrIElNWDhNTV9DTEtfRFVNTVk+LCA8JmNsayBJTVg4TU1fQ0xLX0RVTU1ZPjsNCisJCQkJ
-Y2xvY2stbmFtZXMgPSAiYnVzIiwgIm1jbGsxIiwgIm1jbGsyIiwgIm1jbGszIjsNCisJCQkJZG1h
-cyA9IDwmc2RtYTIgNCAyIDA+LCA8JnNkbWEyIDUgMiAwPjsNCisJCQkJZG1hLW5hbWVzID0gInJ4
-IiwgInR4IjsNCisJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCisJCQl9Ow0KKw0KKwkJCXNhaTU6
-IHNhaUAzMDA1MDAwMCB7DQorCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtbS1zYWkiLCAiZnNs
-LGlteDhtcS1zYWkiOw0KKwkJCQlyZWcgPSA8MHgzMDA1MDAwMCAweDEwMDAwPjsNCisJCQkJaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDkwIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJCQljbG9ja3Mg
-PSA8JmNsayBJTVg4TU1fQ0xLX1NBSTVfSVBHPiwNCisJCQkJCSA8JmNsayBJTVg4TU1fQ0xLX1NB
-STVfUk9PVD4sDQorCQkJCQkgPCZjbGsgSU1YOE1NX0NMS19EVU1NWT4sIDwmY2xrIElNWDhNTV9D
-TEtfRFVNTVk+Ow0KKwkJCQljbG9jay1uYW1lcyA9ICJidXMiLCAibWNsazEiLCAibWNsazIiLCAi
-bWNsazMiOw0KKwkJCQlkbWFzID0gPCZzZG1hMiA4IDIgMD4sIDwmc2RtYTIgOSAyIDA+Ow0KKwkJ
-CQlkbWEtbmFtZXMgPSAicngiLCAidHgiOw0KKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KKwkJ
-CX07DQorDQorCQkJc2FpNjogc2FpQDMwMDYwMDAwIHsNCisJCQkJY29tcGF0aWJsZSA9ICJmc2ws
-aW14OG1tLXNhaSIsICJmc2wsaW14OG1xLXNhaSI7DQorCQkJCXJlZyA9IDwweDMwMDYwMDAwIDB4
-MTAwMDA+Ow0KKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTAgSVJRX1RZUEVfTEVWRUxfSElH
-SD47DQorCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfU0FJNl9JUEc+LA0KKwkJCQkJIDwm
-Y2xrIElNWDhNTV9DTEtfU0FJNl9ST09UPiwNCisJCQkJCSA8JmNsayBJTVg4TU1fQ0xLX0RVTU1Z
-PiwgPCZjbGsgSU1YOE1NX0NMS19EVU1NWT47DQorCQkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJt
-Y2xrMSIsICJtY2xrMiIsICJtY2xrMyI7DQorCQkJCWRtYXMgPSA8JnNkbWEyIDEwIDIgMD4sIDwm
-c2RtYTIgMTEgMiAwPjsNCisJCQkJZG1hLW5hbWVzID0gInJ4IiwgInR4IjsNCisJCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsNCisJCQl9Ow0KKw0KIAkJCWdwaW8xOiBncGlvQDMwMjAwMDAwIHsNCiAJ
-CQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1tLWdwaW8iLCAiZnNsLGlteDM1LWdwaW8iOw0KIAkJ
-CQlyZWcgPSA8MHgzMDIwMDAwMCAweDEwMDAwPjsNCi0tIA0KMi4xNy4xDQoNCg==
+This series enables the video engine on Aspeed BMC platforms. The use of the
+video engine reset line, originally planned to be made externally available in
+the clock driver, is removed from the video engine driver. A node for the video
+engine is added to the AST2500 devicetree.
+The series also includes a missing property for reserved memory in the
+devicetree documentation, and a small change to make the video engine driver
+start without reserved memory.
+
+Changes since v1:
+ - Drop clock patch since it's been applied
+ - Add a missing semi-colon in the devicetree doc
+
+Eddie James (4):
+  media: platform: Aspeed: Remove use of reset line
+  media: platform: Aspeed: Make reserved memory optional
+  media: dt-bindings: aspeed-video: Add missing memory-region property
+  ARM: dts: aspeed-g5: Add video engine
+
+ .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
+ arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 +++++++
+ drivers/media/platform/aspeed-video.c              | 33 ++++------------------
+ 3 files changed, 22 insertions(+), 27 deletions(-)
+
+-- 
+1.8.3.1
