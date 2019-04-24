@@ -1,172 +1,168 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: tsl2772: convert bindings to YAML format
-Date: Tue, 23 Apr 2019 20:34:13 -0500
-Message-ID: <CAL_JsqJo4jA=_dLJ7QJ-LOhSYrXDAcVN01119do0a+y4odpFng@mail.gmail.com>
-References: <20190416084552.1538-1-masneyb@onstation.org> <20190422135238.27b9892d@archlinux>
+Subject: Re: [PATCH v5 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Tue, 23 Apr 2019 20:52:51 -0500
+Message-ID: <CAL_JsqLZqA=cKLo3Jw7fizt06ytADL8YbhhRKS=mLo05hAaf2A@mail.gmail.com>
+References: <20190418151143.26068-1-masneyb@onstation.org> <20190418151143.26068-3-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422135238.27b9892d@archlinux>
+In-Reply-To: <20190418151143.26068-3-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Brian Masney <masneyb@onstation.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 7:52 AM Jonathan Cameron <jic23@kernel.org> wrote:
+On Thu, Apr 18, 2019 at 10:12 AM Brian Masney <masneyb@onstation.org> wrote:
 >
-> On Tue, 16 Apr 2019 04:45:51 -0400
-> Brian Masney <masneyb@onstation.org> wrote:
+> Add new backlight bindings for the TI LM3630A dual-string white LED.
 >
-> > Convert the tsl2772 device tree bindings to the new YAML format.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Hi Brian,
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v4:
+> - Drop $ref from led-sources
+> - Drop description from reg of i2c address
+> - Expand description of reg for the control bank
+> - Drop status from examples
 >
-> Good to see this.  I'm afraid it's all a bit new to me so what
-> I haven't yet understood is how prescriptive we should be.
-> For example, are the phandle references below needed or not?
+> Changes since v3:
+> - Add label. I didn't add a description for it since that'll come from
+>   the common properties once its converted.
 >
-> So for a while yet I'm going to be relying on Rob and others
-> to review these and put me on the right track.
+> Changes since v2:
+> - Update description of max-brightness
+> - Add description for reg
+> - Correct typo: s/tranisiton/transition
+> - add reg to control banks
+> - add additionalProperties
 >
-> Jonathan
+>  .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
 >
-> > ---
-> >  .../devicetree/bindings/iio/light/tsl2772.txt | 42 ---------
-> >  .../bindings/iio/light/tsl2772.yaml           | 85 +++++++++++++++++++
-> >  2 files changed, 85 insertions(+), 42 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.yaml
-> >
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> new file mode 100644
+> index 000000000000..e754df569365
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LM3630A High-Efficiency Dual-String White LED
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +description: |
+> +  The LM3630A is a current-mode boost converter which supplies the power and
+> +  controls the current in up to two strings of 10 LEDs per string.
+> +  https://www.ti.com/product/LM3630A
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,lm3630a
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,linear-mapping-mode:
+> +    description: |
+> +      Enable linear mapping mode. If disabled, then it will use exponential
+> +      mapping mode in which the ramp up/down appears to have a more uniform
+> +      transition to the human eye.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^led@[01]$":
+> +    type: object
+> +    description: |
+> +      Properties for a string of connected LEDs.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The control bank that is used to program the two current sinks. The
+> +          LM3630A has two control banks (A and B) and are represented as 0 or 1
+> +          in this property. The two current sinks can be controlled
+> +          independently with both banks, or bank A can be configured to control
+> +          both sinks with the led-sources property.
+> +        maxItems: 1
+> +        minimum: 0
+> +        maximum: 1
+> +
+> +      label:
+> +        maxItems: 1
+> +
+> +      led-sources:
+> +        allOf:
+> +          - minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              minimum: 0
+> +              maximum: 1
+> +
+> +      default-brightness:
+> +        description: Default brightness level on boot.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +      max-brightness:
+> +        description: Maximum brightness that is allowed during runtime.
+> +        minimum: 0
+> +        maximum: 255
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties: false
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        lm3630a_bl@38 {
 
-> > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.yaml b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
-> > new file mode 100644
-> > index 000000000000..b3ac182288d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
-> > @@ -0,0 +1,85 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+Still needs:
 
-Do you have the rights on the original file to add BSD license?
+led-controller@38
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/light/tsl2772.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: AMS/TAOS Ambient Light Sensor (ALS) and Proximity Detector
-> > +
-> > +maintainers:
-> > +  - Brian Masney <masneyb@onstation.org>
-> > +
-> > +description: |
-> > +  Ambient light sensing and proximity detection with an i2c interface.
-> > +  https://ams.com/documents/20143/36005/TSL2772_DS000181_2-00.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - amstaos,tsl2571
-> > +      - amstaos,tsl2671
-> > +      - amstaos,tmd2671
-> > +      - amstaos,tsl2771
-> > +      - amstaos,tmd2771
-> > +      - amstaos,tsl2572
-> > +      - amstaos,tsl2672
-> > +      - amstaos,tmd2672
-> > +      - amstaos,tsl2772
-> > +      - amstaos,tmd2772
-> > +      - avago,apds9930
-> > +
-> > +  reg:
-> > +    description: The I2C address of the device
+> +                compatible = "ti,lm3630a";
+> +                reg = <0x38>;
+> +
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                        reg = <0>;
+> +                        led-sources = <0 1>;
+> +                        label = "lcd-backlight";
+> +                        default-brightness = <200>;
+> +                        max-brightness = <255>;
+> +                };
+> +        };
+> +    };
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        lm3630a_bl@38 {
 
-No need for description on common properties unless you have something
-unique to add.
+And here.
 
-> > +    maxItems: 1
-> > +
-> > +  amstaos,proximity-diodes:
-> > +    description: Proximity diodes to enable
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +      - minItems: 1
-> > +        maxItems: 2
-> > +        items:
-> > +          minimum: 0
-> > +          maximum: 1
->
-> Do we need to represent that these can't be <1 0> ?
-> (specified in old docs)
-> We also have a tighter spec than the uint32-array format in types.yaml
-> as don't allow <0>, <1> under the current binding where only <0, 1> is
-> allowed.
+With those fixed:
 
-The uint32-array definition is loose to avoid lots of warnings on
-common properties where we can't define the exact size. Over time we
-need to tighten up the dts syntax to be consistent (I have a dtc patch
-which can spew out lots of warnings to fix these).
-
-So this case is correct. '<0, 1>' means a single array with 2
-elements. '<0>, <1>' means 2 arrays each with a single element. There
-shouldn't be lots of occurrences.
-
-> > +
-> > +  interrupts:
-> > +    description: Interrupt generated by the device
-
-No need for description.
-
-> > +    maxItems: 1
-> > +
-> > +  led-max-microamp:
-> > +    description: Current for the proximity LED
-
-This device only has proximity LEDs, right?
-
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - enum: [13000, 25000, 50000, 100000]
-
-We should assume a common schema for 'led-max-microamp', so we just
-need the enum.
-
-> > +
-> > +  vdd-supply:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: Regulator that provides power to the sensor
-
-Same here for '*-supply'. So just the description is enough.
-
-> > +
-> > +  vddio-supply:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: Regulator that provides power to the bus
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        tsl2772@39 {
-
-proximity-sensor@39
-
-> > +                compatible = "amstaos,tsl2772";
-> > +                reg = <0x39>;
-> > +                interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
-> > +                vdd-supply = <&pm8941_l17>;
-> > +                vddio-supply = <&pm8941_lvs1>;
-> > +                amstaos,proximity-diodes = <0>;
-> > +                led-max-microamp = <100000>;
-> > +        };
-> > +    };
-> > +...
->
+Reviewed-by: Rob Herring <robh@kernel.org>
