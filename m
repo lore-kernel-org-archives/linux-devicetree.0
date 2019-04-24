@@ -1,8 +1,8 @@
 From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH V6 3/4] arm64: dts: imx8qxp: added ddr performance monitor
- nodes
-Date: Wed, 24 Apr 2019 22:29:20 +0000
-Message-ID: <1556144928-24828-3-git-send-email-Frank.Li@nxp.com>
+Subject: [PATCH V6 4/4] MAINTAINERS: Added imx DDR performonitor driver
+ maintainer information
+Date: Wed, 24 Apr 2019 22:29:23 +0000
+Message-ID: <1556144928-24828-4-git-send-email-Frank.Li@nxp.com>
 References: <1556144928-24828-1-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,37 +23,32 @@ To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.d
 Cc: Frank Li <frank.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add ddr performance monitor
+Add DDR perf counter driver maintainer information
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
-Change from v3 to v6
-* none
+No change from v1 to v6
 
-Change from v2 to v3
-* ddr_pmu0 -> ddr-pmu
-
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 7 +++++++
+ MAINTAINERS | 7 +++++++
  1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 0683ee2..16f2588 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -110,6 +110,13 @@
- 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c7d4e1..6a9868b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6264,6 +6264,13 @@ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ F:	drivers/i2c/busses/i2c-cpm.c
  
-+	ddr-pmu@5c020000 {
-+		compatible = "fsl,imx8-ddr-pmu";
-+		reg = <0x0 0x5c020000 0x0 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+	};
++FREESCALE IMX DDR Performance Monitor DRIVER
++M:	Frank Li <Frank.li@nxp.com>
++L:	linux-arm-kernel@lists.infradead.org
++S:	Maintained
++F:	drivers/perf/fsl_imx8_ddr_perf.c
++F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
 +
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
+ FREESCALE IMX LPI2C DRIVER
+ M:	Dong Aisheng <aisheng.dong@nxp.com>
+ L:	linux-i2c@vger.kernel.org
 -- 
 2.5.2
