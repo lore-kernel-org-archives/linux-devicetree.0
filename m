@@ -1,59 +1,44 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
-Date: Wed, 24 Apr 2019 10:31:27 +0200
-Message-ID: <20190424083127.GB6699@amd>
-References: <20190423090451.23711-1-brgl@bgdev.pl>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: tsl2772: convert bindings to YAML
+ format
+Date: Wed, 24 Apr 2019 04:34:53 -0400
+Message-ID: <20190424083453.GA13924@basecamp>
+References: <20190416084552.1538-1-masneyb@onstation.org>
+ <20190422135238.27b9892d@archlinux>
+ <CAL_JsqJo4jA=_dLJ7QJ-LOhSYrXDAcVN01119do0a+y4odpFng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190423090451.23711-1-brgl@bgdev.pl>
+In-Reply-To: <CAL_JsqJo4jA=_dLJ7QJ-LOhSYrXDAcVN01119do0a+y4odpFng@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 23, 2019 at 08:34:13PM -0500, Rob Herring wrote:
+> On Mon, Apr 22, 2019 at 7:52 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> > > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.yaml b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> > > new file mode 100644
+> > > index 000000000000..b3ac182288d2
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> > > @@ -0,0 +1,85 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> 
+> Do you have the rights on the original file to add BSD license?
 
---i0/AhcQY5QxfSsSZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I'm the only contributor to the original file.
 
-On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> This series adds support for max77650 ultra low-power PMIC. It provides
-> the core mfd driver and a set of five sub-drivers for the regulator,
-> power supply, gpio, leds and input subsystems.
->=20
-> Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devic=
-es().
-> Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for this
-> device.
->=20
-> The regulator part is already upstream.
+> > > +    maxItems: 1
+> > > +
+> > > +  led-max-microamp:
+> > > +    description: Current for the proximity LED
+> 
+> This device only has proximity LEDs, right?
 
-I see v10 in my inbox... and acks from all over the place, but patches
-not going in. Who takes these? I don't think I need another 10
-versions in my inbox...
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Yes
 
---i0/AhcQY5QxfSsSZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The other feedback makes sense. Thanks for the review!
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAHt8ACgkQMOfwapXb+vL/mgCeOCQVfRMEFE1+NFcHmsDoDLMo
-MjsAoI/6BvVLuAazM6fSVjSB60dlhrmA
-=BJ96
------END PGP SIGNATURE-----
-
---i0/AhcQY5QxfSsSZ--
+Brian
