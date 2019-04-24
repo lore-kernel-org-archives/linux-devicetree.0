@@ -1,76 +1,49 @@
-Return-Path: <SRS0=HVR0=S2=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 3/9] dt-bindings: usb: hd3ss3220 device tree binding document
-Date: Wed, 24 Apr 2019 10:22:17 +0100
-Message-Id: <1556097743-12717-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-References: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=Lf4w=S2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-it1-f199.google.com ([209.85.166.199]:40848 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfDXICw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Apr 2019 04:02:52 -0400
+Received: by mail-it1-f199.google.com with SMTP id j8so2401980ita.5
+        for <devicetree@vger.kernel.org>; Wed, 24 Apr 2019 01:02:51 -0700 (PDT)
+MIME-Version: 1.0
+Message-ID: <000000000000cdf35c0587422072@google.com>
+Date: Wed, 24 Apr 2019 08:02:51 +0000
+Subject: SEO+SMO Proposal
+From: elizabethburton1977@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding document for TI HD3SS3220 Type-C DRP port
-controller driver.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-V4-->V5
-  * No Change.
-V3-->V4
-  * No Change.
-V2-->V3
-  * Added Rob's Reviewed by tag.
-V1-->V2
-  * Added connector node.
-  * updated the example with connector node.
----
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-new file mode 100644
-index 0000000..7f41400
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-@@ -0,0 +1,37 @@
-+TI HD3SS3220 TypeC DRP Port Controller.
-+
-+Required properties:
-+ - compatible: Must be "ti,hd3ss3220".
-+ - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-+ - interrupts: <a b> where a is the interrupt number and b represents an
-+   encoding of the sense and level information for the interrupt.
-+
-+Required sub-node:
-+ - connector : The "usb-c-connector" attached to the hd3ss3220 chip. The
-+   bindings of the connector node are specified in:
-+
-+	Documentation/devicetree/bindings/connector/usb-connector.txt
-+
-+Example:
-+hd3ss3220@47 {
-+	compatible = "ti,hd3ss3220";
-+	reg = <0x47>;
-+	interrupt-parent = <&gpio6>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		data-role = "dual";
-+	};
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		hd3ss3220_ep: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usb3peri_role_switch>;
-+		};
-+	};
-+};
--- 
-2.7.4
+Hi,
+My name Elizabeth, and am working with a reputable leading S.E.O. Company  
+in INDIA
+We have the expertise to get our customer's websites top ranking in Google,  
+Yahoo, and MSN and other search engines
+producing high revenue with top page rank, guaranteed based result within  
+3-4 months
+We provide a S.E.O. special offer for the following package:
+1. 50 Directory submissions
+2. 50 Social Book marking Submissions
+3. 10 Article Submissions (1 article x 10 article directories)
+4. 10 Press Release Submissions (1 press release x 10 press release
+websites)
+5. Google Submissions
+6. 1 unique, 400 word article written
+7. 1 unique, 400 word press release
+8. Meta tags changes suggestions
+9. Keyword research
+10. Competitor Analysis
+11. Heading tag changes
+12. Alt tag changes
+13. Interlinking wherever required.
+14. Keyword Density in site content.
+15. HTML Site Map
+16. XML site map and Submission in webmaster tool
+17. Search Engine Submission
+18. Content optimization
+Let me know if you interested so give me your website with keyword would do  
+an analysis on it to suggest you the best.
+Looking forward for your positive reply here you can Target More than 15  
+keywords
+Elizabeth Burton
