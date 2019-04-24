@@ -1,45 +1,51 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: tsl2772: convert bindings to
- YAML format
-Date: Wed, 24 Apr 2019 10:50:41 -0500
-Message-ID: <CAL_JsqLQRkBO=DxSqNaGqE=zoQq0n0EQ920pQNGGE+LnVZid5A@mail.gmail.com>
-References: <20190424092238.6381-1-masneyb@onstation.org> <20190424122648.GA15745@basecamp>
+Subject: Re: [PATCH v6 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Wed, 24 Apr 2019 10:57:50 -0500
+Message-ID: <CAL_JsqJSpmG_TfNaxHKQMzVn0ig=HaBupQ22bbPAa9riuCU71Q@mail.gmail.com>
+References: <20190424092505.6578-1-masneyb@onstation.org> <20190424092505.6578-3-masneyb@onstation.org>
+ <20190424142037.GA20237@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424122648.GA15745@basecamp>
+In-Reply-To: <20190424142037.GA20237@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Brian Masney <masneyb@onstation.org>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 7:26 AM Brian Masney <masneyb@onstation.org> wrote:
+On Wed, Apr 24, 2019 at 9:20 AM Pavel Machek <pavel@ucw.cz> wrote:
 >
-> On Wed, Apr 24, 2019 at 05:22:37AM -0400, Brian Masney wrote:
-> > Convert the tsl2772 device tree bindings to the new YAML format.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> > Changes since v1:
-> > - Dropped description from reg and interrupts properties.
-> > - Dropped $ref from led-max-microamp, vdd-supply, and vddio-supply.
-> > - Changed 'tsl2772@39' in example to 'proximity-sensor@39'
+> Hi!
 >
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        proximity-sensor@39 {
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> > @@ -0,0 +1,129 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >
-> I didn't think of this until after I sent out that patch, but I think
-> this example should be 'als-proximity-sensor@39' instead of
-> 'proximity-sensor@39'.
+> I'm not a great fan on links to external websites. But this is comment
+> for Rob.
 
-I'd just do 'sensor@39' in that case. We normally use light-sensor for
-ALS devices, but we haven't been real consistent here.
+This is simply how json-schema works. $schema says what meta-schema
+this file should validate against so it's versioned if we change the
+schema format. $id is just a unique identifier and is used to resolve
+$ref values. Note that these aren't live urls either (but could be at
+some point in the future).
+
+> > +title: TI LM3630A High-Efficiency Dual-String White LED
+> > +
+> > +maintainers:
+> > +  - Lee Jones <lee.jones@linaro.org>
+> > +  - Daniel Thompson <daniel.thompson@linaro.org>
+> > +  - Jingoo Han <jingoohan1@gmail.com>
+>
+> Not a great fan of duplicating MAINTAINERS information here. But this
+> is a comment for Rob, again.
+
+Hopefully this is temporary until we move to per directory MAINTAINERS
+files. Not sure what happened with that.
 
 Rob
