@@ -1,35 +1,41 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] MAINTAINERS: Add entry for BM1880 pinctrl
-Date: Wed, 24 Apr 2019 17:32:24 +0530
-Message-ID: <20190424120224.22660-6-manivannan.sadhasivam@linaro.org>
-References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: tsl2772: convert bindings to
+ YAML format
+Date: Wed, 24 Apr 2019 08:26:48 -0400
+Message-ID: <20190424122648.GA15745@basecamp>
+References: <20190424092238.6381-1-masneyb@onstation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190424092238.6381-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, linux-gpio@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for Bitmain BM1880 SoC pinctrl.
+On Wed, Apr 24, 2019 at 05:22:37AM -0400, Brian Masney wrote:
+> Convert the tsl2772 device tree bindings to the new YAML format.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v1:
+> - Dropped description from reg and interrupts properties.
+> - Dropped $ref from led-max-microamp, vdd-supply, and vddio-supply.
+> - Changed 'tsl2772@39' in example to 'proximity-sensor@39'
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity-sensor@39 {
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3671fdea5010..8b5fcb89a8a4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1416,7 +1416,9 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm64/boot/dts/bitmain/
-+F:	drivers/pinctrl/pinctrl-bm1880.c
- F:	Documentation/devicetree/bindings/arm/bitmain.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- 
- ARM/CALXEDA HIGHBANK ARCHITECTURE
- M:	Rob Herring <robh@kernel.org>
--- 
-2.17.1
+I didn't think of this until after I sent out that patch, but I think
+this example should be 'als-proximity-sensor@39' instead of
+'proximity-sensor@39'.
+
+Brian
