@@ -1,59 +1,50 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 3/3] backlight: lm3630a: add firmware node support
-Date: Wed, 24 Apr 2019 16:24:15 +0200
-Message-ID: <20190424142415.GB20237@amd>
-References: <20190424092505.6578-1-masneyb@onstation.org>
- <20190424092505.6578-4-masneyb@onstation.org>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 01/66] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
+Date: Wed, 24 Apr 2019 10:32:35 -0400
+Message-ID: <20190424143341.27665-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190424092505.6578-4-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: "Leonidas P. Papadakos" <papadakospan@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
 
-On Wed 2019-04-24 05:25:05, Brian Masney wrote:
-> Add fwnode support to the lm3630a driver and optionally allow
-> configuring the label, default brightness level, and maximum brightness
-> level. The two outputs can be controlled by bank A and B independently
-> or bank A can control both outputs.
->=20
-> If the platform data was not configured, then the driver defaults to
-> enabling both banks. This patch changes the default value to disable
-> both banks before parsing the firmware node so that just a single bank
-> can be enabled if desired. There are no in-tree users of this driver.
->=20
-> Driver was tested on a LG Nexus 5 (hammerhead) phone.
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Dan Murphy <dmurphy@ti.com>
+The rk3328-roc-cc board exhibits tx stability issues with large packets,
+as does the rock64 board, which was fixed with this patch
+https://patchwork.kernel.org/patch/10178969/
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+A similar patch was merged for the rk3328-roc-cc here
+https://patchwork.kernel.org/patch/10804863/
+but it doesn't include the tx/rx_delay tweaks, and I find that they
+help with an issue where large transfers would bring the ethernet
+link down, causing a link reset regularly.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAcY8ACgkQMOfwapXb+vKHZQCfZ7wxHT3lFTEQnSgosEPjRAN9
-PWkAniD///EKrdym1kbPKR1X8qxmD136
-=BW+m
------END PGP SIGNATURE-----
-
---oLBj+sq0vYjzfsbl--
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 99d0d9912950..a91f87df662e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -107,8 +107,8 @@
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	tx_delay = <0x25>;
+-	rx_delay = <0x11>;
++	tx_delay = <0x24>;
++	rx_delay = <0x18>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.19.1
