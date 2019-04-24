@@ -1,62 +1,77 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 4/5] OPP: Update the bandwidth on OPP frequency changes
-Date: Wed, 24 Apr 2019 11:25:12 +0530
-Message-ID: <20190424055512.i6hertpilbkdxees@vireshk-i7>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-5-georgi.djakov@linaro.org>
+From: Rocky Liao <rjliao@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
+ firmware-name for QCA6174
+Date: Wed, 24 Apr 2019 14:19:08 +0800
+Message-ID: <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
+References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
+ <1554888476-17560-1-git-send-email-rjliao@codeaurora.org>
+ <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190423132823.7915-5-georgi.djakov@linaro.org>
+In-Reply-To: <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, thierry.escande@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 23-04-19, 16:28, Georgi Djakov wrote:
-> If the OPP bandwidth values are populated, we want to switch also the
-> interconnect bandwidth in addition to frequency and voltage.
+On 2019-04-24 01:06, Marcel Holtmann wrote:
+> Hi Rocky,
 > 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  drivers/opp/core.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>> This patch adds an optional device property "firmware-name" to allow 
+>> the
+>> driver to load customized nvm firmware file based on this property.
+>> 
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>> Changes in v3:
+>>  * added firmware-name instead of nvm-postfix to specify full firmware 
+>> name
+>> ---
+>> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
+>> 1 file changed, 2 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
+>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> index 824c0e2..2bcea50 100644
+>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> @@ -16,6 +16,7 @@ Optional properties for compatible string 
+>> qcom,qca6174-bt:
+>> 
+>>  - enable-gpios: gpio specifier used to enable chip
+>>  - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>> + - firmware-name: specify the name of nvm firmware to load
+>> 
+>> Required properties for compatible string qcom,wcn3990-bt:
+>> 
+>> @@ -39,6 +40,7 @@ serial@7570000 {
+>> 
+>> 		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+>> 		clocks = <&divclk4>;
+>> +		firmware-name = "nvm_00440302.bin";
+>> 	};
 > 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 97ee39ecdebd..91d1c2abfb3e 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -707,7 +707,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->  	unsigned long freq, old_freq;
->  	struct dev_pm_opp *old_opp, *opp;
->  	struct clk *clk;
-> -	int ret;
-> +	int ret, i;
->  
->  	if (unlikely(!target_freq)) {
->  		dev_err(dev, "%s: Invalid target frequency %lu\n", __func__,
-> @@ -780,6 +780,13 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->  		ret = _generic_set_opp_clk_only(dev, clk, freq);
->  	}
->  
-> +	if (!ret && !IS_ERR_OR_NULL(opp_table->paths)) {
+> and how is this a firmware-name property. Wouldn’t this be more like
+> nvm-file or something along these lines. This really needs to be
+> cleared with Rob to pick the right property name.
+> 
+> Regards
+> 
+> Marcel
 
-Can paths ever have a error value ? I believe only checking for NULL
-is sufficient ?
+Hi Rob,
 
-> +		for (i = 0; i < opp_table->path_count; i++) {
-> +			icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
-> +				   opp->bandwidth[i].peak);
-> +		}
-> +	}
-> +
-
-I will set the path after required_opps are set.
-
->  	/* Scaling down? Configure required OPPs after frequency */
->  	if (!ret && freq < old_freq) {
->  		ret = _set_required_opps(dev, opp_table, opp);
+Are you OK to use a property name "nvm-file" or "firmware-nvm-file"? 
+Actually we have two firmware files, one is the patch file which is 
+common to all of the products, the other is the nvm file which is 
+customized. Using a "nvm-file" or "firmware-nvm-file" property name 
+would be more clear.
 
 -- 
-viresh
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
