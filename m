@@ -1,42 +1,33 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 1/3] usb: usb251xb: Add US lanes inversion dts-bindings
-Date: Thu, 25 Apr 2019 00:12:05 +0300
-Message-ID: <20190424211208.17499-2-fancer.lancer@gmail.com>
-References: <20190424211208.17499-1-fancer.lancer@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] media: dt-bindings: aspeed-video: Add missing
+ memory-region property
+Date: Wed, 24 Apr 2019 16:17:32 -0500
+Message-ID: <20190424211732.GA18914@bogus>
+References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
+ <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424211208.17499-1-fancer.lancer@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Serge Semin <Sergey.Semin@t-platforms.ru>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Since a separate US ports lanes polarity inversion property is going to
-be available the bindings doc-file should be updated with information
-about swap-us-lanes bool property, which will be responsible for it.
+On Wed, 24 Apr 2019 10:16:59 -0500, Eddie James wrote:
+> Missed documenting this property in the initial commit.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+> Changes since v1:
+>  - Add missing semi-colon
+> 
+>  Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- Documentation/devicetree/bindings/usb/usb251xb.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 17915f64b8ee..bc7945e9dbfe 100644
---- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-+++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -64,8 +64,10 @@ Optional properties :
-  - power-on-time-ms : Specifies the time it takes from the time the host
- 	initiates the power-on sequence to a port until the port has adequate
- 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
-- - swap-dx-lanes : Specifies the ports which will swap the differential-pair
--	(D+/D-), default is not-swapped.
-+ - swap-dx-lanes : Specifies the downstream ports which will swap the
-+	differential-pair (D+/D-), default is not-swapped.
-+ - swap-us-lanes : Selects the upstream port differential-pair (D+/D-)
-+	swapping (boolean, default is not-swapped)
- 
- Examples:
- 	usb2512b@2c {
--- 
-2.21.0
+If a tag was not added on purpose, please state why and what changed.
