@@ -1,39 +1,54 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] ARM: dts: qcom-apq8064: Fix DSI PHY ref clk phandle
-Date: Tue, 23 Apr 2019 17:12:10 -0700
-Message-ID: <20190424001210.201672-1-mka@chromium.org>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: adc: mt8183: add binding document
+Date: Wed, 24 Apr 2019 08:51:31 +0800
+Message-ID: <1556067091.21970.16.camel@mhfsdcap03>
+References: <20190422115417.16751-1-zhiyong.tao@mediatek.com>
+         <20190422115417.16751-2-zhiyong.tao@mediatek.com>
+         <4c7f244f-4111-9e28-5134-8f108b1dbafa@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4c7f244f-4111-9e28-5134-8f108b1dbafa@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux Next Mailing List <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, srv_heupstream@mediatek.com, hui.liu@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, erin.lo@mediatek.com, eddie.huang@mediatek.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 3560af5a56b5 ("ARM: dts: qcom-apq8064: Set 'xo_board' as
-ref clock of the DSI PHY") specifies the non-existing phandle
-'xo_board' as DSI PHY ref clk. Fix this by using the correct
-phandle is 'cxo_board'.
+On Tue, 2019-04-23 at 16:35 +0200, Matthias Brugger wrote:
+> 
+> On 22/04/2019 13:54, Zhiyong Tao wrote:
+> > The commit adds mt8183 compatible node in binding document.
+> > 
+> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > index 0df9befdaecc..05bc79d8483c 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > @@ -15,6 +15,7 @@ Required properties:
+> >      - "mediatek,mt2712-auxadc": For MT2712 family of SoCs
+> >      - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
+> >      - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
+> > +    - "mediatek,mt8183-auxadc": For MT8183 family of SoCs
+> >    - reg: Address range of the AUXADC unit.
+> >    - clocks: Should contain a clock specifier for each entry in clock-names
+> >    - clock-names: Should contain "main".
+> > 
+> 
+> You are missing the logic in the driver to bind against this compatible.
+> If there is nothing different from other SoCs then you could add a compatible
+> with a fallback, like:
+> 
+> "mediatek,mt8183-auxadc", "mediatek,mt7622-auxadc": For MT8183 family of SoCs
 
-Fixes: 3560af5a56b5 ("ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of the DSI PHY")
+==> Thanks for your suggestion. In v2, we will add the comment here:
+- "mediatek,mt8183-auxadc", "mediatek,mt8173-auxadc": For MT8183 family
+of SoCs.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 2fff5074f2d7..65975df6a8c3 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -1305,7 +1305,7 @@
- 			reg-names = "dsi_pll", "dsi_phy", "dsi_phy_regulator";
- 			clock-names = "iface_clk", "ref";
- 			clocks = <&mmcc DSI_M_AHB_CLK>,
--				 <&xo_board>;
-+				 <&cxo_board>;
- 		};
- 
- 
--- 
-2.21.0.593.g511ec345e18-goog
+> 
+> Regards,
+> Matthias
