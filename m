@@ -1,35 +1,39 @@
 From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 0/4] Aspeed: Enable video engine
-Date: Wed, 24 Apr 2019 10:16:56 -0500
-Message-ID: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH v2 2/4] media: platform: Aspeed: Make reserved memory optional
+Date: Wed, 24 Apr 2019 10:16:58 -0500
+Message-ID: <1556119020-7609-3-git-send-email-eajames@linux.ibm.com>
+References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This series enables the video engine on Aspeed BMC platforms. The use of the
-video engine reset line, originally planned to be made externally available in
-the clock driver, is removed from the video engine driver. A node for the video
-engine is added to the AST2500 devicetree.
-The series also includes a missing property for reserved memory in the
-devicetree documentation, and a small change to make the video engine driver
-start without reserved memory.
+Reserved memory doesn't need to be required; system memory would work
+fine.
 
-Changes since v1:
- - Drop clock patch since it's been applied
- - Add a missing semi-colon in the devicetree doc
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ drivers/media/platform/aspeed-video.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Eddie James (4):
-  media: platform: Aspeed: Remove use of reset line
-  media: platform: Aspeed: Make reserved memory optional
-  media: dt-bindings: aspeed-video: Add missing memory-region property
-  ARM: dts: aspeed-g5: Add video engine
-
- .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
- arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 +++++++
- drivers/media/platform/aspeed-video.c              | 33 ++++------------------
- 3 files changed, 22 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index 55c55a6..8144fe3 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -1608,11 +1608,7 @@ static int aspeed_video_init(struct aspeed_video *video)
+ 		return PTR_ERR(video->vclk);
+ 	}
+ 
+-	rc = of_reserved_mem_device_init(dev);
+-	if (rc) {
+-		dev_err(dev, "Unable to reserve memory\n");
+-		return rc;
+-	}
++	of_reserved_mem_device_init(dev);
+ 
+ 	rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+ 	if (rc) {
 -- 
 1.8.3.1
