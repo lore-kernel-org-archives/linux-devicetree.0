@@ -1,90 +1,39 @@
-Return-Path: <SRS0=HRCn=TA=renesas.com=prvs=40235708d9=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 6/7] ARM: dts: r7s9210-rza2mevb: Add Ethernet support
-Date: Tue, 30 Apr 2019 08:23:08 -0500
-Message-ID: <20190430132309.12473-7-chris.brandt@renesas.com>
-In-Reply-To: <20190430132309.12473-1-chris.brandt@renesas.com>
-References: <20190430132309.12473-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=9itL=S2=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add HDMI video
+ suport
+Date: Wed, 24 Apr 2019 09:59:14 +0000
+Message-ID: 
+ <TY1PR01MB17707DBD69B60B47CB1954D7C03C0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1555403977-7188-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190424094616.5e7d5u4t2h6pxcdb@verge.net.au>
+In-Reply-To: <20190424094616.5e7d5u4t2h6pxcdb@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
-Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/A2M EVB sub board has 2 Ethernet jacks on it.
+Hello Simon,
 
-Set switch SW6_4	to ON to use Ethernet Ch-0
-Set switch SW6_5	to ON to use Ethernet Ch-1
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 24 April 2019 10:46
+> Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add HDMI video=
+ suport
+>=20
+> On Tue, Apr 16, 2019 at 09:39:37AM +0100, Fabrizio Castro wrote:
+> > The CAT874 board comes with a HDMI connector, managed by
+> > a TDA19988BET chip, connected to the RZ/G2E SoC via DPAD.
+> > This patch adds the necessary support to the board DT.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>=20
+> Thanks Fabrizio,
+>=20
+> applied for inclusion in v5.3 with the spelling of support corrected.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Thank you for fixing.
 
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-index 42005acb848c..df69746244fe 100644
---- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -62,6 +62,34 @@
- 		pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
- 			 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
- 	};
-+
-+	eth0_pins: eth0 {
-+		pinmux = <RZA2_PINMUX(PORTE, 0, 7)>, /* REF50CK0 */
-+			 <RZA2_PINMUX(PORT6, 1, 7)>, /* RMMI0_TXDEN */
-+			 <RZA2_PINMUX(PORT6, 2, 7)>, /* RMII0_TXD0 */
-+			 <RZA2_PINMUX(PORT6, 3, 7)>, /* RMII0_TXD1 */
-+			 <RZA2_PINMUX(PORTE, 4, 7)>, /* RMII0_CRSDV */
-+			 <RZA2_PINMUX(PORTE, 1, 7)>, /* RMII0_RXD0 */
-+			 <RZA2_PINMUX(PORTE, 2, 7)>, /* RMII0_RXD1 */
-+			 <RZA2_PINMUX(PORTE, 3, 7)>, /* RMII0_RXER */
-+			 <RZA2_PINMUX(PORTE, 5, 1)>, /* ET0_MDC */
-+			 <RZA2_PINMUX(PORTE, 6, 1)>, /* ET0_MDIO */
-+			 <RZA2_PINMUX(PORTL, 0, 5)>; /* IRQ4 */
-+	};
-+
-+	eth1_pins: eth1 {
-+		pinmux = <RZA2_PINMUX(PORTK, 3, 7)>, /* REF50CK1 */
-+			 <RZA2_PINMUX(PORTK, 0, 7)>, /* RMMI1_TXDEN */
-+			 <RZA2_PINMUX(PORTK, 1, 7)>, /* RMII1_TXD0 */
-+			 <RZA2_PINMUX(PORTK, 2, 7)>, /* RMII1_TXD1 */
-+			 <RZA2_PINMUX(PORT3, 2, 7)>, /* RMII1_CRSDV */
-+			 <RZA2_PINMUX(PORTK, 4, 7)>, /* RMII1_RXD0 */
-+			 <RZA2_PINMUX(PORT3, 5, 7)>, /* RMII1_RXD1 */
-+			 <RZA2_PINMUX(PORT3, 1, 7)>, /* RMII1_RXER */
-+			 <RZA2_PINMUX(PORT3, 3, 1)>, /* ET1_MDC */
-+			 <RZA2_PINMUX(PORT3, 4, 1)>, /* ET1_MDIO */
-+			 <RZA2_PINMUX(PORTL, 1, 5)>; /* IRQ5 */
-+	};
- };
- 
- /* High resolution System tick timers */
-@@ -80,3 +108,25 @@
- 
- 	status = "okay";
- };
-+
-+&ether0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth0_pins>;
-+	status = "okay";
-+	renesas,no-ether-link;
-+	phy-handle = <&phy0>;
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
-+&ether1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth1_pins>;
-+	status = "okay";
-+	renesas,no-ether-link;
-+	phy-handle = <&phy1>;
-+	phy1: ethernet-phy@1 {
-+		reg = <0>;
-+	};
-+};
--- 
-2.16.1
+Fab
