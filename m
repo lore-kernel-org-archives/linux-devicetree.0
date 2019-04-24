@@ -1,50 +1,27 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V11 0/5] Add i.MX7ULP EVK PWM backlight support
-Date: Wed, 24 Apr 2019 02:59:10 +0000
-Message-ID: <AM6PR0402MB39113C3CA7E1AB8969882B41F53C0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1554860547-18237-1-git-send-email-Anson.Huang@nxp.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v1 01/15] Revert "ARM: dts: imx6q: Use correct
+ SDMA script for SPI5 core"
+Date: Wed, 24 Apr 2019 02:59:45 +0000
+Message-ID: <1556074411.11321.1.camel@nxp.com>
+References: <1556027045-5269-1-git-send-email-yibin.gong@nxp.com>
+         <1556027045-5269-2-git-send-email-yibin.gong@nxp.com>
+         <CAOMZO5C5Sc0=_Jsb_CW-Vf9_Zka7OaA66uo3OPB4NsHzo92T3A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1554860547-18237-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAOMZO5C5Sc0=_Jsb_CW-Vf9_Zka7OaA66uo3OPB4NsHzo92T3A@mail.gmail.com>
 Content-Language: en-US
+Content-ID: <691EB444F5402145BBF3E5159D367C23@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "plyatov@gmail.com" <plyatov@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "sean.nyekjaer@prevas.dk" <sean.nyekjaer@prevas.dk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@peng>
 List-Id: devicetree@vger.kernel.org
 
-R2VudGxlIHBpbmcuLi4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBB
-bnNvbiBIdWFuZw0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDEwLCAyMDE5IDk6NDcgQU0NCj4g
-VG86IHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25p
-eC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4
-QGFybWxpbnV4Lm9yZy51azsgc3RlZmFuQGFnbmVyLmNoOw0KPiBvdGF2aW9Ab3NzeXN0ZW1zLmNv
-bS5icjsgTGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IFJvYmlu
-IEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT47IHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
-ZTsgbGludXgtDQo+IHB3bUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
-Pg0KPiBTdWJqZWN0OiBbUEFUQ0ggVjExIDAvNV0gQWRkIGkuTVg3VUxQIEVWSyBQV00gYmFja2xp
-Z2h0IHN1cHBvcnQNCj4gDQo+IGkuTVg3VUxQIEVWSyBib2FyZCBoYXMgTUlQSS1EU0kgZGlzcGxh
-eSwgaXRzIGJhY2tsaWdodCBpcyBzdXBwbGllZCBieSBUUE0NCj4gUFdNIG1vZHVsZSwgdGhpcyBw
-YXRjaCBzZXQgZW5hYmxlcyBpLk1YN1VMUCBUUE0gUFdNIGRyaXZlciBzdXBwb3J0IGFuZA0KPiBh
-bHNvIGFkZCBiYWNrbGlnaHQgc3VwcG9ydCBmb3IgTUlQSS1EU0kgZGlzcGxheS4NCj4gDQo+IENo
-YW5nZXMgc2luY2UgVjEwOg0KPiAJLSBPTkxZIGNoYW5nZSB0aGUgcHdtIGRyaXZlciBwYXRjaC4N
-Cj4gDQo+IEFuc29uIEh1YW5nICg1KToNCj4gICBkdC1iaW5kaW5nczogcHdtOiBBZGQgaS5NWCBU
-UE0gUFdNIGJpbmRpbmcNCj4gICBwd206IEFkZCBpLk1YIFRQTSBQV00gZHJpdmVyIHN1cHBvcnQN
-Cj4gICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBUUE0gUFdNIHN1cHBvcnQgYnkgZGVm
-YXVsdA0KPiAgIEFSTTogZHRzOiBpbXg3dWxwOiBBZGQgdHBtIHB3bSBzdXBwb3J0DQo+ICAgQVJN
-OiBkdHM6IGlteDd1bHAtZXZrOiBBZGQgYmFja2xpZ2h0IHN1cHBvcnQNCj4gDQo+ICAuLi4vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wd20vaW14LXRwbS1wd20udHh0ICAgICAgICB8ICAyMiArDQo+ICBh
-cmNoL2FybS9ib290L2R0cy9pbXg3dWxwLWV2ay5kdHMgICAgICAgICAgICAgICAgICB8ICAyMSAr
-DQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLmR0c2kgICAgICAgICAgICAgICAgICAgICB8
-ICAxMCArDQo+ICBhcmNoL2FybS9jb25maWdzL2lteF92Nl92N19kZWZjb25maWcgICAgICAgICAg
-ICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3B3bS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAxMSArDQo+ICBkcml2ZXJzL3B3bS9NYWtlZmlsZSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3B3bS9wd20taW14LXRwbS5jICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8IDQ0MiArKysrKysrKysrKysrKysrKysrKysNCj4gIDcg
-ZmlsZXMgY2hhbmdlZCwgNTA4IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC10cG0tDQo+IHB3bS50eHQN
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3B3bS9wd20taW14LXRwbS5jDQo+IA0KPiAt
-LQ0KPiAyLjcuNA0KDQo=
+T24gMjAxOS0wNC0yMyBhdCAxMTowMiAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4gSGkg
+Um9iaW4sDQo+IA0KPiBPbiBUdWUsIEFwciAyMywgMjAxOSBhdCAxMDo1MCBBTSBSb2JpbiBHb25n
+IDx5aWJpbi5nb25nQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+IA0KPiA+IA0KPiA+IFRoaXMgcmV2
+ZXJ0cyBjb21taXQgZGYwNzEwMWUxYzRhMjllODIwZGYwMmY5OTg5YTA2Njk4OGIxNjBlNi4NCj4g
+WW91IG5lZWQgdG8gcHJvdmlkZSBhIGRldGFpbGVkIGV4cGxhbmF0aW9uIGluIHRoZSBjb21taXQg
+bG9nIGFzIHRvDQo+IHdoeQ0KPiB0aGUgcmV2ZXJ0IGlzIG5lZWRlZC4NCk9rYXksIHdpbGwgYWRk
+cmVzcyB5b3VyIGNvbW1lbnRzIGludG8gVjIu
