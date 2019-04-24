@@ -1,36 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V12 1/5] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 24 Apr 2019 15:49:27 -0500
-Message-ID: <20190424204927.GA31960@bogus>
-References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 0/3] usb: usb251xb: Add upstream port lanes polarity inversion
+Date: Thu, 25 Apr 2019 00:12:04 +0300
+Message-ID: <20190424211208.17499-1-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.ne>
+To: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Serge Semin <Sergey.Semin@t-platforms.ru>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Apr 2019 03:22:09 +0000, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and thermal sensors etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get temperature from thermal sensors, this patch adds
-> binding doc for i.MX system controller thermal driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
+A while ago I created an original patchset with functionality of any ports
+inversion setting implemented. But while I was busy with another work,
+Marco' version of the similar code has already been upstreamed.
+So I decided to at least refactor my patchset extracting alterations,
+which I think might be useful in the driver.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Even though the Marco' implementation was correct in general, it lacked a
+small specific detail. The polarity inversion property might be setup for
+downstream and upstream ports. Both of these cases are covered by current
+'swap-dx-lanes' property implementation, but there is no any mentioning
+about number 0 being considered as Upstream port of the hub. This might be
+confusing seeing the rest of the port-related properties accept
+only the ports starting from 1 (which is starting number of downstream
+ports) and don't support number 0. So in order to unify the 'swap-dx-lanes'
+property with the rest port-related ones, I'd suggest to make it being
+responsible for downstream ports only, while upstream port lanes inversion
+would be enabled by setting a new 'swap-us-lanes' boolean property. Current
+property names mnemonic also fits quiet well for this update.
 
-If a tag was not added on purpose, please state why and what changed.
+In addition the usb251xb_get_ofdata() method is getting to be too
+complicated with obvious identical peaces of code. In particular it
+concerns the ports-related properties like 'non-removable-ports',
+'sp-disabled-ports' and 'bp-disabled-ports'. We can simplify the code
+responsible for the properties handling by moving a common part into
+a dedicated method. Needless to say that in case if the suggestion made
+above regarding the 'swap-dx-lanes' property alteration is accepted,
+the same could be done for parsing it' code as well.
+
+So all of these updates are implemented in the patches of this small
+series.
+
+
+Serge Semin (3):
+  usb: usb251xb: Add US lanes inversion dts-bindings
+  usb: usb251xb: Create a ports field collector method
+  usb: usb251xb: Add US port lanes inversion property
+
+ .../devicetree/bindings/usb/usb251xb.txt      |  6 +-
+ drivers/usb/misc/usb251xb.c                   | 73 +++++++------------
+ 2 files changed, 32 insertions(+), 47 deletions(-)
+
+-- 
+2.21.0
