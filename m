@@ -1,53 +1,58 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
-	files to *.rst
-Date: Wed, 24 Apr 2019 16:54:10 +0200
-Message-ID: <20190424145410.GE30142@zn.tnic>
-References: <cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
-	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
-	<20190423125519.GA7104@redhat.com>
-	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
-	<20190423103053.07cf2149@lwn.net>
-	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
-	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
-	<20190423213816.GE16353@zn.tnic> <20190423232325.679c100b@coco.lan>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/5] Aspeed: Enable video engine
+Date: Wed, 24 Apr 2019 10:00:28 -0500
+Message-ID: <f3cacd11-c68d-9097-4a86-3ebeab046b93@linux.vnet.ibm.com>
+References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+ <b524e352-2e9d-6360-5517-18eee2e02c2c@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190423232325.679c100b-qA1ZUp+OV9c@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, kernel-hardening-ZwoEplunGu1jrUoiu81ncdBPR1lH4CV8@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless@v
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b524e352-2e9d-6360-5517-18eee2e02c2c@xs4all.nl>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Eddie James <eajames@linux.ibm.com>, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 07:40:07AM -0300, Mauro Carvalho Chehab wrote:
-> Personally, I don't care much with monospaced fonts on this table. After
-> all, if I want to see it monospaced, I can simply click at the
-> "View page source" at the browser, and it will display the file as a
-> plain old monospaced text file.
 
-Goes to show why kernel people wouldn't want to look at that in
-the browser. Long hex numbers are hard to read as it is - that's
-why there's even the 4-digit separator in some docs, for example:
-0xffff_ffff_8100_0000.
+On 4/24/19 5:50 AM, Hans Verkuil wrote:
+> Hi Eddie,
+>
+> On 4/2/19 8:24 PM, Eddie James wrote:
+>> This series enables the video engine on Aspeed BMC platforms. The video engine
+>> clocking is added to the Aspeed clock driver. The use of the video engine reset
+>> line, originally planned to be made externally available in the clock driver,
+>> is removed from the video engine driver. Finally a node for the video engine is
+>> added to the AST2500 devicetree.
+>> The series also includes a missing property for reserved memory in the
+>> devicetree documentation, and a small change to make the video engine driver
+>> start without reserved memory.
+> I assume you'll post a v3 since there were some comments?
 
-Not having it monospaced makes the whole thing even less readable.
 
-That's why it is important for the markup not to get in the way of
-people looking at those files in an editor.
+Sure... The only change would be a missing semi-colon in the devicetree 
+doc. And we're only on v2 :)
 
--- 
-Regards/Gruss,
-    Boris.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+>
+> If you want to get it in for 5.2, then be aware that you should post it tomorrow
+> at the latest.
+>
+> Regards,
+>
+> 	Hans
+>
+>> Eddie James (5):
+>>    media: platform: Aspeed: Remove use of reset line
+>>    media: platform: Aspeed: Make reserved memory optional
+>>    media: dt-bindings: aspeed-video: Add missing memory-region property
+>>    clk: Aspeed: Setup video engine clocking
+>>    ARM: dts: aspeed-g5: Add video engine
+>>
+>>   .../devicetree/bindings/media/aspeed-video.txt     |  6 ++++
+>>   arch/arm/boot/dts/aspeed-g5.dtsi                   | 10 ++++++
+>>   drivers/clk/clk-aspeed.c                           | 42 ++++++++++++++++++++--
+>>   drivers/media/platform/aspeed-video.c              | 33 ++++-------------
+>>   4 files changed, 61 insertions(+), 30 deletions(-)
+>>
