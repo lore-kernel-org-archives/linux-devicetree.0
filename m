@@ -1,55 +1,110 @@
-From: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v1 14/15] ARM: dts: imx6sll: correct ecspi/sdma compatible
-Date: Wed, 24 Apr 2019 08:37:45 +0200
-Message-ID: <20190424063745.b67kcb3zzifuf22b@pengutronix.de>
-References: <1556027045-5269-1-git-send-email-yibin.gong@nxp.com>
- <1556027045-5269-15-git-send-email-yibin.gong@nxp.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
+ bindings
+Date: Wed, 24 Apr 2019 12:16:43 +0530
+Message-ID: <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190423132823.7915-2-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1556027045-5269-15-git-send-email-yibin.gong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sean.nyekjaer@prevas.dk" <sean.nyekjaer@prevas.dk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "plyatov@gmail.com" <plyatov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190423132823.7915-2-georgi.djakov@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc: jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 01:51:45PM +0000, Robin Gong wrote:
-> Correct ecspi/sdma compatible since ecspi errata ERR009165
-> not fixed on i.mx6sll chip.
+
+
+On 4/23/2019 6:58 PM, Georgi Djakov wrote:
+> In addition to frequency and voltage, some devices may have bandwidth
+> requirements for their interconnect throughput - for example a CPU
+> or GPU may also need to increase or decrease their bandwidth to DDR
+> memory based on the current operating performance point.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Extend the OPP tables with additional property to describe the bandwidth
+> needs of a device. The average and peak bandwidth values depend on the
+> hardware and its properties.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  arch/arm/boot/dts/imx6sll.dtsi | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>   Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++++++++
+>   .../devicetree/bindings/property-units.txt    |  4 ++
+>   2 files changed, 42 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-> index 1b4899f..03f2103 100644
-> --- a/arch/arm/boot/dts/imx6sll.dtsi
-> +++ b/arch/arm/boot/dts/imx6sll.dtsi
-> @@ -183,7 +183,7 @@
->  				};
->  
->  				ecspi1: spi@2008000 {
-> -					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
-> +					compatible ="fsl,imx51-ecspi";
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 76b6c79604a5..830f0206aea7 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -132,6 +132,9 @@ Optional properties:
+>   - opp-level: A value representing the performance level of the device,
+>     expressed as a 32-bit integer.
+>   
+> +- bandwidth-MBps: The interconnect bandwidth is specified with an array containing
+> +  the two integer values for average and peak bandwidth in megabytes per second.
+> +
+>   - clock-latency-ns: Specifies the maximum possible transition latency (in
+>     nanoseconds) for switching to this OPP from any other OPP.
+>   
+> @@ -546,3 +549,38 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
+>   		};
+>   	};
+>   };
+> +
+> +Example 7: bandwidth-MBps:
+> +Average and peak bandwidth values for the interconnects between CPU and DDR
+> +memory and also between CPU and L3 are defined per each OPP. Bandwidth of both
+> +interconnects is scaled together with CPU frequency.
+> +
+> +/ {
+> +	cpus {
+> +		CPU0: cpu@0 {
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			...
+> +			operating-points-v2 = <&cpu_opp_table>;
+> +			/* path between CPU and DDR memory and CPU and L3 */
+> +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
+> +					<&noc MASTER_CPU &noc SLAVE_L3>;
+> +		};
+> +	};
+> +
+> +	cpu_opp_table: cpu_opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp-200000000 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
+> +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
+> +			bandwidth-MBps = <457 1525>, <914 3050>;
 
-Where is the fsl,imx6sll-ecspi compatible that would have prevented us
-from changing this devicetree now? You should at least add it now.
-
-Sascha
+Should this also have a bandwidth-MBps-name perhaps? Without that I guess we assume
+the order in which we specify the interconnects is the same as the order here?
+  
+> +		};
+> +		opp-400000000 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			/* CPU<->DDR bandwidth: 915 MB/s average, 3051 MB/s peak */
+> +			 * CPU<->L3 bandwidth: 1828 MB/s average, 6102 MB/s peak */
+> +			bandwidth-MBps = <915 3051>, <1828 6102>;
+> +		};
+> +	};
+> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> index bfd33734faca..9c3dbefcdae8 100644
+> --- a/Documentation/devicetree/bindings/property-units.txt
+> +++ b/Documentation/devicetree/bindings/property-units.txt
+> @@ -41,3 +41,7 @@ Temperature
+>   Pressure
+>   ----------------------------------------
+>   -kpascal	: kiloPascal
+> +
+> +Throughput
+> +----------------------------------------
+> +-MBps		: megabytes per second
+> 
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
