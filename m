@@ -1,27 +1,117 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: Re: [EXT] Re: [PATCH v1 01/15] Revert "ARM: dts: imx6q: Use correct
- SDMA script for SPI5 core"
-Date: Wed, 24 Apr 2019 02:59:45 +0000
-Message-ID: <1556074411.11321.1.camel@nxp.com>
-References: <1556027045-5269-1-git-send-email-yibin.gong@nxp.com>
-         <1556027045-5269-2-git-send-email-yibin.gong@nxp.com>
-         <CAOMZO5C5Sc0=_Jsb_CW-Vf9_Zka7OaA66uo3OPB4NsHzo92T3A@mail.gmail.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V4 05/16] PCI: dwc: Move config space capability search
+ API
+Date: Wed, 24 Apr 2019 08:41:59 +0530
+Message-ID: <22c7a99b-2d6c-e49b-43b0-219c60f7e5e9@nvidia.com>
+References: <20190423082730.370-1-vidyas@nvidia.com>
+ <20190423082730.370-6-vidyas@nvidia.com> <20190423203244.GD14616@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5C5Sc0=_Jsb_CW-Vf9_Zka7OaA66uo3OPB4NsHzo92T3A@mail.gmail.com>
+In-Reply-To: <20190423203244.GD14616@google.com>
 Content-Language: en-US
-Content-ID: <691EB444F5402145BBF3E5159D367C23@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "plyatov@gmail.com" <plyatov@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "sean.nyekjaer@prevas.dk" <sean.nyekjaer@prevas.dk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@peng>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wNC0yMyBhdCAxMTowMiAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4gSGkg
-Um9iaW4sDQo+IA0KPiBPbiBUdWUsIEFwciAyMywgMjAxOSBhdCAxMDo1MCBBTSBSb2JpbiBHb25n
-IDx5aWJpbi5nb25nQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+IA0KPiA+IA0KPiA+IFRoaXMgcmV2
-ZXJ0cyBjb21taXQgZGYwNzEwMWUxYzRhMjllODIwZGYwMmY5OTg5YTA2Njk4OGIxNjBlNi4NCj4g
-WW91IG5lZWQgdG8gcHJvdmlkZSBhIGRldGFpbGVkIGV4cGxhbmF0aW9uIGluIHRoZSBjb21taXQg
-bG9nIGFzIHRvDQo+IHdoeQ0KPiB0aGUgcmV2ZXJ0IGlzIG5lZWRlZC4NCk9rYXksIHdpbGwgYWRk
-cmVzcyB5b3VyIGNvbW1lbnRzIGludG8gVjIu
+On 4/24/2019 2:02 AM, Bjorn Helgaas wrote:
+> On Tue, Apr 23, 2019 at 01:57:19PM +0530, Vidya Sagar wrote:
+>> Move PCIe config space capability search API to common DesignWare file
+>> as this can be used by both host and ep mode codes.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Changes from [v3]:
+>> * Rebased to linux-next top of the tree
+>>
+>> Changes from [v2]:
+>> * None
+>>
+>> Changes from [v1]:
+>> * Removed dw_pcie_find_next_ext_capability() API from here and made a
+>>    separate patch for that
+>>
+>>   drivers/pci/controller/dwc/pcie-designware.c | 33 ++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  2 ++
+> 
+> You claim this is a "move", but I only see adds.  Where did it move
+> *from*?
+These are supposed to be moved from pcie-designware-ep.c file. That was the case
+with my old patches but when I rebased them onto ToT, I missed the change that
+removes them from pcie-designware-ep.c file. Thanks for catching this. I'll
+address it in the next patch.
+
+> 
+> While you're at it, can you add a comment in the code about why we
+> can't use the regular pci_find_capability() interface?  It's really a
+> shame to have to reimplement that.
+Regular pci_find_capability() uses 'struct pci_dev *dev' pointer and can be used
+only after device enumeration is done. Whereas, these APIs are used particularly
+before link up and use 'struct dw_pcie *pci' pointer.
+
+> 
+>>   2 files changed, 35 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 8e0081ccf83b..6a98135244d6 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -20,6 +20,39 @@
+>>   #define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
+>>   #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
+>>   
+>> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>> +				  u8 cap)
+>> +{
+>> +	u8 cap_id, next_cap_ptr;
+>> +	u16 reg;
+>> +
+>> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+>> +	next_cap_ptr = (reg & 0xff00) >> 8;
+>> +	cap_id = (reg & 0x00ff);
+>> +
+>> +	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
+>> +		return 0;
+>> +
+>> +	if (cap_id == cap)
+>> +		return cap_ptr;
+>> +
+>> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+>> +}
+>> +
+>> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>> +{
+>> +	u8 next_cap_ptr;
+>> +	u16 reg;
+>> +
+>> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>> +	next_cap_ptr = (reg & 0x00ff);
+>> +
+>> +	if (!next_cap_ptr)
+>> +		return 0;
+>> +
+>> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+>> +}
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>>   {
+>>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 9ee98ced1ef6..35160b4ce929 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -248,6 +248,8 @@ struct dw_pcie {
+>>   #define to_dw_pcie_from_ep(endpoint)   \
+>>   		container_of((endpoint), struct dw_pcie, ep)
+>>   
+>> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>>   
+>> -- 
+>> 2.17.1
+>>
