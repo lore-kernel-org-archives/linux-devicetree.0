@@ -1,92 +1,156 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
- bindings
-Date: Wed, 24 Apr 2019 12:19:42 +0530
-Message-ID: <20190424064942.v5g6jr5l3xy5z3xv@vireshk-i7>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-2-georgi.djakov@linaro.org>
- <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
+From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Wed, 24 Apr 2019 08:52:09 +0200
+Message-ID: <20190424065209.GC4038@hirez.programming.kicks-ass.net>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
+	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
+	<20190423103053.07cf2149@lwn.net>
+	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
+	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
+	<20190423213816.GE16353@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, sibis@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20190423213816.GE16353-Jj63ApZU6fQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24-04-19, 12:16, Rajendra Nayak wrote:
-> 
-> 
-> On 4/23/2019 6:58 PM, Georgi Djakov wrote:
-> > In addition to frequency and voltage, some devices may have bandwidth
-> > requirements for their interconnect throughput - for example a CPU
-> > or GPU may also need to increase or decrease their bandwidth to DDR
-> > memory based on the current operating performance point.
-> > 
-> > Extend the OPP tables with additional property to describe the bandwidth
-> > needs of a device. The average and peak bandwidth values depend on the
-> > hardware and its properties.
-> > 
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> >   Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++++++++
-> >   .../devicetree/bindings/property-units.txt    |  4 ++
-> >   2 files changed, 42 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index 76b6c79604a5..830f0206aea7 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -132,6 +132,9 @@ Optional properties:
-> >   - opp-level: A value representing the performance level of the device,
-> >     expressed as a 32-bit integer.
-> > +- bandwidth-MBps: The interconnect bandwidth is specified with an array containing
-> > +  the two integer values for average and peak bandwidth in megabytes per second.
-> > +
-> >   - clock-latency-ns: Specifies the maximum possible transition latency (in
-> >     nanoseconds) for switching to this OPP from any other OPP.
-> > @@ -546,3 +549,38 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
-> >   		};
-> >   	};
-> >   };
-> > +
-> > +Example 7: bandwidth-MBps:
-> > +Average and peak bandwidth values for the interconnects between CPU and DDR
-> > +memory and also between CPU and L3 are defined per each OPP. Bandwidth of both
-> > +interconnects is scaled together with CPU frequency.
-> > +
-> > +/ {
-> > +	cpus {
-> > +		CPU0: cpu@0 {
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			...
-> > +			operating-points-v2 = <&cpu_opp_table>;
-> > +			/* path between CPU and DDR memory and CPU and L3 */
-> > +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
-> > +					<&noc MASTER_CPU &noc SLAVE_L3>;
-> > +		};
-> > +	};
-> > +
-> > +	cpu_opp_table: cpu_opp_table {
-> > +		compatible = "operating-points-v2";
-> > +		opp-shared;
-> > +
-> > +		opp-200000000 {
-> > +			opp-hz = /bits/ 64 <200000000>;
-> > +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
-> > +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
-> > +			bandwidth-MBps = <457 1525>, <914 3050>;
-> 
-> Should this also have a bandwidth-MBps-name perhaps? Without that I guess we assume
-> the order in which we specify the interconnects is the same as the order here?
+On Tue, Apr 23, 2019 at 11:38:16PM +0200, Borislav Petkov wrote:
+> If that is all the changes it would need, then I guess that's ok. Btw,
+> those rst-conversion patches don't really show what got changed. Dunno
+> if git can even show that properly. I diffed the two files by hand to
+> see what got changed, see end of mail.
 
-Right, so I suggested not to add the -name property and to rely on the
-order. Though I missed that he hasn't mentioned the order thing here.
+That is not a happy diff; that table has gotten waay worse to read due
+to all that extra table crap.
 
-@Georgi: Please mention above in the binding that the order is same as
-interconnects binding.
-
--- 
-viresh
+> ---
+> --- mm.old	2019-04-23 23:18:55.954335784 +0200
+> +++ mm.new	2019-04-23 23:18:48.122335821 +0200
+> @@ -18,51 +18,68 @@ Notes:
+>     notation than "16 EB", which few will recognize at first sight as 16 exabytes.
+>     It also shows it nicely how incredibly large 64-bit address space is.
+>  
+> -========================================================================================================================
+> -    Start addr    |   Offset   |     End addr     |  Size   | VM area description
+> -========================================================================================================================
+> -                  |            |                  |         |
+> - 0000000000000000 |    0       | 00007fffffffffff |  128 TB | user-space virtual memory, different per mm
+> -__________________|____________|__________________|_________|___________________________________________________________
+> -                  |            |                  |         |
+> - 0000800000000000 | +128    TB | ffff7fffffffffff | ~16M TB | ... huge, almost 64 bits wide hole of non-canonical
+> -                  |            |                  |         |     virtual memory addresses up to the -128 TB
+> -                  |            |                  |         |     starting offset of kernel mappings.
+> -__________________|____________|__________________|_________|___________________________________________________________
+> -                                                            |
+> -                                                            | Kernel-space virtual memory, shared between all processes:
+> -____________________________________________________________|___________________________________________________________
+> -                  |            |                  |         |
+> - ffff800000000000 | -128    TB | ffff87ffffffffff |    8 TB | ... guard hole, also reserved for hypervisor
+> - ffff880000000000 | -120    TB | ffff887fffffffff |  0.5 TB | LDT remap for PTI
+> - ffff888000000000 | -119.5  TB | ffffc87fffffffff |   64 TB | direct mapping of all physical memory (page_offset_base)
+> - ffffc88000000000 |  -55.5  TB | ffffc8ffffffffff |  0.5 TB | ... unused hole
+> - ffffc90000000000 |  -55    TB | ffffe8ffffffffff |   32 TB | vmalloc/ioremap space (vmalloc_base)
+> - ffffe90000000000 |  -23    TB | ffffe9ffffffffff |    1 TB | ... unused hole
+> - ffffea0000000000 |  -22    TB | ffffeaffffffffff |    1 TB | virtual memory map (vmemmap_base)
+> - ffffeb0000000000 |  -21    TB | ffffebffffffffff |    1 TB | ... unused hole
+> - ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory
+> -__________________|____________|__________________|_________|____________________________________________________________
+> -                                                            |
+> -                                                            | Identical layout to the 56-bit one from here on:
+> -____________________________________________________________|____________________________________________________________
+> -                  |            |                  |         |
+> - fffffc0000000000 |   -4    TB | fffffdffffffffff |    2 TB | ... unused hole
+> -                  |            |                  |         | vaddr_end for KASLR
+> - fffffe0000000000 |   -2    TB | fffffe7fffffffff |  0.5 TB | cpu_entry_area mapping
+> - fffffe8000000000 |   -1.5  TB | fffffeffffffffff |  0.5 TB | ... unused hole
+> - ffffff0000000000 |   -1    TB | ffffff7fffffffff |  0.5 TB | %esp fixup stacks
+> - ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole
+> - ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space
+> - ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole
+> - ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
+> - ffffffff80000000 |-2048    MB |                  |         |
+> - ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space
+> - ffffffffff000000 |  -16    MB |                  |         |
+> -    FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset
+> - ffffffffff600000 |  -10    MB | ffffffffff600fff |    4 kB | legacy vsyscall ABI
+> - ffffffffffe00000 |   -2    MB | ffffffffffffffff |    2 MB | ... unused hole
+> -__________________|____________|__________________|_________|___________________________________________________________
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|   Start addr    |   Offset   |     End addr     |  Size   | VM area description                                       |
+> ++=================+============+==================+=========+===========================================================+
+> +|                 |            |                  |         |                                                           |
+> +|0000000000000000 |    0       | 00007fffffffffff |  128 TB | user-space virtual memory, different per mm               |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|                 |            |                  |         |                                                           |
+> +|0000800000000000 | +128    TB | ffff7fffffffffff | ~16M TB | ... huge, almost 64 bits wide hole of non-canonical       |
+> +|                 |            |                  |         | virtual memory addresses up to the -128 TB                |
+> +|                 |            |                  |         | starting offset of kernel mappings.                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|                      **Kernel-space virtual memory, shared between all processes:**                                   |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffff800000000000 | -128    TB | ffff87ffffffffff |    8 TB | ... guard hole, also reserved for hypervisor              |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffff880000000000 | -120    TB | ffff887fffffffff |  0.5 TB | LDT remap for PTI                                         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffff888000000000 | -119.5  TB | ffffc87fffffffff |   64 TB | direct mapping of all physical memory (page_offset_base)  |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffc88000000000 |  -55.5  TB | ffffc8ffffffffff |  0.5 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffc90000000000 |  -55    TB | ffffe8ffffffffff |   32 TB | vmalloc/ioremap space (vmalloc_base)                      |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffe90000000000 |  -23    TB | ffffe9ffffffffff |    1 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffea0000000000 |  -22    TB | ffffeaffffffffff |    1 TB | virtual memory map (vmemmap_base)                         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffeb0000000000 |  -21    TB | ffffebffffffffff |    1 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory                                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|                         **Identical layout to the 56-bit one from here on:**                                          |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|fffffc0000000000 |   -4    TB | fffffdffffffffff |    2 TB | ... unused hole                                           |
+> +|                 |            |                  |         | vaddr_end for KASLR                                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|fffffe0000000000 |   -2    TB | fffffe7fffffffff |  0.5 TB | cpu_entry_area mapping                                    |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|fffffe8000000000 |   -1.5  TB | fffffeffffffffff |  0.5 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffff0000000000 |   -1    TB | ffffff7fffffffff |  0.5 TB | %esp fixup stacks                                         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space                                  |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffff80000000 |-2048    MB |                  |         |                                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space                                      |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffff000000 |  -16    MB |                  |         |                                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|   FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset    |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffff600000 |  -10    MB | ffffffffff600fff |    4 kB | legacy vsyscall ABI                                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffffe00000 |   -2    MB | ffffffffffffffff |    2 MB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
