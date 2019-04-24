@@ -1,16 +1,16 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V5 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Wed, 24 Apr 2019 11:58:22 +0100
-Message-ID: <20190424105822.GA14614@fuggles.cambridge.arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH V5 2/4] drivers/perf: imx_ddr: Add ddr performance counter
+ support
+Date: Wed, 24 Apr 2019 12:08:19 +0100
+Message-ID: <dc519703-dcd8-7238-c50c-25f265f9a07b@arm.com>
 References: <1555447156-28306-1-git-send-email-Frank.Li@nxp.com>
  <1555447156-28306-2-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
 In-Reply-To: <1555447156-28306-2-git-send-email-Frank.Li@nxp.com>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,87 +20,11 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Frank Li <frank.li@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-On Tue, Apr 16, 2019 at 08:39:33PM +0000, Frank Li wrote:
-> Add ddr performance monitor support for iMX8QXP
-> 
-> There are 4 counters for ddr perfomance events.
-> counter 0 is dedicated for cycles.
-> you choose any up to 3 no cycles events.
-
-I was about to pick this up, but I still have a few questions/comments
-on the code:
-
-> +static irqreturn_t ddr_perf_irq_handler(int irq, void *p)
-> +{
-> +	int i;
-> +	u8 reg;
-> +	int val;
-> +	int counter;
-> +	struct ddr_pmu *pmu = (struct ddr_pmu *) p;
-> +	struct perf_event *event;
-> +
-> +	/* Only cycles counter overflowed can issue irq. all counters will
-> +	 * be stopped when cycles counter overflow. but other counter don't stop
-> +	 * when overflow happen. Update all of the local counter values,
-> +	 * then reset the cycles counter, so the others can continue
-> +	 * counting. cycles counter is fastest counter in all events. at last
-> +	 * 4 times than other counters.
-> +	 */
-> +	for (i = 0; i < NUM_COUNTER; i++) {
-> +
-> +		if (!pmu->active_events[i])
-> +			continue;
-> +
-> +		event = pmu->active_events[i];
-> +		counter = event->hw.idx;
-> +		reg = counter * 4 + COUNTER_CNTL;
-> +		val = readl(pmu->base + reg);
-
-Does this read have a side-effect, or can it be removed given that you don't
-use val for anything else?
-
-> +		ddr_perf_event_update(event);
-> +
-> +		if (counter == EVENT_CYCLES_COUNTER) {
-> +			ddr_perf_event_enable(pmu,
-> +					      EVENT_CYCLES_ID,
-> +					      EVENT_CYCLES_COUNTER,
-> +					      true);
-> +			ddr_perf_event_update(event);
-> +		}
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-What stops the IRQ handler running concurrently with perf callbacks? I can't
-see any locking here, or is the IRQ supposed to be affine to the same CPU
-that's handling the perf context?
-
-> +static int ddr_perf_offline_cpu(unsigned int cpu, struct hlist_node *node)
-> +{
-> +	struct ddr_pmu *pmu = hlist_entry_safe(node, struct ddr_pmu, node);
-> +	int target;
-> +
-> +	if (!cpumask_test_and_clear_cpu(cpu, &pmu->cpu))
-> +		return 0;
-> +
-> +	target = cpumask_any_but(cpu_online_mask, cpu);
-> +	if (target >= nr_cpu_ids)
-> +		return 0;
-> +
-> +	perf_pmu_migrate_context(&pmu->pmu, cpu, target);
-> +	cpumask_set_cpu(target, &pmu->cpu);
-> +
-> +	return 0;
-> +}
-> +
+On 16/04/2019 21:39, Frank Li wrote:
+[...]
 > +static int ddr_perf_probe(struct platform_device *pdev)
 > +{
 > +	struct ddr_pmu *pmu;
@@ -147,6 +71,13 @@ that's handling the perf context?
 > +		dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
 > +		goto ddr_perf_err;
 > +	}
+
+Since you don't seem to ever remove this state again, this looks like it 
+would make subsequent loads of the module always fail after it's been 
+loaded and unloaded once - have you tried that?
+
+Robin.
+
 > +
 > +	pmu->cpuhp_state = ret;
 > +
@@ -160,9 +91,6 @@ that's handling the perf context?
 > +	/* Request irq */
 > +	irq = of_irq_get(np, 0);
 > +	if (irq < 0) {
-
-irq is a u32 so this will never execute. You need to make it an int.
-
 > +		dev_err(&pdev->dev, "Failed to get irq: %d", irq);
 > +		ret = irq;
 > +		goto ddr_perf_irq_err;
@@ -171,8 +99,50 @@ irq is a u32 so this will never execute. You need to make it an int.
 > +	ret = devm_request_irq(&pdev->dev, irq,
 > +					ddr_perf_irq_handler,
 > +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-
-Can you explain why you need to pass these specific IRQ flags, please? I'm
-struggling to see what the ONESHOT is buying you.
-
-Will
+> +					DDR_PERF_DEV_NAME,
+> +					pmu);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Request irq failed: %d", ret);
+> +		goto ddr_perf_irq_err;
+> +	}
+> +
+> +	return 0;
+> +
+> +ddr_perf_irq_err:
+> +	perf_pmu_unregister(&(pmu->pmu));
+> +
+> +ddr_perf_err:
+> +	if (pmu->cpuhp_state)
+> +		cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+> +
+> +	dev_warn(&pdev->dev, "i.MX8 DDR Perf PMU failed (%d), disabled\n", ret);
+> +	return ret;
+> +}
+> +
+> +static int ddr_perf_remove(struct platform_device *pdev)
+> +{
+> +	struct ddr_pmu *pmu = platform_get_drvdata(pdev);
+> +
+> +	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+> +	perf_pmu_unregister(&pmu->pmu);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver imx_ddr_pmu_driver = {
+> +	.driver         = {
+> +		.name   = "imx-ddr-pmu",
+> +		.of_match_table = imx_ddr_pmu_dt_ids,
+> +	},
+> +	.probe          = ddr_perf_probe,
+> +	.remove         = ddr_perf_remove,
+> +};
+> +
+> +static int __init imx_ddr_pmu_init(void)
+> +{
+> +	return platform_driver_register(&imx_ddr_pmu_driver);
+> +}
+> +
+> +module_init(imx_ddr_pmu_init);
+> +
+> 
