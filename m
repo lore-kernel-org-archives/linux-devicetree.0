@@ -1,59 +1,83 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v4 02/26] leds: class: Improve LED and LED flash class
- registration API
-Date: Wed, 24 Apr 2019 20:56:09 +0200
-Message-ID: <17af15f5-9b0b-f2cd-adbe-3f7b00028224@gmail.com>
-References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
- <20190417205439.17685-3-jacek.anaszewski@gmail.com>
- <20190424134633.GA14360@amd> <5a738825-a8f9-f4ca-0a38-773fe145048f@gmail.com>
- <20190424182522.GA31600@amd>
+From: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Subject: Re: [PATCH v1 14/17] Documentation: kunit: add documentation for
+ KUnit
+Date: Wed, 24 Apr 2019 14:58:14 -0400
+Message-ID: <20190424185813.xabwr4lt6aunvpsd@gabell>
+References: <20190404220652.19765-1-brendanhiggins@google.com>
+ <20190404220652.19765-15-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424182522.GA31600@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190404220652.19765-15-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>, Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: corbet@lwn.net, frowand.list@gmail.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, shuah@kernel.org, yamada.masahiro@socionext.com, pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, Felix Guo <felixguoxiuping@gmail.com>, wfg@linux.intel.com, joel@jms.id.au, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/24/19 8:25 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> +/**
->>>> + * led_classdev_register_ext - register a new object of LED class with
->>>> + *			       init data
->>>> + * @parent: LED controller device this LED is driven by
->>>> + * @led_cdev: the led_classdev structure for this device
->>>> + * @init_data: the LED class device initialization data
->>>> + *
->>>> + * Returns: 0 on success or negative error value on failure
->>>> + */
->>>> +extern int led_classdev_register_ext(struct device *parent,
->>>> +				     struct led_classdev *led_cdev,
->>>> +				     struct led_init_data *init_data);
->>>> +#define led_classdev_register(parent, led_cdev)			\
->>>> +	led_classdev_register_ext(parent, led_cdev, NULL)
->>>> +extern int devm_led_classdev_register_ext(struct device *parent,
->>>> +					  struct led_classdev *led_cdev,
->>>> +					  struct led_init_data *init_data);
->>>> +#define devm_led_classdev_register(parent, led_cdev)		\
->>>> +	devm_led_classdev_register_ext(parent, led_cdev, NULL)
->>>
->>> Static inline (instead of macro) might be preffered. More type safety
->>> and less confusing behaviour in case of errors...
->>
->> This is kind of alias. You have type control in the function being
->> mapped. With inline we'd have to nest the function calls, i.e.
->> it will worsen performance by this one additional call level.
-> 
-> It is not a big issue; but no, performance will be exactly the
-> same. "static inline" says .. well, inline this into caller, so there
-> will be one function call, not two.
+Hi Brendan,
 
-Yes, I realized that right after sending the message.
+KUNIT_ASSERT_NOT_ERR_OR_NULL() should be replaced to
+KUNIT_EXPECT_NOT_ERR_OR_NULL(), right?
 
--- 
-Best regards,
-Jacek Anaszewski
+On Thu, Apr 04, 2019 at 03:06:49PM -0700, Brendan Higgins wrote:
+> Add documentation for KUnit, the Linux kernel unit testing framework.
+> - Add intro and usage guide for KUnit
+> - Add API reference
+> 
+> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+
+<snip>
+
+> diff --git a/Documentation/kunit/start.rst b/Documentation/kunit/start.rst
+> new file mode 100644
+> index 0000000000000..5cdba5091905e
+> --- /dev/null
+> +++ b/Documentation/kunit/start.rst
+
+<snip>
+
+> +Assertions
+> +~~~~~~~~~~
+> +
+> +KUnit also has the concept of an *assertion*. An assertion is just like an
+> +expectation except the assertion immediately terminates the test case if it is
+> +not satisfied.
+> +
+> +For example:
+> +
+> +.. code-block:: c
+> +
+> +	static void mock_test_do_expect_default_return(struct kunit *test)
+> +	{
+> +		struct mock_test_context *ctx = test->priv;
+> +		struct mock *mock = ctx->mock;
+> +		int param0 = 5, param1 = -5;
+> +		const char *two_param_types[] = {"int", "int"};
+> +		const void *two_params[] = {&param0, &param1};
+> +		const void *ret;
+> +
+> +		ret = mock->do_expect(mock,
+> +				      "test_printk", test_printk,
+> +				      two_param_types, two_params,
+> +				      ARRAY_SIZE(two_params));
+
+> +		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ret);
+
+		KUNIT_EXPECT_NOT_ERR_OR_NULL(test, ret);
+
+> +		KUNIT_EXPECT_EQ(test, -4, *((int *) ret));
+> +	}
+> +
+> +In this example, the method under test should return a pointer to a value, so
+> +if the pointer returned by the method is null or an errno, we don't want to
+> +bother continuing the test since the following expectation could crash the test
+
+> +case. `ASSERT_NOT_ERR_OR_NULL(...)` allows us to bail out of the test case if
+
+  +case. `KUNIT_EXPECT_NOT_ERR_OR_NULL(...)` allows us to bail out of the test case if
+
+Thanks!
+Masa
