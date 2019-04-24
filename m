@@ -1,54 +1,88 @@
-Return-Path: <sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190423095107.21091-1-gregory.clement@bootlin.com>
-References: <20190423095107.21091-1-gregory.clement@bootlin.com>
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH resend v5 0/6] Add CPU clock support for Armada 7K/8K
-Message-ID: <155623961445.15276.6825857823781902623@swboyd.mtv.corp.google.com>
-Date: Thu, 25 Apr 2019 17:46:54 -0700
-To: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Return-Path: <SRS0=HVR0=S2=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH V5 9/9] arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
+Date: Wed, 24 Apr 2019 10:22:23 +0100
+Message-Id: <1556097743-12717-10-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
+References: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Gregory CLEMENT (2019-04-23 02:51:01)
-> Hello,
->=20
-> [resent because I used an old non worlking email for Stephen Boyd]
->=20
-> This is the fifth version of a series allowing to manage the cpu clock
-> for Armada 7K/8K. The third version was sent more than 3 months
-> without any relevant feedback since this end of december last year.
->=20
-> For these SoCs, the CPUs share the same clock by cluster, so actually
-> the clock management is done at cluster level.
->=20
-> As for the other Armada 7K/8K clocks it is possible to have multiple
-> AP so here again we need to have unique name: the purpose of the second
-> patch is to share a common code which will be used in 3 drivers.
->=20
-> The last 2 patch enable the driver at dt and platform level and will
-> be applied through the mvebu subsystem.
+This patch enables TI HD3SS3220 device and support usb role switch
+for the CAT 874 platform.
 
-Has anything changed since this was sent as v2? My scripts aren't
-showing any change.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+V4-->V5
+  * No change
+V3-->V4
+  * No change
+V2-->V3
+  * Used "renesas,usb-role-switch" instead of generic "usb-role-switch"
+    property
+V1-->V2
+  * New patch
+---
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 39 +++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
->=20
-> Changelog v4->v5:
->=20
->  - As requested by the device tree maintainer make the reg property
->    mandatory
->=20
->  - Updated the device tree files accordingly with the new binding
->=20
-> Changelog v3->v4:
->  - Rebased on v5.1-rc1
->  - Mention in the binding that a reg property can be used to make the
->    device tree maintainer happy in the hope that there will be finally
->    a review on this patch blocking the whole series.
->=20
-
-But this says things happened. I'm still waiting for Rob to ack the
-binding and I seem to recall that it was incorrect? I'll have to dig
-through the archives.
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index b9ae7db..746826c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -85,6 +85,34 @@
+ 	clock-frequency = <48000000>;
+ };
+ 
++&i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
++
++	hd3ss3220@47 {
++		compatible = "ti,hd3ss3220";
++		reg = <0x47>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++		};
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hd3ss3220_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&usb3peri_role_switch>;
++			};
++		};
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
+@@ -175,6 +203,17 @@
+ &usb3_peri0 {
+ 	companion = <&xhci0>;
+ 	status = "okay";
++	renesas,usb-role-switch;
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usb3peri_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&hd3ss3220_ep>;
++		};
++	};
+ };
+ 
+ &xhci0 {
+-- 
+2.7.4
