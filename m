@@ -1,44 +1,38 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 28/30] dt-bindings: pci: tegra: Document nvidia,rst-gpio optional prop
-Date: Thu, 11 Apr 2019 22:33:53 +0530
-Message-ID: <20190411170355.6882-29-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=K8Ad=S3=socionext.com=sugaya.taichi@kernel.org>
+From: Sugaya Taichi <sugaya.taichi@socionext.com>
+Subject: [PATCH v3 3/3] ARM: dts: milbeaut: Add a clk node for Milbeaut M10V
+Date: Thu, 25 Apr 2019 19:41:02 +0900
+Message-Id: <1556188862-22546-4-git-send-email-sugaya.taichi@socionext.com>
+In-Reply-To: <1556188862-22546-1-git-send-email-sugaya.taichi@socionext.com>
+References: <1556188862-22546-1-git-send-email-sugaya.taichi@socionext.com>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document "nvidia,rst-gpio" optional property which supports GPIO based
-PERST# signal.
+Add a clk node for Milbeaut M10V.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
 ---
- Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/milbeaut-m10v.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-index dca8393b86d1..23928fd59538 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-@@ -75,6 +75,8 @@ Optional properties:
-   Pass pinctrl phandle to allow driver bring PCIe IO out of DPD state.
- - nvidia,plat-gpios: A list of platform specific gpios which controls
-   endpoint's internal regulator or PCIe logic.
-+- nvidia,rst-gpio: If GPIO is used as PERST# signal instead of available
-+  SFIO, add this property with phandle to GPIO controller and GPIO number.
- 
- Required properties on Tegra124 and later (deprecated):
- - phys: Must contain an entry for each entry in phy-names.
-@@ -671,6 +673,7 @@ Board DTS:
- 
- 		pci@1,0 {
- 			nvidia,num-lanes = <4>;
-+			nvidia,rst-gpio = <&tegra_main_gpio TEGRA_MAIN_GPIO(A, 3) 0>;
- 			status = "okay";
+diff --git a/arch/arm/boot/dts/milbeaut-m10v.dtsi b/arch/arm/boot/dts/milbeaut-m10v.dtsi
+index aa7c6ca..5428bd9 100644
+--- a/arch/arm/boot/dts/milbeaut-m10v.dtsi
++++ b/arch/arm/boot/dts/milbeaut-m10v.dtsi
+@@ -65,6 +65,13 @@
+ 			      <0x1d002000 0x1000>; /* CPU I/f base and size */
  		};
  
++		clk: m10v-clock-ctrl@1d021000 {
++			compatible = "socionext,milbeaut-m10v-ccu";
++			#clock-cells = <1>;
++			reg = <0x1d021000 0x1000>;
++			clocks = <&uclk40xi>;
++		};
++
+ 		timer@1e000050 { /* 32-bit Reload Timers */
+ 			compatible = "socionext,milbeaut-timer";
+ 			reg = <0x1e000050 0x20>;
 -- 
-2.17.1
+1.9.1
