@@ -1,25 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/5] MAINTAINERS: Add entry for BM1880 pinctrl
-Date: Thu, 25 Apr 2019 09:10:37 +0200
-Message-ID: <CACRpkdaM6HsBWNGikAG-KFWWJFOtejZV4n+KWVQngdg-U6rNUg@mail.gmail.com>
-References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org> <20190424120224.22660-6-manivannan.sadhasivam@linaro.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 3/4] media: dt-bindings: aspeed-video: Add missing
+ memory-region property
+Date: Thu, 25 Apr 2019 09:19:05 +0200
+Message-ID: <6a8601d6-ad30-132c-f47a-adc3b4d39958@xs4all.nl>
+References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
+ <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
+ <20190424211732.GA18914@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424120224.22660-6-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190424211732.GA18914@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haitao.suo@bitmain.com, darren.tsao@bitmain.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Eddie James <eajames@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 2:03 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On 4/24/19 11:17 PM, Rob Herring wrote:
+> On Wed, 24 Apr 2019 10:16:59 -0500, Eddie James wrote:
+>> Missed documenting this property in the initial commit.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>> Changes since v1:
+>>  - Add missing semi-colon
+>>
+>>  Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
+> 
 
-> Add MAINTAINERS entry for Bitmain BM1880 SoC pinctrl.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I noticed the same when I was processing this patch. I've added back your
+'Reviewed-by' tag.
 
-Patch applied.
+So there is no need to repost, Eddie. Just remember this for the next
+time :-)
 
-Yours,
-Linus Walleij
+Regards,
+
+	Hans
