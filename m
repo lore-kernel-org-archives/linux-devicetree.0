@@ -1,24 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: qoriq-clock: Add ls1028a chip compatible string
-Date: Thu, 25 Apr 2019 11:38:06 -0700
-Message-ID: <155621748632.15276.290181429944098137@swboyd.mtv.corp.google.com>
-References: <20190424022847.25510-1-andy.tang@nxp.com>
+Subject: Re: [PATCH 1/7] dt-bindings: clock: at91: new sckc bindings
+Date: Thu, 25 Apr 2019 11:43:24 -0700
+Message-ID: <155621780413.15276.1640957113449819563@swboyd.mtv.corp.google.com>
+References: <20190219170200.3608-1-alexandre.belloni@bootlin.com> <20190219170200.3608-2-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424022847.25510-1-andy.tang@nxp.com>
+In-Reply-To: <20190219170200.3608-2-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting andy.tang@nxp.com (2019-04-23 19:28:47)
-> From: Yuantian Tang <andy.tang@nxp.com>
+Quoting Alexandre Belloni (2019-02-19 09:01:54)
+> Remove the need for child nodes in the sckc binding to be able to remove
+> dtc warnings and have a more modern binding.
 >=20
-> Add ls1028a chip compatible string in binding document.
+> Also document optional properties.
 >=20
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
 
 Applied to clk-next
