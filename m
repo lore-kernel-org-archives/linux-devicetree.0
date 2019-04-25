@@ -1,77 +1,80 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names
- from DT
-Date: Thu, 25 Apr 2019 23:42:30 +0200
-Message-ID: <5d17334c-ed2f-5112-dba6-72a050bfd1b2@linaro.org>
-References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com>
- <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
- <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
+Date: Thu, 25 Apr 2019 23:46:09 +0200
+Message-ID: <20190425214609.rav7ooxovzhvgn7e@earth.universe>
+References: <20190423090451.23711-1-brgl@bgdev.pl>
+ <20190424083127.GB6699@amd>
+ <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hkqjlur2zgw6jemw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
-Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Pavel Machek <pavel@denx.de>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/25/19 23:29, Stephen Boyd wrote:
-> Quoting Jorge Ramirez (2019-04-22 04:44:50)
->> On 2/22/19 19:11, Stephen Boyd wrote:
->>> Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
->>>> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
->>>>         if (!a53cc)
->>>>                 return -ENOMEM;
->>>>  
->>>> +       /* check if the parent names are present in the device tree */
->>>
->>> This looks odd.
->>>
->>>> +       ret = devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
->>>> +       if (ret == -EPROBE_DEFER)
->>>> +               return ret;
->>>
->>> Why can't we use of_clk_parent_fill() if we know this is always a DT
->>> platform?  The parent clks may not be registered at the time of probe?
->>
->> yes, and AFAICS the important thing at this point is that the clock is
->> registered hence the handling of defer.
->>
->> I could use of_clk_parent_fill and then - if needed - call
->> devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
->> this just make the code more confusing?)
-> 
-> Yeah of_clk_parent_fill() isn't the best approach. But it at least keeps
-> this driver from using clk consumer APIs?
 
-ok will do that then.
+--hkqjlur2zgw6jemw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->>
->>
->>> Maybe this series should wait for the parent registration stuff I'm
->>> working on so that this can be made simpler.
->>
->> the need for the clock name is not intrinsic to this driver (the driver
->> itself doesnt use these names) but it just feeds these to the framework.
->>
->> I was looking into your parent registration code and I am not sure how
->> can I use it in this particular driver other than simply removing the
->> names and hoping that things are handled properly at the lower
->> levels.... could you clarify please?
->>
-> 
-> I think so. I've forgotten the context of this patch, but the general
-> idea would be to specify the parents with clock-names or DT index in the
-> DT node for the clks registered here and not use of_clk_parent_fill() or
-> do any sort of devm_clk_bulk_get() calls. Then the framework will take
-> care of finding the parents for the clks and hooking things up properly
-> for the parent-child relationship.
-> 
-> 
+Hi,
 
-ok will try that. thanks for confirming!
+On Wed, Apr 24, 2019 at 10:45:00AM +0200, Bartosz Golaszewski wrote:
+> =C5=9Br., 24 kwi 2019 o 10:31 Pavel Machek <pavel@denx.de> napisa=C5=82(a=
+):
+> >
+> > On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > This series adds support for max77650 ultra low-power PMIC. It provid=
+es
+> > > the core mfd driver and a set of five sub-drivers for the regulator,
+> > > power supply, gpio, leds and input subsystems.
+> > >
+> > > Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_d=
+evices().
+> > > Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for=
+ this
+> > > device.
+> > >
+> > > The regulator part is already upstream.
+> >
+> > I see v10 in my inbox... and acks from all over the place, but patches
+> > not going in. Who takes these? I don't think I need another 10
+> > versions in my inbox...
+> >                                                                 Pavel
+>=20
+> I think Lee Jones should take them through the MFD tree. With the ack
+> from Sebastian Reichel on the driver part and the example in the
+> charger binding fixed I think they are ready to be picked up.
+
+Fine with me.
+
+-- Sebastian
+
+--hkqjlur2zgw6jemw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzCKpoACgkQ2O7X88g7
++pr2mBAAkSSqMITsZQW+RCxTbutrVPO+dqNO9WPo6/0+bjuOfMLt5V9ty3vimvhi
+K/dCIpbQRO417ZwlyCM+mt5wuhPBGbgOy/65EBAcdFKweDFv4q/tug45qh6V3fZ8
+6iaSwd9wXMf2UttkJZ5UeOX+O+ud19RjBVmoJ8HqUG5LA+ud0ZbUcVDhlUEiMcEJ
++zNMo0HQpUuKMmHRp2iKlWkoekPFDhEWnQZbuBxwhVhKbvZCX4LavbHeiR3GCkO8
+Q1onr1MjkpFJfrQTjbQLOKFB5i2/I4EMmZ63LECwv5PhaYkb3Rf7dtGj7koS+4ni
+rVKYEvSuiCXDPliimXmV6zorkK4FQd2ykZc+pHamTdEMsqanOr+K/BpSh4qOZvqH
+Mo2t4FiEqKZ2ATKnfimQsqnPG37cr5yq4cKwukL+hND36maWjws0jF9o2HkXJI8Y
+CTcIs+ZGjuDRDgW5bxkpao9P+M16FlKzrkO1EP6LLCBtIQde4nWf5jn26xHj8j56
+QHGToQk12PykVLrXrzpWFYxHilzCtV7ZNdSj02rMFJFiCwcxkqPv2jJqQhILJnuR
+CcdSpEILZZgcTan0H4p7plyOJWoPpminEHFZLHTNkQyywFYXXQRGHVRvNXjc/P/I
+vpvXVsB8WQCEXVhUtJz1fzyEhBSKN0XGOPEWEe6OYtI4rgtm+io=
+=X5TB
+-----END PGP SIGNATURE-----
+
+--hkqjlur2zgw6jemw--
