@@ -1,7 +1,7 @@
 From: Greg KH <gregkh@linuxfoundation.org>
 Subject: Re: [PATCHv1 5/6] firmware: rsu: document sysfs interface
-Date: Thu, 25 Apr 2019 22:27:20 +0200
-Message-ID: <20190425202719.GC22307@kroah.com>
+Date: Thu, 25 Apr 2019 22:28:27 +0200
+Message-ID: <20190425202827.GD22307@kroah.com>
 References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
  <1554835562-25056-6-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
@@ -47,10 +47,26 @@ On Tue, Apr 09, 2019 at 01:46:01PM -0500, richard.gong@linux.intel.com wrote:
 > +Contact:        Richard Gong <richard.gong@intel.com>
 > +Description:
 > +		(RO) the address of failed image in flash.
+> +
+> +What:           /sys/devices/platform/soc:firmware:svc/soc:firmware:svc:rsu/state
+> +Date:           April 2019
+> +KernelVersion:  5.2
+> +Contact:        Richard Gong <richard.gong@intel.com>
+> +Description:
+> +		(RO) the state of RSU system.
+> +		The state field has two parts: major error code in upper 16 bits and minor error code
+> +		in lower 16 bits.
+> +		1. Major error code
+> +			0xF001 -- bitstream error
+> +			0xF002 -- hardware access failure
+> +			0xF003 -- bitstream corruption
+> +			0xF004 -- internal error
+> +			0xF005 -- device error
+> +			0xF006 -- HPS watchdog timeout
+> +			0xF007 -- internal unknown error
+> +		2: Minor error code
+> +			Currently used only when major error is 0xF006 (HPS watchdog timeout), in which
+> +		case the minor error code is the value reported by HPS to firmware through the RSU notify
+> +		command before the watchdog timeout occurs.
 
-Use tabs everywhere please, do not mix spaces for some attributes and
-tabs for others.
-
-thanks,
-
-gre gk-h
+Properly wrap your lines at 72 colums.
