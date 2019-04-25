@@ -1,64 +1,179 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names from DT
-Date: Thu, 25 Apr 2019 14:29:05 -0700
-Message-ID: <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
-References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org> <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com> <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
+Date: Thu, 25 Apr 2019 23:32:30 +0200
+Message-ID: <CAPDyKFr_SNVrnZy74bOa_f46yb8CcEozvFu=wdhSz9=Zme=XAw@mail.gmail.com>
+References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
+ <1551802205-32188-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFoZuQ+hshZpj-qjchKf7enW4ChPd=r_QhK2xtuJcSvqxQ@mail.gmail.com>
+ <fd57fd63-093e-dd23-5ca4-6bd4f99ecda9@st.com> <CAPDyKFrmTX6w1ZgwBkEmieCQ5swUQx_O864mHofhNsz3LFC32A@mail.gmail.com>
+ <30eae958-fd66-96a2-52a2-661c0646a302@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
+In-Reply-To: <30eae958-fd66-96a2-52a2-661c0646a302@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
-Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez (2019-04-22 04:44:50)
-> On 2/22/19 19:11, Stephen Boyd wrote:
-> > Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
-> >> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platf=
-orm_device *pdev)
-> >>         if (!a53cc)
-> >>                 return -ENOMEM;
-> >> =20
-> >> +       /* check if the parent names are present in the device tree */
-> >=20
-> > This looks odd.
-> >=20
-> >> +       ret =3D devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
-> >> +       if (ret =3D=3D -EPROBE_DEFER)
-> >> +               return ret;
-> >=20
-> > Why can't we use of_clk_parent_fill() if we know this is always a DT
-> > platform?  The parent clks may not be registered at the time of probe?
->=20
-> yes, and AFAICS the important thing at this point is that the clock is
-> registered hence the handling of defer.
->=20
-> I could use of_clk_parent_fill and then - if needed - call
-> devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
-> this just make the code more confusing?)
+On Thu, 25 Apr 2019 at 16:09, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+>
+> On 4/25/19 12:08 PM, Ulf Hansson wrote:
+> > On Thu, 25 Apr 2019 at 11:22, Ludovic BARRE <ludovic.barre@st.com> wrote:
+> >>
+> >> hi Ulf
+> >>
+> >> On 4/23/19 3:39 PM, Ulf Hansson wrote:
+> >>> On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> >>>>
+> >>>> From: Ludovic Barre <ludovic.barre@st.com>
+> >>>>
+> >>>> The busy status bit could occurred even if no busy response is
+> >>>> expected (example cmd11). On sdmmc variant, the busy_detect_flag
+> >>>> reflects inverted value of d0 state, it's sampled at the end of a
+> >>>> CMD response and a second time 2 clk cycles after the CMD response.
+> >>>> To avoid a fake busy, the busy status could be checked and polled
+> >>>> only if the command has RSP_BUSY flag.
+> >>>
+> >>> I would appreciate a better explanation of what this patch really changes.
+> >>>
+> >>> The above is giving some background to the behavior of sdmmc variant,
+> >>> but at this point that variant doesn't even have the
+> >>> ->variant->busy_detect flag set.
+> >>>
+> >>
+> >> Yes, I will try to explain more and focus on common behavior.
+> >>
+> >>>>
+> >>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> >>>> ---
+> >>>>    drivers/mmc/host/mmci.c | 19 +++++++++++++------
+> >>>>    1 file changed, 13 insertions(+), 6 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> >>>> index 387ff14..4901b73 100644
+> >>>> --- a/drivers/mmc/host/mmci.c
+> >>>> +++ b/drivers/mmc/host/mmci.c
+> >>>> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+> >>>>                unsigned int status)
+> >>>>    {
+> >>>>           void __iomem *base = host->base;
+> >>>> -       bool sbc;
+> >>>> +       bool sbc, busy_resp;
+> >>>>
+> >>>>           if (!cmd)
+> >>>>                   return;
+> >>>>
+> >>>>           sbc = (cmd == host->mrq->sbc);
+> >>>> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
+> >>>>
+> >>>>           /*
+> >>>>            * We need to be one of these interrupts to be considered worth
+> >>>> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+> >>>>           /*
+> >>>>            * ST Micro variant: handle busy detection.
+> >>>>            */
+> >>>> -       if (host->variant->busy_detect) {
+> >>>> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
+> >>>> +       if (busy_resp && host->variant->busy_detect) {
+> >>>>
+> >>>>                   /* We are busy with a command, return */
+> >>>>                   if (host->busy_status &&
+> >>>> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+> >>>>                    * that the special busy status bit is still set before
+> >>>>                    * proceeding.
+> >>>>                    */
+> >>>> -               if (!host->busy_status && busy_resp &&
+> >>>> +               if (!host->busy_status &&
+> >>>>                       !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+> >>>>                       (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+> >>>
+> >>> All the changes above makes perfect sense to me, but looks more like a
+> >>> cleanup of the code, rather than actually changing the behavior.
+> >>
+> >> yes, few changing (this just avoid to enter in
+> >> "if (host->variant->busy_detect)") at each time.
+> >> I could move this part in cleanup patch (before this patch)
+> >
+> > Sounds good to me!
+> >
+> >>
+> >>>
+> >>>>
+> >>>> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+> >>>>    {
+> >>>>           struct mmci_host *host = dev_id;
+> >>>>           u32 status;
+> >>>> +       bool busy_resp;
+> >>>>           int ret = 0;
+> >>>>
+> >>>>           spin_lock(&host->lock);
+> >>>> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+> >>>>                   }
+> >>>>
+> >>>>                   /*
+> >>>> -                * Don't poll for busy completion in irq context.
+> >>>> +                * Don't poll for:
+> >>>> +                * -busy completion in irq context.
+> >>>> +                * -no busy response expected.
+> >>>>                    */
+> >>>> -               if (host->variant->busy_detect && host->busy_status)
+> >>>> +               busy_resp = host->cmd ?
+> >>>> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
+> >>>
+> >>> This doesn't make sense to me, but I may be missing something.
+> >>>
+> >>> host->busy_status is being updated by mmci_cmd_irq() and only when
+> >>> MMC_RSP_BUSY is set for the command in flight. In other words,
+> >>> checking for MMC_RSP_BUSY here as well is redundant. No?
+> >>
+> >> In mmci_irq the "do while" loops until the status is totally cleared.
+> >>
+> >> Today (for variant with busy_detect option), the status busy_detect_flag
+> >> is excluded only while busy_status period (command with MMC_RSP_BUSY and
+> >> while busy line is low => "busy_status=1")
+> >>
+> >> On SDMMC variant I noticed that busy_detect_flag status could be enabled
+> >> even if the command is not MMC_RSP_BUSY, for example sdmmc variant stay
+> >> in loop while cmd11 voltage switch.
+> >
+> > Right, I see.
+> >
+> >>
+> >> So I wish extend host->variant->busy_detect_flag exclusion for all
+> >> commands which is not a MMC_RSP_BUSY. I suppose that other variants
+> >> could have the same behavior, and else there is no impact, normally.
+> >
+> > I am guessing this is because the variant->busy_dpsm_flag has been set
+> > in the datactrl register, which is needed for mmci_card_busy().
+> >
+> > That said, I am kind of wondering if we ever should need repeat the
+> > while loop if 'status' contains the bit for
+> > host->variant->busy_detect_flag. I mean we have already called
+> > mmci_cmd_irq() to handle it.
+> >
+> > So, couldn't we just always do:
+> >
+> > if (host->variant->busy_detect_flag)
+> >      status &= ~host->variant->busy_detect_flag;
+> >
+> > No?
+>
+> yes that make sense, I launched tests on sdmmc and it's ok.
+> I think, that we could take on this solution.
 
-Yeah of_clk_parent_fill() isn't the best approach. But it at least keeps
-this driver from using clk consumer APIs?
+Great!
 
->=20
->=20
-> > Maybe this series should wait for the parent registration stuff I'm
-> > working on so that this can be made simpler.
->=20
-> the need for the clock name is not intrinsic to this driver (the driver
-> itself doesnt use these names) but it just feeds these to the framework.
->=20
-> I was looking into your parent registration code and I am not sure how
-> can I use it in this particular driver other than simply removing the
-> names and hoping that things are handled properly at the lower
-> levels.... could you clarify please?
->=20
+>
+> If it's ok for you, I resend a series with all modifications.
 
-I think so. I've forgotten the context of this patch, but the general
-idea would be to specify the parents with clock-names or DT index in the
-DT node for the clks registered here and not use of_clk_parent_fill() or
-do any sort of devm_clk_bulk_get() calls. Then the framework will take
-care of finding the parents for the clks and hooking things up properly
-for the parent-child relationship.
+Yes, please do. I haven't reviewed the rest of the series yet, but it
+may be better to do that when the next version is ready.
+
+In either case, I should have some time to run some tests of the next
+version, if you manage to send it within a couple of days or so.
+
+[...]
+
+Kind regards
+Uffe
