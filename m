@@ -1,97 +1,43 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V5 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Thu, 25 Apr 2019 18:16:59 +0100
-Message-ID: <20190425171659.GB4319@lakrids.cambridge.arm.com>
-References: <1555447156-28306-1-git-send-email-Frank.Li@nxp.com>
- <1555447156-28306-2-git-send-email-Frank.Li@nxp.com>
- <20190424105822.GA14614@fuggles.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 3/6] regulator: max77620: Support Maxim 77663
+Date: Thu, 25 Apr 2019 18:41:44 +0100
+Message-ID: <20190425174144.GC22575@sirena.org.uk>
+References: <20190424224900.8018-1-digetx@gmail.com>
+ <20190424224900.8018-4-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="B4IIlcmfBL/1gGOG"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190424105822.GA14614@fuggles.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190424224900.8018-4-digetx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:58:22AM +0100, Will Deacon wrote:
-> Hi Frank,
-> 
-> On Tue, Apr 16, 2019 at 08:39:33PM +0000, Frank Li wrote:
-> > Add ddr performance monitor support for iMX8QXP
-> > 
-> > There are 4 counters for ddr perfomance events.
-> > counter 0 is dedicated for cycles.
-> > you choose any up to 3 no cycles events.
-> 
-> I was about to pick this up, but I still have a few questions/comments
-> on the code:
-> 
-> > +static irqreturn_t ddr_perf_irq_handler(int irq, void *p)
-> > +{
-> > +	int i;
-> > +	u8 reg;
-> > +	int val;
-> > +	int counter;
-> > +	struct ddr_pmu *pmu = (struct ddr_pmu *) p;
-> > +	struct perf_event *event;
-> > +
-> > +	/* Only cycles counter overflowed can issue irq. all counters will
-> > +	 * be stopped when cycles counter overflow. but other counter don't stop
-> > +	 * when overflow happen. Update all of the local counter values,
-> > +	 * then reset the cycles counter, so the others can continue
-> > +	 * counting. cycles counter is fastest counter in all events. at last
-> > +	 * 4 times than other counters.
-> > +	 */
-> > +	for (i = 0; i < NUM_COUNTER; i++) {
-> > +
-> > +		if (!pmu->active_events[i])
-> > +			continue;
-> > +
-> > +		event = pmu->active_events[i];
-> > +		counter = event->hw.idx;
-> > +		reg = counter * 4 + COUNTER_CNTL;
-> > +		val = readl(pmu->base + reg);
-> 
-> Does this read have a side-effect, or can it be removed given that you don't
-> use val for anything else?
-> 
-> > +		ddr_perf_event_update(event);
-> > +
-> > +		if (counter == EVENT_CYCLES_COUNTER) {
-> > +			ddr_perf_event_enable(pmu,
-> > +					      EVENT_CYCLES_ID,
-> > +					      EVENT_CYCLES_COUNTER,
-> > +					      true);
-> > +			ddr_perf_event_update(event);
-> > +		}
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> 
-> What stops the IRQ handler running concurrently with perf callbacks? I can't
-> see any locking here, or is the IRQ supposed to be affine to the same CPU
-> that's handling the perf context?
 
-To be correct, the IRQ affinity should be set to match the logical
-affinity of the PMU, but it looks like that's not done at setup or
-migrate time.
+--B4IIlcmfBL/1gGOG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Frank, please take a look at what drivers/perf/arm-ccn.c does with teh
-IRQ, including the use of IRQF_NOBALANCING | IRQF_NO_THREAD flags when
-requesting the IRQ to begin with.
+On Thu, Apr 25, 2019 at 01:48:57AM +0300, Dmitry Osipenko wrote:
+> Add support for Maxim 77663.
 
-Thanks,
-Mark.
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--B4IIlcmfBL/1gGOG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzB8VcACgkQJNaLcl1U
+h9C5MQf/e2dZ7OiWk6YvNr2eKFK3rstlkbMyDYubayOmpQ+34xTFCBU3W6VHjoPC
+kF+Aqr8vVUh8VFcEAU/kw4V7P5ghtZ8IPV3SrT4Ta1dP4ntd12SKkD9EwBIsXlGg
+NrSblWxWunv+aSUaPZ/1gkdvJ+orhRkul+f8yoxPZGKqcGhvDTcBOIfYYkxSfqm9
+d8OEf+hf9hNC1uxg/Jawtm/8oi9hYQEIQm/sm6M33DkBkScHkhUXYZB2KQRWx3LE
+wnryRHfks1n1aXDudkiBwjpXZ094cBTtx519NZR7DQKNZ3TMQZVe6T7t9cIF0RN/
+rRUgO7y5ZPqYJnP6iK6UxLWfW4TH+Q==
+=AyPs
+-----END PGP SIGNATURE-----
+
+--B4IIlcmfBL/1gGOG--
