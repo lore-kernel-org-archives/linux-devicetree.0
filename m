@@ -1,130 +1,98 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v3 05/14] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-Date: Thu, 25 Apr 2019 16:28:44 +0200
-Message-ID: <b00ee1e4c394f5d71612eb4b0207f91e9d24b793.camel@v3.sk>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
-         <20181120100318.367987-6-lkundrak@v3.sk> <20181122200341.GA8279@w540>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v3 6/6] mfd: max77620: Provide system power-off
+ functionality
+Date: Thu, 25 Apr 2019 17:58:53 +0300
+Message-ID: <7251d025-b229-7c78-f2b8-187b833183fa@gmail.com>
+References: <20190424224900.8018-1-digetx@gmail.com>
+ <20190424224900.8018-7-digetx@gmail.com> <20190425112241.GA10218@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181122200341.GA8279@w540>
+In-Reply-To: <20190425112241.GA10218@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-11-22 at 21:08 +0100, jacopo mondi wrote:
-> Hi Lubomir,
+25.04.2019 14:22, Thierry Reding пишет:
+> On Thu, Apr 25, 2019 at 01:49:00AM +0300, Dmitry Osipenko wrote:
+>> Provide system power-off functionality that allows to turn off machine
+>> gracefully.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/mfd/max77620.c | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+>> index 9b0009c29610..e56223bde568 100644
+>> --- a/drivers/mfd/max77620.c
+>> +++ b/drivers/mfd/max77620.c
+>> @@ -37,6 +37,8 @@
+>>  #include <linux/regmap.h>
+>>  #include <linux/slab.h>
+>>  
+>> +static struct max77620_chip *max77620_scratch;
+>> +
+>>  static const struct resource gpio_resources[] = {
+>>  	DEFINE_RES_IRQ(MAX77620_IRQ_TOP_GPIO),
+>>  };
+>> @@ -481,6 +483,15 @@ static int max77620_read_es_version(struct max77620_chip *chip)
+>>  	return ret;
+>>  }
+>>  
+>> +static void max77620_pm_power_off(void)
+>> +{
+>> +	struct max77620_chip *chip = max77620_scratch;
+>> +
+>> +	regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG1,
+>> +			   MAX77620_ONOFFCNFG1_SFT_RST,
+>> +			   MAX77620_ONOFFCNFG1_SFT_RST);
+>> +}
 > 
-> On Tue, Nov 20, 2018 at 11:03:10AM +0100, Lubomir Rintel wrote:
-> > Add Marvell MMP2 camera host interface.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v2:
-> > - Added #clock-cells, clock-names, port
-> > 
-> >  .../bindings/media/marvell,mmp2-ccic.txt      | 37 +++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > new file mode 100644
-> > index 000000000000..e5e8ca90e7f7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > @@ -0,0 +1,37 @@
-> > +Marvell MMP2 camera host interface
-> > +
-> > +Required properties:
-> > + - compatible: Should be "marvell,mmp2-ccic"
-> > + - reg: register base and size
-> > + - interrupts: the interrupt number
-> > + - #clock-cells: must be 0
-> > + - any required generic properties defined in video-interfaces.txt
+> I think this is only partially correct. See here for a driver that I had
+> proposed a while back:
 > 
-> I don't think video-interfaces applies here. It described bindings to
-> be used for endpoint and port nodes.
-
-Yes. Will fix.
-
-> > +
-> > +Optional properties:
-> > + - clocks: input clock (see clock-bindings.txt)
+> 	https://github.com/thierryreding/linux/commit/d0eaa77b402f62bd236d76e3edeb3ccf296cbe81
 > 
-> What do you think of:
-> "reference to the input clock as specified by clock-bindings.txt"
-
-Sounds good; I'll use that.
-
-> > + - clock-names: names of the clocks used, may include "axi", "func" and
-> > +                "phy"
+> Note that that driver is part of a larger series to move away from all
+> the pm_power_off hackery. There was a fair bit of discussion back when I
+> proposed the original power off driver for max77620:
 > 
-> "may include" is abit vague. Which clock should the interface be
-> powered from, and in which case?
-
-I did this somewhat intentionally, because the hardware documentation
-is secret and the only clue about the clocks comes from what is
-actually implemented in the driver.
-
-I think I can still improve it somehow though, without too much risk of
-stating things incorrectly.
-
-> > + - clock-output-names: should contain the name of the clock driving the
-> > +                       sensor master clock MCLK
+> 	https://lkml.org/lkml/2017/1/12/470
 > 
-> This is a property for the clock provider part, and I will just list
-> the only clock this interfaces provides here:
-> 
->     - clock-output-names: Optional clock source for sensors. Shall be "mclk".
+> I think I may have a more up-to-date local branch of the system-power
+> branch from my github repository if you're interested in looking at some
+> of that code. There wasn't a whole lot of feedback on the patches, but
+> the feedback I did get was generally positive. However, since it didn't
+> gain any traction I eventually abandoned that effort. It might be worth
+> picking it up again, since, as far as I can tell, the situation around
+> power off and restart hasn't changed in the meantime.
 
-Thanks, will fix in next patch version.
+Hello Thierry,
 
-> See a comment on patch 14 on the use of the clock provider part.
-> 
-> > +
-> > +Required subnodes:
-> > + - port: the parallel bus interface port with a single endpoint linked to
-> > +         the sensor's endpoint as described in video-interfaces.txt
-> > +
-> > +Example:
-> > +
-> > +	camera0: camera@d420a000 {
-> > +		compatible = "marvell,mmp2-ccic";
-> > +		reg = <0xd420a000 0x800>;
-> > +		interrupts = <42>;
-> > +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> > +		clock-names = "axi";
-> > +		#clock-cells = <0>;
-> > +		clock-output-names = "mclk";
-> > +
-> > +		port {
-> > +			camera0_0: endpoint {
-> > +				remote-endpoint = <&ov7670_0>;
-> 
-> I'm debated, your sensor does not support configuring the parallel bus,
-> that's fine, but as "bindings describe hardware" shouldn't you list
-> here the bus configurations the HW interface supports and list their default
-> values? Or there are none for real in this platform?
+Thank you very much for the feedback. IIUC, you're asking for a
+comprehensive solution that nobody managed to get upstreamed for years
+and thus I think it is absolutely fine to have at least a practical
+minimum implemented for the start.
 
-Hard to tell, given Marvell won't publish the documentation.
+In yours system-power series you are saying that the restart handlers
+"lack any means of locking against concurrently registering handlers or
+formal definitions on what proper priorities are to order handlers", it
+looks to me that it will be much easier to just fix the missing locks
+and properly define the priorities.
 
-The driver seems to have some rudimentary support for bus-type of
-<V4L2_MBUS_CSI2_DPHY>, but I have no idea whether it's on MMP2
-hardware. The 16x documentation, that may or may not be relevant, only
-lists parallel formats.
+	https://github.com/thierryreding/linux/commit/16e386d4692716c3f2423732a2181fb589421526
 
-I'd prefer not to take risks of making wrong guesses and don't list I
-can not verify to be correct.
+In the LKML discussion there is also pointer to the "poweroff handler
+call chain" series from 2014 which is similar to the restart handlers
+and actually looks nice, sadly it didn't got too far.
 
-> Thanks
->   j
+	https://lkml.org/lkml/2014/10/21/5
 
-There are points above I have not responded to. I'll address them in
-the next version of the patch.
-
-Thank you
-Lubo
+I may try to continue the effort of getting proper restart / poweroff
+handlers into upstream at some point in the future. Meanwhile there are
+much bigger and fun problems to solve in the kernel and user spaces,
+let's get everything step by step on by as-needed basis.
