@@ -1,34 +1,47 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] arm64: dts: pms405: increase s3 max voltage
-Date: Thu, 25 Apr 2019 13:34:29 +0200
-Message-ID: <20190425113429.14321-1-niklas.cassel@linaro.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Harish Bandi <c-hbandi@codeaurora.org>
+Subject: [PATCH v7 0/2] Enable Bluetooth functionality for WCN3998.
+Date: Thu, 25 Apr 2019 17:43:34 +0530
+Message-ID: <1556194416-30842-1-git-send-email-c-hbandi@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: mka@chromium.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Harish Bandi <c-hbandi@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Increase s3 max voltage in accordance to QCS404 CPR Fusing Guide Rev 6.0
+This patch series we add support for WCN3998 BT chip set. This new chip set
+is based from the WCN3990 with minimal power numbers. So here in this patch
+The major difference between wcn3990 and WCN3998 is only power numbers.
+where as init process and fw download is same with wcn3990.
+So we add new compatible for WCN3998. 
+Removed the Reading of regulator values from dts.
+Added new compatible for WCN3998.
+Changes in V6:
+Initialized rom_ver to 0 to fix compiler warning 
+Changed Commit text for DT patch
+Changes in V6:
+changed return value to false in the qca_is_wcn399x()stub
+Changes in V5:
+changed is_qca_soc_type_wcn399x_family to
+qca_is_wcn399x helper function 
+Moved the qca_is_wcn399x function to btqca.c
+modified the DT document for wcn399x as per driver code
+Changes in V4:
+Added is_qca_soc_type_wcn399x_family helper function 
+to get the soc type is wcn399x or not.
+Changes in V3:
+updated to latest code base.
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Harish Bandi (2):
+  Bluetooth: hci_qca: Added support for WCN3998
+  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
+    WCN3998
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 2c3127167e3c..6910fc663fe1 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -64,7 +64,7 @@
- 		regulator-boot-on;
- 		regulator-name = "vdd_apc";
- 		regulator-min-microvolt = <1048000>;
--		regulator-max-microvolt = <1352000>;
-+		regulator-max-microvolt = <1384000>;
- 	};
- };
- 
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt |  5 +--
+ drivers/bluetooth/btqca.c                          | 12 +++++--
+ drivers/bluetooth/btqca.h                          |  8 ++++-
+ drivers/bluetooth/hci_qca.c                        | 40 ++++++++++++++--------
+ 4 files changed, 45 insertions(+), 20 deletions(-)
+
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
