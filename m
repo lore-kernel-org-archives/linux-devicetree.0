@@ -1,42 +1,149 @@
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v2 4/6] ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
-Date: Thu, 25 Apr 2019 11:17:21 +0200
-Message-ID: <1556183843-28033-5-git-send-email-fabien.dessenne@st.com>
-References: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
+Date: Thu, 25 Apr 2019 11:22:37 +0200
+Message-ID: <fd57fd63-093e-dd23-5ca4-6bd4f99ecda9@st.com>
+References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
+ <1551802205-32188-2-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFoZuQ+hshZpj-qjchKf7enW4ChPd=r_QhK2xtuJcSvqxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <CAPDyKFoZuQ+hshZpj-qjchKf7enW4ChPd=r_QhK2xtuJcSvqxQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Declare hwspinlock device for stm32mp157 SoC
+hi Ulf
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 4/23/19 3:39 PM, Ulf Hansson wrote:
+> On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> The busy status bit could occurred even if no busy response is
+>> expected (example cmd11). On sdmmc variant, the busy_detect_flag
+>> reflects inverted value of d0 state, it's sampled at the end of a
+>> CMD response and a second time 2 clk cycles after the CMD response.
+>> To avoid a fake busy, the busy status could be checked and polled
+>> only if the command has RSP_BUSY flag.
+> 
+> I would appreciate a better explanation of what this patch really changes.
+> 
+> The above is giving some background to the behavior of sdmmc variant,
+> but at this point that variant doesn't even have the
+> ->variant->busy_detect flag set.
+> 
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 105e21f..824d7e1 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -886,6 +886,14 @@
- 			status = "disabled";
- 		};
- 
-+		hsem: hwspinlock@4c000000 {
-+			compatible = "st,stm32-hwspinlock";
-+			#hwlock-cells = <2>;
-+			reg = <0x4c000000 0x400>;
-+			clocks = <&rcc HSEM>;
-+			clock-names = "hsem";
-+		};
-+
- 		ipcc: mailbox@4c001000 {
- 			compatible = "st,stm32mp1-ipcc";
- 			#mbox-cells = <1>;
--- 
-2.7.4
+Yes, I will try to explain more and focus on common behavior.
+
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.c | 19 +++++++++++++------
+>>   1 file changed, 13 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index 387ff14..4901b73 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>               unsigned int status)
+>>   {
+>>          void __iomem *base = host->base;
+>> -       bool sbc;
+>> +       bool sbc, busy_resp;
+>>
+>>          if (!cmd)
+>>                  return;
+>>
+>>          sbc = (cmd == host->mrq->sbc);
+>> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
+>>
+>>          /*
+>>           * We need to be one of these interrupts to be considered worth
+>> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>          /*
+>>           * ST Micro variant: handle busy detection.
+>>           */
+>> -       if (host->variant->busy_detect) {
+>> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
+>> +       if (busy_resp && host->variant->busy_detect) {
+>>
+>>                  /* We are busy with a command, return */
+>>                  if (host->busy_status &&
+>> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>                   * that the special busy status bit is still set before
+>>                   * proceeding.
+>>                   */
+>> -               if (!host->busy_status && busy_resp &&
+>> +               if (!host->busy_status &&
+>>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+>>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+> 
+> All the changes above makes perfect sense to me, but looks more like a
+> cleanup of the code, rather than actually changing the behavior.
+
+yes, few changing (this just avoid to enter in
+"if (host->variant->busy_detect)") at each time.
+I could move this part in cleanup patch (before this patch)
+
+> 
+>>
+>> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>   {
+>>          struct mmci_host *host = dev_id;
+>>          u32 status;
+>> +       bool busy_resp;
+>>          int ret = 0;
+>>
+>>          spin_lock(&host->lock);
+>> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>                  }
+>>
+>>                  /*
+>> -                * Don't poll for busy completion in irq context.
+>> +                * Don't poll for:
+>> +                * -busy completion in irq context.
+>> +                * -no busy response expected.
+>>                   */
+>> -               if (host->variant->busy_detect && host->busy_status)
+>> +               busy_resp = host->cmd ?
+>> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
+> 
+> This doesn't make sense to me, but I may be missing something.
+> 
+> host->busy_status is being updated by mmci_cmd_irq() and only when
+> MMC_RSP_BUSY is set for the command in flight. In other words,
+> checking for MMC_RSP_BUSY here as well is redundant. No?
+
+In mmci_irq the "do while" loops until the status is totally cleared.
+
+Today (for variant with busy_detect option), the status busy_detect_flag
+is excluded only while busy_status period (command with MMC_RSP_BUSY and 
+while busy line is low => "busy_status=1")
+
+On SDMMC variant I noticed that busy_detect_flag status could be enabled
+even if the command is not MMC_RSP_BUSY, for example sdmmc variant stay
+in loop while cmd11 voltage switch.
+
+So I wish extend host->variant->busy_detect_flag exclusion for all
+commands which is not a MMC_RSP_BUSY. I suppose that other variants
+could have the same behavior, and else there is no impact, normally.
+
+> 
+>> +
+>> +               if (host->variant->busy_detect &&
+>> +                   (!busy_resp || host->busy_status))
+>>                          status &= ~host->variant->busy_detect_flag;
+>>
+>>                  ret = 1;
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
