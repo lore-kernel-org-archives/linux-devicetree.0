@@ -1,152 +1,64 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCHv1 4/6] firmware: add Intel Stratix10 remote system update
- driver
-Date: Thu, 25 Apr 2019 22:33:41 +0200
-Message-ID: <20190425203341.GF22307@kroah.com>
-References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
- <1554835562-25056-5-git-send-email-richard.gong@linux.intel.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names from DT
+Date: Thu, 25 Apr 2019 14:29:05 -0700
+Message-ID: <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
+References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org> <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com> <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1554835562-25056-5-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: richard.gong@linux.intel.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Richard Gong <richard.gong@intel.com>
+To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
+Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 01:46:00PM -0500, richard.gong@linux.intel.com wrote:
-> +static ssize_t reboot_image_store(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-> +	unsigned long address;
-> +	int ret;
-> +
-> +	if (priv == 0)
-> +		return -ENODEV;
-> +
-> +	ret = kstrtoul(buf, 0, &address);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rsu_send_msg(priv, COMMAND_RSU_UPDATE,
-> +			address, rsu_update_callback);
-> +
-> +	return count;
-> +}
+Quoting Jorge Ramirez (2019-04-22 04:44:50)
+> On 2/22/19 19:11, Stephen Boyd wrote:
+> > Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
+> >> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platf=
+orm_device *pdev)
+> >>         if (!a53cc)
+> >>                 return -ENOMEM;
+> >> =20
+> >> +       /* check if the parent names are present in the device tree */
+> >=20
+> > This looks odd.
+> >=20
+> >> +       ret =3D devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
+> >> +       if (ret =3D=3D -EPROBE_DEFER)
+> >> +               return ret;
+> >=20
+> > Why can't we use of_clk_parent_fill() if we know this is always a DT
+> > platform?  The parent clks may not be registered at the time of probe?
+>=20
+> yes, and AFAICS the important thing at this point is that the clock is
+> registered hence the handling of defer.
+>=20
+> I could use of_clk_parent_fill and then - if needed - call
+> devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
+> this just make the code more confusing?)
 
-No error checking that the value was a sane one?  That this message
-actually worked?  I can write any random number in here and have no
-error happen at all?  Nice!  :(
+Yeah of_clk_parent_fill() isn't the best approach. But it at least keeps
+this driver from using clk consumer APIs?
 
-> +static ssize_t notify_store(struct device *dev,
-> +			    struct device_attribute *attr,
-> +			    const char *buf, size_t count)
-> +{
-> +	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-> +	unsigned long status;
-> +	int ret;
-> +
-> +	if (priv == 0)
-> +		return -ENODEV;
-> +
-> +	ret = kstrtoul(buf, 0, &status);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rsu_send_msg(priv, COMMAND_RSU_NOTIFY,
-> +			status, rsu_notify_callback);
-> +
-> +	return count;
-> +}
+>=20
+>=20
+> > Maybe this series should wait for the parent registration stuff I'm
+> > working on so that this can be made simpler.
+>=20
+> the need for the clock name is not intrinsic to this driver (the driver
+> itself doesnt use these names) but it just feeds these to the framework.
+>=20
+> I was looking into your parent registration code and I am not sure how
+> can I use it in this particular driver other than simply removing the
+> names and hoping that things are handled properly at the lower
+> levels.... could you clarify please?
+>=20
 
-Same comment here.
-
-> +
-> +static DEVICE_ATTR_RO(current_image);
-> +static DEVICE_ATTR_RO(fail_image);
-> +static DEVICE_ATTR_RO(state);
-> +static DEVICE_ATTR_RO(version);
-> +static DEVICE_ATTR_RO(error_location);
-> +static DEVICE_ATTR_RO(error_details);
-> +static DEVICE_ATTR_WO(reboot_image);
-> +static DEVICE_ATTR_WO(notify);
-> +
-> +static struct attribute *attrs[] = {
-> +	&dev_attr_current_image.attr,
-> +	&dev_attr_fail_image.attr,
-> +	&dev_attr_state.attr,
-> +	&dev_attr_version.attr,
-> +	&dev_attr_error_location.attr,
-> +	&dev_attr_error_details.attr,
-> +	&dev_attr_reboot_image.attr,
-> +	&dev_attr_notify.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute_group attr_group = {
-> +	.attrs = attrs
-> +};
-
-ATTRIBUTE_GROUP()?
-
-> +static int stratix10_rsu_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct stratix10_rsu_priv *priv;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->client.dev = dev;
-> +	priv->client.receive_cb = NULL;
-> +	priv->client.priv = priv;
-> +	priv->status.current_image = 0;
-> +	priv->status.fail_image = 0;
-> +	priv->status.error_location = 0;
-> +	priv->status.error_details = 0;
-> +	priv->status.version = 0;
-> +	priv->status.state = 0;
-> +
-> +	mutex_init(&priv->lock);
-> +	priv->chan = stratix10_svc_request_channel_byname(&priv->client,
-> +							 SVC_CLIENT_RSU);
-> +	if (IS_ERR(priv->chan)) {
-> +		dev_err(dev, "couldn't get service channel (%s)\n",
-> +			SVC_CLIENT_RSU);
-> +		return PTR_ERR(priv->chan);
-> +	}
-> +
-> +	init_completion(&priv->completion);
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* status is only updated after reboot */
-> +	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
-> +			   0, rsu_status_callback);
-> +	if (ret) {
-> +		dev_err(dev, "Error getting RSU status (%i)\n", ret);
-> +		stratix10_svc_free_channel(priv->chan);
-> +		return ret;
-> +	}
-> +
-> +	ret = sysfs_create_group(&dev->kobj, &attr_group);
-
-Why not add this to the device earlier so that the driver core creates
-it all for your automatically?
-
-Or does platform devices not do this?  I can never remember...
-
-> +	if (ret)
-> +		stratix10_svc_free_channel(priv->chan);
-> +
-> +	pr_info("Intel RSU Driver Initialized\n");
-
-Don't be noisy, if all goes well, never say anything.
-
-thanks,
-
-greg k-h
+I think so. I've forgotten the context of this patch, but the general
+idea would be to specify the parents with clock-names or DT index in the
+DT node for the clks registered here and not use of_clk_parent_fill() or
+do any sort of devm_clk_bulk_get() calls. Then the framework will take
+care of finding the parents for the clks and hooking things up properly
+for the parent-child relationship.
