@@ -1,38 +1,82 @@
-From: <shun-chih.yu@mediatek.com>
-Subject: [PATCH 1/1] dmaengine: mediatek-cqdma: fix wrong register usage in mtk_cqdma_start
-Date: Thu, 25 Apr 2019 11:53:50 +0800
-Message-ID: <1556164430-30724-1-git-send-email-shun-chih.yu@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
+ bindings
+Date: Wed, 24 Apr 2019 21:24:50 -0700
+Message-ID: <20190425042450.GB2867@tuxbook-pro>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190423132823.7915-2-georgi.djakov@linaro.org>
+ <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
+ <20190424064942.v5g6jr5l3xy5z3xv@vireshk-i7>
+ <dd6f055c-e7df-13e8-72aa-2973d3c664d0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <dd6f055c-e7df-13e8-72aa-2973d3c664d0@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, Shun-Chih Yu <shun-chih.yu@mediatek.com>
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, vincent.guittot@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+On Wed 24 Apr 02:00 PDT 2019, Sibi Sankar wrote:
+> On 4/24/19 12:19 PM, Viresh Kumar wrote:
+> > On 24-04-19, 12:16, Rajendra Nayak wrote:
+> > > On 4/23/2019 6:58 PM, Georgi Djakov wrote:
+[..]
+> > > > +/ {
+> > > > +	cpus {
+> > > > +		CPU0: cpu@0 {
+> > > > +			compatible = "arm,cortex-a53", "arm,armv8";
+> > > > +			...
+> > > > +			operating-points-v2 = <&cpu_opp_table>;
+> > > > +			/* path between CPU and DDR memory and CPU and L3 */
+> > > > +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
+> > > > +					<&noc MASTER_CPU &noc SLAVE_L3>;
+> > > > +		};
+> > > > +	};
+> > > > +
+> > > > +	cpu_opp_table: cpu_opp_table {
+> > > > +		compatible = "operating-points-v2";
+> > > > +		opp-shared;
+> > > > +
+> > > > +		opp-200000000 {
+> > > > +			opp-hz = /bits/ 64 <200000000>;
+> > > > +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
+> > > > +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
+> > > > +			bandwidth-MBps = <457 1525>, <914 3050>;
+> > > 
+> > > Should this also have a bandwidth-MBps-name perhaps? Without that I guess we assume
+> > > the order in which we specify the interconnects is the same as the order here?
+> > 
+> > Right, so I suggested not to add the -name property and to rely on the
+> > order. Though I missed that he hasn't mentioned the order thing here.
+> 
+> by skipping names, aren't we forced to specify all the specified paths
+> bandwidths for each opp even if it is redundant? i.e if the first/second
+> icc path doesn't have to change across a few opps but if the other path
+> does need to change this scheme would force it to be included and will
+> try to set the first/second path again.
+> 
+> 
+> e.g: Here the first path does not have to change across these two opps
+> but have to specified nonetheless since we omit names.
+> 
 
-This patch fixes wrong register usage in the mtk_cqdma_start. The
-destination register should be MTK_CQDMA_DST2 instead.
+If this is a pair in the middle of the list, we would either have to
+define how non-specified values are inherited from neighbouring nodes or
+you will get different behavior if you're coming from a lower or a
+higher opp.
 
-Fixes: b1f01e48df5a ("dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC")
-Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
----
- drivers/dma/mediatek/mtk-cqdma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think it looks clearer to just be explicit and repeat the values.
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index 131f397..8148538 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -253,7 +253,7 @@ static void mtk_cqdma_start(struct mtk_cqdma_pchan *pc,
- #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
- 	mtk_dma_set(pc, MTK_CQDMA_DST2, cvd->dest >> MTK_CQDMA_ADDR2_SHFIT);
- #else
--	mtk_dma_set(pc, MTK_CQDMA_SRC2, 0);
-+	mtk_dma_set(pc, MTK_CQDMA_DST2, 0);
- #endif
- 
- 	/* setup the length */
--- 
-1.7.9.5
+Regards,
+Bjorn
+
+> +		opp-1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			bandwidth-MBps = <457 1525>, <914 3050>;
+> +		};
+> +		opp-1400000000 {
+> +			opp-hz = /bits/ 64 <1400000000>;
+> +			bandwidth-MBps = <457 1525>, <1828 6102>;
+> +		};
