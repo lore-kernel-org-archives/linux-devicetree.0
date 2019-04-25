@@ -1,66 +1,80 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 2/6] mfd: rk808: Add RK817 and RK809 support
-Date: Thu, 25 Apr 2019 10:11:44 +0100
-Message-ID: <20190425091144.GH14758@dell>
-References: <20190102102002.29245-1-tony.xie@rock-chips.com>
- <20190102102002.29245-3-tony.xie@rock-chips.com>
- <20190402063305.GZ4187@dell>
- <518340124.P20tlEWT52@phil>
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v2 1/6] dt-bindings: hwlock: add support of shared locks
+Date: Thu, 25 Apr 2019 11:17:18 +0200
+Message-ID: <1556183843-28033-2-git-send-email-fabien.dessenne@st.com>
+References: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518340124.P20tlEWT52@phil>
+In-Reply-To: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Tony Xie <tony.xie@rock-chips.com>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Apr 2019, Heiko Stuebner wrote:
+Use #hwlock-cells value to define whether the locks can be shared
+by several users.
 
-> Hi Lee,
-> 
-> Am Dienstag, 2. April 2019, 08:33:05 CEST schrieb Lee Jones:
-> > On Wed, 02 Jan 2019, Tony Xie wrote:
-> > 
-> > > The RK809 and RK817 are a Power Management IC (PMIC) for multimedia
-> > > and handheld devices. They contains the following components:
-> > >   - Regulators
-> > >   - RTC
-> > >   - Clocking
-> > > 
-> > > Both RK809 and RK817 chips are using a similar register map,
-> > > so we can reuse the RTC and Clocking functionality.
-> > > Most of regulators have a some implementation also.
-> > > 
-> > > Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-> > > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> > > ---
-> > >  drivers/mfd/Kconfig       |   6 +-
-> > >  drivers/mfd/rk808.c       | 192 +++++++++++++++++++++++++++++++++++++-
-> > >  include/linux/mfd/rk808.h | 172 ++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 364 insertions(+), 6 deletions(-)
-> > 
-> > For my own reference:
-> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> 
-> do you have some sort of merge plan for this or are you waiting for
-> specific Acks? I guess if we're waiting for an Ack from Mark Brown,
-> we'll need a resend of the patch.
-> 
-> All other patches have Acks from their subsystem maintainers (rtc, clk)
-> so you could pick up all patches except patch3 and I could just resend
-> this one, which in turn could also go through the regulator tree.
-> 
-> Otherwise we'll probably need a resend of the series, as Mark most of
-> the time doesn't keep old patch series around.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/hwlock/hwlock.txt          | 27 ++++++++++++++++------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-Try resending it.  Hopefully he will review in the next week or so can
-I can collect it when I return back from Shared Parental Leave.
-
+diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+index 085d1f5..e98088a 100644
+--- a/Documentation/devicetree/bindings/hwlock/hwlock.txt
++++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+@@ -13,7 +13,7 @@ hwlock providers:
+ 
+ Required properties:
+ - #hwlock-cells:        Specifies the number of cells needed to represent a
+-                        specific lock.
++                        specific lock. Shall be 1 or 2 (see hwlocks below).
+ 
+ hwlock users:
+ =============
+@@ -27,6 +27,11 @@ Required properties:
+                         #hwlock-cells. The list can have just a single hwlock
+                         or multiple hwlocks, with each hwlock represented by
+                         a phandle and a corresponding args specifier.
++                        If #hwlock-cells is 1, all of the locks are exclusive
++                        (cannot be used by several users).
++                        If #hwlock-cells is 2, the value of the second cell
++                        defines whether the lock is for exclusive usage (0) or
++                        shared (1) i.e. can be used by several users.
+ 
+ Optional properties:
+ - hwlock-names:         List of hwlock name strings defined in the same order
+@@ -46,14 +51,22 @@ of length 1.
+ 		...
+ 	};
+ 
+-2. Example of a node using multiple specific hwlocks:
++2. Example of nodes using multiple and shared specific hwlocks:
+ 
+-The following example has a node requesting two hwlocks, a hwlock within
+-the hwlock device node 'hwlock1' with #hwlock-cells value of 1, and another
+-hwlock within the hwlock device node 'hwlock2' with #hwlock-cells value of 2.
++The following example has a nodeA requesting two hwlocks:
++- an exclusive one (#hwlock-cells = 1) within the hwlock device node 'hwlock1'
++- a shared one (#hwlock-cells = 2, second cell = 1) within the hwlock device
++  node 'hwlock2'.
++The shared lock is also be used by nodeB.
+ 
+-	node {
++	nodeA {
+ 		...
+-		hwlocks = <&hwlock1 2>, <&hwlock2 0 3>;
++		hwlocks = <&hwlock1 2>, <&hwlock2 0 1>;
+ 		...
+ 	};
++
++	nodeB {
++		...
++		hwlocks = <&hwlock2 0 1>;
++		...
++	};
+\ No newline at end of file
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
