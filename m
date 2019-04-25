@@ -1,101 +1,97 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v7 1/2] Bluetooth: hci_qca: Added support for WCN3998
-Date: Thu, 25 Apr 2019 09:46:44 -0700
-Message-ID: <20190425164644.GG112750@google.com>
-References: <1556194416-30842-1-git-send-email-c-hbandi@codeaurora.org>
- <1556194416-30842-2-git-send-email-c-hbandi@codeaurora.org>
- <08C6CC93-45C7-468E-AFC3-251507FA678E@holtmann.org>
- <2172b21d6b936c0befca1a608ae297c1@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V5 2/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Thu, 25 Apr 2019 18:16:59 +0100
+Message-ID: <20190425171659.GB4319@lakrids.cambridge.arm.com>
+References: <1555447156-28306-1-git-send-email-Frank.Li@nxp.com>
+ <1555447156-28306-2-git-send-email-Frank.Li@nxp.com>
+ <20190424105822.GA14614@fuggles.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <2172b21d6b936c0befca1a608ae297c1@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harish Bandi <c-hbandi@codeaurora.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+In-Reply-To: <20190424105822.GA14614@fuggles.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 07:10:51PM +0530, Harish Bandi wrote:
-> Hi Marcel,
+On Wed, Apr 24, 2019 at 11:58:22AM +0100, Will Deacon wrote:
+> Hi Frank,
 > 
-> On 2019-04-25 18:17, Marcel Holtmann wrote:
-> > Hi Harish,
+> On Tue, Apr 16, 2019 at 08:39:33PM +0000, Frank Li wrote:
+> > Add ddr performance monitor support for iMX8QXP
 > > 
-> > > Added new compatible for WCN3998 and corresponding voltage
-> > > and current values to WCN3998 compatible.
-> > > Changed driver code to support WCN3998
-> > > 
-> > > Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in V7:
-> > > - Initialized rom_ver to 0 to fix compiler warning
-> > > ---
-> > > drivers/bluetooth/btqca.c   | 12 +++++++++---
-> > > drivers/bluetooth/btqca.h   |  8 +++++++-
-> > > drivers/bluetooth/hci_qca.c | 40
-> > > ++++++++++++++++++++++++++--------------
-> > > 3 files changed, 42 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> > > index 6122685..495a52f 100644
-> > > --- a/drivers/bluetooth/btqca.c
-> > > +++ b/drivers/bluetooth/btqca.c
-> > > @@ -336,7 +336,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t
-> > > baudrate,
-> > > {
-> > > 	struct rome_config config;
-> > > 	int err;
-> > > -	u8 rom_ver;
-> > > +	u8 rom_ver = 0;
-> > 
-> > what is this change for?
-> [Harish] - kbuild test robot gave compiler warning. So initialized.
-> drivers/bluetooth/btqca.c:369:3: warning: 'rom_ver' may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
+> > There are 4 counters for ddr perfomance events.
+> > counter 0 is dedicated for cycles.
+> > you choose any up to 3 no cycles events.
 > 
-> > 
-> > > 	bt_dev_dbg(hdev, "QCA setup on UART");
-> > > 
-> > > @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t
-> > > baudrate,
-> > > 
-> > > 	/* Download rampatch file */
-> > > 	config.type = TLV_TYPE_PATCH;
-> > > -	if (soc_type == QCA_WCN3990) {
-> > > +	if (qca_is_wcn399x(soc_type)) {
-> > > 		/* Firmware files to download are based on ROM version.
-> > > 		 * ROM version is derived from last two bytes of soc_ver.
-> > > 		 */
-> > > @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t
-> > > baudrate,
-> > > 
-> > > 	/* Download NVM configuration */
-> > > 	config.type = TLV_TYPE_NVM;
-> > > -	if (soc_type == QCA_WCN3990)
-> > > +	if (qca_is_wcn399x(soc_type))
-> > > 		snprintf(config.fwname, sizeof(config.fwname),
-> > > 			 "qca/crnv%02x.bin", rom_ver);
-> > > 	else
-> > > @@ -410,6 +410,12 @@ int qca_set_bdaddr(struct hci_dev *hdev, const
-> > > bdaddr_t *bdaddr)
-> > > }
-> > > EXPORT_SYMBOL_GPL(qca_set_bdaddr);
-> > > 
-> > > +bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
-> > > +{
-> > > +	return ((soc_type == QCA_WCN3990) || (soc_type == QCA_WCN3998));
-> > 
-> > no () needed around soc_type = check.
+> I was about to pick this up, but I still have a few questions/comments
+> on the code:
 > 
-> [Harish]  - OK, will change it.
-> > 
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(qca_is_wcn399x);
-> > > +
-> > 
-> > Why is this exported. Make this an inline function in btqca.h.
-> [Harish] - This was used in btqca.c also to check the soc_type
+> > +static irqreturn_t ddr_perf_irq_handler(int irq, void *p)
+> > +{
+> > +	int i;
+> > +	u8 reg;
+> > +	int val;
+> > +	int counter;
+> > +	struct ddr_pmu *pmu = (struct ddr_pmu *) p;
+> > +	struct perf_event *event;
+> > +
+> > +	/* Only cycles counter overflowed can issue irq. all counters will
+> > +	 * be stopped when cycles counter overflow. but other counter don't stop
+> > +	 * when overflow happen. Update all of the local counter values,
+> > +	 * then reset the cycles counter, so the others can continue
+> > +	 * counting. cycles counter is fastest counter in all events. at last
+> > +	 * 4 times than other counters.
+> > +	 */
+> > +	for (i = 0; i < NUM_COUNTER; i++) {
+> > +
+> > +		if (!pmu->active_events[i])
+> > +			continue;
+> > +
+> > +		event = pmu->active_events[i];
+> > +		counter = event->hw.idx;
+> > +		reg = counter * 4 + COUNTER_CNTL;
+> > +		val = readl(pmu->base + reg);
+> 
+> Does this read have a side-effect, or can it be removed given that you don't
+> use val for anything else?
+> 
+> > +		ddr_perf_event_update(event);
+> > +
+> > +		if (counter == EVENT_CYCLES_COUNTER) {
+> > +			ddr_perf_event_enable(pmu,
+> > +					      EVENT_CYCLES_ID,
+> > +					      EVENT_CYCLES_COUNTER,
+> > +					      true);
+> > +			ddr_perf_event_update(event);
+> > +		}
+> > +	}
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> 
+> What stops the IRQ handler running concurrently with perf callbacks? I can't
+> see any locking here, or is the IRQ supposed to be affine to the same CPU
+> that's handling the perf context?
 
-true, but this is still possible with an inline function in btqca.h.
+To be correct, the IRQ affinity should be set to match the logical
+affinity of the PMU, but it looks like that's not done at setup or
+migrate time.
+
+Frank, please take a look at what drivers/perf/arm-ccn.c does with teh
+IRQ, including the use of IRQF_NOBALANCING | IRQF_NO_THREAD flags when
+requesting the IRQ to begin with.
+
+Thanks,
+Mark.
