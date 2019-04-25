@@ -1,7 +1,7 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Applied "ASoC: sprd: Add Spreadtrum multi-channel data transfer support" to the asoc tree
-Date: Thu, 25 Apr 2019 20:24:33 +0100 (BST)
-Message-ID: <20190425192433.AC32B441D3B@finisterre.ee.mobilebroadband>
+Date: Thu, 25 Apr 2019 20:26:28 +0100 (BST)
+Message-ID: <20190425192628.3D4DB441D3E@finisterre.ee.mobilebroadband>
 References: <045f33cca3b34aadec7ec69be2697b05b1b069d8.1555917711.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <045f33cca3b34aadec7ec69be2697b05b1b069d8.1555917711.git.baolin.wang@linaro.org>
