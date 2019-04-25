@@ -1,139 +1,22 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: misc: Add bindings for HiSilicon
- usb hub and data role switch functionality on HiKey960
-Date: Thu, 25 Apr 2019 16:35:32 -0500
-Message-ID: <20190425213532.GA32028@bogus>
-References: <20190420064019.57522-1-chenyu56@huawei.com>
- <20190420064019.57522-3-chenyu56@huawei.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 13/24] dt-bindings: mediatek: apmixedsys: add support for MT8516
+Date: Thu, 25 Apr 2019 14:35:36 -0700
+Message-ID: <155622813672.15276.2529493939985880382@swboyd.mtv.corp.google.com>
+References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-14-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190420064019.57522-3-chenyu56@huawei.com>
+In-Reply-To: <20190323211612.860-14-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Kishon Vijay Abraham I <kishon@ti.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: mark.rutland@arm.com, matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc: sean.wang@kernel.org, ryder.lee@mediatek.com, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, chaotian.jing@mediatek.com, yong.mao@mediatek.com, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com, Fabien Parent <fparent@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 02:40:08PM +0800, Yu Chen wrote:
-> This patch adds binding documentation to support usb hub and usb
-> data role switch of Hisilicon HiKey960 Board.
-
-Sorry I've been slow to really review this, but I needed to look at the 
-schematics to see what exactly is going on here.
-
-I think this needs some changes to better reflect the h/w and utilize 
-existing bindings. It should really be designed ignoring the muxing to 
-start with. Define the binding for the TypeC connector and then the host 
-hub and make sure they can coexist. Then overlay what you need to switch 
-between the 2 modes which AFAICT is just a single GPIO. 
-
-> 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+Quoting Fabien Parent (2019-03-23 14:16:01)
+> Add binding documentation of apmixedsys for MT8516 SoC.
+>=20
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
-> v1:
-> * Fix some format errors as suggested by Sergei.
-> * Modify gpio description to use gpiod API.
-> v2:
-> * Remove information about Hikey.
-> * Fix gpio description.
-> * Remove device_type of endpoint.
-> v3:
-> * Remove property typec-vbus-enable-val.
-> * Add description of pinctrl-names.
-> * Add example for "hisilicon,gpio-hubv1"
-> * Add flag in gpiod properties.
-> ---
-> ---
->  .../bindings/misc/hisilicon-hikey-usb.txt          | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> new file mode 100644
-> index 000000000000..422e844df719
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> @@ -0,0 +1,52 @@
-> +Support usb hub and usb data role switch of Hisilicon HiKey960 Board.
-> +
-> +-----------------------------
-> +
-> +Required properties:
-> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
-> +- typec-vbus-gpios: gpio to control the vbus of typeC port
 
-This should be a gpio regulator and then connected to 'vbus-supply' in a 
-usb-connector node (see .../bindings/connectors/usb-connector.txt). 
-
-Then you also need the RT1711HWSC TypeC controller in DT. That is 
-typically the parent device of the connector node. 
-
-> +- otg-switch-gpios: gpio to switch DP & DM between the hub and typeC port
-
-This probably belongs in USB controller node.
-
-> +- hub-vdd33-en-gpios: gpio to enable the power of hub
-
-This too should be a gpio regulator and then in a hub node. We have 2 
-ways to represent hubs. Either as an I2C device or as a child of the 
-host controller. The latter is preferred, but I'm not too sure how the 
-OF graph connection linking the controller to the TypeC connector will 
-work with the usb bus binding.
-
-> +- pinctrl-names: pin configuration state name ("default")
-> +- pinctrl-0: pinctrl config
-> +
-> +Example
-> +-----
-> +
-> +	hisi_hikey_usb: hisi_hikey_usb {
-> +		compatible = "hisilicon,hikey960-usb";
-> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
-> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
-> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usbhub5734_pmx_func>;
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			hikey_usb_ep: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&dwc3_role_switch_notify>;
-> +			};
-> +		};
-> +	};
-> +
-> +	hisi_hikey_usb: hisi_hikey_usb {
-
-Perhaps doesn't matter with my above feedback, but I don't understand 
-the point of this 2nd example.
-
-> +		compatible = "hisilicon,gpio-hubv1";
-> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_LOW>;
-> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
-> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usbhub5734_pmx_func>;
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			hikey_usb_ep: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&dwc3_role_switch_notify>;
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.15.0-rc2
-> 
+Applied to clk-next
