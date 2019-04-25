@@ -1,25 +1,30 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qoriq: add more PLL divider clocks support
-Date: Thu, 25 Apr 2019 11:23:05 -0700
-Message-ID: <155621658525.15276.10875911078203745396@swboyd.mtv.corp.google.com>
-References: <20190422091509.3181-1-andy.tang@nxp.com> <20190422091509.3181-2-andy.tang@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 02/11] dt-bindings: power: supply: add DT bindings
+ for max77650
+Date: Thu, 25 Apr 2019 13:34:26 -0500
+Message-ID: <20190425183426.GA30229@bogus>
+References: <20190423090451.23711-1-brgl@bgdev.pl>
+ <20190423090451.23711-3-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422091509.3181-2-andy.tang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190423090451.23711-3-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting andy.tang@nxp.com (2019-04-22 02:15:09)
-> From: Yuantian Tang <andy.tang@nxp.com>
->=20
-> More PLL divider clocks are needed by clock consumer IP. So enlarge
-> the PLL divider array to accommodate more divider clocks.
->=20
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+On Tue, 23 Apr 2019 11:04:42 +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add the DT binding document for the battery charger module of max77650.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
+>  .../power/supply/max77650-charger.txt         | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+> 
 
-Applied to clk-next
+Reviewed-by: Rob Herring <robh@kernel.org>
