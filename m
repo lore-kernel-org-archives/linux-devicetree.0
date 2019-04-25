@@ -1,43 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 3/6] regulator: max77620: Support Maxim 77663
-Date: Thu, 25 Apr 2019 18:41:44 +0100
-Message-ID: <20190425174144.GC22575@sirena.org.uk>
-References: <20190424224900.8018-1-digetx@gmail.com>
- <20190424224900.8018-4-digetx@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/5] Add of_ functions for device_link_add()
+Date: Thu, 25 Apr 2019 13:07:53 -0500
+Message-ID: <CAL_JsqJp9f3Sv08igSyR38Z5eXnAYWMNY29U5qEGLp=r2YReRw@mail.gmail.com>
+References: <20190424101913.1534-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="B4IIlcmfBL/1gGOG"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190424224900.8018-4-digetx@gmail.com>
+In-Reply-To: <20190424101913.1534-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, Frank Rowand <frowand.list@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Yannick Fertre <yannick.fertre@st.com>, Arnd Bergmann <arnd@arndb.de>, Linux Input <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 24, 2019 at 5:19 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> It could happen that we need to control suspend/resume ordering between
+> devices without obvious consumer/supplier link. For example when touchscreens
+> and DSI panels share the same reset line, in this case we need to be sure
+> of pm_runtime operations ordering between those two devices to correctly
+> perform reset.
+> DSI panel and touchscreen aren't sharing any heriachical relationship (unlike
+> I2C client and I2C bus or regulator client and regulator provider) so we need
+> to describe this in device-tree.
 
---B4IIlcmfBL/1gGOG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Needing to know which touchscreen is attached to a panel could be
+important to describe if you have multiple displays.
 
-On Thu, Apr 25, 2019 at 01:48:57AM +0300, Dmitry Osipenko wrote:
-> Add support for Maxim 77663.
+Doesn't the reset subsystem already have some support for shared
+resets? Seems like it could provide clients with struct device or
+device_node ptrs to other devices sharing a reset.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+>
+> This series introduce of_device_links_{add,remove} and devm_of_device_links_add()
+> helpers to find and parse 'links-add' property in a device-tree node.
 
---B4IIlcmfBL/1gGOG
-Content-Type: application/pgp-signature; name="signature.asc"
+Going to document that property somewhere? :)
 
------BEGIN PGP SIGNATURE-----
+I think this is too generic and coupled to Linux. It doesn't have any
+information as to what is the dependency or connection nor what the
+direction of the dependency is.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzB8VcACgkQJNaLcl1U
-h9C5MQf/e2dZ7OiWk6YvNr2eKFK3rstlkbMyDYubayOmpQ+34xTFCBU3W6VHjoPC
-kF+Aqr8vVUh8VFcEAU/kw4V7P5ghtZ8IPV3SrT4Ta1dP4ntd12SKkD9EwBIsXlGg
-NrSblWxWunv+aSUaPZ/1gkdvJ+orhRkul+f8yoxPZGKqcGhvDTcBOIfYYkxSfqm9
-d8OEf+hf9hNC1uxg/Jawtm/8oi9hYQEIQm/sm6M33DkBkScHkhUXYZB2KQRWx3LE
-wnryRHfks1n1aXDudkiBwjpXZ094cBTtx519NZR7DQKNZ3TMQZVe6T7t9cIF0RN/
-rRUgO7y5ZPqYJnP6iK6UxLWfW4TH+Q==
-=AyPs
------END PGP SIGNATURE-----
+I'm not convinced we need to solve this generically vs. defining
+something for this specific example.
 
---B4IIlcmfBL/1gGOG--
+Rob
