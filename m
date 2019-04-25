@@ -1,107 +1,119 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v10 02/11] dt-bindings: power: supply: add DT bindings
- for max77650
-Date: Wed, 24 Apr 2019 13:31:02 +0200
-Message-ID: <20190424113102.pej37jnlidwfzjhk@earth.universe>
-References: <20190423090451.23711-1-brgl@bgdev.pl>
- <20190423090451.23711-3-brgl@bgdev.pl>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Date: Thu, 25 Apr 2019 13:12:45 +0200
+Message-ID: <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tzyyotohclek3npg"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190423090451.23711-3-brgl@bgdev.pl>
+In-Reply-To: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Simon Horman <horms+renesas@verge.net.au>, Simon Horman <horms@verge.net.au>, Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tfranzen@de.adit-jv.com, Eugeniu Rosca <erosca@de.adit-jv.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
---tzyyotohclek3npg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do we have any chance getting this upstream? If so, would you kindly
+list the acceptance criteria we have to conform to?
 
-Hi,
+Many thanks.
 
-On Tue, Apr 23, 2019 at 11:04:42AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> Add the DT binding document for the battery charger module of max77650.
->=20
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Apr 11, 2019 at 02:41:03PM +0200, Spyridon Papageorgiou wrote:
+> This patch adds description of TI WL1837 and links interfaces
+> to communicate with the IC, namely the SDIO interface to WLAN.
+> 
+> Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
 > ---
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
--- Sebastian
-
->  .../power/supply/max77650-charger.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
-ger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
-xt
-> new file mode 100644
-> index 000000000000..e6d0fb6ff94e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> @@ -0,0 +1,28 @@
-> +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
+>  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 49 ++++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> index 7a09576..27851a7 100644
+> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> @@ -38,6 +38,18 @@
+>  		regulator-min-microvolt = <5000000>;
+>  		regulator-max-microvolt = <5000000>;
+>  	};
 > +
-> +This module is part of the MAX77650 MFD device. For more details
-> +see Documentation/devicetree/bindings/mfd/max77650.txt.
+> +	wlan_en: regulator-wlan_en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "wlan-en-regulator";
 > +
-> +The charger is represented as a sub-node of the PMIC node on the device =
-tree.
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
 > +
-> +Required properties:
-> +--------------------
-> +- compatible:		Must be "maxim,max77650-charger"
-> +
-> +Optional properties:
-> +--------------------
-> +- input-voltage-min-microvolt:	Minimum CHGIN regulation voltage. Must be=
- one
-> +				of: 4000000, 4100000, 4200000, 4300000,
-> +				4400000, 4500000, 4600000, 4700000.
-> +- input-current-limit-microamp:	CHGIN input current limit (in microamps)=
-=2E Must
-> +				be one of: 95000, 190000, 285000, 380000,
-> +				475000.
-> +
-> +Example:
-> +--------
-> +
-> +	charger {
-> +		compatible =3D "maxim,max77650-charger";
-> +		input-voltage-min-microvolt =3D <4200000>;
-> +		input-current-limit-microamp =3D <285000>;
+> +		gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <70000>;
+> +		enable-active-high;
 > +	};
-> --=20
-> 2.21.0
->=20
+>  };
+>  
+>  &can0 {
+> @@ -88,6 +100,13 @@
+>  			line-name = "Audio_Out_OFF";
+>  		};
+>  
+> +		sd-wifi-mux {
+> +			gpio-hog;
+> +			gpios = <5 GPIO_ACTIVE_HIGH>;
+> +			output-low;	/* Connect WL1837 */
+> +			line-name = "SD WiFi mux";
+> +		};
+> +
+>  		hub_pwen {
+>  			gpio-hog;
+>  			gpios = <6 GPIO_ACTIVE_HIGH>;
+> @@ -254,6 +273,12 @@
+>  		function = "scif1";
+>  	};
+>  
+> +	sdhi3_pins: sdhi3 {
+> +		groups = "sdhi3_data4", "sdhi3_ctrl";
+> +		function = "sdhi3";
+> +		power-source = <3300>;
+> +	};
+> +
+>  	usb0_pins: usb0 {
+>  		groups = "usb0";
+>  		function = "usb0";
+> @@ -273,6 +298,30 @@
+>  	status = "okay";
+>  };
+>  
+> +&sdhi3 {
+> +	pinctrl-0 = <&sdhi3_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	vmmc-supply = <&wlan_en>;
+> +	vqmmc-supply = <&wlan_en>;
+> +	bus-width = <4>;
+> +	no-1-8-v;
+> +	non-removable;
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +	max-frequency = <26000000>;
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	wlcore: wlcore@2 {
+> +		compatible = "ti,wl1837";
+> +		reg = <2>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> +};
+> +
+>  &usb2_phy0 {
+>  	pinctrl-0 = <&usb0_pins>;
+>  	pinctrl-names = "default";
+> -- 
+> 2.7.4
+> 
 
---tzyyotohclek3npg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzASPEACgkQ2O7X88g7
-+pr0JRAApxsn5uxXytg/SEvhNBb/SxefIg95+EkMbpo96sFxk5ZP5xwaRdheUUzC
-0sBN3TDPfn0IQsksQtLaZBqQ+RmQEA/K+PS7reoMNx0he1Xgetd33E6R1dBUR1XX
-zi0thWOgS08u0TIX4tnogtitjVtXrY5tXJGDAqu0lQAhVjMuX8n81XQZ2zgZo4nG
-42I+WP00S6JNI6kWBjHt8enj0ZzXUQc8bfcBm9uGkPpeO0u4DPHAysNeVQQBR0Ef
-x4GoTX26tKiJoNrcV+V7wWDDpnpLV9c8QP0jyJCjCZPGpPtJNNieF79zhfLpgrVN
-lkCamB9WLfigpnZBYgkm8dR7f1ZTFle1haYdGBfj/G/CL+rOPnrBcnQV4mv4VeNZ
-vx5pM+H7EKRNDQASERSDXFejrtMi/VOj+pKxpUZqhyT63SgfVA0kHkTDt7xm+Ovc
-ecvpRgx4FMWCj+FFpMVqIqcLrcdYmlnrOgJQvrkXMADuLW7xkPptQkuPnCUmugDq
-uqZI4uIs7PVD/guIVM6UZhFP+4gsLFkRg8VW4T+I73NIJkN9AbKAp6L7vu2xMeYl
-V3NVfGSp4f8lJNvlNV5auM2b+8vTGX+W7Ef+xUrxHj2Nh6zOR27wmVeDRcsofbmF
-bH6mOSfxHrgnc9LG0LIahlxhIbfcmMr4XCu31xYozmL1GgwuWPM=
-=usHc
------END PGP SIGNATURE-----
-
---tzyyotohclek3npg--
+-- 
+Best regards,
+Eugeniu.
