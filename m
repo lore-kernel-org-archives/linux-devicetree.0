@@ -1,65 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3998
-Date: Thu, 25 Apr 2019 13:47:40 -0500
-Message-ID: <20190425184740.GA23300@bogus>
-References: <1556194416-30842-1-git-send-email-c-hbandi@codeaurora.org>
- <1556194416-30842-3-git-send-email-c-hbandi@codeaurora.org>
- <B3F78119-055C-41EB-BE3B-C5C94825B93E@holtmann.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: simple-card-utils: add
+ asoc_simple_card_of_parse_pin_switches()
+Date: Thu, 25 Apr 2019 19:49:41 +0100
+Message-ID: <20190425184941.GH23183@sirena.org.uk>
+References: <20190420104553.5071-1-paul@crapouillou.net>
+ <20190420104553.5071-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uAgJxtfIS94j9H4T"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <B3F78119-055C-41EB-BE3B-C5C94825B93E@holtmann.org>
+In-Reply-To: <20190420104553.5071-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Harish Bandi <c-hbandi@codeaurora.org>, Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 02:43:56PM +0200, Marcel Holtmann wrote:
-> Hi Harish,
-> 
-> > Add compatible string for the Qualcomm WCN3998 Bluetooth controller
-> > 
-> > Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> > ---
-> > Changes in V6:
-> > - Changed Commit text
-> > ---
-> > Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 5 +++--
-> > 1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > index 824c0e2..7ef6118 100644
-> > --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > @@ -11,20 +11,21 @@ Required properties:
-> >  - compatible: should contain one of the following:
-> >    * "qcom,qca6174-bt"
-> >    * "qcom,wcn3990-bt"
-> > +   * "qcom,wcn3998-bt"
-> > 
-> > Optional properties for compatible string qcom,qca6174-bt:
-> > 
-> >  - enable-gpios: gpio specifier used to enable chip
-> >  - clocks: clock provided to the controller (SUSCLK_32KHZ)
-> > 
-> > -Required properties for compatible string qcom,wcn3990-bt:
-> > +Required properties for compatible string qcom,wcn399x-bt:
-> > 
-> >  - vddio-supply: VDD_IO supply regulator handle.
-> >  - vddxo-supply: VDD_XO supply regulator handle.
-> >  - vddrf-supply: VDD_RF supply regulator handle.
-> >  - vddch0-supply: VDD_CH0 supply regulator handle.
-> > 
-> > -Optional properties for compatible string qcom,wcn3990-bt:
-> > +Optional properties for compatible string qcom,wcn399x-bt:
-> 
-> wasn’t the conclusion to _not_ use x things in compatible strings? I would personally prefer you list these two compatible strings separately. However I let Rob comment and Ack this if this is fine for him.
 
-It's fine for me as it isn't the actual string used.
+--uAgJxtfIS94j9H4T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Sat, Apr 20, 2019 at 12:45:52PM +0200, Paul Cercueil wrote:
+> This function is a helper that permits to create pin switch controls for
+> a list of widgets whose names are listed in the PREFIX "pin-switches"
+> devicetree property.
 
-Rob
+This doesn't apply against current code, please check and resend.
+
+--uAgJxtfIS94j9H4T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzCAUQACgkQJNaLcl1U
+h9DiJgf+Lw9YawQDyW9xcOtpzvnRSd2TkTYKSlXJ08xv7bGfnLyd9G4xCALeDAfj
+C+XGV3koinjACyfqnENByqcTFj8aUtft36DW/keK6FjA4PY/cM7tts6yK16mzgO6
+Ju7uJgtu3yhaK3jzpnIaTbmKHwrnG7jd/3ZchS2aIeSITVGIs8d+Bbg2gPYdEEfR
+2OS1HzeHzCICuSPT+bSDBWGYhcLNm1TdaHuAgxO0lsLCDMnNuAL8JDc/m+fcy8V7
+j8g4Xacw6d2BFxhSh0xWzmwBI2h8yMWXtwGxoRXh5ur8bOwszbvDzM1qu34r38oa
+KoYqqvaISW0G3kNJQ8rLIAPW9MXa5Q==
+=o0p1
+-----END PGP SIGNATURE-----
+
+--uAgJxtfIS94j9H4T--
