@@ -1,68 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: doc: simple-card: Add pin-switches property" to the asoc tree
-Date: Thu, 25 Apr 2019 20:24:33 +0100 (BST)
-Message-ID: <20190425192433.19363441D3D@finisterre.ee.mobilebroadband>
-References: <20190420104553.5071-1-paul@crapouillou.net>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 0/5] Add of_ functions for device_link_add()
+Date: Thu, 25 Apr 2019 12:24:46 -0700
+Message-ID: <CAKdAkRTUsJ4TU7BrSNXCKiQGZnArao9o_qk7i0xSzYJ1SGU14A@mail.gmail.com>
+References: <20190424101913.1534-1-benjamin.gaignard@st.com> <CAL_JsqJp9f3Sv08igSyR38Z5eXnAYWMNY29U5qEGLp=r2YReRw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190420104553.5071-1-paul@crapouillou.net>
+In-Reply-To: <CAL_JsqJp9f3Sv08igSyR38Z5eXnAYWMNY29U5qEGLp=r2YReRw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, Rob Herring <robh+dt@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, Frank Rowand <frowand.list@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Yannick Fertre <yannick.fertre@st.com>, Arnd Bergmann <arnd@arndb.de>, Linux Input <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thu, Apr 25, 2019 at 11:08 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Wed, Apr 24, 2019 at 5:19 AM Benjamin Gaignard
+> <benjamin.gaignard@st.com> wrote:
+> >
+> > It could happen that we need to control suspend/resume ordering between
+> > devices without obvious consumer/supplier link. For example when touchscreens
+> > and DSI panels share the same reset line, in this case we need to be sure
+> > of pm_runtime operations ordering between those two devices to correctly
+> > perform reset.
+> > DSI panel and touchscreen aren't sharing any heriachical relationship (unlike
+> > I2C client and I2C bus or regulator client and regulator provider) so we need
+> > to describe this in device-tree.
+>
+> Needing to know which touchscreen is attached to a panel could be
+> important to describe if you have multiple displays.
+>
+> Doesn't the reset subsystem already have some support for shared
+> resets? Seems like it could provide clients with struct device or
+> device_node ptrs to other devices sharing a reset.
+>
+> >
+> > This series introduce of_device_links_{add,remove} and devm_of_device_links_add()
+> > helpers to find and parse 'links-add' property in a device-tree node.
+>
+> Going to document that property somewhere? :)
+>
+> I think this is too generic and coupled to Linux. It doesn't have any
+> information as to what is the dependency or connection nor what the
+> direction of the dependency is.
+>
+> I'm not convinced we need to solve this generically vs. defining
+> something for this specific example.
 
-   ASoC: doc: simple-card: Add pin-switches property
+I am pretty sure there will be more drivers needing complex
+dependencies. Doesn't ACPI allow defining relationship between devices
+that goes beyond the tree structure?
 
-has been applied to the asoc tree at
+Thanks.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6b903f9bdd98093a2c1ea79df07e86decfda3b04 Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Sat, 20 Apr 2019 12:45:51 +0200
-Subject: [PATCH] ASoC: doc: simple-card: Add pin-switches property
-
-The simple-audio-card,pin-switches property can contain the list of
-widget names for which pin switches must be created.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/simple-card.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index 4629c8f8a6b6..79954cd6e37b 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -24,6 +24,8 @@ Optional properties:
- 					  a microphone is attached.
- - simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
- 					  as amplifiers, to be added to the sound card.
-+- simple-audio-card,pin-switches	: List of strings containing the widget names for
-+					  which pin switches must be created.
- 
- Optional subnodes:
- 
 -- 
-2.20.1
+Dmitry
