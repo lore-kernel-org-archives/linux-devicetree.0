@@ -1,68 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: doc: simple-card: Add pin-switches property" to the asoc tree
-Date: Thu, 25 Apr 2019 20:26:27 +0100 (BST)
-Message-ID: <20190425192627.AC94C441D3D@finisterre.ee.mobilebroadband>
-References: <20190420104553.5071-1-paul@crapouillou.net>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v10 00/18] Introduce the Counter subsystem
+Date: Thu, 25 Apr 2019 21:36:24 +0200
+Message-ID: <20190425193624.GA11240@kroah.com>
+References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+ <20190407152550.451a7f63@archlinux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190420104553.5071-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20190407152550.451a7f63@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, Rob Herring <robh+dt@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Sun, Apr 07, 2019 at 03:25:50PM +0100, Jonathan Cameron wrote:
+> On Tue,  2 Apr 2019 15:30:35 +0900
+> William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+> 
+> > Changes in v10:
+> >   - Fix minor typographical errors in documentation
+> >   - Merge the FlexTimer Module Quadrature decoder counter driver patches
+> > 
+> > This revision is functionally identical to the last; changes in this
+> > version were made to fix minor typos in the documentation files and also
+> > to pull in the new FTM quadrature decoder counter driver.
+> > 
+> > The Generic Counter API has been and is still in a feature freeze until
+> > it is merged into the mainline. The following features will be
+> > investigated after the merge: interrupt support for counter devices, and
+> > a character device interface for low-latency applications.
+> 
+> Hi William / al,
+> 
+> So the question is how to move this forwards?  I'm happy with how it turned
+> out and the existing drivers we had in IIO are a lot cleaner under
+> the counter subsystem (other than the backwards compatibility for those that
+> ever existed in IIO).  For those  not following closely the situation is:
 
-   ASoC: doc: simple-card: Add pin-switches property
+I've now sucked this into my staging-testing branch and if 0-day is fine
+with it, I'll merge it to staging-next in a day or so.  This way you can
+build on it for any iio drivers that might be coming.
 
-has been applied to the asoc tree at
+I do have reservations about that one sysfs file that is multi-line, and
+I think it will come to bite you in the end over time, so I reserve the
+right to say "I told you so" when that happens...
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+But, I don't have a better answer for it now, so don't really worry
+about it :)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+thanks,
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6b903f9bdd98093a2c1ea79df07e86decfda3b04 Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Sat, 20 Apr 2019 12:45:51 +0200
-Subject: [PATCH] ASoC: doc: simple-card: Add pin-switches property
-
-The simple-audio-card,pin-switches property can contain the list of
-widget names for which pin switches must be created.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/simple-card.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index 4629c8f8a6b6..79954cd6e37b 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -24,6 +24,8 @@ Optional properties:
- 					  a microphone is attached.
- - simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
- 					  as amplifiers, to be added to the sound card.
-+- simple-audio-card,pin-switches	: List of strings containing the widget names for
-+					  which pin switches must be created.
- 
- Optional subnodes:
- 
--- 
-2.20.1
+greg k-h
