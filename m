@@ -1,34 +1,35 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v7 2/3] dt-bindings: Add an entry for Purism SPC
-Date: Wed, 24 Apr 2019 16:17:10 -0700
-Message-ID: <20190424231711.14156-3-angus@akkea.ca>
-References: <20190424231711.14156-1-angus@akkea.ca>
+From: jojo_zeng@126.com
+Subject: [PATCH]  of/device.c: fix the wrong comments
+Date: Thu, 25 Apr 2019 09:45:54 +0800
+Message-ID: <1556156754-18993-1-git-send-email-jojo_zeng@126.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424231711.14156-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus@akkea.ca
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>, Aisheng Dong <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.felsch@pengutronix.de
+To: robh+dt@kernel.org, frowand.list@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jojo Zeng <jojo_zeng@126.com>
 List-Id: devicetree@vger.kernel.org
 
-Add an entry for Purism, SPC
+From: Jojo Zeng <jojo_zeng@126.com>
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Reviewed-by: Rob Herring <robh@kernel.org>
+the comments which discribed the input parameters of of_match_device(). 
+the name is changed, so fix it.
+
+Signed-off-by: Jojo Zeng <jojo_zeng@126.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index d058b5102664..81f097f26953 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -332,6 +332,7 @@ poslab	Poslab Technology Co., Ltd.
- powervr	PowerVR (deprecated, use img)
- probox2	PROBOX2 (by W2COMP Co., Ltd.)
- pulsedlight	PulsedLight, Inc
-+purism	Purism, SPC
- qca	Qualcomm Atheros, Inc.
- qcom	Qualcomm Technologies, Inc
- qemu	QEMU, a generic and open source machine emulator and virtualizer
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 3717f2a..da81583 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -17,7 +17,7 @@
+ 
+ /**
+  * of_match_device - Tell if a struct device matches an of_device_id list
+- * @ids: array of of device match structures to search in
++ * @matches: array of of device match structures to search in
+  * @dev: the of device structure to match against
+  *
+  * Used by a driver to check whether an platform_device present in the
 -- 
-2.17.1
+2.7.4
