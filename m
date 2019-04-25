@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v2 5/6] ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
-Date: Thu, 25 Apr 2019 11:17:22 +0200
-Message-ID: <1556183843-28033-6-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v2 4/6] ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
+Date: Thu, 25 Apr 2019 11:17:21 +0200
+Message-ID: <1556183843-28033-5-git-send-email-fabien.dessenne@st.com>
 References: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,25 +12,31 @@ To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.or
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Define a hwspinlock to be used by the irq controller driver and the
-syscon driver.
+Declare hwspinlock device for stm32mp157 SoC
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 824d7e1..417bdf7 100644
+index 105e21f..824d7e1 100644
 --- a/arch/arm/boot/dts/stm32mp157c.dtsi
 +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -921,6 +921,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			reg = <0x5000d000 0x400>;
-+			hwlocks = <&hsem 1 1>;
+@@ -886,6 +886,14 @@
+ 			status = "disabled";
  		};
  
- 		syscfg: syscon@50020000 {
++		hsem: hwspinlock@4c000000 {
++			compatible = "st,stm32-hwspinlock";
++			#hwlock-cells = <2>;
++			reg = <0x4c000000 0x400>;
++			clocks = <&rcc HSEM>;
++			clock-names = "hsem";
++		};
++
+ 		ipcc: mailbox@4c001000 {
+ 			compatible = "st,stm32mp1-ipcc";
+ 			#mbox-cells = <1>;
 -- 
 2.7.4
