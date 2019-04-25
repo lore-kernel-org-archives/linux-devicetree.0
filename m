@@ -1,45 +1,105 @@
-From: Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [PATCH 3/5] input: edt-ft5x06 - Call devm_of_device_links_add()
- to create links
-Date: Thu, 25 Apr 2019 07:22:03 +0000
-Message-ID: <769d2c1e-8a33-d4fe-a3d9-6de4772b67d4@st.com>
-References: <20190424101913.1534-1-benjamin.gaignard@st.com>
- <20190424101913.1534-4-benjamin.gaignard@st.com>
- <20190424225235.GA225055@dtor-ws>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 4/5] pinctrl: Add pinctrl support for BM1880 SoC
+Date: Thu, 25 Apr 2019 12:58:25 +0530
+Message-ID: <20190425072825.GA31116@Mani-XPS-13-9360>
+References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org>
+ <20190424120224.22660-5-manivannan.sadhasivam@linaro.org>
+ <CACRpkdZJweCPs096r6LJJTUSmPYViPDV_rBJ8NWbHzx96xEfsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424225235.GA225055@dtor-ws>
-Content-Language: en-US
-Content-ID: <FFB026A3F1B8D5459817496E3480153C@st.com>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZJweCPs096r6LJJTUSmPYViPDV_rBJ8NWbHzx96xEfsw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "hadess@hadess.net" <hadess@hadess.net>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, "agx@sigxcpu.org" <agx@sigxcpu.org>, Yannick FERTRE <yannick.fertre@st.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "broonie@kernel.org" <broonie@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haitao.suo@bitmain.com, darren.tsao@bitmain.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiA0LzI1LzE5IDEyOjUyIEFNLCBEbWl0cnkgVG9yb2tob3Ygd3JvdGU6DQo+IEhpIEJlbmph
-bWluLA0KPg0KPiBPbiBXZWQsIEFwciAyNCwgMjAxOSBhdCAxMjoxOToxMVBNICswMjAwLCBCZW5q
-YW1pbiBHYWlnbmFyZCB3cm90ZToNCj4+IEZyb206IFlhbm5pY2sgRmVydHLDg8KpIDx5YW5uaWNr
-LmZlcnRyZUBzdC5jb20+DQo+Pg0KPj4gQWRkIGEgY2FsbCB0byBkZXZtX29mX2RldmljZV9saW5r
-c19hZGQoKSB0byBjcmVhdGUgbGlua3Mgd2l0aCBzdXBwbGllcnMNCj4+IGF0IHByb2JlIHRpbWUu
-DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBz
-dC5jb20+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2Fp
-Z25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZWR0
-LWZ0NXgwNi5jIHwgMiArKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
-Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZWR0LWZ0NXgwNi5j
-IGIvZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LmMNCj4+IGluZGV4IDcwMmJm
-ZGE3ZWU3Ny4uYWM5ZjdlODVlZmIwIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9pbnB1dC90b3Vj
-aHNjcmVlbi9lZHQtZnQ1eDA2LmMNCj4+ICsrKyBiL2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4v
-ZWR0LWZ0NXgwNi5jDQo+PiBAQCAtMTE2Nyw2ICsxMTY3LDggQEAgc3RhdGljIGludCBlZHRfZnQ1
-eDA2X3RzX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+PiAgIA0KPj4gICAJaTJj
-X3NldF9jbGllbnRkYXRhKGNsaWVudCwgdHNkYXRhKTsNCj4+ICAgDQo+PiArCWRldm1fb2ZfZGV2
-aWNlX2xpbmtzX2FkZCgmY2xpZW50LT5kZXYpOw0KPj4gKw0KPiBUaGlzIHNlZW1zIHByZXR0eSBn
-ZW5lcmljIGFjdGlvbiBhbmQgSSBiZWxpZXZlIGl0IHNob3VsZCBiZSBkb25lIGluDQo+IGdlbmVy
-aWMgY29kZSwgZWl0aGVyIGJ1cyAoaTJjLCBzcGksIGV0YyksIG9yIGluIGRldmljZSBjb3JlLg0K
-SXQgaXMgZG9uZSAob3IgY291bGQgYmUgZG9uZSkgaW4gbW9zdCBvZiB0aGUgYnVzZXMgb3IgZnJh
-bWV3b3JrIChsaWtlIA0KZm9yIHJlZ3VsYXRvcikNCmJ1dCBJIHRoaW5rIHRoYXQgYWRkaW5nIGl0
-IGluIGRldmljZSBjb3JlIGFkZCBhIGRldmljZS10cmVlIG5vZGUgcGFyc2luZyANCmZvciBhbGwg
-dGhlDQpkcml2ZXJzIHdoaWxlIG9ubHkgYSBmZXcgb2YgdGhlbSB3aWxsIHJlYWxseSBuZWVkIHRo
-aXMgZmVhdHVyZS4gVGhhdCB3aHkgDQpJIGhhdmUgcHV0IHRoZQ0KY2FsbCBoZXJlLg0KDQpCZW5q
-YW1pbg0KPg0KPiBUaGFua3MuDQo+
+Hi Linus,
+
+On Thu, Apr 25, 2019 at 09:09:28AM +0200, Linus Walleij wrote:
+> On Wed, Apr 24, 2019 at 2:03 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> > Add pinctrl support for Bitmain BM1880 SoC. The driver only handles
+> > pinmuxing as the SoC is not capable of handling pinconf.
+> >
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Patch applied, because there is no reason to hold back this clean
+> and important infrastructure for the platform. Minor nits can be
+> considered for follow-up patches.
+> 
+
+Thanks a lot! I will follow up with the cleanup patches.
+
+> > +config PINCTRL_BM1880
+> > +       bool "Bitmain BM1880 Pinctrl driver"
+> > +       depends on ARCH_BITMAIN
+> 
+> Could we do:
+> 
+> depends on ARCH_BITMAIN || COMPILE_TEST
+> 
+> to get some compiler coverage?
+> 
+
+Sure, will do.
+
+> > +       select PINMUX
+> > +       help
+> > +         Pinctrl driver for Bitmain BM1880 SoC.
+> 
+> I think the platform always want this driver enabled, so I would either
+> select it from arch/arm/mach-foo/Kconfig or add a row like this:
+> 
+> default ARCH_BITMAIN
+> 
+> Either defaulting it to 'y'.
+> 
+
+Makes sense! Will add ARCH_BITMAIN default to this Kconfig.
+
+> > +       F_nand, F_spi, F_emmc, F_sdio, F_eth0, F_pwm0, F_pwm1, F_pwm2,
+> > +       F_pwm3, F_pwm4, F_pwm5, F_pwm6, F_pwm7, F_pwm8, F_pwm9, F_pwm10,
+> > +       F_pwm11, F_pwm12, F_pwm13, F_pwm14, F_pwm15, F_pwm16, F_pwm17,
+> > +       F_pwm18, F_pwm19, F_pwm20, F_pwm21, F_pwm22, F_pwm23, F_pwm24,
+> > +       F_pwm25, F_pwm26, F_pwm27, F_pwm28, F_pwm29, F_pwm30, F_pwm31,
+> > +       F_pwm32, F_pwm33, F_pwm34, F_pwm35, F_pwm36, F_pwm37, F_i2c0, F_i2c1,
+> 
+> 
+> Wow 38 individual PWMs. This platform must really have good use for PWM.
+> I wonder why they hardcoded so many of them into the hardware...
+> 
+
+I don't know the reasoning behind it. This SoC is targeted at AI/ML
+usecase, and there are 4 PWM modules in it. Maybe they tried to integrate
+motor control usecase with these PWM modules? There is also a RISC-V core
+in this SoC, which can perform some real time offloading.
+
+> > +static int __init bm1880_pinctrl_init(void)
+> > +{
+> > +       return platform_driver_register(&bm1880_pinctrl_driver);
+> > +}
+> > +arch_initcall(bm1880_pinctrl_init);
+> 
+> driver_initcall() also known as module_builtin_driver() doesn't work?
+> 
+
+It will work, but I want this driver to be probed very soon.
+
+> Do you plan to add GPIO (and interrupts) and pin config to this driver as well?
+> 
+
+GPIO support is handled by Designware IP. I have already added DTS
+support for it. And you acked those 2 patches ;-)
+
+For pinconfig, sadly there is nothing I can see in the vendor kernel so
+assumed that the SoC doesn't support it (yes it is wierd). I will ask
+Bitmain folks to be sure.
+
+Thanks,
+Mani
+
+> Yours,
+> Linus Walleij
