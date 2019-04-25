@@ -1,116 +1,128 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-Date: Thu, 25 Apr 2019 14:57:50 -0500
-Message-ID: <20190425195750.GA26031@bogus>
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
- <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 3/5] Documentation: dt-bindings: Add
+ snps,need-phy-for-wake for dwc2 USB
+Date: Thu, 25 Apr 2019 12:58:10 -0700
+Message-ID: <CAD=FV=WA07+gUkVvsikN=iDHZLUJQtzjkKtiBHAEDw4gLNWY7w@mail.gmail.com>
+References: <20190418001356.124334-1-dianders@chromium.org>
+ <20190418001356.124334-4-dianders@chromium.org> <87pnpas1fx.fsf@linux.intel.com>
+ <CAD=FV=V=6dUkXAsX0+XR2y=688VcyDa8aPvD8JkKHTFZrs=YDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <CAD=FV=V=6dUkXAsX0+XR2y=688VcyDa8aPvD8JkKHTFZrs=YDg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Minas Harutyunyan <hminas@synopsys.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Alan Stern <stern@rowland.harvard.edu>, Artur Petrosyan <Arthur.Petrosyan@synopsys.com>, Alexandru M Stan <amstan@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, William Wu <william.wu@rock-chips.com>, linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Randy Li <ayaka@soulik.info>, Chris <zyw@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Ryan Case <ryandcase@chromium.org>, Amelie Delaunay <amelie.delaunay@st.com>, Julius Werner <jwerner@chromium.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Elaine Zhang <zhangqing@rock-chips.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 04:19:24PM +0200, Lukasz Luba wrote:
-> The patch adds description for DT binding for a new Exynos5422 Dynamic
-> Memory Controller device.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> new file mode 100644
-> index 0000000..133b3cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -0,0 +1,73 @@
-> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
-> +
-> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-> +memory chips are connected. The driver is to monitor the controller in runtime
-> +and switch frequency and voltage. To monitor the usage of the controller in
-> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-> +is able to measure the current load of the memory.
-> +When 'userspace' governor is used for the driver, an application is able to
-> +switch the DMC and memory frequency.
-> +
-> +Required properties for DMC device for Exynos5422:
-> +- compatible: Should be "samsung,exynos5422-bus".
-> +- clock-names : the name of clock used by the bus, "bus".
-> +- clocks : phandles for clock specified in "clock-names" property.
-> +- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- vdd-supply : phandle for voltage regulator which is connected.
-> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
-> +- operating-points-v2 : phandle for OPPs described in v2 definition.
-> +- device-handle : phandle of the connected DRAM memory device. For more
-> +	information please refer to Documentation
+Hi,
 
-The memory node(s) should be a child of the memory controller IMO.
+On Thu, Apr 25, 2019 at 11:09 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Apr 25, 2019 at 5:40 AM Felipe Balbi
+> <felipe.balbi@linux.intel.com> wrote:
+> >
+> > Douglas Anderson <dianders@chromium.org> writes:
+> >
+> > > Some SoCs with a dwc2 USB controller may need to keep the PHY on to
+> > > support remote wakeup.  Allow specifying this as a device tree
+> > > property.
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > > For relevant prior discussion on this patch, see:
+> > >
+> > > https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders@chromium.org
+> > >
+> > > I didn't make any changes from the prior version since I never found
+> > > out what Rob thought of my previous arguments.  If folks want a
+> > > change, perhaps they could choose from these options:
+> > >
+> > > 1. Assume that all dwc2 hosts would like to keep their PHY on for
+> > >    suspend if there's a USB wakeup enabled, thus we totally drop this
+> > >    binding.  This doesn't seem super great to me since I'd bet that
+> > >    many devices that use dwc2 weren't designed for USB wakeup (they
+> > >    may not keep enough clocks or rails on) so we might be wasting
+> > >    power for nothing.
+> > > 2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
+> > >    it more obvious that this property is intended both to document
+> > >    that wakeup from suspend is possible and that we need the PHY for
+> > >    said wakeup.
+> > > 3. Rename this property to "snps,can-wakeup-from-suspend" and assume
+> > >    it's implicit that if we can wakeup from suspend that we need to
+> > >    keep the PHY on.  If/when someone shows that a device exists using
+> > >    dwc2 where we can wakeup from suspend without the PHY they can add
+> > >    a new property.
+> > >
+> > > Changes in v2: None
+> > >
+> > >  Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> >
+> > checking file Documentation/devicetree/bindings/usb/dwc2.txt
+> > Hunk #1 FAILED at 37.
+> > Hunk #2 succeeded at 52 (offset -1 lines).
+> > 1 out of 2 hunks FAILED
+>
+> Yeah, as Minas pointed out in the cover letter [1] my series conflicts
+> with Artur's.  I have it on my list to try out his series and see if,
+> perhaps, it allows me to enable the partial power down and also just
+> generally rebase.  It's fairly high on my list to do that--hopefully
+> in the next week.
+>
+> [1] https://lkml.kernel.org/r/e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com
 
-> +- devfreq-events : phandles of the PPMU events used by the controller.
-> +
-> +Example:
-> +
-> +	ppmu_dmc0_0: ppmu@10d00000 {
-> +		compatible = "samsung,exynos-ppmu";
-> +		reg = <0x10d00000 0x2000>;
-> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
-> +		clock-names = "ppmu";
-> +		status = "okay";
+Oh, it looks like you didn't apply Artur's patches, though.
+Presumably you applied mine first and they won the race and thus I
+guess it's up to Artur to rebase his patches atop mine.  This probably
+explains why you told him the patches didn't apply.  I'll reply to
+that thread.
 
-Don't show 'status' in examples.
+...so it turns out that when I try now my patches apply fine [2].  I'm
+guessing that you perhaps tried to apply these patches before my
+"rk3288's remote wake quirk" which would indeed cause conflicts.  I
+mentioned the dependency in my cover letter [1] but totally understand
+that it's easy to miss stuff like that.  :-)
 
-> +		events {
-> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
-> +				event-name = "ppmu-event3-dmc0_0";
-> +			};
-> +		};
-> +	};
-> +
-> +	dmc: memory-controller@10c20000 {
-> +		compatible = "samsung,exynos5422-dmc";
-> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
-> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
-> +		clocks = 	<&clock CLK_FOUT_SPLL>,
-> +				<&clock CLK_MOUT_SCLK_SPLL>,
-> +				<&clock CLK_FF_DOUT_SPLL2>,
-> +				<&clock CLK_FOUT_BPLL>,
-> +				<&clock CLK_MOUT_BPLL>,
-> +				<&clock CLK_SCLK_BPLL>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
-> +				<&clock CLK_MOUT_MCLK_CDREX>,
-> +				<&clock CLK_DOUT_CLK2X_PHY0>,
-> +				<&clock CLK_CLKM_PHY0>,
-> +				<&clock CLK_CLKM_PHY1>;
-> +		clock-names =	"fout_spll",
-> +				"mout_sclk_spll",
-> +				"ff_dout_spll2",
-> +				"fout_bpll",
-> +				"mout_bpll",
-> +				"sclk_bpll",
-> +				"mout_mx_mspll_ccore",
-> +				"mout_mx_mspll_ccore_phy",
-> +				"mout_mclk_cdrex",
-> +				"dout_clk2x_phy0",
-> +				"clkm_phy0",
-> +			        "clkm_phy1";
-> +		status = "okay";
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		device-handle = <&samsung_K3QF2F20DB>;
-> +		vdd-supply = <&buck1_reg>;
-> +	};
-> -- 
-> 2.7.4
-> 
+I'm going to assume you can just go-ahead and try applying patches 3,
+4, and 5 in this series again.  If you want me to repost them then
+please let me know.
+
+Thanks, and sorry for the hassle.
+
+[1] https://lkml.kernel.org/r/20190418001356.124334-1-dianders@chromium.org
+
+[2] Showing that patches currently apply:
+
+dianders@tictac2:v4.19 ((2e3cfcbbb140...))$ git checkout
+linux_usb_balbi/testing/next
+HEAD is now at 2e3cfcbbb140 dwc2: gadget: Fix completed transfer size
+calculation in DDMA
+
+dianders@tictac2:v4.19 ((2e3cfcbbb140...))$ curl -L
+https://lore.kernel.org/patchwork/patch/1063477/mbox | git am
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  7273  100  7273    0     0  35827      0 --:--:-- --:--:-- --:--:-- 35827
+Applying: Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+
+dianders@tictac2:v4.19 ((84c34d7b9647...))$ curl -L
+https://lore.kernel.org/patchwork/patch/1063478/mbox | git am
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  9587  100  9587    0     0  46538      0 --:--:-- --:--:-- --:--:-- 46538
+Applying: USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+
+dianders@tictac2:v4.19 ((ff5ab1cb16ab...))$ curl -L
+https://lore.kernel.org/patchwork/patch/1063479/mbox | git am
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  6045  100  6045    0     0  29778      0 --:--:-- --:--:-- --:--:-- 29778
+Applying: ARM: dts: rockchip: Allow wakeup from rk3288-veyron's dwc2 USB ports
+
+-Doug
