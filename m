@@ -1,80 +1,232 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
-Date: Thu, 25 Apr 2019 23:46:09 +0200
-Message-ID: <20190425214609.rav7ooxovzhvgn7e@earth.universe>
-References: <20190423090451.23711-1-brgl@bgdev.pl>
- <20190424083127.GB6699@amd>
- <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 13/13] dts: hi3660: Add support for usb on Hikey960
+Date: Thu, 25 Apr 2019 17:00:16 -0500
+Message-ID: <20190425220016.GC32028@bogus>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+ <20190420064019.57522-14-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hkqjlur2zgw6jemw"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
+In-Reply-To: <20190420064019.57522-14-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Pavel Machek <pavel@denx.de>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Yu Chen <chenyu56@huawei.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Chunfeng Yun <chunfeng.yun@mediatek.com>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Apr 20, 2019 at 02:40:19PM +0800, Yu Chen wrote:
+> This patch adds support for usb on Hikey960.
+> 
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Wei Xu <xuwei5@hisilicon.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+> v2:
+> * Remove device_type property.
+> * Add property "usb-role-switch".
+> v3:
+> * Make node "usb_phy" a subnode of usb3_otg_bc register.
+> * Remove property "typec-vbus-enable-val" of hisi_hikey_usb.
+> v4:
+> * Remove property "hisilicon,usb3-otg-bc-syscon" of usb-phy.
+> ---
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 53 ++++++++++++++++
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 73 +++++++++++++++++++++++
+>  2 files changed, 126 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> index e035cf195b19..d4e11c56b250 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> @@ -13,6 +13,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/usb/pd.h>
+>  
+>  / {
+>  	model = "HiKey960";
+> @@ -196,6 +197,26 @@
+>  			method = "smc";
+>  		};
+>  	};
+> +
+> +	hisi_hikey_usb: hisi_hikey_usb {
+> +		compatible = "hisilicon,hikey960_usb";
+> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
+> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
+> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usbhub5734_pmx_func>;
+> +
+> +		port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			hikey_usb_ep: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&dwc3_role_switch_notify>;
+> +			};
+> +		};
+> +	};
+> +
+>  };
+>  
+>  /*
+> @@ -526,6 +547,38 @@
+>  &i2c1 {
+>  	status = "okay";
+>  
+> +	rt1711h: rt1711h@4e {
+> +		compatible = "richtek,rt1711h";
 
---hkqjlur2zgw6jemw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The binding doc for this should state it should have a 'connector' node.
 
-Hi,
+> +		reg = <0x4e>;
+> +		status = "ok";
 
-On Wed, Apr 24, 2019 at 10:45:00AM +0200, Bartosz Golaszewski wrote:
-> =C5=9Br., 24 kwi 2019 o 10:31 Pavel Machek <pavel@denx.de> napisa=C5=82(a=
-):
-> >
-> > On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > This series adds support for max77650 ultra low-power PMIC. It provid=
-es
-> > > the core mfd driver and a set of five sub-drivers for the regulator,
-> > > power supply, gpio, leds and input subsystems.
-> > >
-> > > Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_d=
-evices().
-> > > Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for=
- this
-> > > device.
-> > >
-> > > The regulator part is already upstream.
-> >
-> > I see v10 in my inbox... and acks from all over the place, but patches
-> > not going in. Who takes these? I don't think I need another 10
-> > versions in my inbox...
-> >                                                                 Pavel
->=20
-> I think Lee Jones should take them through the MFD tree. With the ack
-> from Sebastian Reichel on the driver part and the example in the
-> charger binding fixed I think they are ready to be picked up.
+Can drop this, it is the default.
 
-Fine with me.
+> +		interrupt-parent = <&gpio27>;
+> +		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb_cfg_func>;
+> +
+> +		usb_con: connector {
+> +			compatible = "usb-c-connector";
+> +			label = "USB-C";
+> +			data-role = "dual";
+> +			power-role = "dual";
+> +			try-power-role = "sink";
+> +			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
+> +			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
+> +				PDO_VAR(5000, 5000, 1000)>;
+> +			op-sink-microwatt = <10000000>;
+> +		};
+> +
+> +		port {
 
--- Sebastian
+The connector node should have a 'ports' child with 'port@0' being the 
+HS connection.
 
---hkqjlur2zgw6jemw
-Content-Type: application/pgp-signature; name="signature.asc"
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			rt1711h_ep: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&dwc3_role_switch>;
+> +			};
+> +		};
+> +	};
+> +
+>  	adv7533: adv7533@39 {
+>  		status = "ok";
+>  		compatible = "adi,adv7533";
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index 2f19e0e5b7cf..173467505ada 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -355,6 +355,12 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		pmctrl: pmctrl@fff31000 {
+> +			compatible = "hisilicon,hi3660-pmctrl", "syscon";
+> +			reg = <0x0 0xfff31000 0x0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+>  		pmuctrl: crg_ctrl@fff34000 {
+>  			compatible = "hisilicon,hi3660-pmuctrl", "syscon";
+>  			reg = <0x0 0xfff34000 0x0 0x1000>;
+> @@ -1134,5 +1140,72 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		usb3_otg_bc: usb3_otg_bc@ff200000 {
+> +			compatible = "syscon", "simple-mfd";
+> +			reg = <0x0 0xff200000 0x0 0x1000>;
+> +
+> +			usb_phy: usb-phy {
+> +				compatible = "hisilicon,hi3660-usb-phy";
+> +				#phy-cells = <0>;
+> +				hisilicon,pericrg-syscon = <&crg_ctrl>;
+> +				hisilicon,pctrl-syscon = <&pctrl>;
+> +				hisilicon,eye-diagram-param = <0x22466e4>;
+> +			};
+> +		};
+> +
+> +		usb3: hisi_dwc3 {
+> +			compatible = "hisilicon,hi3660-dwc3";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
 
------BEGIN PGP SIGNATURE-----
+If there are not any wrapper registers, then get rid of the hisi_dwc3 
+node. For just clocks and resets we just put everything in one node.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzCKpoACgkQ2O7X88g7
-+pr2mBAAkSSqMITsZQW+RCxTbutrVPO+dqNO9WPo6/0+bjuOfMLt5V9ty3vimvhi
-K/dCIpbQRO417ZwlyCM+mt5wuhPBGbgOy/65EBAcdFKweDFv4q/tug45qh6V3fZ8
-6iaSwd9wXMf2UttkJZ5UeOX+O+ud19RjBVmoJ8HqUG5LA+ud0ZbUcVDhlUEiMcEJ
-+zNMo0HQpUuKMmHRp2iKlWkoekPFDhEWnQZbuBxwhVhKbvZCX4LavbHeiR3GCkO8
-Q1onr1MjkpFJfrQTjbQLOKFB5i2/I4EMmZ63LECwv5PhaYkb3Rf7dtGj7koS+4ni
-rVKYEvSuiCXDPliimXmV6zorkK4FQd2ykZc+pHamTdEMsqanOr+K/BpSh4qOZvqH
-Mo2t4FiEqKZ2ATKnfimQsqnPG37cr5yq4cKwukL+hND36maWjws0jF9o2HkXJI8Y
-CTcIs+ZGjuDRDgW5bxkpao9P+M16FlKzrkO1EP6LLCBtIQde4nWf5jn26xHj8j56
-QHGToQk12PykVLrXrzpWFYxHilzCtV7ZNdSj02rMFJFiCwcxkqPv2jJqQhILJnuR
-CcdSpEILZZgcTan0H4p7plyOJWoPpminEHFZLHTNkQyywFYXXQRGHVRvNXjc/P/I
-vpvXVsB8WQCEXVhUtJz1fzyEhBSKN0XGOPEWEe6OYtI4rgtm+io=
-=X5TB
------END PGP SIGNATURE-----
+> +
+> +			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> +				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +			clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+> +
+> +			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +			assigned-clock-rates = <229000000>;
+> +			resets = <&crg_rst 0x90 8>,
+> +				 <&crg_rst 0x90 7>,
+> +				 <&crg_rst 0x90 6>,
+> +				 <&crg_rst 0x90 5>;
+> +
+> +			dwc3: dwc3@ff100000 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0x0 0xff100000 0x0 0x100000>;
+> +				interrupts = <0 159 4>, <0 161 4>;
+> +				phys = <&usb_phy>;
+> +				phy-names = "usb3-phy";
+> +				dr_mode = "otg";
+> +				maximum-speed = "super-speed";
+> +				phy_type = "utmi";
+> +				snps,dis-del-phy-power-chg-quirk;
 
---hkqjlur2zgw6jemw--
+> +				snps,lfps_filter_quirk;
+> +				snps,dis_u2_susphy_quirk;
+> +				snps,dis_u3_susphy_quirk;
+> +				snps,tx_de_emphasis_quirk;
+> +				snps,tx_de_emphasis = <1>;
+> +				snps,dis_enblslpm_quirk;
+
+Pretty sure these aren't documented because we don't use '_' in property 
+names.
+
+> +				snps,gctl-reset-quirk;
+> +				usb-role-switch;
+> +				role-switch-default-host;
+> +
+> +				port {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					dwc3_role_switch: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&rt1711h_ep>;
+> +					};
+> +
+> +					dwc3_role_switch_notify: endpoint@1 {
+> +						reg = <1>;
+> +						remote-endpoint = <&hikey_usb_ep>;
+> +					};
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
+> -- 
+> 2.15.0-rc2
+> 
