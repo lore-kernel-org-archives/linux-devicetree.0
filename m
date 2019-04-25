@@ -1,42 +1,47 @@
-Return-Path: <SRS0=g90a=SQ=gmail.com=peron.clem@kernel.org>
-MIME-Version: 1.0
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Sun, 14 Apr 2019 18:18:04 +0200
-Message-ID: <CAJiuCceeLwY+myYtUf15frSYsLKmGaUBifAOxUkNWwSjbF4oDg@mail.gmail.com>
-Subject: Question about compatible fallback and documentation
-Content-Type: text/plain; charset="UTF-8"
-To: devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Return-Path: <SRS0=UBGr=S3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:23784 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfDYBZa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Apr 2019 21:25:30 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH v2 3/5] arm64: dts: renesas: r8a7796: Add TPU support
+Date: Thu, 25 Apr 2019 10:25:15 +0900
+Message-Id: <1556155517-5054-4-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, geert+renesas@glider.be, broonie@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Add tpu device node to dtsi for TPU support on r8a7796 SoC.
 
-I have to bind an already existing IP by a vendor in a new SoC called
-"SOC3" device-tree.
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-In the 1st gen of "SOC1" the IP is introduced :
-soc1.dtsi :
-compatible = "vendor,ip-soc1";
-
-Then a 2nd gen of the IP is introduced in "SOC2" with new registers.
-But the driver of the 1st gen is still working fine and no update of
-the existing driver has been introduced because not required.
-soc2.dtsi :
-compatible = "vendor,ip-soc2", "vendor,ip-soc1";
-
-Finally in "SOC3" and regardind the user manual we think that the IP
-introduced is the same as "SOC2".
-Should the compatible in soc3.dtsi be A or B?
-A) compatible = "vendor,ip-soc2", "vendor,ip-soc1";
-or
-B) compatible = "vendor,ip-soc3", "vendor,ip-soc2", "vendor,ip-soc1";
-
-I propose the solution B) because we don't know what could happens
-maybe the IP could need a quirks only for "SOC3". And device tree
-shouldn't move for the user only the driver.
-
-Last question does we have to document all the compatible use in
-DTS(i) files in the Documentation ? or only the compatible used by the
-drivers ?
-
-Thanks for answers,
-Clement
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index d5e2f4a..a5c6a99 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1319,6 +1319,17 @@
+ 			status = "disabled";
+ 		};
+ 
++		tpu: pwm@e6e80000 {
++			compatible = "renesas,tpu-r8a7796", "renesas,tpu";
++			reg = <0 0xe6e80000 0 0x148>;
++			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 304>;
++			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++			resets = <&cpg 304>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
++
+ 		msiof0: spi@e6e90000 {
+ 			compatible = "renesas,msiof-r8a7796",
+ 				     "renesas,rcar-gen3-msiof";
+-- 
+2.7.4
