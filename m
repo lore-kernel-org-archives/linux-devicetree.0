@@ -1,49 +1,25 @@
-Return-Path: <SRS0=Lf4w=S2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-it1-f199.google.com ([209.85.166.199]:40848 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDXICw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Apr 2019 04:02:52 -0400
-Received: by mail-it1-f199.google.com with SMTP id j8so2401980ita.5
-        for <devicetree@vger.kernel.org>; Wed, 24 Apr 2019 01:02:51 -0700 (PDT)
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Message-ID: <000000000000cdf35c0587422072@google.com>
-Date: Wed, 24 Apr 2019 08:02:51 +0000
-Subject: SEO+SMO Proposal
-From: elizabethburton1977@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556188862-22546-3-git-send-email-sugaya.taichi@socionext.com>
+References: <1556188862-22546-1-git-send-email-sugaya.taichi@socionext.com> <1556188862-22546-3-git-send-email-sugaya.taichi@socionext.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 2/3] clock: milbeaut: Add Milbeaut M10V clock controller
+Message-ID: <155623587387.15276.14839487511493210076@swboyd.mtv.corp.google.com>
+Date: Thu, 25 Apr 2019 16:44:33 -0700
+To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-My name Elizabeth, and am working with a reputable leading S.E.O. Company  
-in INDIA
-We have the expertise to get our customer's websites top ranking in Google,  
-Yahoo, and MSN and other search engines
-producing high revenue with top page rank, guaranteed based result within  
-3-4 months
-We provide a S.E.O. special offer for the following package:
-1. 50 Directory submissions
-2. 50 Social Book marking Submissions
-3. 10 Article Submissions (1 article x 10 article directories)
-4. 10 Press Release Submissions (1 press release x 10 press release
-websites)
-5. Google Submissions
-6. 1 unique, 400 word article written
-7. 1 unique, 400 word press release
-8. Meta tags changes suggestions
-9. Keyword research
-10. Competitor Analysis
-11. Heading tag changes
-12. Alt tag changes
-13. Interlinking wherever required.
-14. Keyword Density in site content.
-15. HTML Site Map
-16. XML site map and Submission in webmaster tool
-17. Search Engine Submission
-18. Content optimization
-Let me know if you interested so give me your website with keyword would do  
-an analysis on it to suggest you the best.
-Looking forward for your positive reply here you can Target More than 15  
-keywords
-Elizabeth Burton
+Quoting Sugaya Taichi (2019-04-25 03:41:01)
+> The M10V of the Milbeaut SoCs has an on-chip controller that derive
+> mostly clocks from a single external clock, using PLLs, dividers,
+> multiplexers and gates. Since the PLLs have already been started and
+> will not stop / restart, they are fixed factor. The gates will be added
+> in later patch (all of the gates are off state now).
+>=20
+> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> ---
+
+Applied to clk-next
