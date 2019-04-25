@@ -1,121 +1,77 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 1/4] clk: tegra20/30: Add custom EMC clock
- implementation
-Date: Fri, 26 Apr 2019 00:42:19 +0300
-Message-ID: <2b4f56cd-caf9-e6b5-6344-a045e08a9c91@gmail.com>
-References: <20190414202009.31268-1-digetx@gmail.com>
- <20190414202009.31268-2-digetx@gmail.com>
- <155621927685.15276.16453873579880842057@swboyd.mtv.corp.google.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names
+ from DT
+Date: Thu, 25 Apr 2019 23:42:30 +0200
+Message-ID: <5d17334c-ed2f-5112-dba6-72a050bfd1b2@linaro.org>
+References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com>
+ <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
+ <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155621927685.15276.16453873579880842057@swboyd.mtv.corp.google.com>
+In-Reply-To: <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
+Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-25.04.2019 22:07, Stephen Boyd пишет:
-> Quoting Dmitry Osipenko (2019-04-14 13:20:06)
->> diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
->> new file mode 100644
->> index 000000000000..35b67a9989c8
->> --- /dev/null
->> +++ b/drivers/clk/tegra/clk-tegra20-emc.c
->> @@ -0,0 +1,307 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/bits.h>
->> +#include <linux/clk/tegra.h>
+On 4/25/19 23:29, Stephen Boyd wrote:
+> Quoting Jorge Ramirez (2019-04-22 04:44:50)
+>> On 2/22/19 19:11, Stephen Boyd wrote:
+>>> Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
+>>>> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+>>>>         if (!a53cc)
+>>>>                 return -ENOMEM;
+>>>>  
+>>>> +       /* check if the parent names are present in the device tree */
+>>>
+>>> This looks odd.
+>>>
+>>>> +       ret = devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
+>>>> +       if (ret == -EPROBE_DEFER)
+>>>> +               return ret;
+>>>
+>>> Why can't we use of_clk_parent_fill() if we know this is always a DT
+>>> platform?  The parent clks may not be registered at the time of probe?
+>>
+>> yes, and AFAICS the important thing at this point is that the clock is
+>> registered hence the handling of defer.
+>>
+>> I could use of_clk_parent_fill and then - if needed - call
+>> devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
+>> this just make the code more confusing?)
 > 
-> Include clk-provider.h as this is a clk provider driver.
+> Yeah of_clk_parent_fill() isn't the best approach. But it at least keeps
+> this driver from using clk consumer APIs?
 
-Okay, although clk-provider.h is also included by clk.h below.
+ok will do that then.
 
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/slab.h>
->> +
->> +#include "clk.h"
->> +
->> +#define CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK     GENMASK(7, 0)
->> +#define CLK_SOURCE_EMC_2X_CLK_SRC_MASK         GENMASK(31, 30)
-> [...]
->> +
->> +static const struct clk_ops tegra_clk_emc_ops = {
->> +       .recalc_rate = emc_recalc_rate,
->> +       .get_parent = emc_get_parent,
->> +       .set_parent = emc_set_parent,
->> +       .set_rate = emc_set_rate,
->> +       .set_rate_and_parent = emc_set_rate_and_parent,
->> +       .determine_rate = emc_determine_rate,
->> +};
->> +
->> +void tegra20_clk_set_emc_round_callback(void *round_cb, void *arg_cb)
 > 
-> Why can't we have type safety on these function pointers?
-
-It is probably not really necessary since it's a platform-specific API.
-But I'll add an explicit type in v3 for consistency, thanks.
-
->> +{
->> +       struct clk *clk = __clk_lookup("emc");
->> +       struct tegra_clk_emc *emc;
->> +       struct clk_hw *hw;
->> +
->> +       if (clk) {
->> +               hw = __clk_get_hw(clk);
->> +               emc = to_tegra_clk_emc(hw);
->> +
->> +               emc->round_cb = round_cb;
->> +               emc->arg_cb = arg_cb;
->> +       }
->> +}
->> +
->> +bool tegra20_clk_emc_driver_available(void)
->> +{
->> +       struct clk *clk = __clk_lookup("emc");
+>>
+>>
+>>> Maybe this series should wait for the parent registration stuff I'm
+>>> working on so that this can be made simpler.
+>>
+>> the need for the clock name is not intrinsic to this driver (the driver
+>> itself doesnt use these names) but it just feeds these to the framework.
+>>
+>> I was looking into your parent registration code and I am not sure how
+>> can I use it in this particular driver other than simply removing the
+>> names and hoping that things are handled properly at the lower
+>> levels.... could you clarify please?
+>>
 > 
-> Can we avoid using __clk_lookup()? Maybe by having the clk_hw pointer in
-> this driver somehow?
-
-tegra20_clk_emc_driver_available() is a private function of the Tegra's
-clk-core. Please note that prototype of this function is added to the
-local "drivers/clk/tegra/clk.h" file.
-
-It is indeed possible to use clk pointer instead of __clk_lookup() and
-I'll change that in v3 since it's causing some confusion.
-
->> +       struct tegra_clk_emc *emc;
->> +       struct clk_hw *hw;
->> +
->> +       if (clk) {
->> +               hw = __clk_get_hw(clk);
+> I think so. I've forgotten the context of this patch, but the general
+> idea would be to specify the parents with clock-names or DT index in the
+> DT node for the clks registered here and not use of_clk_parent_fill() or
+> do any sort of devm_clk_bulk_get() calls. Then the framework will take
+> care of finding the parents for the clks and hooking things up properly
+> for the parent-child relationship.
 > 
-> This gets further to the point, we don't prefer to see drivers use
-> __clk_get_hw() unless they absolutely need to. Maybe I don't understand
-> the driver structure, but it seems like maybe the driver that's
-> providing the callbacks could be the same driver that's registering
-> these clks, and thus everything could be inside one file so that we
-> don't have to pass around callbacks and clk_hw pointers? Commit text
-> says "this is how it's been" but that's not a reason to keep doing it.
+> 
 
-Again, tegra20_clk_emc_driver_available() is for the Terga's clk-core
-and not for the EMC (External Memory Controller) driver. This function
-is used to determine whether EMC driver is ready to handle clock-rate
-changes (PRE/POST rate-change notifications), clk users can't get EMC
-clock until driver is ready (i.e. the "round" callback is registered by
-the driver).
-
-Please see tegra20_clk_src_onecell_get() changes in this patch and
-drivers/memory/tegra/tegra20-emc.c for clarity.
-
-It is not possible to register clk from the EMC driver without having
-some custom integration with the clk-core because CLK and EMC are
-different hardware units and hence EMC driver doesn't have direct access
-to the CLK registers. I think it is better to keep CLK and memory-timing
-programming logically separated simply for consistency, although I'm
-open to suggestions.
+ok will try that. thanks for confirming!
