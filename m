@@ -1,54 +1,86 @@
-From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH V7 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Thu, 25 Apr 2019 19:19:51 +0000
-Message-ID: <1556219971-27322-4-git-send-email-Frank.Li@nxp.com>
-References: <1556219971-27322-1-git-send-email-Frank.Li@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1556219971-27322-1-git-send-email-Frank.Li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Frank Li <frank.li@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: ASoC: Add Spreadtrum multi-channel data transfer support" to the asoc tree
+Date: Thu, 25 Apr 2019 20:24:34 +0100 (BST)
+Message-ID: <20190425192434.368FD441D3C@finisterre.ee.mobilebroadband>
+References: <fd223d1dcf5be1f83863e881fa3db931b5c84601.1555917711.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fd223d1dcf5be1f83863e881fa3db931b5c84601.1555917711.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: alsa-devel@alsa-project.org, baolin.wang@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, orsonzhai@gmail.com, perex@perex.cz, robh+dt@kernel.org, tiwai@suse.com, zhang.lyra@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add DDR perf counter driver maintainer information
+The patch
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+   dt-bindings: ASoC: Add Spreadtrum multi-channel data transfer support
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From c634d3ffc6b2c3b15ea79ffe0a761ce08b4da71a Mon Sep 17 00:00:00 2001
+From: Baolin Wang <baolin.wang@linaro.org>
+Date: Tue, 23 Apr 2019 10:26:21 +0800
+Subject: [PATCH] dt-bindings: ASoC: Add Spreadtrum multi-channel data transfer
+ support
+
+On Spreadtrum platform, the audio subsystem will use the multi-channel
+data transfer controller to transfer sound stream between audio subsystem
+and other AP/CP subsystem.
+
+It can support 10 DAC channel and 10 ADC channel, and each channel has
+512 bytes depth data fifo. Moreover each channel can be used DMA mode
+or interrupt mode to transfer data.
+
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-No change from v1 to v7
+ .../devicetree/bindings/sound/sprd-mcdt.txt   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/sprd-mcdt.txt
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2c7d4e1..6a9868b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6264,6 +6264,13 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-cpm.c
- 
-+FREESCALE IMX DDR Performance Monitor DRIVER
-+M:	Frank Li <Frank.li@nxp.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	drivers/perf/fsl_imx8_ddr_perf.c
-+F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+diff --git a/Documentation/devicetree/bindings/sound/sprd-mcdt.txt b/Documentation/devicetree/bindings/sound/sprd-mcdt.txt
+new file mode 100644
+index 000000000000..274ba0acbfd6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/sprd-mcdt.txt
+@@ -0,0 +1,19 @@
++Spreadtrum Multi-Channel Data Transfer Binding
 +
- FREESCALE IMX LPI2C DRIVER
- M:	Dong Aisheng <aisheng.dong@nxp.com>
- L:	linux-i2c@vger.kernel.org
++The Multi-channel data transfer controller is used for sound stream
++transmission between audio subsystem and other AP/CP subsystem. It
++supports 10 DAC channel and 10 ADC channel, and each channel can be
++configured with DMA mode or interrupt mode.
++
++Required properties:
++- compatible: Should be "sprd,sc9860-mcdt".
++- reg: Should contain registers address and length.
++- interrupts: Should contain one interrupt shared by all channel.
++
++Example:
++
++mcdt@41490000 {
++	compatible = "sprd,sc9860-mcdt";
++	reg = <0 0x41490000 0 0x170>;
++	interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
-2.5.2
+2.20.1
