@@ -1,381 +1,133 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH RESEND v13 8/8] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Thu, 25 Apr 2019 14:17:19 +0300
-Message-ID: <resend.2a84677b20adab6319736c8baa31b6241dd63a68.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover2.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 6/6] mfd: max77620: Provide system power-off
+ functionality
+Date: Thu, 25 Apr 2019 13:22:41 +0200
+Message-ID: <20190425112241.GA10218@ulmo>
+References: <20190424224900.8018-1-digetx@gmail.com>
+ <20190424224900.8018-7-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover2.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20190424224900.8018-7-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, heikki.haikola@fi.r
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Initial support for watchdog block included in ROHM BD70528
-power management IC.
 
-Configurations for low power states are still to be checked.
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
----
-Changelog v13
-- Moved WDT enable/disable code from MFD to WDT as was (strongly) suggested
-  by Lee Jones
+On Thu, Apr 25, 2019 at 01:49:00AM +0300, Dmitry Osipenko wrote:
+> Provide system power-off functionality that allows to turn off machine
+> gracefully.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/mfd/max77620.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+> index 9b0009c29610..e56223bde568 100644
+> --- a/drivers/mfd/max77620.c
+> +++ b/drivers/mfd/max77620.c
+> @@ -37,6 +37,8 @@
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+> =20
+> +static struct max77620_chip *max77620_scratch;
+> +
+>  static const struct resource gpio_resources[] =3D {
+>  	DEFINE_RES_IRQ(MAX77620_IRQ_TOP_GPIO),
+>  };
+> @@ -481,6 +483,15 @@ static int max77620_read_es_version(struct max77620_=
+chip *chip)
+>  	return ret;
+>  }
+> =20
+> +static void max77620_pm_power_off(void)
+> +{
+> +	struct max77620_chip *chip =3D max77620_scratch;
+> +
+> +	regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG1,
+> +			   MAX77620_ONOFFCNFG1_SFT_RST,
+> +			   MAX77620_ONOFFCNFG1_SFT_RST);
+> +}
 
-Changelog v12 
-- No functional changes
-- Small styling fixes
+I think this is only partially correct. See here for a driver that I had
+proposed a while back:
 
- drivers/watchdog/Kconfig       |  12 ++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/bd70528_wdt.c | 290 +++++++++++++++++++++++++++++++++
- 3 files changed, 303 insertions(+)
- create mode 100644 drivers/watchdog/bd70528_wdt.c
+	https://github.com/thierryreding/linux/commit/d0eaa77b402f62bd236d76e3edeb=
+3ccf296cbe81
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 242eea859637..a00bf649d7f0 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
- 	  watchdog. Be aware that governors might affect the watchdog because it
- 	  is purely software, e.g. the panic governor will stall it!
- 
-+config BD70528_WATCHDOG
-+	tristate "ROHM BD70528 PMIC Watchdog"
-+	depends on MFD_ROHM_BD70528
-+	select WATCHDOG_CORE
-+	help
-+	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-+	  cause system reset.
-+
-+	  Say Y here to include support for the ROHM BD70528 watchdog.
-+	  Alternatively say M to compile the driver as a module,
-+	  which will be called bd70528_wdt.
-+
- config DA9052_WATCHDOG
- 	tristate "Dialog DA9052 Watchdog"
- 	depends on PMIC_DA9052 || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index ba930e464657..3985922c440a 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -205,6 +205,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
- obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- 
- # Architecture Independent
-+obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
- obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-new file mode 100644
-index 000000000000..b0152fef4fc7
---- /dev/null
-+++ b/drivers/watchdog/bd70528_wdt.c
-@@ -0,0 +1,290 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 ROHM Semiconductors
-+// ROHM BD70528MWV watchdog driver
-+
-+#include <linux/bcd.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/rohm-bd70528.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/watchdog.h>
-+
-+/*
-+ * Max time we can set is 1 hour, 59 minutes and 59 seconds
-+ * and Minimum time is 1 second
-+ */
-+#define WDT_MAX_MS	((2 * 60 * 60 - 1) * 1000)
-+#define WDT_MIN_MS	1000
-+#define DEFAULT_TIMEOUT	60
-+
-+#define WD_CTRL_MAGIC1 0x55
-+#define WD_CTRL_MAGIC2 0xAA
-+
-+struct wdtbd70528 {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct rohm_regmap_dev *mfd;
-+	struct watchdog_device wdt;
-+};
-+
-+/**
-+ * bd70528_wdt_set - arm or disarm watchdog timer
-+ *
-+ * @data:	device data for the PMIC instance we want to operate on
-+ * @enable:	new state of WDT. zero to disable, non zero to enable
-+ * @old_state:	previous state of WDT will be filled here
-+ *
-+ * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
-+ * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
-+ * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
-+ */
-+int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
-+{
-+	int ret, i;
-+	unsigned int tmp;
-+	struct bd70528_data *bd70528 = container_of(data, struct bd70528_data,
-+						 chip);
-+	u8 wd_ctrl_arr[3] = { WD_CTRL_MAGIC1, WD_CTRL_MAGIC2, 0 };
-+	u8 *wd_ctrl = &wd_ctrl_arr[2];
-+
-+	ret = regmap_read(bd70528->chip.regmap, BD70528_REG_WDT_CTRL, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	*wd_ctrl = (u8)tmp;
-+
-+	if (old_state) {
-+		if (*wd_ctrl & BD70528_MASK_WDT_EN)
-+			*old_state |= BD70528_WDT_STATE_BIT;
-+		else
-+			*old_state &= ~BD70528_WDT_STATE_BIT;
-+		if ((!enable) == (!(*old_state & BD70528_WDT_STATE_BIT)))
-+			return 0;
-+	}
-+
-+	if (enable) {
-+		if (*wd_ctrl & BD70528_MASK_WDT_EN)
-+			return 0;
-+		*wd_ctrl |= BD70528_MASK_WDT_EN;
-+	} else {
-+		if (*wd_ctrl & BD70528_MASK_WDT_EN)
-+			*wd_ctrl &= ~BD70528_MASK_WDT_EN;
-+		else
-+			return 0;
-+	}
-+
-+	for (i = 0; i < 3; i++) {
-+		ret = regmap_write(bd70528->chip.regmap, BD70528_REG_WDT_CTRL,
-+				   wd_ctrl_arr[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = regmap_read(bd70528->chip.regmap, BD70528_REG_WDT_CTRL, &tmp);
-+	if ((tmp & BD70528_MASK_WDT_EN) != (*wd_ctrl & BD70528_MASK_WDT_EN)) {
-+		dev_err(bd70528->chip.dev,
-+			"Watchdog ctrl mismatch (hw) 0x%x (set) 0x%x\n",
-+			tmp, *wd_ctrl);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bd70528_wdt_set);
-+
-+/**
-+ * bd70528_wdt_lock - take WDT lock
-+ *
-+ * @bd70528:	device data for the PMIC instance we want to operate on
-+ *
-+ * Lock WDT for arming/disarming in order to avoid race condition caused
-+ * by WDT state changes initiated by WDT and RTC drivers.
-+ */
-+void bd70528_wdt_lock(struct rohm_regmap_dev *data)
-+{
-+	struct bd70528_data *bd70528 = container_of(data, struct bd70528_data,
-+						 chip);
-+
-+	mutex_lock(&bd70528->rtc_timer_lock);
-+}
-+EXPORT_SYMBOL(bd70528_wdt_lock);
-+
-+/**
-+ * bd70528_wdt_unlock - unlock WDT lock
-+ *
-+ * @bd70528:	device data for the PMIC instance we want to operate on
-+ *
-+ * Unlock WDT lock which has previously been taken by call to
-+ * bd70528_wdt_lock.
-+ */
-+void bd70528_wdt_unlock(struct rohm_regmap_dev *data)
-+{
-+	struct bd70528_data *bd70528 = container_of(data, struct bd70528_data,
-+						 chip);
-+
-+	mutex_unlock(&bd70528->rtc_timer_lock);
-+}
-+EXPORT_SYMBOL(bd70528_wdt_unlock);
-+
-+static int bd70528_wdt_set_locked(struct wdtbd70528 *w, int enable)
-+{
-+	return bd70528_wdt_set(w->mfd, enable, NULL);
-+}
-+
-+static int bd70528_wdt_change(struct wdtbd70528 *w, int enable)
-+{
-+	int ret;
-+
-+	bd70528_wdt_lock(w->mfd);
-+	ret = bd70528_wdt_set_locked(w, enable);
-+	bd70528_wdt_unlock(w->mfd);
-+
-+	return ret;
-+}
-+
-+static int bd70528_wdt_start(struct watchdog_device *wdt)
-+{
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	dev_dbg(w->dev, "WDT ping...\n");
-+	return bd70528_wdt_change(w, 1);
-+}
-+
-+static int bd70528_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	dev_dbg(w->dev, "WDT stopping...\n");
-+	return bd70528_wdt_change(w, 0);
-+}
-+
-+static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-+				   unsigned int timeout)
-+{
-+	unsigned int hours;
-+	unsigned int minutes;
-+	unsigned int seconds;
-+	int ret;
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	seconds = timeout;
-+	hours = timeout / (60 * 60);
-+	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-+	if (hours)
-+		seconds -= (60 * 60);
-+	minutes = seconds / 60;
-+	seconds = seconds % 60;
-+
-+	bd70528_wdt_lock(w->mfd);
-+
-+	ret = bd70528_wdt_set_locked(w, 0);
-+	if (ret)
-+		goto out_unlock;
-+
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_HOUR,
-+				 BD70528_MASK_WDT_HOUR, hours);
-+	if (ret) {
-+		dev_err(w->dev, "Failed to set WDT hours\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_MINUTE,
-+				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-+	if (ret) {
-+		dev_err(w->dev, "Failed to set WDT minutes\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_SEC,
-+				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-+	if (ret)
-+		dev_err(w->dev, "Failed to set WDT seconds\n");
-+	else
-+		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
-+
-+out_en_unlock:
-+	ret = bd70528_wdt_set_locked(w, 1);
-+out_unlock:
-+	bd70528_wdt_unlock(w->mfd);
-+
-+	return ret;
-+}
-+
-+static const struct watchdog_info bd70528_wdt_info = {
-+	.identity = "bd70528-wdt",
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+};
-+
-+static const struct watchdog_ops bd70528_wdt_ops = {
-+	.start		= bd70528_wdt_start,
-+	.stop		= bd70528_wdt_stop,
-+	.set_timeout	= bd70528_wdt_set_timeout,
-+};
-+
-+static int bd70528_wdt_probe(struct platform_device *pdev)
-+{
-+	struct rohm_regmap_dev *bd70528;
-+	struct wdtbd70528 *w;
-+	int ret;
-+	unsigned int reg;
-+
-+	bd70528 = dev_get_drvdata(pdev->dev.parent);
-+	if (!bd70528) {
-+		dev_err(&pdev->dev, "No MFD driver data\n");
-+		return -EINVAL;
-+	}
-+	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-+	if (!w)
-+		return -ENOMEM;
-+
-+	w->regmap = bd70528->regmap;
-+	w->mfd = bd70528;
-+	w->dev = &pdev->dev;
-+
-+	w->wdt.info = &bd70528_wdt_info;
-+	w->wdt.ops =  &bd70528_wdt_ops;
-+	w->wdt.min_hw_heartbeat_ms = WDT_MIN_MS;
-+	w->wdt.max_hw_heartbeat_ms = WDT_MAX_MS;
-+	w->wdt.parent = pdev->dev.parent;
-+	w->wdt.timeout = DEFAULT_TIMEOUT;
-+	watchdog_set_drvdata(&w->wdt, w);
-+	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
-+
-+	ret = bd70528_wdt_set_timeout(&w->wdt, w->wdt.timeout);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-+		return ret;
-+	}
-+
-+	bd70528_wdt_lock(w->mfd);
-+	ret = regmap_read(w->regmap, BD70528_REG_WDT_CTRL, &reg);
-+	bd70528_wdt_unlock(w->mfd);
-+
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
-+		return ret;
-+	}
-+	if (reg & BD70528_MASK_WDT_EN) {
-+		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-+		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
-+	}
-+
-+	ret = devm_watchdog_register_device(&pdev->dev, &w->wdt);
-+	if (ret < 0)
-+		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver bd70528_wdt = {
-+	.driver = {
-+		.name = "bd70528-wdt"
-+	},
-+	.probe = bd70528_wdt_probe,
-+};
-+
-+module_platform_driver(bd70528_wdt);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("BD70528 watchdog driver");
-+MODULE_LICENSE("GPL");
--- 
-2.17.2
+Note that that driver is part of a larger series to move away from all
+the pm_power_off hackery. There was a fair bit of discussion back when I
+proposed the original power off driver for max77620:
 
+	https://lkml.org/lkml/2017/1/12/470
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+I think I may have a more up-to-date local branch of the system-power
+branch from my github repository if you're interested in looking at some
+of that code. There wasn't a whole lot of feedback on the patches, but
+the feedback I did get was generally positive. However, since it didn't
+gain any traction I eventually abandoned that effort. It might be worth
+picking it up again, since, as far as I can tell, the situation around
+power off and restart hasn't changed in the meantime.
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Thierry
+
+> +
+>  static int max77620_probe(struct i2c_client *client,
+>  			  const struct i2c_device_id *id)
+>  {
+> @@ -488,6 +499,7 @@ static int max77620_probe(struct i2c_client *client,
+>  	struct max77620_chip *chip;
+>  	const struct mfd_cell *mfd_cells;
+>  	int n_mfd_cells;
+> +	bool pm_off;
+>  	int ret;
+> =20
+>  	chip =3D devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+> @@ -554,6 +566,13 @@ static int max77620_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+> =20
+> +	pm_off =3D of_property_read_bool(client->dev.of_node,
+> +				       "maxim,system-power-controller");
+> +	if (pm_off && !pm_power_off) {
+> +		max77620_scratch =3D chip;
+> +		pm_power_off =3D max77620_pm_power_off;
+> +	}
+> +
+>  	return 0;
+>  }
+> =20
+> --=20
+> 2.21.0
+>=20
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzBmH4ACgkQ3SOs138+
+s6FW4Q//WwGUmKeVX9G+JztP+onk6z3UHZYwUuKhumFVhdbzSPwmjvhzyU8cG44z
++n+aremYlkCHa+wQbZHe55kBqke9GFOUOWswgfYZIwRYzyMxklrNYHLaCjKnDiRU
+0tstURpNyaYhGSKAWez5jAxJgZOBNJsn6VRiu9nc6dj3DlqtXG5azGdDXArwyZhn
+7C3suAH9ktZ2wfFM3fZ8sI30of24Bqx4qgf1mRrxhS1dJtipQUwMyVAsFehf54c8
+YsyDMbL4b4H4UtcsM+gF6lfyRFfakcMz9D6bzj2jdMfxYYRf/tz94FnQb4x8oMXX
+O/FohlW3UyOCxjjXIrIibkC/z6C/0YI1zjwwesNsIg3qz1KaoUjbFvfyfNfk2Xzy
+zmtEhwiHxAqxxVlemzYbiqFMtbWA+7FSKMycC3peszvQ4GbDgg3Masd42D4YFBFE
+dIDG7qe6rVYCL7+lCYJVIgdO0DuaOkzqEmzZkSeO3iRFhO/24ZzUp6Y9fk3jcCn9
+QxJb6L5pkWHRhJvqQEDM4tX6bj8XfYhhd0rY3AfOC4CRQiAz/5n/SRcCy+wYAHGE
+HfO89UuNhAz75Md+jQCXUzevDvJcLBn7z/I4QZ4Is4qKcVlSwrRfbSxWmsTwVjz7
+IfWA+z3BgnkARPUJZGZ41XhYKa/jVLMudMuc2vI7bbGUsolJuGo=
+=2OHv
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
