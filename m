@@ -1,105 +1,80 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 4/5] pinctrl: Add pinctrl support for BM1880 SoC
-Date: Thu, 25 Apr 2019 12:58:25 +0530
-Message-ID: <20190425072825.GA31116@Mani-XPS-13-9360>
-References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org>
- <20190424120224.22660-5-manivannan.sadhasivam@linaro.org>
- <CACRpkdZJweCPs096r6LJJTUSmPYViPDV_rBJ8NWbHzx96xEfsw@mail.gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add r_watchog node
+Date: Thu, 25 Apr 2019 09:34:36 +0200
+Message-ID: <CAJiuCce_KZzYx5T3bq3i_PHGGSts_=Fh==c0CvqsuHhdqmsG-w@mail.gmail.com>
+References: <20190411154534.25563-1-peron.clem@gmail.com> <20190411154534.25563-3-peron.clem@gmail.com>
+ <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com> <20190423160545.muolantrdppz35rz@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZJweCPs096r6LJJTUSmPYViPDV_rBJ8NWbHzx96xEfsw@mail.gmail.com>
+In-Reply-To: <20190423160545.muolantrdppz35rz@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haitao.suo@bitmain.com, darren.tsao@bitmain.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Thu, Apr 25, 2019 at 09:09:28AM +0200, Linus Walleij wrote:
-> On Wed, Apr 24, 2019 at 2:03 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> > Add pinctrl support for Bitmain BM1880 SoC. The driver only handles
-> > pinmuxing as the SoC is not capable of handling pinconf.
+On Tue, 23 Apr 2019 at 18:05, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Fri, Apr 19, 2019 at 09:00:42PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi,
 > >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Patch applied, because there is no reason to hold back this clean
-> and important infrastructure for the platform. Minor nits can be
-> considered for follow-up patches.
-> 
+> > On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
+.com> wrote:
+> > >
+> > > Allwinner H6 has a r_watchdog similar to A64.
+> > >
+> > > Declare it in the device-tree.
+> > >
+> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index 5c2f5451227b..66dc684a378e 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -622,6 +622,13 @@
+> > >                         #reset-cells =3D <1>;
+> > >                 };
+> > >
+> > > +               r_watchdog: watchdog@7020400 {
+> > > +                       compatible =3D "allwinner,sun50i-a64-wdt",
+> > > +                                    "allwinner,sun6i-a31-wdt";
+> > > +                       reg =3D <0x07020400 0x20>;
+> > > +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HI=
+GH>;
+> > > +               };
+> >
+> > I have set the same compatible as A64 because regarding the User
+> > Manual they have exactly the same memory mapping.
+> > However we don't know really if it's the same IP version, maybe there
+> > will be an errata one day.
+> > So I would like to know if it's better to define the h6-wdt also
+> >   compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt"=
+,
+> >                                  "allwinner,sun6i-a31-wdt";
+> >
+> > I would say Yes, but with this logic we would have to had a new
+> > compatible each time there is a  new SoC.
+>
+Hi,
 
-Thanks a lot! I will follow up with the cleanup patches.
+> Why not just having the A31 compatible?
+H6 has a lightly differences in registers with A31 but it's the same
+as 64 (WDOG_KEY_FIELD)
 
-> > +config PINCTRL_BM1880
-> > +       bool "Bitmain BM1880 Pinctrl driver"
-> > +       depends on ARCH_BITMAIN
-> 
-> Could we do:
-> 
-> depends on ARCH_BITMAIN || COMPILE_TEST
-> 
-> to get some compiler coverage?
-> 
+As the A64 is already introduced if think it's a good solution to reuse it.
 
-Sure, will do.
+Cl=C3=A9ment
 
-> > +       select PINMUX
-> > +       help
-> > +         Pinctrl driver for Bitmain BM1880 SoC.
-> 
-> I think the platform always want this driver enabled, so I would either
-> select it from arch/arm/mach-foo/Kconfig or add a row like this:
-> 
-> default ARCH_BITMAIN
-> 
-> Either defaulting it to 'y'.
-> 
-
-Makes sense! Will add ARCH_BITMAIN default to this Kconfig.
-
-> > +       F_nand, F_spi, F_emmc, F_sdio, F_eth0, F_pwm0, F_pwm1, F_pwm2,
-> > +       F_pwm3, F_pwm4, F_pwm5, F_pwm6, F_pwm7, F_pwm8, F_pwm9, F_pwm10,
-> > +       F_pwm11, F_pwm12, F_pwm13, F_pwm14, F_pwm15, F_pwm16, F_pwm17,
-> > +       F_pwm18, F_pwm19, F_pwm20, F_pwm21, F_pwm22, F_pwm23, F_pwm24,
-> > +       F_pwm25, F_pwm26, F_pwm27, F_pwm28, F_pwm29, F_pwm30, F_pwm31,
-> > +       F_pwm32, F_pwm33, F_pwm34, F_pwm35, F_pwm36, F_pwm37, F_i2c0, F_i2c1,
-> 
-> 
-> Wow 38 individual PWMs. This platform must really have good use for PWM.
-> I wonder why they hardcoded so many of them into the hardware...
-> 
-
-I don't know the reasoning behind it. This SoC is targeted at AI/ML
-usecase, and there are 4 PWM modules in it. Maybe they tried to integrate
-motor control usecase with these PWM modules? There is also a RISC-V core
-in this SoC, which can perform some real time offloading.
-
-> > +static int __init bm1880_pinctrl_init(void)
-> > +{
-> > +       return platform_driver_register(&bm1880_pinctrl_driver);
-> > +}
-> > +arch_initcall(bm1880_pinctrl_init);
-> 
-> driver_initcall() also known as module_builtin_driver() doesn't work?
-> 
-
-It will work, but I want this driver to be probed very soon.
-
-> Do you plan to add GPIO (and interrupts) and pin config to this driver as well?
-> 
-
-GPIO support is handled by Designware IP. I have already added DTS
-support for it. And you acked those 2 patches ;-)
-
-For pinconfig, sadly there is nothing I can see in the vendor kernel so
-assumed that the SoC doesn't support it (yes it is wierd). I will ask
-Bitmain folks to be sure.
-
-Thanks,
-Mani
-
-> Yours,
-> Linus Walleij
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
