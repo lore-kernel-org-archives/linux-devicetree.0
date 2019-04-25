@@ -1,82 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
- bindings
-Date: Wed, 24 Apr 2019 21:24:50 -0700
-Message-ID: <20190425042450.GB2867@tuxbook-pro>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-2-georgi.djakov@linaro.org>
- <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
- <20190424064942.v5g6jr5l3xy5z3xv@vireshk-i7>
- <dd6f055c-e7df-13e8-72aa-2973d3c664d0@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/2] L2 cache controller support for SiFive FU540
+Date: Thu, 25 Apr 2019 11:24:54 +0530
+Message-ID: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dd6f055c-e7df-13e8-72aa-2973d3c664d0@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org, sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org, vincent.guittot@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, palmer@sifive.com
+Cc: paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 24 Apr 02:00 PDT 2019, Sibi Sankar wrote:
-> On 4/24/19 12:19 PM, Viresh Kumar wrote:
-> > On 24-04-19, 12:16, Rajendra Nayak wrote:
-> > > On 4/23/2019 6:58 PM, Georgi Djakov wrote:
-[..]
-> > > > +/ {
-> > > > +	cpus {
-> > > > +		CPU0: cpu@0 {
-> > > > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > > > +			...
-> > > > +			operating-points-v2 = <&cpu_opp_table>;
-> > > > +			/* path between CPU and DDR memory and CPU and L3 */
-> > > > +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
-> > > > +					<&noc MASTER_CPU &noc SLAVE_L3>;
-> > > > +		};
-> > > > +	};
-> > > > +
-> > > > +	cpu_opp_table: cpu_opp_table {
-> > > > +		compatible = "operating-points-v2";
-> > > > +		opp-shared;
-> > > > +
-> > > > +		opp-200000000 {
-> > > > +			opp-hz = /bits/ 64 <200000000>;
-> > > > +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
-> > > > +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
-> > > > +			bandwidth-MBps = <457 1525>, <914 3050>;
-> > > 
-> > > Should this also have a bandwidth-MBps-name perhaps? Without that I guess we assume
-> > > the order in which we specify the interconnects is the same as the order here?
-> > 
-> > Right, so I suggested not to add the -name property and to rely on the
-> > order. Though I missed that he hasn't mentioned the order thing here.
-> 
-> by skipping names, aren't we forced to specify all the specified paths
-> bandwidths for each opp even if it is redundant? i.e if the first/second
-> icc path doesn't have to change across a few opps but if the other path
-> does need to change this scheme would force it to be included and will
-> try to set the first/second path again.
-> 
-> 
-> e.g: Here the first path does not have to change across these two opps
-> but have to specified nonetheless since we omit names.
-> 
+This patch series adds an L2 cache controller driver with DT documentation
+for SiFive FU540-C000.
 
-If this is a pair in the middle of the list, we would either have to
-define how non-specified values are inherited from neighbouring nodes or
-you will get different behavior if you're coming from a lower or a
-higher opp.
+These two patches were initially part of the patch series:
+'L2 cache controller and EDAC support for SiFive SoCs'
+https://lkml.org/lkml/2019/4/15/320
+In order to merge L2 cache controller driver without any dependency on EDAC,
+the L2 cache controller patches are re-posted seperately in this series.
 
-I think it looks clearer to just be explicit and repeat the values.
+The patchset is based on Linux 5.1-rc2 and tested on HiFive Unleashed
+board with additional board related patches needed for testing can be
+found at dev/yashs/L2_cache_controller branch of:
+https://github.com/yashshah7/riscv-linux.git
 
-Regards,
-Bjorn
+Yash Shah (2):
+  RISC-V: Add DT documentation for SiFive L2 Cache Controller
+  RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive
+    SoCs
 
-> +		opp-1200000000 {
-> +			opp-hz = /bits/ 64 <1200000000>;
-> +			bandwidth-MBps = <457 1525>, <914 3050>;
-> +		};
-> +		opp-1400000000 {
-> +			opp-hz = /bits/ 64 <1400000000>;
-> +			bandwidth-MBps = <457 1525>, <1828 6102>;
-> +		};
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  |  53 +++++
+ arch/riscv/mm/Makefile                             |   1 +
+ arch/riscv/mm/sifive_l2_cache.c                    | 224 +++++++++++++++++++++
+ 3 files changed, 278 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+
+-- 
+1.9.1
