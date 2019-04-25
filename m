@@ -1,22 +1,58 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 13/24] dt-bindings: mediatek: apmixedsys: add support for MT8516
-Date: Thu, 25 Apr 2019 14:35:36 -0700
-Message-ID: <155622813672.15276.2529493939985880382@swboyd.mtv.corp.google.com>
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-14-fparent@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 03/13] usb: dwc3: dwc3-of-simple: Add support for dwc3
+ of Hisilicon Soc Platform
+Date: Thu, 25 Apr 2019 16:36:58 -0500
+Message-ID: <20190425213658.GB32028@bogus>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+ <20190420064019.57522-4-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190323211612.860-14-fparent@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190420064019.57522-4-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc: sean.wang@kernel.org, ryder.lee@mediatek.com, hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com, chaotian.jing@mediatek.com, yong.mao@mediatek.com, jjian.zhou@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com, Fabien Parent <fparent@baylibre.com>
+To: Yu Chen <chenyu56@huawei.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Fabien Parent (2019-03-23 14:16:01)
-> Add binding documentation of apmixedsys for MT8516 SoC.
->=20
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+On Sat, Apr 20, 2019 at 02:40:09PM +0800, Yu Chen wrote:
+> This patch adds support for the poweron and shutdown of dwc3 core
+> on Hisilicon Soc Platform.
+> 
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
 > ---
+>  drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+> index 4c2771c5e727..0ed09d876542 100644
+> --- a/drivers/usb/dwc3/dwc3-of-simple.c
+> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+> @@ -98,7 +98,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+>  	 * Some controllers need to toggle the usb3-otg reset before trying to
+>  	 * initialize the PHY, otherwise the PHY times out.
+>  	 */
+> -	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
+> +	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
+> +			of_device_is_compatible(np, "hisilicon,hi3660-dwc3"))
+>  		simple->need_reset = true;
 
-Applied to clk-next
+Fine, I guess, but really this flag should be moved to the match table 
+so we aren't doing compatible matching twice.
+
+>  
+>  	if (of_device_is_compatible(np, "amlogic,meson-axg-dwc3") ||
+> @@ -243,6 +244,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
+>  	{ .compatible = "amlogic,meson-axg-dwc3" },
+>  	{ .compatible = "amlogic,meson-gxl-dwc3" },
+>  	{ .compatible = "allwinner,sun50i-h6-dwc3" },
+> +	{ .compatible = "hisilicon,hi3660-dwc3" },
+>  	{ /* Sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
+> -- 
+> 2.15.0-rc2
+> 
