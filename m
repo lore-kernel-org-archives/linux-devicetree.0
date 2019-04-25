@@ -1,136 +1,39 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 04/28] PCI: tegra: Disable PCIe interrupts in runtime suspend
-Date: Tue, 23 Apr 2019 14:58:01 +0530
-Message-ID: <20190423092825.759-5-mmaddireddy@nvidia.com>
-In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=UBGr=S3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www3345.sakura.ne.jp ([49.212.235.55]:23804 "EHLO
+        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfDYBZd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Apr 2019 21:25:33 -0400
+From: Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: [PATCH v2 5/5] dt-bindings: pwm: renesas: tpu: Document R8A779{5|6|65} bindings
+Date: Thu, 25 Apr 2019 10:25:17 +0900
+Message-Id: <1556155517-5054-6-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
+References: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, geert+renesas@glider.be, broonie@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org
+Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Disable PCIe interrupts in runtime suspend to avoid executing irq handler
-and power off sequence in parallel.
+Document the R-Car H3/M3-W/M3-N (R8A779{5|6|65}) SoC in the Renesas TPU bindings.
 
-Following sequence triggers such scenario,
- - tegra_pcie_remove() triggers runtime suspend
- - pex_rst is asserted in runtime suspend
- - PRSNT_MAP bit field in RP_PRIV_MISC register changes from EP_PRSNT to
-   EP_ABSNT
- - This is sensed by AFI and triggers "Slot present pin change" interrupt
- - tegra_pcie_isr() function accesses AFI register when runtime suspend
-   is going through power off sequence
-
-rmmod pci-tegra
- pci_generic_config_write32: 108 callbacks suppressed
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x9c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x88 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x90 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4 may corrupt adjacent RW1C bits
- igb 0002:04:00.1: removed PHC on enP2p4s0f1
- igb 0002:04:00.0: removed PHC on enP2p4s0f0
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x9c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x88 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x90 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4 may corrupt adjacent RW1C bits
- rcu: INFO: rcu_preempt self-detected stall on CPU
- SError Interrupt on CPU0, code 0xbf000002 -- SError
- CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : tegra_pcie_isr+0x58/0x178 [pci_tegra]
- lr : tegra_pcie_isr+0x40/0x178 [pci_tegra]
- sp : ffff000010003da0
- x29: ffff000010003da0 x28: 0000000000000000
- x27: ffff8000f9e61000 x26: ffff000010fbf420
- x25: ffff000011427f93 x24: ffff8000fa600410
- x23: ffff00001129d000 x22: ffff00001129d000
- x21: ffff8000f18bf3c0 x20: 0000000000000070
- x19: 00000000ffffffff x18: 0000000000000000
- x17: 0000000000000000 x16: 0000000000000000
- x15: 0000000000000000 x14: ffff000008d40a48
- x13: ffff000008d40a30 x12: ffff000008d40a20
- x11: ffff000008d40a10 x10: ffff000008d40a00
- x9 : ffff000008d409e8 x8 : ffff000008d40ae8
- x7 : ffff000008d40ad0 x6 : ffff000010003e58
- x5 : ffff8000fac00248 x4 : 0000000000000000
- x3 : ffff000008d40b08 x2 : fffffffffffffff8
- x1 : ffff000008d3f4e8 x0 : 00000000ffffffff
- Kernel panic - not syncing: Asynchronous SError Interrupt
- CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
- Call trace:
-  dump_backtrace+0x0/0x158
-  show_stack+0x14/0x20
-  dump_stack+0xa8/0xcc
-  panic+0x140/0x2f4
-  nmi_panic+0x6c/0x70
-  arm64_serror_panic+0x74/0x80
-  __pte_error+0x0/0x28
-  el1_error+0x84/0xf8
-  tegra_pcie_isr+0x58/0x178 [pci_tegra]
-  __handle_irq_event_percpu+0x70/0x198
-  handle_irq_event_percpu+0x34/0x88
-  handle_irq_event+0x48/0x78
-  handle_fasteoi_irq+0xb4/0x190
-  generic_handle_irq+0x24/0x38
-  __handle_domain_irq+0x5c/0xb8
-  gic_handle_irq+0x58/0xa8
-  el1_irq+0xb8/0x180
-  cpuidle_enter_state+0x138/0x358
-  cpuidle_enter+0x18/0x20
-  call_cpuidle+0x1c/0x48
-  do_idle+0x230/0x2d0
-  cpu_startup_entry+0x20/0x28
-  rest_init+0xd4/0xe0
-  arch_call_rest_init+0xc/0x14
-  start_kernel+0x444/0x470
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 ---
-V2: This is new patch in V2
+ Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
- drivers/pci/controller/pci-tegra.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index bb3c0af9c830..8c0ad038699d 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1622,6 +1622,18 @@ static int tegra_pcie_disable_msi(struct tegra_pcie *pcie)
- 	return 0;
- }
- 
-+static void tegra_pcie_disable_interrupts(struct tegra_pcie *pcie)
-+{
-+	u32 value;
-+
-+	value = afi_readl(pcie, AFI_INTR_MASK);
-+	value &= ~AFI_INTR_MASK_INT_MASK;
-+	afi_writel(pcie, value, AFI_INTR_MASK);
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		tegra_pcie_disable_msi(pcie);
-+}
-+
- static int tegra_pcie_get_xbar_config(struct tegra_pcie *pcie, u32 lanes,
- 				      u32 *xbar)
- {
-@@ -2466,6 +2478,11 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
- 		tegra_pcie_pme_turnoff(port);
- 
- 	tegra_pcie_disable_ports(pcie);
-+	/*
-+	 * disable interrupts to avoid executing irq handler in parallel
-+	 * to power off sequence.
-+	 */
-+	tegra_pcie_disable_interrupts(pcie);
- 
- 	if (pcie->soc->program_uphy) {
- 		err = tegra_pcie_phy_power_off(pcie);
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
+index 848a92b..054ce4a 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
+@@ -9,6 +9,9 @@ Required Properties:
+     - "renesas,tpu-r8a7744": for R8A7744 (RZ/G1N) compatible PWM controller.
+     - "renesas,tpu-r8a7745": for R8A7745 (RZ/G1E) compatible PWM controller.
+     - "renesas,tpu-r8a7790": for R8A7790 (R-Car H2) compatible PWM controller.
++    - "renesas,tpu-r8a7795": for R8A7795 (R-Car H3) compatible PWM controller.
++    - "renesas,tpu-r8a7796": for R8A7796 (R-Car M3-W) compatible PWM controller.
++    - "renesas,tpu-r8a77965": for R8A77965 (R-Car M3-N) compatible PWM controller.
+     - "renesas,tpu-r8a77970": for R8A77970 (R-Car V3M) compatible PWM
+ 			      controller.
+     - "renesas,tpu-r8a77980": for R8A77980 (R-Car V3H) compatible PWM
 -- 
-2.17.1
+2.7.4
