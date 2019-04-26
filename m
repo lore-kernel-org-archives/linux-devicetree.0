@@ -1,128 +1,38 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
-Date: Fri, 26 Apr 2019 11:50:12 +0200
-Message-ID: <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
-References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
- <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
+Date: Fri, 26 Apr 2019 09:53:16 +0000
+Message-ID: <1556272020.951.1.camel@nxp.com>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+         <1556265512-9130-7-git-send-email-yibin.gong@nxp.com>
+         <1556269635.2584.23.camel@pengutronix.de>
+         <1556270196.9298.16.camel@nxp.com>
+         <1556271442.2584.29.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+In-Reply-To: <1556271442.2584.29.camel@pengutronix.de>
+Content-Language: en-US
+Content-ID: <B1E243CA31B122469B45E9233F923901@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tfranzen@de.adit-jv.com, Eugeniu Rosca <roscaeugeniu@gmail.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "plyatov@gmail.com" <plyatov@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-from my point of view what is required is a review.
-I will try to find someone to do so.
-I apologise for not doing so earlier.
-
-On Thu, Apr 25, 2019 at 01:12:45PM +0200, Eugeniu Rosca wrote:
-> Hi Simon,
-> 
-> Do we have any chance getting this upstream? If so, would you kindly
-> list the acceptance criteria we have to conform to?
-> 
-> Many thanks.
-> 
-> On Thu, Apr 11, 2019 at 02:41:03PM +0200, Spyridon Papageorgiou wrote:
-> > This patch adds description of TI WL1837 and links interfaces
-> > to communicate with the IC, namely the SDIO interface to WLAN.
-> > 
-> > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
-> > ---
-> >  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 49 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > index 7a09576..27851a7 100644
-> > --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > @@ -38,6 +38,18 @@
-> >  		regulator-min-microvolt = <5000000>;
-> >  		regulator-max-microvolt = <5000000>;
-> >  	};
-> > +
-> > +	wlan_en: regulator-wlan_en {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "wlan-en-regulator";
-> > +
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +
-> > +		gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
-> > +		startup-delay-us = <70000>;
-> > +		enable-active-high;
-> > +	};
-> >  };
-> >  
-> >  &can0 {
-> > @@ -88,6 +100,13 @@
-> >  			line-name = "Audio_Out_OFF";
-> >  		};
-> >  
-> > +		sd-wifi-mux {
-> > +			gpio-hog;
-> > +			gpios = <5 GPIO_ACTIVE_HIGH>;
-> > +			output-low;	/* Connect WL1837 */
-> > +			line-name = "SD WiFi mux";
-> > +		};
-> > +
-> >  		hub_pwen {
-> >  			gpio-hog;
-> >  			gpios = <6 GPIO_ACTIVE_HIGH>;
-> > @@ -254,6 +273,12 @@
-> >  		function = "scif1";
-> >  	};
-> >  
-> > +	sdhi3_pins: sdhi3 {
-> > +		groups = "sdhi3_data4", "sdhi3_ctrl";
-> > +		function = "sdhi3";
-> > +		power-source = <3300>;
-> > +	};
-> > +
-> >  	usb0_pins: usb0 {
-> >  		groups = "usb0";
-> >  		function = "usb0";
-> > @@ -273,6 +298,30 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&sdhi3 {
-> > +	pinctrl-0 = <&sdhi3_pins>;
-> > +	pinctrl-names = "default";
-> > +
-> > +	vmmc-supply = <&wlan_en>;
-> > +	vqmmc-supply = <&wlan_en>;
-> > +	bus-width = <4>;
-> > +	no-1-8-v;
-> > +	non-removable;
-> > +	cap-power-off-card;
-> > +	keep-power-in-suspend;
-> > +	max-frequency = <26000000>;
-> > +	status = "okay";
-> > +
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	wlcore: wlcore@2 {
-> > +		compatible = "ti,wl1837";
-> > +		reg = <2>;
-> > +		interrupt-parent = <&gpio1>;
-> > +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > +	};
-> > +};
-> > +
-> >  &usb2_phy0 {
-> >  	pinctrl-0 = <&usb0_pins>;
-> >  	pinctrl-names = "default";
-> > -- 
-> > 2.7.4
-> > 
-> 
-> -- 
-> Best regards,
-> Eugeniu.
-> 
+T24gMjAxOS0wNC0yNiBhdCAxMTozNyArMDIwMCwgTHVjYXMgU3RhY2ggd3JvdGU6DQo+IEFtIEZy
+ZWl0YWcsIGRlbiAyNi4wNC4yMDE5LCAwOToyMiArMDAwMCBzY2hyaWViIFJvYmluIEdvbmc6DQo+
+ID4gDQo+ID4gT24gMjAxOS0wNC0yNiBhdCAxMTowNyArMDIwMCwgTHVjYXMgU3RhY2ggd3JvdGU6
+DQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gQW0gRnJlaXRhZywgZGVuIDI2LjA0LjIwMTksIDA4OjA1
+ICswMDAwIHNjaHJpZWIgUm9iaW4gR29uZzoNCj4gPiA+ID4gDQo+ID4gPiA+IMKgc3RhdGljIHZv
+aWQgbXg1MV9zZXR1cF93bWwoc3RydWN0IHNwaV9pbXhfZGF0YSAqc3BpX2lteCkNCj4gPiA+ID4g
+wqB7DQo+ID4gPiA+ICvCoMKgwqDCoMKgdTMyIHR4X3dtbCA9IDA7DQo+ID4gPiA+ICsNCj4gPiA+
+IFdpdGggYSB3bWwgb2YgMCB5b3UgbWlnaHQgc2V0IHRoZSBtYXhidXJzdCBvZiB0aGUgVFggZG1h
+IGNoYW5uZWwNCj4gPiA+IHRvDQo+ID4gPiBmaWZvc2l6ZSB0byBtaW5pbWl6ZSB0aGUgcGVyZm9y
+bWFuY2UgaW1wYWN0IG9mIHRoaXMgd29ya2Fyb3VuZC4NCj4gPiA+IA0KPiA+ID4gUmVnYXJkcywN
+Cj4gPiA+IEx1Y2FzDQo+ID4gVW5mb3J0dW5hdGVseSwgdGhpcyBpcyBhIE1VU1QgcGFydCBvZiBl
+cnJhdGEgd2hpY2ggY2F1c2UNCj4gPiBwZXJmb3JtYW5jZQ0KPiA+IGRyb3AuDQo+IEknbSBub3Qg
+dGFsa2luZyBhYm91dCBjaGFuZ2luZyB0aGUgV01MLCBidXQgd2hlbiB0aGUgV01MIG11c3QgYmUg
+MA0KPiB5b3UNCj4gY2FuIHNhZmVseSBpbmNyZWFzZSB0aGUgRE1BIGJ1cnN0IHNpemUgd2l0aG91
+dCBvdmVyZmxvd2luZyB0aGUgRklGTywNCj4gd2hpY2ggbWlnaHQgcmVjb3ZlciBzb21lIG9mIG9m
+IHRoZSBwZXJmb3JtYW5jZSBsb3NzLg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCkdvb2QgcG9p
+bnQsIHdpbGwgYWRkIGl0IGluIFYzLCB0aGFua3Mu
