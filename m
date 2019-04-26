@@ -1,81 +1,184 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 5/6] dt-bindings: display: sii902x: Add HDMI audio
- bindings
-Date: Fri, 26 Apr 2019 08:34:58 -0500
-Message-ID: <CAL_JsqJmtbGJw_Mbv3n+jN9Ce0S+B_jKZbsaL7H6ObhOYZhuyg@mail.gmail.com>
-References: <cover.1556284767.git.jsarha@ti.com>
- <5314a5fa9b7d488de77e31842644a92cfed329f3.1556284767.git.jsarha@ti.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH] watchdog: stm32: add dynamic prescaler support
+Date: Fri, 26 Apr 2019 15:41:15 +0200
+Message-ID: <1556286075-29496-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5314a5fa9b7d488de77e31842644a92cfed329f3.1556284767.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Songjun Wu <Songjun.Wu@atmel.com>, Archit Taneja <architt@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjYsIDIwMTkgYXQgODoyMyBBTSBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29t
-PiB3cm90ZToKPgo+IFRoZSBzaWk5MDJ4IGNoaXAgZmFtaWx5IHN1cHBvcnRzIGFsc28gSERNSSBh
-dWRpby4gQWRkIGJpbmRpbmcgZm9yCj4gZGVzY3JpYmluZyB0aGUgbmVjZXNzYXJ5IGkycyBhbmQg
-bWNsayB3aXJpbmcgZm9yIGl0Lgo+Cj4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhh
-QHRpLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkwMngudHh0
-ICAgICAgIHwgNDEgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5z
-ZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IGluZGV4IGM0YzE4NTVjYTY1
-NC4uYjUxNjhhMGUzYTJiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+IEBAIC05LDYg
-KzksNDEgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgICAgICAgICAgYWJvdXQgaG90cGx1ZyBl
-dmVudHMuCj4gICAgICAgICAtIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNp
-ZmljYXRpb24gZm9yIFJTVF9OIHBpbi4KPgo+ICsgICAgICAgSERNSSBhdWRpbyBwcm9wZXJ0aWVz
-Ogo+ICsgICAgICAgLSAjc291bmQtZGFpLWNlbGxzOiA8MD4gb3IgPDE+LiA8MD4gaWYgb25seSBp
-MnMgb3Igc3BkaWYgcGluCj4gKyAgICAgICAgICBpcyB3aXJlZCwgPDE+IGlmIHRoZSBib3RoIGFy
-ZSB3aXJlZC4gSERNSSBhdWRpbyBpcwo+ICsgICAgICAgICAgY29uZmlndXJlZCBvbmx5IGlmIHRo
-aXMgcHJvcGVydHkgaXMgZm91bmQuCj4gKyAgICAgICAtIHNpbCxpMnMtZGF0YS1sYW5lczogQXJy
-YXkgb2YgdXAgdG8gNCBpbnRlZ2VycyB3aXRoIHZhbHVlcyBvZiAwLTMKPiArICAgICAgICAgIEVh
-Y2ggaW50ZWdlciBpbmRpY2F0ZXMgd2hpY2ggaTJzIHBpbiBpcyBjb25uZWN0ZWQgdG8gd2hpY2gK
-PiArICAgICAgICAgIGF1ZGlvIGZpZm8uIFRoZSBmaXJzdCBpbnRlZ2VyIHNlbGVjdHMgaTJzIGF1
-ZGlvIHBpbiBmb3IgdGhlCj4gKyAgICAgICAgICBmaXJzdCBhdWRpbyBmaWZvIzAgKEhETUkgY2hh
-bm5lbHMgMSYyKSwgc2Vjb25kIGZvciBmaWZvIzEKPiArICAgICAgICAgIChIRE1JIGNoYW5uZWxz
-IDMmNCksIGFuZCBzbyBvbi4gVGhlcmUgaXMgNCBmaWZvcyBhbmQgNCBpMnMKPiArICAgICAgICAg
-IHBpbnMgKFNEMCAtIFNEMykuIEFueSBpMnMgcGluIGNhbiBiZSBjb25uZWN0ZWQgdG8gYW55IGZp
-Zm8sCj4gKyAgICAgICAgICBidXQgdGhlcmUgY2FuIGJlIG5vIGdhcHMuIEUuZy4gYW4gaTJzIHBp
-biBtdXN0IGJlIG1hcHBlZCB0bwo+ICsgICAgICAgICAgZmlmbyMwIGFuZCBmaWZvIzEgYmVmb3Jl
-IG1hcHBpbmcgYSBjaGFubmVsIHRvIGZpZm8jMi4gRGVmYXVsdAo+ICsgICAgICAgICAgdmFsdWUg
-aXMgPDA+LCBkZXNjcmliaW5nIFNEMCBwaW4gYmVpZ2luZyByb3V0ZWQgdG8gaGRtaSBhdWRpbwo+
-ICsgICAgICAgICAgZmlmbyAjMC4KPiArICAgICAgIC0gY2xvY2tzOiBwaGFuZGxlIGFuZCBjbG9j
-ayBzcGVjaWZpZXIgZm9yIGVhY2ggY2xvY2sgbGlzdGVkIGluCj4gKyAgICAgICAgICAgdGhlIGNs
-b2NrLW5hbWVzIHByb3BlcnR5Cj4gKyAgICAgICAtIGNsb2NrLW5hbWVzOiAibWNsayIKPiArICAg
-ICAgICAgIERlc2NyaWJlcyBTSUk5MDJ4IE1DTEsgaW5wdXQuIE1DTEsgaXMgdXNlZCB0byBwcm9k
-dWNlCj4gKyAgICAgICAgICBIRE1JIGF1ZGlvIENUUyB2YWx1ZXMuIFRoaXMgcHJvcGVydHkgaXMg
-cmVxdWlyZWQgaWYKPiArICAgICAgICAgICIjc291bmQtZGFpLWNlbGxzIi1wcm9wZXJ0eSBpcyBw
-cmVzZW50LiBUaGlzIHByb3BlcnR5IGZvbGxvd3MKPiArICAgICAgICAgIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiArICAgICAgICAg
-IGNvbnN1bWVyIGJpbmRpbmcuCj4gKwo+ICsgICAgICAgSWYgSERNSSBhdWRpbyBpcyBjb25maWd1
-cmVkIHRoZSBzaWk5MDJ4IGRldmljZSBiZWNvbWVzIGFuIEkyUwo+ICsgICAgICAgYW5kL29yIHNw
-ZGlmIGF1ZGlvIGNvZGVjIGNvbXBvbmVudCAoZS5nIGEgZGlnaXRhbCBhdWRpbyBzaW5rKSwKPiAr
-ICAgICAgIHRoYXQgY2FuIGJlIHVzZWQgaW4gY29uZmlndXJpbmcgYSBmdWxsIGF1ZGlvIGRldmlj
-ZXMgd2l0aAo+ICsgICAgICAgc2ltcGxlLWNhcmQgb3IgYXVkaW8tZ3JhcGgtY2FyZCBiaW5kaW5n
-LiBTZWUgdGhlaXIgYmluZGluZwo+ICsgICAgICAgZG9jdW1lbnRzIG9uIGhvdyB0byBkZXNjcmli
-ZSB0aGUgd2F5IHRoZSBzaWk5MDJ4IGRldmljZSBpcwo+ICsgICAgICAgY29ubmVjdGVkIHRvIHRo
-ZSByZXN0IG9mIHRoZSBhdWRpbyBzeXN0ZW06Cj4gKyAgICAgICBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0Cj4gKyAgICAgICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYXVkaW8tZ3JhcGgtY2FyZC50eHQKPiArICAg
-ICAgIE5vdGU6IEluIGNhc2Ugb2YgdGhlIGF1ZGlvLWdyYXBoLWNhcmQgYmluZGluZyB0aGUgdXNl
-ZCBwb3J0Cj4gKyAgICAgICBpbmRleCBzaG91bGQgYmUgMyBvciBoaWdoZXIgdG8gYXZvaWQgY29u
-ZmxpY3Qgd2l0aCB2aWRlbyBwb3J0cwoKRHJvcCB0aGUgJ29yIGhpZ2hlcicuIFRoZSBwb3J0IG51
-bWJlciBzaG91bGQgYmUga25vd24gYW5kIGZpeGVkLgoKV2l0aCB0aGF0LAoKUmV2aWV3ZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbA==
+From: Ludovic Barre <ludovic.barre@st.com>
+
+This patch allows to define the max prescaler by compatible.
+To set a large range of timeout, the prescaler should be set
+dynamically (from the timeout request) to improve the resolution
+in order to have a timeout close to the expected value.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/watchdog/stm32_iwdg.c | 70 +++++++++++++++++++++++++------------------
+ 1 file changed, 41 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+index e00e3b3..91d0a89 100644
+--- a/drivers/watchdog/stm32_iwdg.c
++++ b/drivers/watchdog/stm32_iwdg.c
+@@ -34,18 +34,10 @@
+ #define KR_KEY_EWA	0x5555 /* write access enable */
+ #define KR_KEY_DWA	0x0000 /* write access disable */
+ 
+-/* IWDG_PR register bit values */
+-#define PR_4		0x00 /* prescaler set to 4 */
+-#define PR_8		0x01 /* prescaler set to 8 */
+-#define PR_16		0x02 /* prescaler set to 16 */
+-#define PR_32		0x03 /* prescaler set to 32 */
+-#define PR_64		0x04 /* prescaler set to 64 */
+-#define PR_128		0x05 /* prescaler set to 128 */
+-#define PR_256		0x06 /* prescaler set to 256 */
++#define PR_SHIFT	2
+ 
+ /* IWDG_RLR register values */
+-#define RLR_MIN		0x07C /* min value supported by reload register */
+-#define RLR_MAX		0xFFF /* max value supported by reload register */
++#define RLR_MAX		GENMASK(11, 0) /* max value of reload register */
+ 
+ /* IWDG_SR register bit mask */
+ #define FLAG_PVU	BIT(0) /* Watchdog prescaler value update */
+@@ -55,15 +47,28 @@
+ #define TIMEOUT_US	100000
+ #define SLEEP_US	1000
+ 
+-#define HAS_PCLK	true
++struct stm32_iwdg_data {
++	bool has_pclk;
++	u32 max_prescaler;
++};
++
++static const struct stm32_iwdg_data stm32_iwdg_data = {
++	.has_pclk = false,
++	.max_prescaler = 256,
++};
++
++static const struct stm32_iwdg_data stm32mp1_iwdg_data = {
++	.has_pclk = true,
++	.max_prescaler = 1024,
++};
+ 
+ struct stm32_iwdg {
+ 	struct watchdog_device	wdd;
++	const struct stm32_iwdg_data *data;
+ 	void __iomem		*regs;
+ 	struct clk		*clk_lsi;
+ 	struct clk		*clk_pclk;
+ 	unsigned int		rate;
+-	bool			has_pclk;
+ };
+ 
+ static inline u32 reg_read(void __iomem *base, u32 reg)
+@@ -80,21 +85,30 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
+ {
+ 	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+ 	u32 val = FLAG_PVU | FLAG_RVU;
+-	u32 reload;
++	u32 timeout, presc, iwdg_rlr, iwdg_pr;
+ 	int ret;
+ 
+ 	dev_dbg(wdd->parent, "%s\n", __func__);
+ 
+-	/* prescaler fixed to 256 */
+-	reload = clamp_t(unsigned int, ((wdd->timeout * wdt->rate) / 256) - 1,
+-			 RLR_MIN, RLR_MAX);
++	timeout = clamp_t(unsigned int, wdd->timeout,
++			  wdd->min_timeout, wdd->max_hw_heartbeat_ms / 1000);
++
++	if (timeout != wdd->timeout)
++		dev_warn(wdd->parent, "timeout skrinked to %d\n", timeout);
++
++	presc = DIV_ROUND_UP(timeout * wdt->rate, RLR_MAX + 1);
++
++	/* The prescaler is align on power of 2 and start at 2 ^ PR_SHIFT. */
++	presc = roundup_pow_of_two(presc);
++	iwdg_pr = presc <= 1 << PR_SHIFT ? 0 : ilog2(presc) - PR_SHIFT;
++	iwdg_rlr = ((timeout * wdt->rate) / presc) - 1;
+ 
+ 	/* enable write access */
+ 	reg_write(wdt->regs, IWDG_KR, KR_KEY_EWA);
+ 
+ 	/* set prescaler & reload registers */
+-	reg_write(wdt->regs, IWDG_PR, PR_256); /* prescaler fix to 256 */
+-	reg_write(wdt->regs, IWDG_RLR, reload);
++	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
++	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
+ 	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+ 
+ 	/* wait for the registers to be updated (max 100ms) */
+@@ -150,7 +164,7 @@ static int stm32_iwdg_clk_init(struct platform_device *pdev,
+ 	}
+ 
+ 	/* optional peripheral clock */
+-	if (wdt->has_pclk) {
++	if (wdt->data->has_pclk) {
+ 		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
+ 		if (IS_ERR(wdt->clk_pclk)) {
+ 			dev_err(&pdev->dev, "Unable to get pclk clock\n");
+@@ -191,8 +205,8 @@ static const struct watchdog_ops stm32_iwdg_ops = {
+ };
+ 
+ static const struct of_device_id stm32_iwdg_of_match[] = {
+-	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
+-	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
++	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_data },
++	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_data },
+ 	{ /* end node */ }
+ };
+ MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+@@ -200,20 +214,17 @@ MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+ static int stm32_iwdg_probe(struct platform_device *pdev)
+ {
+ 	struct watchdog_device *wdd;
+-	const struct of_device_id *match;
+ 	struct stm32_iwdg *wdt;
+ 	struct resource *res;
+ 	int ret;
+ 
+-	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
+-	if (!match)
+-		return -ENODEV;
+-
+ 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+ 	if (!wdt)
+ 		return -ENOMEM;
+ 
+-	wdt->has_pclk = match->data;
++	wdt->data = of_device_get_match_data(&pdev->dev);
++	if (!wdt->data)
++		return -ENODEV;
+ 
+ 	/* This is the timer base. */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -231,8 +242,9 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+ 	wdd = &wdt->wdd;
+ 	wdd->info = &stm32_iwdg_info;
+ 	wdd->ops = &stm32_iwdg_ops;
+-	wdd->min_timeout = ((RLR_MIN + 1) * 256) / wdt->rate;
+-	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * 256 * 1000) / wdt->rate;
++	wdd->min_timeout = 1;
++	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
++				    1000) / wdt->rate;
+ 	wdd->parent = &pdev->dev;
+ 
+ 	watchdog_set_drvdata(wdd, wdt);
+-- 
+2.7.4
