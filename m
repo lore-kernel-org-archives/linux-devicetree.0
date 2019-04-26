@@ -1,25 +1,58 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 1/1] dmaengine: mediatek-cqdma: fix wrong register usage
- in mtk_cqdma_start
-Date: Fri, 26 Apr 2019 17:28:40 +0530
-Message-ID: <20190426115840.GA28103@vkoul-mobl>
-References: <1556164430-30724-1-git-send-email-shun-chih.yu@mediatek.com>
+From: Dragan Cvetic <draganc@xilinx.com>
+Subject: RE: [PATCH V2 01/12] dt-bindings: xilinx-sdfec: Add SDFEC binding
+Date: Fri, 26 Apr 2019 12:27:05 +0000
+Message-ID: <BL0PR02MB56812D6CE27C3522A7A2A58ACB3E0@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1554804414-206099-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1554804414-206099-2-git-send-email-dragan.cvetic@xilinx.com>
+ <20190425202417.GA22307@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1556164430-30724-1-git-send-email-shun-chih.yu@mediatek.com>
+In-Reply-To: <20190425202417.GA22307@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: shun-chih.yu@mediatek.com
-Cc: Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25-04-19, 11:53, shun-chih.yu@mediatek.com wrote:
-> From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
-> 
-> This patch fixes wrong register usage in the mtk_cqdma_start. The
-> destination register should be MTK_CQDMA_DST2 instead.
+Hi Greg,
 
-Applied and cced stable, thanks
--- 
-~Vinod
+
+
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Thursday 25 April 2019 21:24
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
+sts.infradead.org; linux-kernel@vger.kernel.org; Derek
+> Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V2 01/12] dt-bindings: xilinx-sdfec: Add SDFEC bindin=
+g
+>=20
+> On Tue, Apr 09, 2019 at 11:06:43AM +0100, Dragan Cvetic wrote:
+> > Add the Soft Decision Forward Error Correction (SDFEC) Engine
+> > bindings which is available for the Zynq UltraScale+ RFSoC
+> > FPGA's.
+> >
+> > Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> > Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/misc/xlnx,sd-fec.txt       | 58 ++++++++++++++=
+++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.=
+txt
+>=20
+> Don't you have to send new bindings to the DT maintainers?
+
+
+They will be in the email list from now on.
+
+Thanks
+Dragan
+
+>=20
+> thanks,
+>=20
+> greg k-h
