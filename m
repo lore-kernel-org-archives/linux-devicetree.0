@@ -1,43 +1,146 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/8] dt-bindings: gpu: mali-midgard: Add
- h6 mali gpu compatible
-Date: Fri, 26 Apr 2019 17:52:38 -0500
-Message-ID: <20190426225238.GA17375@bogus>
-References: <20190417173031.9920-1-peron.clem@gmail.com>
- <20190417173031.9920-4-peron.clem@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH 0/4] of_net: Add NVMEM support to of_get_mac_address
+Date: Sat, 27 Apr 2019 01:06:38 +0200
+Message-ID: <1556320002-26213-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDJIP47K7MERBOEXR3TAKGQE55DOASI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190417173031.9920-4-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Apr 2019 19:30:26 +0200, =3D?UTF-8?q?Cl=3DC3=3DA9ment=3D20P=3DC3=
-=3DA9ron?=3D wrote:
-> This add the H6 mali compatible in the dt-bindings to later support
-> specific implementation.
->=20
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->=20
+Hi,
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+this patch series is a continuation of my previous attempt[1], where I've
+tried to wire MTD layer into of_get_mac_address, so it would be possible to
+load MAC addresses from various NVMEMs as EEPROMs etc.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Predecessor of this patch which used directly MTD layer has originated in
+OpenWrt some time ago and supports already about 497 use cases in 357
+device tree files.
+
+During the review process of my 1st attempt I was told, that I shouldn't be
+using MTD directly, but I should rather use new NVMEM subsystem, so this
+patch series tries to accommodate that.
+
+First patch is wiring NVMEM support directly into of_get_mac_address as
+it's obvious, that adding support for NVMEM into every other driver would
+mean adding a lot of repetitive code. This patch allows us to configure MAC
+addresses in various devices like ethernet and wireless adapters directly
+from of_get_mac_address, which is used by quite a lot of drivers in the
+tree already.
+
+Second patch is simply updating documentation with NVMEM bits, also adding
+some missing bits like mac-address and local-mac-address properties, which
+are currently supported by of_get_mac_address.
+
+Third and fourth patches are simply removing duplicate NVMEM code which is
+no longer needed as the first patch has added NVMEM support directly into
+of_get_mac_address.
+
+Just for a better picture, this patch series and one simple patch[2] on top
+of it, allows me to configure 8Devices Carambola2 board's MAC addresses
+with following DTS (simplified):
+
+ &spi {
+ 	flash@0 {
+ 		partitions {
+			art: partition@ff0000 {
+				label = "art";
+				reg = <0xff0000 0x010000>;
+				read-only;
+
+				nvmem-cells {
+					compatible = "nvmem-cells";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					eth0_addr: eth-mac-addr@0 {
+						reg = <0x0 0x6>;
+					};
+
+					eth1_addr: eth-mac-addr@6 {
+						reg = <0x6 0x6>;
+					};
+
+					wmac_addr: wifi-mac-addr@1002 {
+						reg = <0x1002 0x6>;
+					};
+				};
+			};
+		};
+	};
+ };
+
+ &eth0 {
+	nvmem-cells = <&eth0_addr>;
+	nvmem-cell-names = "mac-address";
+ };
+
+ &eth1 {
+	nvmem-cells = <&eth1_addr>;
+	nvmem-cell-names = "mac-address";
+ };
+
+ &wmac {
+	nvmem-cells = <&wmac_addr>;
+	nvmem-cell-names = "mac-address";
+ };
+
+
+1. https://patchwork.ozlabs.org/patch/1086628/
+2. https://patchwork.ozlabs.org/patch/890738/
+
+-- ynezz
+
+Petr Štetiar (4):
+  of_net: Add NVMEM support to of_get_mac_address
+  dt-bindings: doc: Reflect new NVMEM of_get_mac_address behaviour
+  net: macb: Drop nvmem_get_mac_address usage
+  net: davinci_emac: Drop nvmem_get_mac_address usage
+
+ .../devicetree/bindings/net/altera_tse.txt         |  3 ++
+ Documentation/devicetree/bindings/net/arc_emac.txt |  4 ++
+ .../devicetree/bindings/net/brcm,amac.txt          |  3 ++
+ .../devicetree/bindings/net/brcm,bcmgenet.txt      |  5 +++
+ .../devicetree/bindings/net/brcm,systemport.txt    |  4 ++
+ .../devicetree/bindings/net/cavium-mix.txt         |  7 +++-
+ .../devicetree/bindings/net/cavium-pip.txt         |  5 +++
+ Documentation/devicetree/bindings/net/cpsw.txt     |  3 ++
+ .../devicetree/bindings/net/davicom-dm9000.txt     |  4 ++
+ .../devicetree/bindings/net/davinci_emac.txt       |  2 +
+ Documentation/devicetree/bindings/net/dsa/dsa.txt  |  7 ++--
+ .../devicetree/bindings/net/emac_rockchip.txt      |  4 ++
+ Documentation/devicetree/bindings/net/ethernet.txt |  2 +
+ .../devicetree/bindings/net/ezchip_enet.txt        |  6 +++
+ Documentation/devicetree/bindings/net/fsl-fec.txt  |  4 ++
+ .../devicetree/bindings/net/fsl-tsec-phy.txt       |  4 ++
+ .../devicetree/bindings/net/hisilicon-femac.txt    |  3 ++
+ .../bindings/net/hisilicon-hix5hd2-gmac.txt        |  3 ++
+ .../devicetree/bindings/net/keystone-netcp.txt     |  9 ++--
+ Documentation/devicetree/bindings/net/macb.txt     |  8 ++--
+ .../devicetree/bindings/net/marvell-orion-net.txt  |  3 ++
+ .../devicetree/bindings/net/marvell-pxa168.txt     |  3 ++
+ .../devicetree/bindings/net/microchip,enc28j60.txt |  3 ++
+ .../devicetree/bindings/net/microchip,lan78xx.txt  |  2 +
+ .../devicetree/bindings/net/opencores-ethoc.txt    |  4 ++
+ .../devicetree/bindings/net/oxnas-dwmac.txt        |  6 +++
+ .../devicetree/bindings/net/qca,qca7000.txt        |  3 ++
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |  3 ++
+ .../bindings/net/snps,dwc-qos-ethernet.txt         |  2 +
+ .../devicetree/bindings/net/socfpga-dwmac.txt      |  4 ++
+ .../bindings/net/socionext,uniphier-ave4.txt       |  3 ++
+ .../devicetree/bindings/net/socionext-netsec.txt   |  2 +
+ Documentation/devicetree/bindings/net/stmmac.txt   |  4 ++
+ .../bindings/net/wireless/mediatek,mt76.txt        |  2 +
+ .../devicetree/bindings/net/wireless/qca,ath9k.txt |  2 +
+ .../devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt  |  3 ++
+ drivers/net/ethernet/cadence/macb_main.c           | 12 ++----
+ drivers/net/ethernet/ti/davinci_emac.c             | 14 +++----
+ drivers/of/of_net.c                                | 48 +++++++++++++++++++---
+ 39 files changed, 179 insertions(+), 34 deletions(-)
+
+-- 
+1.9.1
