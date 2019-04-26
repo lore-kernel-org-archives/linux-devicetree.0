@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v4 3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-Date: Fri, 26 Apr 2019 14:47:14 +0800
-Message-ID: <1556261237-13823-4-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v4 2/6] dt-bindings: usb: add binding for Type-B GPIO connector driver
+Date: Fri, 26 Apr 2019 14:47:13 +0800
+Message-ID: <1556261237-13823-3-git-send-email-chunfeng.yun@mediatek.com>
 References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,54 +12,79 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Now the USB Role Switch is supported, so add properties about it
+It's used to support dual role switch via GPIO when use Type-B
+receptacle, typically the USB ID pin is connected to an input
+GPIO pin
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v4: no changes
-v3: no changes
+v4 no changes
+
+v3 changes:
+ 1. treat type-B connector as a virtual device, but not child device of
+    USB controller's
 
 v2 changes:
-  1. fix typo
-  2. refer new binding about connector property
+  1. new patch to make binding clear suggested by Hans
 ---
- .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../bindings/usb/typeb-conn-gpio.txt          | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 3382b5cb471d..6e004c4a89af 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -27,7 +27,9 @@ Optional properties:
-  - ranges : allows valid 1:1 translation between child's address space and
- 	parent's address space
-  - extcon : external connector for vbus and idpin changes detection, needed
--	when supports dual-role mode.
-+	when supports dual-role mode; it's consiedered valid for compatibility
-+	reasons, and not allowed for new bindings, use the property
-+	usb-role-switch instead.
-  - vbus-supply : reference to the VBUS regulator, needed when supports
- 	dual-role mode.
-  - pinctrl-names : a pinctrl state named "default" is optional, and need be
-@@ -36,7 +38,8 @@ Optional properties:
- 	is not set.
-  - pinctrl-0 : pin control group
- 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
-+ - usb-role-switch : use USB Role Switch to support dual-role switch, but
-+	not extcon
-  - maximum-speed : valid arguments are "super-speed", "high-speed" and
- 	"full-speed"; refer to usb/generic.txt
-  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
-@@ -61,6 +64,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
- if host mode is enabled. The DT binding details of xhci can be found in:
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
- 
-+The port would be added as subnode if use usb-role-switch property
+diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+new file mode 100644
+index 000000000000..d2e1c4e01b6d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+@@ -0,0 +1,49 @@
++USB Type-B GPIO Connector
++
++This is a virtual device used to switch dual role mode from the USB ID pin
++connected to an input GPIO pin.
++
++Required properties:
++- compatible : Should be "linux,typeb-conn-gpio"
++
++Sub-nodes:
++- connector : should be present.
++	- compatible : should be "usb-b-connector".
++	- id-gpios, vbus-gpios : either one of them must be present,
++		and both can be present as well.
++	- vbus-supply : can be present if needed when supports dual role mode.
++	see connector/usb-connector.txt
++
++- port : should be present.
 +	see graph.txt
 +
- Example:
- ssusb: usb@11271000 {
- 	compatible = "mediatek,mt8173-mtu3";
++Example:
++
++rsw_iddig: role_sw_iddig {
++	compatible = "linux,typeb-conn-gpio";
++	status = "okay";
++
++	connector {
++		compatible = "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
++		vbus-supply = <&usb_p0_vbus>;
++	};
++
++	port {
++		bconn_ep: endpoint@0 {
++			remote-endpoint = <&usb_role_sw>;
++		};
++	};
++};
++
++&mtu3 {
++	status = "okay";
++
++	port {
++		usb_role_sw: endpoint@0 {
++			remote-endpoint = <&bconn_ep>;
++		};
++	};
++};
 -- 
 2.21.0
