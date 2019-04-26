@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 1/5] mtd: onenand/samsung: Unify resource order for controller variants
-Date: Fri, 26 Apr 2019 18:42:20 +0200
-Message-ID: <20190426164224.11327-2-pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 3/5] mtd: onenand/samsung: Add device tree support
+Date: Fri, 26 Apr 2019 18:42:22 +0200
+Message-ID: <20190426164224.11327-4-pawel.mikolaj.chmiel@gmail.com>
 References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,150 +15,93 @@ List-Id: devicetree@vger.kernel.org
 
 From: Tomasz Figa <tomasz.figa@gmail.com>
 
-Before this patch, the order of memory resources requested by the driver
-was controller base as first and OneNAND chip base as second for
-S3C64xx/S5PC100 variant and the opposite for S5PC110/S5PV210 variant.
-
-To make this more consistent, this patch swaps the order of resources
-for the latter and updates platform code accordingly. As a nice side
-effect there is a slight reduction in line count of probe function.
+This patch adds support for instantation using Device Tree.
 
 Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 ---
- drivers/mtd/nand/onenand/samsung.c | 48 ++++++++++++++----------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
+ drivers/mtd/nand/onenand/samsung.c | 37 +++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mtd/nand/onenand/samsung.c b/drivers/mtd/nand/onenand/samsung.c
-index e64d0fdf7eb5..a425f19a3876 100644
+index 9628bf5bc397..0f450604412f 100644
 --- a/drivers/mtd/nand/onenand/samsung.c
 +++ b/drivers/mtd/nand/onenand/samsung.c
-@@ -126,14 +126,13 @@ struct s3c_onenand {
- 	struct mtd_info	*mtd;
- 	struct platform_device	*pdev;
- 	enum soc_type	type;
--	void __iomem	*base;
--	void __iomem	*ahb_addr;
-+	void __iomem	*ctrl_base;
-+	void __iomem	*chip_base;
- 	int		bootram_command;
- 	void		*page_buf;
- 	void		*oob_buf;
- 	unsigned int	(*mem_addr)(int fba, int fpa, int fsa);
- 	unsigned int	(*cmd_map)(unsigned int type, unsigned int val);
--	void __iomem	*dma_addr;
- 	unsigned long	phys_base;
- 	struct completion	complete;
- };
-@@ -147,22 +146,22 @@ static struct s3c_onenand *onenand;
+@@ -25,6 +25,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/of.h>
  
- static inline int s3c_read_reg(int offset)
- {
--	return readl(onenand->base + offset);
-+	return readl(onenand->ctrl_base + offset);
+ #include "samsung.h"
+ 
+@@ -835,8 +836,36 @@ static void s3c_onenand_setup(struct mtd_info *mtd)
+ 	this->write_bufferram = onenand_write_bufferram;
  }
  
- static inline void s3c_write_reg(int value, int offset)
++#ifdef CONFIG_OF
++static const struct of_device_id s3c_onenand_of_match[] = {
++	{ .compatible = "samsung,s3c6400-onenand",
++		.data = (void *)TYPE_S3C6400 },
++	{ .compatible = "samsung,s3c6410-onenand",
++		.data = (void *)TYPE_S3C6410 },
++	{ .compatible = "samsung,s5pv210-onenand",
++		.data = (void *)TYPE_S5PC110 },
++	{},
++};
++MODULE_DEVICE_TABLE(of, onenand_s3c_dt_match);
++#endif
++
++static enum soc_type s3c_onenand_get_device_id(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++
++	if (IS_ENABLED(CONFIG_OF) && np) {
++		const struct of_device_id *match;
++
++		match = of_match_node(s3c_onenand_of_match, np);
++		return (enum soc_type)match->data;
++	}
++
++	return platform_get_device_id(pdev)->driver_data;
++}
++
+ static int s3c_onenand_probe(struct platform_device *pdev)
  {
--	writel(value, onenand->base + offset);
-+	writel(value, onenand->ctrl_base + offset);
- }
++	struct device_node *np = pdev->dev.of_node;
+ 	struct onenand_platform_data *pdata;
+ 	struct onenand_chip *this;
+ 	struct mtd_info *mtd;
+@@ -858,9 +887,10 @@ static int s3c_onenand_probe(struct platform_device *pdev)
  
- static inline int s3c_read_cmd(unsigned int cmd)
- {
--	return readl(onenand->ahb_addr + cmd);
-+	return readl(onenand->chip_base + cmd);
- }
+ 	this = (struct onenand_chip *) &mtd[1];
+ 	mtd->priv = this;
++	mtd->dev.of_node = np;
+ 	mtd->dev.parent = &pdev->dev;
+ 	onenand->pdev = pdev;
+-	onenand->type = platform_get_device_id(pdev)->driver_data;
++	onenand->type = s3c_onenand_get_device_id(pdev);
  
- static inline void s3c_write_cmd(int value, unsigned int cmd)
- {
--	writel(value, onenand->ahb_addr + cmd);
-+	writel(value, onenand->chip_base + cmd);
- }
- 
- #ifdef SAMSUNG_DEBUG
-@@ -519,7 +518,7 @@ static int (*s5pc110_dma_ops)(dma_addr_t dst, dma_addr_t src, size_t count, int
- 
- static int s5pc110_dma_poll(dma_addr_t dst, dma_addr_t src, size_t count, int direction)
- {
--	void __iomem *base = onenand->dma_addr;
-+	void __iomem *base = onenand->ctrl_base;
- 	int status;
- 	unsigned long timeout;
- 
-@@ -563,7 +562,7 @@ static int s5pc110_dma_poll(dma_addr_t dst, dma_addr_t src, size_t count, int di
- 
- static irqreturn_t s5pc110_onenand_irq(int irq, void *data)
- {
--	void __iomem *base = onenand->dma_addr;
-+	void __iomem *base = onenand->ctrl_base;
- 	int status, cmd = 0;
- 
- 	status = readl(base + S5PC110_INTC_DMA_STATUS);
-@@ -585,7 +584,7 @@ static irqreturn_t s5pc110_onenand_irq(int irq, void *data)
- 
- static int s5pc110_dma_irq(dma_addr_t dst, dma_addr_t src, size_t count, int direction)
- {
--	void __iomem *base = onenand->dma_addr;
-+	void __iomem *base = onenand->ctrl_base;
- 	int status;
- 
- 	status = readl(base + S5PC110_INTC_DMA_MASK);
-@@ -634,7 +633,7 @@ static int s5pc110_read_bufferram(struct mtd_info *mtd, int area,
- 	}
- 
- 	if (offset & 3 || (size_t) buf & 3 ||
--		!onenand->dma_addr || count != mtd->writesize)
-+		!onenand->ctrl_base || count != mtd->writesize)
- 		goto normal;
- 
- 	/* Handle vmalloc address */
-@@ -864,23 +863,22 @@ static int s3c_onenand_probe(struct platform_device *pdev)
  	s3c_onenand_setup(mtd);
  
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	onenand->base = devm_ioremap_resource(&pdev->dev, r);
--	if (IS_ERR(onenand->base))
--		return PTR_ERR(onenand->base);
--
-+	onenand->ctrl_base = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(onenand->ctrl_base))
-+		return PTR_ERR(onenand->ctrl_base);
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	onenand->chip_base = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(onenand->chip_base))
-+		return PTR_ERR(onenand->chip_base);
- 	onenand->phys_base = r->start;
+@@ -919,6 +949,10 @@ static int s3c_onenand_probe(struct platform_device *pdev)
+ 	}
  
--	/* Set onenand_chip also */
--	this->base = onenand->base;
--
- 	/* Use runtime badblock check */
- 	this->options |= ONENAND_SKIP_UNLOCK_CHECK;
+ 	onenand->clk_bus = devm_clk_get(&pdev->dev, "bus");
++	if (np && IS_ERR(onenand->clk_bus)) {
++		dev_err(&pdev->dev, "failed to get bus clock\n");
++		return PTR_ERR(onenand->clk_bus);
++	}
+ 	if (!IS_ERR(onenand->clk_bus))
+ 		clk_prepare_enable(onenand->clk_bus);
  
- 	if (onenand->type != TYPE_S5PC110) {
--		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--		onenand->ahb_addr = devm_ioremap_resource(&pdev->dev, r);
--		if (IS_ERR(onenand->ahb_addr))
--			return PTR_ERR(onenand->ahb_addr);
-+		/* Set onenand_chip also */
-+		this->base = onenand->ctrl_base;
- 
- 		/* Allocate 4KiB BufferRAM */
- 		onenand->page_buf = devm_kzalloc(&pdev->dev, SZ_4K,
-@@ -898,10 +896,8 @@ static int s3c_onenand_probe(struct platform_device *pdev)
- 		this->subpagesize = mtd->writesize;
- 
- 	} else { /* S5PC110 */
--		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--		onenand->dma_addr = devm_ioremap_resource(&pdev->dev, r);
--		if (IS_ERR(onenand->dma_addr))
--			return PTR_ERR(onenand->dma_addr);
-+		/* Set onenand_chip also */
-+		this->base = onenand->chip_base;
- 
- 		s5pc110_dma_ops = s5pc110_dma_poll;
- 		/* Interrupt support */
+@@ -1000,6 +1034,7 @@ static struct platform_driver s3c_onenand_driver = {
+ 	.driver         = {
+ 		.name	= "samsung-onenand",
+ 		.pm	= &s3c_pm_ops,
++		.of_match_table = of_match_ptr(s3c_onenand_of_match),
+ 	},
+ 	.id_table	= s3c_onenand_driver_ids,
+ 	.probe          = s3c_onenand_probe,
 -- 
 2.20.1
