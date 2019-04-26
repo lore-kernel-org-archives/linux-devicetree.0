@@ -1,53 +1,44 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Make USB1 peripheral
-Date: Fri, 26 Apr 2019 13:26:34 -0600
-Message-ID: <CAOCk7NqmNYDzyTSXnMUdDyAcbzHjzL-aSO9r_+V-5o-8oOMPPg@mail.gmail.com>
-References: <20190426191025.16131-1-bjorn.andersson@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of/device.c: fix the wrong comments
+Date: Fri, 26 Apr 2019 12:31:21 -0700
+Message-ID: <d28a199c-eba3-7f10-0430-c3da58522a41@gmail.com>
+References: <1556156754-18993-1-git-send-email-jojo_zeng@126.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190426191025.16131-1-bjorn.andersson@linaro.org>
+In-Reply-To: <1556156754-18993-1-git-send-email-jojo_zeng@126.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+To: jojo_zeng@126.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 1:10 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The MTP is a "mobile reference device", as such the default operation is
-> to use fastboot to boot/flash software onto it and the common case is
-> thereby that we boot with a USB cable connected downstream from a PC or
-> a hub.  And without support for the PMI8998 charger block VBUS will not
-> be driven by the device.
->
-> Switch to peripheral until we can enable OTG.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Makes sense to me.
-
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-
+On 4/24/19 6:45 PM, jojo_zeng@126.com wrote:
+> From: Jojo Zeng <jojo_zeng@126.com>
+> 
+> the comments which discribed the input parameters of of_match_device(). 
+> the name is changed, so fix it.
+> 
+> Signed-off-by: Jojo Zeng <jojo_zeng@126.com>
 > ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 02b8357c8ce8..2e78638eb73b 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -404,8 +404,8 @@
->  };
->
->  &usb_1_dwc3 {
-> -       /* Until we have Type C hooked up we'll force this as host. */
-> -       dr_mode = "host";
-> +       /* Until we have Type C hooked up we'll force this as peripheral. */
-> +       dr_mode = "peripheral";
->  };
->
->  &usb_1_hsphy {
-> --
-> 2.18.0
->
+>  drivers/of/device.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 3717f2a..da81583 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -17,7 +17,7 @@
+>  
+>  /**
+>   * of_match_device - Tell if a struct device matches an of_device_id list
+> - * @ids: array of of device match structures to search in
+> + * @matches: array of of device match structures to search in
+>   * @dev: the of device structure to match against
+>   *
+>   * Used by a driver to check whether an platform_device present in the
+> 
+
+
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
