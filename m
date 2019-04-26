@@ -1,121 +1,48 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
- for static replicator
-Date: Fri, 26 Apr 2019 09:03:37 -0600
-Message-ID: <20190426150337.GA1851@xps15>
-References: <20190412102738.12679-1-leo.yan@linaro.org>
- <20190412102738.12679-2-leo.yan@linaro.org>
- <CANLsYkw1vaevcJZfjQfF9BeUvi1THGNtu+SH+LR008LjZOc7fA@mail.gmail.com>
- <20190417000959.GB6202@leoy-ThinkPad-X240s>
- <CANLsYkwEBmn519ey-Vg-4-yfKFCaZv8kTDZ4sWpVzNTBOdtC=g@mail.gmail.com>
- <20190426142507.GA8721@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V5 09/16] Documentation/devicetree: Add PCIe
+ supports-clkreq property
+Date: Fri, 26 Apr 2019 10:22:29 -0500
+Message-ID: <20190426152229.GA8492@bogus>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-10-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190426142507.GA8721@bogus>
+In-Reply-To: <20190424052004.6270-10-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Leo Yan <leo.yan@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 09:25:07AM -0500, Rob Herring wrote:
-> On Wed, Apr 17, 2019 at 07:57:50AM -0600, Mathieu Poirier wrote:
-> > On Tue, 16 Apr 2019 at 18:10, Leo Yan <leo.yan@linaro.org> wrote:
-> > >
-> > > On Tue, Apr 16, 2019 at 02:18:40PM -0600, Mathieu Poirier wrote:
-> > > > Hi Leo,
-> > > >
-> > > > On Fri, 12 Apr 2019 at 04:28, Leo Yan <leo.yan@linaro.org> wrote:
-> > > > >
-> > > > > CoreSight uses below bindings for replicator:
-> > > > >
-> > > > >   Dynamic replicator, aka. configurable replicator:
-> > > > >     "arm,coresight-dynamic-replicator", "arm,primecell";
-> > > > >
-> > > > >   Static replicator, aka. non-configurable replicator:
-> > > > >     "arm,coresight-replicator";
-> > > > >
-> > > > > The compatible string "arm,coresight-replicator" is not an explicit
-> > > > > naming to express the replicator is 'static'.  To unify the naming
-> > > > > convention, this patch introduces a new compatible string
-> > > > > "arm,coresight-static-replicator" for the static replicator; the
-> > > > > compatible string "arm,coresight-replicator" is kept for backward
-> > > > > compatibility, but tag it as obsolete and suggest to use the new
-> > > > > compatible string.
-> > > > >
-> > > > > As result CoreSight replicator have below bindings:
-> > > > >
-> > > > >   Dynamic replicator:
-> > > > >     "arm,coresight-dynamic-replicator", "arm,primecell";
-> > > > >
-> > > > >   Static replicator:
-> > > > >     "arm,coresight-static-replicator";
-> > > > >     "arm,coresight-replicator"; (obsolete)
-> > > > >
-> > > > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
-> > > > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > > > > index f8aff65ab921..d02d160fa8ac 100644
-> > > > > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > > > > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > > > > @@ -69,7 +69,10 @@ its hardware characteristcs.
-> > > > >
-> > > > >         * compatible: Currently supported value is (note the absence of the
-> > > > >           AMBA markee):
-> > > > > -               - "arm,coresight-replicator"
-> > > > > +               - Coresight Non-configurable Replicator:
-> > > > > +                       "arm,coresight-static-replicator";
-> > > > > +                       "arm,coresight-replicator"; (OBSOLETE. For backward
-> > > > > +                               compatibility and will be removed)
-> > > > >
-> > > > >         * port or ports: see "Graph bindings for Coresight" below.
-> > > > >
-> > > > > @@ -169,7 +172,7 @@ Example:
-> > > > >                 /* non-configurable replicators don't show up on the
-> > > > >                  * AMBA bus.  As such no need to add "arm,primecell".
-> > > > >                  */
-> > > > > -               compatible = "arm,coresight-replicator";
-> > > > > +               compatible = "arm,coresight-static-replicator";
-> > > > >
-> > > > >                 out-ports {
-> > > > >                         #address-cells = <1>;
-> > > > > --
-> > > > > 2.17.1
-> > > >
-> > > > Since this is a binding patch it needs to be sent on its own.
-> > >
-> > > Thanks for reminding, Mathieu.
-> > >
-> > > Since this is the second time you remind me to send DT binding related
-> > > patches separately, so I may misunderstand your meaning and want to get
-> > > clarification to avoid making the same mistake for many times.
-> > >
-> > > Before I remembered in one patch set we need to organise patches with
-> > > sending document patch (or document changing patch) ahead and then
-> > > followed by the corresponding code change patch.  So this can give the
-> > > reviewers more clear context;  and this also can present the merging
-> > > dependency between document change patches and the code change patches.
-> > >
-> > > This is the rule I followed in this patch set and I sent to CoreSight
-> > > and DT maintainers (and mailing lists) together.
-> > >
-> > > Please let me know what you think about this?  And also welcome
-> > > Rob/Mark's suggestions.
-> > 
-> > https://www.kernel.org/doc/Documentation/devicetree/bindings/submitting-patches.txt
-> 
-> I'm not clear on what you are asking for. Binding patches should be 
-> separate patch, but can and should still be in a series if there's 
-> relevant code changes.
+On Wed, Apr 24, 2019 at 10:49:57AM +0530, Vidya Sagar wrote:
+> Some host controllers need to know the existence of clkreq signal routing to
+> downstream devices to be able to advertise low power features like ASPM L1
+> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
+> states might lead to downstream devices falling off the bus. Hence a new device
+> tree property 'supports-clkreq' is added to make such host controllers
+> aware of clkreq signal routing to downstream devices.
 
-The fault is mine - I reviewed Leo's patchset while seriously jet lagged and
-sent him in the weeds.  Apologies for the confusion.
+Please be consistent with subjects (Use 'dt-bindings: ...')
 
-Mathieu
+With that change,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 
 > 
-> Rob
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * Rebased on top of linux-next top of the tree
+> 
+> Changes since [v2]:
+> * None
+> 
+> Changes since [v1]:
+> * This is a new patch in v2 series
+> 
+>  Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
