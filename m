@@ -1,45 +1,59 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 0/3] clk: add driver for the SiFive FU540 PRCI and PLLs it controls
-Date: Thu, 25 Apr 2019 18:38:38 -0700
-Message-ID: <155624271876.15276.8637203698438742304@swboyd.mtv.corp.google.com>
-References: <20190411082618.3502-1-paul.walmsley@sifive.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+Date: Fri, 26 Apr 2019 03:44:53 +0200
+Message-ID: <1426b1de-b2ae-9f8a-ba36-8aa81dfda161@gmail.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus>
+ <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <CAL_JsqJDh3Z+iFn6fbkGT+jQ3HG2s4n3PT=LrmB-td++G99q_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411082618.3502-1-paul.walmsley@sifive.com>
+In-Reply-To: <CAL_JsqJDh3Z+iFn6fbkGT+jQ3HG2s4n3PT=LrmB-td++G99q_w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, mturquette@baylibre.com
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Mason Yang <masonccyang@mxic.com.tw>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Boris Brezillon <bbrezillon@kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Lee Jones <lee.jones@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Julien Su <juliensu@mxic.com.tw>, Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-11 01:26:16)
-> clk: add driver for the SiFive FU540 PRCI and PLLs it controls
->=20
-> Add a driver for the SiFive FU540 PRCI IP block, which handles clock and
-> some device reset control for the SiFive FU540 chip.  Also add a driver-
-> independent library for the Analog Bits Wide-Range PLL (WRPLL), used by
-> the PRCI driver to monitor and control the WRPLL instances on the FU540
-> chip.
->=20
-> Boot-tested on a SiFive HiFive Unleashed board, using BBL and the
-> open-source FSBL with a mainline-focused DTB.
->=20
-> This third version incorporates changes requested by Stephen Boyd
-> <sboyd@kernel.org> and Rob Herring <robh@kernel.org>.
->=20
-> This patch series is also available, along with the DT macro prerequisite
-> patch, at:
+On 4/26/19 1:07 AM, Rob Herring wrote:
+> On Wed, Apr 24, 2019 at 4:54 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+>>
+>> On 4/24/19 11:23 PM, Rob Herring wrote:
+>>> On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
+>>>> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
+>>>>
+>>>> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>>>> ---
+>>>>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++++++++++++++++++
+>>>>  1 file changed, 40 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>> new file mode 100644
+>>>> index 0000000..668b822
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>> @@ -0,0 +1,40 @@
+>>>> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
+>>>> +--------------------------------------------------
+>>>
+>>> Looks like a SPI flash controller from the example. What makes it an
+>>> MFD?
+>>
+>> It supports both SPI NOR and HyperFlash (CFI-compliant flash with
+>> different bus interface).
+> 
+> Not sure that really makes it an MFD. Lee probably has an opinion.
+> 
+> In any case, can we get a complete binding that shows both.
 
-Can you please send the dt macro patch along with the rest of the
-patches? I can't apply these patches and build them without it.
-Typically the macro patch is part of the binding patch and Rob
-acks/reviews it as one change. Then I pick that up and the clk driver
-parts and they get pulled into whatever SoC tree is using the bindings
-header with and those defines get merged up through some other path..
+Presumably that would only mean the flash compatible is some "cfi,nor"
+or somesuch. But I agree, would be nice to have both in the example.
 
->=20
-> https://github.com/sifive/riscv-linux/tree/dev/paulw/prci-v5.1-rc4
->=20
-
-I suppose I'll go and fetch it from here manually.
+-- 
+Best regards,
+Marek Vasut
