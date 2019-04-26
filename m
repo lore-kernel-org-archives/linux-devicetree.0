@@ -1,38 +1,105 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Add doc for the Ingenic JZ47xx LCD
- controller driver
-Date: Fri, 26 Apr 2019 15:39:22 -0500
-Message-ID: <20190426203922.GA14919@bogus>
-References: <20190426005308.27039-1-paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/6] dt-bindings: usb: add binding for Type-B GPIO
+ connector driver
+Date: Fri, 26 Apr 2019 15:45:37 -0500
+Message-ID: <20190426204537.GA15074@bogus>
+References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1556261237-13823-3-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190426005308.27039-1-paul@crapouillou.net>
+In-Reply-To: <1556261237-13823-3-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Apr 2019 02:53:07 +0200, Paul Cercueil wrote:
-> Add documentation for the devicetree bindings of the LCD controller present in
-> the JZ47xx family of SoCs from Ingenic.
+On Fri, Apr 26, 2019 at 02:47:13PM +0800, Chunfeng Yun wrote:
+> It's used to support dual role switch via GPIO when use Type-B
+> receptacle, typically the USB ID pin is connected to an input
+> GPIO pin
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
+> v4 no changes
 > 
-> Notes:
->     v2: Remove ingenic,panel property.
->     
->     v3: - Rename compatible strings from ingenic,jz47XX-drm to ingenic,jz47XX-lcd
->         - The ingenic,lcd-mode property is now read from the panel node instead
->     	  of from the driver node
->     
->     v4: Remove ingenic,lcd-mode property completely.
+> v3 changes:
+>  1. treat type-B connector as a virtual device, but not child device of
+>     USB controller's
 > 
->  .../bindings/display/ingenic,lcd.txt          | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+> v2 changes:
+>   1. new patch to make binding clear suggested by Hans
+> ---
+>  .../bindings/usb/typeb-conn-gpio.txt          | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+> new file mode 100644
+> index 000000000000..d2e1c4e01b6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+> @@ -0,0 +1,49 @@
+> +USB Type-B GPIO Connector
+> +
+> +This is a virtual device used to switch dual role mode from the USB ID pin
+> +connected to an input GPIO pin.
+> +
+> +Required properties:
+> +- compatible : Should be "linux,typeb-conn-gpio"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+There's no need for this virtual node. The USB host or device driver can 
+instantiate a connector driver by walking the OF graph to the connector 
+and creating a device.
+
+> +
+> +Sub-nodes:
+> +- connector : should be present.
+> +	- compatible : should be "usb-b-connector".
+> +	- id-gpios, vbus-gpios : either one of them must be present,
+> +		and both can be present as well.
+> +	- vbus-supply : can be present if needed when supports dual role mode.
+> +	see connector/usb-connector.txt
+> +
+> +- port : should be present.
+> +	see graph.txt
+> +
+> +Example:
+> +
+> +rsw_iddig: role_sw_iddig {
+> +	compatible = "linux,typeb-conn-gpio";
+> +	status = "okay";
+> +
+> +	connector {
+> +		compatible = "usb-b-connector";
+> +		label = "micro-USB";
+> +		type = "micro";
+> +		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+> +		vbus-supply = <&usb_p0_vbus>;
+> +	};
+> +
+> +	port {
+
+Humm, same mistake as Hikey patches...
+
+This goes under the connector node as defined in the connector binding.
+
+> +		bconn_ep: endpoint@0 {
+> +			remote-endpoint = <&usb_role_sw>;
+> +		};
+> +	};
+> +};
+> +
+> +&mtu3 {
+> +	status = "okay";
+> +
+> +	port {
+> +		usb_role_sw: endpoint@0 {
+> +			remote-endpoint = <&bconn_ep>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.21.0
+> 
