@@ -1,67 +1,78 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 07/15] spi: imx: remove ERR009165 workaround on
- i.mx6ul
-Date: Fri, 26 Apr 2019 11:09:56 +0200
-Message-ID: <1556269796.2584.25.camel@pengutronix.de>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
-         <1556265512-9130-8-git-send-email-yibin.gong@nxp.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v6 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Fri, 26 Apr 2019 12:21:43 +0300
+Message-ID: <d7ca7260-9337-0779-459b-bfed15113db0@ti.com>
+References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
+ <1554882504-9010-2-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556265512-9130-8-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1554882504-9010-2-git-send-email-pawell@cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 26.04.2019, 08:05 +0000 schrieb Robin Gong:
->    ERR009165 fix on i.mx6ul and next chip, such as i.mx6ull/i.mx8mq/i.mx8mm.
-> Remove workaround on those chips. Add new i.mx6ul type for that.
+Hi Pawel,
+
+On 10/04/2019 10:48, Pawel Laszczak wrote:
+> This patch aim at documenting USB related dt-bindings for the
+> Cadence USBSS-DRD controller.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 > ---
->  drivers/spi/spi-imx.c | 39 +++++++++++++++++++++++++++++++++++----
->  1 file changed, 35 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
 > 
-> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index eb56eac..2e5e978 100644
-> --- a/drivers/spi/spi-imx.c
-> +++ b/drivers/spi/spi-imx.c
-> @@ -57,6 +57,7 @@ enum spi_imx_devtype {
->  	IMX35_CSPI,	/* CSPI on all i.mx except above */
->  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
->  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
-> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
->  };
->  
->  struct spi_imx_data;
-> @@ -128,7 +129,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
->  
->  static inline int is_imx51_ecspi(struct spi_imx_data *d)
->  {
-> -	return d->devtype_data->devtype == IMX51_ECSPI;
-> +	return d->devtype_data->devtype == IMX51_ECSPI ||
-> +	       d->devtype_data->devtype == IMX6UL_ECSPI;
->  }
->  
->  static inline int is_imx53_ecspi(struct spi_imx_data *d)
-> @@ -585,9 +587,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
->  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
->  	spi_imx->spi_bus_clk = clk;
->  
-> -	/* ERR009165: work in XHC mode as PIO */
-> -	if (spi_imx->usedma)
-> -		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	/*
-> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
-> +	 * before i.mx6ul.
-> +	 */
-> +	if (spi_imx->usedma) {
-> +		if (spi_imx->devtype_data->devtype == IMX6UL_ECSPI)
+> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> new file mode 100644
+> index 000000000000..1d2b449e3cb4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> @@ -0,0 +1,30 @@
+> +Binding for the Cadence USBSS-DRD controller
+> +
+> +Required properties:
+> +  - reg: Physical base address and size of the controller's register areas.
+> +	 Controller has 3 different regions:
+> +	 region 1 - HOST registers area
+> +	 region 2 - DEVICE registers area
+> +	 region 3 - OTG/DRD registers area
+> +  - reg-names - register memory area names:
+> +	"xhci" - for HOST registers space
+> +	"dev" - for DEVICE registers space
+> +	"otg" - for OTG/DRD registers space
+> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
+> +  - interrupts: Interrupts used by cdns3 controller.
+> +
+> +Optional properties:
+> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> +                   "full-speed"; refer to usb/generic.txt
+> + - dr_mode: Should be one of "host", "peripheral" or "otg".
+> + - phys: reference to the USB PHY
 
->=, otherwise the workaround might be applied to later generations of
-the core if more are added later.
+In your test platform is this a 2.0PHY or 3.0PHY? Typical platforms will have both.
+Is there any power-on sequencing requirements for powering up these PHYs vs powering up the controller?
 
-Regards,
-Lucas
+> +
+> +Example:
+> +	usb@f3000000 {
+> +		compatible = "cdns,usb3-1.0.1";
+> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
+> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
+> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
+> +		reg-names = "xhci", "dev", "otg";
+> +	};
+> 
+
+-- 
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
