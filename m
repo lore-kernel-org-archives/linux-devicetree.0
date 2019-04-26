@@ -1,43 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document
- allwinner,cpu-operating-points-v2
-Date: Fri, 26 Apr 2019 16:15:40 -0500
-Message-ID: <20190426211540.GA890@bogus>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com>
- <20190410174139.20012-3-tiny.windzz@gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: clk: add documentation for the
+ SiFive PRCI driver
+Date: Fri, 26 Apr 2019 16:44:36 -0500
+Message-ID: <20190426214436.GA29815@bogus>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com>
+ <20190411082733.3736-3-paul.walmsley@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190410174139.20012-3-tiny.windzz@gmail.com>
+In-Reply-To: <20190411082733.3736-3-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, Paul Walmsley <paul@pwsan.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
+On Thu, 11 Apr 2019 01:27:34 -0700, Paul Walmsley wrote:
+> Add DT binding documentation for the Linux driver for the SiFive
+> PRCI clock & reset control IP block, as found on the SiFive
+> FU540 chip.
 > 
-> The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-microvolt-<name>: voltage in micro Volts.
->   At runtime, the platform can pick a <name> and matching
->   opp-microvolt-<name> property.
-> 			HW:		<name>:
-> 			sun50iw-h6      speed0 speed1 speed2
-
-We already have at least one way to support speed bins with QC kryo 
-binding. Why do we need a different way?
-
+> This version includes changes requested by Stephen Boyd
+> <sboyd@kernel.org> and Rob Herring <robh@kernel.org>, and
+> fixes some errors in the initial version.
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Megan Wachs <megan@sifive.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 168 ++++++++++++++++++
->  1 file changed, 168 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+>  .../bindings/clock/sifive/fu540-prci.txt      | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
