@@ -1,29 +1,78 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 0/3] clk: add driver for the SiFive FU540 PRCI and PLLs it controls
-Date: Fri, 26 Apr 2019 10:17:17 -0700
-Message-ID: <155629903755.15276.1866080713022430392@swboyd.mtv.corp.google.com>
-References: <20190411082618.3502-1-paul.walmsley@sifive.com> <155624271876.15276.8637203698438742304@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904261000090.28496@viisi.sifive.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
+ firmware-name for QCA6174
+Date: Fri, 26 Apr 2019 12:45:12 -0500
+Message-ID: <CAL_JsqLnM4XqQTCT7VTUSmukujz0VHJoCbXMF2--RmTEx_LZww@mail.gmail.com>
+References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
+ <1554888476-17560-1-git-send-email-rjliao@codeaurora.org> <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
+ <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1904261000090.28496@viisi.sifive.com>
+In-Reply-To: <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, mturquette@baylibre.com
+To: Rocky Liao <rjliao@codeaurora.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, Thierry Escande <thierry.escande@linaro.org>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Balakrishna Godavarthi <bgodavar@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-26 10:01:23)
-> On Thu, 25 Apr 2019, Stephen Boyd wrote:
-> >=20
-> > Can you please send the dt macro patch along with the rest of the
-> > patches? I can't apply these patches and build them without it.
->=20
-> It's upstream now as commit 6ec4bae178d8 ("dt-bindings: clock: sifive: ad=
-d=20
-> FU540-C000 PRCI clock constants")
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D6ec4bae178d8a1e9814eb3bfdd321b0475de0468
->=20
+On Wed, Apr 24, 2019 at 1:19 AM Rocky Liao <rjliao@codeaurora.org> wrote:
+>
+> On 2019-04-24 01:06, Marcel Holtmann wrote:
+> > Hi Rocky,
+> >
+> >> This patch adds an optional device property "firmware-name" to allow
+> >> the
+> >> driver to load customized nvm firmware file based on this property.
+> >>
+> >> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> >> ---
+> >> Changes in v3:
+> >>  * added firmware-name instead of nvm-postfix to specify full firmware
+> >> name
+> >> ---
+> >> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
+> >> 1 file changed, 2 insertions(+)
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> index 824c0e2..2bcea50 100644
+> >> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> >> @@ -16,6 +16,7 @@ Optional properties for compatible string
+> >> qcom,qca6174-bt:
+> >>
+> >>  - enable-gpios: gpio specifier used to enable chip
+> >>  - clocks: clock provided to the controller (SUSCLK_32KHZ)
+> >> + - firmware-name: specify the name of nvm firmware to load
+> >>
+> >> Required properties for compatible string qcom,wcn3990-bt:
+> >>
+> >> @@ -39,6 +40,7 @@ serial@7570000 {
+> >>
+> >>              enable-gpios =3D <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+> >>              clocks =3D <&divclk4>;
+> >> +            firmware-name =3D "nvm_00440302.bin";
+> >>      };
+> >
+> > and how is this a firmware-name property. Wouldn=E2=80=99t this be more=
+ like
+> > nvm-file or something along these lines. This really needs to be
+> > cleared with Rob to pick the right property name.
+> >
+> > Regards
+> >
+> > Marcel
+>
+> Hi Rob,
+>
+> Are you OK to use a property name "nvm-file" or "firmware-nvm-file"?
+> Actually we have two firmware files, one is the patch file which is
+> common to all of the products, the other is the nvm file which is
+> customized. Using a "nvm-file" or "firmware-nvm-file" property name
+> would be more clear.
 
-Hmm ok. Thanks for the pointer.
+'firmware-name' is the standard name for specifying firmware file names.
+
+Rob
