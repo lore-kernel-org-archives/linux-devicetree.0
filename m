@@ -1,27 +1,43 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCHv1 0/2] qcom: pms405: adc fixes
-Date: Sat, 27 Apr 2019 02:38:50 +0530
-Message-ID: <CAHLCerMtsBUi_suDKVNgG29GWHFxWd16ZbbWZoop2Wb+7B44DQ@mail.gmail.com>
-References: <cover.1553088982.git.amit.kucheria@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document
+ allwinner,cpu-operating-points-v2
+Date: Fri, 26 Apr 2019 16:15:40 -0500
+Message-ID: <20190426211540.GA890@bogus>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com>
+ <20190410174139.20012-3-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1553088982.git.amit.kucheria@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190410174139.20012-3-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 7:10 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> A couple of fixes to the adc node in PMS405 to get thermistors to work
-> correctly.
->
-> Amit Kucheria (2):
->   arm64: dts: qcom: pms405: calibrate the VADC correctly
->   arm64: dts: qcom: pms405: Rename adc outputs as per schematics
->
->  arch/arm64/boot/dts/qcom/pms405.dtsi | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
+On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
+> Allwinner Process Voltage Scaling Tables defines the voltage and
+> frequency value based on the speedbin blown in the efuse combination.
+> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> provide the OPP framework with required information.
+> This is used to determine the voltage and frequency value for each
+> OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> 
+> The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
+> with following parameters:
+> - nvmem-cells (NVMEM area containig the speedbin information)
+> - opp-microvolt-<name>: voltage in micro Volts.
+>   At runtime, the platform can pick a <name> and matching
+>   opp-microvolt-<name> property.
+> 			HW:		<name>:
+> 			sun50iw-h6      speed0 speed1 speed2
 
-Ping!
+We already have at least one way to support speed bins with QC kryo 
+binding. Why do we need a different way?
+
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 168 ++++++++++++++++++
+>  1 file changed, 168 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
