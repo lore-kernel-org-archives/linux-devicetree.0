@@ -1,60 +1,47 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v8 0/2] Enable Bluetooth functionality for WCN3998.
-Date: Fri, 26 Apr 2019 19:00:10 +0200
-Message-ID: <548B5CB0-492C-4D64-B4A5-4D66F6016F46@holtmann.org>
-References: <1556286962-3132-1-git-send-email-c-hbandi@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v3 0/3] clk: add driver for the SiFive FU540 PRCI and
+ PLLs it controls
+Date: Fri, 26 Apr 2019 10:01:23 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1904261000090.28496@viisi.sifive.com>
+References: <20190411082618.3502-1-paul.walmsley@sifive.com> <155624271876.15276.8637203698438742304@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556286962-3132-1-git-send-email-c-hbandi@codeaurora.org>
+In-Reply-To: <155624271876.15276.8637203698438742304@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harish Bandi <c-hbandi@codeaurora.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, anubhavg@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, mturquette@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Harish,
+Hi Stephen,
 
-> This patch series we add support for WCN3998 BT chip set. This new chip set
-> is based from the WCN3990 with minimal power numbers. So here in this patch
-> The major difference between wcn3990 and WCN3998 is only power numbers.
-> where as init process and fw download is same with wcn3990.
-> So we add new compatible for WCN3998. 
-> Removed the Reading of regulator values from dts.
-> Added new compatible for WCN3998.
-> Changes in V8:
-> Removed export of qca_is_wcn399x() and added as inline function
-> Added robh reviewed by tag in commit text
-> Changes in V7:
-> Initialized rom_ver to 0 to fix compiler warning 
-> Changed Commit text for DT patch
-> Changes in V6:
-> changed return value to false in the qca_is_wcn399x()stub
-> Changes in V5:
-> changed is_qca_soc_type_wcn399x_family to
-> qca_is_wcn399x helper function 
-> Moved the qca_is_wcn399x function to btqca.c
-> modified the DT document for wcn399x as per driver code
-> Changes in V4:
-> Added is_qca_soc_type_wcn399x_family helper function 
-> to get the soc type is wcn399x or not.
-> Changes in V3:
-> updated to latest code base.
+On Thu, 25 Apr 2019, Stephen Boyd wrote:
+
+> Quoting Paul Walmsley (2019-04-11 01:26:16)
+> > clk: add driver for the SiFive FU540 PRCI and PLLs it controls
+> > 
+> > Add a driver for the SiFive FU540 PRCI IP block, which handles clock and
+> > some device reset control for the SiFive FU540 chip.  Also add a driver-
+> > independent library for the Analog Bits Wide-Range PLL (WRPLL), used by
+> > the PRCI driver to monitor and control the WRPLL instances on the FU540
+> > chip.
+> > 
+> > Boot-tested on a SiFive HiFive Unleashed board, using BBL and the
+> > open-source FSBL with a mainline-focused DTB.
+> > 
+> > This third version incorporates changes requested by Stephen Boyd
+> > <sboyd@kernel.org> and Rob Herring <robh@kernel.org>.
+> > 
+> > This patch series is also available, along with the DT macro prerequisite
+> > patch, at:
 > 
-> Harish Bandi (2):
->  Bluetooth: hci_qca: Added support for WCN3998
->  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
->    WCN3998
-> 
-> .../devicetree/bindings/net/qualcomm-bluetooth.txt |  5 +--
-> drivers/bluetooth/btqca.c                          |  7 ++--
-> drivers/bluetooth/btqca.h                          | 11 +++++-
-> drivers/bluetooth/hci_qca.c                        | 40 ++++++++++++++--------
-> 4 files changed, 43 insertions(+), 20 deletions(-)
+> Can you please send the dt macro patch along with the rest of the
+> patches? I can't apply these patches and build them without it.
 
-both patches have been applied to bluetooth-next tree.
+It's upstream now as commit 6ec4bae178d8 ("dt-bindings: clock: sifive: add 
+FU540-C000 PRCI clock constants")
 
-Regards
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6ec4bae178d8a1e9814eb3bfdd321b0475de0468
 
-Marcel
+
+- Paul
