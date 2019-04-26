@@ -1,93 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
-Date: Fri, 26 Apr 2019 13:05:09 -0500
-Message-ID: <20190426180509.GB19329@bogus>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-12-vidyas@nvidia.com>
- <20190426154519.GA19329@bogus>
- <20190426160723.GB3204@ulmo>
+Subject: Re: [PATCH v4 6/9] dt-bindings: display: hdmi-connector: Add DDC
+ power supply
+Date: Fri, 26 Apr 2019 13:23:37 -0500
+Message-ID: <20190426182337.GA22245@bogus>
+References: <20190413165418.27880-1-megous@megous.com>
+ <20190413165418.27880-7-megous@megous.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190426160723.GB3204@ulmo>
+In-Reply-To: <20190413165418.27880-7-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: megous@megous.com
+Cc: linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 06:07:23PM +0200, Thierry Reding wrote:
-> On Fri, Apr 26, 2019 at 10:45:19AM -0500, Rob Herring wrote:
-> > On Wed, Apr 24, 2019 at 10:49:59AM +0530, Vidya Sagar wrote:
-> > > Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-> > > module instantiated one for each PCIe lane between Synopsys Designware core
-> > > based PCIe IP and Universal PHY block.
-> > 
-> > Missing Sob.
-> > 
-> > > ---
-> > > Changes since [v4]:
-> > > * None
-> > > 
-> > > Changes since [v3]:
-> > > * None
-> > > 
-> > > Changes since [v2]:
-> > > * Changed node label to reflect new format that includes either 'hsio' or
-> > >   'nvhs' in its name to reflect which UPHY brick they belong to
-> > > 
-> > > Changes since [v1]:
-> > > * This is a new patch in v2 series
-> > > 
-> > >  .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-> > > new file mode 100644
-> > > index 000000000000..8b543cba483b
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-> > > @@ -0,0 +1,28 @@
-> > > +NVIDIA Tegra194 P2U binding
-> > > +
-> > > +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
-> > > +Speed) each interfacing with 12 and 8 P2U instances respectively.
-> > > +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
-> > > +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
-> > > +lane.
-> > > +
-> > > +Required properties:
-> > > +- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
-> > > +- reg: Should be the physical address space and length of respective each P2U
-> > > +       instance.
-> > > +- reg-names: Must include the entry "ctl".
-> > 
-> > -names is pointless when there is only 1.
+On Sat, Apr 13, 2019 at 06:54:15PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
 > 
-> We've occasionally done this in the past for other types of resources.
-> When we did it was to preempt having to verbosely describe exactly what
-> order -names entries need to be in if ever a new entry was required.
+> Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+> on-board voltage shifting logic for the DDC bus to be usable. Use
+> ddc-supply on the hdmi-connector to model this.
 > 
-> For example, if we document only one clock for a module and leave out
-> the clock-names property, then if ever we need to add another clock, it
-> means that clock-names must be documented in such a way that the "main"
-> clock (the one that was always documented) would need to be first in the
-> list of clock-names, so that it's matching entry in the clocks property
-> is at index 0, because that's effectively what the ABI is.
+> Add binding documentation for optional ddc-supply property.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+> index 508aee461e0d..33085aeb0bb9 100644
+> --- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+> +++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+> @@ -9,6 +9,7 @@ Optional properties:
+>  - label: a symbolic name for the connector
+>  - hpd-gpios: HPD GPIO number
+>  - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
+> +- ddc-supply: the power supply for the DDC bus
 
-The original clock at index 0 is part of the ABI with or without names 
-as long as that clock is always required.
+It's not just for DDC. It powers the chips in bridge dongles for 
+example. Pretty much every diagram I find just calls it 5V or +5V.
 
-The purpose of '*-names' was to handle cases with multiple combinations 
-of optional entries. That's the exception though and shouldn't be 
-necessary too often. Clocks was an exception because the kernel's 
-clock api required clock names (though only for more than 1). For the 
-rest, everyone loves making up names and bloating their DT. (The last 
-Plumbers had a discussion about replacing DT strings with numbers to 
-shrink them, so it's not a non-issue for some.)
-
-In any case, I only point this out if I have other comments and you all 
-can keep it if you want. I'm just not a fan.
+So how about '5V-supply' or 'v5V-supply'?
 
 Rob
