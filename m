@@ -1,36 +1,47 @@
-Return-Path: <SRS0=dDaQ=S7=nxp.com=haibo.chen@kernel.org>
-From: BOUGH CHEN <haibo.chen@nxp.com>
-Subject: [PATCH 3/3] ARM: dts: imx7s: set the tuning start tap for USDHC
-Date: Mon, 29 Apr 2019 12:38:03 +0000
-Message-ID: <20190429124547.19928-3-haibo.chen@nxp.com>
-References: <20190429124547.19928-1-haibo.chen@nxp.com>
-In-Reply-To: <20190429124547.19928-1-haibo.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=BEIL=S4=verge.net.au=horms@kernel.org>
+Date: Fri, 26 Apr 2019 11:41:12 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/5] Add TPU support for R-Car H3/M3-W/M3-N
+Message-ID: <20190426094112.r6nyvpnhcb2j4qv6@verge.net.au>
+References: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: linux-renesas-soc@vger.kernel.org, geert+renesas@glider.be, broonie@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Rm9yIFVTREhDIHN0YW5kYXJkIHR1bmluZyBtZXRob2QsIGkuTVg3RCByZXF1aXJlIHRoYXQgdGhl
-IHN0YXJ0IHRhcA0KcG9pbnQgbXVzdCBiZSBsYXJnZXIgdGhhbiAxMCwgb3RoZXJ3aXNlIHRoZSBp
-bnRlcm5hbCBJQyBsb2dpYyBjYW4ndA0Kd29yayBub3JtYWwuIFNvIHRoaXMgcGF0Y2ggc2V0IHRo
-ZSB0dW5pbmcgc3RhcnQgdGFwIGFzIDIwIGFjY29yZGluZw0KdG8gSUMgc3VnZ2VzdGlvbi4NCg0K
-U2lnbmVkLW9mZi1ieTogSGFpYm8gQ2hlbiA8aGFpYm8uY2hlbkBueHAuY29tPg0KLS0tDQogYXJj
-aC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaSB8IDMgKysrDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5z
-ZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaSBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdzLmR0c2kNCmluZGV4IDEwNjcxMWQyYzAxYi4uMTA4NjUy
-OTE1Zjk5IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaQ0KKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaQ0KQEAgLTExMjYsNiArMTEyNiw3IEBADQogCQkJ
-CQk8JmNsa3MgSU1YN0RfVVNESEMxX1JPT1RfQ0xLPjsNCiAJCQkJY2xvY2stbmFtZXMgPSAiaXBn
-IiwgImFoYiIsICJwZXIiOw0KIAkJCQlidXMtd2lkdGggPSA8ND47DQorCQkJCWZzbCx0dW5pbmct
-c3RhcnQtdGFwID0gPDIwPjsNCiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KIA0K
-QEAgLTExMzgsNiArMTEzOSw3IEBADQogCQkJCQk8JmNsa3MgSU1YN0RfVVNESEMyX1JPT1RfQ0xL
-PjsNCiAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiIsICJwZXIiOw0KIAkJCQlidXMtd2lk
-dGggPSA8ND47DQorCQkJCWZzbCx0dW5pbmctc3RhcnQtdGFwID0gPDIwPjsNCiAJCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KIA0KQEAgLTExNTAsNiArMTE1Miw3IEBADQogCQkJCQk8
-JmNsa3MgSU1YN0RfVVNESEMzX1JPT1RfQ0xLPjsNCiAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwg
-ImFoYiIsICJwZXIiOw0KIAkJCQlidXMtd2lkdGggPSA8ND47DQorCQkJCWZzbCx0dW5pbmctc3Rh
-cnQtdGFwID0gPDIwPjsNCiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KIA0KLS0g
-DQoyLjE3LjENCg0K
+Hi,
+
+On Thu, Apr 25, 2019 at 10:25:12AM +0900, Cao Van Dong wrote:
+> This series adds tpu support for r8a7795/r8a7796/r8a77965 SoCs.
+> Based on the renesas-drivers-2019-04-02-v5.1-rc3 tag of renesas-drivers tree.
+> For test, after booting, I found the device was registered in the booting log.
+
+Could you clarify some details of this test.
+
+Looking at the DTS patches I see 'status = "disabled";' for each
+of the newly added devices. So I would not expect them to be probed
+at run-time without some extra tweaking.
+
+> 
+> Cao Van Dong (5):
+>   clk: renesas: r8a779{5|6|65}: Add TPU clock
+>   arm64: dts: renesas: r8a7795: Add TPU support
+>   arm64: dts: renesas: r8a7796: Add TPU support
+>   arm64: dts: renesas: r8a77965: Add TPU support
+>   dt-bindings: pwm: renesas: tpu: Document R8A779{5|6|65} bindings
+> 
+>  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt |  3 +++
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi                  | 11 +++++++++++
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi                  | 11 +++++++++++
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi                 | 11 +++++++++++
+>  drivers/clk/renesas/r8a7795-cpg-mssr.c                    |  1 +
+>  drivers/clk/renesas/r8a7796-cpg-mssr.c                    |  1 +
+>  drivers/clk/renesas/r8a77965-cpg-mssr.c                   |  1 +
+>  7 files changed, 39 insertions(+)
+> 
+> -- 
+> 2.7.4
+> 
