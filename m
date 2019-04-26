@@ -1,91 +1,62 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/4] dt-bindings: mfd: Document Macronix MX25F0A
- controller bindings
-Date: Fri, 26 Apr 2019 17:41:36 -0500
-Message-ID: <20190426224136.GA636@bogus>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
- <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw>
+Subject: Re: [PATCH v3 1/3] dt-bindings: input: add Elan 400 combo
+ keyboard/touchpad over i2c
+Date: Fri, 26 Apr 2019 17:49:08 -0500
+Message-ID: <20190426224908.GA30389@bogus>
+References: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com>
+ <20190415161055.16372-1-jeffrey.l.hugo@gmail.com>
+ <CAO-hwJJ_BRRHL44yaZ=d_K-9iq1cyONn0rR+VW3ukW1M2Ma0ug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <CAO-hwJJ_BRRHL44yaZ=d_K-9iq1cyONn0rR+VW3ukW1M2Ma0ug@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>
-Cc: broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org, mark.rutland@arm.com, computersforpeace@gmal.com, paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com, liang.yang@amlogic.com, geert@linux-m68k.org, devicetree@vger.kernel.org, marcel.ziswiler@toradex.com, linux-mtd@lists.infradead.org, richard@nod.at, miquel.raynal@bootlin.com, juliensu@mxic.com.tw, zhengxunli@mxic.com.tw
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, mark.rutland@arm.com, Lee Jones <lee.jones@linaro.org>, bjorn.andersson@linaro.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, agross@kernel.org, David Brown <david.brown@linaro.org>, Jiri Kosina <jikos@kernel.org>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:23:54PM +0800, Mason Yang wrote:
-> Document the bindings used by the Macronix MX25F0A MFD controller.
+On Thu, Apr 18, 2019 at 11:35:42AM +0200, Benjamin Tissoires wrote:
+> On Mon, Apr 15, 2019 at 6:11 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > The Elan 400 combo keyboard/touchpad over i2c device is a distinct device
+> > from the Elan 400 standalone touchpad device.  The combo device has been
+> > found in the Lenovo Miix 630 and HP Envy x2 laptops.
+> >
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  .../devicetree/bindings/mfd/mxic-mx25f0a.txt       | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-> new file mode 100644
-> index 0000000..7f3e0f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-> @@ -0,0 +1,51 @@
-> +Macronix MX25F0A MultiFunction Device Tree Bindings
-> +----------------------------------------------------
-> +
-> +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
-> +supports either spi host controller or raw nand controller.
-> +
-> +Required properties:
-> +- compatible: should be "mxic,mx25f0a"
-> +- #address-cells: should be 1
-> +- #size-cells: should be 0
-> +- reg: should contain 2 entries, one for the registers and one for the direct
-> +       mapping area in SPI mode.
-> +- reg-names: should contain "regs" and "dirmap"
-> +- interrupts: interrupt line connected to this MFD controller
-> +- SPI controller driver:
-> +		- clock-names: should contain "ps_clk", "send_clk" and
-> +			       "send_dly_clk"
-> +		- clocks: should contain 3 entries for the "ps_clk", "send_clk"
-> +			  and "send_dly_clk" clocks
-> +
-> +- Raw nand controller driver.
-> +		- nand-ecc-mode = "soft";
-> +		- nand-ecc-algo = "bch";
-> +
-> +Example:
-> +
-> +	mxic: mx25f0a@43c30000 {
-> +		compatible = "mxic,mx25f0a";
-> +		reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-> +		reg-names = "regs", "dirmap";
-> +
-> +		/* spi */
-> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		flash@0 {
-> +			compatible = "jedec,spi-nor";
-> +			reg = <0>;
-> +			spi-max-frequency = <25000000>;
-> +			spi-tx-bus-width = <4>;
-> +			spi-rx-bus-width = <4>;
-> +		};
-> +
-> +		/* nand */
+> With my comments in 2/3, I wonder if you need this patch at all then.
 
-Don't you need a nand child node? I'm not sure how that's going to work 
-as you are already using the number space (i.e. reg) for SPI CS number 
-and you can't really mix number spaces within a node level.
+I don't really follow the discussion in 2/3, but you should still have 
+specific compatibles even if right now you don't need them.
 
-> +		nand-ecc-mode = "soft";
-> +		nand-ecc-algo = "bch";
-> +		nand-ecc-step-size = <512>;
-> +		nand-ecc-strength = <8>;
-> +	};
-> -- 
-> 1.9.1
 > 
+> Cheers,
+> Benjamin
+> 
+> >  .../devicetree/bindings/input/elan,combo400-i2c.txt   | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt b/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+> > new file mode 100644
+> > index 000000000000..fb700a29148d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+> > @@ -0,0 +1,11 @@
+> > +Elantech 0400 I2C combination Keyboard/Touchpad
+> > +
+> > +This binding describes an Elan device with pid 0x0400, that is a combination
+> > +keyboard + touchpad device.  This binding does not cover an Elan device with
+> > +pid 0x0400 that is solely a standalone touchpad device.
+> > +
+> > +Required properties:
+> > +- compatible: should be "elan,combo400-i2c"
+> > +
+> > +This binding is compatible with the HID over I2C binding, which is specified
+> > +in hid-over-i2c.txt in this directory.
+
+Separate is fine, but we've been adding compatibles to hid-over-i2c.txt.
+
+Rob
