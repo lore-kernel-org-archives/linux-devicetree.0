@@ -1,38 +1,66 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: Re: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
-Date: Fri, 26 Apr 2019 09:53:16 +0000
-Message-ID: <1556272020.951.1.camel@nxp.com>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
-         <1556265512-9130-7-git-send-email-yibin.gong@nxp.com>
-         <1556269635.2584.23.camel@pengutronix.de>
-         <1556270196.9298.16.camel@nxp.com>
-         <1556271442.2584.29.camel@pengutronix.de>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v6 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Fri, 26 Apr 2019 10:39:49 +0000
+Message-ID: <BYAPR07MB47095561D7C58860CD8C7400DD3E0@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1554882504-9010-1-git-send-email-pawell@cadence.com>
+ <1554882504-9010-2-git-send-email-pawell@cadence.com>
+ <d7ca7260-9337-0779-459b-bfed15113db0@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556271442.2584.29.camel@pengutronix.de>
+In-Reply-To: <d7ca7260-9337-0779-459b-bfed15113db0@ti.com>
 Content-Language: en-US
-Content-ID: <B1E243CA31B122469B45E9233F923901@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "plyatov@gmail.com" <plyatov@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wNC0yNiBhdCAxMTozNyArMDIwMCwgTHVjYXMgU3RhY2ggd3JvdGU6DQo+IEFtIEZy
-ZWl0YWcsIGRlbiAyNi4wNC4yMDE5LCAwOToyMiArMDAwMCBzY2hyaWViIFJvYmluIEdvbmc6DQo+
-ID4gDQo+ID4gT24gMjAxOS0wNC0yNiBhdCAxMTowNyArMDIwMCwgTHVjYXMgU3RhY2ggd3JvdGU6
-DQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gQW0gRnJlaXRhZywgZGVuIDI2LjA0LjIwMTksIDA4OjA1
-ICswMDAwIHNjaHJpZWIgUm9iaW4gR29uZzoNCj4gPiA+ID4gDQo+ID4gPiA+IMKgc3RhdGljIHZv
-aWQgbXg1MV9zZXR1cF93bWwoc3RydWN0IHNwaV9pbXhfZGF0YSAqc3BpX2lteCkNCj4gPiA+ID4g
-wqB7DQo+ID4gPiA+ICvCoMKgwqDCoMKgdTMyIHR4X3dtbCA9IDA7DQo+ID4gPiA+ICsNCj4gPiA+
-IFdpdGggYSB3bWwgb2YgMCB5b3UgbWlnaHQgc2V0IHRoZSBtYXhidXJzdCBvZiB0aGUgVFggZG1h
-IGNoYW5uZWwNCj4gPiA+IHRvDQo+ID4gPiBmaWZvc2l6ZSB0byBtaW5pbWl6ZSB0aGUgcGVyZm9y
-bWFuY2UgaW1wYWN0IG9mIHRoaXMgd29ya2Fyb3VuZC4NCj4gPiA+IA0KPiA+ID4gUmVnYXJkcywN
-Cj4gPiA+IEx1Y2FzDQo+ID4gVW5mb3J0dW5hdGVseSwgdGhpcyBpcyBhIE1VU1QgcGFydCBvZiBl
-cnJhdGEgd2hpY2ggY2F1c2UNCj4gPiBwZXJmb3JtYW5jZQ0KPiA+IGRyb3AuDQo+IEknbSBub3Qg
-dGFsa2luZyBhYm91dCBjaGFuZ2luZyB0aGUgV01MLCBidXQgd2hlbiB0aGUgV01MIG11c3QgYmUg
-MA0KPiB5b3UNCj4gY2FuIHNhZmVseSBpbmNyZWFzZSB0aGUgRE1BIGJ1cnN0IHNpemUgd2l0aG91
-dCBvdmVyZmxvd2luZyB0aGUgRklGTywNCj4gd2hpY2ggbWlnaHQgcmVjb3ZlciBzb21lIG9mIG9m
-IHRoZSBwZXJmb3JtYW5jZSBsb3NzLg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCkdvb2QgcG9p
-bnQsIHdpbGwgYWRkIGl0IGluIFYzLCB0aGFua3Mu
+SGkgUm9nZXIsDQoNCj5PbiAxMC8wNC8yMDE5IDEwOjQ4LCBQYXdlbCBMYXN6Y3phayB3cm90ZToN
+Cj4+IFRoaXMgcGF0Y2ggYWltIGF0IGRvY3VtZW50aW5nIFVTQiByZWxhdGVkIGR0LWJpbmRpbmdz
+IGZvciB0aGUNCj4+IENhZGVuY2UgVVNCU1MtRFJEIGNvbnRyb2xsZXIuDQo+Pg0KPj4gU2lnbmVk
+LW9mZi1ieTogUGF3ZWwgTGFzemN6YWsgPHBhd2VsbEBjYWRlbmNlLmNvbT4NCj4+IFJldmlld2Vk
+LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPj4NCj4+IC0tLQ0KPj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jZG5zLXVzYjMudHh0ICAgICB8IDMwICsrKysrKysrKysr
+KysrKysrKysNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKQ0KPj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NkbnMt
+dXNiMy50eHQNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3VzYi9jZG5zLXVzYjMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3VzYi9jZG5zLXVzYjMudHh0DQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXgg
+MDAwMDAwMDAwMDAwLi4xZDJiNDQ5ZTNjYjQNCj4+IC0tLSAvZGV2L251bGwNCj4+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2Rucy11c2IzLnR4dA0KPj4gQEAg
+LTAsMCArMSwzMCBAQA0KPj4gK0JpbmRpbmcgZm9yIHRoZSBDYWRlbmNlIFVTQlNTLURSRCBjb250
+cm9sbGVyDQo+PiArDQo+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICsgIC0gcmVnOiBQaHlz
+aWNhbCBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlciBh
+cmVhcy4NCj4+ICsJIENvbnRyb2xsZXIgaGFzIDMgZGlmZmVyZW50IHJlZ2lvbnM6DQo+PiArCSBy
+ZWdpb24gMSAtIEhPU1QgcmVnaXN0ZXJzIGFyZWENCj4+ICsJIHJlZ2lvbiAyIC0gREVWSUNFIHJl
+Z2lzdGVycyBhcmVhDQo+PiArCSByZWdpb24gMyAtIE9URy9EUkQgcmVnaXN0ZXJzIGFyZWENCj4+
+ICsgIC0gcmVnLW5hbWVzIC0gcmVnaXN0ZXIgbWVtb3J5IGFyZWEgbmFtZXM6DQo+PiArCSJ4aGNp
+IiAtIGZvciBIT1NUIHJlZ2lzdGVycyBzcGFjZQ0KPj4gKwkiZGV2IiAtIGZvciBERVZJQ0UgcmVn
+aXN0ZXJzIHNwYWNlDQo+PiArCSJvdGciIC0gZm9yIE9URy9EUkQgcmVnaXN0ZXJzIHNwYWNlDQo+
+PiArICAtIGNvbXBhdGlibGU6IFNob3VsZCBjb250YWluOiAiY2Rucyx1c2IzLTEuMC4wIiBvciAi
+Y2Rucyx1c2IzLTEuMC4xIg0KPj4gKyAgLSBpbnRlcnJ1cHRzOiBJbnRlcnJ1cHRzIHVzZWQgYnkg
+Y2RuczMgY29udHJvbGxlci4NCj4+ICsNCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4gKyAt
+IG1heGltdW0tc3BlZWQgOiB2YWxpZCBhcmd1bWVudHMgYXJlICJzdXBlci1zcGVlZCIsICJoaWdo
+LXNwZWVkIiBhbmQNCj4+ICsgICAgICAgICAgICAgICAgICAgImZ1bGwtc3BlZWQiOyByZWZlciB0
+byB1c2IvZ2VuZXJpYy50eHQNCj4+ICsgLSBkcl9tb2RlOiBTaG91bGQgYmUgb25lIG9mICJob3N0
+IiwgInBlcmlwaGVyYWwiIG9yICJvdGciLg0KPj4gKyAtIHBoeXM6IHJlZmVyZW5jZSB0byB0aGUg
+VVNCIFBIWQ0KPg0KPkluIHlvdXIgdGVzdCBwbGF0Zm9ybSBpcyB0aGlzIGEgMi4wUEhZIG9yIDMu
+MFBIWT8gVHlwaWNhbCBwbGF0Zm9ybXMgd2lsbCBoYXZlIGJvdGguDQo+SXMgdGhlcmUgYW55IHBv
+d2VyLW9uIHNlcXVlbmNpbmcgcmVxdWlyZW1lbnRzIGZvciBwb3dlcmluZyB1cCB0aGVzZSBQSFlz
+IHZzIHBvd2VyaW5nIHVwIHRoZSBjb250cm9sbGVyPw0KPg0KR2VuZXJhbGx5LCBteSB0ZXN0aW5n
+IHBsYXRmb3JtIGlzIGJhc2VkIG9uIFBDSWUsIHNvIEkgZG9u4oCZdCB1c2UgZHRzLiBQSFkgaW5p
+dGlhbGl6YXRpb24gb24gbXkgdGVzdGluZyBwbGF0Zm9ybSANCmhhcyBiZWVuIGhpZGRlbiBpbiBG
+UEdBIGltcGxlbWVudGF0aW9uLiBXZSBhcmUgdXNpbmcgRFRTIGluIHNpbXVsYXRpb24gYnV0IHRo
+ZXJlIHdlIGRvbid0IGhhdmUgYSBQSFlzLiANCg0KSSB0aGluayB0aGF0IHlvdSBoYXZlIHJpZ2h0
+LCBhbmQgd2Ugc2hvdWxkIGhhdmUgaGVyZSB0d28gVVNCMi4wIGFuZCBVU0IzLjAgcGh5LiANCkkg
+aGF2ZSB0byBsb29rIGF0IGhvdyBpdCBsb29rcyBpbiBvdGhlciBkcml2ZXJzIGFuZCBpbXByb3Zl
+IHRoaXMgdGhpcyBmaWxlIGFuZCBtYXliZSBDRE5TMyBkcml2ZXIgdG9vLiANCg0KPj4gKw0KPj4g
+K0V4YW1wbGU6DQo+PiArCXVzYkBmMzAwMDAwMCB7DQo+PiArCQljb21wYXRpYmxlID0gImNkbnMs
+dXNiMy0xLjAuMSI7DQo+PiArCQlpbnRlcnJ1cHRzID0gPFVTQl9JUlEgIDcgSVJRX1RZUEVfTEVW
+RUxfSElHSD47DQo+PiArCQlyZWcgPSA8MHhmMzAwMDAwMCAweDEwMDAwCS8qIG1lbW9yeSBhcmVh
+IGZvciBIT1NUIHJlZ2lzdGVycyAqLw0KPj4gKwkJCTB4ZjMwMTAwMDAgMHgxMDAwMAkvKiBtZW1v
+cnkgYXJlYSBmb3IgREVWSUNFIHJlZ2lzdGVycyAqLw0KPj4gKwkJCTB4ZjMwMjAwMDAgMHgxMDAw
+MD47CS8qIG1lbW9yeSBhcmVhIGZvciBPVEcvRFJEIHJlZ2lzdGVycyAqLw0KPj4gKwkJcmVnLW5h
+bWVzID0gInhoY2kiLCAiZGV2IiwgIm90ZyI7DQo+PiArCX07DQo+Pg0KPg0KDQpjaGVlcnMsDQpQ
+YXdlbA0KDQo=
