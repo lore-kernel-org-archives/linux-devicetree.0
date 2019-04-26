@@ -1,30 +1,25 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 2/3] dmaengine: imx-sdma: Only check ratio on parts
- that support 1:1
-Date: Fri, 26 Apr 2019 17:18:40 +0530
-Message-ID: <20190426114840.GV28103@vkoul-mobl>
-References: <20190328133828.20999-1-angus@akkea.ca>
- <20190329152130.18411-1-angus@akkea.ca>
- <20190329152130.18411-3-angus@akkea.ca>
+Subject: Re: [PATCH 1/1] dmaengine: mediatek-cqdma: fix wrong register usage
+ in mtk_cqdma_start
+Date: Fri, 26 Apr 2019 17:28:40 +0530
+Message-ID: <20190426115840.GA28103@vkoul-mobl>
+References: <1556164430-30724-1-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190329152130.18411-3-angus@akkea.ca>
+In-Reply-To: <1556164430-30724-1-git-send-email-shun-chih.yu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dan Williams <dan.j.williams@intel.com>, Lucas Stach <l.stach@pengutronix.de>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: shun-chih.yu@mediatek.com
+Cc: Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 29-03-19, 08:21, Angus Ainslie (Purism) wrote:
-> On imx8mq B0 chip, AHB/SDMA clock ratio 2:1 can't be supported,
-> since SDMA clock ratio has to be increased to 250Mhz, AHB can't reach
-> to 500Mhz, so use 1:1 instead.
+On 25-04-19, 11:53, shun-chih.yu@mediatek.com wrote:
+> From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
 > 
-> To limit this change to the imx8mq for now this patch also adds an
-> im8mq-sdma compatible string.
+> This patch fixes wrong register usage in the mtk_cqdma_start. The
+> destination register should be MTK_CQDMA_DST2 instead.
 
-Applied, thanks
-
+Applied and cced stable, thanks
 -- 
 ~Vinod
