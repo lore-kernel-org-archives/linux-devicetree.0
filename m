@@ -1,210 +1,131 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH] dt-bindings: Add silabs,si5341
-Date: Fri, 26 Apr 2019 06:51:15 +0000
-Message-ID: <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl>
- <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH v4 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Fri, 26 Apr 2019 07:02:24 +0000
+Message-ID: <OSBPR01MB210350ED8C36423BBF4A8FDFB83E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1556261237-13823-5-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1556261237-13823-5-git-send-email-chunfeng.yun@mediatek.com>
 Content-Language: en-US
-Content-ID: <5661B3941CCB9C4DA4362F19B93F6AB3@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYtMDQtMTkgMDE6MDQsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gUXVvdGluZyBNaWtlIExv
-b2lqbWFucyAoMjAxOS0wNC0yNCAwMjowMjoxNikNCj4+IEFkZHMgdGhlIGRldmljZXRyZWUgYmlu
-ZGluZ3MgZm9yIHRoZSBzaTUzNDEgZHJpdmVyIHRoYXQgc3VwcG9ydHMgdGhlDQo+PiBTaTUzNDEg
-YW5kIFNpNTM0MCBjaGlwcy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBNaWtlIExvb2lqbWFucyA8
-bWlrZS5sb29pam1hbnNAdG9waWMubmw+DQo+PiAtLS0NCj4+ICAgLi4uL2JpbmRpbmdzL2Nsb2Nr
-L3NpbGFicyxzaTUzNDEudHh0ICAgICAgICAgIHwgMTQxICsrKysrKysrKysrKysrKysrKw0KPj4g
-ICAxIGZpbGUgY2hhbmdlZCwgMTQxIGluc2VydGlvbnMoKykNCj4+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zaWxhYnMsc2k1MzQx
-LnR4dA0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svc2lsYWJzLHNpNTM0MS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvY2xvY2svc2lsYWJzLHNpNTM0MS50eHQNCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
-PiBpbmRleCAwMDAwMDAwMDAwMDAuLjFhMDBkZDgzMTAwZg0KPj4gLS0tIC9kZXYvbnVsbA0KPj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3NpbGFicyxzaTUz
-NDEudHh0DQo+PiBAQCAtMCwwICsxLDE0MSBAQA0KPj4gK0JpbmRpbmcgZm9yIFNpbGljb24gTGFi
-cyBTaTUzNDEgYW5kIFNpNTM0MCBwcm9ncmFtbWFibGUgaTJjIGNsb2NrIGdlbmVyYXRvci4NCj4+
-ICsNCj4+ICtSZWZlcmVuY2UNCj4+ICtbMV0gU2k1MzQxIERhdGEgU2hlZXQNCj4+ICsgICAgaHR0
-cHM6Ly93d3cuc2lsYWJzLmNvbS9kb2N1bWVudHMvcHVibGljL3JlZmVyZW5jZS1tYW51YWxzL1Np
-NTM0MS00MC1ELVJNLnBkZg0KPiANCj4gVGhhbmtzISBJIGFsc28gaGFkIHRvIGxvb2sgdXAgdGhl
-IHBpbm91dCBpbiB0aGUgZGF0YXNoZWV0LCBub3QgdGhlDQo+IHJlZmVyZW5jZSBtYW51YWwgYWJv
-dmUuDQoNCk5vdyB5b3UgbWVudGlvbiBpdCwgdGhpcyBpcyB0aGUgInJlZmVyZW5jZSBtYW51YWwi
-LCBub3QgdGhlIGRhdGFzaGVldC4gSSdsbCANCmFkZCBhIHJlZmVyZW5jZSB0byB0aGF0IGFzIHdl
-bGwuDQoNCj4+ICsNCj4+ICtUaGUgU2k1MzQxIGFuZCBTaTUzNDAgYXJlIHByb2dyYW1tYWJsZSBp
-MmMgY2xvY2sgZ2VuZXJhdG9ycyB3aXRoIHVwIHRvIDEwIG91dHB1dA0KPj4gK2Nsb2Nrcy4gVGhl
-IGNoaXAgY29udGFpbnMgYSBQTEwgdGhhdCBzb3VyY2VzIDUgKG9yIDQpIG11bHRpc3ludGggY2xv
-Y2tzLCB3aGljaA0KPj4gK2luIHR1cm4gY2FuIGJlIGRpcmVjdGVkIHRvIGFueSBvZiB0aGUgMTAg
-KG9yIDQpIG91dHB1dHMgdGhyb3VnaCBhIGRpdmlkZXIuDQo+PiArVGhlIGludGVybmFsIHN0cnVj
-dHVyZSBvZiB0aGUgY2xvY2sgZ2VuZXJhdG9ycyBjYW4gYmUgZm91bmQgaW4gWzFdLg0KPj4gKw0K
-Pj4gK1RoZSBkcml2ZXIgY2FuIGJlIHVzZWQgaW4gImFzIGlzIiBtb2RlLCByZWFkaW5nIHRoZSBj
-dXJyZW50IHNldHRpbmdzIGZyb20gdGhlDQo+PiArY2hpcCBhdCBib290LCBpbiBjYXNlIHlvdSBo
-YXZlIGEgKHByZS0pcHJvZ3JhbW1lZCBkZXZpY2UuIElmIHRoZSBQTEwgaXMgbm90DQo+PiArY29u
-ZmlndXJlZCB3aGVuIHRoZSBkcml2ZXIgcHJvYmVzLCBpdCBhc3N1bWVzIHRoZSBkcml2ZXIgbXVz
-dCBmdWxseSBpbml0aWFsaXplDQo+PiAraXQuDQo+PiArDQo+PiArVGhlIGRldmljZSB0eXBlLCBz
-cGVlZCBncmFkZSBhbmQgcmV2aXNpb24gYXJlIGRldGVybWluZWQgcnVudGltZSBieSBwcm9iaW5n
-Lg0KPj4gKw0KPj4gK1RoZSBkcml2ZXIgY3VycmVudGx5IG9ubHkgc3VwcG9ydHMgWFRBTCBpbnB1
-dCBtb2RlLCBhbmQgZG9lcyBub3Qgc3VwcG9ydCBhbnkNCj4+ICtmYW5jeSBpbnB1dCBjb25maWd1
-cmF0aW9ucy4gVGhleSBjYW4gc3RpbGwgYmUgcHJvZ3JhbW1lZCBpbnRvIHRoZSBjaGlwIGFuZA0K
-Pj4gK3RoZSBkcml2ZXIgd2lsbCBsZWF2ZSB0aGVtICJhcyBpcyIuDQo+PiArDQo+PiArPT1JMkMg
-ZGV2aWNlIG5vZGU9PQ0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiArLSBjb21w
-YXRpYmxlOiBzaGFsbCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzogInNpbGFicyxzaTUzNDEiLCAi
-c2lsYWJzLHNpNTM0MCINCj4+ICstIHJlZzogaTJjIGRldmljZSBhZGRyZXNzLCB1c3VhbGx5IDB4
-NzQNCj4+ICstICNjbG9jay1jZWxsczogZnJvbSBjb21tb24gY2xvY2sgYmluZGluZzsgc2hhbGwg
-YmUgc2V0IHRvIDEuDQo+PiArLSBjbG9ja3M6IGZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmc7IGxp
-c3Qgb2YgcGFyZW50IGNsb2NrDQo+PiArICBoYW5kbGVzLCBzaGFsbCBiZSB4dGFsIHJlZmVyZW5j
-ZSBjbG9jay4gVXN1YWxseSBhIGZpeGVkIGNsb2NrLg0KPiANCj4gSXMgdGhlcmUgb25seSBvbmUg
-cG9zc2libGUgY2xrIHBhcmVudD8gTG9va3MgbGlrZSB0aGVyZSdzIGFuIG9wdGlvbmFsDQo+IHh0
-YWwgb24gdGhlIFhBL1hCIHBpbnMgYW5kIHRoZW4gdXAgdG8gdGhyZWUgbW9yZSBpbnB1dCBjbGtz
-IG9uIElOMC8xLzIuDQo+IFNvIHNob3VsZG4ndCB0aGlzIGxpc3QgYWxsIG9mIHRob3NlIGFuZCB0
-aGVuIGluZGljYXRlIHRoYXQgYXQgbGVhc3Qgb25lDQo+IHNob3VsZCBiZSBzcGVjaWZpZWQgYXQg
-YWxsIHRpbWVzPw0KPiANCj4+ICstIGNsb2NrLW5hbWVzOiBTaGFsbCBiZSAieHRhbCIuDQo+IA0K
-PiBUaGlzIHNob3VsZCBpbmNsdWRlIHRoZSBvdGhlciBjbGsgaW5wdXRzPw0KDQpTb21lIGRheSBt
-YXliZS4gVGhhdCdzIHdoYXQgSSBtZWFudCB3aGVuIEkgd3JvdGUgImRvZXMgbm90IHN1cHBvcnQg
-YW55IGZhbmN5IA0KaW5wdXQgY29uZmlndXJhdGlvbnMiLg0KDQpUaGUgaW5wdXQgY29uZmlnIGlz
-IGhvcnJlbmRvdXNseSBjb21wbGV4LiBXZSBoYXZlIG5ldmVyIHVzZWQgYW55dGhpbmcgYnV0IGp1
-c3QgDQp0aGUgeHRhbCBpbnB1dCwgYW5kIEkgdGhpbmsgdGhhdCBnb2VzIGZvciA5OS45JSBvZiB0
-aGUgdXNlIGNhc2VzIGZvciB0aGlzIGNoaXAuDQoNCkkgYWxyZWFkeSB3ZW50IHdheSBvdmVyIGJ1
-ZGdldCB3aXRoIHRoaXMgb25lLCBteSBmaXJzdCBpbnRlbnRpb24gd2FzIHRvIHdyaXRlIA0KYSBk
-cml2ZXIgdGhhdCB0YWtlcyBhIGZpcm13YXJlIGJsb2IgZnJvbSB0aGUgImNsb2NrYnVpbGRlciIg
-c29mdHdhcmUsIGJ1dCANCndoaWxlIHdyaXRpbmcgaXQgSSBkaXNjb3ZlcmVkIHRoYXQgdGhlIHdo
-b2xlIGRhbW4gdGhpbmcgY291bGQgZWFzaWx5IGJlIA0KY29udHJvbGxlZCBjb21wbGV0ZWx5IHdp
-dGhvdXQgaXQuDQoNCj4gDQo+PiArLSAjYWRkcmVzcy1jZWxsczogc2hhbGwgYmUgc2V0IHRvIDEu
-DQo+PiArLSAjc2l6ZS1jZWxsczogc2hhbGwgYmUgc2V0IHRvIDAuDQo+IA0KPiBJJ2QgZXhwZWN0
-IHRvIHNlZSBhbGwgdGhlIGlucHV0IHZvbHRhZ2Ugc3VwcGxpZXMgaGVyZSB0b28uDQo+IA0KPiAJ
-dmRkLXN1cHBseQ0KPiAJdmRkYS1zdXBwbHkNCj4gCXZkZHMtc3VwcGx5DQo+IAl2ZGQwLXN1cHBs
-eQ0KPiAJdmRkMS1zdXBwbHkNCj4gCXZkZDItc3VwcGx5DQo+IAl2ZGQzLXN1cHBseQ0KPiAJdmRk
-NC1zdXBwbHkNCj4gCXZkZDUtc3VwcGx5DQo+IAl2ZGQ2LXN1cHBseQ0KPiAJdmRkNy1zdXBwbHkN
-Cj4gCXZkZDgtc3VwcGx5DQo+IAl2ZGQ5LXN1cHBseQ0KDQpJJ2xsIGxvb2sgaW50byBpdC4gTWln
-aHQgYmUgdXNlZnVsIGZvciBzb21lIHJlZ2lzdGVyIHNldHRpbmdzLg0KDQo+PiArDQo+PiArT3B0
-aW9uYWwgcHJvcGVydGllczoNCj4+ICstIHNpbGFicyxwbGwtbS1udW0sIHNpbGFicyxwbGwtbS1k
-ZW46IE51bWVyYXRvciBhbmQgZGVub21pbmF0b3IgZm9yIFBMTA0KPj4gKyAgZmVlZGJhY2sgZGl2
-aWRlci4gTXVzdCBiZSBzdWNoIHRoYXQgdGhlIFBMTCBvdXRwdXQgaXMgaW4gdGhlIHZhbGlkIHJh
-bmdlLiBGb3INCj4+ICsgIGV4YW1wbGUsIHRvIGNyZWF0ZSAxNEdIeiBmcm9tIGEgNDhNSHogeHRh
-bCwgdXNlIG0tbnVtPTE0MDAwIGFuZCBtLWRlbj00OC4gT25seQ0KPj4gKyAgdGhlIGZyYWN0aW9u
-IG1hdHRlcnMsIHVzaW5nIDM1MDAgYW5kIDEyIHdpbGwgZGVsaXZlciB0aGUgZXhhY3Qgc2FtZSBy
-ZXN1bHQuDQo+PiArICBJZiB0aGVzZSBhcmUgbm90IHNwZWNpZmllZCwgYW5kIHRoZSBQTEwgaXMg
-bm90IHlldCBwcm9ncmFtbWVkIHdoZW4gdGhlIGRyaXZlcg0KPj4gKyAgcHJvYmVzLCB0aGUgUExM
-IHdpbGwgYmUgc2V0IHRvIDE0R0h6Lg0KPiANCj4gQ2FuIHRoaXMgYmUgZG9uZSB2aWEgYXNzaWdu
-ZWQtY2xvY2stcmF0ZXM/IFBvc3NpYmx5IHdpdGggYSB0YWJsZSBpbiB0aGUNCj4gY2xrIGRyaXZl
-ciB0byB0ZWxsIHVzIGhvdyB0byBnZW5lcmF0ZSB0aG9zZSByYXRlcy4NCg0KVGhlIFBMTCBmcmVx
-dWVuY3kgY2hvaWNlIGRldGVybWluZXMgd2hvJ2xsIGdldCBqaXR0ZXIgYW5kIHdobyB3b24ndC4g
-SXQncyANCnJpZGljdWxvdXNseSBhY2N1cmF0ZSB0b28uDQoNCkZvciBleGFtcGxlLCBpZiB5b3Ug
-bmVlZCBhIDI2IE1IeiBhbmQgYSAxMDAgTUh6IG91dHB1dCwgdGhlcmUncyBubyBzb2x1dGlvbiAN
-CmZvciB0aGUgUExMIHRoYXQgbWFrZXMgYm90aCBjbG9ja3MgYW4gaW50ZWdlciBkaXZpZGVyIChT
-SSBpcyB2YWd1ZSBhYm91dCBpdCwgDQpidXQgYXBwYXJlbnRseSBpbnRlZ2VyIGRpdmlkZXJzIGhh
-dmUgbGVzcyBqaXR0ZXIgb24gb3V0cHV0KS4gT25seSB0aGUgZW5kdXNlciANCmNhbiBzYXkgd2hp
-Y2ggY2xvY2sgd2lsbCBnZXQgdGhlIGJldHRlciBxdWFsaXR5Lg0KDQo+IA0KPj4gKy0gc2lsYWJz
-LHJlcHJvZ3JhbTogV2hlbiBwcmVzZW50LCB0aGUgZHJpdmVyIHdpbGwgYWx3YXlzIGFzc3VtZSB0
-aGUgZGV2aWNlIG11c3QNCj4+ICsgIGJlIGluaXRpYWxpemVkLCBhbmQgYWx3YXlzIHBlcmZvcm1z
-IHRoZSBzb2Z0LXJlc2V0IHJvdXRpbmUuIFNpbmNlIHRoaXMgd2lsbA0KPj4gKyAgdGVtcG9yYXJp
-bHkgc3RvcCBhbGwgb3V0cHV0IGNsb2NrcywgZG9uJ3QgZG8gdGhpcyBpZiB0aGUgY2hpcCBpcyBn
-ZW5lcmF0aW5nDQo+PiArICB0aGUgQ1BVIGNsb2NrIGZvciBleGFtcGxlLg0KPiANCj4gQ291bGQg
-dGhpcyBiZSBkb25lIHdpdGggdGhlIHJlc2V0IGZyYW1ld29yaz8gSXQgYWxtb3N0IHNvdW5kcyBs
-aWtlIGlmDQo+IHRoZSBjbGsgaXMgYSBDTEtfSVNfQ1JJVElDQUwgdGhlbiB3ZSBzaG91bGRuJ3Qg
-ZG8gdGhlIHJlc2V0LCBvdGhlcndpc2UNCj4gd2UgcHJvYmFibHkgc2hvdWxkIHJlc2V0IHRoZSBj
-aGlwIHdoZW4gdGhlIGRyaXZlciBwcm9iZXMuIElmIHdlIGRvbid0DQo+IGhhdmUgYSBjYXNlIHdo
-ZXJlIGl0J3MgZ29pbmcgdG8gYmUgc3VwcGx5aW5nIGEgY3JpdGljYWwgY2xrIGZvciBhIGxvbmcN
-Cj4gdGltZSB0aGVuIHBlcmhhcHMgd2Ugc2hvdWxkbid0IGV2ZW4gY29uc2lkZXIgdGhpcyB0b3Bp
-YyB1bnRpbCBsYXRlci4NCg0KVGhlIGRyaXZlciBjYW4gc29ydCBvZiBzZWUgdGhhdCB0aGUgY2hp
-cHMgaXMgYWxyZWFkeSBjb25maWd1cmVkLiBUaGlzIHRlbGxzIA0KdGhlIGRyaXZlciB3aGV0aGVy
-IHRoYXQncyBleHBlY3RlZCBvciBqdXN0IGNvaW5jaWRlbmNlLg0KDQpNYXliZSBpdCdkIGJlIGNs
-ZWFyZXIgaWYgSSByZXZlcnNlZCB0aGUgbG9naWMgYW5kIG5hbWUgdGhpcyANCiJzaWxhYnMscHJl
-cHJvZ3JhbW1lZCIsIHdoaWNoIHdpbGwgc2tpcCB0aGUgZHJpdmVyJ3MgaW5pdGlhbGl6YXRpb24g
-cm91dGluZT8NCg0KDQo+IA0KPj4gKw0KPiANCj4gTG9va3MgbGlrZSB0aGVyZSBpcyBhbiBpbnRl
-cnJ1cHQgcGluPyBTbyB3ZSBuZWVkIGFuIG9wdGlvbmFsIGludGVycnVwdHMNCj4gcHJvcGVydHk/
-ICBBbHNvLCBhIHJlc2V0IHBpbiwgc28gbWF5YmUgYSAncmVzZXRzJyBwcm9wZXJ0eS4gVGhlcmUn
-cyBhbHNvDQo+IGFub3RoZXIgaW5wdXQgcGluIGZvciAnb3V0cHV0IGVuYWJsZScgd2hpY2ggbWF5
-YmUgc29tZW9uZSB3YW50cyB0byB1c2U/DQo+IFBsdXMgc29tZSBvdGhlciBwaW5zIHRvIGNvbnRy
-b2wgc3RlcCB1cC9kb3duIG9mIGZyZXF1ZW5jeSBhbmQgY2xvY2sNCj4gc3luY2hyb25pemF0aW9u
-PyBNYXliZSB0aG9zZSBzaG91bGQgYmUgb3B0aW9uYWwgZ3Bpb3MsIGJ1dCBpdCBwcm9iYWJseQ0K
-PiBjYW4gd2FpdCB1bnRpbCBsYXRlci4NCg0KVGhlcmUncyBpbmRlZWQgYW4gaW50ZXJydXB0LCB0
-aGF0IGNhbiB0ZWxsIHlvdSB3aGVuIGEgY2xvY2sgc3RvcHMgcnVubmluZy4NCg0KVGhlIGlzc3Vl
-IGhlcmUgaXMgdGhhdCBzdXBwb3J0aW5nIGFsbCB0aGF0IHRoZSBjaGlwIGNhbiBkbyBpbiBhIGRy
-aXZlciB3aWxsIA0KdGFrZSB3ZWVrcyBvZiBwcm9ncmFtbWluZywgd2hlcmVhcyB0aGUgYWRkZWQg
-dmFsdWUgaXMgbmV4dCB0byBub3RoaW5nLg0KDQpJIGFzc3VtZWQgdGhlIGVuYWJsZSwgc3RlcCwg
-YW5kIHNpbWlsYXIgcGlucyBhcmUgZm9yIGNwdS1sZXNzIG9wZXJhdGlvbiwgc2luY2UgDQp0aGV5
-IGRvbid0IGFkZCBhbnkgZnVuY3Rpb25hbGl0eSAoeW91IGNhbiBkbyBhbGwgdGhhdCB0aHJvdWdo
-IHRoZSBJMkMgaW50ZXJmYWNlKS4NCg0KDQo+IA0KPj4gKz09Q2hpbGQgbm9kZXM9PQ0KPj4gKw0K
-Pj4gK0VhY2ggb2YgdGhlIGNsb2NrIG91dHB1dHMgY2FuIGJlIG92ZXJ3cml0dGVuIGluZGl2aWR1
-YWxseSBieQ0KPj4gK3VzaW5nIGEgY2hpbGQgbm9kZSB0byB0aGUgSTJDIGRldmljZSBub2RlLiBJ
-ZiBhIGNoaWxkIG5vZGUgZm9yIGEgY2xvY2sNCj4+ICtvdXRwdXQgaXMgbm90IHNldCwgdGhlIGNv
-bmZpZ3VyYXRpb24gcmVtYWlucyB1bmNoYW5nZWQuDQo+PiArDQo+PiArUmVxdWlyZWQgY2hpbGQg
-bm9kZSBwcm9wZXJ0aWVzOg0KPj4gKy0gcmVnOiBudW1iZXIgb2YgY2xvY2sgb3V0cHV0Lg0KPj4g
-Kw0KPj4gK09wdGlvbmFsIGNoaWxkIG5vZGUgcHJvcGVydGllczoNCj4+ICstIHNpbGFicyxmb3Jt
-YXQ6IE91dHB1dCBmb3JtYXQsIHNlZSBbMV0sIDE9ZGlmZmVyZW50aWFsLCAyPWxvdy1wb3dlciwg
-ND1MVkNNT1MNCj4+ICstIHNpbGFicyxjb21tb24tbW9kZTogT3V0cHV0IGNvbW1vbiBtb2RlLCBk
-ZXBlbmRzIG9uIHN0YW5kYXJkLg0KPj4gKy0gc2lsYWJzLGFtcGxpdHVkZTogT3V0cHV0IGFtcGxp
-dHVkZSwgZGVwZW5kcyBvbiBzdGFuZGFyZC4NCj4+ICstIHNpbGFicyxzeW50aC1zb3VyY2U6IFNl
-bGVjdCB3aGljaCBtdWx0aXN5bnRoIHRvIHVzZSBmb3IgdGhpcyBvdXRwdXQNCj4+ICstIHNpbGFi
-cyxzeW50aC1mcmVxdWVuY3k6IFNldHMgdGhlIGZyZXF1ZW5jeSBmb3IgdGhlIG11bHRpc3ludGgg
-Y29ubmVjdGVkIHRvDQo+PiArICB0aGlzIG91dHB1dC4gVGhpcyB3aWxsIGFmZmVjdCBvdGhlciBv
-dXRwdXRzIGNvbm5lY3RlZCB0byB0aGlzIG11bHRpc3ludGguIFRoZQ0KPj4gKyAgc2V0dGluZyBp
-cyBhcHBsaWVkIGJlZm9yZSBzaWxhYnMsc3ludGgtbWFzdGVyIGFuZCBjbG9jay1mcmVxdWVuY3ku
-DQo+PiArLSBzaWxhYnMsc3ludGgtbWFzdGVyOiBJZiBwcmVzZW50LCB0aGlzIG91dHB1dCBpcyBh
-bGxvd2VkIHRvIGNoYW5nZSB0aGUNCj4+ICsgIG11bHRpc3ludGggZnJlcXVlbmN5IGR5bmFtaWNh
-bGx5Lg0KPiANCj4gVGhlc2UgYWJvdmUgcHJvcGVydGllcyBsb29rIGxpa2UgaGlnaGx5IGRldGFp
-bGVkIGNvbmZpZ3VyYXRpb24gZGF0YSB0bw0KPiBsZXQgdGhlIGRyaXZlciBjb25maWd1cmUgdGhl
-IGNsayBvdXRwdXQgZXhhY3RseSBob3cgaXQncyBzdXBwb3NlZCB0byBiZQ0KPiBjb25maWd1cmVk
-LiBDYW4gdGhlc2UgcHJvcGVydGllcyBiZSByZXdyaXR0ZW4gaW4gbW9yZSBoaWdoLWxldmVsIHRl
-cm1zDQo+IHRoYXQgYSBzeXN0ZW0gaW50ZWdyYXRvciB3b3VsZCB1bmRlcnN0YW5kPyBJZGVhbGx5
-LCBJIHNob3VsZG4ndCBoYXZlIHRvDQo+IHJlYWQgdGhlIGRhdGFzaGVldCBhbmQgdGhlIGRyaXZl
-ciBhbmQgdGhlbiBmaWd1cmUgb3V0IHdoYXQgRFQgcHJvcGVydGllcw0KPiBuZWVkIHRoZSB2YWx1
-ZXMgZnJvbSB0aGUgZGF0YXNoZWV0IGluIHRoZW0gc28gdGhhdCB0aGUgZHJpdmVyIHdyaXRlcw0K
-PiB0aGVtIHRvIGEgcGFydGljdWxhciByZWdpc3Rlci4gSSBkb24ndCBrbm93IGlmIHRoYXQncyBw
-b3NzaWJsZSBoZXJlLA0KPiBiZWNhdXNlIEkgaGF2ZW4ndCByZWFkIHRoZSBkcml2ZXIgb3IgdGhl
-IGRhdGFzaGVldCB0b28gY2xvc2VseSB5ZXQsIGJ1dA0KPiB0aGF0IHNob3VsZCBiZSB0aGUgZ29h
-bC4NCg0KVGhlIGRhdGFzaGVldCBpcyBub3QgdmVyeSBoZWxwZnVsIGluIHRoaXMgcmVnYXJkLiBT
-aWxhYnMganVzdCBhc3N1bWVzIHlvdSdsbCANCnVzZSB0aGVpciBjbG9ja2J1aWxkZXIgc29mdHdh
-cmUgZm9yIHdyaXRpbmcgdGhlc2UgdmFsdWVzLCB3aGljaCBpcyBob3cgd2UgZ290IA0KdG8gdGhl
-ICJMVkRTIDN2MyIgdmFsdWVzLg0KDQpJIGNvdWxkIHB1dCBpbiBhIHRhYmxlIG9mICJjb21tb24i
-IHZhbHVlcywgc28gdGhhdCB5b3UgY2FuIHNheToNCg0Kc2lsYWJzLG91dHB1dC1zdGFuZGFyZCA9
-ICJsdmRzIjsNCg0KQW5kIHRoZW4gdXNlIHRoZSAicmF3IiBwcm9wZXJ0aWVzIHRvIGV4cGFuZCBv
-ciBvdmVycmlkZSBvbiB0aGF0Lg0KDQpFeHRyYSBkZWZpbmVzIG1pZ2h0IGhlbHAsIGUuZy46DQoN
-CnNpbGFicyxmb3JtYXQgPSA8U0k1MzQxX0ZPUk1BVF9ESUZGRVJFTlRJQUw+Ow0KDQo+PiArLSBj
-bG9jay1mcmVxdWVuY3k6IFNldHMgYSBkZWZhdWx0IGZyZXF1ZW5jeSBmb3IgdGhpcyBvdXRwdXQu
-DQo+IA0KPiBXaHkgbm90IHVzZSBhc3NpZ25lZC1jbG9jay1yYXRlcz8NCg0KU3VwcG9zZSB5b3Ug
-d2FudCB0byBoYXZlIGEgc3luY2hyb25pemVkIGF1ZGlvIGFuZCB2aWRlbyBjbG9jay4gVGhlIGF1
-ZGlvIG5lZWRzIA0KYSAxNTM2MDAwIEh6IGNsb2NrIGFuZCB2aWRlbyB3YW50cyAzNjg2NDAwMC4g
-VGhlIGNsb2NrcyBtdXN0IGhhdmUgdGhlIHNhbWUgDQpwYXJlbnQgKHNvIHRoZXkgZG9uJ3QgZHJp
-ZnQpLg0KDQpXaXRob3V0IHByZS1zcGVjaWZ5aW5nIHRoZSBjbG9ja3MsIHRoZSB2aWRlbyBtaWdo
-dCBwcm9iZSBmaXJzdCBhbmQgY2hhbmdlIHRoZSANCnN5bnRoIHRvIHJ1biBhdCA3MzcyODAwMC4g
-VGhlIGF1ZGlvIGNsb2NrIHdpbGwgdGhlbiBydW4gYXQgc29tZSB1bmRlZmluZWQgDQpmcmVxdWVu
-Y3kgdW50aWwgdGhlIGRyaXZlciBwcm9iZXMuIFRoZSBhdWRpbyBoYXJkd2FyZSBtYXkgbm90IGxp
-a2UgdGhhdC4NCg0KSWYgdGhlIGF1ZGlvIHByb2JlcyBmaXJzdCwgaXQgY291bGQgcHJvZ3JhbSB0
-aGUgc3ludGggdG8gMzA3MjAwMCBmb3IgZXhhbXBsZS4gDQpUaGVuIHdoZW4gdGhlIHZpZGVvIHBy
-b2JlcywgaXQgbmVlZHMgdG8gcmUtcHJvZ3JhbSB0aGUgc3ludGgsIGFuZCB0aGVuIHRoZSANCmF1
-ZGlvIG11c3QgYWRhcHQgaXRzIGRpdmlkZXIuDQoNCkFub3RoZXIgZXhhbXBsZSwgYSBzZXJkZXMg
-bmVlZHMgYSAxMDBNSHogY2xvY2suIFRoaXMgY291bGQgc2V0IHRoZSBzeW50aCB0byANCjIwME1I
-eiwgYW5kIHRoYXQncyBmaW5lLiBBbm90aGVyIGRldmljZSBuZWVkcyBhIDIwME1IeiBjbG9jay4g
-VGhpcyBjYW4gc2hhcmUgDQp0aGUgc2FtZSBzeW50aCwgYnkgcHJvZ3JhbW1pbmcgaXQgdG8gNDAw
-TUh6IHVzaW5nIGEgLzQgYW5kIC8yIGRpdmlkZXIuIEJ1dCBpZiANCnRoYXQgMTAwTUh6IHNlcmRl
-cyBpcyBhbHJlYWR5IHVwIGFuZCBydW5uaW5nLCBjaGFuZ2luZyB0aGUgc3ludGggY29uZmlnIHdp
-bGwgDQpjYXVzZSB0aGUgc2VyZGVzIHRvIGxvc2UgaXRzIGxvY2sgYW5kIHJlc3VsdCBpbiB0cmFu
-c2ZlciBlcnJvcnMuIFRoaXMgd291bGQgDQpub3QgaGFwcGVuIGlmIHRoZSAyMDBNSHogZGV2aWNl
-IGhhcHBlbnMgdG8gcHJvYmUgYmVmb3JlIHRoYXQgc2VyZGVzLiBUaGUgDQpzb2x1dGlvbiBwcm92
-aWRlZCBieSB0aGUgZHJpdmVyIGlzIHRoYXQgeW91IGNhbiBwcmUtc2V0IHRoZSBzeW50aCB0byA0
-MDAgYW5kIA0KdGhlbiBib3RoIGRyaXZlcnMgY2FuIHByb2JlIGluIGFueSBvcmRlciB0aGV5IGxp
-a2UuDQoNCldoaWxlIHRoZSBkcml2ZXIgY2FuIGNoYW5nZSB0aGUgbXV4aW5nIGFuZCBkaXZpZGVy
-cyBhbmQgbXVsdGlwbGllcnMsIHRoZXJlJ3MgDQptb3JlIHRvIGl0IHRoYXQganVzdCAiZ2ltbWUg
-YSBmcmVxdWVuY3kiLiBTbyBJIGxldCB0aGUgdXNlciBkZXNjcmliZSBhIA0KKHBhcnRpYWwpIHNv
-bHV0aW9uIGluIHRoZSBkZXZpY2V0cmVlLg0KDQo+PiArLSBhbHdheXMtb246IEltbWVkaWF0ZWx5
-IGFuZCBwZXJtYW5lbnRseSBlbmFibGUgdGhpcyBvdXRwdXQuIFBhcnRpY3VsYXJ5DQo+PiArICB1
-c2VmdWwgd2hlbiBjb21iaW5lZCB3aXRoIGFzc2lnbmVkLWNsb2Nrcywgc2luY2UgdGhhdCBkb2Vz
-IG5vdCBwcmVwYXJlIGNsb2Nrcy4NCj4gDQo+IExvb2tzIGxpa2UgeW91IHdhbnQgQ0xLX0lTX0NS
-SVRJQ0FMIGluIERULiBXZSd2ZSBoYWQgdGhhdCBkaXNjdXNzaW9uDQo+IGJlZm9yZSBidXQgbWF5
-YmUgd2Ugc2hvdWxkIHJldmlzaXQgaXQgaGVyZSBhbmQgYWRkIGEgd2F5IHRvIGluZGljYXRlDQo+
-IHRoYXQgc29tZSBjbGsgc2hvdWxkIG5ldmVyIGJlIHR1cm5lZCBvZmYgaW5zdGVhZCBvZiBhc3N1
-bWluZyB0aGF0IHdlDQo+IGNhbiBkbyB0aGlzIGZyb20gQyBjb2RlIGFsbCB0aGUgdGltZS4NCg0K
-TXkgaXNzdWUgd2FzIHRoYXQgYXNzaWduZWQtY2xvY2tzIGRvZXMgbm90IGNhbGwgY2xrX3ByZXBh
-cmUuIElmIHRoZSBjbG9jayBpcyANCm5vdCBydW5uaW5nLCBhc3NpZ25lZC1jbG9ja3Mgd2lsbCBu
-b3QgdHVybiBpdCBvbiAoYXQgbGVhc3QsIHRoYXQgaXMgdGhlIGNhc2UgDQpvbiB0aGUgNC4xNCBr
-ZXJuZWwgSSB0ZXN0ZWQgdGhpcyBvbiksIGl0IGFwcGFyZW50bHkgb25seSBwcmV2ZW50cyBpdCBm
-cm9tIA0KYmVpbmcgdHVybmVkIG9mZiBieSBtYXJraW5nIGl0IGFzICJpbiB1c2UiLiBUaGlzIGp1
-c3QgcHJvdmlkZXMgYSB3YXkgdG8gdXNlIA0KYXNzaWduZWQtY2xvY2tzLg0KDQoNCg==
+Hi Chunfeng Yun,
+
+Thanks for the patch.
+
+> Subject: [PATCH v4 4/6] usb: roles: add API to get usb_role_switch by node
+> 
+> Add fwnode_usb_role_switch_get() to make easier to get usb_role_switch
+> by fwnode which register it.
+> It's useful when there is not device_connection registered between two
+> drivers and only knows the fwnode which register usb_role_switch.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Tested-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> v4 changes:
+>   1. use switch_fwnode_match() to find fwnode suggested by Heikki
+>   2. this patch now depends on [1]
+> 
+>  [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+>     https://patchwork.kernel.org/patch/10909971/
+> 
+> v3 changes:
+>   1. use fwnodes instead of node suggested by Andy
+>   2. rebuild the API suggested by Heikki
+> 
+> v2 no changes
+> ---
+>  drivers/usb/roles/class.c | 25 +++++++++++++++++++++++++
+> include/linux/usb/role.h  |  8 ++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c index
+> f45d8df5cfb8..994fcb979795 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+
+Is it required?
+
+>  #include <linux/slab.h>
+> 
+>  static struct class *role_class;
+> @@ -135,6 +136,30 @@ struct usb_role_switch *usb_role_switch_get(struct
+> device *dev)  }  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+> 
+> +/**
+> + * fwnode_usb_role_switch_get - Find USB role switch by it's parent
+> +fwnode
+> + * @fwnode: The fwnode that register USB role switch
+> + *
+> + * Finds and returns role switch registered by @fwnode. The reference
+> +count
+> + * for the found switch is incremented.
+> + */
+> +struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode) {
+> +	struct usb_role_switch *sw;
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(role_class, NULL, fwnode,
+> switch_fwnode_match);
+> +	if (!dev)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	sw = to_role_switch(dev);
+> +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> +
+> +	return sw;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+> +
+>  /**
+>   * usb_role_switch_put - Release handle to a switch
+>   * @sw: USB Role Switch
+> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h index
+> da2b9641b877..35d460f9ec40 100644
+> --- a/include/linux/usb/role.h
+> +++ b/include/linux/usb/role.h
+> @@ -48,6 +48,8 @@ int usb_role_switch_set_role(struct usb_role_switch
+> *sw, enum usb_role role);  enum usb_role usb_role_switch_get_role(struct
+> usb_role_switch *sw);  struct usb_role_switch *c(struct
+> device *dev);  void usb_role_switch_put(struct usb_role_switch *sw);
+> +struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+
+>  struct usb_role_switch *
+>  usb_role_switch_register(struct device *parent, @@ -72,6 +74,12 @@ static
+> inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> 
+>  static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+> 
+> +static inline struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode) {
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+
+>  static inline struct usb_role_switch *
+>  usb_role_switch_register(struct device *parent,
+>  			 const struct usb_role_switch_desc *desc)
+> --
+> 2.21.0
