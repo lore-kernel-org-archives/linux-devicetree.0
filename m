@@ -1,48 +1,45 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: Re: [PATCH v2 3/4] media: dt-bindings: aspeed-video: Add missing
- memory-region property
-Date: Fri, 26 Apr 2019 09:11:31 -0500
-Message-ID: <6fd356ba-815b-aa34-abd4-d3709daf453a@linux.ibm.com>
-References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
- <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
- <20190424211732.GA18914@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Enrico Weigelt, metux IT consult" <info@metux.net>
+Subject: [PATCH v2] mod_devicetable: helper macro for declaring oftree module device table
+Date: Fri, 26 Apr 2019 16:16:23 +0200
+Message-ID: <1556288183-5782-1-git-send-email-info@metux.net>
+References: <1556104081-16217-1-git-send-email-info@metux.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424211732.GA18914@bogus>
-Content-Language: en-US
+In-Reply-To: <1556104081-16217-1-git-send-email-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Little helper macro that declares an oftree module device table,
+if CONFIG_OF is enabled. Otherwise it's just noop.
 
-On 4/24/19 4:17 PM, Rob Herring wrote:
-> On Wed, 24 Apr 2019 10:16:59 -0500, Eddie James wrote:
->> Missed documenting this property in the initial commit.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->> Changes since v1:
->>   - Add missing semi-colon
->>
->>   Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+This is also helpful if some drivers can be built w/ or w/o
+oftree support.
 
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ include/linux/mod_devicetable.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Yes, I left it off because I added a semi-colon (trivial, I know, but it 
-did change). The change log is there below the commit message.
-
-Thanks,
-
-Eddie
-
-
->
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 448621c..853e301 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -245,6 +245,15 @@ struct of_device_id {
+ 	const void *data;
+ };
+ 
++/*
++ * macro for adding the of module device table only if CONFIG_OF enabled
++ */
++#ifdef CONFIG_OF
++#define MODULE_DEVICE_TABLE_OF(name)	MODULE_DEVICE_TABLE(of,name)
++#else
++#define MODULE_DEVICE_TABLE_OF(name)
++#endif /* CONFIG_OF */
++
+ /* VIO */
+ struct vio_device_id {
+ 	char type[32];
+-- 
+1.9.1
