@@ -1,54 +1,27 @@
-From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH V8 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Fri, 26 Apr 2019 20:50:18 +0000
-Message-ID: <1556311794-14708-4-git-send-email-Frank.Li@nxp.com>
-References: <1556311794-14708-1-git-send-email-Frank.Li@nxp.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCHv1 0/2] qcom: pms405: adc fixes
+Date: Sat, 27 Apr 2019 02:38:50 +0530
+Message-ID: <CAHLCerMtsBUi_suDKVNgG29GWHFxWd16ZbbWZoop2Wb+7B44DQ@mail.gmail.com>
+References: <cover.1553088982.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1556311794-14708-1-git-send-email-Frank.Li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Frank Li <frank.li@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1553088982.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DDR perf counter driver maintainer information
+On Wed, Mar 20, 2019 at 7:10 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> A couple of fixes to the adc node in PMS405 to get thermistors to work
+> correctly.
+>
+> Amit Kucheria (2):
+>   arm64: dts: qcom: pms405: calibrate the VADC correctly
+>   arm64: dts: qcom: pms405: Rename adc outputs as per schematics
+>
+>  arch/arm64/boot/dts/qcom/pms405.dtsi | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-No change from v1 to v8
-
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2c7d4e1..6a9868b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6264,6 +6264,13 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-cpm.c
- 
-+FREESCALE IMX DDR Performance Monitor DRIVER
-+M:	Frank Li <Frank.li@nxp.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	drivers/perf/fsl_imx8_ddr_perf.c
-+F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-+
- FREESCALE IMX LPI2C DRIVER
- M:	Dong Aisheng <aisheng.dong@nxp.com>
- L:	linux-i2c@vger.kernel.org
--- 
-2.5.2
+Ping!
