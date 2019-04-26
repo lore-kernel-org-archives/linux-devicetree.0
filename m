@@ -1,80 +1,37 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache Controller
-Date: Fri, 26 Apr 2019 11:20:17 +0530
-Message-ID: <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
-References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
- <1556171696-7741-2-git-send-email-yash.shah@sifive.com> <20190425101318.GA8469@e107155-lin>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
+Date: Fri, 26 Apr 2019 05:54:26 +0000
+Message-ID: <20190426055558.44544-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190425101318.GA8469@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
-> > Add device tree bindings for SiFive FU540 L2 cache controller driver
-> >
-> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > ---
-> >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > new file mode 100644
-> > index 0000000..15132e2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > @@ -0,0 +1,53 @@
-> > +SiFive L2 Cache Controller
-> > +--------------------------
-> > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
-> > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
-> > +acts as directory-based coherency manager.
-> > +
-> > +Required Properties:
-> > +--------------------
-> > +- compatible: Should be "sifive,fu540-c000-ccache"
-> > +
-> > +- cache-block-size: Specifies the block size in bytes of the cache
-> > +
-> > +- cache-level: Should be set to 2 for a level 2 cache
-> > +
-> > +- cache-sets: Specifies the number of associativity sets of the cache
-> > +
-> > +- cache-size: Specifies the size in bytes of the cache
-> > +
-> > +- cache-unified: Specifies the cache is a unified cache
-> > +
-> > +- interrupt-parent: Must be core interrupt controller
-> > +
-> > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
-> > +
-> > +- reg: Physical base address and size of L2 cache controller registers map
-> > +
-> > +- reg-names: Should be "control"
-> > +
->
-> It would be good if you mark the properties that are present in DT
-> specification and those that are added for sifive,fu540-c000-ccache
-
-I believe there isn't any property which is added explicitly for
-sifive,fu540-c000-ccache.
-
-> explicitly. Also I assume you can retain the stardard "cache" compatible
-> in addition to above. I am interested to see if the cacheinfo infrastructure
-> can be used without any issues.
-
-Yes, I will add the "cache" string to the compatible property.
-
->
-> --
-> Regards,
-> Sudeep
-
-Thanks for your comments.
-- Yash
+VGhpcyBwYXRjaCBhZGRzIFVTQiBkdCBub2RlcyBmb3IgTFMxMDI4QS4NCg0KU2lnbmVkLW9mZi1i
+eTogUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhwLmNvbT4NCi0tLQ0KQ2hhbmdlcyBpbiB2MjoNCiAg
+LSBSZW5hbWUgbm9kZSBmcm9tIHVzYjNALi4uIHRvIHVzYkAuLi4gdG8gbWVldCBEVFNwZWMNCg0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAgIDIwICsr
+KysrKysrKysrKysrKysrKysrDQogMSBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAw
+IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvZnNsLWxzMTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
+czEwMjhhLmR0c2kNCmluZGV4IDhkZDM1MDEuLjE4OGNmYjggMTAwNjQ0DQotLS0gYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQorKysgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQpAQCAtMTQ0LDYgKzE0NCwyNiBA
+QA0KIAkJCWNsb2NrcyA9IDwmc3lzY2xrPjsNCiAJCX07DQogDQorCQl1c2IwOnVzYkAzMTAwMDAw
+IHsNCisJCQljb21wYXRpYmxlPSAic25wcyxkd2MzIjsNCisJCQlyZWc9IDwweDAgMHgzMTAwMDAw
+IDB4MCAweDEwMDAwPjsNCisJCQlpbnRlcnJ1cHRzPSA8MCA4MCAweDQ+Ow0KKwkJCWRyX21vZGU9
+ICJob3N0IjsNCisJCQlzbnBzLGRpc19yeGRldF9pbnAzX3F1aXJrOw0KKwkJCXNucHMscXVpcmst
+ZnJhbWUtbGVuZ3RoLWFkanVzdG1lbnQgPSA8MHgyMD47DQorCQkJc25wcyxpbmNyLWJ1cnN0LXR5
+cGUtYWRqdXN0bWVudCA9IDwxPiwgPDQ+LCA8OD4sIDwxNj47DQorCQl9Ow0KKw0KKwkJdXNiMTp1
+c2JAMzExMDAwMCB7DQorCQkJY29tcGF0aWJsZT0gInNucHMsZHdjMyI7DQorCQkJcmVnPSA8MHgw
+IDB4MzExMDAwMCAweDAgMHgxMDAwMD47DQorCQkJaW50ZXJydXB0cz0gPDAgODEgMHg0PjsNCisJ
+CQlkcl9tb2RlPSAiaG9zdCI7DQorCQkJc25wcyxkaXNfcnhkZXRfaW5wM19xdWlyazsNCisJCQlz
+bnBzLHF1aXJrLWZyYW1lLWxlbmd0aC1hZGp1c3RtZW50ID0gPDB4MjA+Ow0KKwkJCXNucHMsaW5j
+ci1idXJzdC10eXBlLWFkanVzdG1lbnQgPSA8MT4sIDw0PiwgPDg+LCA8MTY+Ow0KKwkJfTsNCisN
+CiAJCWkyYzA6IGkyY0AyMDAwMDAwIHsNCiAJCQljb21wYXRpYmxlID0gImZzbCx2ZjYxMC1pMmMi
+Ow0KIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KLS0gDQoxLjcuMQ0KDQo=
