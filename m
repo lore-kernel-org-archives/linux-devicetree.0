@@ -1,95 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 4/5] dt-bindings: mtd: Add bindings for TI's AM654
- HyperBus memory controller
-Date: Fri, 26 Apr 2019 15:20:25 -0500
-Message-ID: <20190426202025.GA24486@bogus>
-References: <20190423104814.5762-1-vigneshr@ti.com>
- <20190423104814.5762-5-vigneshr@ti.com>
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+Subject: Re: [PATCH v6 01/17] media: videodev2.h, v4l2-ioctl: add rkisp1
+ meta buffer format
+Date: Fri, 26 Apr 2019 16:34:10 -0400
+Message-ID: <2367b550d815bdf4c50aae692a5549f9be6a0802.camel@ndufresne.ca>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+         <20180308094807.9443-2-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-mOui5ucgkVhFyJMZ5z0C"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190423104814.5762-5-vigneshr@ti.com>
+In-Reply-To: <20180308094807.9443-2-jacob-chen@iotwrt.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 04:18:13PM +0530, Vignesh Raghavendra wrote:
-> Add binding documentation for TI's HyperBus memory controller present on
-> AM654 SoC.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+--=-mOui5ucgkVhFyJMZ5z0C
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le jeudi 08 mars 2018 =C3=A0 17:47 +0800, Jacob Chen a =C3=A9crit :
+> From: Shunqian Zheng <zhengsq@rock-chips.com>
+>=20
+> Add the Rockchip ISP1 specific processing parameter format
+> V4L2_META_FMT_RK_ISP1_PARAMS and metadata format
+> V4L2_META_FMT_RK_ISP1_STAT_3A for 3A.
+>=20
+> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 > ---
->  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 32 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-> new file mode 100644
-> index 000000000000..fc87c7918389
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-> @@ -0,0 +1,32 @@
-> +Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+>  include/uapi/linux/videodev2.h       | 4 ++++
+>  2 files changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-co=
+re/v4l2-ioctl.c
+> index 1be54429d601..bdd469290d66 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1257,6 +1257,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *f=
+mt)
+>  	case V4L2_META_FMT_VSP1_HGO:	descr =3D "R-Car VSP1 1-D Histogram"; brea=
+k;
+>  	case V4L2_META_FMT_VSP1_HGT:	descr =3D "R-Car VSP1 2-D Histogram"; brea=
+k;
+>  	case V4L2_META_FMT_UVC:		descr =3D "UVC payload header metadata"; break=
+;
+> +	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr =3D "Rockchip ISP1 3A params";=
+ break;
+> +	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr =3D "Rockchip ISP1 3A statist=
+ics"; break;
+> =20
+>  	default:
+>  		/* Compressed formats */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev=
+2.h
+> index e20d10df75c1..359ad8bbf9bf 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -698,6 +698,10 @@ struct v4l2_pix_format {
+>  #define V4L2_META_FMT_VSP1_HGT    v4l2_fourcc('V', 'S', 'P', 'T') /* R-C=
+ar VSP1 2-D Histogram */
+>  #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC=
+ Payload Header metadata */
+> =20
+> +/* Vendor specific - used for IPU3 camera sub-system */
+
+Did you mean "RK_ISP1 camera sub-system" ?
+
+> +#define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* =
+Rockchip ISP1 params */
+> +#define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /*=
+ Rockchip ISP1 3A statistics */
 > +
-> +Required properties:
-> +- compatible : "ti,am654-hbmc" for AM654 SoC
-> +- reg : Two entries:
-> +	First entry pointed to the register space of HBMC controller
-> +	Second entry pointing to the memory map region dedicated for
-> +	MMIO access to attached flash devices
-> +- ranges : Address range allocated for each chipselect in the MMIO space
-> +
-> +Optional properties:
-> +- mux-controls : phandle to the multiplexer that controls selection of
-> +		 HBMC vs OSPI. Mux state of 1 indicates HBMC is selected.
+>  /* priv field value to indicates that subsequent fields are valid. */
+>  #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+> =20
 
-So 1 is also the default because your example doesn't have the property?
+--=-mOui5ucgkVhFyJMZ5z0C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> +
-> +Example:
-> +
-> +	hbmc: hbmc@47034000 {
-> +		compatible = "ti,am654-hbmc";
-> +		reg = <0x0 0x47034000 0x0 0x100>,
-> +			<0x5 0x00000000 0x1 0x0000000>;
-> +		power-domains = <&k3_pds 55>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-> +			 <0x1 0x5 0x04000000 0x4000000>; /* CS1 - 64MB
+-----BEGIN PGP SIGNATURE-----
 
-This is wrong. You need 2 cells for the child address. The first cell is 
-the CS and the 2nd cell is the offset (typically 0). Otherwise you have 
-overlapping addresses with child addresses 0 and 1.
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXMNrQgAKCRBxUwItrAao
+HMr/AKCH5EVntTk1jT5u0f41G/tqfeI+CwCgwiiFz0hcOaFAjBEJIqWm5+mUPpM=
+=9X8/
+-----END PGP SIGNATURE-----
 
-> +
-> +		/* Slave flash node */
-> +		flash@0 {
-
-And then the unit-address here would be '0,0'.
-
-> +			compatible = "cypress,hyperflash";
-
-Doesn't match what you defined for this binding.
-
-> +			reg = <0x0 0x4000000>;
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a5f22f85c848..1ade81f9a32a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7258,6 +7258,7 @@ S:	Supported
->  F:	drivers/mtd/hyperbus/
->  F:	include/linux/mtd/hyperbus.h
->  F:	Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
-> +F:	Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->  
->  HYPERVISOR VIRTUAL CONSOLE DRIVER
->  L:	linuxppc-dev@lists.ozlabs.org
-> -- 
-> 2.21.0
-> 
+--=-mOui5ucgkVhFyJMZ5z0C--
