@@ -1,82 +1,42 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache
- Controller
-Date: Fri, 26 Apr 2019 10:34:14 +0100
-Message-ID: <20190426093358.GA28309@e107155-lin>
-References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
- <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
- <20190425101318.GA8469@e107155-lin>
- <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
+Date: Fri, 26 Apr 2019 11:37:22 +0200
+Message-ID: <1556271442.2584.29.camel@pengutronix.de>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+         <1556265512-9130-7-git-send-email-yibin.gong@nxp.com>
+         <1556269635.2584.23.camel@pengutronix.de>
+         <1556270196.9298.16.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
+In-Reply-To: <1556270196.9298.16.camel@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Sudeep Holla <sudeep.holla@arm.com>
+To: Robin Gong <yibin.gong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "plyatov@gmail.com" <plyatov@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 11:20:17AM +0530, Yash Shah wrote:
-> On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
-> > > Add device tree bindings for SiFive FU540 L2 cache controller driver
-> > >
-> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > > ---
-> > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
-> > >  1 file changed, 53 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > new file mode 100644
-> > > index 0000000..15132e2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > @@ -0,0 +1,53 @@
-> > > +SiFive L2 Cache Controller
-> > > +--------------------------
-> > > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
-> > > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
-> > > +acts as directory-based coherency manager.
+Am Freitag, den 26.04.2019, 09:22 +0000 schrieb Robin Gong:
+> On 2019-04-26 at 11:07 +0200, Lucas Stach wrote:
+> > 
+> > Am Freitag, den 26.04.2019, 08:05 +0000 schrieb Robin Gong:
+> > >  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+> > >  {
+> > > +     u32 tx_wml = 0;
 > > > +
-> > > +Required Properties:
-> > > +--------------------
-> > > +- compatible: Should be "sifive,fu540-c000-ccache"
-> > > +
-> > > +- cache-block-size: Specifies the block size in bytes of the cache
-> > > +
-> > > +- cache-level: Should be set to 2 for a level 2 cache
-> > > +
-> > > +- cache-sets: Specifies the number of associativity sets of the cache
-> > > +
-> > > +- cache-size: Specifies the size in bytes of the cache
-> > > +
-> > > +- cache-unified: Specifies the cache is a unified cache
-> > > +
-> > > +- interrupt-parent: Must be core interrupt controller
-> > > +
-> > > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
-> > > +
-> > > +- reg: Physical base address and size of L2 cache controller registers map
-> > > +
-> > > +- reg-names: Should be "control"
-> > > +
-> >
-> > It would be good if you mark the properties that are present in DT
-> > specification and those that are added for sifive,fu540-c000-ccache
+> > 
+> > With a wml of 0 you might set the maxburst of the TX dma channel to
+> > fifosize to minimize the performance impact of this workaround.
+> > 
+> > Regards,
+> > Lucas
 > 
-> I believe there isn't any property which is added explicitly for
-> sifive,fu540-c000-ccache.
-> 
+> Unfortunately, this is a MUST part of errata which cause performance
+> drop.
 
-reg and interrupts are generally optional for normal cache and may be
-required for cache controller like this. DT specification[1] covers
-only caches and not cache controllers.
+I'm not talking about changing the WML, but when the WML must be 0 you
+can safely increase the DMA burst size without overflowing the FIFO,
+which might recover some of of the performance loss.
 
---
 Regards,
-Sudeep
-
-[1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
+Lucas
