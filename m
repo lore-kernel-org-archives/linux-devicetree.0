@@ -1,59 +1,48 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-Date: Fri, 26 Apr 2019 03:44:53 +0200
-Message-ID: <1426b1de-b2ae-9f8a-ba36-8aa81dfda161@gmail.com>
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus>
- <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <CAL_JsqJDh3Z+iFn6fbkGT+jQ3HG2s4n3PT=LrmB-td++G99q_w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Takao Orito <orito.takao@socionext.com>
+Subject: [PATCH 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Date: Fri, 26 Apr 2019 11:06:21 +0900
+Message-ID: <1556244381-15781-1-git-send-email-orito.takao@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJDh3Z+iFn6fbkGT+jQ3HG2s4n3PT=LrmB-td++G99q_w@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mason Yang <masonccyang@mxic.com.tw>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Boris Brezillon <bbrezillon@kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Lee Jones <lee.jones@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Julien Su <juliensu@mxic.com.tw>, Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com, orito.takao@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On 4/26/19 1:07 AM, Rob Herring wrote:
-> On Wed, Apr 24, 2019 at 4:54 PM Marek Vasut <marek.vasut@gmail.com> wrote:
->>
->> On 4/24/19 11:23 PM, Rob Herring wrote:
->>> On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
->>>> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
->>>>
->>>> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->>>> ---
->>>>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++++++++++++++++++
->>>>  1 file changed, 40 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->>>> new file mode 100644
->>>> index 0000000..668b822
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->>>> @@ -0,0 +1,40 @@
->>>> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
->>>> +--------------------------------------------------
->>>
->>> Looks like a SPI flash controller from the example. What makes it an
->>> MFD?
->>
->> It supports both SPI NOR and HyperFlash (CFI-compliant flash with
->> different bus interface).
-> 
-> Not sure that really makes it an MFD. Lee probably has an opinion.
-> 
-> In any case, can we get a complete binding that shows both.
+The following patches add driver for SD Host controller on
+Socionext's Milbeaut M10V platforms.
 
-Presumably that would only mean the flash compatible is some "cfi,nor"
-or somesuch. But I agree, would be nice to have both in the example.
+SD Host controller on Milbeaut is consist of two controller parts.
+One is core controller F_SDH30, this is similar to sdhci-fujitsu
+controller.
+Another is bridge controller. This bridge controller is not compatible
+with sdhci-fujitsu controller. This is special for Milbeaut series.
+
+It has the several parts,
+ - reset control
+ - clock enable / select for SDR50/25/12
+ - hold control of DATA/CMD line
+ - select characteristics for WP/CD/LED line
+ - Re-tuning control for mode3
+ - Capability setting
+   Timeout Clock / Base Clock / Timer Count for Re-Tuning /
+   Debounce period
+These requires special procedures at reset or clock enable/change or
+ further tuning of clock.
+
+Takao Orito (2):
+  dt-bindings: mmc: add DT bindings for Milbeaut SD controller
+  mmc: sdhci-milbeaut: add Milbeaut SD controller driver
+
+ .../devicetree/bindings/mmc/sdhci-milbeaut.txt     |  35 ++
+ drivers/mmc/host/Kconfig                           |  11 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-milbeaut.c                  | 393 +++++++++++++++++++++
+ drivers/mmc/host/sdhci_f_sdh30.c                   |  26 +-
+ drivers/mmc/host/sdhci_f_sdh30.h                   |  32 ++
+ 6 files changed, 473 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+ create mode 100644 drivers/mmc/host/sdhci-milbeaut.c
+ create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
 
 -- 
-Best regards,
-Marek Vasut
+1.9.1
