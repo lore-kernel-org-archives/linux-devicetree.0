@@ -1,68 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/6] dt-bindings: ap806: add the cluster clock node in
- the syscon file
-Date: Fri, 26 Apr 2019 09:30:27 -0500
-Message-ID: <20190426143027.GA17777@bogus>
-References: <20190423095107.21091-1-gregory.clement@bootlin.com>
- <20190423095107.21091-2-gregory.clement@bootlin.com>
+Subject: Re: [PATCH V5 07/16] dt-bindings: PCI: designware: Add binding for
+ CDM register check
+Date: Fri, 26 Apr 2019 09:32:47 -0500
+Message-ID: <20190426143247.GA25107@bogus>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-8-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190423095107.21091-2-gregory.clement@bootlin.com>
+In-Reply-To: <20190424052004.6270-8-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:51:02AM +0200, Gregory CLEMENT wrote:
-> Document the device tree binding for the cluster clock controllers found
-> in the Armada 7K/8K SoCs.
+On Wed, Apr 24, 2019 at 10:49:55AM +0530, Vidya Sagar wrote:
+> Add support to enable CDM (Configuration Dependent Module) registers check
+> for any data corruption. CDM registers include standard PCIe configuration
+> space registers, Port Logic registers and iATU and DMA registers.
+> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
+> Version 4.90a
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  .../arm/marvell/ap806-system-controller.txt   | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> Changes since [v4]:
+> * None
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> index 7b8b8eb0191f..a65d3e9ff915 100644
-> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> @@ -143,3 +143,29 @@ ap_syscon1: system-controller@6f8000 {
->  		#thermal-sensor-cells = <1>;
->  	};
->  };
-> +
-> +Cluster clocks:
-> +---------------
-> +
-> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
-> +cluster contain up to 2 CPUs running at the same frequency.
-> +
-> +Required properties:
-> +- compatible: must be  "marvell,ap806-cpu-clock";
-> +- #clock-cells : should be set to 1.
-> +- clocks : shall be the input parents clock phandle for the clock.
-> +- reg: register range associated the cluster clocks, offset must be 0
-> +  and the size have to be the whole size of the system-controller
-> +
-> +
-> +ap_syscon1: system-controller@6f8000 {
-> +	compatible = "syscon", "simple-mfd";
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
+> * Added info about Port Logic and DMA registers being part of CDM
+> 
+> Changes since [v1]:
+> * This is a new patch in v2 series
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 5561a1c060d0..85b872c42a9f 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -34,6 +34,11 @@ Optional properties:
+>  - clock-names: Must include the following entries:
+>  	- "pcie"
+>  	- "pcie_bus"
+> +- enable-cdm-check: This is a boolean property and if present enables
 
-This should have a specific compatible.
+This needs a vendor prefix.
 
-> +	reg = <0x6f8000 0x1000>;
-> +
-> +	cpu_clk: clock-cpu@0 {
-> +		compatible = "marvell,ap806-cpu-clock";
-> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
-> +		#clock-cells = <1>;
-> +		reg = <0x0 0x1000>;
-
-This takes the entire address range of the parent, then why the child 
-node? You can't add any other child nodes without creating an overlap.
-
-Your example also won't compile.
-
-Rob
+> +   automatic checking of CDM (Configuration Dependent Module) registers
+> +   for data corruption. CDM registers include standard PCIe configuration
+> +   space registers, Port Logic registers, DMA and iATU (internal Address
+> +   Translation Unit) registers.
+>  RC mode:
+>  - num-viewport: number of view ports configured in hardware. If a platform
+>    does not specify it, the driver assumes 2.
+> -- 
+> 2.17.1
+> 
