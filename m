@@ -1,28 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 11/26] dt-bindings: lp8860: Add function and color
- properties
-Date: Fri, 26 Apr 2019 13:59:18 -0500
-Message-ID: <20190426185918.GA30491@bogus>
-References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
- <20190417205439.17685-12-jacek.anaszewski@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845-mtp: Make USB1 peripheral
+Date: Fri, 26 Apr 2019 12:10:25 -0700
+Message-ID: <20190426191025.16131-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190417205439.17685-12-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net, jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>
+To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Apr 2019 22:54:24 +0200, Jacek Anaszewski wrote:
-> Refer to new "function" and "color" properties and mark "label"
-> as deprecated.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
+The MTP is a "mobile reference device", as such the default operation is
+to use fastboot to boot/flash software onto it and the common case is
+thereby that we boot with a USB cable connected downstream from a PC or
+a hub.  And without support for the PMI8998 charger block VBUS will not
+be driven by the device.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Switch to peripheral until we can enable OTG.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index 02b8357c8ce8..2e78638eb73b 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -404,8 +404,8 @@
+ };
+ 
+ &usb_1_dwc3 {
+-	/* Until we have Type C hooked up we'll force this as host. */
+-	dr_mode = "host";
++	/* Until we have Type C hooked up we'll force this as peripheral. */
++	dr_mode = "peripheral";
+ };
+ 
+ &usb_1_hsphy {
+-- 
+2.18.0
