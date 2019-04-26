@@ -1,38 +1,50 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: tsl2772: convert bindings to
- YAML format
-Date: Fri, 26 Apr 2019 08:20:34 -0500
-Message-ID: <CAL_JsqL0SQZSs8MmF6j1B_qfvCOcg9XMjUBUHFL+mnCk7xNB1A@mail.gmail.com>
-References: <20190425230314.26000-1-masneyb@onstation.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v7 0/6] drm/bridge: sii902x: HDMI-audio support and some fixes
+Date: Fri, 26 Apr 2019 16:23:09 +0300
+Message-ID: <cover.1556284767.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190425230314.26000-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: fabrizio.castro@bp.renesas.com, architt@codeaurora.org, Songjun.Wu@atmel.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 6:03 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Convert the tsl2772 device tree bindings to the new YAML format.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Changes since v2:
-> - Remove allof from led-max-microamp. Split out enum list from [] to
->   individual lines for consistency with the compatible attribute.
-> - Change 'proximity-sensor@39' in example to 'sensor@39'.
->
-> Changes since v1:
-> - Dropped description from reg and interrupts properties.
-> - Dropped $ref from led-max-microamp, vdd-supply, and vddio-supply.
-> - Changed 'tsl2772@39' in example to 'proximity-sensor@39'
->
->  .../devicetree/bindings/iio/light/tsl2772.txt | 42 ----------
->  .../bindings/iio/light/tsl2772.yaml           | 83 +++++++++++++++++++
->  2 files changed, 83 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.yaml
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+VGhlIGFscmVhZHkgcmV2aWV3ZWQgcGF0Y2hlcyBhcmUgaW4gZnJvbnQuIE5vdCByZXZpZXdlZCBz
+dGlsbCBwYXRjaGVzIDUtNi4gCgpDaGFuZ2VzIHNpbmNlIHY2OgotICJkdC1iaW5kaW5nczogZGlz
+cGxheTogc2lpOTAyeDogQWRkIEhETUkgYXVkaW8gYmluZGluZ3MiCiAtIFJlcGxhY2UgcmVmZXJl
+bmNlcyB0byBBU29DIChhIExpbnV4IHRlcm0pIHdpdGggbW9yZSBnZW5lcmljIHRlcm1zCiAtIEFk
+ZCAic2lsLCItcHJlZml4IHRvICJpMnMtZGF0YS1sYW5lcyItcHJvcGVydHkgaW4gdGhlIGV4YW1w
+bGUgbm9kZQotICJkcm0vYnJpZGdlOiBzaWk5MDJ4OiBJbXBsZW1lbnQgSERNSSBhdWRpbyBzdXBw
+b3J0IgogLSBEbyBub3QgdXNlIHVuc2lnbmVkIGluIHNpaTkwMnhfc2VsZWN0X21jbGtfZGl2KCkn
+cyAiZGlzdGFuY2UiIGNhbGN1bGF0aW9ucwogICB0byBhdm9pZCBiYWQgdHlwZSBwcm9tb3Rpb25z
+IHRvIHVuc2lnbmVkIGNhdXNpbmcgdW5leHBlY3RlZCByZXN1bHRzCiAtIEFsd2F5cyByZXR1cm4g
+dGhlIGNsb2NrIGRpdmlzb3IgYnkgc2lpOTAyeF9zZWxlY3RfbWNsa19kaXYoKQogLSBEaXNhYmxl
+IHJlZ21hcCBsb2NraW5nIHNpbmNlIHRoZSBkcml2ZXIgc3BlY2lmaWMgbG9ja2luZyBzaG91bGQg
+YmUgZW5vdWdoCiAtIEFkZCBtaXNzaW5nIG11dGV4IGxvY2tpbmcgdG8gdGhlIHJlZ2lzdGVyIGFj
+Y2VzcyBpbiB0aGUgaXJxIGhhbmRsZXIKClRoZSBwcmV2aW91cyByb3VuZDoKaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMDg4MTE2OS8KCkp5cmkgU2FyaGEgKDUpOgogIGRybS9i
+cmlkZ2U6IHNpaTkwMng6IFNldCBvdXRwdXQgbW9kZSB0byBIRE1JIG9yIERWSSBhY2NvcmRpbmcg
+dG8gRURJRAogIGRybS9icmlkZ2U6IHNpaTkwMng6IHBpeGVsIGNsb2NrIHVuaXQgaXMgMTBrSHog
+aW5zdGVhZCBvZiAxa0h6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHNpaTkwMng6IFJlbW92ZSB0
+cmFpbGluZyB3aGl0ZSBzcGFjZQogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzaWk5MDJ4OiBBZGQg
+SERNSSBhdWRpbyBiaW5kaW5ncwogIGRybS9icmlkZ2U6IHNpaTkwMng6IEltcGxlbWVudCBIRE1J
+IGF1ZGlvIHN1cHBvcnQKClRvbWkgVmFsa2VpbmVuICgxKToKICBkcm0vYnJpZGdlOiBzaWk5MDJ4
+OiBhZGQgaW5wdXRfYnVzX2ZsYWdzCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkw
+MngudHh0ICAgICAgIHwgIDQzICstCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyAg
+ICAgICAgICAgICAgfCA0ODggKysrKysrKysrKysrKysrKystCiAyIGZpbGVzIGNoYW5nZWQsIDUy
+MyBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZp
+bmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLiBZLXR1bm51cy9CdXNp
+bmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
