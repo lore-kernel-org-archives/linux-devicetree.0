@@ -1,53 +1,68 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
-Date: Sat, 27 Apr 2019 06:22:06 -0400
-Message-ID: <20190427102206.GA296@basecamp>
-References: <20190306005316.12232-1-masneyb@onstation.org>
- <20190427053034.GH3137@builder>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v10 00/18] Introduce the Counter subsystem
+Date: Sat, 27 Apr 2019 12:49:36 +0100
+Message-ID: <20190427124937.1a9920ea@archlinux>
+References: <cover.1554184734.git.vilhelm.gray@gmail.com>
+        <20190407152550.451a7f63@archlinux>
+        <20190425193624.GA11240@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190427053034.GH3137@builder>
+In-Reply-To: <20190425193624.GA11240@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org, david@lechnology.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, esben@haabendal.dk, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, patrick.havelange@essensium.com, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Thu, 25 Apr 2019 21:36:24 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-On Fri, Apr 26, 2019 at 10:30:34PM -0700, Bjorn Andersson wrote:
-> On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
+> On Sun, Apr 07, 2019 at 03:25:50PM +0100, Jonathan Cameron wrote:
+> > On Tue,  2 Apr 2019 15:30:35 +0900
+> > William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+> >   
+> > > Changes in v10:
+> > >   - Fix minor typographical errors in documentation
+> > >   - Merge the FlexTimer Module Quadrature decoder counter driver patches
+> > > 
+> > > This revision is functionally identical to the last; changes in this
+> > > version were made to fix minor typos in the documentation files and also
+> > > to pull in the new FTM quadrature decoder counter driver.
+> > > 
+> > > The Generic Counter API has been and is still in a feature freeze until
+> > > it is merged into the mainline. The following features will be
+> > > investigated after the merge: interrupt support for counter devices, and
+> > > a character device interface for low-latency applications.  
+> > 
+> > Hi William / al,
+> > 
+> > So the question is how to move this forwards?  I'm happy with how it turned
+> > out and the existing drivers we had in IIO are a lot cleaner under
+> > the counter subsystem (other than the backwards compatibility for those that
+> > ever existed in IIO).  For those  not following closely the situation is:  
 > 
-> > Here are some patches that fix gpio hogging for all boards that use
-> > spmi-gpio and ssbi-gpio. These depend on the following two patches
-> > that were merged in 4.20-rc1:
-> > 
-> > commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
-> > boot issues")
-> > 
-> > commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
-> > boot issues")
-> > 
-> > I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
-> > into v5.1 during this merge window:
-> > 
-> > https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
-> > 
-> > Andy: You may want to consider submitting these post rc1 as a fix for
-> > v5.1 and possibly marking these for stable.
-> > 
-> > Brian Masney (8):
-> >   ARM: dts: qcom: apq8064: add gpio-ranges
-> >   ARM: dts: qcom: mdm9615: add gpio-ranges
-> >   ARM: dts: qcom: msm8660: add gpio-ranges
-> >   ARM: dts: qcom: pma8084: add gpio-ranges
+> I've now sucked this into my staging-testing branch and if 0-day is fine
+> with it, I'll merge it to staging-next in a day or so.  This way you can
+> build on it for any iio drivers that might be coming.
+
+Great thanks. 
+
 > 
-> Looks like I missed the ARM patches before. All 8 picked up now, with
-> Linus' r-b.
+> I do have reservations about that one sysfs file that is multi-line, and
+> I think it will come to bite you in the end over time, so I reserve the
+> right to say "I told you so" when that happens...
+> 
+> But, I don't have a better answer for it now, so don't really worry
+> about it :)
+> 
+> thanks,
+> 
+> greg k-h
 
-Andy already picked these 8 patches up in his tree.
+Looks like a few late breaking comments came in, but nothing that can't
+be fixed up before this reaches a release.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
+Thanks,
 
-Brian
+Jonathan
