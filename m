@@ -1,26 +1,21 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: clk: meson: add g12b periph clock
- controller bindings
-Date: Sat, 27 Apr 2019 22:18:36 +0200
-Message-ID: <CAFBinCCV6DWFM-nynSUGGmdvo1R6Lfno7V4d2+Fc17iS3+DSig@mail.gmail.com>
-References: <20190423091503.10847-1-narmstrong@baylibre.com> <20190423091503.10847-2-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 4/6] dt-bindings: arm: amlogic: add G12B bindings
+Date: Sat, 27 Apr 2019 22:22:05 +0200
+Message-ID: <CAFBinCA7qCmVcz_brXfJ4aiw6ZHvEJ_duhjtEH+znJ3zmL_mmg@mail.gmail.com>
+References: <20190423091503.10847-1-narmstrong@baylibre.com> <20190423091503.10847-5-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423091503.10847-2-narmstrong@baylibre.com>
+In-Reply-To: <20190423091503.10847-5-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: khilman@baylibre.com, devicetree@vger.kernel.org, jbrunet@baylibre.com, Rob Herring <robh@kernel.org>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:15 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Tue, Apr 23, 2019 at 11:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> This patch adds the specific Amlogic G12B clock driver compatible.
->
-> G12B clock driver is very close, the main differences are :
-> - the clock tree is duplicated for the both clusters, and the
->   SYS_PLL are swapped between the clusters
-> - G12A has additional clocks like for CSI an other components
+> Add compatible for the Amlogic G12B SoC, sharing most of the
+> features and architecture with the G12A SoC.
 >
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > Reviewed-by: Rob Herring <robh@kernel.org>
