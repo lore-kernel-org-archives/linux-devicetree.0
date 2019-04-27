@@ -1,116 +1,91 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V3 00/12] misc: xilinx sd-fec drive
-Date: Sat, 27 Apr 2019 23:04:54 +0100
-Message-ID: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V3 01/12] dt-bindings: xilinx-sdfec: Add SDFEC binding
+Date: Sat, 27 Apr 2019 23:04:55 +0100
+Message-ID: <1556402706-176271-2-git-send-email-dragan.cvetic@xilinx.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is adding the full Soft Decision Forward Error
-Correction (SD-FEC) driver implementation, driver DT binding and
-driver documentation.
+Add the Soft Decision Forward Error Correction (SDFEC) Engine
+bindings which is available for the Zynq UltraScale+ RFSoC
+FPGA's.
 
-Forward Error Correction (FEC) codes such as Low Density Parity
-Check (LDPC) and turbo codes provide a means to control errors in
-data transmissions over unreliable or noisy communication
-channels. The SD-FEC Integrated Block is an optimized block for
-soft-decision decoding of these codes. Fixed turbo codes are
-supported directly, whereas custom and standardized LDPC codes
-are supported through the ability to specify the parity check
-matrix through an AXI4-Lite bus or using the optional programmable
-(PL)-based support logic. For the further information see
-https://www.xilinx.com/support/documentation/ip_documentation/
-sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-
-This driver is a platform device driver which supports SDFEC16
-(16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-Turbo code decoding. LDPC codes can be specified on
-a codeword-by-codeword basis, also a custom LDPC code can be used.
-
-The SD-FEC driver exposes a char device interface and supports
-file operations: open(), close(), poll() and ioctl(). The driver
-allows only one usage of the device, open() limits the number of
-driver instances. The driver also utilize Common Clock Framework
-(CCF).
-
-The control and monitoring is supported over ioctl system call.
-The features supported by ioctl():
-- enable or disable data pipes to/from device
-- configure the FEC algorithm parameters
-- set the order of data
-- provide a control of a SDFEC bypass option
-- activates/deactivates SD-FEC
-- collect and provide statistical data
-- enable/disable interrupt mode
-
-Poll can be utilized to detect errors on IRQ trigger rather than
-using looping status and stats ioctl's.
-
-Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
-Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-
-Changes V1 -> V2:
-- Removed unnecesary comenting from the commit messages.
-- Removed error log messages which can be triggered from user space.
-- Corrected the SDFEC table end addresses.
-- Removed casting between user pointer and kernel pointer.
-- Corrected definition of ioctl command code, used a corect type for
-size parameters.
-- Changes to declarations of IOCTL that pass structures, i.e. do not
-use pointers for sizeof as prevents compile time checks
-- IOCTL size fix, using a paging to manage a memory. Implemented a big
-tables transfer from user to kernel with get_user_pages_fast().
-- Removed unnecessary check after container_of.
-- Removed not needed ioctl code checkes inside ioctl handler.
-- Implemented compat_ioctl.
-- Updated reviewer and tester lists.
-- Updated documentation, added Limitation chapter related to fork()
-and dup().
-
-Link to V1 patch series:
-https://lore.kernel.org/lkml/1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V2 -> V3:
-- Corrected a licence in xilinx_sdfec.h changed to uapi licence format.
-- Corrected driver variable data types into user space data types.
-
-Link to V2 patch series:
-https://lore.kernel.org/lkml/1554804414-206099-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Dragan Cvetic (12):
-  dt-bindings: xilinx-sdfec: Add SDFEC binding
-  misc: xilinx-sdfec: add core driver
-  misc: xilinx_sdfec: Add CCF support
-  misc: xilinx_sdfec: Add open, close and ioctl
-  misc: xilinx_sdfec: Store driver config and state
-  misc: xilinx_sdfec: Add ability to configure turbo
-  misc: xilinx_sdfec: Add ability to configure LDPC
-  misc: xilinx_sdfec: Add ability to get/set config
-  misc: xilinx_sdfec: Support poll file operation
-  misc: xilinx_sdfec: Add stats & status ioctls
-  Docs: misc: xilinx_sdfec: Add documentation
-  MAINTAINERS: add maintainer for SD-FEC
-
- .../devicetree/bindings/misc/xlnx,sd-fec.txt       |   58 +
- Documentation/misc-devices/index.rst               |    1 +
- Documentation/misc-devices/xilinx_sdfec.rst        |  291 ++++
- MAINTAINERS                                        |   12 +
- drivers/misc/Kconfig                               |   12 +
- drivers/misc/Makefile                              |    1 +
- drivers/misc/xilinx_sdfec.c                        | 1669 ++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h                   |  475 ++++++
- 8 files changed, 2519 insertions(+)
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+---
+ .../devicetree/bindings/misc/xlnx,sd-fec.txt       | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
- create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
- create mode 100644 drivers/misc/xilinx_sdfec.c
- create mode 100644 include/uapi/misc/xilinx_sdfec.h
 
+diff --git a/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt b/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+new file mode 100644
+index 0000000..425b6a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+@@ -0,0 +1,58 @@
++* Xilinx SDFEC(16nm) IP *
++
++The Soft Decision Forward Error Correction (SDFEC) Engine is a Hard IP block
++which provides high-throughput LDPC and Turbo Code implementations.
++The LDPC decode & encode functionality is capable of covering a range of
++customer specified Quasi-cyclic (QC) codes. The Turbo decode functionality
++principally covers codes used by LTE. The FEC Engine offers significant
++power and area savings versus implementations done in the FPGA fabric.
++
++
++Required properties:
++- compatible: Must be "xlnx,sd-fec-1.1"
++- clock-names : List of input clock names from the following:
++    - "core_clk", Main processing clock for processing core (required)
++    - "s_axi_aclk", AXI4-Lite memory-mapped slave interface clock (required)
++    - "s_axis_din_aclk", DIN AXI4-Stream Slave interface clock (optional)
++    - "s_axis_din_words-aclk", DIN_WORDS AXI4-Stream Slave interface clock (optional)
++    - "s_axis_ctrl_aclk",  Control input AXI4-Stream Slave interface clock (optional)
++    - "m_axis_dout_aclk", DOUT AXI4-Stream Master interface clock (optional)
++    - "m_axis_dout_words_aclk", DOUT_WORDS AXI4-Stream Master interface clock (optional)
++    - "m_axis_status_aclk", Status output AXI4-Stream Master interface clock (optional)
++- clocks : Clock phandles (see clock_bindings.txt for details).
++- reg: Should contain Xilinx SDFEC 16nm Hardened IP block registers
++  location and length.
++- xlnx,sdfec-code : Should contain "ldpc" or "turbo" to describe the codes
++  being used.
++- xlnx,sdfec-din-words : A value 0 indicates that the DIN_WORDS interface is
++  driven with a fixed value and is not present on the device, a value of 1
++  configures the DIN_WORDS to be block based, while a value of 2 configures the
++  DIN_WORDS input to be supplied for each AXI transaction.
++- xlnx,sdfec-din-width : Configures the DIN AXI stream where a value of 1
++  configures a width of "1x128b", 2 a width of "2x128b" and 4 configures a width
++  of "4x128b".
++- xlnx,sdfec-dout-words : A value 0 indicates that the DOUT_WORDS interface is
++  driven with a fixed value and is not present on the device, a value of 1
++  configures the DOUT_WORDS to be block based, while a value of 2 configures the
++  DOUT_WORDS input to be supplied for each AXI transaction.
++- xlnx,sdfec-dout-width : Configures the DOUT AXI stream where a value of 1
++  configures a width of "1x128b", 2 a width of "2x128b" and 4 configures a width
++  of "4x128b".
++Optional properties:
++- interrupts: should contain SDFEC interrupt number
++
++Example
++---------------------------------------
++	sd_fec_0: sd-fec@a0040000 {
++		compatible = "xlnx,sd-fec-1.1";
++		clock-names = "core_clk","s_axi_aclk","s_axis_ctrl_aclk","s_axis_din_aclk","m_axis_status_aclk","m_axis_dout_aclk";
++		clocks = <&misc_clk_2>,<&misc_clk_0>,<&misc_clk_1>,<&misc_clk_1>,<&misc_clk_1>, <&misc_clk_1>;
++		reg = <0x0 0xa0040000 0x0 0x40000>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 89 4>;
++		xlnx,sdfec-code = "ldpc";
++		xlnx,sdfec-din-words = <0>;
++		xlnx,sdfec-din-width = <2>;
++		xlnx,sdfec-dout-words = <0>;
++		xlnx,sdfec-dout-width = <1>;
++	};
 -- 
 2.7.4
