@@ -1,67 +1,19 @@
-Return-Path: <SRS0=K2Fs=S4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.eatwithus.eu ([176.107.131.6]:44070 "EHLO eatwithus.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfDZHps (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:45:48 -0400
-Received: by mail.eatwithus.eu for <devicetree@vger.kernel.org>; Fri, 26 Apr 2019 07:45:40 GMT
-Message-ID: <20190426084500-0.1.y.9gp.0.6ldo3opqt2@eatwithus.eu>
-Date: Fri, 26 Apr 2019 07:45:40 GMT
-From: "Radoslav Dobrev" <radoslav.dobrev@eatwithus.eu>
-Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=5x2g=S5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from [111.177.169.40] ([111.177.169.40]:56270 "EHLO
+        localhost.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726071AbfD0PD1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 27 Apr 2019 11:03:27 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by localhost.localdomain (Postfix) with SMTP id 241AD1D5590
+        for <devicetree@vger.kernel.org>; Sat, 27 Apr 2019 12:40:05 +0800 (CST)
+From: devicetree@vger.kernel.org
+Reply-To: prodawez@armyspy.com
+Subject: Zdravstvuyte! Vas interesuyut kliyentskiye bazy dannykh?
+Message-Id: <20190427044006.241AD1D5590@localhost.localdomain>
+Date: Sat, 27 Apr 2019 12:40:05 +0800 (CST)
 Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5!
-
-=D0=A1=D0=BF=D0=BE=D1=80=D0=B5=D0=B4 =D0=BF=D1=80=D0=BE=D1=83=D1=87=D0=B2=
-=D0=B0=D0=BD=D0=B5 =D0=BD=D0=B0 =D0=90=D1=81=D0=BE=D1=86=D0=B8=D0=B0=D1=86=
-=D0=B8=D1=8F=D1=82=D0=B0 =D0=BD=D0=B0 =D0=B8=D0=BD=D0=B4=D1=83=D1=81=D1=82=
-=D1=80=D0=B8=D0=B0=D0=BB=D0=BD=D0=B8=D1=8F =D0=BA=D0=B0=D0=BF=D0=B8=D1=82=
-=D0=B0=D0=BB, 45% =D0=BE=D1=82 =D1=84=D0=B8=D1=80=D0=BC=D0=B8=D1=82=D0=B5=
- =D1=83 =D0=BD=D0=B0=D1=81 =D1=89=D0=B5 =D0=B4=D0=B0=D0=B4=D0=B0=D1=82 =D0=
-=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8 =D0=B1=D0=
-=BE=D0=BD=D1=83=D1=81=D0=B8 =D0=BD=D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=
-=82=D0=B5=D0=BB=D0=B8=D1=82=D0=B5 =D1=81=D0=B8, =D0=B0 74% =D0=BE=D1=82 =D1=
-=82=D0=B5=D0=B7=D0=B8 =D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8 =D1=89=D0=B5 =D1=
-=81=D0=B0 =D0=B2 =D1=80=D0=B0=D0=B7=D0=BC=D0=B5=D1=80 =D0=B4=D0=BE 200 =D0=
-=BB=D0=B2.=20
-
-=D0=9C=D0=B5=D0=B6=D0=B4=D1=83 =D1=80=D0=B0=D0=B7=D0=BB=D0=B8=D1=87=D0=BD=
-=D0=B8=D1=82=D0=B5 =D1=84=D0=BE=D1=80=D0=BC=D0=B8 =D0=B7=D0=B0 =D0=BC=D0=B0=
-=D1=82=D0=B5=D1=80=D0=B8=D0=B0=D0=BB=D0=BD=D0=BE =D1=81=D1=82=D0=B8=D0=BC=
-=D1=83=D0=BB=D0=B8=D1=80=D0=B0=D0=BD=D0=B5, =D0=BD=D0=B5=D1=81=D0=BB=D1=83=
-=D1=87=D0=B0=D0=B9=D0=BD=D0=BE =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=
-=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0 =D0=B2=D0=B5=D1=87=
-=D0=B5 =D1=81=D0=B5 =D0=BD=D0=B0=D0=BB=D0=BE=D0=B6=D0=B8=D1=85=D0=B0 =D0=BA=
-=D0=B0=D1=82=D0=BE =D0=BD=D0=B0=D0=B9-=D1=87=D0=B5=D1=81=D1=82=D0=BE =D0=B8=
-=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B8=D1=82=D0=B5 =D0=B8=
- =D1=83=D1=81=D0=BF=D0=B5=D1=88=D0=BD=D0=B8 =D0=BD=D0=B0=D1=87=D0=B8=D0=BD=
-=D0=B8 =D0=B7=D0=B0 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D1=8F=
-=2E  =D0=A2=D0=B5 =D0=BF=D0=BE=D0=B7=D0=B2=D0=BE=D0=BB=D1=8F=D0=B2=D0=B0=D1=
-=82 =D0=B4=D0=B0 =D0=B1=D1=8A=D0=B4=D0=B0=D1=82 =D1=88=D0=B8=D1=80=D0=BE=D0=
-=BA=D0=BE =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B8 =D0=
-=B2 =D0=B3=D0=BE=D0=BB=D0=B5=D0=BC=D0=B8=D1=82=D0=B5 =D1=85=D1=80=D0=B0=D0=
-=BD=D0=B8=D1=82=D0=B5=D0=BB=D0=BD=D0=B8 =D0=B2=D0=B5=D1=80=D0=B8=D0=B3=D0=
-=B8 =D0=B8 =D1=82=D0=B0=D0=BA=D0=B0 =D1=83=D0=BB=D0=B5=D1=81=D0=BD=D1=8F=D0=
-=B2=D0=B0=D1=82 =D1=81=D0=B5=D0=BC=D0=B5=D0=B9=D1=81=D1=82=D0=B2=D0=B0=D1=
-=82=D0=B0 =D0=BF=D1=80=D0=B8 =D0=BF=D0=BE=D0=B4=D0=B3=D0=BE=D1=82=D0=BE=D0=
-=B2=D0=BA=D0=B0=D1=82=D0=B0 =D0=BD=D0=B0 =D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=
-=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B0=D1=82=D0=B0 =D1=82=D1=80=D0=B0=D0=BF=D0=
-=B5=D0=B7=D0=B0.
-
-=D0=9E=D1=81=D1=82=D0=B0=D0=B2=D0=B0=D0=BC=D0=B5 =D0=BD=D0=B0 =D1=80=D0=B0=
-=D0=B7=D0=BF=D0=BE=D0=BB=D0=BE=D0=B6=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B4=D0=B0=
- =D0=92=D0=B8 =D1=80=D0=B0=D0=B7=D0=BA=D0=B0=D0=B6=D0=B5=D0=BC =D0=BE=D1=89=
-=D0=B5 =D0=B7=D0=B0 =D0=BF=D1=80=D0=B5=D0=B4=D0=B8=D0=BC=D1=81=D1=82=D0=B2=
-=D0=B0=D1=82=D0=B0 =D0=BD=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=
-=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0.
-
-
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.eatwithus.eu  
+Zdravstvuyte! Vas interesuyut kliyentskiye bazy dannykh?
