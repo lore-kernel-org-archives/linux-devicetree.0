@@ -1,128 +1,107 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML format
-Date: Sat, 27 Apr 2019 14:23:59 -0400
-Message-ID: <20190427182359.27254-1-masneyb@onstation.org>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v4 6/9] dt-bindings: display:
+ hdmi-connector: Add DDC power supply
+Date: Sat, 27 Apr 2019 21:01:23 +0200
+Message-ID: <20190427190123.6aik7by3fgkyjmq7@core.my.home>
+References: <20190413165418.27880-1-megous@megous.com>
+ <20190413165418.27880-7-megous@megous.com>
+ <20190426182337.GA22245@bogus>
+ <20190426192031.wtoaxctjo2qxxquq@core.my.home>
+ <CAL_Jsq+o1j6AGL9UnhN1tV150DsFug6pg+UPEJ9EKqBc6rgq_w@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, anson.huang@nxp.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ldewangan@nvidia.com, rklein@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBCOOSLTAKGQENWXGBYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+o1j6AGL9UnhN1tV150DsFug6pg+UPEJ9EKqBc6rgq_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert the isl29018 device tree bindings to the new YAML format.
+On Fri, Apr 26, 2019 at 03:02:50PM -0500, Rob Herring wrote:
+> On Fri, Apr 26, 2019 at 2:20 PM Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> >
+> > On Fri, Apr 26, 2019 at 01:23:37PM -0500, Rob Herring wrote:
+> > > On Sat, Apr 13, 2019 at 06:54:15PM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> > > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > > >
+> > > > Some Allwinner SoC using boards (Orange Pi 3 for example) need to e=
+nable
+> > > > on-board voltage shifting logic for the DDC bus to be usable. Use
+> > > > ddc-supply on the hdmi-connector to model this.
+> > > >
+> > > > Add binding documentation for optional ddc-supply property.
+> > > >
+> > > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > > > ---
+> > > >  .../devicetree/bindings/display/connector/hdmi-connector.txt     |=
+ 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/connector/hd=
+mi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi=
+-connector.txt
+> > > > index 508aee461e0d..33085aeb0bb9 100644
+> > > > --- a/Documentation/devicetree/bindings/display/connector/hdmi-conn=
+ector.txt
+> > > > +++ b/Documentation/devicetree/bindings/display/connector/hdmi-conn=
+ector.txt
+> > > > @@ -9,6 +9,7 @@ Optional properties:
+> > > >  - label: a symbolic name for the connector
+> > > >  - hpd-gpios: HPD GPIO number
+> > > >  - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDI=
+D probing
+> > > > +- ddc-supply: the power supply for the DDC bus
+> > >
+> > > It's not just for DDC. It powers the chips in bridge dongles for
+> > > example. Pretty much every diagram I find just calls it 5V or +5V.
+> > >
+> > > So how about '5V-supply' or 'v5V-supply'?
+> >
+> > Just to be sure, the schematic that inspired this change looks like thi=
+s:
+> >
+> > https://megous.com/dl/tmp/33b2971de6943e9d.png
+> >
+> > HDMI-5V is always on, and what is really being enabled here are mosfets
+> > connected to DDC_CEC_EN and not the HDMI-5V power supply. So in this ca=
+se it
+> > really is just for DDC. It is conceivable that some boards may need bot=
+h to
+> > enable 5V for HDMI circuitry and some separate power shifting logic for
+> > DDC bus.
+>=20
+> Okay, not what I thought you were defining. DDC_CEC_EN is a GPIO line?
+> I wouldn't characterize this as a voltage rail, so I don't think it
+> should be a supply. Perhaps 'ddc-en-gpios'?
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-I'm willing to be listed as the maintainer since this is one of the
-drivers that I moved out out of staging unless one of the original
-authors wants to be listed instead.
+Yes it's GPIO. I'll implement it as GPIO.
 
-I added the BSD-2-Clause to the new binding document. I wrote the
-original document and the only commit since then was from Rob in
-commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
-bindings")
+> We certainly want to make it clear this is not the 5V supply.
 
- .../bindings/iio/light/isl29018.txt           | 27 ---------
- .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
- create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml
+Right. Thank you for review.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-deleted file mode 100644
-index b9bbde3e13ed..000000000000
---- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* ISL 29018/29023/29035 I2C ALS, Proximity, and Infrared sensor
--
--Required properties:
--
--  - compatible: Should be one of
--		"isil,isl29018"
--		"isil,isl29023"
--		"isil,isl29035"
--  - reg: the I2C address of the device
--
--Optional properties:
--
--  - interrupts: the sole interrupt generated by the device
--
--  Refer to interrupt-controller/interrupts.txt for generic interrupt client
--  node bindings.
--
--  - vcc-supply: phandle to the regulator that provides power to the sensor.
--
--Example:
--
--isl29018@44 {
--	compatible = "isil,isl29018";
--	reg = <0x44>;
--	interrupt-parent = <&gpio>;
--	interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.yaml b/Documentation/devicetree/bindings/iio/light/isl29018.yaml
-new file mode 100644
-index 000000000000..cbb00be8f359
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/isl29018.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/isl29018.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: |
-+  Intersil 29018/29023/29035 Ambient Light, Infrared Light, and Proximity Sensor
-+
-+maintainers:
-+  - Brian Masney <masneyb@onstation.org>
-+
-+description: |
-+  Ambient and infrared light sensing with proximity detection over an i2c
-+  interface.
-+
-+  https://www.renesas.com/us/en/www/doc/datasheet/isl29018.pdf
-+  https://www.renesas.com/us/en/www/doc/datasheet/isl29023.pdf
-+  https://www.renesas.com/us/en/www/doc/datasheet/isl29035.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - isil,isl29018
-+      - isil,isl29023
-+      - isil,isl29035
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vcc-supply:
-+    description: Regulator that provides power to the sensor
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        sensor@44 {
-+                compatible = "isil,isl29018";
-+                reg = <0x44>;
-+                interrupts-extended = <&msmgpio 61 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
-+...
--- 
-2.20.1
+regards,
+	Ondrej
+
+> Rob
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
