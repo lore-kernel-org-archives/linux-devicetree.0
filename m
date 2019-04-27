@@ -1,70 +1,128 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
-Date: Sun, 28 Apr 2019 03:21:13 +0900
-Message-ID: <20190427182113.GL14916@sirena.org.uk>
-References: <1548675904-18324-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1548675904-18324-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20190204090301.GC23441@sirena.org.uk>
- <95276ca0-6896-a595-867a-184a518fa31f@linaro.org>
- <20190425183736.GF23183@sirena.org.uk>
- <022b3c6a-e356-3c5a-3c46-c6edcf4f8cd5@linaro.org>
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML format
+Date: Sat, 27 Apr 2019 14:23:59 -0400
+Message-ID: <20190427182359.27254-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sCNd3Ivk/oijKKf1"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <022b3c6a-e356-3c5a-3c46-c6edcf4f8cd5@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, vinod.koul@linaro.org, niklas.cassel@linaro.org, khasim.mohammed@linaro.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, anson.huang@nxp.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ldewangan@nvidia.com, rklein@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
+Convert the isl29018 device tree bindings to the new YAML format.
 
---sCNd3Ivk/oijKKf1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+I'm willing to be listed as the maintainer since this is one of the
+drivers that I moved out out of staging unless one of the original
+authors wants to be listed instead.
 
-On Thu, Apr 25, 2019 at 09:44:00PM +0200, Jorge Ramirez wrote:
+I added the BSD-2-Clause to the new binding document. I wrote the
+original document and the only commit since then was from Rob in
+commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
+bindings")
 
-> the way I see it, if I follow your suggestion and since we are not
-> allowed to extend spmi_regulator_find_range(), the only options are:
+ .../bindings/iio/light/isl29018.txt           | 27 ---------
+ .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
+ 2 files changed, 56 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml
 
-> 1) duplicate verbatim this whole function
-> (spmi_regulator_select_voltage_same_range) with a minor change (this
-> amount of code duplication in the kernel seems rather unnecessary to me)
-
-> 2) modify the struct spmi_regulator definition with a new operation that
-> calls a different implementation of find range (seems a massive overkill)
-
-Since the point of this change is AFAICT that this regulator only has a
-single linear range it seems like it should just be able to use the
-existing generic functions shouldn't it?  It just needs it's own
-set/get_voltage_sel() operations.  As far as I can see the main thing
-the driver is doing with the custom stuff is handling the fact that
-there's multiple ranges but that's not an issue for this regulator.
-It's possible I'm missing something there but that was the main thing
-(and we do have some generic support for multiple linear ranges in the
-helper code already, can't remember why this driver isn't using that -
-the ranges overlap IIRC?).
-
-TBH looking at the uses of find_range() I'm not sure they're 100%
-sensible as they are - the existing _time_sel() is assuming we only need
-to work out the ramp time between voltages in the same range which is
-going to have trouble.
-
---sCNd3Ivk/oijKKf1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzEnZYACgkQJNaLcl1U
-h9Be2wf/Ts0rAq3XrujapmG1sE36u6DgwDxHfPpMSejg40goWEljc2BT0WnUwqiC
-NRj8O2f8zXZJ6jEofNYk6dOO17ej93naTtIO34nDIU7KSB0q0DhyApUTMwGiFuC9
-b5Aoa1EvRAaqQ/Pr9n8XUHnDxgCJsMzDxz9w6dXlT0fgDnvoFnQAL1OYaHZjwb72
-Sgp/3sJSpniaTGO+F3QaSV/lmGJ/7bMRvvNSQZOpwYc10YRmuFOGcGw2WZp71G4q
-XUlyxvscZ77dvHs3p/p87mwuzJID6ZTxnIFcH3ScemFJE6DDSN4aRb1gfVZtrOIS
-qdrDP4sKHBDd+xxxcUqJVBtZaWHK/Q==
-=RPrf
------END PGP SIGNATURE-----
-
---sCNd3Ivk/oijKKf1--
+diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+deleted file mode 100644
+index b9bbde3e13ed..000000000000
+--- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* ISL 29018/29023/29035 I2C ALS, Proximity, and Infrared sensor
+-
+-Required properties:
+-
+-  - compatible: Should be one of
+-		"isil,isl29018"
+-		"isil,isl29023"
+-		"isil,isl29035"
+-  - reg: the I2C address of the device
+-
+-Optional properties:
+-
+-  - interrupts: the sole interrupt generated by the device
+-
+-  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+-  node bindings.
+-
+-  - vcc-supply: phandle to the regulator that provides power to the sensor.
+-
+-Example:
+-
+-isl29018@44 {
+-	compatible = "isil,isl29018";
+-	reg = <0x44>;
+-	interrupt-parent = <&gpio>;
+-	interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.yaml b/Documentation/devicetree/bindings/iio/light/isl29018.yaml
+new file mode 100644
+index 000000000000..cbb00be8f359
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/isl29018.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/isl29018.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: |
++  Intersil 29018/29023/29035 Ambient Light, Infrared Light, and Proximity Sensor
++
++maintainers:
++  - Brian Masney <masneyb@onstation.org>
++
++description: |
++  Ambient and infrared light sensing with proximity detection over an i2c
++  interface.
++
++  https://www.renesas.com/us/en/www/doc/datasheet/isl29018.pdf
++  https://www.renesas.com/us/en/www/doc/datasheet/isl29023.pdf
++  https://www.renesas.com/us/en/www/doc/datasheet/isl29035.pdf
++
++properties:
++  compatible:
++    enum:
++      - isil,isl29018
++      - isil,isl29023
++      - isil,isl29035
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vcc-supply:
++    description: Regulator that provides power to the sensor
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        sensor@44 {
++                compatible = "isil,isl29018";
++                reg = <0x44>;
++                interrupts-extended = <&msmgpio 61 IRQ_TYPE_LEVEL_HIGH>;
++        };
++    };
++...
+-- 
+2.20.1
