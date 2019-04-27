@@ -1,234 +1,249 @@
 From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V3 03/12] misc: xilinx_sdfec: Add CCF support
-Date: Sat, 27 Apr 2019 23:04:57 +0100
-Message-ID: <1556402706-176271-4-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V3 08/12] misc: xilinx_sdfec: Add ability to get/set config
+Date: Sat, 27 Apr 2019 23:05:02 +0100
+Message-ID: <1556402706-176271-9-git-send-email-dragan.cvetic@xilinx.com>
 References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the support for Linux Clock Control Framework (CCF).
-Registers and enables clocks with the Clock Control
-Framework (CCF), to prevent shared clocks from been
-disabled.
+- Add capability to get SD-FEC config data using ioctl
+XSDFEC_GET_CONFIG.
+
+- Add capability to set SD-FEC data order using ioctl
+SDFEC_SET_ORDER.
+
+- Add capability to set SD-FEC bypass option using ioctl
+XSDFEC_SET_BYPASS.
+
+- Add capability to set SD-FEC active state using ioctl
+XSDFEC_IS_ACTIVE.
 
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c | 154 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 154 insertions(+)
+ drivers/misc/xilinx_sdfec.c      | 99 ++++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h | 57 +++++++++++++++++++++++
+ 2 files changed, 156 insertions(+)
 
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 278754b..a52a5c6 100644
+index 18e7ae2..560a2ed 100644
 --- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -37,6 +37,28 @@ static atomic_t xsdfec_ndevs = ATOMIC_INIT(0);
- static dev_t xsdfec_devt;
+@@ -306,6 +306,17 @@ static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+ 	return 0;
+ }
  
- /**
-+ * struct xsdfec_clks - For managing SD-FEC clocks
-+ * @core_clk: Main processing clock for core
-+ * @axi_clk: AXI4-Lite memory-mapped clock
-+ * @din_words_clk: DIN Words AXI4-Stream Slave clock
-+ * @din_clk: DIN AXI4-Stream Slave clock
-+ * @dout_clk: DOUT Words AXI4-Stream Slave clock
-+ * @dout_words_clk: DOUT AXI4-Stream Slave clock
-+ * @ctrl_clk: Control AXI4-Stream Slave clock
-+ * @status_clk: Status AXI4-Stream Slave clock
-+ */
-+struct xsdfec_clks {
-+	struct clk *core_clk;
-+	struct clk *axi_clk;
-+	struct clk *din_words_clk;
-+	struct clk *din_clk;
-+	struct clk *dout_clk;
-+	struct clk *dout_words_clk;
-+	struct clk *ctrl_clk;
-+	struct clk *status_clk;
-+};
-+
-+/**
-  * struct xsdfec_dev - Driver data for SDFEC
-  * @regs: device physical base address
-  * @dev: pointer to device struct
-@@ -44,6 +66,7 @@ static dev_t xsdfec_devt;
-  * @open_count: Count of char device being opened
-  * @xsdfec_cdev: Character device handle
-  * @irq_lock: Driver spinlock
-+ * @clks: Clocks managed by the SDFEC driver
-  *
-  * This structure contains necessary state for SDFEC driver to operate
-  */
-@@ -55,12 +78,136 @@ struct xsdfec_dev {
- 	struct cdev xsdfec_cdev;
- 	/* Spinlock to protect state_updated and stats_updated */
- 	spinlock_t irq_lock;
-+	struct xsdfec_clks clks;
- };
- 
- static const struct file_operations xsdfec_fops = {
- 	.owner = THIS_MODULE,
- };
- 
-+static int xsdfec_clk_init(struct platform_device *pdev,
-+			   struct xsdfec_clks *clks)
++static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
 +{
 +	int err;
 +
-+	clks->core_clk = devm_clk_get(&pdev->dev, "core_clk");
-+	if (IS_ERR(clks->core_clk)) {
-+		dev_err(&pdev->dev, "failed to get core_clk");
-+		return PTR_ERR(clks->core_clk);
-+	}
-+
-+	clks->axi_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
-+	if (IS_ERR(clks->axi_clk)) {
-+		dev_err(&pdev->dev, "failed to get axi_clk");
-+		return PTR_ERR(clks->axi_clk);
-+	}
-+
-+	clks->din_words_clk = devm_clk_get(&pdev->dev, "s_axis_din_words_aclk");
-+	if (IS_ERR(clks->din_words_clk))
-+		clks->din_words_clk = NULL;
-+
-+	clks->din_clk = devm_clk_get(&pdev->dev, "s_axis_din_aclk");
-+	if (IS_ERR(clks->din_clk))
-+		clks->din_clk = NULL;
-+
-+	clks->dout_clk = devm_clk_get(&pdev->dev, "m_axis_dout_aclk");
-+	if (IS_ERR(clks->dout_clk))
-+		clks->dout_clk = NULL;
-+
-+	clks->dout_words_clk =
-+		devm_clk_get(&pdev->dev, "s_axis_dout_words_aclk");
-+	if (IS_ERR(clks->dout_words_clk))
-+		clks->dout_words_clk = NULL;
-+
-+	clks->ctrl_clk = devm_clk_get(&pdev->dev, "s_axis_ctrl_aclk");
-+	if (IS_ERR(clks->ctrl_clk))
-+		clks->ctrl_clk = NULL;
-+
-+	clks->status_clk = devm_clk_get(&pdev->dev, "m_axis_status_aclk");
-+	if (IS_ERR(clks->status_clk))
-+		clks->status_clk = NULL;
-+
-+	err = clk_prepare_enable(clks->core_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable core_clk (%d)", err);
-+		return err;
-+	}
-+
-+	err = clk_prepare_enable(clks->axi_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable axi_clk (%d)", err);
-+		goto err_disable_core_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->din_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable din_clk (%d)", err);
-+		goto err_disable_axi_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->din_words_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable din_words_clk (%d)", err);
-+		goto err_disable_din_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->dout_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable dout_clk (%d)", err);
-+		goto err_disable_din_words_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->dout_words_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable dout_words_clk (%d)",
-+			err);
-+		goto err_disable_dout_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->ctrl_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable ctrl_clk (%d)", err);
-+		goto err_disable_dout_words_clk;
-+	}
-+
-+	err = clk_prepare_enable(clks->status_clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable status_clk (%d)\n", err);
-+		goto err_disable_ctrl_clk;
-+	}
-+
-+	return err;
-+
-+err_disable_ctrl_clk:
-+	clk_disable_unprepare(clks->ctrl_clk);
-+err_disable_dout_words_clk:
-+	clk_disable_unprepare(clks->dout_words_clk);
-+err_disable_dout_clk:
-+	clk_disable_unprepare(clks->dout_clk);
-+err_disable_din_words_clk:
-+	clk_disable_unprepare(clks->din_words_clk);
-+err_disable_din_clk:
-+	clk_disable_unprepare(clks->din_clk);
-+err_disable_axi_clk:
-+	clk_disable_unprepare(clks->axi_clk);
-+err_disable_core_clk:
-+	clk_disable_unprepare(clks->core_clk);
-+
-+	return err;
-+}
-+
-+static void xsdfec_disable_all_clks(struct xsdfec_clks *clks)
-+{
-+	clk_disable_unprepare(clks->status_clk);
-+	clk_disable_unprepare(clks->ctrl_clk);
-+	clk_disable_unprepare(clks->dout_words_clk);
-+	clk_disable_unprepare(clks->dout_clk);
-+	clk_disable_unprepare(clks->din_words_clk);
-+	clk_disable_unprepare(clks->din_clk);
-+	clk_disable_unprepare(clks->core_clk);
-+	clk_disable_unprepare(clks->axi_clk);
-+}
-+
- static int xsdfec_probe(struct platform_device *pdev)
- {
- 	struct xsdfec_dev *xsdfec;
-@@ -77,6 +224,10 @@ static int xsdfec_probe(struct platform_device *pdev)
- 	xsdfec->config.fec_id = atomic_read(&xsdfec_ndevs);
- 	spin_lock_init(&xsdfec->irq_lock);
- 
-+	err = xsdfec_clk_init(pdev, &xsdfec->clks);
++	err = copy_to_user(arg, &xsdfec->config, sizeof(xsdfec->config));
 +	if (err)
-+		return err;
++		err = -EFAULT;
 +
- 	dev = xsdfec->dev;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	xsdfec->regs = devm_ioremap_resource(dev, res);
-@@ -124,6 +275,7 @@ static int xsdfec_probe(struct platform_device *pdev)
- err_xsdfec_cdev:
- 	cdev_del(&xsdfec->xsdfec_cdev);
- err_xsdfec_dev:
-+	xsdfec_disable_all_clks(&xsdfec->clks);
- 	return err;
++	return err;
++}
++
+ static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
+ {
+ 	struct xsdfec_turbo turbo;
+@@ -648,6 +659,82 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
+ 	return ret;
  }
  
-@@ -141,6 +293,8 @@ static int xsdfec_remove(struct platform_device *pdev)
- 		return -EIO;
++static int xsdfec_set_order(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	bool order_invalid;
++	enum xsdfec_order order;
++	int err;
++
++	err = get_user(order, (enum xsdfec_order *)arg);
++	if (err)
++		return -EFAULT;
++
++	order_invalid = (order != XSDFEC_MAINTAIN_ORDER) &&
++			(order != XSDFEC_OUT_OF_ORDER);
++	if (order_invalid) {
++		dev_err(xsdfec->dev, "%s invalid order value %d for SDFEC%d",
++			__func__, order, xsdfec->config.fec_id);
++		return -EINVAL;
++	}
++
++	/* Verify Device has not started */
++	if (xsdfec->state == XSDFEC_STARTED) {
++		dev_err(xsdfec->dev,
++			"%s attempting to set Order while started for SDFEC%d",
++			__func__, xsdfec->config.fec_id);
++		return -EIO;
++	}
++
++	xsdfec_regwrite(xsdfec, XSDFEC_ORDER_ADDR, order);
++
++	xsdfec->config.order = order;
++
++	return 0;
++}
++
++static int xsdfec_set_bypass(struct xsdfec_dev *xsdfec, bool __user *arg)
++{
++	bool bypass;
++	int err;
++
++	err = get_user(bypass, arg);
++	if (err)
++		return -EFAULT;
++
++	/* Verify Device has not started */
++	if (xsdfec->state == XSDFEC_STARTED) {
++		dev_err(xsdfec->dev,
++			"%s attempting to set bypass while started for SDFEC%d",
++			__func__, xsdfec->config.fec_id);
++		return -EIO;
++	}
++
++	if (bypass)
++		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 1);
++	else
++		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 0);
++
++	xsdfec->config.bypass = bypass;
++
++	return 0;
++}
++
++static int xsdfec_is_active(struct xsdfec_dev *xsdfec, bool __user *arg)
++{
++	u32 reg_value;
++	bool is_active;
++	int err;
++
++	reg_value = xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR);
++	/* using a double ! operator instead of casting */
++	is_active = !!(reg_value & XSDFEC_IS_ACTIVITY_SET);
++	err = put_user(is_active, arg);
++	if (err)
++		return -EFAULT;
++
++	return err;
++}
++
+ static u32
+ xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
+ {
+@@ -741,6 +828,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
  	}
  
-+	xsdfec_disable_all_clks(&xsdfec->clks);
-+
- 	device_destroy(xsdfec_class,
- 		       MKDEV(MAJOR(xsdfec_devt), xsdfec->config.fec_id));
- 	cdev_del(&xsdfec->xsdfec_cdev);
+ 	switch (cmd) {
++	case XSDFEC_GET_CONFIG:
++		rval = xsdfec_get_config(xsdfec, arg);
++		break;
+ 	case XSDFEC_SET_TURBO:
+ 		rval = xsdfec_set_turbo(xsdfec, arg);
+ 		break;
+@@ -750,6 +840,15 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	case XSDFEC_ADD_LDPC_CODE_PARAMS:
+ 		rval = xsdfec_add_ldpc(xsdfec, arg);
+ 		break;
++	case XSDFEC_SET_ORDER:
++		rval = xsdfec_set_order(xsdfec, arg);
++		break;
++	case XSDFEC_SET_BYPASS:
++		rval = xsdfec_set_bypass(xsdfec, arg);
++		break;
++	case XSDFEC_IS_ACTIVE:
++		rval = xsdfec_is_active(xsdfec, (bool __user *)arg);
++		break;
+ 	default:
+ 		/* Should not get here */
+ 		dev_err(xsdfec->dev, "Undefined SDFEC IOCTL");
+diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+index b6987c5..5532572 100644
+--- a/include/uapi/misc/xilinx_sdfec.h
++++ b/include/uapi/misc/xilinx_sdfec.h
+@@ -315,6 +315,19 @@ xsdfec_calculate_shared_ldpc_table_entry_size(struct xsdfec_ldpc_params *ldpc,
+ #define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
+ 	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
+ /**
++ * DOC: XSDFEC_GET_CONFIG
++ * @Parameters
++ *
++ * @struct xsdfec_config *
++ *	Pointer to the &struct xsdfec_config that contains the current
++ *	configuration settings of the SD-FEC Block
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC core configuration
++ */
++#define XSDFEC_GET_CONFIG _IOR(XSDFEC_MAGIC, 6, struct xsdfec_config)
++/**
+  * DOC: XSDFEC_GET_TURBO
+  * @Parameters
+  *
+@@ -327,4 +340,48 @@ xsdfec_calculate_shared_ldpc_table_entry_size(struct xsdfec_ldpc_params *ldpc,
+  * ioctl that returns SD-FEC turbo param values
+  */
+ #define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
++/**
++ * DOC: XSDFEC_SET_ORDER
++ * @Parameters
++ *
++ * @struct unsigned long *
++ *	Pointer to the unsigned long that contains a value from the
++ *	@enum xsdfec_order
++ *
++ * @Description
++ *
++ * ioctl that sets order, if order of blocks can change from input to output
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_ORDER _IOW(XSDFEC_MAGIC, 8, unsigned long)
++/**
++ * DOC: XSDFEC_SET_BYPASS
++ * @Parameters
++ *
++ * @struct bool *
++ *	Pointer to bool that sets the bypass value, where false results in
++ *	normal operation and false results in the SD-FEC performing the
++ *	configured operations (same number of cycles) but output data matches
++ *	the input data
++ *
++ * @Description
++ *
++ * ioctl that sets bypass.
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_BYPASS _IOW(XSDFEC_MAGIC, 9, bool)
++/**
++ * DOC: XSDFEC_IS_ACTIVE
++ * @Parameters
++ *
++ * @struct bool *
++ *	Pointer to bool that returns true if the SD-FEC is processing data
++ *
++ * @Description
++ *
++ * ioctl that determines if SD-FEC is processing data
++ */
++#define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
+ #endif /* __XILINX_SDFEC_H__ */
 -- 
 2.7.4
