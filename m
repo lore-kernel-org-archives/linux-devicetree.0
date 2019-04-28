@@ -1,543 +1,778 @@
-From: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH V3 07/12] misc: xilinx_sdfec: Add ability to configure LDPC
-Date: Sat, 27 Apr 2019 23:05:01 +0100
-Message-ID: <1556402706-176271-8-git-send-email-dragan.cvetic@xilinx.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: [RFT PATCH v4 3/5] cpu-topology: Move cpu topology code to common code.
+Date: Sat, 27 Apr 2019 17:25:27 -0700
+Message-ID: <20190428002529.14229-4-atish.patra@wdc.com>
+References: <20190428002529.14229-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+In-Reply-To: <20190428002529.14229-1-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Dragan Cvetic <dragan.cvetic@xilinx.com>, Derek Kiernan <derek.kiernan@xilinx.com>
+To: linux-kernel@vger.kernel.org
+Cc: Atish Patra <atish.patra@wdc.com>, Jeffrey Hugo <jhugo@codeaurora.org>, Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>Rob Herring <ro>
 List-Id: devicetree@vger.kernel.org
 
-Add the capability to configure LDPC mode via the ioctl
-XSDFEC_ADD_LDPC_CODE_PARAMS.
+Both RISC-V & ARM64 are using cpu-map device tree to describe
+their cpu topology. It's better to move the relevant code to
+a common place instead of duplicate code.
 
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/misc/xilinx_sdfec.c      | 333 +++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h | 119 ++++++++++++++
- 2 files changed, 452 insertions(+)
+ arch/arm64/include/asm/topology.h |  23 ---
+ arch/arm64/kernel/topology.c      | 303 +-----------------------------
+ drivers/base/arch_topology.c      | 298 ++++++++++++++++++++++++++++-
+ drivers/base/topology.c           |   1 +
+ include/linux/arch_topology.h     |  28 +++
+ 5 files changed, 330 insertions(+), 323 deletions(-)
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 19b5f96..18e7ae2 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -26,6 +26,8 @@
- #include <linux/spinlock.h>
- #include <linux/clk.h>
- #include <linux/compat.h>
-+#include <linux/mm.h>
-+#include <linux/highmem.h>
+diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+index 0524f2438649..a4d945db95a2 100644
+--- a/arch/arm64/include/asm/topology.h
++++ b/arch/arm64/include/asm/topology.h
+@@ -4,29 +4,6 @@
  
- #include <uapi/misc/xilinx_sdfec.h>
+ #include <linux/cpumask.h>
  
-@@ -122,6 +124,57 @@ static dev_t xsdfec_devt;
- #define XSDFEC_TURBO_SCALE_BIT_POS (8)
- #define XSDFEC_TURBO_SCALE_MAX (15)
+-struct cpu_topology {
+-	int thread_id;
+-	int core_id;
+-	int package_id;
+-	int llc_id;
+-	cpumask_t thread_sibling;
+-	cpumask_t core_sibling;
+-	cpumask_t llc_sibling;
+-};
+-
+-extern struct cpu_topology cpu_topology[NR_CPUS];
+-
+-#define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
+-#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
+-#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
+-#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
+-#define topology_llc_cpumask(cpu)	(&cpu_topology[cpu].llc_sibling)
+-
+-void init_cpu_topology(void);
+-void store_cpu_topology(unsigned int cpuid);
+-void remove_cpu_topology(unsigned int cpuid);
+-const struct cpumask *cpu_coregroup_mask(int cpu);
+-
+ #ifdef CONFIG_NUMA
  
-+/* REG0 Register */
-+#define XSDFEC_LDPC_CODE_REG0_ADDR_BASE (0x2000)
-+#define XSDFEC_LDPC_CODE_REG0_ADDR_HIGH (0x27F0)
-+#define XSDFEC_REG0_N_MIN (4)
-+#define XSDFEC_REG0_N_MAX (32768)
-+#define XSDFEC_REG0_N_MUL_P (256)
-+#define XSDFEC_REG0_N_LSB (0)
-+#define XSDFEC_REG0_K_MIN (2)
-+#define XSDFEC_REG0_K_MAX (32766)
-+#define XSDFEC_REG0_K_MUL_P (256)
-+#define XSDFEC_REG0_K_LSB (16)
-+
-+/* REG1 Register */
-+#define XSDFEC_LDPC_CODE_REG1_ADDR_BASE (0x2004)
-+#define XSDFEC_LDPC_CODE_REG1_ADDR_HIGH (0x27f4)
-+#define XSDFEC_REG1_PSIZE_MIN (2)
-+#define XSDFEC_REG1_PSIZE_MAX (512)
-+#define XSDFEC_REG1_NO_PACKING_MASK (0x400)
-+#define XSDFEC_REG1_NO_PACKING_LSB (10)
-+#define XSDFEC_REG1_NM_MASK (0xFF800)
-+#define XSDFEC_REG1_NM_LSB (11)
-+#define XSDFEC_REG1_BYPASS_MASK (0x100000)
-+
-+/* REG2 Register */
-+#define XSDFEC_LDPC_CODE_REG2_ADDR_BASE (0x2008)
-+#define XSDFEC_LDPC_CODE_REG2_ADDR_HIGH (0x27f8)
-+#define XSDFEC_REG2_NLAYERS_MIN (1)
-+#define XSDFEC_REG2_NLAYERS_MAX (256)
-+#define XSDFEC_REG2_NNMQC_MASK (0xFFE00)
-+#define XSDFEC_REG2_NMQC_LSB (9)
-+#define XSDFEC_REG2_NORM_TYPE_MASK (0x100000)
-+#define XSDFEC_REG2_NORM_TYPE_LSB (20)
-+#define XSDFEC_REG2_SPECIAL_QC_MASK (0x200000)
-+#define XSDFEC_REG2_SPEICAL_QC_LSB (21)
-+#define XSDFEC_REG2_NO_FINAL_PARITY_MASK (0x400000)
-+#define XSDFEC_REG2_NO_FINAL_PARITY_LSB (22)
-+#define XSDFEC_REG2_MAX_SCHEDULE_MASK (0x1800000)
-+#define XSDFEC_REG2_MAX_SCHEDULE_LSB (23)
-+
-+/* REG3 Register */
-+#define XSDFEC_LDPC_CODE_REG3_ADDR_BASE (0x200C)
-+#define XSDFEC_LDPC_CODE_REG3_ADDR_HIGH (0x27FC)
-+#define XSDFEC_REG3_LA_OFF_LSB (8)
-+#define XSDFEC_REG3_QC_OFF_LSB (16)
-+
-+#define XSDFEC_LDPC_REG_JUMP (0x10)
-+#define XSDFEC_REG_WIDTH_JUMP (4)
-+
-+/* The maximum number of pinned pages */
-+#define MAX_NUM_PAGES ((XSDFEC_QC_TABLE_DEPTH / PAGE_SIZE) + 1)
-+
- /**
-  * struct xsdfec_clks - For managing SD-FEC clocks
-  * @core_clk: Main processing clock for core
-@@ -318,6 +371,283 @@ static int xsdfec_get_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return err;
+ struct pci_bus;
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 0825c4a856e3..6b95c91e7d67 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -14,250 +14,13 @@
+ #include <linux/acpi.h>
+ #include <linux/arch_topology.h>
+ #include <linux/cacheinfo.h>
+-#include <linux/cpu.h>
+-#include <linux/cpumask.h>
+ #include <linux/init.h>
+ #include <linux/percpu.h>
+-#include <linux/node.h>
+-#include <linux/nodemask.h>
+-#include <linux/of.h>
+-#include <linux/sched.h>
+-#include <linux/sched/topology.h>
+-#include <linux/slab.h>
+-#include <linux/smp.h>
+-#include <linux/string.h>
+ 
+ #include <asm/cpu.h>
+ #include <asm/cputype.h>
+ #include <asm/topology.h>
+ 
+-static int __init get_cpu_for_node(struct device_node *node)
+-{
+-	struct device_node *cpu_node;
+-	int cpu;
+-
+-	cpu_node = of_parse_phandle(node, "cpu", 0);
+-	if (!cpu_node)
+-		return -1;
+-
+-	cpu = of_cpu_node_to_id(cpu_node);
+-	if (cpu >= 0)
+-		topology_parse_cpu_capacity(cpu_node, cpu);
+-	else
+-		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+-
+-	of_node_put(cpu_node);
+-	return cpu;
+-}
+-
+-static int __init parse_core(struct device_node *core, int package_id,
+-			     int core_id)
+-{
+-	char name[10];
+-	bool leaf = true;
+-	int i = 0;
+-	int cpu;
+-	struct device_node *t;
+-
+-	do {
+-		snprintf(name, sizeof(name), "thread%d", i);
+-		t = of_get_child_by_name(core, name);
+-		if (t) {
+-			leaf = false;
+-			cpu = get_cpu_for_node(t);
+-			if (cpu >= 0) {
+-				cpu_topology[cpu].package_id = package_id;
+-				cpu_topology[cpu].core_id = core_id;
+-				cpu_topology[cpu].thread_id = i;
+-			} else {
+-				pr_err("%pOF: Can't get CPU for thread\n",
+-				       t);
+-				of_node_put(t);
+-				return -EINVAL;
+-			}
+-			of_node_put(t);
+-		}
+-		i++;
+-	} while (t);
+-
+-	cpu = get_cpu_for_node(core);
+-	if (cpu >= 0) {
+-		if (!leaf) {
+-			pr_err("%pOF: Core has both threads and CPU\n",
+-			       core);
+-			return -EINVAL;
+-		}
+-
+-		cpu_topology[cpu].package_id = package_id;
+-		cpu_topology[cpu].core_id = core_id;
+-	} else if (leaf) {
+-		pr_err("%pOF: Can't get CPU for leaf core\n", core);
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-static int __init parse_cluster(struct device_node *cluster, int depth)
+-{
+-	char name[10];
+-	bool leaf = true;
+-	bool has_cores = false;
+-	struct device_node *c;
+-	static int package_id __initdata;
+-	int core_id = 0;
+-	int i, ret;
+-
+-	/*
+-	 * First check for child clusters; we currently ignore any
+-	 * information about the nesting of clusters and present the
+-	 * scheduler with a flat list of them.
+-	 */
+-	i = 0;
+-	do {
+-		snprintf(name, sizeof(name), "cluster%d", i);
+-		c = of_get_child_by_name(cluster, name);
+-		if (c) {
+-			leaf = false;
+-			ret = parse_cluster(c, depth + 1);
+-			of_node_put(c);
+-			if (ret != 0)
+-				return ret;
+-		}
+-		i++;
+-	} while (c);
+-
+-	/* Now check for cores */
+-	i = 0;
+-	do {
+-		snprintf(name, sizeof(name), "core%d", i);
+-		c = of_get_child_by_name(cluster, name);
+-		if (c) {
+-			has_cores = true;
+-
+-			if (depth == 0) {
+-				pr_err("%pOF: cpu-map children should be clusters\n",
+-				       c);
+-				of_node_put(c);
+-				return -EINVAL;
+-			}
+-
+-			if (leaf) {
+-				ret = parse_core(c, package_id, core_id++);
+-			} else {
+-				pr_err("%pOF: Non-leaf cluster with core %s\n",
+-				       cluster, name);
+-				ret = -EINVAL;
+-			}
+-
+-			of_node_put(c);
+-			if (ret != 0)
+-				return ret;
+-		}
+-		i++;
+-	} while (c);
+-
+-	if (leaf && !has_cores)
+-		pr_warn("%pOF: empty cluster\n", cluster);
+-
+-	if (leaf)
+-		package_id++;
+-
+-	return 0;
+-}
+-
+-static int __init parse_dt_topology(void)
+-{
+-	struct device_node *cn, *map;
+-	int ret = 0;
+-	int cpu;
+-
+-	cn = of_find_node_by_path("/cpus");
+-	if (!cn) {
+-		pr_err("No CPU information found in DT\n");
+-		return 0;
+-	}
+-
+-	/*
+-	 * When topology is provided cpu-map is essentially a root
+-	 * cluster with restricted subnodes.
+-	 */
+-	map = of_get_child_by_name(cn, "cpu-map");
+-	if (!map)
+-		goto out;
+-
+-	ret = parse_cluster(map, 0);
+-	if (ret != 0)
+-		goto out_map;
+-
+-	topology_normalize_cpu_scale();
+-
+-	/*
+-	 * Check that all cores are in the topology; the SMP code will
+-	 * only mark cores described in the DT as possible.
+-	 */
+-	for_each_possible_cpu(cpu)
+-		if (cpu_topology[cpu].package_id == -1)
+-			ret = -EINVAL;
+-
+-out_map:
+-	of_node_put(map);
+-out:
+-	of_node_put(cn);
+-	return ret;
+-}
+-
+-/*
+- * cpu topology table
+- */
+-struct cpu_topology cpu_topology[NR_CPUS];
+-EXPORT_SYMBOL_GPL(cpu_topology);
+-
+-const struct cpumask *cpu_coregroup_mask(int cpu)
+-{
+-	const cpumask_t *core_mask = cpumask_of_node(cpu_to_node(cpu));
+-
+-	/* Find the smaller of NUMA, core or LLC siblings */
+-	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
+-		/* not numa in package, lets use the package siblings */
+-		core_mask = &cpu_topology[cpu].core_sibling;
+-	}
+-	if (cpu_topology[cpu].llc_id != -1) {
+-		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
+-			core_mask = &cpu_topology[cpu].llc_sibling;
+-	}
+-
+-	return core_mask;
+-}
+-
+-static void update_siblings_masks(unsigned int cpuid)
+-{
+-	struct cpu_topology *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
+-	int cpu;
+-
+-	/* update core and thread sibling masks */
+-	for_each_online_cpu(cpu) {
+-		cpu_topo = &cpu_topology[cpu];
+-
+-		if (cpuid_topo->llc_id == cpu_topo->llc_id) {
+-			cpumask_set_cpu(cpu, &cpuid_topo->llc_sibling);
+-			cpumask_set_cpu(cpuid, &cpu_topo->llc_sibling);
+-		}
+-
+-		if (cpuid_topo->package_id != cpu_topo->package_id)
+-			continue;
+-
+-		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
+-		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
+-
+-		if (cpuid_topo->core_id != cpu_topo->core_id)
+-			continue;
+-
+-		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
+-		cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
+-	}
+-}
+-
+ void store_cpu_topology(unsigned int cpuid)
+ {
+ 	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
+@@ -296,59 +59,19 @@ void store_cpu_topology(unsigned int cpuid)
+ 	update_siblings_masks(cpuid);
  }
  
-+static int xsdfec_reg0_write(struct xsdfec_dev *xsdfec, u32 n, u32 k, u32 psize,
-+			     u32 offset)
+-static void clear_cpu_topology(int cpu)
+-{
+-	struct cpu_topology *cpu_topo = &cpu_topology[cpu];
+-
+-	cpumask_clear(&cpu_topo->llc_sibling);
+-	cpumask_set_cpu(cpu, &cpu_topo->llc_sibling);
+-
+-	cpumask_clear(&cpu_topo->core_sibling);
+-	cpumask_set_cpu(cpu, &cpu_topo->core_sibling);
+-	cpumask_clear(&cpu_topo->thread_sibling);
+-	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
+-}
+-
+-static void __init reset_cpu_topology(void)
+-{
+-	unsigned int cpu;
+-
+-	for_each_possible_cpu(cpu) {
+-		struct cpu_topology *cpu_topo = &cpu_topology[cpu];
+-
+-		cpu_topo->thread_id = -1;
+-		cpu_topo->core_id = 0;
+-		cpu_topo->package_id = -1;
+-		cpu_topo->llc_id = -1;
+-
+-		clear_cpu_topology(cpu);
+-	}
+-}
+-
+-void remove_cpu_topology(unsigned int cpu)
+-{
+-	int sibling;
+-
+-	for_each_cpu(sibling, topology_core_cpumask(cpu))
+-		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
+-	for_each_cpu(sibling, topology_sibling_cpumask(cpu))
+-		cpumask_clear_cpu(cpu, topology_sibling_cpumask(sibling));
+-	for_each_cpu(sibling, topology_llc_cpumask(cpu))
+-		cpumask_clear_cpu(cpu, topology_llc_cpumask(sibling));
+-
+-	clear_cpu_topology(cpu);
+-}
+-
+ #ifdef CONFIG_ACPI
+ /*
+  * Propagate the topology information of the processor_topology_node tree to the
+  * cpu_topology array.
+  */
+-static int __init parse_acpi_topology(void)
++int __init parse_acpi_topology(void)
+ {
+ 	bool is_threaded;
+ 	int cpu, topology_id;
+ 
++	if (acpi_disabled)
++		return 0;
++
+ 	is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -384,24 +107,6 @@ static int __init parse_acpi_topology(void)
+ 
+ 	return 0;
+ }
+-
+-#else
+-static inline int __init parse_acpi_topology(void)
+-{
+-	return -EINVAL;
+-}
+ #endif
+ 
+-void __init init_cpu_topology(void)
+-{
+-	reset_cpu_topology();
+ 
+-	/*
+-	 * Discard anything that was parsed if we hit an error so we
+-	 * don't use partial information.
+-	 */
+-	if (!acpi_disabled && parse_acpi_topology())
+-		reset_cpu_topology();
+-	else if (of_have_populated_dt() && parse_dt_topology())
+-		reset_cpu_topology();
+-}
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index edfcf8d982e4..2b0758c01cee 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -6,8 +6,8 @@
+  * Written by: Juri Lelli, ARM Ltd.
+  */
+ 
+-#include <linux/acpi.h>
+ #include <linux/arch_topology.h>
++#include <linux/acpi.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
+ #include <linux/device.h>
+@@ -16,6 +16,11 @@
+ #include <linux/string.h>
+ #include <linux/sched/topology.h>
+ #include <linux/cpuset.h>
++#include <linux/cpumask.h>
++#include <linux/init.h>
++#include <linux/percpu.h>
++#include <linux/sched.h>
++#include <linux/smp.h>
+ 
+ DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+ 
+@@ -278,3 +283,294 @@ static void parsing_done_workfn(struct work_struct *work)
+ #else
+ core_initcall(free_raw_capacity);
+ #endif
++
++#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
++static int __init get_cpu_for_node(struct device_node *node)
 +{
-+	u32 wdata;
++	struct device_node *cpu_node;
++	int cpu;
 +
-+	if (n < XSDFEC_REG0_N_MIN || n > XSDFEC_REG0_N_MAX ||
-+	    (n > XSDFEC_REG0_N_MUL_P * psize) || n <= k || ((n % psize) != 0)) {
-+		dev_err(xsdfec->dev, "N value is not in range");
++	cpu_node = of_parse_phandle(node, "cpu", 0);
++	if (!cpu_node)
++		return -1;
++
++	cpu = of_cpu_node_to_id(cpu_node);
++	if (cpu >= 0)
++		topology_parse_cpu_capacity(cpu_node, cpu);
++	else
++		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
++
++	of_node_put(cpu_node);
++	return cpu;
++}
++
++static int __init parse_core(struct device_node *core, int package_id,
++			     int core_id)
++{
++	char name[10];
++	bool leaf = true;
++	int i = 0;
++	int cpu;
++	struct device_node *t;
++
++	do {
++		snprintf(name, sizeof(name), "thread%d", i);
++		t = of_get_child_by_name(core, name);
++		if (t) {
++			leaf = false;
++			cpu = get_cpu_for_node(t);
++			if (cpu >= 0) {
++				cpu_topology[cpu].package_id = package_id;
++				cpu_topology[cpu].core_id = core_id;
++				cpu_topology[cpu].thread_id = i;
++			} else {
++				pr_err("%pOF: Can't get CPU for thread\n",
++				       t);
++				of_node_put(t);
++				return -EINVAL;
++			}
++			of_node_put(t);
++		}
++		i++;
++	} while (t);
++
++	cpu = get_cpu_for_node(core);
++	if (cpu >= 0) {
++		if (!leaf) {
++			pr_err("%pOF: Core has both threads and CPU\n",
++			       core);
++			return -EINVAL;
++		}
++
++		cpu_topology[cpu].package_id = package_id;
++		cpu_topology[cpu].core_id = core_id;
++	} else if (leaf) {
++		pr_err("%pOF: Can't get CPU for leaf core\n", core);
 +		return -EINVAL;
 +	}
-+	n <<= XSDFEC_REG0_N_LSB;
 +
-+	if (k < XSDFEC_REG0_K_MIN || k > XSDFEC_REG0_K_MAX ||
-+	    (k > XSDFEC_REG0_K_MUL_P * psize) || ((k % psize) != 0)) {
-+		dev_err(xsdfec->dev, "K value is not in range");
-+		return -EINVAL;
-+	}
-+	k = k << XSDFEC_REG0_K_LSB;
-+	wdata = k | n;
-+
-+	if (XSDFEC_LDPC_CODE_REG0_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG0_ADDR_HIGH) {
-+		dev_err(xsdfec->dev, "Writing outside of LDPC reg0 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG0_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG0_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
 +	return 0;
 +}
 +
-+static int xsdfec_reg1_write(struct xsdfec_dev *xsdfec, u32 psize,
-+			     u32 no_packing, u32 nm, u32 offset)
++static int __init parse_cluster(struct device_node *cluster, int depth)
 +{
-+	u32 wdata;
-+
-+	if (psize < XSDFEC_REG1_PSIZE_MIN || psize > XSDFEC_REG1_PSIZE_MAX) {
-+		dev_err(xsdfec->dev, "Psize is not in range");
-+		return -EINVAL;
-+	}
-+
-+	if (no_packing != 0 && no_packing != 1)
-+		dev_err(xsdfec->dev, "No-packing bit register invalid");
-+	no_packing = ((no_packing << XSDFEC_REG1_NO_PACKING_LSB) &
-+		      XSDFEC_REG1_NO_PACKING_MASK);
-+
-+	if (nm & ~(XSDFEC_REG1_NM_MASK >> XSDFEC_REG1_NM_LSB))
-+		dev_err(xsdfec->dev, "NM is beyond 10 bits");
-+	nm = (nm << XSDFEC_REG1_NM_LSB) & XSDFEC_REG1_NM_MASK;
-+
-+	wdata = nm | no_packing | psize;
-+	if (XSDFEC_LDPC_CODE_REG1_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG1_ADDR_HIGH) {
-+		dev_err(xsdfec->dev, "Writing outside of LDPC reg1 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG1_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG1_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
-+}
-+
-+static int xsdfec_reg2_write(struct xsdfec_dev *xsdfec, u32 nlayers, u32 nmqc,
-+			     u32 norm_type, u32 special_qc, u32 no_final_parity,
-+			     u32 max_schedule, u32 offset)
-+{
-+	u32 wdata;
-+
-+	if (nlayers < XSDFEC_REG2_NLAYERS_MIN ||
-+	    nlayers > XSDFEC_REG2_NLAYERS_MAX) {
-+		dev_err(xsdfec->dev, "Nlayers is not in range");
-+		return -EINVAL;
-+	}
-+
-+	if (nmqc & ~(XSDFEC_REG2_NNMQC_MASK >> XSDFEC_REG2_NMQC_LSB))
-+		dev_err(xsdfec->dev, "NMQC exceeds 11 bits");
-+	nmqc = (nmqc << XSDFEC_REG2_NMQC_LSB) & XSDFEC_REG2_NNMQC_MASK;
-+
-+	if (norm_type > 1)
-+		dev_err(xsdfec->dev, "Norm type is invalid");
-+	norm_type = ((norm_type << XSDFEC_REG2_NORM_TYPE_LSB) &
-+		     XSDFEC_REG2_NORM_TYPE_MASK);
-+	if (special_qc > 1)
-+		dev_err(xsdfec->dev, "Special QC in invalid");
-+	special_qc = ((special_qc << XSDFEC_REG2_SPEICAL_QC_LSB) &
-+		      XSDFEC_REG2_SPECIAL_QC_MASK);
-+
-+	if (no_final_parity > 1)
-+		dev_err(xsdfec->dev, "No final parity check invalid");
-+	no_final_parity =
-+		((no_final_parity << XSDFEC_REG2_NO_FINAL_PARITY_LSB) &
-+		 XSDFEC_REG2_NO_FINAL_PARITY_MASK);
-+	if (max_schedule &
-+	    ~(XSDFEC_REG2_MAX_SCHEDULE_MASK >> XSDFEC_REG2_MAX_SCHEDULE_LSB))
-+		dev_err(xsdfec->dev, "Max Schdule exceeds 2 bits");
-+	max_schedule = ((max_schedule << XSDFEC_REG2_MAX_SCHEDULE_LSB) &
-+			XSDFEC_REG2_MAX_SCHEDULE_MASK);
-+
-+	wdata = (max_schedule | no_final_parity | special_qc | norm_type |
-+		 nmqc | nlayers);
-+
-+	if (XSDFEC_LDPC_CODE_REG2_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG2_ADDR_HIGH) {
-+		dev_err(xsdfec->dev, "Writing outside of LDPC reg2 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG2_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG2_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
-+}
-+
-+static int xsdfec_reg3_write(struct xsdfec_dev *xsdfec, u8 sc_off, u8 la_off,
-+			     u16 qc_off, u32 offset)
-+{
-+	u32 wdata;
-+
-+	wdata = ((qc_off << XSDFEC_REG3_QC_OFF_LSB) |
-+		 (la_off << XSDFEC_REG3_LA_OFF_LSB) | sc_off);
-+	if (XSDFEC_LDPC_CODE_REG3_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG3_ADDR_HIGH) {
-+		dev_err(xsdfec->dev, "Writing outside of LDPC reg3 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG3_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG3_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
-+}
-+
-+static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
-+			      u32 *src_ptr, u32 len, const u32 base_addr,
-+			      const u32 depth)
-+{
-+	u32 reg = 0;
-+	u32 res;
-+	u32 n, i;
-+	u32 *addr = NULL;
-+	struct page *page[MAX_NUM_PAGES];
++	char name[10];
++	bool leaf = true;
++	bool has_cores = false;
++	int core_id = 0;
++	static int package_id __initdata;
++	struct device_node *c;
++	int i, ret;
 +
 +	/*
-+	 * Writes that go beyond the length of
-+	 * Shared Scale(SC) table should fail
++	 * First check for child clusters; we currently ignore any
++	 * information about the nesting of clusters and present the
++	 * scheduler with a flat list of them.
 +	 */
-+	if ((XSDFEC_REG_WIDTH_JUMP * (offset + len)) > depth) {
-+		dev_err(xsdfec->dev, "Write exceeds SC table length");
-+		return -EINVAL;
-+	}
++	i = 0;
++	do {
++		snprintf(name, sizeof(name), "cluster%d", i);
++		c = of_get_child_by_name(cluster, name);
++		if (c) {
++			leaf = false;
++			ret = parse_cluster(c, depth + 1);
++			of_node_put(c);
++			if (ret != 0)
++				return ret;
++		}
++		i++;
++	} while (c);
 +
-+	n = len / PAGE_SIZE;
-+	if (len % PAGE_SIZE)
-+		n += 1;
++	/* Now check for cores */
++	i = 0;
++	do {
++		snprintf(name, sizeof(name), "core%d", i);
++		c = of_get_child_by_name(cluster, name);
++		if (c) {
++			has_cores = true;
 +
-+	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
-+	if (res < n) {
-+		for (i = 0; i < res; i++)
-+			put_page(page[i]);
-+		return -EINVAL;
-+	}
++			if (depth == 0) {
++				pr_err("%pOF: cpu-map children should be clusters\n",
++				       c);
++				of_node_put(c);
++				return -EINVAL;
++			}
 +
-+	for (i = 0; i < n; i++) {
-+		addr = kmap(page[i]);
-+		do {
-+			xsdfec_regwrite(xsdfec,
-+					base_addr + ((offset + reg) *
-+						     XSDFEC_REG_WIDTH_JUMP),
-+					addr[reg]);
-+			reg++;
-+		} while ((reg < len) && (reg % PAGE_SIZE));
-+		put_page(page[i]);
-+	}
-+	return reg;
++			if (leaf) {
++				ret = parse_core(c, package_id, core_id++);
++			} else {
++				pr_err("%pOF: Non-leaf cluster with core %s\n",
++				       cluster, name);
++				ret = -EINVAL;
++			}
++
++			of_node_put(c);
++			if (ret != 0)
++				return ret;
++		}
++		i++;
++	} while (c);
++
++	if (leaf && !has_cores)
++		pr_warn("%pOF: empty cluster\n", cluster);
++
++	if (leaf)
++		package_id++;
++
++	return 0;
 +}
 +
-+static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
++static int __init parse_dt_topology(void)
 +{
-+	struct xsdfec_ldpc_params *ldpc;
-+	int ret, n;
++	struct device_node *cn, *map;
++	int ret = 0;
++	int cpu;
 +
-+	ldpc = kzalloc(sizeof(*ldpc), GFP_KERNEL);
-+	if (!ldpc)
-+		return -ENOMEM;
-+
-+	ret = copy_from_user(ldpc, arg, sizeof(*ldpc));
-+	if (ret)
-+		goto err_out;
-+
-+	if (xsdfec->config.code == XSDFEC_TURBO_CODE) {
-+		dev_err(xsdfec->dev,
-+			"%s: Unable to write LDPC to SDFEC%d check DT",
-+			__func__, xsdfec->config.fec_id);
-+		ret = -EIO;
-+		goto err_out;
++	cn = of_find_node_by_path("/cpus");
++	if (!cn) {
++		pr_err("No CPU information found in DT\n");
++		return 0;
 +	}
 +
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED) {
-+		dev_err(xsdfec->dev,
-+			"%s attempting to write LDPC code while started for SDFEC%d",
-+			__func__, xsdfec->config.fec_id);
-+		ret = -EIO;
-+		goto err_out;
-+	}
++	/*
++	 * When topology is provided cpu-map is essentially a root
++	 * cluster with restricted subnodes.
++	 */
++	map = of_get_child_by_name(cn, "cpu-map");
++	if (!map)
++		goto out;
 +
-+	if (xsdfec->config.code_wr_protect) {
-+		dev_err(xsdfec->dev,
-+			"%s writing LDPC code while Code Write Protection enabled for SDFEC%d",
-+			__func__, xsdfec->config.fec_id);
-+		ret = -EIO;
-+		goto err_out;
-+	}
++	ret = parse_cluster(map, 0);
++	if (ret != 0)
++		goto out_map;
 +
-+	/* Write Reg 0 */
-+	ret = xsdfec_reg0_write(xsdfec, ldpc->n, ldpc->k, ldpc->psize,
-+				ldpc->code_id);
-+	if (ret)
-+		goto err_out;
++	topology_normalize_cpu_scale();
 +
-+	/* Write Reg 1 */
-+	ret = xsdfec_reg1_write(xsdfec, ldpc->psize, ldpc->no_packing, ldpc->nm,
-+				ldpc->code_id);
-+	if (ret)
-+		goto err_out;
++	/*
++	 * Check that all cores are in the topology; the SMP code will
++	 * only mark cores described in the DT as possible.
++	 */
++	for_each_possible_cpu(cpu)
++		if (cpu_topology[cpu].package_id == -1)
++			ret = -EINVAL;
 +
-+	/* Write Reg 2 */
-+	ret = xsdfec_reg2_write(xsdfec, ldpc->nlayers, ldpc->nmqc,
-+				ldpc->norm_type, ldpc->special_qc,
-+				ldpc->no_final_parity, ldpc->max_schedule,
-+				ldpc->code_id);
-+	if (ret)
-+		goto err_out;
-+
-+	/* Write Reg 3 */
-+	ret = xsdfec_reg3_write(xsdfec, ldpc->sc_off, ldpc->la_off,
-+				ldpc->qc_off, ldpc->code_id);
-+	if (ret)
-+		goto err_out;
-+
-+	/* Write Shared Codes */
-+	n = ldpc->nlayers / 4;
-+	if (ldpc->nlayers % 4)
-+		n++;
-+
-+	ret = xsdfec_table_write(xsdfec, ldpc->sc_off, ldpc->sc_table, n,
-+				 XSDFEC_LDPC_SC_TABLE_ADDR_BASE,
-+				 XSDFEC_SC_TABLE_DEPTH);
-+	if (ret < 0)
-+		goto err_out;
-+
-+	ret = xsdfec_table_write(xsdfec, 4 * ldpc->la_off, ldpc->la_table,
-+				 ldpc->nlayers, XSDFEC_LDPC_LA_TABLE_ADDR_BASE,
-+				 XSDFEC_LA_TABLE_DEPTH);
-+	if (ret < 0)
-+		goto err_out;
-+
-+	ret = xsdfec_table_write(xsdfec, 4 * ldpc->qc_off, ldpc->qc_table,
-+				 ldpc->nqc, XSDFEC_LDPC_QC_TABLE_ADDR_BASE,
-+				 XSDFEC_QC_TABLE_DEPTH);
-+	if (ret > 0)
-+		ret = 0;
-+err_out:
-+	kfree(ldpc);
++out_map:
++	of_node_put(map);
++out:
++	of_node_put(cn);
 +	return ret;
 +}
 +
- static u32
- xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
- {
-@@ -417,6 +747,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_GET_TURBO:
- 		rval = xsdfec_get_turbo(xsdfec, arg);
- 		break;
-+	case XSDFEC_ADD_LDPC_CODE_PARAMS:
-+		rval = xsdfec_add_ldpc(xsdfec, arg);
-+		break;
- 	default:
- 		/* Should not get here */
- 		dev_err(xsdfec->dev, "Undefined SDFEC IOCTL");
-diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index 3dc8c53..b6987c5 100644
---- a/include/uapi/misc/xilinx_sdfec.h
-+++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -11,6 +11,22 @@
- #ifndef __XILINX_SDFEC_H__
- #define __XILINX_SDFEC_H__
- 
-+/* Shared LDPC Tables */
-+#define XSDFEC_LDPC_SC_TABLE_ADDR_BASE (0x10000)
-+#define XSDFEC_LDPC_SC_TABLE_ADDR_HIGH (0x10400)
-+#define XSDFEC_LDPC_LA_TABLE_ADDR_BASE (0x18000)
-+#define XSDFEC_LDPC_LA_TABLE_ADDR_HIGH (0x19000)
-+#define XSDFEC_LDPC_QC_TABLE_ADDR_BASE (0x20000)
-+#define XSDFEC_LDPC_QC_TABLE_ADDR_HIGH (0x28000)
-+
-+/* LDPC tables depth */
-+#define XSDFEC_SC_TABLE_DEPTH                                                  \
-+	(XSDFEC_LDPC_SC_TABLE_ADDR_HIGH - XSDFEC_LDPC_SC_TABLE_ADDR_BASE)
-+#define XSDFEC_LA_TABLE_DEPTH                                                  \
-+	(XSDFEC_LDPC_LA_TABLE_ADDR_HIGH - XSDFEC_LDPC_LA_TABLE_ADDR_BASE)
-+#define XSDFEC_QC_TABLE_DEPTH                                                  \
-+	(XSDFEC_LDPC_QC_TABLE_ADDR_HIGH - XSDFEC_LDPC_QC_TABLE_ADDR_BASE)
-+
- /**
-  * enum xsdfec_code - Code Type.
-  * @XSDFEC_TURBO_CODE: Driver is configured for Turbo mode.
-@@ -125,6 +141,53 @@ struct xsdfec_turbo {
- };
- 
- /**
-+ * struct xsdfec_ldpc_params - User data for LDPC codes.
-+ * @n: Number of code word bits
-+ * @k: Number of information bits
-+ * @psize: Size of sub-matrix
-+ * @nlayers: Number of layers in code
-+ * @nqc: Quasi Cyclic Number
-+ * @nmqc: Number of M-sized QC operations in parity check matrix
-+ * @nm: Number of M-size vectors in N
-+ * @norm_type: Normalization required or not
-+ * @no_packing: Determines if multiple QC ops should be performed
-+ * @special_qc: Sub-Matrix property for Circulant weight > 0
-+ * @no_final_parity: Decide if final parity check needs to be performed
-+ * @max_schedule: Experimental code word scheduling limit
-+ * @sc_off: SC offset
-+ * @la_off: LA offset
-+ * @qc_off: QC offset
-+ * @sc_table: Pointer to SC Table which must be page aligned
-+ * @la_table: Pointer to LA Table which must be page aligned
-+ * @qc_table: Pointer to QC Table which must be page aligned
-+ * @code_id: LDPC Code
-+ *
-+ * This structure describes the LDPC code that is passed to the driver by the
-+ * application.
++/*
++ * cpu topology table
 + */
-+struct xsdfec_ldpc_params {
-+	__u32 n;
-+	__u32 k;
-+	__u32 psize;
-+	__u32 nlayers;
-+	__u32 nqc;
-+	__u32 nmqc;
-+	__u32 nm;
-+	__u32 norm_type;
-+	__u32 no_packing;
-+	__u32 special_qc;
-+	__u32 no_final_parity;
-+	__u32 max_schedule;
-+	__u32 sc_off;
-+	__u32 la_off;
-+	__u32 qc_off;
-+	__u32 *sc_table;
-+	__u32 *la_table;
-+	__u32 *qc_table;
-+	__u16 code_id;
-+};
++struct cpu_topology cpu_topology[NR_CPUS];
++EXPORT_SYMBOL_GPL(cpu_topology);
 +
-+/**
-  * struct xsdfec_status - Status of SD-FEC core.
-  * @fec_id: ID of SD-FEC instance. ID is limited to the number of active
-  *          SD-FEC's in the FPGA and is related to the driver instance
-@@ -176,6 +239,41 @@ struct xsdfec_config {
- 	struct xsdfec_irq irq;
- };
- 
-+/**
-+ * struct xsdfec_ldpc_param_table_sizes - Used to store sizes of SD-FEC table
-+ *					  entries for an individual LPDC code
-+ *					  parameter.
-+ * @sc_size: Size of SC table used
-+ * @la_size: Size of LA table used
-+ * @qc_size: Size of QC table used
-+ */
-+struct xsdfec_ldpc_param_table_sizes {
-+	__u32 sc_size;
-+	__u32 la_size;
-+	__u32 qc_size;
-+};
-+
-+/**
-+ * xsdfec_calculate_shared_ldpc_table_entry_size - Calculates shared code
-+ * table sizes.
-+ * @ldpc: Pointer to the LPDC Code Parameters
-+ * @table_sizes: Pointer to structure containing the calculated table sizes
-+ *
-+ * Calculates the size of shared LDPC code tables used for a specified LPDC code
-+ * parameters.
-+ */
-+inline void
-+xsdfec_calculate_shared_ldpc_table_entry_size(struct xsdfec_ldpc_params *ldpc,
-+	struct xsdfec_ldpc_param_table_sizes *table_sizes)
++const struct cpumask *cpu_coregroup_mask(int cpu)
 +{
-+	/* Calculate the sc_size in 32 bit words */
-+	table_sizes->sc_size = (ldpc->nlayers + 3) >> 2;
-+	/* Calculate the la_size in 256 bit words */
-+	table_sizes->la_size = ((ldpc->nlayers << 2) + 15) >> 4;
-+	/* Calculate the qc_size in 256 bit words */
-+	table_sizes->qc_size = ((ldpc->nqc << 2) + 15) >> 4;
++	const cpumask_t *core_mask = cpumask_of_node(cpu_to_node(cpu));
++
++	/* Find the smaller of NUMA, core or LLC siblings */
++	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
++		/* not numa in package, lets use the package siblings */
++		core_mask = &cpu_topology[cpu].core_sibling;
++	}
++	if (cpu_topology[cpu].llc_id != -1) {
++		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
++			core_mask = &cpu_topology[cpu].llc_sibling;
++	}
++
++	return core_mask;
 +}
 +
- /*
-  * XSDFEC IOCTL List
-  */
-@@ -196,6 +294,27 @@ struct xsdfec_config {
-  */
- #define XSDFEC_SET_TURBO _IOW(XSDFEC_MAGIC, 4, struct xsdfec_turbo)
- /**
-+ * DOC: XSDFEC_ADD_LDPC_CODE_PARAMS
-+ * @Parameters
-+ *
-+ * @struct xsdfec_ldpc_params *
-+ *	Pointer to the &struct xsdfec_ldpc_params that contains the LDPC code
-+ *	parameters to be added to the SD-FEC Block
-+ *
-+ * @Description
-+ * ioctl to add an LDPC code to the SD-FEC LDPC codes
-+ *
-+ * This can only be used when:
-+ *
-+ * - Driver is in the XSDFEC_STOPPED state
-+ *
-+ * - SD-FEC core is configured as LPDC
-+ *
-+ * - SD-FEC Code Write Protection is disabled
-+ */
-+#define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
-+	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
-+/**
-  * DOC: XSDFEC_GET_TURBO
-  * @Parameters
++void update_siblings_masks(unsigned int cpuid)
++{
++	struct cpu_topology *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
++	int cpu;
++
++	/* update core and thread sibling masks */
++	for_each_online_cpu(cpu) {
++		cpu_topo = &cpu_topology[cpu];
++
++		if (cpuid_topo->llc_id == cpu_topo->llc_id) {
++			cpumask_set_cpu(cpu, &cpuid_topo->llc_sibling);
++			cpumask_set_cpu(cpuid, &cpu_topo->llc_sibling);
++		}
++
++		if (cpuid_topo->package_id != cpu_topo->package_id)
++			continue;
++
++		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
++		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
++
++		if (cpuid_topo->core_id != cpu_topo->core_id)
++			continue;
++
++		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
++		cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
++	}
++}
++
++static void clear_cpu_topology(int cpu)
++{
++	struct cpu_topology *cpu_topo = &cpu_topology[cpu];
++
++	cpumask_clear(&cpu_topo->llc_sibling);
++	cpumask_set_cpu(cpu, &cpu_topo->llc_sibling);
++
++	cpumask_clear(&cpu_topo->core_sibling);
++	cpumask_set_cpu(cpu, &cpu_topo->core_sibling);
++	cpumask_clear(&cpu_topo->thread_sibling);
++	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
++}
++
++static void __init reset_cpu_topology(void)
++{
++	unsigned int cpu;
++
++	for_each_possible_cpu(cpu) {
++		struct cpu_topology *cpu_topo = &cpu_topology[cpu];
++
++		cpu_topo->thread_id = -1;
++		cpu_topo->core_id = 0;
++		cpu_topo->package_id = -1;
++		cpu_topo->llc_id = -1;
++
++		clear_cpu_topology(cpu);
++	}
++}
++
++void remove_cpu_topology(unsigned int cpu)
++{
++	int sibling;
++
++	for_each_cpu(sibling, topology_core_cpumask(cpu))
++		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
++	for_each_cpu(sibling, topology_sibling_cpumask(cpu))
++		cpumask_clear_cpu(cpu, topology_sibling_cpumask(sibling));
++	for_each_cpu(sibling, topology_llc_cpumask(cpu))
++		cpumask_clear_cpu(cpu, topology_llc_cpumask(sibling));
++
++	clear_cpu_topology(cpu);
++}
++
++__weak int __init parse_acpi_topology(void)
++{
++	return 0;
++}
++
++void __init init_cpu_topology(void)
++{
++	reset_cpu_topology();
++
++	/*
++	 * Discard anything that was parsed if we hit an error so we
++	 * don't use partial information.
++	 */
++	if (parse_acpi_topology())
++		reset_cpu_topology();
++	else if (of_have_populated_dt() && parse_dt_topology())
++		reset_cpu_topology();
++}
++#endif
+diff --git a/drivers/base/topology.c b/drivers/base/topology.c
+index 5fd9f167ecc1..c17d5434c6f7 100644
+--- a/drivers/base/topology.c
++++ b/drivers/base/topology.c
+@@ -8,6 +8,7 @@
   *
+  * All rights reserved.
+  */
++#include <linux/arch_topology.h>
+ #include <linux/mm.h>
+ #include <linux/cpu.h>
+ #include <linux/module.h>
+diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+index d9bdc1a7f4e7..d4e76e0a283f 100644
+--- a/include/linux/arch_topology.h
++++ b/include/linux/arch_topology.h
+@@ -33,4 +33,32 @@ unsigned long topology_get_freq_scale(int cpu)
+ 	return per_cpu(freq_scale, cpu);
+ }
+ 
++struct cpu_topology {
++	int thread_id;
++	int core_id;
++	int package_id;
++	int llc_id;
++	cpumask_t thread_sibling;
++	cpumask_t core_sibling;
++	cpumask_t llc_sibling;
++};
++
++#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
++extern struct cpu_topology cpu_topology[NR_CPUS];
++
++#define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
++#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
++#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
++#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
++#define topology_llc_cpumask(cpu)	(&cpu_topology[cpu].llc_sibling)
++void init_cpu_topology(void);
++void store_cpu_topology(unsigned int cpuid);
++const struct cpumask *cpu_coregroup_mask(int cpu);
++#endif
++
++#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
++void update_siblings_masks(unsigned int cpu);
++#endif
++void remove_cpu_topology(unsigned int cpuid);
++
+ #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
 -- 
-2.7.4
+2.21.0
