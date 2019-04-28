@@ -9,8 +9,8 @@ References: <20190422083540.8380-1-daniel@zonque.org>
  <f5c26867-235d-0c6e-3e44-885b54664cfe@zonque.org>
  <20190428173604.GB44908@dtor-ws>
 From: Daniel Mack <daniel@zonque.org>
-Message-ID: <256962f1-7a75-b5f7-7104-d6e70f66b23d@zonque.org>
-Date: Sun, 28 Apr 2019 21:50:35 +0200
+Message-ID: <efc0ca57-b55f-12e1-ad86-9a1230f9fa32@zonque.org>
+Date: Sun, 28 Apr 2019 21:30:19 +0200
 MIME-Version: 1.0
 In-Reply-To: <20190428173604.GB44908@dtor-ws>
 Content-Type: text/plain; charset=utf-8
@@ -53,8 +53,7 @@ On 28/4/2019 7:36 PM, Dmitry Torokhov wrote:
 > otherwise there is a chance it will be running concurrently when we are
 > resuming if interrupt does latch.
 
-Actually, to address that, all we need to do is call into eeti_ts_read()
-before enable_irq(). See my v2.
+Ah, good point. I'll send a v2.
 
 
 Thanks,
