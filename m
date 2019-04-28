@@ -1,55 +1,89 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
-Date: Sun, 28 Apr 2019 17:53:05 +0800
-Message-ID: <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
- <20190426211540.GA890@bogus>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v4 3/6] dt-bindings: usb: mtu3: add properties about USB
+ Role Switch
+Date: Sun, 28 Apr 2019 20:16:28 +0800
+Message-ID: <1556453788.10179.224.camel@mhfsdcap03>
+References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1556261237-13823-4-git-send-email-chunfeng.yun@mediatek.com>
+         <20190426204906.GB15074@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190426211540.GA890@bogus>
+In-Reply-To: <20190426204906.GB15074@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mark.rutland@arm.com, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
-> > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > frequency value based on the speedbin blown in the efuse combination.
-> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > provide the OPP framework with required information.
-> > This is used to determine the voltage and frequency value for each
-> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> >
-> > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
-> > with following parameters:
-> > - nvmem-cells (NVMEM area containig the speedbin information)
-> > - opp-microvolt-<name>: voltage in micro Volts.
-> >   At runtime, the platform can pick a <name> and matching
-> >   opp-microvolt-<name> property.
-> >                       HW:             <name>:
-> >                       sun50iw-h6      speed0 speed1 speed2
->
-> We already have at least one way to support speed bins with QC kryo
-> binding. Why do we need a different way?
-
-For some SOCs, for some reason (making the CPU have approximate performance),
-they use the same frequency but different voltage. In the case where
-this speed bin
-is not a lot and opp uses the same frequency, too many repeated opp
-nodes are a bit
-redundant and not intuitive enough.
-
-So, I think it's worth the new method.
-
-Yangtao
-
->
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+On Fri, 2019-04-26 at 15:49 -0500, Rob Herring wrote:
+> On Fri, Apr 26, 2019 at 02:47:14PM +0800, Chunfeng Yun wrote:
+> > Now the USB Role Switch is supported, so add properties about it
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > > ---
-> >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 168 ++++++++++++++++++
-> >  1 file changed, 168 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > v4: no changes
+> > v3: no changes
+> > 
+> > v2 changes:
+> >   1. fix typo
+> >   2. refer new binding about connector property
+> > ---
+> >  .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > index 3382b5cb471d..6e004c4a89af 100644
+> > --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > @@ -27,7 +27,9 @@ Optional properties:
+> >   - ranges : allows valid 1:1 translation between child's address space and
+> >  	parent's address space
+> >   - extcon : external connector for vbus and idpin changes detection, needed
+> > -	when supports dual-role mode.
+> > +	when supports dual-role mode; it's consiedered valid for compatibility
+> > +	reasons, and not allowed for new bindings, use the property
+> > +	usb-role-switch instead.
+> >   - vbus-supply : reference to the VBUS regulator, needed when supports
+> >  	dual-role mode.
+> >   - pinctrl-names : a pinctrl state named "default" is optional, and need be
+> > @@ -36,7 +38,8 @@ Optional properties:
+> >  	is not set.
+> >   - pinctrl-0 : pin control group
+> >  	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> > -
+> > + - usb-role-switch : use USB Role Switch to support dual-role switch, but
+> > +	not extcon
+> 
+> Coordinate with the Renesas and HiSilicon folks implementing the same 
+> thing and put this in a common spot. 
+I'll prepare a patch for it, and CC Biju and Yu
+
+> However, I think this should not 
+> even be needed as knowing the controller capabilities (based on the 
+> compatible) and knowing the type of connector should be enough 
+> information to tell you if dual role is supported or not.
+Some Dual-Role controller drivers already used extcon framework to
+handle role switch, if try to support the new USB Role Switch framework,
+the driver may want to know which way will be used.
+
+Sometimes users also want to use dual-role even use the type-A, such as
+use sys interface to handle role switch, so only knowing the connector
+type can't tell driver which way to use
+> 
+> >   - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> >  	"full-speed"; refer to usb/generic.txt
+> >   - enable-manual-drd : supports manual dual-role switch via debugfs; usually
+> > @@ -61,6 +64,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
+> >  if host mode is enabled. The DT binding details of xhci can be found in:
+> >  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+> >  
+> > +The port would be added as subnode if use usb-role-switch property
+> > +	see graph.txt
+> > +
+> >  Example:
+> >  ssusb: usb@11271000 {
+> >  	compatible = "mediatek,mt8173-mtu3";
+> > -- 
+> > 2.21.0
+> > 
