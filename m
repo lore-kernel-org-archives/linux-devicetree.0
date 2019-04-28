@@ -1,50 +1,112 @@
-From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH v2 4/4] net: davinci_emac: Drop nvmem_get_mac_address usage
-Date: Sun, 28 Apr 2019 14:53:22 +0200
-Message-ID: <1556456002-13430-5-git-send-email-ynezz@true.cz>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+Date: Sun, 28 Apr 2019 17:08:22 +0200
+Message-ID: <20190428150822.13935-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1556456002-13430-1-git-send-email-ynezz@true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-omap@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-of_get_mac_address now uses NVMEM under the hood, so it's not necessary
-to call it manually anymore.
+The property is spelled 'bias-pull-up', as documented in
+pinctrl-bindings.txt.
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
- drivers/net/ethernet/ti/davinci_emac.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ .../devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 57450b1..c1a5526 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1912,15 +1912,11 @@ static int davinci_emac_probe(struct platform_device *pdev)
- 		ether_addr_copy(ndev->dev_addr, priv->mac_addr);
- 
- 	if (!is_valid_ether_addr(priv->mac_addr)) {
--		/* Try nvmem if MAC wasn't passed over pdata or DT. */
--		rc = nvmem_get_mac_address(&pdev->dev, priv->mac_addr);
--		if (rc) {
--			/* Use random MAC if still none obtained. */
--			eth_hw_addr_random(ndev);
--			memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
--			dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
--				 priv->mac_addr);
--		}
-+		/* Use random MAC if still none obtained. */
-+		eth_hw_addr_random(ndev);
-+		memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
-+		dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
-+			 priv->mac_addr);
- 	}
- 
- 	ndev->netdev_ops = &emac_netdev_ops;
--- 
-1.9.1
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+index c2dbb3e8d840..4e90ddd77784 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+@@ -42,7 +42,7 @@ information about e.g. the mux function.
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th,
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th,
+  output-low, output-high.
+
+ Non-empty subnodes must specify the 'pins' property.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+index 991be0cd0948..84be0f2c6f3b 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+@@ -44,7 +44,7 @@ information about e.g. the mux function.
+
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th.
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th.
+
+ Non-empty subnodes must specify the 'pins' property.
+ Note that not all properties are valid for all pins.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+index 7ed56a1b70fc..a7aaaa7db83b 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+@@ -42,7 +42,7 @@ information about e.g. the mux function.
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th,
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th,
+  output-low, output-high.
+
+ Non-empty subnodes must specify the 'pins' property.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+index cdc4787e59d2..f095209848c8 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+@@ -42,7 +42,7 @@ information about e.g. the mux function.
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th,
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th,
+  output-low, output-high.
+
+ Non-empty subnodes must specify the 'pins' property.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+index c22e6c425d0b..004056506679 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+@@ -41,7 +41,7 @@ information about e.g. the mux function.
+
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th.
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th.
+
+ Non-empty subnodes must specify the 'pins' property.
+ Note that not all properties are valid for all pins.
+=2D-
+2.20.1
