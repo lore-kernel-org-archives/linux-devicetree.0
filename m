@@ -1,11 +1,13 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 0/7] Add imx7ulp USBOTG1 support
-Date: Sun, 28 Apr 2019 02:51:09 +0000
-Message-ID: <20190428024847.5046-1-peter.chen@nxp.com>
+Subject: [PATCH 1/7] doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
+Date: Sun, 28 Apr 2019 02:51:13 +0000
+Message-ID: <20190428024847.5046-2-peter.chen@nxp.com>
+References: <20190428024847.5046-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190428024847.5046-1-peter.chen@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +22,24 @@ To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "balbi@kernel.org" <balbi@kerne
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-There is a dual-role USB controller at imx7ulp, we add support for it
-in this patch set, and the dual-role function is tested at imx7ulp-evk
-board.
+Add compatible for 7ulp USB PHY.
 
-Thanks.
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ Documentation/devicetree/bindings/phy/mxs-usb-phy.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Peter Chen (7):
-  doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
-  usb: phy: phy-mxs-usb: add imx7ulp support
-  doc: dt-binding: ci-hdrc-usb2: add compatible string for imx7ulp
-  doc: dt-binding: usbmisc-imx: add compatible string for imx7ulp
-  usb: chipidea: imx: add imx7ulp support
-  ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-  ARM: dts: imx7ulp-evk: enable USBOTG1 support
-
- .../devicetree/bindings/phy/mxs-usb-phy.txt        |  1 +
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  1 +
- .../devicetree/bindings/usb/usbmisc-imx.txt        |  1 +
- arch/arm/boot/dts/imx7ulp-evk.dts                  | 35 ++++++++++
- arch/arm/boot/dts/imx7ulp.dtsi                     | 30 +++++++++
- drivers/usb/chipidea/ci_hdrc_imx.c                 | 28 +++++++-
- drivers/usb/chipidea/usbmisc_imx.c                 |  4 ++
- drivers/usb/phy/phy-mxs-usb.c                      | 76 +++++++++++++++++++++-
- include/linux/usb/chipidea.h                       |  1 +
- 9 files changed, 175 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+index 6ac98b3b5f57..32da8d17759a 100644
+--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+@@ -7,6 +7,7 @@ Required properties:
+ 	* "fsl,imx6sl-usbphy" for imx6sl
+ 	* "fsl,vf610-usbphy" for Vybrid vf610
+ 	* "fsl,imx6sx-usbphy" for imx6sx
++	* "fsl,imx7ulp-usbphy" for imx7ulp
+   "fsl,imx23-usbphy" is still a fallback for other strings
+ - reg: Should contain registers location and length
+ - interrupts: Should contain phy interrupt
 -- 
 2.14.1
