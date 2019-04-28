@@ -1,8 +1,8 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 3/7] doc: dt-binding: ci-hdrc-usb2: add compatible string for
+Subject: [PATCH 4/7] doc: dt-binding: usbmisc-imx: add compatible string for
  imx7ulp
-Date: Sun, 28 Apr 2019 02:51:20 +0000
-Message-ID: <20190428024847.5046-4-peter.chen@nxp.com>
+Date: Sun, 28 Apr 2019 02:51:23 +0000
+Message-ID: <20190428024847.5046-5-peter.chen@nxp.com>
 References: <20190428024847.5046-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,24 +23,24 @@ To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "balbi@kernel.org" <balbi@kerne
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible string for imx7ulp.
+Add compatible string for imx7ulp
 
 Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
+ Documentation/devicetree/bindings/usb/usbmisc-imx.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index a254386a91ad..cfc9f40ab641 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -10,6 +10,7 @@ Required properties:
- 	"fsl,imx6sx-usb"
- 	"fsl,imx6ul-usb"
- 	"fsl,imx7d-usb"
-+	"fsl,imx7ulp-usb"
- 	"lsi,zevio-usb"
- 	"qcom,ci-hdrc"
- 	"chipidea,usb2"
+diff --git a/Documentation/devicetree/bindings/usb/usbmisc-imx.txt b/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
+index a85a631ec434..b353b9816487 100644
+--- a/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
++++ b/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
+@@ -7,6 +7,7 @@ Required properties:
+ 	"fsl,vf610-usbmisc" for Vybrid vf610
+ 	"fsl,imx6sx-usbmisc" for imx6sx
+ 	"fsl,imx7d-usbmisc" for imx7d
++	"fsl,imx7ulp-usbmisc" for imx7ulp
+ - reg: Should contain registers location and length
+ 
+ Examples:
 -- 
 2.14.1
