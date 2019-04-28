@@ -1,86 +1,59 @@
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH] arm64: dts: allwinner: a64: orangepi-win: Add wifi and bluetooth nodes
-Date: Sun, 28 Apr 2019 22:13:26 +0200
-Message-ID: <20190428201326.27767-1-jernej.skrabec@siol.net>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v2 3/4] net: macb: Drop nvmem_get_mac_address usage
+Date: Sun, 28 Apr 2019 23:08:14 +0200
+Message-ID: <20190428210814.GA346@meh.true.cz>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-4-git-send-email-ynezz@true.cz>
+ <20190428165637.GJ23059@lunn.ch>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com, wens@csie.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190428165637.GJ23059@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
-identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+Andrew Lunn <andrew@lunn.ch> [2019-04-28 18:56:37]:
 
-WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
-in a 4 wire configuration. Same as the WiFi side, due to being the same
-chip and package, DLDO2 provides overall power via VBAT, and DLDO4
-provides I/O power via VDDIO. The RTC clock output provides the LPO low
-power clock at 32.768 kHz.
+Hi Andrew,
 
-This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
-missing LPO clock on the WiFi side. PCM connection also exists for
-Bluetooth audio, but it's not used here.
+> On Sun, Apr 28, 2019 at 02:53:21PM +0200, Petr Štetiar wrote:
+> > of_get_mac_address now uses NVMEM under the hood, so it's not necessary
+> > to call it manually anymore.
+> > 
+> > Signed-off-by: Petr Štetiar <ynezz@true.cz>
+> > ---
+> >  drivers/net/ethernet/cadence/macb_main.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> > index 3da2795..1b98bc8 100644
+> > --- a/drivers/net/ethernet/cadence/macb_main.c
+> > +++ b/drivers/net/ethernet/cadence/macb_main.c
+> > @@ -4172,16 +4172,10 @@ static int macb_probe(struct platform_device *pdev)
+> >  		bp->rx_intr_mask |= MACB_BIT(RXUBR);
+> >  
+> >  	mac = of_get_mac_address(np);
+> > -	if (mac) {
+> > +	if (mac)
+> >  		ether_addr_copy(bp->dev->dev_addr, mac);
+> > -	} else {
+> > -		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
+> > -		if (err) {
+> > -			if (err == -EPROBE_DEFER)
+>
+> The EPRODE_DEFER is interesting here. your change to
+> of_get_mac_address() does not seem to handle that case. It probably
+> should. We don't want it to fail and end up with a random MAC
+> addresses etc, because the NVMEM has not probed yet.
 
-Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
-audio. While module supports even higher speeds, currently sunxi UART
-driver doesn't support higher speed.
+so if I understand this correctly, it probably means, that this approach with
+modified of_get_mac_address is dead end as current of_get_mac_address users
+don't expect and handle possible -EPROBE_DEFER error, so I would need to
+change all the current users, which is nonsense.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- .../dts/allwinner/sun50i-a64-orangepi-win.dts | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 510f661229dc..5ef3c62c765e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -109,6 +109,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible =3D "mmc-pwrseq-simple";
- 		reset-gpios =3D <&r_pio 0 8 GPIO_ACTIVE_LOW>; /* PL8 */
-+		clocks =3D <&rtc 1>;
-+		clock-names =3D "ext_clock";
- 	};
- };
-=20
-@@ -170,6 +172,14 @@
- 	bus-width =3D <4>;
- 	non-removable;
- 	status =3D "okay";
-+
-+	brcmf: wifi@1 {
-+		reg =3D <1>;
-+		compatible =3D "brcm,bcm4329-fmac";
-+		interrupt-parent =3D <&r_pio>;
-+		interrupts =3D <0 7 IRQ_TYPE_LEVEL_LOW>; /* PL7 */
-+		interrupt-names =3D "host-wake";
-+	};
- };
-=20
- &ohci0 {
-@@ -342,7 +352,20 @@
- &uart1 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
- 	status =3D "okay";
-+
-+	bluetooth {
-+		compatible =3D "brcm,bcm43438-bt";
-+		max-speed =3D <1500000>;
-+		clocks =3D <&rtc 1>;
-+		clock-names =3D "lpo";
-+		vbat-supply =3D <&reg_dldo2>;
-+		vddio-supply =3D <&reg_dldo4>;
-+		device-wakeup-gpios =3D <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+		host-wakeup-gpios =3D <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		shutdown-gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-+	};
- };
-=20
- /* On Pi-2 connector, RTS/CTS optional */
---=20
-2.21.0
+-- ynezz
