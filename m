@@ -1,112 +1,50 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: usb: add binding for Type-B GPIO
- connector driver
-Date: Sun, 28 Apr 2019 09:50:57 +0800
-Message-ID: <1556416257.10179.210.camel@mhfsdcap03>
-References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1556261237-13823-3-git-send-email-chunfeng.yun@mediatek.com>
-         <20190426204537.GA15074@bogus>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 0/7] Add imx7ulp USBOTG1 support
+Date: Sun, 28 Apr 2019 02:51:09 +0000
+Message-ID: <20190428024847.5046-1-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190426204537.GA15074@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "balbi@kernel.org" <balbi@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-04-26 at 15:45 -0500, Rob Herring wrote:
-> On Fri, Apr 26, 2019 at 02:47:13PM +0800, Chunfeng Yun wrote:
-> > It's used to support dual role switch via GPIO when use Type-B
-> > receptacle, typically the USB ID pin is connected to an input
-> > GPIO pin
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v4 no changes
-> > 
-> > v3 changes:
-> >  1. treat type-B connector as a virtual device, but not child device of
-> >     USB controller's
-> > 
-> > v2 changes:
-> >   1. new patch to make binding clear suggested by Hans
-> > ---
-> >  .../bindings/usb/typeb-conn-gpio.txt          | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> > new file mode 100644
-> > index 000000000000..d2e1c4e01b6d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> > @@ -0,0 +1,49 @@
-> > +USB Type-B GPIO Connector
-> > +
-> > +This is a virtual device used to switch dual role mode from the USB ID pin
-> > +connected to an input GPIO pin.
-> > +
-> > +Required properties:
-> > +- compatible : Should be "linux,typeb-conn-gpio"
-> 
-> There's no need for this virtual node. The USB host or device driver can 
-> instantiate a connector driver by walking the OF graph to the connector 
-> and creating a device.
-Got it.
-> 
-> > +
-> > +Sub-nodes:
-> > +- connector : should be present.
-> > +	- compatible : should be "usb-b-connector".
-> > +	- id-gpios, vbus-gpios : either one of them must be present,
-> > +		and both can be present as well.
-> > +	- vbus-supply : can be present if needed when supports dual role mode.
-> > +	see connector/usb-connector.txt
-> > +
-> > +- port : should be present.
-> > +	see graph.txt
-> > +
-> > +Example:
-> > +
-> > +rsw_iddig: role_sw_iddig {
-> > +	compatible = "linux,typeb-conn-gpio";
-> > +	status = "okay";
-> > +
-> > +	connector {
-> > +		compatible = "usb-b-connector";
-> > +		label = "micro-USB";
-> > +		type = "micro";
-> > +		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-> > +		vbus-supply = <&usb_p0_vbus>;
-> > +	};
-> > +
-> > +	port {
-> 
-> Humm, same mistake as Hikey patches...
-> 
-> This goes under the connector node as defined in the connector binding.
-Ok, will fix it.
+There is a dual-role USB controller at imx7ulp, we add support for it
+in this patch set, and the dual-role function is tested at imx7ulp-evk
+board.
 
-Thanks a lot.
+Thanks.
 
-> 
-> > +		bconn_ep: endpoint@0 {
-> > +			remote-endpoint = <&usb_role_sw>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&mtu3 {
-> > +	status = "okay";
-> > +
-> > +	port {
-> > +		usb_role_sw: endpoint@0 {
-> > +			remote-endpoint = <&bconn_ep>;
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 2.21.0
-> > 
+Peter Chen (7):
+  doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
+  usb: phy: phy-mxs-usb: add imx7ulp support
+  doc: dt-binding: ci-hdrc-usb2: add compatible string for imx7ulp
+  doc: dt-binding: usbmisc-imx: add compatible string for imx7ulp
+  usb: chipidea: imx: add imx7ulp support
+  ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
+  ARM: dts: imx7ulp-evk: enable USBOTG1 support
+
+ .../devicetree/bindings/phy/mxs-usb-phy.txt        |  1 +
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  1 +
+ .../devicetree/bindings/usb/usbmisc-imx.txt        |  1 +
+ arch/arm/boot/dts/imx7ulp-evk.dts                  | 35 ++++++++++
+ arch/arm/boot/dts/imx7ulp.dtsi                     | 30 +++++++++
+ drivers/usb/chipidea/ci_hdrc_imx.c                 | 28 +++++++-
+ drivers/usb/chipidea/usbmisc_imx.c                 |  4 ++
+ drivers/usb/phy/phy-mxs-usb.c                      | 76 +++++++++++++++++++++-
+ include/linux/usb/chipidea.h                       |  1 +
+ 9 files changed, 175 insertions(+), 2 deletions(-)
+
+-- 
+2.14.1
