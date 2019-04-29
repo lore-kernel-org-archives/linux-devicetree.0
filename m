@@ -1,26 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: mfd: LMU: Fix lm3632 dt binding example
-Date: Mon, 29 Apr 2019 12:30:58 -0500
-Message-ID: <20190429173058.GA27596@bogus>
-References: <20190405141907.3348-1-dmurphy@ti.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
+ driver
+Date: Mon, 29 Apr 2019 17:31:18 +0000
+Message-ID: <TY1PR01MB15620363F895ACD71CFE77878A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20190429093631.10799-1-geert+renesas@glider.be>
+ <20190429093631.10799-3-geert+renesas@glider.be>
+ <f9310d4c-8f9e-a837-3ed3-4d7c294efd3f@arm.com>
+ <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
+ <e6c6dfe7-f67d-90a9-eee5-d30b94c7c978@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190405141907.3348-1-dmurphy@ti.com>
+In-Reply-To: <e6c6dfe7-f67d-90a9-eee5-d30b94c7c978@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Apr 2019 09:19:07 -0500, Dan Murphy wrote:
-> Fix the lm3632 dt binding examples as the LCM enable GPIOs
-> are defined as enable GPIOs per the regulator/lm363x-regulator.txt
-> bindings document.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/devicetree/bindings/mfd/ti-lmu.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+SGkgR2VlcnQgYW5kIE1hcmMsDQoNCkkgdGVzdGVkIEdlZXJ0J3MgcGF0Y2hlcyBvbiBSWi9BMSBh
+bmQgUlovQTIgYm9hcmRzIChwdXNoIGJ1dHRvbnMgYW5kIExDRA0KdG91Y2hzY3JlZW4gY29udHJv
+bGxlcikuIFdvcmtzIGdyZWF0IQ0KDQokIGNhdCAvcHJvYy9pbnRlcnJ1cHRzDQogNDk6ICAgICAg
+IDUwNTAgIGZjZmVmODAwLmludGVycnVwdC1jb250cm9sbGVyICAgMSBMZXZlbCAgICAgZnQ1eDA2
+X3RzDQogNTA6ICAgICAgICAgMzIgIGZjZmVmODAwLmludGVycnVwdC1jb250cm9sbGVyICAgMyBF
+ZGdlICAgICAgU1cxDQogNTE6ICAgICAgICAgMTIgIGZjZmVmODAwLmludGVycnVwdC1jb250cm9s
+bGVyICAgMiBFZGdlICAgICAgU1cyDQogNTI6ICAgICAgICAgMTAgIGZjZmVmODAwLmludGVycnVw
+dC1jb250cm9sbGVyICAgNSBFZGdlICAgICAgU1czDQoNCg0KRm9yIFJaL0EyLCBJIHBhdGNoZWQg
+dGhlIGRyaXZlci9LY29uZmlnIGFzIGZvbGxvd3M6DQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLXJlbmVzYXMtcnphMS5jIGIvZHJpdmVycy9pcnFjaGlw
+L2lycS1yZW5lc2FzLXJ6YTEuYw0KaW5kZXggNjUxMTAwMTlhZGRhLi44OWE3MjE4NjRmZjkgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL2lycWNoaXAvaXJxLXJlbmVzYXMtcnphMS5jDQorKysgYi9kcml2
+ZXJzL2lycWNoaXAvaXJxLXJlbmVzYXMtcnphMS5jDQpAQCAtMjA2LDcgKzIwNiwxMiBAQCBzdHJ1
+Y3QgcnphMV9pcnFjX2luZm8gcnphMV9pcnFjX2luZm8gPSB7DQogICAgICAgIC5naWNfc3BpX2Jh
+c2UgPSAwLA0KIH07DQogDQorc3RydWN0IHJ6YTFfaXJxY19pbmZvIHJ6YTJfaXJxY19pbmZvID0g
+ew0KKyAgICAgICAuZ2ljX3NwaV9iYXNlID0gNCwNCit9Ow0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkIHJ6YTFfaXJxY19kdF9pZHNbXSA9IHsNCisgICAgICAgeyAuY29tcGF0
+aWJsZSA9ICJyZW5lc2FzLHI3czkyMTAtaXJxYyIsICZyemEyX2lycWNfaW5mbyB9LA0KICAgICAg
+ICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMscnphMS1pcnFjIiwgJnJ6YTFfaXJxY19pbmZvIH0s
+DQogICAgICAgIHt9LA0KIH07DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvcmVuZXNhcy9LY29u
+ZmlnIGIvZHJpdmVycy9zb2MvcmVuZXNhcy9LY29uZmlnDQppbmRleCAxNDQ4YjZkYmNkYjIuLjRh
+YjdkY2ZkNmEyZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL3JlbmVzYXMvS2NvbmZpZw0KKysr
+IGIvZHJpdmVycy9zb2MvcmVuZXNhcy9LY29uZmlnDQpAQCAtNjUsNiArNjUsNyBAQCBjb25maWcg
+QVJDSF9SN1M5MjEwDQogICAgICAgIGJvb2wgIlJaL0EyIChSN1M5MjEwKSINCiAgICAgICAgc2Vs
+ZWN0IFBNDQogICAgICAgIHNlbGVjdCBQTV9HRU5FUklDX0RPTUFJTlMNCisgICAgICAgc2VsZWN0
+IFJFTkVTQVNfUlpBMV9JUlFDDQogICAgICAgIHNlbGVjdCBSRU5FU0FTX09TVE0NCiANCiBjb25m
+aWcgQVJDSF9SOEE3M0E0DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCg0KSG93ZXZlciwgYXMgcGVyOg0KDQoN
+Ck9uIE1vbiwgQXByIDI5LCAyMDE5LCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4+PiArc3RydWN0
+IHJ6YTFfaXJxY19pbmZvIHJ6YTFfaXJxY19pbmZvID0gew0KPiA+Pj4gKyAgICAgLmdpY19zcGlf
+YmFzZSA9IDAsDQo+ID4+PiArfTsNCj4gPj4NCj4gPj4gVG8gYW5zd2VyIHlvdXIgcXVlc3Rpb24g
+aW4gdGhlIGNvdmVyIGxldHRlciwgSSdkIHJhdGhlciB0aGlzIGNhbWUgZnJvbQ0KPiA+PiBEVC4g
+QW5kIG90aGVyd2lzZSwgaXQgc2hvdWxkIGJlIGJlIHN0YXRpYy4NCj4gPg0KPiA+IChPb3BzLCBm
+b3JnZXQgdGhlICJzdGF0aWMgY29uc3QiKQ0KPiA+DQo+ID4gVXNpbmcgYSBjdXN0b20gcHJvcGVy
+dHksIG9yIGRlcml2ZWQgZnJvbSA4IGludGVycnVwdCBzcGVjaWZpZXJzIGluIHRoZQ0KPiA+IGlu
+dGVycnVwdHMgcHJvcGVydHk/DQo+IA0KPiBBIGN1c3RvbSBwcm9wZXJ0eSBpcyBmaW5lIGJ5IG1l
+IChldmVyeWJvZHkgZG9lcyB0aGF0IGFueXdheSkuDQoNCg0KSSdsbCByZS10ZXN0IGFmdGVyIHYy
+IG9mIHRoZSBwYXRjaCB3aGVuIGdpY19zcGlfYmFzZSBtb3ZlcyB0byBEVC4NCg0KDQoNCklmIHlv
+dSB3YW50IHRvIGFkZCBSWi9BMiBpbnRvIHRoaXMgc2VyaWVzIHRvIGdldCBpdCBhbGwgZG9uZSBh
+dCBvbmNlLCANCkknbGwgdGVzdCB0aGF0IGFzIHdlbGwuDQoNCkp1c3Qgbm90ZSB0aGF0IG9uIHRo
+ZSBSWi9BMk0gRVZCLCBvbmx5IFNXMyBpcyBjb25uZWN0ZWQgdG8gYW4gaW50ZXJydXB0IA0KcGlu
+IChJUlEwKS4NCg0KJnBpbmN0cmwgew0KCS8qIFNXMyA9IElSUTAgKi8NCglrZXlib2FyZF9waW5z
+OiBrZXlib2FyZCB7DQoJCXBpbm11eCA9IDxSWkEyX1BJTk1VWChQT1JUSiwgMSwgNik+OwkvKiBJ
+UlEwICovDQoJfTsNCn07DQoNCi8gew0KCWtleWJvYXJkIHsNCgkJY29tcGF0aWJsZSA9ICJncGlv
+LWtleXMiOw0KDQoJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQoJCXBpbmN0cmwtMCA9IDwm
+a2V5Ym9hcmRfcGlucz47DQoNCgkJa2V5LTMgew0KCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmaXJx
+Yz47DQoJCQlpbnRlcnJ1cHRzID0gPDAgSVJRX1RZUEVfRURHRV9CT1RIPjsNCgkJCWxpbnV4LGNv
+ZGUgPSA8S0VZXzM+Ow0KCQkJbGFiZWwgPSAiU1czIjsNCgkJCXdha2V1cC1zb3VyY2U7DQoJCX07
+DQoJfTsNCn07DQoNCg0KDQpDaHJpcw0KDQo=
