@@ -1,54 +1,77 @@
-Return-Path: <SRS0=HOgu=SN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH 16/30] PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-Date: Thu, 11 Apr 2019 22:33:41 +0530
-Message-ID: <20190411170355.6882-17-mmaddireddy@nvidia.com>
-In-Reply-To: <20190411170355.6882-1-mmaddireddy@nvidia.com>
-References: <20190411170355.6882-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=IdcD=S7=zonque.org=daniel@kernel.org>
+Subject: Re: [PATCH 2/2] input: touch: eeti: read hardware state once after
+ wakeup
+References: <20190422083540.8380-1-daniel@zonque.org>
+ <20190422083540.8380-2-daniel@zonque.org>
+ <20190423031705.gllzrreptvphdrc3@penguin>
+ <6b550519-4550-0872-f3de-9eba1fc0279f@zonque.org>
+ <20190423084111.hqco2xgl2lfe35la@penguin>
+ <f5c26867-235d-0c6e-3e44-885b54664cfe@zonque.org>
+ <20190428173604.GB44908@dtor-ws>
+ <256962f1-7a75-b5f7-7104-d6e70f66b23d@zonque.org>
+ <20190429011759.GA125935@dtor-ws>
+From: Daniel Mack <daniel@zonque.org>
+Message-ID: <d124d6e4-d708-549c-37f3-d1d393a23bef@zonque.org>
+Date: Mon, 29 Apr 2019 07:49:46 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+In-Reply-To: <20190429011759.GA125935@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Sven Neumann <Sven.Neumann@teufel.de>
 List-ID: <devicetree@vger.kernel.org>
 
-AFI_CACHE* registers are available only in Tegra20, program them only
-for Tegra20.
+On 29/4/2019 3:17 AM, Dmitry Torokhov wrote:
+> On Sun, Apr 28, 2019 at 09:50:35PM +0200, Daniel Mack wrote:
+>> On 28/4/2019 7:36 PM, Dmitry Torokhov wrote:
+>>> On Sun, Apr 28, 2019 at 09:18:46AM +0200, Daniel Mack wrote:
+>>>> On 23/4/2019 10:41 AM, Dmitry Torokhov wrote:
+>>>>> On Tue, Apr 23, 2019 at 06:51:32AM +0200, Daniel Mack wrote:
+>>>>>> Hi Dmitry,
+>>>>>>
+>>>>>> On 23/4/2019 5:17 AM, Dmitry Torokhov wrote:
+>>>>>>> On Mon, Apr 22, 2019 at 10:35:40AM +0200, Daniel Mack wrote:
+>>>>>>>> For systems in which the touch IRQ is acting as wakeup source, the interrupt
+>>>>>>>> controller might not latch the GPIO IRQ during sleep. In such cases, the
+>>>>>>>> interrupt will never occur again after resume, hence the touch screen
+>>>>>>>> appears dead.
+>>>>>>>>
+>>>>>>>> To fix this, call into eeti_ts_read() once to read the hardware status and
+>>>>>>>> to arm the IRQ again.
+>>>>>>>
+>>>>>>> Can you instead make the interrupt level-triggered?
+>>>>>>
+>>>>>> The hardware I'm working on doesn't support that unfortunately.
+>>>>>>
+>>>>>> In fact, the whole attn-gpio dance is there because of that, and the
+>>>>>> GPIO descriptor maps to the same pin that also causes the IRQ in my case.
+>>>>>
+>>>>> OK, if the interrupt controller is incapable of dealing with level
+>>>>> interrupts then we have to do what you propose.
+>>>>
+>>>> So you consider these patches for inclusion then? I'm just asking
+>>>> because I can't see them in your tree yet.
+>>>
+>>> I was about to, but now I wonder if we need a mutex in the isr code now,
+>>> otherwise there is a chance it will be running concurrently when we are
+>>> resuming if interrupt does latch.
+>>
+>> Actually, to address that, all we need to do is call into eeti_ts_read()
+>> before enable_irq(). See my v2.
+> 
+> This is still a bit racy as interrupt may come after you attempted to
+> read but before enable_irq() and then we need interrupt replaying code
+> to work reliably, which, as far as I understand, is not always the case.
+> I suppose we need at least add a comment that we rely on replays.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Ah, of course. Okay, let's just have a mutex for this then. I'll send a v3.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 8e5fdc8ce3d6..cdaaf13a9fd7 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -887,6 +887,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
-  */
- static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
- {
-+	struct device_node *np = pcie->dev->of_node;
- 	u32 fpci_bar, size, axi_address;
- 
- 	/* Bar 0: type 1 extended configuration space */
-@@ -927,11 +928,13 @@ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
- 	afi_writel(pcie, 0, AFI_AXI_BAR5_SZ);
- 	afi_writel(pcie, 0, AFI_FPCI_BAR5);
- 
--	/* map all upstream transactions as uncached */
--	afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
--	afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
--	afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
--	afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
-+	if (of_device_is_compatible(np, "nvidia,tegra20-pcie")) {
-+		/* map all upstream transactions as uncached */
-+		afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
-+	}
- 
- 	/* MSI translations are setup only when needed */
- 	afi_writel(pcie, 0, AFI_MSI_FPCI_BAR_ST);
--- 
-2.17.1
+> What kind of hardware is that? Is there no chance of making interrupt
+> controller handle level interrupts?
+
+It's a PXA3xx platform, and their interrupt controller lacks such a feature.
+
+
+Thanks,
+Daniel
