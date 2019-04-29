@@ -1,44 +1,49 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
-Date: Mon, 29 Apr 2019 11:06:27 +0200
-Message-ID: <20190429090627.GA10302@kroah.com>
-References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <20190301161624.GA19937@kroah.com>
- <TYXPR01MB17756DBAF2FD7A1F2A9B82B0C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <TY1PR01MB1770DB45DCD263C6933B9210C0230@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190427125606.GA25493@kroah.com>
- <TY1PR01MB177019CA89AC165803270945C0390@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v4 03/10] [media] marvell-ccic: don't generate EOF on parallel bus
+Date: Mon, 29 Apr 2019 11:16:25 +0200
+Message-ID: <20190429091632.2462285-4-lkundrak@v3.sk>
+References: <20190429091632.2462285-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB177019CA89AC165803270945C0390@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <20190429091632.2462285-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 08:53:00AM +0000, Fabrizio Castro wrote:
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: 27 April 2019 13:56
-> > Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
-> > 
-> > On Tue, Apr 23, 2019 at 03:32:59PM +0000, Fabrizio Castro wrote:
-> > > Hello Simon,
-> > >
-> > > I know you don't normally take this type of patches, but this one has
-> > > been around for more than 4 months now, and I am losing hope here...
-> > >
-> > > Do you think you can this patch?
-> > 
-> > I think this got dropped somehow, sorry about that.
-> > 
-> > Can you resend it, with the acks that have been given to it, and I will
-> > be glad to queue it up.
-> 
-> Thank you Greg, I have sent it now.
+The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
+marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
+parallel bus without a very good explanation.
 
-Now queued up, sorry about the delay.
+That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
+parallel bus. Revert that chunk.
 
-greg k-h
+Tested on an OLPC XO-1.75.
+
+Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.c
+index d97f39bde9bd..d24e5b7a3bc5 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
+ 	 * Make sure it knows we want to use hsync/vsync.
+ 	 */
+ 	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
+-	/*
+-	 * This field controls the generation of EOF(DVP only)
+-	 */
+-	if (cam->bus_type !=3D V4L2_MBUS_CSI2_DPHY)
+-		mcam_reg_set_bit(cam, REG_CTRL0,
+-				C0_EOF_VSYNC | C0_VEDGE_CTRL);
+ }
+=20
+=20
+--=20
+2.21.0
