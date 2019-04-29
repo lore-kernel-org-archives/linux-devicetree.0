@@ -1,49 +1,56 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 2/6] dt-bindings: riscv: sifive: add YAML documentation
- for the SiFive FU540
-Date: Mon, 29 Apr 2019 11:13:40 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1904291113140.10713@viisi.sifive.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411084304.5072-3-paul.walmsley@sifive.com> <20190429180846.GA26021@bogus>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA' property
+Date: Mon, 29 Apr 2019 12:19:48 -0700
+Message-ID: <7hk1fcr54b.fsf@baylibre.com>
+References: <20190418124758.24022-1-glaroque@baylibre.com> <20190418124758.24022-2-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190429180846.GA26021@bogus>
+In-Reply-To: <20190418124758.24022-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
+To: Guillaume La Roque <glaroque@baylibre.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Apr 2019, Rob Herring wrote:
+Rob,
 
-> On Thu, Apr 11, 2019 at 01:43:00AM -0700, Paul Walmsley wrote:
-> > Add YAML DT binding documentation for the SiFive FU540 SoC.  This
-> > SoC is documented at:
-> > 
-> >     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> > 
-> > Passes dt-doc-validate, as of yaml-bindings commit 4c79d42e9216.
+Guillaume La Roque <glaroque@baylibre.com> writes:
 
-...
+> This property allow drive-strength parameter in uA instead of mA.
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index cef2b5855d60..fc7018459aa2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+>  drive-open-drain	- drive with open drain
+>  drive-open-source	- drive with open source
+>  drive-strength		- sink or source at most X mA
+> +drive-strength-uA	- sink or source at most X uA
+>  input-enable		- enable input on pin (no effect on output, such as
+>  			  enabling an input buffer)
+>  input-disable		- disable input on pin (no effect on output, such as
+> @@ -326,6 +327,8 @@ arguments are described below.
+>  
+>  - drive-strength takes as argument the target strength in mA.
+>  
+> +- drive-strength-uA takes as argument the target strength in uA.
+> +
+>  - input-debounce takes the debounce time in usec as argument
+>    or 0 to disable debouncing
 
-> > ---
-> >  .../devicetree/bindings/riscv/sifive.yaml     | 26 +++++++++++++++++++
-> >  MAINTAINERS                                   |  9 +++++++
-> >  2 files changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> > new file mode 100644
-> > index 000000000000..d2808d8d79bb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> > @@ -0,0 +1,26 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/riscv/sifive/sifive.yaml#
-> 
-> The path here should match the file path. IOW, drop 'sifive/'.
+Can we get your input on this?
 
-Thanks, will do.
+Linus W. is OK with this[1], but wants opinion/approval from DT
+maintainers first.
 
-- Paul
+Thanks,
+
+Kevin
+
+[1] https://lore.kernel.org/lkml/CACRpkdZ2dPzrtJQkxmN7V=f6+qYZAvrF+b0J77cN9hoRAgFqrw@mail.gmail.com/T/#u
