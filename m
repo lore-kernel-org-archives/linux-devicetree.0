@@ -1,255 +1,29 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Move CPU OPP tables out of SoC node on Exynos5420
-Date: Mon, 29 Apr 2019 19:35:24 +0200
-Message-ID: <20190429173524.4870-1-krzk@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add support for
+ imx6ul-pico-dwarf
+Date: Mon, 29 Apr 2019 12:35:43 -0500
+Message-ID: <20190429173543.GA4192@bogus>
+References: <20190407193723.3351-1-otavio@ossystems.com.br>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190407193723.3351-1-otavio@ossystems.com.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-The cpus node is a top-level node, not inside the soc.  Therefore its
-OPP tables should be there as well.
+On Sun,  7 Apr 2019 16:37:22 -0300, Otavio Salvador wrote:
+> From: Fabio Estevam <festevam@gmail.com>
+> 
+> Add support for TechNexion's imx6ul-pico-dwarf board.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+> ---
+> 
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-This also fixes the DTC warnings like:
-
-    arch/arm/boot/dts/exynos5420.dtsi:46.37-109.5:
-        Warning simple_bus_reg): /soc/opp_table0: missing or empty reg/ranges property
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420.dtsi | 216 +++++++++++++++---------------
- 1 file changed, 109 insertions(+), 107 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 5fb2326875dc..16088186a33a 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -42,117 +42,119 @@
- 	 * by exynos5420-cpus.dtsi or exynos5422-cpus.dtsi.
- 	 */
- 
--	soc: soc {
--		cluster_a15_opp_table: opp_table0 {
--			compatible = "operating-points-v2";
--			opp-shared;
--			opp-1800000000 {
--				opp-hz = /bits/ 64 <1800000000>;
--				opp-microvolt = <1250000>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1700000000 {
--				opp-hz = /bits/ 64 <1700000000>;
--				opp-microvolt = <1212500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1600000000 {
--				opp-hz = /bits/ 64 <1600000000>;
--				opp-microvolt = <1175000>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1500000000 {
--				opp-hz = /bits/ 64 <1500000000>;
--				opp-microvolt = <1137500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1400000000 {
--				opp-hz = /bits/ 64 <1400000000>;
--				opp-microvolt = <1112500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1300000000 {
--				opp-hz = /bits/ 64 <1300000000>;
--				opp-microvolt = <1062500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1200000000 {
--				opp-hz = /bits/ 64 <1200000000>;
--				opp-microvolt = <1037500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1100000000 {
--				opp-hz = /bits/ 64 <1100000000>;
--				opp-microvolt = <1012500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1000000000 {
--				opp-hz = /bits/ 64 <1000000000>;
--				opp-microvolt = < 987500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-900000000 {
--				opp-hz = /bits/ 64 <900000000>;
--				opp-microvolt = < 962500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-800000000 {
--				opp-hz = /bits/ 64 <800000000>;
--				opp-microvolt = < 937500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-700000000 {
--				opp-hz = /bits/ 64 <700000000>;
--				opp-microvolt = < 912500>;
--				clock-latency-ns = <140000>;
--			};
-+	cluster_a15_opp_table: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1250000>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1700000000 {
-+			opp-hz = /bits/ 64 <1700000000>;
-+			opp-microvolt = <1212500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1600000000 {
-+			opp-hz = /bits/ 64 <1600000000>;
-+			opp-microvolt = <1175000>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1500000000 {
-+			opp-hz = /bits/ 64 <1500000000>;
-+			opp-microvolt = <1137500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1400000000 {
-+			opp-hz = /bits/ 64 <1400000000>;
-+			opp-microvolt = <1112500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1300000000 {
-+			opp-hz = /bits/ 64 <1300000000>;
-+			opp-microvolt = <1062500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1037500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1100000000 {
-+			opp-hz = /bits/ 64 <1100000000>;
-+			opp-microvolt = <1012500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = < 987500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-900000000 {
-+			opp-hz = /bits/ 64 <900000000>;
-+			opp-microvolt = < 962500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = < 937500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-700000000 {
-+			opp-hz = /bits/ 64 <700000000>;
-+			opp-microvolt = < 912500>;
-+			clock-latency-ns = <140000>;
- 		};
-+	};
- 
--		cluster_a7_opp_table: opp_table1 {
--			compatible = "operating-points-v2";
--			opp-shared;
--			opp-1300000000 {
--				opp-hz = /bits/ 64 <1300000000>;
--				opp-microvolt = <1275000>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1200000000 {
--				opp-hz = /bits/ 64 <1200000000>;
--				opp-microvolt = <1212500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1100000000 {
--				opp-hz = /bits/ 64 <1100000000>;
--				opp-microvolt = <1162500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-1000000000 {
--				opp-hz = /bits/ 64 <1000000000>;
--				opp-microvolt = <1112500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-900000000 {
--				opp-hz = /bits/ 64 <900000000>;
--				opp-microvolt = <1062500>;
--				clock-latency-ns = <140000>;
--			};
--			opp-800000000 {
--				opp-hz = /bits/ 64 <800000000>;
--				opp-microvolt = <1025000>;
--				clock-latency-ns = <140000>;
--			};
--			opp-700000000 {
--				opp-hz = /bits/ 64 <700000000>;
--				opp-microvolt = <975000>;
--				clock-latency-ns = <140000>;
--			};
--			opp-600000000 {
--				opp-hz = /bits/ 64 <600000000>;
--				opp-microvolt = <937500>;
--				clock-latency-ns = <140000>;
--			};
-+	cluster_a7_opp_table: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1300000000 {
-+			opp-hz = /bits/ 64 <1300000000>;
-+			opp-microvolt = <1275000>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1212500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1100000000 {
-+			opp-hz = /bits/ 64 <1100000000>;
-+			opp-microvolt = <1162500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <1112500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-900000000 {
-+			opp-hz = /bits/ 64 <900000000>;
-+			opp-microvolt = <1062500>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = <1025000>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-700000000 {
-+			opp-hz = /bits/ 64 <700000000>;
-+			opp-microvolt = <975000>;
-+			clock-latency-ns = <140000>;
-+		};
-+		opp-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <937500>;
-+			clock-latency-ns = <140000>;
- 		};
-+	};
- 
-+	soc: soc {
- 		cci: cci@10d20000 {
- 			compatible = "arm,cci-400";
- 			#address-cells = <1>;
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
