@@ -1,35 +1,36 @@
-Return-Path: <SRS0=akoX=SD=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 06/12] dt-bindings: usb: renesas_usbhs: Add support for r8a77470
-Date: Mon,  1 Apr 2019 13:53:46 +0100
-Message-Id: <1554123232-58942-7-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554123232-58942-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=dDaQ=S7=nxp.com=haibo.chen@kernel.org>
+From: BOUGH CHEN <haibo.chen@nxp.com>
+Subject: [PATCH 3/3] ARM: dts: imx7s: set the tuning start tap for USDHC
+Date: Mon, 29 Apr 2019 12:38:03 +0000
+Message-ID: <20190429124547.19928-3-haibo.chen@nxp.com>
+References: <20190429124547.19928-1-haibo.chen@nxp.com>
+In-Reply-To: <20190429124547.19928-1-haibo.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document support for RZ/G1C (R8A77470) SoC.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2
-  * New patch
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index d93b6a1..b8acc2a 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
- 	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
- 	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
-+	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
- 	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
- 	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
- 	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
--- 
-2.7.4
+Rm9yIFVTREhDIHN0YW5kYXJkIHR1bmluZyBtZXRob2QsIGkuTVg3RCByZXF1aXJlIHRoYXQgdGhl
+IHN0YXJ0IHRhcA0KcG9pbnQgbXVzdCBiZSBsYXJnZXIgdGhhbiAxMCwgb3RoZXJ3aXNlIHRoZSBp
+bnRlcm5hbCBJQyBsb2dpYyBjYW4ndA0Kd29yayBub3JtYWwuIFNvIHRoaXMgcGF0Y2ggc2V0IHRo
+ZSB0dW5pbmcgc3RhcnQgdGFwIGFzIDIwIGFjY29yZGluZw0KdG8gSUMgc3VnZ2VzdGlvbi4NCg0K
+U2lnbmVkLW9mZi1ieTogSGFpYm8gQ2hlbiA8aGFpYm8uY2hlbkBueHAuY29tPg0KLS0tDQogYXJj
+aC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaSB8IDMgKysrDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5z
+ZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaSBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdzLmR0c2kNCmluZGV4IDEwNjcxMWQyYzAxYi4uMTA4NjUy
+OTE1Zjk5IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaQ0KKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaQ0KQEAgLTExMjYsNiArMTEyNiw3IEBADQogCQkJ
+CQk8JmNsa3MgSU1YN0RfVVNESEMxX1JPT1RfQ0xLPjsNCiAJCQkJY2xvY2stbmFtZXMgPSAiaXBn
+IiwgImFoYiIsICJwZXIiOw0KIAkJCQlidXMtd2lkdGggPSA8ND47DQorCQkJCWZzbCx0dW5pbmct
+c3RhcnQtdGFwID0gPDIwPjsNCiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KIA0K
+QEAgLTExMzgsNiArMTEzOSw3IEBADQogCQkJCQk8JmNsa3MgSU1YN0RfVVNESEMyX1JPT1RfQ0xL
+PjsNCiAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiIsICJwZXIiOw0KIAkJCQlidXMtd2lk
+dGggPSA8ND47DQorCQkJCWZzbCx0dW5pbmctc3RhcnQtdGFwID0gPDIwPjsNCiAJCQkJc3RhdHVz
+ID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KIA0KQEAgLTExNTAsNiArMTE1Miw3IEBADQogCQkJCQk8
+JmNsa3MgSU1YN0RfVVNESEMzX1JPT1RfQ0xLPjsNCiAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwg
+ImFoYiIsICJwZXIiOw0KIAkJCQlidXMtd2lkdGggPSA8ND47DQorCQkJCWZzbCx0dW5pbmctc3Rh
+cnQtdGFwID0gPDIwPjsNCiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KIA0KLS0g
+DQoyLjE3LjENCg0K
