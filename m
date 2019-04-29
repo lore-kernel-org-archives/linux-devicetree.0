@@ -1,54 +1,26 @@
-From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH V10 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Tue, 30 Apr 2019 21:40:20 +0000
-Message-ID: <1556660398-25450-4-git-send-email-Frank.Li@nxp.com>
-References: <1556660398-25450-1-git-send-email-Frank.Li@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1556660398-25450-1-git-send-email-Frank.Li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Frank Li <frank.li@nxp.com>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 29 Apr 2019 13:05:55 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 20/20] dt-bindings: can: rcar_can: Document r8a77470
+ bindings
+Message-ID: <20190429180555.GA25843@bogus>
+References: <1554969262-15028-1-git-send-email-cv-dong@jinso.co.jp>
+ <1554969262-15028-21-git-send-email-cv-dong@jinso.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554969262-15028-21-git-send-email-cv-dong@jinso.co.jp>
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, biju.das@bp.renesas.com, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+List-ID: <devicetree@vger.kernel.org>
 
-Add DDR perf counter driver maintainer information
+On Thu, 11 Apr 2019 16:54:22 +0900, Cao Van Dong wrote:
+> Document SoC specific bindings for R-Car RZ/G1C(r8a77470) SoC.
+> 
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+> ---
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-No change from v1 to v10
-
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2c7d4e1..6a9868b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6264,6 +6264,13 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-cpm.c
- 
-+FREESCALE IMX DDR Performance Monitor DRIVER
-+M:	Frank Li <Frank.li@nxp.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	drivers/perf/fsl_imx8_ddr_perf.c
-+F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-+
- FREESCALE IMX LPI2C DRIVER
- M:	Dong Aisheng <aisheng.dong@nxp.com>
- L:	linux-i2c@vger.kernel.org
--- 
-2.5.2
+Reviewed-by: Rob Herring <robh@kernel.org>
