@@ -1,83 +1,105 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/6] dt-bindings: usb: mtu3: add properties about USB
- Role Switch
-Date: Mon, 29 Apr 2019 11:25:54 -0500
-Message-ID: <CAL_JsqKXKRetoy4u_yAMgS+RA0vaRhzjR0zpLjKMtgRvFHXn7A@mail.gmail.com>
-References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
- <1556261237-13823-4-git-send-email-chunfeng.yun@mediatek.com>
- <20190426204906.GB15074@bogus> <1556453788.10179.224.camel@mhfsdcap03>
+Subject: Re: [PATCH v6 04/10] Documentation: dt: device tree bindings for
+ LPDDR3 memories
+Date: Mon, 29 Apr 2019 11:36:16 -0500
+Message-ID: <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87@eucas1p1.samsung.com>
+ <1555683568-20882-5-git-send-email-l.luba@partner.samsung.com>
+ <20190425195156.GA31128@bogus> <86715dda-c1b0-5354-17d2-419f8137cb91@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556453788.10179.224.camel@mhfsdcap03>
+In-Reply-To: <86715dda-c1b0-5354-17d2-419f8137cb91@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Biju Das <biju.das@bp.renesas.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kees Cook <keescook@chromium.org>, Tony Lindgren <tony@atomide.com>, Joerg Roedel <jroedel@suse.de>, Thierry Reding <treding@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 7:16 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+On Mon, Apr 29, 2019 at 7:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
 >
-> On Fri, 2019-04-26 at 15:49 -0500, Rob Herring wrote:
-> > On Fri, Apr 26, 2019 at 02:47:14PM +0800, Chunfeng Yun wrote:
-> > > Now the USB Role Switch is supported, so add properties about it
-> > >
-> > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > ---
-> > > v4: no changes
-> > > v3: no changes
-> > >
-> > > v2 changes:
-> > >   1. fix typo
-> > >   2. refer new binding about connector property
-> > > ---
-> > >  .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++--
-> > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > > index 3382b5cb471d..6e004c4a89af 100644
-> > > --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > > @@ -27,7 +27,9 @@ Optional properties:
-> > >   - ranges : allows valid 1:1 translation between child's address space and
-> > >     parent's address space
-> > >   - extcon : external connector for vbus and idpin changes detection, needed
-> > > -   when supports dual-role mode.
-> > > +   when supports dual-role mode; it's consiedered valid for compatibility
-> > > +   reasons, and not allowed for new bindings, use the property
-> > > +   usb-role-switch instead.
-> > >   - vbus-supply : reference to the VBUS regulator, needed when supports
-> > >     dual-role mode.
-> > >   - pinctrl-names : a pinctrl state named "default" is optional, and need be
-> > > @@ -36,7 +38,8 @@ Optional properties:
-> > >     is not set.
-> > >   - pinctrl-0 : pin control group
-> > >     See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > > -
-> > > + - usb-role-switch : use USB Role Switch to support dual-role switch, but
-> > > +   not extcon
+> Hi Rob,
+>
+> On 4/25/19 9:51 PM, Rob Herring wrote:
+> > On Fri, Apr 19, 2019 at 04:19:22PM +0200, Lukasz Luba wrote:
+> >> The device tree bindings for LPDDR3 SDRAM memories.
+> >>
+> >> For specifying the AC timing parameters of the memory device
+> >> the 'lpddr3' binding uses binding 'lpddr2-timings'.
+> >>
+> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> >> ---
+> >>   .../devicetree/bindings/lpddr3/lpddr3-timings.txt  | 57 +++++++++++++
+> >>   .../devicetree/bindings/lpddr3/lpddr3.txt          | 93 ++++++++++++++++++++++
 > >
-> > Coordinate with the Renesas and HiSilicon folks implementing the same
-> > thing and put this in a common spot.
-> I'll prepare a patch for it, and CC Biju and Yu
->
-> > However, I think this should not
-> > even be needed as knowing the controller capabilities (based on the
-> > compatible) and knowing the type of connector should be enough
-> > information to tell you if dual role is supported or not.
-> Some Dual-Role controller drivers already used extcon framework to
-> handle role switch, if try to support the new USB Role Switch framework,
-> the driver may want to know which way will be used.
+> > Please rename the lpddr2 directory to 'ddr' and add these to it.
+> OK, I will rename it in the nex patch set.
+> >
+> > Maybe whatever properties are common should be put in a common doc.
+> There are maybe a few common properties, but I would not dare to merge
+> lpddr2 and lpddr3 before consulting it with TI engineers who made
+> LPDDR2 support.
 
-Wouldn't it know by presence of 'extcon' property or not?
+Why not. You aren't changing anything. Just rearranging.
 
-> Sometimes users also want to use dual-role even use the type-A, such as
-> use sys interface to handle role switch, so only knowing the connector
-> type can't tell driver which way to use
+> Could we work on a common file after the patch set got merged?
 
-That use case doesn't sound like something that should be in DT
-though. That would be possible for any controller that supports
-dual-role. Though perhaps that requires some specific Vbus wiring? Or
-a cable with Vbus disconnected. Either way, doesn't sound USB
-compliant.
+Yes, but please still move everything to a common directory.
+
+> >
+> >>   2 files changed, 150 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
+> >> new file mode 100644
+> >> index 0000000..ebf3e00
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
+> >> @@ -0,0 +1,57 @@
+> >> +* AC timing parameters of LPDDR3 memories for a given speed-bin.
+> >> +* The structures are based on LPDDR2 and extended where needed.
+> >> +
+> >> +Required properties:
+> >> +- compatible : Should be "jedec,lpddr3-timings"
+> >> +- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
+> >> +- max-freq : maximum DDR clock frequency for the speed-bin. Type is <u32>
+> >> +
+> >> +Optional properties:
+> >> +
+> >> +The following properties represent AC timing parameters from the memory
+> >> +data-sheet of the device for a given speed-bin. All these properties are
+> >> +of type <u32> and the default unit is ps (pico seconds).
+> >> +- tRFC
+> >> +- tRRD
+> >> +- tRPab
+> >> +- tRPpb
+> >> +- tRCD
+> >> +- tRC
+> >> +- tRAS
+> >> +- tWTR
+> >> +- tWR
+> >> +- tRTP
+> >> +- tW2W-C2C
+> >> +- tR2R-C2C
+> >> +- tFAW
+> >> +- tXSR
+> >> +- tXP
+> >> +- tCKE
+> >> +- tCKESR
+> >> +- tMRD
+> >> +
+> >> +Example:
+> >> +
+> >> +timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
+> >
+> > Since the lpddr2 version was written, we've gotten stricter about
+> > allowing unit-address without reg property. Perhaps 'reg' should be the
+> > max-freq instead.
+> OK, so I will rename 'max-freq' to 'reg' and add a comment with:
+> '/* workaround: it shows max-freq */
+> Does it make sense?
+
+Sure.
 
 Rob
