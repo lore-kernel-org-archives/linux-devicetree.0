@@ -1,14 +1,8 @@
-Return-Path: <SRS0=BKL8=S7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from p3plsmtpa08-05.prod.phx3.secureserver.net ([173.201.193.106]:57950
-        "EHLO p3plsmtpa08-05.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727710AbfD2MYY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:24:24 -0400
+Return-Path: <SRS0=ZzVx=S7=labundy.com=jeff@kernel.org>
 From: Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v10 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
-Date: Mon, 29 Apr 2019 07:24:11 -0500
-Message-Id: <1556540652-7616-1-git-send-email-jeff@labundy.com>
-Sender: devicetree-owner@vger.kernel.org
+Subject: [PATCH v9 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
+Date: Sun, 28 Apr 2019 23:18:43 -0500
+Message-Id: <1556511524-7850-1-git-send-email-jeff@labundy.com>
 To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
 Cc: linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
 List-ID: <devicetree@vger.kernel.org>
@@ -18,9 +12,6 @@ family of trackpad/touchscreen controllers.
 
 Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 ---
-Changes in v10:
-  - None
-
 Changes in v9:
   - Corrected the polarity of the reset GPIO in the example node to match that
     of the device's active-low NRST pin
