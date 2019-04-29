@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v4 01/10] media: dt-bindings: marvell,mmp2-ccic: Add Marvell MMP2 camera
-Date: Mon, 29 Apr 2019 11:16:23 +0200
-Message-ID: <20190429091632.2462285-2-lkundrak@v3.sk>
+Subject: [PATCH v4 04/10] Revert "[media] marvell-ccic: reset ccic phy when stop streaming for stability"
+Date: Mon, 29 Apr 2019 11:16:26 +0200
+Message-ID: <20190429091632.2462285-5-lkundrak@v3.sk>
 References: <20190429091632.2462285-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,74 +12,116 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Add Marvell MMP2 camera host interface.
+This accesses the clock registers directly and thus is going to stay in t=
+he
+way of making the driver devicetree friendly.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+No boards seems to actually use this. If it's somehow actually needed it
+needs to be done differently.
 
+This reverts commit 7c269f454e7a51b151d94f99344120efa1cd0acb.
 ---
-Changes since v3:
-- Dropped the video-interfaces.txt reference
-- Clarify "clocks", "clock-names" and "clock-output-names" descriptions
-- Refer to other documentation by full path
+ .../media/platform/marvell-ccic/mcam-core.c   |  6 -----
+ .../media/platform/marvell-ccic/mcam-core.h   |  2 --
+ .../media/platform/marvell-ccic/mmp-driver.c  | 25 -------------------
+ 3 files changed, 33 deletions(-)
 
-Changes since v2:
-- Added #clock-cells, clock-names, port
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.c
+index d24e5b7a3bc5..1b879035948c 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -1154,12 +1154,6 @@ static void mcam_vb_stop_streaming(struct vb2_queu=
+e *vq)
+ 	if (cam->state !=3D S_STREAMING)
+ 		return;
+ 	mcam_ctlr_stop_dma(cam);
+-	/*
+-	 * Reset the CCIC PHY after stopping streaming,
+-	 * otherwise, the CCIC may be unstable.
+-	 */
+-	if (cam->ctlr_reset)
+-		cam->ctlr_reset(cam);
+ 	/*
+ 	 * VB2 reclaims the buffers, so we need to forget
+ 	 * about them.
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.h b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.h
+index ad8955f9f0a1..a3a097a45e78 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.h
++++ b/drivers/media/platform/marvell-ccic/mcam-core.h
+@@ -116,7 +116,6 @@ struct mcam_camera {
+ 	int mclk_src;	/* which clock source the mclk derives from */
+ 	int mclk_div;	/* Clock Divider Value for MCLK */
 =20
-.../bindings/media/marvell,mmp2-ccic.txt      | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-=
-ccic.txt
-
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.tx=
-t b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-new file mode 100644
-index 000000000000..cf7767268c52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-@@ -0,0 +1,38 @@
-+Marvell MMP2 camera host interface
-+
-+Required properties:
-+ - compatible: Should be "marvell,mmp2-ccic".
-+ - reg: Register base and size.
-+ - interrupts: The interrupt number.
-+ - #clock-cells: Nust be 0.
-+
-+Optional properties:
-+ - clocks: Reference to the input clock as specified by
-+           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-+ - clock-names: Names of the clocks used; "axi" for the AXI bus interfac=
-e,
-+                "func" for the peripheral clock and "phy" for the parall=
-el
-+                video bus interface.
-+ - clock-output-names: Optional clock source for sensors. Shall be "mclk=
-".
-+
-+Required subnodes:
-+ - port: The parallel bus interface port with a single endpoint linked t=
-o
-+         the sensor's endpoint as described in
-+         Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	camera0: camera@d420a000 {
-+		compatible =3D "marvell,mmp2-ccic";
-+		reg =3D <0xd420a000 0x800>;
-+		interrupts =3D <42>;
-+		clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
-+		clock-names =3D "axi";
-+		#clock-cells =3D <0>;
-+		clock-output-names =3D "mclk";
-+
-+		port {
-+			camera0_0: endpoint {
-+				remote-endpoint =3D <&ov7670_0>;
-+			};
-+		};
-+	};
+-	int ccic_id;
+ 	enum v4l2_mbus_type bus_type;
+ 	/* MIPI support */
+ 	/* The dphy config value, allocated in board file
+@@ -137,7 +136,6 @@ struct mcam_camera {
+ 	int (*plat_power_up) (struct mcam_camera *cam);
+ 	void (*plat_power_down) (struct mcam_camera *cam);
+ 	void (*calc_dphy) (struct mcam_camera *cam);
+-	void (*ctlr_reset) (struct mcam_camera *cam);
+=20
+ 	/*
+ 	 * Everything below here is private to the mcam core and
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
+edia/platform/marvell-ccic/mmp-driver.c
+index af76eb637773..8d982c4aae0d 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -105,7 +105,6 @@ static struct mmp_camera *mmpcam_find_device(struct p=
+latform_device *pdev)
+ #define CPU_SUBSYS_PMU_BASE	0xd4282800
+ #define REG_CCIC_DCGCR		0x28	/* CCIC dyn clock gate ctrl reg */
+ #define REG_CCIC_CRCR		0x50	/* CCIC clk reset ctrl reg	*/
+-#define REG_CCIC2_CRCR		0xf4	/* CCIC2 clk reset ctrl reg	*/
+=20
+ static void mcam_clk_enable(struct mcam_camera *mcam)
+ {
+@@ -183,28 +182,6 @@ static void mmpcam_power_down(struct mcam_camera *mc=
+am)
+ 	mcam_clk_disable(mcam);
+ }
+=20
+-static void mcam_ctlr_reset(struct mcam_camera *mcam)
+-{
+-	unsigned long val;
+-	struct mmp_camera *cam =3D mcam_to_cam(mcam);
+-
+-	if (mcam->ccic_id) {
+-		/*
+-		 * Using CCIC2
+-		 */
+-		val =3D ioread32(cam->power_regs + REG_CCIC2_CRCR);
+-		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC2_CRCR);
+-		iowrite32(val | 0x2, cam->power_regs + REG_CCIC2_CRCR);
+-	} else {
+-		/*
+-		 * Using CCIC1
+-		 */
+-		val =3D ioread32(cam->power_regs + REG_CCIC_CRCR);
+-		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC_CRCR);
+-		iowrite32(val | 0x2, cam->power_regs + REG_CCIC_CRCR);
+-	}
+-}
+-
+ /*
+  * calc the dphy register values
+  * There are three dphy registers being used.
+@@ -352,11 +329,9 @@ static int mmpcam_probe(struct platform_device *pdev=
+)
+ 	mcam =3D &cam->mcam;
+ 	mcam->plat_power_up =3D mmpcam_power_up;
+ 	mcam->plat_power_down =3D mmpcam_power_down;
+-	mcam->ctlr_reset =3D mcam_ctlr_reset;
+ 	mcam->calc_dphy =3D mmpcam_calc_dphy;
+ 	mcam->dev =3D &pdev->dev;
+ 	mcam->use_smbus =3D 0;
+-	mcam->ccic_id =3D pdev->id;
+ 	mcam->mclk_min =3D pdata->mclk_min;
+ 	mcam->mclk_src =3D pdata->mclk_src;
+ 	mcam->mclk_div =3D pdata->mclk_div;
 --=20
 2.21.0
