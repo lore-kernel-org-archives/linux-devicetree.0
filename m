@@ -1,76 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-binding: misc: Add common LPC snoop
- documentation
-Date: Mon, 29 Apr 2019 17:58:47 -0500
-Message-ID: <20190429225847.GA8905@bogus>
-References: <20190416111631.356803-1-tmaimon77@gmail.com>
- <20190416111631.356803-2-tmaimon77@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
+Date: Mon, 29 Apr 2019 15:59:49 -0700
+Message-ID: <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190416111631.356803-2-tmaimon77@gmail.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: gregkh@linuxfoundation.org, arnd@arnd.de, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 02:16:30PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM BIOS Post Code (BPC) and Apeed AST2500 LPC snoop.
+Quoting Paul Walmsley (2019-04-29 12:42:07)
+> Hi Stephen,
+>=20
+> On Fri, 26 Apr 2019, Paul Walmsley wrote:
+>=20
+> > On Fri, 26 Apr 2019, Stephen Boyd wrote:
+> >=20
+> > > Quoting Paul Walmsley (2019-04-11 01:27:32)
+> > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) =
+IP
+> > > > block, as implemented in TSMC CLN28HPC.
+> > >=20
+> > > I haven't deeply reviewed at all, but I already get two problems when
+> > > compile testing these patches. I can fix them up if nothing else needs
+> > > fixing.
+> > >=20
+> > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn:=
+ should 'target_rate << divq' be a 64 bit type?
+> > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in v=
+oid function
+> >=20
+> > Hmm, that's odd.  I will definitely take a look and repost.
+>=20
+> I'm not able to reproduce these problems.  The configs tried here were:
+>=20
+> - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with=20
+>   crosstool-NG 1.24.0)
+>=20
+> - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with=20
+>   crosstool-NG 1.24.0)
+>=20
+> - 32-bit i386 defconfig w/ PRCI driver enabled (gcc=20
+>   5.4.0-6ubuntu1~16.04.11)
+>=20
+> Could you post the toolchain and kernel config you're using?
+>=20
 
-s/Apeed/Aspeed/
-
-> The LPC snoop monitoring two configurable I/O addresses
-> written by the host on Low Pin Count (LPC) bus.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../devicetree/bindings/misc/lpc-snoop.txt         | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/lpc-snoop.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/lpc-snoop.txt b/Documentation/devicetree/bindings/misc/lpc-snoop.txt
-> new file mode 100644
-> index 000000000000..c21cb8df4ffb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/lpc-snoop.txt
-> @@ -0,0 +1,27 @@
-> +LPC snoop interface
-> +
-> +The LPC snoop (BIOS Post Code) interface can monitor
-> +two configurable I/O addresses written by the host on
-> +the Low Pin Count (LPC) bus.
-> +
-> +Nuvoton NPCM7xx LPC snoop supports capture double words,
-> +when using capture double word only I/O address 1 is monitored.
-> +
-> +Required properties for lpc-snoop node
-> +- compatible   : "nuvoton,npcm750-lpc-bpc-snoop" for Poleg NPCM7XX
-> +                 "aspeed,ast2500-lpc-snoop" for Aspeed AST2500.
-> +- reg          : specifies physical base address and size of the registers.
-> +- interrupts   : contain the LPC snoop interrupt with flags for falling edge.
-> +- snoop-ports  : contain monitor I/O addresses, at least one monitor I/O
-> +                 address required
-> +
-> +Optional property for NPCM7xx lpc-snoop node
-> +- nuvoton,lpc-en-dwcapture : enable capture double words support.
-> +
-> +Example:
-> +	lpc-snoop: lpc_snoop@f0007040 {
-
-lpc-snoop@...
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +		compatible = "nuvoton,npcm750-lpc-bpc-snoop";
-> +		reg = <0xf0007040 0x14>;
-> +		snoop-ports = <0x80>;
-> +		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> -- 
-> 2.14.1
-> 
+I'm running sparse and smatch too.
