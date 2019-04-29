@@ -1,74 +1,100 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD controller
-Date: Mon, 29 Apr 2019 12:24:16 +0200
-Message-ID: <CAPDyKFouv1MDJXwDryqhC=X4mLycoAigB3x6Xee09U+QNGTa-Q@mail.gmail.com>
-References: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 01/10] media: dt-bindings: marvell,mmp2-ccic: Add
+ Marvell MMP2 camera
+Date: Mon, 29 Apr 2019 13:28:09 +0300
+Message-ID: <20190429102809.qlwwgzgwzh4raz2q@valkosipuli.retiisi.org.uk>
+References: <20190429091632.2462285-1-lkundrak@v3.sk>
+ <20190429091632.2462285-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <20190429091632.2462285-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takao Orito <orito.takao@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Apr 2019 at 04:04, Takao Orito <orito.takao@socionext.com> wrote:
->
-> Signed-off-by: Takao Orito <orito.takao@socionext.com>
+Hi Lubomir,
+
+On Mon, Apr 29, 2019 at 11:16:23AM +0200, Lubomir Rintel wrote:
+> Add Marvell MMP2 camera host interface.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
->  .../devicetree/bindings/mmc/sdhci-milbeaut.txt     | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> Changes since v3:
+> - Dropped the video-interfaces.txt reference
+> - Clarify "clocks", "clock-names" and "clock-output-names" descriptions
+> - Refer to other documentation by full path
+> 
+> Changes since v2:
+> - Added #clock-cells, clock-names, port
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+>  
+> .../bindings/media/marvell,mmp2-ccic.txt      | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
 > new file mode 100644
-> index 0000000..7008462
+> index 000000000000..cf7767268c52
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
-> @@ -0,0 +1,35 @@
-> +* SOCIONEXT SDHCI controller
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci_milbeaut driver.
+> +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+> @@ -0,0 +1,38 @@
+> +Marvell MMP2 camera host interface
 > +
 > +Required properties:
-> +- compatible: "socionext,milbeaut-m10v-sdhci-3.0"
-> +- clocks: Must contain an entry for each entry in clock-names. It is a
-> +  list of phandles and clock-specifier pairs.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Should contain the following two entries:
-> +       "iface" - clock used for sdhci interface
-> +       "core"  - core clock for sdhci controller
+> + - compatible: Should be "marvell,mmp2-ccic".
+> + - reg: Register base and size.
+> + - interrupts: The interrupt number.
+> + - #clock-cells: Nust be 0.
+
+"Must".
+
 > +
 > +Optional properties:
-> +- vqmmc-supply: phandle to the regulator device tree node, mentioned
-> +  as the VCCQ/VDD_IO supply in the eMMC/SD specs.
-> +- fujitsu,cmd-dat-delay-select: boolean property indicating that this host
-> +  requires the CMD_DAT_DELAY control to be enabled.
-> +- sni,mmc-power-gpio: set property indicating that power on or off needs
-> +  control of gpios.
+> + - clocks: Reference to the input clock as specified by
+> +           Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> + - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
+> +                "func" for the peripheral clock and "phy" for the parallel
+> +                video bus interface.
+> + - clock-output-names: Optional clock source for sensors. Shall be "mclk".
+> +
+> +Required subnodes:
+> + - port: The parallel bus interface port with a single endpoint linked to
+> +         the sensor's endpoint as described in
+> +         Documentation/devicetree/bindings/media/video-interfaces.txt.
 
-Please use a vmmc-supply instead of "power-gpio" (which means you need
-to model this as a fixed GPIO regulator).
+Both parallel and Bt.656 are supported. So you'll need the bus-type
+property. Looking further the datasheet, you'll also need pclk-sample,
+hsync-active and vsync-active properties. I'd make them mandatory for the
+endpoint (the two latter are for parallel mode only).
 
 > +
 > +Example:
-> +       sdhci3: mmc@1b010000 {
-> +               compatible = "socionext,milbeaut-m10v-sdhci-3.0";
-> +               reg = <0x1b010000 0x10000>;
-> +               interrupts = <0 265 0x4>;
-> +               voltage-ranges = <3300 3300>;
-> +               bus-width = <4>;
-> +               clocks = <&clk 7>, <&ahb_clk>;
-> +               clock-names = "core", "iface";
-> +               cap-sdio-irq;
-> +               sni,mmc-power-gpio = <&pinctrl 53 GPIO_ACTIVE_HIGH>;
-> +                       fujitsu,cmd-dat-delay-select;
-> +       };
-> --
-> 1.9.1
->
->
+> +
+> +	camera0: camera@d420a000 {
+> +		compatible = "marvell,mmp2-ccic";
+> +		reg = <0xd420a000 0x800>;
+> +		interrupts = <42>;
+> +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
+> +		clock-names = "axi";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "mclk";
+> +
+> +		port {
+> +			camera0_0: endpoint {
+> +				remote-endpoint = <&ov7670_0>;
 
-Kind regards
-Uffe
+Please also add the above properties here.
+
+> +			};
+> +		};
+> +	};
+
+-- 
+Kind regards,
+
+Sakari Ailus
