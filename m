@@ -1,54 +1,32 @@
-From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH V9 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Mon, 29 Apr 2019 16:44:37 +0000
-Message-ID: <1556556252-22868-4-git-send-email-Frank.Li@nxp.com>
-References: <1556556252-22868-1-git-send-email-Frank.Li@nxp.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 1/2] ARM: dts: aspeed: Add aspeed-p2a-ctrl node
+Date: Mon, 29 Apr 2019 10:05:40 -0700
+Message-ID: <20190429170540.27bc3fu6nvab2vc5@localhost>
+References: <20190425194853.140617-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1556556252-22868-1-git-send-email-Frank.Li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Frank Li <frank.li@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190425194853.140617-1-venture@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Patrick Venture <venture@google.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DDR perf counter driver maintainer information
+On Thu, Apr 25, 2019 at 12:48:53PM -0700, Patrick Venture wrote:
+> Add a node for the aspeed-p2a-ctrl module.  This node, when enabled will
+> disable the PCI-to-AHB bridge and then allow control of this bridge via
+> ioctls, and access via mmap.
+> 
+> Signed-off-by: Patrick Venture <venture@google.com>
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-No change from v1 to v9
+Patrick,
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Please send these to Joel and Andrew (and cc the mailing lists). No need to
+send patches that there are active maintainers for to arm@kernel.org directly.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2c7d4e1..6a9868b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6264,6 +6264,13 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-cpm.c
- 
-+FREESCALE IMX DDR Performance Monitor DRIVER
-+M:	Frank Li <Frank.li@nxp.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	drivers/perf/fsl_imx8_ddr_perf.c
-+F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-+
- FREESCALE IMX LPI2C DRIVER
- M:	Dong Aisheng <aisheng.dong@nxp.com>
- L:	linux-i2c@vger.kernel.org
--- 
-2.5.2
+(As a matter of fact, drivers/soc/aspeed should go through them too, even if
+I applied the first patch directly just now).
+
+
+-Olof
