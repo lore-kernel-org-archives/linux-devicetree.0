@@ -1,7 +1,7 @@
 From: Gerald BAEZA <gerald.baeza@st.com>
-Subject: [PATCH 1/5] Documentation: perf: stm32: ddrperfm support
-Date: Mon, 29 Apr 2019 10:03:36 +0000
-Message-ID: <1556532194-27904-2-git-send-email-gerald.baeza@st.com>
+Subject: [PATCH 2/5] dt-bindings: perf: stm32: ddrperfm support
+Date: Mon, 29 Apr 2019 10:03:37 +0000
+Message-ID: <1556532194-27904-3-git-send-email-gerald.baeza@st.com>
 References: <1556532194-27904-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,69 +16,41 @@ List-Id: devicetree@vger.kernel.org
 
 The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
 
-This documentation introduces the DDRPERFM, the stm32-ddr-pmu driver
-supporting it and how to use it with the perf tool.
+This documentation indicates how to enable stm32-ddr-pmu driver on
+DDRPERFM peripheral, via the device tree.
 
 Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 ---
- Documentation/perf/stm32-ddr-pmu.txt | 41 ++++++++++++++++++++++++++++++++=
+ .../devicetree/bindings/perf/stm32-ddr-pmu.txt         | 18 ++++++++++++++=
 ++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/perf/stm32-ddr-pmu.txt
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
+t
 
-diff --git a/Documentation/perf/stm32-ddr-pmu.txt b/Documentation/perf/stm3=
-2-ddr-pmu.txt
+diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
+umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
 new file mode 100644
-index 0000000..d5b35b3
+index 0000000..dabc4c7
 --- /dev/null
-+++ b/Documentation/perf/stm32-ddr-pmu.txt
-@@ -0,0 +1,41 @@
-+STM32 DDR Performance Monitor (DDRPERFM)
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+@@ -0,0 +1,18 @@
++* STM32 DDR Performance Monitor (DDRPERFM)
 +
-+The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
-+See STM32MP157 reference manual RM0436 to get a description of this periph=
-eral.
-+
-+
-+The five following counters are supported by stm32-ddr-pmu driver:
-+	cnt0: read operations counters		(read_cnt)
-+	cnt1: write operations counters		(write_cnt)
-+	cnt2: active state counters		(activate_cnt)
-+	cnt3: idle state counters		(idle_cnt)
-+	tcnt: time count, present for all sets	(time_cnt)
-+
-+The stm32-ddr-pmu driver relies on the perf PMU framework to expose the
-+counters via sysfs:
-+	$ ls /sys/bus/event_source/devices/ddrperfm/events
-+	activate_cnt  idle_cnt  read_cnt  time_cnt  write_cnt
-+
-+
-+The perf PMU framework is usually invoked via the 'perf stat' tool.
-+
-+The DDRPERFM is a system monitor that cannot isolate the traffic coming fr=
-om a
-+given thread or CPU, that is why stm32-ddr-pmu driver rejects any 'perf st=
-at'
-+call that does not request a system-wide collection: the '-a, --all-cpus'
-+option is mandatory!
++Required properties:
++- compatible: must be "st,stm32-ddr-pmu".
++- reg: physical address and length of the registers set.
++- clocks: list of phandles and specifiers to all input clocks listed in
++	  clock-names property.
++- clock-names: "bus" corresponds to the DDRPERFM bus clock and "ddr" to
++	       the DDR frequency.
 +
 +Example:
-+	$ perf stat -e ddrperfm/read_cnt/,ddrperfm/time_cnt/ -a sleep 20
-+	Performance counter stats for 'system wide':
++	ddrperfm: perf@5a007000 {
++		compatible =3D "st,stm32-ddr-pmu";
++		reg =3D <0x5a007000 0x400>;
++		clocks =3D <&rcc DDRPERFM>, <&rcc PLL2_R>;
++		clock-names =3D "bus", "ddr";
++	};
 +
-+	         342541560      ddrperfm/read_cnt/
-+	       10660011400      ddrperfm/time_cnt/
-+
-+	      20.021068551 seconds time elapsed
-+
-+
-+The driver also exposes a 'bandwidth' attribute that can be used to displa=
-y
-+the read/write/total bandwidth achieved during the last 'perf stat' execut=
-ion.
-+	$ cat /sys/bus/event_source/devices/ddrperfm/bandwidth
-+	Read =3D 403, Write =3D 239, Read & Write =3D 642 (MB/s)
 --=20
 2.7.4
