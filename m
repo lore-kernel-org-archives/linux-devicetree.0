@@ -1,46 +1,33 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/3] thermal: broadcom: Add Stingray thermal driver
-Date: Mon, 29 Apr 2019 16:24:22 +0100
-Message-ID: <20190429152422.GC17516@e107155-lin>
-References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
- <1527486084-4636-4-git-send-email-srinath.mannam@broadcom.com>
- <da76e12f246c3f10bfed28d8b91a3575dc73f243.camel@infradead.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Date: Mon, 29 Apr 2019 17:27:22 +0200
+Message-ID: <20190429152722.xw5bcocu2t77wb4u@pengutronix.de>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+ <CAJ2_jOF8RsLWHkcCJzwfpeMN0+G0oqbHto=nBBnpZDNfuQMKOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <da76e12f246c3f10bfed28d8b91a3575dc73f243.camel@infradead.org>
+In-Reply-To: <CAJ2_jOF8RsLWHkcCJzwfpeMN0+G0oqbHto=nBBnpZDNfuQMKOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Srinath Mannam <srinath.mannam@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>, Sudeep Holla <sudeep.holla@arm.com>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 06:07:12PM +0300, David Woodhouse wrote:
-> On Mon, 2018-05-28 at 11:11 +0530, Srinath Mannam wrote:
-> > From: Pramod Kumar <pramod.kumar@broadcom.com>
-> >
-> > This commit adds stingray thermal driver to monitor six
-> > thermal zones temperature and trips at critical temperature.
->
-> This matches an ACPI "BRCM0500" device but then calls
-> devm_thermal_zone_of_sensor_register(), which AFAICT is going to fail
-> on an ACPI system because the first thing that does is call
-> of_find_node_by_name(NULL, "thermal-zones") which isn't going to find a
-> match.
->
+On Mon, Apr 15, 2019 at 11:36:51AM +0530, Yash Shah wrote:
+> Hi,
+> 
+> Any comments on this patch series?
+> Any more changes are needed or it looks good to be merged upstream?
 
-Thanks David for bringing this up. I hadn't noticed that this driver is
-cheekily trying to do thermal management in ACPI using crafty
-acpi_device_id match. ACPI thermal objects/methods must be used in the
-firmware to do thermal management.
+In my eyes it would be great if Andreas Schwab was able to resolve the
+problems he pointed out in this thread.
 
-Pramod, can you remove the ACPI support or I can go ahead and post the
-patch to do the same ?
+Best regards
+Uwe
 
-> How does this work in the ACPI case?
-
-It can't and shouldn't work if one can make it happen :)
-
---
-Regards,
-Sudeep
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
