@@ -1,56 +1,48 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA' property
-Date: Mon, 29 Apr 2019 12:19:48 -0700
-Message-ID: <7hk1fcr54b.fsf@baylibre.com>
-References: <20190418124758.24022-1-glaroque@baylibre.com> <20190418124758.24022-2-glaroque@baylibre.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
+Date: Mon, 29 Apr 2019 12:42:07 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418124758.24022-2-glaroque@baylibre.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+Hi Stephen,
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
+On Fri, 26 Apr 2019, Paul Walmsley wrote:
 
-> This property allow drive-strength parameter in uA instead of mA.
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> index cef2b5855d60..fc7018459aa2 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
->  drive-open-drain	- drive with open drain
->  drive-open-source	- drive with open source
->  drive-strength		- sink or source at most X mA
-> +drive-strength-uA	- sink or source at most X uA
->  input-enable		- enable input on pin (no effect on output, such as
->  			  enabling an input buffer)
->  input-disable		- disable input on pin (no effect on output, such as
-> @@ -326,6 +327,8 @@ arguments are described below.
->  
->  - drive-strength takes as argument the target strength in mA.
->  
-> +- drive-strength-uA takes as argument the target strength in uA.
-> +
->  - input-debounce takes the debounce time in usec as argument
->    or 0 to disable debouncing
+> On Fri, 26 Apr 2019, Stephen Boyd wrote:
+> 
+> > Quoting Paul Walmsley (2019-04-11 01:27:32)
+> > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
+> > > block, as implemented in TSMC CLN28HPC.
+> > 
+> > I haven't deeply reviewed at all, but I already get two problems when
+> > compile testing these patches. I can fix them up if nothing else needs
+> > fixing.
+> > 
+> > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
+> > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
+> 
+> Hmm, that's odd.  I will definitely take a look and repost.
 
-Can we get your input on this?
+I'm not able to reproduce these problems.  The configs tried here were:
 
-Linus W. is OK with this[1], but wants opinion/approval from DT
-maintainers first.
+- 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with 
+  crosstool-NG 1.24.0)
 
-Thanks,
+- 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with 
+  crosstool-NG 1.24.0)
 
-Kevin
+- 32-bit i386 defconfig w/ PRCI driver enabled (gcc 
+  5.4.0-6ubuntu1~16.04.11)
 
-[1] https://lore.kernel.org/lkml/CACRpkdZ2dPzrtJQkxmN7V=f6+qYZAvrF+b0J77cN9hoRAgFqrw@mail.gmail.com/T/#u
+Could you post the toolchain and kernel config you're using?
+
+
+- Paul
