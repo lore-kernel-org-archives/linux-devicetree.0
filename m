@@ -1,81 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-Date: Mon, 29 Apr 2019 11:43:38 -0500
-Message-ID: <CAL_Jsq+bJtjO8xbpnCRHmcyCB=b8DMr73GWKEz+xMXVZag0FrQ@mail.gmail.com>
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
- <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
- <20190425195750.GA26031@bogus> <e4613d6e-0893-8163-32ef-8137c40d2b24@partner.samsung.com>
+From: Frank Li <frank.li@nxp.com>
+Subject: [PATCH V9 1/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
+ performance monitor
+Date: Mon, 29 Apr 2019 16:44:29 +0000
+Message-ID: <1556556252-22868-1-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4613d6e-0893-8163-32ef-8137c40d2b24@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kees Cook <keescook@chromium.org>, Tony Lindgren <tony@atomide.com>, Joerg Roedel <jroedel@suse.de>, Thierry Reding <treding@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Frank Li <frank.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 7:14 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Rob,
->
-> On 4/25/19 9:57 PM, Rob Herring wrote:
-> > On Fri, Apr 19, 2019 at 04:19:24PM +0200, Lukasz Luba wrote:
-> >> The patch adds description for DT binding for a new Exynos5422 Dynamic
-> >> Memory Controller device.
-> >>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
-> >>   1 file changed, 73 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >> new file mode 100644
-> >> index 0000000..133b3cc
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >> @@ -0,0 +1,73 @@
-> >> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
-> >> +
-> >> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-> >> +memory chips are connected. The driver is to monitor the controller in runtime
-> >> +and switch frequency and voltage. To monitor the usage of the controller in
-> >> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-> >> +is able to measure the current load of the memory.
-> >> +When 'userspace' governor is used for the driver, an application is able to
-> >> +switch the DMC and memory frequency.
-> >> +
-> >> +Required properties for DMC device for Exynos5422:
-> >> +- compatible: Should be "samsung,exynos5422-bus".
-> >> +- clock-names : the name of clock used by the bus, "bus".
-> >> +- clocks : phandles for clock specified in "clock-names" property.
-> >> +- devfreq-events : phandles for PPMU devices connected to this DMC.
-> >> +- vdd-supply : phandle for voltage regulator which is connected.
-> >> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
-> >> +- operating-points-v2 : phandle for OPPs described in v2 definition.
-> >> +- device-handle : phandle of the connected DRAM memory device. For more
-> >> +    information please refer to Documentation
-> >
-> > The memory node(s) should be a child of the memory controller IMO.
-> I have followed the TI code for LPDDR2. They use 'device-handle'
-> probably because the memory controller can be moved into the common
-> .dtsi and taken by reference in .dts in a proper board file.
+Added binding doc for imx8qxp ddr performance monitor
 
-You'd still have to have the ctrlr node in the board file to add the
-'device-handle' property.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Change from v8 to v9
+* use 32bit address width 
 
-> The board .dts files might specify different DRAM chips and timings.
-> In Exynos case we will also have such situation: one memory controller
-> and a few different DRAM chips.
+No change from v4 to v8
 
-You mean as in the case where there are multiple options and one chip
-gets populated on the board? So 'device-handle' is selecting which
-chip to use.
+Change from v4 to v4
+* remove "standard xxx"
 
-You can actually do both here. Keep 'device-handle' to select which
-DRAM chip and have the chips as child nodes. But if you really don't
-want to have them as child nodes, that's fine.
+Change from v2 to v3
+* ddr_pmu0 -> ddr-pmu
 
-Rob
+
+ .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+new file mode 100644
+index 0000000..9b9cda6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+@@ -0,0 +1,22 @@
++* Freescale(NXP) IMX8 DDR performance monitor
++
++Required properties:
++
++- compatible: should be one of:
++	"fsl,imx8-ddr-pmu"
++	"fsl,imx8m-ddr-pmu"
++
++- reg: physical address and size
++
++- interrupts: single interrupt
++	generated by the control block
++
++Example:
++
++	ddr-pmu@5c020000 {
++		compatible = "fsl,imx8-ddr-pmu";
++		reg = <0x5c020000 0x10000>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+-- 
+2.5.2
