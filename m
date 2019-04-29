@@ -1,40 +1,255 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/6] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Mon, 29 Apr 2019 12:34:20 -0500
-Message-ID: <20190429173420.GA1273@bogus>
-References: <20190405142855.3969-1-dmurphy@ti.com>
- <20190405142855.3969-4-dmurphy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ARM: dts: exynos: Move CPU OPP tables out of SoC node on Exynos5420
+Date: Mon, 29 Apr 2019 19:35:24 +0200
+Message-ID: <20190429173524.4870-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190405142855.3969-4-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Apr 2019 09:28:53 -0500, Dan Murphy wrote:
-> The LM3697 is a single function LED driver. The single function LED
-> driver needs to reside in the LED directory as a dedicated LED driver
-> and not as a MFD device.  The device does have common brightness and ramp
-> features and those can be accomodated by a TI LMU framework.
-> 
-> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
-> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
-> reside in the Documentation/devicetree/bindings/leds directory and follow the
-> current LED and general bindings guidelines.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.txt -
-> https://lore.kernel.org/patchwork/patch/1054501/
-> 
->  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
->  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
->  2 files changed, 74 insertions(+), 26 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> 
+The cpus node is a top-level node, not inside the soc.  Therefore its
+OPP tables should be there as well.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This also fixes the DTC warnings like:
+
+    arch/arm/boot/dts/exynos5420.dtsi:46.37-109.5:
+        Warning simple_bus_reg): /soc/opp_table0: missing or empty reg/ranges property
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos5420.dtsi | 216 +++++++++++++++---------------
+ 1 file changed, 109 insertions(+), 107 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 5fb2326875dc..16088186a33a 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -42,117 +42,119 @@
+ 	 * by exynos5420-cpus.dtsi or exynos5422-cpus.dtsi.
+ 	 */
+ 
+-	soc: soc {
+-		cluster_a15_opp_table: opp_table0 {
+-			compatible = "operating-points-v2";
+-			opp-shared;
+-			opp-1800000000 {
+-				opp-hz = /bits/ 64 <1800000000>;
+-				opp-microvolt = <1250000>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1700000000 {
+-				opp-hz = /bits/ 64 <1700000000>;
+-				opp-microvolt = <1212500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1600000000 {
+-				opp-hz = /bits/ 64 <1600000000>;
+-				opp-microvolt = <1175000>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1500000000 {
+-				opp-hz = /bits/ 64 <1500000000>;
+-				opp-microvolt = <1137500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1400000000 {
+-				opp-hz = /bits/ 64 <1400000000>;
+-				opp-microvolt = <1112500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1300000000 {
+-				opp-hz = /bits/ 64 <1300000000>;
+-				opp-microvolt = <1062500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1200000000 {
+-				opp-hz = /bits/ 64 <1200000000>;
+-				opp-microvolt = <1037500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1100000000 {
+-				opp-hz = /bits/ 64 <1100000000>;
+-				opp-microvolt = <1012500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1000000000 {
+-				opp-hz = /bits/ 64 <1000000000>;
+-				opp-microvolt = < 987500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-900000000 {
+-				opp-hz = /bits/ 64 <900000000>;
+-				opp-microvolt = < 962500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-800000000 {
+-				opp-hz = /bits/ 64 <800000000>;
+-				opp-microvolt = < 937500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-700000000 {
+-				opp-hz = /bits/ 64 <700000000>;
+-				opp-microvolt = < 912500>;
+-				clock-latency-ns = <140000>;
+-			};
++	cluster_a15_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-1800000000 {
++			opp-hz = /bits/ 64 <1800000000>;
++			opp-microvolt = <1250000>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1700000000 {
++			opp-hz = /bits/ 64 <1700000000>;
++			opp-microvolt = <1212500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1600000000 {
++			opp-hz = /bits/ 64 <1600000000>;
++			opp-microvolt = <1175000>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1500000000 {
++			opp-hz = /bits/ 64 <1500000000>;
++			opp-microvolt = <1137500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1400000000 {
++			opp-hz = /bits/ 64 <1400000000>;
++			opp-microvolt = <1112500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1300000000 {
++			opp-hz = /bits/ 64 <1300000000>;
++			opp-microvolt = <1062500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1037500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1100000000 {
++			opp-hz = /bits/ 64 <1100000000>;
++			opp-microvolt = <1012500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = < 987500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-900000000 {
++			opp-hz = /bits/ 64 <900000000>;
++			opp-microvolt = < 962500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = < 937500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-700000000 {
++			opp-hz = /bits/ 64 <700000000>;
++			opp-microvolt = < 912500>;
++			clock-latency-ns = <140000>;
+ 		};
++	};
+ 
+-		cluster_a7_opp_table: opp_table1 {
+-			compatible = "operating-points-v2";
+-			opp-shared;
+-			opp-1300000000 {
+-				opp-hz = /bits/ 64 <1300000000>;
+-				opp-microvolt = <1275000>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1200000000 {
+-				opp-hz = /bits/ 64 <1200000000>;
+-				opp-microvolt = <1212500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1100000000 {
+-				opp-hz = /bits/ 64 <1100000000>;
+-				opp-microvolt = <1162500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-1000000000 {
+-				opp-hz = /bits/ 64 <1000000000>;
+-				opp-microvolt = <1112500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-900000000 {
+-				opp-hz = /bits/ 64 <900000000>;
+-				opp-microvolt = <1062500>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-800000000 {
+-				opp-hz = /bits/ 64 <800000000>;
+-				opp-microvolt = <1025000>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-700000000 {
+-				opp-hz = /bits/ 64 <700000000>;
+-				opp-microvolt = <975000>;
+-				clock-latency-ns = <140000>;
+-			};
+-			opp-600000000 {
+-				opp-hz = /bits/ 64 <600000000>;
+-				opp-microvolt = <937500>;
+-				clock-latency-ns = <140000>;
+-			};
++	cluster_a7_opp_table: opp_table1 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-1300000000 {
++			opp-hz = /bits/ 64 <1300000000>;
++			opp-microvolt = <1275000>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1212500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1100000000 {
++			opp-hz = /bits/ 64 <1100000000>;
++			opp-microvolt = <1162500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <1112500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-900000000 {
++			opp-hz = /bits/ 64 <900000000>;
++			opp-microvolt = <1062500>;
++			clock-latency-ns = <140000>;
++		};
++		opp-800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <1025000>;
++			clock-latency-ns = <140000>;
++		};
++		opp-700000000 {
++			opp-hz = /bits/ 64 <700000000>;
++			opp-microvolt = <975000>;
++			clock-latency-ns = <140000>;
++		};
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <937500>;
++			clock-latency-ns = <140000>;
+ 		};
++	};
+ 
++	soc: soc {
+ 		cci: cci@10d20000 {
+ 			compatible = "arm,cci-400";
+ 			#address-cells = <1>;
+-- 
+2.17.1
