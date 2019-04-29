@@ -1,27 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: del redundant type conversion
-Date: Mon, 29 Apr 2019 12:50:12 -0500
-Message-ID: <20190429175012.GA28972@bogus>
-References: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+Date: Mon, 29 Apr 2019 13:00:25 -0500
+Message-ID: <20190429180025.GA15562@bogus>
+References: <20190410133833.28859-1-dmurphy@ti.com>
+ <20190410133833.28859-2-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1554884981-20309-1-git-send-email-xiaojiangfeng@huawei.com>
+In-Reply-To: <20190410133833.28859-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xiaojiangfeng <xiaojiangfeng@huawei.com>
-Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 04:29:41PM +0800, xiaojiangfeng wrote:
-> The type of variable l in early_init_dt_scan_chosen is
-> int, there is no need to convert to int.
+On Wed, 10 Apr 2019 08:38:29 -0500, Dan Murphy wrote:
+> Add the LM36274 backlight driver with regulator support.
+> This is a multi-function device for backlight applications.
 > 
-> Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
+> Backlight properties will be documented in it's a supplemental
+> bindings document.
+> 
+> Regulator support is documented in the regulator/lm363x-regulator.txt
+> 
+> http://www.ti.com/lit/ds/symlink/lm36274.pdf
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> v2 - No changes - https://lore.kernel.org/patchwork/patch/1058776/
+> 
+>  .../devicetree/bindings/mfd/ti-lmu.txt        | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
 
-Applied.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
