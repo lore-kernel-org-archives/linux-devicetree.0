@@ -1,86 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: interconnect: Add Qualcomm QCS404 DT
- bindings
-Date: Mon, 29 Apr 2019 17:16:56 -0500
-Message-ID: <20190429221656.GA1843@bogus>
-References: <20190415104357.5305-1-georgi.djakov@linaro.org>
- <20190415104357.5305-2-georgi.djakov@linaro.org>
+Subject: Re: [v2 1/3] dt-bindings: display: mediatek: update dsi supported
+ chips
+Date: Mon, 29 Apr 2019 17:26:46 -0500
+Message-ID: <20190429222646.GA20752@bogus>
+References: <20190416054217.75387-1-jitao.shi@mediatek.com>
+ <20190416054217.75387-2-jitao.shi@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190415104357.5305-2-georgi.djakov@linaro.org>
+In-Reply-To: <20190416054217.75387-2-jitao.shi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.in
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 01:43:54PM +0300, Georgi Djakov wrote:
-> The Qualcomm QCS404 platform has several buses that could be controlled
-> and tuned according to the bandwidth demand.
+On Tue, Apr 16, 2019 at 01:42:15PM +0800, Jitao Shi wrote:
+> Update device tree binding documentation for the dsi for
+> Mediatek MT8183 SoCs.
 > 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt       | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> v2:
-> - No changes.
-> 
->  .../bindings/interconnect/qcom,qcs404.txt     | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> new file mode 100644
-> index 000000000000..9befcd14a5b5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> @@ -0,0 +1,45 @@
-> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
-> +-----------------------------------------------------------
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +			"qcom,qcs404-bimc"
-> +			"qcom,qcs404-pcnoc"
-> +			"qcom,qcs404-snoc"
-> +- #interconnect-cells : should contain 1
-> +
-> +Optional properties :
-> +clocks : list of phandles and specifiers to all interconnect bus clocks
-> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
-> +
-> +Example:
-> +
-> +rpm-glink {
-> +	...
-> +	rpm_requests: glink-channel {
-> +		...
-> +		bimc: interconnect@0 {
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> index fadf327c7cdf..bd68195458b9 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
+>  
+>  Required properties:
+>  - compatible: "mediatek,<chip>-mipi-tx"
+> -  the supported chips are mt2701 and mt8173.
+> +  the supported chips are mt2701 , mt8173 and mt8183.
 
-Unit-address needs a 'reg' property. dtc should give you a warning 
-(maybe W=1 is still needed).
+drop the space                     ^
 
-> +			compatible = "qcom,qcs404-bimc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
-> +		};
-> +
-> +		pnoc: interconnect@1 {
-> +			compatible = "qcom,qcs404-pcnoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
-> +		};
-> +
-> +		snoc: interconnect@2 {
-> +			compatible = "qcom,qcs404-snoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
-> +		};
-> +	};
-> +};
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
