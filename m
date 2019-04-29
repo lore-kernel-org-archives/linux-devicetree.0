@@ -1,43 +1,72 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 0/3] update aspeed-bmc-opp-zaius device-tree
-Date: Mon, 29 Apr 2019 08:27:49 +0000
-Message-ID: <CACPK8XeTOhcdKPsKgsBJXAYeMDeHRLOSLRF5XO0oT-5XUhghMQ@mail.gmail.com>
-References: <20190416162150.150154-1-venture@google.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+Date: Mon, 29 Apr 2019 09:47:55 +0100
+Message-ID: <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
+ <20190420100950.7997-12-lokeshvutla@ti.com>
+ <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416162150.150154-1-venture@google.com>
+In-Reply-To: <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Venture <venture@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Lokesh Vutla <lokeshvutla@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Apr 2019 at 16:22, Patrick Venture <venture@google.com> wrote:
->
-> Hi,
->
-> This series contains three updates to the Zaius ASPEED device-tree to
-> add voltrage regulators, and update addresses and aliases.  The Infineon
-> and Intersil drivers are staged on hwmon-next, and the trivial device
-> dt-bindings changed are up for review.
+On 23/04/2019 11:00, Lokesh Vutla wrote:
+> Hi Marc,
 
-Applied to the aspeed SoC tree, thanks Patrick.
+[...]
 
-Cheers,
+>> +/**
+>> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
+>> + * @data:	Pointer to corresponding irq_data
+>> + * @type:	Trigger type as specified by user
+>> + *
+>> + * Note: This updates the handle_irq callback for level msi.
+>> + *
+>> + * Return 0 if all went well else appropriate error.
+>> + */
+>> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
+>> +{
+>> +	struct irq_desc *desc = irq_to_desc(data->irq);
+>> +
+>> +	/*
+>> +	 * .alloc default sets handle_edge_irq. But if the user specifies
+>> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
+>> +	 */
+>> +	if (type & IRQF_TRIGGER_HIGH)
+>> +		desc->handle_irq = handle_level_irq;
+>> +
+>> +	return 0;
+> 
+> 
+> Returning error value is causing request_irq to fail, so still returning 0. Do
+> you suggest any other method to handle this?
 
-Joel
+But that is the very point, isn't it? If you pass the wrong triggering
+type to request_irq, it *must* fail. What you should have is something like:
 
->
-> Maxim Sloyko (1):
->   ARM: dts: aspeed: zaius: add Infineon and Intersil regulators
->
-> Robert Lippert (2):
->   ARM: dts: aspeed: zaius: update 12V brick I2C address
->   ARM: dts: aspeed: zaius: fixed I2C bus numbers for pcie slots
->
->  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 121 +++++++++++++++++++--
->  1 file changed, 113 insertions(+), 8 deletions(-)
->
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
+switch (type & IRQ_TYPE_SENSE_MASK) {
+case IRQF_TRIGGER_HIGH:
+	desc->handle_irq = handle_level_irq;
+	return 0;
+case IRQ_TYPE_EDGE_RISING:
+	return 0;
+default:
+	return -EINVAL;
+}
+
+(adjust as necessary).
+
+What's wrong with this?
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
