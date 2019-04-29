@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v4 04/10] Revert "[media] marvell-ccic: reset ccic phy when stop streaming for stability"
-Date: Mon, 29 Apr 2019 11:16:26 +0200
-Message-ID: <20190429091632.2462285-5-lkundrak@v3.sk>
+Subject: [PATCH v4 02/10] [media] marvell-ccic: fix DMA s/g desc number calculation
+Date: Mon, 29 Apr 2019 11:16:24 +0200
+Message-ID: <20190429091632.2462285-3-lkundrak@v3.sk>
 References: <20190429091632.2462285-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,116 +12,59 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-This accesses the clock registers directly and thus is going to stay in t=
-he
-way of making the driver devicetree friendly.
+The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+left dma_desc_nent unset. It previously contained the number of DMA
+descriptors as returned from dma_map_sg().
 
-No boards seems to actually use this. If it's somehow actually needed it
-needs to be done differently.
+We can now (since the commit referred to above) obtain the same value fro=
+m
+the sg_table and drop dma_desc_nent altogether.
 
-This reverts commit 7c269f454e7a51b151d94f99344120efa1cd0acb.
+Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
+driver, since that one doesn't do DMA.
+
+Fixes: d790b7eda953df474f470169ebdf111c02fa7a2d
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- .../media/platform/marvell-ccic/mcam-core.c   |  6 -----
- .../media/platform/marvell-ccic/mcam-core.h   |  2 --
- .../media/platform/marvell-ccic/mmp-driver.c  | 25 -------------------
- 3 files changed, 33 deletions(-)
+ drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
 dia/platform/marvell-ccic/mcam-core.c
-index d24e5b7a3bc5..1b879035948c 100644
+index f1b301810260..d97f39bde9bd 100644
 --- a/drivers/media/platform/marvell-ccic/mcam-core.c
 +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -1154,12 +1154,6 @@ static void mcam_vb_stop_streaming(struct vb2_queu=
-e *vq)
- 	if (cam->state !=3D S_STREAMING)
- 		return;
- 	mcam_ctlr_stop_dma(cam);
--	/*
--	 * Reset the CCIC PHY after stopping streaming,
--	 * otherwise, the CCIC may be unstable.
--	 */
--	if (cam->ctlr_reset)
--		cam->ctlr_reset(cam);
- 	/*
- 	 * VB2 reclaims the buffers, so we need to forget
- 	 * about them.
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.h b/drivers/me=
-dia/platform/marvell-ccic/mcam-core.h
-index ad8955f9f0a1..a3a097a45e78 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.h
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.h
-@@ -116,7 +116,6 @@ struct mcam_camera {
- 	int mclk_src;	/* which clock source the mclk derives from */
- 	int mclk_div;	/* Clock Divider Value for MCLK */
+@@ -200,7 +200,6 @@ struct mcam_vb_buffer {
+ 	struct list_head queue;
+ 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
+ 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
+-	int dma_desc_nent;		/* Number of mapped descriptors */
+ };
 =20
--	int ccic_id;
- 	enum v4l2_mbus_type bus_type;
- 	/* MIPI support */
- 	/* The dphy config value, allocated in board file
-@@ -137,7 +136,6 @@ struct mcam_camera {
- 	int (*plat_power_up) (struct mcam_camera *cam);
- 	void (*plat_power_down) (struct mcam_camera *cam);
- 	void (*calc_dphy) (struct mcam_camera *cam);
--	void (*ctlr_reset) (struct mcam_camera *cam);
-=20
- 	/*
- 	 * Everything below here is private to the mcam core and
-diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
-edia/platform/marvell-ccic/mmp-driver.c
-index af76eb637773..8d982c4aae0d 100644
---- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-+++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-@@ -105,7 +105,6 @@ static struct mmp_camera *mmpcam_find_device(struct p=
-latform_device *pdev)
- #define CPU_SUBSYS_PMU_BASE	0xd4282800
- #define REG_CCIC_DCGCR		0x28	/* CCIC dyn clock gate ctrl reg */
- #define REG_CCIC_CRCR		0x50	/* CCIC clk reset ctrl reg	*/
--#define REG_CCIC2_CRCR		0xf4	/* CCIC2 clk reset ctrl reg	*/
-=20
- static void mcam_clk_enable(struct mcam_camera *mcam)
+ static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *v=
+b)
+@@ -608,9 +607,11 @@ static void mcam_dma_contig_done(struct mcam_camera =
+*cam, int frame)
+ static void mcam_sg_next_buffer(struct mcam_camera *cam)
  {
-@@ -183,28 +182,6 @@ static void mmpcam_power_down(struct mcam_camera *mc=
-am)
- 	mcam_clk_disable(mcam);
- }
+ 	struct mcam_vb_buffer *buf;
++	struct sg_table *sg_table;
 =20
--static void mcam_ctlr_reset(struct mcam_camera *mcam)
--{
--	unsigned long val;
--	struct mmp_camera *cam =3D mcam_to_cam(mcam);
--
--	if (mcam->ccic_id) {
--		/*
--		 * Using CCIC2
--		 */
--		val =3D ioread32(cam->power_regs + REG_CCIC2_CRCR);
--		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC2_CRCR);
--		iowrite32(val | 0x2, cam->power_regs + REG_CCIC2_CRCR);
--	} else {
--		/*
--		 * Using CCIC1
--		 */
--		val =3D ioread32(cam->power_regs + REG_CCIC_CRCR);
--		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC_CRCR);
--		iowrite32(val | 0x2, cam->power_regs + REG_CCIC_CRCR);
--	}
--}
--
- /*
-  * calc the dphy register values
-  * There are three dphy registers being used.
-@@ -352,11 +329,9 @@ static int mmpcam_probe(struct platform_device *pdev=
-)
- 	mcam =3D &cam->mcam;
- 	mcam->plat_power_up =3D mmpcam_power_up;
- 	mcam->plat_power_down =3D mmpcam_power_down;
--	mcam->ctlr_reset =3D mcam_ctlr_reset;
- 	mcam->calc_dphy =3D mmpcam_calc_dphy;
- 	mcam->dev =3D &pdev->dev;
- 	mcam->use_smbus =3D 0;
--	mcam->ccic_id =3D pdev->id;
- 	mcam->mclk_min =3D pdata->mclk_min;
- 	mcam->mclk_src =3D pdata->mclk_src;
- 	mcam->mclk_div =3D pdata->mclk_div;
+ 	buf =3D list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
+ 	list_del_init(&buf->queue);
++	sg_table =3D vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
+ 	/*
+ 	 * Very Bad Not Good Things happen if you don't clear
+ 	 * C1_DESC_ENA before making any descriptor changes.
+@@ -618,7 +619,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *c=
+am)
+ 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
+ 	mcam_reg_write(cam, REG_DESC_LEN_Y,
+-			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
++			sg_table->nents*sizeof(struct mcam_dma_desc));
+ 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
+ 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
+ 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
 --=20
 2.21.0
