@@ -1,35 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 6/7] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-Date: Mon, 29 Apr 2019 16:15:42 -0500
-Message-ID: <20190429211542.GA28956@bogus>
-References: <20190411193848.23140-1-dmurphy@ti.com>
- <20190411193848.23140-7-dmurphy@ti.com>
+Subject: Re: [PATCH 1/3] dt-bindings: spi: Add spi-mux-gpio
+Date: Mon, 29 Apr 2019 16:37:40 -0500
+Message-ID: <20190429213740.GA29098@bogus>
+References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
+ <20190412050213.17698-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190411193848.23140-7-dmurphy@ti.com>
+In-Reply-To: <20190412050213.17698-2-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, marek.behun@nic.cz, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: broonie@kernel.org, mark.rutland@arm.com, Hamish Martin <hamish.martin@alliedtelesis.co.nz>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Apr 2019 14:38:47 -0500, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and the LP5018
-> RGB LED device driver.  The LP5036/3024/18 can control RGB LEDs individually
-> or as part of a control bank group.  These devices have the ability
-> to adjust the mixing control for the RGB LEDs to obtain different colors
-> independent of the overall brightness of the LED grouping.
+On Fri, Apr 12, 2019 at 05:02:11PM +1200, Chris Packham wrote:
+> Add binding documentation for spi-mux-gpio which is a slightly more
+> complicated hardware implementation of using gpios to steer SPI chip
+> selects.
 > 
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
->  .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>  .../devicetree/bindings/spi/spi-mux-gpio.txt  | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux-gpio.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mux-gpio.txt b/Documentation/devicetree/bindings/spi/spi-mux-gpio.txt
+> new file mode 100644
+> index 000000000000..a32f25321d37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-mux-gpio.txt
+> @@ -0,0 +1,45 @@
+> +SPI bus gpio multiplexer
+> +
+> +The SPI bus gpio multiplexer can be used to implement more complicated access
+> +logic than can be supported with the cs-gpios property of a SPI bus.
+> +
+> +In the example below we have a SoC with a single SPI CS that is gated by the
+> +state of a gpio to select the desired SPI device.
+> +
+> +     +----------+  CS    +-----+ CS0  +----+
+> +     |          |--------|     |------|    |
+> +     |          |        | \ / |      +----+
+> +     |   SoC    |        |  +  |
+> +     |          |  GPIO  | / \ | CS1  +----+
+> +     |          |--------|     |------|    |
+> +     +----------+        +-----+      +----+
+> +
+> +Required properties:
+> +- compatible	- must be "spi-mux-gpio"
+> +- gpios		- gpios used to implement the multiplexing logic
+> +- spi-parent-bus - parent spi bus to use
+> +
+> +Optional properties:
+> +- spi-parent-cs - chip select on parent bus to use. Defaults to 0 if not
+> +                  specified.
+> +
+> +Example for a multiplexer with a single gpio:
+> +
+> +	spi-mux {
+> +		compatible = "spi-mux-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		gpios = <&gpio0 1 0>;
+> +		spi-parent-bus = <&spi0>;
+> +		spi-parent-cs = <0>;
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Why is this out of band? We can do something similar to I2C and use the 
+mux-control binding:
+
+spi {
+	mux@0 {
+		compatible = "spi-mux";
+		reg "0"; 
+		mux-controls = ...;
+
+		spi-dev@0 {};
+		spi-dev@1 {};
+	};
+
+	spi-dev@1 {};
+
+};
+
+Rob
