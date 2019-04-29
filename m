@@ -1,95 +1,56 @@
-Return-Path: <SRS0=zE5V=SZ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V2 22/28] PCI: tegra: Access endpoint config only if PCIe link is up
-Date: Tue, 23 Apr 2019 14:58:19 +0530
-Message-ID: <20190423092825.759-23-mmaddireddy@nvidia.com>
-In-Reply-To: <20190423092825.759-1-mmaddireddy@nvidia.com>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 29 Apr 2019 17:05:03 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Question about compatible fallback and documentation
+Message-ID: <20190429220503.GA4720@bogus>
+References: <CAJiuCceeLwY+myYtUf15frSYsLKmGaUBifAOxUkNWwSjbF4oDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCceeLwY+myYtUf15frSYsLKmGaUBifAOxUkNWwSjbF4oDg@mail.gmail.com>
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add PCIe link up check in config read and write callback functions
-before accessing endpoint config registers.
+On Sun, Apr 14, 2019 at 06:18:04PM +0200, Cl�ment P�ron wrote:
+> Hi,
+> 
+> I have to bind an already existing IP by a vendor in a new SoC called
+> "SOC3" device-tree.
+> 
+> In the 1st gen of "SOC1" the IP is introduced :
+> soc1.dtsi :
+> compatible = "vendor,ip-soc1";
+> 
+> Then a 2nd gen of the IP is introduced in "SOC2" with new registers.
+> But the driver of the 1st gen is still working fine and no update of
+> the existing driver has been introduced because not required.
+> soc2.dtsi :
+> compatible = "vendor,ip-soc2", "vendor,ip-soc1";
+> 
+> Finally in "SOC3" and regardind the user manual we think that the IP
+> introduced is the same as "SOC2".
+> Should the compatible in soc3.dtsi be A or B?
+> A) compatible = "vendor,ip-soc2", "vendor,ip-soc1";
+> or
+> B) compatible = "vendor,ip-soc3", "vendor,ip-soc2", "vendor,ip-soc1";
+> 
+> I propose the solution B) because we don't know what could happens
+> maybe the IP could need a quirks only for "SOC3". And device tree
+> shouldn't move for the user only the driver.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
-V2: Change tegra_pcie_link_status() to tegra_pcie_link_up()
+B is correct.
 
- drivers/pci/controller/pci-tegra.c | 38 ++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+Or you could list soc3 and soc2 given you do know there are additional 
+features. That would require a driver update, but likely the new SoC 
+requires some OS changes. Maybe someday SoC design will be disciplined 
+enough that new SoCs are fully backwards compatible.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 8ba71e314b1b..05586672a221 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -428,6 +428,14 @@ static inline u32 pads_readl(struct tegra_pcie *pcie, unsigned long offset)
- 	return readl(pcie->pads + offset);
- }
- 
-+static bool tegra_pcie_link_up(struct tegra_pcie_port *port)
-+{
-+	u32 value;
-+
-+	value = readl(port->base + RP_LINK_CONTROL_STATUS);
-+	return !!(value & RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE);
-+}
-+
- /*
-  * The configuration space mapping on Tegra is somewhat similar to the ECAM
-  * defined by PCIe. However it deviates a bit in how the 4 bits for extended
-@@ -493,20 +501,50 @@ static void __iomem *tegra_pcie_map_bus(struct pci_bus *bus,
- static int tegra_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
- 				  int where, int size, u32 *value)
- {
-+	struct tegra_pcie *pcie = bus->sysdata;
-+	struct pci_dev *bridge;
-+	struct tegra_pcie_port *port;
-+
- 	if (bus->number == 0)
- 		return pci_generic_config_read32(bus, devfn, where, size,
- 						 value);
- 
-+	bridge = pcie_find_root_port(bus->self);
-+
-+	list_for_each_entry(port, &pcie->ports, list)
-+		if (port->index + 1 == PCI_SLOT(bridge->devfn))
-+			break;
-+
-+	/* If there is no link, then there is no device */
-+	if (!tegra_pcie_link_up(port)) {
-+		*value = 0xffffffff;
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+
- 	return pci_generic_config_read(bus, devfn, where, size, value);
- }
- 
- static int tegra_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
- 				   int where, int size, u32 value)
- {
-+	struct tegra_pcie *pcie = bus->sysdata;
-+	struct tegra_pcie_port *port;
-+	struct pci_dev *bridge;
-+
- 	if (bus->number == 0)
- 		return pci_generic_config_write32(bus, devfn, where, size,
- 						  value);
- 
-+	bridge = pcie_find_root_port(bus->self);
-+
-+	list_for_each_entry(port, &pcie->ports, list)
-+		if (port->index + 1 == PCI_SLOT(bridge->devfn))
-+			break;
-+
-+	/* If there is no link, then there is no device */
-+	if (!tegra_pcie_link_up(port))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
- 	return pci_generic_config_write(bus, devfn, where, size, value);
- }
- 
--- 
-2.17.1
+> Last question does we have to document all the compatible use in
+> DTS(i) files in the Documentation ? or only the compatible used by the
+> drivers ?
+
+What is used in DTS files.
+
+Rob
