@@ -1,72 +1,34 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Mon, 29 Apr 2019 09:47:55 +0100
-Message-ID: <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
-References: <20190420100950.7997-1-lokeshvutla@ti.com>
- <20190420100950.7997-12-lokeshvutla@ti.com>
- <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+Date: Mon, 29 Apr 2019 09:51:24 +0100
+Message-ID: <1556527884-11640-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/04/2019 11:00, Lokesh Vutla wrote:
-> Hi Marc,
+Document RZ/G2E (R8A774C0) SoC bindings.
 
-[...]
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->> +/**
->> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
->> + * @data:	Pointer to corresponding irq_data
->> + * @type:	Trigger type as specified by user
->> + *
->> + * Note: This updates the handle_irq callback for level msi.
->> + *
->> + * Return 0 if all went well else appropriate error.
->> + */
->> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
->> +{
->> +	struct irq_desc *desc = irq_to_desc(data->irq);
->> +
->> +	/*
->> +	 * .alloc default sets handle_edge_irq. But if the user specifies
->> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
->> +	 */
->> +	if (type & IRQF_TRIGGER_HIGH)
->> +		desc->handle_irq = handle_level_irq;
->> +
->> +	return 0;
-> 
-> 
-> Returning error value is causing request_irq to fail, so still returning 0. Do
-> you suggest any other method to handle this?
-
-But that is the very point, isn't it? If you pass the wrong triggering
-type to request_irq, it *must* fail. What you should have is something like:
-
-switch (type & IRQ_TYPE_SENSE_MASK) {
-case IRQF_TRIGGER_HIGH:
-	desc->handle_irq = handle_level_irq;
-	return 0;
-case IRQ_TYPE_EDGE_RISING:
-	return 0;
-default:
-	return -EINVAL;
-}
-
-(adjust as necessary).
-
-What's wrong with this?
-
-Thanks,
-
-	M.
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index fea8b15..97400e8 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -10,6 +10,7 @@ Required properties:
+     - "renesas,xhci-r8a7743" for r8a7743 SoC
+     - "renesas,xhci-r8a7744" for r8a7744 SoC
+     - "renesas,xhci-r8a774a1" for r8a774a1 SoC
++    - "renesas,xhci-r8a774c0" for r8a774c0 SoC
+     - "renesas,xhci-r8a7790" for r8a7790 SoC
+     - "renesas,xhci-r8a7791" for r8a7791 SoC
+     - "renesas,xhci-r8a7793" for r8a7793 SoC
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
