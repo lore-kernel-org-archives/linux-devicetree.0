@@ -1,34 +1,77 @@
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
-Date: Mon, 29 Apr 2019 11:25:25 +0200
-Message-ID: <20190429092525.GA1808@vmlxhi-102.adit-jv.com>
-References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
- <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
- <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
- <20190429081747.irznig7yrvztuc5x@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/5] ARM: rskrza1: Add RZ/A1 IRQC and input switches
+Date: Mon, 29 Apr 2019 11:36:26 +0200
+Message-ID: <20190429093631.10799-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190429081747.irznig7yrvztuc5x@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tfranzen@de.adit-jv.com, "George G. Davis" <george_davis@mentor.com>, Joshua Frkuska <joshua_frkuska@mentor.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+	Hi all,
 
-On Mon, Apr 29, 2019 at 10:17:48AM +0200, Simon Horman wrote:
-> Hi again,
-> 
-> I have been able to solicit a limited private review of this patch and
-> have gone ahead and applied it for inclusion in v5.2.
+Unlike on most other Renesas SoCs, the GPIO controller block on RZ/A1
+SoCs lack interrupt functionality.  While the GPIOs can be routed to the
+GIC as pin interrupts, this is of limited use, as the PL390 GIC supports
+rising edge and high-level interrupts only.
 
-Thank you. In case of any concerns/reports/fixes applicable to this
-patch, we would appreciate if you CC ADIT people. We will then reply
-with best possible latency, since we are interested in having a working
-WiFi/BT on ULCB-KF.
+Fortunately RZ/A1 SoCs contain a small front-end for the GIC, allowing
+to use up to 8 external interrupts, with configurable sense select.
+
+Hence this patch series adds DT bindings and a driver for this
+front-end, adds a device node for it in the RZ/A1H DTS, and uses it to
+enable support for the 3 input switches on the Renesas RSK+RZA1
+development board.
+
+I expect this driver to be reusable for RZ/A2, after adding a match
+entry with .gic_spi_base = 4.
+  - Should this information come from DT instead?
+  - Originally I had interrupts properties in DT to define the mapping
+    from external interrupts to GIC interrupts (cfr. "renesas,irqc",
+    which also calls request_irq()), but other similar drivers seem to
+    hardcode this information in the driver, so I went that route.
+
+Dependencies:
+  - Patch 3 depends on patch 2,
+  - Patch 4 can be applied as soon as the DT bindings in patch 1 have
+    been accepted,
+  - Patch 5 depends on patch 4.
+
+This has been tested on RSK+RZA1 with evtest and s2ram wake-up.
+I have verified proper operation of low-level and rising/falling sense
+select, too.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (5):
+  dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt
+    Controller
+  irqchip: Add Renesas RZ/A1 Interrupt Controller driver
+  soc: renesas: Enable RZ/A1 IRQC on RZ/A1H
+  ARM: dts: r7s72100: Add IRQC device node
+  ARM: dts: rskrza1: Add input switches
+
+ .../renesas,rza1-irqc.txt                     |  27 ++
+ arch/arm/boot/dts/r7s72100-rskrza1.dts        |  38 +++
+ arch/arm/boot/dts/r7s72100.dtsi               |   8 +
+ drivers/irqchip/Kconfig                       |   4 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-renesas-rza1.c            | 238 ++++++++++++++++++
+ drivers/soc/renesas/Kconfig                   |   1 +
+ 7 files changed, 317 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+ create mode 100644 drivers/irqchip/irq-renesas-rza1.c
 
 -- 
-Best Regards,
-Eugeniu.
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
