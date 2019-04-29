@@ -1,39 +1,30 @@
 From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 0/5] ARM: rskrza1: Add RZ/A1 IRQC and input switches
-Date: Mon, 29 Apr 2019 12:21:50 +0000
-Message-ID: <TY1PR01MB15620A5958E5A9211518E0C48A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
+ driver
+Date: Mon, 29 Apr 2019 12:25:11 +0000
+Message-ID: <TY1PR01MB1562E95253A89499124CC6978A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20190429093631.10799-1-geert+renesas@glider.be>
+ <20190429093631.10799-3-geert+renesas@glider.be>
+ <f9310d4c-8f9e-a837-3ed3-4d7c294efd3f@arm.com>
+ <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190429093631.10799-1-geert+renesas@glider.be>
+In-Reply-To: <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thanks for this patch!
-
-I've been hacking this support into the standard GIC driver in our BSPs=20
-for years now. :o
-
-On Mon, Apr 29, 2019, Geert Uytterhoeven wrote:
-> I expect this driver to be reusable for RZ/A2, after adding a match
-> entry with .gic_spi_base =3D 4.
-
-Yes, the same IP block is in RZ/A2.
-
-So with that said, should we call this driver irq-renesas-rza1.c or just
-irq-renesas-rza.c?
-It doesn't really matter to me.
-For an RZ/A3, we might just use the same IP again.
-
-Side note, I've seen this interrupt pin HW in some older SH4A devices=20
-(like SH7724 and SH7757). So it's been around for a while.
-
-
-Chris
+SGkgR2VlcnQsDQoNCk9uIE1vbiwgQXByIDI5LCAyMDE5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
+dGU6DQo+ID4gSXQgb3RoZXJ3aXNlIGxvb2tzIGdvb2QgdG8gbWUuIElmIHlvdSByZXNwaW4gaXQg
+cXVpY2tseSBlbm91Z2gsIEknbQ0KPiA+IGhhcHB5IHRvIHRha2UgaXQgZm9yIDUuMi4NCj4gDQo+
+IFRoYW5rcywgd2lsbCBkbyB0b21vcnJvdywgc28gQ2hyaXMgKGluIE5DLlVTOyBsZXQncyBob3Bl
+IGhlIGRvZXNuJ3QNCj4gY2VsZWJyYXRlIEdvbGRlbiBXZWVrKSBoYXMgYSBjaGFuY2UgdG8gY29t
+bWVudC4uLg0KDQpObyBHb2xkZW4gV2VlayBmb3IgbWUuDQoNCkV4Y2VwdCwgSSBnZXQgMSB3ZWVr
+IGEgeWVhciB3aGVuIEkgd2FrZSB1cCBpbiB0aGUgbW9ybmluZyBhbmQgbXkgaW5ib3ggDQppcyBu
+b3QgYWxyZWFkeSBmdWxsLi4uc28gaXQgaXMgYSBnb2xkZW4gd2VlayBmb3IgbWUuIDopDQoNCkkn
+bSBnb2luZyB0byB0cnkgdGhlc2UgcGF0Y2hlcyBvdXQgb24gUlovQTEgYW5kIFJaL0EyIHRvZGF5
+Lg0KDQoNCkNocmlzDQo=
