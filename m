@@ -1,7 +1,7 @@
 From: Gerald BAEZA <gerald.baeza@st.com>
-Subject: [PATCH 2/5] dt-bindings: perf: stm32: ddrperfm support
-Date: Mon, 29 Apr 2019 10:03:37 +0000
-Message-ID: <1556532194-27904-3-git-send-email-gerald.baeza@st.com>
+Subject: [PATCH 4/5] ARM: configs: enable STM32_DDR_PMU
+Date: Mon, 29 Apr 2019 10:03:38 +0000
+Message-ID: <1556532194-27904-5-git-send-email-gerald.baeza@st.com>
 References: <1556532194-27904-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,43 +14,26 @@ To: "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.ru
 Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Gerald BAEZA <gerald.baeza@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
-
-This documentation indicates how to enable stm32-ddr-pmu driver on
-DDRPERFM peripheral, via the device tree.
+STM32_DDR_PMU enables the perf driver that
+controls the DDR Performance Monitor (DDRPERFM)
 
 Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 ---
- .../devicetree/bindings/perf/stm32-ddr-pmu.txt         | 18 ++++++++++++++=
-++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
-t
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
-umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-new file mode 100644
-index 0000000..dabc4c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-@@ -0,0 +1,18 @@
-+* STM32 DDR Performance Monitor (DDRPERFM)
-+
-+Required properties:
-+- compatible: must be "st,stm32-ddr-pmu".
-+- reg: physical address and length of the registers set.
-+- clocks: list of phandles and specifiers to all input clocks listed in
-+	  clock-names property.
-+- clock-names: "bus" corresponds to the DDRPERFM bus clock and "ddr" to
-+	       the DDR frequency.
-+
-+Example:
-+	ddrperfm: perf@5a007000 {
-+		compatible =3D "st,stm32-ddr-pmu";
-+		reg =3D <0x5a007000 0x400>;
-+		clocks =3D <&rcc DDRPERFM>, <&rcc PLL2_R>;
-+		clock-names =3D "bus", "ddr";
-+	};
-+
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v=
+7_defconfig
+index c75051b..6bc6ffd 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -979,6 +979,7 @@ CONFIG_PHY_UNIPHIER_USB2=3Dy
+ CONFIG_OMAP_USB2=3Dy
+ CONFIG_TI_PIPE3=3Dy
+ CONFIG_TWL4030_USB=3Dm
++CONFIG_STM32_DDR_PMU=3Dm
+ CONFIG_NVMEM_IMX_OCOTP=3Dy
+ CONFIG_NVMEM_SUNXI_SID=3Dy
+ CONFIG_NVMEM_VF610_OCOTP=3Dy
 --=20
 2.7.4
