@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/5] soc: renesas: Enable RZ/A1 IRQC on RZ/A1H
-Date: Mon, 29 Apr 2019 11:36:29 +0200
-Message-ID: <20190429093631.10799-4-geert+renesas@glider.be>
+Subject: [PATCH 4/5] ARM: dts: r7s72100: Add IRQC device node
+Date: Mon, 29 Apr 2019 11:36:30 +0200
+Message-ID: <20190429093631.10799-5-geert+renesas@glider.be>
 References: <20190429093631.10799-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190429093631.10799-1-geert+renesas@glider.be>
@@ -10,28 +10,33 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Auto-enable the RZ/A1 Interrupt Controller when configuring a kernel
-with support for RZ/A1H SoCs.
-
-This is similar to how interrupt controllers for other Renesas SoCs are
-enabled.
+Enable support for the IRQC on RZ/A1H, which is a small front-end to the
+GIC.  This allows to use up to 8 external interrupts with configurable
+sense select.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/soc/renesas/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/r7s72100.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 68bfca6f20ddf8a7..1448b6dbcdb20bae 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -57,6 +57,7 @@ config ARCH_R7S72100
- 	bool "RZ/A1H (R7S72100)"
- 	select PM
- 	select PM_GENERIC_DOMAINS
-+	select RENESAS_RZA1_IRQC
- 	select SYS_SUPPORTS_SH_MTU2
- 	select RENESAS_OSTM
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 2211f88ede2ad351..27bc7789f5437ef1 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -670,6 +670,14 @@
+ 			status = "disabled";
+ 		};
  
++		irqc: interrupt-controller@fcfef800 {
++			compatible = "renesas,r7s72100-irqc",
++				     "renesas,rza1-irqc";
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			reg = <0xfcfef800 0x6>;
++		};
++
+ 		mtu2: timer@fcff0000 {
+ 			compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
+ 			reg = <0xfcff0000 0x400>;
 -- 
 2.17.1
