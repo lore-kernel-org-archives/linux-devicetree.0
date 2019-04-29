@@ -1,201 +1,150 @@
-Return-Path: <SRS0=WG84=SV=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V7 RESEND 00/10] Microchip mcp25xxfd can controller driver
-Date: Fri, 19 Apr 2019 05:14:22 +0000
-Message-Id: <20190419051432.13538-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-Path: <SRS0=2F4V=S7=pengutronix.de=mfe@kernel.org>
+Date: Mon, 29 Apr 2019 18:44:28 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH 1/3] media: dt-bindings: add bindings for Toshiba TC358746
+Message-ID: <20190429164427.naz6fqbbnqi5gqum@pengutronix.de>
+References: <20190218100333.qvptfllrd4pyhsyb@paasikivi.fi.intel.com>
+ <20190301105235.a23jwiwmxejuv2yf@pengutronix.de>
+ <a51ecc47-df19-a48b-3d82-01b21d03972c@gmail.com>
+ <20190301130118.jy57g5wcsn7mqclk@pengutronix.de>
+ <20190304123621.l3ocvdiya5z5wzal@paasikivi.fi.intel.com>
+ <20190304165528.n4sqxjhfsplmt5km@pengutronix.de>
+ <20190304181747.ax7nvbvhdul4vtna@kekkonen.localdomain>
+ <20190305084902.vzaqr53q77oy2o7r@uno.localdomain>
+ <20190305181419.kqdaqnjte3v7663f@pengutronix.de>
+ <20190416104550.htexnpzgypuuubo4@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416104550.htexnpzgypuuubo4@pengutronix.de>
+To: robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Ian Arkver <ian.arkver.dev@gmail.com>, hans.verkuil@cisco.com, Sakari Ailus <sakari.ailus@linux.intel.com>, mchehab@kernel.org, graphics@pengutronix.de, linux-media@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+Hi Rob,
 
-This patchset adds a driver for the mcp25xxfd CanFD controller.
+sorry instead of adding you to To you was on Cc.
+Do you have any preferences about the below discussion?
 
-Most of the features of the controller are supported by this driver
-release.
+Regards,
+  Marco
 
-The controller includes a few features that the current core Can(FD)
-implementation does not support: * Transmit Bandwidth Sharing bits
-  - this waits for a configurable number of syncronization bits before
-    atempting to transmit the next frame - for the moment controllable
-    via a module parameter
-* SID11 with CanFD frames
-  - at this moment not supported by driver
-* 3 transmit attempts in addition to ONE_SHOT
-* transmitter delay compensation configurations
-* micro second exact transmission and reception timestamps
-  - used internally by driver
-* variable number of tx-fifos
-  - exposed via module parameter at this moment
+On 19-04-16 12:45, Marco Felsch wrote:
+> Hi Rob,
+> 
+> gentle ping.
+> 
+> Regards,
+>   Marco
+> 
+> On 19-03-05 19:14, Marco Felsch wrote:
+> > Hi Rob,
+> > 
+> > I think you didn't followed the discussion in detail so I will ask you
+> > personal. In short the tc358746 can act as parallel-in -> csi-out or as
+> > csi->in -> parallel-out device. The phyiscal pins are always the same
+> > only the internal timings are different. So we have two ports with two
+> > endpoints.
+> > 
+> > Now the question is how we determine the mode. We have two approaches:
+> > 1)
+> >   port@0 -> input port
+> >   port@1 -> output port
+> > 
+> >   pro:
+> >   + no extra vendor specific binding is needed to determine the mode
+> > 
+> >   con:
+> >   - input/output endpoint can be parallel or mipi-csi2.
+> > 
+> > 2)
+> >   port@0 -> parallel port
+> >   port@1 -> mipi-csi2 port
+> > 
+> >   pro:
+> >   + input/output endpoint are fixed to parallel or mipi
+> > 
+> >   con:
+> >   - vendor specific binding is needed to determine the mode
+> > 
+> > Thanks for your comments :)
+> > 
+> > Regards,
+> > Marco
+> > 
+> > On 19-03-05 09:49, Jacopo Mondi wrote:
+> > > Hi Sakari, Marco,
+> > > 
+> > > On Mon, Mar 04, 2019 at 08:17:48PM +0200, Sakari Ailus wrote:
+> > > > Hi Marco,
+> > > >
+> > > > On Mon, Mar 04, 2019 at 05:55:28PM +0100, Marco Felsch wrote:
+> > > > > > > (more device specific)
+> > > > > > > tc358746,default-mode = <CSI-Tx> /* Parallel-in -> CSI-out */
+> > > > > > > tc358746,default-mode = <CSI-Rx> /* CSI-in -> Parallel-out */
+> > > > > > >
+> > > > > > > or
+> > > > > > >
+> > > > > > > (more generic)
+> > > > > > > tc358746,default-dir = <PARALLEL_TO_CSI2>
+> > > > > > > tc358746,default-dir = <CSI2_TO_PARALLEL>
+> > > > > >
+> > > > > > The prefix for Toshiba is "toshiba". What would you think of
+> > > > > > "toshiba,csi2-direction" with values of either "rx" or "tx"? Or
+> > > > > > "toshiba,csi2-mode" with either "master" or "slave", which would be a
+> > > > > > little bit more generic, but could be slightly more probable to get wrong
+> > > > > > as well.
+> > > > >
+> > > > > You're right mixed the prefix with the device.. If we need to introduce
+> > > > > a property I would prefer the "toshiba,csi2-direction" one. I said if
+> > > > > because as Jacopo mentioned we can avoid the property by define port@0
+> > > > > as input and port@1 as output. I tink that's the best solution, since we
+> > > > > can avoid device specific bindings and it's common to use the last port
+> > > > > as output (e.g. video-mux).
+> > > >
+> > > > The ports represent hardware and I think I would avoid reordering them. I
+> > > > wonder what would the DT folks prefer.
+> > > >
+> > > 
+> > > I might have missed why you mention re-ordering? :)
+> > > 
+> > > > The device specific property is to the point at least: it describes an
+> > > > orthogonal part of the device configuration. That's why I'd pick that if I
+> > > > were to choose. But I'll let Rob to comment on this.
+> > > 
+> > > That's true indeed. Let's wait for inputs from DT people, I'm fine
+> > > with both approaches.
+> > > 
+> > > Thanks
+> > >    j
+> > > 
+> > > >
+> > > > --
+> > > > Regards,
+> > > >
+> > > > Sakari Ailus
+> > > > sakari.ailus@linux.intel.com
+> > 
+> > 
+> > 
+> > -- 
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
 
-The driver driver has been split into several patches - first just
-initial setup of each section and then driver optimization patches.
-
-As requested the driver has now also been split out into smaller
-files for individual components of the driver - in the hope that this
-has not been producing regressions...
-
-The driver is able to handle reception of 99.95% of all CAN frames
-of a 100% saturated 1MHz Can2.0 Bus with Frames with standard IDs and
-DLC=0 on a Raspberry Pi 3. Note that this statistics is without injection
-into the network stack, which then drops about 60% of all frames.
-
-At this time the SPI bus is utilized 75% (when counting CS asserted)
-and 60% from a SPI-Clock perspective.
-
-On the Rasberry pi 3 in such a situation we are using 100% of one
-CPU for the interrupt thread (as the spi driver is using polling for
-short transfers) and this has exposed a performance inefficiency in the
-spi framework that shows as the the spi-worker thread also consuming
-CPU cycles (30% of one CPU in this test case) unnecessarily.
-
-The driver also allows to use the INT0/1 pins as GPIOs.
-Lots of internal data/statistics is exposed via debugfs.
-
-On the HW side some errata related to SRAM access have been found
-during the development of the patchsets. Since then an errata for
-the controller has been shared by microchip.
-
-At this very moment there is no 100% mitigation for this (besides
-a newer version of the silicon).
-The only instance where this is probably not an issue is when using
-a SPI bus driver that reliably deasserts CS in the "requested"
-time-frame of a few Can clock cycles.
-
-When the spi-bus-driver is using GPIO-CS (which is nowadays the preferred
-implementation of spi-bus-drivers) then we have to rely on
-interrupt and interrupt worker thread scheduling latencies to be fast
-enough to fullfill the requirements of the mcp2517fd of SCK stop to
-CS-deassert. To achive this a faster CPU is needed and preferably more
-cores.
-
-A lot of possible mitigations have been investigated (Fifo ordering in
-SRAM, the use of CRC SPI commands,...), but none have been successful.
-That is why we are only able to reach 99.95% rate, because
-when this issue occurres then there is the need to reconfigure the
-controller and that takes some time which can not get used to process
-frames. Fortunately this only happens on highly congested systems, but it
-is more likely to occur on low end systems.
-
-So as an example almost everything related to can-transmission can get
-found in mcp25xxfd_can_tx.c. mcp25xxfd_can_rx.c is responsible for
-can-reception and mcp25xxfd_can_int.c for interrupt handling.
-
-Unfortunately the limit of the linux-can mailing-list seems lower than
-128k (and thus patch 4 of the series seems not to have been accepted).
-Thus V7 is essentially splitting V6 patch 4 into basic Can functionality
-with Can RX working in V7 patch 4 and TX-support in V7 patch 5.
-
-Changelog:
-  V1 -> V2: new more generic name based on feedback from microchip
-            cleanup of code (checkpatch)
-            address all feedback on code
-            handle (HW) systemerrors in a much better/reliable way
-            cleanup of dt custom properties removing (most) gpio
-              related properties
-            implemented GPIOLIB support as per feedback
-  V2 -> V3: added vendor-prefix for gpio-opendrain to dt-binding
-            added gpio-controller to dt-binding
-	    added feedback by Rob Herring
-	    waited for other feedback regarding the code
-  V3 -> V4: resend
-            Patch-1 (dt) added: Reviewed-by: Rob Herring <robh@kernel.org>
-  V4 -> V5: reorganisation of the patchset into smaller patches
-            review of the whole driver code for better modularization
-  V5 -> V6: Major refactoring as per feedback from Wilhelm Grandegger
-	    Fixing bugs reported by several other parties
-            Split out of optimizations into separate patches
-  V6 -> V7: added include linux/irqreturn.h (feedback by Eric Scholz)
-            move can transmission into a separate patch to reduce
-              the size of the individual patches to make the linux-can
-              mailing-list happy...
-
-Martin Sperl (10):
-  dt-binding: can: mcp25xxfd: document device tree bindings
-  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver basics
-  can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
-  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
-  can: mcp25xxfd: Add Can transmission support
-  can: mcp25xxfd: optimize TEF read avoiding unnecessary SPI transfers
-  can: mcp25xxfd: optimize TEF reads reading multiple TEFs in one go
-  can: mcp25xxfd: optimize SPI reads of FIFOs in can2.0 mode
-  can: mcp25xxfd: add prediction of CanFD frames sizes based on history
-  can: mcp25xxfd: optimize reception of big CanFD frame reception with
-    BRS
-
- .../bindings/net/can/microchip,mcp25xxfd.txt       |  32 +
- drivers/net/can/spi/Kconfig                        |   2 +
- drivers/net/can/spi/Makefile                       |   2 +
- drivers/net/can/spi/mcp25xxfd/Kconfig              |   5 +
- drivers/net/can/spi/mcp25xxfd/Makefile             |  18 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c     | 281 ++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.h     |  14 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c      | 684 ++++++++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h      |  56 ++
- .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c  | 235 ++++++
- .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.h  |  44 ++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c | 347 +++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.h |  16 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_id.h   |  69 ++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c  | 706 ++++++++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.h  |  17 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h | 203 ++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 521 ++++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.h   |  18 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c   | 794 +++++++++++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.h   |  86 +++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.c    | 485 +++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.h    |  28 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.c      | 312 ++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.h      |  84 +++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.c      |  31 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.h      |  15 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.c  | 110 +++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.h  |  30 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.c      |  75 ++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.h      |  16 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.c     | 194 +++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.h     |  16 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.c      |  73 ++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.h      |  15 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_priv.h     |  83 +++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_regs.h     | 661 +++++++++++++++++
- 37 files changed, 6378 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
- create mode 100644 drivers/net/can/spi/mcp25xxfd/Kconfig
- create mode 100644 drivers/net/can/spi/mcp25xxfd/Makefile
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_id.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_priv.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_regs.h
-
---
-2.11.0
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
