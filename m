@@ -1,85 +1,285 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
-Date: Mon, 29 Apr 2019 14:31:55 +0200
-Message-ID: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
-References: <1548675904-18324-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1548675904-18324-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20190204090301.GC23441@sirena.org.uk>
- <95276ca0-6896-a595-867a-184a518fa31f@linaro.org>
- <20190425183736.GF23183@sirena.org.uk>
- <022b3c6a-e356-3c5a-3c46-c6edcf4f8cd5@linaro.org>
- <20190427182113.GL14916@sirena.org.uk>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v6 09/10] ARM: dts: exynos: add DMC device for
+ exynos5422
+Date: Mon, 29 Apr 2019 14:38:45 +0200
+Message-ID: <34ae95ae-9788-6334-d4ef-7f9add76b77c@partner.samsung.com>
+References: <CGME20190419141952eucas1p11dc36f30c873a947122e0f7e8d55a3bb@eucas1p1.samsung.com>
+        <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+        <1555683568-20882-10-git-send-email-l.luba@partner.samsung.com>
+        <CAJKOXPfE2Kt_afkH6wryRgdVqfvDUH82rMf_iKFuvDVSH00LJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190427182113.GL14916@sirena.org.uk>
+In-Reply-To: <CAJKOXPfE2Kt_afkH6wryRgdVqfvDUH82rMf_iKFuvDVSH00LJw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, vinod.koul@linaro.org, niklas.cassel@linaro.org, khasim.mohammed@linaro.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 4/27/19 20:21, Mark Brown wrote:
-> On Thu, Apr 25, 2019 at 09:44:00PM +0200, Jorge Ramirez wrote:
+Hi Krzysztof,
+
+Thank you the review, please check my comments below.
+
+On 4/23/19 1:03 PM, Krzysztof Kozlowski wrote:
+> On Fri, 19 Apr 2019 at 16:19, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Add description of Dynamic Memory Controller and PPMU counters.
+>> They are used by exynos5422-dmc driver.
+>> There is a definition of the memory chip, hwich is then used during
 > 
->> the way I see it, if I follow your suggestion and since we are not
->> allowed to extend spmi_regulator_find_range(), the only options are:
+> which
+ACK
 > 
->> 1) duplicate verbatim this whole function
->> (spmi_regulator_select_voltage_same_range) with a minor change (this
->> amount of code duplication in the kernel seems rather unnecessary to me)
+>> calculation of timings for each OPP.
+>> The algorithm in the driver needs these two sets to bound the timings.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi             | 120 ++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 120 ++++++++++++++++++++++++++
+>>   2 files changed, 240 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index aaff158..b687cd7 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -14,6 +14,7 @@
+>>   #include <dt-bindings/clock/exynos5420.h>
+>>   #include <dt-bindings/clock/exynos-audss-clk.h>
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/pmu/exynos_ppmu.h>
+>>
+>>   / {
+>>          compatible = "samsung,exynos5420", "samsung,exynos5";
+>> @@ -235,6 +236,37 @@
+>>                          status = "disabled";
+>>                  };
+>>
+>> +               dmc: memory-controller@10c20000 {
+>> +                       compatible = "samsung,exynos5422-dmc";
+>> +                       reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
 > 
->> 2) modify the struct spmi_regulator definition with a new operation that
->> calls a different implementation of find range (seems a massive overkill)
+> I think in the driver you access range up to 0xff of each DREX memory
+> region. Do not map entire 0x10000 if not needed.
+I agree, I will map only 0x100.
 > 
-> Since the point of this change is AFAICT that this regulator only has a
-> single linear range it seems like it should just be able to use the
-> existing generic functions shouldn't it?  
-
-yes that would have been ideal but it does not seem to be the case for
-this hardware.
-
-The register that stores the voltage range for all other SPMI regulators
-(SPMI_COMMON_REG_VOLTAGE_RANGE 0x40) is used by something else in the
-HFS430: SPMI_HFS430_REG_VOLTAGE_LB 0x40 stores the voltage level in two
-bytes 0x40 and 0x41;
-
-This overlap really what is creating the pain: HFS430 cant use 0x40 to
-store the range (even if it is only one)
-
-so yeah, most of the changes in the patch are working around this fact.
-
-enum spmi_common_regulator_registers {
-	SPMI_COMMON_REG_DIG_MAJOR_REV		= 0x01,
-	SPMI_COMMON_REG_TYPE			= 0x04,
-	SPMI_COMMON_REG_SUBTYPE			= 0x05,
-	SPMI_COMMON_REG_VOLTAGE_RANGE		= 0x40, ******
-	SPMI_COMMON_REG_VOLTAGE_SET		= 0x41,
-	SPMI_COMMON_REG_MODE			= 0x45,
-	SPMI_COMMON_REG_ENABLE			= 0x46,
-	SPMI_COMMON_REG_PULL_DOWN		= 0x48,
-	SPMI_COMMON_REG_SOFT_START		= 0x4c,
-	SPMI_COMMON_REG_STEP_CTRL		= 0x61,
-};
-
-enum spmi_hfs430_registers {
-	SPMI_HFS430_REG_VOLTAGE_LB		= 0x40, *******
-	SPMI_HFS430_REG_VOLTAGE_VALID_LB	= 0x42,
-	SPMI_HFS430_REG_MODE			= 0x45,
-};
-
-It just needs it's own
-> set/get_voltage_sel() operations.  As far as I can see the main thing
-> the driver is doing with the custom stuff is handling the fact that
-> there's multiple ranges but that's not an issue for this regulator.
-> It's possible I'm missing something there but that was the main thing
-> (and we do have some generic support for multiple linear ranges in the
-> helper code already, can't remember why this driver isn't using that -
-> the ranges overlap IIRC?).
 > 
-> TBH looking at the uses of find_range() I'm not sure they're 100%
-> sensible as they are - the existing _time_sel() is assuming we only need
-> to work out the ramp time between voltages in the same range which is
-> going to have trouble.
+>> +                               <0x10000000 0x1000>, <0x10030000 0x1000>;
+>> +                       clocks = <&clock CLK_FOUT_SPLL>,
+>> +                                <&clock CLK_MOUT_SCLK_SPLL>,
+>> +                                <&clock CLK_FF_DOUT_SPLL2>,
+>> +                                <&clock CLK_FOUT_BPLL>,
+>> +                                <&clock CLK_MOUT_BPLL>,
+>> +                                <&clock CLK_SCLK_BPLL>,
+>> +                                <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>> +                                <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>> +                                <&clock CLK_MOUT_MCLK_CDREX>,
+>> +                                <&clock CLK_DOUT_CLK2X_PHY0>,
+>> +                                <&clock CLK_CLKM_PHY0>,
+>> +                                <&clock CLK_CLKM_PHY1>;
+>> +                       clock-names = "fout_spll",
+>> +                                     "mout_sclk_spll",
+>> +                                     "ff_dout_spll2",
+>> +                                     "fout_bpll",
+>> +                                     "mout_bpll",
+>> +                                     "sclk_bpll",
+>> +                                     "mout_mx_mspll_ccore",
+>> +                                     "mout_mx_mspll_ccore_phy",
+>> +                                     "mout_mclk_cdrex",
+>> +                                     "dout_clk2x_phy0",
+>> +                                     "clkm_phy0",
+>> +                                     "clkm_phy1";
+>> +                       status = "disabled";
+>> +               };
+>> +
+>>                  nocp_mem0_0: nocp@10ca1000 {
+>>                          compatible = "samsung,exynos5420-nocp";
+>>                          reg = <0x10CA1000 0x200>;
+>> @@ -271,6 +303,94 @@
+>>                          status = "disabled";
+>>                  };
+>>
+>> +               ppmu_dmc0_0: ppmu@10d00000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d00000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc0_0: ppmu-event0-dmc0_0 {
+>> +                                       event-name = "ppmu-event0-dmc0_0";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc0_0: ppmu-event1-dmc0_0 {
+>> +                                       event-name = "ppmu-event1-dmc0_0";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc0_0: ppmu-event3-dmc0_0 {
+>> +                                       event-name = "ppmu-event3-dmc0_0";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc0_1: ppmu@10d10000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d10000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc0_1: ppmu-event0-dmc0_1 {
+>> +                                       event-name = "ppmu-event0-dmc0_1";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc0_1: ppmu-event1-dmc0_1 {
+>> +                                       event-name = "ppmu-event1-dmc0_1";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc0_1: ppmu-event3-dmc0_1 {
+>> +                                       event-name = "ppmu-event3-dmc0_1";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc1_0: ppmu@10d60000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d60000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc1_0: ppmu-event0-dmc1_0 {
+>> +                                       event-name = "ppmu-event0-dmc1_0";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc1_0: ppmu-event1-dmc1_0 {
+>> +                                       event-name = "ppmu-event1-dmc1_0";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc1_0: ppmu-event3-dmc1_0 {
+>> +                                       event-name = "ppmu-event3-dmc1_0";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc1_1: ppmu@10d70000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d70000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc1_1: ppmu-event0-dmc1_1 {
+>> +                                       event-name = "ppmu-event0-dmc1_1";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc1_1: ppmu-event1-dmc1_1 {
+>> +                                       event-name = "ppmu-event1-dmc1_1";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc1_1: ppmu-event3-dmc1_1 {
+>> +                                       event-name = "ppmu-event3-dmc1_1";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>>                  gsc_pd: power-domain@10044000 {
+>>                          compatible = "samsung,exynos4210-pd";
+>>                          reg = <0x10044000 0x20>;
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> index 25d95de1..76bf0dbf 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> @@ -34,6 +34,95 @@
+>>                          clock-frequency = <24000000>;
+>>                  };
+>>          };
+>> +
+>> +       dmc_opp_table: opp_table2 {
+>> +               compatible = "operating-points-v2";
+>> +
+>> +               opp00 {
+>> +                       opp-hz = /bits/ 64 <165000000>;
+>> +                       opp-microvolt = <875000>;
+>> +               };
+>> +               opp01 {
+>> +                       opp-hz = /bits/ 64 <206000000>;
+>> +                       opp-microvolt = <875000>;
+>> +               };
+>> +               opp02 {
+>> +                       opp-hz = /bits/ 64 <275000000>;
+>> +                       opp-microvolt = <875000>;
+>> +               };
+>> +               opp03 {
+>> +                       opp-hz = /bits/ 64 <413000000>;
+>> +                       opp-microvolt = <887500>;
+>> +               };
+>> +               opp04 {
+>> +                       opp-hz = /bits/ 64 <543000000>;
+>> +                       opp-microvolt = <937500>;
+>> +               };
+>> +               opp05 {
+>> +                       opp-hz = /bits/ 64 <633000000>;
+>> +                       opp-microvolt = <1012500>;
+>> +               };
+>> +               opp06 {
+>> +                       opp-hz = /bits/ 64 <728000000>;
+>> +                       opp-microvolt = <1037500>;
+>> +               };
+>> +               opp07 {
+>> +                       opp-hz = /bits/ 64 <825000000>;
+>> +                       opp-microvolt = <1050000>;
+>> +               };
+>> +       };
+>> +
+>> +       samsung_K3QF2F20DB: lpddr3 {
+>> +               compatible      = "Samsung,K3QF2F20DB","jedec,lpddr3";
+> 
+> Missing space after coma.
+Good catch, thank you.
+> 
+>> +               density         = <16384>;
+>> +               io-width        = <32>;
+>> +
+>> +               tRFC-min-tck            = <17>;
+>> +               tRRD-min-tck            = <2>;
+>> +               tRPab-min-tck           = <2>;
+>> +               tRPpb-min-tck           = <2>;
+>> +               tRCD-min-tck            = <3>;
+>> +               tRC-min-tck             = <6>;
+>> +               tRAS-min-tck            = <5>;
+>> +               tWTR-min-tck            = <2>;
+>> +               tWR-min-tck             = <7>;
+>> +               tRTP-min-tck            = <2>;
+>> +               tW2W-C2C-min-tck        = <0>;
+>> +               tR2R-C2C-min-tck        = <0>;
+>> +               tWL-min-tck             = <8>;
+>> +               tDQSCK-min-tck          = <5>;
+>> +               tRL-min-tck             = <14>;
+>> +               tFAW-min-tck            = <5>;
+>> +               tXSR-min-tck            = <12>;
+>> +               tXP-min-tck             = <2>;
+>> +               tCKE-min-tck            = <2>;
+>> +               tCKESR-min-tck          = <2>;
+>> +               tMRD-min-tck            = <5>;
+>> +
+>> +               timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
+> 
+> @0 does not look correct... you do not have <reg>. No DTC warnings here?
+Rob also pointed out that it should have 'reg'. I have followed the
+LPDDR2 definitions, but in the meantime DT rules have changed and now
+'reg' is needed. I will put 'reg' instead of 'max-freq' if Rob agrees.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
 > 
