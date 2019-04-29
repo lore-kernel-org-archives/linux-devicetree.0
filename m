@@ -1,377 +1,146 @@
-Return-Path: <SRS0=FHWM=SE=mxic.com.tw=masonccyang@kernel.org>
-In-Reply-To: <231f7423-bf13-99f8-427b-530f5446348b@cogentembedded.com>
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw> <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw> <231f7423-bf13-99f8-427b-530f5446348b@cogentembedded.com>
-Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
+Return-Path: <SRS0=dDaQ=S7=nxp.com=haibo.chen@kernel.org>
+From: BOUGH CHEN <haibo.chen@nxp.com>
+Subject: [PATCH 1/3] ARM: dts: imx7d: correct the pad drive strength setting
+Date: Mon, 29 Apr 2019 12:37:57 +0000
+Message-ID: <20190429124547.19928-1-haibo.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Message-ID: <OF7F1B534F.B934A9FE-ON482583D0.001DC618-482583D0.001FE84B@mxic.com.tw>
-From: masonccyang@mxic.com.tw
-Date: Tue, 2 Apr 2019 13:48:29 +0800
-Content-Type: multipart/alternative; boundary="=_alternative 001FE849482583D0_="
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multipart message in MIME format.
---=_alternative 001FE849482583D0_=
-Content-Type: text/plain; charset="US-ASCII"
-
-
-Hi Sergei,
-
-
-> > +static void rpc_spi_mem_set_prep_op_cfg(struct spi_device *spi,
-> > +               const struct spi_mem_op *op,
-> > +               u64 *offs, size_t *len)
-> > +{
-> > +   struct rpc_spi *rpc = spi_controller_get_devdata(spi->controller);
-> > +
-> > +   rpc->cmd = RPC_SMCMR_CMD(op->cmd.opcode);
-> > +   rpc->smenr = RPC_SMENR_CDE |
-> > +           RPC_SMENR_CDB(ilog2(op->cmd.buswidth));
-> > +   rpc->totalxferlen = 1;
-> > +   rpc->xfer_dir = SPI_MEM_NO_DATA;
-> > +   rpc->xferlen = 0;
-> > +   rpc->addr = 0;
-> > +
-> > +   if (op->addr.nbytes) {
-> > +      rpc->smenr |= RPC_SMENR_ADB(ilog2(op->addr.buswidth));
-> > +      if (op->addr.nbytes == 4)
-> > +         rpc->smenr |= RPC_SMENR_ADE(0xf);
-> > +      else
-> > +         rpc->smenr |= RPC_SMENR_ADE(0x7);
-> > +
-> > +      if (offs && len)
-> > +         rpc->addr = *offs;
-> > +      else
-> > +         rpc->addr = op->addr.val;
-> > +      rpc->totalxferlen += op->addr.nbytes;
-> > +   }
-> > +
-> > +   if (op->dummy.nbytes) {
-> > +      rpc->smenr |= RPC_SMENR_DME;
-> > +      rpc->dummy = RPC_SMDMCR_DMCYC(op->dummy.nbytes);
-> 
->    So you haven't fixed this bug? I repeat, the driver doesn't work 
-right
-> w/o this fixed!
-
-Do you mean
-
-rpc->dummy = RPC_SMDMCR_DMCYC(op->dummy.nbytes) * 8;   ?
-
-What is your flash part number?
-
-The problem you found is in 1 bit or 4 bits width ?
-
-> 
-> [...]
-> > +static ssize_t rpc_spi_mem_dirmap_read(struct spi_mem_dirmap_desc 
-*desc,
-> > +                   u64 offs, size_t len, void *buf)
-> > +{
-> > +   struct rpc_spi *rpc =
-> > +         spi_controller_get_devdata(desc->mem->spi->controller);
-> > +   int ret;
-> > +
-> > +   if (offs + desc->info.offset + len > U32_MAX)
-> > +      return -EINVAL;
-> > +
-> > +   if (len > 0x4000000)
-> > +      len = 0x4000000;
-> 
->    Ugh...
-
-by mtd->size ?
-
-> 
-> > +
-> > +   ret = rpc_spi_set_freq(rpc, desc->mem->spi->max_speed_hz);
-> > +   if (ret)
-> > +      return ret;
-> > +
-> > +   rpc_spi_mem_set_prep_op_cfg(desc->mem->spi,
-> > +                &desc->info.op_tmpl, &offs, &len);
-> > +
-> > +   regmap_update_bits(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD, 0);
-> > +   regmap_write(rpc->regmap, RPC_DRCR, RPC_DRCR_RBURST(32) |
-> > +           RPC_DRCR_RBE);
-> > +
-> > +   regmap_write(rpc->regmap, RPC_DRCMR, rpc->cmd);
-> > +   regmap_write(rpc->regmap, RPC_DREAR, RPC_DREAR_EAC(1));
-> 
->    So you're not even trying to support flashes larger than the read 
-dirmap?
-> Now I don't think it's acceptable (and I have rewritten this code 
-internally).
-
-what about the size comes form mtd->size ?
-
-> 
-> [...]
-> > +static ssize_t rpc_spi_mem_dirmap_write(struct spi_mem_dirmap_desc 
-*desc,
-> > +               u64 offs, size_t len, const void *buf)
-> > +{
-> > +   struct rpc_spi *rpc =
-> > +         spi_controller_get_devdata(desc->mem->spi->controller);
-> > +   int ret;
-> > +
-> > +   if (offs + desc->info.offset + len > U32_MAX)
-> > +      return -EINVAL;
-> > +
-> > +   if (len > RPC_WBUF_SIZE)
-> > +      len = RPC_WBUF_SIZE;
-> 
->    Ugh! Again, I no longer think this is acceptable... Maybe we just 
-need
-> to drop the support of the write buffer...
-> 
-
-why ?
-Using write buffer got the much better write performance.
-
-> [...]
-> > +static void rpc_spi_transfer_setup(struct rpc_spi *rpc,
-> > +               struct spi_message *msg)
-> > +{
-> [...]
-> > +   if (xfercnt > 2 && xfer[1].len && xfer[1].tx_buf) {
-> > +      rpc->smenr |=
-> > +         RPC_SMENR_ADB(ilog2((unsigned int)xfer[1].tx_nbits));
-> > +
-> > +      for (i = 0; i < xfer[1].len; i++)
-> > +         rpc->addr |= ((u8 *)xfer[1].tx_buf)[i] <<
-> > +                 (8 * (xfer[1].len - i - 1));
-> > +
-> > +      if (xfer[1].len == 4)
-> > +         rpc->smenr |= RPC_SMENR_ADE(0xf);
-> > +      else
-> > +         rpc->smenr |= RPC_SMENR_ADE(0x7);
-> > +   }
-> > +
-> > +   if (xfercnt > 3 && xfer[2].len && xfer[2].tx_buf) {
-> > +      rpc->smenr |= RPC_SMENR_DME;
-> > +      rpc->dummy = RPC_SMDMCR_DMCYC(xfer[2].len);
-> 
->    Needs to be multiplied by 8 (or other value) as well...
-
-Same above you mentioned:
-
-rpc->dummy = RPC_SMDMCR_DMCYC(xfer[2].len) * 8; 
-
-
-best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
---=_alternative 001FE849482583D0_=
-Content-Type: text/html; charset="US-ASCII"
-
-
-<tt><font size=2>Hi Sergei,<br>
-<br>
-<br>
-&gt; &gt; +static void rpc_spi_mem_set_prep_op_cfg(struct spi_device *spi,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const struct
-spi_mem_op *op,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; u64 *offs,
-size_t *len)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + &nbsp; struct rpc_spi *rpc = spi_controller_get_devdata(spi-&gt;controller);<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; rpc-&gt;cmd = RPC_SMCMR_CMD(op-&gt;cmd.opcode);<br>
-&gt; &gt; + &nbsp; rpc-&gt;smenr = RPC_SMENR_CDE |<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; RPC_SMENR_CDB(ilog2(op-&gt;cmd.buswidth));<br>
-&gt; &gt; + &nbsp; rpc-&gt;totalxferlen = 1;<br>
-&gt; &gt; + &nbsp; rpc-&gt;xfer_dir = SPI_MEM_NO_DATA;<br>
-&gt; &gt; + &nbsp; rpc-&gt;xferlen = 0;<br>
-&gt; &gt; + &nbsp; rpc-&gt;addr = 0;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (op-&gt;addr.nbytes) {<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;smenr |= RPC_SMENR_ADB(ilog2(op-&gt;addr.buswidth));<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;if (op-&gt;addr.nbytes == 4)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;smenr |= RPC_SMENR_ADE(0xf);<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;else<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;smenr |= RPC_SMENR_ADE(0x7);<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;if (offs &amp;&amp; len)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;addr = *offs;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;else<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;addr = op-&gt;addr.val;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;totalxferlen += op-&gt;addr.nbytes;<br>
-&gt; &gt; + &nbsp; }<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (op-&gt;dummy.nbytes) {<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;smenr |= RPC_SMENR_DME;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;dummy = RPC_SMDMCR_DMCYC(op-&gt;dummy.nbytes);<br>
-&gt; <br>
-&gt; &nbsp; &nbsp;So you haven't fixed this bug? I repeat, the driver doesn't
-work right<br>
-&gt; w/o this fixed!</font></tt>
-<br>
-<br><tt><font size=2>Do you mean</font></tt>
-<br>
-<br><tt><font size=2>rpc-&gt;dummy = RPC_SMDMCR_DMCYC(op-&gt;dummy.nbytes)
-* 8; &nbsp; ?</font></tt>
-<br>
-<br><tt><font size=2>What is your flash part number?</font></tt>
-<br>
-<br><tt><font size=2>The problem you found is in 1 bit or 4 bits width
-?</font></tt>
-<br><tt><font size=2><br>
-&gt; <br>
-&gt; [...]<br>
-&gt; &gt; +static ssize_t rpc_spi_mem_dirmap_read(struct spi_mem_dirmap_desc
-*desc,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-u64 offs, size_t len, void *buf)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + &nbsp; struct rpc_spi *rpc =<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; spi_controller_get_devdata(desc-&gt;mem-&gt;spi-&gt;controller);<br>
-&gt; &gt; + &nbsp; int ret;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (offs + desc-&gt;info.offset + len &gt; U32_MAX)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;return -EINVAL;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (len &gt; 0x4000000)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;len = 0x4000000;<br>
-&gt; <br>
-&gt; &nbsp; &nbsp;Ugh...</font></tt>
-<br>
-<br><tt><font size=2>by mtd-&gt;size ?</font></tt>
-<br><tt><font size=2><br>
-&gt; <br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; ret = rpc_spi_set_freq(rpc, desc-&gt;mem-&gt;spi-&gt;max_speed_hz);<br>
-&gt; &gt; + &nbsp; if (ret)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;return ret;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; rpc_spi_mem_set_prep_op_cfg(desc-&gt;mem-&gt;spi,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&amp;desc-&gt;info.op_tmpl,
-&amp;offs, &amp;len);<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; regmap_update_bits(rpc-&gt;regmap, RPC_CMNCR, RPC_CMNCR_MD,
-0);<br>
-&gt; &gt; + &nbsp; regmap_write(rpc-&gt;regmap, RPC_DRCR, RPC_DRCR_RBURST(32)
-|<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; RPC_DRCR_RBE);<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; regmap_write(rpc-&gt;regmap, RPC_DRCMR, rpc-&gt;cmd);<br>
-&gt; &gt; + &nbsp; regmap_write(rpc-&gt;regmap, RPC_DREAR, RPC_DREAR_EAC(1));<br>
-&gt; <br>
-&gt; &nbsp; &nbsp;So you're not even trying to support flashes larger than
-the read dirmap?<br>
-&gt; Now I don't think it's acceptable (and I have rewritten this code
-internally).</font></tt>
-<br>
-<br><tt><font size=2>what about the size comes form mtd-&gt;size ?</font></tt>
-<br><tt><font size=2><br>
-&gt; <br>
-&gt; [...]<br>
-&gt; &gt; +static ssize_t rpc_spi_mem_dirmap_write(struct spi_mem_dirmap_desc
-*desc,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; u64 offs,
-size_t len, const void *buf)<br>
-&gt; &gt; +{<br>
-&gt; &gt; + &nbsp; struct rpc_spi *rpc =<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; spi_controller_get_devdata(desc-&gt;mem-&gt;spi-&gt;controller);<br>
-&gt; &gt; + &nbsp; int ret;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (offs + desc-&gt;info.offset + len &gt; U32_MAX)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;return -EINVAL;<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (len &gt; RPC_WBUF_SIZE)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;len = RPC_WBUF_SIZE;<br>
-&gt; <br>
-&gt; &nbsp; &nbsp;Ugh! Again, I no longer think this is acceptable... Maybe
-we just need<br>
-&gt; to drop the support of the write buffer...<br>
-&gt; </font></tt>
-<br>
-<br><tt><font size=2>why ?</font></tt>
-<br><tt><font size=2>Using write buffer got the much better write performance.</font></tt>
-<br><tt><font size=2><br>
-&gt; [...]<br>
-&gt; &gt; +static void rpc_spi_transfer_setup(struct rpc_spi *rpc,<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; struct spi_message
-*msg)<br>
-&gt; &gt; +{<br>
-&gt; [...]<br>
-&gt; &gt; + &nbsp; if (xfercnt &gt; 2 &amp;&amp; xfer[1].len &amp;&amp;
-xfer[1].tx_buf) {<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;smenr |=<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; RPC_SMENR_ADB(ilog2((unsigned int)xfer[1].tx_nbits));<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;for (i = 0; i &lt; xfer[1].len; i++)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;addr |= ((u8 *)xfer[1].tx_buf)[i]
-&lt;&lt;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (8
-* (xfer[1].len - i - 1));<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;if (xfer[1].len == 4)<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;smenr |= RPC_SMENR_ADE(0xf);<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;else<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; rpc-&gt;smenr |= RPC_SMENR_ADE(0x7);<br>
-&gt; &gt; + &nbsp; }<br>
-&gt; &gt; +<br>
-&gt; &gt; + &nbsp; if (xfercnt &gt; 3 &amp;&amp; xfer[2].len &amp;&amp;
-xfer[2].tx_buf) {<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;smenr |= RPC_SMENR_DME;<br>
-&gt; &gt; + &nbsp; &nbsp; &nbsp;rpc-&gt;dummy = RPC_SMDMCR_DMCYC(xfer[2].len);<br>
-&gt; <br>
-&gt; &nbsp; &nbsp;Needs to be multiplied by 8 (or other value) as well...</font></tt>
-<br>
-<br><tt><font size=2>Same above you mentioned:</font></tt>
-<br>
-<br><tt><font size=2>rpc-&gt;dummy = RPC_SMDMCR_DMCYC(xfer[2].len) * 8;
-&nbsp; &nbsp; </font></tt>
-<br><tt><font size=2><br>
-<br>
-best regards,</font></tt>
-<br><tt><font size=2>Mason<br>
-<br>
-CONFIDENTIALITY NOTE:<br>
-<br>
-This e-mail and any attachments may contain confidential information and/or
-personal data, which is protected by applicable laws. Please be reminded
-that duplication, disclosure, distribution, or use of this e-mail (and/or
-its attachments) or any part thereof is prohibited. If you receive this
-e-mail in error, please notify us immediately and delete this mail as well
-as its attachment(s) from your system. In addition, please be informed
-that collection, processing, and/or use of personal data is prohibited
-unless expressly permitted by personal data protection laws. Thank you
-for your attention and cooperation.<br>
-<br>
-Macronix International Co., Ltd.<br>
-<br>
-=====================================================================<br>
-</font></tt>
-
---=_alternative 001FE849482583D0_=--
+Y29tbWl0IDU0OTBjNzdkNTk2YSAoImR0LWJpbmRpbmdzOiBwaW5jdHJsOiBpbXg3ZDogRml4IFBB
+RF9DVExfRFNFX1gqIikNCnBvaW50IG91dCB0aGF0IHRoZSBQQURfQ1RMX0RTRV9YKiB2YWx1ZXMg
+YXJlIHdyb25nbHkgZG9jdW1lbnQgaW4gdGhlDQpSTS4gRm9yIHRoZSBVU0RIQyAxMDBNaHogcGFk
+IGRyaXZlIHN0cmVuZ3RoLCBpdCBzaG91bGQgYmUgUEFEX0NUTF9EU0VfWDQsDQp0aGlzIHBhdGNo
+IGZpeCB0aGlzLg0KDQpTaWduZWQtb2ZmLWJ5OiBIYWlibyBDaGVuIDxoYWliby5jaGVuQG54cC5j
+b20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaSB8IDIyICsrKysr
+KysrKy0tLS0tLS0tLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg3LW1iYTcuZHRzaSAgICB8IDEw
+ICsrKystLS0tLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctdHFtYTcuZHRzaSAgIHwgMjAgKysr
+KysrKystLS0tLS0tLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg3ZC1waWNvLmR0c2kgICB8IDMy
+ICsrKysrKysrKysrKystLS0tLS0tLS0tLS0tLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNk
+Yi5kdHMgICAgIHwgMzQgKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0NCiA1IGZpbGVzIGNo
+YW5nZWQsIDU5IGluc2VydGlvbnMoKyksIDU5IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9p
+bXg3LWNvbGlicmkuZHRzaQ0KaW5kZXggODk1ZmJkZTRkNDMzLi5iOWQ1ZGQzNTczMWIgMTAwNjQ0
+DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KKysrIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCkBAIC02MzAsMTcgKzYzMCwxNyBAQA0KIA0K
+IAlwaW5jdHJsX3VzZGhjM18xMDBtaHo6IHVzZGhjM2dycF8xMDBtaHogew0KIAkJZnNsLHBpbnMg
+PSA8DQotCQkJTVg3RF9QQURfU0QzX0NNRF9fU0QzX0NNRAkJMHg1YQ0KLQkJCU1YN0RfUEFEX1NE
+M19DTEtfX1NEM19DTEsJCTB4MWENCi0JCQlNWDdEX1BBRF9TRDNfREFUQTBfX1NEM19EQVRBMAkJ
+MHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBMV9fU0QzX0RBVEExCQkweDVhDQotCQkJTVg3RF9Q
+QURfU0QzX0RBVEEyX19TRDNfREFUQTIJCTB4NWENCi0JCQlNWDdEX1BBRF9TRDNfREFUQTNfX1NE
+M19EQVRBMwkJMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBNF9fU0QzX0RBVEE0CQkweDVhDQot
+CQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNfREFUQTUJCTB4NWENCi0JCQlNWDdEX1BBRF9TRDNf
+REFUQTZfX1NEM19EQVRBNgkJMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBN19fU0QzX0RBVEE3
+CQkweDVhDQotCQkJTVg3RF9QQURfU0QzX1NUUk9CRV9fU0QzX1NUUk9CRSAgICAgICAgIDB4MWEN
+CisJCQlNWDdEX1BBRF9TRDNfQ01EX19TRDNfQ01ECQkweDU5DQorCQkJTVg3RF9QQURfU0QzX0NM
+S19fU0QzX0NMSwkJMHgxOQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBMF9fU0QzX0RBVEEwCQkweDU5
+DQorCQkJTVg3RF9QQURfU0QzX0RBVEExX19TRDNfREFUQTEJCTB4NTkNCisJCQlNWDdEX1BBRF9T
+RDNfREFUQTJfX1NEM19EQVRBMgkJMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBM19fU0QzX0RB
+VEEzCQkweDU5DQorCQkJTVg3RF9QQURfU0QzX0RBVEE0X19TRDNfREFUQTQJCTB4NTkNCisJCQlN
+WDdEX1BBRF9TRDNfREFUQTVfX1NEM19EQVRBNQkJMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRB
+Nl9fU0QzX0RBVEE2CQkweDU5DQorCQkJTVg3RF9QQURfU0QzX0RBVEE3X19TRDNfREFUQTcJCTB4
+NTkNCisJCQlNWDdEX1BBRF9TRDNfU1RST0JFX19TRDNfU1RST0JFICAgICAgICAgMHgxOQ0KIAkJ
+PjsNCiAJfTsNCiANCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg3LW1iYTcuZHRz
+aSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctbWJhNy5kdHNpDQppbmRleCA1MGFiZjE4YWQzMGIu
+LjllY2FhYmU3YmNjNyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctbWJhNy5k
+dHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LW1iYTcuZHRzaQ0KQEAgLTQzNywxMiAr
+NDM3LDEyIEBADQogDQogCXBpbmN0cmxfdXNkaGMxXzEwMG1oejogdXNkaGMxZ3JwXzEwMG1oeiB7
+DQogCQlmc2wscGlucyA9IDwNCi0JCQlNWDdEX1BBRF9TRDFfQ01EX19TRDFfQ01ECQkweDVhDQor
+CQkJTVg3RF9QQURfU0QxX0NNRF9fU0QxX0NNRAkJMHg1OQ0KIAkJCU1YN0RfUEFEX1NEMV9DTEtf
+X1NEMV9DTEsJCTB4NTcNCi0JCQlNWDdEX1BBRF9TRDFfREFUQTBfX1NEMV9EQVRBMAkJMHg1YQ0K
+LQkJCU1YN0RfUEFEX1NEMV9EQVRBMV9fU0QxX0RBVEExCQkweDVhDQotCQkJTVg3RF9QQURfU0Qx
+X0RBVEEyX19TRDFfREFUQTIJCTB4NWENCi0JCQlNWDdEX1BBRF9TRDFfREFUQTNfX1NEMV9EQVRB
+MwkJMHg1YQ0KKwkJCU1YN0RfUEFEX1NEMV9EQVRBMF9fU0QxX0RBVEEwCQkweDU5DQorCQkJTVg3
+RF9QQURfU0QxX0RBVEExX19TRDFfREFUQTEJCTB4NTkNCisJCQlNWDdEX1BBRF9TRDFfREFUQTJf
+X1NEMV9EQVRBMgkJMHg1OQ0KKwkJCU1YN0RfUEFEX1NEMV9EQVRBM19fU0QxX0RBVEEzCQkweDU5
+DQogCQk+Ow0KIAl9Ow0KIA0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctdHFt
+YTcuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctdHFtYTcuZHRzaQ0KaW5kZXggOWFhZWQ4
+NTEzOGNiLi5hM2FhNjNiMjQxZTIgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg3
+LXRxbWE3LmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctdHFtYTcuZHRzaQ0KQEAg
+LTE3OCwxNyArMTc4LDE3IEBADQogDQogCXBpbmN0cmxfdXNkaGMzXzEwMG1oejogdXNkaGMzZ3Jw
+XzEwMG1oeiB7DQogCQlmc2wscGlucyA9IDwNCi0JCQlNWDdEX1BBRF9TRDNfQ01EX19TRDNfQ01E
+ICAgICAgICAgICAgICAgMHg1YQ0KKwkJCU1YN0RfUEFEX1NEM19DTURfX1NEM19DTUQgICAgICAg
+ICAgICAgICAweDU5DQogCQkJTVg3RF9QQURfU0QzX0NMS19fU0QzX0NMSyAgICAgICAgICAgICAg
+IDB4NTENCi0JCQlNWDdEX1BBRF9TRDNfREFUQTBfX1NEM19EQVRBMCAgICAgICAgICAgMHg1YQ0K
+LQkJCU1YN0RfUEFEX1NEM19EQVRBMV9fU0QzX0RBVEExICAgICAgICAgICAweDVhDQotCQkJTVg3
+RF9QQURfU0QzX0RBVEEyX19TRDNfREFUQTIgICAgICAgICAgIDB4NWENCi0JCQlNWDdEX1BBRF9T
+RDNfREFUQTNfX1NEM19EQVRBMyAgICAgICAgICAgMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRB
+NF9fU0QzX0RBVEE0ICAgICAgICAgICAweDVhDQotCQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNf
+REFUQTUgICAgICAgICAgIDB4NWENCi0JCQlNWDdEX1BBRF9TRDNfREFUQTZfX1NEM19EQVRBNiAg
+ICAgICAgICAgMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBN19fU0QzX0RBVEE3ICAgICAgICAg
+ICAweDVhDQotCQkJTVg3RF9QQURfU0QzX1NUUk9CRV9fU0QzX1NUUk9CRSAgICAgICAgIDB4MWEN
+CisJCQlNWDdEX1BBRF9TRDNfREFUQTBfX1NEM19EQVRBMCAgICAgICAgICAgMHg1OQ0KKwkJCU1Y
+N0RfUEFEX1NEM19EQVRBMV9fU0QzX0RBVEExICAgICAgICAgICAweDU5DQorCQkJTVg3RF9QQURf
+U0QzX0RBVEEyX19TRDNfREFUQTIgICAgICAgICAgIDB4NTkNCisJCQlNWDdEX1BBRF9TRDNfREFU
+QTNfX1NEM19EQVRBMyAgICAgICAgICAgMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBNF9fU0Qz
+X0RBVEE0ICAgICAgICAgICAweDU5DQorCQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNfREFUQTUg
+ICAgICAgICAgIDB4NTkNCisJCQlNWDdEX1BBRF9TRDNfREFUQTZfX1NEM19EQVRBNiAgICAgICAg
+ICAgMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBN19fU0QzX0RBVEE3ICAgICAgICAgICAweDU5
+DQorCQkJTVg3RF9QQURfU0QzX1NUUk9CRV9fU0QzX1NUUk9CRSAgICAgICAgIDB4MTkNCiAJCT47
+DQogCX07DQogDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2QtcGljby5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2QtcGljby5kdHNpDQppbmRleCA2ZjUwZWJmMzFhMGEu
+LjIyMzA5MmVhZTZjMCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXBpY28u
+ZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2QtcGljby5kdHNpDQpAQCAtNDkxLDEy
+ICs0OTEsMTIgQEANCiANCiAJcGluY3RybF91c2RoYzFfMTAwbWh6OiB1c2RoYzFncnBfMTAwbWh6
+IHsNCiAJCWZzbCxwaW5zID0gPA0KLQkJCU1YN0RfUEFEX1NEMV9DTURfX1NEMV9DTUQJCTB4NWEN
+Ci0JCQlNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLCQkweDFhDQotCQkJTVg3RF9QQURfU0QxX0RB
+VEEwX19TRDFfREFUQTAJCTB4NWENCi0JCQlNWDdEX1BBRF9TRDFfREFUQTFfX1NEMV9EQVRBMQkJ
+MHg1YQ0KLQkJCU1YN0RfUEFEX1NEMV9EQVRBMl9fU0QxX0RBVEEyCQkweDVhDQotCQkJTVg3RF9Q
+QURfU0QxX0RBVEEzX19TRDFfREFUQTMJCTB4NWENCisJCQlNWDdEX1BBRF9TRDFfQ01EX19TRDFf
+Q01ECQkweDU5DQorCQkJTVg3RF9QQURfU0QxX0NMS19fU0QxX0NMSwkJMHgxOQ0KKwkJCU1YN0Rf
+UEFEX1NEMV9EQVRBMF9fU0QxX0RBVEEwCQkweDU5DQorCQkJTVg3RF9QQURfU0QxX0RBVEExX19T
+RDFfREFUQTEJCTB4NTkNCisJCQlNWDdEX1BBRF9TRDFfREFUQTJfX1NEMV9EQVRBMgkJMHg1OQ0K
+KwkJCU1YN0RfUEFEX1NEMV9EQVRBM19fU0QxX0RBVEEzCQkweDU5DQogCQkJTVg3RF9QQURfU0Qx
+X0NEX0JfX0dQSU81X0lPMAkJMHgxNQ0KIAkJPjsNCiAJfTsNCkBAIC01NDEsMTYgKzU0MSwxNiBA
+QA0KIA0KIAlwaW5jdHJsX3VzZGhjM18xMDBtaHo6IHVzZGhjM2dycF8xMDBtaHogew0KIAkJZnNs
+LHBpbnMgPSA8DQotCQkJTVg3RF9QQURfU0QzX0NNRF9fU0QzX0NNRAkJMHg1YQ0KLQkJCU1YN0Rf
+UEFEX1NEM19DTEtfX1NEM19DTEsJCTB4MWENCi0JCQlNWDdEX1BBRF9TRDNfREFUQTBfX1NEM19E
+QVRBMAkJMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBMV9fU0QzX0RBVEExCQkweDVhDQotCQkJ
+TVg3RF9QQURfU0QzX0RBVEEyX19TRDNfREFUQTIJCTB4NWENCi0JCQlNWDdEX1BBRF9TRDNfREFU
+QTNfX1NEM19EQVRBMwkJMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBNF9fU0QzX0RBVEE0CQkw
+eDVhDQotCQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNfREFUQTUJCTB4NWENCi0JCQlNWDdEX1BB
+RF9TRDNfREFUQTZfX1NEM19EQVRBNgkJMHg1YQ0KLQkJCU1YN0RfUEFEX1NEM19EQVRBN19fU0Qz
+X0RBVEE3CQkweDVhDQorCQkJTVg3RF9QQURfU0QzX0NNRF9fU0QzX0NNRAkJMHg1OQ0KKwkJCU1Y
+N0RfUEFEX1NEM19DTEtfX1NEM19DTEsJCTB4MTkNCisJCQlNWDdEX1BBRF9TRDNfREFUQTBfX1NE
+M19EQVRBMAkJMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBMV9fU0QzX0RBVEExCQkweDU5DQor
+CQkJTVg3RF9QQURfU0QzX0RBVEEyX19TRDNfREFUQTIJCTB4NTkNCisJCQlNWDdEX1BBRF9TRDNf
+REFUQTNfX1NEM19EQVRBMwkJMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBNF9fU0QzX0RBVEE0
+CQkweDU5DQorCQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNfREFUQTUJCTB4NTkNCisJCQlNWDdE
+X1BBRF9TRDNfREFUQTZfX1NEM19EQVRBNgkJMHg1OQ0KKwkJCU1YN0RfUEFEX1NEM19EQVRBN19f
+U0QzX0RBVEE3CQkweDU5DQogCQk+Ow0KIAl9Ow0KIA0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDdkLXNkYi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRzDQpp
+bmRleCAyMDI5MjJlZDM3NTQuLjZhNjAzNWIyYmMyMiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDdkLXNkYi5kdHMNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi5k
+dHMNCkBAIC02NjUsMTIgKzY2NSwxMiBAQA0KIA0KIAkJcGluY3RybF91c2RoYzJfMTAwbWh6OiB1
+c2RoYzJncnBfMTAwbWh6IHsNCiAJCQlmc2wscGlucyA9IDwNCi0JCQkJTVg3RF9QQURfU0QyX0NN
+RF9fU0QyX0NNRAkJMHg1YQ0KLQkJCQlNWDdEX1BBRF9TRDJfQ0xLX19TRDJfQ0xLCQkweDFhDQot
+CQkJCU1YN0RfUEFEX1NEMl9EQVRBMF9fU0QyX0RBVEEwCQkweDVhDQotCQkJCU1YN0RfUEFEX1NE
+Ml9EQVRBMV9fU0QyX0RBVEExCQkweDVhDQotCQkJCU1YN0RfUEFEX1NEMl9EQVRBMl9fU0QyX0RB
+VEEyCQkweDVhDQotCQkJCU1YN0RfUEFEX1NEMl9EQVRBM19fU0QyX0RBVEEzCQkweDVhDQorCQkJ
+CU1YN0RfUEFEX1NEMl9DTURfX1NEMl9DTUQJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QyX0NMS19f
+U0QyX0NMSwkJMHgxOQ0KKwkJCQlNWDdEX1BBRF9TRDJfREFUQTBfX1NEMl9EQVRBMAkJMHg1OQ0K
+KwkJCQlNWDdEX1BBRF9TRDJfREFUQTFfX1NEMl9EQVRBMQkJMHg1OQ0KKwkJCQlNWDdEX1BBRF9T
+RDJfREFUQTJfX1NEMl9EQVRBMgkJMHg1OQ0KKwkJCQlNWDdEX1BBRF9TRDJfREFUQTNfX1NEMl9E
+QVRBMwkJMHg1OQ0KIAkJCT47DQogCQl9Ow0KIA0KQEAgLTcwNCwxNyArNzA0LDE3IEBADQogDQog
+CQlwaW5jdHJsX3VzZGhjM18xMDBtaHo6IHVzZGhjM2dycF8xMDBtaHogew0KIAkJCWZzbCxwaW5z
+ID0gPA0KLQkJCQlNWDdEX1BBRF9TRDNfQ01EX19TRDNfQ01ECQkweDVhDQotCQkJCU1YN0RfUEFE
+X1NEM19DTEtfX1NEM19DTEsJCTB4MWENCi0JCQkJTVg3RF9QQURfU0QzX0RBVEEwX19TRDNfREFU
+QTAJCTB4NWENCi0JCQkJTVg3RF9QQURfU0QzX0RBVEExX19TRDNfREFUQTEJCTB4NWENCi0JCQkJ
+TVg3RF9QQURfU0QzX0RBVEEyX19TRDNfREFUQTIJCTB4NWENCi0JCQkJTVg3RF9QQURfU0QzX0RB
+VEEzX19TRDNfREFUQTMJCTB4NWENCi0JCQkJTVg3RF9QQURfU0QzX0RBVEE0X19TRDNfREFUQTQJ
+CTB4NWENCi0JCQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNfREFUQTUJCTB4NWENCi0JCQkJTVg3
+RF9QQURfU0QzX0RBVEE2X19TRDNfREFUQTYJCTB4NWENCi0JCQkJTVg3RF9QQURfU0QzX0RBVEE3
+X19TRDNfREFUQTcJCTB4NWENCi0JCQkJTVg3RF9QQURfU0QzX1NUUk9CRV9fU0QzX1NUUk9CRQkJ
+MHgxYQ0KKwkJCQlNWDdEX1BBRF9TRDNfQ01EX19TRDNfQ01ECQkweDU5DQorCQkJCU1YN0RfUEFE
+X1NEM19DTEtfX1NEM19DTEsJCTB4MTkNCisJCQkJTVg3RF9QQURfU0QzX0RBVEEwX19TRDNfREFU
+QTAJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QzX0RBVEExX19TRDNfREFUQTEJCTB4NTkNCisJCQkJ
+TVg3RF9QQURfU0QzX0RBVEEyX19TRDNfREFUQTIJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QzX0RB
+VEEzX19TRDNfREFUQTMJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QzX0RBVEE0X19TRDNfREFUQTQJ
+CTB4NTkNCisJCQkJTVg3RF9QQURfU0QzX0RBVEE1X19TRDNfREFUQTUJCTB4NTkNCisJCQkJTVg3
+RF9QQURfU0QzX0RBVEE2X19TRDNfREFUQTYJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QzX0RBVEE3
+X19TRDNfREFUQTcJCTB4NTkNCisJCQkJTVg3RF9QQURfU0QzX1NUUk9CRV9fU0QzX1NUUk9CRQkJ
+MHgxOQ0KIAkJCT47DQogCQl9Ow0KIA0KLS0gDQoyLjE3LjENCg0K
