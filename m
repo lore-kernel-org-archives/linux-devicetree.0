@@ -1,53 +1,85 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
-Date: Mon, 29 Apr 2019 15:59:49 -0700
-Message-ID: <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: stm32: add bindings for ML-AHB
+ interconnect
+Date: Mon, 29 Apr 2019 18:13:16 -0500
+Message-ID: <20190429231316.GA13995@bogus>
+References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
+ <1555426699-5340-2-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1555426699-5340-2-git-send-email-fabien.dessenne@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Alexandre Torgue <alexandre.torgue@st.com>, Loic Pallardy <loic.pallardy@st.com>, devicetree@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-29 12:42:07)
-> Hi Stephen,
->=20
-> On Fri, 26 Apr 2019, Paul Walmsley wrote:
->=20
-> > On Fri, 26 Apr 2019, Stephen Boyd wrote:
-> >=20
-> > > Quoting Paul Walmsley (2019-04-11 01:27:32)
-> > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) =
-IP
-> > > > block, as implemented in TSMC CLN28HPC.
-> > >=20
-> > > I haven't deeply reviewed at all, but I already get two problems when
-> > > compile testing these patches. I can fix them up if nothing else needs
-> > > fixing.
-> > >=20
-> > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn:=
- should 'target_rate << divq' be a 64 bit type?
-> > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in v=
-oid function
-> >=20
-> > Hmm, that's odd.  I will definitely take a look and repost.
->=20
-> I'm not able to reproduce these problems.  The configs tried here were:
->=20
-> - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with=20
->   crosstool-NG 1.24.0)
->=20
-> - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with=20
->   crosstool-NG 1.24.0)
->=20
-> - 32-bit i386 defconfig w/ PRCI driver enabled (gcc=20
->   5.4.0-6ubuntu1~16.04.11)
->=20
-> Could you post the toolchain and kernel config you're using?
->=20
+On Tue, Apr 16, 2019 at 04:58:12PM +0200, Fabien Dessenne wrote:
+> Document the ML-AHB interconnect for stm32 SoCs.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  .../devicetree/bindings/arm/stm32/mlahb.txt        | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> new file mode 100644
+> index 0000000..a36458a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+> @@ -0,0 +1,37 @@
+> +ML-AHB interconnect bindings
+> +
+> +These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
+> +a Cortex-M subsystem with dedicated memories.
+> +The MCU SRAM and RETRAM memory parts can be accessed through different addresses
+> +(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
+> +Cortex-M firmware accesses among those ports allows to tune the system
+> +performance.
+> +
+> +[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
+> +[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
+> +
+> +Required properties:
+> +- compatible: should be "simple-bus"
+> +- dma-ranges: describes memory addresses translation between the local CPU and
+> +	   the remote Cortex-M processor. Each memory region, is declared with
+> +	   3 parameters:
+> +		 - param 1: device base address (Cortex-M processor address)
+> +		 - param 2: physical base address (local CPU address)
+> +		 - param 3: size of the memory region.
+> +
+> +The Cortex-M remote processor accessed via the mlahb interconnect is described
+> +by a child node.
+> +
+> +Example:
+> +mlahb {
+> +	compatible = "simple-bus";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	dma-ranges = <0x00000000 0x38000000 0x10000>,
+> +		     <0x10000000 0x10000000 0x60000>,
+> +		     <0x30000000 0x30000000 0x60000>;
+> +
+> +	m4_rproc: m4@0 {
 
-I'm running sparse and smatch too.
+'0' is a cpu address given there's no 'ranges' now for translating cpu 
+addresses. I think you want it to be 0x38000000 instead. 
+
+> +		...
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
