@@ -1,104 +1,115 @@
-Return-Path: <SRS0=uE6T=SM=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=r54Y=S7=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V5 08/13] ARM: dts: r8a77470: Add USB PHY DT support
-Date: Wed, 10 Apr 2019 15:48:45 +0100
-Message-Id: <1554907730-14792-9-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
-References: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH V5 4/9] dt-bindings: usb: renesas_usb3: Add
+ renesas,usb-role-switch property
+Date: Mon, 29 Apr 2019 09:39:47 +0000
+Message-ID: 
+ <OSBPR01MB2103BF796E95B788CC018CA2B8390@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1556097743-12717-1-git-send-email-biju.das@bp.renesas.com>
+ <1556097743-12717-5-git-send-email-biju.das@bp.renesas.com>
+ <20190426181405.GA1881@bogus>
+In-Reply-To: <20190426181405.GA1881@bogus>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Yu Chen <chenyu56@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the r8a77470 generic part of the USB PHY device node.
+Hi Rob,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
-V4-->V5
-  * No change
-V3-->V4
-  * No change
-V2-->V3
-  * Added gen3 usb2 phy nodes
-V1-->V2
- * New patch
----
- arch/arm/boot/dts/r8a77470.dtsi | 56 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+Thanks for the feedback.
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 493cf2b..dcd2975 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -325,6 +325,42 @@
- 			status = "disabled";
- 		};
- 
-+		usbphy0: usb-phy@e6590100 {
-+			compatible = "renesas,usb-phy-r8a77470",
-+				     "renesas,rcar-gen2-usb-phy";
-+			reg = <0 0xe6590100 0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			clock-names = "usbhs";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			status = "disabled";
+> Subject: Re: [PATCH V5 4/9] dt-bindings: usb: renesas_usb3: Add
+> renesas,usb-role-switch property
+>=20
+> On Wed, Apr 24, 2019 at 10:22:18AM +0100, Biju Das wrote:
+> > Add an optional property renesas,usb-role-switch to support dual role
+> > switch for USB Type-C DRP port controller devices using USB role
+> > switch class framework.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  V4-->V5
+> >   * No Change
+> >  V3-->V4
+> >   * No Change
+> >  V2-->V3
+> >   * Added optional renesas,usb-role-switch property.
+> >  V1-->V2
+> >   * Added usb-role-switch-property
+> >   * Updated the example with usb-role-switch property.
+> > ---
+> >  .../devicetree/bindings/usb/renesas_usb3.txt       | 22
+> ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > index 35039e7..f1cb06a 100644
+> > --- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> > @@ -22,6 +22,7 @@ Required properties:
+> >  Optional properties:
+> >    - phys: phandle + phy specifier pair
+> >    - phy-names: must be "usb"
+> > +  - renesas,usb-role-switch: use USB role switch to handle role
+> > + switch events
+>=20
+> Mediatek and HiSilicon both have same or similar properties in patches un=
+der
+> review. Please coordinate and document a common property.
+
+As per R-Car Gen3 boards design. The USB3.0 port  on the boards (Salvator-x=
+s and Ebisu) has a USB3.0 Type-A receptor.
+For debug purpose , the same port can be used as peripheral  using force_b_=
+device mode on debugfs.
+Ie, we can use force_b_device to switch the role on this boards.
+
+Where as RZ/G2E board is having USB 3.0 type-C connector.  So the driver ne=
+eds to know whether to use debugfs based
+dual role switch or non-debugfs based dual role switch(type-C). That is the=
+ reason I have added this property.
+
+> Really, I'm wondering why this is needed. Can't you walk the graph to the
+> connector and determine if dual role is supported by the connector type?
+
+Yes, Basically we don't need this property. I could walk through the graph =
+and determine=20
+the role supported by connector type
+
+Please find the example code which will be used in the driver.
+
++static bool is_ext_dual_role_usb_connector_available(struct device *dev)
++{
++       struct device_node *np =3D dev->of_node;
++       struct device_node *parent;
++       struct device_node *child;
++       bool ret =3D false;
++       const char *role_type =3D NULL;
 +
-+			usb0: usb-channel@0 {
-+				reg = <0>;
-+				#phy-cells = <1>;
-+			};
-+		};
++       child =3D of_graph_get_endpoint_by_regs(np, -1, -1);
++       if (!child)
++               return ret;
 +
-+		usbphy1: usb-phy@e6598100 {
-+			compatible = "renesas,usb-phy-r8a77470",
-+				     "renesas,rcar-gen2-usb-phy";
-+			reg = <0 0xe6598100 0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cpg CPG_MOD 706>;
-+			clock-names = "usbhs";
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 706>;
-+			status = "disabled";
++       parent =3D of_graph_get_remote_port_parent(child);
++       of_node_put(child);
++       child =3D of_get_child_by_name(parent, "connector");
++       of_node_put(parent);
++       if (!child)
++               return ret;
 +
-+			usb1: usb-channel@0 {
-+				reg = <0>;
-+				#phy-cells = <1>;
-+			};
-+		};
++       if (of_device_is_compatible(child, "usb-c-connector")) {
++               of_property_read_string(child, "data-role", &role_type);
++               if (role_type && (!strncmp(role_type, "dual", strlen("dual"=
+))))
++                       ret =3D true;
++       }
 +
- 		usb_dmac00: dma-controller@e65a0000 {
- 			compatible = "renesas,r8a77470-usb-dmac",
- 				     "renesas,usb-dmac";
-@@ -588,6 +624,26 @@
- 			status = "disabled";
- 		};
- 
-+		usb2_phy0: usb-phy@ee080200 {
-+			compatible = "renesas,usb2-phy-r8a77470";
-+			reg = <0 0xee080200 0 0x700>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 703>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		usb2_phy1: usb-phy@ee0c0200 {
-+			compatible = "renesas,usb2-phy-r8a77470";
-+			reg = <0 0xee0c0200 0 0x700>;
-+			clocks = <&cpg CPG_MOD 705>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 705>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
--- 
-2.7.4
++       of_node_put(child);
++       return ret;
++}
+
+Regards,
+Biju
