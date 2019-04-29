@@ -1,47 +1,77 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
-Date: Mon, 29 Apr 2019 08:53:00 +0000
-Message-ID: <TY1PR01MB177019CA89AC165803270945C0390@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <20190301161624.GA19937@kroah.com>
- <TYXPR01MB17756DBAF2FD7A1F2A9B82B0C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <TY1PR01MB1770DB45DCD263C6933B9210C0230@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190427125606.GA25493@kroah.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+Date: Mon, 29 Apr 2019 14:29:33 +0530
+Message-ID: <7d012633-e540-df8f-7c21-07702447cb8a@ti.com>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
+ <20190420100950.7997-12-lokeshvutla@ti.com>
+ <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
+ <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190427125606.GA25493@kroah.com>
+In-Reply-To: <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Simon Horman <horms@verge.net.au>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Sent: 27 April 2019 13:56
-> Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
->=20
-> On Tue, Apr 23, 2019 at 03:32:59PM +0000, Fabrizio Castro wrote:
-> > Hello Simon,
-> >
-> > I know you don't normally take this type of patches, but this one has
-> > been around for more than 4 months now, and I am losing hope here...
-> >
-> > Do you think you can this patch?
->=20
-> I think this got dropped somehow, sorry about that.
->=20
-> Can you resend it, with the acks that have been given to it, and I will
-> be glad to queue it up.
 
-Thank you Greg, I have sent it now.
 
-BR,
-Fab
+On 29/04/19 2:17 PM, Marc Zyngier wrote:
+> On 23/04/2019 11:00, Lokesh Vutla wrote:
+>> Hi Marc,
+> 
+> [...]
+> 
+>>> +/**
+>>> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
+>>> + * @data:	Pointer to corresponding irq_data
+>>> + * @type:	Trigger type as specified by user
+>>> + *
+>>> + * Note: This updates the handle_irq callback for level msi.
+>>> + *
+>>> + * Return 0 if all went well else appropriate error.
+>>> + */
+>>> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
+>>> +{
+>>> +	struct irq_desc *desc = irq_to_desc(data->irq);
+>>> +
+>>> +	/*
+>>> +	 * .alloc default sets handle_edge_irq. But if the user specifies
+>>> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
+>>> +	 */
+>>> +	if (type & IRQF_TRIGGER_HIGH)
+>>> +		desc->handle_irq = handle_level_irq;
+>>> +
+>>> +	return 0;
+>>
+>>
+>> Returning error value is causing request_irq to fail, so still returning 0. Do
+>> you suggest any other method to handle this?
+> 
+> But that is the very point, isn't it? If you pass the wrong triggering
+> type to request_irq, it *must* fail. What you should have is something like:
+> 
+> switch (type & IRQ_TYPE_SENSE_MASK) {
+> case IRQF_TRIGGER_HIGH:
+> 	desc->handle_irq = handle_level_irq;
+> 	return 0;
+> case IRQ_TYPE_EDGE_RISING:
+> 	return 0;
+> default:
+> 	return -EINVAL;
+> }
+> 
+> (adjust as necessary).
+> 
+> What's wrong with this?
 
->=20
-> thanks,
->=20
-> greg k-h
+I get it. Will fix it in next version. I also got the firmware update as well.
+If you are okay with rest of the series, I want to post the next version with
+the firmware update.
+
+Thanks and regards,
+Lokesh
