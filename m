@@ -1,36 +1,35 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML format
-Date: Mon, 29 Apr 2019 07:44:14 -0500
-Message-ID: <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
-References: <20190427182359.27254-1-masneyb@onstation.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: dma: uart: rename binding
+Date: Mon, 29 Apr 2019 07:48:27 -0500
+Message-ID: <20190429124827.GA13816@bogus>
+References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+ <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190427182359.27254-1-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Anson Huang <anson.huang@nxp.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Rhyland Klein <rklein@nvidia.com>
+To: Long Cheng <long.cheng@mediatek.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenb>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 1:25 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Convert the isl29018 device tree bindings to the new YAML format.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+On Sat, 27 Apr 2019 11:36:32 +0800, Long Cheng wrote:
+> The filename matches mtk-uart-apdma.c.
+> So using "mtk-uart-apdma.txt" should be better.
+> And add some property.
+> 
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 > ---
-> I'm willing to be listed as the maintainer since this is one of the
-> drivers that I moved out out of staging unless one of the original
-> authors wants to be listed instead.
->
-> I added the BSD-2-Clause to the new binding document. I wrote the
-> original document and the only commit since then was from Rob in
-> commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
-> bindings")
->
->  .../bindings/iio/light/isl29018.txt           | 27 ---------
->  .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
->  2 files changed, 56 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml
+>  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 ------------
+>  .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   55 ++++++++++++++++++++
+>  2 files changed, 55 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
