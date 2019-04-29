@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5/5] ARM: dts: rskrza1: Add input switches
-Date: Mon, 29 Apr 2019 11:36:31 +0200
-Message-ID: <20190429093631.10799-6-geert+renesas@glider.be>
+Subject: [PATCH 1/5] dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt Controller
+Date: Mon, 29 Apr 2019 11:36:27 +0200
+Message-ID: <20190429093631.10799-2-geert+renesas@glider.be>
 References: <20190429093631.10799-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190429093631.10799-1-geert+renesas@glider.be>
@@ -10,82 +10,46 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add support for input switches SW1-3 on the Renesas RZ/A1 RSK+RZA1
-development board.
-
-Note that this uses the IRQ interrupts, as the RZ/A1 GPIO controller
-does not include interrupt support.
+Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-v2:
-  - Use rza1-irqc instead of gic.
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 38 ++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ .../renesas,rza1-irqc.txt                     | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index ff24301dc1be54de..99acfe4fe11aaed9 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- #include "r7s72100.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
- 
- / {
-@@ -28,6 +29,37 @@
- 		reg = <0x08000000 0x02000000>;
- 	};
- 
-+	keyboard {
-+		compatible = "gpio-keys";
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+new file mode 100644
+index 0000000000000000..0914d3d216c3bdac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+@@ -0,0 +1,27 @@
++DT bindings for the Renesas RZ/A1 Interrupt Controller
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&keyboard_pins>;
++The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
++RZ/A1 SoCs:
++  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
++    interrupts,
++  - NMI edge select.
 +
-+		key-1 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_1>;
-+			label = "SW1";
-+			wakeup-source;
-+		};
++Required properties:
++  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
++		fallback.
++		Examples with soctypes are:
++		  - "renesas,r7s72100-irqc" (RZ/A1H)
++  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
++				 in interrupts.txt in this directory)
++  - interrupt-controller: Marks the device as an interrupt controller
++  - reg: Base address and length of the memory resource used by the interrupt
++         controller
 +
-+		key-2 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_2>;
-+			label = "SW2";
-+			wakeup-source;
-+		};
++Example:
 +
-+		key-3 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_3>;
-+			label = "SW3";
-+			wakeup-source;
-+		};
++	irqc: interrupt-controller@fcfef800 {
++		compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0xfcfef800 0x6>;
 +	};
-+
- 	lbsc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -101,6 +133,12 @@
- 			 <RZA1_PINMUX(1, 7, 1)>;	/* RIIC3SDA */
- 	};
- 
-+	keyboard_pins: keyboard {
-+		pinmux = <RZA1_PINMUX(1, 9, 3)>,	/* IRQ3 */
-+			 <RZA1_PINMUX(1, 8, 3)>,	/* IRQ2 */
-+			 <RZA1_PINMUX(1, 11, 3)>;	/* IRQ5 */
-+	};
-+
- 	/* Serial Console */
- 	scif2_pins: serial2 {
- 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
 -- 
 2.17.1
