@@ -1,84 +1,74 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-Date: Mon, 29 Apr 2019 11:13:02 +0100
-Message-ID: <3723e553-4e04-4ce4-080b-01f1a9843ea8@arm.com>
-References: <20190420100950.7997-1-lokeshvutla@ti.com>
- <20190420100950.7997-12-lokeshvutla@ti.com>
- <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
- <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
- <7d012633-e540-df8f-7c21-07702447cb8a@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD controller
+Date: Mon, 29 Apr 2019 12:24:16 +0200
+Message-ID: <CAPDyKFouv1MDJXwDryqhC=X4mLycoAigB3x6Xee09U+QNGTa-Q@mail.gmail.com>
+References: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7d012633-e540-df8f-7c21-07702447cb8a@ti.com>
-Content-Language: en-US
+In-Reply-To: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
+To: Takao Orito <orito.takao@socionext.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On 29/04/2019 09:59, Lokesh Vutla wrote:
-> 
-> 
-> On 29/04/19 2:17 PM, Marc Zyngier wrote:
->> On 23/04/2019 11:00, Lokesh Vutla wrote:
->>> Hi Marc,
->>
->> [...]
->>
->>>> +/**
->>>> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
->>>> + * @data:	Pointer to corresponding irq_data
->>>> + * @type:	Trigger type as specified by user
->>>> + *
->>>> + * Note: This updates the handle_irq callback for level msi.
->>>> + *
->>>> + * Return 0 if all went well else appropriate error.
->>>> + */
->>>> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
->>>> +{
->>>> +	struct irq_desc *desc = irq_to_desc(data->irq);
->>>> +
->>>> +	/*
->>>> +	 * .alloc default sets handle_edge_irq. But if the user specifies
->>>> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
->>>> +	 */
->>>> +	if (type & IRQF_TRIGGER_HIGH)
->>>> +		desc->handle_irq = handle_level_irq;
->>>> +
->>>> +	return 0;
->>>
->>>
->>> Returning error value is causing request_irq to fail, so still returning 0. Do
->>> you suggest any other method to handle this?
->>
->> But that is the very point, isn't it? If you pass the wrong triggering
->> type to request_irq, it *must* fail. What you should have is something like:
->>
->> switch (type & IRQ_TYPE_SENSE_MASK) {
->> case IRQF_TRIGGER_HIGH:
->> 	desc->handle_irq = handle_level_irq;
->> 	return 0;
->> case IRQ_TYPE_EDGE_RISING:
->> 	return 0;
->> default:
->> 	return -EINVAL;
->> }
->>
->> (adjust as necessary).
->>
->> What's wrong with this?
-> 
-> I get it. Will fix it in next version. I also got the firmware update as well.
-> If you are okay with rest of the series, I want to post the next version with
-> the firmware update.
-Then post it now, and I'll review that. I'd rather look at the latest
-than providing feedback on something that has already changed.
+On Fri, 26 Apr 2019 at 04:04, Takao Orito <orito.takao@socionext.com> wrote:
+>
+> Signed-off-by: Takao Orito <orito.takao@socionext.com>
+> ---
+>  .../devicetree/bindings/mmc/sdhci-milbeaut.txt     | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> new file mode 100644
+> index 0000000..7008462
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> @@ -0,0 +1,35 @@
+> +* SOCIONEXT SDHCI controller
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the sdhci_milbeaut driver.
+> +
+> +Required properties:
+> +- compatible: "socionext,milbeaut-m10v-sdhci-3.0"
+> +- clocks: Must contain an entry for each entry in clock-names. It is a
+> +  list of phandles and clock-specifier pairs.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Should contain the following two entries:
+> +       "iface" - clock used for sdhci interface
+> +       "core"  - core clock for sdhci controller
+> +
+> +Optional properties:
+> +- vqmmc-supply: phandle to the regulator device tree node, mentioned
+> +  as the VCCQ/VDD_IO supply in the eMMC/SD specs.
+> +- fujitsu,cmd-dat-delay-select: boolean property indicating that this host
+> +  requires the CMD_DAT_DELAY control to be enabled.
+> +- sni,mmc-power-gpio: set property indicating that power on or off needs
+> +  control of gpios.
 
-Thanks,
+Please use a vmmc-supply instead of "power-gpio" (which means you need
+to model this as a fixed GPIO regulator).
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> +
+> +Example:
+> +       sdhci3: mmc@1b010000 {
+> +               compatible = "socionext,milbeaut-m10v-sdhci-3.0";
+> +               reg = <0x1b010000 0x10000>;
+> +               interrupts = <0 265 0x4>;
+> +               voltage-ranges = <3300 3300>;
+> +               bus-width = <4>;
+> +               clocks = <&clk 7>, <&ahb_clk>;
+> +               clock-names = "core", "iface";
+> +               cap-sdio-irq;
+> +               sni,mmc-power-gpio = <&pinctrl 53 GPIO_ACTIVE_HIGH>;
+> +                       fujitsu,cmd-dat-delay-select;
+> +       };
+> --
+> 1.9.1
+>
+>
+
+Kind regards
+Uffe
