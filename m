@@ -1,32 +1,34 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH v6 00/13] Add support for usb on Hikey960
-Date: Mon, 29 Apr 2019 16:42:57 +0100
-Message-ID: <766eb894-f939-02d2-5a3b-03fb51f7c4ee@arm.com>
-References: <20190420064019.57522-1-chenyu56@huawei.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/3] thermal: broadcom: Add Stingray thermal driver
+Date: Mon, 29 Apr 2019 16:46:05 +0100
+Message-ID: <20190429154605.GB29909@e107155-lin>
+References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
+ <1527486084-4636-4-git-send-email-srinath.mannam@broadcom.com>
+ <da76e12f246c3f10bfed28d8b91a3575dc73f243.camel@infradead.org>
+ <20190429152422.GC17516@e107155-lin>
+ <CABe79T4MYf65QM+OHTPa_F8uG6_pd-9VLMQOHb9EPRyj2mEx1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190420064019.57522-1-chenyu56@huawei.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CABe79T4MYf65QM+OHTPa_F8uG6_pd-9VLMQOHb9EPRyj2mEx1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Apr 29, 2019 at 08:58:26PM +0530, Srinath Mannam wrote:
+> Hi David,
+>
+> Thank you for notifying..
+>
+> Hi Sudeep,
+>
+> I will send a patch to remove ACPI support.
+>
 
-On 20/04/2019 07:40, Yu Chen wrote:
-> The patchset adds support for usb functionality of Hikey960, includes:
-> - usb phy driver for Hisilicon Kirin Soc hi3660
-> - usb driver for HiKey960 board
-> - some adjustment in dwc3 and usb role driver
-> - dts for support usb of HiKey960
-> 
+Thanks.
 
-Still works fine on my Debian setup:
-
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
-
-Thanks,
-Valentin
+--
+Regards,
+Sudeep
