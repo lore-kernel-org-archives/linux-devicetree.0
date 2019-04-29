@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v4 07/10] [media] marvell-ccic: rename the clocks
-Date: Mon, 29 Apr 2019 11:16:29 +0200
-Message-ID: <20190429091632.2462285-8-lkundrak@v3.sk>
+Subject: [PATCH v4 06/10] [media] marvell-ccic/mmp: enable clock before accessing registers
+Date: Mon, 29 Apr 2019 11:16:28 +0200
+Message-ID: <20190429091632.2462285-7-lkundrak@v3.sk>
 References: <20190429091632.2462285-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,33 +12,36 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Use the names more suitable for devicetree bindings.
-
-There are no board files utilizing this, thus we seem to be at liberty
-at renaming this without consequences.
+The access to REG_CLKCTRL or REG_CTRL1 without the clock enabled hangs
+the machine. Enable the clock first.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
-Changes since v2:
-- This patch was added to the series
-
- drivers/media/platform/marvell-ccic/mmp-driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/marvell-ccic/mmp-driver.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
 edia/platform/marvell-ccic/mmp-driver.c
-index 352e67fc1062..8f1d2a972bc9 100644
+index a1b1d66e34cd..352e67fc1062 100644
 --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
 +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-@@ -33,7 +33,7 @@ MODULE_ALIAS("platform:mmp-camera");
- MODULE_AUTHOR("Jonathan Corbet <corbet@lwn.net>");
- MODULE_LICENSE("GPL");
+@@ -144,6 +144,7 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
+  * Turn on power and clocks to the controller.
+  */
+ 	mmpcam_power_up_ctlr(cam);
++	mcam_clk_enable(mcam);
+ /*
+  * Provide power to the sensor.
+  */
+@@ -157,8 +158,6 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
+ 	gpio_set_value(pdata->sensor_reset_gpio, 1); /* reset is active low */
+ 	mdelay(5);
 =20
--static char *mcam_clks[] =3D {"CCICAXICLK", "CCICFUNCLK", "CCICPHYCLK"};
-+static char *mcam_clks[] =3D {"axi", "func", "phy"};
+-	mcam_clk_enable(mcam);
+-
+ 	return 0;
+ }
 =20
- struct mmp_camera {
- 	void __iomem *power_regs;
 --=20
 2.21.0
