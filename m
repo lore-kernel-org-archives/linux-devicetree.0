@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/5] dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt Controller
-Date: Mon, 29 Apr 2019 11:36:27 +0200
-Message-ID: <20190429093631.10799-2-geert+renesas@glider.be>
+Subject: [PATCH 3/5] soc: renesas: Enable RZ/A1 IRQC on RZ/A1H
+Date: Mon, 29 Apr 2019 11:36:29 +0200
+Message-ID: <20190429093631.10799-4-geert+renesas@glider.be>
 References: <20190429093631.10799-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190429093631.10799-1-geert+renesas@glider.be>
@@ -10,46 +10,28 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+Auto-enable the RZ/A1 Interrupt Controller when configuring a kernel
+with support for RZ/A1H SoCs.
+
+This is similar to how interrupt controllers for other Renesas SoCs are
+enabled.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../renesas,rza1-irqc.txt                     | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+ drivers/soc/renesas/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-new file mode 100644
-index 0000000000000000..0914d3d216c3bdac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-@@ -0,0 +1,27 @@
-+DT bindings for the Renesas RZ/A1 Interrupt Controller
-+
-+The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-+RZ/A1 SoCs:
-+  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-+    interrupts,
-+  - NMI edge select.
-+
-+Required properties:
-+  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-+		fallback.
-+		Examples with soctypes are:
-+		  - "renesas,r7s72100-irqc" (RZ/A1H)
-+  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-+				 in interrupts.txt in this directory)
-+  - interrupt-controller: Marks the device as an interrupt controller
-+  - reg: Base address and length of the memory resource used by the interrupt
-+         controller
-+
-+Example:
-+
-+	irqc: interrupt-controller@fcfef800 {
-+		compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xfcfef800 0x6>;
-+	};
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 68bfca6f20ddf8a7..1448b6dbcdb20bae 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -57,6 +57,7 @@ config ARCH_R7S72100
+ 	bool "RZ/A1H (R7S72100)"
+ 	select PM
+ 	select PM_GENERIC_DOMAINS
++	select RENESAS_RZA1_IRQC
+ 	select SYS_SUPPORTS_SH_MTU2
+ 	select RENESAS_OSTM
+ 
 -- 
 2.17.1
