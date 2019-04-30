@@ -1,40 +1,41 @@
-Return-Path: <SRS0=bLyw=SN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from forward105o.mail.yandex.net ([37.140.190.183]:37165 "EHLO
-        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726121AbfDKMUd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:20:33 -0400
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 5/6] dt/bindings: Add bindings for ls1x CPU
-Date: Thu, 11 Apr 2019 20:19:14 +0800
-Message-Id: <20190411121915.8040-6-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190411121915.8040-1-jiaxun.yang@flygoat.com>
-References: <20190312091520.8863-2-jiaxun.yang@flygoat.com>
- <20190411121915.8040-1-jiaxun.yang@flygoat.com>
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org, paul.burton@mips.com, robh+dt@kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1554907730-14792-1-git-send-email-biju.das@bp.renesas.com> <1554907730-14792-13-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1554907730-14792-13-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 14:58:59 +0200
+Message-ID: <CAMuHMdU9URhBDbM7dP+Mq6f3kiUTdcD8+ipDvipFBciq=iUDMw@mail.gmail.com>
+Subject: Re: [PATCH V5 12/13] ARM: dts: r8a77470: Add HSUSB device nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This documented ls1x CPU node.
+On Wed, Apr 10, 2019 at 4:56 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Define the r8a77470 generic part of the HSUSB0/1 device nodes.
+>
+> Currently the renesas_usbhs driver doesn't handle multiple phys and we
+> don't have a proper hardware to validate such driver changes.
+>
+> So for hsusb1 it is assumed that usbphy0 will be enabled by either
+> channel0 host or device.
+>
+> In future, if any boards support hsusb1, we will need to add multiple phy
+> support in the renesas_usbhs driver and override the board dts to enable
+> the same.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- Documentation/devicetree/bindings/mips/loongson/ls1x-cpu.txt | 4 ++++
- 1 file changed, 4 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/ls1x-cpu.txt
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/mips/loongson/ls1x-cpu.txt b/Documentation/devicetree/bindings/mips/loongson/ls1x-cpu.txt
-new file mode 100644
-index 000000000000..33664bd15487
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/ls1x-cpu.txt
-@@ -0,0 +1,4 @@
-+* Loongson-1 MCU CPUs
-+
-+Required properties:
-+- compatible: "loongson,ls1b", "loongson,ls1c"
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
