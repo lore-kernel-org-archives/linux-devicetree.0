@@ -1,152 +1,77 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH V9 2/4] drivers/perf: imx_ddr: Add ddr performance counter
- support
-Date: Tue, 30 Apr 2019 11:30:17 -0500
-Message-ID: <CAHrpEqTqf2TFjrgdbu8RpYY6RKeJdX2Sz7yj+0-k5hE1gUCJ8w@mail.gmail.com>
-References: <1556556252-22868-1-git-send-email-Frank.Li@nxp.com>
- <1556556252-22868-2-git-send-email-Frank.Li@nxp.com>
- <20190430105124.GA16204@fuggles.cambridge.arm.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on
+ NXP's i.MX8 SoCs
+Date: Tue, 30 Apr 2019 18:58:17 +0200
+Message-ID: <20190430165817.GB29626@bogon.m.sigxcpu.org>
+References: <cover.1556633413.git.agx@sigxcpu.org>
+ <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
+ <CAOMZO5BerzB94YvJgZoOVYaA3fCsHQiuC5FyVVVRV+ttEg92uQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190430105124.GA16204@fuggles.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5BerzB94YvJgZoOVYaA3fCsHQiuC5FyVVVRV+ttEg92uQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, moderated list:ARM/FREESCALE IMX / MXC ARM A
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 5:51 AM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Mon, Apr 29, 2019 at 04:44:32PM +0000, Frank Li wrote:
-> > diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-> > new file mode 100644
-> > index 0000000..087d75a
-> > --- /dev/null
-> > +++ b/drivers/perf/fsl_imx8_ddr_perf.c
-> > @@ -0,0 +1,589 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright 2017 NXP
-> > + * Copyright 2016 Freescale Semiconductor, Inc.
-> > + */
+Hi Fabio,
+On Tue, Apr 30, 2019 at 01:24:45PM -0300, Fabio Estevam wrote:
+> Hi Guido,
+> 
+> On Tue, Apr 30, 2019 at 11:40 AM Guido Günther <agx@sigxcpu.org> wrote:
+> >
+> > This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
+> > this is an IP core it will likely be found on others in the future. So
+> > instead of adding this to the nwl host driver make it a generic PHY
+> > driver.
+> >
+> > The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
+> > added once the necessary system controller bits are in via
+> > mixel_dphy_devdata.
+> >
+> > Co-authored-by: Robert Chiras <robert.chiras@nxp.com>
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> 
+> I wish I could test it on a imx8m-evk , but there are some other
+> pieces needed such as Northwest Logic driver, mxsfb changes for
+> supporting mx8m, OLED panel driver, etc
+> 
+> Anyway, it looks good to me and I have only a few minor comments:
+> 
+> > ---
+> >  drivers/phy/freescale/Kconfig                 |  11 +
+> >  drivers/phy/freescale/Makefile                |   1 +
+> >  .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 506 ++++++++++++++++++
+> >  3 files changed, 518 insertions(+)
+> >  create mode 100644 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+> >
+> > diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
+> > index 832670b4952b..a111b130f9d2 100644
+> > --- a/drivers/phy/freescale/Kconfig
+> > +++ b/drivers/phy/freescale/Kconfig
+> > @@ -3,3 +3,14 @@ config PHY_FSL_IMX8MQ_USB
+> >         depends on OF && HAS_IOMEM
+> >         select GENERIC_PHY
+> >         default ARCH_MXC && ARM64
 > > +
-> > +#include <linux/init.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/perf_event.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#define COUNTER_CNTL         0x0
-> > +#define COUNTER_READ         0x20
-> > +
-> > +#define COUNTER_DPCR1                0x30
-> > +
-> > +#define CNTL_OVER            0x1
-> > +#define CNTL_CLEAR           0x2
-> > +#define CNTL_EN                      0x4
-> > +#define CNTL_EN_MASK         0xFFFFFFFB
-> > +#define CNTL_CLEAR_MASK              0xFFFFFFFD
-> > +#define CNTL_OVER_MASK               0xFFFFFFFE
-> > +
-> > +#define CNTL_CSV_SHIFT               24
-> > +#define CNTL_CSV_MASK                (0xFF << CNTL_CSV_SHIFT)
-> > +
-> > +#define EVENT_CYCLES_ID              0
-> > +#define EVENT_CYCLES_COUNTER 0
-> > +#define NUM_COUNTERS         4
-> > +
-> > +#define to_ddr_pmu(p)                container_of(p, struct ddr_pmu, pmu)
-> > +
-> > +#define DDR_PERF_DEV_NAME    "ddr_perf"
->
-> This is far too generic. Please make it something like "imx8_ddr_perf_pmu".
->
-> > +static int ddr_perf_probe(struct platform_device *pdev)
-> > +{
-> > +     struct ddr_pmu *pmu;
-> > +     struct device_node *np;
-> > +     void __iomem *base;
-> > +     struct resource *iomem;
-> > +     char *name;
-> > +     char *hpname;
-> > +     int num;
-> > +     int ret;
-> > +     int irq;
-> > +
-> > +     iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     base = devm_ioremap_resource(&pdev->dev, iomem);
-> > +     if (IS_ERR(base))
-> > +             return PTR_ERR(base);
-> > +
-> > +     np = pdev->dev.of_node;
-> > +
-> > +     pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
-> > +     if (!pmu)
-> > +             return -ENOMEM;
-> > +
-> > +     num = ddr_perf_init(pmu, base, &pdev->dev);
-> > +
-> > +     platform_set_drvdata(pdev, pmu);
-> > +
-> > +     name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "ddr%d", num);
-> > +     if (!name)
-> > +             return -ENOMEM;
-> > +
-> > +     hpname = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-> > +                             "perf/imx/ddr%d:online", num);
-> > +     if (!hpname)
-> > +             return -ENOMEM;
-> > +
-> > +     pmu->cpu = raw_smp_processor_id();
-> > +     ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, hpname, NULL,
-> > +                                      ddr_perf_offline_cpu);
->
-> This doesn't seem right to me. My understanding of the cpuhp mechanism
-> is that you register a single multi-instance state as part of driver
-> initialisation, and then add an instance for each device you probe.
-> That means you don't need to kasprintf the callback name as you are above --
-> you can just use DDR_PERF_DEV_NAME instead.
->
-> Please see how other perf drivers manage this on my for-next/perf branch.
->
-> > +
-> > +     if (ret < 0) {
-> > +             dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
-> > +             goto ddr_perf_err;
-> > +     }
-> > +
-> > +     pmu->cpuhp_state = ret;
-> > +
-> > +     /* Register the pmu instance for cpu hotplug */
-> > +     cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
-> > +
-> > +     ret = perf_pmu_register(&pmu->pmu, name, -1);
->
-> Again, the string you're passing in here is too generic. I suggest taking
-> DDR_PERF_DEV_NAME and adding "_%d" to the end to paste in your 'num'
-> identifier.
->
-> Sorry if this feels like pedantry, but this gets exposed to userspace
-> via sysfs, so we need to be careful with the namespace.
+> > +config PHY_MIXEL_MIPI_DPHY
+> > +       tristate "Mixel MIPI DSI PHY support"
+> > +       depends on OF && HAS_IOMEM
+> > +       select GENERIC_PHY
+> > +       select GENERIC_PHY_MIPI_DPHY
+> > +       select REGMAP_MMIO
+> > +       default ARCH_MXC && ARM64
+> 
+> I don't think that this default is a good idea.
+> 
+> There are imx8m systems that do not have display, so in this case it
+> does not make sense to always force the build of this driver.
 
-imx8_ddr_perf_pmu is too long to use.  how about imx_ddr%d?
-
-best regards
-Frank Li
-
->
-> Will
+O.k. - we can enable this based on imx-nwl later on. I've also addressed
+your other comments. Will wait for a v10 for a couple of days in case
+there's more feedback.
+Thanks,
+ -- Guido
