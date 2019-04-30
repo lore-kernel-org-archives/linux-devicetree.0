@@ -1,89 +1,88 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay values
-Date: Tue, 30 Apr 2019 11:38:56 +0530
-Message-ID: <20190430060856.18445-1-faiz_abbas@ti.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 4/4] DT: arm: exynos4412: add event data type which
+ is monitored
+Date: Tue, 30 Apr 2019 15:10:45 +0900
+Message-ID: <cee7b5a2-377e-59d6-7c6e-b6f9b3140d4f@samsung.com>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6@eucas1p1.samsung.com>
+        <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com, faiz_abbas@ti.com
+To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
-dra76x data manual[1].
+Hi,
 
-Also this particular pinctrl-array is using spaces instead of tabs for
-spacing between the values and the comments. Fix this as well.
+On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
+> The patch adds new field in the PPMU event which shows explicitly
+> what kind of data the event is monitoring. It is possible to change it
+> using defined values in exynos_ppmu.h file.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> index 3a3b2fa..549faba 100644
+> --- a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> @@ -6,12 +6,16 @@
+>   * Author: Chanwoo Choi <cw00.choi@samsung.com>
+>   */
+>  
+> +#include <dt-bindings/pmu/exynos_ppmu.h>
+> +
+>  &ppmu_dmc0 {
+>         status = "okay";
+>  
+>         events {
+>  	       ppmu_dmc0_3: ppmu-event3-dmc0 {
+>  		       event-name = "ppmu-event3-dmc0";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> @@ -22,6 +26,8 @@
+>         events {
+>  	       ppmu_dmc1_3: ppmu-event3-dmc1 {
+>  		       event-name = "ppmu-event3-dmc1";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> @@ -32,6 +38,8 @@
+>         events {
+>  	       ppmu_leftbus_3: ppmu-event3-leftbus {
+>  		       event-name = "ppmu-event3-leftbus";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> @@ -42,6 +50,8 @@
+>         events {
+>  	       ppmu_rightbus_3: ppmu-event3-rightbus {
+>  		       event-name = "ppmu-event3-rightbus";
+> +		       event-data-type = <(PPMU_RO_DATA_CNT |
+> +					   PPMU_WO_DATA_CNT)>;
+>  	       };
+>         };
+>  };
+> 
 
-[1] http://www.ti.com/lit/ds/symlink/dra76p.pdf
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
 
-Tested on dra76x-evm and am574x-idk.
-
- arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi | 40 +++++++++++------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
-index baba7b00eca7..fdca48186916 100644
---- a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
-+++ b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
-@@ -22,7 +22,7 @@
-  *
-  * Datamanual Revisions:
-  *
-- * DRA76x Silicon Revision 1.0: SPRS993A, Revised July 2017
-+ * DRA76x Silicon Revision 1.0: SPRS993E, Revised December 2018
-  *
-  */
- 
-@@ -169,25 +169,25 @@
- 	/* Corresponds to MMC2_HS200_MANUAL1 in datamanual */
- 	mmc2_iodelay_hs200_conf: mmc2_iodelay_hs200_conf {
- 		pinctrl-pin-array = <
--			0x190 A_DELAY_PS(384) G_DELAY_PS(0)       /* CFG_GPMC_A19_OEN */
--			0x194 A_DELAY_PS(0) G_DELAY_PS(174)       /* CFG_GPMC_A19_OUT */
--			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)       /* CFG_GPMC_A20_OEN */
--			0x1ac A_DELAY_PS(85) G_DELAY_PS(0)        /* CFG_GPMC_A20_OUT */
--			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)       /* CFG_GPMC_A21_OEN */
--			0x1b8 A_DELAY_PS(139) G_DELAY_PS(0)       /* CFG_GPMC_A21_OUT */
--			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)       /* CFG_GPMC_A22_OEN */
--			0x1c4 A_DELAY_PS(69) G_DELAY_PS(0)        /* CFG_GPMC_A22_OUT */
--			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	  /* CFG_GPMC_A23_OUT */
--			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)       /* CFG_GPMC_A24_OEN */
--			0x1dc A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A24_OUT */
--			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)       /* CFG_GPMC_A25_OEN */
--			0x1e8 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A25_OUT */
--			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)       /* CFG_GPMC_A26_OEN */
--			0x1f4 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A26_OUT */
--			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)       /* CFG_GPMC_A27_OEN */
--			0x200 A_DELAY_PS(36) G_DELAY_PS(0)        /* CFG_GPMC_A27_OUT */
--			0x364 A_DELAY_PS(759) G_DELAY_PS(0)       /* CFG_GPMC_CS1_OEN */
--			0x368 A_DELAY_PS(72) G_DELAY_PS(0)        /* CFG_GPMC_CS1_OUT */
-+			0x190 A_DELAY_PS(384) G_DELAY_PS(0)	/* CFG_GPMC_A19_OEN */
-+			0x194 A_DELAY_PS(350) G_DELAY_PS(174)	/* CFG_GPMC_A19_OUT */
-+			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)	/* CFG_GPMC_A20_OEN */
-+			0x1ac A_DELAY_PS(335) G_DELAY_PS(0)	/* CFG_GPMC_A20_OUT */
-+			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)	/* CFG_GPMC_A21_OEN */
-+			0x1b8 A_DELAY_PS(339) G_DELAY_PS(0)	/* CFG_GPMC_A21_OUT */
-+			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)	/* CFG_GPMC_A22_OEN */
-+			0x1c4 A_DELAY_PS(219) G_DELAY_PS(0)	/* CFG_GPMC_A22_OUT */
-+			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	/* CFG_GPMC_A23_OUT */
-+			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)	/* CFG_GPMC_A24_OEN */
-+			0x1dc A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A24_OUT */
-+			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)	/* CFG_GPMC_A25_OEN */
-+			0x1e8 A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A25_OUT */
-+			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)	/* CFG_GPMC_A26_OEN */
-+			0x1f4 A_DELAY_PS(200) G_DELAY_PS(0)	/* CFG_GPMC_A26_OUT */
-+			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)	/* CFG_GPMC_A27_OEN */
-+			0x200 A_DELAY_PS(236) G_DELAY_PS(0)	/* CFG_GPMC_A27_OUT */
-+			0x364 A_DELAY_PS(759) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OEN */
-+			0x368 A_DELAY_PS(372) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OUT */
- 	      >;
- 	};
- 
 -- 
-2.19.2
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
