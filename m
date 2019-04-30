@@ -1,77 +1,61 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Date: Tue, 30 Apr 2019 18:58:17 +0200
-Message-ID: <20190430165817.GB29626@bogon.m.sigxcpu.org>
-References: <cover.1556633413.git.agx@sigxcpu.org>
- <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
- <CAOMZO5BerzB94YvJgZoOVYaA3fCsHQiuC5FyVVVRV+ttEg92uQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
+Date: Tue, 30 Apr 2019 10:13:39 -0700
+Message-ID: <20190430171339.GE2867@tuxbook-pro>
+References: <20190306005316.12232-1-masneyb@onstation.org>
+ <20190427053034.GH3137@builder>
+ <20190427102206.GA296@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5BerzB94YvJgZoOVYaA3fCsHQiuC5FyVVVRV+ttEg92uQ@mail.gmail.com>
+In-Reply-To: <20190427102206.GA296@basecamp>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, moderated list:ARM/FREESCALE IMX / MXC ARM A
+To: Brian Masney <masneyb@onstation.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-On Tue, Apr 30, 2019 at 01:24:45PM -0300, Fabio Estevam wrote:
-> Hi Guido,
-> 
-> On Tue, Apr 30, 2019 at 11:40 AM Guido Günther <agx@sigxcpu.org> wrote:
-> >
-> > This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
-> > this is an IP core it will likely be found on others in the future. So
-> > instead of adding this to the nwl host driver make it a generic PHY
-> > driver.
-> >
-> > The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
-> > added once the necessary system controller bits are in via
-> > mixel_dphy_devdata.
-> >
-> > Co-authored-by: Robert Chiras <robert.chiras@nxp.com>
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> 
-> I wish I could test it on a imx8m-evk , but there are some other
-> pieces needed such as Northwest Logic driver, mxsfb changes for
-> supporting mx8m, OLED panel driver, etc
-> 
-> Anyway, it looks good to me and I have only a few minor comments:
-> 
-> > ---
-> >  drivers/phy/freescale/Kconfig                 |  11 +
-> >  drivers/phy/freescale/Makefile                |   1 +
-> >  .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 506 ++++++++++++++++++
-> >  3 files changed, 518 insertions(+)
-> >  create mode 100644 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-> >
-> > diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
-> > index 832670b4952b..a111b130f9d2 100644
-> > --- a/drivers/phy/freescale/Kconfig
-> > +++ b/drivers/phy/freescale/Kconfig
-> > @@ -3,3 +3,14 @@ config PHY_FSL_IMX8MQ_USB
-> >         depends on OF && HAS_IOMEM
-> >         select GENERIC_PHY
-> >         default ARCH_MXC && ARM64
-> > +
-> > +config PHY_MIXEL_MIPI_DPHY
-> > +       tristate "Mixel MIPI DSI PHY support"
-> > +       depends on OF && HAS_IOMEM
-> > +       select GENERIC_PHY
-> > +       select GENERIC_PHY_MIPI_DPHY
-> > +       select REGMAP_MMIO
-> > +       default ARCH_MXC && ARM64
-> 
-> I don't think that this default is a good idea.
-> 
-> There are imx8m systems that do not have display, so in this case it
-> does not make sense to always force the build of this driver.
+On Sat 27 Apr 03:22 PDT 2019, Brian Masney wrote:
 
-O.k. - we can enable this based on imx-nwl later on. I've also addressed
-your other comments. Will wait for a v10 for a couple of days in case
-there's more feedback.
-Thanks,
- -- Guido
+> Hi Bjorn,
+> 
+> On Fri, Apr 26, 2019 at 10:30:34PM -0700, Bjorn Andersson wrote:
+> > On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
+> > 
+> > > Here are some patches that fix gpio hogging for all boards that use
+> > > spmi-gpio and ssbi-gpio. These depend on the following two patches
+> > > that were merged in 4.20-rc1:
+> > > 
+> > > commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
+> > > boot issues")
+> > > 
+> > > commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
+> > > boot issues")
+> > > 
+> > > I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
+> > > into v5.1 during this merge window:
+> > > 
+> > > https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
+> > > 
+> > > Andy: You may want to consider submitting these post rc1 as a fix for
+> > > v5.1 and possibly marking these for stable.
+> > > 
+> > > Brian Masney (8):
+> > >   ARM: dts: qcom: apq8064: add gpio-ranges
+> > >   ARM: dts: qcom: mdm9615: add gpio-ranges
+> > >   ARM: dts: qcom: msm8660: add gpio-ranges
+> > >   ARM: dts: qcom: pma8084: add gpio-ranges
+> > 
+> > Looks like I missed the ARM patches before. All 8 picked up now, with
+> > Linus' r-b.
+> 
+> Andy already picked these 8 patches up in his tree.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
+> 
+
+Perfect. And I see that all 8 are included in Andy's pull request for
+5.2
+
+Regards,
+Bjorn
