@@ -1,48 +1,33 @@
-Return-Path: <SRS0=qoK5=SH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:45961 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfDEGUS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Apr 2019 02:20:18 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 4/4] dt-bindings: timer: renesas, cmt: Document r8a779{5|65|90} CMT support
-Date: Fri,  5 Apr 2019 14:44:09 +0900
-Message-Id: <1554443049-25127-5-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, linux-renesas-soc@vger.kernel.org, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com> <1555428717-18376-7-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1555428717-18376-7-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 15:10:32 +0200
+Message-ID: <CAMuHMdXQ1R2xBY2sVeBcKF56+jxFMz08cqva1VkkUGQuzFuV1g@mail.gmail.com>
+Subject: Re: [PATCH 6/6] arm64: dts: renesas: r8a774a1: Connect Ethernet-AVB
+ to IPMMU-DS0
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
+On Tue, Apr 16, 2019 at 5:38 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add IPMMU-DS0 to the Ethernet-AVB device node.
+>
+> Based on work by Magnus Damm for the r8a7795.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index c059445..c5220bc 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -42,12 +42,18 @@ Required Properties:
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-+    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
-+    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
-     - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
-     - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
-+    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
-+    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
-     - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
-     - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-     - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
-     - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-+    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
-+    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
- 
-     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
- 		and RZ/G1.
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
