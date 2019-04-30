@@ -1,74 +1,58 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: usb: dwc2: Document quirk to reset
- PHY upon wakeup
-Date: Mon, 29 Apr 2019 22:29:44 -0700
-Message-ID: <CAD=FV=V3_NcBHdg5A8LvGMoVd_eLN0q=pXo_3f2GCdi5u2GP-Q@mail.gmail.com>
-References: <20190416215351.242246-1-dianders@chromium.org>
- <20190416215351.242246-2-dianders@chromium.org> <20190430005357.GA13695@bogus>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
+Date: Mon, 29 Apr 2019 22:57:15 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
+ <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190430005357.GA13695@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ryan Case <ryandcase-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Minas Harutyunyan <hminas-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 29 Apr 2019, Stephen Boyd wrote:
 
-On Mon, Apr 29, 2019 at 5:54 PM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> On Tue, Apr 16, 2019 at 02:53:48PM -0700, Douglas Anderson wrote:
-> > On Rockchip rk3288 there's a hardware quirk where we need to assert
-> > the reset signal to the PHY when we get a remote wakeup on one of the
-> > two ports.  Document this quirk in the bindings.
-> >
-> > Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Reviewed-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> >
-> > Changes in v2: None
-> >
-> >  Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > index 6dc3c4a34483..f70f3aee4bfc 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > @@ -37,6 +37,8 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
-> >  - g-rx-fifo-size: size of rx fifo size in gadget mode.
-> >  - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
-> >  - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
-> > +- snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
-> > +                          we detect a wakeup.  This is due to a hardware errata.
->
-> Synopsys or Rockchip errata?
->
-> Ideally, this should be implied by the controller or phy compatible.
+> Quoting Paul Walmsley (2019-04-29 12:42:07)
+> > On Fri, 26 Apr 2019, Paul Walmsley wrote:
+> > > On Fri, 26 Apr 2019, Stephen Boyd wrote:
+> > > 
+> > > > Quoting Paul Walmsley (2019-04-11 01:27:32)
+> > > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
+> > > > > block, as implemented in TSMC CLN28HPC.
+> > > > 
+> > > > I haven't deeply reviewed at all, but I already get two problems when
+> > > > compile testing these patches. I can fix them up if nothing else needs
+> > > > fixing.
+> > > > 
+> > > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
+> > > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
+> > > 
+> > > Hmm, that's odd.  I will definitely take a look and repost.
+> > 
+> > I'm not able to reproduce these problems.  The configs tried here were:
+> > 
+> > - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with 
+> >   crosstool-NG 1.24.0)
+> > 
+> > - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with 
+> >   crosstool-NG 1.24.0)
+> > 
+> > - 32-bit i386 defconfig w/ PRCI driver enabled (gcc 
+> >   5.4.0-6ubuntu1~16.04.11)
+> > 
+> > Could you post the toolchain and kernel config you're using?
+> > 
+> 
+> I'm running sparse and smatch too.
 
-I have no idea.  The errata was described to me by Rockchip but I
-don't know if it's common to more than one board.
+OK.  I was able to reproduce the __wrpll_calc_divq() warning.  It's been 
+resolved in the upcoming revision.  
 
-You're right that we could do it on the controller compatible, but we
-have to be careful.  The two ports on rk3288 currently have the same
-compatible string but the errata only applies to one of them.  ...so
-I'd have to cue on not just the compatible string but also detect
-whether we're on the "OTG" port of the "host only" port.  That's not
-too hard, though since it is probe-able.
-
-I'm happy to spin this but I'll wait to hear from Felipe.  This is
-already in his testing tree, so presumably I should do a follow-up
-patch.  ...but if he wants me to re-post I can do that too.
+But I don't see the second error with either sparse or smatch.  (This is 
+with sparse at commit 2b96cd804dc7 and smatch at commit f0092daff69d.)
 
 
--Doug
+- Paul
