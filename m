@@ -1,58 +1,122 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 2/2] mux: mmio: add generic regmap bitfield-based multiplexer
-Date: Tue, 30 Apr 2019 19:52:41 +0000
-Message-ID: <20190430195226.8965-3-peda@axentia.se>
-References: <20190430195226.8965-1-peda@axentia.se>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v6 04/10] Documentation: dt: device tree bindings for
+ LPDDR3 memories
+Date: Tue, 30 Apr 2019 22:04:31 +0200
+Message-ID: <cb929f1d-409c-ad06-e9b2-83ce104664fd@partner.samsung.com>
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419141945eucas1p1c95d65f261f82da5c856c0f2fcf1ce87@eucas1p1.samsung.com>
+        <1555683568-20882-5-git-send-email-l.luba@partner.samsung.com>
+        <20190425195156.GA31128@bogus>
+        <86715dda-c1b0-5354-17d2-419f8137cb91@partner.samsung.com>
+        <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430195226.8965-1-peda@axentia.se>
+In-Reply-To: <CAL_JsqJUNw_aDKjWf4TkJWQFhhLCrGYWbTtWpz5jkyeONRcpQw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Pankaj Bansal <pankaj.bansal@nxp.com>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kees Cook <keescook@chromium.org>, Tony Lindgren <tony@atomide.com>, Joerg Roedel <jroedel@suse.de>, Thierry Reding <treding@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGFua2FqIEJhbnNhbCA8cGFua2FqLmJhbnNhbEBueHAuY29tPg0KDQpHZW5lcmljIHJl
-Z2lzdGVyIGJpdGZpZWxkLWJhc2VkIG11bHRpcGxleGVyIHRoYXQgY29udHJvbHMgdGhlIG11bHRp
-cGxleGVyDQpwcm9kdWNlciBkZWZpbmVkIHVuZGVyIGEgcGFyZW50IG5vZGUuDQpUaGUgZHJpdmVy
-IGNvcnJlc3BvbmRpbmcgdG8gcGFyZW50IG5vZGUgcHJvdmlkZXMgcmVnaXN0ZXIgcmVhZC93cml0
-ZQ0KY2FwYWJpbGl0aWVzLg0KDQpTaWduZWQtb2ZmLWJ5OiBQYW5rYWogQmFuc2FsIDxwYW5rYWou
-YmFuc2FsQG54cC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlh
-LnNlPg0KLS0tDQogZHJpdmVycy9tdXgvS2NvbmZpZyB8IDEyICsrKysrKy0tLS0tLQ0KIGRyaXZl
-cnMvbXV4L21taW8uYyAgfCAgNiArKysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlv
-bnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL211eC9LY29uZmln
-IGIvZHJpdmVycy9tdXgvS2NvbmZpZw0KaW5kZXggNzY1OWQ2YzVmNzE4Li5lNWM1NzFmZDIzMmMg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL211eC9LY29uZmlnDQorKysgYi9kcml2ZXJzL211eC9LY29u
-ZmlnDQpAQCAtNDYsMTQgKzQ2LDE0IEBAIGNvbmZpZyBNVVhfR1BJTw0KIAkgIGJlIGNhbGxlZCBt
-dXgtZ3Bpby4NCiANCiBjb25maWcgTVVYX01NSU8NCi0JdHJpc3RhdGUgIk1NSU8gcmVnaXN0ZXIg
-Yml0ZmllbGQtY29udHJvbGxlZCBNdWx0aXBsZXhlciINCi0JZGVwZW5kcyBvbiAoT0YgJiYgTUZE
-X1NZU0NPTikgfHwgQ09NUElMRV9URVNUDQorCXRyaXN0YXRlICJNTUlPL1JlZ21hcCByZWdpc3Rl
-ciBiaXRmaWVsZC1jb250cm9sbGVkIE11bHRpcGxleGVyIg0KKwlkZXBlbmRzIG9uIE9GIHx8IENP
-TVBJTEVfVEVTVA0KIAloZWxwDQotCSAgTU1JTyByZWdpc3RlciBiaXRmaWVsZC1jb250cm9sbGVk
-IE11bHRpcGxleGVyIGNvbnRyb2xsZXIuDQorCSAgTU1JTy9SZWdtYXAgcmVnaXN0ZXIgYml0Zmll
-bGQtY29udHJvbGxlZCBNdWx0aXBsZXhlciBjb250cm9sbGVyLg0KIA0KLQkgIFRoZSBkcml2ZXIg
-YnVpbGRzIG11bHRpcGxleGVyIGNvbnRyb2xsZXJzIGZvciBiaXRmaWVsZHMgaW4gYSBzeXNjb24N
-Ci0JICByZWdpc3Rlci4gRm9yIE4gYml0IHdpZGUgYml0ZmllbGRzLCB0aGVyZSB3aWxsIGJlIDJe
-TiBwb3NzaWJsZQ0KLQkgIG11bHRpcGxleGVyIHN0YXRlcy4NCisJICBUaGUgZHJpdmVyIGJ1aWxk
-cyBtdWx0aXBsZXhlciBjb250cm9sbGVycyBmb3IgYml0ZmllbGRzIGluIGVpdGhlcg0KKwkgIGEg
-c3lzY29uIHJlZ2lzdGVyIG9yIGEgZHJpdmVyIHJlZ21hcCByZWdpc3Rlci4gRm9yIE4gYml0IHdp
-ZGUNCisJICBiaXRmaWVsZHMsIHRoZXJlIHdpbGwgYmUgMl5OIHBvc3NpYmxlIG11bHRpcGxleGVy
-IHN0YXRlcy4NCiANCiAJICBUbyBjb21waWxlIHRoZSBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29z
-ZSBNIGhlcmU6IHRoZSBtb2R1bGUgd2lsbA0KIAkgIGJlIGNhbGxlZCBtdXgtbW1pby4NCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL211eC9tbWlvLmMgYi9kcml2ZXJzL211eC9tbWlvLmMNCmluZGV4IDkz
-NWFjNDRhYTIwOS4uNDRhN2EwZTg4NWI4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tdXgvbW1pby5j
-DQorKysgYi9kcml2ZXJzL211eC9tbWlvLmMNCkBAIC0yOCw2ICsyOCw3IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXV4X2NvbnRyb2xfb3BzIG11eF9tbWlvX29wcyA9IHsNCiANCiBzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdXhfbW1pb19kdF9pZHNbXSA9IHsNCiAJeyAuY29tcGF0
-aWJsZSA9ICJtbWlvLW11eCIsIH0sDQorCXsgLmNvbXBhdGlibGUgPSAicmVnLW11eCIsIH0sDQog
-CXsgLyogc2VudGluZWwgKi8gfQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXV4X21t
-aW9fZHRfaWRzKTsNCkBAIC00Myw3ICs0NCwxMCBAQCBzdGF0aWMgaW50IG11eF9tbWlvX3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCWludCByZXQ7DQogCWludCBpOw0KIA0K
-LQlyZWdtYXAgPSBzeXNjb25fbm9kZV90b19yZWdtYXAobnAtPnBhcmVudCk7DQorCWlmIChvZl9k
-ZXZpY2VfaXNfY29tcGF0aWJsZShucCwgIm1taW8tbXV4IikpDQorCQlyZWdtYXAgPSBzeXNjb25f
-bm9kZV90b19yZWdtYXAobnAtPnBhcmVudCk7DQorCWVsc2UNCisJCXJlZ21hcCA9IGRldl9nZXRf
-cmVnbWFwKGRldi0+cGFyZW50LCBOVUxMKSA/OiBFUlJfUFRSKC1FTk9ERVYpOw0KIAlpZiAoSVNf
-RVJSKHJlZ21hcCkpIHsNCiAJCXJldCA9IFBUUl9FUlIocmVnbWFwKTsNCiAJCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIGdldCByZWdtYXA6ICVkXG4iLCByZXQpOw0KLS0gDQoyLjExLjANCg0K
+Hi Rob,
+
+On 4/29/19 6:36 PM, Rob Herring wrote:
+> On Mon, Apr 29, 2019 at 7:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 4/25/19 9:51 PM, Rob Herring wrote:
+>>> On Fri, Apr 19, 2019 at 04:19:22PM +0200, Lukasz Luba wrote:
+>>>> The device tree bindings for LPDDR3 SDRAM memories.
+>>>>
+>>>> For specifying the AC timing parameters of the memory device
+>>>> the 'lpddr3' binding uses binding 'lpddr2-timings'.
+>>>>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    .../devicetree/bindings/lpddr3/lpddr3-timings.txt  | 57 +++++++++++++
+>>>>    .../devicetree/bindings/lpddr3/lpddr3.txt          | 93 ++++++++++++++++++++++
+>>>
+>>> Please rename the lpddr2 directory to 'ddr' and add these to it.
+>> OK, I will rename it in the nex patch set.
+>>>
+>>> Maybe whatever properties are common should be put in a common doc.
+>> There are maybe a few common properties, but I would not dare to merge
+>> lpddr2 and lpddr3 before consulting it with TI engineers who made
+>> LPDDR2 support.
+> 
+> Why not. You aren't changing anything. Just rearranging.
+True.
+> 
+>> Could we work on a common file after the patch set got merged?
+> 
+> Yes, but please still move everything to a common directory.
+OK, I am currently working on it and moving these lpddr* files into
+Documentation/devicetree/bindings/ddr/
+Then after acceptance I will find the common stuff and do the merge.
+> 
+>>>
+>>>>    2 files changed, 150 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
+>>>>    create mode 100644 Documentation/devicetree/bindings/lpddr3/lpddr3.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
+>>>> new file mode 100644
+>>>> index 0000000..ebf3e00
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/lpddr3/lpddr3-timings.txt
+>>>> @@ -0,0 +1,57 @@
+>>>> +* AC timing parameters of LPDDR3 memories for a given speed-bin.
+>>>> +* The structures are based on LPDDR2 and extended where needed.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : Should be "jedec,lpddr3-timings"
+>>>> +- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
+>>>> +- max-freq : maximum DDR clock frequency for the speed-bin. Type is <u32>
+>>>> +
+>>>> +Optional properties:
+>>>> +
+>>>> +The following properties represent AC timing parameters from the memory
+>>>> +data-sheet of the device for a given speed-bin. All these properties are
+>>>> +of type <u32> and the default unit is ps (pico seconds).
+>>>> +- tRFC
+>>>> +- tRRD
+>>>> +- tRPab
+>>>> +- tRPpb
+>>>> +- tRCD
+>>>> +- tRC
+>>>> +- tRAS
+>>>> +- tWTR
+>>>> +- tWR
+>>>> +- tRTP
+>>>> +- tW2W-C2C
+>>>> +- tR2R-C2C
+>>>> +- tFAW
+>>>> +- tXSR
+>>>> +- tXP
+>>>> +- tCKE
+>>>> +- tCKESR
+>>>> +- tMRD
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
+>>>
+>>> Since the lpddr2 version was written, we've gotten stricter about
+>>> allowing unit-address without reg property. Perhaps 'reg' should be the
+>>> max-freq instead.
+>> OK, so I will rename 'max-freq' to 'reg' and add a comment with:
+>> '/* workaround: it shows max-freq */
+>> Does it make sense?
+> 
+> Sure.
+OK. Thank you.
+
+Regards,
+Lukasz
+> 
+> Rob
+> 
+> 
