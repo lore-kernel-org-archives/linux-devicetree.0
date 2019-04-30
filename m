@@ -1,81 +1,88 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Date: Tue, 30 Apr 2019 17:47:31 -0500
-Message-ID: <20190430224731.GA31760@bogus>
-References: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
- <20190421190913.1478-3-nandor.han@vaisala.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: net: add qca,ar71xx.txt documentation
+Date: Tue, 30 Apr 2019 17:51:30 -0500
+Message-ID: <20190430225130.GA10771@bogus>
+References: <20190422064046.2822-1-o.rempel@pengutronix.de>
+ <20190422064046.2822-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190421190913.1478-3-nandor.han@vaisala.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Han Nandor <nandor.han@vaisala.com>
-Cc: "sre@kernel.org" <sre@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20190422064046.2822-2-o.rempel@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 07:09:30PM +0000, Han Nandor wrote:
-> Add the device tree bindings document for the NVMEM based reboot-mode
-> driver.
+On Mon, Apr 22, 2019 at 08:40:44AM +0200, Oleksij Rempel wrote:
+> Add binding documentation for Atheros/QCA networking IP core used
+> in many routers.
 > 
-> Signed-off-by: Nandor Han <nandor.han@vaisala.com>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
->  .../power/reset/nvmem-reboot-mode.txt         | 32 +++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
+>  .../devicetree/bindings/net/qca,ar71xx.txt    | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
+> diff --git a/Documentation/devicetree/bindings/net/qca,ar71xx.txt b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
 > new file mode 100644
-> index 000000000000..2e1b86c31cb3
+> index 000000000000..56abf224de2c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
-> @@ -0,0 +1,32 @@
-> +NVMEM reboot mode driver
-> +
-> +This driver gets reboot mode magic value from reboot-mode driver
-> +and stores it in a NVMEM cell named "reboot-mode". Then the bootloader
-> +can read it and take different action according to the magic
-> +value stored.
+> +++ b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
+> @@ -0,0 +1,44 @@
 
-This is also assuming the nvmem is writeable which is more often not the 
-case.
+Needs some title and info about what this h/w is.
 
-Is your usecase a platform that supports pstore? Adding on to that 
-binding might be a better fit.
-
-> +
-> +This DT node should be represented as a sub-node of a "simple-mfd"
-> +node.
-> +
 > +Required properties:
-> +- compatible: should be "nvmem-reboot-mode".
-> +- nvmem-cells: A phandle to the reboot mode provided by a nvmem device.
-> +- nvmem-cell-names: Should be "reboot-mode".
+> +- compatible:	Should be "qca,<soc>-eth". Currently support compatibles are:
+> +		qca,ar7100-eth - Atheros AR7100
+> +		qca,ar7240-eth - Atheros AR7240
+> +		qca,ar7241-eth - Atheros AR7241
+> +		qca,ar7242-eth - Atheros AR7242
+> +		qca,ar9130-eth - Atheros AR9130
+> +		qca,ar9330-eth - Atheros AR9330
+> +		qca,ar9340-eth - Atheros AR9340
+> +		qca,qca9530-eth - Qualcomm Atheros QCA9530
+> +		qca,qca9550-eth - Qualcomm Atheros QCA9550
+> +		qca,qca9560-eth - Qualcomm Atheros QCA9560
 > +
-> +The rest of the properties should follow the generic reboot-mode description
-> +found in reboot-mode.txt
+> +- reg : Address and length of the register set for the device
+> +- interrupts : Should contain eth interrupt
+> +- phy-mode : See ethernet.txt file in the same directory
+
+Is there a subset of valid modes?
+
+> +- clocks: the clock used by the core
+> +- clock-names: the names of the clock listed in the clocks property. These are
+> +	"mdio".
+
+Seems strange that's the only clock.
+
+> +- resets: Should contain phandles to the reset signals
+> +- reset-names: Should contain the names of reset signal listed in the resets
+> +		property. These are "mac" and "mdio"
+> +
+> +Optional properties:
+> +- phy-handle : phandle to the PHY device connected to this device.
+> +- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+> +  Use instead of phy-handle.
+> +
+> +Optional subnodes:
+> +- mdio : specifies the mdio bus, used as a container for phy nodes
+> +  according to phy.txt in the same directory
 > +
 > +Example:
-> +	reboot-mode-nvmem@0 {
-
-What's this node for?
-
-> +		compatible = "simple-mfd";
-
-I only see 1 function.
-
-> +		reboot-mode {
-> +			compatible = "nvmem-reboot-mode";
-> +			nvmem-cells = <&reboot_mode>;
-> +			nvmem-cell-names = "reboot-mode";
 > +
-> +			mode-normal     = <0xAAAA5501>;
-> +			mode-bootloader = <0xBBBB5500>;
-> +			mode-recovery   = <0xCCCC5502>;
-> +			mode-test       = <0xDDDD5503>;
-> +		};
-> +	};
+> +ethernet@1a000000 {
+> +	compatible = "qca,ar9330-eth";
+> +	reg = <0x1a000000 0x200>;
+> +	interrupts = <5>;
+> +	resets = <&rst 13>, <&rst 23>;
+> +	reset-names = "mac", "mdio";
+> +	clocks = <&pll ATH79_CLK_MDIO>;
+> +	clock-names = "mdio";
+> +	phy-mode = "gmii";
+> +};
 > -- 
-> 2.17.2
+> 2.20.1
 > 
