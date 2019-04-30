@@ -1,46 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/6] dt-bindings: mfd: max77620: Add
- maxim,system-power-controller property
-Date: Tue, 30 Apr 2019 17:55:04 -0500
-Message-ID: <20190430225504.GA19387@bogus>
-References: <20190424224900.8018-1-digetx@gmail.com>
- <20190424224900.8018-6-digetx@gmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v1] mmc: dt: add DT bindings for ls1028a eSDHC host controller
+Date: Tue, 30 Apr 2019 18:12:05 -0500
+Message-ID: <CADRPPNQ4RYhe5n_ZA_xrhG8VARsvV3cwVgnuinedb2VHKkDzbQ@mail.gmail.com>
+References: <20190430051723.31345-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190424224900.8018-6-digetx@gmail.com>
+In-Reply-To: <20190430051723.31345-1-yinbo.zhu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 01:48:59AM +0300, Dmitry Osipenko wrote:
-> Add new property that designates the PMIC as the system's power
-> controller.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+On Tue, Apr 30, 2019 at 12:16 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
+>
+> From: Yinbo Zhu <yinbo.zhu@nxp.com>
+
+The patch title better to be "dt-bindings: mmc: ..."
+>
+> Add "fsl,ls1028a-esdhc" bindings for ls1028a eSDHC host controller
+>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 > ---
->  Documentation/devicetree/bindings/mfd/max77620.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> index 9058499051e0..dda6d158b170 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> @@ -18,6 +18,9 @@ Optional properties:
->  			IRQ numbers for different interrupt source of MAX77620
->  			are defined at dt-bindings/mfd/max77620.h.
->  
-> +- maxim,system-power-controller: Indicates that this PMIC is controlling the
-> +				 system power.
+>  .../devicetree/bindings/mmc/fsl-esdhc.txt          |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> index 99c5cf8..a7250b9 100644
+> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> @@ -21,6 +21,7 @@ Required properties:
+>         "fsl,ls1043a-esdhc"
+>         "fsl,ls1046a-esdhc"
+>         "fsl,ls2080a-esdhc"
+> +       "fsl,ls1028a-esdhc"
 
-Drop the 'maxim'. We have a standard property for this.
+Better to be alphabetical order.
 
-> +
->  Optional subnodes and their properties:
->  =======================================
->  
-> -- 
-> 2.21.0
-> 
+>    - clock-frequency : specifies eSDHC base clock frequency.
+>
+>  Optional properties:
+> --
+> 1.7.1
+>
