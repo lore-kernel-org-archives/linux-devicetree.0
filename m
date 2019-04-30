@@ -1,27 +1,31 @@
-Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 0/6] Add more support to RZ/G2M SoC
-Date: Tue, 16 Apr 2019 16:31:51 +0100
-Message-Id: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20190430132309.12473-1-chris.brandt@renesas.com> <20190430132309.12473-4-chris.brandt@renesas.com>
+In-Reply-To: <20190430132309.12473-4-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 16:47:52 +0200
+Message-ID: <CAMuHMdVK3AZ2LK0Tz70tnFbBsDC3FOHuSMR9ujU43jr15fZrqA@mail.gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: i2c: riic: document r7s9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds RZ/G2M SoC dtsi support for DU, VSP, FDP,
-and Tie SYS-DMAC, Audio-DMAC, Ethernet AVB to IPMMU.
+On Tue, Apr 30, 2019 at 3:36 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Document support for the R7S9210 (RZ/A2) SoC. Also explicitly document
+> bindings for the R7S72100 (RZ/A1) SoC.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-This patchset is based on renesas dev branch.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Biju Das (6):
-  arm64: dts: r8a774a1: Add VSP instances
-  arm64: dts: r8a774a1: Add DU device to DT
-  arm64: dts: renesas: r8a774a1: Add FDP1 instance
-  arm64: dts: renesas: r8a774a1: Tie SYS-DMAC to IPMMU-DS0/1
-  arm64: dts: renesas: r8a774a1: Tie Audio-DMAC to IPMMU-MP
-  arm64: dts: renesas: r8a774a1: Connect Ethernet-AVB to IPMMU-DS0
+Gr{oetje,eeting}s,
 
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 169 ++++++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
+                        Geert
 
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
