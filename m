@@ -1,259 +1,245 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v6 13/13] dts: hi3660: Add support for usb on Hikey960
-Date: Tue, 30 Apr 2019 15:15:58 +0800
-Message-ID: <6b5c219c-3941-5add-5e91-5efbd9b9d85c@huawei.com>
-References: <20190420064019.57522-1-chenyu56@huawei.com>
- <20190420064019.57522-14-chenyu56@huawei.com> <20190425220016.GC32028@bogus>
+From: guillaume La Roque <glaroque@baylibre.com>
+Subject: Re: [PATCH v2 4/4] pinctrl: meson: add support of drive-strength-uA
+Date: Tue, 30 Apr 2019 09:20:39 +0200
+Message-ID: <163fa4df-1017-d230-b264-51ea71236df9@baylibre.com>
+References: <20190418124758.24022-1-glaroque@baylibre.com>
+ <20190418124758.24022-5-glaroque@baylibre.com>
+ <CAFBinCDNz1txJ7_aQU8MwjpeVFC6BgyG_gkg-jJRnnerSjbP9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190425220016.GC32028@bogus>
+In-Reply-To: <CAFBinCDNz1txJ7_aQU8MwjpeVFC6BgyG_gkg-jJRnnerSjbP9A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Liuyu (R)" <liuyu712@hisilicon.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Chunfeng Yun <chunfeng.yun@mediatek.com>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Binghui Wang <wangbinghui@hisilicon.com>, =?UTF-8?B?c2h1ZmFuX2xlZSjmnY7mm7jluIYp?= <shufan_lee@richtek.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Martin,
 
-On 2019/4/26 6:00, Rob Herring wrote:
-> On Sat, Apr 20, 2019 at 02:40:19PM +0800, Yu Chen wrote:
->> This patch adds support for usb on Hikey960.
+
+thanks for your feedback.
+
+
+On 4/27/19 9:44 PM, Martin Blumenstingl wrote:
+> Hi Guillaume,
+>
+> On Thu, Apr 18, 2019 at 2:48 PM Guillaume La Roque
+> <glaroque@baylibre.com> wrote:
+>> drive-strength-uA is a new feature needed for G12A SoC.
+>> the default DS setting after boot is usually 500uA and it is not enough for
+>> many functions. We need to be able to set the drive strength to reliably
+>> enable things like MMC, I2C, etc ...
 >>
->> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
->> Cc: Wei Xu <xuwei5@hisilicon.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> I gave this a go on Meson8m2 (meaning I applied all four patches from
+> this series and booted the result on my board):
+> [Meson8m2 doesn't support drive strength and still boots without any
+> crashes or obvious regressions]
+> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>
 >> ---
->> v2:
->> * Remove device_type property.
->> * Add property "usb-role-switch".
->> v3:
->> * Make node "usb_phy" a subnode of usb3_otg_bc register.
->> * Remove property "typec-vbus-enable-val" of hisi_hikey_usb.
->> v4:
->> * Remove property "hisilicon,usb3-otg-bc-syscon" of usb-phy.
->> ---
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 53 ++++++++++++++++
->>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 73 +++++++++++++++++++++++
->>  2 files changed, 126 insertions(+)
+>>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  36 ++---
+>>  drivers/pinctrl/meson/pinctrl-meson.c      | 166 ++++++++++++++++-----
+>>  drivers/pinctrl/meson/pinctrl-meson.h      |  20 ++-
+> personally I would have split this into two separate patches:
+> - one for the generic pinctrl-meson part which adds drive-strength-uA support
+> - another patch for enabling this on G12A
+>
+> if nobody else wants you to split this then it's fine for me as well
+
+
+why not if i send new series i will do.
+
+
+>
+>>  3 files changed, 163 insertions(+), 59 deletions(-)
 >>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> index e035cf195b19..d4e11c56b250 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> @@ -13,6 +13,7 @@
->>  #include <dt-bindings/gpio/gpio.h>
->>  #include <dt-bindings/input/input.h>
->>  #include <dt-bindings/interrupt-controller/irq.h>
->> +#include <dt-bindings/usb/pd.h>
->>  
->>  / {
->>  	model = "HiKey960";
->> @@ -196,6 +197,26 @@
->>  			method = "smc";
->>  		};
->>  	};
->> +
->> +	hisi_hikey_usb: hisi_hikey_usb {
->> +		compatible = "hisilicon,hikey960_usb";
->> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
->> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
->> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&usbhub5734_pmx_func>;
->> +
->> +		port {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			hikey_usb_ep: endpoint@0 {
->> +				reg = <0>;
->> +				remote-endpoint = <&dwc3_role_switch_notify>;
->> +			};
->> +		};
->> +	};
->> +
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> index d494492e98e9..3475cd7bd2af 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> @@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
 >>  };
->>  
->>  /*
->> @@ -526,6 +547,38 @@
->>  &i2c1 {
->>  	status = "okay";
->>  
->> +	rt1711h: rt1711h@4e {
->> +		compatible = "richtek,rt1711h";
-> 
-> The binding doc for this should state it should have a 'connector' node.
-> 
-Hi shufan,
-Is the 'connector' node an essential node of rt1711h?
-Currently it is missing in Documentation/devicetree/bindings/usb/richtek,rt1711h.txt.
-Do you think the 'connector' node should add as this patch in the binding doc?
-
->> +		reg = <0x4e>;
->> +		status = "ok";
-> 
-> Can drop this, it is the default.
-> 
-OK.
-
->> +		interrupt-parent = <&gpio27>;
->> +		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&usb_cfg_func>;
->> +
->> +		usb_con: connector {
->> +			compatible = "usb-c-connector";
->> +			label = "USB-C";
->> +			data-role = "dual";
->> +			power-role = "dual";
->> +			try-power-role = "sink";
->> +			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
->> +			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
->> +				PDO_VAR(5000, 5000, 1000)>;
->> +			op-sink-microwatt = <10000000>;
->> +		};
->> +
->> +		port {
-> 
-> The connector node should have a 'ports' child with 'port@0' being the 
-> HS connection.
-> 
-This port and endpoint of the port are used for role_switch matching by
-fwnode_graph_devcon_match. I'm not too sure the 'ports' under connector is used in
-rt1711h driver？
-Hi shufan_lee,
-    Can you confirm this?
-
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			rt1711h_ep: endpoint@0 {
->> +				reg = <0>;
->> +				remote-endpoint = <&dwc3_role_switch>;
->> +			};
->> +		};
->> +	};
->> +
->>  	adv7533: adv7533@39 {
->>  		status = "ok";
->>  		compatible = "adi,adv7533";
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> index 2f19e0e5b7cf..173467505ada 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> @@ -355,6 +355,12 @@
->>  			#clock-cells = <1>;
->>  		};
->>  
->> +		pmctrl: pmctrl@fff31000 {
->> +			compatible = "hisilicon,hi3660-pmctrl", "syscon";
->> +			reg = <0x0 0xfff31000 0x0 0x1000>;
->> +			#clock-cells = <1>;
->> +		};
->> +
->>  		pmuctrl: crg_ctrl@fff34000 {
->>  			compatible = "hisilicon,hi3660-pmuctrl", "syscon";
->>  			reg = <0x0 0xfff34000 0x0 0x1000>;
->> @@ -1134,5 +1140,72 @@
->>  				};
->>  			};
->>  		};
->> +
->> +		usb3_otg_bc: usb3_otg_bc@ff200000 {
->> +			compatible = "syscon", "simple-mfd";
->> +			reg = <0x0 0xff200000 0x0 0x1000>;
->> +
->> +			usb_phy: usb-phy {
->> +				compatible = "hisilicon,hi3660-usb-phy";
->> +				#phy-cells = <0>;
->> +				hisilicon,pericrg-syscon = <&crg_ctrl>;
->> +				hisilicon,pctrl-syscon = <&pctrl>;
->> +				hisilicon,eye-diagram-param = <0x22466e4>;
->> +			};
->> +		};
->> +
->> +		usb3: hisi_dwc3 {
->> +			compatible = "hisilicon,hi3660-dwc3";
->> +			#address-cells = <2>;
->> +			#size-cells = <2>;
->> +			ranges;
-> 
-> If there are not any wrapper registers, then get rid of the hisi_dwc3 
-> node. For just clocks and resets we just put everything in one node.
-> 
-I will try to fix this.
->> +
->> +			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
->> +				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->> +			clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
->> +
->> +			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->> +			assigned-clock-rates = <229000000>;
->> +			resets = <&crg_rst 0x90 8>,
->> +				 <&crg_rst 0x90 7>,
->> +				 <&crg_rst 0x90 6>,
->> +				 <&crg_rst 0x90 5>;
->> +
->> +			dwc3: dwc3@ff100000 {
->> +				compatible = "snps,dwc3";
->> +				reg = <0x0 0xff100000 0x0 0x100000>;
->> +				interrupts = <0 159 4>, <0 161 4>;
->> +				phys = <&usb_phy>;
->> +				phy-names = "usb3-phy";
->> +				dr_mode = "otg";
->> +				maximum-speed = "super-speed";
->> +				phy_type = "utmi";
->> +				snps,dis-del-phy-power-chg-quirk;
-> 
->> +				snps,lfps_filter_quirk;
->> +				snps,dis_u2_susphy_quirk;
->> +				snps,dis_u3_susphy_quirk;
->> +				snps,tx_de_emphasis_quirk;
->> +				snps,tx_de_emphasis = <1>;
->> +				snps,dis_enblslpm_quirk;
-> 
-> Pretty sure these aren't documented because we don't use '_' in property 
-> names.
-> 
-Do you mean property as "snps,dis_enblslpm_quirk"? These properties are
-documented in Documentation/devicetree/bindings/usb/dwc3.txt.
-
->> +				snps,gctl-reset-quirk;
->> +				usb-role-switch;
->> +				role-switch-default-host;
->> +
->> +				port {
->> +					#address-cells = <1>;
->> +					#size-cells = <0>;
->> +
->> +					dwc3_role_switch: endpoint@0 {
->> +						reg = <0>;
->> +						remote-endpoint = <&rt1711h_ep>;
->> +					};
->> +
->> +					dwc3_role_switch_notify: endpoint@1 {
->> +						reg = <1>;
->> +						remote-endpoint = <&hikey_usb_ep>;
->> +					};
->> +				};
->> +			};
->> +		};
->>  	};
->>  };
->> -- 
->> 2.15.0-rc2
 >>
-> 
-> .
-> 
+>>  static struct meson_bank meson_g12a_periphs_banks[] = {
+>> -       /* name  first  last  irq  pullen  pull  dir  out  in */
+>> -       BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
+>> -            4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
+>> -       BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
+>> -            3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
+>> -       BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
+>> -            0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
+>> -       BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
+>> -            1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
+>> -       BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
+>> -            5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
+>> -       BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
+>> -            2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
+>> +       /* name  first  last  irq  pullen  pull  dir  out  in  ds */
+>> +       BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
+>> +               4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
+>> +       BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
+>> +               3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
+>> +       BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
+>> +               0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
+>> +       BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
+>> +               1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
+>> +       BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
+>> +               5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
+>> +       BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
+>> +               2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
+>>  };
+>>
+>>  static struct meson_bank meson_g12a_aobus_banks[] = {
+>> -       /* name  first  last  irq  pullen  pull  dir  out  in  */
+>> -       BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
+>> -            3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
+>> +       /* name  first  last  irq  pullen  pull  dir  out  in  ds */
+>> +       BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
+>> +               0, 0),
+>>         /* GPIOE actually located in the AO bank */
+>> -       BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
+>> -            3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
+>> +       BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
+>> +               16, 1, 0),
+>>  };
+> these definitions are really hard to read, but it's been like this
+> even before your patch
+>
+>>  static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+>> index 96a4a72708e4..5108e5aa6514 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>> @@ -174,62 +174,106 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
+>>         return 0;
+>>  }
+>>
+>> -static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+>> -                            unsigned long *configs, unsigned num_configs)
+>> +static int meson_pinconf_set_bias(struct meson_pinctrl *pc, unsigned int pin,
+>> +                                 enum pin_config_param conf)
+> can you please confirm that I understood the purpose of this correctly:
+> I think you introduce this to make setting the bias consistent with
+> how you set the drive-strength.
+> if so then it would be great to have a separate patch which describes
+> that it's only a code-style change and a functional no-op
 
-Thanks
-- Yu Chen
+
+you  are right, i will separate this changes.
+
+
+>
+> additionally the function arguments are not consistent with
+> meson_pinconf_get_drive_strength():
+> - here you pass the pinctrl subsystem specific parameters (enum
+> pin_config_param conf)
+> - in meson_pinconf_get_drive_strength the conversion for pinctrl
+> subsystem specific values (pinconf_to_config_argument) is part of
+> meson_pinconf_set
+
+
+for param i'm not sure i understand what you want, if you talk about difference between set_bias and set_drive arg , it's difficult to align it.
+
+if it's about diff between get_bias and get_drive i think i can return drive stength value instead of using an u16 arg input param.
+
+
+> I'm wondering whether two separate functions
+> (meson_pinconf_disable_bias and meson_pinconf_enable_bias) would make
+> things easier to read. I haven't tried whether this would really make
+> things better, so I'd like to hear your opinion on this Guillaume!
+
+
+no special opinion on this, if you think it's better for understanding i can separate  set_bias function.
+
+
+>
+> [...]
+>> +static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
+>> +                                           unsigned int pin, u16 arg)
+>>  {
+>> -       struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+>>         struct meson_bank *bank;
+>> -       enum pin_config_param param;
+>>         unsigned int reg, bit;
+>> -       int i, ret;
+>> +       unsigned int ds_val;
+>> +       int ret;
+>> +
+>> +       if (!pc->reg_ds) {
+>> +               dev_err(pc->dev, "drive-strength not supported\n");
+>> +               return -ENOTSUPP;
+> in meson_pinconf_set() we don't complain (with a dev_err) for this case.
+> I'm not sure what the best-practice is for the pinctrl subsystem,
+> maybe Linus can comment on this
+>
+
+this check is to be sure it's possible to set drive stength,
+
+if no register bank is setting in DT but drive-stength properties are setting on pins i need to generate an error
+
+because something is wrong.
+
+
+>> +       }
+>>
+>>         ret = meson_get_bank(pc, pin, &bank);
+>>         if (ret)
+>>                 return ret;
+>>
+>> +       meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
+>> +       bit = bit << 1;
+>> +
+>> +       if (arg <= 500) {
+>> +               ds_val = MESON_PINCONF_DRV_500UA;
+>> +       } else if (arg <= 2500) {
+>> +               ds_val = MESON_PINCONF_DRV_2500UA;
+>> +       } else if (arg <= 3000) {
+>> +               ds_val = MESON_PINCONF_DRV_3000UA;
+>> +       } else if (arg <= 4000) {
+>> +               ds_val = MESON_PINCONF_DRV_4000UA;
+>> +       } else {
+>> +               dev_warn_once(pc->dev,
+>> +                             "pin %u: invalid drive-strength : %d , default to 4mA\n",
+>> +                             pin, arg);
+>> +               ds_val = MESON_PINCONF_DRV_4000UA;
+> why not return -EINVAL here? (my assumption is that the pinctrl
+> subsystem would like to have -EINVAL instead of drivers doing
+> fallbacks if the values are out-of-range, but I'm not 100% sure about
+> this)
+>
+> [...]
+
+
+i choose to set a default value instead of generating an error,
+
+in this case it's only if you ask a value upper than 4000uA so it's not really a risk to set 4000uA by default.
+
+
+>> +static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
+>> +                                           unsigned int pin, u16 *arg)
+>> +{
+>> +       struct meson_bank *bank;
+>> +       unsigned int reg, bit;
+>> +       unsigned int val;
+>> +       int ret;
+>> +
+> do you need to return -ENOTSUPP here if pc->reg_ds is NULL, similar to
+> what you already have in meson_pinconf_set_drive_strength()?
+
+depending of linux comment on your feedback on meson_pinconf_set_drive_strength
+
+i will update this part .
+
+
+>
+>
+> Regards
+> Martin
+
+
+Regards
+
+Guillaume
