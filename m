@@ -1,54 +1,55 @@
-Return-Path: <SRS0=KePS=TA=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 1/6] arm64: dts: r8a774a1: Add VSP instances
-Date: Tue, 30 Apr 2019 14:31:51 +0000
-Message-ID: 
- <OSBPR01MB2103C18AA80F4E9682DCCFC8B83A0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
- <1555428717-18376-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdV4PiVjYotbR-LF-2BNkpY61Q7XsxKFKDk56dvA_0iibA@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdV4PiVjYotbR-LF-2BNkpY61Q7XsxKFKDk56dvA_0iibA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+References: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com> <1555428717-18376-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1555428717-18376-2-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 16:10:30 +0200
+Message-ID: <CAMuHMdV4PiVjYotbR-LF-2BNkpY61Q7XsxKFKDk56dvA_0iibA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] arm64: dts: r8a774a1: Add VSP instances
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMS82XSBhcm02NDogZHRzOiByOGE3NzRhMTogQWRkIFZTUCBpbnN0YW5jZXMNCj4gDQo+
-IEhpIEJpanUsDQo+IA0KPiBPbiBUdWUsIEFwciAxNiwgMjAxOSBhdCA1OjM4IFBNIEJpanUgRGFz
-IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhlIHI4YTc3NGExIHNvYyBo
-YXMgNSBWU1AgaW5zdGFuY2VzIHNpbWlsYXIgdG8gcjhhNzc5Ni4NCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gDQo+ID4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGExLmR0c2kNCj4gPiArKysgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YTEuZHRzaQ0KPiA+IEBAIC0xODc3LDYgKzE4
-NzcsNjEgQEANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBpb21tdXMgPSA8JmlwbW11X3Zj
-MCAxOT47DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAgICAg
-dnNwYjogdnNwQGZlOTYwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gInJlbmVzYXMsdnNwMiI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
-PDAgMHhmZTk2MDAwMCAwIDB4ODAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDI2NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDYyNj47DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcG93ZXItZG9tYWlucyA9IDwmc3lzYyBSOEE3NzRBMV9QRF9BM1ZD
-PjsNCj4gDQo+IEkgaGF2ZSBteSBkb3VidHMgYWJvdXQgdnNwYiAoYW5kIGZjcHZiMCkgYmVpbmcg
-cGFydCBvZiB0aGUgQTNWQyBwb3dlcg0KPiBkb21haW4gKGFsc28gb24gUi1DYXIgTTMtVykuDQoN
-CkFzIHBlciBSLUNhciBHZW4zIFJldi4xLjUwIE5vdiAyMDE4IEhhcmR3YXJlIHVzZXIncyBtYW51
-YWwgaXQgaXMgQTNWQywNCg0KVGhlIGRldGFpbHMgYXJlIG1lbnRpb25lZCBpbiBUYWJsZSA5LjQg
-UG93ZXIgZG9tYWlucyBmb3IgQTNWUC4NCg0KQTNWUCA6LSBUaGlzIGRvbWFpbiBpcyBhdmFpbGFi
-bGUgb25seSBmb3IgUi1DYXJIMywgUi1DYXIgSDMtTiBhbmQgUi1DYXIgTTMtTi5Nb2R1bGVzIGlu
-Y2x1ZGVkIGluIHRoaXMgZG9tYWluIHdhcw0KTW92ZWQgdG8gQTNWQyBkb21haW4gZm9yIFItQ2Fy
-IE0zLVcuDQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmVzZXRzID0gPCZjcGcgNjI2PjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmVuZXNhcyxmY3AgPSA8JmZjcHZiMD47DQo+ID4gKyAgICAgICAgICAgICAgIH07DQo+IA0K
-PiBBcGFydCBmcm9tIHRoYXQ6DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdl
-ZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9l
-dmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0N
-Cj4gbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
-YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
-ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
-ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
-bGRzDQo=
+Hi Biju,
+
+On Tue, Apr 16, 2019 at 5:38 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> The r8a774a1 soc has 5 VSP instances similar to r8a7796.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> @@ -1877,6 +1877,61 @@
+>                         iommus = <&ipmmu_vc0 19>;
+>                 };
+>
+> +               vspb: vsp@fe960000 {
+> +                       compatible = "renesas,vsp2";
+> +                       reg = <0 0xfe960000 0 0x8000>;
+> +                       interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 626>;
+> +                       power-domains = <&sysc R8A774A1_PD_A3VC>;
+
+I have my doubts about vspb (and fcpvb0) being part of the A3VC power
+domain (also on R-Car M3-W).
+
+
+> +                       resets = <&cpg 626>;
+> +
+> +                       renesas,fcp = <&fcpvb0>;
+> +               };
+
+Apart from that:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
