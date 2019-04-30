@@ -1,128 +1,256 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add
- Exynos5422 DMC device description
-Date: Tue, 30 Apr 2019 22:30:47 +0200
-Message-ID: <32dfc887-5f67-3d61-08c9-0397d6852811@partner.samsung.com>
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
-        <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
-        <babae08b-3ea6-30f4-6a46-85dea0eacd86@samsung.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on
+ NXP's i.MX8 SoCs
+Date: Tue, 30 Apr 2019 22:31:08 +0200
+Message-ID: <20190430203108.GA20545@ravnborg.org>
+References: <cover.1556633413.git.agx@sigxcpu.org>
+ <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <babae08b-3ea6-30f4-6a46-85dea0eacd86@samsung.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Guido.
 
-On 4/30/19 6:46 AM, Chanwoo Choi wrote:
-> On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
->> The patch adds description for DT binding for a new Exynos5422 Dynamic
->> Memory Controller device.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
->>   1 file changed, 73 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->> new file mode 100644
->> index 0000000..133b3cc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->> @@ -0,0 +1,73 @@
->> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
->> +
->> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
->> +memory chips are connected. The driver is to monitor the controller in runtime
->> +and switch frequency and voltage. To monitor the usage of the controller in
->> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
->> +is able to measure the current load of the memory.
->> +When 'userspace' governor is used for the driver, an application is able to
->> +switch the DMC and memory frequency.
->> +
->> +Required properties for DMC device for Exynos5422:
->> +- compatible: Should be "samsung,exynos5422-bus".
-> 
-> As I already mentioned on many times, it is not fixed.
-> You have to fix it as following:
-> - exynos5422-bus -> exynos5422-dmc
-I don't know how I missed it on my list. My apologies.
-> 
->> +- clock-names : the name of clock used by the bus, "bus".
-> 
-> The below examples doesn't contain the 'bus' clock name.
-True. Thank you for pointing this out. I will it.
+Took a look at this, but feedback is trivial as
+I have no experience with PHYs so use only
+the feedback you consider relevant.
 
-Regards,
-Lukasz
-> 
->> +- clocks : phandles for clock specified in "clock-names" property.
->> +- devfreq-events : phandles for PPMU devices connected to this DMC.
->> +- vdd-supply : phandle for voltage regulator which is connected.
->> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
->> +- operating-points-v2 : phandle for OPPs described in v2 definition.
->> +- device-handle : phandle of the connected DRAM memory device. For more
->> +	information please refer to Documentation
->> +- devfreq-events : phandles of the PPMU events used by the controller.
->> +
->> +Example:
->> +
->> +	ppmu_dmc0_0: ppmu@10d00000 {
->> +		compatible = "samsung,exynos-ppmu";
->> +		reg = <0x10d00000 0x2000>;
->> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
->> +		clock-names = "ppmu";
->> +		status = "okay";
->> +		events {
->> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
->> +				event-name = "ppmu-event3-dmc0_0";
->> +			};
->> +		};
->> +	};
->> +
->> +	dmc: memory-controller@10c20000 {
->> +		compatible = "samsung,exynos5422-dmc";
->> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
->> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
->> +		clocks = 	<&clock CLK_FOUT_SPLL>,
->> +				<&clock CLK_MOUT_SCLK_SPLL>,
->> +				<&clock CLK_FF_DOUT_SPLL2>,
->> +				<&clock CLK_FOUT_BPLL>,
->> +				<&clock CLK_MOUT_BPLL>,
->> +				<&clock CLK_SCLK_BPLL>,
->> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
->> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
->> +				<&clock CLK_MOUT_MCLK_CDREX>,
->> +				<&clock CLK_DOUT_CLK2X_PHY0>,
->> +				<&clock CLK_CLKM_PHY0>,
->> +				<&clock CLK_CLKM_PHY1>;
->> +		clock-names =	"fout_spll",
->> +				"mout_sclk_spll",
->> +				"ff_dout_spll2",
->> +				"fout_bpll",
->> +				"mout_bpll",
->> +				"sclk_bpll",
->> +				"mout_mx_mspll_ccore",
->> +				"mout_mx_mspll_ccore_phy",
->> +				"mout_mclk_cdrex",
->> +				"dout_clk2x_phy0",
->> +				"clkm_phy0",
->> +			        "clkm_phy1";
->> +		status = "okay";
->> +		operating-points-v2 = <&dmc_opp_table>;
->> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
->> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
->> +		operating-points-v2 = <&dmc_opp_table>;
->> +		device-handle = <&samsung_K3QF2F20DB>;
->> +		vdd-supply = <&buck1_reg>;
->> +	};
->>
-> 
-> 
+	Sam
+
+> diff --git a/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+> new file mode 100644
+> index 000000000000..d6b5af0b3380
+> --- /dev/null
+> +++ b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+> @@ -0,0 +1,506 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2017,2018 NXP
+> + * Copyright 2019 Purism SPC
+> + */
+> +
+> +
+> +/* DPHY registers */
+> +#define DPHY_PD_DPHY			0x00
+> +#define DPHY_M_PRG_HS_PREPARE		0x04
+> +#define DPHY_MC_PRG_HS_PREPARE		0x08
+> +#define DPHY_M_PRG_HS_ZERO		0x0c
+> +#define DPHY_MC_PRG_HS_ZERO		0x10
+> +#define DPHY_M_PRG_HS_TRAIL		0x14
+> +#define DPHY_MC_PRG_HS_TRAIL		0x18
+> +#define DPHY_PD_PLL			0x1c
+> +#define DPHY_TST			0x20
+> +#define DPHY_CN				0x24
+> +#define DPHY_CM				0x28
+> +#define DPHY_CO				0x2c
+> +#define DPHY_LOCK			0x30
+> +#define DPHY_LOCK_BYP			0x34
+> +#define DPHY_REG_BYPASS_PLL		0x4C
+> +
+> +#define MBPS(x) ((x) * 1000000)
+> +
+> +#define DATA_RATE_MAX_SPEED MBPS(1500)
+> +#define DATA_RATE_MIN_SPEED MBPS(80)
+> +
+> +#define PLL_LOCK_SLEEP 10
+> +#define PLL_LOCK_TIMEOUT 1000
+> +
+> +#define CN_BUF	0xcb7a89c0
+> +#define CO_BUF	0x63
+> +#define CM(x)	(				\
+> +		((x) <	32)?0xe0|((x)-16) :	\
+> +		((x) <	64)?0xc0|((x)-32) :	\
+> +		((x) < 128)?0x80|((x)-64) :	\
+> +		((x) - 128))
+> +#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
+> +#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
+> +
+> +/* PHY power on is active low */
+> +#define PWR_ON	0
+> +#define PWR_OFF	1
+> +
+> +enum mixel_dphy_devtype {
+> +	MIXEL_IMX8MQ,
+> +};
+> +
+> +struct mixel_dphy_devdata {
+> +	u8 reg_tx_rcal;
+> +	u8 reg_auto_pd_en;
+> +	u8 reg_rxlprp;
+> +	u8 reg_rxcdrp;
+> +	u8 reg_rxhs_settle;
+> +};
+> +
+> +static const struct mixel_dphy_devdata mixel_dphy_devdata[] = {
+> +	[MIXEL_IMX8MQ] = {
+> +		.reg_tx_rcal = 0x38,
+> +		.reg_auto_pd_en = 0x3c,
+> +		.reg_rxlprp = 0x40,
+> +		.reg_rxcdrp = 0x44,
+> +		.reg_rxhs_settle = 0x48,
+> +	},
+> +};
+> +
+> +struct mixel_dphy_cfg {
+> +	/* DPHY PLL parameters */
+> +	u32 cm;
+> +	u32 cn;
+> +	u32 co;
+> +	/* DPHY register values */
+> +	u8 mc_prg_hs_prepare;
+> +	u8 m_prg_hs_prepare;
+> +	u8 mc_prg_hs_zero;
+> +	u8 m_prg_hs_zero;
+> +	u8 mc_prg_hs_trail;
+> +	u8 m_prg_hs_trail;
+> +	u8 rxhs_settle;
+> +};
+> +
+> +struct mixel_dphy_priv {
+> +	struct mixel_dphy_cfg cfg;
+> +	struct regmap *regs;
+It is a little confusing that the regmap is named regs.
+As regs in many other cases is used as name for the variable
+with pointer to registers.
+See for example call to devm_regmap_init_mmio()
+
+> +	struct clk *phy_ref_clk;
+> +	const struct mixel_dphy_devdata *devdata;
+> +};
+> +
+> +static const struct regmap_config mixel_dphy_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.max_register = DPHY_REG_BYPASS_PLL,
+> +	.name = "mipi-dphy",
+> +};
+> +
+> +static int phy_write(struct phy *phy, u32 value, unsigned int reg)
+> +{
+> +	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = regmap_write(priv->regs, reg, value);
+> +	if (ret < 0)
+> +		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Find a ratio close to the desired one using continued fraction
+> + * approximation ending either at exact match or maximum allowed
+> + * nominator, denominator.
+> + */
+> +static void get_best_ratio(u32 *pnum, u32 *pdenom, unsigned int max_n,
+> +			   unsigned int max_d)
+> +{
+Maybe use u32 for all parameters?
+That would also match usage below.
+
+> +	u32 a = *pnum;
+> +	u32 b = *pdenom;
+> +	u32 c;
+> +	u32 n[] = {0, 1};
+> +	u32 d[] = {1, 0};
+> +	u32 whole;
+> +	unsigned int i = 1;
+> +
+> +	while (b) {
+> +		i ^= 1;
+> +		whole = a / b;
+> +		n[i] += (n[i ^ 1] * whole);
+> +		d[i] += (d[i ^ 1] * whole);
+> +		if ((n[i] > max_n) || (d[i] > max_d)) {
+> +			i ^= 1;
+> +			break;
+> +		}
+> +		c = a - (b * whole);
+> +		a = b;
+> +		b = c;
+> +	}
+> +	*pnum = n[i];
+> +	*pdenom = d[i];
+> +}
+> +
+> +static int mixel_dphy_config_from_opts(struct phy *phy,
+> +	       struct phy_configure_opts_mipi_dphy *dphy_opts,
+> +	       struct mixel_dphy_cfg *cfg)
+> +{
+> +	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
+> +	unsigned long ref_clk = clk_get_rate(priv->phy_ref_clk);
+> +	u32 lp_t, numerator, denominator;
+> +	unsigned long long tmp;
+> +	u32 n;
+> +	int i;
+> +
+> +	if (dphy_opts->hs_clk_rate > DATA_RATE_MAX_SPEED ||
+> +	    dphy_opts->hs_clk_rate < DATA_RATE_MIN_SPEED)
+> +		return -EINVAL;
+> +
+> +	numerator = dphy_opts->hs_clk_rate;
+> +	denominator = ref_clk;
+> +	get_best_ratio(&numerator, &denominator, 255, 256);
+> +	if (!numerator || !denominator) {
+> +		dev_err(&phy->dev, "Invalid %d/%d for %ld/%ld\n",
+> +			numerator, denominator,
+> +			dphy_opts->hs_clk_rate, ref_clk);
+> +		return -EINVAL;
+> +	}
+> +
+> +	while ((numerator < 16) && (denominator <= 128)) {
+> +		numerator <<= 1;
+> +		denominator <<= 1;
+> +	}
+> +	/*
+> +	 * CM ranges between 16 and 255
+> +	 * CN ranges between 1 and 32
+> +	 * CO is power of 2: 1, 2, 4, 8
+> +	 */
+> +	i = __ffs(denominator);
+> +	if (i > 3)
+> +		i = 3;
+> +	cfg->cn = denominator >> i;
+> +	cfg->co = 1 << i;
+> +	cfg->cm = numerator;
+> +
+> +	if (cfg->cm < 16 || cfg->cm > 255 ||
+> +	    cfg->cn < 1 || cfg->cn > 32 ||
+> +	    cfg->co < 1 || cfg->co > 8) {
+> +		dev_err(&phy->dev, "Invalid CM/CN/CO values: %u/%u/%u\n",
+> +			cfg->cm, cfg->cn, cfg->co);
+> +		dev_err(&phy->dev, "for hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
+Hmm, my mutt does not like this symbol?  ⩰ 
+
+> +
+> +	phy_write(phy, PWR_ON, DPHY_PD_PLL);
+> +	ret = regmap_read_poll_timeout(priv->regs, DPHY_LOCK, locked,
+> +				       locked, PLL_LOCK_SLEEP,
+> +				       PLL_LOCK_TIMEOUT);
+> +	if (ret < 0) {
+> +		dev_err(&phy->dev, "Could not get DPHY lock (%d)!\n", ret);
+> +		goto clock_disable;
+> +	}
+> +	phy_write(phy, PWR_ON, DPHY_PD_DPHY);
+
+Are then no other timing constrains than the poll of DPHY_LOCK?
+Some panel (I know this is not a panel, but amyway) have some
+ridgid timing constrains around power ON/OFF.
+
+> +
+> +MODULE_AUTHOR("NXP Semiconductor");
+> +MODULE_DESCRIPTION("Mixel MIPI-DSI PHY driver");
+
+> +MODULE_LICENSE("GPL v2");
+Does this match the SPDX tag?
+
+"
+> +// SPDX-License-Identifier: GPL-2.0+
+"
