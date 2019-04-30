@@ -1,84 +1,30 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-Date: Tue, 30 Apr 2019 16:34:55 +0100
-Message-ID: <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
-References: <20190430121254.3737-1-geert+renesas@glider.be>
- <20190430121254.3737-2-geert+renesas@glider.be>
- <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay
+ values
+Date: Tue, 30 Apr 2019 08:54:15 -0700
+Message-ID: <20190430155415.GI8007@atomide.com>
+References: <20190430060856.18445-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190430060856.18445-1-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 30/04/2019 16:02, Rob Herring wrote:
-> On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->>
->> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> v2:
->>   - Add "renesas,gic-spi-base",
->>   - Document RZ/A2M.
->> ---
->>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->> new file mode 100644
->> index 0000000000000000..ea8ddb6955338ccd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->> @@ -0,0 +1,30 @@
->> +DT bindings for the Renesas RZ/A1 Interrupt Controller
->> +
->> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
->> +RZ/A1 and RZ/A2 SoCs:
->> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
->> +    interrupts,
->> +  - NMI edge select.
->> +
->> +Required properties:
->> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
->> +               fallback.
->> +               Examples with soctypes are:
->> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
->> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
->> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
->> +                                in interrupts.txt in this directory)
->> +  - interrupt-controller: Marks the device as an interrupt controller
->> +  - reg: Base address and length of the memory resource used by the interrupt
->> +         controller
->> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+Hi,
+
+* Faiz Abbas <faiz_abbas@ti.com> [190429 23:09]:
+> Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
+> dra76x data manual[1].
 > 
-> Why isn't this just an 'interrupts' property?
+> Also this particular pinctrl-array is using spaces instead of tabs for
+> spacing between the values and the comments. Fix this as well.
 
-That's likely because of kernel limitations. The DT code does an
-of_populate() on any device that it finds, parse the "interrupts"
-propertiy, resulting in the irq_descs being populated.
+Is this needed as a fix or can this wait?
 
-That creates havoc, as these interrupts are not for this device, but for
-something that is connected to it. This is merely a bridge of some sort.
+Regards,
 
-Furthermore, this is a rather long established practice: gic-v2m,
-gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
-for one reason or another plug onto the GIC use the same method.
-
-> Plus, without 'interrupts' walking the hierarchy is broken.
-
-Erm... Which hierarchy?
-
-Thanks,
-	
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Tony
