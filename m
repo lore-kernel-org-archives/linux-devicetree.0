@@ -1,153 +1,31 @@
-Return-Path: <SRS0=ZzVx=S7=labundy.com=jeff@kernel.org>
-From: Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v9 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
-Date: Sun, 28 Apr 2019 23:18:43 -0500
-Message-Id: <1556511524-7850-1-git-send-email-jeff@labundy.com>
-To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20190430132309.12473-1-chris.brandt@renesas.com> <20190430132309.12473-8-chris.brandt@renesas.com>
+In-Reply-To: <20190430132309.12473-8-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 17:30:15 +0200
+Message-ID: <CAMuHMdUSqFQXfbrp9_PxY1a0ieH8AWr6Dh-SY1ULzOXd2h0-Xg@mail.gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: r7s9210-rza2mevb: Add SDHI support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds binding documentation for the Azoteq IQS550/572/525
-family of trackpad/touchscreen controllers.
+On Tue, Apr 30, 2019 at 3:33 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> The RZ/A2M EVB supports 2 SD card slots. A micro SD slot on the CPU
+> board, and a full SD card slot on the sub board.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
----
-Changes in v9:
-  - Corrected the polarity of the reset GPIO in the example node to match that
-    of the device's active-low NRST pin
-  - Removed previous Reviewed-by trailer as this file has since changed
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Changes in v8:
-  - Added Reviewed-by trailer
+Gr{oetje,eeting}s,
 
-Changes in v7:
-  - Removed the azoteq,exp-ver-major and azoteq,exp-ver-minor properties to
-    match the driver's updated device identification scheme
-  - Updated the example node to use a level-sensitive interrupt rather than
-    an edge-sensitive interrupt
-  - Removed previous Reviewed-by trailer as this file has since changed
+                        Geert
 
-Changes in v6:
-  - None
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Changes in v5:
-  - None
-
-Changes in v4:
-  - None
-
-Changes in v3:
-  - Added Reviewed-by trailer
-
-Changes in v2:
-  - Separated each valid "compatible" property with a line break
-  - Specified the polarity of the RDY and NRST pins
-  - Replaced duplicate definitions of common touchscreen properties with a
-    reference to touchscreen.txt
-  - Specified the example node as "touchscreen@74"
-
- .../bindings/input/touchscreen/iqs5xx.txt          | 80 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-new file mode 100644
-index 0000000..efa0820
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-@@ -0,0 +1,80 @@
-+Azoteq IQS550/572/525 Trackpad/Touchscreen Controller
-+
-+Required properties:
-+
-+- compatible			: Must be equal to one of the following:
-+				  "azoteq,iqs550"
-+				  "azoteq,iqs572"
-+				  "azoteq,iqs525"
-+
-+- reg				: I2C slave address for the device.
-+
-+- interrupts			: GPIO to which the device's active-high RDY
-+				  output is connected (see [0]).
-+
-+- reset-gpios			: GPIO to which the device's active-low NRST
-+				  input is connected (see [1]).
-+
-+Optional properties:
-+
-+- touchscreen-min-x		: See [2].
-+
-+- touchscreen-min-y		: See [2].
-+
-+- touchscreen-size-x		: See [2]. If this property is omitted, the
-+				  maximum x-coordinate is specified by the
-+				  device's "X Resolution" register.
-+
-+- touchscreen-size-y		: See [2]. If this property is omitted, the
-+				  maximum y-coordinate is specified by the
-+				  device's "Y Resolution" register.
-+
-+- touchscreen-max-pressure	: See [2]. Pressure is expressed as the sum of
-+				  the deltas across all channels impacted by a
-+				  touch event. A channel's delta is calculated
-+				  as its count value minus a reference, where
-+				  the count value is inversely proportional to
-+				  the channel's capacitance.
-+
-+- touchscreen-fuzz-x		: See [2].
-+
-+- touchscreen-fuzz-y		: See [2].
-+
-+- touchscreen-fuzz-pressure	: See [2].
-+
-+- touchscreen-inverted-x	: See [2]. Inversion is applied relative to that
-+				  which may already be specified by the device's
-+				  FLIP_X and FLIP_Y register fields.
-+
-+- touchscreen-inverted-y	: See [2]. Inversion is applied relative to that
-+				  which may already be specified by the device's
-+				  FLIP_X and FLIP_Y register fields.
-+
-+- touchscreen-swapped-x-y	: See [2]. Swapping is applied relative to that
-+				  which may already be specified by the device's
-+				  SWITCH_XY_AXIS register field.
-+
-+[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-+[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-+
-+Example:
-+
-+	&i2c1 {
-+		/* ... */
-+
-+		touchscreen@74 {
-+			compatible = "azoteq,iqs550";
-+			reg = <0x74>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <17 4>;
-+			reset-gpios = <&gpio 27 1>;
-+
-+			touchscreen-size-x = <640>;
-+			touchscreen-size-y = <480>;
-+
-+			touchscreen-max-pressure = <16000>;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 4b1a2a8..51f9954 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -53,6 +53,7 @@ avic	Shanghai AVIC Optoelectronics Co., Ltd.
- avnet	Avnet, Inc.
- axentia	Axentia Technologies AB
- axis	Axis Communications AB
-+azoteq	Azoteq (Pty) Ltd
- bananapi BIPAI KEJI LIMITED
- bhf	Beckhoff Automation GmbH & Co. KG
- bitmain	Bitmain Technologies
---
-2.7.4
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
