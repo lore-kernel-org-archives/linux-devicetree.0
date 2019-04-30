@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/5] soc: renesas: Enable RZ/A1 IRQC on RZ/A1H and RZ/A2M
-Date: Tue, 30 Apr 2019 14:12:52 +0200
-Message-ID: <20190430121254.3737-4-geert+renesas@glider.be>
+Subject: [PATCH v3 5/5] ARM: dts: rskrza1: Add input switches
+Date: Tue, 30 Apr 2019 14:12:54 +0200
+Message-ID: <20190430121254.3737-6-geert+renesas@glider.be>
 References: <20190430121254.3737-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190430121254.3737-1-geert+renesas@glider.be>
@@ -10,45 +10,85 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Auto-enable support for the RZ/A1 Interrupt Controller when configuring
-a kernel which supports RZ/A1H or RZ/A2M SoCs.
-Keep selects sorted while at it.
+Add support for input switches SW1-3 on the Renesas RZ/A1 RSK+RZA1
+development board.
 
-This is similar to how interrupt controllers for other Renesas SoCs are
-enabled.
+Note that this uses the IRQ interrupts, as the RZ/A1 GPIO controller
+does not include interrupt support.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
-v2:
-  - Add Reviewed-by,
-  - Add RZ/A2M,
-  - Sort RZ/A1H selects.
----
- drivers/soc/renesas/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v3:
+  - No changes,
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 68bfca6f20ddf8a7..2bbf49e5d441808b 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -57,14 +57,16 @@ config ARCH_R7S72100
- 	bool "RZ/A1H (R7S72100)"
- 	select PM
- 	select PM_GENERIC_DOMAINS
--	select SYS_SUPPORTS_SH_MTU2
- 	select RENESAS_OSTM
-+	select RENESAS_RZA1_IRQC
-+	select SYS_SUPPORTS_SH_MTU2
+v2:
+  - Use rza1-irqc instead of gic.
+---
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 38 ++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index ff24301dc1be54de..99acfe4fe11aaed9 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -8,6 +8,7 @@
+ /dts-v1/;
+ #include "r7s72100.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
  
- config ARCH_R7S9210
- 	bool "RZ/A2 (R7S9210)"
- 	select PM
- 	select PM_GENERIC_DOMAINS
- 	select RENESAS_OSTM
-+	select RENESAS_RZA1_IRQC
+ / {
+@@ -28,6 +29,37 @@
+ 		reg = <0x08000000 0x02000000>;
+ 	};
  
- config ARCH_R8A73A4
- 	bool "R-Mobile APE6 (R8A73A40)"
++	keyboard {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&keyboard_pins>;
++
++		key-1 {
++			interrupt-parent = <&irqc>;
++			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_1>;
++			label = "SW1";
++			wakeup-source;
++		};
++
++		key-2 {
++			interrupt-parent = <&irqc>;
++			interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_2>;
++			label = "SW2";
++			wakeup-source;
++		};
++
++		key-3 {
++			interrupt-parent = <&irqc>;
++			interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_3>;
++			label = "SW3";
++			wakeup-source;
++		};
++	};
++
+ 	lbsc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -101,6 +133,12 @@
+ 			 <RZA1_PINMUX(1, 7, 1)>;	/* RIIC3SDA */
+ 	};
+ 
++	keyboard_pins: keyboard {
++		pinmux = <RZA1_PINMUX(1, 9, 3)>,	/* IRQ3 */
++			 <RZA1_PINMUX(1, 8, 3)>,	/* IRQ2 */
++			 <RZA1_PINMUX(1, 11, 3)>;	/* IRQ5 */
++	};
++
+ 	/* Serial Console */
+ 	scif2_pins: serial2 {
+ 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
 -- 
 2.17.1
