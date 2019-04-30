@@ -1,57 +1,36 @@
-Return-Path: <SRS0=HRCn=TA=renesas.com=prvs=40235708d9=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 5/7] ARM: dts: r7s9210: Add SDHI support
-Date: Tue, 30 Apr 2019 08:23:07 -0500
-Message-ID: <20190430132309.12473-6-chris.brandt@renesas.com>
-In-Reply-To: <20190430132309.12473-1-chris.brandt@renesas.com>
-References: <20190430132309.12473-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=NzLh=TA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39445 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfD3OZq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Apr 2019 10:25:46 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
-Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+References: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp> <1554443049-25127-3-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554443049-25127-3-git-send-email-cv-dong@jinso.co.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 16:25:33 +0200
+Message-ID: <CAMuHMdX500jXaX19LnsAxSpcvMV+pkWEsrn7XjayxnbUtCg4Rw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] arm64: dts: renesas: r8a77965: Add CMT device nodes
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: Mark Brown <broonie@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, =?UTF-8?B?56iy5ZCJ?= <h-inayoshi@jinso.co.jp>, =?UTF-8?B?RHVuZ++8muS6uuOCvQ==?= <nv-dung@jinso.co.jp>, Hoan Nguyen An <na-hoan@jinso.co.jp>
 List-ID: <devicetree@vger.kernel.org>
 
-Add SDHI support for the R7S9210 (RZ/A2) SoC.
+On Fri, Apr 5, 2019 at 7:44 AM Cao Van Dong <cv-dong@jinso.co.jp> wrote:
+> This patch adds CMT{0|1|2|3} device nodes for r8a77965 SoC.
+>
+> Tested-by: Cao Van Dong <cv-dong@jinso.co.jp>
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s9210.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-index 1cd982c9920f..2eaa5eeba509 100644
---- a/arch/arm/boot/dts/r7s9210.dtsi
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -322,6 +322,30 @@
- 			status = "disabled";
- 		};
- 
-+		sdhi0: sd@e8228000 {
-+			compatible = "renesas,sdhi-r7s9210";
-+			reg = <0xe8228000 0x8c0>;
-+			interrupts = <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 103>, <&cpg CPG_MOD 102>;
-+			clock-names = "core", "cd";
-+			power-domains = <&cpg>;
-+			cap-sd-highspeed;
-+			cap-sdio-irq;
-+			status = "disabled";
-+		};
-+
-+		sdhi1: sd@e822a000 {
-+			compatible = "renesas,sdhi-r7s9210";
-+			reg = <0xe822a000 0x8c0>;
-+			interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 101>, <&cpg CPG_MOD 100>;
-+			clock-names = "core", "cd";
-+			power-domains = <&cpg>;
-+			cap-sd-highspeed;
-+			cap-sdio-irq;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@e8221000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.16.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
