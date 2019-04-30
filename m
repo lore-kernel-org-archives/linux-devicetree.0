@@ -1,92 +1,83 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of_net: add mtd-mac-address support to
- of_get_mac_address()
-Date: Mon, 29 Apr 2019 18:15:30 -0700
-Message-ID: <91fc37e6-aacd-cb67-cf7e-2415a59375a4@gmail.com>
-References: <1555445100-30936-1-git-send-email-ynezz@true.cz>
- <d29bcf08-9299-8f2c-00bc-791b60658581@gmail.com>
- <93770c6a-5f99-38f6-276b-316c00176cac@gmail.com>
- <20190430004845.GA29722@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added DIP dt-bindings
+Date: Mon, 29 Apr 2019 20:16:19 -0500
+Message-ID: <20190430011619.GA22170@bogus>
+References: <20190417104511.21514-1-frederic.chen@mediatek.com>
+ <20190417104511.21514-4-frederic.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190430004845.GA29722@bogus>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190417104511.21514-4-frederic.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frederic Chen <frederic.chen@mediatek.com>
+Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/29/19 5:48 PM, Rob Herring wrote:
-> On Tue, Apr 16, 2019 at 08:01:56PM -0700, Frank Rowand wrote:
->> Hi Rob,
->>
->> On 4/16/19 5:29 PM, Florian Fainelli wrote:
->>>
->>>
->>> On 16/04/2019 13:05, Petr Štetiar wrote:
->>>> From: John Crispin <john@phrozen.org>
->>>>
->>>> Many embedded devices have information such as MAC addresses stored
->>>> inside MTD devices. This patch allows us to add a property inside a node
->>>> describing a network interface. The new property points at a MTD
->>>> partition with an offset where the MAC address can be found.
->>>>
->>>> This patch has originated in OpenWrt some time ago, so in order to
->>>> consider usefulness of this patch, here are some real-world numbers
->>>> which hopefully speak for themselves:
->>>>
->>>>   * mtd-mac-address                used 497 times in 357 device tree files
->>>>   * mtd-mac-address-increment      used  74 times in  58 device tree files
->>>>   * mtd-mac-address-increment-byte used   1 time  in   1 device tree file
->>>>
->>>> Signed-off-by: John Crispin <john@phrozen.org>
->>>> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->>>> [cleanup of the patch for upstream submission]
->>>> Signed-off-by: Petr Štetiar <ynezz@true.cz>
->>>> ---
->>>
->>> [snip]
->>>
->>>> +static const void *of_get_mac_address_mtd(struct device_node *np)
->>>> +{
->>>> +#ifdef CONFIG_MTD
->>>> +    void *addr;
->>>> +    size_t retlen;
->>>> +    int size, ret;
->>>> +    u8 mac[ETH_ALEN];
->>>> +    phandle phandle;
->>>> +    const char *part;
->>>> +    const __be32 *list;
->>>> +    struct mtd_info *mtd;
->>>> +    struct property *prop;
->>>> +    u32 mac_inc = 0;
->>>> +    u32 inc_idx = ETH_ALEN-1;
->>>> +    struct device_node *mtd_np = NULL;
->>>
->>> Reverse christmas tree would look a bit nicer here.
->>
->> Do we a variable declaration format preference for drivers/of/*?
+On Wed, Apr 17, 2019 at 06:45:08PM +0800, Frederic Chen wrote:
+> This patch adds DT binding documentation for the Digital Image
+> Processing (DIP) unit of camera ISP system on Mediatek's SoCs.
 > 
-> We'd better get one. It's all the rage.
+> Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
+> ---
+>  .../bindings/media/mediatek,mt8183-dip.txt    | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
 > 
-> How about fallen Christmas tree:
-> 
-> 	int a;
-> 	bool fallen;
-> 	char christmas_tree;
-> 	int for_our;
-> 	int dt;
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
+> new file mode 100644
+> index 000000000000..0e1994bf82f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
+> @@ -0,0 +1,35 @@
+> +* Mediatek Digital Image Processor (DIP)
+> +
+> +Digital Image Processor (DIP) unit in Mediatek ISP system is responsible for
+> +image content adjustment according to the tuning parameters. DIP can process
+> +the image form memory buffer and output the processed image to multiple output
+> +buffers. Furthermore, it can support demosaicing and noise reduction on the
+> +images.
+> +
+> +Required properties:
+> +- compatible: "mediatek,mt8183-dip"
+> +- reg: Physical base address and length of the function block register space
+> +- interrupts: interrupt number to the cpu
+> +- iommus: should point to the respective IOMMU block with master port as
+> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
+> +- mediatek,larb: must contain the local arbiters in the current Socs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+> +- clocks: must contain the local arbiters 5 (LARB5) and DIP clock
+> +- clock-names: must contain DIP_CG_IMG_LARB5 and DIP_CG_IMG_DIP
+> +
+> +Example:
+> +	dip: dip@15022000 {
+> +		compatible = "mediatek,mt8183-dip";
+> +		mediatek,larb = <&larb5>;
 
-Nice!  That is actually the most aesthetically pleasing method I have
-seen.  :-)
+> +		mediatek,mdp3 = <&mdp_rdma0>;
+> +		mediatek,vpu = <&vpu>;
 
-In the future I will tell people to ignore devicetree review comments
-that espouse a declaration religion.  As long as the declarations are
-within reason (and sort of follow whatever style is present elsewhere
-in the same file).
+Not documented.
 
-> 
-> Rob
+> +		iommus = <&iommu M4U_PORT_CAM_IMGI>;
+> +		reg = <0 0x15022000 0 0x6000>;
+> +		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&imgsys CLK_IMG_LARB5>,
+> +			 <&imgsys CLK_IMG_DIP>;
+> +		clock-names = "DIP_CG_IMG_LARB5",
+> +			      "DIP_CG_IMG_DIP";
+> +	};
+> -- 
+> 2.18.0
 > 
