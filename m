@@ -1,51 +1,57 @@
-From: guillaume La Roque <glaroque@baylibre.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: pinctrl: meson: Add drive-strength-uA
- property
-Date: Tue, 30 Apr 2019 08:38:04 +0200
-Message-ID: <7608f385-d412-f8be-d11b-9023f9702ec3@baylibre.com>
-References: <20190418124758.24022-1-glaroque@baylibre.com>
- <20190418124758.24022-4-glaroque@baylibre.com>
- <CAFBinCD_qJw6-_zsnKFhsVHUHd2K2wJ3S9EsXGrPPxZ1SWn=uA@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 1/3] dt-bindings: i2c: add optional mul-value property to
+ binding
+Date: Tue, 30 Apr 2019 08:38:22 +0200
+Message-ID: <20190430063822.dk5nerqa2m36ua6x@pengutronix.de>
+References: <20190430043242.29687-1-chuanhua.han@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCD_qJw6-_zsnKFhsVHUHd2K2wJ3S9EsXGrPPxZ1SWn=uA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190430043242.29687-1-chuanhua.han@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chuanhua Han <chuanhua.han@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com, festevam@gmail.com, wsa+renesas@sang-engineering.com, eha@deif.com, linux@rempel-privat.de, sumit.batra@nxp.com, l.stach@pengutronix.de, peda@axentia.se
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+On Tue, Apr 30, 2019 at 12:32:40PM +0800, Chuanhua Han wrote:
+> NXP Layerscape SoC have up to three MUL options available for all
+> divider values, we choice of MUL determines the internal monitor rate
+> of the I2C bus (SCL and SDA signals):
+> A lower MUL value results in a higher sampling rate of the I2C signals.
+> A higher MUL value results in a lower sampling rate of the I2C signals.
+> 
+> So in Optional properties we added our custom mul-value property in the
+> binding to select which mul option for the device tree i2c controller
+> node.
+> 
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-imx.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> index b967544590e8..ba8e7b7b3fa8 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> @@ -18,6 +18,9 @@ Optional properties:
+>  - sda-gpios: specify the gpio related to SDA pin
+>  - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
+>    bus recovery, call it "gpio" state
+> +- mul-value: NXP Layerscape SoC have up to three MUL options available for
+> +all I2C divider values, it describes which MUL we choose to use for the driver,
+> +the values should be 1,2,4.
 
-On 4/27/19 9:21 PM, Martin Blumenstingl wrote:
-> Hi Guillaume,
->
-> On Thu, Apr 18, 2019 at 2:48 PM Guillaume La Roque
-> <glaroque@baylibre.com> wrote:
->> Add optional drive-strength-uA property
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->> ---
->>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> index a47dd990a8d3..b3e4be696ddc 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
->>  "bias-pull-up" and "bias-pull-down", described in file
->>  pinctrl-bindings.txt
->>
->> +Optional properties :
->> + - drive-strength-uA: Drive strength for the specified pins in uA.
-> if you have to re-send this series for whatever reason then please
-> mention that drive-strength-uA is only valid for G12A and newer
+Indention is broken.
 
-thanks for your review, i will do if i send new series.
+I wonder why this needs to be configurable on a per-machine/device
+level. What is the trade-off?
 
+Best regards
+Uwe
 
-> otherwise:
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
