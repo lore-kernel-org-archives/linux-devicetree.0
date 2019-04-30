@@ -1,112 +1,88 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V2 2/2] dt-bindings: clock: imx-lpcg: add support to parse
- clocks from device tree
-Date: Tue, 30 Apr 2019 17:35:31 +0000
-Message-ID: <1556645270-20648-3-git-send-email-aisheng.dong@nxp.com>
-References: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
+From: =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+Subject: [RFC 0/4] Add support for drm/rockchip to dynamically control  the DDR frequency within vblank for gru chromebooks.
+Date: Tue, 30 Apr 2019 14:05:20 -0400
+Message-ID: <20190430180524.22710-1-gael.portay@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Derek Basehore <dbasehore@chromium.org>, Lin Huang <hl@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-MX8QM and MX8QXP LPCG Clocks are mostly the same except they may reside
-in different subsystems across CPUs and also vary a bit on the availability.
+Dear all,
 
-Same as SCU clock, we want to move the clock definition into device tree
-which can fully decouple the dependency of Clock ID definition from device
-tree and make us be able to write a fully generic lpcg clock driver.
+The purpose of that RFC is to enable de DMC device for the Rockchip
+based GRU Chromebooks, and to add a mean of synchronization between the
+Rockchip DRM driver and that DMC devfreq driver.
 
-And we can also use the existence of clock nodes in device tree to address
-the device and clock availability differences across different SoCs.
+The DMC device is responsible for updating the DDR frequency according
+to the load of the DDR memory. Changing that clock rate within the
+display scanout leads to glitches. Thus, the devfreq framework needs a
+mean to synchronize the rate change with other devices.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v1->v2:
- * Update example
- * Add power domain property
----
- .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 34 ++++++++++++++++++----
- 1 file changed, 28 insertions(+), 6 deletions(-)
+In that case, the DRM driver display has to synchronize a change rate
+within the VBLANK.
 
-diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-index 965cfa4..6fc2fd8 100644
---- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-+++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-@@ -11,6 +11,21 @@ enabled by these control bits, it might still not be running based
- on the base resource.
- 
- Required properties:
-+- compatible:		Should be one of:
-+			  "fsl,imx8qxp-lpcg"
-+			  "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
-+- reg:			Address and length of the register set.
-+- #clock-cells:		Should be 1. One LPCG supports multiple clocks.
-+- clocks:		Input parent clocks phandle array for each clock.
-+- bit-offset:		An integer array indicating the bit offset for each clock.
-+- hw-autogate:		Boolean array indicating whether supports HW autogate for
-+			each clock.
-+- clock-output-names:	Shall be the corresponding names of the outputs.
-+			NOTE this property must be specified in the same order
-+			as the clock bit-offset and hw-autogate property.
-+- power-domains:	Should contain the power domain used by this clock.
-+
-+Legacy binding (DEPRECATED):
- - compatible:	Should be one of:
- 		  "fsl,imx8qxp-lpcg-adma",
- 		  "fsl,imx8qxp-lpcg-conn",
-@@ -33,10 +48,17 @@ Examples:
- 
- #include <dt-bindings/clock/imx8qxp-clock.h>
- 
--conn_lpcg: clock-controller@5b200000 {
--	compatible = "fsl,imx8qxp-lpcg-conn";
--	reg = <0x5b200000 0xb0000>;
-+sdhc0_lpcg: clock-controller@5b200000 {
-+	compatible = "fsl,imx8qxp-lpcg";
-+	reg = <0x5b200000 0x10000>;
- 	#clock-cells = <1>;
-+	clocks = <&sdhc0_clk IMX_SC_PM_CLK_PER>,
-+		 <&conn_ipg_clk>, <&conn_axi_clk>;
-+	bit-offset = <0 16 20>;
-+	clock-output-names = "sdhc0_lpcg_per_clk",
-+			     "sdhc0_lpcg_ipg_clk",
-+			     "sdhc0_lpcg_ahb_clk";
-+	power-domains = <&pd IMX_SC_R_SDHC_0>;
- };
- 
- usdhc1: mmc@5b010000 {
-@@ -44,8 +66,8 @@ usdhc1: mmc@5b010000 {
- 	interrupt-parent = <&gic>;
- 	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
- 	reg = <0x5b010000 0x10000>;
--	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
--		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
--		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
-+	clocks = <&sdhc0_lpcg 1>,
-+		 <&sdhc0_lpcg 0>,
-+		 <&sdhc0_lpcg 2>;
- 	clock-names = "ipg", "per", "ahb";
- };
+The first patch adds a locking API to the devfreq framework. The users
+of a devfreq device can control the frequency change by locking and
+unlocking the devfreq device whenever they want. When a change rate is
+requested, and the device is locked, the drivers that hold a lock are
+called back, and the change will be applied as soon as the device is
+unlocked.
+
+The second patch adds the devfreq support in the Rockchip DRM drivers
+and uses the devfreq lock API to defer the change of the DDR frequency
+within the next VBLANK. The DRM driver locks the devfreq device and gets
+notified when a change is wanted then. Next, it enables the VBLANK
+interrupt, releases the lock on interrupt and starts a timer that
+relocks the devfreq device at the end of the vertical blanking interval.
+Also, the DRM driver disables the devfreq device if more than one CRTC
+becomes active.
+
+The third patch merges the Rockchip DDR clock code to the Rockchip DMC
+devfreq driver. These drivers both perform SMC calls to the
+Trusted-Firmware A to run SiP services that are related to the DDR
+memory. This merge puts the code at the same place. It avoids the
+contention in the Common Clock Framework that may cause to miss the
+deadline during which the rate can be changing without making glitches.
+
+The fourth patch tells display-subsystem to use the DMC devfreq device.
+
+I am waiting for your feedback.
+
+Note: This RFC needs patchset[1]. Its purpose is to addresses the review
+that was made in v1[2]. I dropped some patches in v2 to address things
+separately (in that RFC).
+
+[1]: https://patchwork.kernel.org/cover/10901577/
+[2]: https://lkml.org/lkml/fancy/2018/8/2/7
+
+Best regards,
+Gaël PORTAY (3):
+  PM / devfreq: add devfreq_lock/unlock() functions
+  drm: rockchip: Add DDR devfreq support.
+  clk: rockchip: merge clk-ddr in dmc devfreq driver
+  arm64: dts: rockchip: Set the display-subsystem devfreq
+
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi |   4 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi     |   2 +-
+ drivers/clk/rockchip/Makefile                |   1 -
+ drivers/clk/rockchip/clk-ddr.c               | 147 --------------
+ drivers/clk/rockchip/clk-rk3399.c            |   2 -
+ drivers/clk/rockchip/clk.c                   |   9 -
+ drivers/clk/rockchip/clk.h                   |  33 ---
+ drivers/devfreq/devfreq.c                    | 200 ++++++++++++++++++-
+ drivers/devfreq/rk3399_dmc.c                 |  42 ++--
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c  |  51 ++++-
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h  |   6 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c   | 177 +++++++++++++++-
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h   |   3 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c  |  82 ++++++++
+ include/linux/devfreq.h                      |  64 ++++++
+ 15 files changed, 611 insertions(+), 212 deletions(-)
+ delete mode 100644 drivers/clk/rockchip/clk-ddr.c
+
 -- 
-2.7.4
+2.21.0
