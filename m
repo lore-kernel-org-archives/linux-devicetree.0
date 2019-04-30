@@ -1,43 +1,79 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] of: replace be32_to_cpu to be32_to_cpup
-Date: Tue, 30 Apr 2019 06:32:31 -0700
-Message-ID: <20190430133231.GA5646@infradead.org>
-References: <20190430090044.16345-1-tranmanphong@gmail.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
+Date: Tue, 30 Apr 2019 15:32:32 +0200
+Message-ID: <20190430133232.GA18808@lst.de>
+References: <E1gtUZn-0000NW-MA@stardust.g4.wien.funkfeuer.at>
+ <20190212100929.iqsxu443qrkl6myf@flea>
+ <E1gtds8-0000NB-Re@stardust.g4.wien.funkfeuer.at>
+ <20190213094442.da2dy6d5bb527nft@flea>
+ <E1gtsx9-0000RP-08@stardust.g4.wien.funkfeuer.at>
+ <20190213155311.ovkpim3lxwyvuhhj@flea>
+ <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
+ <20190215142029.GB32618@lst.de>
+ <E1gv6rh-0000Km-U8@stardust.g4.wien.funkfeuer.at>
+ <20190218102442.l3br2h3oqfe2atdv@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190430090044.16345-1-tranmanphong@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Phong Tran <tranmanphong@gmail.com>
-Cc: robh+dt@kernel.org, frowand.list@gmail.com, pantelis.antoniou@konsulko.com, natechancellor@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190218102442.l3br2h3oqfe2atdv@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:00:44PM +0700, Phong Tran wrote:
+On Mon, Feb 18, 2019 at 11:24:42AM +0100, Maxime Ripard wrote:
+> On Sat, Feb 16, 2019 at 09:47:13PM +0100, Harald Geyer wrote:
+> > 
+> > > Would you care to submit a patch version without that GPIO handled?
+> > > I think it's very useful and has the potential to be agreed upon.
+> > 
+> > That would enable audio from the internal speakers but select debug
+> > output on the HP jack by default. I would be okay with that, despite
+> > still thinking that audio on the head phones should be the default.
+> > 
+> > Maxime and Wens are the maintainers, so it's their call in the end.
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index e240992e5cb6..1c35fc8f19b0 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -235,7 +235,7 @@ static inline u64 of_read_number(const __be32 *cell, int size)
->  {
->  	u64 r = 0;
->  	while (size--)
-> -		r = (r << 32) | be32_to_cpu(*(cell++));
-> +		r = (r << 32) | be32_to_cpup(cell++);
->  	return r;
+> At this point, I'm not really convinced by the solution in that patch,
+> but I don't have really good ideas either. I think it would be good to
+> discuss this with Mark and Linus Walleij, they will probably have way
+> better solutions than what I can come up with.
 
-This whole function looks odd.  It could simply be replaced with
-calls to get_unaligned_be64 / get_unaligned_be32.  Given that we have a
-lot of callers we can't easily do that, but at least we could try
-something like
+Once more my plead to *please* apply the unchallenged parts of this patch!
 
-static inline u64 of_read_number(const __be32 *cell, int size)
-{
-	WARN_ON_ONCE(size < 1);
-	WARN_ON_ONCE(size > 2);
+For reference:
+https://patchwork.kernel.org/patch/10792589/
 
-	if (size == 1)
-		return get_unaligned_be32(cell);
-	return get_unaligned_be64(cell);
-}
+
+Just leave out the line
+
++	hpvcc-supply = <&reg_eldo1>; /* TODO: Use only one of these */
+(as clarified by ChenYu)
+
+and the
+
+@@ -131,6 +151,14 @@ 
+ 	status = "okay";
+ };
+ 
++&r_pio {
++	r_debug_select_pin: debug-select {
+[...]
+
+hunk, which the discussion was about. The patch is of good value
+even without it.
+
+IMHO it's a shame this didn't make it into 5.1
+
+Acked-by: Torsten Duwe <duwe@suse.de>
+
+	Torsten
