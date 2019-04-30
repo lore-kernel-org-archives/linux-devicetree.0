@@ -1,111 +1,87 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
- description
-Date: Tue, 30 Apr 2019 15:16:04 +0900
-Message-ID: <52204c4b-80fa-1a87-2e00-1cfb774478f6@samsung.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
-        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v3 3/3] clk: sifive: add a driver for the SiFive FU540
+ PRCI IP block
+Date: Mon, 29 Apr 2019 23:20:26 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1904292258000.7063@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <20190411082733.3736-4-paul.walmsley@sifive.com> <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
+In-Reply-To: <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Stephen Boyd <sboyd@kernel.org>, "Wesley W . Terpstra" <wesley@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Hi Atish,
 
-On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
-> Extend the documenation by events description with new 'event-data-type'
-> field. Add example how the event might be defined in DT.
+On Sat, 27 Apr 2019, Atish Patra wrote:
+
+> On 4/11/19 1:28 AM, Paul Walmsley wrote:
+> > Add driver code for the SiFive FU540 PRCI IP block.  This IP block
+> > handles reset and clock control for the SiFive FU540 device and
+> > implements SoC-level clock tree controls and dividers.
+
+[...]
+
+> > +static const struct of_device_id sifive_fu540_prci_of_match[] = {
+> > +	{ .compatible = "sifive,fu540-c000-prci", },
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> All the existing unleashed devices have prci clock compatible string as
+> "sifive,aloeprci0" or "sifive,ux00prci0". Should it be added to maintain
+> backward compatibility?
+
+As you note, just adding the old (unreviewed) compatible string isn't 
+enough.
+
+> Even after adding the compatible string (just for my testing purpose), I get
+> this while booting.
 > 
-> diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-> index 3e36c1d..47feb5f 100644
-> --- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-> @@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
->  			reg = <0x104d0000 0x2000>;
->  			status = "disabled";
->  		};
-> +
-> +The 'event' type specified in the PPMU node defines 'event-name'
-> +which also contains 'id' number and optionally 'event-data-type'.
-> +
-> +Example:
-> +
-> +		events {
-> +			ppmu_leftbus_0: ppmu-event0-leftbus {
-> +				event-name = "ppmu-event0-leftbus";
-> +				event-data-type = <PPMU_RO_DATA_CNT>;
-> +			};
+> [    0.104571] sifive-fu540-prci 10000000.prci: expected only two parent
+> clocks, found 1
+> [    0.112460] sifive-fu540-prci 10000000.prci: could not register clocks: -22
+> [    0.119499] sifive-fu540-prci: probe of 10000000.prci failed with error -22
+> 
+> Looking at the DT entries, your DT patch has
+> 
+> +		prci: clock-controller@10000000 {
+> +			compatible = "sifive,fu540-c000-prci";
+> +			reg = <0x0 0x10000000 0x0 0x1000>;
+> +			clocks = <&hfclk>, <&rtcclk>;
+> +			#clock-cells = <1>;
 > +		};
-> +
-> +The 'event-data-type' defines the type of data which shell be counted
-> +by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
-> +all possible type, i.e. count read requests, count write data in bytes,
-> +etc. This field is optional and when it is missing, the driver code will
-> +use default data type.
 > 
+> 
+> while current DT from FSBL
+> (https://github.com/sifive/freedom-u540-c000-bootloader/blob/master/fsbl/ux00_fsbl.dts)
+> 
+> prci: prci@10000000 {
+> 			compatible = "sifive,aloeprci0", "sifive,ux00prci0";
+> 			reg = <0x0 0x10000000 0x0 0x1000>;
+> 			reg-names = "control";
+> 			clocks = <&refclk>;
+> 			#clock-cells = <1>;
+> 		};
+> 
+> This seems to be the cause of error. It looks like this patch needs a complete
+> different DT (your DT patch) than FSBL provides.
 
-How about editing it as following?
+That's right.  That old data was completely out of tree and unreviewed.  
+It's part of the reason why we're going through the process of posting DT 
+data to the kernel and devicetree lists and getting that data reviewed:
 
---- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-+++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
-@@ -10,14 +10,23 @@ The Exynos PPMU driver uses the devfreq-event class to provide event data
- to various devfreq devices. The devfreq devices would use the event data when
- derterming the current state of each IP.
- 
--Required properties:
-+Required properties for PPMU device:
- - compatible: Should be "samsung,exynos-ppmu" or "samsung,exynos-ppmu-v2.
- - reg: physical base address of each PPMU and length of memory mapped region.
- 
--Optional properties:
-+Optional properties for PPMU device:
- - clock-names : the name of clock used by the PPMU, "ppmu"
- - clocks : phandles for clock specified in "clock-names" property
- 
-+Required properties for 'events' child node of PPMU device:
-+- event-name : the unique event name among PPMU device
-+Optional properties for 'events' child node of PPMU device:
-+- event-data-type : Define the type of data which shell be counted
-+by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
-+all possible type, i.e. count read requests, count write data in bytes,
-+etc. This field is optional and when it is missing, the driver code
-+will use default data type.
-+
- Example1 : PPMUv1 nodes in exynos3250.dtsi are listed below.
- 
-                ppmu_dmc0: ppmu_dmc0@106a0000 {
-@@ -145,3 +154,16 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
-                        reg = <0x104d0000 0x2000>;
-                        status = "disabled";
-                };
-+
-+Example4 : 'event-data-type' in exynos4412-ppmu-common.dtsi are listed below.
-+
-+       &ppmu_dmc0 {
-+               status = "okay";
-+               events {
-+                       ppmu_dmc0_3: ppmu-event3-dmc0 {
-+                               event-name = "ppmu-event3-dmc0";
-+                               event-data-type = <(PPMU_RO_DATA_CNT |
-+                                               PPMU_WO_DATA_CNT)>;
-+                       };
-+               };
-+       };
+https://lore.kernel.org/linux-riscv/20190411084242.4999-1-paul.walmsley@sifive.com/
+
+> This means everybody must upgrade the FSBL to use your DT patch in their
+> boards once this driver is merged. Is this okay?
+
+People can continue to use the out-of-tree DT data if they want.  They'll 
+just have to continue to patch their kernels to add out-of-tree drivers, 
+as they do now.
+
+Otherwise, if people want to use the upstream PRCI driver in the upstream 
+kernel, then it's necessary to use DT data that aligns with what's in the 
+upstream binding documentation.
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+- Paul
