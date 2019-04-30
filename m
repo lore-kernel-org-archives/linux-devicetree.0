@@ -1,73 +1,56 @@
-From: Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH] of: replace be32_to_cpu to be32_to_cpup
-Date: Tue, 30 Apr 2019 02:37:49 -0700
-Message-ID: <20190430093749.GA29126@archlinux-i9>
-References: <20190430090044.16345-1-tranmanphong@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/3] thermal: rockchip: fix up the tsadc pinctrl
+ setting error
+Date: Tue, 30 Apr 2019 11:44:49 +0200
+Message-ID: <70cc3a91-8f5d-da48-a815-eaf2670f9a93@linaro.org>
+References: <1556187154-22632-1-git-send-email-zhangqing@rock-chips.com>
+ <1556187154-22632-2-git-send-email-zhangqing@rock-chips.com>
+ <be0170d7-64dc-896d-b847-5be192304791@linaro.org>
+ <8d41ea98-e0e8-60c8-3237-ade5d0d169bf@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190430090044.16345-1-tranmanphong@gmail.com>
+In-Reply-To: <8d41ea98-e0e8-60c8-3237-ade5d0d169bf@rock-chips.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phong Tran <tranmanphong@gmail.com>
-Cc: robh+dt@kernel.org, frowand.list@gmail.com, pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>, clang-built-linux@googlegroups.com
+To: "elaine.zhang" <zhangqing@rock-chips.com>, heiko@sntech.de
+Cc: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-+ Nick and the list
+On 29/04/2019 11:51, elaine.zhang wrote:
 
-On Tue, Apr 30, 2019 at 04:00:44PM +0700, Phong Tran wrote:
-> The cell is a pointer to __be32.
-> with the be32_to_cpu a lot of clang warning show that:
+[ ... ]
+
+> pinctrl select to gpio mode when tsadc suspend and shutdown.
 > 
-> ./include/linux/of.h:238:37: warning: multiple unsequenced modifications
-> to 'cell' [-Wunsequenced]
->                 r = (r << 32) | be32_to_cpu(*(cell++));
->                                                   ^~
-> ./include/linux/byteorder/generic.h:95:21: note: expanded from macro
-> 'be32_to_cpu'
->                     ^
-> ./include/uapi/linux/byteorder/little_endian.h:40:59: note: expanded
-> from macro '__be32_to_cpu'
->                                                           ^
-> ./include/uapi/linux/swab.h:118:21: note: expanded from macro '__swab32'
->         ___constant_swab32(x) :                 \
->                            ^
-> ./include/uapi/linux/swab.h:18:12: note: expanded from macro
-> '___constant_swab32'
->         (((__u32)(x) & (__u32)0x000000ffUL) << 24) |            \
->                   ^
+> When suspend, tsadc is disabled, the otp_pin should revert to the
+> default gpio state.
 > 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->  include/linux/of.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>>>         return 0;
+>>>   }
+>>> @@ -1383,7 +1413,8 @@ static int __maybe_unused
+>>> rockchip_thermal_resume(struct device *dev)
+>>>       for (i = 0; i < thermal->chip->chn_num; i++)
+>>>           rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+>>>   -    pinctrl_pm_select_default_state(dev);
+>>> +    if (thermal->tshut_mode == TSHUT_MODE_GPIO)
+>>> +        pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+>> And then
+>>     pinctrl_select_state(thermal->pinctrl, thermal->pinctrl_state);
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index e240992e5cb6..1c35fc8f19b0 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -235,7 +235,7 @@ static inline u64 of_read_number(const __be32 *cell, int size)
->  {
->  	u64 r = 0;
->  	while (size--)
-> -		r = (r << 32) | be32_to_cpu(*(cell++));
-> +		r = (r << 32) | be32_to_cpup(cell++);
->  	return r;
->  }
->  
-> -- 
-> 2.21.0
-> 
+> pinctrl select to otp mode when tsadc resume.
 
-While the patch does remove the warning, I am not convinced that this
-isn't a clang bug based on my brief analysis here:
+Ok, thanks for clarifying.
 
-https://github.com/ClangBuiltLinux/linux/issues/460#issuecomment-487808008
+  -- Daniel
 
-However, I'm waiting for people smarter than I am to comment on whether
-that sounds correct or not.
 
-I am not familiar with the various different big/little endian functions
-enough to review this but thank you for the patch!
 
-Nathan
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
