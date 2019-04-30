@@ -1,68 +1,66 @@
-From: Stephen Boyd <sboyd@kernel.org>
+From: Paul Walmsley <paul.walmsley@sifive.com>
 Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
-Date: Tue, 30 Apr 2019 11:28:31 -0700
-Message-ID: <155664891171.168659.10903540623861208390@swboyd.mtv.corp.google.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com> <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com>
+Date: Tue, 30 Apr 2019 11:43:03 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1904301142521.7063@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
+ <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com> <155664891171.168659.10903540623861208390@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com>
+In-Reply-To: <155664891171.168659.10903540623861208390@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
 Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-29 22:57:15)
-> On Mon, 29 Apr 2019, Stephen Boyd wrote:
->=20
-> > Quoting Paul Walmsley (2019-04-29 12:42:07)
-> > > On Fri, 26 Apr 2019, Paul Walmsley wrote:
-> > > > On Fri, 26 Apr 2019, Stephen Boyd wrote:
-> > > >=20
-> > > > > Quoting Paul Walmsley (2019-04-11 01:27:32)
-> > > > > > Add common library code for the Analog Bits Wide-Range PLL (WRP=
-LL) IP
-> > > > > > block, as implemented in TSMC CLN28HPC.
-> > > > >=20
-> > > > > I haven't deeply reviewed at all, but I already get two problems =
-when
-> > > > > compile testing these patches. I can fix them up if nothing else =
-needs
-> > > > > fixing.
-> > > > >=20
-> > > > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() w=
-arn: should 'target_rate << divq' be a 64 bit type?
-> > > > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression =
-in void function
-> > > >=20
-> > > > Hmm, that's odd.  I will definitely take a look and repost.
-> > >=20
-> > > I'm not able to reproduce these problems.  The configs tried here wer=
-e:
-> > >=20
-> > > - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built wit=
-h=20
-> > >   crosstool-NG 1.24.0)
-> > >=20
-> > > - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with=20
-> > >   crosstool-NG 1.24.0)
-> > >=20
-> > > - 32-bit i386 defconfig w/ PRCI driver enabled (gcc=20
-> > >   5.4.0-6ubuntu1~16.04.11)
-> > >=20
-> > > Could you post the toolchain and kernel config you're using?
-> > >=20
-> >=20
-> > I'm running sparse and smatch too.
->=20
-> OK.  I was able to reproduce the __wrpll_calc_divq() warning.  It's been =
+On Tue, 30 Apr 2019, Stephen Boyd wrote:
 
-> resolved in the upcoming revision. =20
->=20
-> But I don't see the second error with either sparse or smatch.  (This is =
+> Quoting Paul Walmsley (2019-04-29 22:57:15)
+> > On Mon, 29 Apr 2019, Stephen Boyd wrote:
+> > 
+> > > Quoting Paul Walmsley (2019-04-29 12:42:07)
+> > > > On Fri, 26 Apr 2019, Paul Walmsley wrote:
+> > > > > On Fri, 26 Apr 2019, Stephen Boyd wrote:
+> > > > > 
+> > > > > > Quoting Paul Walmsley (2019-04-11 01:27:32)
+> > > > > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
+> > > > > > > block, as implemented in TSMC CLN28HPC.
+> > > > > > 
+> > > > > > I haven't deeply reviewed at all, but I already get two problems when
+> > > > > > compile testing these patches. I can fix them up if nothing else needs
+> > > > > > fixing.
+> > > > > > 
+> > > > > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
+> > > > > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
+> > > > > 
+> > > > > Hmm, that's odd.  I will definitely take a look and repost.
+> > > > 
+> > > > I'm not able to reproduce these problems.  The configs tried here were:
+> > > > 
+> > > > - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with 
+> > > >   crosstool-NG 1.24.0)
+> > > > 
+> > > > - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with 
+> > > >   crosstool-NG 1.24.0)
+> > > > 
+> > > > - 32-bit i386 defconfig w/ PRCI driver enabled (gcc 
+> > > >   5.4.0-6ubuntu1~16.04.11)
+> > > > 
+> > > > Could you post the toolchain and kernel config you're using?
+> > > > 
+> > > 
+> > > I'm running sparse and smatch too.
+> > 
+> > OK.  I was able to reproduce the __wrpll_calc_divq() warning.  It's been 
+> > resolved in the upcoming revision.  
+> > 
+> > But I don't see the second error with either sparse or smatch.  (This is 
+> > with sparse at commit 2b96cd804dc7 and smatch at commit f0092daff69d.)
+> > 
+> 
+> Weird! The return in void function is pretty obvious though so please
+> fix it regardless.
 
-> with sparse at commit 2b96cd804dc7 and smatch at commit f0092daff69d.)
->=20
+Done.
 
-Weird! The return in void function is pretty obvious though so please
-fix it regardless.
+- Paul
