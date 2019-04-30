@@ -1,69 +1,244 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: usb: dwc2: Document quirk to reset
- PHY upon wakeup
-Date: Tue, 30 Apr 2019 08:51:43 -0500
-Message-ID: <CAL_JsqJGMBhqRw0D9ehsV=A7cQ4cPah=Ot335npraBdGm1Yhag@mail.gmail.com>
-References: <20190416215351.242246-1-dianders@chromium.org>
- <20190416215351.242246-2-dianders@chromium.org> <20190430005357.GA13695@bogus>
- <CAD=FV=V3_NcBHdg5A8LvGMoVd_eLN0q=pXo_3f2GCdi5u2GP-Q@mail.gmail.com>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Handling of EPROBE_DEFER in of_get_mac_address [Was: Re: [PATCH v2
+ 3/4] net: macb: Drop nvmem_get_mac_address usage]
+Date: Tue, 30 Apr 2019 16:13:35 +0200
+Message-ID: <20190430141335.GC346@meh.true.cz>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-4-git-send-email-ynezz@true.cz>
+ <20190428165637.GJ23059@lunn.ch>
+ <20190428210814.GA346@meh.true.cz>
+ <20190428213640.GB10772@lunn.ch>
+ <20190429075514.GB346@meh.true.cz>
+ <20190429130248.GC10772@lunn.ch>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=V3_NcBHdg5A8LvGMoVd_eLN0q=pXo_3f2GCdi5u2GP-Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190429130248.GC10772@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Minas Harutyunyan <hminas@synopsys.com>, Heiko Stuebner <heiko@sntech.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, Alexandru M Stan <amstan@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux USB List <linux-usb@vger.kernel.org>, Randy Li <ayaka@soulik.info>, Matthias Kaehlcke <mka@chromium.org>, Ryan Case <ryandcase@chromium.org>, Julius Werner <jwerner@chromium.org>, Elaine Zhang <zhangqing@rock-chips.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:29 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Mon, Apr 29, 2019 at 5:54 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Apr 16, 2019 at 02:53:48PM -0700, Douglas Anderson wrote:
-> > > On Rockchip rk3288 there's a hardware quirk where we need to assert
-> > > the reset signal to the PHY when we get a remote wakeup on one of the
-> > > two ports.  Document this quirk in the bindings.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > >
-> > > Changes in v2: None
-> > >
-> > >  Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > > index 6dc3c4a34483..f70f3aee4bfc 100644
-> > > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > > @@ -37,6 +37,8 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
-> > >  - g-rx-fifo-size: size of rx fifo size in gadget mode.
-> > >  - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
-> > >  - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
-> > > +- snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
-> > > +                          we detect a wakeup.  This is due to a hardware errata.
-> >
-> > Synopsys or Rockchip errata?
-> >
-> > Ideally, this should be implied by the controller or phy compatible.
->
-> I have no idea.  The errata was described to me by Rockchip but I
-> don't know if it's common to more than one board.
->
-> You're right that we could do it on the controller compatible, but we
-> have to be careful.  The two ports on rk3288 currently have the same
-> compatible string but the errata only applies to one of them.  ...so
-> I'd have to cue on not just the compatible string but also detect
-> whether we're on the "OTG" port of the "host only" port.  That's not
-> too hard, though since it is probe-able.
->
-> I'm happy to spin this but I'll wait to hear from Felipe.  This is
-> already in his testing tree, so presumably I should do a follow-up
-> patch.  ...but if he wants me to re-post I can do that too.
+Andrew Lunn <andrew@lunn.ch> [2019-04-29 15:02:48]:
 
-Okay, I guess it is fine as-is.
+Hi Andrew,
 
-Rob
+> > My understanding of -PROBE_DEFER is, that it needs to be propagated back from
+> > the driver's probe callback/hook to the upper device/driver subsystem in order
+> > to be moved to the list of pending drivers and considered for probe later
+> > again. This is not going to happen in any of the current drivers, thus it will
+> > probably still always result in random MAC address in case of -EPROBE_DEFER
+> > error from the nvmem subsystem.
+> 
+> All current drivers which don't look in NVMEM don't expect
+> EPROBE_DEFER. 
+
+once there's NVMEM wired in of_get_mac_address, one can simply use it, nothing
+is going to stop the potential user of doing so and if EPROBE_DEFER isn't
+propagated from the driver back to the upper device driver subsytem, it's
+probably going to end with random MAC address in some (very rare?) cases.
+
+So if we don't want to properly convert all current of_get_mac_address users,
+and just selectively upgrade drivers which could support NVMEM (and it makes
+sense for those drivers) with proper EPROBE_DEFER handling, we should probably
+just extend of_get_mac_address and convert those drivers to NVMEM one by one,
+as needed:
+
+ enum of_mac_addr {
+	OF_MAC_ADDR_DT = 0,
+	OF_MAC_ADDR_DT_NVMEM
+ };
+
+ const void *of_get_mac_address(struct device_node *np, enum of_mac_addr type);
+
+  (just my first rough idea, feel free to suggest something more acceptable)
+
+> The one driver which does expect EPROBE_DEFER already has the code to
+> handle it.
+
+I've read the code in that macb driver several times and I don't see any code
+which is specificaly handling the EPROBE_DEFER, so I'm probably blind or I miss
+something fundamental ;-) This driver is simply forwarding that EPROBE_DEFER
+error to the upper layer, nothing specific. The other one, davinci_emac simply
+doesn't care about the possible EPROBE_DEFER and uses random MAC address in
+case of any NVMEM error.
+
+> What you have to be careful of, is the return value from your new code
+> looking in NVMEM. It should only return EPROBE_DEFER, or another error
+> if there really is expected to be a value in NVMEM, or getting it from
+> NVMEM resulted in an error.
+
+Thanks for the hint, I've created of_has_nvmem_mac_addr helper for that and it
+works fine.
+
+> I've not looked at the details of nvmem_get_mac_address(), but it
+> should be a two stage process. The first is to look in device tree to
+> find the properties. Device tree is always accessible. So performing a
+> lookup will never return EPROBE_DEFER. If there are no properties, it
+> probably return -ENODEV. You need to consider that as not being a real
+> error, since these are optional properties. of_get_mac_address() needs
+> to try the next source of the MAC address. The second stage is to look
+> into the NVMEM. That could return -EPROBE_DEFER and you should return
+> that error, or any other error at this stage. The MAC address should
+> exist in NVMEM so we want to know about the error.
+
+While looking at all current of_get_mac_address users, I've simply found out,
+that it would look inconsistent and confusing to propagate back EPROBE_DEFER
+just in some places, so I've bitten the bullet and converted all current
+of_get_mac_address users to return EPROBE_DEFER properly (where applicable),
+see bellow.
+
+It has resulted in a bunch of commits, and as I'm not sure how it's going to be
+received and to avoid sending more nonsense to a lot of lists and people, I've
+made it available in my GitHub repository (just tell me that it's OK and I'll
+send it as v3):
+
+ The following changes since commit 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b:
+
+   Linux 5.1-rc7 (2019-04-28 17:04:13 -0700)
+
+ are available in the git repository at:
+
+   https://github.com/ynezz/linux.git upstream/nvmem-mac-address
+
+ for you to fetch changes up to 5eb1e8131d3f97a488b74563dd8fefa068218e05:
+
+   powerpc: tsi108: adjust for of_get_mac_address ERR_PTR encoded error value (2019-04-30 13:02:22 +0200)
+
+ ----------------------------------------------------------------
+ Petr Štetiar (20):
+       of_net: add NVMEM support to of_get_mac_address
+       dt-bindings: doc: reflect new NVMEM of_get_mac_address behaviour
+       net: macb: drop nvmem_get_mac_address usage
+       net: davinci_emac: drop nvmem_get_mac_address usage
+       net: ethernet: make eth_platform_get_mac_address probe defer aware
+       net: ethernet: make of_get_mac_address probe defer aware
+       net: usb: make eth_platform_get_mac_address probe defer aware
+       net: usb: make of_get_mac_address probe defer aware
+       net: sh_eth: make of_get_mac_address probe defer aware
+       net: fec: make of_get_mac_address probe defer aware
+       net: fec_mpc52xx: make of_get_mac_address probe defer aware
+       net: hisi_femac: make of_get_mac_address probe defer aware
+       net: sky2: make of_get_mac_address probe defer aware
+       net: ks8851: make of_get_mac_address probe defer aware
+       wireless: ath9k: make of_get_mac_address probe defer aware
+       wireless: mt76: make of_get_mac_address probe defer aware
+       wireless: ralink: make of_get_mac_address probe defer aware
+       staging: octeon-ethernet: make of_get_mac_address probe defer aware
+       ARM: Kirkwood: adjust for of_get_mac_address ERR_PTR encoded error value
+       powerpc: tsi108: adjust for of_get_mac_address ERR_PTR encoded error value
+
+  .../devicetree/bindings/net/altera_tse.txt         |  5 +-
+  Documentation/devicetree/bindings/net/amd-xgbe.txt |  5 +-
+  .../devicetree/bindings/net/brcm,amac.txt          |  4 +-
+  Documentation/devicetree/bindings/net/cpsw.txt     |  4 +-
+  .../devicetree/bindings/net/davinci_emac.txt       |  5 +-
+  Documentation/devicetree/bindings/net/dsa/dsa.txt  |  5 +-
+  Documentation/devicetree/bindings/net/ethernet.txt |  6 +-
+  .../devicetree/bindings/net/hisilicon-femac.txt    |  4 +-
+  .../bindings/net/hisilicon-hix5hd2-gmac.txt        |  4 +-
+  .../devicetree/bindings/net/keystone-netcp.txt     | 10 ++--
+  Documentation/devicetree/bindings/net/macb.txt     |  5 +-
+  .../devicetree/bindings/net/marvell-pxa168.txt     |  4 +-
+  .../devicetree/bindings/net/microchip,enc28j60.txt |  3 +-
+  .../devicetree/bindings/net/microchip,lan78xx.txt  |  5 +-
+  .../devicetree/bindings/net/qca,qca7000.txt        |  4 +-
+  .../devicetree/bindings/net/samsung-sxgbe.txt      |  4 +-
+  .../bindings/net/snps,dwc-qos-ethernet.txt         |  5 +-
+  .../bindings/net/socionext,uniphier-ave4.txt       |  4 +-
+  .../devicetree/bindings/net/socionext-netsec.txt   |  5 +-
+  .../bindings/net/wireless/mediatek,mt76.txt        |  5 +-
+  .../devicetree/bindings/net/wireless/qca,ath9k.txt |  4 +-
+  arch/arm/mach-mvebu/kirkwood.c                     |  3 +-
+  arch/powerpc/sysdev/tsi108_dev.c                   |  2 +-
+  drivers/net/ethernet/aeroflex/greth.c              |  5 +-
+  drivers/net/ethernet/allwinner/sun4i-emac.c        |  9 +--
+  drivers/net/ethernet/altera/altera_tse_main.c      |  8 ++-
+  drivers/net/ethernet/arc/emac_main.c               |  9 ++-
+  drivers/net/ethernet/aurora/nb8800.c               |  9 ++-
+  drivers/net/ethernet/broadcom/bcmsysport.c         |  5 +-
+  drivers/net/ethernet/broadcom/bgmac-bcma.c         |  9 ++-
+  drivers/net/ethernet/broadcom/bgmac-platform.c     |  4 +-
+  drivers/net/ethernet/broadcom/genet/bcmgenet.c     |  7 ++-
+  drivers/net/ethernet/broadcom/tg3.c                | 10 +++-
+  drivers/net/ethernet/cadence/macb_main.c           | 12 ++--
+  drivers/net/ethernet/cavium/octeon/octeon_mgmt.c   |  9 ++-
+  drivers/net/ethernet/cavium/thunder/thunder_bgx.c  |  4 +-
+  drivers/net/ethernet/davicom/dm9000.c              |  4 +-
+  drivers/net/ethernet/ethoc.c                       |  6 +-
+  drivers/net/ethernet/ezchip/nps_enet.c             |  8 ++-
+  drivers/net/ethernet/freescale/fec_main.c          | 17 ++++--
+  drivers/net/ethernet/freescale/fec_mpc52xx.c       | 25 +++++----
+  drivers/net/ethernet/freescale/fman/mac.c          |  5 +-
+  .../net/ethernet/freescale/fs_enet/fs_enet-main.c  |  6 +-
+  drivers/net/ethernet/freescale/gianfar.c           |  7 ++-
+  drivers/net/ethernet/freescale/ucc_geth.c          |  6 +-
+  drivers/net/ethernet/hisilicon/hisi_femac.c        | 21 ++++---
+  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      |  7 ++-
+  drivers/net/ethernet/intel/i40e/i40e_main.c        | 15 ++++-
+  drivers/net/ethernet/intel/igb/igb_main.c          |  5 +-
+  drivers/net/ethernet/intel/igc/igc_main.c          |  5 +-
+  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |  6 +-
+  drivers/net/ethernet/lantiq_xrx200.c               |  4 +-
+  drivers/net/ethernet/marvell/mv643xx_eth.c         |  4 +-
+  drivers/net/ethernet/marvell/mvneta.c              |  5 +-
+  drivers/net/ethernet/marvell/pxa168_eth.c          |  9 ++-
+  drivers/net/ethernet/marvell/sky2.c                | 14 +++--
+  drivers/net/ethernet/mediatek/mtk_eth_soc.c        |  8 +--
+  drivers/net/ethernet/micrel/ks8851.c               | 15 +++--
+  drivers/net/ethernet/micrel/ks8851_mll.c           |  6 +-
+  drivers/net/ethernet/microchip/enc28j60.c          |  8 ++-
+  drivers/net/ethernet/nxp/lpc_eth.c                 | 10 +++-
+  drivers/net/ethernet/qualcomm/qca_spi.c            |  9 +--
+  drivers/net/ethernet/qualcomm/qca_uart.c           |  9 +--
+  drivers/net/ethernet/realtek/r8169.c               |  4 +-
+  drivers/net/ethernet/renesas/ravb_main.c           | 11 +++-
+  drivers/net/ethernet/renesas/sh_eth.c              | 15 ++---
+  .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |  7 ++-
+  drivers/net/ethernet/socionext/sni_ave.c           |  9 +--
+  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  2 +-
+  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  3 +
+  drivers/net/ethernet/ti/cpsw.c                     |  4 +-
+  drivers/net/ethernet/ti/davinci_emac.c             | 25 ++++-----
+  drivers/net/ethernet/ti/netcp_core.c               |  8 ++-
+  drivers/net/ethernet/wiznet/w5100-spi.c            |  6 +-
+  drivers/net/ethernet/wiznet/w5100.c                |  2 +-
+  drivers/net/ethernet/xilinx/ll_temac_main.c        |  5 +-
+  drivers/net/ethernet/xilinx/xilinx_axienet_main.c  |  4 +-
+  drivers/net/ethernet/xilinx/xilinx_emaclite.c      |  7 ++-
+  drivers/net/usb/asix_devices.c                     |  7 ++-
+  drivers/net/usb/lan78xx.c                          | 13 ++++-
+  drivers/net/usb/smsc75xx.c                         | 16 ++++--
+  drivers/net/usb/smsc95xx.c                         | 16 ++++--
+  drivers/net/wireless/ath/ath9k/init.c              |  4 +-
+  drivers/net/wireless/mediatek/mt76/eeprom.c        | 10 +++-
+  drivers/net/wireless/mediatek/mt76/mt76.h          |  2 +-
+  drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c |  4 +-
+  drivers/net/wireless/mediatek/mt76/mt76x2/eeprom.c |  6 +-
+  drivers/net/wireless/ralink/rt2x00/rt2400pci.c     |  5 +-
+  drivers/net/wireless/ralink/rt2x00/rt2500pci.c     |  5 +-
+  drivers/net/wireless/ralink/rt2x00/rt2500usb.c     |  5 +-
+  drivers/net/wireless/ralink/rt2x00/rt2800lib.c     |  4 +-
+  drivers/net/wireless/ralink/rt2x00/rt2x00.h        |  3 +-
+  drivers/net/wireless/ralink/rt2x00/rt2x00dev.c     | 16 ++++--
+  drivers/net/wireless/ralink/rt2x00/rt61pci.c       |  5 +-
+  drivers/net/wireless/ralink/rt2x00/rt73usb.c       |  5 +-
+  drivers/of/of_net.c                                | 64 +++++++++++++++++++++-
+  drivers/staging/octeon/ethernet.c                  |  7 ++-
+  net/ethernet/eth.c                                 |  8 ++-
+  98 files changed, 527 insertions(+), 239 deletions(-)
+
+So I'm wondering, is this (probably) proper handling of EPROBE_DEFER overkill?
+
+Or should I really just convert all current consumers of of_get_mac_address to
+IS_ERR_OR_NULL() macro check (as you've suggested) and call it a day? 
+
+Or should I simply change of_get_mac_address so it would allow for progressive
+conversion of drivers using of_get_mac_address to NVMEM?
+
+Thanks!
+
+-- ynezz
