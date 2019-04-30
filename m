@@ -1,56 +1,61 @@
-From: Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH V2] of: fix clang -Wunsequenced for be32_to_cpu()
-Date: Tue, 30 Apr 2019 21:56:24 +0700
-Message-ID: <20190430145624.30470-1-tranmanphong@gmail.com>
-References: <46b3e8edf27e4c8f98697f9e7f2117d6@AcuMS.aculab.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+Date: Tue, 30 Apr 2019 10:02:54 -0500
+Message-ID: <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+References: <20190430121254.3737-1-geert+renesas@glider.be> <20190430121254.3737-2-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <46b3e8edf27e4c8f98697f9e7f2117d6@AcuMS.aculab.com>
+In-Reply-To: <20190430121254.3737-2-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com, pantelis.antoniou@konsulko.com
-Cc: David.Laight@ACULAB.COM, hch@infradead.org, ndesaulniers@google.com, natechancellor@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com, Phong Tran <tranmanphong@gmail.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Now, make the loop explicit to avoid clang warning.
+On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Add "renesas,gic-spi-base",
+>   - Document RZ/A2M.
+> ---
+>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> new file mode 100644
+> index 0000000000000000..ea8ddb6955338ccd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> @@ -0,0 +1,30 @@
+> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> +
+> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> +RZ/A1 and RZ/A2 SoCs:
+> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> +    interrupts,
+> +  - NMI edge select.
+> +
+> +Required properties:
+> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> +               fallback.
+> +               Examples with soctypes are:
+> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> +                                in interrupts.txt in this directory)
+> +  - interrupt-controller: Marks the device as an interrupt controller
+> +  - reg: Base address and length of the memory resource used by the interrupt
+> +         controller
+> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
 
-./include/linux/of.h:238:37: warning: multiple unsequenced modifications
-to 'cell' [-Wunsequenced]
-                r = (r << 32) | be32_to_cpu(*(cell++));
-                                                  ^~
-./include/linux/byteorder/generic.h:95:21: note: expanded from macro
-'be32_to_cpu'
-                    ^
-./include/uapi/linux/byteorder/little_endian.h:40:59: note: expanded
-from macro '__be32_to_cpu'
-                                                          ^
-./include/uapi/linux/swab.h:118:21: note: expanded from macro '__swab32'
-        ___constant_swab32(x) :                 \
-                           ^
-./include/uapi/linux/swab.h:18:12: note: expanded from macro
-'___constant_swab32'
-        (((__u32)(x) & (__u32)0x000000ffUL) << 24) |            \
-                  ^
+Why isn't this just an 'interrupts' property? Plus, without
+'interrupts' walking the hierarchy is broken.
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
- include/linux/of.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index e240992e5cb6..71ca25ac01f6 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -234,8 +234,8 @@ extern struct device_node *of_find_all_nodes(struct device_node *prev);
- static inline u64 of_read_number(const __be32 *cell, int size)
- {
- 	u64 r = 0;
--	while (size--)
--		r = (r << 32) | be32_to_cpu(*(cell++));
-+	for(; size--; cell++)
-+		r = (r << 32) | be32_to_cpu(*cell);
- 	return r;
- }
- 
--- 
-2.21.0
+Rob
