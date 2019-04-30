@@ -1,66 +1,80 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
-Date: Tue, 30 Apr 2019 11:43:03 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1904301142521.7063@viisi.sifive.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com> <alpine.DEB.2.21.9999.1904291141340.7063@viisi.sifive.com>
- <155657878993.168659.6676692672888882237@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904292252120.7063@viisi.sifive.com> <155664891171.168659.10903540623861208390@swboyd.mtv.corp.google.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 2/2] dt-bindings: net: wiznet: add w5x00 support
+Date: Tue, 30 Apr 2019 20:52:14 +0200
+Message-ID: <20190430185215.21685-2-nsaenzjulienne@suse.de>
+References: <20190430185215.21685-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155664891171.168659.10903540623861208390@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190430185215.21685-1-nsaenzjulienne@suse.de>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Apr 2019, Stephen Boyd wrote:
+Add bindings for Wiznet's w5x00 series of SPI interfaced Ethernet chips.
 
-> Quoting Paul Walmsley (2019-04-29 22:57:15)
-> > On Mon, 29 Apr 2019, Stephen Boyd wrote:
-> > 
-> > > Quoting Paul Walmsley (2019-04-29 12:42:07)
-> > > > On Fri, 26 Apr 2019, Paul Walmsley wrote:
-> > > > > On Fri, 26 Apr 2019, Stephen Boyd wrote:
-> > > > > 
-> > > > > > Quoting Paul Walmsley (2019-04-11 01:27:32)
-> > > > > > > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
-> > > > > > > block, as implemented in TSMC CLN28HPC.
-> > > > > > 
-> > > > > > I haven't deeply reviewed at all, but I already get two problems when
-> > > > > > compile testing these patches. I can fix them up if nothing else needs
-> > > > > > fixing.
-> > > > > > 
-> > > > > > drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
-> > > > > > drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
-> > > > > 
-> > > > > Hmm, that's odd.  I will definitely take a look and repost.
-> > > > 
-> > > > I'm not able to reproduce these problems.  The configs tried here were:
-> > > > 
-> > > > - 64-bit RISC-V defconfig w/ PRCI driver enabled (gcc 8.2.0 built with 
-> > > >   crosstool-NG 1.24.0)
-> > > > 
-> > > > - 32-bit ARM defconfig w/ PRCI driver enabled (gcc 8.3.0 built with 
-> > > >   crosstool-NG 1.24.0)
-> > > > 
-> > > > - 32-bit i386 defconfig w/ PRCI driver enabled (gcc 
-> > > >   5.4.0-6ubuntu1~16.04.11)
-> > > > 
-> > > > Could you post the toolchain and kernel config you're using?
-> > > > 
-> > > 
-> > > I'm running sparse and smatch too.
-> > 
-> > OK.  I was able to reproduce the __wrpll_calc_divq() warning.  It's been 
-> > resolved in the upcoming revision.  
-> > 
-> > But I don't see the second error with either sparse or smatch.  (This is 
-> > with sparse at commit 2b96cd804dc7 and smatch at commit f0092daff69d.)
-> > 
-> 
-> Weird! The return in void function is pretty obvious though so please
-> fix it regardless.
+Based on the bindings for microchip,enc28j60.
 
-Done.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ .../devicetree/bindings/net/wiznet,w5x00.txt  | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wiznet,w5x00.txt
 
-- Paul
+diff --git a/Documentation/devicetree/bindings/net/wiznet,w5x00.txt b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
+new file mode 100644
+index 000000000000..2cbedefb1607
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
+@@ -0,0 +1,48 @@
++* Wiznet w5x00
++
++This is a standalone 10/100 MBit Ethernet controller with SPI interface.
++
++For each device connected to a SPI bus, define a child node within
++the SPI master node.
++
++Required properties:
++- compatible: Should be "wiznet,w5100", "wiznet,w5200" or "wiznet,w5500"
++- reg: Specify the SPI chip select the chip is wired to.
++- interrupts: Specify the interrupt index within the interrupt controller (referred
++              to above in interrupt-parent) and interrupt type. w5x00 natively
++              generates falling edge interrupts, however, additional board logic
++              might invert the signal.
++- pinctrl-names: List of assigned state names, see pinctrl binding documentation.
++- pinctrl-0: List of phandles to configure the GPIO pin used as interrupt line,
++             see also generic and your platform specific pinctrl binding
++             documentation.
++
++Optional properties:
++- spi-max-frequency: Maximum frequency of the SPI bus when accessing the w5500.
++  According to the w5500 datasheet, the chip allows a maximum of 80 MHz, however,
++  board designs may need to limit this value.
++- local-mac-address: See ethernet.txt in the same directory.
++
++
++Example (for Raspberry Pi with pin control stuff for GPIO irq):
++
++&spi {
++	eth1: w5500@0 {
++		compatible = "wiznet,w5500";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&eth1_pins>;
++		interrupt-parent = <&gpio>;
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++		spi-max-frequency = <30000000>;
++	};
++};
++
++&gpio {
++	eth1_pins: eth1_pins {
++		brcm,pins = <25>;
++		brcm,function = <0>; /* in */
++		brcm,pull = <0>; /* none */
++	};
++};
++
+-- 
+2.21.0
