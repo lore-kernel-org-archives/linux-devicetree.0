@@ -1,57 +1,68 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 1/3] dt-bindings: i2c: add optional mul-value property to
- binding
-Date: Tue, 30 Apr 2019 08:38:22 +0200
-Message-ID: <20190430063822.dk5nerqa2m36ua6x@pengutronix.de>
-References: <20190430043242.29687-1-chuanhua.han@nxp.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v4 3/3] dt-bindings: power: supply: Add bindings for Microchip UCS1002
+Date: Mon, 29 Apr 2019 23:45:57 -0700
+Message-ID: <20190430064557.28469-4-andrew.smirnov@gmail.com>
+References: <20190430064557.28469-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190430043242.29687-1-chuanhua.han@nxp.com>
+In-Reply-To: <20190430064557.28469-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com, festevam@gmail.com, wsa+renesas@sang-engineering.com, eha@deif.com, linux@rempel-privat.de, sumit.batra@nxp.com, l.stach@pengutronix.de, peda@axentia.se
+To: linux-pm@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Enric Balletbo Serra <enric.balletbo@collabora.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:32:40PM +0800, Chuanhua Han wrote:
-> NXP Layerscape SoC have up to three MUL options available for all
-> divider values, we choice of MUL determines the internal monitor rate
-> of the I2C bus (SCL and SDA signals):
-> A lower MUL value results in a higher sampling rate of the I2C signals.
-> A higher MUL value results in a lower sampling rate of the I2C signals.
-> 
-> So in Optional properties we added our custom mul-value property in the
-> binding to select which mul option for the device tree i2c controller
-> node.
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-imx.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-> index b967544590e8..ba8e7b7b3fa8 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-> @@ -18,6 +18,9 @@ Optional properties:
->  - sda-gpios: specify the gpio related to SDA pin
->  - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
->    bus recovery, call it "gpio" state
-> +- mul-value: NXP Layerscape SoC have up to three MUL options available for
-> +all I2C divider values, it describes which MUL we choose to use for the driver,
-> +the values should be 1,2,4.
+Add bindings for Microchip UCS1002 Programmable USB Port Power
+Controller with Charger Emulation.
 
-Indention is broken.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+---
+ .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
 
-I wonder why this needs to be configurable on a per-machine/device
-level. What is the trade-off?
-
-Best regards
-Uwe
-
+diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+new file mode 100644
+index 000000000000..021fd7aba75e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+@@ -0,0 +1,27 @@
++Microchip UCS1002 USB Port Power Controller
++
++Required properties:
++- compatible		: Should be "microchip,ucs1002";
++- reg			: I2C slave address
++
++Optional properties:
++- interrupts-extended	: A list of interrupts lines present (could be either
++			  corresponding to A_DET# pin, ALERT# pin, or both)
++- interrupt-names	: A list of interrupt names. Should contain (if
++			  present):
++			  - "a_det" for line connected to A_DET# pin
++			  - "alert" for line connected to ALERT# pin
++			  Both are expected to be IRQ_TYPE_EDGE_BOTH
++Example:
++
++&i2c3 {
++	charger@32 {
++		compatible = "microchip,ucs1002";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ucs1002_pins>;
++		reg = <0x32>;
++		interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
++				      <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
++		interrupt-names = "a_det", "alert";
++	};
++};
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.1
