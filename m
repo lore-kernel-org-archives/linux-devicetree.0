@@ -1,108 +1,288 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH v3 3/3] clk: sifive: add a driver for the SiFive FU540
- PRCI IP block
-Date: Tue, 30 Apr 2019 00:01:40 -0700
-Message-ID: <67a4a4b6-e0d7-efc2-c318-a1138cddc9c7@wdc.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com>
- <20190411082733.3736-4-paul.walmsley@sifive.com>
- <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
- <alpine.DEB.2.21.9999.1904292258000.7063@viisi.sifive.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 2/3] Input: add a driver for GPIO controllable
+ vibrators
+Date: Tue, 30 Apr 2019 00:14:57 -0700
+Message-ID: <20190430071457.GA148015@dtor-ws>
+References: <20190426194747.22256-1-luca@z3ntu.xyz>
+ <20190426194747.22256-2-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1904292258000.7063@viisi.sifive.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190426194747.22256-2-luca@z3ntu.xyz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Stephen Boyd <sboyd@kernel.org>, "Wesley W . Terpstra" <wesley@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Pascal PAILLET-LME <p.paillet@st.com>, Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>, Xiaotong Lu <xiaotong.lu@spreadtrum.com>, Brian Masney <masneyb@onstation.org>, Rob Herring <robh@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/29/19 11:20 PM, Paul Walmsley wrote:
-> Hi Atish,
+On Fri, Apr 26, 2019 at 09:47:46PM +0200, Luca Weiss wrote:
+> Provide a simple driver for GPIO controllable vibrators.
+> It will be used by the Fairphone 2.
 > 
-> On Sat, 27 Apr 2019, Atish Patra wrote:
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+
+Applied, thank you.
+
+> ---
+>  drivers/input/misc/Kconfig      |  12 ++
+>  drivers/input/misc/Makefile     |   1 +
+>  drivers/input/misc/gpio-vibra.c | 209 ++++++++++++++++++++++++++++++++
+>  3 files changed, 222 insertions(+)
+>  create mode 100644 drivers/input/misc/gpio-vibra.c
 > 
->> On 4/11/19 1:28 AM, Paul Walmsley wrote:
->>> Add driver code for the SiFive FU540 PRCI IP block.  This IP block
->>> handles reset and clock control for the SiFive FU540 device and
->>> implements SoC-level clock tree controls and dividers.
-> 
-> [...]
-> 
->>> +static const struct of_device_id sifive_fu540_prci_of_match[] = {
->>> +	{ .compatible = "sifive,fu540-c000-prci", },
->>
->> All the existing unleashed devices have prci clock compatible string as
->> "sifive,aloeprci0" or "sifive,ux00prci0". Should it be added to maintain
->> backward compatibility?
-> 
-> As you note, just adding the old (unreviewed) compatible string isn't
-> enough.
-> 
->> Even after adding the compatible string (just for my testing purpose), I get
->> this while booting.
->>
->> [    0.104571] sifive-fu540-prci 10000000.prci: expected only two parent
->> clocks, found 1
->> [    0.112460] sifive-fu540-prci 10000000.prci: could not register clocks: -22
->> [    0.119499] sifive-fu540-prci: probe of 10000000.prci failed with error -22
->>
->> Looking at the DT entries, your DT patch has
->>
->> +		prci: clock-controller@10000000 {
->> +			compatible = "sifive,fu540-c000-prci";
->> +			reg = <0x0 0x10000000 0x0 0x1000>;
->> +			clocks = <&hfclk>, <&rtcclk>;
->> +			#clock-cells = <1>;
->> +		};
->>
->>
->> while current DT from FSBL
->> (https://github.com/sifive/freedom-u540-c000-bootloader/blob/master/fsbl/ux00_fsbl.dts)
->>
->> prci: prci@10000000 {
->> 			compatible = "sifive,aloeprci0", "sifive,ux00prci0";
->> 			reg = <0x0 0x10000000 0x0 0x1000>;
->> 			reg-names = "control";
->> 			clocks = <&refclk>;
->> 			#clock-cells = <1>;
->> 		};
->>
->> This seems to be the cause of error. It looks like this patch needs a complete
->> different DT (your DT patch) than FSBL provides.
-> 
-> That's right.  That old data was completely out of tree and unreviewed.
-> It's part of the reason why we're going through the process of posting DT
-> data to the kernel and devicetree lists and getting that data reviewed:
-> 
-> https://lore.kernel.org/linux-riscv/20190411084242.4999-1-paul.walmsley@sifive.com/
-> 
->> This means everybody must upgrade the FSBL to use your DT patch in their
->> boards once this driver is merged. Is this okay?
-> 
-> People can continue to use the out-of-tree DT data if they want.  They'll
-> just have to continue to patch their kernels to add out-of-tree drivers,
-> as they do now.
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index e15ed1bb8558..6dfe9e2fe5b1 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
+>  	 To compile this driver as a module, choose M here: the module
+>  	 will be called gpio_decoder.
+>  
+> +config INPUT_GPIO_VIBRA
+> +	tristate "GPIO vibrator support"
+> +	depends on GPIOLIB || COMPILE_TEST
+> +	select INPUT_FF_MEMLESS
+> +	help
+> +	  Say Y here to get support for GPIO based vibrator devices.
+> +
+> +	  If unsure, say N.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called gpio-vibra.
+> +
+>  config INPUT_IXP4XX_BEEPER
+>  	tristate "IXP4XX Beeper support"
+>  	depends on ARCH_IXP4XX
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index b936c5b1d4ac..f38ebbdb05e2 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+>  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+>  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+>  obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
+> +obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
+>  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+>  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+>  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+> new file mode 100644
+> index 000000000000..b76c81015de9
+> --- /dev/null
+> +++ b/drivers/input/misc/gpio-vibra.c
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + *  GPIO vibrator driver
+> + *
+> + *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
+> + *
+> + *  Based on PWM vibrator driver:
+> + *  Copyright (C) 2017 Collabora Ltd.
+> + *
+> + *  Based on previous work from:
+> + *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> + *
+> + *  Based on PWM beeper driver:
+> + *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
+> + */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/input.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +struct gpio_vibrator {
+> +	struct input_dev *input;
+> +	struct gpio_desc *gpio;
+> +	struct regulator *vcc;
+> +
+> +	struct work_struct play_work;
+> +	bool running;
+> +	bool vcc_on;
+> +};
+> +
+> +static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+> +{
+> +	struct device *pdev = vibrator->input->dev.parent;
+> +	int err;
+> +
+> +	if (!vibrator->vcc_on) {
+> +		err = regulator_enable(vibrator->vcc);
+> +		if (err) {
+> +			dev_err(pdev, "failed to enable regulator: %d\n", err);
+> +			return err;
+> +		}
+> +		vibrator->vcc_on = true;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(vibrator->gpio, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+> +{
+> +	gpiod_set_value_cansleep(vibrator->gpio, 0);
+> +
+> +	if (vibrator->vcc_on) {
+> +		regulator_disable(vibrator->vcc);
+> +		vibrator->vcc_on = false;
+> +	}
+> +}
+> +
+> +static void gpio_vibrator_play_work(struct work_struct *work)
+> +{
+> +	struct gpio_vibrator *vibrator =
+> +		container_of(work, struct gpio_vibrator, play_work);
+> +
+> +	if (vibrator->running)
+> +		gpio_vibrator_start(vibrator);
+> +	else
+> +		gpio_vibrator_stop(vibrator);
+> +}
+> +
+> +static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
+> +				     struct ff_effect *effect)
+> +{
+> +	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
+> +
+> +	int level = effect->u.rumble.strong_magnitude;
+> +
+> +	if (!level)
+> +		level = effect->u.rumble.weak_magnitude;
+> +
+> +	if (level)
+> +		vibrator->running = true;
+> +	else
+> +		vibrator->running = false;
+> +
+> +	schedule_work(&vibrator->play_work);
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpio_vibrator_close(struct input_dev *input)
+> +{
+> +	struct gpio_vibrator *vibrator = input_get_drvdata(input);
+> +
+> +	cancel_work_sync(&vibrator->play_work);
+> +	gpio_vibrator_stop(vibrator);
+> +	vibrator->running = false;
+> +}
+> +
+> +static int gpio_vibrator_probe(struct platform_device *pdev)
+> +{
+> +	struct gpio_vibrator *vibrator;
+> +	int err;
+> +
+> +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
+> +	if (!vibrator)
+> +		return -ENOMEM;
+> +
+> +	vibrator->input = devm_input_allocate_device(&pdev->dev);
+> +	if (!vibrator->input)
+> +		return -ENOMEM;
+> +
+> +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> +	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> +	if (err) {
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
+> +				err);
+> +		return err;
+> +	}
+> +
+> +	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+> +	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+> +	if (err) {
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
+> +				err);
+> +		return err;
+> +	}
+> +
+> +	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+> +
+> +	vibrator->input->name = "gpio-vibrator";
+> +	vibrator->input->id.bustype = BUS_HOST;
+> +	vibrator->input->close = gpio_vibrator_close;
+> +
+> +	input_set_drvdata(vibrator->input, vibrator);
+> +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
+> +
+> +	err = input_ff_create_memless(vibrator->input, NULL,
+> +				      gpio_vibrator_play_effect);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Couldn't create FF dev: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	err = input_register_device(vibrator->input);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Couldn't register input dev: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, vibrator);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
+> +{
+> +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+> +
+> +	cancel_work_sync(&vibrator->play_work);
+> +	if (vibrator->running)
+> +		gpio_vibrator_stop(vibrator);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused gpio_vibrator_resume(struct device *dev)
+> +{
+> +	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+> +
+> +	if (vibrator->running)
+> +		gpio_vibrator_start(vibrator);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
+> +			 gpio_vibrator_suspend, gpio_vibrator_resume);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id gpio_vibra_dt_match_table[] = {
+> +	{ .compatible = "gpio-vibrator" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
+> +#endif
+> +
+> +static struct platform_driver gpio_vibrator_driver = {
+> +	.probe	= gpio_vibrator_probe,
+> +	.driver	= {
+> +		.name	= "gpio-vibrator",
+> +		.pm	= &gpio_vibrator_pm_ops,
+> +		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
+> +	},
+> +};
+> +module_platform_driver(gpio_vibrator_driver);
+> +
+> +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
+> +MODULE_DESCRIPTION("GPIO vibrator driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:gpio-vibrator");
+> -- 
+> 2.21.0
 > 
 
-There were some concerns about the breaking the existing setup in the past.
-
-> Otherwise, if people want to use the upstream PRCI driver in the upstream
-> kernel, then it's necessary to use DT data that aligns with what's in the
-> upstream binding documentation.
-> 
-
-Personally, it makes sense to me. I am okay with upgrading FSBL to 
-update the DT once the patches are in mainline. In fact, I used to do 
-that for topology patch series. This will help to add any new DT entry 
-in future as well.
-
-However, if SiFive can share a prebuilt FSBL image for everybody to 
-upgrade, that would be very helpful.
-
-Regards,
-Atish
-> 
-> - Paul
-> 
+-- 
+Dmitry
