@@ -1,51 +1,54 @@
-Return-Path: <SRS0=Pzvf=SV=ucw.cz=pavel@kernel.org>
-Date: Fri, 19 Apr 2019 20:10:06 +0200
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 leds-next 2/2] dt-bindings: leds: Document Turris
- Omnia LED controller binding
-Message-ID: <20190419181006.GA25060@amd>
-References: <20190328193428.19273-1-marek.behun@nic.cz>
- <20190328193428.19273-3-marek.behun@nic.cz>
+Return-Path: <SRS0=KePS=TA=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 1/6] arm64: dts: r8a774a1: Add VSP instances
+Date: Tue, 30 Apr 2019 14:31:51 +0000
+Message-ID: 
+ <OSBPR01MB2103C18AA80F4E9682DCCFC8B83A0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1555428717-18376-1-git-send-email-biju.das@bp.renesas.com>
+ <1555428717-18376-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdV4PiVjYotbR-LF-2BNkpY61Q7XsxKFKDk56dvA_0iibA@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdV4PiVjYotbR-LF-2BNkpY61Q7XsxKFKDk56dvA_0iibA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
-In-Reply-To: <20190328193428.19273-3-marek.behun@nic.cz>
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc: linux-leds@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-ID: <devicetree@vger.kernel.org>
 
-
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2019-03-28 20:34:28, Marek Beh=FAn wrote:
-> This adds device tree binding documentation for the front panel LEDs
-> controller of CZ.NIC's Turris Omnia router.
->=20
-> Signed-off-by: Marek Beh=FAn <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAly6Dv4ACgkQMOfwapXb+vKHdQCgkYxbKOF18wO1agFxoFrMGdOE
-BwUAoJdMPd+ADFTclO16t/kHXMWHbn+2
-=a8jm
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMS82XSBhcm02NDogZHRzOiByOGE3NzRhMTogQWRkIFZTUCBpbnN0YW5jZXMNCj4gDQo+
+IEhpIEJpanUsDQo+IA0KPiBPbiBUdWUsIEFwciAxNiwgMjAxOSBhdCA1OjM4IFBNIEJpanUgRGFz
+IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhlIHI4YTc3NGExIHNvYyBo
+YXMgNSBWU1AgaW5zdGFuY2VzIHNpbWlsYXIgdG8gcjhhNzc5Ni4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gDQo+ID4gLS0tIGEv
+YXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGExLmR0c2kNCj4gPiArKysgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YTEuZHRzaQ0KPiA+IEBAIC0xODc3LDYgKzE4
+NzcsNjEgQEANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBpb21tdXMgPSA8JmlwbW11X3Zj
+MCAxOT47DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAgICAg
+dnNwYjogdnNwQGZlOTYwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gInJlbmVzYXMsdnNwMiI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PDAgMHhmZTk2MDAwMCAwIDB4ODAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50
+ZXJydXB0cyA9IDxHSUNfU1BJIDI2NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDYyNj47DQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgcG93ZXItZG9tYWlucyA9IDwmc3lzYyBSOEE3NzRBMV9QRF9BM1ZD
+PjsNCj4gDQo+IEkgaGF2ZSBteSBkb3VidHMgYWJvdXQgdnNwYiAoYW5kIGZjcHZiMCkgYmVpbmcg
+cGFydCBvZiB0aGUgQTNWQyBwb3dlcg0KPiBkb21haW4gKGFsc28gb24gUi1DYXIgTTMtVykuDQoN
+CkFzIHBlciBSLUNhciBHZW4zIFJldi4xLjUwIE5vdiAyMDE4IEhhcmR3YXJlIHVzZXIncyBtYW51
+YWwgaXQgaXMgQTNWQywNCg0KVGhlIGRldGFpbHMgYXJlIG1lbnRpb25lZCBpbiBUYWJsZSA5LjQg
+UG93ZXIgZG9tYWlucyBmb3IgQTNWUC4NCg0KQTNWUCA6LSBUaGlzIGRvbWFpbiBpcyBhdmFpbGFi
+bGUgb25seSBmb3IgUi1DYXJIMywgUi1DYXIgSDMtTiBhbmQgUi1DYXIgTTMtTi5Nb2R1bGVzIGlu
+Y2x1ZGVkIGluIHRoaXMgZG9tYWluIHdhcw0KTW92ZWQgdG8gQTNWQyBkb21haW4gZm9yIFItQ2Fy
+IE0zLVcuDQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgcmVzZXRzID0gPCZjcGcgNjI2PjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgcmVuZXNhcyxmY3AgPSA8JmZjcHZiMD47DQo+ID4gKyAgICAgICAgICAgICAgIH07DQo+IA0K
+PiBBcGFydCBmcm9tIHRoYXQ6DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdl
+ZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9l
+dmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0N
+Cj4gbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
+YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
+ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
+ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
+bGRzDQo=
