@@ -1,54 +1,46 @@
-From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH] arm64: dts: imx8mq: Add a node for irqsteer
-Date: Tue, 30 Apr 2019 15:41:57 +0200
-Message-ID: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v2 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
+ driver
+Date: Tue, 30 Apr 2019 13:49:24 +0000
+Message-ID: <TY1PR01MB1562FF2E949141B569DA32F88A3A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-3-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190430121254.3737-3-geert+renesas@glider.be>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the irqsteer interrupt controller found on the iMX8MQ
-SoC.
+On Tue, Apr 30, 2019, Geert Uytterhoeven wrote:
+> Add a driver for the Renesas RZ/A1 Interrupt Controller.
+>=20
+> This supports using up to 8 external interrupts on RZ/A1, with
+> configurable sense select.
+>=20
+> NMI edge select is not yet supported.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Use u16 for register values,
+>   - Use relaxed I/O accessors,
+>   - Use "rza1-irqc" as irq_chip class name,
+>   - Replace gic_spi_base in OF match data by renesas,gic-spi-base in DT.
+> ---
+>  drivers/irqchip/Kconfig            |   4 +
+>  drivers/irqchip/Makefile           |   1 +
+>  drivers/irqchip/irq-renesas-rza1.c | 235 +++++++++++++++++++++++++++++
+>  3 files changed, 240 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-renesas-rza1.c
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Tested on RZ/A1H RSK and RZ/A2M EVB (push buttons and LCD
+touchscreen controller).
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 2cc939cfbd75..ce0e137ec8ee 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -798,6 +798,27 @@
- 			};
- 		};
- 
-+		bus@32c00000 { /* AIPS4 */
-+			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x32c00000 0x32c00000 0x400000>;
-+
-+			irqsteer: interrupt-controller@32e2d000 {
-+				compatible = "fsl,imx8m-irqsteer",
-+					     "fsl,imx-irqsteer";
-+				reg = <0x32e2d000 0x1000>;
-+				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-+				clock-names = "ipg";
-+				fsl,channel = <0>;
-+				fsl,num-irqs = <64>;
-+				interrupt-controller;
-+				interrupt-parent = <&gic>;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+
- 		gpu: gpu@38000000 {
- 			compatible = "vivante,gc";
- 			reg = <0x38000000 0x40000>;
--- 
-2.20.1
+Thanks!
+
+Tested-by: Chris Brandt <chris.brandt@renesas.com>
