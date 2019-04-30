@@ -1,67 +1,31 @@
-Return-Path: <SRS0=hFAX=SS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH V4 2/7] dt-bindings: usb: renesas_usb3: Add renesas,usb-role-switch property
-Date: Tue, 16 Apr 2019 10:38:02 +0100
-Message-Id: <1555407487-35394-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
-References: <1555407487-35394-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
-List-ID: <devicetree@vger.kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 08/14] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Tue, 30 Apr 2019 17:24:39 -0500
+Message-ID: <20190430222439.GA7845@bogus>
+References: <20190430101230.21794-1-lokeshvutla@ti.com>
+ <20190430101230.21794-9-lokeshvutla@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190430101230.21794-9-lokeshvutla@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
+List-Id: devicetree@vger.kernel.org
 
-Add an optional property renesas,usb-role-switch to support
-dual role switch for USB Type-C DRP port controller devices
-using USB role switch class framework.
+On Tue, 30 Apr 2019 15:42:24 +0530, Lokesh Vutla wrote:
+> Add the DT binding documentation for Interrupt router driver.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> Changes since v7:
+> - Changes interrupt cells to 2.
+> 
+>  .../interrupt-controller/ti,sci-intr.txt      | 82 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> 
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- V3-->V4
-  * No Change
- V2-->V3
-  * Added optional renesas,usb-role-switch property.
- V1-->V2
-  * Added usb-role-switch-property
-  * Updated the example with usb-role-switch property.
----
- .../devicetree/bindings/usb/renesas_usb3.txt       | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index 35039e7..f1cb06a 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -22,6 +22,7 @@ Required properties:
- Optional properties:
-   - phys: phandle + phy specifier pair
-   - phy-names: must be "usb"
-+  - renesas,usb-role-switch: use USB role switch to handle role switch events
- 
- Example of R-Car H3 ES1.x:
- 	usb3_peri0: usb@ee020000 {
-@@ -39,3 +40,24 @@ Example of R-Car H3 ES1.x:
- 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cpg CPG_MOD 327>;
- 	};
-+
-+Example of RZ/G2E:
-+	usb3_peri0: usb@ee020000 {
-+		compatible = "renesas,r8a774c0-usb3-peri",
-+			     "renesas,rcar-gen3-usb3-peri";
-+		reg = <0 0xee020000 0 0x400>;
-+		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 328>;
-+		companion = <&xhci0>;
-+		renesas,usb-role-switch;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			usb3peri_role_switch: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&hd3ss3220_ep>;
-+			};
-+		};
-+	};
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
