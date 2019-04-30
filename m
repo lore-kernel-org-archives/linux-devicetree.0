@@ -1,84 +1,94 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 1/4] include: dt-bindings: add Performance Monitoring
- Unit for Exynos
-Date: Tue, 30 Apr 2019 22:36:23 +0200
-Message-ID: <d07544be-50c8-4520-4637-b0938701df1e@partner.samsung.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134820eucas1p154e839769af0e1b8bae17ce3efa0ba93@eucas1p1.samsung.com>
-        <1555681688-19643-2-git-send-email-l.luba@partner.samsung.com>
-        <a1ff3566-6117-b670-a2f3-b60a2bbec14a@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/8] dt-bindings: remoteproc: add bindings for stm32
+ remote processor driver
+Date: Tue, 30 Apr 2019 15:37:25 -0500
+Message-ID: <CAL_JsqJjMy43Juhse_PwRqjwjG2swkiJsQgagZWAb53an9B-6Q@mail.gmail.com>
+References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
+ <1555426699-5340-3-git-send-email-fabien.dessenne@st.com> <20190430004051.GA7391@bogus>
+ <ff424530-6e7b-cec9-910f-1897d60de2a1@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a1ff3566-6117-b670-a2f3-b60a2bbec14a@samsung.com>
-Content-Language: en-US
+In-Reply-To: <ff424530-6e7b-cec9-910f-1897d60de2a1@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
+To: Fabien DESSENNE <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, Loic PALLARDY <loic.pallardy@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 30, 2019 at 9:15 AM Fabien DESSENNE <fabien.dessenne@st.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On 30/04/2019 2:40 AM, Rob Herring wrote:
+> > On Tue, Apr 16, 2019 at 04:58:13PM +0200, Fabien Dessenne wrote:
+> >> Add the device tree bindings document for the stm32 remoteproc devices.
+> >>
+> >> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> >> ---
+> >>   .../devicetree/bindings/remoteproc/stm32-rproc.txt | 64 ++++++++++++++++++++++
+> >>   1 file changed, 64 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> >> new file mode 100644
+> >> index 0000000..430132c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> >> @@ -0,0 +1,64 @@
+> >> +STMicroelectronics STM32 Remoteproc
+> >> +-----------------------------------
+> >> +This document defines the binding for the remoteproc component that loads and
+> >> +boots firmwares on the ST32MP family chipset.
+> >> +
+> >> +Required properties:
+> >> +- compatible:       Must be "st,stm32mp1-m4"
+> >> +- reg:              Address ranges of the remote processor dedicated memories.
+> >> +            The parent node should provide an appropriate ranges property
+> >> +            for properly translating these into bus addresses.
+> > dma-ranges, but that's independent of 'reg'.
+> >
+> > It needs to list how many reg regions and what they are.
+>
+> The "reg" property needs to be removed since it is not used by the
+> driver : the "memory-region" property (defined below) provides with all
+> the needed memory information.
 
+I'm not sure that's the right direction. reserved-memory nodes
+generally should be in the range of system memory (i.e. what /memory
+nodes define).
 
-On 4/30/19 6:56 AM, Chanwoo Choi wrote:
-> Hi,
-> 
-> I agree of this patch. But, I add the minor comments.
-> 
-> If you edit them according to my comment, feel free to add my following tag:
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-> On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
->> This patch add support of a new feature which can be used in DT:
->> Performance Monitoring Unit with defined event data type.
->> In this patch the event data types are defined for Exynos PPMU.
->> The patch also updates the MAINTAINERS file accordingly and
->> adds the header file to devfreq event subsystem.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   MAINTAINERS                           |  1 +
->>   include/dt-bindings/pmu/exynos_ppmu.h | 26 ++++++++++++++++++++++++++
->>   2 files changed, 27 insertions(+)
->>   create mode 100644 include/dt-bindings/pmu/exynos_ppmu.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 3671fde..1ba4b9b 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -4560,6 +4560,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
->>   S:	Supported
->>   F:	drivers/devfreq/event/
->>   F:	drivers/devfreq/devfreq-event.c
->> +F:	include/dt-bindings/pmu/exynos_ppmu.h
->>   F:	include/linux/devfreq-event.h
->>   F:	Documentation/devicetree/bindings/devfreq/event/
->>   
->> diff --git a/include/dt-bindings/pmu/exynos_ppmu.h b/include/dt-bindings/pmu/exynos_ppmu.h
->> new file mode 100644
->> index 0000000..08fdce9
->> --- /dev/null
->> +++ b/include/dt-bindings/pmu/exynos_ppmu.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Samsung Exynos PPMU event types for counting in regs
->> + *
->> + * Copyright (c) 2019, Samsung
-> 
-> Mabye, "Samsung Electronics" instead of 'Samsung'.
-ACK
-> 
->> + * Author: Lukasz Luba <l.luba@partner.samsung.com>
->> + */
->> +
->> +#ifndef __DT_BINDINGS_PMU_EXYNOS_PPMU_H
->> +#define __DT_BINDINGS_PMU_EXYNOS_PPMU_H
->> +
->> +
-> 
-> Remove unneeded blank line.
-OK done. I will add your 'Acked-by' in the next version.
+> Unfortunately, when I remove this "reg" property from the DeviceTree, I
+> have this warning when building (W=123) the DTB:
+>
+>   "Warning (avoid_unnecessary_addr_size): /mlahb: unnecessary
+> #address-cells/#size-cells without "ranges" or child "reg" property"
+>
+> IMHO, there is something wrong in the dtc script which seems to ignore
+> the "dma-ranges" property that needs to have #address-cells/#size-cells
+> defined. Just like "ranges".
 
-Regards,
-Lukasz
+Perhaps.
+
+>
+> The quick patch below (add check for "dma-ranges" ) in
+> scripts/dtc/checks.c solves this issue.
+>
+> static void check_avoid_unnecessary_addr_size(struct check *c, struct
+> dt_info *dti,
+>                            struct node *node)
+> {
+> ...
+>      if (get_property(node, "ranges") || get_property(node,
+> "dma-ranges") || !node->children)
+>          return;
+> ...
+>
+> Can you confirm that I can remove the "reg" property and ignore the warning?
+
+That should cause another warning because the 'simple-bus' checks
+expect to have nodes with addresses as 'simple-bus' means MMIO bus.
+That may have been the check which was broken for a while and I just
+fixed not too long ago.
+
+Rob
