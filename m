@@ -1,61 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-Date: Tue, 30 Apr 2019 10:02:54 -0500
-Message-ID: <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
-References: <20190430121254.3737-1-geert+renesas@glider.be> <20190430121254.3737-2-geert+renesas@glider.be>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: add a 'drive-strength-uA'
+ property
+Date: Tue, 30 Apr 2019 10:12:43 -0500
+Message-ID: <20190430151243.GA6879@bogus>
+References: <20190418124758.24022-1-glaroque@baylibre.com>
+ <20190418124758.24022-2-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430121254.3737-2-geert+renesas@glider.be>
+Content-Disposition: inline
+In-Reply-To: <20190418124758.24022-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: linus.walleij@linaro.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Thu, Apr 18, 2019 at 02:47:55PM +0200, Guillaume La Roque wrote:
+> This property allow drive-strength parameter in uA instead of mA.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
-> v2:
->   - Add "renesas,gic-spi-base",
->   - Document RZ/A2M.
-> ---
->  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> new file mode 100644
-> index 0000000000000000..ea8ddb6955338ccd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> @@ -0,0 +1,30 @@
-> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index cef2b5855d60..fc7018459aa2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+>  drive-open-drain	- drive with open drain
+>  drive-open-source	- drive with open source
+>  drive-strength		- sink or source at most X mA
+> +drive-strength-uA	- sink or source at most X uA
+>  input-enable		- enable input on pin (no effect on output, such as
+>  			  enabling an input buffer)
+>  input-disable		- disable input on pin (no effect on output, such as
+> @@ -326,6 +327,8 @@ arguments are described below.
+>  
+>  - drive-strength takes as argument the target strength in mA.
+>  
+> +- drive-strength-uA takes as argument the target strength in uA.
 > +
-> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-> +RZ/A1 and RZ/A2 SoCs:
-> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-> +    interrupts,
-> +  - NMI edge select.
-> +
-> +Required properties:
-> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-> +               fallback.
-> +               Examples with soctypes are:
-> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
-> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
-> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-> +                                in interrupts.txt in this directory)
-> +  - interrupt-controller: Marks the device as an interrupt controller
-> +  - reg: Base address and length of the memory resource used by the interrupt
-> +         controller
-> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
 
-Why isn't this just an 'interrupts' property? Plus, without
-'interrupts' walking the hierarchy is broken.
+We have standard unit suffixes defined in bindings/property-units.txt. 
+Use them please.
 
 Rob
