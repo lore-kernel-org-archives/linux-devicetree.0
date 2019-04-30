@@ -1,46 +1,68 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
- driver
-Date: Tue, 30 Apr 2019 13:49:24 +0000
-Message-ID: <TY1PR01MB1562FF2E949141B569DA32F88A3A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20190430121254.3737-1-geert+renesas@glider.be>
- <20190430121254.3737-3-geert+renesas@glider.be>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add a node for irqsteer
+Date: Tue, 30 Apr 2019 15:50:04 +0200
+Message-ID: <1556632204.2560.20.camel@pengutronix.de>
+References: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430121254.3737-3-geert+renesas@glider.be>
-Content-Language: en-US
+In-Reply-To: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019, Geert Uytterhoeven wrote:
-> Add a driver for the Renesas RZ/A1 Interrupt Controller.
->=20
-> This supports using up to 8 external interrupts on RZ/A1, with
-> configurable sense select.
->=20
-> NMI edge select is not yet supported.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Am Dienstag, den 30.04.2019, 15:41 +0200 schrieb Guido Günther:
+> Add a node for the irqsteer interrupt controller found on the iMX8MQ
+> SoC.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > ---
-> v2:
->   - Use u16 for register values,
->   - Use relaxed I/O accessors,
->   - Use "rza1-irqc" as irq_chip class name,
->   - Replace gic_spi_base in OF match data by renesas,gic-spi-base in DT.
-> ---
->  drivers/irqchip/Kconfig            |   4 +
->  drivers/irqchip/Makefile           |   1 +
->  drivers/irqchip/irq-renesas-rza1.c | 235 +++++++++++++++++++++++++++++
->  3 files changed, 240 insertions(+)
->  create mode 100644 drivers/irqchip/irq-renesas-rza1.c
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 2cc939cfbd75..ce0e137ec8ee 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -798,6 +798,27 @@
+>  			};
+>  		};
+>  
+> +		bus@32c00000 { /* AIPS4 */
+> +			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x32c00000 0x32c00000 0x400000>;
+> +
+> +			irqsteer: interrupt-controller@32e2d000 {
+> +				compatible = "fsl,imx8m-irqsteer",
+> +					     "fsl,imx-irqsteer";
 
-Tested on RZ/A1H RSK and RZ/A2M EVB (push buttons and LCD
-touchscreen controller).
+This fits on a single line, right?
 
-Thanks!
+> +				reg = <0x32e2d000 0x1000>;
+> +				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+> +				clock-names = "ipg";
+> +				fsl,channel = <0>;
+> +				fsl,num-irqs = <64>;
+> +				interrupt-controller;
+> +				interrupt-parent = <&gic>;
 
-Tested-by: Chris Brandt <chris.brandt@renesas.com>
+This is wrong, the irqsteer upstream IRQ is routed through the GPC like
+all the other peripheral interrupts. You can just drop this property.
+
+With this fixed:
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
+Regards,
+Lucas
+
+> +				#interrupt-cells = <1>;
+> +			};
+> +		};
+> +
+>  		gpu: gpu@38000000 {
+>  			compatible = "vivante,gc";
+>  			reg = <0x38000000 0x40000>;
