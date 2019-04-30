@@ -1,217 +1,88 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
-Date: Tue, 30 Apr 2019 13:22:43 -0700
-Message-ID: <155665576397.168659.15988829291472885637@swboyd.mtv.corp.google.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155656941055.168659.18136739282359756367@swboyd.mtv.corp.google.com> <alpine.DEB.2.21.9999.1904291506060.7063@viisi.sifive.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+Date: Tue, 30 Apr 2019 15:25:47 -0500
+Message-ID: <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1904291506060.7063@viisi.sifive.com>
+In-Reply-To: <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Wesley Terpstra <wesley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Megan Wachs <megan@sifive.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-29 18:14:14)
-> On Mon, 29 Apr 2019, Stephen Boyd wrote:
-> >=20
-> > Nitpick: This might be easier to read with a switch statement:
-> >=20
-> >       switch (post_divr_freq) {
-> >       case 0 ... 11000000:
-> >               return 1;
-> >       case 11000001 ... 18000000:
-> >               return 2;
-> >       case 18000001 ... 30000000:
-> >               return 3;
-> >       case 30000001 ... 50000000:
-> >               return 4;
-> >       case 50000000 ... 80000000:
-> >               return 5;
-> >       case 80000001 ... 130000000:
-> >               return 6;
-> >       }
-> >=20
-> >       return 7;
->=20
-> To be equivalent to the original code, we'd need to write:
->=20
->        switch (post_divr_freq) {
->        case 0 ... 10999999:
->                return 1;
->        case 11000000 ... 17999999:
->                return 2;
-> (etc.)
->=20
-> In any case, it's been changed to use the gcc case range operator.
+On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+>
+> On 30/04/2019 16:02, Rob Herring wrote:
+> > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> >>
+> >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> ---
+> >> v2:
+> >>   - Add "renesas,gic-spi-base",
+> >>   - Document RZ/A2M.
+> >> ---
+> >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> >>  1 file changed, 30 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >> new file mode 100644
+> >> index 0000000000000000..ea8ddb6955338ccd
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >> @@ -0,0 +1,30 @@
+> >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> >> +
+> >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> >> +RZ/A1 and RZ/A2 SoCs:
+> >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> >> +    interrupts,
+> >> +  - NMI edge select.
+> >> +
+> >> +Required properties:
+> >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> >> +               fallback.
+> >> +               Examples with soctypes are:
+> >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> >> +                                in interrupts.txt in this directory)
+> >> +  - interrupt-controller: Marks the device as an interrupt controller
+> >> +  - reg: Base address and length of the memory resource used by the interrupt
+> >> +         controller
+> >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> >
+> > Why isn't this just an 'interrupts' property?
+>
+> That's likely because of kernel limitations. The DT code does an
+> of_populate() on any device that it finds, parse the "interrupts"
+> propertiy, resulting in the irq_descs being populated.
+>
+> That creates havoc, as these interrupts are not for this device, but for
+> something that is connected to it. This is merely a bridge of some sort.
 
-Ah right, thanks!
+'interrupt-map' would avoid that problem I think.
 
-> > > +{
-> > > +       return (c->flags & WRPLL_FLAGS_INT_FEEDBACK_MASK) ? 2 : 1;
-> > > +}
-> > > +
-> > > +/**
-> > > + * __wrpll_calc_divq() - determine DIVQ based on target PLL output c=
-lock rate
-> > > + * @target_rate: target PLL output clock rate
-> > > + * @vco_rate: pointer to a u64 to store the computed VCO rate into
-> > > + *
-> > > + * Determine a reasonable value for the PLL Q post-divider, based on=
- the
-> > > + * target output rate @target_rate for the PLL.  Along with returnin=
-g the
-> > > + * computed Q divider value as the return value, this function store=
-s the
-> > > + * desired target VCO rate into the variable pointed to by @vco_rate.
-> > > + *
-> > > + * Context: Any context.  Caller must protect the memory pointed to =
-by
-> > > + *          @vco_rate from simultaneous access or modification.
-> > > + *
-> > > + * Return: a positive integer DIVQ value to be programmed into the h=
-ardware
-> > > + *         upon success, or 0 upon error (since 0 is an invalid DIVQ=
- value)
-> >=20
-> > Why are we doing that? Can't we return a normal error code and test for
-> > it being negative and then consider the number if its greater than 0 to
-> > be valid?
->=20
-> One motivation here is that this function returns a divisor value.  So a =
+> Furthermore, this is a rather long established practice: gic-v2m,
+> gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+> for one reason or another plug onto the GIC use the same method.
 
-> zero represents a divide by zero, which is intrinsically an error for a=20
-> function that returns a divisor.  The other motivation is that the curren=
-t=20
-> return value directly maps to what the hardware expects to see.
-> =20
-> Let me know if you want me to change this anyway.
+All handling the mapping to the parent in their own way...
 
-Ok, sounds fine.
+> > Plus, without 'interrupts' walking the hierarchy is broken.
+>
+> Erm... Which hierarchy?
 
->  =20
-> > > + */
-> > > +static u8 __wrpll_calc_divq(u32 target_rate, u64 *vco_rate)
-> >=20
-> > Why does target_rate need to be u32?=20
->=20
-> I don't think there's any specific requirement for it to be a u32.
+of_irq_init() expects that an interrupt-controller without an
+interrupt-parent is the root controller. So you're right. We only need
+to have an 'interrupt-parent', but not 'interrupts'.
 
-Ok.
-
->=20
-> > Can it be unsigned long?
->=20
-> There are two basic principles motivating this:
->=20
-> 1. Use the shortest type that fits what will be contained in the variable.
->    This increases the chance that static analysis will catch any=20
->    inadvertent overflows (for example, via gcc -Woverflow).
->=20
-> 2. Use fixed-width types for hardware-constrained values that are=20
->    unrelated to the CPU's native word length.  This is a general design=20
->    practice, both to avoid confusion as to whether the variable's range=20
->    does in fact depend on the compiler's implementation, and to avoid API=
-=20
->    problems if the width does change.  Although this last case doesn't=20
->    apply here, the general application of this practice avoids problems=20
->    like the longstanding API problem we've had with clk_set_rate(), which=
-=20
->    can't take a 64 bit clock rate argument if the kernel is built with a =
-
->    compiler that uses 32 bit longs.
->=20
-
-Sure, makes sense.
-
->=20
-> > > +
-> > > +       if (parent_rate > MAX_INPUT_FREQ || parent_rate < MIN_POST_DI=
-VR_FREQ)
-> > > +               return -1;
-> > > +
-> > > +       c->parent_rate =3D parent_rate;
-> > > +       max_r_for_parent =3D div_u64(parent_rate, MIN_POST_DIVR_FREQ);
-> > > +       c->max_r =3D min_t(u8, MAX_DIVR_DIVISOR, max_r_for_parent);
-> >=20
-> > Then this min_t can be min() which is simpler to reason about.
->=20
-> To me they have the same meaning - min_t doesn't seem too obscure:
->=20
-> $ fgrep -Ir min_t\( linux/ | wc -l
-> 3320
-> $=20
->=20
-> and using it means we don't have to use a type that's needlessly large fo=
-r=20
-> the range of values that the variable will contain.  However, if getting =
-
-> rid of min_t() is more important to you than that principle, it can=20
-> of course be changed.  Do you feel strongly about it?
-
-It's not about obscurity. min_t() is an indicator that we have to coerce
-type for comparison with casting. It's nice to avoid casts if possible
-and use native types for the comparison.  assignment. It's good that you
-aren't using min() with a cast though, so this look fine to me and I'm
-not going to stay worried about this.
-
-> > > + * mutually exclusive.  If both bits are set, or both are zero, the =
-struct
-> > > + * analogbits_wrpll_cfg record is uninitialized or corrupt.
-> > > + */
-> > > +#define WRPLL_FLAGS_BYPASS_SHIFT               0
-> > > +#define WRPLL_FLAGS_BYPASS_MASK                BIT(WRPLL_FLAGS_BYPAS=
-S_SHIFT)
-> > > +#define WRPLL_FLAGS_RESET_SHIFT                1
-> > > +#define WRPLL_FLAGS_RESET_MASK         BIT(WRPLL_FLAGS_RESET_SHIFT)
-> > > +#define WRPLL_FLAGS_INT_FEEDBACK_SHIFT 2
-> > > +#define WRPLL_FLAGS_INT_FEEDBACK_MASK  BIT(WRPLL_FLAGS_INT_FEEDBACK_=
-SHIFT)
-> > > +#define WRPLL_FLAGS_EXT_FEEDBACK_SHIFT 3
-> > > +#define WRPLL_FLAGS_EXT_FEEDBACK_MASK  BIT(WRPLL_FLAGS_EXT_FEEDBACK_=
-SHIFT)
-> >=20
-> > Maybe you can use FIELD_GET/FIELD_SET?
->=20
-> To me BIT() is clearer and more concise.  However, please let me know if =
-
-> the use of the FIELD_*() macros is important to you, and I will change it.
-
-I'm not strong on it so up to you.
-
-> > > + */
-> > > +struct analogbits_wrpll_cfg {
-> > > +       u8 divr;
-> > > +       u8 divq;
-> > > +       u8 range;
-> > > +       u8 flags;
-> > > +       u16 divf;
-> > > +/* private: */
-> > > +       u32 output_rate_cache[DIVQ_VALUES];
-> > > +       unsigned long parent_rate;
-> > > +       u8 max_r;
-> > > +       u8 init_r;
-> > > +};
-> > > +
-> > > +int analogbits_wrpll_configure_for_rate(struct analogbits_wrpll_cfg =
-*c,
-> > > +                                       u32 target_rate,
-> > > +                                       unsigned long parent_rate);
-> > > +
-> > > +unsigned int analogbits_wrpll_calc_max_lock_us(struct analogbits_wrp=
-ll_cfg *c);
-> > > +
-> > > +unsigned long analogbits_wrpll_calc_output_rate(struct analogbits_wr=
-pll_cfg *c,
-> > > +                                               unsigned long parent_=
-rate);
-> >=20
-> > I wonder if it may be better to remove analogbits_ from all these
-> > exported functions. I suspect that it wouldn't conflict if it was
-> > prefixed with wrpll_ and it's shorter this way. Up to you.
->=20
-> I don't have a strong preference either way.  I've changed it to remove=20
-> the analogbits prefix as you request.
->=20
-
-Alright sounds good!
+Rob
