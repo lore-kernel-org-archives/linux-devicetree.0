@@ -1,78 +1,36 @@
-Return-Path: <SRS0=HRCn=TA=renesas.com=prvs=40235708d9=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 1/7] ARM: dts: r7s9210: Add RSPI
-Date: Tue, 30 Apr 2019 08:23:03 -0500
-Message-ID: <20190430132309.12473-2-chris.brandt@renesas.com>
-In-Reply-To: <20190430132309.12473-1-chris.brandt@renesas.com>
-References: <20190430132309.12473-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=NzLh=TA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:36775 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfD3OZN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Apr 2019 10:25:13 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
-Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+References: <1554443049-25127-1-git-send-email-cv-dong@jinso.co.jp> <1554443049-25127-2-git-send-email-cv-dong@jinso.co.jp>
+In-Reply-To: <1554443049-25127-2-git-send-email-cv-dong@jinso.co.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 16:24:59 +0200
+Message-ID: <CAMuHMdW9bf10Z5jZbLCSjE+XF6o8JgW1eRdU7jyjnLE1iBDVHA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm64: dts: renesas: r8a7795: Add CMT device nodes
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Cao Van Dong <cv-dong@jinso.co.jp>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, =?UTF-8?B?56iy5ZCJ?= <h-inayoshi@jinso.co.jp>, =?UTF-8?B?RHVuZ++8muS6uuOCvQ==?= <nv-dung@jinso.co.jp>, Hoan Nguyen An <na-hoan@jinso.co.jp>
 List-ID: <devicetree@vger.kernel.org>
 
-Add RSPI support for RZ/A2 SoC.
+On Fri, Apr 5, 2019 at 7:44 AM Cao Van Dong <cv-dong@jinso.co.jp> wrote:
+> This patch adds CMT{0|1|2|3} device nodes for r8a7795 SoC.
+>
+> Tested-by: Cao Van Dong <cv-dong@jinso.co.jp>
+> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/r7s9210.dtsi | 45 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-index 22baa96f5974..8423004bb4b7 100644
---- a/arch/arm/boot/dts/r7s9210.dtsi
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -146,6 +146,51 @@
- 			status = "disabled";
- 		};
- 
-+		spi0: spi@e800c800 {
-+			compatible = "renesas,rspi-r7s9210", "renesas,rspi-rz";
-+			reg = <0xe800c800 0x24>;
-+			interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error", "rx", "tx";
-+			clocks = <&cpg CPG_MOD 97>;
-+			power-domains = <&cpg>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi1: spi@e800d000 {
-+			compatible = "renesas,rspi-r7s9210", "renesas,rspi-rz";
-+			reg = <0xe800d000 0x24>;
-+			interrupts = <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error", "rx", "tx";
-+			clocks = <&cpg CPG_MOD 96>;
-+			power-domains = <&cpg>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi2: spi@e800d800 {
-+			compatible = "renesas,rspi-r7s9210", "renesas,rspi-rz";
-+			reg = <0xe800d800 0x24>;
-+			interrupts = <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error", "rx", "tx";
-+			clocks = <&cpg CPG_MOD 95>;
-+			power-domains = <&cpg>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		ostm0: timer@e803b000 {
- 			compatible = "renesas,r7s9210-ostm", "renesas,ostm";
- 			reg = <0xe803b000 0x30>;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.16.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
