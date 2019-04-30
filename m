@@ -1,15 +1,15 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v8 00/14] Add support for TISCI Interrupt controller
- drivers
-Date: Tue, 30 Apr 2019 06:45:12 -0500
-Message-ID: <20190430114512.pde3uuh5e3qwve3m@kahuna>
-References: <20190430101230.21794-1-lokeshvutla@ti.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 0/5] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Tue, 30 Apr 2019 14:06:45 +0200
+Message-ID: <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
+References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFqbn=UcbwoH_z+yjrjvHQZaMtmsD=n0yrBV7DAK5VRJEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
+In-Reply-To: <CAPDyKFqbn=UcbwoH_z+yjrjvHQZaMtmsD=n0yrBV7DAK5VRJEQ@mail.gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,42 +19,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, jason@lakedaemon.net, Device Tree Mailing List <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, linus.walleij@linaro.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15:42-20190430, Lokesh Vutla wrote:
-[...]
-> Changes since v7:
-> - Rebased on top of latest master.
-> - Each patch has respective changes mentioned.
-> 
-> Grygorii Strashko (1):
->   firmware: ti_sci: Add support to get TISCI handle using of_phandle
-> 
-> Lokesh Vutla (12):
->   firmware: ti_sci: Add support for RM core ops
->   firmware: ti_sci: Add support for IRQ management
->   firmware: ti_sci: Add helper apis to manage resources
->   genirq: Introduce irq_chip_{request,release}_resource_parent() apis
->   gpio: thunderx: Use the default parent apis for
->     {request,release}_resources
->   dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
->   irqchip: ti-sci-intr: Add support for Interrupt Router driver
->   dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
->   irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
->   soc: ti: Add MSI domain bus support for Interrupt Aggregator
->   irqchip: ti-sci-inta: Add msi domain support
->   arm64: arch_k3: Enable interrupt controller drivers
-> 
-> Peter Ujfalusi (1):
->   firmware: ti_sci: Add RM mapping table for am654
-> 
 
-For patches 1..5 (Firmware patches):
 
-Acked-by: Nishanth Menon <nm@ti.com>
+On 4/30/19 1:13 PM, Ulf Hansson wrote:
+> On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch series adds busy detect for stm32 sdmmc variant.
+>> Some adaptations are required:
+>> -Avoid to check and poll busy status when is not expected.
+>> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
+>>   different.
+>> -Add hardware busy timeout with MMCIDATATIMER register.
+>>
+>> V2:
+>> -mmci_cmd_irq cleanup in separate patch.
+>> -simplify the busy_detect_flag exclude
+>> -replace sdmmc specific comment in
+>> "mmc: mmci: avoid fake busy polling in mmci_irq"
+>> to focus on common behavior
+>>
+>> Ludovic Barre (5):
+>>    mmc: mmci: cleanup mmci_cmd_irq for busy detect feature
+>>    mmc: mmci: avoid fake busy polling in mmci_irq
+>>    mmc: mmci: fix clear of busy detect status
+>>    mmc: mmci: add hardware busy timeout feature
+>>    mmc: mmci: add busy detect for stm32 sdmmc variant
+>>
+>>   drivers/mmc/host/mmci.c | 61 ++++++++++++++++++++++++++++++++++++++-----------
+>>   drivers/mmc/host/mmci.h |  3 +++
+>>   2 files changed, 51 insertions(+), 13 deletions(-)
+>>
+>> --
+>> 2.7.4
+>>
+> 
+> Ludovic, just wanted to let you know that I am reviewing and testing
+> this series.
+> 
+> However, while running some tests on Ux500 for validating the busy
+> detection code, even without your series applied, I encounter some odd
+> behaviors. I am looking into the problem to understand better and will
+> let you know as soon as I have some more data to share.
 
--- 
-Regards,
-Nishanth Menon
+Oops, don't hesitate to share your status, if I could help.
+
+> 
+> Kind regards
+> Uffe
+> 
