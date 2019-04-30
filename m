@@ -1,163 +1,89 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v6 02/13] dt-bindings: misc: Add bindings for HiSilicon
- usb hub and data role switch functionality on HiKey960
-Date: Tue, 30 Apr 2019 14:07:55 +0800
-Message-ID: <f925304a-17ef-1574-b671-77d4ad0331d8@huawei.com>
-References: <20190420064019.57522-1-chenyu56@huawei.com>
- <20190420064019.57522-3-chenyu56@huawei.com> <20190425213532.GA32028@bogus>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay values
+Date: Tue, 30 Apr 2019 11:38:56 +0530
+Message-ID: <20190430060856.18445-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190425213532.GA32028@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Kishon Vijay Abraham I <kishon@ti.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
+dra76x data manual[1].
 
-On 2019/4/26 5:35, Rob Herring wrote:
-> On Sat, Apr 20, 2019 at 02:40:08PM +0800, Yu Chen wrote:
->> This patch adds binding documentation to support usb hub and usb
->> data role switch of Hisilicon HiKey960 Board.
-> 
-> Sorry I've been slow to really review this, but I needed to look at the 
-> schematics to see what exactly is going on here.
-> 
-> I think this needs some changes to better reflect the h/w and utilize 
-> existing bindings. It should really be designed ignoring the muxing to 
-> start with. Define the binding for the TypeC connector and then the host 
-> hub and make sure they can coexist. Then overlay what you need to switch 
-> between the 2 modes which AFAICT is just a single GPIO. 
-> 
->>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->> v1:
->> * Fix some format errors as suggested by Sergei.
->> * Modify gpio description to use gpiod API.
->> v2:
->> * Remove information about Hikey.
->> * Fix gpio description.
->> * Remove device_type of endpoint.
->> v3:
->> * Remove property typec-vbus-enable-val.
->> * Add description of pinctrl-names.
->> * Add example for "hisilicon,gpio-hubv1"
->> * Add flag in gpiod properties.
->> ---
->> ---
->>  .../bindings/misc/hisilicon-hikey-usb.txt          | 52 ++++++++++++++++++++++
->>  1 file changed, 52 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->> new file mode 100644
->> index 000000000000..422e844df719
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->> @@ -0,0 +1,52 @@
->> +Support usb hub and usb data role switch of Hisilicon HiKey960 Board.
->> +
->> +-----------------------------
->> +
->> +Required properties:
->> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
->> +- typec-vbus-gpios: gpio to control the vbus of typeC port
-> 
-> This should be a gpio regulator and then connected to 'vbus-supply' in a 
-> usb-connector node (see .../bindings/connectors/usb-connector.txt). 
-Currently usb-connector node has no "vbus-supply" property and
-I do not find process that handles vbus-supply in RT1711H TypeC driver.
+Also this particular pinctrl-array is using spaces instead of tabs for
+spacing between the values and the comments. Fix this as well.
 
-> 
-> Then you also need the RT1711HWSC TypeC controller in DT. That is 
-> typically the parent device of the connector node. 
-> 
->> +- otg-switch-gpios: gpio to switch DP & DM between the hub and typeC port
-> 
-> This probably belongs in USB controller node.
-> 
-The otg-switch-gpios controls a mux like fsusb30mux. It is related to
-the board design of HiKey960. And the state of the mux is decided by
-the typeC port state. So I think it is not so good to make it belongs
-in USB controller node.
+[1] http://www.ti.com/lit/ds/symlink/dra76p.pdf
 
->> +- hub-vdd33-en-gpios: gpio to enable the power of hub
-> 
-> This too should be a gpio regulator and then in a hub node. We have 2 
-> ways to represent hubs. Either as an I2C device or as a child of the 
-> host controller. The latter is preferred, but I'm not too sure how the 
-> OF graph connection linking the controller to the TypeC connector will 
-> work with the usb bus binding.
-> 
-There is no particular code except the power control for the hub.
-The i2c on the hub is not used. So it can not be an I2C device.
-Is there such an example that make the hub as a child of the host controller
-and control its power?
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
 
->> +- pinctrl-names: pin configuration state name ("default")
->> +- pinctrl-0: pinctrl config
->> +
->> +Example
->> +-----
->> +
->> +	hisi_hikey_usb: hisi_hikey_usb {
->> +		compatible = "hisilicon,hikey960-usb";
->> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
->> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
->> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&usbhub5734_pmx_func>;
->> +
->> +		port {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			hikey_usb_ep: endpoint@0 {
->> +				reg = <0>;
->> +				remote-endpoint = <&dwc3_role_switch_notify>;
->> +			};
->> +		};
->> +	};
->> +
->> +	hisi_hikey_usb: hisi_hikey_usb {
-> 
-> Perhaps doesn't matter with my above feedback, but I don't understand 
-> the point of this 2nd example.
-> 
-OK. I will remove it.
->> +		compatible = "hisilicon,gpio-hubv1";
->> +		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_LOW>;
->> +		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
->> +		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&usbhub5734_pmx_func>;
->> +
->> +		port {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			hikey_usb_ep: endpoint@0 {
->> +				reg = <0>;
->> +				remote-endpoint = <&dwc3_role_switch_notify>;
->> +			};
->> +		};
->> +	};
->> -- 
->> 2.15.0-rc2
->>
-> 
-> .
-> 
+Tested on dra76x-evm and am574x-idk.
 
-Thanks
-- Yu Chen
+ arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi | 40 +++++++++++------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
+index baba7b00eca7..fdca48186916 100644
+--- a/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
++++ b/arch/arm/boot/dts/dra76x-mmc-iodelay.dtsi
+@@ -22,7 +22,7 @@
+  *
+  * Datamanual Revisions:
+  *
+- * DRA76x Silicon Revision 1.0: SPRS993A, Revised July 2017
++ * DRA76x Silicon Revision 1.0: SPRS993E, Revised December 2018
+  *
+  */
+ 
+@@ -169,25 +169,25 @@
+ 	/* Corresponds to MMC2_HS200_MANUAL1 in datamanual */
+ 	mmc2_iodelay_hs200_conf: mmc2_iodelay_hs200_conf {
+ 		pinctrl-pin-array = <
+-			0x190 A_DELAY_PS(384) G_DELAY_PS(0)       /* CFG_GPMC_A19_OEN */
+-			0x194 A_DELAY_PS(0) G_DELAY_PS(174)       /* CFG_GPMC_A19_OUT */
+-			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)       /* CFG_GPMC_A20_OEN */
+-			0x1ac A_DELAY_PS(85) G_DELAY_PS(0)        /* CFG_GPMC_A20_OUT */
+-			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)       /* CFG_GPMC_A21_OEN */
+-			0x1b8 A_DELAY_PS(139) G_DELAY_PS(0)       /* CFG_GPMC_A21_OUT */
+-			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)       /* CFG_GPMC_A22_OEN */
+-			0x1c4 A_DELAY_PS(69) G_DELAY_PS(0)        /* CFG_GPMC_A22_OUT */
+-			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	  /* CFG_GPMC_A23_OUT */
+-			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)       /* CFG_GPMC_A24_OEN */
+-			0x1dc A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A24_OUT */
+-			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)       /* CFG_GPMC_A25_OEN */
+-			0x1e8 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A25_OUT */
+-			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)       /* CFG_GPMC_A26_OEN */
+-			0x1f4 A_DELAY_PS(0) G_DELAY_PS(0)         /* CFG_GPMC_A26_OUT */
+-			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)       /* CFG_GPMC_A27_OEN */
+-			0x200 A_DELAY_PS(36) G_DELAY_PS(0)        /* CFG_GPMC_A27_OUT */
+-			0x364 A_DELAY_PS(759) G_DELAY_PS(0)       /* CFG_GPMC_CS1_OEN */
+-			0x368 A_DELAY_PS(72) G_DELAY_PS(0)        /* CFG_GPMC_CS1_OUT */
++			0x190 A_DELAY_PS(384) G_DELAY_PS(0)	/* CFG_GPMC_A19_OEN */
++			0x194 A_DELAY_PS(350) G_DELAY_PS(174)	/* CFG_GPMC_A19_OUT */
++			0x1a8 A_DELAY_PS(410) G_DELAY_PS(0)	/* CFG_GPMC_A20_OEN */
++			0x1ac A_DELAY_PS(335) G_DELAY_PS(0)	/* CFG_GPMC_A20_OUT */
++			0x1b4 A_DELAY_PS(468) G_DELAY_PS(0)	/* CFG_GPMC_A21_OEN */
++			0x1b8 A_DELAY_PS(339) G_DELAY_PS(0)	/* CFG_GPMC_A21_OUT */
++			0x1c0 A_DELAY_PS(676) G_DELAY_PS(0)	/* CFG_GPMC_A22_OEN */
++			0x1c4 A_DELAY_PS(219) G_DELAY_PS(0)	/* CFG_GPMC_A22_OUT */
++			0x1d0 A_DELAY_PS(1062) G_DELAY_PS(154)	/* CFG_GPMC_A23_OUT */
++			0x1d8 A_DELAY_PS(640) G_DELAY_PS(0)	/* CFG_GPMC_A24_OEN */
++			0x1dc A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A24_OUT */
++			0x1e4 A_DELAY_PS(356) G_DELAY_PS(0)	/* CFG_GPMC_A25_OEN */
++			0x1e8 A_DELAY_PS(150) G_DELAY_PS(0)	/* CFG_GPMC_A25_OUT */
++			0x1f0 A_DELAY_PS(579) G_DELAY_PS(0)	/* CFG_GPMC_A26_OEN */
++			0x1f4 A_DELAY_PS(200) G_DELAY_PS(0)	/* CFG_GPMC_A26_OUT */
++			0x1fc A_DELAY_PS(435) G_DELAY_PS(0)	/* CFG_GPMC_A27_OEN */
++			0x200 A_DELAY_PS(236) G_DELAY_PS(0)	/* CFG_GPMC_A27_OUT */
++			0x364 A_DELAY_PS(759) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OEN */
++			0x368 A_DELAY_PS(372) G_DELAY_PS(0)	/* CFG_GPMC_CS1_OUT */
+ 	      >;
+ 	};
+ 
+-- 
+2.19.2
