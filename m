@@ -1,30 +1,61 @@
-From: Patrick Venture <venture@google.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add ir38064 as a trivial device
-Date: Tue, 30 Apr 2019 07:32:56 -0700
-Message-ID: <CAO=notwuAhWQry-yO9-5zQud7Mo_3=Q5gKaE4doijSrS=v_pXw@mail.gmail.com>
-References: <20190416154138.124734-1-venture@google.com> <20190430004211.GA28272@bogus>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH v9 1/2] dt-bindings: phy: Add documentation for mixel dphy
+Date: Tue, 30 Apr 2019 16:40:10 +0200
+Message-ID: <528d957b8dddad219936013ee1684934f887ac92.1556633413.git.agx@sigxcpu.org>
+References: <cover.1556633413.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430004211.GA28272@bogus>
+In-Reply-To: <cover.1556633413.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, trivial@kernel.org, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 5:42 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Apr 16, 2019 at 08:41:38AM -0700, Patrick Venture wrote:
-> > The ir38064 is a voltage regulator from Infineon.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
-> > ---
-> >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
->
-> Patch 1 and 2 applied.
+Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
 
-Thanks!
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
 
->
-> Rob
+diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+new file mode 100644
+index 000000000000..9b23407233c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+@@ -0,0 +1,29 @@
++Mixel DSI PHY for i.MX8
++
++The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
++MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
++electrical signals for DSI.
++
++Required properties:
++- compatible: Must be:
++  - "fsl,imx8mq-mipi-dphy"
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Must contain the following entries:
++  - "phy_ref": phandle and specifier referring to the DPHY ref clock
++- reg: the register range of the PHY controller
++- #phy-cells: number of cells in PHY, as defined in
++  Documentation/devicetree/bindings/phy/phy-bindings.txt
++  this must be <0>
++
++Optional properties:
++- power-domains: phandle to power domain
++
++Example:
++	dphy: dphy@30a0030 {
++		compatible = "fsl,imx8mq-mipi-dphy";
++		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
++		clock-names = "phy_ref";
++		reg = <0x30a00300 0x100>;
++		power-domains = <&pd_mipi0>;
++		#phy-cells = <0>;
++        };
+-- 
+2.20.1
