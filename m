@@ -1,92 +1,125 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 4/4] DT: arm: exynos4412: add event data type which
- is monitored
-Date: Tue, 30 Apr 2019 23:24:27 +0200
-Message-ID: <f8873863-9524-1ef0-9633-868edc3b56d3@partner.samsung.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6@eucas1p1.samsung.com>
-        <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
-        <cee7b5a2-377e-59d6-7c6e-b6f9b3140d4f@samsung.com>
+From: Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+Date: Tue, 30 Apr 2019 23:32:17 +0200
+Message-ID: <2683948.V7X3pFLLSZ@debian64>
+References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cee7b5a2-377e-59d6-7c6e-b6f9b3140d4f@samsung.com>
-Content-Language: en-US
+In-Reply-To: <20190428150822.13935-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
+To: Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc: linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sunday, April 28, 2019 5:08:22 PM CEST Jonathan Neusch=E4fer wrote:
+> The property is spelled 'bias-pull-up', as documented in
+> pinctrl-bindings.txt.
+>=20
 
+I also sent out a patch for that... back in 2017:
 
-On 4/30/19 8:10 AM, Chanwoo Choi wrote:
-> Hi,
-> 
-> On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
->> The patch adds new field in the PPMU event which shows explicitly
->> what kind of data the event is monitoring. It is possible to change it
->> using defined values in exynos_ppmu.h file.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
->> index 3a3b2fa..549faba 100644
->> --- a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
->> @@ -6,12 +6,16 @@
->>    * Author: Chanwoo Choi <cw00.choi@samsung.com>
->>    */
->>   
->> +#include <dt-bindings/pmu/exynos_ppmu.h>
->> +
->>   &ppmu_dmc0 {
->>          status = "okay";
->>   
->>          events {
->>   	       ppmu_dmc0_3: ppmu-event3-dmc0 {
->>   		       event-name = "ppmu-event3-dmc0";
->> +		       event-data-type = <(PPMU_RO_DATA_CNT |
->> +					   PPMU_WO_DATA_CNT)>;
->>   	       };
->>          };
->>   };
->> @@ -22,6 +26,8 @@
->>          events {
->>   	       ppmu_dmc1_3: ppmu-event3-dmc1 {
->>   		       event-name = "ppmu-event3-dmc1";
->> +		       event-data-type = <(PPMU_RO_DATA_CNT |
->> +					   PPMU_WO_DATA_CNT)>;
->>   	       };
->>          };
->>   };
->> @@ -32,6 +38,8 @@
->>          events {
->>   	       ppmu_leftbus_3: ppmu-event3-leftbus {
->>   		       event-name = "ppmu-event3-leftbus";
->> +		       event-data-type = <(PPMU_RO_DATA_CNT |
->> +					   PPMU_WO_DATA_CNT)>;
->>   	       };
->>          };
->>   };
->> @@ -42,6 +50,8 @@
->>          events {
->>   	       ppmu_rightbus_3: ppmu-event3-rightbus {
->>   		       event-name = "ppmu-event3-rightbus";
->> +		       event-data-type = <(PPMU_RO_DATA_CNT |
->> +					   PPMU_WO_DATA_CNT)>;
->>   	       };
->>          };
->>   };
->>
-> 
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Thank you, added to the patch.
+https://patchwork.ozlabs.org/patch/763151/
 
-Regards,
-Lukasz
-> 
-> 
+It's marked Accepted and Archived.
+
+@rob ?
+
+> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt        | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt        | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt        | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt        | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt        | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinct=
+rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+> index c2dbb3e8d840..4e90ddd77784 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+> @@ -42,7 +42,7 @@ information about e.g. the mux function.
+>  The following generic properties as defined in pinctrl-bindings.txt are =
+valid
+>  to specify in a pin configuration subnode:
+>=20
+> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
+gth,
+> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
+gth,
+>   output-low, output-high.
+>=20
+>  Non-empty subnodes must specify the 'pins' property.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinct=
+rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+> index 991be0cd0948..84be0f2c6f3b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+> @@ -44,7 +44,7 @@ information about e.g. the mux function.
+>=20
+>  The following generic properties as defined in pinctrl-bindings.txt are =
+valid
+>  to specify in a pin configuration subnode:
+> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
+gth.
+> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
+gth.
+>=20
+>  Non-empty subnodes must specify the 'pins' property.
+>  Note that not all properties are valid for all pins.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinct=
+rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+> index 7ed56a1b70fc..a7aaaa7db83b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+> @@ -42,7 +42,7 @@ information about e.g. the mux function.
+>  The following generic properties as defined in pinctrl-bindings.txt are =
+valid
+>  to specify in a pin configuration subnode:
+>=20
+> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
+gth,
+> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
+gth,
+>   output-low, output-high.
+>=20
+>  Non-empty subnodes must specify the 'pins' property.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinct=
+rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+> index cdc4787e59d2..f095209848c8 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+> @@ -42,7 +42,7 @@ information about e.g. the mux function.
+>  The following generic properties as defined in pinctrl-bindings.txt are =
+valid
+>  to specify in a pin configuration subnode:
+>=20
+> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
+gth,
+> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
+gth,
+>   output-low, output-high.
+>=20
+>  Non-empty subnodes must specify the 'pins' property.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinct=
+rl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+> index c22e6c425d0b..004056506679 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+> @@ -41,7 +41,7 @@ information about e.g. the mux function.
+>=20
+>  The following generic properties as defined in pinctrl-bindings.txt are =
+valid
+>  to specify in a pin configuration subnode:
+> - pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-stren=
+gth.
+> + pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-stren=
+gth.
+>=20
+>  Non-empty subnodes must specify the 'pins' property.
+>  Note that not all properties are valid for all pins.
+> --
+> 2.20.1
+>=20
