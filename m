@@ -1,119 +1,29 @@
-Return-Path: <SRS0=50pB=SZ=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add HDMI audio
-Date: Tue, 23 Apr 2019 14:16:48 +0100
-Message-Id: <1556025408-16366-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
+Return-Path: <SRS0=q1F+=TA=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 6/7] ARM: dts: r7s9210-rza2mevb: Add Ethernet support
+Date: Tue, 30 Apr 2019 16:03:39 +0000
+Message-ID: 
+ <TY1PR01MB156277831BBAD3BF0E0EE52D8A3A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20190430132309.12473-1-chris.brandt@renesas.com>
+ <20190430132309.12473-7-chris.brandt@renesas.com>
+ <CAMuHMdWzN_1XmO8w_otDseJ+bxk+AKNouk-ycPPyM2XWMWritQ@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdWzN_1XmO8w_otDseJ+bxk+AKNouk-ycPPyM2XWMWritQ@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux I2C" <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The CAT874 board pushes sound via I2S over SSI0 into the
-TDA19988BET chip.
-This commit wires things up so that we can get sound out of
-the HDMI interface.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
-This patch depends on patch:
-https://patchwork.kernel.org/patch/10902203/
-
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 56 +++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index 0623950..b7183f1 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- #include "r8a774c0.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/display/tda998x.h>
- 
- / {
- 	model = "Silicon Linux RZ/G2E 96board platform (CAT874)";
-@@ -63,6 +64,23 @@
- 		reg = <0x0 0x48000000 0x0 0x78000000>;
- 	};
- 
-+	sound: sound {
-+		compatible = "simple-audio-card";
-+
-+		simple-audio-card,name = "CAT874 HDMI sound";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sndcpu>;
-+		simple-audio-card,frame-master = <&sndcpu>;
-+
-+		sndcpu: simple-audio-card,cpu {
-+			sound-dai = <&rcar_sound>;
-+		};
-+
-+		sndcodec: simple-audio-card,codec {
-+			sound-dai = <&tda19988>;
-+		};
-+	};
-+
- 	vcc_sdhi0: regulator-vcc-sdhi0 {
- 		compatible = "regulator-fixed";
- 
-@@ -93,6 +111,10 @@
- 	};
- };
- 
-+&audio_clk_a {
-+	clock-frequency = <22579200>;
-+};
-+
- &du {
- 	pinctrl-0 = <&du_pins>;
- 	pinctrl-names = "default";
-@@ -133,6 +155,10 @@
- 
- 		video-ports = <0x234501>;
- 
-+		#sound-dai-cells = <0>;
-+		audio-ports = <TDA998x_I2S 0x03>;
-+		clocks = <&rcar_sound 1>;
-+
- 		ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -216,6 +242,36 @@
- 		function = "sdhi0";
- 		power-source = <1800>;
- 	};
-+
-+	sound_pins: sound {
-+		groups = "ssi01239_ctrl", "ssi0_data";
-+		function = "ssi";
-+	};
-+
-+	sound_clk_pins: sound_clk {
-+		groups = "audio_clkout1_a";
-+		function = "audio_clk";
-+	};
-+};
-+
-+&rcar_sound {
-+	pinctrl-0 = <&sound_pins &sound_clk_pins>;
-+	pinctrl-names = "default";
-+
-+	/* Single DAI */
-+	#sound-dai-cells = <0>;
-+
-+	/* audio_clkout0/1/2/3 */
-+	#clock-cells = <1>;
-+	clock-frequency = <11289600>;
-+
-+	status = "okay";
-+
-+	rcar_sound,dai {
-+		dai0 {
-+			playback = <&ssi0 &src0 &dvc0>;
-+		};
-+	};
- };
- 
- &rwdt {
--- 
-2.7.4
+SGkgR2VlcnQsDQoNCk9uIFR1ZSwgQXByIDMwLCAyMDE5IDEsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3
+cm90ZToNCj4gUGVyaGFwcyB5b3Ugd2FudCB0byBhZGQgYW4gImV0aGVybmV0MCIgYWxpYXMsIHNv
+IFUtQm9vdCBjYW4gZmluZCB0aGUNCj4gZGV2aWNlLW5vZGUgYW5kIGFkZCBhbiBhcHByb3ByaWF0
+ZSAibG9jYWwtbWFjLWFkZHJlc3MiIHByb3BlcnR5Pw0KDQpTaW5jZSBJIGhhdmUgMiBFdGhlcm5l
+dHMsIHdvdWxkIHlvdXIgcmVjb21tZW5kYXRpb24gYmUgSSBhZGQgYW4gYWxpYXMgZm9yDQplYWNo
+Pw0KDQpIb25lc3RseSwgSSd2ZSBuZXZlciBkb25lIGl0IHRoYXQgd2F5LiBJdCBoYXMgYWx3YXlz
+IGJlZW4gdGhhdCB1LWJvb3QgDQpwcmVsb2FkcyB0aGUgTUFDIGFkZHJlc3MgcmVnaXN0ZXJzIGFu
+ZCB0aGVuIHRoZSBzaF9ldGggZHJpdmVyIGp1c3QgdXNlcyANCndoYXQncyBhbHJlYWR5IGxvYWRl
+ZC4NCkJ1dCwgaWYgdXNpbmcgRFQgaXMgdGhlIG1vcmUgcmVjb21tZW5kZWQgbWV0aG9kLCBJIGNh
+biBtaWdyYXRlIHRvd2FyZHMNCnRoYXQuDQoNClRoYW5rcywNCkNocmlzDQoNCg==
