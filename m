@@ -1,58 +1,30 @@
-Return-Path: <SRS0=MvHc=SL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:29854 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfDIIwf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Apr 2019 04:52:35 -0400
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Subject: [PATCH 05/11] ARM: dts: r8a77470: Add VIN support
-Date: Tue,  9 Apr 2019 17:51:46 +0900
-Message-Id: <1554799912-24764-6-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-References: <1554799912-24764-1-git-send-email-cv-dong@jinso.co.jp>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, broonie@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org
-Cc: yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, na-hoan@jinso.co.jp
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20190430132309.12473-1-chris.brandt@renesas.com> <20190430132309.12473-3-chris.brandt@renesas.com>
+In-Reply-To: <20190430132309.12473-3-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 16:38:04 +0200
+Message-ID: <CAMuHMdVz1G7BTiB2nymahxBGjCTjTdw10ZUecYnPHQRJHTBwYQ@mail.gmail.com>
+Subject: Re: [PATCH 2/7] ARM: dts: r7s9210: Add Ethernet support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add vin{0|1} nodes to dtsi for VIN support on the RZ/G1C (r8a77470) SoC.
+On Tue, Apr 30, 2019 at 3:33 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add Ethernet support for the RZ/A2 SoC.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
----
- arch/arm/boot/dts/r8a77470.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 3940a0d..e89c72f 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -780,6 +780,28 @@
- 			status = "disabled";
- 		};
- 
-+		vin0: video@e6ef0000 {
-+			compatible = "renesas,vin-r8a77470",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef0000 0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 811>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 811>;
-+			status = "disabled";
-+		};
-+
-+		vin1: video@e6ef1000 {
-+			compatible = "renesas,vin-r8a77470",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef1000 0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 810>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 810>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
