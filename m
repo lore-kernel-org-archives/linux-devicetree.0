@@ -1,82 +1,61 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add a node for irqsteer
-Date: Tue, 30 Apr 2019 19:16:57 +0200
-Message-ID: <20190430171657.GA1513@bogon.m.sigxcpu.org>
-References: <a08a0a2fdd2090f4f42fe50d8ed70ee08b2fbcaf.1556631673.git.agx@sigxcpu.org>
- <1556632204.2560.20.camel@pengutronix.de>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V2 0/2] clk: imx: scu: add parsing clocks from device tree
+ support
+Date: Tue, 30 Apr 2019 17:35:24 +0000
+Message-ID: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1556632204.2560.20.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
-On Tue, Apr 30, 2019 at 03:50:04PM +0200, Lucas Stach wrote:
-> Am Dienstag, den 30.04.2019, 15:41 +0200 schrieb Guido Günther:
-> > Add a node for the irqsteer interrupt controller found on the iMX8MQ
-> > SoC.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > index 2cc939cfbd75..ce0e137ec8ee 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -798,6 +798,27 @@
-> >  			};
-> >  		};
-> >  
-> > +		bus@32c00000 { /* AIPS4 */
-> > +			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0x32c00000 0x32c00000 0x400000>;
-> > +
-> > +			irqsteer: interrupt-controller@32e2d000 {
-> > +				compatible = "fsl,imx8m-irqsteer",
-> > +					     "fsl,imx-irqsteer";
-> 
-> This fits on a single line, right?
+This is a follow up of the patch thread.
+https://www.spinics.net/lists/devicetree/msg283675.html
 
-It went past the 80 char limit but it seems the dts is not super picky
-about that so I changed that in v2.
+This patch series is a preparation for the MX8 Architecture improvement.
+As for IMX SCU based platforms like MX8QM and MX8QXP, they are comprised
+of a couple of SS(Subsystems) while most of them within the same SS
+can be shared. e.g. Clocks, Devices and etc.
 
-> 
-> > +				reg = <0x32e2d000 0x1000>;
-> > +				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-> > +				clock-names = "ipg";
-> > +				fsl,channel = <0>;
-> > +				fsl,num-irqs = <64>;
-> > +				interrupt-controller;
-> > +				interrupt-parent = <&gic>;
-> 
-> This is wrong, the irqsteer upstream IRQ is routed through the GPC like
-> all the other peripheral interrupts. You can just drop this property.
+However, current device tree is heavily depends on Clocks IDs defined which
+cause some troubles in writing the common <soc>-ss-xx.dtsi file.
 
-Fixed in v2. Thanks,
- -- Guido
+This patch series adds a new binding to support parsing clocks from device tree
+which can fully decouple the dependency of Clock IDs in device tree and make
+us be able to write a fully generic clock driver for SCU based SoCs.
+And it can make the driver much easily to be maintained in the future and
+avoid writing a lot of duplicated codes.
 
-> 
-> With this fixed:
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> 
-> Regards,
-> Lucas
-> 
-> > +				#interrupt-cells = <1>;
-> > +			};
-> > +		};
-> > +
-> >  		gpu: gpu@38000000 {
-> >  			compatible = "vivante,gc";
-> >  			reg = <0x38000000 0x40000>;
-> 
+ChangeLog:
+v1->v2:
+ * SCU clock changed to one cell clock binding inspired by arm,scpi.txt
+   Documentation/devicetree/bindings/arm/arm,scpi.txt
+ * Add required power domain property
+ * Dropped PATCH 3&4 first, will send the updated version accordingly
+   after the binding is finally determined,
+
+Dong Aisheng (2):
+  dt-bindings: firmware: imx-scu: new binding to parse clocks from
+    device tree
+  dt-bindings: clock: imx-lpcg: add support to parse clocks from device
+    tree
+
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 45 ++++++++++++++++++----
+ .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 34 +++++++++++++---
+ include/dt-bindings/firmware/imx/rsrc.h            | 17 ++++++++
+ 3 files changed, 82 insertions(+), 14 deletions(-)
+
+-- 
+2.7.4
