@@ -1,245 +1,228 @@
-From: guillaume La Roque <glaroque@baylibre.com>
-Subject: Re: [PATCH v2 4/4] pinctrl: meson: add support of drive-strength-uA
-Date: Tue, 30 Apr 2019 09:20:39 +0200
-Message-ID: <163fa4df-1017-d230-b264-51ea71236df9@baylibre.com>
-References: <20190418124758.24022-1-glaroque@baylibre.com>
- <20190418124758.24022-5-glaroque@baylibre.com>
- <CAFBinCDNz1txJ7_aQU8MwjpeVFC6BgyG_gkg-jJRnnerSjbP9A@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 2/4] drivers: devfreq: events: extend events by type
+ of counted data
+Date: Tue, 30 Apr 2019 16:34:30 +0900
+Message-ID: <3557d507-0463-89de-4025-fbeaaef78bed@samsung.com>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134821eucas1p2461a27e28387ff2b87c149f09582d2a0@eucas1p2.samsung.com>
+        <1555681688-19643-3-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDNz1txJ7_aQU8MwjpeVFC6BgyG_gkg-jJRnnerSjbP9A@mail.gmail.com>
+In-Reply-To: <1555681688-19643-3-git-send-email-l.luba@partner.samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hi Lukasz,
+
+On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
+> This patch adds posibility to choose what type of data should be counted
+> by the PPMU counter. Now the type comes from DT where the event has been
+> defined. When there is no 'event-data-type' the default value is used,
+> which is 'read data in bytes'.
+> It is needed when you want to know not only read+write data bytes but
+> i.e. only write data in byte, or number of read requests, etc.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/devfreq/event/exynos-ppmu.c | 61 +++++++++++++++++++++++++------------
+>  include/linux/devfreq-event.h       |  6 ++++
+>  2 files changed, 48 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+> index c61de0b..073bf2c 100644
+> --- a/drivers/devfreq/event/exynos-ppmu.c
+> +++ b/drivers/devfreq/event/exynos-ppmu.c
+> @@ -154,9 +154,9 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	/* Set the event of Read/Write data count  */
+> +	/* Set the event of proper data type monitoring */
+>  	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id),
+> -				PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT);
+> +			   edev->desc->data_type);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -368,23 +368,11 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	/* Set the event of Read/Write data count  */
+> -	switch (id) {
+> -	case PPMU_PMNCNT0:
+> -	case PPMU_PMNCNT1:
+> -	case PPMU_PMNCNT2:
+> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+> -				PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT);
+> -		if (ret < 0)
+> -			return ret;
+> -		break;
+> -	case PPMU_PMNCNT3:
+> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+> -				PPMU_V2_EVT3_RW_DATA_CNT);
+> -		if (ret < 0)
+> -			return ret;
+> -		break;
+> -	}
+> +	/* Set the event of proper data type monitoring */
+> +	ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+> +			   edev->desc->data_type);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	/* Reset cycle counter/performance counter and enable PPMU */
+>  	ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
+> @@ -508,6 +496,7 @@ static int of_get_devfreq_events(struct device_node *np,
+>  	struct device *dev = info->dev;
+>  	struct device_node *events_np, *node;
+>  	int i, j, count;
+> +	int ret;
+>  
+>  	events_np = of_get_child_by_name(np, "events");
+>  	if (!events_np) {
+> @@ -544,6 +533,40 @@ static int of_get_devfreq_events(struct device_node *np,
+>  		desc[j].driver_data = info;
+>  
+>  		of_property_read_string(node, "event-name", &desc[j].name);
+> +		ret = of_property_read_u32(node, "event-data-type",
+> +					   &desc[j].data_type);
+> +		if (ret) {
+> +			/* Set the event of proper data type counting.
+> +			 * Check if the data type has been defined in DT,
+> +			 * use default if not.
+> +			 */
+> +			if (of_device_is_compatible(np,
+> +					"samsung,exynos-ppmu-v2")) {
+
+It is not proper to compare the compatible string again
+in the device driver. Instead, you can define the ppmu device type
+as following and then use 'struct of_device_id' in order to
+identify the device type.
+
+	enum exynos_ppmu_type {
+		EXYNOS_TYPE_PPMU,
+		EXYNOS_TYPE_PPMU_V2,
+	};
+
+ static const struct of_device_id exynos_ppmu_id_match[] = {
+        {
+                .compatible = "samsung,exynos-ppmu",
+-               .data = (void *)&exynos_ppmu_ops,
++               .data = (void *)EXYNOS_TYPE_PPMU,
+        }, {
+                .compatible = "samsung,exynos-ppmu-v2",
+-               .data = (void *)&exynos_ppmu_v2_ops,
++               .data = (void *)EXYNOS_TYPE_PPMU_V2,
+        },
 
 
-thanks for your feedback.
+The many device drivers in the mainline uses this code
+in order to get the device type. You can refer the example
+in the drivers/mfd/max14577.c.
+
+(snip)
 
 
-On 4/27/19 9:44 PM, Martin Blumenstingl wrote:
-> Hi Guillaume,
->
-> On Thu, Apr 18, 2019 at 2:48 PM Guillaume La Roque
-> <glaroque@baylibre.com> wrote:
->> drive-strength-uA is a new feature needed for G12A SoC.
->> the default DS setting after boot is usually 500uA and it is not enough for
->> many functions. We need to be able to set the drive strength to reliably
->> enable things like MMC, I2C, etc ...
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> I gave this a go on Meson8m2 (meaning I applied all four patches from
-> this series and booted the result on my board):
-> [Meson8m2 doesn't support drive strength and still boots without any
-> crashes or obvious regressions]
-> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
->> ---
->>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  36 ++---
->>  drivers/pinctrl/meson/pinctrl-meson.c      | 166 ++++++++++++++++-----
->>  drivers/pinctrl/meson/pinctrl-meson.h      |  20 ++-
-> personally I would have split this into two separate patches:
-> - one for the generic pinctrl-meson part which adds drive-strength-uA support
-> - another patch for enabling this on G12A
->
-> if nobody else wants you to split this then it's fine for me as well
+Example, I add the example. but it is not tested. 
+
+--- a/drivers/devfreq/event/exynos-ppmu.c
++++ b/drivers/devfreq/event/exynos-ppmu.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/suspend.h>
+@@ -23,6 +24,11 @@
+ 
+ #include "exynos-ppmu.h"
+ 
++enum exynos_ppmu_type {
++       EXYNOS_TYPE_PPMU,
++       EXYNOS_TYPE_PPMU_V2,
++};
++
+ struct exynos_ppmu_data {
+        struct clk *clk;
+ };
+@@ -36,6 +42,7 @@ struct exynos_ppmu {
+        struct regmap *regmap;
+ 
+        struct exynos_ppmu_data ppmu;
++       enum exynos_ppmu_type ppmu_type;
+ };
+ 
+ #define PPMU_EVENT(name)                       \
+ 
+        /* Reset cycle counter/performance counter and enable PPMU */
+        ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
+@@ -483,31 +476,23 @@ static const struct devfreq_event_ops exynos_ppmu_v2_ops = {
+ static const struct of_device_id exynos_ppmu_id_match[] = {
+        {
+                .compatible = "samsung,exynos-ppmu",
+-               .data = (void *)&exynos_ppmu_ops,
++               .data = (void *)EXYNOS_TYPE_PPMU,
+        }, {
+                .compatible = "samsung,exynos-ppmu-v2",
+-               .data = (void *)&exynos_ppmu_v2_ops,
++               .data = (void *)EXYNOS_TYPE_PPMU_V2,
+        },
+        { /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, exynos_ppmu_id_match);
+ 
+-static struct devfreq_event_ops *exynos_bus_get_ops(struct device_node *np)
+-{
+-       const struct of_device_id *match;
+-
+-       match = of_match_node(exynos_ppmu_id_match, np);
+-       return (struct devfreq_event_ops *)match->data;
+-}
+-
+ static int of_get_devfreq_events(struct device_node *np,
+                                 struct exynos_ppmu *info)
+ {
+        struct devfreq_event_desc *desc;
+-       struct devfreq_event_ops *event_ops;
+        struct device *dev = info->dev;
+        struct device_node *events_np, *node;
+        int i, j, count;
+ 
+        events_np = of_get_child_by_name(np, "events");
+        if (!events_np) {
+@@ -515,7 +500,6 @@ static int of_get_devfreq_events(struct device_node *np,
+                        "failed to get child node of devfreq-event devices\n");
+                return -EINVAL;
+        }
+-       event_ops = exynos_bus_get_ops(np);
+ 
+        count = of_get_child_count(events_np);
+        desc = devm_kcalloc(dev, count, sizeof(*desc), GFP_KERNEL);
+@@ -540,11 +524,38 @@ static int of_get_devfreq_events(struct device_node *np,
+                        continue;
+                }
+ 
+-               desc[j].ops = event_ops;
++               switch (info->ppmu_type) {
++               case EXYNOS_TYPE_PPMU:
++                       desc[j].ops = &exynos_ppmu_ops;
++                       break;
++               case EXYNOS_TYPE_PPMU_V2:
++                       desc[j].ops = &exynos_ppmu_v2_ops;
++                       break;
++               }
++
 
 
-why not if i send new series i will do.
-
-
->
->>  3 files changed, 163 insertions(+), 59 deletions(-)
->>
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> index d494492e98e9..3475cd7bd2af 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
->> @@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
->>  };
->>
->>  static struct meson_bank meson_g12a_periphs_banks[] = {
->> -       /* name  first  last  irq  pullen  pull  dir  out  in */
->> -       BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
->> -            4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
->> -       BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
->> -            3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
->> -       BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
->> -            0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
->> -       BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
->> -            1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
->> -       BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
->> -            5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
->> -       BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
->> -            2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
->> +       /* name  first  last  irq  pullen  pull  dir  out  in  ds */
->> +       BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
->> +               4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
->> +       BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
->> +               3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
->> +       BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
->> +               0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
->> +       BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
->> +               1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
->> +       BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
->> +               5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
->> +       BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
->> +               2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
->>  };
->>
->>  static struct meson_bank meson_g12a_aobus_banks[] = {
->> -       /* name  first  last  irq  pullen  pull  dir  out  in  */
->> -       BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
->> -            3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
->> +       /* name  first  last  irq  pullen  pull  dir  out  in  ds */
->> +       BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
->> +               0, 0),
->>         /* GPIOE actually located in the AO bank */
->> -       BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
->> -            3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
->> +       BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
->> +               16, 1, 0),
->>  };
-> these definitions are really hard to read, but it's been like this
-> even before your patch
->
->>  static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
->> index 96a4a72708e4..5108e5aa6514 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> @@ -174,62 +174,106 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
->>         return 0;
->>  }
->>
->> -static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
->> -                            unsigned long *configs, unsigned num_configs)
->> +static int meson_pinconf_set_bias(struct meson_pinctrl *pc, unsigned int pin,
->> +                                 enum pin_config_param conf)
-> can you please confirm that I understood the purpose of this correctly:
-> I think you introduce this to make setting the bias consistent with
-> how you set the drive-strength.
-> if so then it would be great to have a separate patch which describes
-> that it's only a code-style change and a functional no-op
-
-
-you  are right, i will separate this changes.
-
-
->
-> additionally the function arguments are not consistent with
-> meson_pinconf_get_drive_strength():
-> - here you pass the pinctrl subsystem specific parameters (enum
-> pin_config_param conf)
-> - in meson_pinconf_get_drive_strength the conversion for pinctrl
-> subsystem specific values (pinconf_to_config_argument) is part of
-> meson_pinconf_set
-
-
-for param i'm not sure i understand what you want, if you talk about difference between set_bias and set_drive arg , it's difficult to align it.
-
-if it's about diff between get_bias and get_drive i think i can return drive stength value instead of using an u16 arg input param.
-
-
-> I'm wondering whether two separate functions
-> (meson_pinconf_disable_bias and meson_pinconf_enable_bias) would make
-> things easier to read. I haven't tried whether this would really make
-> things better, so I'd like to hear your opinion on this Guillaume!
-
-
-no special opinion on this, if you think it's better for understanding i can separate  set_bias function.
-
-
->
-> [...]
->> +static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
->> +                                           unsigned int pin, u16 arg)
->>  {
->> -       struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
->>         struct meson_bank *bank;
->> -       enum pin_config_param param;
->>         unsigned int reg, bit;
->> -       int i, ret;
->> +       unsigned int ds_val;
->> +       int ret;
->> +
->> +       if (!pc->reg_ds) {
->> +               dev_err(pc->dev, "drive-strength not supported\n");
->> +               return -ENOTSUPP;
-> in meson_pinconf_set() we don't complain (with a dev_err) for this case.
-> I'm not sure what the best-practice is for the pinctrl subsystem,
-> maybe Linus can comment on this
->
-
-this check is to be sure it's possible to set drive stength,
-
-if no register bank is setting in DT but drive-stength properties are setting on pins i need to generate an error
-
-because something is wrong.
-
-
->> +       }
->>
->>         ret = meson_get_bank(pc, pin, &bank);
->>         if (ret)
->>                 return ret;
->>
->> +       meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
->> +       bit = bit << 1;
->> +
->> +       if (arg <= 500) {
->> +               ds_val = MESON_PINCONF_DRV_500UA;
->> +       } else if (arg <= 2500) {
->> +               ds_val = MESON_PINCONF_DRV_2500UA;
->> +       } else if (arg <= 3000) {
->> +               ds_val = MESON_PINCONF_DRV_3000UA;
->> +       } else if (arg <= 4000) {
->> +               ds_val = MESON_PINCONF_DRV_4000UA;
->> +       } else {
->> +               dev_warn_once(pc->dev,
->> +                             "pin %u: invalid drive-strength : %d , default to 4mA\n",
->> +                             pin, arg);
->> +               ds_val = MESON_PINCONF_DRV_4000UA;
-> why not return -EINVAL here? (my assumption is that the pinctrl
-> subsystem would like to have -EINVAL instead of drivers doing
-> fallbacks if the values are out-of-range, but I'm not 100% sure about
-> this)
->
-> [...]
-
-
-i choose to set a default value instead of generating an error,
-
-in this case it's only if you ask a value upper than 4000uA so it's not really a risk to set 4000uA by default.
-
-
->> +static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
->> +                                           unsigned int pin, u16 *arg)
->> +{
->> +       struct meson_bank *bank;
->> +       unsigned int reg, bit;
->> +       unsigned int val;
->> +       int ret;
->> +
-> do you need to return -ENOTSUPP here if pc->reg_ds is NULL, similar to
-> what you already have in meson_pinconf_set_drive_strength()?
-
-depending of linux comment on your feedback on meson_pinconf_set_drive_strength
-
-i will update this part .
-
-
->
->
-> Regards
-> Martin
-
-
-Regards
-
-Guillaume
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
