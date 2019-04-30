@@ -1,82 +1,107 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [EXT] Re: [PATCH V3 04/16] PCI: dwc: Perform dbi regs write lock
- towards the end
-Date: Tue, 30 Apr 2019 00:36:22 +0000
-Message-ID: <AM6PR04MB57816120E04D106D64F2AA39843A0@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20190416192730.15681-1-vidyas@nvidia.com>
-        <20190416192730.15681-5-vidyas@nvidia.com>
-        <305100E33629484CBB767107E4246BBB0A22C127@de02wembxa.internal.synopsys.com>
- <20190422154608.6e6f8ae3@xhacker.debian>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/8] dt-bindings: remoteproc: add bindings for stm32
+ remote processor driver
+Date: Mon, 29 Apr 2019 19:40:51 -0500
+Message-ID: <20190430004051.GA7391@bogus>
+References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
+ <1555426699-5340-3-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190422154608.6e6f8ae3@xhacker.debian>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1555426699-5340-3-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "kthota@nvidia.com" <kthota@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEppc2hlbmcgWmhhbmcgW21h
-aWx0bzpKaXNoZW5nLlpoYW5nQHN5bmFwdGljcy5jb21dDQo+IFNlbnQ6IDIwMTnE6jTUwjIyyNUg
-MTU6NTUNCj4gVG86IEd1c3Rhdm8gUGltZW50ZWwgPEd1c3Rhdm8uUGltZW50ZWxAc3lub3BzeXMu
-Y29tPjsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogVmlkeWEgU2Fn
-YXIgPHZpZHlhc0BudmlkaWEuY29tPjsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gcm9iaCtkdEBr
-ZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgdGhpZXJyeS5yZWRpbmdAZ21haWwuY29t
-Ow0KPiBqb25hdGhhbmhAbnZpZGlhLmNvbTsga2lzaG9uQHRpLmNvbTsgY2F0YWxpbi5tYXJpbmFz
-QGFybS5jb207DQo+IHdpbGwuZGVhY29uQGFybS5jb207IGxvcmVuem8ucGllcmFsaXNpQGFybS5j
-b207IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
-bW1hZGRpcmVkZHlAbnZpZGlhLmNvbTsga3Rob3RhQG52aWRpYS5jb207DQo+IGxpbnV4LXBjaUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IG1wZXJ0dHVu
-ZW5AbnZpZGlhLmNvbTsgbGludXgtdGVncmFAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IHNhZ2FyLnR2QGdtYWlsLmNvbQ0KPiBTdWJqZWN0
-OiBbRVhUXSBSZTogW1BBVENIIFYzIDA0LzE2XSBQQ0k6IGR3YzogUGVyZm9ybSBkYmkgcmVncyB3
-cml0ZSBsb2NrDQo+IHRvd2FyZHMgdGhlIGVuZA0KPiANCj4gV0FSTklORzogVGhpcyBlbWFpbCB3
-YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5YUC4gRE8gTk9UIENMSUNLIGxpbmtzIG9yDQo+IGF0dGFj
-aG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRl
-bnQgaXMgc2FmZS4NCj4gDQo+IA0KPiANCj4gT24gV2VkLCAxNyBBcHIgMjAxOSAwOTo1NjozMyAr
-MDAwMCBHdXN0YXZvIFBpbWVudGVsIHdyb3RlOg0KPiANCj4gPg0KPiA+IE9uIFR1ZSwgQXByIDE2
-LCAyMDE5IGF0IDIwOjI3OjE4LCBWaWR5YSBTYWdhciA8dmlkeWFzQG52aWRpYS5jb20+IHdyb3Rl
-Og0KPiA+DQo+ID4gPiBSZW1vdmUgbXVsdGlwbGUgd3JpdGUgZW5hYmxlIGFuZCBkaXNhYmxlIHNl
-cXVlbmNlcyBvZiBkYmkgcmVnaXN0ZXJzDQo+ID4gPiBhcw0KPiA+ID4gVGVncmExOTQgaW1wbGVt
-ZW50cyB3cml0ZXMgdG8gQkFSLTAgcmVnaXN0ZXIgKG9mZnNldDogMHgxMCkNCj4gPiA+IGNvbnRy
-b2xsZWQgYnkgREJJIHdyaXRlLWxvY2sgZW5hYmxlIGJpdCB0aGVyZWJ5IG5vdCBhbGxvd2luZyBh
-bnkNCj4gPiA+IGZ1cnRoZXIgd3JpdGVzIHRvIEJBUi0wIHJlZ2lzdGVyIGluIGNvbmZpZyBzcGFj
-ZSB0byB0YWtlIHBsYWNlLg0KPiA+ID4gSGVuY2UgZGlzYWJsaW5nIHdyaXRlIHBlcm1pc3Npb24g
-b25seSB0b3dhcmRzIHRoZSBlbmQuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogVmlkeWEg
-U2FnYXIgPHZpZHlhc0BudmlkaWEuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiBDaGFuZ2VzIHNpbmNl
-IFt2Ml06DQo+ID4gPiAqIE5vbmUNCj4gPiA+DQo+ID4gPiBDaGFuZ2VzIHNpbmNlIFt2MV06DQo+
-ID4gPiAqIE5vbmUNCj4gPiA+DQo+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
-ZS1kZXNpZ253YXJlLWhvc3QuYyB8IDMgLS0tDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgZGVs
-ZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4gaW5kZXggMmE1MzMyZTVjY2Zh
-Li5jMDMzNGM5MmMxYTYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVy
-L2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jDQo+ID4gPiBAQCAtNjgzLDcgKzY4Myw2
-IEBAIHZvaWQgZHdfcGNpZV9zZXR1cF9yYyhzdHJ1Y3QgcGNpZV9wb3J0ICpwcCkNCj4gPiA+ICAg
-ICAgIHZhbCAmPSAweGZmZmYwMGZmOw0KPiA+ID4gICAgICAgdmFsIHw9IDB4MDAwMDAxMDA7DQo+
-ID4gPiAgICAgICBkd19wY2llX3dyaXRlbF9kYmkocGNpLCBQQ0lfSU5URVJSVVBUX0xJTkUsIHZh
-bCk7DQo+ID4gPiAtICAgICBkd19wY2llX2RiaV9yb193cl9kaXMocGNpKTsNCj4gPiA+DQo+ID4g
-PiAgICAgICAvKiBTZXR1cCBidXMgbnVtYmVycyAqLw0KPiA+ID4gICAgICAgdmFsID0gZHdfcGNp
-ZV9yZWFkbF9kYmkocGNpLCBQQ0lfUFJJTUFSWV9CVVMpOyBAQCAtNzIzLDgNCj4gPiA+ICs3MjIs
-NiBAQCB2b2lkIGR3X3BjaWVfc2V0dXBfcmMoc3RydWN0IHBjaWVfcG9ydCAqcHApDQo+ID4gPg0K
-PiA+ID4gICAgICAgZHdfcGNpZV93cl9vd25fY29uZihwcCwgUENJX0JBU0VfQUREUkVTU18wLCA0
-LCAwKTsNCj4gPiA+DQo+ID4gPiAtICAgICAvKiBFbmFibGUgd3JpdGUgcGVybWlzc2lvbiBmb3Ig
-dGhlIERCSSByZWFkLW9ubHkgcmVnaXN0ZXIgKi8NCj4gPiA+IC0gICAgIGR3X3BjaWVfZGJpX3Jv
-X3dyX2VuKHBjaSk7DQo+ID4gPiAgICAgICAvKiBQcm9ncmFtIGNvcnJlY3QgY2xhc3MgZm9yIFJD
-ICovDQo+ID4gPiAgICAgICBkd19wY2llX3dyX293bl9jb25mKHBwLCBQQ0lfQ0xBU1NfREVWSUNF
-LCAyLA0KPiBQQ0lfQ0xBU1NfQlJJREdFX1BDSSk7DQo+ID4gPiAgICAgICAvKiBCZXR0ZXIgZGlz
-YWJsZSB3cml0ZSBwZXJtaXNzaW9uIHJpZ2h0IGFmdGVyIHRoZSB1cGRhdGUgKi8NCj4gPiA+IC0t
-DQo+ID4gPiAyLjE3LjENCj4gPg0KPiA+IFRoaXMgc2V0dXAgc2VxdWVuY2Ugd2FzIHdyaXR0ZW4g
-YnkgSmluZ29vIEhhbiwgbGV0J3MgY2hlY2sgaWYgaGUgZGlkDQo+ID4gdGhpcyBieSBzb21lIHBh
-cnRpY3VsYXIgcmVhc29uLg0KPiA+IEppbmdvbyBkbyB5b3UgcmVtZW1iZXIgd2h5IHlvdSB3cm90
-ZSB0aGUgY29kZSBsaWtlIHRoaXM/DQo+IA0KPiBGV0lDVCwgZW5hYmxpbmcgUk8gd3JpdGVhYmxl
-IGluIHRoZSBzZXR1cCBzZXF1ZW5jZSBpcyBpbnRyb2R1Y2VkIGluIGNvbW1pdA0KPiBkOTFkZmU1
-MDU0ZDQgKCJQQ0k6IGR3YzogRW5hYmxlIHdyaXRlIHBlcm1pc3Npb24gZm9yIENsYXNzIENvZGUs
-IEludGVycnVwdA0KPiBQaW4gdXBkYXRlcyIpLiBUaGUgUmVhc29uIHdoeSBub3QgdG93YXJkcyB0
-aGUgZW5kIG1heWJlIG9ubHkgZW5hYmxlIHRoZQ0KPiBSTyB3cml0ZWFibGUgd2hlbiBuZWNlc3Nh
-cnkuDQo+IA0KDQpZZXMsIHlvdSBnZXQgdGhlIHBvaW50LCBJIHRoaW5rIGl0J3Mgbm90IGEgZ29v
-ZCBjaG9pY2UgdG8gdW5sb2NrIHRoZSB3cml0ZSBwZXJtaXNzaW9uDQpvZiB0aGUgUk8gcmVnaXN0
-ZXJzIGFsbCB0aHJvdWdoLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
+On Tue, Apr 16, 2019 at 04:58:13PM +0200, Fabien Dessenne wrote:
+> Add the device tree bindings document for the stm32 remoteproc devices.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  .../devicetree/bindings/remoteproc/stm32-rproc.txt | 64 ++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> new file mode 100644
+> index 0000000..430132c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> @@ -0,0 +1,64 @@
+> +STMicroelectronics STM32 Remoteproc
+> +-----------------------------------
+> +This document defines the binding for the remoteproc component that loads and
+> +boots firmwares on the ST32MP family chipset.
+> +
+> +Required properties:
+> +- compatible:	Must be "st,stm32mp1-m4"
+> +- reg:		Address ranges of the remote processor dedicated memories.
+> +		The parent node should provide an appropriate ranges property
+> +		for properly translating these into bus addresses.
+
+dma-ranges, but that's independent of 'reg'.
+
+It needs to list how many reg regions and what they are.
+
+> +- resets:	Reference to a reset controller asserting the remote processor.
+> +- st,syscfg-holdboot: Reference to the system configuration which holds the
+> +		remote processor reset hold boot
+> +	1st cell: phandle of syscon block
+> +	2nd cell: register offset containing the hold boot setting
+> +	3rd cell: register bitmask for the hold boot field
+> +- st,syscfg-tz: Reference to the system configuration which holds the RCC trust
+> +		zone mode
+> +	1st cell: phandle to syscon block
+> +	2nd cell: register offset containing the RCC trust zone mode setting
+> +	3rd cell: register bitmask for the RCC trust zone mode bit
+> +
+> +Optional properties:
+> +- interrupts:	Should contain the watchdog interrupt
+> +- mboxes:	This property is required only if the rpmsg/virtio functionality
+> +		is used. List of phandle and mailbox channel specifiers:
+> +		- a channel (a) used to communicate through virtqueues with the
+> +		  remote proc.
+> +		  Bi-directional channel:
+> +		      - from local to remote = send message
+> +		      - from remote to local = send message ack
+> +		- a channel (b) working the opposite direction of channel (a)
+> +		- a channel (c) used by the local proc to notify the remote proc
+> +		  that it is about to be shut down.
+> +		  Unidirectional channel:
+> +		      - from local to remote, where ACK from the remote means
+> +		        that it is ready for shutdown
+> +- mbox-names:	This property is required if the mboxes property is used.
+> +		- must be "vq0" for channel (a)
+> +		- must be "vq1" for channel (b)
+> +		- must be "shutdown" for channel (c)
+> +- memory-region: List of phandles to the reserved memory regions associated with
+> +		the remoteproc device. This is variable and describes the
+> +		memories shared with the remote processor (eg: remoteproc
+> +		firmware and carveouts, rpmsg vrings, ...).
+> +		(see ../reserved-memory/reserved-memory.txt)
+> +- st,syscfg-pdds: Reference to the system configuration which holds the remote
+> +		processor deep sleep setting
+> +	1st cell: phandle to syscon block
+> +	2nd cell: register offset containing the deep sleep setting
+> +	3rd cell: register bitmask for the deep sleep bit
+> +- auto_boot:	If defined, when remoteproc is probed, it loads the default
+> +		firmware and starts the remote processor.
+
+st,auto-boot
+
+> +
+> +Example:
+> +	m4_rproc: m4@0 {
+> +		compatible = "st,stm32mp1-m4";
+> +		reg = <0x00000000 0x10000>,
+> +		      <0x10000000 0x40000>,
+> +		      <0x30000000 0x40000>;
+> +		resets = <&rcc MCU_R>;
+> +		st,syscfg-holdboot = <&rcc 0x10C 0x1>;
+> +		st,syscfg-tz = <&rcc 0x000 0x1>;
+> +	};
+> -- 
+> 2.7.4
+> 
