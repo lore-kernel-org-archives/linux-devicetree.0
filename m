@@ -1,87 +1,51 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v3 3/3] clk: sifive: add a driver for the SiFive FU540
- PRCI IP block
-Date: Mon, 29 Apr 2019 23:20:26 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1904292258000.7063@viisi.sifive.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com> <20190411082733.3736-4-paul.walmsley@sifive.com> <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
+From: guillaume La Roque <glaroque@baylibre.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: pinctrl: meson: Add drive-strength-uA
+ property
+Date: Tue, 30 Apr 2019 08:38:04 +0200
+Message-ID: <7608f385-d412-f8be-d11b-9023f9702ec3@baylibre.com>
+References: <20190418124758.24022-1-glaroque@baylibre.com>
+ <20190418124758.24022-4-glaroque@baylibre.com>
+ <CAFBinCD_qJw6-_zsnKFhsVHUHd2K2wJ3S9EsXGrPPxZ1SWn=uA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <256b9312-4740-e7b1-84ac-c0cc1ff4bc77@wdc.com>
+In-Reply-To: <CAFBinCD_qJw6-_zsnKFhsVHUHd2K2wJ3S9EsXGrPPxZ1SWn=uA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Albert Ou <aou@eecs.berkeley.edu>, Stephen Boyd <sboyd@kernel.org>, "Wesley W . Terpstra" <wesley@sifive.com>, Michael Turquette <mturquette@baylibre.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Atish,
+Hi Martin,
 
-On Sat, 27 Apr 2019, Atish Patra wrote:
+On 4/27/19 9:21 PM, Martin Blumenstingl wrote:
+> Hi Guillaume,
+>
+> On Thu, Apr 18, 2019 at 2:48 PM Guillaume La Roque
+> <glaroque@baylibre.com> wrote:
+>> Add optional drive-strength-uA property
+>>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+>> ---
+>>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> index a47dd990a8d3..b3e4be696ddc 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
+>>  "bias-pull-up" and "bias-pull-down", described in file
+>>  pinctrl-bindings.txt
+>>
+>> +Optional properties :
+>> + - drive-strength-uA: Drive strength for the specified pins in uA.
+> if you have to re-send this series for whatever reason then please
+> mention that drive-strength-uA is only valid for G12A and newer
 
-> On 4/11/19 1:28 AM, Paul Walmsley wrote:
-> > Add driver code for the SiFive FU540 PRCI IP block.  This IP block
-> > handles reset and clock control for the SiFive FU540 device and
-> > implements SoC-level clock tree controls and dividers.
-
-[...]
-
-> > +static const struct of_device_id sifive_fu540_prci_of_match[] = {
-> > +	{ .compatible = "sifive,fu540-c000-prci", },
-> 
-> All the existing unleashed devices have prci clock compatible string as
-> "sifive,aloeprci0" or "sifive,ux00prci0". Should it be added to maintain
-> backward compatibility?
-
-As you note, just adding the old (unreviewed) compatible string isn't 
-enough.
-
-> Even after adding the compatible string (just for my testing purpose), I get
-> this while booting.
-> 
-> [    0.104571] sifive-fu540-prci 10000000.prci: expected only two parent
-> clocks, found 1
-> [    0.112460] sifive-fu540-prci 10000000.prci: could not register clocks: -22
-> [    0.119499] sifive-fu540-prci: probe of 10000000.prci failed with error -22
-> 
-> Looking at the DT entries, your DT patch has
-> 
-> +		prci: clock-controller@10000000 {
-> +			compatible = "sifive,fu540-c000-prci";
-> +			reg = <0x0 0x10000000 0x0 0x1000>;
-> +			clocks = <&hfclk>, <&rtcclk>;
-> +			#clock-cells = <1>;
-> +		};
-> 
-> 
-> while current DT from FSBL
-> (https://github.com/sifive/freedom-u540-c000-bootloader/blob/master/fsbl/ux00_fsbl.dts)
-> 
-> prci: prci@10000000 {
-> 			compatible = "sifive,aloeprci0", "sifive,ux00prci0";
-> 			reg = <0x0 0x10000000 0x0 0x1000>;
-> 			reg-names = "control";
-> 			clocks = <&refclk>;
-> 			#clock-cells = <1>;
-> 		};
-> 
-> This seems to be the cause of error. It looks like this patch needs a complete
-> different DT (your DT patch) than FSBL provides.
-
-That's right.  That old data was completely out of tree and unreviewed.  
-It's part of the reason why we're going through the process of posting DT 
-data to the kernel and devicetree lists and getting that data reviewed:
-
-https://lore.kernel.org/linux-riscv/20190411084242.4999-1-paul.walmsley@sifive.com/
-
-> This means everybody must upgrade the FSBL to use your DT patch in their
-> boards once this driver is merged. Is this okay?
-
-People can continue to use the out-of-tree DT data if they want.  They'll 
-just have to continue to patch their kernels to add out-of-tree drivers, 
-as they do now.
-
-Otherwise, if people want to use the upstream PRCI driver in the upstream 
-kernel, then it's necessary to use DT data that aligns with what's in the 
-upstream binding documentation.
+thanks for your review, i will do if i send new series.
 
 
-- Paul
+> otherwise:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
