@@ -1,123 +1,157 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add
- Exynos5422 DMC device description
-Date: Tue, 30 Apr 2019 13:46:17 +0900
-Message-ID: <babae08b-3ea6-30f4-6a46-85dea0eacd86@samsung.com>
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
-        <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+From: Chuanhua Han <chuanhua.han@nxp.com>
+Subject: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider I2C_IPGCLK_SEL RCW
+ bit when using ls1046a SoC
+Date: Tue, 30 Apr 2019 12:47:18 +0800
+Message-ID: <20190430044719.30720-1-chuanhua.han@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, sumit.batra@nxp.com, eha@deif.com, Chuanhua Han <chuanhua.han@nxp.com>, linux-kernel@vger.kernel.org, linux@rempel-privat.de, wsa+renesas@sang-engineering.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, l.stach@pengutronix.de, festevam@gmail.com, peda@axentia.se, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
-> The patch adds description for DT binding for a new Exynos5422 Dynamic
-> Memory Controller device.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> new file mode 100644
-> index 0000000..133b3cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -0,0 +1,73 @@
-> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
-> +
-> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-> +memory chips are connected. The driver is to monitor the controller in runtime
-> +and switch frequency and voltage. To monitor the usage of the controller in
-> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-> +is able to measure the current load of the memory.
-> +When 'userspace' governor is used for the driver, an application is able to
-> +switch the DMC and memory frequency.
-> +
-> +Required properties for DMC device for Exynos5422:
-> +- compatible: Should be "samsung,exynos5422-bus".
+The current kernel driver does not consider I2C_IPGCLK_SEL (424 bit
+of RCW) in deciding  i2c_clk_rate in function i2c_imx_set_clk()
+{ 0 Platform clock/4, 1 Platform clock/2}.
 
-As I already mentioned on many times, it is not fixed.
-You have to fix it as following:
-- exynos5422-bus -> exynos5422-dmc
+When using ls1046a SoC, this populates incorrect value in IBFD register
+if I2C_IPGCLK_SEL = 0, which generates half of the desired Clock.
 
-> +- clock-names : the name of clock used by the bus, "bus".
+Therefore, if ls1046a SoC is used, we need to set the i2c clock
+according to the corresponding RCW.
 
-The below examples doesn't contain the 'bus' clock name.
+Signed-off-by: Sumit Batra <sumit.batra@nxp.com>
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+---
+ drivers/i2c/busses/i2c-imx.c | 64 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-> +- clocks : phandles for clock specified in "clock-names" property.
-> +- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- vdd-supply : phandle for voltage regulator which is connected.
-> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
-> +- operating-points-v2 : phandle for OPPs described in v2 definition.
-> +- device-handle : phandle of the connected DRAM memory device. For more
-> +	information please refer to Documentation
-> +- devfreq-events : phandles of the PPMU events used by the controller.
-> +
-> +Example:
-> +
-> +	ppmu_dmc0_0: ppmu@10d00000 {
-> +		compatible = "samsung,exynos-ppmu";
-> +		reg = <0x10d00000 0x2000>;
-> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
-> +		clock-names = "ppmu";
-> +		status = "okay";
-> +		events {
-> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
-> +				event-name = "ppmu-event3-dmc0_0";
-> +			};
-> +		};
-> +	};
-> +
-> +	dmc: memory-controller@10c20000 {
-> +		compatible = "samsung,exynos5422-dmc";
-> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
-> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
-> +		clocks = 	<&clock CLK_FOUT_SPLL>,
-> +				<&clock CLK_MOUT_SCLK_SPLL>,
-> +				<&clock CLK_FF_DOUT_SPLL2>,
-> +				<&clock CLK_FOUT_BPLL>,
-> +				<&clock CLK_MOUT_BPLL>,
-> +				<&clock CLK_SCLK_BPLL>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
-> +				<&clock CLK_MOUT_MCLK_CDREX>,
-> +				<&clock CLK_DOUT_CLK2X_PHY0>,
-> +				<&clock CLK_CLKM_PHY0>,
-> +				<&clock CLK_CLKM_PHY1>;
-> +		clock-names =	"fout_spll",
-> +				"mout_sclk_spll",
-> +				"ff_dout_spll2",
-> +				"fout_bpll",
-> +				"mout_bpll",
-> +				"sclk_bpll",
-> +				"mout_mx_mspll_ccore",
-> +				"mout_mx_mspll_ccore_phy",
-> +				"mout_mclk_cdrex",
-> +				"dout_clk2x_phy0",
-> +				"clkm_phy0",
-> +			        "clkm_phy1";
-> +		status = "okay";
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		device-handle = <&samsung_K3QF2F20DB>;
-> +		vdd-supply = <&buck1_reg>;
-> +	};
-> 
-
-
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 422f1a445b55..7186cf3c7d24 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -45,6 +45,8 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
++#include <linux/fsl/guts.h>
++#include <linux/sys_soc.h>
+ 
+ /* This will be the driver name the kernel reports */
+ #define DRIVER_NAME "imx-i2c"
+@@ -109,6 +111,21 @@
+ 
+ #define I2C_PM_TIMEOUT		10 /* ms */
+ 
++/* 14-1 Since array index starts from 0 */
++#define RCW_I2C_IPGCLK_WORD (14 - 1)
++/*
++ * Set mask for RCW 424th bit, reading from DCFG_CCSR RCW Status Registers
++ * Since this register in RM depicted as big endian,
++ * so consider 31st bit as LSB for creating the mask.
++ */
++#define RCW_I2C_IPGCLK_MASK    0x800000
++int i2c_ipgclk_sel = 1;
++
++static const struct soc_device_attribute ls1046a_soc[] = {
++	       {.family = "QorIQ LS1046A"},
++	       { /* sentinel */ }
++};
++
+ /*
+  * sorted list of clock divider, register value pairs
+  * taken from table 26-5, p.26-9, Freescale i.MX
+@@ -304,6 +321,11 @@ static const struct platform_device_id imx_i2c_devtype[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, imx_i2c_devtype);
+ 
++static const struct of_device_id guts_device_ids[] = {
++	{ .compatible = "fsl,qoriq-device-config", },
++	{}
++};
++
+ static const struct of_device_id i2c_imx_dt_ids[] = {
+ 	{ .compatible = "fsl,imx1-i2c", .data = &imx1_i2c_hwdata, },
+ 	{ .compatible = "fsl,imx21-i2c", .data = &imx21_i2c_hwdata, },
+@@ -533,6 +555,9 @@ static void i2c_imx_set_clk(struct imx_i2c_struct *i2c_imx,
+ 	unsigned int div;
+ 	int i;
+ 
++	if (!i2c_ipgclk_sel)
++		i2c_clk_rate = i2c_clk_rate / 2;
++
+ 	/* Divider value calculation */
+ 	if (i2c_imx->cur_clk == i2c_clk_rate)
+ 		return;
+@@ -551,6 +576,10 @@ static void i2c_imx_set_clk(struct imx_i2c_struct *i2c_imx,
+ 	/* Store divider value */
+ 	i2c_imx->ifdr = i2c_clk_div[i].val;
+ 
++	pr_alert("[%s] CLK Rate=%u Bitrate =%u Div =%u Value =%d\n",
++		 __func__, i2c_clk_rate, i2c_imx->bitrate,
++		 div, i2c_clk_div[i].val);
++
+ 	/*
+ 	 * There dummy delay is calculated.
+ 	 * It should be about one I2C clock period long.
+@@ -1116,6 +1145,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	int irq, ret;
+ 	dma_addr_t phy_addr;
+ 	u32 mul_value;
++	struct device_node *guts_node;
++	static struct ccsr_guts __iomem *guts_regs;
++	u32 rcw_reg;
+ 
+ 	dev_dbg(&pdev->dev, "<%s>\n", __func__);
+ 
+@@ -1135,6 +1167,38 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	if (!i2c_imx)
+ 		return -ENOMEM;
+ 
++	if (soc_device_match(ls1046a_soc)) {
++		/*
++		 * Make device node for GUTS/DCFG (global utilities block)
++		 * to read RCW.
++		 */
++		guts_node = of_find_matching_node(NULL, guts_device_ids);
++		if (!guts_node) {
++			dev_err(&pdev->dev, "Could not find GUTS node\n");
++			return -ENODEV;
++		}
++		/*
++		 * Memory (IO)  MAP the DCFG registers(for RCW) to
++		 * be used in kernel virtual address space.
++		 */
++		guts_regs = of_iomap(guts_node, 0);
++		of_node_put(guts_node);
++		if (!guts_regs) {
++			dev_err(&pdev->dev, "IOREMAP of GUTS node failed\n");
++			return -ENOMEM;
++		}
++		/* Read rcw bit 424 (starting from 0) */
++		rcw_reg = ioread32be(&guts_regs->rcwsr[RCW_I2C_IPGCLK_WORD]);
++		pr_alert("RCW REG[%d]=0x%x\n", RCW_I2C_IPGCLK_WORD, rcw_reg);
++		if (rcw_reg & RCW_I2C_IPGCLK_MASK) {
++			pr_alert("Div by 2 Case Detected in RCW\n");
++			i2c_ipgclk_sel = 1;
++		} else {
++			pr_alert("Div by 4 Case Detected in RCW\n");
++			i2c_ipgclk_sel = 0;
++		}
++	}
++
+ 	if (of_id) {
+ 		i2c_imx->hwdata = of_id->data;
+ 		ret = of_property_read_u32(pdev->dev.of_node,
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.17.1
