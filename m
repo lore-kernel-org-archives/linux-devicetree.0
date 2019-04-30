@@ -1,24 +1,30 @@
+Return-Path: <SRS0=9+2E=TA=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Date: Wed, 10 Apr 2019 07:54:21 -0500
-References: <20190410010013.17259-1-otavio@ossystems.com.br>
-In-Reply-To: <20190410010013.17259-1-otavio@ossystems.com.br>
-Message-ID: <CAL_JsqLE==OcWmNgpug_dWZcCMRL0PFF24SoSdx62Cd5yhBg7Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add support for imx6ul-pico-nymph
-From: Rob Herring <robh+dt@kernel.org>
+References: <20190430132309.12473-1-chris.brandt@renesas.com> <20190430132309.12473-6-chris.brandt@renesas.com>
+In-Reply-To: <20190430132309.12473-6-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Apr 2019 16:53:17 +0200
+Message-ID: <CAMuHMdXYfemNCfzci9fAcPWpdHOeKJNkTirrrB+97t5Aj2Bzxg@mail.gmail.com>
+Subject: Re: [PATCH 5/7] ARM: dts: r7s9210: Add SDHI support
 Content-Type: text/plain; charset="UTF-8"
-To: Otavio Salvador <otavio@ossystems.com.br>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Apr 9, 2019 at 8:00 PM Otavio Salvador <otavio@ossystems.com.br> wrote:
+On Tue, Apr 30, 2019 at 3:33 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add SDHI support for the R7S9210 (RZ/A2) SoC.
 >
-> From: Fabio Estevam <festevam@gmail.com>
->
-> Add support for TechNexion's imx6ul-pico-nymph board.
->
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-> ---
->
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
