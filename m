@@ -1,45 +1,87 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v1] mmc: dt: add DT bindings for ls1028a eSDHC host controller
-Date: Tue, 30 Apr 2019 18:12:05 -0500
-Message-ID: <CADRPPNQ4RYhe5n_ZA_xrhG8VARsvV3cwVgnuinedb2VHKkDzbQ@mail.gmail.com>
-References: <20190430051723.31345-1-yinbo.zhu@nxp.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 3/3] dt-bindings: power: supply: Add bindings for
+ Microchip UCS1002
+Date: Tue, 30 Apr 2019 16:28:57 -0700
+Message-ID: <8e4fa5ae-9547-83b3-d2f6-3a7b7ad32cbf@roeck-us.net>
+References: <20190430064557.28469-1-andrew.smirnov@gmail.com>
+ <20190430064557.28469-4-andrew.smirnov@gmail.com>
+ <20190430161542.GB731@roeck-us.net> <20190430223236.GA10236@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430051723.31345-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20190430223236.GA10236@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org, Enric Balletbo Serra <enric.balletbo@collabora.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:16 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> From: Yinbo Zhu <yinbo.zhu@nxp.com>
+On 4/30/19 3:32 PM, Rob Herring wrote:
+> On Tue, Apr 30, 2019 at 09:15:42AM -0700, Guenter Roeck wrote:
+>> On Mon, Apr 29, 2019 at 11:45:57PM -0700, Andrey Smirnov wrote:
+>>> Add bindings for Microchip UCS1002 Programmable USB Port Power
+>>> Controller with Charger Emulation.
+>>>
+>>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>>> Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+>>> Cc: Chris Healy <cphealy@gmail.com>
+>>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+>>> Cc: Guenter Roeck <linux@roeck-us.net>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: Sebastian Reichel <sre@kernel.org>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: linux-pm@vger.kernel.org
+>>> ---
+>>>   .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+>>>   1 file changed, 27 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+>>> new file mode 100644
+>>> index 000000000000..021fd7aba75e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+>>> @@ -0,0 +1,27 @@
+>>> +Microchip UCS1002 USB Port Power Controller
+>>> +
+>>> +Required properties:
+>>> +- compatible		: Should be "microchip,ucs1002";
+>>> +- reg			: I2C slave address
+>>> +
+>>> +Optional properties:
+>>> +- interrupts-extended	: A list of interrupts lines present (could be either
+>>> +			  corresponding to A_DET# pin, ALERT# pin, or both)
+> 
+> Just make this 'interrupts'. Support for 'interrupts-extended' is
+> implied.
+> 
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+>>> +- interrupt-names	: A list of interrupt names. Should contain (if
+>>> +			  present):
+>>> +			  - "a_det" for line connected to A_DET# pin
+>>> +			  - "alert" for line connected to ALERT# pin
+>>> +			  Both are expected to be IRQ_TYPE_EDGE_BOTH
+>>> +Example:
+>>> +
+>>> +&i2c3 {
+>>> +	charger@32 {
+>>> +		compatible = "microchip,ucs1002";
+>>> +		pinctrl-names = "default";
+>>> +		pinctrl-0 = <&pinctrl_ucs1002_pins>;
+>>
+>> Document the above ? Or is that optional ?
+> 
+> I would have said to document this, but recently we had some discussion
+> about allowing this to be implied when there's only a 'default' entry.
+> We'll add it automatically for schemas.
+> 
 
-The patch title better to be "dt-bindings: mmc: ..."
->
-> Add "fsl,ls1028a-esdhc" bindings for ls1028a eSDHC host controller
->
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> ---
->  .../devicetree/bindings/mmc/fsl-esdhc.txt          |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> index 99c5cf8..a7250b9 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> @@ -21,6 +21,7 @@ Required properties:
->         "fsl,ls1043a-esdhc"
->         "fsl,ls1046a-esdhc"
->         "fsl,ls2080a-esdhc"
-> +       "fsl,ls1028a-esdhc"
+Good to know. Thanks for the information!
 
-Better to be alphabetical order.
-
->    - clock-frequency : specifies eSDHC base clock frequency.
->
->  Optional properties:
-> --
-> 1.7.1
->
+Guenter
