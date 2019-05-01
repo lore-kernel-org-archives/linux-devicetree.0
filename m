@@ -1,50 +1,46 @@
-Return-Path: <SRS0=GYkJ=TQ=ragnatech.se=niklas.soderlund+renesas@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH] dt-bindings: rcar-{csi2,vin}: Rename bindings documentation files
-Date: Thu, 16 May 2019 02:38:03 +0200
-Message-Id: <20190516003803.808-1-niklas.soderlund+renesas@ragnatech.se>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Return-Path: <SRS0=TtEp=TB=rockwellcollins.com=adam.michaelis@kernel.org>
+From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option
+Date: Wed,  1 May 2019 16:17:01 -0500
+Message-Id: <1556745423-11368-4-git-send-email-adam.michaelis@rockwellcollins.com>
+In-Reply-To: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+To: linux-iio@vger.kernel.org
+Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Renesas media binding documentation files uses a naming schema of
-'renesas,<module>.txt'. Rename VIN and CSI-2 files to match this
-pattern.
+Adding optional parameter to the ad7949 to indicate that the part should
+be configured to include the configuration register value used when
+acquiring the current sample value.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
 ---
- .../media/{renesas,rcar-csi2.txt => renesas,csi2.txt}         | 0
- .../bindings/media/{rcar_vin.txt => renesas,vin.txt}          | 0
- MAINTAINERS                                                   | 4 ++--
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/media/{renesas,rcar-csi2.txt => renesas,csi2.txt} (100%)
- rename Documentation/devicetree/bindings/media/{rcar_vin.txt => renesas,vin.txt} (100%)
+ Documentation/devicetree/bindings/iio/adc/ad7949.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,csi2.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-rename to Documentation/devicetree/bindings/media/renesas,csi2.txt
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/renesas,vin.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/media/rcar_vin.txt
-rename to Documentation/devicetree/bindings/media/renesas,vin.txt
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 878588cfb453d83c..c3a23726472d7d4d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9629,8 +9629,8 @@ L:	linux-media@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Supported
--F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
--F:	Documentation/devicetree/bindings/media/rcar_vin.txt
-+F:	Documentation/devicetree/bindings/media/renesas,csi2.txt
-+F:	Documentation/devicetree/bindings/media/renesas,vin.txt
- F:	drivers/media/platform/rcar-vin/
+diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+index 14ee9a2cb2a5..cd3572828243 100644
+--- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
++++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+@@ -18,6 +18,8 @@ Optional properties:
+    7: External reference, temperature sensor disabled, buffer enabled
+  - vref-supply: The regulator supply for ADC reference voltage. Required
+  if external reference selected by 'adi,reference-select'.
++ - adi,cfg-readback: If defined, set bit in configuration register to
++ read-back the configuration used for the current sample value.
  
- MEDIA DRIVERS FOR RENESAS - VSP1
+ Examples:
+ adc@0 {
+@@ -32,3 +34,10 @@ adc@0 {
+ 	reg = <0>;
+ 	adi,reference-select = <0>;
+ };
++
++adc@0 {
++	compatible = "adi,ad7949";
++	reg = <0>;
++	adi,reference-select = <1>;
++	adi,cfg-readback;
++};
 -- 
-2.21.0
+1.9.1
