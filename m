@@ -1,79 +1,53 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v3 5/6] clk: qcom: Add MSM8998 Multimedia Clock Controller
- (MMCC) driver
-Date: Wed, 1 May 2019 08:25:44 -0600
-Message-ID: <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
-References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
- <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
- <20190501034314.GE2938@tuxbook-pro>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v8 00/14] Add support for TISCI Interrupt controller
+ drivers
+Date: Wed, 1 May 2019 15:31:06 +0100
+Message-ID: <29a47f10-00cc-877b-8f65-1dea7342049b@arm.com>
+References: <20190430101230.21794-1-lokeshvutla@ti.com>
+ <30f5c877-a4dc-8ad9-0ad0-c172a60dc853@arm.com>
+ <7edd8582-ce51-60a0-24e1-c45fe6725705@ti.com>
+ <86pnp29tlv.wl-marc.zyngier@arm.com> <20190501140422.GJ8007@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501034314.GE2938@tuxbook-pro>
+In-Reply-To: <20190501140422.GJ8007@atomide.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org, marc.w.gonzalez@free.fr, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/30/2019 9:43 PM, Bjorn Andersson wrote:
-> On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
->> +static const struct of_device_id mmcc_msm8998_match_table[] = {
->> +	{ .compatible = "qcom,mmcc-msm8998" },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
->> +
->> +static int mmcc_msm8998_probe(struct platform_device *pdev)
->> +{
->> +	struct regmap *regmap;
->> +
+On 01/05/2019 15:04, Tony Lindgren wrote:
+> * Marc Zyngier <marc.zyngier@arm.com> [190501 13:45]:
+>> On Wed, 01 May 2019 14:23:41 +0100,
+>> Lokesh Vutla <lokeshvutla@ti.com> wrote:
+>>>
+>>> Hi Marc,
+>>
+>> [...]
+>>
+>>>> Lokesh,
+>>>>
+>>>> Thanks for having respun this quickly.
+>>>>
+>>>> I've applied the first 13 patches to irqchip-next (after tidying up some
+>>>> of the commit messages). I've left the last patch for armsoc to take,
+>>>> unless you guys insist on me taking it.
+>>>
+>>> I prefer if everything goes as a single bundle, unless arm-soc maintainers
+>>> object. Want to start posting DT nodes.
+>>
+>> Santosh, Tony: what do you prefer? I don't care either way, but I need
+>> a word from either of you.
 > 
-> Don't you want to wait for "xo" here as well?
-
-No, I don't want to.  As far as I recall, Stephen would like to make a 
-clear divide between clock providers, and clock consumers.  Since we 
-have the uart issue in gcc, and gcc is pretty critical to the entire 
-SoC, it seems like there is a reason (not sure I'd call it "good") to 
-wait for xo there.
-
-Here, I'm less confident in the reasoning.  mmcc is not really critical 
-to the SoC, and everything it services is "optional".  If you have a 
-headless system with no display output, you won't even need it.  On 
-system where there is a display, I expect the realistic driver ordering 
-to be that everything which consumes a mmcc clock to come up well after 
-xo is available.
-
-In short, seems like a bit of a kludge to maybe avoid an issue which 
-doesn't seem like would happen.
-
+> Best to keep the series together IMO, and it's a tiny patch unlikely
+> to conflict with anything. Here's an ack from me for patch 14 from me:
 > 
->> +	regmap = qcom_cc_map(pdev, &mmcc_msm8998_desc);
->> +	if (IS_ERR(regmap))
->> +		return PTR_ERR(regmap);
->> +
->> +	return qcom_cc_really_probe(pdev, &mmcc_msm8998_desc, regmap);
->> +}
-> [..]
->> +MODULE_DESCRIPTION("QCOM MMCC MSM8998 Driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:mmcc-msm8998");
-> 
-> MODULE_DEVICE_TABLE() will provide the alias for module auto loading, so
-> drop this.
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
-Huh.  I did not know that.  Will put on the list to fixup.
+Cheers Tony. Applied and pushed out.
 
-> 
-> Regards,
-> Bjorn
-> 
-
-
+	M.
 -- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Jazz is not dead. It just smells funny...
