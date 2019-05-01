@@ -1,48 +1,67 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
- fsl,qe-snums binding
-Date: Wed, 1 May 2019 18:47:10 +0000
-Message-ID: <12a4abf5-2a56-c5d3-dc43-59b1473c0829@prevas.dk>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
- <4c3aef881393398ca18efac99b1f76e7dbd19acf.camel@infinera.com>
+From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Subject: [PATCH 2/6] dt-bindings: iio: ad7949: Add adi,reference-select
+Date: Wed, 1 May 2019 14:30:16 -0500
+Message-ID: <CALMrGWUsr4+E3bYSj8hGvxDhZRZ1xiwVtd-x4RnOf3En6xMq5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4c3aef881393398ca18efac99b1f76e7dbd19acf.camel@infinera.com>
-Content-Language: en-US
-Content-ID: <8D3C3DDBAB3D4847BB37F9D538B0407B@EURPRD10.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "qiang.zhao@nxp.com" <qiang.zhao@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "oss@buserror.net" <oss@buserror.net>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org
+Cc: Clayton Shotwell <clayton.shotwell@rockwellcollins.com>, Brandon Maier <brandon.maier@rockwellcollins.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMDUvMjAxOSAxNy4xMiwgSm9ha2ltIFRqZXJubHVuZCB3cm90ZToNCj4gT24gV2VkLCAy
-MDE5LTA1LTAxIGF0IDA5OjI5ICswMDAwLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3RlOg0KPj4gQ0FV
-VElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0
-aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IHJl
-Y29nbml6ZSB0aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQo+Pg0KPj4N
-Cj4+IFJlYWRpbmcgdGFibGUgNC0zMCwgYW5kIGl0cyBmb290bm90ZXMsIG9mIHRoZSBRVUlDQyBF
-bmdpbmUgQmxvY2sNCj4+IFJlZmVyZW5jZSBNYW51YWwgc2hvd3MgdGhhdCB0aGUgc2V0IG9mIHNu
-dW0gX3ZhbHVlc18gaXMgbm90DQo+PiBuZWNlc3NhcmlseSBqdXN0IGEgZnVuY3Rpb24gb2YgdGhl
-IF9udW1iZXJfIG9mIHNudW1zLCBhcyBnaXZlbiBpbiB0aGUNCj4+IGZzbCxxZS1udW0tc251bXMg
-cHJvcGVydHkuDQo+Pg0KPj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVyIHRv
-IGFkZCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cw0KPj4gb2YgdGhlIFFVSUNDIGVuZ2luZSBJ
-UCwgdGhpcyBpbnRyb2R1Y2VzIGEgbmV3IGJpbmRpbmcgZnNsLHFlLXNudW1zLA0KPj4gd2hpY2gg
-YXV0b21hdGljYWxseSBlbmNvZGVzIGJvdGggdGhlIG51bWJlciBvZiBzbnVtcyBhbmQgdGhlIGFj
-dHVhbA0KPj4gdmFsdWVzIHRvIHVzZS4NCj4+DQo+PiBGb3IgZXhhbXBsZSwgZm9yIHRoZSBNUEM4
-MzA5LCBvbmUgd291bGQgc3BlY2lmeSB0aGUgcHJvcGVydHkgYXMNCj4+DQo+PiAgICAgICAgICAg
-ICAgICBmc2wscWUtc251bXMgPSAvYml0cy8gOCA8DQo+PiAgICAgICAgICAgICAgICAgICAgICAg
-IDB4ODggMHg4OSAweDk4IDB4OTkgMHhhOCAweGE5IDB4YjggMHhiOQ0KPj4gICAgICAgICAgICAg
-ICAgICAgICAgICAweGM4IDB4YzkgMHhkOCAweGQ5IDB4ZTggMHhlOT47DQo+IA0KPiBJIHRoaW5r
-IHlvdSBuZWVkIGFkZCB0aGlzIGV4YW1wbGUgdG8gdGhlIHFlLnR4dCBkb2MgaXRzZWxmdC4NCg0K
-U3VyZSwgY2FuIGRvLg0KDQo+IEJUVywgd2hhdCBpcyAvYml0cy8gPw0KDQpUaGF0IGluZGljYXRl
-cyB0aGF0IHRoZSBudW1iZXJzIHNob3VsZCBiZSBzdG9yZWQgYXMgYW4gYXJyYXkgb2YgdTgsIGFu
-ZA0Kbm90IGFzIGJ5IGRlZmF1bHQgYW4gYXJyYXkgb2YgKGJpZy1lbmRpYW4pIDMyLWJpdCBudW1i
-ZXJzLiBTZWUNCg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2R0Yy9kdGMu
-Z2l0L3RyZWUvRG9jdW1lbnRhdGlvbi9kdHMtZm9ybWF0LnR4dCNuNDYNCg0KVGhpcyBpcyBhbHJl
-YWR5IHVzZWQgaW4gc29tZSBiaW5kaW5ncyBhbmQgZXhpc3RpbmcgLmR0cyAoZS5nLg0KaHdtb24v
-YXNwZWVkLXB3bS10YWNoby50eHQsIGJ1dCBnaXQgZ3JlcCBzaG93cyBtYW55IG1vcmUpLg0KDQpS
-YXNtdXMNCg==
+>From d228a1a119e33aff91f481fb8ab301a027b5a4ac Mon Sep 17 00:00:00 2001
+From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Date: Thu, 25 Apr 2019 15:22:00 -0500
+Subject: [PATCH 2/6] dt-bindings: iio: ad7949: Add adi,reference-select
+
+Adding optional parameter to AD7949 to specify the source for the
+reference voltage signal. Default value is maintaned with option '6' to
+match previous version of driver.
+
+Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+---
+Sorry about the re-sends - GMail inserted HTML on me and it bounced from vger.
+---
+ .../devicetree/bindings/iio/adc/ad7949.txt         | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+index c7f5057356b1..14ee9a2cb2a5 100644
+--- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
++++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+@@ -6,11 +6,29 @@ Required properties:
+  * "adi,ad7682"
+  * "adi,ad7689"
+  - reg: spi chip select number for the device
+- - vref-supply: The regulator supply for ADC reference voltage
+
+-Example:
++Optional properties:
++ - adi,reference-select: Select the reference voltage source to use
++ when converting the input voltages. Valid values are:
++   0: Internal 2.5V reference; temperature sensor enabled
++   1: Internal 4.096V reference; temperature sensor enabled
++   2: External reference, temperature sensor enabled, no buffer
++   3: External reference, temperature sensor enabled, buffer enabled
++   6: External reference, temperature sensor disabled, no buffer
++   7: External reference, temperature sensor disabled, buffer enabled
++ - vref-supply: The regulator supply for ADC reference voltage. Required
++ if external reference selected by 'adi,reference-select'.
++
++Examples:
+ adc@0 {
+  compatible = "adi,ad7949";
+  reg = <0>;
++ adi,reference-select = <2>;
+  vref-supply = <&vdd_supply>;
+ };
++
++adc@0 {
++ compatible = "adi,ad7949";
++ reg = <0>;
++ adi,reference-select = <0>;
++};
+-- 
+1.9.1
