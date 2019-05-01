@@ -1,64 +1,77 @@
-From: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Subject: Re: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
- fsl,qe-snums binding
-Date: Wed, 1 May 2019 15:12:52 +0000
-Message-ID: <4c3aef881393398ca18efac99b1f76e7dbd19acf.camel@infinera.com>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
-         <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
-         <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+From: Frank Li <frank.li@nxp.com>
+Subject: [PATCH V11 1/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
+ performance monitor
+Date: Wed, 1 May 2019 15:20:57 +0000
+Message-ID: <1556724043-3961-1-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Content-ID: <D0283986214D8D409C19E11E53FCFC81@namprd10.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "qiang.zhao@nxp.com" <qiang.zhao@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "oss@buserror.net" <oss@buserror.net>, "Rasmus.Villemoes@prevas.se" <Rasmus.Villemoes@prevas.se>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Frank Li <frank.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTAxIGF0IDA5OjI5ICswMDAwLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3Rl
-Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
-cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
-cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
-Cj4gDQo+IA0KPiBSZWFkaW5nIHRhYmxlIDQtMzAsIGFuZCBpdHMgZm9vdG5vdGVzLCBvZiB0aGUg
-UVVJQ0MgRW5naW5lIEJsb2NrDQo+IFJlZmVyZW5jZSBNYW51YWwgc2hvd3MgdGhhdCB0aGUgc2V0
-IG9mIHNudW0gX3ZhbHVlc18gaXMgbm90DQo+IG5lY2Vzc2FyaWx5IGp1c3QgYSBmdW5jdGlvbiBv
-ZiB0aGUgX251bWJlcl8gb2Ygc251bXMsIGFzIGdpdmVuIGluIHRoZQ0KPiBmc2wscWUtbnVtLXNu
-dW1zIHByb3BlcnR5Lg0KPiANCj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVy
-IHRvIGFkZCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cw0KPiBvZiB0aGUgUVVJQ0MgZW5naW5l
-IElQLCB0aGlzIGludHJvZHVjZXMgYSBuZXcgYmluZGluZyBmc2wscWUtc251bXMsDQo+IHdoaWNo
-IGF1dG9tYXRpY2FsbHkgZW5jb2RlcyBib3RoIHRoZSBudW1iZXIgb2Ygc251bXMgYW5kIHRoZSBh
-Y3R1YWwNCj4gdmFsdWVzIHRvIHVzZS4NCj4gDQo+IEZvciBleGFtcGxlLCBmb3IgdGhlIE1QQzgz
-MDksIG9uZSB3b3VsZCBzcGVjaWZ5IHRoZSBwcm9wZXJ0eSBhcw0KPiANCj4gICAgICAgICAgICAg
-ICAgZnNsLHFlLXNudW1zID0gL2JpdHMvIDggPA0KPiAgICAgICAgICAgICAgICAgICAgICAgIDB4
-ODggMHg4OSAweDk4IDB4OTkgMHhhOCAweGE5IDB4YjggMHhiOQ0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgIDB4YzggMHhjOSAweGQ4IDB4ZDkgMHhlOCAweGU5PjsNCg0KSSB0aGluayB5b3UgbmVl
-ZCBhZGQgdGhpcyBleGFtcGxlIHRvIHRoZSBxZS50eHQgZG9jIGl0c2VsZnQuIEJUVywgd2hhdCBp
-cyAvYml0cy8gPw0KPiANCj4gU2lnbmVkLW9mZi1ieTogUmFzbXVzIFZpbGxlbW9lcyA8cmFzbXVz
-LnZpbGxlbW9lc0BwcmV2YXMuZGs+DQo+IC0tLQ0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dCB8IDggKysrKysrKy0NCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4
-dA0KPiBpbmRleCBkN2FmYWZmNWZhZmYuLjA1ZjVmNDg1NTYyYSAxMDA2NDQNCj4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dA0KPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUu
-dHh0DQo+IEBAIC0xOCw3ICsxOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAtIHJlZyA6
-IG9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSBkZXZpY2UgcmVnaXN0ZXJzLg0KPiAgLSBidXMtZnJl
-cXVlbmN5IDogdGhlIGNsb2NrIGZyZXF1ZW5jeSBmb3IgUVVJQ0MgRW5naW5lLg0KPiAgLSBmc2ws
-cWUtbnVtLXJpc2NzOiBkZWZpbmUgaG93IG1hbnkgUklTQyBlbmdpbmVzIHRoZSBRRSBoYXMuDQo+
-IC0tIGZzbCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0p
-IHRoZSBRRSBjYW4gdXNlIGZvciB0aGUNCj4gKy0gZnNsLHFlLXNudW1zOiBUaGlzIHByb3BlcnR5
-IGhhcyB0byBiZSBzcGVjaWZpZWQgYXMgJy9iaXRzLyA4JyB2YWx1ZSwNCj4gKyAgZGVmaW5pbmcg
-dGhlIGFycmF5IG9mIHNlcmlhbCBudW1iZXIgKFNOVU0pIHZhbHVlcyBmb3IgdGhlIHZpcnR1YWwN
-Cj4gICAgdGhyZWFkcy4NCj4gDQo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiBAQCAtMzQsNiAr
-MzUsMTEgQEAgUmVjb21tZW5kZWQgcHJvcGVydGllcw0KPiAgLSBicmctZnJlcXVlbmN5IDogdGhl
-IGludGVybmFsIGNsb2NrIHNvdXJjZSBmcmVxdWVuY3kgZm9yIGJhdWQtcmF0ZQ0KPiAgICBnZW5l
-cmF0b3JzIGluIEh6Lg0KPiANCj4gK0RlcHJlY2F0ZWQgcHJvcGVydGllcw0KPiArLSBmc2wscWUt
-bnVtLXNudW1zOiBkZWZpbmUgaG93IG1hbnkgc2VyaWFsIG51bWJlcihTTlVNKSB0aGUgUUUgY2Fu
-IHVzZQ0KPiArICBmb3IgdGhlIHRocmVhZHMuIFVzZSBmc2wscWUtc251bXMgaW5zdGVhZCB0byBu
-b3Qgb25seSBzcGVjaWZ5IHRoZQ0KPiArICBudW1iZXIgb2Ygc251bXMsIGJ1dCBhbHNvIHRoZWly
-IHZhbHVlcy4NCj4gKw0KPiAgRXhhbXBsZToNCj4gICAgICAgcWVAZTAxMDAwMDAgew0KPiAgICAg
-ICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAtLQ0KPiAyLjIwLjENCj4gDQoNCg==
+Added binding doc for imx8qxp ddr performance monitor
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+
+Notes:
+    No change from v10 to v11
+    
+    Change from v8 to v9
+    * use 32bit address width
+    
+    No change from v4 to v8
+    
+    Change from v4 to v4
+    * remove "standard xxx"
+    
+    Change from v2 to v3
+    * ddr_pmu0 -> ddr-pmu
+
+ .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+new file mode 100644
+index 0000000..9b9cda6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+@@ -0,0 +1,22 @@
++* Freescale(NXP) IMX8 DDR performance monitor
++
++Required properties:
++
++- compatible: should be one of:
++	"fsl,imx8-ddr-pmu"
++	"fsl,imx8m-ddr-pmu"
++
++- reg: physical address and size
++
++- interrupts: single interrupt
++	generated by the control block
++
++Example:
++
++	ddr-pmu@5c020000 {
++		compatible = "fsl,imx8-ddr-pmu";
++		reg = <0x5c020000 0x10000>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+-- 
+2.5.2
