@@ -1,38 +1,39 @@
-From: Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH V2] of: fix clang -Wunsequenced for be32_to_cpu()
-Date: Wed, 1 May 2019 11:13:01 -0700
-Message-ID: <CAKwvOdnVrm9MyBkWL=yykX0td-c6uB3=Ymo0hr8wMQG1QESreg@mail.gmail.com>
-References: <46b3e8edf27e4c8f98697f9e7f2117d6@AcuMS.aculab.com>
- <20190430145624.30470-1-tranmanphong@gmail.com> <CAKwvOdmvA4sO7UsXW4DapO_HKodeWFwA_5FsNe_wVjneZBYYdg@mail.gmail.com>
- <CAKwvOdntTmHBinCK0T_8OZ-2ksUHkQBvDyR8WrxZdW=+yu25dw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: Update schema project location to devicetree.org github group
+Date: Wed,  1 May 2019 13:23:32 -0500
+Message-ID: <20190501182332.29094-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKwvOdntTmHBinCK0T_8OZ-2ksUHkQBvDyR8WrxZdW=+yu25dw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>, pantelis.antoniou@konsulko.com
-Cc: David.Laight@aculab.com, hch@infradead.org, Nathan Chancellor <natechancellor@gmail.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, clang-built-linux <clang-built-linux@googlegroups.com>, Phong Tran <tranmanphong@gmail.com>
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org, maxime.ripard@bootlin.com, grant.likely@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 9:29 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Apr 30, 2019 at 9:28 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> > Thanks for the patch.
-> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/460
-> > Suggested-by: David Laight <David.Laight@ACULAB.COM>
->
-> sent too soon...
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+The DT schema tools are moving from my personal GH repo to the
+devicetree.org group on GH. The new location is here:
 
-We'll also need this for stable, can the maintainers please add the
-following tag if it's not too late:
+https://github.com/devicetree-org/dt-schema.git
 
-Cc: stable@vger.kernel.org
+The old repo will be kept as a mirror.
 
-to unbreak ppc back through at least 4.14.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/writing-schema.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/writing-schema.md b/Documentation/devicetree/writing-schema.md
+index a3652d33a48f..dc032db36262 100644
+--- a/Documentation/devicetree/writing-schema.md
++++ b/Documentation/devicetree/writing-schema.md
+@@ -97,7 +97,7 @@ The DT schema project must be installed in order to validate the DT schema
+ binding documents and validate DTS files using the DT schema. The DT schema
+ project can be installed with pip:
+ 
+-`pip3 install git+https://github.com/robherring/yaml-bindings.git@master`
++`pip3 install git+https://github.com/devicetree-org/dt-schema.git@master`
+ 
+ dtc must also be built with YAML output support enabled. This requires that
+ libyaml and its headers be installed on the host system.
 -- 
-Thanks,
-~Nick Desaulniers
+2.20.1
