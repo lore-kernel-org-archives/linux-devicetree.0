@@ -1,82 +1,64 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [DO NOT MERGE] [PATCH 2/2] arm64: rockchip: rk3399: nanopc-t4: Enable FriendlyELEC HD702E eDP panel
-Date: Wed, 01 May 2019 17:09:46 +0200
-Message-ID: <59905981.qcSMt8CUfq@phil>
-References: <20190501121448.3812-1-jagan@amarulasolutions.com> <cc16498b-71f8-04ce-44d1-25417fd64757@arm.com> <CAMty3ZBdko3+p6SoKYH-Mwism-Qnp3F5u7JV8YQTHzNP8A5kEg@mail.gmail.com>
+From: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Subject: Re: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums binding
+Date: Wed, 1 May 2019 15:12:52 +0000
+Message-ID: <4c3aef881393398ca18efac99b1f76e7dbd19acf.camel@infinera.com>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+         <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+         <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZBdko3+p6SoKYH-Mwism-Qnp3F5u7JV8YQTHzNP8A5kEg@mail.gmail.com>
+In-Reply-To: <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+Content-Language: en-US
+Content-ID: <D0283986214D8D409C19E11E53FCFC81@namprd10.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, linux-amarula <linux-amarula@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "qiang.zhao@nxp.com" <qiang.zhao@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "oss@buserror.net" <oss@buserror.net>, "Rasmus.Villemoes@prevas.se" <Rasmus.Villemoes@prevas.se>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 1. Mai 2019, 16:09:46 CEST schrieb Jagan Teki:
-> On Wed, May 1, 2019 at 6:17 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> >
-> > On 01/05/2019 13:14, Jagan Teki wrote:
-> > > FriendlyELEC HD702E is one of optional LCD panel for
-> > > NanoPC T4 eDP interface.
-> > >
-> > > It features 800x1280 resolutions, with built in GT9271 captive
-> > > touchscreen and adjustable backlight via PWM.
-> > >
-> > > eDP panel connections are:
-> > > - VCC3V3_SYS: 3.3V panel power supply
-> > > - GPIO4_C2: PWM0_BL pin
-> > > - GPIO4_D5_LCD_BL_EN: Backlight enable pin
-> > > - VCC12V0_SYS: 12V backlight power supply
-> > > - Touchscreen connected via I2C4
-> > > - GPIO1_C4_TP_INT: touchscreen interrupt pin
-> > > - GPIO1_B5_TP_RST: touchscreen reset pin
-> > >
-> > > Add support for it.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Note: we need to disable hdmi-cec pinctrl to work with
-> > > edp-hpd since both share same pin, otherwise we can
-> > > encounter below error during bootup
-> > > [    1.047726] rockchip-pinctrl pinctrl: pin gpio4-23 already requested by ff940000.hdmi; cannot claim for ff970000.edp
-> > > [    1.048655] rockchip-pinctrl pinctrl: pin-151 (ff970000.edp) status -22
-> > > [    1.049235] rockchip-pinctrl pinctrl: could not request pin 151 (gpio4-23) from group edp-hpd  on device rockchip-pinctrl
-> > > [    1.050191] rockchip-dp ff970000.edp: Error applying setting, reverse things back
-> > > [    1.050867] rockchip-dp: probe of ff970000.edp failed with error -22
-> >
-> > Hmm, AFAICS that pin is exclusively wired to the HDMI connector and not
-> > used for the eDP interface, so really it's the fault of rk3399.dtsi for
-> > trying to claim it unconditionally. Ideally we'd pull those pinctrl
-> > properties out into the board DTs which do actually need them, but the
-> > quick and easy approach would be to add some "/delete-property/ ..."
-> > workarounds to the &edp node here.
-> 
-> Thought that initially, but the same pin shared between HDMI CEC and
-> eDP hotplug with different bit function to enable.
-> 
-> gpio4c7_sel
-> GPIO4C[7] iomux select
-> 2'b00: gpio
-> 2'b01: hdmi_cecinout
-> 2'b10: edp_hotplug
-> 2'b11: reserved
-> 
-> GPIO4_C7/HDMI_CECINOUT/EDP_HOTPLUG is the shared pin, which is
-> available in any nanopc-t4 as well in rk3399 datasheet, look like it's
-> an SoC pin that driver hotplug to eDP and ie same reason is pinmux in
-> rk3399.dtsi.
-
-Yes the pin of the soc is shared between those functions, so you'll
-have to check the schematics of your board where this pin is going
-to.
-
-If you check the schematics [0] page 11, GPIO4_C7's signal is named HDMI_CEC
-and on page 18 you can see that it goes as expected to the cec-pin of the
-hdmi connector. 
-
-So the Nanopc-T4 should only select the cec signal.
-
-
-Heiko
-[0] http://wiki.friendlyarm.com/wiki/images/f/f4/NanoPC-T4-1802-Schematic.pdf
+T24gV2VkLCAyMDE5LTA1LTAxIGF0IDA5OjI5ICswMDAwLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3Rl
+Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
+cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
+cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
+Cj4gDQo+IA0KPiBSZWFkaW5nIHRhYmxlIDQtMzAsIGFuZCBpdHMgZm9vdG5vdGVzLCBvZiB0aGUg
+UVVJQ0MgRW5naW5lIEJsb2NrDQo+IFJlZmVyZW5jZSBNYW51YWwgc2hvd3MgdGhhdCB0aGUgc2V0
+IG9mIHNudW0gX3ZhbHVlc18gaXMgbm90DQo+IG5lY2Vzc2FyaWx5IGp1c3QgYSBmdW5jdGlvbiBv
+ZiB0aGUgX251bWJlcl8gb2Ygc251bXMsIGFzIGdpdmVuIGluIHRoZQ0KPiBmc2wscWUtbnVtLXNu
+dW1zIHByb3BlcnR5Lg0KPiANCj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVy
+IHRvIGFkZCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cw0KPiBvZiB0aGUgUVVJQ0MgZW5naW5l
+IElQLCB0aGlzIGludHJvZHVjZXMgYSBuZXcgYmluZGluZyBmc2wscWUtc251bXMsDQo+IHdoaWNo
+IGF1dG9tYXRpY2FsbHkgZW5jb2RlcyBib3RoIHRoZSBudW1iZXIgb2Ygc251bXMgYW5kIHRoZSBh
+Y3R1YWwNCj4gdmFsdWVzIHRvIHVzZS4NCj4gDQo+IEZvciBleGFtcGxlLCBmb3IgdGhlIE1QQzgz
+MDksIG9uZSB3b3VsZCBzcGVjaWZ5IHRoZSBwcm9wZXJ0eSBhcw0KPiANCj4gICAgICAgICAgICAg
+ICAgZnNsLHFlLXNudW1zID0gL2JpdHMvIDggPA0KPiAgICAgICAgICAgICAgICAgICAgICAgIDB4
+ODggMHg4OSAweDk4IDB4OTkgMHhhOCAweGE5IDB4YjggMHhiOQ0KPiAgICAgICAgICAgICAgICAg
+ICAgICAgIDB4YzggMHhjOSAweGQ4IDB4ZDkgMHhlOCAweGU5PjsNCg0KSSB0aGluayB5b3UgbmVl
+ZCBhZGQgdGhpcyBleGFtcGxlIHRvIHRoZSBxZS50eHQgZG9jIGl0c2VsZnQuIEJUVywgd2hhdCBp
+cyAvYml0cy8gPw0KPiANCj4gU2lnbmVkLW9mZi1ieTogUmFzbXVzIFZpbGxlbW9lcyA8cmFzbXVz
+LnZpbGxlbW9lc0BwcmV2YXMuZGs+DQo+IC0tLQ0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dCB8IDggKysrKysrKy0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4
+dA0KPiBpbmRleCBkN2FmYWZmNWZhZmYuLjA1ZjVmNDg1NTYyYSAxMDA2NDQNCj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dA0KPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUu
+dHh0DQo+IEBAIC0xOCw3ICsxOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAtIHJlZyA6
+IG9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSBkZXZpY2UgcmVnaXN0ZXJzLg0KPiAgLSBidXMtZnJl
+cXVlbmN5IDogdGhlIGNsb2NrIGZyZXF1ZW5jeSBmb3IgUVVJQ0MgRW5naW5lLg0KPiAgLSBmc2ws
+cWUtbnVtLXJpc2NzOiBkZWZpbmUgaG93IG1hbnkgUklTQyBlbmdpbmVzIHRoZSBRRSBoYXMuDQo+
+IC0tIGZzbCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0p
+IHRoZSBRRSBjYW4gdXNlIGZvciB0aGUNCj4gKy0gZnNsLHFlLXNudW1zOiBUaGlzIHByb3BlcnR5
+IGhhcyB0byBiZSBzcGVjaWZpZWQgYXMgJy9iaXRzLyA4JyB2YWx1ZSwNCj4gKyAgZGVmaW5pbmcg
+dGhlIGFycmF5IG9mIHNlcmlhbCBudW1iZXIgKFNOVU0pIHZhbHVlcyBmb3IgdGhlIHZpcnR1YWwN
+Cj4gICAgdGhyZWFkcy4NCj4gDQo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiBAQCAtMzQsNiAr
+MzUsMTEgQEAgUmVjb21tZW5kZWQgcHJvcGVydGllcw0KPiAgLSBicmctZnJlcXVlbmN5IDogdGhl
+IGludGVybmFsIGNsb2NrIHNvdXJjZSBmcmVxdWVuY3kgZm9yIGJhdWQtcmF0ZQ0KPiAgICBnZW5l
+cmF0b3JzIGluIEh6Lg0KPiANCj4gK0RlcHJlY2F0ZWQgcHJvcGVydGllcw0KPiArLSBmc2wscWUt
+bnVtLXNudW1zOiBkZWZpbmUgaG93IG1hbnkgc2VyaWFsIG51bWJlcihTTlVNKSB0aGUgUUUgY2Fu
+IHVzZQ0KPiArICBmb3IgdGhlIHRocmVhZHMuIFVzZSBmc2wscWUtc251bXMgaW5zdGVhZCB0byBu
+b3Qgb25seSBzcGVjaWZ5IHRoZQ0KPiArICBudW1iZXIgb2Ygc251bXMsIGJ1dCBhbHNvIHRoZWly
+IHZhbHVlcy4NCj4gKw0KPiAgRXhhbXBsZToNCj4gICAgICAgcWVAZTAxMDAwMDAgew0KPiAgICAg
+ICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAtLQ0KPiAyLjIwLjENCj4gDQoNCg==
