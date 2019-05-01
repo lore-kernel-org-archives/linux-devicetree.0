@@ -1,120 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: misc: Add bindings for HiSilicon
- usb hub and data role switch functionality on HiKey960
-Date: Wed, 1 May 2019 11:27:01 -0500
-Message-ID: <CAL_Jsq+Xf===cii0me0pwjZ2mcxXmYXDjNH7UpOftUphHCxd1w@mail.gmail.com>
-References: <20190420064019.57522-1-chenyu56@huawei.com> <20190420064019.57522-3-chenyu56@huawei.com>
- <20190425213532.GA32028@bogus> <f925304a-17ef-1574-b671-77d4ad0331d8@huawei.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 5/6] clk: qcom: Add MSM8998 Multimedia Clock
+ Controller (MMCC) driver
+Date: Wed, 1 May 2019 09:54:06 -0700
+Message-ID: <20190501165406.GI2938@tuxbook-pro>
+References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
+ <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
+ <20190501034314.GE2938@tuxbook-pro>
+ <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f925304a-17ef-1574-b671-77d4ad0331d8@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Yu <chenyu56@huawei.com>
-Cc: liuyu712@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, Li Pengcheng <lipengcheng8@huawei.com>, Song Xiaowei <songxiaowei@hisilicon.com>, Yiping Xu <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang <zangleigang@hisilicon.com>, Kishon Vijay Abraham I <kishon@ti.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org, marc.w.gonzalez@free.fr, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 1:08 AM Chen Yu <chenyu56@huawei.com> wrote:
->
-> Hi Rob,
->
-> On 2019/4/26 5:35, Rob Herring wrote:
-> > On Sat, Apr 20, 2019 at 02:40:08PM +0800, Yu Chen wrote:
-> >> This patch adds binding documentation to support usb hub and usb
-> >> data role switch of Hisilicon HiKey960 Board.
-> >
-> > Sorry I've been slow to really review this, but I needed to look at the
-> > schematics to see what exactly is going on here.
-> >
-> > I think this needs some changes to better reflect the h/w and utilize
-> > existing bindings. It should really be designed ignoring the muxing to
-> > start with. Define the binding for the TypeC connector and then the host
-> > hub and make sure they can coexist. Then overlay what you need to switch
-> > between the 2 modes which AFAICT is just a single GPIO.
-> >
-> >>
-> >> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> >> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: John Stultz <john.stultz@linaro.org>
-> >> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> >> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> >> ---
-> >> v1:
-> >> * Fix some format errors as suggested by Sergei.
-> >> * Modify gpio description to use gpiod API.
-> >> v2:
-> >> * Remove information about Hikey.
-> >> * Fix gpio description.
-> >> * Remove device_type of endpoint.
-> >> v3:
-> >> * Remove property typec-vbus-enable-val.
-> >> * Add description of pinctrl-names.
-> >> * Add example for "hisilicon,gpio-hubv1"
-> >> * Add flag in gpiod properties.
-> >> ---
-> >> ---
-> >>  .../bindings/misc/hisilicon-hikey-usb.txt          | 52 ++++++++++++++++++++++
-> >>  1 file changed, 52 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> >> new file mode 100644
-> >> index 000000000000..422e844df719
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
-> >> @@ -0,0 +1,52 @@
-> >> +Support usb hub and usb data role switch of Hisilicon HiKey960 Board.
-> >> +
-> >> +-----------------------------
-> >> +
-> >> +Required properties:
-> >> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
-> >> +- typec-vbus-gpios: gpio to control the vbus of typeC port
-> >
-> > This should be a gpio regulator and then connected to 'vbus-supply' in a
-> > usb-connector node (see .../bindings/connectors/usb-connector.txt).
-> Currently usb-connector node has no "vbus-supply" property and
-> I do not find process that handles vbus-supply in RT1711H TypeC driver.
+On Wed 01 May 07:25 PDT 2019, Jeffrey Hugo wrote:
 
-The patch[1] adding that is posted to the list and may not have landed yet.
+> On 4/30/2019 9:43 PM, Bjorn Andersson wrote:
+> > On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
+> > > +static const struct of_device_id mmcc_msm8998_match_table[] = {
+> > > +	{ .compatible = "qcom,mmcc-msm8998" },
+> > > +	{ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
+> > > +
+> > > +static int mmcc_msm8998_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct regmap *regmap;
+> > > +
+> > 
+> > Don't you want to wait for "xo" here as well?
+> 
+> No, I don't want to.  As far as I recall, Stephen would like to make a clear
+> divide between clock providers, and clock consumers.  Since we have the uart
+> issue in gcc, and gcc is pretty critical to the entire SoC, it seems like
+> there is a reason (not sure I'd call it "good") to wait for xo there.
+> 
+> Here, I'm less confident in the reasoning.  mmcc is not really critical to
+> the SoC, and everything it services is "optional".  If you have a headless
+> system with no display output, you won't even need it.  On system where
+> there is a display, I expect the realistic driver ordering to be that
+> everything which consumes a mmcc clock to come up well after xo is
+> available.
+> 
+> In short, seems like a bit of a kludge to maybe avoid an issue which doesn't
+> seem like would happen.
+> 
 
-Whether the RT1711H TypeC driver handles it or not is not a binding problem.
+Okay, cool.
 
-> > Then you also need the RT1711HWSC TypeC controller in DT. That is
-> > typically the parent device of the connector node.
-> >
-> >> +- otg-switch-gpios: gpio to switch DP & DM between the hub and typeC port
-> >
-> > This probably belongs in USB controller node.
-> >
-> The otg-switch-gpios controls a mux like fsusb30mux. It is related to
-> the board design of HiKey960. And the state of the mux is decided by
-> the typeC port state. So I think it is not so good to make it belongs
-> in USB controller node.
+> > 
+> > > +	regmap = qcom_cc_map(pdev, &mmcc_msm8998_desc);
+> > > +	if (IS_ERR(regmap))
+> > > +		return PTR_ERR(regmap);
+> > > +
+> > > +	return qcom_cc_really_probe(pdev, &mmcc_msm8998_desc, regmap);
+> > > +}
+> > [..]
+> > > +MODULE_DESCRIPTION("QCOM MMCC MSM8998 Driver");
+> > > +MODULE_LICENSE("GPL v2");
+> > > +MODULE_ALIAS("platform:mmcc-msm8998");
+> > 
+> > MODULE_DEVICE_TABLE() will provide the alias for module auto loading, so
+> > drop this.
+> 
+> Huh.  I did not know that.  Will put on the list to fixup.
+> 
 
-Let me put it this way. The gpio property belongs wherever the mux is
-represented. In this case, I would expect the graph port representing
-the HS port to have 2 endpoints representing the 2 mux outputs. We
-don't generally put properties in the endpoint or port nodes, but the
-parent nodes.
+With this dropped (and your objection above) I think the patch looks
+good.
 
-> >> +- hub-vdd33-en-gpios: gpio to enable the power of hub
-> >
-> > This too should be a gpio regulator and then in a hub node. We have 2
-> > ways to represent hubs. Either as an I2C device or as a child of the
-> > host controller. The latter is preferred, but I'm not too sure how the
-> > OF graph connection linking the controller to the TypeC connector will
-> > work with the usb bus binding.
-> >
-> There is no particular code except the power control for the hub.
-> The i2c on the hub is not used. So it can not be an I2C device.
-> Is there such an example that make the hub as a child of the host controller
-> and control its power?
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Yes, bindings/usb/usb-device.txt.
+Regards,
+Bjorn
 
-Rob
-
-[1] https://www.spinics.net/lists/kernel/msg3089136.html
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> 
+> 
+> -- 
+> Jeffrey Hugo
+> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies,
+> Inc.
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
