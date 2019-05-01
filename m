@@ -1,42 +1,98 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v7 0/4] Qualcomm AOSS QMP driver
-Date: Tue, 30 Apr 2019 21:37:30 -0700
-Message-ID: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v7 4/4] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+Date: Tue, 30 Apr 2019 21:37:34 -0700
+Message-ID: <20190501043734.26706-5-bjorn.andersson@linaro.org>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190501043734.26706-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <swboyd@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce a driver implementing Qualcomm Messaging Protocol (QMP) to
-communicate with the Always On Subsystem (AOSS) and expose the low-power
-states for the remoteprocs as a set of power-domains and the QDSS clock
-as a clock.
+From: Sibi Sankar <sibis@codeaurora.org>
+
+This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
 Changes since v6:
-- First couple of patches merged for v5.2
-- Squashed the qmp and qmp-pd driver into one and by that moved it all
-  to one file
-- Expose QDSS clock as a clock instead of a power domain
+- None
 
-Bjorn Andersson (3):
-  dt-bindings: soc: qcom: Add AOSS QMP binding
-  soc: qcom: Add AOSS QMP driver
-  arm64: dts: qcom: Add AOSS QMP node
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 58 ++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-Sibi Sankar (1):
-  arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-
- .../bindings/soc/qcom/qcom,aoss-qmp.txt       |  81 +++
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |  68 +++
- drivers/soc/qcom/Kconfig                      |  11 +
- drivers/soc/qcom/Makefile                     |   1 +
- drivers/soc/qcom/qcom_aoss.c                  | 473 ++++++++++++++++++
- include/dt-bindings/power/qcom-aoss-qmp.h     |  14 +
- 6 files changed, 648 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
- create mode 100644 drivers/soc/qcom/qcom_aoss.c
- create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 666bc88d3e81..2f3ab6acda3d 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1672,6 +1672,64 @@
+ 			};
+ 		};
+ 
++		mss_pil: remoteproc@4080000 {
++			compatible = "qcom,sdm845-mss-pil";
++			reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
++			reg-names = "qdsp6", "rmb";
++
++			interrupts-extended =
++				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack",
++					  "shutdown-ack";
++
++			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
++				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
++				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
++				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
++				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
++				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++				 <&gcc GCC_PRNG_AHB_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bus", "mem", "gpll0_mss",
++				      "snoc_axi", "mnoc_axi", "prng", "xo";
++
++			qcom,smem-states = <&modem_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
++				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
++			reset-names = "mss_restart", "pdc_reset";
++
++			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
++
++			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
++					<&rpmhpd SDM845_CX>,
++					<&rpmhpd SDM845_MX>,
++					<&rpmhpd SDM845_MSS>;
++			power-domain-names = "load_state", "cx", "mx", "mss";
++
++			mba {
++				memory-region = <&mba_region>;
++			};
++
++			mpss {
++				memory-region = <&mpss_region>;
++			};
++
++			glink-edge {
++				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
++				label = "modem";
++				qcom,remote-pid = <1>;
++				mboxes = <&apss_shared 12>;
++			};
++		};
++
+ 		gpucc: clock-controller@5090000 {
+ 			compatible = "qcom,sdm845-gpucc";
+ 			reg = <0 0x05090000 0 0x9000>;
 -- 
 2.18.0
