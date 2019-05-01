@@ -1,79 +1,161 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280 LCD
- panel
-Date: Wed,  1 May 2019 17:44:47 +0530
-Message-ID: <20190501121448.3812-1-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH 2/2] arm64: rockchip: rk3399: nanopc-t4: Enable FriendlyELEC HD702E eDP panel
+Date: Wed,  1 May 2019 17:44:48 +0530
+Message-ID: <20190501121448.3812-2-jagan@amarulasolutions.com>
+References: <20190501121448.3812-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190501121448.3812-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-SEQ3MDJFIGxjZCBpcyBGcmllbmRseUVMRUMgZGV2ZWxvcGVkIGVEUCBMQ0QgcGFuZWwgd2l0aCA4
-MDB4MTI4MApyZXNvbHV0aW9uLiBJdCBoYXMgYnVpbHQgaW4gR29vZGl4LCBHVDkyNzEgY2FwdGl2
-ZSB0b3VjaHNjcmVlbgp3aXRoIGJhY2tsaWdodCBhZGp1c3RhYmxlIHZpYSBQV00uCgpBZGQgc3Vw
-cG9ydCBmb3IgaXQuCgpDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNv
-bT4KQ2M6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KQ2M6IERhdmlkIEFpcmxpZSA8
-YWlybGllZEBsaW51eC5pZT4KQ2M6IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4KQ2M6
-IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVr
-aSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Ci0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvZnJp
-ZW5kbHlhcm0saGQ3MDJlLnR4dCAgICAgIHwgMjkgKysrKysrKysrKysrKysrKysrKwogZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMjYgKysrKysrKysrKysr
-KysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNTUgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2ZyaWVu
-ZGx5YXJtLGhkNzAyZS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9mcmllbmRseWFybSxoZDcwMmUudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZnJpZW5kbHlhcm0saGQ3MDJl
-LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjY3MzQ5ZDdmNzli
-ZQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL2ZyaWVuZGx5YXJtLGhkNzAyZS50eHQKQEAgLTAsMCArMSwyOSBAQAorRnJp
-ZW5kbHlFTEVDIEhENzAyRSA4MDB4MTI4MCBMQ0QgcGFuZWwKKworSEQ3MDJFIGxjZCBpcyBGcmll
-bmRseUVMRUMgZGV2ZWxvcGVkIGVEUCBMQ0QgcGFuZWwgd2l0aCA4MDB4MTI4MAorcmVzb2x1dGlv
-bi4gSXQgaGFzIGJ1aWx0IGluIEdvb2RpeCwgR1Q5MjcxIGNhcHRpdmUgdG91Y2hzY3JlZW4KK3dp
-dGggYmFja2xpZ2h0IGFkanVzdGFibGUgdmlhIFBXTS4KKworUmVxdWlyZWQgcHJvcGVydGllczoK
-Ky0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmcmllbmRseWFybSxoZDcwMmUiCistIHBvd2VyLXN1
-cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCisKK09wdGlvbmFs
-IHByb3BlcnRpZXM6CistIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmlj
-ZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworT3B0aW9uYWwgbm9kZXM6CistIFZpZGVvIHBvcnQg
-Zm9yIExDRCBwYW5lbCBpbnB1dC4KKworRXhhbXBsZToKKworCXBhbmVsIHsKKwkJY29tcGF0aWJs
-ZSA9ImZyaWVuZGx5YXJtLGhkNzAyZSI7CisJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwkJ
-cG93ZXItc3VwcGx5ID0gPCZ2Y2MzdjNfc3lzPjsKKworCQlwb3J0IHsKKwkJCXBhbmVsX2luX2Vk
-cDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9wYW5lbD47CisJ
-CQl9OworCQl9OworCX07CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
-c2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggOWU4
-MjE4ZjZhM2YyLi45ZGIzYzBjNjVlZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
-LmMKQEAgLTExODQsNiArMTE4NCwyOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
-Zm94bGlua19mbDUwMHd2cjAwX2EwdCA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRf
-UkdCODg4XzFYMjQsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUg
-ZnJpZW5kbHlhcm1faGQ3MDJlX21vZGUgPSB7CisJLmNsb2NrCQk9IDY3MTg1LAorCS5oZGlzcGxh
-eQk9IDgwMCwKKwkuaHN5bmNfc3RhcnQJPSA4MDAgKyAyMCwKKwkuaHN5bmNfZW5kCT0gODAwICsg
-MjAgKyAyNCwKKwkuaHRvdGFsCQk9IDgwMCArIDIwICsgMjQgKyAyMCwKKwkudmRpc3BsYXkJPSAx
-MjgwLAorCS52c3luY19zdGFydAk9IDEyODAgKyA0LAorCS52c3luY19lbmQJPSAxMjgwICsgNCAr
-IDgsCisJLnZ0b3RhbAkJPSAxMjgwICsgNCArIDggKyA0LAorCS52cmVmcmVzaAk9IDYwLAorCS5m
-bGFncyAJCT0gRFJNX01PREVfRkxBR19OVlNZTkMgfCBEUk1fTU9ERV9GTEFHX05IU1lOQywKK307
-CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBmcmllbmRseWFybV9oZDcwMmUgPSB7
-CisJLm1vZGVzID0gJmZyaWVuZGx5YXJtX2hkNzAyZV9tb2RlLAorCS5udW1fbW9kZXMgPSAxLAor
-CS5zaXplID0geworCQkud2lkdGgJPSA5NCwKKwkJLmhlaWdodAk9IDE1MSwKKwl9LAorfTsKKwog
-c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGdpYW50cGx1c19ncGc0ODI3Mzlx
-czVfbW9kZSA9IHsKIAkuY2xvY2sgPSA5MDAwLAogCS5oZGlzcGxheSA9IDQ4MCwKQEAgLTI2MzQs
-NiArMjY1Nyw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29m
-X21hdGNoW10gPSB7CiAJfSwgewogCQkuY29tcGF0aWJsZSA9ICJlZHQsZXRtMDcwMGcwZWRoNiIs
-CiAJCS5kYXRhID0gJmVkdF9ldG0wNzAwZzBiZGg2LAorCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAi
-ZnJpZW5kbHlhcm0saGQ3MDJlIiwKKwkJLmRhdGEgPSAmZnJpZW5kbHlhcm1faGQ3MDJlLAogCX0s
-IHsKIAkJLmNvbXBhdGlibGUgPSAiZm94bGluayxmbDUwMHd2cjAwLWEwdCIsCiAJCS5kYXRhID0g
-JmZveGxpbmtfZmw1MDB3dnIwMF9hMHQsCi0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+FriendlyELEC HD702E is one of optional LCD panel for
+NanoPC T4 eDP interface.
+
+It features 800x1280 resolutions, with built in GT9271 captive
+touchscreen and adjustable backlight via PWM.
+
+eDP panel connections are:
+- VCC3V3_SYS: 3.3V panel power supply
+- GPIO4_C2: PWM0_BL pin
+- GPIO4_D5_LCD_BL_EN: Backlight enable pin
+- VCC12V0_SYS: 12V backlight power supply
+- Touchscreen connected via I2C4
+- GPIO1_C4_TP_INT: touchscreen interrupt pin
+- GPIO1_B5_TP_RST: touchscreen reset pin
+
+Add support for it.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Note: we need to disable hdmi-cec pinctrl to work with
+edp-hpd since both share same pin, otherwise we can
+encounter below error during bootup
+[    1.047726] rockchip-pinctrl pinctrl: pin gpio4-23 already requested by ff940000.hdmi; cannot claim for ff970000.edp
+[    1.048655] rockchip-pinctrl pinctrl: pin-151 (ff970000.edp) status -22
+[    1.049235] rockchip-pinctrl pinctrl: could not request pin 151 (gpio4-23) from group edp-hpd  on device rockchip-pinctrl
+[    1.050191] rockchip-dp ff970000.edp: Error applying setting, reverse things back
+[    1.050867] rockchip-dp: probe of ff970000.edp failed with error -22
+
+ .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+index 931c3dbf1b7d..b652d960946f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+@@ -46,6 +46,48 @@
+ 		};
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		brightness-levels = <
++			  0   1   2   3   4   5   6   7
++			  8   9  10  11  12  13  14  15
++			 16  17  18  19  20  21  22  23
++			 24  25  26  27  28  29  30  31
++			 32  33  34  35  36  37  38  39
++			 40  41  42  43  44  45  46  47
++			 48  49  50  51  52  53  54  55
++			 56  57  58  59  60  61  62  63
++			 64  65  66  67  68  69  70  71
++			 72  73  74  75  76  77  78  79
++			 80  81  82  83  84  85  86  87
++			 88  89  90  91  92  93  94  95
++			 96  97  98  99 100 101 102 103
++			104 105 106 107 108 109 110 111
++			112 113 114 115 116 117 118 119
++			120 121 122 123 124 125 126 127
++			128 129 130 131 132 133 134 135
++			136 137 138 139 140 141 142 143
++			144 145 146 147 148 149 150 151
++			152 153 154 155 156 157 158 159
++			160 161 162 163 164 165 166 167
++			168 169 170 171 172 173 174 175
++			176 177 178 179 180 181 182 183
++			184 185 186 187 188 189 190 191
++			192 193 194 195 196 197 198 199
++			200 201 202 203 204 205 206 207
++			208 209 210 211 212 213 214 215
++			216 217 218 219 220 221 222 223
++			224 225 226 227 228 229 230 231
++			232 233 234 235 236 237 238 239
++			240 241 242 243 244 245 246 247
++			248 249 250 251 252 253 254 255>;
++		default-brightness-level = <200>;
++		enable-gpios = <&gpio4 RK_PD5 GPIO_ACTIVE_HIGH>;	/* GPIO4_D5_LCD_BL_EN */
++		pwms = <&pwm0 0 25000 0>;
++		power-supply = <&vcc12v0_sys>;
++		status = "okay";
++	};
++
+ 	ir-receiver {
+ 		compatible = "gpio-ir-receiver";
+ 		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
+@@ -64,6 +106,18 @@
+ 		fan-supply = <&vcc12v0_sys>;
+ 		pwms = <&pwm1 0 50000 0>;
+ 	};
++
++	panel {
++		compatible ="friendlyarm,hd702e";
++		backlight = <&backlight>;
++		power-supply = <&vcc3v3_sys>;
++
++		port {
++			panel_in_edp: endpoint {
++				remote-endpoint = <&edp_out_panel>;
++			};
++		};
++	};
+ };
+ 
+ &cpu_thermal {
+@@ -94,6 +148,23 @@
+ 	};
+ };
+ 
++&edp {
++	status = "okay";
++
++	ports {
++		edp_out: port@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			edp_out_panel: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
++
+ &gpu_thermal {
+ 	trips {
+ 		gpu_warm: gpu_warm {
+@@ -130,6 +201,17 @@
+ 	};
+ };
+ 
++&i2c4 {
++	touchscreen@5d {
++		compatible = "goodix,gt911";
++		reg = <0x5d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <RK_PC4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpio = <&gpio1 RK_PC4 GPIO_ACTIVE_HIGH>;	/* GPIO1_C4_TP_INT */
++		reset-gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;	/* GPIO1_B5_TP_RST */
++	};
++};
++
+ &sdhci {
+ 	mmc-hs400-1_8v;
+ 	mmc-hs400-enhanced-strobe;
+-- 
+2.18.0.321.gffc6fa0e3
