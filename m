@@ -1,62 +1,38 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 3/3] backlight: lm3630a: add firmware node support
-Date: Wed, 1 May 2019 10:26:27 +0200
-Message-ID: <20190501082627.GA2971@amd>
-References: <20190415072905.2861-1-masneyb@onstation.org>
- <20190415072905.2861-4-masneyb@onstation.org>
- <0e5e26ba-cf98-913e-8e76-e988a86dc0d1@ti.com>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: [PATCH v2 0/6] soc/fsl/qe: cleanups and new DT binding
+Date: Wed, 1 May 2019 09:29:01 +0000
+Message-ID: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0e5e26ba-cf98-913e-8e76-e988a86dc0d1@ti.com>
+In-Reply-To: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Brian Masney <masneyb@onstation.org>, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, jonathan@marek.ca
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
 List-Id: devicetree@vger.kernel.org
 
-
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > @@ -396,13 +506,20 @@ static int lm3630a_probe(struct i2c_client *clien=
-t,
-> >  				     GFP_KERNEL);
-> >  		if (pdata =3D=3D NULL)
-> >  			return -ENOMEM;
-> > +
-> >  		/* default values */
-> > -		pdata->leda_ctrl =3D LM3630A_LEDA_ENABLE;
-> > -		pdata->ledb_ctrl =3D LM3630A_LEDB_ENABLE;
-> > +		pdata->leda_ctrl =3D LM3630A_LEDA_DISABLE;
-> > +		pdata->ledb_ctrl =3D LM3630A_LEDB_DISABLE;
->=20
-> This is not needed since default is disabled and kzalloc will set these t=
-o 0
-
-Let compiler do this kind of optimalizations. Code makes sense as-is.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzJWDMACgkQMOfwapXb+vK/6QCguYAgoaGIpYPAGtybTC9vIfZi
-p4UAn2Haq8zwV7EpVgAkDZlkZ4x+gZWb
-=7kTY
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+VGhpcyBzbWFsbCBzZXJpZXMgY29uc2lzdHMgb2Ygc29tZSBzbWFsbCBjbGVhbnVwcyBhbmQgc2lt
+cGxpZmljYXRpb25zDQpvZiB0aGUgUVVJQ0MgZW5naW5lIGRyaXZlciwgYW5kIGludHJvZHVjZXMg
+YSBuZXcgRFQgYmluZGluZyB0aGF0IG1ha2VzDQppdCBtdWNoIGVhc2llciB0byBzdXBwb3J0IG90
+aGVyIHZhcmlhbnRzIG9mIHRoZSBRVUlDQyBlbmdpbmUgSVAgYmxvY2sNCnRoYXQgYXBwZWFycyBp
+biB0aGUgd2lsZDogVGhlcmUncyBubyByZWFzb24gdG8gZXhwZWN0IGluIGdlbmVyYWwgdGhhdA0K
+dGhlIG51bWJlciBvZiB2YWxpZCBTTlVNcyB1bmlxdWVseSBkZXRlcm1pbmVzIHRoZSBzZXQgb2Yg
+c3VjaCwgc28gaXQncw0KYmV0dGVyIHRvIHNpbXBseSBsZXQgdGhlIGRldmljZSB0cmVlIHNwZWNp
+ZnkgdGhlIHZhbHVlcyAoYW5kLA0KaW1wbGljaXRseSB2aWEgdGhlIGFycmF5IGxlbmd0aCwgYWxz
+byB0aGUgY291bnQpLg0KDQp2MjoNCi0gQWRkcmVzcyBjb21tZW50cyBmcm9tIENocmlzdG9waGUg
+TGVyb3kNCi0gQWRkIGhpcyBSZXZpZXdlZC1ieSB0byAxLzYgYW5kIDMvNg0KLSBTcGxpdCBEVCBi
+aW5kaW5nIHVwZGF0ZSB0byBzZXBhcmF0ZSBwYXRjaCBhcyBwZXINCiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3N1Ym1pdHRpbmctcGF0Y2hlcy50eHQNCg0KDQpSYXNtdXMgVmls
+bGVtb2VzICg2KToNCiAgc29jL2ZzbC9xZTogcWUuYzogZHJvcCB1c2VsZXNzIHN0YXRpYyBxdWFs
+aWZpZXINCiAgc29jL2ZzbC9xZTogcWUuYzogcmVkdWNlIHN0YXRpYyBtZW1vcnkgZm9vdHByaW50
+IGJ5IDEuN0sNCiAgc29jL2ZzbC9xZTogcWUuYzogaW50cm9kdWNlIHFlX2dldF9kZXZpY2Vfbm9k
+ZSBoZWxwZXINCiAgZHQtYmluZGluZ3M6IHNvYy9mc2w6IHFlOiBkb2N1bWVudCBuZXcgZnNsLHFl
+LXNudW1zIGJpbmRpbmcNCiAgc29jL2ZzbC9xZTogcWUuYzogc3VwcG9ydCBmc2wscWUtc251bXMg
+cHJvcGVydHkNCiAgc29jL2ZzbC9xZTogcWUuYzogZm9sZCBxZV9nZXRfbnVtX29mX3NudW1zIGlu
+dG8gcWVfc251bXNfaW5pdA0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1f
+cWUvcWUudHh0IHwgICA4ICstDQogZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMgICAgICAgICAgICAg
+ICAgICAgICAgIHwgMTY0ICsrKysrKystLS0tLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNzIg
+aW5zZXJ0aW9ucygrKSwgMTAwIGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMjAuMQ0KDQo=
