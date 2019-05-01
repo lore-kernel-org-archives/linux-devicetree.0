@@ -1,16 +1,17 @@
 From: Zhi Li <lznuaa@gmail.com>
 Subject: Re: [PATCH V11 2/4] drivers/perf: imx_ddr: Add ddr performance
  counter support
-Date: Wed, 1 May 2019 10:35:01 -0500
-Message-ID: <CAHrpEqQYhg_aRt7qukkTzT3pEzLqg-B0YJL1Z7T06iZV1JAxmQ@mail.gmail.com>
+Date: Wed, 1 May 2019 10:41:13 -0500
+Message-ID: <CAHrpEqQON_M3LC6KtZCaRt4ShhREyY-ZA=-_cRpHxAaz46bvQA@mail.gmail.com>
 References: <1556724043-3961-1-git-send-email-Frank.Li@nxp.com>
  <1556724043-3961-2-git-send-email-Frank.Li@nxp.com>
  <20190501152437.GA28109@fuggles.cambridge.arm.com>
+ <CAHrpEqQYhg_aRt7qukkTzT3pEzLqg-B0YJL1Z7T06iZV1JAxmQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190501152437.GA28109@fuggles.cambridge.arm.com>
+In-Reply-To: <CAHrpEqQYhg_aRt7qukkTzT3pEzLqg-B0YJL1Z7T06iZV1JAxmQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,38 +25,46 @@ To: Will Deacon <will.deacon@arm.com>
 Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 1, 2019 at 10:24 AM Will Deacon <will.deacon@arm.com> wrote:
+On Wed, May 1, 2019 at 10:35 AM Zhi Li <lznuaa@gmail.com> wrote:
 >
-> On Wed, May 01, 2019 at 03:21:00PM +0000, Frank Li wrote:
-> > +static int ddr_perf_probe(struct platform_device *pdev)
-> > +{
-> > +     struct ddr_pmu *pmu;
-> > +     struct device_node *np;
-> > +     void __iomem *base;
-> > +     char *name;
-> > +     int num;
-> > +     int ret;
-> > +     int irq;
-> > +
-> > +     base = devm_platform_ioremap_resource(pdev, 0);
-> > +     if (IS_ERR(base))
-> > +             return PTR_ERR(base);
-> > +
-> > +     np = pdev->dev.of_node;
-> > +
-> > +     pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
-> > +     if (!pmu)
-> > +             return -ENOMEM;
-> > +
-> > +     num = ddr_perf_init(pmu, base, &pdev->dev);
-> > +
-> > +     platform_set_drvdata(pdev, pmu);
-> > +
-> > +     name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "imx_ddr%d", num);
+> On Wed, May 1, 2019 at 10:24 AM Will Deacon <will.deacon@arm.com> wrote:
+> >
+> > On Wed, May 01, 2019 at 03:21:00PM +0000, Frank Li wrote:
+> > > +static int ddr_perf_probe(struct platform_device *pdev)
+> > > +{
+> > > +     struct ddr_pmu *pmu;
+> > > +     struct device_node *np;
+> > > +     void __iomem *base;
+> > > +     char *name;
+> > > +     int num;
+> > > +     int ret;
+> > > +     int irq;
+> > > +
+> > > +     base = devm_platform_ioremap_resource(pdev, 0);
+> > > +     if (IS_ERR(base))
+> > > +             return PTR_ERR(base);
+> > > +
+> > > +     np = pdev->dev.of_node;
+> > > +
+> > > +     pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
+> > > +     if (!pmu)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     num = ddr_perf_init(pmu, base, &pdev->dev);
+> > > +
+> > > +     platform_set_drvdata(pdev, pmu);
+> > > +
+> > > +     name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "imx_ddr%d", num);
+> >
+> > Still not happy with this.
 >
-> Still not happy with this.
+> is imx_ddr_pmu%d  okay?
 
-is imx_ddr_pmu%d  okay?
+imx_ddr%d_pmu look like more reasonable.
+
+best regards
+Frank Li
 
 >
-> Will
+> >
+> > Will
