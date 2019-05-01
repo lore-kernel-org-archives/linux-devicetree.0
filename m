@@ -1,92 +1,123 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 5/6] clk: qcom: Add MSM8998 Multimedia Clock
- Controller (MMCC) driver
-Date: Wed, 1 May 2019 09:54:06 -0700
-Message-ID: <20190501165406.GI2938@tuxbook-pro>
-References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
- <1556677642-29428-1-git-send-email-jhugo@codeaurora.org>
- <20190501034314.GE2938@tuxbook-pro>
- <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1] arm64: ls1028: dtsi: Add esdhc node in dtsi
+Date: Wed, 1 May 2019 12:50:29 -0500
+Message-ID: <CAL_Jsq+4g+inxc+qcC3oLrXuR+L9AMvXFShGaU5Y3iRDsK3P6A@mail.gmail.com>
+References: <20190423114424.3578-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0513163c-5088-6168-64fb-04fa51f711fa@codeaurora.org>
+In-Reply-To: <20190423114424.3578-1-yinbo.zhu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, agross@kernel.org, marc.w.gonzalez@free.fr, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 01 May 07:25 PDT 2019, Jeffrey Hugo wrote:
+On Tue, Apr 23, 2019 at 6:42 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
+>
+> From: Ashish Kumar <Ashish.Kumar@nxp.com>
+>
+> This patch is to add esdhc node and enable SD UHS-I,
+> eMMC HS200 for ls1028ardb/ls1028aqds board.
+>
+> Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  8 ++++++
+>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 13 +++++++++
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 27 +++++++++++++++++++
+>  3 files changed, 48 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 14c79f4691ea..180e5d2a00d1 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -42,6 +42,14 @@
+>         status = "okay";
+>  };
+>
+> +&esdhc {
+> +       status = "okay";
+> +};
+> +
+> +&esdhc1 {
+> +       status = "okay";
+> +};
+> +
+>  &i2c0 {
+>         status = "okay";
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index f86b054a74ae..1bfaf4294db4 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -30,6 +30,19 @@
+>         };
+>  };
+>
+> +&esdhc {
+> +       status = "okay";
+> +       sd-uhs-sdr104;
+> +       sd-uhs-sdr50;
+> +       sd-uhs-sdr25;
+> +       sd-uhs-sdr12;
+> +       };
+> +
+> +&esdhc1 {
+> +       status = "okay";
+> +       mmc-hs200-1_8v;
+> +       };
+> +
+>  &i2c0 {
+>         status = "okay";
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbcfa3bb..d13cd3fb455b 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -274,6 +274,33 @@
+>                         status = "disabled";
+>                 };
+>
+> +               esdhc: esdhc@2140000 {
 
-> On 4/30/2019 9:43 PM, Bjorn Andersson wrote:
-> > On Tue 30 Apr 19:27 PDT 2019, Jeffrey Hugo wrote:
-> > > +static const struct of_device_id mmcc_msm8998_match_table[] = {
-> > > +	{ .compatible = "qcom,mmcc-msm8998" },
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
-> > > +
-> > > +static int mmcc_msm8998_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct regmap *regmap;
-> > > +
-> > 
-> > Don't you want to wait for "xo" here as well?
-> 
-> No, I don't want to.  As far as I recall, Stephen would like to make a clear
-> divide between clock providers, and clock consumers.  Since we have the uart
-> issue in gcc, and gcc is pretty critical to the entire SoC, it seems like
-> there is a reason (not sure I'd call it "good") to wait for xo there.
-> 
-> Here, I'm less confident in the reasoning.  mmcc is not really critical to
-> the SoC, and everything it services is "optional".  If you have a headless
-> system with no display output, you won't even need it.  On system where
-> there is a display, I expect the realistic driver ordering to be that
-> everything which consumes a mmcc clock to come up well after xo is
-> available.
-> 
-> In short, seems like a bit of a kludge to maybe avoid an issue which doesn't
-> seem like would happen.
-> 
+mmc@...
 
-Okay, cool.
+> +                       compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+> +                       reg = <0x0 0x2140000 0x0 0x10000>;
+> +                       interrupts = <0 28 0x4>; /* Level high type */
+> +                       clock-frequency = <0>;
 
-> > 
-> > > +	regmap = qcom_cc_map(pdev, &mmcc_msm8998_desc);
-> > > +	if (IS_ERR(regmap))
-> > > +		return PTR_ERR(regmap);
-> > > +
-> > > +	return qcom_cc_really_probe(pdev, &mmcc_msm8998_desc, regmap);
-> > > +}
-> > [..]
-> > > +MODULE_DESCRIPTION("QCOM MMCC MSM8998 Driver");
-> > > +MODULE_LICENSE("GPL v2");
-> > > +MODULE_ALIAS("platform:mmcc-msm8998");
-> > 
-> > MODULE_DEVICE_TABLE() will provide the alias for module auto loading, so
-> > drop this.
-> 
-> Huh.  I did not know that.  Will put on the list to fixup.
-> 
+Filled in by bootloader? If so, add a comment.
 
-With this dropped (and your objection above) I think the patch looks
-good.
+> +                       clocks = <&clockgen 2 1>;
+> +                       voltage-ranges = <1800 1800 3300 3300>;
+> +                       sdhci,auto-cmd12;
+> +                       little-endian;
+> +                       bus-width = <4>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               esdhc1: esdhc@2150000 {
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+mmc@...
 
-Regards,
-Bjorn
-
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> 
-> 
-> -- 
-> Jeffrey Hugo
-> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies,
-> Inc.
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> +                       compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+> +                       reg = <0x0 0x2150000 0x0 0x10000>;
+> +                       interrupts = <0 63 0x4>; /* Level high type */
+> +                       clock-frequency = <0>;
+> +                       clocks = <&clockgen 2 1>;
+> +                       voltage-ranges = <1800 1800 3300 3300>;
+> +                       sdhci,auto-cmd12;
+> +                       broken-cd;
+> +                       little-endian;
+> +                       bus-width = <4>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 sata: sata@3200000 {
+>                         compatible = "fsl,ls1028a-ahci";
+>                         reg = <0x0 0x3200000 0x0 0x10000>,
+> --
+> 2.17.1
+>
