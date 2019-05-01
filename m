@@ -1,27 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-Date: Wed, 1 May 2019 14:48:54 -0500
-Message-ID: <20190501194854.GA10996@bogus>
-References: <1556677404-29194-1-git-send-email-jhugo@codeaurora.org>
- <1556677473-29242-1-git-send-email-jhugo@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Date: Wed, 1 May 2019 14:50:19 -0500
+Message-ID: <20190501195019.GA13211@bogus>
+References: <20190419191730.9437-1-peron.clem@gmail.com>
+ <20190419191730.9437-2-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1556677473-29242-1-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <20190419191730.9437-2-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Apr 2019 20:24:33 -0600, Jeffrey Hugo wrote:
-> The global clock controller on MSM8998 can consume a number of external
-> clocks.  Document them.
+On Fri, 19 Apr 2019 21:17:26 +0200, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
+> Allwinner H6 has a SPDIF controller with an increase of the fifo
+> size and a sligher difference in memory mapping compare which
+> make it not compatible with the previous generation H3/A64.
 > 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
