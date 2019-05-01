@@ -1,68 +1,69 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH v2 6/6] soc/fsl/qe: qe.c: fold qe_get_num_of_snums into
- qe_snums_init
-Date: Wed, 1 May 2019 09:29:11 +0000
-Message-ID: <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH] mfd: lochnagar: Add links to binding docs for sound and hwmon
+Date: Wed, 1 May 2019 11:23:50 +0100
+Message-ID: <20190501102350.3520-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGNvbW1lbnQgIk5vIFFFIGV2ZXIgaGFzIGZld2VyIHRoYW4gMjggU05VTXMiIGlzIGZhbHNl
-OyBlLmcuIHRoZQ0KTVBDODMwOSBoYXMgMTQuIFRoZSBjb2RlIHBhdGggcmV0dXJuaW5nIC1FSU5W
-QUwgaXMgYWxzbyBhIHJlY2lwZSBmb3INCmluc3RhbnQgZGlzYXN0ZXIsIHNpbmNlIHRoZSBjYWxs
-ZXIgKHFlX3NudW1zX2luaXQpIHVuY3JpdGljYWxseQ0KYXNzaWducyB0aGUgcmV0dXJuIHZhbHVl
-IHRvIHRoZSB1bnNpZ25lZCBxZV9udW1fb2Zfc251bSwgYW5kIHdvdWxkDQp0aHVzIHByb2NlZWQg
-dG8gYXR0ZW1wdCB0byBjb3B5IDRHQiBmcm9tIHNudW1faW5pdF80NltdIHRvIHRoZSBzbnVtW10N
-CmFycmF5Lg0KDQpTbyBmb2xkIHRoZSBoYW5kbGluZyBvZiB0aGUgbGVnYWN5IGZzbCxxZS1udW0t
-c251bXMgaW50bw0KcWVfc251bXNfaW5pdCwgYW5kIG1ha2Ugc3VyZSB3ZSBkbyBub3QgZW5kIHVw
-IHVzaW5nIHRoZSBzbnVtX2luaXRfNDYNCmFycmF5IGluIGNhc2VzIG90aGVyIHRoYW4gdGhlIHR3
-byB3aGVyZSB3ZSBrbm93IGl0IG1ha2VzIHNlbnNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBSYXNtdXMg
-VmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCi0tLQ0KIGRyaXZlcnMvc29j
-L2ZzbC9xZS9xZS5jIHwgNDYgKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0NCiAxIGZpbGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pDQoN
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyBiL2RyaXZlcnMvc29jL2ZzbC9x
-ZS9xZS5jDQppbmRleCAzMjVkNjg5Y2JmNWMuLjI3NmQ3ZDc4ZWJmYyAxMDA2NDQNCi0tLSBhL2Ry
-aXZlcnMvc29jL2ZzbC9xZS9xZS5jDQorKysgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYw0KQEAg
-LTMwOCwyNCArMzA4LDMzIEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9pZCkNCiAJaW50
-IGk7DQogDQogCWJpdG1hcF96ZXJvKHNudW1fc3RhdGUsIFFFX05VTV9PRl9TTlVNKTsNCisJcWVf
-bnVtX29mX3NudW0gPSAyODsgLyogVGhlIGRlZmF1bHQgbnVtYmVyIG9mIHNudW0gZm9yIHRocmVh
-ZHMgaXMgMjggKi8NCiAJcWUgPSBxZV9nZXRfZGV2aWNlX25vZGUoKTsNCiAJaWYgKHFlKSB7DQog
-CQlpID0gb2ZfcHJvcGVydHlfcmVhZF92YXJpYWJsZV91OF9hcnJheShxZSwgImZzbCxxZS1zbnVt
-cyIsDQogCQkJCQkJICAgICAgIHNudW1zLCAxLCBRRV9OVU1fT0ZfU05VTSk7DQotCQlvZl9ub2Rl
-X3B1dChxZSk7DQogCQlpZiAoaSA+IDApIHsNCisJCQlvZl9ub2RlX3B1dChxZSk7DQogCQkJcWVf
-bnVtX29mX3NudW0gPSBpOw0KIAkJCXJldHVybjsNCiAJCX0NCisJCS8qDQorCQkgKiBGYWxsIGJh
-Y2sgdG8gbGVnYWN5IGJpbmRpbmcgb2YgdXNpbmcgdGhlIHZhbHVlIG9mDQorCQkgKiBmc2wscWUt
-bnVtLXNudW1zIHRvIGNob29zZSBvbmUgb2YgdGhlIHN0YXRpYyBhcnJheXMNCisJCSAqIGFib3Zl
-Lg0KKwkJICovDQorCQlvZl9wcm9wZXJ0eV9yZWFkX3UzMihxZSwgImZzbCxxZS1udW0tc251bXMi
-LCAmcWVfbnVtX29mX3NudW0pOw0KKwkJb2Zfbm9kZV9wdXQocWUpOw0KIAl9DQogDQotCXFlX251
-bV9vZl9zbnVtID0gcWVfZ2V0X251bV9vZl9zbnVtcygpOw0KLQ0KLQlpZiAocWVfbnVtX29mX3Nu
-dW0gPT0gNzYpDQorCWlmIChxZV9udW1fb2Zfc251bSA9PSA3Nikgew0KIAkJc251bV9pbml0ID0g
-c251bV9pbml0Xzc2Ow0KLQllbHNlDQorCX0gZWxzZSBpZiAocWVfbnVtX29mX3NudW0gPT0gMjgg
-fHwgcWVfbnVtX29mX3NudW0gPT0gNDYpIHsNCiAJCXNudW1faW5pdCA9IHNudW1faW5pdF80NjsN
-Ci0NCisJfSBlbHNlIHsNCisJCXByX2VycigiUUU6IHVuc3VwcG9ydGVkIHZhbHVlIG9mIGZzbCxx
-ZS1udW0tc251bXM6ICV1XG4iLCBxZV9udW1fb2Zfc251bSk7DQorCQlyZXR1cm47DQorCX0NCiAJ
-bWVtY3B5KHNudW1zLCBzbnVtX2luaXQsIHFlX251bV9vZl9zbnVtKTsNCiB9DQogDQpAQCAtNjQx
-LDMwICs2NTAsNyBAQCBFWFBPUlRfU1lNQk9MKHFlX2dldF9udW1fb2ZfcmlzYyk7DQogDQogdW5z
-aWduZWQgaW50IHFlX2dldF9udW1fb2Zfc251bXModm9pZCkNCiB7DQotCXN0cnVjdCBkZXZpY2Vf
-bm9kZSAqcWU7DQotCWludCBzaXplOw0KLQl1bnNpZ25lZCBpbnQgbnVtX29mX3NudW1zOw0KLQlj
-b25zdCB1MzIgKnByb3A7DQotDQotCW51bV9vZl9zbnVtcyA9IDI4OyAvKiBUaGUgZGVmYXVsdCBu
-dW1iZXIgb2Ygc251bSBmb3IgdGhyZWFkcyBpcyAyOCAqLw0KLQlxZSA9IHFlX2dldF9kZXZpY2Vf
-bm9kZSgpOw0KLQlpZiAoIXFlKQ0KLQkJcmV0dXJuIG51bV9vZl9zbnVtczsNCi0NCi0JcHJvcCA9
-IG9mX2dldF9wcm9wZXJ0eShxZSwgImZzbCxxZS1udW0tc251bXMiLCAmc2l6ZSk7DQotCWlmIChw
-cm9wICYmIHNpemUgPT0gc2l6ZW9mKCpwcm9wKSkgew0KLQkJbnVtX29mX3NudW1zID0gKnByb3A7
-DQotCQlpZiAoKG51bV9vZl9zbnVtcyA8IDI4KSB8fCAobnVtX29mX3NudW1zID4gUUVfTlVNX09G
-X1NOVU0pKSB7DQotCQkJLyogTm8gUUUgZXZlciBoYXMgZmV3ZXIgdGhhbiAyOCBTTlVNcyAqLw0K
-LQkJCXByX2VycigiUUU6IG51bWJlciBvZiBzbnVtIGlzIGludmFsaWRcbiIpOw0KLQkJCW9mX25v
-ZGVfcHV0KHFlKTsNCi0JCQlyZXR1cm4gLUVJTlZBTDsNCi0JCX0NCi0JfQ0KLQ0KLQlvZl9ub2Rl
-X3B1dChxZSk7DQotDQotCXJldHVybiBudW1fb2Zfc251bXM7DQorCXJldHVybiBxZV9udW1fb2Zf
-c251bTsNCiB9DQogRVhQT1JUX1NZTUJPTChxZV9nZXRfbnVtX29mX3NudW1zKTsNCiANCi0tIA0K
-Mi4yMC4xDQoNCg==
+Lochnagar is an evaluation and development board for Cirrus
+Logic Smart CODEC and Amp devices. It allows the connection of
+most Cirrus Logic devices on mini-cards, as well as allowing
+connection of various application processor systems to provide a
+full evaluation platform. This driver supports the board
+controller chip on the Lochnagar board.
+
+Add links to the binding documents for the new sound and hardware
+monitor parts of the driver.
+
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ .../devicetree/bindings/mfd/cirrus,lochnagar.txt        | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+index 004b0158cf4d7..3bf92ad37fa1b 100644
+--- a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
++++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+@@ -19,6 +19,8 @@ And these documents for the required sub-node binding details:
+   [4] Clock: ../clock/cirrus,lochnagar.txt
+   [5] Pinctrl: ../pinctrl/cirrus,lochnagar.txt
+   [6] Regulator: ../regulator/cirrus,lochnagar.txt
++  [7] Sound: ../sound/cirrus,lochnagar.txt
++  [8] Hardware Monitor: ../hwmon/cirrus,lochnagar.txt
+ 
+ Required properties:
+ 
+@@ -41,6 +43,11 @@ Optional sub-nodes:
+   - Bindings for the regulator components, see [6]. Only available on
+     Lochnagar 2.
+ 
++  - lochnagar-sc : Binding for the sound card components, see [7].
++                   Only available on Lochnagar 2.
++  - lochnagar-hwmon : Binding for the hardware monitor components, see [8].
++                      Only available on Lochnagar 2.
++
+ Optional properties:
+ 
+   - present-gpios : Host present line, indicating the presence of a
+@@ -65,4 +72,14 @@ lochnagar: lochnagar@22 {
+ 		compatible = "cirrus,lochnagar-pinctrl";
+ 		...
+ 	};
++
++	lochnagar-sc {
++		compatible = "cirrus,lochnagar2-soundcard";
++		...
++	};
++
++	lochnagar-hwmon {
++		compatible = "cirrus,lochnagar2-hwmon";
++		...
++	};
+ };
+-- 
+2.11.0
