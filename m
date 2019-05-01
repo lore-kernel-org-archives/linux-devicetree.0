@@ -1,38 +1,30 @@
 From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH v2 0/6] soc/fsl/qe: cleanups and new DT binding
-Date: Wed, 1 May 2019 09:29:01 +0000
-Message-ID: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+Subject: [PATCH v2 1/6] soc/fsl/qe: qe.c: drop useless static qualifier
+Date: Wed, 1 May 2019 09:29:03 +0000
+Message-ID: <20190501092841.9026-2-rasmus.villemoes@prevas.dk>
 References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
 Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzbWFsbCBzZXJpZXMgY29uc2lzdHMgb2Ygc29tZSBzbWFsbCBjbGVhbnVwcyBhbmQgc2lt
-cGxpZmljYXRpb25zDQpvZiB0aGUgUVVJQ0MgZW5naW5lIGRyaXZlciwgYW5kIGludHJvZHVjZXMg
-YSBuZXcgRFQgYmluZGluZyB0aGF0IG1ha2VzDQppdCBtdWNoIGVhc2llciB0byBzdXBwb3J0IG90
-aGVyIHZhcmlhbnRzIG9mIHRoZSBRVUlDQyBlbmdpbmUgSVAgYmxvY2sNCnRoYXQgYXBwZWFycyBp
-biB0aGUgd2lsZDogVGhlcmUncyBubyByZWFzb24gdG8gZXhwZWN0IGluIGdlbmVyYWwgdGhhdA0K
-dGhlIG51bWJlciBvZiB2YWxpZCBTTlVNcyB1bmlxdWVseSBkZXRlcm1pbmVzIHRoZSBzZXQgb2Yg
-c3VjaCwgc28gaXQncw0KYmV0dGVyIHRvIHNpbXBseSBsZXQgdGhlIGRldmljZSB0cmVlIHNwZWNp
-ZnkgdGhlIHZhbHVlcyAoYW5kLA0KaW1wbGljaXRseSB2aWEgdGhlIGFycmF5IGxlbmd0aCwgYWxz
-byB0aGUgY291bnQpLg0KDQp2MjoNCi0gQWRkcmVzcyBjb21tZW50cyBmcm9tIENocmlzdG9waGUg
-TGVyb3kNCi0gQWRkIGhpcyBSZXZpZXdlZC1ieSB0byAxLzYgYW5kIDMvNg0KLSBTcGxpdCBEVCBi
-aW5kaW5nIHVwZGF0ZSB0byBzZXBhcmF0ZSBwYXRjaCBhcyBwZXINCiAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3N1Ym1pdHRpbmctcGF0Y2hlcy50eHQNCg0KDQpSYXNtdXMgVmls
-bGVtb2VzICg2KToNCiAgc29jL2ZzbC9xZTogcWUuYzogZHJvcCB1c2VsZXNzIHN0YXRpYyBxdWFs
-aWZpZXINCiAgc29jL2ZzbC9xZTogcWUuYzogcmVkdWNlIHN0YXRpYyBtZW1vcnkgZm9vdHByaW50
-IGJ5IDEuN0sNCiAgc29jL2ZzbC9xZTogcWUuYzogaW50cm9kdWNlIHFlX2dldF9kZXZpY2Vfbm9k
-ZSBoZWxwZXINCiAgZHQtYmluZGluZ3M6IHNvYy9mc2w6IHFlOiBkb2N1bWVudCBuZXcgZnNsLHFl
-LXNudW1zIGJpbmRpbmcNCiAgc29jL2ZzbC9xZTogcWUuYzogc3VwcG9ydCBmc2wscWUtc251bXMg
-cHJvcGVydHkNCiAgc29jL2ZzbC9xZTogcWUuYzogZm9sZCBxZV9nZXRfbnVtX29mX3NudW1zIGlu
-dG8gcWVfc251bXNfaW5pdA0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1f
-cWUvcWUudHh0IHwgICA4ICstDQogZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMgICAgICAgICAgICAg
-ICAgICAgICAgIHwgMTY0ICsrKysrKystLS0tLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNzIg
-aW5zZXJ0aW9ucygrKSwgMTAwIGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMjAuMQ0KDQo=
+VGhlIGxvY2FsIHZhcmlhYmxlIHNudW1faW5pdCBoYXMgbm8gcmVhc29uIHRvIGhhdmUgc3RhdGlj
+IHN0b3JhZ2UgZHVyYXRpb24uDQoNClJldmlld2VkLWJ5OiBDaHJpc3RvcGhlIExlcm95IDxjaHJp
+c3RvcGhlLmxlcm95QGMtcy5mcj4NClNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPHJh
+c211cy52aWxsZW1vZXNAcHJldmFzLmRrPg0KLS0tDQogZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMg
+fCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoN
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyBiL2RyaXZlcnMvc29jL2ZzbC9x
+ZS9xZS5jDQppbmRleCA2MTJkOWM1NTFiZTUuLjg1NTM3M2RlYjc0NiAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvc29jL2ZzbC9xZS9xZS5jDQorKysgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYw0KQEAg
+LTMwNiw3ICszMDYsNyBAQCBzdGF0aWMgdm9pZCBxZV9zbnVtc19pbml0KHZvaWQpDQogCQkweDI4
+LCAweDI5LCAweDM4LCAweDM5LCAweDQ4LCAweDQ5LCAweDU4LCAweDU5LA0KIAkJMHg2OCwgMHg2
+OSwgMHg3OCwgMHg3OSwgMHg4MCwgMHg4MSwNCiAJfTsNCi0Jc3RhdGljIGNvbnN0IHU4ICpzbnVt
+X2luaXQ7DQorCWNvbnN0IHU4ICpzbnVtX2luaXQ7DQogDQogCXFlX251bV9vZl9zbnVtID0gcWVf
+Z2V0X251bV9vZl9zbnVtcygpOw0KIA0KLS0gDQoyLjIwLjENCg0K
