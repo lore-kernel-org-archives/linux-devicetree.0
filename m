@@ -1,85 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added FD dt-bindings
-Date: Wed, 1 May 2019 17:46:47 -0500
-Message-ID: <20190501224647.GA12044@bogus>
-References: <20190423104505.38778-1-Jerry-Ch.chen@mediatek.com>
- <20190423104505.38778-4-Jerry-Ch.chen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190423104505.38778-4-Jerry-Ch.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, shik@chromium.org, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v8 0/3] Add support for the Purism Librem5 devkit
+Date: Wed,  1 May 2019 16:57:16 -0600
+Message-ID: <20190501225719.3257-1-angus@akkea.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 06:45:02PM +0800, Jerry-ch Chen wrote:
-> From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> 
-> This patch adds DT binding documentation for the Face Detection (FD)
-> unit of the camera system on Mediatek's SoCs.
-> 
-> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> ---
->  .../bindings/media/mediatek,mt8183-fd.txt     | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-> new file mode 100644
-> index 000000000000..97c12fd93e7e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-> @@ -0,0 +1,34 @@
-> +* Mediatek Face Detection Unit (FD)
-> +
-> +Face Detection (FD) unit is a typical memory-to-memory HW device.
-> +It provides hardware accelerated face detection function, and it
-> +is able to detect different poses of faces. FD will writre result
-> +of detected face into memory as output.
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt8183-fd"
-> +- reg: Physical base address and length of the function block register space
-> +- interrupts: interrupt number to the cpu.
-> +- iommus: should point to the respective IOMMU block with master port as
-> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> +  for details.
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-How many entries? Looks like 3 from the example.
+Changes since v7:
 
-> +- mediatek,larb: must contain the local arbiters in the current Socs, see
-> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-> +  for details.
-> +- clocks : must contain the FDVT clock
-> +- clock-names: must contain FD_CLK_IMG_FD
-> +
-> +Example:
-> +	fd:fd@1502b000 {
-           ^ space needed
+More regulators always on for USB.
+Add vbus regulator.
+Drop vbat regulator.
+Replace legacy "gpio-key,wakeup" with "wakeup-source".
+Add vbus-supply to get rid of warning
+imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not found, using dummy regulator
 
-> +		compatible = "mediatek,mt8183-fd";
-> +		mediatek,larb = <&larb5>;
-> +		mediatek,scp = <&scp>;
-> +		iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
-> +			 <&iommu M4U_PORT_CAM_FDVT_WR>,
-> +			 <&iommu M4U_PORT_CAM_FDVT_RB>;
-> +		reg = <0 0x1502b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&imgsys CLK_IMG_FDVT>;
-> +		clock-names = "FD_CLK_IMG_FD";
-> +	};
-> +
-> -- 
-> 2.18.0
-> 
+Changes since v6:
+
+Dropped unused regulators.
+Fix regulator phandles case.
+Dropped extra whitespace.
+
+Changes since v5:
+
+Added reviewed-by tags.
+Moved USB port links to USB controller node.
+
+Changes since v4:
+
+Compiled against linux-next next-20190415.
+Added imx8mq to the arm yaml file.
+Re-arrange regulator nodes to drop undefined supplies.
+Additional ordering for aesthetics.
+Split some long lines.
+Added lots of blank lines.
+Moved pinctl muxes to where they are used.
+Cleaned out reg defintions from regulator nodes.
+
+Changes since v3:
+
+Freshly sorted and pressed nodes.
+Change the backlight to an interpolated scale.
+Dropped i2c2.
+Dropped devkit version number to match debian MR.
+
+Changes since v2:
+
+Fixed incorrect phy-supply for the fsl-fec.
+Dropped unused regulator property.
+Fixup Makefile for linux-next.
+
+Changes since v1:
+
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
+
+Angus Ainslie (Purism) (3):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+  dt-bindings: arm: fsl: Add the imx8mq boards
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 823 ++++++++++++++++++
+ 4 files changed, 832 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+
+-- 
+2.17.1
