@@ -1,62 +1,71 @@
-Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 9 May 2019 16:24:26 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 17/28] PCI: tegra: Fix PLLE power down issue due to
- CLKREQ# signal
-Message-ID: <20190509142426.GN8907@ulmo>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-18-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2+jOUFLb7N+7fooZ"
-Content-Disposition: inline
-In-Reply-To: <20190423092825.759-18-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=HFXL=TB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from da1vs03.rockwellcollins.com ([205.175.227.47]:2639 "EHLO
+        da1vs03.rockwellcollins.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726125AbfEAVRo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 May 2019 17:17:44 -0400
+From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Subject: [PATCH 3/6] iio: ad7949: Support configuration read-back
+Date: Wed,  1 May 2019 16:17:00 -0500
+Message-Id: <1556745423-11368-3-git-send-email-adam.michaelis@rockwellcollins.com>
+In-Reply-To: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org
+Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Adds device tree parameter to set the configuration read-back bit
+in the configuration register to tell the AD7949 to include the value of
+the configuration register at the time the current sample was acquired
+when reading from the part.
 
---2+jOUFLb7N+7fooZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Further work must be done to make read-back information available to
+consumer.
 
-On Tue, Apr 23, 2019 at 02:58:14PM +0530, Manikanta Maddireddy wrote:
-> Disable controllers which failed to link up and configure CLKREQ# signals
-> of these controllers as GPIO. This is required to avoid CLKREQ# signal of
-> inactive controllers interfering with PLLE power down sequence.
->=20
-> PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
-> these bits in other SoCs doesn't cause any side effects. Program these
-> bits for all Tegra SoCs to avoid conditional check.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2: Corrected the comment in driver
->=20
->  drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+---
+ drivers/iio/adc/ad7949.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---2+jOUFLb7N+7fooZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUOBoACgkQ3SOs138+
-s6FxQg/9GCN23PoKSSVWK6D1A6kDYJxTlVQHCvhRE1I8SGKzUdmBGcsZ90xwqrUg
-m6AF06HCEFxgXOJAbg9bF9+jwXxom42/C9x8mJ3lq5hXH2vfZvwPZjtUdzc7IcNp
-K8C4tLb9fGKcZlPR1AFZuUf2eC6M2WQQtnKrJEr17C+ngdAS0K7b0+1vfzBCHClx
-hJy2aYXus4PYne0EwHI990ycRyPSk/MDD/SKlwu8K0TVcVfWWtW0ahio0jhnt42K
-cBXLTymRTGk98Gnrp4MunSt3N7QO5A42LMgB2zko6vv9oSHxrf41cggO1x1cSCS3
-a0wtLq0REUz2cisatxsNNeVYWTvD9aLeYEti301JqzPHq9MIOa6jIeuTlHKfrpqJ
-Ft2P0G6ZfdDydQ9AOBAT/S1LVRGEVsyQwbKKT4a9/6oxuPgWxCl+aTDpjRBezhFy
-HuSR2oW4Qwoj99A3ZlFvp1wYIduIeU0Bv69O2YyU+Xr9NuGNXGp3XRrJWL9UqiWz
-Az74oT3ooNUVM4684HSMmR6paZ0mIpz7UxtOn55Z43xyWPqPB4Pa5wUda2tc9oYF
-tlHQnFtip+2MVbheGZaREowd4FEVWkG504jnbyIVGt63HhI1ErHiNfoDEOOEBUIh
-C8fQ9PFFCsDnqrzW/tQdkzFvQ2jzNWJOUCRO2YfzOabV8XzbEK0=
-=YoN5
------END PGP SIGNATURE-----
-
---2+jOUFLb7N+7fooZ--
+diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
+index 1c49eed298d8..1d75fff698d1 100644
+--- a/drivers/iio/adc/ad7949.c
++++ b/drivers/iio/adc/ad7949.c
+@@ -55,6 +55,7 @@ struct ad7949_adc_spec {
+  * @iio_dev: reference to iio structure
+  * @spi: reference to spi structure
+  * @ref_sel: selected reference voltage source
++ * @cfg_readback: whether reads will include configuration data
+  * @resolution: resolution of the chip
+  * @cfg: copy of the configuration register
+  * @current_channel: current channel in use
+@@ -66,6 +67,7 @@ struct ad7949_adc_chip {
+ 	struct iio_dev *indio_dev;
+ 	struct spi_device *spi;
+ 	enum ad7949_ref_sel ref_sel;
++	bool cfg_readback;
+ 	u8 resolution;
+ 	u16 cfg;
+ 	unsigned int current_channel;
+@@ -256,7 +258,7 @@ static int ad7949_spi_init(struct ad7949_adc_chip *ad7949_adc)
+ 	adc_config |= ((ad7949_adc->current_channel & 0x07) << 7);
+ 	adc_config |= (1 << 6);
+ 	adc_config |= (ad7949_adc->ref_sel << 3);
+-	adc_config |= 1;
++	adc_config |= (ad7949_adc->cfg_readback ? 0 : 1);
+ 
+ 	ret = ad7949_spi_write_cfg(ad7949_adc, adc_config, AD7949_MASK_TOTAL);
+ 
+@@ -302,6 +304,10 @@ static int ad7949_spi_probe(struct spi_device *spi)
+ 	indio_dev->num_channels = spec->num_channels;
+ 	ad7949_adc->resolution = spec->resolution;
+ 
++	ad7949_adc->cfg_readback = of_property_read_bool(
++			ad7949_adc->indio_dev->dev.of_node,
++			"adi,cfg-readback");
++
+ 	ret = of_property_read_u32(ad7949_adc->indio_dev->dev.of_node,
+ 			"adi,reference-select",
+ 			&temp);
+-- 
+1.9.1
