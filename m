@@ -1,556 +1,199 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
-Date: Tue, 30 Apr 2019 21:37:32 -0700
-Message-ID: <20190501043734.26706-3-bjorn.andersson@linaro.org>
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH] dt-bindings: Add silabs,si5341
+Date: Wed, 1 May 2019 05:46:55 +0000
+Message-ID: <c7f5184f-f484-e8ad-33ae-36b0da061113@topic.nl>
+References: <20190424090216.18417-1-mike.looijmans@topic.nl>
+ <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
+ <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl>
+ <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com>
+ <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
+ <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+In-Reply-To: <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Content-ID: <32C2B3FF2E22AD4CA8DF503BA01496BD@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <swboyd@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Always On Subsystem (AOSS) Qualcomm Messaging Protocol (QMP) driver
-is used to communicate with the AOSS for certain side-channel requests,
-that are not available through the RPMh interface.
-
-The communication is a very simple synchronous mechanism of messages
-being written in message RAM and a doorbell in the AOSS is rung. As the
-AOSS has processed the message length is cleared and an interrupt is
-fired by the AOSS as acknowledgment.
-
-The driver exposes the QDSS clock as a clock and the low-power state
-associated with the remoteprocs in the system as a set of power-domains.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v6:
-- Squash the pd into the same driver as the communication, to simplify
-  the interaction.
-- Representing the QDSS clocks as a clock/power domain turns out to
-  cascade into a request to make all Coresight drivers have a secondary
-  compatible to replace the required bus clock with a required power
-  domain. So in v7 this is exposed as a clock instead.
-- Some error checking updates, as reported by Doug.
-
- drivers/soc/qcom/Kconfig     |  11 +
- drivers/soc/qcom/Makefile    |   1 +
- drivers/soc/qcom/qcom_aoss.c | 473 +++++++++++++++++++++++++++++++++++
- 3 files changed, 485 insertions(+)
- create mode 100644 drivers/soc/qcom/qcom_aoss.c
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 1ee298f6bf17..3e460b334b47 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -3,6 +3,17 @@
- #
- menu "Qualcomm SoC drivers"
- 
-+config QCOM_AOSS_QMP
-+	tristate "Qualcomm AOSS Driver"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on MAILBOX
-+	select PM_GENERIC_DOMAINS
-+	help
-+	  This driver provides the means of communicating with and controlling
-+	  the low-power state for resources related to the remoteproc
-+	  subsystems as well as controlling the debug clocks exposed by the Always On
-+	  Subsystem (AOSS) using Qualcomm Messaging Protocol (QMP).
-+
- config QCOM_COMMAND_DB
- 	bool "Qualcomm Command DB"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index ffe519b0cb66..eeb088beb15f 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- CFLAGS_rpmh-rsc.o := -I$(src)
-+obj-$(CONFIG_QCOM_AOSS_QMP) +=	qcom_aoss.o
- obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
- obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
- obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-new file mode 100644
-index 000000000000..f1fc26ab2e36
---- /dev/null
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -0,0 +1,473 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019, Linaro Ltd
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mailbox_client.h>
-+#include <linux/pm_domain.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <dt-bindings/power/qcom-aoss-qmp.h>
-+
-+#define QMP_DESC_MAGIC			0x0
-+#define QMP_DESC_VERSION		0x4
-+#define QMP_DESC_FEATURES		0x8
-+
-+/* AOP-side offsets */
-+#define QMP_DESC_UCORE_LINK_STATE	0xc
-+#define QMP_DESC_UCORE_LINK_STATE_ACK	0x10
-+#define QMP_DESC_UCORE_CH_STATE		0x14
-+#define QMP_DESC_UCORE_CH_STATE_ACK	0x18
-+#define QMP_DESC_UCORE_MBOX_SIZE	0x1c
-+#define QMP_DESC_UCORE_MBOX_OFFSET	0x20
-+
-+/* Linux-side offsets */
-+#define QMP_DESC_MCORE_LINK_STATE	0x24
-+#define QMP_DESC_MCORE_LINK_STATE_ACK	0x28
-+#define QMP_DESC_MCORE_CH_STATE		0x2c
-+#define QMP_DESC_MCORE_CH_STATE_ACK	0x30
-+#define QMP_DESC_MCORE_MBOX_SIZE	0x34
-+#define QMP_DESC_MCORE_MBOX_OFFSET	0x38
-+
-+#define QMP_STATE_UP	0x0000ffff
-+#define QMP_STATE_DOWN	0xffff0000
-+
-+#define QMP_MAGIC	0x4d41494c
-+#define QMP_VERSION	1
-+
-+/* Requests are expected to be 96 bytes long */
-+#define QMP_MSG_LEN	96
-+
-+/**
-+ * struct qmp - driver state for QMP implementation
-+ * @msgram: iomem referencing the message RAM used for communication
-+ * @dev: reference to QMP device
-+ * @mbox_client: mailbox client used to ring the doorbell on transmit
-+ * @mbox_chan: mailbox channel used to ring the doorbell on transmit
-+ * @offset: offset within @msgram where messages should be written
-+ * @size: maximum size of the messages to be transmitted
-+ * @event: wait_queue for synchronization with the IRQ
-+ * @tx_lock: provides syncrhonization between multiple callers of qmp_send()
-+ * @qdss_clk: QDSS clock hw struct
-+ * @pd_data: genpd data
-+ */
-+struct qmp {
-+	void __iomem *msgram;
-+	struct device *dev;
-+
-+	struct mbox_client mbox_client;
-+	struct mbox_chan *mbox_chan;
-+
-+	size_t offset;
-+	size_t size;
-+
-+	wait_queue_head_t event;
-+
-+	struct mutex tx_lock;
-+
-+	struct clk_hw qdss_clk;
-+	struct genpd_onecell_data pd_data;
-+};
-+
-+struct qmp_pd {
-+	struct qmp *qmp;
-+	struct generic_pm_domain pd;
-+};
-+
-+#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
-+
-+static void qmp_kick(struct qmp *qmp)
-+{
-+	mbox_send_message(qmp->mbox_chan, NULL);
-+	mbox_client_txdone(qmp->mbox_chan, 0);
-+}
-+
-+static bool qmp_magic_valid(struct qmp *qmp)
-+{
-+	return readl(qmp->msgram + QMP_DESC_MAGIC) == QMP_MAGIC;
-+}
-+
-+static bool qmp_link_acked(struct qmp *qmp)
-+{
-+	return readl(qmp->msgram + QMP_DESC_MCORE_LINK_STATE_ACK) == QMP_STATE_UP;
-+}
-+
-+static bool qmp_mcore_channel_acked(struct qmp *qmp)
-+{
-+	return readl(qmp->msgram + QMP_DESC_MCORE_CH_STATE_ACK) == QMP_STATE_UP;
-+}
-+
-+static bool qmp_ucore_channel_up(struct qmp *qmp)
-+{
-+	return readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE) == QMP_STATE_UP;
-+}
-+
-+static int qmp_open(struct qmp *qmp)
-+{
-+	int ret;
-+	u32 val;
-+
-+	if (!qmp_magic_valid(qmp)) {
-+		dev_err(qmp->dev, "QMP magic doesn't match\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	val = readl(qmp->msgram + QMP_DESC_VERSION);
-+	if (val != QMP_VERSION) {
-+		dev_err(qmp->dev, "unsupported QMP version %d\n", val);
-+		return -EINVAL;
-+	}
-+
-+	qmp->offset = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_OFFSET);
-+	qmp->size = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_SIZE);
-+	if (!qmp->size) {
-+		dev_err(qmp->dev, "invalid mailbox size\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Ack remote core's link state */
-+	val = readl(qmp->msgram + QMP_DESC_UCORE_LINK_STATE);
-+	writel(val, qmp->msgram + QMP_DESC_UCORE_LINK_STATE_ACK);
-+
-+	/* Set local core's link state to up */
-+	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
-+
-+	qmp_kick(qmp);
-+
-+	ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
-+	if (!ret) {
-+		dev_err(qmp->dev, "ucore didn't ack link\n");
-+		goto timeout_close_link;
-+	}
-+
-+	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
-+
-+	qmp_kick(qmp);
-+
-+	ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
-+	if (!ret) {
-+		dev_err(qmp->dev, "ucore didn't open channel\n");
-+		goto timeout_close_channel;
-+	}
-+
-+	/* Ack remote core's channel state */
-+	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_UCORE_CH_STATE_ACK);
-+
-+	qmp_kick(qmp);
-+
-+	ret = wait_event_timeout(qmp->event, qmp_mcore_channel_acked(qmp), HZ);
-+	if (!ret) {
-+		dev_err(qmp->dev, "ucore didn't ack channel\n");
-+		goto timeout_close_channel;
-+	}
-+
-+	return 0;
-+
-+timeout_close_channel:
-+	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
-+
-+timeout_close_link:
-+	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
-+	qmp_kick(qmp);
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static void qmp_close(struct qmp *qmp)
-+{
-+	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
-+	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
-+	qmp_kick(qmp);
-+}
-+
-+static irqreturn_t qmp_intr(int irq, void *data)
-+{
-+	struct qmp *qmp = data;
-+
-+	wake_up_interruptible_all(&qmp->event);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static bool qmp_message_empty(struct qmp *qmp)
-+{
-+	return readl(qmp->msgram + qmp->offset) == 0;
-+}
-+
-+/**
-+ * qmp_send() - send a message to the AOSS
-+ * @qmp: qmp context
-+ * @data: message to be sent
-+ * @len: length of the message
-+ *
-+ * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
-+ * @len must be a multiple of 4 and not longer than the mailbox size. Access is
-+ * synchronized by this implementation.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ */
-+int qmp_send(struct qmp *qmp, const void *data, size_t len)
-+{
-+	int ret;
-+
-+	if (WARN_ON(len + sizeof(u32) > qmp->size))
-+		return -EINVAL;
-+
-+	if (WARN_ON(len % sizeof(u32)))
-+		return -EINVAL;
-+
-+	mutex_lock(&qmp->tx_lock);
-+
-+	/* The message RAM only implements 32-bit accesses */
-+	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
-+			 data, len / sizeof(u32));
-+	writel(len, qmp->msgram + qmp->offset);
-+	qmp_kick(qmp);
-+
-+	ret = wait_event_interruptible_timeout(qmp->event,
-+					       qmp_message_empty(qmp), HZ);
-+	if (!ret) {
-+		dev_err(qmp->dev, "ucore did not ack channel\n");
-+		ret = -ETIMEDOUT;
-+
-+		/* Clear message from buffer */
-+		writel(0, qmp->msgram + qmp->offset);
-+	} else {
-+		ret = 0;
-+	}
-+
-+	mutex_unlock(&qmp->tx_lock);
-+
-+	return ret;
-+}
-+
-+static int qmp_qdss_clk_prepare(struct clk_hw *hw)
-+{
-+	struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
-+	char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 1}";
-+
-+	return qmp_send(qmp, buf, sizeof(buf));
-+}
-+
-+static void qmp_qdss_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
-+	char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 0}";
-+
-+	qmp_send(qmp, buf, sizeof(buf));
-+}
-+
-+static const struct clk_ops qmp_qdss_clk_ops = {
-+	.prepare = qmp_qdss_clk_prepare,
-+	.unprepare = qmp_qdss_clk_unprepare,
-+};
-+
-+static int qmp_qdss_clk_add(struct qmp *qmp)
-+{
-+	struct clk_init_data qdss_init = {
-+		.ops = &qmp_qdss_clk_ops,
-+		.name = "qdss",
-+	};
-+	int ret;
-+
-+	qmp->qdss_clk.init = &qdss_init;
-+	ret = clk_hw_register(qmp->dev, &qmp->qdss_clk);
-+	if (ret < 0) {
-+		dev_err(qmp->dev, "failed to register qdss clock\n");
-+		return ret;
-+	}
-+
-+	return of_clk_add_hw_provider(qmp->dev->of_node, of_clk_hw_simple_get,
-+				      &qmp->qdss_clk);
-+}
-+
-+static void qmp_qdss_clk_remove(struct qmp *qmp)
-+{
-+	clk_hw_unregister(&qmp->qdss_clk);
-+	of_clk_del_provider(qmp->dev->of_node);
-+}
-+
-+static int qmp_pd_power_toggle(struct qmp_pd *res, bool enable)
-+{
-+	char buf[QMP_MSG_LEN] = {};
-+
-+	snprintf(buf, sizeof(buf),
-+		 "{class: image, res: load_state, name: %s, val: %s}",
-+		 res->pd.name, enable ? "on" : "off");
-+	return qmp_send(res->qmp, buf, sizeof(buf));
-+}
-+
-+static int qmp_pd_power_on(struct generic_pm_domain *domain)
-+{
-+	return qmp_pd_power_toggle(to_qmp_pd_resource(domain), true);
-+}
-+
-+static int qmp_pd_power_off(struct generic_pm_domain *domain)
-+{
-+	return qmp_pd_power_toggle(to_qmp_pd_resource(domain), false);
-+}
-+
-+static const char * const sdm845_resources[] = {
-+	[AOSS_QMP_LS_CDSP] = "cdsp",
-+	[AOSS_QMP_LS_LPASS] = "adsp",
-+	[AOSS_QMP_LS_MODEM] = "modem",
-+	[AOSS_QMP_LS_SLPI] = "slpi",
-+	[AOSS_QMP_LS_SPSS] = "spss",
-+	[AOSS_QMP_LS_VENUS] = "venus",
-+};
-+
-+static int qmp_pd_add(struct qmp *qmp)
-+{
-+	struct genpd_onecell_data *data = &qmp->pd_data;
-+	struct device *dev = qmp->dev;
-+	struct qmp_pd *res;
-+	size_t num = ARRAY_SIZE(sdm845_resources);
-+	int ret;
-+	int i;
-+
-+	res = devm_kcalloc(dev, num, sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	data->domains = devm_kcalloc(dev, num, sizeof(*data->domains),
-+				     GFP_KERNEL);
-+	if (!data->domains)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num; i++) {
-+		res[i].qmp = qmp;
-+		res[i].pd.name = sdm845_resources[i];
-+		res[i].pd.power_on = qmp_pd_power_on;
-+		res[i].pd.power_off = qmp_pd_power_off;
-+
-+		ret = pm_genpd_init(&res[i].pd, NULL, true);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to init genpd\n");
-+			goto unroll_genpds;
-+		}
-+
-+		data->domains[i] = &res[i].pd;
-+	}
-+
-+	data->num_domains = i;
-+
-+	ret = of_genpd_add_provider_onecell(dev->of_node, data);
-+	if (ret < 0)
-+		goto unroll_genpds;
-+
-+	return 0;
-+
-+unroll_genpds:
-+	for (i--; i >= 0; i--)
-+		pm_genpd_remove(data->domains[i]);
-+
-+	return ret;
-+}
-+
-+static void qmp_pd_remove(struct qmp *qmp)
-+{
-+	struct genpd_onecell_data *data = &qmp->pd_data;
-+	struct device *dev = qmp->dev;
-+	int i;
-+
-+	of_genpd_del_provider(dev->of_node);
-+
-+	for (i = 0; i < data->num_domains; i++)
-+		pm_genpd_remove(data->domains[i]);
-+}
-+
-+static int qmp_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct qmp *qmp;
-+	int irq;
-+	int ret;
-+
-+	qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
-+	if (!qmp)
-+		return -ENOMEM;
-+
-+	qmp->dev = &pdev->dev;
-+	init_waitqueue_head(&qmp->event);
-+	mutex_init(&qmp->tx_lock);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(qmp->msgram))
-+		return PTR_ERR(qmp->msgram);
-+
-+	qmp->mbox_client.dev = &pdev->dev;
-+	qmp->mbox_client.knows_txdone = true;
-+	qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
-+	if (IS_ERR(qmp->mbox_chan)) {
-+		dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
-+		return PTR_ERR(qmp->mbox_chan);
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
-+			       "aoss-qmp", qmp);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to request interrupt\n");
-+		goto err_close_qmp;
-+	}
-+
-+	ret = qmp_open(qmp);
-+	if (ret < 0)
-+		goto err_free_mbox;
-+
-+	ret = qmp_qdss_clk_add(qmp);
-+	if (ret)
-+		goto err_close_qmp;
-+
-+	ret = qmp_pd_add(qmp);
-+	if (ret)
-+		goto err_remove_qdss_clk;
-+
-+	platform_set_drvdata(pdev, qmp);
-+
-+	return 0;
-+
-+err_remove_qdss_clk:
-+	qmp_qdss_clk_remove(qmp);
-+err_close_qmp:
-+	qmp_close(qmp);
-+err_free_mbox:
-+	mbox_free_channel(qmp->mbox_chan);
-+
-+	return ret;
-+}
-+
-+static int qmp_remove(struct platform_device *pdev)
-+{
-+	struct qmp *qmp = platform_get_drvdata(pdev);
-+
-+	qmp_qdss_clk_remove(qmp);
-+	qmp_pd_remove(qmp);
-+
-+	qmp_close(qmp);
-+	mbox_free_channel(qmp->mbox_chan);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id qmp_dt_match[] = {
-+	{ .compatible = "qcom,sdm845-aoss-qmp", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, qmp_dt_match);
-+
-+static struct platform_driver qmp_driver = {
-+	.driver = {
-+		.name		= "qcom_aoss_qmp",
-+		.of_match_table	= qmp_dt_match,
-+	},
-+	.probe = qmp_probe,
-+	.remove	= qmp_remove,
-+};
-+module_platform_driver(qmp_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm AOSS QMP driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.18.0
+T24gMzAtMDQtMTkgMDI6MTcsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gUXVvdGluZyBNaWtlIExv
+b2lqbWFucyAoMjAxOS0wNC0yNyAwMjo0Mjo1NikNCj4+IE9uIDI3LTA0LTE5IDAyOjQ0LCBTdGVw
+aGVuIEJveWQgd3JvdGU6DQo+Pj4gUXVvdGluZyBNaWtlIExvb2lqbWFucyAoMjAxOS0wNC0yNSAy
+Mzo1MToxNSkNCj4+Pj4gT24gMjYtMDQtMTkgMDE6MDQsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4+
+Pj4+PiArDQo+Pj4+Pj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+Pj4+Pj4gKy0gc2lsYWJzLHBs
+bC1tLW51bSwgc2lsYWJzLHBsbC1tLWRlbjogTnVtZXJhdG9yIGFuZCBkZW5vbWluYXRvciBmb3Ig
+UExMDQo+Pj4+Pj4gKyAgZmVlZGJhY2sgZGl2aWRlci4gTXVzdCBiZSBzdWNoIHRoYXQgdGhlIFBM
+TCBvdXRwdXQgaXMgaW4gdGhlIHZhbGlkIHJhbmdlLiBGb3INCj4+Pj4+PiArICBleGFtcGxlLCB0
+byBjcmVhdGUgMTRHSHogZnJvbSBhIDQ4TUh6IHh0YWwsIHVzZSBtLW51bT0xNDAwMCBhbmQgbS1k
+ZW49NDguIE9ubHkNCj4+Pj4+PiArICB0aGUgZnJhY3Rpb24gbWF0dGVycywgdXNpbmcgMzUwMCBh
+bmQgMTIgd2lsbCBkZWxpdmVyIHRoZSBleGFjdCBzYW1lIHJlc3VsdC4NCj4+Pj4+PiArICBJZiB0
+aGVzZSBhcmUgbm90IHNwZWNpZmllZCwgYW5kIHRoZSBQTEwgaXMgbm90IHlldCBwcm9ncmFtbWVk
+IHdoZW4gdGhlIGRyaXZlcg0KPj4+Pj4+ICsgIHByb2JlcywgdGhlIFBMTCB3aWxsIGJlIHNldCB0
+byAxNEdIei4NCj4+Pj4+DQo+Pj4+PiBDYW4gdGhpcyBiZSBkb25lIHZpYSBhc3NpZ25lZC1jbG9j
+ay1yYXRlcz8gUG9zc2libHkgd2l0aCBhIHRhYmxlIGluIHRoZQ0KPj4+Pj4gY2xrIGRyaXZlciB0
+byB0ZWxsIHVzIGhvdyB0byBnZW5lcmF0ZSB0aG9zZSByYXRlcy4NCj4+Pj4NCj4+Pj4gVGhlIFBM
+TCBmcmVxdWVuY3kgY2hvaWNlIGRldGVybWluZXMgd2hvJ2xsIGdldCBqaXR0ZXIgYW5kIHdobyB3
+b24ndC4gSXQncw0KPj4+PiByaWRpY3Vsb3VzbHkgYWNjdXJhdGUgdG9vLg0KPj4+Pg0KPj4+PiBG
+b3IgZXhhbXBsZSwgaWYgeW91IG5lZWQgYSAyNiBNSHogYW5kIGEgMTAwIE1IeiBvdXRwdXQsIHRo
+ZXJlJ3Mgbm8gc29sdXRpb24NCj4+Pj4gZm9yIHRoZSBQTEwgdGhhdCBtYWtlcyBib3RoIGNsb2Nr
+cyBhbiBpbnRlZ2VyIGRpdmlkZXIgKFNJIGlzIHZhZ3VlIGFib3V0IGl0LA0KPj4+PiBidXQgYXBw
+YXJlbnRseSBpbnRlZ2VyIGRpdmlkZXJzIGhhdmUgbGVzcyBqaXR0ZXIgb24gb3V0cHV0KS4gT25s
+eSB0aGUgZW5kdXNlcg0KPj4+PiBjYW4gc2F5IHdoaWNoIGNsb2NrIHdpbGwgZ2V0IHRoZSBiZXR0
+ZXIgcXVhbGl0eS4NCj4gDQo+IFJpZ2h0LiBTbyBtYXliZSB3ZSBtYWtlIHRhYmxlcyBvZiByYXRl
+cyBhbmQgcHV0IGl0IGluIHRoZSBkcml2ZXIgYW5kDQo+IGtlZXAgYWRkaW5nIGNvZGUgaW4gdGhl
+cmU/IEknbSB3b3JyaWVkIGFib3V0IGhhdmluZyB0aGVzZSBwcm9wZXJ0aWVzIGluDQo+IERUIGFu
+ZCB0aGVuIGhhdmluZyB0byB3b3JrIGFyb3VuZCB0aGVtIGxhdGVyIG9uIGJ5ICJmaXhpbmciIHRo
+ZSBEVC4gSWYNCj4gaXQncyBvbmx5IGluIHRoZSBkcml2ZXIgdGhlbiB3ZSdyZSBhYmxlIHRvIHR3
+ZWFrIHRoZSB2YWx1ZXMgdG8gZ2V0DQo+IGJldHRlciBqaXR0ZXIgbnVtYmVycywgZXRjLg0KDQpQ
+cm9ncmFtbWluZyB0aGUgbWFpbiBQTEwgaXMgZWFzeSwgbm8gdGFibGVzIHJlcXVpcmVkLg0KDQpJ
+dCdzIGFsbCB1c2VyIGNob2ljZSwgdGhhdCdzIHRoZSBpc3N1ZSBoZXJlLiBEcml2ZXJzIHRoZW1z
+ZWx2ZXMgY2Fubm90IG1ha2UgDQp0aGlzIGRlY2lzaW9uLg0KDQoodXNlciA9IHRoZSBwZXJzb24g
+ZG9pbmcgYm9hcmQgc3VwcG9ydCwgd3JpdGluZyB0aGUgZGV2aWNldHJlZSBhbmQga2VybmVsIA0K
+Y29uZmlnIGZvciBleGFtcGxlKQ0KDQpJbiBteSBleGFtcGxlLCB0aGUgY2hpcCBoYXMgbm8gaXNz
+dWUgc3ludGhlc2l6aW5nIGJvdGggMjYgYW5kIDEwMCBNSHouIA0KRGVwZW5kaW5nIG9uIHRoZSBt
+YWluIFBMTCBzZXR0aW5nLCBvbmUgbWF5IGhhdmUgbW9yZSBqaXR0ZXIgdGhhbiB0aGUgb3RoZXIu
+IElmIA0KdGhlIFBMTCBpcyBzZXQgdG8gMTQuMCBHSHosIHRoZSAxMDAgTUh6IGNsb2NrIHdpbGwg
+YmUgb2YgYmV0dGVyIHF1YWxpdHksIHdoaWxlIA0KaWYgdGhlIFBMTCBpcyBzZXQgdG8gMTMuNjI0
+IEdIeiAoYW4gZXZlbiBtdWx0aXBsZSBvZiAyNiksIHRoZSAyNiBNSHogd2lsbCBoYXZlIA0KYmV0
+dGVyIHF1YWxpdHkuDQoNCg0KPj4+Pj4+ICstIHNpbGFicyxyZXByb2dyYW06IFdoZW4gcHJlc2Vu
+dCwgdGhlIGRyaXZlciB3aWxsIGFsd2F5cyBhc3N1bWUgdGhlIGRldmljZSBtdXN0DQo+Pj4+Pj4g
+KyAgYmUgaW5pdGlhbGl6ZWQsIGFuZCBhbHdheXMgcGVyZm9ybXMgdGhlIHNvZnQtcmVzZXQgcm91
+dGluZS4gU2luY2UgdGhpcyB3aWxsDQo+Pj4+Pj4gKyAgdGVtcG9yYXJpbHkgc3RvcCBhbGwgb3V0
+cHV0IGNsb2NrcywgZG9uJ3QgZG8gdGhpcyBpZiB0aGUgY2hpcCBpcyBnZW5lcmF0aW5nDQo+Pj4+
+Pj4gKyAgdGhlIENQVSBjbG9jayBmb3IgZXhhbXBsZS4NCj4+Pj4+DQo+Pj4+PiBDb3VsZCB0aGlz
+IGJlIGRvbmUgd2l0aCB0aGUgcmVzZXQgZnJhbWV3b3JrPyBJdCBhbG1vc3Qgc291bmRzIGxpa2Ug
+aWYNCj4+Pj4+IHRoZSBjbGsgaXMgYSBDTEtfSVNfQ1JJVElDQUwgdGhlbiB3ZSBzaG91bGRuJ3Qg
+ZG8gdGhlIHJlc2V0LCBvdGhlcndpc2UNCj4+Pj4+IHdlIHByb2JhYmx5IHNob3VsZCByZXNldCB0
+aGUgY2hpcCB3aGVuIHRoZSBkcml2ZXIgcHJvYmVzLiBJZiB3ZSBkb24ndA0KPj4+Pj4gaGF2ZSBh
+IGNhc2Ugd2hlcmUgaXQncyBnb2luZyB0byBiZSBzdXBwbHlpbmcgYSBjcml0aWNhbCBjbGsgZm9y
+IGEgbG9uZw0KPj4+Pj4gdGltZSB0aGVuIHBlcmhhcHMgd2Ugc2hvdWxkbid0IGV2ZW4gY29uc2lk
+ZXIgdGhpcyB0b3BpYyB1bnRpbCBsYXRlci4NCj4+Pj4NCj4+Pj4gVGhlIGRyaXZlciBjYW4gc29y
+dCBvZiBzZWUgdGhhdCB0aGUgY2hpcHMgaXMgYWxyZWFkeSBjb25maWd1cmVkLiBUaGlzIHRlbGxz
+DQo+Pj4+IHRoZSBkcml2ZXIgd2hldGhlciB0aGF0J3MgZXhwZWN0ZWQgb3IganVzdCBjb2luY2lk
+ZW5jZS4NCj4+Pj4NCj4+Pj4gTWF5YmUgaXQnZCBiZSBjbGVhcmVyIGlmIEkgcmV2ZXJzZWQgdGhl
+IGxvZ2ljIGFuZCBuYW1lIHRoaXMNCj4+Pj4gInNpbGFicyxwcmVwcm9ncmFtbWVkIiwgd2hpY2gg
+d2lsbCBza2lwIHRoZSBkcml2ZXIncyBpbml0aWFsaXphdGlvbiByb3V0aW5lPw0KPj4+Pg0KPj4+
+DQo+Pj4gTWF5YmU/IElzIHRoZXJlIGFueSB3YXkgdG8gbG9vayBhdCBzb21lIHJlZ2lzdGVyIHRv
+IGZpZ3VyZSBvdXQgZm9yIHN1cmUNCj4+PiBpZiBpdCdzIGJlZW4gcHJlLXByb2dyYW1tZWQgb3Ig
+bm90PyBDb3VsZCBUT09MX1ZFUlNJT04gYmUgdXNlZCBvcg0KPj4+IEFDVElWRV9OVk1fQkFOSyBv
+ciBERVNJR05fSUQwLTc/DQo+Pg0KPj4gSSd2ZSBleHBlcmltZW50YWxseSBkZXRlcm1pbmVkIHRo
+YXQgVE9PTF9WRVJTSU9OIGFuZCBERVNJR05fSUR4DQo+PiBhcHBhcmVudGx5IGdldCBmaWxsZWQg
+d2l0aCB6ZXJvZXMgYnkgdGhlIGNsb2NrYnVpbGRlciBhbnl3YXkuDQo+Pg0KPj4gQUNUSVZFX05W
+TV9CQU5LIHdvcmtzIHJlbGlhYmx5IGZvciBzZWxmLXByb2dyYW1tZWQgY2hpcHMuDQo+Pg0KPj4g
+VGhlIGZsYWcgaXMgYWJvdXQgImlzIHRoaXMgY2hpcCB1bmRlciBmdWxsIGtlcm5lbCBjb250cm9s
+LCBvciBpcyBpdA0KPj4gZ2VuZXJhdGluZyBjbG9ja3MgdGhlIGtlcm5lbCBkb2Vzbid0IGtub3cg
+YWJvdXQgKGUuZy4gZm9yIHJlYWx0aW1lIGNvcmVzDQo+PiBvciBGUEdBIGxvZ2ljKSIuDQo+Pg0K
+PiANCj4gQWxyaWdodC4NCj4gDQo+Pg0KPj4NCj4+Pj4+PiArPT1DaGlsZCBub2Rlcz09DQo+Pj4+
+Pj4gKw0KPj4+Pj4+ICtFYWNoIG9mIHRoZSBjbG9jayBvdXRwdXRzIGNhbiBiZSBvdmVyd3JpdHRl
+biBpbmRpdmlkdWFsbHkgYnkNCj4+Pj4+PiArdXNpbmcgYSBjaGlsZCBub2RlIHRvIHRoZSBJMkMg
+ZGV2aWNlIG5vZGUuIElmIGEgY2hpbGQgbm9kZSBmb3IgYSBjbG9jaw0KPj4+Pj4+ICtvdXRwdXQg
+aXMgbm90IHNldCwgdGhlIGNvbmZpZ3VyYXRpb24gcmVtYWlucyB1bmNoYW5nZWQuDQo+Pj4+Pj4g
+Kw0KPj4+Pj4+ICtSZXF1aXJlZCBjaGlsZCBub2RlIHByb3BlcnRpZXM6DQo+Pj4+Pj4gKy0gcmVn
+OiBudW1iZXIgb2YgY2xvY2sgb3V0cHV0Lg0KPj4+Pj4+ICsNCj4+Pj4+PiArT3B0aW9uYWwgY2hp
+bGQgbm9kZSBwcm9wZXJ0aWVzOg0KPj4+Pj4+ICstIHNpbGFicyxmb3JtYXQ6IE91dHB1dCBmb3Jt
+YXQsIHNlZSBbMV0sIDE9ZGlmZmVyZW50aWFsLCAyPWxvdy1wb3dlciwgND1MVkNNT1MNCj4+Pj4+
+PiArLSBzaWxhYnMsY29tbW9uLW1vZGU6IE91dHB1dCBjb21tb24gbW9kZSwgZGVwZW5kcyBvbiBz
+dGFuZGFyZC4NCj4+Pj4+PiArLSBzaWxhYnMsYW1wbGl0dWRlOiBPdXRwdXQgYW1wbGl0dWRlLCBk
+ZXBlbmRzIG9uIHN0YW5kYXJkLg0KPj4+Pj4+ICstIHNpbGFicyxzeW50aC1zb3VyY2U6IFNlbGVj
+dCB3aGljaCBtdWx0aXN5bnRoIHRvIHVzZSBmb3IgdGhpcyBvdXRwdXQNCj4+Pj4+PiArLSBzaWxh
+YnMsc3ludGgtZnJlcXVlbmN5OiBTZXRzIHRoZSBmcmVxdWVuY3kgZm9yIHRoZSBtdWx0aXN5bnRo
+IGNvbm5lY3RlZCB0bw0KPj4+Pj4+ICsgIHRoaXMgb3V0cHV0LiBUaGlzIHdpbGwgYWZmZWN0IG90
+aGVyIG91dHB1dHMgY29ubmVjdGVkIHRvIHRoaXMgbXVsdGlzeW50aC4gVGhlDQo+Pj4+Pj4gKyAg
+c2V0dGluZyBpcyBhcHBsaWVkIGJlZm9yZSBzaWxhYnMsc3ludGgtbWFzdGVyIGFuZCBjbG9jay1m
+cmVxdWVuY3kuDQo+Pj4+Pj4gKy0gc2lsYWJzLHN5bnRoLW1hc3RlcjogSWYgcHJlc2VudCwgdGhp
+cyBvdXRwdXQgaXMgYWxsb3dlZCB0byBjaGFuZ2UgdGhlDQo+Pj4+Pj4gKyAgbXVsdGlzeW50aCBm
+cmVxdWVuY3kgZHluYW1pY2FsbHkuDQo+Pj4+Pg0KPj4+Pj4gVGhlc2UgYWJvdmUgcHJvcGVydGll
+cyBsb29rIGxpa2UgaGlnaGx5IGRldGFpbGVkIGNvbmZpZ3VyYXRpb24gZGF0YSB0bw0KPj4+Pj4g
+bGV0IHRoZSBkcml2ZXIgY29uZmlndXJlIHRoZSBjbGsgb3V0cHV0IGV4YWN0bHkgaG93IGl0J3Mg
+c3VwcG9zZWQgdG8gYmUNCj4+Pj4+IGNvbmZpZ3VyZWQuIENhbiB0aGVzZSBwcm9wZXJ0aWVzIGJl
+IHJld3JpdHRlbiBpbiBtb3JlIGhpZ2gtbGV2ZWwgdGVybXMNCj4+Pj4+IHRoYXQgYSBzeXN0ZW0g
+aW50ZWdyYXRvciB3b3VsZCB1bmRlcnN0YW5kPyBJZGVhbGx5LCBJIHNob3VsZG4ndCBoYXZlIHRv
+DQo+Pj4+PiByZWFkIHRoZSBkYXRhc2hlZXQgYW5kIHRoZSBkcml2ZXIgYW5kIHRoZW4gZmlndXJl
+IG91dCB3aGF0IERUIHByb3BlcnRpZXMNCj4+Pj4+IG5lZWQgdGhlIHZhbHVlcyBmcm9tIHRoZSBk
+YXRhc2hlZXQgaW4gdGhlbSBzbyB0aGF0IHRoZSBkcml2ZXIgd3JpdGVzDQo+Pj4+PiB0aGVtIHRv
+IGEgcGFydGljdWxhciByZWdpc3Rlci4gSSBkb24ndCBrbm93IGlmIHRoYXQncyBwb3NzaWJsZSBo
+ZXJlLA0KPj4+Pj4gYmVjYXVzZSBJIGhhdmVuJ3QgcmVhZCB0aGUgZHJpdmVyIG9yIHRoZSBkYXRh
+c2hlZXQgdG9vIGNsb3NlbHkgeWV0LCBidXQNCj4+Pj4+IHRoYXQgc2hvdWxkIGJlIHRoZSBnb2Fs
+Lg0KPj4+Pg0KPj4+PiBUaGUgZGF0YXNoZWV0IGlzIG5vdCB2ZXJ5IGhlbHBmdWwgaW4gdGhpcyBy
+ZWdhcmQuIFNpbGFicyBqdXN0IGFzc3VtZXMgeW91J2xsDQo+Pj4+IHVzZSB0aGVpciBjbG9ja2J1
+aWxkZXIgc29mdHdhcmUgZm9yIHdyaXRpbmcgdGhlc2UgdmFsdWVzLCB3aGljaCBpcyBob3cgd2Ug
+Z290DQo+Pj4+IHRvIHRoZSAiTFZEUyAzdjMiIHZhbHVlcy4NCj4+Pg0KPj4+IEkgaG9wZSB0aGF0
+IGNhbiBiZSBkZXRlcm1pbmVkIGJ5IGxvb2tpbmcgYXQgdmRkPE4+LXN1cHBseSB2b2x0YWdlcz8N
+Cj4+DQo+PiBOb3QgcmVhbGx5LCBhbmQgd2hlbiBhc2tlZCBmb3IgYSBiaXQgbW9yZSBkZXRhaWws
+IFNpbGFicyBqdXN0IHNheXMgdG8NCj4+IHVzZSB0aGUgZXhjZWxsZW50IGRldmVsb3BlciBmcmll
+bmRseSBjbG9ja2J1aWxkZXIgc29mdHdhcmUgdGhhdCBhbG1vc3QNCj4+IHJ1bnMgb24gYWxtb3N0
+IGFueSBwbGF0Zm9ybS4NCj4+DQo+Pj4+IEkgY291bGQgcHV0IGluIGEgdGFibGUgb2YgImNvbW1v
+biIgdmFsdWVzLCBzbyB0aGF0IHlvdSBjYW4gc2F5Og0KPj4+Pg0KPj4+PiBzaWxhYnMsb3V0cHV0
+LXN0YW5kYXJkID0gImx2ZHMiOw0KPj4+Pg0KPj4+PiBBbmQgdGhlbiB1c2UgdGhlICJyYXciIHBy
+b3BlcnRpZXMgdG8gZXhwYW5kIG9yIG92ZXJyaWRlIG9uIHRoYXQuDQo+Pj4+DQo+Pj4+IEV4dHJh
+IGRlZmluZXMgbWlnaHQgaGVscCwgZS5nLjoNCj4+Pj4NCj4+Pj4gc2lsYWJzLGZvcm1hdCA9IDxT
+STUzNDFfRk9STUFUX0RJRkZFUkVOVElBTD47DQo+Pj4NCj4+PiBJIHN1cHBvc2UgeW91J2xsIG5l
+ZWQgdG8gcmV2ZXJzZSBlbmdpbmVlciB0aGUgY2xvY2sgYnVpbGRlciBzb2Z0d2FyZSB0bw0KPj4+
+IGZpZ3VyZSBvdXQgd2h5IGEgU0k1MzQxX0ZPUk1BVF9ESUZGRVJFTlRJQUwgd291bGQgYmUgc3Bl
+Y2lmaWVkIGluc3RlYWQNCj4+PiBvZiBzb21lIG90aGVyIHZhbHVlLiBJZGVhbGx5IHdlIGRvbid0
+IG5lZWQgYW55IG9mIHRoZXNlIHZlbmRvciBzcGVjaWZpYw0KPj4+IHByb3BlcnRpZXMgYW5kIHRo
+ZSBkcml2ZXJzIHVzaW5nIHRoZXNlIGNsa3MgY2FuIGFzayB0aGUgY2xrIGZyYW1ld29yayB0bw0K
+Pj4+IGNvbmZpZ3VyZSB0aGVzZSBwcm9wZXJ0aWVzLCBvciB3ZSBuZWVkIHRvIGxvb2sgYXQgbWFr
+aW5nIG1vcmUgcHJvcGVydGllcw0KPj4+IGxpa2UgJ2Fzc2lnbmVkLWNsb2NrLXBhcmVudHMnIHRo
+YXQgbGV0cyB1cyBjb25maWd1cmUgdGhpbmdzIGdlbmVyaWNhbGx5Lg0KPj4NCj4+IFRoZXNlIHBy
+b3BlcnRpZXMgYXJlIGFib3V0IGhvdyB5b3Ugc29sZGVyZWQgdGhpbmdzIHRvZ2V0aGVyLCBidXQg
+eWVhaCwNCj4+IGlmIHRoZSBjbG9jayBvdXRwdXRzIGdvIHRvIGV4cGFuc2lvbiBzbG90cywgc29t
+ZSBkcml2ZXIgb3IgZGV2aWNldHJlZQ0KPj4gZnJhZ21lbnQgY29udHJvbCB3b3VsZCBiZSBkZXNp
+cmFibGUsIHNvIHlvdSBjYW4gc3dpdGNoIHRoZSBjbG9jayBtb2RlDQo+PiBmcm9tIGRpZmZlcmVu
+dGlhbCB0byBzaW5nbGUgZW5kZWQgZm9yIGV4YW1wbGUuDQo+IA0KPiBIbW0uLiBQZXJoYXBzIHdl
+IG5lZWQgYSBjbGtfc2V0X21vZGUoKSBBUEk/IFBvc3NpYmx5IGJlIGFuIGludGVybmFsIEFQSQ0K
+PiB0aGF0IGxldHMgdGhlIERUIGNvbmZpZ3VyZSB0aGUgbW9kZSB0byBiZSBkaWZmZXJlbnRpYWwg
+b3Igc2luZ2xlIGVuZGVkPw0KPiBOb2JvZHkgaGFzIHJlcXVpcmVkIHRoaXMgc28gZmFyIHNvIGl0
+J3MgdmVyeSByYXJlLCBidXQgSSdkIGxpa2UgdG8gc2VlDQo+IHRoZSBwcm9wZXJ0aWVzIGJlY29t
+ZSBzdGFuZGFyZCBpbnN0ZWFkIG9mIHZlbmRvciBzcGVjaWZpYyBpZiBwb3NzaWJsZS4NCj4gDQo+
+Pg0KPj4NCj4+Pj4+PiArLSBhbHdheXMtb246IEltbWVkaWF0ZWx5IGFuZCBwZXJtYW5lbnRseSBl
+bmFibGUgdGhpcyBvdXRwdXQuIFBhcnRpY3VsYXJ5DQo+Pj4+Pj4gKyAgdXNlZnVsIHdoZW4gY29t
+YmluZWQgd2l0aCBhc3NpZ25lZC1jbG9ja3MsIHNpbmNlIHRoYXQgZG9lcyBub3QgcHJlcGFyZSBj
+bG9ja3MuDQo+Pj4+Pg0KPj4+Pj4gTG9va3MgbGlrZSB5b3Ugd2FudCBDTEtfSVNfQ1JJVElDQUwg
+aW4gRFQuIFdlJ3ZlIGhhZCB0aGF0IGRpc2N1c3Npb24NCj4+Pj4+IGJlZm9yZSBidXQgbWF5YmUg
+d2Ugc2hvdWxkIHJldmlzaXQgaXQgaGVyZSBhbmQgYWRkIGEgd2F5IHRvIGluZGljYXRlDQo+Pj4+
+PiB0aGF0IHNvbWUgY2xrIHNob3VsZCBuZXZlciBiZSB0dXJuZWQgb2ZmIGluc3RlYWQgb2YgYXNz
+dW1pbmcgdGhhdCB3ZQ0KPj4+Pj4gY2FuIGRvIHRoaXMgZnJvbSBDIGNvZGUgYWxsIHRoZSB0aW1l
+Lg0KPj4+Pg0KPj4+PiBNeSBpc3N1ZSB3YXMgdGhhdCBhc3NpZ25lZC1jbG9ja3MgZG9lcyBub3Qg
+Y2FsbCBjbGtfcHJlcGFyZS4gSWYgdGhlIGNsb2NrIGlzDQo+Pj4+IG5vdCBydW5uaW5nLCBhc3Np
+Z25lZC1jbG9ja3Mgd2lsbCBub3QgdHVybiBpdCBvbiAoYXQgbGVhc3QsIHRoYXQgaXMgdGhlIGNh
+c2UNCj4+Pj4gb24gdGhlIDQuMTQga2VybmVsIEkgdGVzdGVkIHRoaXMgb24pLCBpdCBhcHBhcmVu
+dGx5IG9ubHkgcHJldmVudHMgaXQgZnJvbQ0KPj4+PiBiZWluZyB0dXJuZWQgb2ZmIGJ5IG1hcmtp
+bmcgaXQgYXMgImluIHVzZSIuIFRoaXMganVzdCBwcm92aWRlcyBhIHdheSB0byB1c2UNCj4+Pj4g
+YXNzaWduZWQtY2xvY2tzLg0KPj4+Pg0KPj4+IERvIHlvdSB3YW50IHRoZSBjbGtzIHRvIGFsd2F5
+cyBiZSBwcmVwYXJlZCBhbmQgZW5hYmxlZD8gV2hhdCB1c2UtY2FzZSBpcw0KPj4+IHRoaXM/IEl0
+IHN0aWxsIGxvb2tzIGxpa2UgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcgbmVlZHMgdG8gYmUgZXhwcmVz
+c2VkIGluDQo+Pj4gRFQgaGVyZS4NCj4+DQo+PiBUaGUgdXNlIGNhc2UgaXMgcHJldHR5IHNpbXBs
+ZSwgaXQncyBqdXN0IHRvIGVuYWJsZSB0aGUgY2xvY2suIE9yIGluIHRoaXMNCj4+IGNhc2UsICJw
+cmVwYXJlIiBpdCwgYmVjYXVzZSB0aGUgSTJDIGNsaWVudCBuZWVkcyB0byBiZSBhYmxlIHRvIHNs
+ZWVwIGFuZA0KPj4gYWxsIGFjdGlvbnMgbXVzdCBiZSBkb25lIGluIHRoZSBwcmVwYXJlIHBhcnQu
+DQo+Pg0KPj4gU3VwcG9zZSBJIHVzZSB0aGUgc2k1MzQxIHRvIGdlbmVyYXRlIGEgMjZNSHogY2xv
+Y2sgdGhhdCB3b3VsZCBub3JtYWxseQ0KPj4gYmUgcHJvdmlkZXMgYnkgYSBoYXJkd2FyZSBvc2Np
+bGxhdG9yLiBUaGUgZHJpdmVyIGl0c2VsZiBkb2Vzbid0IGhhdmUgYW55DQo+PiBjbG9jayBwcm9w
+ZXJ0aWVzIHRvIHNldC4gVGhlbiBJJ2QgcHV0IGludG8gdGhhdCBkZXZpY2UncyBkZXZpY2V0cmVl
+IG5vZGUNCj4+IHRoZSBmb2xsb3dpbmc6DQo+Pg0KPj4gYXNzaWduZWQtY2xvY2tzID0gPCZzaTUz
+NDEgMj47DQo+PiBhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwyNjAwMDAwMD47DQo+Pg0KPj4gV2hl
+biB0aGUgc3lzdGVtIGJvb3RzLCB0aGUgY2xvY2sgZnJhbWV3b3JrIGluZGVlZCBjYWxscw0KPj4g
+InNldF9yYXRlKDI2MDAwMDAwKSIgYmVmb3JlIHRoYXQgZHJpdmVyIHByb2JlcywgYnV0IGl0IG5l
+dmVyIGNhbGxzDQo+PiAiY2xrX3ByZXBhcmUiLCBzbyB0aGUgY2xvY2sncyBmcmVxdWVuY3kgaXMg
+c2V0IG9rYXkgYnV0IHRoZSBjbG9jayB3b24ndA0KPj4gYmUgcnVubmluZyBhbmQgdGhlIGRldmlj
+ZSB3b24ndCBmdW5jdGlvbi4NCj4gDQo+IFdoeSBjYW4ndCB0aGF0IGRyaXZlciBjYWxsIGNsa19w
+cmVwYXJlX2VuYWJsZSgpPyBJcyB0aGVyZSBzb21lIHNvcnQgb2YNCj4gYXNzdW1wdGlvbiB0aGF0
+IHRoaXMgY2xrIHdpbGwgYWx3YXlzIGJlIGVuYWJsZWQgYW5kIG5vdCBoYXZlIGEgZHJpdmVyDQo+
+IHRoYXQgY29uZmlndXJlcyB0aGUgcmF0ZSBhbmQgZ2F0ZXMvdW5nYXRlcyBpdD8NCg0KTm90IG9u
+bHkgY2xrX3ByZXBhcmVfZW5hYmxlKCksIGJ1dCB0aGUgZHJpdmVyIGNvdWxkIGFsc28gY2FsbCBj
+bGtfc2V0X3JhdGUoKSANCmFuZCBjbGtfc2V0X3BhcmVudCgpIGFuZCB0aGUgbGlrZXMsIGJ1dCBp
+dCBkb2Vzbid0LCBzbyB0aGF0J3Mgd2h5IHRoZXJlIGlzIA0KImFzc2lnbmVkLWNsb2NrcyIgcmln
+aHQ/DQoNClRoZXJlIGFyZSBtdWx0aXBsZSBzY2VuYXJpbydzLCBzaW1pbGFyIHRvIHdoeSByZWd1
+bGF0b3JzIGFsc28gaGF2ZSBwcm9wZXJ0aWVzIA0KbGlrZSB0aGVzZS4NCg0KLSBUaGUgY2xvY2sg
+aXMgcmVsYXRlZCB0byBoYXJkd2FyZSB0aGF0IHRoZSBrZXJuZWwgaXMgbm90IGF3YXJlIG9mLg0K
+LSBUaGUgY2xvY2sgaXMgZm9yIGEgZHJpdmVyIHRoYXQgaXNuJ3QgYXdhcmUgb2YgaXRzIGNsb2Nr
+IHJlcXVpcmVtZW50cy4gSXQgDQptaWdodCBiZSBhbiBleHRyYSBjbG9jayBmb3IgYW4gRlBHQSBp
+bXBsZW1lbnRlZCBjb250cm9sbGVyIHRoYXQgbWltaWNzIA0KZXhpc3RpbmcgaGFyZHdhcmUuDQoN
+CkknZCBhbHNvIGNvbnNpZGVyIHBhdGNoaW5nICJhc3NpZ25lZC1jbG9ja3MiIHRvIGNhbGwgImNs
+a19wcmVwYXJlX2VuYWJsZSgpIiwgDQp3b3VsZCB0aGF0IG1ha2Ugc2Vuc2UsIG9yIGlzIGl0IGlu
+dGVudGlvbmFsIHRoYXQgYXNzaWduZWQtY2xvY2tzIGRvZXNuJ3QgZG8gdGhhdD8NCg0KDQo=
