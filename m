@@ -1,95 +1,178 @@
-Return-Path: <SRS0=r956=TB=collins.com=adam.michaelis@kernel.org>
-MIME-Version: 1.0
-From: Adam Michaelis <adam.michaelis@collins.com>
-Date: Wed, 1 May 2019 14:17:59 -0500
-Message-ID: <CALMrGWVfM+PqijDDnj5m_hHZodf0AKCRu9VHvm9mBTB_R3+rjQ@mail.gmail.com>
-Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option
-Content-Type: multipart/alternative; boundary="000000000000c5b3a70587d8604f"
-To: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org
-Cc: Brandon Maier <brandon.maier@rockwellcollins.com>, Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
+Return-Path: <SRS0=TtEp=TB=rockwellcollins.com=adam.michaelis@kernel.org>
+From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Subject: [PATCH 5/6] iio: ad7949: Fix SPI interfacing for 14-bit messages
+Date: Wed,  1 May 2019 16:17:02 -0500
+Message-Id: <1556745423-11368-5-git-send-email-adam.michaelis@rockwellcollins.com>
+In-Reply-To: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+To: linux-iio@vger.kernel.org
+Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000c5b3a70587d8604f
-Content-Type: text/plain; charset="UTF-8"
+The AD7949 (but not the other two models supported by this driver) uses
+samples 14 bits wide. When attempting to communicate through certain SPI
+controllers that require power-of-2 word widths, this fails. Adding
+logic to pack the 14-bit messages into the most-significant bits of a
+16-bit message for communicating over byte-based SPI bus.
 
->From 7bf834dd49844a4e785924a9b0ead37cb9cf83c6 Mon Sep 17 00:00:00 2001
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Date: Thu, 25 Apr 2019 15:26:21 -0500
-Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option
-
-Adding optional parameter to the ad7949 to indicate that the part should
-be configured to include the configuration register value used when
-acquiring the current sample value.
+Only able to test with AD7949 part, but should support the 16-bit
+samples of the AD7682 and AD7689, as well.
 
 Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
 ---
- Documentation/devicetree/bindings/iio/adc/ad7949.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iio/adc/ad7949.c | 97 ++++++++++++++++++++++++------------------------
+ 1 file changed, 48 insertions(+), 49 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-index 14ee9a2cb2a5..cd3572828243 100644
---- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-@@ -18,6 +18,8 @@ Optional properties:
-    7: External reference, temperature sensor disabled, buffer enabled
-  - vref-supply: The regulator supply for ADC reference voltage. Required
-  if external reference selected by 'adi,reference-select'.
-+ - adi,cfg-readback: If defined, set bit in configuration register to
-+ read-back the configuration used for the current sample value.
-
- Examples:
- adc@0 {
-@@ -32,3 +34,10 @@ adc@0 {
-  reg = <0>;
-  adi,reference-select = <0>;
+diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
+index 1d75fff698d1..dc1ae4c143b0 100644
+--- a/drivers/iio/adc/ad7949.c
++++ b/drivers/iio/adc/ad7949.c
+@@ -18,6 +18,7 @@
+ #define AD7949_OFFSET_CHANNEL_SEL	7
+ #define AD7949_CFG_READ_BACK		0x1
+ #define AD7949_CFG_REG_SIZE_BITS	14
++#define AD7949_BUFFER_LEN 4
+ 
+ enum {
+ 	ID_AD7949 = 0,
+@@ -71,7 +72,7 @@ struct ad7949_adc_chip {
+ 	u8 resolution;
+ 	u16 cfg;
+ 	unsigned int current_channel;
+-	u32 buffer ____cacheline_aligned;
++	u8 buffer[AD7949_BUFFER_LEN] ____cacheline_aligned;
  };
+ 
+ static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
+@@ -82,41 +83,40 @@ static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
+ 	return false;
+ }
+ 
+-static int ad7949_spi_bits_per_word(struct ad7949_adc_chip *ad7949_adc)
+-{
+-	int ret = ad7949_adc->resolution;
+-
+-	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
+-		ret += AD7949_CFG_REG_SIZE_BITS;
+-
+-	return ret;
+-}
+-
+ static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
+ 				u16 mask)
+ {
+-	int ret;
+-	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
+-	int shift = bits_per_word - AD7949_CFG_REG_SIZE_BITS;
++	int ret = 0;
+ 	struct spi_message msg;
+-	struct spi_transfer tx[] = {
+-		{
+-			.tx_buf = &ad7949_adc->buffer,
+-			.len = 4,
+-			.bits_per_word = bits_per_word,
+-		},
+-	};
+-
+-	ad7949_adc->cfg = (val & mask) | (ad7949_adc->cfg & ~mask);
+-	ad7949_adc->buffer = ad7949_adc->cfg << shift;
+-	spi_message_init_with_transfers(&msg, tx, 1);
+-	ret = spi_sync(ad7949_adc->spi, &msg);
++	struct spi_transfer tx;
++	u16 tmp_cfg = 0;
 +
-+adc@0 {
-+ compatible = "adi,ad7949";
-+ reg = <0>;
-+ adi,reference-select = <1>;
-+ adi,cfg-readback;
-+};
++	(void)memset(&tx, 0, sizeof(tx));
++	(void)memset(ad7949_adc->buffer, 0, AD7949_BUFFER_LEN);
++
++	tmp_cfg = (val & mask) | (ad7949_adc->cfg & ~mask);
++
++	if (tmp_cfg != ad7949_adc->cfg) {
++		ad7949_adc->cfg = tmp_cfg;
++
++		/* Pack 14-bit value into 2 bytes, MSB first */
++		ad7949_adc->buffer[0] = ((ad7949_adc->cfg & 0x7f00) >> 6) |
++			((ad7949_adc->cfg & 0xc0) >> 6);
++		ad7949_adc->buffer[1] = (ad7949_adc->cfg & 0x007f) << 2;
++
++		tx.tx_buf = ad7949_adc->buffer;
++		tx.len = ad7949_spi_cfg_is_read_back(ad7949_adc) ? 4 : 2;
++
++		spi_message_init_with_transfers(&msg, &tx, 1);
++		ret = spi_sync(ad7949_adc->spi, &msg);
++
++		/*
++		 * This delay is to avoid a new request before the required
++		 * time to send a new command to the device
++		 */
++		udelay(2);
++	}
+ 
+-	/*
+-	 * This delay is to avoid a new request before the required time to
+-	 * send a new command to the device
+-	 */
+-	udelay(2);
+ 	return ret;
+ }
+ 
+@@ -124,16 +124,10 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 				   unsigned int channel)
+ {
+ 	int ret;
+-	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
+-	int mask = GENMASK(ad7949_adc->resolution, 0);
+ 	struct spi_message msg;
+-	struct spi_transfer tx[] = {
+-		{
+-			.rx_buf = &ad7949_adc->buffer,
+-			.len = 4,
+-			.bits_per_word = bits_per_word,
+-		},
+-	};
++	struct spi_transfer tx;
++
++	ad7949_adc->current_channel = channel;
+ 
+ 	ret = ad7949_spi_write_cfg(ad7949_adc,
+ 				   channel << AD7949_OFFSET_CHANNEL_SEL,
+@@ -141,24 +135,29 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
+ 	if (ret)
+ 		return ret;
+ 
+-	ad7949_adc->buffer = 0;
+-	spi_message_init_with_transfers(&msg, tx, 1);
++	(void)memset(&tx, 0, sizeof(tx));
++	(void)memset(ad7949_adc->buffer, 0, AD7949_BUFFER_LEN);
++
++	tx.rx_buf = ad7949_adc->buffer;
++	tx.len = ad7949_spi_cfg_is_read_back(ad7949_adc) ? 4 : 2;
++
++	spi_message_init_with_transfers(&msg, &tx, 1);
+ 	ret = spi_sync(ad7949_adc->spi, &msg);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/*
+-	 * This delay is to avoid a new request before the required time to
+-	 * send a new command to the device
++	 * This delay is to avoid a new request before the required time
++	 * to send a new command to the device.
+ 	 */
+ 	udelay(2);
+ 
+-	ad7949_adc->current_channel = channel;
++	*val = (ad7949_adc->buffer[0] << 8) | ad7949_adc->buffer[1];
+ 
+-	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
+-		*val = (ad7949_adc->buffer >> AD7949_CFG_REG_SIZE_BITS) & mask;
+-	else
+-		*val = ad7949_adc->buffer & mask;
++	if (ad7949_adc->resolution == 14) {
++		/* 14-bit value in 16-bit buffer */
++		*val = *val >> 2;
++	}
+ 
+ 	return 0;
+ }
 -- 
 1.9.1
-
---000000000000c5b3a70587d8604f
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div><div>From 7bf834dd49844a4e785924a9b0=
-ead37cb9cf83c6 Mon Sep 17 00:00:00 2001</div><div>From: Adam Michaelis &lt;=
-<a href=3D"mailto:adam.michaelis@rockwellcollins.com">adam.michaelis@rockwe=
-llcollins.com</a>&gt;</div><div>Date: Thu, 25 Apr 2019 15:26:21 -0500</div>=
-<div>Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option=
-</div><div><br></div><div>Adding optional parameter to the ad7949 to indica=
-te that the part should</div><div>be configured to include the configuratio=
-n register value used when</div><div>acquiring the current sample value.</d=
-iv><div><br></div><div>Signed-off-by: Adam Michaelis &lt;<a href=3D"mailto:=
-adam.michaelis@rockwellcollins.com">adam.michaelis@rockwellcollins.com</a>&=
-gt;</div><div>---</div><div>=C2=A0Documentation/devicetree/bindings/iio/adc=
-/ad7949.txt | 9 +++++++++</div><div>=C2=A01 file changed, 9 insertions(+)</=
-div><div><br></div><div>diff --git a/Documentation/devicetree/bindings/iio/=
-adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt</div>=
-<div>index 14ee9a2cb2a5..cd3572828243 100644</div><div>--- a/Documentation/=
-devicetree/bindings/iio/adc/ad7949.txt</div><div>+++ b/Documentation/device=
-tree/bindings/iio/adc/ad7949.txt</div><div>@@ -18,6 +18,8 @@ Optional prope=
-rties:</div><div>=C2=A0 =C2=A0 7: External reference, temperature sensor di=
-sabled, buffer enabled</div><div>=C2=A0 - vref-supply: The regulator supply=
- for ADC reference voltage. Required</div><div>=C2=A0 if external reference=
- selected by &#39;adi,reference-select&#39;.</div><div>+ - adi,cfg-readback=
-: If defined, set bit in configuration register to</div><div>+ read-back th=
-e configuration used for the current sample value.</div><div>=C2=A0</div><d=
-iv>=C2=A0Examples:</div><div>=C2=A0adc@0 {</div><div>@@ -32,3 +34,10 @@ adc=
-@0 {</div><div>=C2=A0<span style=3D"white-space:pre">	</span>reg =3D &lt;0&=
-gt;;</div><div>=C2=A0<span style=3D"white-space:pre">	</span>adi,reference-=
-select =3D &lt;0&gt;;</div><div>=C2=A0};</div><div>+</div><div>+adc@0 {</di=
-v><div>+<span style=3D"white-space:pre">	</span>compatible =3D &quot;adi,ad=
-7949&quot;;</div><div>+<span style=3D"white-space:pre">	</span>reg =3D &lt;=
-0&gt;;</div><div>+<span style=3D"white-space:pre">	</span>adi,reference-sel=
-ect =3D &lt;1&gt;;</div><div>+<span style=3D"white-space:pre">	</span>adi,c=
-fg-readback;</div><div>+};</div><div>--=C2=A0</div><div>1.9.1</div><div><br=
-></div></div></div></div>
-
---000000000000c5b3a70587d8604f--
