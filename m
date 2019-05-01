@@ -1,199 +1,131 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH] dt-bindings: Add silabs,si5341
-Date: Wed, 1 May 2019 05:46:55 +0000
-Message-ID: <c7f5184f-f484-e8ad-33ae-36b0da061113@topic.nl>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl>
- <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
- <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl>
- <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com>
- <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
- <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+Date: Wed, 1 May 2019 09:16:41 +0200
+Message-ID: <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Content-ID: <32C2B3FF2E22AD4CA8DF503BA01496BD@eurprd04.prod.outlook.com>
+In-Reply-To: <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAtMDQtMTkgMDI6MTcsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gUXVvdGluZyBNaWtlIExv
-b2lqbWFucyAoMjAxOS0wNC0yNyAwMjo0Mjo1NikNCj4+IE9uIDI3LTA0LTE5IDAyOjQ0LCBTdGVw
-aGVuIEJveWQgd3JvdGU6DQo+Pj4gUXVvdGluZyBNaWtlIExvb2lqbWFucyAoMjAxOS0wNC0yNSAy
-Mzo1MToxNSkNCj4+Pj4gT24gMjYtMDQtMTkgMDE6MDQsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4+
-Pj4+PiArDQo+Pj4+Pj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+Pj4+Pj4gKy0gc2lsYWJzLHBs
-bC1tLW51bSwgc2lsYWJzLHBsbC1tLWRlbjogTnVtZXJhdG9yIGFuZCBkZW5vbWluYXRvciBmb3Ig
-UExMDQo+Pj4+Pj4gKyAgZmVlZGJhY2sgZGl2aWRlci4gTXVzdCBiZSBzdWNoIHRoYXQgdGhlIFBM
-TCBvdXRwdXQgaXMgaW4gdGhlIHZhbGlkIHJhbmdlLiBGb3INCj4+Pj4+PiArICBleGFtcGxlLCB0
-byBjcmVhdGUgMTRHSHogZnJvbSBhIDQ4TUh6IHh0YWwsIHVzZSBtLW51bT0xNDAwMCBhbmQgbS1k
-ZW49NDguIE9ubHkNCj4+Pj4+PiArICB0aGUgZnJhY3Rpb24gbWF0dGVycywgdXNpbmcgMzUwMCBh
-bmQgMTIgd2lsbCBkZWxpdmVyIHRoZSBleGFjdCBzYW1lIHJlc3VsdC4NCj4+Pj4+PiArICBJZiB0
-aGVzZSBhcmUgbm90IHNwZWNpZmllZCwgYW5kIHRoZSBQTEwgaXMgbm90IHlldCBwcm9ncmFtbWVk
-IHdoZW4gdGhlIGRyaXZlcg0KPj4+Pj4+ICsgIHByb2JlcywgdGhlIFBMTCB3aWxsIGJlIHNldCB0
-byAxNEdIei4NCj4+Pj4+DQo+Pj4+PiBDYW4gdGhpcyBiZSBkb25lIHZpYSBhc3NpZ25lZC1jbG9j
-ay1yYXRlcz8gUG9zc2libHkgd2l0aCBhIHRhYmxlIGluIHRoZQ0KPj4+Pj4gY2xrIGRyaXZlciB0
-byB0ZWxsIHVzIGhvdyB0byBnZW5lcmF0ZSB0aG9zZSByYXRlcy4NCj4+Pj4NCj4+Pj4gVGhlIFBM
-TCBmcmVxdWVuY3kgY2hvaWNlIGRldGVybWluZXMgd2hvJ2xsIGdldCBqaXR0ZXIgYW5kIHdobyB3
-b24ndC4gSXQncw0KPj4+PiByaWRpY3Vsb3VzbHkgYWNjdXJhdGUgdG9vLg0KPj4+Pg0KPj4+PiBG
-b3IgZXhhbXBsZSwgaWYgeW91IG5lZWQgYSAyNiBNSHogYW5kIGEgMTAwIE1IeiBvdXRwdXQsIHRo
-ZXJlJ3Mgbm8gc29sdXRpb24NCj4+Pj4gZm9yIHRoZSBQTEwgdGhhdCBtYWtlcyBib3RoIGNsb2Nr
-cyBhbiBpbnRlZ2VyIGRpdmlkZXIgKFNJIGlzIHZhZ3VlIGFib3V0IGl0LA0KPj4+PiBidXQgYXBw
-YXJlbnRseSBpbnRlZ2VyIGRpdmlkZXJzIGhhdmUgbGVzcyBqaXR0ZXIgb24gb3V0cHV0KS4gT25s
-eSB0aGUgZW5kdXNlcg0KPj4+PiBjYW4gc2F5IHdoaWNoIGNsb2NrIHdpbGwgZ2V0IHRoZSBiZXR0
-ZXIgcXVhbGl0eS4NCj4gDQo+IFJpZ2h0LiBTbyBtYXliZSB3ZSBtYWtlIHRhYmxlcyBvZiByYXRl
-cyBhbmQgcHV0IGl0IGluIHRoZSBkcml2ZXIgYW5kDQo+IGtlZXAgYWRkaW5nIGNvZGUgaW4gdGhl
-cmU/IEknbSB3b3JyaWVkIGFib3V0IGhhdmluZyB0aGVzZSBwcm9wZXJ0aWVzIGluDQo+IERUIGFu
-ZCB0aGVuIGhhdmluZyB0byB3b3JrIGFyb3VuZCB0aGVtIGxhdGVyIG9uIGJ5ICJmaXhpbmciIHRo
-ZSBEVC4gSWYNCj4gaXQncyBvbmx5IGluIHRoZSBkcml2ZXIgdGhlbiB3ZSdyZSBhYmxlIHRvIHR3
-ZWFrIHRoZSB2YWx1ZXMgdG8gZ2V0DQo+IGJldHRlciBqaXR0ZXIgbnVtYmVycywgZXRjLg0KDQpQ
-cm9ncmFtbWluZyB0aGUgbWFpbiBQTEwgaXMgZWFzeSwgbm8gdGFibGVzIHJlcXVpcmVkLg0KDQpJ
-dCdzIGFsbCB1c2VyIGNob2ljZSwgdGhhdCdzIHRoZSBpc3N1ZSBoZXJlLiBEcml2ZXJzIHRoZW1z
-ZWx2ZXMgY2Fubm90IG1ha2UgDQp0aGlzIGRlY2lzaW9uLg0KDQoodXNlciA9IHRoZSBwZXJzb24g
-ZG9pbmcgYm9hcmQgc3VwcG9ydCwgd3JpdGluZyB0aGUgZGV2aWNldHJlZSBhbmQga2VybmVsIA0K
-Y29uZmlnIGZvciBleGFtcGxlKQ0KDQpJbiBteSBleGFtcGxlLCB0aGUgY2hpcCBoYXMgbm8gaXNz
-dWUgc3ludGhlc2l6aW5nIGJvdGggMjYgYW5kIDEwMCBNSHouIA0KRGVwZW5kaW5nIG9uIHRoZSBt
-YWluIFBMTCBzZXR0aW5nLCBvbmUgbWF5IGhhdmUgbW9yZSBqaXR0ZXIgdGhhbiB0aGUgb3RoZXIu
-IElmIA0KdGhlIFBMTCBpcyBzZXQgdG8gMTQuMCBHSHosIHRoZSAxMDAgTUh6IGNsb2NrIHdpbGwg
-YmUgb2YgYmV0dGVyIHF1YWxpdHksIHdoaWxlIA0KaWYgdGhlIFBMTCBpcyBzZXQgdG8gMTMuNjI0
-IEdIeiAoYW4gZXZlbiBtdWx0aXBsZSBvZiAyNiksIHRoZSAyNiBNSHogd2lsbCBoYXZlIA0KYmV0
-dGVyIHF1YWxpdHkuDQoNCg0KPj4+Pj4+ICstIHNpbGFicyxyZXByb2dyYW06IFdoZW4gcHJlc2Vu
-dCwgdGhlIGRyaXZlciB3aWxsIGFsd2F5cyBhc3N1bWUgdGhlIGRldmljZSBtdXN0DQo+Pj4+Pj4g
-KyAgYmUgaW5pdGlhbGl6ZWQsIGFuZCBhbHdheXMgcGVyZm9ybXMgdGhlIHNvZnQtcmVzZXQgcm91
-dGluZS4gU2luY2UgdGhpcyB3aWxsDQo+Pj4+Pj4gKyAgdGVtcG9yYXJpbHkgc3RvcCBhbGwgb3V0
-cHV0IGNsb2NrcywgZG9uJ3QgZG8gdGhpcyBpZiB0aGUgY2hpcCBpcyBnZW5lcmF0aW5nDQo+Pj4+
-Pj4gKyAgdGhlIENQVSBjbG9jayBmb3IgZXhhbXBsZS4NCj4+Pj4+DQo+Pj4+PiBDb3VsZCB0aGlz
-IGJlIGRvbmUgd2l0aCB0aGUgcmVzZXQgZnJhbWV3b3JrPyBJdCBhbG1vc3Qgc291bmRzIGxpa2Ug
-aWYNCj4+Pj4+IHRoZSBjbGsgaXMgYSBDTEtfSVNfQ1JJVElDQUwgdGhlbiB3ZSBzaG91bGRuJ3Qg
-ZG8gdGhlIHJlc2V0LCBvdGhlcndpc2UNCj4+Pj4+IHdlIHByb2JhYmx5IHNob3VsZCByZXNldCB0
-aGUgY2hpcCB3aGVuIHRoZSBkcml2ZXIgcHJvYmVzLiBJZiB3ZSBkb24ndA0KPj4+Pj4gaGF2ZSBh
-IGNhc2Ugd2hlcmUgaXQncyBnb2luZyB0byBiZSBzdXBwbHlpbmcgYSBjcml0aWNhbCBjbGsgZm9y
-IGEgbG9uZw0KPj4+Pj4gdGltZSB0aGVuIHBlcmhhcHMgd2Ugc2hvdWxkbid0IGV2ZW4gY29uc2lk
-ZXIgdGhpcyB0b3BpYyB1bnRpbCBsYXRlci4NCj4+Pj4NCj4+Pj4gVGhlIGRyaXZlciBjYW4gc29y
-dCBvZiBzZWUgdGhhdCB0aGUgY2hpcHMgaXMgYWxyZWFkeSBjb25maWd1cmVkLiBUaGlzIHRlbGxz
-DQo+Pj4+IHRoZSBkcml2ZXIgd2hldGhlciB0aGF0J3MgZXhwZWN0ZWQgb3IganVzdCBjb2luY2lk
-ZW5jZS4NCj4+Pj4NCj4+Pj4gTWF5YmUgaXQnZCBiZSBjbGVhcmVyIGlmIEkgcmV2ZXJzZWQgdGhl
-IGxvZ2ljIGFuZCBuYW1lIHRoaXMNCj4+Pj4gInNpbGFicyxwcmVwcm9ncmFtbWVkIiwgd2hpY2gg
-d2lsbCBza2lwIHRoZSBkcml2ZXIncyBpbml0aWFsaXphdGlvbiByb3V0aW5lPw0KPj4+Pg0KPj4+
-DQo+Pj4gTWF5YmU/IElzIHRoZXJlIGFueSB3YXkgdG8gbG9vayBhdCBzb21lIHJlZ2lzdGVyIHRv
-IGZpZ3VyZSBvdXQgZm9yIHN1cmUNCj4+PiBpZiBpdCdzIGJlZW4gcHJlLXByb2dyYW1tZWQgb3Ig
-bm90PyBDb3VsZCBUT09MX1ZFUlNJT04gYmUgdXNlZCBvcg0KPj4+IEFDVElWRV9OVk1fQkFOSyBv
-ciBERVNJR05fSUQwLTc/DQo+Pg0KPj4gSSd2ZSBleHBlcmltZW50YWxseSBkZXRlcm1pbmVkIHRo
-YXQgVE9PTF9WRVJTSU9OIGFuZCBERVNJR05fSUR4DQo+PiBhcHBhcmVudGx5IGdldCBmaWxsZWQg
-d2l0aCB6ZXJvZXMgYnkgdGhlIGNsb2NrYnVpbGRlciBhbnl3YXkuDQo+Pg0KPj4gQUNUSVZFX05W
-TV9CQU5LIHdvcmtzIHJlbGlhYmx5IGZvciBzZWxmLXByb2dyYW1tZWQgY2hpcHMuDQo+Pg0KPj4g
-VGhlIGZsYWcgaXMgYWJvdXQgImlzIHRoaXMgY2hpcCB1bmRlciBmdWxsIGtlcm5lbCBjb250cm9s
-LCBvciBpcyBpdA0KPj4gZ2VuZXJhdGluZyBjbG9ja3MgdGhlIGtlcm5lbCBkb2Vzbid0IGtub3cg
-YWJvdXQgKGUuZy4gZm9yIHJlYWx0aW1lIGNvcmVzDQo+PiBvciBGUEdBIGxvZ2ljKSIuDQo+Pg0K
-PiANCj4gQWxyaWdodC4NCj4gDQo+Pg0KPj4NCj4+Pj4+PiArPT1DaGlsZCBub2Rlcz09DQo+Pj4+
-Pj4gKw0KPj4+Pj4+ICtFYWNoIG9mIHRoZSBjbG9jayBvdXRwdXRzIGNhbiBiZSBvdmVyd3JpdHRl
-biBpbmRpdmlkdWFsbHkgYnkNCj4+Pj4+PiArdXNpbmcgYSBjaGlsZCBub2RlIHRvIHRoZSBJMkMg
-ZGV2aWNlIG5vZGUuIElmIGEgY2hpbGQgbm9kZSBmb3IgYSBjbG9jaw0KPj4+Pj4+ICtvdXRwdXQg
-aXMgbm90IHNldCwgdGhlIGNvbmZpZ3VyYXRpb24gcmVtYWlucyB1bmNoYW5nZWQuDQo+Pj4+Pj4g
-Kw0KPj4+Pj4+ICtSZXF1aXJlZCBjaGlsZCBub2RlIHByb3BlcnRpZXM6DQo+Pj4+Pj4gKy0gcmVn
-OiBudW1iZXIgb2YgY2xvY2sgb3V0cHV0Lg0KPj4+Pj4+ICsNCj4+Pj4+PiArT3B0aW9uYWwgY2hp
-bGQgbm9kZSBwcm9wZXJ0aWVzOg0KPj4+Pj4+ICstIHNpbGFicyxmb3JtYXQ6IE91dHB1dCBmb3Jt
-YXQsIHNlZSBbMV0sIDE9ZGlmZmVyZW50aWFsLCAyPWxvdy1wb3dlciwgND1MVkNNT1MNCj4+Pj4+
-PiArLSBzaWxhYnMsY29tbW9uLW1vZGU6IE91dHB1dCBjb21tb24gbW9kZSwgZGVwZW5kcyBvbiBz
-dGFuZGFyZC4NCj4+Pj4+PiArLSBzaWxhYnMsYW1wbGl0dWRlOiBPdXRwdXQgYW1wbGl0dWRlLCBk
-ZXBlbmRzIG9uIHN0YW5kYXJkLg0KPj4+Pj4+ICstIHNpbGFicyxzeW50aC1zb3VyY2U6IFNlbGVj
-dCB3aGljaCBtdWx0aXN5bnRoIHRvIHVzZSBmb3IgdGhpcyBvdXRwdXQNCj4+Pj4+PiArLSBzaWxh
-YnMsc3ludGgtZnJlcXVlbmN5OiBTZXRzIHRoZSBmcmVxdWVuY3kgZm9yIHRoZSBtdWx0aXN5bnRo
-IGNvbm5lY3RlZCB0bw0KPj4+Pj4+ICsgIHRoaXMgb3V0cHV0LiBUaGlzIHdpbGwgYWZmZWN0IG90
-aGVyIG91dHB1dHMgY29ubmVjdGVkIHRvIHRoaXMgbXVsdGlzeW50aC4gVGhlDQo+Pj4+Pj4gKyAg
-c2V0dGluZyBpcyBhcHBsaWVkIGJlZm9yZSBzaWxhYnMsc3ludGgtbWFzdGVyIGFuZCBjbG9jay1m
-cmVxdWVuY3kuDQo+Pj4+Pj4gKy0gc2lsYWJzLHN5bnRoLW1hc3RlcjogSWYgcHJlc2VudCwgdGhp
-cyBvdXRwdXQgaXMgYWxsb3dlZCB0byBjaGFuZ2UgdGhlDQo+Pj4+Pj4gKyAgbXVsdGlzeW50aCBm
-cmVxdWVuY3kgZHluYW1pY2FsbHkuDQo+Pj4+Pg0KPj4+Pj4gVGhlc2UgYWJvdmUgcHJvcGVydGll
-cyBsb29rIGxpa2UgaGlnaGx5IGRldGFpbGVkIGNvbmZpZ3VyYXRpb24gZGF0YSB0bw0KPj4+Pj4g
-bGV0IHRoZSBkcml2ZXIgY29uZmlndXJlIHRoZSBjbGsgb3V0cHV0IGV4YWN0bHkgaG93IGl0J3Mg
-c3VwcG9zZWQgdG8gYmUNCj4+Pj4+IGNvbmZpZ3VyZWQuIENhbiB0aGVzZSBwcm9wZXJ0aWVzIGJl
-IHJld3JpdHRlbiBpbiBtb3JlIGhpZ2gtbGV2ZWwgdGVybXMNCj4+Pj4+IHRoYXQgYSBzeXN0ZW0g
-aW50ZWdyYXRvciB3b3VsZCB1bmRlcnN0YW5kPyBJZGVhbGx5LCBJIHNob3VsZG4ndCBoYXZlIHRv
-DQo+Pj4+PiByZWFkIHRoZSBkYXRhc2hlZXQgYW5kIHRoZSBkcml2ZXIgYW5kIHRoZW4gZmlndXJl
-IG91dCB3aGF0IERUIHByb3BlcnRpZXMNCj4+Pj4+IG5lZWQgdGhlIHZhbHVlcyBmcm9tIHRoZSBk
-YXRhc2hlZXQgaW4gdGhlbSBzbyB0aGF0IHRoZSBkcml2ZXIgd3JpdGVzDQo+Pj4+PiB0aGVtIHRv
-IGEgcGFydGljdWxhciByZWdpc3Rlci4gSSBkb24ndCBrbm93IGlmIHRoYXQncyBwb3NzaWJsZSBo
-ZXJlLA0KPj4+Pj4gYmVjYXVzZSBJIGhhdmVuJ3QgcmVhZCB0aGUgZHJpdmVyIG9yIHRoZSBkYXRh
-c2hlZXQgdG9vIGNsb3NlbHkgeWV0LCBidXQNCj4+Pj4+IHRoYXQgc2hvdWxkIGJlIHRoZSBnb2Fs
-Lg0KPj4+Pg0KPj4+PiBUaGUgZGF0YXNoZWV0IGlzIG5vdCB2ZXJ5IGhlbHBmdWwgaW4gdGhpcyBy
-ZWdhcmQuIFNpbGFicyBqdXN0IGFzc3VtZXMgeW91J2xsDQo+Pj4+IHVzZSB0aGVpciBjbG9ja2J1
-aWxkZXIgc29mdHdhcmUgZm9yIHdyaXRpbmcgdGhlc2UgdmFsdWVzLCB3aGljaCBpcyBob3cgd2Ug
-Z290DQo+Pj4+IHRvIHRoZSAiTFZEUyAzdjMiIHZhbHVlcy4NCj4+Pg0KPj4+IEkgaG9wZSB0aGF0
-IGNhbiBiZSBkZXRlcm1pbmVkIGJ5IGxvb2tpbmcgYXQgdmRkPE4+LXN1cHBseSB2b2x0YWdlcz8N
-Cj4+DQo+PiBOb3QgcmVhbGx5LCBhbmQgd2hlbiBhc2tlZCBmb3IgYSBiaXQgbW9yZSBkZXRhaWws
-IFNpbGFicyBqdXN0IHNheXMgdG8NCj4+IHVzZSB0aGUgZXhjZWxsZW50IGRldmVsb3BlciBmcmll
-bmRseSBjbG9ja2J1aWxkZXIgc29mdHdhcmUgdGhhdCBhbG1vc3QNCj4+IHJ1bnMgb24gYWxtb3N0
-IGFueSBwbGF0Zm9ybS4NCj4+DQo+Pj4+IEkgY291bGQgcHV0IGluIGEgdGFibGUgb2YgImNvbW1v
-biIgdmFsdWVzLCBzbyB0aGF0IHlvdSBjYW4gc2F5Og0KPj4+Pg0KPj4+PiBzaWxhYnMsb3V0cHV0
-LXN0YW5kYXJkID0gImx2ZHMiOw0KPj4+Pg0KPj4+PiBBbmQgdGhlbiB1c2UgdGhlICJyYXciIHBy
-b3BlcnRpZXMgdG8gZXhwYW5kIG9yIG92ZXJyaWRlIG9uIHRoYXQuDQo+Pj4+DQo+Pj4+IEV4dHJh
-IGRlZmluZXMgbWlnaHQgaGVscCwgZS5nLjoNCj4+Pj4NCj4+Pj4gc2lsYWJzLGZvcm1hdCA9IDxT
-STUzNDFfRk9STUFUX0RJRkZFUkVOVElBTD47DQo+Pj4NCj4+PiBJIHN1cHBvc2UgeW91J2xsIG5l
-ZWQgdG8gcmV2ZXJzZSBlbmdpbmVlciB0aGUgY2xvY2sgYnVpbGRlciBzb2Z0d2FyZSB0bw0KPj4+
-IGZpZ3VyZSBvdXQgd2h5IGEgU0k1MzQxX0ZPUk1BVF9ESUZGRVJFTlRJQUwgd291bGQgYmUgc3Bl
-Y2lmaWVkIGluc3RlYWQNCj4+PiBvZiBzb21lIG90aGVyIHZhbHVlLiBJZGVhbGx5IHdlIGRvbid0
-IG5lZWQgYW55IG9mIHRoZXNlIHZlbmRvciBzcGVjaWZpYw0KPj4+IHByb3BlcnRpZXMgYW5kIHRo
-ZSBkcml2ZXJzIHVzaW5nIHRoZXNlIGNsa3MgY2FuIGFzayB0aGUgY2xrIGZyYW1ld29yayB0bw0K
-Pj4+IGNvbmZpZ3VyZSB0aGVzZSBwcm9wZXJ0aWVzLCBvciB3ZSBuZWVkIHRvIGxvb2sgYXQgbWFr
-aW5nIG1vcmUgcHJvcGVydGllcw0KPj4+IGxpa2UgJ2Fzc2lnbmVkLWNsb2NrLXBhcmVudHMnIHRo
-YXQgbGV0cyB1cyBjb25maWd1cmUgdGhpbmdzIGdlbmVyaWNhbGx5Lg0KPj4NCj4+IFRoZXNlIHBy
-b3BlcnRpZXMgYXJlIGFib3V0IGhvdyB5b3Ugc29sZGVyZWQgdGhpbmdzIHRvZ2V0aGVyLCBidXQg
-eWVhaCwNCj4+IGlmIHRoZSBjbG9jayBvdXRwdXRzIGdvIHRvIGV4cGFuc2lvbiBzbG90cywgc29t
-ZSBkcml2ZXIgb3IgZGV2aWNldHJlZQ0KPj4gZnJhZ21lbnQgY29udHJvbCB3b3VsZCBiZSBkZXNp
-cmFibGUsIHNvIHlvdSBjYW4gc3dpdGNoIHRoZSBjbG9jayBtb2RlDQo+PiBmcm9tIGRpZmZlcmVu
-dGlhbCB0byBzaW5nbGUgZW5kZWQgZm9yIGV4YW1wbGUuDQo+IA0KPiBIbW0uLiBQZXJoYXBzIHdl
-IG5lZWQgYSBjbGtfc2V0X21vZGUoKSBBUEk/IFBvc3NpYmx5IGJlIGFuIGludGVybmFsIEFQSQ0K
-PiB0aGF0IGxldHMgdGhlIERUIGNvbmZpZ3VyZSB0aGUgbW9kZSB0byBiZSBkaWZmZXJlbnRpYWwg
-b3Igc2luZ2xlIGVuZGVkPw0KPiBOb2JvZHkgaGFzIHJlcXVpcmVkIHRoaXMgc28gZmFyIHNvIGl0
-J3MgdmVyeSByYXJlLCBidXQgSSdkIGxpa2UgdG8gc2VlDQo+IHRoZSBwcm9wZXJ0aWVzIGJlY29t
-ZSBzdGFuZGFyZCBpbnN0ZWFkIG9mIHZlbmRvciBzcGVjaWZpYyBpZiBwb3NzaWJsZS4NCj4gDQo+
-Pg0KPj4NCj4+Pj4+PiArLSBhbHdheXMtb246IEltbWVkaWF0ZWx5IGFuZCBwZXJtYW5lbnRseSBl
-bmFibGUgdGhpcyBvdXRwdXQuIFBhcnRpY3VsYXJ5DQo+Pj4+Pj4gKyAgdXNlZnVsIHdoZW4gY29t
-YmluZWQgd2l0aCBhc3NpZ25lZC1jbG9ja3MsIHNpbmNlIHRoYXQgZG9lcyBub3QgcHJlcGFyZSBj
-bG9ja3MuDQo+Pj4+Pg0KPj4+Pj4gTG9va3MgbGlrZSB5b3Ugd2FudCBDTEtfSVNfQ1JJVElDQUwg
-aW4gRFQuIFdlJ3ZlIGhhZCB0aGF0IGRpc2N1c3Npb24NCj4+Pj4+IGJlZm9yZSBidXQgbWF5YmUg
-d2Ugc2hvdWxkIHJldmlzaXQgaXQgaGVyZSBhbmQgYWRkIGEgd2F5IHRvIGluZGljYXRlDQo+Pj4+
-PiB0aGF0IHNvbWUgY2xrIHNob3VsZCBuZXZlciBiZSB0dXJuZWQgb2ZmIGluc3RlYWQgb2YgYXNz
-dW1pbmcgdGhhdCB3ZQ0KPj4+Pj4gY2FuIGRvIHRoaXMgZnJvbSBDIGNvZGUgYWxsIHRoZSB0aW1l
-Lg0KPj4+Pg0KPj4+PiBNeSBpc3N1ZSB3YXMgdGhhdCBhc3NpZ25lZC1jbG9ja3MgZG9lcyBub3Qg
-Y2FsbCBjbGtfcHJlcGFyZS4gSWYgdGhlIGNsb2NrIGlzDQo+Pj4+IG5vdCBydW5uaW5nLCBhc3Np
-Z25lZC1jbG9ja3Mgd2lsbCBub3QgdHVybiBpdCBvbiAoYXQgbGVhc3QsIHRoYXQgaXMgdGhlIGNh
-c2UNCj4+Pj4gb24gdGhlIDQuMTQga2VybmVsIEkgdGVzdGVkIHRoaXMgb24pLCBpdCBhcHBhcmVu
-dGx5IG9ubHkgcHJldmVudHMgaXQgZnJvbQ0KPj4+PiBiZWluZyB0dXJuZWQgb2ZmIGJ5IG1hcmtp
-bmcgaXQgYXMgImluIHVzZSIuIFRoaXMganVzdCBwcm92aWRlcyBhIHdheSB0byB1c2UNCj4+Pj4g
-YXNzaWduZWQtY2xvY2tzLg0KPj4+Pg0KPj4+IERvIHlvdSB3YW50IHRoZSBjbGtzIHRvIGFsd2F5
-cyBiZSBwcmVwYXJlZCBhbmQgZW5hYmxlZD8gV2hhdCB1c2UtY2FzZSBpcw0KPj4+IHRoaXM/IEl0
-IHN0aWxsIGxvb2tzIGxpa2UgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcgbmVlZHMgdG8gYmUgZXhwcmVz
-c2VkIGluDQo+Pj4gRFQgaGVyZS4NCj4+DQo+PiBUaGUgdXNlIGNhc2UgaXMgcHJldHR5IHNpbXBs
-ZSwgaXQncyBqdXN0IHRvIGVuYWJsZSB0aGUgY2xvY2suIE9yIGluIHRoaXMNCj4+IGNhc2UsICJw
-cmVwYXJlIiBpdCwgYmVjYXVzZSB0aGUgSTJDIGNsaWVudCBuZWVkcyB0byBiZSBhYmxlIHRvIHNs
-ZWVwIGFuZA0KPj4gYWxsIGFjdGlvbnMgbXVzdCBiZSBkb25lIGluIHRoZSBwcmVwYXJlIHBhcnQu
-DQo+Pg0KPj4gU3VwcG9zZSBJIHVzZSB0aGUgc2k1MzQxIHRvIGdlbmVyYXRlIGEgMjZNSHogY2xv
-Y2sgdGhhdCB3b3VsZCBub3JtYWxseQ0KPj4gYmUgcHJvdmlkZXMgYnkgYSBoYXJkd2FyZSBvc2Np
-bGxhdG9yLiBUaGUgZHJpdmVyIGl0c2VsZiBkb2Vzbid0IGhhdmUgYW55DQo+PiBjbG9jayBwcm9w
-ZXJ0aWVzIHRvIHNldC4gVGhlbiBJJ2QgcHV0IGludG8gdGhhdCBkZXZpY2UncyBkZXZpY2V0cmVl
-IG5vZGUNCj4+IHRoZSBmb2xsb3dpbmc6DQo+Pg0KPj4gYXNzaWduZWQtY2xvY2tzID0gPCZzaTUz
-NDEgMj47DQo+PiBhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwyNjAwMDAwMD47DQo+Pg0KPj4gV2hl
-biB0aGUgc3lzdGVtIGJvb3RzLCB0aGUgY2xvY2sgZnJhbWV3b3JrIGluZGVlZCBjYWxscw0KPj4g
-InNldF9yYXRlKDI2MDAwMDAwKSIgYmVmb3JlIHRoYXQgZHJpdmVyIHByb2JlcywgYnV0IGl0IG5l
-dmVyIGNhbGxzDQo+PiAiY2xrX3ByZXBhcmUiLCBzbyB0aGUgY2xvY2sncyBmcmVxdWVuY3kgaXMg
-c2V0IG9rYXkgYnV0IHRoZSBjbG9jayB3b24ndA0KPj4gYmUgcnVubmluZyBhbmQgdGhlIGRldmlj
-ZSB3b24ndCBmdW5jdGlvbi4NCj4gDQo+IFdoeSBjYW4ndCB0aGF0IGRyaXZlciBjYWxsIGNsa19w
-cmVwYXJlX2VuYWJsZSgpPyBJcyB0aGVyZSBzb21lIHNvcnQgb2YNCj4gYXNzdW1wdGlvbiB0aGF0
-IHRoaXMgY2xrIHdpbGwgYWx3YXlzIGJlIGVuYWJsZWQgYW5kIG5vdCBoYXZlIGEgZHJpdmVyDQo+
-IHRoYXQgY29uZmlndXJlcyB0aGUgcmF0ZSBhbmQgZ2F0ZXMvdW5nYXRlcyBpdD8NCg0KTm90IG9u
-bHkgY2xrX3ByZXBhcmVfZW5hYmxlKCksIGJ1dCB0aGUgZHJpdmVyIGNvdWxkIGFsc28gY2FsbCBj
-bGtfc2V0X3JhdGUoKSANCmFuZCBjbGtfc2V0X3BhcmVudCgpIGFuZCB0aGUgbGlrZXMsIGJ1dCBp
-dCBkb2Vzbid0LCBzbyB0aGF0J3Mgd2h5IHRoZXJlIGlzIA0KImFzc2lnbmVkLWNsb2NrcyIgcmln
-aHQ/DQoNClRoZXJlIGFyZSBtdWx0aXBsZSBzY2VuYXJpbydzLCBzaW1pbGFyIHRvIHdoeSByZWd1
-bGF0b3JzIGFsc28gaGF2ZSBwcm9wZXJ0aWVzIA0KbGlrZSB0aGVzZS4NCg0KLSBUaGUgY2xvY2sg
-aXMgcmVsYXRlZCB0byBoYXJkd2FyZSB0aGF0IHRoZSBrZXJuZWwgaXMgbm90IGF3YXJlIG9mLg0K
-LSBUaGUgY2xvY2sgaXMgZm9yIGEgZHJpdmVyIHRoYXQgaXNuJ3QgYXdhcmUgb2YgaXRzIGNsb2Nr
-IHJlcXVpcmVtZW50cy4gSXQgDQptaWdodCBiZSBhbiBleHRyYSBjbG9jayBmb3IgYW4gRlBHQSBp
-bXBsZW1lbnRlZCBjb250cm9sbGVyIHRoYXQgbWltaWNzIA0KZXhpc3RpbmcgaGFyZHdhcmUuDQoN
-CkknZCBhbHNvIGNvbnNpZGVyIHBhdGNoaW5nICJhc3NpZ25lZC1jbG9ja3MiIHRvIGNhbGwgImNs
-a19wcmVwYXJlX2VuYWJsZSgpIiwgDQp3b3VsZCB0aGF0IG1ha2Ugc2Vuc2UsIG9yIGlzIGl0IGlu
-dGVudGlvbmFsIHRoYXQgYXNzaWduZWQtY2xvY2tzIGRvZXNuJ3QgZG8gdGhhdD8NCg0KDQo=
+Hi Rob,
+
+On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > On 30/04/2019 16:02, Rob Herring wrote:
+> > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > > <geert+renesas@glider.be> wrote:
+> > >>
+> > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> > >>
+> > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >> ---
+> > >> v2:
+> > >>   - Add "renesas,gic-spi-base",
+> > >>   - Document RZ/A2M.
+> > >> ---
+> > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> > >>  1 file changed, 30 insertions(+)
+> > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > >> new file mode 100644
+> > >> index 0000000000000000..ea8ddb6955338ccd
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > >> @@ -0,0 +1,30 @@
+> > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> > >> +
+> > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> > >> +RZ/A1 and RZ/A2 SoCs:
+> > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> > >> +    interrupts,
+> > >> +  - NMI edge select.
+> > >> +
+> > >> +Required properties:
+> > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> > >> +               fallback.
+> > >> +               Examples with soctypes are:
+> > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> > >> +                                in interrupts.txt in this directory)
+> > >> +  - interrupt-controller: Marks the device as an interrupt controller
+> > >> +  - reg: Base address and length of the memory resource used by the interrupt
+> > >> +         controller
+> > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> > >
+> > > Why isn't this just an 'interrupts' property?
+> >
+> > That's likely because of kernel limitations. The DT code does an
+> > of_populate() on any device that it finds, parse the "interrupts"
+> > propertiy, resulting in the irq_descs being populated.
+> >
+> > That creates havoc, as these interrupts are not for this device, but for
+> > something that is connected to it. This is merely a bridge of some sort.
+>
+> 'interrupt-map' would avoid that problem I think.
+
+"interrupt-map" seems to be meant for translation on a bus?
+What to do with the child and parent unit addresses fields?
+The parent unit address size depends on the #address-cells of the parent
+interrupt-controller (i.e. GIC, so it's zero).
+But the child unit address size depends on the #address-cells of the bus node
+on which the child is located, so that's a (non-zero) bus #address-cells
+(from the root node), not an interrupt-controller #address-cells.
+
+Each line in an interrupt-map also contains a child interrupt specifier.
+As the RZ/A1 IRQC supports 8 interrupt inputs with 4 sense types,
+that would mean 32 lines? Or should I just ignore the senses here,
+and specify 0?
+
+i.e. interrupt-map = <0 0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH,
+                      0 1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH,
+                      0 2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH,
+                      0 3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH,
+                      0 4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH,
+                      0 5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH,
+                      0 6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH,
+                      0 7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+
+(using zero for the child unit addresses, too)?
+
+> > Furthermore, this is a rather long established practice: gic-v2m,
+> > gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+> > for one reason or another plug onto the GIC use the same method.
+>
+> All handling the mapping to the parent in their own way...
+>
+> > > Plus, without 'interrupts' walking the hierarchy is broken.
+> >
+> > Erm... Which hierarchy?
+>
+> of_irq_init() expects that an interrupt-controller without an
+> interrupt-parent is the root controller. So you're right. We only need
+
+That applies to IRQCHIP_DECLARE() drivers only, not platform device
+drivers, right?
+
+> to have an 'interrupt-parent', but not 'interrupts'.
+
+This is implied by "interrupt-parent = <&gic>;" on the soc node.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
