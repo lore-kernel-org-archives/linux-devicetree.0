@@ -1,16 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for FD
- shared memory
-Date: Wed, 1 May 2019 17:45:12 -0500
-Message-ID: <20190501224512.GA4287@bogus>
+Subject: Re: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added FD dt-bindings
+Date: Wed, 1 May 2019 17:46:47 -0500
+Message-ID: <20190501224647.GA12044@bogus>
 References: <20190423104505.38778-1-Jerry-Ch.chen@mediatek.com>
- <20190423104505.38778-2-Jerry-Ch.chen@mediatek.com>
+ <20190423104505.38778-4-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190423104505.38778-2-Jerry-Ch.chen@mediatek.com>
+In-Reply-To: <20190423104505.38778-4-Jerry-Ch.chen@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,59 +23,63 @@ To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
 Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, shik@chromium.org, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 06:45:00PM +0800, Jerry-ch Chen wrote:
+On Tue, Apr 23, 2019 at 06:45:02PM +0800, Jerry-ch Chen wrote:
 > From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 > 
-> This patch adds the binding for describing the shared memory
-> used to exchange meta data between the co-processor and Face
-> Detection (FD) unit of the camera system on Mediatek SoCs.
+> This patch adds DT binding documentation for the Face Detection (FD)
+> unit of the camera system on Mediatek's SoCs.
 > 
 > Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 > ---
->  .../mediatek,reserve-memory-fd_smem.txt       | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+>  .../bindings/media/mediatek,mt8183-fd.txt     | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
 > new file mode 100644
-> index 000000000000..52ae5071e238
+> index 000000000000..97c12fd93e7e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
-> @@ -0,0 +1,44 @@
-> +Mediatek FD Shared Memory binding
+> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
+> @@ -0,0 +1,34 @@
+> +* Mediatek Face Detection Unit (FD)
 > +
-> +This binding describes the shared memory, which serves the purpose of
-> +describing the shared memory region used to exchange data between Face
-> +Detection hardware (FD) and co-processor in Mediatek SoCs.
-> +
-> +The co-processor doesn't have the iommu so we need to use the physical
-> +address to access the shared buffer in the firmware.
-> +
-> +The Face Detection hardware (FD) can access memory through mt8183 IOMMU so
-> +it can use dma address to access the memory region.
-> +(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
-> +
+> +Face Detection (FD) unit is a typical memory-to-memory HW device.
+> +It provides hardware accelerated face detection function, and it
+> +is able to detect different poses of faces. FD will writre result
+> +of detected face into memory as output.
 > +
 > +Required properties:
-> +
-> +- compatible: must be "mediatek,reserve-memory-fd_smem"
-> +
-> +- reg: required for static allocation (see reserved-memory.txt for
-> +  the detailed usage)
-> +
-> +- alloc-range: required for dynamic allocation. The range must
-> +  between 0x00000400 and 0x100000000 due to the co-processer's
-> +  addressing limitation
-> +
-> +- size: required for dynamic allocation. The unit is bytes.
-> +  for Face Detection Unit, you need 1 MB at least.
+> +- compatible: "mediatek,mt8183-fd"
+> +- reg: Physical base address and length of the function block register space
+> +- interrupts: interrupt number to the cpu.
+> +- iommus: should point to the respective IOMMU block with master port as
+> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
 
-What's the most?
+How many entries? Looks like 3 from the example.
 
-I don't think you really need reserved memory here if you don't need a 
-fixed address. The size is not that big that a contiguous allocation 
-shouldn't be a problem (though with IOMMU you don't even need that). 
-'dma-ranges' can be used to set the kernel's dma mask and ensure a 
-range below 0x10000000.
+> +- mediatek,larb: must contain the local arbiters in the current Socs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+> +- clocks : must contain the FDVT clock
+> +- clock-names: must contain FD_CLK_IMG_FD
+> +
+> +Example:
+> +	fd:fd@1502b000 {
+           ^ space needed
 
-Rob
+> +		compatible = "mediatek,mt8183-fd";
+> +		mediatek,larb = <&larb5>;
+> +		mediatek,scp = <&scp>;
+> +		iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
+> +			 <&iommu M4U_PORT_CAM_FDVT_WR>,
+> +			 <&iommu M4U_PORT_CAM_FDVT_RB>;
+> +		reg = <0 0x1502b000 0 0x1000>;
+> +		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&imgsys CLK_IMG_FDVT>;
+> +		clock-names = "FD_CLK_IMG_FD";
+> +	};
+> +
+> -- 
+> 2.18.0
+> 
