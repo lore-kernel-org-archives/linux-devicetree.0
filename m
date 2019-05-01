@@ -1,98 +1,95 @@
-Return-Path: <SRS0=vTZI=TE=c-mauderer.de=list@kernel.org>
-From: list@c-mauderer.de
-Subject: [PATCH 1/2] dt-bindings: leds: Add binding for ubnt-spi LED.
-Date: Sat,  4 May 2019 14:28:24 +0200
-Message-Id: <20190504122825.11883-1-list@c-mauderer.de>
+Return-Path: <SRS0=r956=TB=collins.com=adam.michaelis@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
+From: Adam Michaelis <adam.michaelis@collins.com>
+Date: Wed, 1 May 2019 14:17:59 -0500
+Message-ID: <CALMrGWVfM+PqijDDnj5m_hHZodf0AKCRu9VHvm9mBTB_R3+rjQ@mail.gmail.com>
+Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option
+Content-Type: multipart/alternative; boundary="000000000000c5b3a70587d8604f"
+To: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org
+Cc: Brandon Maier <brandon.maier@rockwellcollins.com>, Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Christian Mauderer <oss@c-mauderer.de>
+--000000000000c5b3a70587d8604f
+Content-Type: text/plain; charset="UTF-8"
 
-This patch adds the binding documentation for the LED controller found
-in Ubiquity airCube ISP devices.
+>From 7bf834dd49844a4e785924a9b0ead37cb9cf83c6 Mon Sep 17 00:00:00 2001
+From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Date: Thu, 25 Apr 2019 15:26:21 -0500
+Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option
 
-Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
+Adding optional parameter to the ad7949 to indicate that the part should
+be configured to include the configuration register value used when
+acquiring the current sample value.
+
+Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
 ---
+ Documentation/devicetree/bindings/iio/adc/ad7949.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-I tested the patches with a 4.14 and a 4.19 kernel on the current OpenWRT.
-Although I didn't get the kernel running due to file system problems they build
-fine with a 5.1-rc7.
+diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+index 14ee9a2cb2a5..cd3572828243 100644
+--- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
++++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+@@ -18,6 +18,8 @@ Optional properties:
+    7: External reference, temperature sensor disabled, buffer enabled
+  - vref-supply: The regulator supply for ADC reference voltage. Required
+  if external reference selected by 'adi,reference-select'.
++ - adi,cfg-readback: If defined, set bit in configuration register to
++ read-back the configuration used for the current sample value.
 
-I shortly described the protocol of the controller in a comment in the driver
-file in the second patch.
-
-Checkpatch gives the following warning for both patches:
-
-  WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-
-To be honest: I don't know what to do with it. Please excuse my ignorance here.
-It's the first driver that I want to add to the Linux kernel.
-
-Please point me to some documentation if I did miss some big points for
-submitting patches.
-
-
- .../bindings/leds/leds-ubnt-spi.txt           | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt b/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
-new file mode 100644
-index 000000000000..ab1478cdc139
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
-@@ -0,0 +1,49 @@
-+Binding for the controller based LED found in Ubiquity airCube ISP and most
-+likely some other Ubiquity devices.
+ Examples:
+ adc@0 {
+@@ -32,3 +34,10 @@ adc@0 {
+  reg = <0>;
+  adi,reference-select = <0>;
+ };
 +
-+The protocol of the controller is quite simple. Only one byte will be sent. The
-+value of the byte can be between the ubnt-spi,off_bright value and the
-+ubnt-spi,max_bright value.
-+
-+The driver maybe can be used for other devices with a similar protocol too.
-+
-+Required properties:
-+- compatible:		Should be "ubnt,spi-led".
-+- spi-max-frequency:	Should be <100000> for this device.
-+
-+Optional sub-node properties:
-+- ubnt-spi,off_bright:	The value that will be sent if the LED should be
-+			switched off. Default value is 0.
-+- ubnt-spi,max_bright:	Value for the maximum brightness. Default value for that
-+			is 63.
-+- label:		A label for the LED. If one is given, the LED will be
-+			named "ubnt-spi:<label>" or "ubnt-spi::" otherwise.
-+
-+Being a SPI device this driver should be a sub-node of a SPI controller. The
-+controller only supports one LED. For consistence with other controllers, the
-+LED is defined as a sub-node.
-+
-+Example for the airCube ISP (with SPI controller matching that device):
-+
-+led_spi {
-+	compatible = "spi-gpio";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	gpio-sck = <&gpio 3 GPIO_ACTIVE_HIGH>;
-+	gpio-mosi = <&gpio 2 GPIO_ACTIVE_HIGH>;
-+	cs-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
-+	num-chipselects = <1>;
-+
-+	led_ubnt@0 {
-+		compatible = "ubnt,spi-led";
-+		reg = <0>;
-+		spi-max-frequency = <100000>;
-+
-+		led {
-+			label = "system";
-+			/* keep the LED slightly on to show powered device */
-+			ubnt-spi,off_bright = /bits/ 8 <4>;
-+		};
-+	};
++adc@0 {
++ compatible = "adi,ad7949";
++ reg = <0>;
++ adi,reference-select = <1>;
++ adi,cfg-readback;
 +};
 -- 
-2.21.0
+1.9.1
+
+--000000000000c5b3a70587d8604f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div><div>From 7bf834dd49844a4e785924a9b0=
+ead37cb9cf83c6 Mon Sep 17 00:00:00 2001</div><div>From: Adam Michaelis &lt;=
+<a href=3D"mailto:adam.michaelis@rockwellcollins.com">adam.michaelis@rockwe=
+llcollins.com</a>&gt;</div><div>Date: Thu, 25 Apr 2019 15:26:21 -0500</div>=
+<div>Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option=
+</div><div><br></div><div>Adding optional parameter to the ad7949 to indica=
+te that the part should</div><div>be configured to include the configuratio=
+n register value used when</div><div>acquiring the current sample value.</d=
+iv><div><br></div><div>Signed-off-by: Adam Michaelis &lt;<a href=3D"mailto:=
+adam.michaelis@rockwellcollins.com">adam.michaelis@rockwellcollins.com</a>&=
+gt;</div><div>---</div><div>=C2=A0Documentation/devicetree/bindings/iio/adc=
+/ad7949.txt | 9 +++++++++</div><div>=C2=A01 file changed, 9 insertions(+)</=
+div><div><br></div><div>diff --git a/Documentation/devicetree/bindings/iio/=
+adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt</div>=
+<div>index 14ee9a2cb2a5..cd3572828243 100644</div><div>--- a/Documentation/=
+devicetree/bindings/iio/adc/ad7949.txt</div><div>+++ b/Documentation/device=
+tree/bindings/iio/adc/ad7949.txt</div><div>@@ -18,6 +18,8 @@ Optional prope=
+rties:</div><div>=C2=A0 =C2=A0 7: External reference, temperature sensor di=
+sabled, buffer enabled</div><div>=C2=A0 - vref-supply: The regulator supply=
+ for ADC reference voltage. Required</div><div>=C2=A0 if external reference=
+ selected by &#39;adi,reference-select&#39;.</div><div>+ - adi,cfg-readback=
+: If defined, set bit in configuration register to</div><div>+ read-back th=
+e configuration used for the current sample value.</div><div>=C2=A0</div><d=
+iv>=C2=A0Examples:</div><div>=C2=A0adc@0 {</div><div>@@ -32,3 +34,10 @@ adc=
+@0 {</div><div>=C2=A0<span style=3D"white-space:pre">	</span>reg =3D &lt;0&=
+gt;;</div><div>=C2=A0<span style=3D"white-space:pre">	</span>adi,reference-=
+select =3D &lt;0&gt;;</div><div>=C2=A0};</div><div>+</div><div>+adc@0 {</di=
+v><div>+<span style=3D"white-space:pre">	</span>compatible =3D &quot;adi,ad=
+7949&quot;;</div><div>+<span style=3D"white-space:pre">	</span>reg =3D &lt;=
+0&gt;;</div><div>+<span style=3D"white-space:pre">	</span>adi,reference-sel=
+ect =3D &lt;1&gt;;</div><div>+<span style=3D"white-space:pre">	</span>adi,c=
+fg-readback;</div><div>+};</div><div>--=C2=A0</div><div>1.9.1</div><div><br=
+></div></div></div></div>
+
+--000000000000c5b3a70587d8604f--
