@@ -1,42 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/6] dt-bindings: soc/fsl: qe: document new
- fsl,qe-snums  binding
-Date: Wed, 1 May 2019 16:00:48 -0500
-Message-ID: <20190501210048.GA20658@bogus>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH v2 1/5] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Date: Wed, 1 May 2019 16:52:34 -0500
+Message-ID: <20190501215234.GA31269@bogus>
+References: <20190419191730.9437-1-peron.clem@gmail.com>
+ <20190419191730.9437-2-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190501092841.9026-5-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190419191730.9437-2-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Cc: Chen-Yu Tsai <wens@csie.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 1 May 2019 09:29:08 +0000, Rasmus Villemoes wrote:
-> Reading table 4-30, and its footnotes, of the QUICC Engine Block
-> Reference Manual shows that the set of snum _values_ is not
-> necessarily just a function of the _number_ of snums, as given in the
-> fsl,qe-num-snums property.
+On Fri, 19 Apr 2019 21:17:26 +0200, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
+> Allwinner H6 has a SPDIF controller with an increase of the fifo
+> size and a sligher difference in memory mapping compare which
+> make it not compatible with the previous generation H3/A64.
 > 
-> As an alternative, to make it easier to add support for other variants
-> of the QUICC engine IP, this introduces a new binding fsl,qe-snums,
-> which automatically encodes both the number of snums and the actual
-> values to use.
-> 
-> For example, for the MPC8309, one would specify the property as
-> 
->                fsl,qe-snums = /bits/ 8 <
->                        0x88 0x89 0x98 0x99 0xa8 0xa9 0xb8 0xb9
->                        0xc8 0xc9 0xd8 0xd9 0xe8 0xe9>;
-> 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
->  Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
