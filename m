@@ -1,161 +1,79 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v8 00/14] Add support for TISCI Interrupt controller
- drivers
-Date: Wed, 1 May 2019 12:58:43 +0100
-Message-ID: <30f5c877-a4dc-8ad9-0ad0-c172a60dc853@arm.com>
-References: <20190430101230.21794-1-lokeshvutla@ti.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280 LCD
+ panel
+Date: Wed,  1 May 2019 17:44:47 +0530
+Message-ID: <20190501121448.3812-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430101230.21794-1-lokeshvutla@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/04/2019 11:12, Lokesh Vutla wrote:
-> TI AM65x SoC based on K3 architecture introduced support for Events
-> which are message based interrupts with minimal latency. These events
-> are not compatible with regular interrupts and are valid only through
-> an event transport lane. An Interrupt Aggregator(INTA) is introduced
-> to convert these events to interrupts. INTA can also group 64 events
-> into a single interrupt. Now the SoC has many peripherals and a large
-> number of event sources (time sync or DMA), the use of events is
-> completely dependent on a user's specific application, which drives a
-> need for maximum flexibility in which event sources are used in the
-> system. It is also completely up to software control as to how the
-> events are serviced.
-> 
-> Because of the huge flexibility there are certain standard peripherals
-> (like GPIO etc)where all interrupts cannot be directly corrected to host
-> interrupt controller. For this purpose, Interrupt Router(INTR) is
-> introduced in the SoC. INTR just does a classic interrupt redirection.
-> 
-> So the SoC has 3 types of interrupt controllers:
-> - GIC500
-> - Interrupt Router
-> - Interrupt Aggregator
-> 
-> Below is a diagrammatic view of how SoC integration of these interrupt
-> controllers:(https://pastebin.ubuntu.com/p/9ngV3jdGj2/)
-> 
-> Device Index-x               Device Index-y
->            |                         |
->            |                         |
->                       ....
->             \                       /
->              \                     /
->               \  (global events)  /
->           +---------------------------+   +---------+
->           |                           |   |         |
->           |             INTA          |   |  GPIO   |
->           |                           |   |         |
->           +---------------------------+   +---------+
->                          |   (vint)            |
->                          |                     |
->                         \|/                    |
->           +---------------------------+        |
->           |                           |<-------+
->           |           INTR            |
->           |                           |
->           +---------------------------+
->                          |
->                          |
->                         \|/ (gic irq)
->           +---------------------------+
->           |                           |
->           |             GIC           |
->           |                           |
->           +---------------------------+
-> 
-> While at it, TISCI abstracts the handling of all above IRQ routes where
-> interrupt sources are not directly connected to host interrupt controller.
-> That would be configuration of Interrupt Aggregator and Interrupt Router.
-> 
-> This series adds support for:
-> - TISCI commands needed for IRQ configuration
-> - Interrupt Router(INTR) driver.
-> - Interrupt Aggregator(INTA) driver.
-> - Interrupt Aggregator MSI bus layer.
-> 
-> Marc,
-> 	As discussed offline, the firmware changes are going to come within
-> 	a day or so. These changes are tested against local binary which is
-> 	bound to release.
-> 
-> Boot Log: https://pastebin.ubuntu.com/p/YwprMKXdg4/
-> 
-> Changes since v7:
-> - Rebased on top of latest master.
-> - Each patch has respective changes mentioned.
-> 
-> Grygorii Strashko (1):
->   firmware: ti_sci: Add support to get TISCI handle using of_phandle
-> 
-> Lokesh Vutla (12):
->   firmware: ti_sci: Add support for RM core ops
->   firmware: ti_sci: Add support for IRQ management
->   firmware: ti_sci: Add helper apis to manage resources
->   genirq: Introduce irq_chip_{request,release}_resource_parent() apis
->   gpio: thunderx: Use the default parent apis for
->     {request,release}_resources
->   dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
->   irqchip: ti-sci-intr: Add support for Interrupt Router driver
->   dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
->   irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
->   soc: ti: Add MSI domain bus support for Interrupt Aggregator
->   irqchip: ti-sci-inta: Add msi domain support
->   arm64: arch_k3: Enable interrupt controller drivers
-> 
-> Peter Ujfalusi (1):
->   firmware: ti_sci: Add RM mapping table for am654
-> 
->  .../bindings/arm/keystone/ti,sci.txt          |   3 +-
->  .../interrupt-controller/ti,sci-inta.txt      |  66 ++
->  .../interrupt-controller/ti,sci-intr.txt      |  82 +++
->  MAINTAINERS                                   |   6 +
->  arch/arm64/Kconfig.platforms                  |   5 +
->  drivers/firmware/ti_sci.c                     | 651 ++++++++++++++++++
->  drivers/firmware/ti_sci.h                     | 102 +++
->  drivers/gpio/gpio-thunderx.c                  |  16 +-
->  drivers/irqchip/Kconfig                       |  23 +
->  drivers/irqchip/Makefile                      |   2 +
->  drivers/irqchip/irq-ti-sci-inta.c             | 615 +++++++++++++++++
->  drivers/irqchip/irq-ti-sci-intr.c             | 275 ++++++++
->  drivers/soc/ti/Kconfig                        |   6 +
->  drivers/soc/ti/Makefile                       |   1 +
->  drivers/soc/ti/ti_sci_inta_msi.c              | 146 ++++
->  include/linux/irq.h                           |   2 +
->  include/linux/irqdomain.h                     |   1 +
->  include/linux/msi.h                           |  10 +
->  include/linux/soc/ti/ti_sci_inta_msi.h        |  23 +
->  include/linux/soc/ti/ti_sci_protocol.h        | 124 ++++
->  kernel/irq/chip.c                             |  27 +
->  21 files changed, 2173 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->  create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
->  create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
->  create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
->  create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
-
-Lokesh,
-
-Thanks for having respun this quickly.
-
-I've applied the first 13 patches to irqchip-next (after tidying up some
-of the commit messages). I've left the last patch for armsoc to take,
-unless you guys insist on me taking it.
-
-If nothing horrible appears in -next tomorrow, I'll send the 5.2 PR with
-this series.
-
-Hopefully we won't see more of this madness any time soon... :-/
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SEQ3MDJFIGxjZCBpcyBGcmllbmRseUVMRUMgZGV2ZWxvcGVkIGVEUCBMQ0QgcGFuZWwgd2l0aCA4
+MDB4MTI4MApyZXNvbHV0aW9uLiBJdCBoYXMgYnVpbHQgaW4gR29vZGl4LCBHVDkyNzEgY2FwdGl2
+ZSB0b3VjaHNjcmVlbgp3aXRoIGJhY2tsaWdodCBhZGp1c3RhYmxlIHZpYSBQV00uCgpBZGQgc3Vw
+cG9ydCBmb3IgaXQuCgpDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNv
+bT4KQ2M6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KQ2M6IERhdmlkIEFpcmxpZSA8
+YWlybGllZEBsaW51eC5pZT4KQ2M6IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4KQ2M6
+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVr
+aSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Ci0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvZnJp
+ZW5kbHlhcm0saGQ3MDJlLnR4dCAgICAgIHwgMjkgKysrKysrKysrKysrKysrKysrKwogZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMjYgKysrKysrKysrKysr
+KysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNTUgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2ZyaWVu
+ZGx5YXJtLGhkNzAyZS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9mcmllbmRseWFybSxoZDcwMmUudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZnJpZW5kbHlhcm0saGQ3MDJl
+LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjY3MzQ5ZDdmNzli
+ZQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL2ZyaWVuZGx5YXJtLGhkNzAyZS50eHQKQEAgLTAsMCArMSwyOSBAQAorRnJp
+ZW5kbHlFTEVDIEhENzAyRSA4MDB4MTI4MCBMQ0QgcGFuZWwKKworSEQ3MDJFIGxjZCBpcyBGcmll
+bmRseUVMRUMgZGV2ZWxvcGVkIGVEUCBMQ0QgcGFuZWwgd2l0aCA4MDB4MTI4MAorcmVzb2x1dGlv
+bi4gSXQgaGFzIGJ1aWx0IGluIEdvb2RpeCwgR1Q5MjcxIGNhcHRpdmUgdG91Y2hzY3JlZW4KK3dp
+dGggYmFja2xpZ2h0IGFkanVzdGFibGUgdmlhIFBXTS4KKworUmVxdWlyZWQgcHJvcGVydGllczoK
+Ky0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmcmllbmRseWFybSxoZDcwMmUiCistIHBvd2VyLXN1
+cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCisKK09wdGlvbmFs
+IHByb3BlcnRpZXM6CistIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmlj
+ZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworT3B0aW9uYWwgbm9kZXM6CistIFZpZGVvIHBvcnQg
+Zm9yIExDRCBwYW5lbCBpbnB1dC4KKworRXhhbXBsZToKKworCXBhbmVsIHsKKwkJY29tcGF0aWJs
+ZSA9ImZyaWVuZGx5YXJtLGhkNzAyZSI7CisJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwkJ
+cG93ZXItc3VwcGx5ID0gPCZ2Y2MzdjNfc3lzPjsKKworCQlwb3J0IHsKKwkJCXBhbmVsX2luX2Vk
+cDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9wYW5lbD47CisJ
+CQl9OworCQl9OworCX07CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
+c2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggOWU4
+MjE4ZjZhM2YyLi45ZGIzYzBjNjVlZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
+LmMKQEAgLTExODQsNiArMTE4NCwyOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
+Zm94bGlua19mbDUwMHd2cjAwX2EwdCA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRf
+UkdCODg4XzFYMjQsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUg
+ZnJpZW5kbHlhcm1faGQ3MDJlX21vZGUgPSB7CisJLmNsb2NrCQk9IDY3MTg1LAorCS5oZGlzcGxh
+eQk9IDgwMCwKKwkuaHN5bmNfc3RhcnQJPSA4MDAgKyAyMCwKKwkuaHN5bmNfZW5kCT0gODAwICsg
+MjAgKyAyNCwKKwkuaHRvdGFsCQk9IDgwMCArIDIwICsgMjQgKyAyMCwKKwkudmRpc3BsYXkJPSAx
+MjgwLAorCS52c3luY19zdGFydAk9IDEyODAgKyA0LAorCS52c3luY19lbmQJPSAxMjgwICsgNCAr
+IDgsCisJLnZ0b3RhbAkJPSAxMjgwICsgNCArIDggKyA0LAorCS52cmVmcmVzaAk9IDYwLAorCS5m
+bGFncyAJCT0gRFJNX01PREVfRkxBR19OVlNZTkMgfCBEUk1fTU9ERV9GTEFHX05IU1lOQywKK307
+CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBmcmllbmRseWFybV9oZDcwMmUgPSB7
+CisJLm1vZGVzID0gJmZyaWVuZGx5YXJtX2hkNzAyZV9tb2RlLAorCS5udW1fbW9kZXMgPSAxLAor
+CS5zaXplID0geworCQkud2lkdGgJPSA5NCwKKwkJLmhlaWdodAk9IDE1MSwKKwl9LAorfTsKKwog
+c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGdpYW50cGx1c19ncGc0ODI3Mzlx
+czVfbW9kZSA9IHsKIAkuY2xvY2sgPSA5MDAwLAogCS5oZGlzcGxheSA9IDQ4MCwKQEAgLTI2MzQs
+NiArMjY1Nyw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29m
+X21hdGNoW10gPSB7CiAJfSwgewogCQkuY29tcGF0aWJsZSA9ICJlZHQsZXRtMDcwMGcwZWRoNiIs
+CiAJCS5kYXRhID0gJmVkdF9ldG0wNzAwZzBiZGg2LAorCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAi
+ZnJpZW5kbHlhcm0saGQ3MDJlIiwKKwkJLmRhdGEgPSAmZnJpZW5kbHlhcm1faGQ3MDJlLAogCX0s
+IHsKIAkJLmNvbXBhdGlibGUgPSAiZm94bGluayxmbDUwMHd2cjAwLWEwdCIsCiAJCS5kYXRhID0g
+JmZveGxpbmtfZmw1MDB3dnIwMF9hMHQsCi0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
