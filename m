@@ -1,35 +1,27 @@
-Return-Path: <SRS0=QtQs=TH=geanix.com=sean@kernel.org>
-From: Sean Nyekjaer <sean@geanix.com>
-Subject: [PATCH 2/2] dt-bindings: can: mcp251x: add mcp25625 support
-Date: Tue,  7 May 2019 11:34:37 +0200
-Message-Id: <20190507093437.26025-2-sean@geanix.com>
-In-Reply-To: <20190507093437.26025-1-sean@geanix.com>
-References: <20190507093437.26025-1-sean@geanix.com>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 1 May 2019 15:23:53 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: fsl-imx-esdhc: add imx7ulp
+  compatible string
+Message-ID: <20190501202353.GA30853@bogus>
+References: <20190429090310.25484-1-haibo.chen@nxp.com>
+ <20190429090310.25484-2-haibo.chen@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, mkl@pengutronix.de
-Cc: Sean Nyekjaer <sean@geanix.com>, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429090310.25484-2-haibo.chen@nxp.com>
+To: BOUGH CHEN <haibo.chen@nxp.com>
+Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Fully compatible with mcp2515, the mcp25625 have
-integrated transceiver.
+On Mon, 29 Apr 2019 08:55:32 +0000, BOUGH CHEN wrote:
+> Add imx7ulp compatible string.
+> 
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
----
- Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-index 188c8bd4eb67..5a0111d4de58 100644
---- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-@@ -4,6 +4,7 @@ Required properties:
-  - compatible: Should be one of the following:
-    - "microchip,mcp2510" for MCP2510.
-    - "microchip,mcp2515" for MCP2515.
-+   - "microchip,mcp25625" for MCP25625.
-  - reg: SPI chip select.
-  - clocks: The clock feeding the CAN controller.
-  - interrupts: Should contain IRQ line for the CAN controller.
--- 
-2.21.0
+Reviewed-by: Rob Herring <robh@kernel.org>
