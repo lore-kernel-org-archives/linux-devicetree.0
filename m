@@ -1,52 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: doc: Reflect new NVMEM
- of_get_mac_address behaviour
-Date: Wed, 1 May 2019 15:22:00 -0500
-Message-ID: <20190501202200.GB15495@bogus>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-3-git-send-email-ynezz@true.cz>
- <20190428165326.GI23059@lunn.ch>
+Subject: Re: [RFC V2 01/11] dt-bindings: soc: Add dvfsrc driver bindings
+Date: Wed, 1 May 2019 15:25:04 -0500
+Message-ID: <20190501202504.GA32615@bogus>
+References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
+ <1556614265-12745-2-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190428165326.GI23059@lunn.ch>
+In-Reply-To: <1556614265-12745-2-git-send-email-henryc.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@g>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 06:53:26PM +0200, Andrew Lunn wrote:
-> On Sun, Apr 28, 2019 at 02:53:20PM +0200, Petr Štetiar wrote:
-> > As of_get_mac_address now supports NVMEM under the hood, we need to update
-> > the bindings documentation with the new nvmem-cell* properties, which would
-> > mean copy&pasting a lot of redundant information to every binding
-> > documentation currently referencing some of the MAC address properties.
-> > 
-> > So I've just removed all the references to the optional MAC address
-> > properties and replaced them with the reference to the net/ethernet.txt
-> > file.  While at it, I've also removed other optional Ethernet properties.
+On Tue, 30 Apr 2019 16:50:55 +0800, Henry Chen wrote:
+> Document the binding for enabling dvfsrc on MediaTek SoC.
 > 
-> Hi Petr
+> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> ---
+>  .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 23 ++++++++++++++++++++++
+>  include/dt-bindings/soc/mtk,dvfsrc.h               | 14 +++++++++++++
+>  2 files changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+>  create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
 > 
-> I think each individual binding needs to give a hint if
-> of_get_mac_address() is used, and hence if these optional properties
-> are respected. The same is true for other optional properties. I don't
-> want to have to look at the driver to know which optional properties
-> are implemented, the binding should tell me. What the optional
-> properties mean, and which order they are used in can then be defined
-> in ethernet.txt.
-> 
-> So i would suggests something like:
-> 
-> The MAC address will be determined using the optional properties
-> defined in ethernet.txt.
-> 
-> And leave all the other optional parameters in the bindings.
 
-Yes. Generally we need to know which properties from a common pool of 
-properties apply to a specific binding. Also there are typically 
-additional constraints for a specific binding.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
