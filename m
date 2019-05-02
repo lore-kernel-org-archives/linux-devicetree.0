@@ -1,15 +1,16 @@
 From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: Re: [PATCH v2 5/6] soc/fsl/qe: qe.c: support fsl,qe-snums property
-Date: Thu, 2 May 2019 06:52:45 +0200
-Message-ID: <53c8e642-5efa-c476-92b7-a70d5598b217@c-s.fr>
+Subject: Re: [PATCH v2 6/6] soc/fsl/qe: qe.c: fold qe_get_num_of_snums into
+ qe_snums_init
+Date: Thu, 2 May 2019 06:54:07 +0200
+Message-ID: <5457d33f-b691-6406-138d-0fc633c1d24c@c-s.fr>
 References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
  <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-6-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501092841.9026-6-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
 Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
@@ -19,62 +20,99 @@ List-Id: devicetree@vger.kernel.org
 
 
 Le 01/05/2019 à 11:29, Rasmus Villemoes a écrit :
-> Add driver support for the newly introduced fsl,qe-snums property.
+> The comment "No QE ever has fewer than 28 SNUMs" is false; e.g. the
+> MPC8309 has 14. The code path returning -EINVAL is also a recipe for
+> instant disaster, since the caller (qe_snums_init) uncritically
+> assigns the return value to the unsigned qe_num_of_snum, and would
+> thus proceed to attempt to copy 4GB from snum_init_46[] to the snum[]
+> array.
 > 
-> Conveniently, of_property_read_variable_u8_array does exactly what we
-> need: If the property fsl,qe-snums is found (and has an allowed size),
-> the array of values get copied to snums, and the return value is the
-> number of snums - we cannot assign directly to num_of_snums, since we
-> need to check whether the return value is negative.
+> So fold the handling of the legacy fsl,qe-num-snums into
+> qe_snums_init, and make sure we do not end up using the snum_init_46
+> array in cases other than the two where we know it makes sense.
 > 
 > Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
 Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 > ---
->   drivers/soc/fsl/qe/qe.c | 16 ++++++++++++++--
->   1 file changed, 14 insertions(+), 2 deletions(-)
+>   drivers/soc/fsl/qe/qe.c | 46 ++++++++++++++---------------------------
+>   1 file changed, 16 insertions(+), 30 deletions(-)
 > 
 > diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-> index 0fb8b59f61ad..325d689cbf5c 100644
+> index 325d689cbf5c..276d7d78ebfc 100644
 > --- a/drivers/soc/fsl/qe/qe.c
 > +++ b/drivers/soc/fsl/qe/qe.c
-> @@ -283,7 +283,6 @@ EXPORT_SYMBOL(qe_clock_source);
->    */
->   static void qe_snums_init(void)
->   {
-> -	int i;
->   	static const u8 snum_init_76[] = {
->   		0x04, 0x05, 0x0C, 0x0D, 0x14, 0x15, 0x1C, 0x1D,
->   		0x24, 0x25, 0x2C, 0x2D, 0x34, 0x35, 0x88, 0x89,
-> @@ -304,7 +303,21 @@ static void qe_snums_init(void)
->   		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
->   		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
->   	};
-> +	struct device_node *qe;
->   	const u8 *snum_init;
-> +	int i;
-> +
-> +	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
-> +	qe = qe_get_device_node();
-> +	if (qe) {
-> +		i = of_property_read_variable_u8_array(qe, "fsl,qe-snums",
-> +						       snums, 1, QE_NUM_OF_SNUM);
+> @@ -308,24 +308,33 @@ static void qe_snums_init(void)
+>   	int i;
+>   
+>   	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
+> +	qe_num_of_snum = 28; /* The default number of snum for threads is 28 */
+>   	qe = qe_get_device_node();
+>   	if (qe) {
+>   		i = of_property_read_variable_u8_array(qe, "fsl,qe-snums",
+>   						       snums, 1, QE_NUM_OF_SNUM);
+> -		of_node_put(qe);
+>   		if (i > 0) {
+> +			of_node_put(qe);
+>   			qe_num_of_snum = i;
+>   			return;
+>   		}
+> +		/*
+> +		 * Fall back to legacy binding of using the value of
+> +		 * fsl,qe-num-snums to choose one of the static arrays
+> +		 * above.
+> +		 */
+> +		of_property_read_u32(qe, "fsl,qe-num-snums", &qe_num_of_snum);
 > +		of_node_put(qe);
-> +		if (i > 0) {
-> +			qe_num_of_snum = i;
-> +			return;
-> +		}
-> +	}
+>   	}
 >   
->   	qe_num_of_snum = qe_get_num_of_snums();
->   
-> @@ -313,7 +326,6 @@ static void qe_snums_init(void)
->   	else
+> -	qe_num_of_snum = qe_get_num_of_snums();
+> -
+> -	if (qe_num_of_snum == 76)
+> +	if (qe_num_of_snum == 76) {
+>   		snum_init = snum_init_76;
+> -	else
+> +	} else if (qe_num_of_snum == 28 || qe_num_of_snum == 46) {
 >   		snum_init = snum_init_46;
->   
-> -	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
+> -
+> +	} else {
+> +		pr_err("QE: unsupported value of fsl,qe-num-snums: %u\n", qe_num_of_snum);
+> +		return;
+> +	}
 >   	memcpy(snums, snum_init, qe_num_of_snum);
 >   }
+>   
+> @@ -641,30 +650,7 @@ EXPORT_SYMBOL(qe_get_num_of_risc);
+>   
+>   unsigned int qe_get_num_of_snums(void)
+>   {
+> -	struct device_node *qe;
+> -	int size;
+> -	unsigned int num_of_snums;
+> -	const u32 *prop;
+> -
+> -	num_of_snums = 28; /* The default number of snum for threads is 28 */
+> -	qe = qe_get_device_node();
+> -	if (!qe)
+> -		return num_of_snums;
+> -
+> -	prop = of_get_property(qe, "fsl,qe-num-snums", &size);
+> -	if (prop && size == sizeof(*prop)) {
+> -		num_of_snums = *prop;
+> -		if ((num_of_snums < 28) || (num_of_snums > QE_NUM_OF_SNUM)) {
+> -			/* No QE ever has fewer than 28 SNUMs */
+> -			pr_err("QE: number of snum is invalid\n");
+> -			of_node_put(qe);
+> -			return -EINVAL;
+> -		}
+> -	}
+> -
+> -	of_node_put(qe);
+> -
+> -	return num_of_snums;
+> +	return qe_num_of_snum;
+>   }
+>   EXPORT_SYMBOL(qe_get_num_of_snums);
 >   
 > 
