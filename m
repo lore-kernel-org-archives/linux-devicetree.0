@@ -1,43 +1,65 @@
-From: Faiz Abbas <a0230074@ti.com>
-Subject: Re: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage
- switching for SD card
-Date: Thu, 2 May 2019 20:00:14 +0530
-Message-ID: <50559611-a501-4331-c88b-5d05f6e756e9@ti.com>
-References: <20190502084748.22518-1-faiz_abbas@ti.com>
- <20190502142016.GO8007@atomide.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/9 RESEND 2] mtd: partitions: Add AFS partitions DT bindings
+Date: Thu,  2 May 2019 16:30:27 +0200
+Message-ID: <20190502143034.16781-3-linus.walleij@linaro.org>
+References: <20190502143034.16781-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502142016.GO8007@atomide.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, ulf.hansson@linaro.org, adrian.hunter@intel.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190502143034.16781-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+This adds device tree bindings for ARM Firmware Suite
+flash partitioning used in NOR flashes on ARM reference
+designs.
 
-On 02/05/19 7:50 PM, Tony Lindgren wrote:
-> * Faiz Abbas <faiz_abbas@ti.com> [190502 01:48]:
->> If UHS speed modes are enabled, a compatible SD card switches down to
->> 1.8V during enumeration. If after this a software reboot/crash takes
->> place and on-chip ROM tries to enumerate the SD card, the difference in
->> IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
->>
->> The fix for this is to have support for power cycling the card in
->> hardware (with a PORz/soft-reset line causing a power cycle of the
->> card). Since am571x-, am572x- and am574x-idk don't have this
->> capability, disable voltage switching for these boards.
->>
->> The major effect of this is that the maximum supported speed
->> mode is now high speed(50 MHz) down from SDR104(200 MHz).
-> 
-> This sounds a bit urgent, does it also need a stable tag or is
-> it safe to apply against any earlier kernels?
-> 
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ .../mtd/partitions/arm,arm-firmware-suite.txt   | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/partitions/arm,arm-firmware-suite.txt
 
-This should be good to apply on any previous releases.
+diff --git a/Documentation/devicetree/bindings/mtd/partitions/arm,arm-firmware-suite.txt b/Documentation/devicetree/bindings/mtd/partitions/arm,arm-firmware-suite.txt
+new file mode 100644
+index 000000000000..d5c5616f6db5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/partitions/arm,arm-firmware-suite.txt
+@@ -0,0 +1,17 @@
++ARM AFS - ARM Firmware Suite Partitions
++=======================================
++
++The ARM Firmware Suite is a flash partitioning system found on the
++ARM reference designs: Integrator AP, Integrator CP, Versatile AB,
++Versatile PB, the RealView family, Versatile Express and Juno.
++
++Required properties:
++- compatible : (required) must be "arm,arm-firmware-suite"
++
++Example:
++
++flash@0 {
++	partitions {
++		compatible = "arm,arm-firmware-suite";
++	};
++};
+-- 
+2.20.1
 
-Thanks,
-Faiz
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
