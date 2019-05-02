@@ -1,129 +1,106 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 2/4] drivers: devfreq: events: extend events by type
- of counted data
-Date: Thu, 2 May 2019 11:07:43 +0200
-Message-ID: <4cd7b7a3-7458-2166-a784-1a94830f5507@partner.samsung.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134821eucas1p2461a27e28387ff2b87c149f09582d2a0@eucas1p2.samsung.com>
-        <1555681688-19643-3-git-send-email-l.luba@partner.samsung.com>
-        <3557d507-0463-89de-4025-fbeaaef78bed@samsung.com>
-        <adb6e86a-880e-f9b7-76b2-777a531895d2@partner.samsung.com>
-        <be9dfa71-b6fd-ebe3-e8be-a7ea28765225@samsung.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache
+ Controller
+Date: Thu, 2 May 2019 10:10:44 +0100
+Message-ID: <20190502091044.GD12498@e107155-lin>
+References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
+ <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
+ <20190425101318.GA8469@e107155-lin>
+ <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
+ <20190426093358.GA28309@e107155-lin>
+ <CAJ2_jOEoD=Njp+L+H=jG59mA-j9SnwzyNmz7ECogWmbvei_f5Q@mail.gmail.com>
+ <20190502004130.GA20802@bogus>
+ <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <be9dfa71-b6fd-ebe3-e8be-a7ea28765225@samsung.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 02, 2019 at 10:50:12AM +0530, Yash Shah wrote:
+> On Thu, May 2, 2019 at 6:11 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Apr 30, 2019 at 09:50:45AM +0530, Yash Shah wrote:
+> > > On Fri, Apr 26, 2019 at 3:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > >
+> > > > On Fri, Apr 26, 2019 at 11:20:17AM +0530, Yash Shah wrote:
+> > > > > On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > > >
+> > > > > > On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
+> > > > > > > Add device tree bindings for SiFive FU540 L2 cache controller driver
+> > > > > > >
+> > > > > > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > > > > > > ---
+> > > > > > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
+> > > > > > >  1 file changed, 53 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+> > > > > > > new file mode 100644
+> > > > > > > index 0000000..15132e2
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+> > > > > > > @@ -0,0 +1,53 @@
+> > > > > > > +SiFive L2 Cache Controller
+> > > > > > > +--------------------------
+> > > > > > > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
+> > > > > > > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
+> > > > > > > +acts as directory-based coherency manager.
+> > > > > > > +
+> > > > > > > +Required Properties:
+> > > > > > > +--------------------
+> > > > > > > +- compatible: Should be "sifive,fu540-c000-ccache"
+> > > > > > > +
+> > > > > > > +- cache-block-size: Specifies the block size in bytes of the cache
+> > > > > > > +
+> > > > > > > +- cache-level: Should be set to 2 for a level 2 cache
+> > > > > > > +
+> > > > > > > +- cache-sets: Specifies the number of associativity sets of the cache
+> > > > > > > +
+> > > > > > > +- cache-size: Specifies the size in bytes of the cache
+> > > > > > > +
+> > > > > > > +- cache-unified: Specifies the cache is a unified cache
+> > > > > > > +
+> > > > > > > +- interrupt-parent: Must be core interrupt controller
+> > > > > > > +
+> > > > > > > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
+> > > > > > > +
+> > > > > > > +- reg: Physical base address and size of L2 cache controller registers map
+> > > > > > > +
+> > > > > > > +- reg-names: Should be "control"
+> > > > > > > +
+> > > > > >
+> > > > > > It would be good if you mark the properties that are present in DT
+> > > > > > specification and those that are added for sifive,fu540-c000-ccache
+> > > > >
+> > > > > I believe there isn't any property which is added explicitly for
+> > > > > sifive,fu540-c000-ccache.
+> > > > >
+> > > >
+> > > > reg and interrupts are generally optional for normal cache and may be
+> > > > required for cache controller like this. DT specification[1] covers
+> > > > only caches and not cache controllers.
+> > >
+> > > Are you suggesting something like this:
+> > >
+> > > Required Properties:
+> > > --------------------
+> > > Standard Properties:
+> >
+> > I don't think we need this separation.
+>
+> Ok. Won't include this "Standard/Non-standard properties" separation
+> in the next revision of this patch.
+>
 
+Sorry if I created confusion. I just wanted a note saying all the properties
+in ePAPR/DeviceTree specification applies for this platform. That would
+help me check if the standard cacheinfo infrastruction works as is or not.
 
-On 5/2/19 3:25 AM, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> On 19. 5. 1. 오전 6:19, Lukasz Luba wrote:
->> Hi Chanwoo,
->>
->> On 4/30/19 9:34 AM, Chanwoo Choi wrote:
->>> Hi Lukasz,
->>>
->>> On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
->>>> This patch adds posibility to choose what type of data should be counted
->>>> by the PPMU counter. Now the type comes from DT where the event has been
->>>> defined. When there is no 'event-data-type' the default value is used,
->>>> which is 'read data in bytes'.
->>>> It is needed when you want to know not only read+write data bytes but
->>>> i.e. only write data in byte, or number of read requests, etc.
->>>>
->>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>>> ---
->>>>    drivers/devfreq/event/exynos-ppmu.c | 61 +++++++++++++++++++++++++------------
->>>>    include/linux/devfreq-event.h       |  6 ++++
->>>>    2 files changed, 48 insertions(+), 19 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
->>>> index c61de0b..073bf2c 100644
->>>> --- a/drivers/devfreq/event/exynos-ppmu.c
->>>> +++ b/drivers/devfreq/event/exynos-ppmu.c
->>>> @@ -154,9 +154,9 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
->>>>    	if (ret < 0)
->>>>    		return ret;
->>>>    
->>>> -	/* Set the event of Read/Write data count  */
->>>> +	/* Set the event of proper data type monitoring */
->>>>    	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id),
->>>> -				PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT);
->>>> +			   edev->desc->data_type);
->>>>    	if (ret < 0)
->>>>    		return ret;
->>>>    
->>>> @@ -368,23 +368,11 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
->>>>    	if (ret < 0)
->>>>    		return ret;
->>>>    
->>>> -	/* Set the event of Read/Write data count  */
->>>> -	switch (id) {
->>>> -	case PPMU_PMNCNT0:
->>>> -	case PPMU_PMNCNT1:
->>>> -	case PPMU_PMNCNT2:
->>>> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
->>>> -				PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT);
->>>> -		if (ret < 0)
->>>> -			return ret;
->>>> -		break;
->>>> -	case PPMU_PMNCNT3:
->>>> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
->>>> -				PPMU_V2_EVT3_RW_DATA_CNT);
->>>> -		if (ret < 0)
->>>> -			return ret;
->>>> -		break;
->>>> -	}
->>>> +	/* Set the event of proper data type monitoring */
->>>> +	ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
->>>> +			   edev->desc->data_type);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>>    
->>>>    	/* Reset cycle counter/performance counter and enable PPMU */
->>>>    	ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
->>>> @@ -508,6 +496,7 @@ static int of_get_devfreq_events(struct device_node *np,
->>>>    	struct device *dev = info->dev;
->>>>    	struct device_node *events_np, *node;
->>>>    	int i, j, count;
->>>> +	int ret;
->>>>    
->>>>    	events_np = of_get_child_by_name(np, "events");
->>>>    	if (!events_np) {
->>>> @@ -544,6 +533,40 @@ static int of_get_devfreq_events(struct device_node *np,
->>>>    		desc[j].driver_data = info;
->>>>    
->>>>    		of_property_read_string(node, "event-name", &desc[j].name);
->>>> +		ret = of_property_read_u32(node, "event-data-type",
->>>> +					   &desc[j].data_type);
->>>> +		if (ret) {
->>>> +			/* Set the event of proper data type counting.
->>>> +			 * Check if the data type has been defined in DT,
->>>> +			 * use default if not.
->>>> +			 */
->>>> +			if (of_device_is_compatible(np,
->>>> +					"samsung,exynos-ppmu-v2")) {
->>>
->>> It is not proper to compare the compatible string again
->>> in the device driver. Instead, you can define the ppmu device type
->>> as following and then use 'struct of_device_id' in order to
->>> identify the device type.
->> I have been thinking about modifying the code in similar fashion as you
->> did. Good to see similar approach. I'll take your changes with a small
->> additional code, which sets the 'info->ppmu_type' before the for
->> loop, as an additional patch. Would it be OK if I add you as an author
->> and add Sign-off-by: Chanwoo Choi <cw00.choi@samsung.com>?
-> 
-> If you agree, just add the my signed-off-by on second line.
-OK
-
+--
 Regards,
-Lukasz
+Sudeep
