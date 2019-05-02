@@ -1,38 +1,58 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: qcom: Add QCS404 PCIe controller support
-Date: Thu, 2 May 2019 17:29:37 +0530
-Message-ID: <20190502115937.GO3845@vkoul-mobl.Dlink>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
- <20190502001955.10575-4-bjorn.andersson@linaro.org>
+From: Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 2/5] dt-bindings: sound: Add MT8516 AFE PCM bindings
+Date: Thu,  2 May 2019 14:10:38 +0200
+Message-ID: <20190502121041.8045-3-fparent@baylibre.com>
+References: <20190502121041.8045-1-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190502001955.10575-4-bjorn.andersson@linaro.org>
+In-Reply-To: <20190502121041.8045-1-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com, kaichieh.chuang@mediatek.com, shunli.wang@mediatek.com
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Fabien Parent <fparent@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01-05-19, 17:19, Bjorn Andersson wrote:
-> The QCS404 platform contains a PCIe controller of version 2.4.0 and a
-> Qualcomm PCIe2 PHY. The driver already supports version 2.4.0, for the
-> IPQ4019, but this support touches clocks and resets related to the PHY
-> as well, and there's no upstream driver for the PHY.
-> 
-> On QCS404 we must initialize the PHY, so a separate PHY driver is
-> implemented to take care of this and the controller driver is updated to
-> not require the PHY related resources. This is done by relying on the
-> fact that operations in both the clock and reset framework are nops when
-> passed NULL, so we can isolate this change to only the get_resource
-> function.
-> 
-> For QCS404 we also need to enable the AHB (iface) clock, in order to
-> access the register space of the controller, but as this is not part of
-> the IPQ4019 DT binding this is only added for new users of the 2.4.0
-> controller.
+Add documentation for the bindings of the MT8516 AFE PCM driver.
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
+ .../bindings/sound/mt8516-afe-pcm.txt         | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
 
+diff --git a/Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
+new file mode 100644
+index 000000000000..c5fb3c55a7f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
+@@ -0,0 +1,28 @@
++Mediatek AFE PCM controller for mt8516
++
++Required properties:
++- compatible:  "mediatek,mt8516-audio"
++- interrupts: should contain AFE interrupt
++- clocks: Must contain an entry for each entry in clock-names
++- clock-names: should have these clock names:
++		"top_pdn_audio",
++		"aud_dac_clk",
++		"aud_dac_predis_clk",
++		"aud_adc_clk";
++
++Example:
++
++
++	afe: mt8516-afe-pcm@11140000  {
++		compatible = "mediatek,mt8516-audio";
++		reg = <0 0x11140000 0 0x1000>;
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_AUDIO>,
++			 <&audiotop CLK_AUD_DAC>,
++			 <&audiotop CLK_AUD_DAC_PREDIS>,
++			 <&audiotop CLK_AUD_ADC>;
++		clock-names = "top_pdn_audio",
++			      "aud_dac_clk",
++			      "aud_dac_predis_clk",
++			      "aud_adc_clk";
++	};
 -- 
-~Vinod
+2.20.1
