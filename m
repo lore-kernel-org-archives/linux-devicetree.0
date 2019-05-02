@@ -1,183 +1,57 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V2 3/3] watchdog: stm32: add dynamic prescaler support
-Date: Thu, 2 May 2019 16:08:46 +0200
-Message-ID: <1556806126-15890-4-git-send-email-ludovic.Barre@st.com>
-References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage
+ switching for SD card
+Date: Thu, 2 May 2019 07:20:16 -0700
+Message-ID: <20190502142016.GO8007@atomide.com>
+References: <20190502084748.22518-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+Content-Disposition: inline
+In-Reply-To: <20190502084748.22518-1-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, ulf.hansson@linaro.org, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+* Faiz Abbas <faiz_abbas@ti.com> [190502 01:48]:
+> If UHS speed modes are enabled, a compatible SD card switches down to
+> 1.8V during enumeration. If after this a software reboot/crash takes
+> place and on-chip ROM tries to enumerate the SD card, the difference in
+> IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+> 
+> The fix for this is to have support for power cycling the card in
+> hardware (with a PORz/soft-reset line causing a power cycle of the
+> card). Since am571x-, am572x- and am574x-idk don't have this
+> capability, disable voltage switching for these boards.
+> 
+> The major effect of this is that the maximum supported speed
+> mode is now high speed(50 MHz) down from SDR104(200 MHz).
 
-This patch allows to define the max prescaler by compatible.
-To set a large range of timeout, the prescaler should be set
-dynamically (from the timeout request) to improve the resolution
-in order to have a timeout close to the expected value.
+This sounds a bit urgent, does it also need a stable tag or is
+it safe to apply against any earlier kernels?
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/watchdog/stm32_iwdg.c | 76 ++++++++++++++++++++++++-------------------
- 1 file changed, 42 insertions(+), 34 deletions(-)
+Regards,
 
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index f19a6d4..0c765d4 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -34,18 +34,12 @@
- #define KR_KEY_EWA	0x5555 /* write access enable */
- #define KR_KEY_DWA	0x0000 /* write access disable */
- 
--/* IWDG_PR register bit values */
--#define PR_4		0x00 /* prescaler set to 4 */
--#define PR_8		0x01 /* prescaler set to 8 */
--#define PR_16		0x02 /* prescaler set to 16 */
--#define PR_32		0x03 /* prescaler set to 32 */
--#define PR_64		0x04 /* prescaler set to 64 */
--#define PR_128		0x05 /* prescaler set to 128 */
--#define PR_256		0x06 /* prescaler set to 256 */
-+#define PR_SHIFT	2
-+#define PR_MIN		BIT(PR_SHIFT)
- 
- /* IWDG_RLR register values */
--#define RLR_MIN		0x07C /* min value supported by reload register */
--#define RLR_MAX		0xFFF /* max value supported by reload register */
-+#define RLR_MIN		0x2		/* min value recommended */
-+#define RLR_MAX		GENMASK(11, 0)	/* max value of reload register */
- 
- /* IWDG_SR register bit mask */
- #define FLAG_PVU	BIT(0) /* Watchdog prescaler value update */
-@@ -55,15 +49,28 @@
- #define TIMEOUT_US	100000
- #define SLEEP_US	1000
- 
--#define HAS_PCLK	true
-+struct stm32_iwdg_data {
-+	bool has_pclk;
-+	u32 max_prescaler;
-+};
-+
-+static const struct stm32_iwdg_data stm32_iwdg_data = {
-+	.has_pclk = false,
-+	.max_prescaler = 256,
-+};
-+
-+static const struct stm32_iwdg_data stm32mp1_iwdg_data = {
-+	.has_pclk = true,
-+	.max_prescaler = 1024,
-+};
- 
- struct stm32_iwdg {
- 	struct watchdog_device	wdd;
-+	const struct stm32_iwdg_data *data;
- 	void __iomem		*regs;
- 	struct clk		*clk_lsi;
- 	struct clk		*clk_pclk;
- 	unsigned int		rate;
--	bool			has_pclk;
- };
- 
- static inline u32 reg_read(void __iomem *base, u32 reg)
-@@ -79,26 +86,28 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
- static int stm32_iwdg_start(struct watchdog_device *wdd)
- {
- 	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
--	u32 val = FLAG_PVU | FLAG_RVU;
--	u32 reload;
-+	u32 presc, iwdg_rlr, iwdg_pr, iwdg_sr;
- 
- 	dev_dbg(wdd->parent, "%s\n", __func__);
- 
--	/* prescaler fixed to 256 */
--	reload = clamp_t(unsigned int, ((wdd->timeout * wdt->rate) / 256) - 1,
--			 RLR_MIN, RLR_MAX);
-+	presc = DIV_ROUND_UP(wdd->timeout * wdt->rate, RLR_MAX + 1);
-+
-+	/* The prescaler is align on power of 2 and start at 2 ^ PR_SHIFT. */
-+	presc = roundup_pow_of_two(presc);
-+	iwdg_pr = presc <= 1 << PR_SHIFT ? 0 : ilog2(presc) - PR_SHIFT;
-+	iwdg_rlr = ((wdd->timeout * wdt->rate) / presc) - 1;
- 
-+	/* enable watchdog */
-+	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
- 	/* enable write access */
- 	reg_write(wdt->regs, IWDG_KR, KR_KEY_EWA);
--
- 	/* set prescaler & reload registers */
--	reg_write(wdt->regs, IWDG_PR, PR_256); /* prescaler fix to 256 */
--	reg_write(wdt->regs, IWDG_RLR, reload);
--	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-+	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
-+	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
- 
- 	/* wait for the registers to be updated (max 100ms) */
--	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
--				       !(val & (FLAG_PVU | FLAG_RVU)),
-+	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
-+				       !(iwdg_sr & (FLAG_PVU | FLAG_RVU)),
- 				       SLEEP_US, TIMEOUT_US)) {
- 		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
- 		return -EIO;
-@@ -155,7 +164,7 @@ static int stm32_iwdg_clk_init(struct platform_device *pdev,
- 	}
- 
- 	/* optional peripheral clock */
--	if (wdt->has_pclk) {
-+	if (wdt->data->has_pclk) {
- 		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
- 		if (IS_ERR(wdt->clk_pclk)) {
- 			dev_err(&pdev->dev, "Unable to get pclk clock\n");
-@@ -196,8 +205,8 @@ static const struct watchdog_ops stm32_iwdg_ops = {
- };
- 
- static const struct of_device_id stm32_iwdg_of_match[] = {
--	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
--	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
-+	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_data },
-+	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_data },
- 	{ /* end node */ }
- };
- MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-@@ -205,20 +214,17 @@ MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
- static int stm32_iwdg_probe(struct platform_device *pdev)
- {
- 	struct watchdog_device *wdd;
--	const struct of_device_id *match;
- 	struct stm32_iwdg *wdt;
- 	struct resource *res;
- 	int ret;
- 
--	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
--	if (!match)
--		return -ENODEV;
--
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
- 	if (!wdt)
- 		return -ENOMEM;
- 
--	wdt->has_pclk = match->data;
-+	wdt->data = of_device_get_match_data(&pdev->dev);
-+	if (!wdt->data)
-+		return -ENODEV;
- 
- 	/* This is the timer base. */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -236,8 +242,10 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	wdd = &wdt->wdd;
- 	wdd->info = &stm32_iwdg_info;
- 	wdd->ops = &stm32_iwdg_ops;
--	wdd->min_timeout = ((RLR_MIN + 1) * 256) / wdt->rate;
--	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * 256 * 1000) / wdt->rate;
-+	wdd->min_timeout = max_t(unsigned int, 1,
-+				 (((RLR_MIN + 1) * PR_MIN) / wdt->rate));
-+	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
-+				    1000) / wdt->rate;
- 	wdd->parent = &pdev->dev;
- 
- 	watchdog_set_drvdata(wdd, wdt);
--- 
-2.7.4
+Tony
+
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  arch/arm/boot/dts/am57xx-idk-common.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+> index f7bd26458915..42e433da79ec 100644
+> --- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
+> +++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+> @@ -420,6 +420,7 @@
+>  	vqmmc-supply = <&ldo1_reg>;
+>  	bus-width = <4>;
+>  	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
+> +	no-1-8-v;
+>  };
+>  
+>  &mmc2 {
+> -- 
+> 2.19.2
+> 
