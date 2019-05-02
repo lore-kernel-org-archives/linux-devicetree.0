@@ -1,90 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: net: wiznet: add w5x00 support
-Date: Thu, 2 May 2019 16:09:57 -0500
-Message-ID: <20190502210957.GA12202@bogus>
-References: <20190430185215.21685-1-nsaenzjulienne@suse.de>
- <20190430185215.21685-2-nsaenzjulienne@suse.de>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
+ KUnit tests
+Date: Thu, 2 May 2019 14:16:23 -0700
+Message-ID: <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-13-brendanhiggins@google.com>
+ <20190502110220.GD12416@kroah.com>
+ <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190430185215.21685-2-nsaenzjulienne@suse.de>
+In-Reply-To: <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah@kernel.org, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@gmail.com>, Dan Carpenter <dan.carpenter@oracle.com>, Dan Williams <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 08:52:14PM +0200, Nicolas Saenz Julienne wrote:
-> Add bindings for Wiznet's w5x00 series of SPI interfaced Ethernet chips.
+On 5/2/19 11:07 AM, Brendan Higgins wrote:
+> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>
+>> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
+>>> From: Felix Guo <felixguoxiuping@gmail.com>
+>>>
+>>> The ultimate goal is to create minimal isolated test binaries; in the
+>>> meantime we are using UML to provide the infrastructure to run tests, so
+>>> define an abstract way to configure and run tests that allow us to
+>>> change the context in which tests are built without affecting the user.
+>>> This also makes pretty and dynamic error reporting, and a lot of other
+>>> nice features easier.
+>>>
+>>> kunit_config.py:
+>>>   - parse .config and Kconfig files.
+>>>
+>>> kunit_kernel.py: provides helper functions to:
+>>>   - configure the kernel using kunitconfig.
+>>>   - build the kernel with the appropriate configuration.
+>>>   - provide function to invoke the kernel and stream the output back.
+>>>
+>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>
+>> Ah, here's probably my answer to my previous logging format question,
+>> right?  What's the chance that these wrappers output stuff in a standard
+>> format that test-framework-tools can already parse?  :)
 > 
-> Based on the bindings for microchip,enc28j60.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  .../devicetree/bindings/net/wiznet,w5x00.txt  | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wiznet,w5x00.txt b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-> new file mode 100644
-> index 000000000000..2cbedefb1607
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-> @@ -0,0 +1,48 @@
-> +* Wiznet w5x00
-> +
-> +This is a standalone 10/100 MBit Ethernet controller with SPI interface.
-> +
-> +For each device connected to a SPI bus, define a child node within
-> +the SPI master node.
-> +
-> +Required properties:
-> +- compatible: Should be "wiznet,w5100", "wiznet,w5200" or "wiznet,w5500"
+> It should be pretty easy to do. I had some patches that pack up the
+> results into a serialized format for a presubmit service; it should be
+> pretty straightforward to take the same logic and just change the
+> output format.
 
-One per line please.
+When examining and trying out the previous versions of the patch I found
+the wrappers useful to provide information about how to control and use
+the tests, but I had no interest in using the scripts as they do not
+fit in with my personal environment and workflow.
 
-> +- reg: Specify the SPI chip select the chip is wired to.
-> +- interrupts: Specify the interrupt index within the interrupt controller (referred
-> +              to above in interrupt-parent) and interrupt type. w5x00 natively
-> +              generates falling edge interrupts, however, additional board logic
-> +              might invert the signal.
-> +- pinctrl-names: List of assigned state names, see pinctrl binding documentation.
-> +- pinctrl-0: List of phandles to configure the GPIO pin used as interrupt line,
-> +             see also generic and your platform specific pinctrl binding
-> +             documentation.
-> +
-> +Optional properties:
-> +- spi-max-frequency: Maximum frequency of the SPI bus when accessing the w5500.
-> +  According to the w5500 datasheet, the chip allows a maximum of 80 MHz, however,
-> +  board designs may need to limit this value.
-> +- local-mac-address: See ethernet.txt in the same directory.
-> +
-> +
-> +Example (for Raspberry Pi with pin control stuff for GPIO irq):
-> +
-> +&spi {
-> +	eth1: w5500@0 {
+In the previous versions of the patch, these helper scripts are optional,
+which is good for my use case.  If the helper scripts are required to
+get the data into the proper format then the scripts are not quite so
+optional, they become the expected environment.  I think the proper
+format should exist without the helper scripts.
 
-ethernet@0
-
-> +		compatible = "wiznet,w5500";
-> +		reg = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&eth1_pins>;
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +		spi-max-frequency = <30000000>;
-> +	};
-> +};
-> +
-> +&gpio {
-> +	eth1_pins: eth1_pins {
-> +		brcm,pins = <25>;
-> +		brcm,function = <0>; /* in */
-> +		brcm,pull = <0>; /* none */
-> +	};
-> +};
-> +
-> -- 
-> 2.21.0
-> 
+-Frank
