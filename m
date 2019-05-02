@@ -1,150 +1,53 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add
- Exynos5422 DMC device description
-Date: Thu, 2 May 2019 10:35:22 +0900
-Message-ID: <ed07af9b-2d17-23c2-2f3a-dc832570480d@samsung.com>
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
-        <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
-        <babae08b-3ea6-30f4-6a46-85dea0eacd86@samsung.com>
-        <32dfc887-5f67-3d61-08c9-0397d6852811@partner.samsung.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+Date: Thu, 2 May 2019 04:39:44 +0300
+Message-ID: <7b6867f4-54b2-f3b5-2b4e-87ea3000fa44@gmail.com>
+References: <20190414202009.31268-1-digetx@gmail.com>
+ <20190414202009.31268-3-digetx@gmail.com> <20190429220542.GA17924@bogus>
+ <137c766e-66f6-828a-5c3b-f526d66d37bd@gmail.com>
+ <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
+ <27d24f4e-cf4c-b2d1-140a-5dcef021fa40@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <32dfc887-5f67-3d61-08c9-0397d6852811@partner.samsung.com>
+In-Reply-To: <27d24f4e-cf4c-b2d1-140a-5dcef021fa40@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
-
-On 19. 5. 1. 오전 5:30, Lukasz Luba wrote:
-> Hi Chanwoo,
-> 
-> On 4/30/19 6:46 AM, Chanwoo Choi wrote:
->> On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
->>> The patch adds description for DT binding for a new Exynos5422 Dynamic
->>> Memory Controller device.
+02.05.2019 3:52, Dmitry Osipenko пишет:
+> 02.05.2019 3:17, Rob Herring пишет:
+>> On Wed, May 1, 2019 at 7:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
 >>>
->>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>> ---
->>>   .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
->>>   1 file changed, 73 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>>> 30.04.2019 1:05, Rob Herring пишет:
+>>>> On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
+>>>>> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+>>>>> The binding is based on the Tegra124 EMC binding since hardware is
+>>>>> similar, although there are couple significant differences.
+>>>>
+>>>> My comments on Tegra124 binding apply here.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->>> new file mode 100644
->>> index 0000000..133b3cc
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->>> @@ -0,0 +1,73 @@
->>> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
->>> +
->>> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
->>> +memory chips are connected. The driver is to monitor the controller in runtime
->>> +and switch frequency and voltage. To monitor the usage of the controller in
->>> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
->>> +is able to measure the current load of the memory.
->>> +When 'userspace' governor is used for the driver, an application is able to
->>> +switch the DMC and memory frequency.
->>> +
->>> +Required properties for DMC device for Exynos5422:
->>> +- compatible: Should be "samsung,exynos5422-bus".
+>>> The common timing definition doesn't fully match the definition that is
+>>> used by Tegra's Memory Controller, thus the DQS (data strobe) timing
+>>> parameter is comprised of multiple sub-parameters that describe how to
+>>> generate the strobe in hardware. There are also more additional
+>>> parameters that are specific to Tegra and they are individually
+>>> characterized for each memory model and clock rate. Hence the common
+>>> timing definition isn't usable.
 >>
->> As I already mentioned on many times, it is not fixed.
->> You have to fix it as following:
->> - exynos5422-bus -> exynos5422-dmc
-> I don't know how I missed it on my list. My apologies.
->>
->>> +- clock-names : the name of clock used by the bus, "bus".
->>
->> The below examples doesn't contain the 'bus' clock name.
-> True. Thank you for pointing this out. I will it.
+>> I don't understand. Every PC in the world can work with any DIMM
+>> (within a given generation) just with SPD data. Why is that not
+>> sufficient here?
 > 
-> Regards,
-> Lukasz
->>
->>> +- clocks : phandles for clock specified in "clock-names" property.
->>> +- devfreq-events : phandles for PPMU devices connected to this DMC.
->>> +- vdd-supply : phandle for voltage regulator which is connected.
->>> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
->>> +- operating-points-v2 : phandle for OPPs described in v2 definition.
->>> +- device-handle : phandle of the connected DRAM memory device. For more
->>> +	information please refer to Documentation
->>> +- devfreq-events : phandles of the PPMU events used by the controller.
->>> +
->>> +Example:
->>> +
->>> +	ppmu_dmc0_0: ppmu@10d00000 {
->>> +		compatible = "samsung,exynos-ppmu";
->>> +		reg = <0x10d00000 0x2000>;
->>> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
->>> +		clock-names = "ppmu";
->>> +		status = "okay";
->>> +		events {
->>> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
->>> +				event-name = "ppmu-event3-dmc0_0";
->>> +			};
->>> +		};
->>> +	};
->>> +
->>> +	dmc: memory-controller@10c20000 {
->>> +		compatible = "samsung,exynos5422-dmc";
->>> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
->>> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
+> Because this is not a standard PC, but a custom embedded hardware that
+> is simpler and also doesn't fully follow the standards in some cases.
 
-As I discussed about the register region of clock subsystem
-with Sylwester on patch[1], I expected that you used the regmap
-interface to control the register region of clock subsystem.
+Even if there is a way to derive at least some of required parameters
+from the common timing, I don't have information about how to do it and
+there is pretty much no chance to get it into public.
 
-But, this dt-binding documents doesn't include any information
-about regmap interface.
-
-[1] https://lkml.org/lkml/2019/3/6/878
-
->>> +		clocks = 	<&clock CLK_FOUT_SPLL>,
->>> +				<&clock CLK_MOUT_SCLK_SPLL>,
->>> +				<&clock CLK_FF_DOUT_SPLL2>,
->>> +				<&clock CLK_FOUT_BPLL>,
->>> +				<&clock CLK_MOUT_BPLL>,
->>> +				<&clock CLK_SCLK_BPLL>,
->>> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
->>> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
->>> +				<&clock CLK_MOUT_MCLK_CDREX>,
->>> +				<&clock CLK_DOUT_CLK2X_PHY0>,
->>> +				<&clock CLK_CLKM_PHY0>,
->>> +				<&clock CLK_CLKM_PHY1>;
->>> +		clock-names =	"fout_spll",
->>> +				"mout_sclk_spll",
->>> +				"ff_dout_spll2",
->>> +				"fout_bpll",
->>> +				"mout_bpll",
->>> +				"sclk_bpll",
->>> +				"mout_mx_mspll_ccore",
->>> +				"mout_mx_mspll_ccore_phy",
->>> +				"mout_mclk_cdrex",
->>> +				"dout_clk2x_phy0",
->>> +				"clkm_phy0",
->>> +			        "clkm_phy1";
->>> +		status = "okay";
->>> +		operating-points-v2 = <&dmc_opp_table>;
->>> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
->>> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
->>> +		operating-points-v2 = <&dmc_opp_table>;
->>> +		device-handle = <&samsung_K3QF2F20DB>;
->>> +		vdd-supply = <&buck1_reg>;
->>> +	};
->>>
->>
->>
-> 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Rob, please let me know if you're okay with this binding.
