@@ -1,55 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/3] spi: SPI bus multiplexer
-Date: Thu, 2 May 2019 11:45:24 +0900
-Message-ID: <20190502024524.GV14916@sirena.org.uk>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
- <20190412082913.GA6909@sirena.org.uk>
- <d91ab2261a1f4069bc48e090bd4ec702@svr-chch-ex1.atlnz.lc>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Date: Thu, 2 May 2019 09:31:16 +0530
+Message-ID: <CAJ2_jOFu-yCZV_A4B48_fLq7h7UA6LUWhgpxr0uuh7vhW9Q8pA@mail.gmail.com>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+ <mvmbm1zueya.fsf@suse.de> <mvmpnqcsn6u.fsf@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="worL9B4ITIAQZ1FS"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d91ab2261a1f4069bc48e090bd4ec702@svr-chch-ex1.atlnz.lc>
+In-Reply-To: <mvmpnqcsn6u.fsf@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tthayer@opensource.altera.com" <tthayer@opensource.altera.com>
+To: Andreas Schwab <schwab@suse.de>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andreas,
 
---worL9B4ITIAQZ1FS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 27, 2019 at 2:34 PM Andreas Schwab <schwab@suse.de> wrote:
+>
+> I have now found out that the ledtrig modules don't load automatically.
+> I would have expected that the linux,default-trigger entries would cause
+> the load of the corresponding ledtrig modules.
+>
+> But there is another problem, that the leds are on by default.
+> Shouldn't they be off by default?
 
-On Sun, Apr 28, 2019 at 10:28:16PM +0000, Chris Packham wrote:
+The PWM default output state is high (When duty cycle is 0), So I
+guess leds will remain on by default.
 
-> One other problem that I encounter is the interaction between cs-gpio=20
-> and SPI_MASTER_GPIO_SS. Having cs-gpio automatically sets SPI_CS_HIGH=20
-> which has the undesired side-effect that now my real chip select is=20
-> inverted. I actually wonder if this change breaks commit 8eee6b9dd30d=20
-> ("spi: Add Flag to Enable Slave Select with GPIO Chip Select.") since=20
-> now there is an extra inversion on the CS enable.
+Are you able to test the PWM driver at your end? or you still facing
+some issues?
 
-That sounds like a framework bug which should just be fixed - we
-shouldn't be disrupting users of real chip selects when using a GPIO
-chip select.  Depending on the hardware we might need a chip select
-assigned that isn't connected to anything for use while the GPIOs are
-doing the real work but otherwise we shouldn't be breaking things.
-
---worL9B4ITIAQZ1FS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzKWcQACgkQJNaLcl1U
-h9A8mgf+NUGeTId/vCKU5fgsyKAKgLFNNREzR640DJheAW8jSR+tFvdWIcS+Xzui
-wHoMW2SYbEQ9jOoDzhPQKNU9PM4q03Pz3NlbFRkHub9Mz76XQgLzV89K/FvBfOkf
-xhh7repFxc81GLG9gTot2SHBOrsHIPz5LkpXK7FgRQJFiemZEdrDpDn6hmZuiK+v
-kcU4mVpd7rza0fXLRoOcTCSnwjUU7+leF6zx4VsEqSWZ5Sl8oUy2LlvRqfziRKSg
-uvCeyZAn7dYif/78KcjBs5fex/Eb3ac49T85SFAo1GhHPuyQtYJfe2ZxEtz4qrVB
-czstXt8yaIV2diO5m+pXnum3mzstaQ==
-=ou6s
------END PGP SIGNATURE-----
-
---worL9B4ITIAQZ1FS--
+>
+> Andreas.
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+> "And now for something completely different."
