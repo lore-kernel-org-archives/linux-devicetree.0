@@ -1,62 +1,43 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
-Date: Thu, 2 May 2019 12:28:46 -0300
-Message-ID: <CAOMZO5D=BHWgOieLfz4bxL8v4bDmNOutUUnYSzW89KNtYn=Z9g@mail.gmail.com>
-References: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on NXP's
+ i.MX8 SoCs
+Date: Thu, 2 May 2019 17:36:25 +0200
+Message-ID: <4ce62b78-64ac-ca84-733f-bc4d10a67c54@suse.de>
+References: <cover.1556633413.git.agx@sigxcpu.org>
+ <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>, Rui Miguel Silva <rui.silva@linaro.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>, Robert Chiras <robert.chiras@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.c>
 List-Id: devicetree@vger.kernel.org
 
-[Adding Rui]
+Am 30.04.19 um 16:40 schrieb Guido Günther:
+> This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
+> this is an IP core it will likely be found on others in the future. So
+> instead of adding this to the nwl host driver make it a generic PHY
+> driver.
+> 
+> The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
+> added once the necessary system controller bits are in via
+> mixel_dphy_devdata.
+> 
+> Co-authored-by: Robert Chiras <robert.chiras@nxp.com>
 
-On Tue, Apr 30, 2019 at 4:47 AM S=C3=A9bastien Szymanski
-<sebastien.szymanski@armadeus.com> wrote:
->
-> Add csi node for i.MX6UL SoC.
->
-> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
->
-> ---
->  arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dts=
-i
-> index 62ed30c781ed..af322bc58333 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -951,6 +951,17 @@
->                                 };
->                         };
->
-> +                       csi: csi@21c4000 {
-> +                               compatible =3D "fsl,imx6ul-csi", "fsl,imx=
-7-csi";
-> +                               reg =3D <0x021c4000 0x4000>;
-> +                               interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_=
-HIGH>;
-> +                               clocks =3D <&clks IMX6UL_CLK_DUMMY>,
-> +                                        <&clks IMX6UL_CLK_CSI>,
-> +                                        <&clks IMX6UL_CLK_DUMMY>;
-> +                               clock-names =3D "axi", "mclk", "dcic";
+This should be Co-developed-by and is lacking a Signed-off-by from that
+author. Robert, can you please provide one?
 
-Also, I understand you followed
-Documentation/devicetree/bindings/media/imx7-csi.txt and passed these
-three clocks, but looking at the i.MX7D and i.MX6UL/ULL Reference
-Manuals, I don't find the  the descriptions for the "axi" and "dcic"
-CSI clocks.
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
 
-It looks like that only "mclk" is what we really need here.
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Thanks,
+Andreas
 
-Should we change the bindings and the imx7-csi driver to not request
-"axi" and "dcic" clocks?
-
-Rui, what do you think? If you agree I can send a fix for this.
-
-Thanks
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
