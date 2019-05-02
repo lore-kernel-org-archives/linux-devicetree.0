@@ -1,54 +1,36 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v6 1/3] backlight: lm3630a: return 0 on success in
- update_status functions
-Date: Thu, 2 May 2019 11:46:44 +0100
-Message-ID: <20190502104644.e3eth2cdebuz2mpk@holly.lan>
-References: <20190424092505.6578-1-masneyb@onstation.org>
- <20190424092505.6578-2-masneyb@onstation.org>
- <864c1ddc-1008-0041-1559-e491ca0186ef@linaro.org>
- <20190502104239.GA24563@basecamp>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Thu, 2 May 2019 12:50:53 +0200
+Message-ID: <20190502105053.GA12416@kroah.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190502104239.GA24563@basecamp>
+In-Reply-To: <20190501230126.229218-1-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca, Daniel Thompson <daniel@redfelineninja.org.uk>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: frowand.list@gmail.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at, rientjes@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2019 at 06:42:39AM -0400, Brian Masney wrote:
-> On Thu, May 02, 2019 at 11:07:51AM +0100, Daniel Thompson wrote:
-> > On 24/04/2019 10:25, Brian Masney wrote:
-> > > lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-> > > both return the brightness value if the brightness was successfully
-> > > updated. Writing to these attributes via sysfs would cause a 'Bad
-> > > address' error to be returned. These functions should return 0 on
-> > > success, so let's change it to correct that error.
-> > > 
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > Hi Brian, sorry for the delay. For some reason your mails are being dumped
-> > before they reach me so I only discovered these patches when I paid proper
-> > attention to the replies and fetched them from patchwork.
-> > 
-> > Hi Lee, is the same thing happening for you? ;-)
+On Wed, May 01, 2019 at 04:01:09PM -0700, Brendan Higgins wrote:
+> ## TLDR
 > 
-> Huh, that's odd. I haven't ran into that issue when working with people
-> from Linaro in other subsystems.
-> 
-> As a sanity check, I used 'git send-email' to send this patch to
-> check-auth@verifier.port25.com and it verified that I still have SPF,
-> DKIM, reverse DNS, etc. all setup properly on this domain.
-> 
-> hotmail.com addresses are the only ones I've had issues with in the
-> past, but I doubt you're forwarding your email there. :)
+> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
+> 5.2.
 
-No... and strangely enough your recent e-mail sailed through just fine.
-Let's wait and see what is happening for Lee (which I suspect may not be
-until well into next week).
+That might be rushing it, normally trees are already closed now for
+5.2-rc1 if 5.1-final comes out this Sunday.
 
+> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
+> we would merge through your tree when the time came? Am I remembering
+> correctly?
 
-Daniel.
+No objection from me.
+
+Let me go review the latest round of patches now.
+
+thanks,
+
+greg k-h
