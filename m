@@ -1,47 +1,45 @@
-Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 01/28] soc/tegra: pmc: Export tegra_powergate_power_on()
-Date: Thu, 16 May 2019 11:22:40 +0530
-Message-ID: <20190516055307.25737-2-mmaddireddy@nvidia.com>
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=kpDl=TC=gmail.com=jonas.gorski@kernel.org>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: [PATCH 0/3] MIPS: BMIPS: add support for gated clock controller
+Date: Thu,  2 May 2019 14:26:54 +0200
+Message-Id: <20190502122657.15577-1-jonas.gorski@gmail.com>
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-tegra_powergate_sequence_power_up() powers up partition and also enables
-clock & reset. However, if a controller like PCIe have multiple clocks
-& resets and they need to be enabled in a sequence, driver must use
-standalone function tegra_powergate_power_on() to power up partition.
+This patchset adds support for the gated clock controller found on most
+MIPS based Broadcom BCM63XX SoCs.
 
-Export tegra_powergate_power_on() to allow Tegra controller drivers to
-unpower gate partition independent to clock & reset.
+The MIPS based BCM63XX SoCs have very little in common with the ARM
+based ones, so a separate driver is necessary.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4: No change
+It's a simple register based controller, with one bit per clock, active
+high.
 
-V3: No change
+Since BCM63XX/MIPS runs in big endian mode, the driver depends on the
+series "clk: make register endianness a run-time property", or more
+specifically on patch 3, "clk: gate: add explicit big endian support".
 
-V2: No change
+Based on the clk-next branch.
 
- drivers/soc/tegra/pmc.c | 1 +
- 1 file changed, 1 insertion(+)
+Jonas Gorski (3):
+  devicetree: document the BCM63XX gated clock bindings
+  clk: add BCM63XX gated clock controller driver
+  MIPS: BMIPS: add clock controller nodes
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 0c5f79528e5f..cb3de81348bd 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
- 
- 	return tegra_powergate_set(pmc, id, true);
- }
-+EXPORT_SYMBOL(tegra_powergate_power_on);
- 
- /**
-  * tegra_powergate_power_off() - power off partition
+ .../bindings/clock/brcm,bcm63xx-clocks.txt         |  22 ++
+ arch/mips/boot/dts/brcm/bcm3368.dtsi               |  12 +-
+ arch/mips/boot/dts/brcm/bcm63268.dtsi              |  12 +-
+ arch/mips/boot/dts/brcm/bcm6328.dtsi               |   6 +
+ arch/mips/boot/dts/brcm/bcm6358.dtsi               |  12 +-
+ arch/mips/boot/dts/brcm/bcm6362.dtsi               |  12 +-
+ arch/mips/boot/dts/brcm/bcm6368.dtsi               |  12 +-
+ drivers/clk/bcm/Kconfig                            |   8 +
+ drivers/clk/bcm/Makefile                           |   1 +
+ drivers/clk/bcm/clk-bcm63xx-gate.c                 | 246 +++++++++++++++++++++
+ 10 files changed, 328 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm63xx-clocks.txt
+ create mode 100644 drivers/clk/bcm/clk-bcm63xx-gate.c
+
 -- 
-2.17.1
+2.13.2
