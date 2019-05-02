@@ -1,42 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events description
-Date: Thu, 2 May 2019 15:24:20 -0500
-Message-ID: <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
- <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
- <20190430223629.GA22317@bogus> <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 04/17] kunit: test: add kunit_stream a std::stream like
+ logger
+Date: Thu, 2 May 2019 13:25:54 -0700
+Message-ID: <CAFd5g47ssM7RQZxQsUJ86UigcF-Uz+Kwv2yvKN_gZK-TtW89bA@mail.gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-5-brendanhiggins@google.com>
+ <20190502110008.GC12416@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190502110008.GC12416@kroah.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Petr Mladek <pmladek@suse.com>, linux-doc@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-kselftest@vger.kernel.org, shuah@kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org, "Bird,
+ Timothy" <Tim.Bird@sony.com>, linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, Julia Lawall <julia.lawall@lip6.fr>, Dan Williams <dan.j.williams@intel.com>, kunit-dev@googlegroups.
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2019 at 3:52 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Rob,
->
-> On 5/1/19 12:36 AM, Rob Herring wrote:
-> > On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
-> >> Extend the documenation by events description with new 'event-data-type'
-> >> field. Add example how the event might be defined in DT.
-> >
-> > Why do we need event types in DT? We don't do this for other h/w such as
-> > ARM PMU.
-> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
-> arch/arm/kernel/perf_event_v7.c
-> and are seen from perf. They are different type and for different
-> purpose. The Ecynos PPMU events are not seen in perf, they are
-> for internal monitoring and must not be reset by other actors like perf.
-> They are used by the 'bus drivers' to made some heuristics and tune the
-> internal settings, like frequency.
->
-> Chanwoo has written PPMU driver which relies on DT definition.
-> The DT events are used by other DT devices by phandle.
-
-How is that done? I don't see anything in the binding for that.
-
-Rob
+T24gVGh1LCBNYXkgMiwgMjAxOSBhdCA0OjAwIEFNIEdyZWcgS0ggPGdyZWdraEBsaW51eGZvdW5k
+YXRpb24ub3JnPiB3cm90ZToKPgo+IE9uIFdlZCwgTWF5IDAxLCAyMDE5IGF0IDA0OjAxOjEzUE0g
+LTA3MDAsIEJyZW5kYW4gSGlnZ2lucyB3cm90ZToKPiA+IEEgbG90IG9mIHRoZSBleHBlY3RhdGlv
+biBhbmQgYXNzZXJ0aW9uIGluZnJhc3RydWN0dXJlIHByaW50cyBvdXQgZmFpcmx5Cj4gPiBjb21w
+bGljYXRlZCB0ZXN0IGZhaWx1cmUgbWVzc2FnZXMsIHNvIGFkZCBhIEMrKyBzdHlsZSBsb2cgbGli
+cmFyeSBmb3IKPiA+IGZvciBsb2dnaW5nIHRlc3QgcmVzdWx0cy4KPgo+IElkZWFsbHkgd2Ugd291
+bGQgYWx3YXlzIHVzZSBhIHN0YW5kYXJkIGxvZ2dpbmcgZm9ybWF0LCBsaWtlIHRoZQo+IGtzZWxm
+dGVzdCB0ZXN0cyBhbGwgYXJlIGFpbWluZyB0byBkby4gIFRoYXQgd2F5IHRoZSBvdXRwdXQgY2Fu
+IGJlIGVhc2lseQo+IHBhcnNlZCBieSB0b29scyB0byBzZWUgaWYgdGhlIHRlc3RzIHN1Y2NlZWQv
+ZmFpbCBlYXNpbHkuCj4KPiBBbnkgY2hhbmNlIG9mIGhhdmluZyB0aGlzIGxvZ2dpbmcgZnJhbWV3
+b3JrIGVuZm9yY2luZyB0aGF0IGZvcm1hdCBhcwo+IHdlbGw/CgpJIGFncmVlIHdpdGggeW91ciBj
+b21tZW50IG9uIHRoZSBsYXRlciBwYXRjaCB0aGF0IHdlIHNob3VsZCBoYW5kbGUKdGhpcyBhdCB0
+aGUgd3JhcHBlciBzY3JpcHQgbGF5ZXIgKEtVbml0IHRvb2wpLgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
