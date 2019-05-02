@@ -1,91 +1,156 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-Date: Thu, 2 May 2019 20:55:36 +0200
-Message-ID: <CAMuHMdV+ee3fEHvt2dv14s1nYK1JH3yi0RnJ3Xqtarn9MrZ7jA@mail.gmail.com>
-References: <20190430121254.3737-1-geert+renesas@glider.be>
- <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
- <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
- <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
- <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com>
- <CAMuHMdVWG4LDAAht-6Rendt8L96vW+VEJK4tGnOCMJ38pRDybA@mail.gmail.com> <CAL_JsqJ34-0T_XjmRaXc3YTp4OHhptUaO3F+yygAy6L0iaNhdg@mail.gmail.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+Date: Thu, 2 May 2019 20:56:18 +0200
+Message-ID: <b2992f0e-3b46-66a6-f1e4-326fb4b0501f@partner.samsung.com>
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
+        <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+        <babae08b-3ea6-30f4-6a46-85dea0eacd86@samsung.com>
+        <32dfc887-5f67-3d61-08c9-0397d6852811@partner.samsung.com>
+        <ed07af9b-2d17-23c2-2f3a-dc832570480d@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ34-0T_XjmRaXc3YTp4OHhptUaO3F+yygAy6L0iaNhdg@mail.gmail.com>
+In-Reply-To: <ed07af9b-2d17-23c2-2f3a-dc832570480d@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Chanwoo,
 
-On Thu, May 2, 2019 at 6:51 PM Rob Herring <robh+dt@kernel.org> wrote:
-> On Thu, May 2, 2019 at 5:01 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, May 1, 2019 at 9:38 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > On Wed, May 1, 2019 at 2:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > > 'interrupt-map' would avoid that problem I think.
-> > > >
-> > > > "interrupt-map" seems to be meant for translation on a bus?
-> > > > What to do with the child and parent unit addresses fields?
-> > > > The parent unit address size depends on the #address-cells of the parent
-> > > > interrupt-controller (i.e. GIC, so it's zero).
-> > > > But the child unit address size depends on the #address-cells of the bus node
-> > > > on which the child is located, so that's a (non-zero) bus #address-cells
-> > > > (from the root node), not an interrupt-controller #address-cells.
-> > >
-> > > The #address-cells is always retrieved from the interrupt-parent node
-> > > (or its parent). The interrupt-parent can implicitly be the child's
-> > > parent, but that is rarely used in modern systems.
-> >
-> > That's not what Devicetree Specification, Release v0.2 says:
-> >
-> >     child unit address The unit address of the child node being mapped.
-> >     The number of 32-bit cells required to specify this is described by
-> >     the #address-cells property of the bus node on which the child is
-> >     located.
-> >
-> > 2.4.4 Interrupt Mapping Example (for PCI) says the bus node is the PCI
-> > bridge, with #address-cells = <3>.
->
-> PCI is more inline with the spec wording, but systems evolved where
-> the interrupt hierarchy doesn't match the bus hierarchy.
+On 5/2/19 3:35 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> On 19. 5. 1. 오전 5:30, Lukasz Luba wrote:
+>> Hi Chanwoo,
+>>
+>> On 4/30/19 6:46 AM, Chanwoo Choi wrote:
+>>> On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
+>>>> The patch adds description for DT binding for a new Exynos5422 Dynamic
+>>>> Memory Controller device.
+>>>>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
+>>>>    1 file changed, 73 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>>>> new file mode 100644
+>>>> index 0000000..133b3cc
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>>>> @@ -0,0 +1,73 @@
+>>>> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+>>>> +
+>>>> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+>>>> +memory chips are connected. The driver is to monitor the controller in runtime
+>>>> +and switch frequency and voltage. To monitor the usage of the controller in
+>>>> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+>>>> +is able to measure the current load of the memory.
+>>>> +When 'userspace' governor is used for the driver, an application is able to
+>>>> +switch the DMC and memory frequency.
+>>>> +
+>>>> +Required properties for DMC device for Exynos5422:
+>>>> +- compatible: Should be "samsung,exynos5422-bus".
+>>>
+>>> As I already mentioned on many times, it is not fixed.
+>>> You have to fix it as following:
+>>> - exynos5422-bus -> exynos5422-dmc
+>> I don't know how I missed it on my list. My apologies.
+>>>
+>>>> +- clock-names : the name of clock used by the bus, "bus".
+>>>
+>>> The below examples doesn't contain the 'bus' clock name.
+>> True. Thank you for pointing this out. I will it.
+>>
+>> Regards,
+>> Lukasz
+>>>
+>>>> +- clocks : phandles for clock specified in "clock-names" property.
+>>>> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+>>>> +- vdd-supply : phandle for voltage regulator which is connected.
+>>>> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
+>>>> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+>>>> +- device-handle : phandle of the connected DRAM memory device. For more
+>>>> +	information please refer to Documentation
+>>>> +- devfreq-events : phandles of the PPMU events used by the controller.
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +	ppmu_dmc0_0: ppmu@10d00000 {
+>>>> +		compatible = "samsung,exynos-ppmu";
+>>>> +		reg = <0x10d00000 0x2000>;
+>>>> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+>>>> +		clock-names = "ppmu";
+>>>> +		status = "okay";
+>>>> +		events {
+>>>> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+>>>> +				event-name = "ppmu-event3-dmc0_0";
+>>>> +			};
+>>>> +		};
+>>>> +	};
+>>>> +
+>>>> +	dmc: memory-controller@10c20000 {
+>>>> +		compatible = "samsung,exynos5422-dmc";
+>>>> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+>>>> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
+> 
+> As I discussed about the register region of clock subsystem
+> with Sylwester on patch[1], I expected that you used the regmap
+> interface to control the register region of clock subsystem.
+> 
+> But, this dt-binding documents doesn't include any information
+> about regmap interface.
+Right. I will update the doc since the clock and chipid regs will use
+phandle in DT and syscon_regmap in the driver code in the v7 patch set.
 
-OK.
+Regards,
+Lukasz
 
-> > But in the RZ/A1 case the child unit address is irrelevant, as its an
-> > external interrupt input not related to a specific bus.  It could be
-> > used by a device without unit address (e.g. gpio-keys), or some device
-> > on an external local bus (root #adress-cells is <1> on 32-bit without
-> > LPAE, but this block could be reused in a future LPAE or arm64 SoCs),
-> > or on e.g. an SPI or i2c bus, with its own #adress-cells value
-> > (coincidentally <1>, too).
-> >
-> > I see of_irq_parse_raw() does use the address-cells of the parent
-> > interrupt controller (which is usually 0) when iterating its way up,
-> > following interrupt-map.
-> >
-> > So the child unit address does have two different meanings?
->
-> Indeed. That's why you'll see interrupt-controller nodes with the odd
-> '#address-cells = <0>;' in them. It's often omitted because it only
-> matters if there's an interrupt-map. We should clarify the spec.
-
-Yeah, I had noticed that, but didn't want to dive too deep into that
-(at that time).  I always assumed it was some silly mistake, combined
-with dtsi cargo cult copying.  Thanks, now I know better....
-
-BTW, the GIC bindings don't help that much: #address-cells can be
-0, 1, or 2, #size-cells can be 1 or 2. No explanation why...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> [1] https://lkml.org/lkml/2019/3/6/878
+> 
+>>>> +		clocks = 	<&clock CLK_FOUT_SPLL>,
+>>>> +				<&clock CLK_MOUT_SCLK_SPLL>,
+>>>> +				<&clock CLK_FF_DOUT_SPLL2>,
+>>>> +				<&clock CLK_FOUT_BPLL>,
+>>>> +				<&clock CLK_MOUT_BPLL>,
+>>>> +				<&clock CLK_SCLK_BPLL>,
+>>>> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>>>> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>>>> +				<&clock CLK_MOUT_MCLK_CDREX>,
+>>>> +				<&clock CLK_DOUT_CLK2X_PHY0>,
+>>>> +				<&clock CLK_CLKM_PHY0>,
+>>>> +				<&clock CLK_CLKM_PHY1>;
+>>>> +		clock-names =	"fout_spll",
+>>>> +				"mout_sclk_spll",
+>>>> +				"ff_dout_spll2",
+>>>> +				"fout_bpll",
+>>>> +				"mout_bpll",
+>>>> +				"sclk_bpll",
+>>>> +				"mout_mx_mspll_ccore",
+>>>> +				"mout_mx_mspll_ccore_phy",
+>>>> +				"mout_mclk_cdrex",
+>>>> +				"dout_clk2x_phy0",
+>>>> +				"clkm_phy0",
+>>>> +			        "clkm_phy1";
+>>>> +		status = "okay";
+>>>> +		operating-points-v2 = <&dmc_opp_table>;
+>>>> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+>>>> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+>>>> +		operating-points-v2 = <&dmc_opp_table>;
+>>>> +		device-handle = <&samsung_K3QF2F20DB>;
+>>>> +		vdd-supply = <&buck1_reg>;
+>>>> +	};
+>>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
