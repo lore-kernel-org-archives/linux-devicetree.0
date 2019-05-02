@@ -1,90 +1,63 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 2/3] dt-bindings: PCI: qcom: Add QCS404 to the binding
-Date: Wed,  1 May 2019 17:19:54 -0700
-Message-ID: <20190502001955.10575-3-bjorn.andersson@linaro.org>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] clk: gcc-qcs404: Add PCIe resets
+Date: Wed,  1 May 2019 17:21:38 -0700
+Message-ID: <20190502002138.10646-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502001955.10575-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Qualcomm QCS404 platform contains a PCIe controller, add this to the
-Qualcomm PCI binding document. The controller is the same version as the
-one used in IPQ4019, but the PHY part is described separately, hence the
-difference in clocks and resets.
+Enabling PCIe requires several of the PCIe related resets from GCC, so
+add them all.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v2:
-- None
+- Rebased patch
 
- .../devicetree/bindings/pci/qcom,pcie.txt     | 25 +++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
+ include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 1fd703bd73e0..ada80b01bf0c 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -10,6 +10,7 @@
- 			- "qcom,pcie-msm8996" for msm8996 or apq8096
- 			- "qcom,pcie-ipq4019" for ipq4019
- 			- "qcom,pcie-ipq8074" for ipq8074
-+			- "qcom,pcie-qcs404" for qcs404
+diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+index a54807eb3b28..29cf464dd2c8 100644
+--- a/drivers/clk/qcom/gcc-qcs404.c
++++ b/drivers/clk/qcom/gcc-qcs404.c
+@@ -2766,6 +2766,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
+ 	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
+ 	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
+ 	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
++	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = { 0x3e040, 6},
++	[GCC_PCIE_0_AHB_ARES] = { 0x3e040, 5 },
++	[GCC_PCIE_0_AXI_SLAVE_ARES] = { 0x3e040, 4 },
++	[GCC_PCIE_0_AXI_MASTER_ARES] = { 0x3e040, 3 },
++	[GCC_PCIE_0_CORE_STICKY_ARES] = { 0x3e040, 2 },
++	[GCC_PCIE_0_SLEEP_ARES] = { 0x3e040, 1 },
++	[GCC_PCIE_0_PIPE_ARES] = { 0x3e040, 0 },
+ 	[GCC_EMAC_BCR] = { 0x4e000 },
+ };
  
- - reg:
- 	Usage: required
-@@ -116,6 +117,15 @@
- 			- "ahb"		AHB clock
- 			- "aux"		Auxiliary clock
+diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+index 454b3f43f538..5959399fed2e 100644
+--- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
++++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+@@ -166,5 +166,12 @@
+ #define GCC_PCIEPHY_0_PHY_BCR				12
+ #define GCC_EMAC_BCR					13
+ #define GCC_CDSP_RESTART				14
++#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		14
++#define GCC_PCIE_0_AHB_ARES				15
++#define GCC_PCIE_0_AXI_SLAVE_ARES			16
++#define GCC_PCIE_0_AXI_MASTER_ARES			17
++#define GCC_PCIE_0_CORE_STICKY_ARES			18
++#define GCC_PCIE_0_SLEEP_ARES				19
++#define GCC_PCIE_0_PIPE_ARES				20
  
-+- clock-names:
-+	Usage: required for qcs404
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "iface"	AHB clock
-+			- "aux"		Auxiliary clock
-+			- "master_bus"	AXI Master clock
-+			- "slave_bus"	AXI Slave clock
-+
- - resets:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -167,6 +177,17 @@
- 			- "ahb"			AHB Reset
- 			- "axi_m_sticky"	AXI Master Sticky reset
- 
-+- reset-names:
-+	Usage: required for qcs404
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "axi_m"		AXI Master reset
-+			- "axi_s"		AXI Slave reset
-+			- "axi_m_sticky"	AXI Master Sticky reset
-+			- "pipe_sticky"		PIPE sticky reset
-+			- "pwr"			PWR reset
-+			- "ahb"			AHB reset
-+
- - power-domains:
- 	Usage: required for apq8084 and msm8996/apq8096
- 	Value type: <prop-encoded-array>
-@@ -195,12 +216,12 @@
- 	Definition: A phandle to the PCIe endpoint power supply
- 
- - phys:
--	Usage: required for apq8084
-+	Usage: required for apq8084 and qcs404
- 	Value type: <phandle>
- 	Definition: List of phandle(s) as listed in phy-names property
- 
- - phy-names:
--	Usage: required for apq8084
-+	Usage: required for apq8084 and qcs404
- 	Value type: <stringlist>
- 	Definition: Should contain "pciephy"
- 
+ #endif
 -- 
 2.18.0
