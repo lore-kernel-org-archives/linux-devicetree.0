@@ -1,69 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: input: Add support for the MPR121
- without interrupt line
-Date: Wed, 1 May 2019 19:48:49 -0500
-Message-ID: <20190502004849.GA8232@bogus>
-References: <1556267420-93219-1-git-send-email-michal.vokac@ysoft.com>
- <1556267420-93219-2-git-send-email-michal.vokac@ysoft.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+Date: Thu, 2 May 2019 03:52:58 +0300
+Message-ID: <27d24f4e-cf4c-b2d1-140a-5dcef021fa40@gmail.com>
+References: <20190414202009.31268-1-digetx@gmail.com>
+ <20190414202009.31268-3-digetx@gmail.com> <20190429220542.GA17924@bogus>
+ <137c766e-66f6-828a-5c3b-f526d66d37bd@gmail.com>
+ <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1556267420-93219-2-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 10:30:17AM +0200, Michal Vokáč wrote:
-> Normally, the MPR121 controller uses separate interrupt line to notify
-> the I2C host that a key was touched/released. To support platforms that
-> can not use the interrupt line, polling of the MPR121 registers can be
-> used.
+02.05.2019 3:17, Rob Herring пишет:
+> On Wed, May 1, 2019 at 7:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 30.04.2019 1:05, Rob Herring пишет:
+>>> On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
+>>>> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+>>>> The binding is based on the Tegra124 EMC binding since hardware is
+>>>> similar, although there are couple significant differences.
+>>>
+>>> My comments on Tegra124 binding apply here.
+>>
+>> The common timing definition doesn't fully match the definition that is
+>> used by Tegra's Memory Controller, thus the DQS (data strobe) timing
+>> parameter is comprised of multiple sub-parameters that describe how to
+>> generate the strobe in hardware. There are also more additional
+>> parameters that are specific to Tegra and they are individually
+>> characterized for each memory model and clock rate. Hence the common
+>> timing definition isn't usable.
+> 
+> I don't understand. Every PC in the world can work with any DIMM
+> (within a given generation) just with SPD data. Why is that not
+> sufficient here?
 
-Other than making the 'interrupts' property optional, that's a driver 
-change, not a DT change. IOW, we shouldn't need a whole new binding.
+Because this is not a standard PC, but a custom embedded hardware that
+is simpler and also doesn't fully follow the standards in some cases.
 
-> 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> ---
->  .../bindings/input/mpr121-touchkey-polled.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt b/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
-> new file mode 100644
-> index 000000000000..6bb1d312614c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
-> @@ -0,0 +1,26 @@
-> +* Freescale MPR121 Controller without interrupt line
-> +
-> +Required Properties:
-> +- compatible:		Should be "fsl,mpr121-touchkey-polled"
-> +- reg:			The I2C slave address of the device.
-> +- vdd-supply:		Phandle to the Vdd power supply.
-> +- linux,keycodes:	Specifies an array of numeric keycode values to
-> +			be used for reporting button presses. The array can
-> +			contain up to 12 entries.
-> +
-> +Optional Properties:
-> +- autorepeat:		Enable autorepeat feature.
-> +
-> +Example:
-> +
-> +#include "dt-bindings/input/input.h"
-> +
-> +	touchkeys: keys@5a {
-> +		compatible = "fsl,mpr121-touchkey-polled";
-> +		reg = <0x5a>;
-> +		autorepeat;
-> +		vdd-supply = <&ldo4_reg>;
-> +		linux,keycodes = <KEY_0>, <KEY_1>, <KEY_2>, <KEY_3>,
-> +				<KEY_4> <KEY_5>, <KEY_6>, <KEY_7>,
-> +				<KEY_8>, <KEY_9>, <KEY_A>, <KEY_B>;
-> +	};
-> -- 
-> 2.1.4
-> 
+> In any case, it seems for Tegra124 a different approach is going to be
+> taken. Seems like an "avoid DT" solution to me, but if it's contained
+> within the firmware it's not my problem.
+
+My above comment really applies to all Terga's.
+
+The Tegra210 is also a bit more complicated case because of the
+proprietary signed firmware that can't be easily replaced with
+opensource alternative without special hacks, but AFAIK the unofficial
+opensource firmware will be available in some form for at least one
+consumer device (Nintendo Switch).
+
+Please write a detailed comment to the Tegra210's patch, saying what you
+would want to see changed. I'm sure Joseph will try to do his best.
+
+Note that it is always possible to define a proper device tree binding
+and then also "unofficially" support the downstream binding, IIRC that's
+what some drivers are already doing in upstream kernel. So I think you
+could just demand for the proper binding regardless of the firmware
+situation.
