@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] ARM: dts: sun8i: r40:
- bananapi-m2-ultra: Add GPIO pin-bank regulator supplies
-Date: Thu, 2 May 2019 09:37:12 +0200
-Message-ID: <20190502073712.3le5ohnufk7lfvl6@flea>
+Subject: Re: [PATCH v5 2/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Add GPIO pin-bank regulator supplies
+Date: Thu, 2 May 2019 09:38:15 +0200
+Message-ID: <20190502073815.56ktbpiieviqr4ss@flea>
 References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
- <1556040365-10913-2-git-send-email-pgreco@centosproject.org>
+ <1556040365-10913-3-git-send-email-pgreco@centosproject.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zsawzropahmcetva"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKV4VLTAKGQEXAO5KLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="mozzdkjp5mxfsgi7"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2N4VLTAKGQEM7Z2FAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1556040365-10913-2-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+In-Reply-To: <1556040365-10913-3-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,22 +24,38 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-Dg
 List-Id: devicetree@vger.kernel.org
 
 
---zsawzropahmcetva
+--mozzdkjp5mxfsgi7
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Tue, Apr 23, 2019 at 02:25:58PM -0300, Pablo Greco wrote:
-> The bananapi-m2-ultra has the PMIC providing voltage to all the pin-bank
+On Tue, Apr 23, 2019 at 02:25:59PM -0300, Pablo Greco wrote:
+> The bananapi-m2-berry has the PMIC providing voltage to all the pin-bank
 > supply rails from its various regulator outputs, tie them to the pio
 > node.
 >
 > Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> index f05cabd..2cb2ce0 100644
+> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> @@ -123,6 +123,16 @@
+>  	status = "okay";
+>  };
+>
+> +&pio {
+> +	pinctrl-names = "default";
 
-Queued for 5.3, thanks!
+A pinctrl-names property without any other one?
+
+Looks good otherwise, thanks
 Maxime
 
 --
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---zsawzropahmcetva--
+--mozzdkjp5mxfsgi7--
