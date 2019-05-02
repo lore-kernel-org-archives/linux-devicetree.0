@@ -1,28 +1,100 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
-Date: Thu, 2 May 2019 09:21:08 -0300
-Message-ID: <CAOMZO5DTAvdxbb8UQufDTNWgkCj55OzXn=SZFXRocUOnkMY55Q@mail.gmail.com>
-References: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 5/5] ARM: dts: rskrza1: Add input switches
+Date: Thu,  2 May 2019 14:32:20 +0200
+Message-ID: <20190502123220.3016-6-geert+renesas@glider.be>
+References: <20190502123220.3016-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <20190502123220.3016-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi S=C3=A9bastien,
+Add support for input switches SW1-3 on the Renesas RZ/A1 RSK+RZA1
+development board.
 
-On Tue, Apr 30, 2019 at 4:47 AM S=C3=A9bastien Szymanski
-<sebastien.szymanski@armadeus.com> wrote:
+Note that this uses the IRQ interrupts, as the RZ/A1 GPIO controller
+does not include interrupt support.
 
-> +                       csi: csi@21c4000 {
-> +                               compatible =3D "fsl,imx6ul-csi", "fsl,imx=
-7-csi";
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v3:
+  - No changes,
 
-After adding "fsl,imx6ul-csi" to
-Documentation/devicetree/bindings/media/imx7-csi.txt:
+v2:
+  - No changes,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+v1:
+  - Use rza1-irqc instead of gic.
+
+v0:
+  - Sent as an RFC in a reply to another thread.
+---
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 38 ++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index ff24301dc1be54de..99acfe4fe11aaed9 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -8,6 +8,7 @@
+ /dts-v1/;
+ #include "r7s72100.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
+ 
+ / {
+@@ -28,6 +29,37 @@
+ 		reg = <0x08000000 0x02000000>;
+ 	};
+ 
++	keyboard {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&keyboard_pins>;
++
++		key-1 {
++			interrupt-parent = <&irqc>;
++			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_1>;
++			label = "SW1";
++			wakeup-source;
++		};
++
++		key-2 {
++			interrupt-parent = <&irqc>;
++			interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_2>;
++			label = "SW2";
++			wakeup-source;
++		};
++
++		key-3 {
++			interrupt-parent = <&irqc>;
++			interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
++			linux,code = <KEY_3>;
++			label = "SW3";
++			wakeup-source;
++		};
++	};
++
+ 	lbsc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -101,6 +133,12 @@
+ 			 <RZA1_PINMUX(1, 7, 1)>;	/* RIIC3SDA */
+ 	};
+ 
++	keyboard_pins: keyboard {
++		pinmux = <RZA1_PINMUX(1, 9, 3)>,	/* IRQ3 */
++			 <RZA1_PINMUX(1, 8, 3)>,	/* IRQ2 */
++			 <RZA1_PINMUX(1, 11, 3)>;	/* IRQ5 */
++	};
++
+ 	/* Serial Console */
+ 	scif2_pins: serial2 {
+ 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
+-- 
+2.17.1
