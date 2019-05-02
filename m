@@ -1,158 +1,49 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Date: Thu, 2 May 2019 17:11:13 +0200
-Message-ID: <20190502151113.GA30132@bogon.m.sigxcpu.org>
-References: <cover.1556633413.git.agx@sigxcpu.org>
- <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
- <20190430203108.GA20545@ravnborg.org>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins number to
+ GMAC node
+Date: Thu,  2 May 2019 17:12:32 +0200
+Message-ID: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190430203108.GA20545@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, Abel Vesa <abel.vesa@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Li Jun <jun.li@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Mark Rutland <mark.rutland@arm.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCk9uIFR1ZSwgQXByIDMwLCAyMDE5IGF0IDEwOjMxOjA4UE0gKzAyMDAsIFNhbSBSYXZuYm9y
-ZyB3cm90ZToKPiBIaSBHdWlkby4KPiAKPiBUb29rIGEgbG9vayBhdCB0aGlzLCBidXQgZmVlZGJh
-Y2sgaXMgdHJpdmlhbCBhcwo+IEkgaGF2ZSBubyBleHBlcmllbmNlIHdpdGggUEhZcyBzbyB1c2Ug
-b25seQo+IHRoZSBmZWVkYmFjayB5b3UgY29uc2lkZXIgcmVsZXZhbnQuCgpUaGV5IGFsbCBtYWRl
-IHNlbnNlIHNvIEkndmUgaW5jb3Jwb3JhdGVkIHRoZW0gZm9yIHYxMC4KCj4gCj4gCVNhbQo+IAo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L2ZyZWVzY2FsZS9waHktZnNsLWlteDgtbWlwaS1k
-cGh5LmMgYi9kcml2ZXJzL3BoeS9mcmVlc2NhbGUvcGh5LWZzbC1pbXg4LW1pcGktZHBoeS5jCj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kNmI1YWYwYjMz
-ODAKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvcGh5L2ZyZWVzY2FsZS9waHkt
-ZnNsLWlteDgtbWlwaS1kcGh5LmMKPiA+IEBAIC0wLDAgKzEsNTA2IEBACj4gPiArLy8gU1BEWC1M
-aWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArCj4gPiArLyoKPiA+ICsgKiBDb3B5cmlnaHQgMjAx
-NywyMDE4IE5YUAo+ID4gKyAqIENvcHlyaWdodCAyMDE5IFB1cmlzbSBTUEMKPiA+ICsgKi8KPiA+
-ICsKPiA+ICsKPiA+ICsvKiBEUEhZIHJlZ2lzdGVycyAqLwo+ID4gKyNkZWZpbmUgRFBIWV9QRF9E
-UEhZCQkJMHgwMAo+ID4gKyNkZWZpbmUgRFBIWV9NX1BSR19IU19QUkVQQVJFCQkweDA0Cj4gPiAr
-I2RlZmluZSBEUEhZX01DX1BSR19IU19QUkVQQVJFCQkweDA4Cj4gPiArI2RlZmluZSBEUEhZX01f
-UFJHX0hTX1pFUk8JCTB4MGMKPiA+ICsjZGVmaW5lIERQSFlfTUNfUFJHX0hTX1pFUk8JCTB4MTAK
-PiA+ICsjZGVmaW5lIERQSFlfTV9QUkdfSFNfVFJBSUwJCTB4MTQKPiA+ICsjZGVmaW5lIERQSFlf
-TUNfUFJHX0hTX1RSQUlMCQkweDE4Cj4gPiArI2RlZmluZSBEUEhZX1BEX1BMTAkJCTB4MWMKPiA+
-ICsjZGVmaW5lIERQSFlfVFNUCQkJMHgyMAo+ID4gKyNkZWZpbmUgRFBIWV9DTgkJCQkweDI0Cj4g
-PiArI2RlZmluZSBEUEhZX0NNCQkJCTB4MjgKPiA+ICsjZGVmaW5lIERQSFlfQ08JCQkJMHgyYwo+
-ID4gKyNkZWZpbmUgRFBIWV9MT0NLCQkJMHgzMAo+ID4gKyNkZWZpbmUgRFBIWV9MT0NLX0JZUAkJ
-CTB4MzQKPiA+ICsjZGVmaW5lIERQSFlfUkVHX0JZUEFTU19QTEwJCTB4NEMKPiA+ICsKPiA+ICsj
-ZGVmaW5lIE1CUFMoeCkgKCh4KSAqIDEwMDAwMDApCj4gPiArCj4gPiArI2RlZmluZSBEQVRBX1JB
-VEVfTUFYX1NQRUVEIE1CUFMoMTUwMCkKPiA+ICsjZGVmaW5lIERBVEFfUkFURV9NSU5fU1BFRUQg
-TUJQUyg4MCkKPiA+ICsKPiA+ICsjZGVmaW5lIFBMTF9MT0NLX1NMRUVQIDEwCj4gPiArI2RlZmlu
-ZSBQTExfTE9DS19USU1FT1VUIDEwMDAKPiA+ICsKPiA+ICsjZGVmaW5lIENOX0JVRgkweGNiN2E4
-OWMwCj4gPiArI2RlZmluZSBDT19CVUYJMHg2Mwo+ID4gKyNkZWZpbmUgQ00oeCkJKAkJCQlcCj4g
-PiArCQkoKHgpIDwJMzIpPzB4ZTB8KCh4KS0xNikgOglcCj4gPiArCQkoKHgpIDwJNjQpPzB4YzB8
-KCh4KS0zMikgOglcCj4gPiArCQkoKHgpIDwgMTI4KT8weDgwfCgoeCktNjQpIDoJXAo+ID4gKwkJ
-KCh4KSAtIDEyOCkpCj4gPiArI2RlZmluZSBDTih4KQkoKCh4KSA9PSAxKT8weDFmIDogKCgoQ05f
-QlVGKT4+KCh4KS0xKSkmMHgxZikpCj4gPiArI2RlZmluZSBDTyh4KQkoKENPX0JVRik+Pig4LSh4
-KSkmMHgzKQo+ID4gKwo+ID4gKy8qIFBIWSBwb3dlciBvbiBpcyBhY3RpdmUgbG93ICovCj4gPiAr
-I2RlZmluZSBQV1JfT04JMAo+ID4gKyNkZWZpbmUgUFdSX09GRgkxCj4gPiArCj4gPiArZW51bSBt
-aXhlbF9kcGh5X2RldnR5cGUgewo+ID4gKwlNSVhFTF9JTVg4TVEsCj4gPiArfTsKPiA+ICsKPiA+
-ICtzdHJ1Y3QgbWl4ZWxfZHBoeV9kZXZkYXRhIHsKPiA+ICsJdTggcmVnX3R4X3JjYWw7Cj4gPiAr
-CXU4IHJlZ19hdXRvX3BkX2VuOwo+ID4gKwl1OCByZWdfcnhscHJwOwo+ID4gKwl1OCByZWdfcnhj
-ZHJwOwo+ID4gKwl1OCByZWdfcnhoc19zZXR0bGU7Cj4gPiArfTsKPiA+ICsKPiA+ICtzdGF0aWMg
-Y29uc3Qgc3RydWN0IG1peGVsX2RwaHlfZGV2ZGF0YSBtaXhlbF9kcGh5X2RldmRhdGFbXSA9IHsK
-PiA+ICsJW01JWEVMX0lNWDhNUV0gPSB7Cj4gPiArCQkucmVnX3R4X3JjYWwgPSAweDM4LAo+ID4g
-KwkJLnJlZ19hdXRvX3BkX2VuID0gMHgzYywKPiA+ICsJCS5yZWdfcnhscHJwID0gMHg0MCwKPiA+
-ICsJCS5yZWdfcnhjZHJwID0gMHg0NCwKPiA+ICsJCS5yZWdfcnhoc19zZXR0bGUgPSAweDQ4LAo+
-ID4gKwl9LAo+ID4gK307Cj4gPiArCj4gPiArc3RydWN0IG1peGVsX2RwaHlfY2ZnIHsKPiA+ICsJ
-LyogRFBIWSBQTEwgcGFyYW1ldGVycyAqLwo+ID4gKwl1MzIgY207Cj4gPiArCXUzMiBjbjsKPiA+
-ICsJdTMyIGNvOwo+ID4gKwkvKiBEUEhZIHJlZ2lzdGVyIHZhbHVlcyAqLwo+ID4gKwl1OCBtY19w
-cmdfaHNfcHJlcGFyZTsKPiA+ICsJdTggbV9wcmdfaHNfcHJlcGFyZTsKPiA+ICsJdTggbWNfcHJn
-X2hzX3plcm87Cj4gPiArCXU4IG1fcHJnX2hzX3plcm87Cj4gPiArCXU4IG1jX3ByZ19oc190cmFp
-bDsKPiA+ICsJdTggbV9wcmdfaHNfdHJhaWw7Cj4gPiArCXU4IHJ4aHNfc2V0dGxlOwo+ID4gK307
-Cj4gPiArCj4gPiArc3RydWN0IG1peGVsX2RwaHlfcHJpdiB7Cj4gPiArCXN0cnVjdCBtaXhlbF9k
-cGh5X2NmZyBjZmc7Cj4gPiArCXN0cnVjdCByZWdtYXAgKnJlZ3M7Cj4gSXQgaXMgYSBsaXR0bGUg
-Y29uZnVzaW5nIHRoYXQgdGhlIHJlZ21hcCBpcyBuYW1lZCByZWdzLgo+IEFzIHJlZ3MgaW4gbWFu
-eSBvdGhlciBjYXNlcyBpcyB1c2VkIGFzIG5hbWUgZm9yIHRoZSB2YXJpYWJsZQo+IHdpdGggcG9p
-bnRlciB0byByZWdpc3RlcnMuCj4gU2VlIGZvciBleGFtcGxlIGNhbGwgdG8gZGV2bV9yZWdtYXBf
-aW5pdF9tbWlvKCkKCkNoYW5nZWQgdG8gcmVnbWFwIGFuZCBiYXNlLgoKPiAKPiA+ICsJc3RydWN0
-IGNsayAqcGh5X3JlZl9jbGs7Cj4gPiArCWNvbnN0IHN0cnVjdCBtaXhlbF9kcGh5X2RldmRhdGEg
-KmRldmRhdGE7Cj4gPiArfTsKPiA+ICsKPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9j
-b25maWcgbWl4ZWxfZHBoeV9yZWdtYXBfY29uZmlnID0gewo+ID4gKwkucmVnX2JpdHMgPSA4LAo+
-ID4gKwkudmFsX2JpdHMgPSAzMiwKPiA+ICsJLnJlZ19zdHJpZGUgPSA0LAo+ID4gKwkubWF4X3Jl
-Z2lzdGVyID0gRFBIWV9SRUdfQllQQVNTX1BMTCwKPiA+ICsJLm5hbWUgPSAibWlwaS1kcGh5IiwK
-PiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgcGh5X3dyaXRlKHN0cnVjdCBwaHkgKnBoeSwg
-dTMyIHZhbHVlLCB1bnNpZ25lZCBpbnQgcmVnKQo+ID4gK3sKPiA+ICsJc3RydWN0IG1peGVsX2Rw
-aHlfcHJpdiAqcHJpdiA9IHBoeV9nZXRfZHJ2ZGF0YShwaHkpOwo+ID4gKwlpbnQgcmV0Owo+ID4g
-Kwo+ID4gKwlyZXQgPSByZWdtYXBfd3JpdGUocHJpdi0+cmVncywgcmVnLCB2YWx1ZSk7Cj4gPiAr
-CWlmIChyZXQgPCAwKQo+ID4gKwkJZGV2X2VycigmcGh5LT5kZXYsICJGYWlsZWQgdG8gd3JpdGUg
-RFBIWSByZWcgJWQ6ICVkIiwgcmVnLCByZXQpOwo+ID4gKwlyZXR1cm4gcmV0Owo+ID4gK30KPiA+
-ICsKPiA+ICsvKgo+ID4gKyAqIEZpbmQgYSByYXRpbyBjbG9zZSB0byB0aGUgZGVzaXJlZCBvbmUg
-dXNpbmcgY29udGludWVkIGZyYWN0aW9uCj4gPiArICogYXBwcm94aW1hdGlvbiBlbmRpbmcgZWl0
-aGVyIGF0IGV4YWN0IG1hdGNoIG9yIG1heGltdW0gYWxsb3dlZAo+ID4gKyAqIG5vbWluYXRvciwg
-ZGVub21pbmF0b3IuCj4gPiArICovCj4gPiArc3RhdGljIHZvaWQgZ2V0X2Jlc3RfcmF0aW8odTMy
-ICpwbnVtLCB1MzIgKnBkZW5vbSwgdW5zaWduZWQgaW50IG1heF9uLAo+ID4gKwkJCSAgIHVuc2ln
-bmVkIGludCBtYXhfZCkKPiA+ICt7Cj4gTWF5YmUgdXNlIHUzMiBmb3IgYWxsIHBhcmFtZXRlcnM/
-Cj4gVGhhdCB3b3VsZCBhbHNvIG1hdGNoIHVzYWdlIGJlbG93LgoKTGVzcyBjb25mdXNpbmcsIGRv
-bmUuCgo+IAo+ID4gKwl1MzIgYSA9ICpwbnVtOwo+ID4gKwl1MzIgYiA9ICpwZGVub207Cj4gPiAr
-CXUzMiBjOwo+ID4gKwl1MzIgbltdID0gezAsIDF9Owo+ID4gKwl1MzIgZFtdID0gezEsIDB9Owo+
-ID4gKwl1MzIgd2hvbGU7Cj4gPiArCXVuc2lnbmVkIGludCBpID0gMTsKPiA+ICsKPiA+ICsJd2hp
-bGUgKGIpIHsKPiA+ICsJCWkgXj0gMTsKPiA+ICsJCXdob2xlID0gYSAvIGI7Cj4gPiArCQluW2ld
-ICs9IChuW2kgXiAxXSAqIHdob2xlKTsKPiA+ICsJCWRbaV0gKz0gKGRbaSBeIDFdICogd2hvbGUp
-Owo+ID4gKwkJaWYgKChuW2ldID4gbWF4X24pIHx8IChkW2ldID4gbWF4X2QpKSB7Cj4gPiArCQkJ
-aSBePSAxOwo+ID4gKwkJCWJyZWFrOwo+ID4gKwkJfQo+ID4gKwkJYyA9IGEgLSAoYiAqIHdob2xl
-KTsKPiA+ICsJCWEgPSBiOwo+ID4gKwkJYiA9IGM7Cj4gPiArCX0KPiA+ICsJKnBudW0gPSBuW2ld
-Owo+ID4gKwkqcGRlbm9tID0gZFtpXTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGludCBtaXhl
-bF9kcGh5X2NvbmZpZ19mcm9tX29wdHMoc3RydWN0IHBoeSAqcGh5LAo+ID4gKwkgICAgICAgc3Ry
-dWN0IHBoeV9jb25maWd1cmVfb3B0c19taXBpX2RwaHkgKmRwaHlfb3B0cywKPiA+ICsJICAgICAg
-IHN0cnVjdCBtaXhlbF9kcGh5X2NmZyAqY2ZnKQo+ID4gK3sKPiA+ICsJc3RydWN0IG1peGVsX2Rw
-aHlfcHJpdiAqcHJpdiA9IGRldl9nZXRfZHJ2ZGF0YShwaHktPmRldi5wYXJlbnQpOwo+ID4gKwl1
-bnNpZ25lZCBsb25nIHJlZl9jbGsgPSBjbGtfZ2V0X3JhdGUocHJpdi0+cGh5X3JlZl9jbGspOwo+
-ID4gKwl1MzIgbHBfdCwgbnVtZXJhdG9yLCBkZW5vbWluYXRvcjsKPiA+ICsJdW5zaWduZWQgbG9u
-ZyBsb25nIHRtcDsKPiA+ICsJdTMyIG47Cj4gPiArCWludCBpOwo+ID4gKwo+ID4gKwlpZiAoZHBo
-eV9vcHRzLT5oc19jbGtfcmF0ZSA+IERBVEFfUkFURV9NQVhfU1BFRUQgfHwKPiA+ICsJICAgIGRw
-aHlfb3B0cy0+aHNfY2xrX3JhdGUgPCBEQVRBX1JBVEVfTUlOX1NQRUVEKQo+ID4gKwkJcmV0dXJu
-IC1FSU5WQUw7Cj4gPiArCj4gPiArCW51bWVyYXRvciA9IGRwaHlfb3B0cy0+aHNfY2xrX3JhdGU7
-Cj4gPiArCWRlbm9taW5hdG9yID0gcmVmX2NsazsKPiA+ICsJZ2V0X2Jlc3RfcmF0aW8oJm51bWVy
-YXRvciwgJmRlbm9taW5hdG9yLCAyNTUsIDI1Nik7Cj4gPiArCWlmICghbnVtZXJhdG9yIHx8ICFk
-ZW5vbWluYXRvcikgewo+ID4gKwkJZGV2X2VycigmcGh5LT5kZXYsICJJbnZhbGlkICVkLyVkIGZv
-ciAlbGQvJWxkXG4iLAo+ID4gKwkJCW51bWVyYXRvciwgZGVub21pbmF0b3IsCj4gPiArCQkJZHBo
-eV9vcHRzLT5oc19jbGtfcmF0ZSwgcmVmX2Nsayk7Cj4gPiArCQlyZXR1cm4gLUVJTlZBTDsKPiA+
-ICsJfQo+ID4gKwo+ID4gKwl3aGlsZSAoKG51bWVyYXRvciA8IDE2KSAmJiAoZGVub21pbmF0b3Ig
-PD0gMTI4KSkgewo+ID4gKwkJbnVtZXJhdG9yIDw8PSAxOwo+ID4gKwkJZGVub21pbmF0b3IgPDw9
-IDE7Cj4gPiArCX0KPiA+ICsJLyoKPiA+ICsJICogQ00gcmFuZ2VzIGJldHdlZW4gMTYgYW5kIDI1
-NQo+ID4gKwkgKiBDTiByYW5nZXMgYmV0d2VlbiAxIGFuZCAzMgo+ID4gKwkgKiBDTyBpcyBwb3dl
-ciBvZiAyOiAxLCAyLCA0LCA4Cj4gPiArCSAqLwo+ID4gKwlpID0gX19mZnMoZGVub21pbmF0b3Ip
-Owo+ID4gKwlpZiAoaSA+IDMpCj4gPiArCQlpID0gMzsKPiA+ICsJY2ZnLT5jbiA9IGRlbm9taW5h
-dG9yID4+IGk7Cj4gPiArCWNmZy0+Y28gPSAxIDw8IGk7Cj4gPiArCWNmZy0+Y20gPSBudW1lcmF0
-b3I7Cj4gPiArCj4gPiArCWlmIChjZmctPmNtIDwgMTYgfHwgY2ZnLT5jbSA+IDI1NSB8fAo+ID4g
-KwkgICAgY2ZnLT5jbiA8IDEgfHwgY2ZnLT5jbiA+IDMyIHx8Cj4gPiArCSAgICBjZmctPmNvIDwg
-MSB8fCBjZmctPmNvID4gOCkgewo+ID4gKwkJZGV2X2VycigmcGh5LT5kZXYsICJJbnZhbGlkIENN
-L0NOL0NPIHZhbHVlczogJXUvJXUvJXVcbiIsCj4gPiArCQkJY2ZnLT5jbSwgY2ZnLT5jbiwgY2Zn
-LT5jbyk7Cj4gPiArCQlkZXZfZXJyKCZwaHktPmRldiwgImZvciBoc19jbGsvcmVmX2Nsaz0lbGQv
-JWxkIOKpsCAlZC8lZFxuIiwKPiBIbW0sIG15IG11dHQgZG9lcyBub3QgbGlrZSB0aGlzIHN5bWJv
-bD8gIOKpsAoKQ2hhbmdlZCB0byB0aGUgYXNjaWkgJ34nLgoKPiAKPiA+ICsKPiA+ICsJcGh5X3dy
-aXRlKHBoeSwgUFdSX09OLCBEUEhZX1BEX1BMTCk7Cj4gPiArCXJldCA9IHJlZ21hcF9yZWFkX3Bv
-bGxfdGltZW91dChwcml2LT5yZWdzLCBEUEhZX0xPQ0ssIGxvY2tlZCwKPiA+ICsJCQkJICAgICAg
-IGxvY2tlZCwgUExMX0xPQ0tfU0xFRVAsCj4gPiArCQkJCSAgICAgICBQTExfTE9DS19USU1FT1VU
-KTsKPiA+ICsJaWYgKHJldCA8IDApIHsKPiA+ICsJCWRldl9lcnIoJnBoeS0+ZGV2LCAiQ291bGQg
-bm90IGdldCBEUEhZIGxvY2sgKCVkKSFcbiIsIHJldCk7Cj4gPiArCQlnb3RvIGNsb2NrX2Rpc2Fi
-bGU7Cj4gPiArCX0KPiA+ICsJcGh5X3dyaXRlKHBoeSwgUFdSX09OLCBEUEhZX1BEX0RQSFkpOwo+
-IAo+IEFyZSB0aGVuIG5vIG90aGVyIHRpbWluZyBjb25zdHJhaW5zIHRoYW4gdGhlIHBvbGwgb2Yg
-RFBIWV9MT0NLPwo+IFNvbWUgcGFuZWwgKEkga25vdyB0aGlzIGlzIG5vdCBhIHBhbmVsLCBidXQg
-YW15d2F5KSBoYXZlIHNvbWUKPiByaWRnaWQgdGltaW5nIGNvbnN0cmFpbnMgYXJvdW5kIHBvd2Vy
-IE9OL09GRi4KCk5YUHMgQlNQIGRvZXNuJ3QgaGF2ZSBhbnkgYWRkaXRpb25hbCB0aW1pbmcgY29u
-c3RyYWludHMgYW5kIHRoYXQncyB0aGUKYmVzdCB3ZSBoYXZlIGluIHRoYXQgYXJlYS4gRXZlbiB0
-aGUgbmV3IGlteDhtcSByZWZlcmVuY2UgbWFudWFsCnB1Ymxpc2hlZCBsYXN0IHdlZWsgaXNuJ3Qg
-YW55IG1vcmUgcHJlY2lzZSByZWdhcmRpbmcgRFBIWSBwb3dlciB1cC4KPiAKPiA+ICsKPiA+ICtN
-T0RVTEVfQVVUSE9SKCJOWFAgU2VtaWNvbmR1Y3RvciIpOwo+ID4gK01PRFVMRV9ERVNDUklQVElP
-TigiTWl4ZWwgTUlQSS1EU0kgUEhZIGRyaXZlciIpOwo+IAo+ID4gK01PRFVMRV9MSUNFTlNFKCJH
-UEwgdjIiKTsKPiBEb2VzIHRoaXMgbWF0Y2ggdGhlIFNQRFggdGFnPwoKSSd2ZSBjaGFuZ2VkIHRo
-aXMgdG8gTU9EVUxFX0xJQ0VOU0UoIkdQTCIpIHNpbmNlIHRoaXMgc2VlbXMgdG8gYmUgdXNlZApi
-eSBkcml2ZXIgdGhhdCBhcmUgdjIrLgoKPiAiCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZp
-ZXI6IEdQTC0yLjArCj4gIgo+IApUaGFua3MhCiAtLSBHdWlkbwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+---
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 69bc1c9e8e50..b0f059377ab0 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -187,6 +187,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
+-- 
+2.7.4
