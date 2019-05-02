@@ -1,89 +1,80 @@
 From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: Re: [PATCH v2 2/6] soc/fsl/qe: qe.c: reduce static memory footprint
- by 1.7K
-Date: Thu, 2 May 2019 06:51:37 +0200
-Message-ID: <cae22a68-40f3-5993-22a0-222134e76def@c-s.fr>
+Subject: Re: [PATCH v2 5/6] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Date: Thu, 2 May 2019 06:52:45 +0200
+Message-ID: <53c8e642-5efa-c476-92b7-a70d5598b217@c-s.fr>
 References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
  <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-3-rasmus.villemoes@prevas.dk>
+ <20190501092841.9026-6-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190501092841.9026-3-rasmus.villemoes@prevas.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190501092841.9026-6-rasmus.villemoes@prevas.dk>
 Content-Language: fr
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
 List-Id: devicetree@vger.kernel.org
 
-CgpMZSAwMS8wNS8yMDE5IMOgIDExOjI5LCBSYXNtdXMgVmlsbGVtb2VzIGEgw6ljcml0wqA6Cj4g
-VGhlIGN1cnJlbnQgYXJyYXkgb2Ygc3RydWN0IHFlX3NudW0gdXNlIDI1Nio0IGJ5dGVzIGZvciBq
-dXN0IGtlZXBpbmcKPiB0cmFjayBvZiB0aGUgZnJlZS91c2VkIHN0YXRlIG9mIGVhY2ggaW5kZXgs
-IGFuZCB0aGUgc3RydWN0IGxheW91dAo+IG1lYW5zIHRoZXJlJ3MgYW5vdGhlciA3NjggYnl0ZXMg
-b2YgcGFkZGluZy4gSWYgd2UganVzdCB1bnppcCB0aGF0Cj4gc3RydWN0dXJlLCB0aGUgYXJyYXkg
-b2Ygc251bSB2YWx1ZXMganVzdCB1c2UgMjU2IGJ5dGVzLCB3aGlsZSB0aGUKPiBmcmVlL2ludXNl
-IHN0YXRlIGNhbiBiZSB0cmFja2VkIGluIGEgMzIgYnl0ZSBiaXRtYXAuCj4gCj4gU28gdGhpcyBy
-ZWR1Y2VzIHRoZSAuZGF0YSBmb290cHJpbnQgYnkgMTc2MCBieXRlcy4gSXQgYWxzbyBzZXJ2ZXMg
-YXMKPiBwcmVwYXJhdGlvbiBmb3IgaW50cm9kdWNpbmcgYW5vdGhlciBEVCBiaW5kaW5nIGZvciBz
-cGVjaWZ5aW5nIHRoZSBzbnVtCj4gdmFsdWVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJhc211cyBW
-aWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJldmFzLmRrPgoKUmV2aWV3ZWQtYnk6IENocmlz
-dG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPgoKVHJpdmlhbCBjb21tZW50IGJl
-bG93Cgo+IC0tLQo+ICAgZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMgfCA0MyArKysrKysrKysrKyst
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2Vy
-dGlvbnMoKyksIDMxIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9m
-c2wvcWUvcWUuYyBiL2RyaXZlcnMvc29jL2ZzbC9xZS9xZS5jCj4gaW5kZXggODU1MzczZGViNzQ2
-Li4zMDNhYTI5Y2IyN2QgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMKPiAr
-KysgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYwo+IEBAIC0xNCw2ICsxNCw3IEBACj4gICAgKiBG
-cmVlIFNvZnR3YXJlIEZvdW5kYXRpb247ICBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSAgTGljZW5z
-ZSwgb3IgKGF0IHlvdXIKPiAgICAqIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uCj4gICAgKi8K
-PiArI2luY2x1ZGUgPGxpbnV4L2JpdG1hcC5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L2Vycm5vLmg+
-Cj4gICAjaW5jbHVkZSA8bGludXgvc2NoZWQuaD4KPiAgICNpbmNsdWRlIDxsaW51eC9rZXJuZWwu
-aD4KPiBAQCAtNDMsMjUgKzQ0LDE0IEBAIHN0YXRpYyBERUZJTkVfU1BJTkxPQ0socWVfbG9jayk7
-Cj4gICBERUZJTkVfU1BJTkxPQ0soY214Z2NyX2xvY2spOwo+ICAgRVhQT1JUX1NZTUJPTChjbXhn
-Y3JfbG9jayk7Cj4gICAKPiAtLyogUUUgc251bSBzdGF0ZSAqLwo+IC1lbnVtIHFlX3NudW1fc3Rh
-dGUgewo+IC0JUUVfU05VTV9TVEFURV9VU0VELAo+IC0JUUVfU05VTV9TVEFURV9GUkVFCj4gLX07
-Cj4gLQo+IC0vKiBRRSBzbnVtICovCj4gLXN0cnVjdCBxZV9zbnVtIHsKPiAtCXU4IG51bTsKPiAt
-CWVudW0gcWVfc251bV9zdGF0ZSBzdGF0ZTsKPiAtfTsKPiAtCj4gICAvKiBXZSBhbGxvY2F0ZSB0
-aGlzIGhlcmUgYmVjYXVzZSBpdCBpcyB1c2VkIGFsbW9zdCBleGNsdXNpdmVseSBmb3IKPiAgICAq
-IHRoZSBjb21tdW5pY2F0aW9uIHByb2Nlc3NvciBkZXZpY2VzLgo+ICAgICovCj4gICBzdHJ1Y3Qg
-cWVfaW1tYXAgX19pb21lbSAqcWVfaW1tcjsKPiAgIEVYUE9SVF9TWU1CT0wocWVfaW1tcik7Cj4g
-ICAKPiAtc3RhdGljIHN0cnVjdCBxZV9zbnVtIHNudW1zW1FFX05VTV9PRl9TTlVNXTsJLyogRHlu
-YW1pY2FsbHkgYWxsb2NhdGVkIFNOVU1zICovCj4gK3N0YXRpYyB1OCBzbnVtc1tRRV9OVU1fT0Zf
-U05VTV07CS8qIER5bmFtaWNhbGx5IGFsbG9jYXRlZCBTTlVNcyAqLwo+ICtzdGF0aWMgREVDTEFS
-RV9CSVRNQVAoc251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOwo+ICAgc3RhdGljIHVuc2lnbmVk
-IGludCBxZV9udW1fb2Zfc251bTsKPiAgIAo+ICAgc3RhdGljIHBoeXNfYWRkcl90IHFlYmFzZSA9
-IC0xOwo+IEBAIC0zMTUsMTAgKzMwNSw4IEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9p
-ZCkKPiAgIAllbHNlCj4gICAJCXNudW1faW5pdCA9IHNudW1faW5pdF80NjsKPiAgIAo+IC0JZm9y
-IChpID0gMDsgaSA8IHFlX251bV9vZl9zbnVtOyBpKyspIHsKPiAtCQlzbnVtc1tpXS5udW0gPSBz
-bnVtX2luaXRbaV07Cj4gLQkJc251bXNbaV0uc3RhdGUgPSBRRV9TTlVNX1NUQVRFX0ZSRUU7Cj4g
-LQl9Cj4gKwliaXRtYXBfemVybyhzbnVtX3N0YXRlLCBRRV9OVU1fT0ZfU05VTSk7Cj4gKwltZW1j
-cHkoc251bXMsIHNudW1faW5pdCwgcWVfbnVtX29mX3NudW0pOwo+ICAgfQo+ICAgCj4gICBpbnQg
-cWVfZ2V0X3NudW0odm9pZCkKPiBAQCAtMzI4LDEyICszMTYsMTAgQEAgaW50IHFlX2dldF9zbnVt
-KHZvaWQpCj4gICAJaW50IGk7Cj4gICAKPiAgIAlzcGluX2xvY2tfaXJxc2F2ZSgmcWVfbG9jaywg
-ZmxhZ3MpOwo+IC0JZm9yIChpID0gMDsgaSA8IHFlX251bV9vZl9zbnVtOyBpKyspIHsKPiAtCQlp
-ZiAoc251bXNbaV0uc3RhdGUgPT0gUUVfU05VTV9TVEFURV9GUkVFKSB7Cj4gLQkJCXNudW1zW2ld
-LnN0YXRlID0gUUVfU05VTV9TVEFURV9VU0VEOwo+IC0JCQlzbnVtID0gc251bXNbaV0ubnVtOwo+
-IC0JCQlicmVhazsKPiAtCQl9Cj4gKwlpID0gZmluZF9maXJzdF96ZXJvX2JpdChzbnVtX3N0YXRl
-LCBxZV9udW1fb2Zfc251bSk7Cj4gKwlpZiAoaSA8IHFlX251bV9vZl9zbnVtKSB7Cj4gKwkJc2V0
-X2JpdChpLCBzbnVtX3N0YXRlKTsKPiArCQlzbnVtID0gc251bXNbaV07Cj4gICAJfQo+ICAgCXNw
-aW5fdW5sb2NrX2lycXJlc3RvcmUoJnFlX2xvY2ssIGZsYWdzKTsKPiAgIAo+IEBAIC0zNDMsMTQg
-KzMyOSw5IEBAIEVYUE9SVF9TWU1CT0wocWVfZ2V0X3NudW0pOwo+ICAgCj4gICB2b2lkIHFlX3B1
-dF9zbnVtKHU4IHNudW0pCj4gICB7Cj4gLQlpbnQgaTsKPiAtCj4gLQlmb3IgKGkgPSAwOyBpIDwg
-cWVfbnVtX29mX3NudW07IGkrKykgewo+IC0JCWlmIChzbnVtc1tpXS5udW0gPT0gc251bSkgewo+
-IC0JCQlzbnVtc1tpXS5zdGF0ZSA9IFFFX1NOVU1fU1RBVEVfRlJFRTsKPiAtCQkJYnJlYWs7Cj4g
-LQkJfQo+IC0JfQo+ICsJY29uc3QgdTggKnAgPSBtZW1jaHIoc251bXMsIHNudW0sIHFlX251bV9v
-Zl9zbnVtKTsKCkEgYmxhbmsgbGluZSBpcyBleHBlY3RlZCBoZXJlLgoKQ2hyaXN0b3BoZQoKPiAr
-CWlmIChwKQo+ICsJCWNsZWFyX2JpdChwIC0gc251bXMsIHNudW1fc3RhdGUpOwo+ICAgfQo+ICAg
-RVhQT1JUX1NZTUJPTChxZV9wdXRfc251bSk7Cj4gICAKPiAKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+Le 01/05/2019 à 11:29, Rasmus Villemoes a écrit :
+> Add driver support for the newly introduced fsl,qe-snums property.
+> 
+> Conveniently, of_property_read_variable_u8_array does exactly what we
+> need: If the property fsl,qe-snums is found (and has an allowed size),
+> the array of values get copied to snums, and the return value is the
+> number of snums - we cannot assign directly to num_of_snums, since we
+> need to check whether the return value is negative.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+> ---
+>   drivers/soc/fsl/qe/qe.c | 16 ++++++++++++++--
+>   1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+> index 0fb8b59f61ad..325d689cbf5c 100644
+> --- a/drivers/soc/fsl/qe/qe.c
+> +++ b/drivers/soc/fsl/qe/qe.c
+> @@ -283,7 +283,6 @@ EXPORT_SYMBOL(qe_clock_source);
+>    */
+>   static void qe_snums_init(void)
+>   {
+> -	int i;
+>   	static const u8 snum_init_76[] = {
+>   		0x04, 0x05, 0x0C, 0x0D, 0x14, 0x15, 0x1C, 0x1D,
+>   		0x24, 0x25, 0x2C, 0x2D, 0x34, 0x35, 0x88, 0x89,
+> @@ -304,7 +303,21 @@ static void qe_snums_init(void)
+>   		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
+>   		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
+>   	};
+> +	struct device_node *qe;
+>   	const u8 *snum_init;
+> +	int i;
+> +
+> +	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
+> +	qe = qe_get_device_node();
+> +	if (qe) {
+> +		i = of_property_read_variable_u8_array(qe, "fsl,qe-snums",
+> +						       snums, 1, QE_NUM_OF_SNUM);
+> +		of_node_put(qe);
+> +		if (i > 0) {
+> +			qe_num_of_snum = i;
+> +			return;
+> +		}
+> +	}
+>   
+>   	qe_num_of_snum = qe_get_num_of_snums();
+>   
+> @@ -313,7 +326,6 @@ static void qe_snums_init(void)
+>   	else
+>   		snum_init = snum_init_46;
+>   
+> -	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
+>   	memcpy(snums, snum_init, qe_num_of_snum);
+>   }
+>   
+> 
