@@ -1,69 +1,93 @@
-From: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Subject: [PATCH v6 4/5] ARM: dts: sun8i: v40: bananapi-m2-berry:
- Enable AHCI
-Date: Thu,  2 May 2019 10:33:48 -0300
-Message-ID: <1556804030-25291-5-git-send-email-pgreco@centosproject.org>
-References: <1556804030-25291-1-git-send-email-pgreco@centosproject.org>
-Reply-To: pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 0/6] Add support for Tegra186/Tegra194 and generic fixes
+Date: Thu, 2 May 2019 14:36:10 +0100
+Message-ID: <f8486dab-f95b-a4b1-36f2-89b98086d0cb@nvidia.com>
+References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC53DWXR44JBBUHDVPTAKGQE3UZWAHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1556804030-25291-1-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sameer Pujar <spujar@nvidia.com>, vkoul@kernel.org, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: thierry.reding@gmail.com, ldewangan@nvidia.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Just like the Bananapi M2 Ultra, enable the ahci controller and
-the two regulators needed to activate it.
 
-Reviewed-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On 02/05/2019 13:55, Sameer Pujar wrote:
+> Audio DMA(ADMA) interface is a gateway in the AHUB for facilitating DMA
+> transfers between memory and all of its clients. Currently the driver
+> supports Tegra210 based platforms. This series adds support for Tegra186
+> and Tegra194 based platforms and fixes few functional issues.
+> 
+> Patches in the series are classified into three categories,
+>   1. Add support for Tegra186 and Tegra194
+>   2. Add DMA pause/resume feature
+>   3. Fixes common to differernt Tegra generations
+> 
+> Below change log describes the patches in detail.
+> 
+> Change log:
+> =====================================
+> v1
+> ----
+> The series can be classified into 3 categories,
+>   1. Add support for Tegra186 and Tegra194
+>      [Patch 1/6] dmaengine: tegra210-adma: prepare for supporting newer
+>      Tegra chips
+>        * The support was there only for Tegra210
+>        * This is a preparation for adding support for newer Tegra chips
+>        * chip_data is enhanced to support differences between Tegra210 and
+>          Tegra186/Tegra194
+>      [Patch 2/6] Documentation: DT: Add compatibility binding for Tegra186
+>        * New compatibility string is required for driver to work for
+>          Tegra186 and Tegra194. Hence new compatibility is introduced.
+>        * Tegra194 can use the same compatibility as Tegra186
+>      [Patch 3/6] dmaengine: tegra210-adma: add support for Tegra186/
+>      Tegra194
+>        * Populates chip specific information for Tegra186
+>        * There is a difference in the way ADMA CH_CONFIG registers are
+>          encoded for Tegra210 and Tegra186. Added helper fucntions to
+>          support different versions of burst size configuration
+> 
+>   2. Add DMA pause/resume feature
+>      [Patch 4/6] dmaengine: tegra210-adma: add pause/resume support
+>        * Adds support for ADMA pause/resume, otherwise audio loss was seen
+>          during continuous pause/resume of audio playback.
+> 
+>   3. Fixes common to differernt Tegra generations
+>      [Patch 5/6] dmaengine: tegra210-dma: free dma controller in remove()
+>        * Fixes kernel panic observed during driver reload. DMA controller
+>          needs to be freed when driver is unloaded
+>      [Patch 6/6] dmaengine: tegra210-adma: restore channel status
+>        * Fixes resume across system suspend. If the channel state is not
+>          restored, the transfers won't resume from the state from where it
+>          was left during suspend entry. In this case, audio playback did
+>          not resume properly once system exited from low power state.
+> 
+> ===============================
+> Sameer Pujar (6):
+>   dmaengine: tegra210-adma: prepare for supporting newer Tegra chips
+>   Documentation: DT: Add compatibility binding for Tegra186
+>   dmaengine: tegra210-adma: add support for Tegra186/Tegra194
+>   dmaengine: tegra210-adma: add pause/resume support
+>   dmaengine: tegra210-dma: free dma controller in remove()
+>   dmaengine: tegra210-adma: restore channel status
+> 
+>  .../bindings/dma/nvidia,tegra210-adma.txt     |   4 +-
+>  drivers/dma/tegra210-adma.c                   | 232 +++++++++++++++++----
+>  2 files changed, 193 insertions(+), 43 deletions(-)
+> 
 
-diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index 1f4f51f9..461683c 100644
---- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-+++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -99,6 +99,12 @@
- 	};
- };
- 
-+&ahci {
-+	ahci-supply = <&reg_dldo4>;
-+	phy-supply = <&reg_eldo3>;
-+	status = "okay";
-+};
-+
- &de {
- 	status = "okay";
- };
-@@ -233,6 +239,18 @@
- 	regulator-name = "vcc-wifi";
- };
- 
-+&reg_dldo4 {
-+	regulator-min-microvolt = <2500000>;
-+	regulator-max-microvolt = <2500000>;
-+	regulator-name = "vdd2v5-sata";
-+};
-+
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vdd1v2-sata";
-+};
-+
- &tcon_tv0 {
- 	status = "okay";
- };
+Thanks!
+
+For the series ...
+
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
 -- 
-1.8.3.1
+nvpublic
