@@ -1,71 +1,123 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: add PIO VCC bank
- supplies for Pine H64
-Date: Thu, 02 May 2019 15:46:17 +0800
-Message-ID: <8CB1EDA4-E4B7-486D-8BCD-884E0025C6EA@aosc.io>
-References: <20190424062543.61852-1-icenowy@aosc.io> <20190502074303.g3px63n4v4o7xade@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
+Date: Thu, 2 May 2019 09:46:56 +0200
+Message-ID: <20190502074656.5tw62ngvjxabrw4o@flea>
+References: <20190212100929.iqsxu443qrkl6myf@flea>
+ <E1gtds8-0000NB-Re@stardust.g4.wien.funkfeuer.at>
+ <20190213094442.da2dy6d5bb527nft@flea>
+ <E1gtsx9-0000RP-08@stardust.g4.wien.funkfeuer.at>
+ <20190213155311.ovkpim3lxwyvuhhj@flea>
+ <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
+ <20190215142029.GB32618@lst.de>
+ <E1gv6rh-0000Km-U8@stardust.g4.wien.funkfeuer.at>
+ <20190218102442.l3br2h3oqfe2atdv@flea>
+ <20190430133232.GA18808@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBVWAVLTAKGQEZZS567A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190502074303.g3px63n4v4o7xade@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1550223904987698635=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190430133232.GA18808@lst.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--===============1550223904987698635==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ogjf4ravo7ykhs3c"
+Content-Disposition: inline
 
-=E4=BA=8E 2019=E5=B9=B45=E6=9C=882=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883:4=
-3:03, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi,
+
+--ogjf4ravo7ykhs3c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Apr 30, 2019 at 03:32:32PM +0200, Torsten Duwe wrote:
+> On Mon, Feb 18, 2019 at 11:24:42AM +0100, Maxime Ripard wrote:
+> > On Sat, Feb 16, 2019 at 09:47:13PM +0100, Harald Geyer wrote:
+> > >
+> > > > Would you care to submit a patch version without that GPIO handled?
+> > > > I think it's very useful and has the potential to be agreed upon.
+> > >
+> > > That would enable audio from the internal speakers but select debug
+> > > output on the HP jack by default. I would be okay with that, despite
+> > > still thinking that audio on the head phones should be the default.
+> > >
+> > > Maxime and Wens are the maintainers, so it's their call in the end.
+> >
+> > At this point, I'm not really convinced by the solution in that patch,
+> > but I don't have really good ideas either. I think it would be good to
+> > discuss this with Mark and Linus Walleij, they will probably have way
+> > better solutions than what I can come up with.
 >
->On Wed, Apr 24, 2019 at 02:25:43PM +0800, Icenowy Zheng wrote:
->> The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
->> banks.
->>
->> This patch adds supplies for PC and PD banks on Pine H64 board. PG
->and
->> PM banks are used for Wi-Fi and should be added when Wi-Fi is added
+> Once more my plead to *please* apply the unchallenged parts of this patch!
 >
->Not really. The regulator is still there, whether we use it or not. If
->it's not used, then it will be left disabled so it doesn't really
->change anything.
-
-Okay, I will include them in the next revision.
-
+> For reference:
+> https://patchwork.kernel.org/patch/10792589/
 >
->> PL bank is where PMIC is attached, and currently if a PMIC regulator
->> is added for it a dependency loop will happen.
 >
->I guess we should fix that somehow
-
-But this patch is needed for eMMC to be functional again in HS200 mode, so =
-I hope
-it can get applied before this get fixed.
-
+> Just leave out the line
 >
->Maxime
+> +	hpvcc-supply = <&reg_eldo1>; /* TODO: Use only one of these */
+> (as clarified by ChenYu)
 >
->--
->Maxime Ripard, Bootlin
->Embedded Linux and Kernel engineering
->https://bootlin.com
+> and the
+>
+> @@ -131,6 +151,14 @@
+>  	status = "okay";
+>  };
+>
+> +&r_pio {
+> +	r_debug_select_pin: debug-select {
+> [...]
+>
+> hunk, which the discussion was about. The patch is of good value
+> even without it.
+>
+> IMHO it's a shame this didn't make it into 5.1
+>
+> Acked-by: Torsten Duwe <duwe@suse.de>
 
---=20
-=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84An=
-droid=E8=AE=BE=E5=A4=87=E3=80=82
+Please resend that patch
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ogjf4ravo7ykhs3c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMqgcAAKCRDj7w1vZxhR
+xUkWAP432UpRG05M57jNudXsgptVGodfkKNSF8GCePGGa381ugD+I4nvdzZdYqOA
+sTKkTdR+ULGdkJncmivGKljgsi9Y7AA=
+=6Eua
+-----END PGP SIGNATURE-----
+
+--ogjf4ravo7ykhs3c--
+
+
+--===============1550223904987698635==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1550223904987698635==--
