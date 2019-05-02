@@ -1,71 +1,124 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
-Date: Thu, 02 May 2019 16:49:06 +0100
-Message-ID: <m3ftpw6eml.fsf@linaro.org>
-References: <20190430074730.8236-1-sebastien.szymanski@armadeus.com> <CAOMZO5D=BHWgOieLfz4bxL8v4bDmNOutUUnYSzW89KNtYn=Z9g@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+Date: Thu, 2 May 2019 11:33:59 -0500
+Message-ID: <CAL_Jsq+G-X05RhKmN+U=OYJcc4_0BmxkgFoPiYfBsSFo8QdZ_g@mail.gmail.com>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+ <506a3763-62c4-6381-c0d2-d5c5ecacd333@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAOMZO5D=BHWgOieLfz4bxL8v4bDmNOutUUnYSzW89KNtYn=Z9g@mail.gmail.com>
+In-Reply-To: <506a3763-62c4-6381-c0d2-d5c5ecacd333@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Oi Fabio,
-On Thu 02 May 2019 at 16:28, Fabio Estevam wrote:
-> [Adding Rui]
+On Thu, May 2, 2019 at 9:02 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
 >
-> On Tue, Apr 30, 2019 at 4:47 AM S=C3=A9bastien Szymanski
-> <sebastien.szymanski@armadeus.com> wrote:
->>
->> Add csi node for i.MX6UL SoC.
->>
->> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.co=
-m>
->> ---
->>  arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dt=
-si
->> index 62ed30c781ed..af322bc58333 100644
->> --- a/arch/arm/boot/dts/imx6ul.dtsi
->> +++ b/arch/arm/boot/dts/imx6ul.dtsi
->> @@ -951,6 +951,17 @@
->>                                 };
->>                         };
->>
->> +                       csi: csi@21c4000 {
->> +                               compatible =3D "fsl,imx6ul-csi", "fsl,im=
-x7-csi";
->> +                               reg =3D <0x021c4000 0x4000>;
->> +                               interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL=
-_HIGH>;
->> +                               clocks =3D <&clks IMX6UL_CLK_DUMMY>,
->> +                                        <&clks IMX6UL_CLK_CSI>,
->> +                                        <&clks IMX6UL_CLK_DUMMY>;
->> +                               clock-names =3D "axi", "mclk", "dcic";
+> On 30/04/2019 21:25, Rob Herring wrote:
+> > On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> >>
+> >> On 30/04/2019 16:02, Rob Herring wrote:
+> >>> On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> >>> <geert+renesas@glider.be> wrote:
+> >>>>
+> >>>> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> >>>>
+> >>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>>> ---
+> >>>> v2:
+> >>>>   - Add "renesas,gic-spi-base",
+> >>>>   - Document RZ/A2M.
+> >>>> ---
+> >>>>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> >>>>  1 file changed, 30 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >>>> new file mode 100644
+> >>>> index 0000000000000000..ea8ddb6955338ccd
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> >>>> @@ -0,0 +1,30 @@
+> >>>> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> >>>> +
+> >>>> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> >>>> +RZ/A1 and RZ/A2 SoCs:
+> >>>> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> >>>> +    interrupts,
+> >>>> +  - NMI edge select.
+> >>>> +
+> >>>> +Required properties:
+> >>>> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> >>>> +               fallback.
+> >>>> +               Examples with soctypes are:
+> >>>> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> >>>> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> >>>> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> >>>> +                                in interrupts.txt in this directory)
+> >>>> +  - interrupt-controller: Marks the device as an interrupt controller
+> >>>> +  - reg: Base address and length of the memory resource used by the interrupt
+> >>>> +         controller
+> >>>> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> >>>
+> >>> Why isn't this just an 'interrupts' property?
+> >>
+> >> That's likely because of kernel limitations. The DT code does an
+> >> of_populate() on any device that it finds, parse the "interrupts"
+> >> propertiy, resulting in the irq_descs being populated.
+> >>
+> >> That creates havoc, as these interrupts are not for this device, but for
+> >> something that is connected to it. This is merely a bridge of some sort.
+> >
+> > 'interrupt-map' would avoid that problem I think.
 >
-> Also, I understand you followed
-> Documentation/devicetree/bindings/media/imx7-csi.txt and passed these
-> three clocks, but looking at the i.MX7D and i.MX6UL/ULL Reference
-> Manuals, I don't find the  the descriptions for the "axi" and "dcic"
-> CSI clocks.
->
-> It looks like that only "mclk" is what we really need here.
+> I'm afraid it doesn't scale at all. Case in point, the GICv3 ITS. Up to
+> 32bit worth of IDs. How do you represent that using an interrupt-map?
+> Agreed, that's the extreme case, but representing more than a handful of
+> interrupts using an interrupt-map is a pain.
 
-Yeah, you are right.
+Neither does a "parent's irq base" property scale. It works well if
+you have a single linear range, but not any other case. So there's can
+something scale to any possible mapping and can we express simple
+cases in a compact form. Essentially we need to express the mapping
+for a range of irqs with the assumption that we can add the child irq
+number to the parent (otherwise I don't think you can scale it). That
+also requires assumptions about what the irq specifiers contain. All
+the custom properties do that anyway, but the standard interrupt
+properties do not.
 
+Perhaps we just need some interrupt controller specific hook to handle
+more complicated cases of interrupt-map. If we can't map the child to
+the parent using the standard matching (masking), then punt it to the
+driver to find a match however it wants. So you could have something
+like this:
+
+interrupt-map-mask = <0xffffffff 0>;
+interrupt-map = <<child base 1> 0 &gic GIC_SPI <parent base 1>
+IRQ_TYPE_LEVEL_HIGH>,
+        <<child base 2> 0 &gic GIC_SPI <parent base 2> IRQ_TYPE_LEVEL_HIGH>;
+
+Then it is up to the driver to decide how to map an entry and it
+doesn't require an exact match in DT. I've of course given little
+thought to how exactly we wire up that driver hook. :)
+
+> >> Furthermore, this is a rather long established practice: gic-v2m,
+> >> gic-v3-mbi, mediatek,sysirq, mediatek,cirq... All the bits of glue that
+> >> for one reason or another plug onto the GIC use the same method.
+> >
+> > All handling the mapping to the parent in their own way...
 >
-> Should we change the bindings and the imx7-csi driver to not request
-> "axi" and "dcic" clocks?
->
-> Rui, what do you think? If you agree I can send a fix for this.
+> Yes, and that's the problem. We need a scalable way to describe ranges
+> of interrupts that are "forwarded" (for the lack of a better term), but
+> now "owned" by the the interrupt controller.
 
-If you please, that would be great. thanks.
+Do we need to solve that now and for this case? Yes, 8 entries of
+interrupt-map is more verbose than just a property specifying a base
+irq, but I'd prefer standard over non-standard.
 
----
-Cheers,
-	Rui
+OTOH, I guess what's one more custom property...
+
+Rob
