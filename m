@@ -1,199 +1,49 @@
-From: =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
-Subject: [PATCH v5 3/6] devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.
-Date: Thu,  2 May 2019 13:58:17 -0400
-Message-ID: <20190502175820.25382-4-gael.portay@collabora.com>
-References: <20190502175820.25382-1-gael.portay@collabora.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
+ KUnit tests
+Date: Thu, 2 May 2019 11:07:57 -0700
+Message-ID: <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502175820.25382-1-gael.portay@collabora.com>
+In-Reply-To: <20190502110220.GD12416@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah@kernel.org, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@gmail.com>, Dan Carpenter <dan.carpenter@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
+> > From: Felix Guo <felixguoxiuping@gmail.com>
+> >
+> > The ultimate goal is to create minimal isolated test binaries; in the
+> > meantime we are using UML to provide the infrastructure to run tests, so
+> > define an abstract way to configure and run tests that allow us to
+> > change the context in which tests are built without affecting the user.
+> > This also makes pretty and dynamic error reporting, and a lot of other
+> > nice features easier.
+> >
+> > kunit_config.py:
+> >   - parse .config and Kconfig files.
+> >
+> > kunit_kernel.py: provides helper functions to:
+> >   - configure the kernel using kunitconfig.
+> >   - build the kernel with the appropriate configuration.
+> >   - provide function to invoke the kernel and stream the output back.
+> >
+> > Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>
+> Ah, here's probably my answer to my previous logging format question,
+> right?  What's the chance that these wrappers output stuff in a standard
+> format that test-framework-tools can already parse?  :)
 
-Trusted Firmware-A (TF-A) for rk3399 implements a SiP call to get the
-on-die termination (ODT) and auto power down parameters from kernel,
-this patch adds the functionality to do this. Also, if DDR clock
-frequency is lower than the on-die termination (ODT) disable frequency
-this driver should disable the DDR ODT.
+It should be pretty easy to do. I had some patches that pack up the
+results into a serialized format for a presubmit service; it should be
+pretty straightforward to take the same logic and just change the
+output format.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
----
-
-Changes in v5: None
-
-Changes in v4:
-- [PATCH v3 3/5] Add Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>.
-
-Changes in v3:
-- [PATCH v2 3/5] Add Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>.
-		 Remove comments.
-		 Move pmu dt parsing after dt-parsing of timings to fix
-		  data->odt_dis_freq value.
-
-Changes in v2: None
-
-Changes in v1:
-- [RFC 3/10] Add an explanation for platform SIP calls.
-- [RFC 3/10] Change if statement for a switch.
-- [RFC 3/10] Rename ddr_flag to odt_enable to be more clear.
-
- drivers/devfreq/rk3399_dmc.c        | 71 ++++++++++++++++++++++++++++-
- include/soc/rockchip/rockchip_sip.h |  1 +
- 2 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-index e795ad2b3f6b..daf19e121c99 100644
---- a/drivers/devfreq/rk3399_dmc.c
-+++ b/drivers/devfreq/rk3399_dmc.c
-@@ -18,14 +18,17 @@
- #include <linux/devfreq.h>
- #include <linux/devfreq-event.h>
- #include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
-+#include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/rwsem.h>
- #include <linux/suspend.h>
- 
-+#include <soc/rockchip/rk3399_grf.h>
- #include <soc/rockchip/rockchip_sip.h>
- 
- struct dram_timing {
-@@ -69,8 +72,11 @@ struct rk3399_dmcfreq {
- 	struct mutex lock;
- 	struct dram_timing timing;
- 	struct regulator *vdd_center;
-+	struct regmap *regmap_pmu;
- 	unsigned long rate, target_rate;
- 	unsigned long volt, target_volt;
-+	unsigned int odt_dis_freq;
-+	int odt_pd_arg0, odt_pd_arg1;
- };
- 
- static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
-@@ -80,6 +86,8 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
- 	struct dev_pm_opp *opp;
- 	unsigned long old_clk_rate = dmcfreq->rate;
- 	unsigned long target_volt, target_rate;
-+	struct arm_smccc_res res;
-+	bool odt_enable = false;
- 	int err;
- 
- 	opp = devfreq_recommended_opp(dev, freq, flags);
-@@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
- 
- 	mutex_lock(&dmcfreq->lock);
- 
-+	if (target_rate >= dmcfreq->odt_dis_freq)
-+		odt_enable = true;
-+
-+	/*
-+	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
-+	 * timings and to enable or disable the ODT (on-die termination)
-+	 * resistors.
-+	 */
-+	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
-+		      dmcfreq->odt_pd_arg1,
-+		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
-+		      odt_enable, 0, 0, 0, &res);
-+
- 	/*
- 	 * If frequency scaling from low to high, adjust voltage first.
- 	 * If frequency scaling from high to low, adjust frequency first.
-@@ -294,11 +315,13 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- {
- 	struct arm_smccc_res res;
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = pdev->dev.of_node, *node;
- 	struct rk3399_dmcfreq *data;
- 	int ret, index, size;
- 	uint32_t *timing;
- 	struct dev_pm_opp *opp;
-+	u32 ddr_type;
-+	u32 val;
- 
- 	data = devm_kzalloc(dev, sizeof(struct rk3399_dmcfreq), GFP_KERNEL);
- 	if (!data)
-@@ -354,10 +377,56 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	node = of_parse_phandle(np, "rockchip,pmu", 0);
-+	if (node) {
-+		data->regmap_pmu = syscon_node_to_regmap(node);
-+		if (IS_ERR(data->regmap_pmu))
-+			return PTR_ERR(data->regmap_pmu);
-+	}
-+
-+	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-+	ddr_type = (val >> RK3399_PMUGRF_DDRTYPE_SHIFT) &
-+		    RK3399_PMUGRF_DDRTYPE_MASK;
-+
-+	switch (ddr_type) {
-+	case RK3399_PMUGRF_DDRTYPE_DDR3:
-+		data->odt_dis_freq = data->timing.ddr3_odt_dis_freq;
-+		break;
-+	case RK3399_PMUGRF_DDRTYPE_LPDDR3:
-+		data->odt_dis_freq = data->timing.lpddr3_odt_dis_freq;
-+		break;
-+	case RK3399_PMUGRF_DDRTYPE_LPDDR4:
-+		data->odt_dis_freq = data->timing.lpddr4_odt_dis_freq;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
- 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
- 		      ROCKCHIP_SIP_CONFIG_DRAM_INIT,
- 		      0, 0, 0, 0, &res);
- 
-+	/*
-+	 * In TF-A there is a platform SIP call to set the PD (power-down)
-+	 * timings and to enable or disable the ODT (on-die termination).
-+	 * This call needs three arguments as follows:
-+	 *
-+	 * arg0:
-+	 *     bit[0-7]   : sr_idle
-+	 *     bit[8-15]  : sr_mc_gate_idle
-+	 *     bit[16-31] : standby idle
-+	 * arg1:
-+	 *     bit[0-11]  : pd_idle
-+	 *     bit[16-27] : srpd_lite_idle
-+	 * arg2:
-+	 *     bit[0]     : odt enable
-+	 */
-+	data->odt_pd_arg0 = (data->timing.sr_idle & 0xff) |
-+			    ((data->timing.sr_mc_gate_idle & 0xff) << 8) |
-+			    ((data->timing.standby_idle & 0xffff) << 16);
-+	data->odt_pd_arg1 = (data->timing.pd_idle & 0xfff) |
-+			    ((data->timing.srpd_lite_idle & 0xfff) << 16);
-+
- 	/*
- 	 * We add a devfreq driver to our parent since it has a device tree node
- 	 * with operating points.
-diff --git a/include/soc/rockchip/rockchip_sip.h b/include/soc/rockchip/rockchip_sip.h
-index 7e28092c4d3d..ad9482c56797 100644
---- a/include/soc/rockchip/rockchip_sip.h
-+++ b/include/soc/rockchip/rockchip_sip.h
-@@ -23,5 +23,6 @@
- #define ROCKCHIP_SIP_CONFIG_DRAM_GET_RATE	0x05
- #define ROCKCHIP_SIP_CONFIG_DRAM_CLR_IRQ	0x06
- #define ROCKCHIP_SIP_CONFIG_DRAM_SET_PARAM	0x07
-+#define ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD	0x08
- 
- #endif
--- 
-2.21.0
+Cheers
