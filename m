@@ -1,51 +1,113 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: i2c: add optional mul-value property to
- binding
-Date: Thu, 2 May 2019 15:59:01 -0500
-Message-ID: <20190502205901.GA24224@bogus>
-References: <20190430043242.29687-1-chuanhua.han@nxp.com>
+Subject: Re: [RFC v1 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Date: Thu, 2 May 2019 16:06:47 -0500
+Message-ID: <20190502210647.GA32209@bogus>
+References: <20190430112012.4514-1-roger.lu@mediatek.com>
+ <20190430112012.4514-2-roger.lu@mediatek.com>
+ <155665629219.168659.8221738507474891604@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190430043242.29687-1-chuanhua.han@nxp.com>
+In-Reply-To: <155665629219.168659.8221738507474891604@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com, festevam@gmail.com, wsa+renesas@sang-engineering.com, u.kleine-koenig@pengutronix.de, eha@deif.com, linux@rempel-privat.de, sumit.batra@nxp.com, l.stach@pengutronix.de, peda@axentia.se
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Matthias Brugger <matthias.bgg@gmail.com>, Roger Lu <roger.lu@mediatek.com>, Viresh Kumar <vireshk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:32:40PM +0800, Chuanhua Han wrote:
-> NXP Layerscape SoC have up to three MUL options available for all
-> divider values, we choice of MUL determines the internal monitor rate
-> of the I2C bus (SCL and SDA signals):
-> A lower MUL value results in a higher sampling rate of the I2C signals.
-> A higher MUL value results in a lower sampling rate of the I2C signals.
+On Tue, Apr 30, 2019 at 01:31:32PM -0700, Stephen Boyd wrote:
+> Quoting Roger Lu (2019-04-30 04:20:10)
+> > Document the binding for enabling mtk svs on MediaTek SoC.
+> > 
+> > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/power/mtk-svs.txt     | 70 +++++++++++++++++++
+> >  1 file changed, 70 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > new file mode 100644
+> > index 000000000000..355329db74ba
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > @@ -0,0 +1,70 @@
+> > +* Mediatek Smart Voltage Scaling (MTK SVS)
+> > +
+> > +This describes the device tree binding for the MTK SVS controller
+> > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> > +needs thermal data to calculate thermal slope for accurately compensate
+> > +the voltages when temperature change.
+> > +
+> > +Required properties:
+> > +- compatible:
+> > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> > +- reg: Address range of the MTK SVS controller.
+> > +- interrupts: IRQ for the MTK SVS controller.
+> > +- clocks, clock-names: Clocks needed for the svs controller. required
+> > +                       clocks are:
+> > +                      "main_clk": Main clock needed for register access
+> > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> > +- svs_xxx: Phandle of svs_bank device for controlling corresponding opp
 > 
-> So in Optional properties we added our custom mul-value property in the
-> binding to select which mul option for the device tree i2c controller
-> node.
+> Properties shouldn't have underscores in them. Use dashes?
+
+It's also a node, not a property.
+
 > 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-imx.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> > +           table and power-domains.
+> > +- vxxx-supply: Phandle to each regulator. vxxx can be "vcpu_little",
+> > +              "vcpu_big", "vcci" and "vgpu".
+
+Just list each property instead of the indirection with 'xxx'. Though 
+here to, these should be in the nodes actually getting the power.
+
+> > +
+> > +Example:
+> > +
+> > +       svs: svs@1100b000 {
+> > +               compatible = "mediatek,mt8183-svs";
+> > +               reg = <0 0x1100b000 0 0x1000>;
+> > +               interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
+> > +               clocks = <&infracfg CLK_INFRA_THERM>;
+> > +               clock-names = "main_clk";
+> > +               nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> > +               nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> > +
+> > +               svs_cpu_little: svs_cpu_little {
+> > +                       compatible = "mediatek,mt8183-svs-cpu-little";
+
+Not documented. Though I think the child nodes should be removed if you 
+do as Stephen suggests below.
+
+> > +                       operating-points-v2 = <&cluster0_opp>;
+> > +               };
+> > +
+> > +               svs_cpu_big: svs_cpu_big {
+> > +                       compatible = "mediatek,mt8183-svs-cpu-big";
+> > +                       operating-points-v2 = <&cluster1_opp>;
+> > +               };
+> > +
+> > +               svs_cci: svs_cci {
+> > +                       compatible = "mediatek,mt8183-svs-cci";
+> > +                       operating-points-v2 = <&cluster2_opp>;
+> > +               };
+> > +
+> > +               svs_gpu: svs_gpu {
+> > +                       compatible = "mediatek,mt8183-svs-gpu";
+> > +                       power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> > +                       operating-points-v2 = <&gpu_opp_table>;
+> > +               };
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-> index b967544590e8..ba8e7b7b3fa8 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-> @@ -18,6 +18,9 @@ Optional properties:
->  - sda-gpios: specify the gpio related to SDA pin
->  - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
->    bus recovery, call it "gpio" state
-> +- mul-value: NXP Layerscape SoC have up to three MUL options available for
-> +all I2C divider values, it describes which MUL we choose to use for the driver,
-> +the values should be 1,2,4.
-
-Needs a vendor prefix. I don't find 'value' to add anything nor do I 
-understand what MUL is.
-
-If it is determined by SoC rather than board, then it should perhaps be 
-implied by compatible.
-
-Rob
+> It looks like you need multiple OPPs for a single device, because it has
+> different independent power supplies it wants to associate the OPP
+> tables with? Why can't these OPP tables be attached to the devices that
+> use them, i.e. CPU, GPU, CCI, etc.? Seems odd that those devices don't
+> have OPP tables that this hardware block can look up somehow. Similarly,
+> the power domains should probably be part of the devices that are using
+> them and not these sub-nodes that are mirroring the other hardware
+> blocks in the system?
+> 
+> > +       };
+> > +
+> > +       &svs_cpu_little {
