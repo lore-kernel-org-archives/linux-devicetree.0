@@ -1,61 +1,77 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] of: unittest: Remove error printing on OOM
-Date: Thu,  2 May 2019 14:45:35 +0200
-Message-ID: <20190502124535.6292-1-geert+renesas@glider.be>
+From: Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH 0/6] Add support for Tegra186/Tegra194 and generic fixes
+Date: Thu, 2 May 2019 18:25:11 +0530
+Message-ID: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: vkoul@kernel.org, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-There is no need to print a backtrace or other error message if
-kzalloc(), kmemdup(), or devm_kzalloc() fails, as the memory allocation
-core already takes care of that.
+Audio DMA(ADMA) interface is a gateway in the AHUB for facilitating DMA
+transfers between memory and all of its clients. Currently the driver
+supports Tegra210 based platforms. This series adds support for Tegra186
+and Tegra194 based platforms and fixes few functional issues.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/of/unittest.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+Patches in the series are classified into three categories,
+  1. Add support for Tegra186 and Tegra194
+  2. Add DMA pause/resume feature
+  3. Fixes common to differernt Tegra generations
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 2f8e43876c3da70c..a3d31103962b7dd9 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -344,7 +344,7 @@ static void __init of_unittest_check_phandles(void)
- 		}
- 
- 		nh = kzalloc(sizeof(*nh), GFP_KERNEL);
--		if (WARN_ON(!nh))
-+		if (!nh)
- 			return;
- 
- 		nh->np = np;
-@@ -1199,12 +1199,9 @@ static int __init unittest_data_add(void)
- 
- 	/* creating copy */
- 	unittest_data = kmemdup(__dtb_testcases_begin, size, GFP_KERNEL);
--
--	if (!unittest_data) {
--		pr_warn("%s: Failed to allocate memory for unittest_data; "
--			"not running tests\n", __func__);
-+	if (!unittest_data)
- 		return -ENOMEM;
--	}
-+
- 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
-@@ -1845,10 +1842,8 @@ static int unittest_i2c_bus_probe(struct platform_device *pdev)
- 	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
- 
- 	std = devm_kzalloc(dev, sizeof(*std), GFP_KERNEL);
--	if (!std) {
--		dev_err(dev, "Failed to allocate unittest i2c data\n");
-+	if (!std)
- 		return -ENOMEM;
--	}
- 
- 	/* link them together */
- 	std->pdev = pdev;
+Below change log describes the patches in detail.
+
+Change log:
+=====================================
+v1
+----
+The series can be classified into 3 categories,
+  1. Add support for Tegra186 and Tegra194
+     [Patch 1/6] dmaengine: tegra210-adma: prepare for supporting newer
+     Tegra chips
+       * The support was there only for Tegra210
+       * This is a preparation for adding support for newer Tegra chips
+       * chip_data is enhanced to support differences between Tegra210 and
+         Tegra186/Tegra194
+     [Patch 2/6] Documentation: DT: Add compatibility binding for Tegra186
+       * New compatibility string is required for driver to work for
+         Tegra186 and Tegra194. Hence new compatibility is introduced.
+       * Tegra194 can use the same compatibility as Tegra186
+     [Patch 3/6] dmaengine: tegra210-adma: add support for Tegra186/
+     Tegra194
+       * Populates chip specific information for Tegra186
+       * There is a difference in the way ADMA CH_CONFIG registers are
+         encoded for Tegra210 and Tegra186. Added helper fucntions to
+         support different versions of burst size configuration
+
+  2. Add DMA pause/resume feature
+     [Patch 4/6] dmaengine: tegra210-adma: add pause/resume support
+       * Adds support for ADMA pause/resume, otherwise audio loss was seen
+         during continuous pause/resume of audio playback.
+
+  3. Fixes common to differernt Tegra generations
+     [Patch 5/6] dmaengine: tegra210-dma: free dma controller in remove()
+       * Fixes kernel panic observed during driver reload. DMA controller
+         needs to be freed when driver is unloaded
+     [Patch 6/6] dmaengine: tegra210-adma: restore channel status
+       * Fixes resume across system suspend. If the channel state is not
+         restored, the transfers won't resume from the state from where it
+         was left during suspend entry. In this case, audio playback did
+         not resume properly once system exited from low power state.
+
+===============================
+Sameer Pujar (6):
+  dmaengine: tegra210-adma: prepare for supporting newer Tegra chips
+  Documentation: DT: Add compatibility binding for Tegra186
+  dmaengine: tegra210-adma: add support for Tegra186/Tegra194
+  dmaengine: tegra210-adma: add pause/resume support
+  dmaengine: tegra210-dma: free dma controller in remove()
+  dmaengine: tegra210-adma: restore channel status
+
+ .../bindings/dma/nvidia,tegra210-adma.txt     |   4 +-
+ drivers/dma/tegra210-adma.c                   | 232 +++++++++++++++++----
+ 2 files changed, 193 insertions(+), 43 deletions(-)
+
 -- 
-2.17.1
+2.7.4
