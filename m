@@ -1,79 +1,80 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] Documentation: dt-bindings: Add
- snps,need-phy-for-wake for dwc2 USB
-Date: Thu, 2 May 2019 11:36:01 -0700
-Message-ID: <CAD=FV=XTBgKnnswhfoQH3qWjpbp831e1L1+j+QCjxx2h=aQoog@mail.gmail.com>
-References: <20190418001356.124334-1-dianders@chromium.org>
- <20190418001356.124334-4-dianders@chromium.org>
- <87pnpas1fx.fsf@linux.intel.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 16/17] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+Date: Thu, 2 May 2019 11:45:43 -0700
+Message-ID: <CAFd5g471Wawu6g14p0AO3aY8VPBKLA0mjHSdfR1qStFGzp3iGQ@mail.gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-17-brendanhiggins@google.com> <20190502110347.GE12416@kroah.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <87pnpas1fx.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Artur Petrosyan <Arthur.Petrosyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Minas Harutyunyan <hminas-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Case <ryandcase-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Bird, Timothy" <Tim.Bird@sony.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah@kernel.org, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, Amir Goldstein <amir73il@gmail.com>, Dan Carpenter <dan.carpenter@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Apr 25, 2019 at 5:40 AM Felipe Balbi
-<felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+On Thu, May 2, 2019 at 11:15 AM <Tim.Bird@sony.com> wrote:
 >
-> Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> writes:
 >
-> > Some SoCs with a dwc2 USB controller may need to keep the PHY on to
-> > support remote wakeup.  Allow specifying this as a device tree
-> > property.
-> >
-> > Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> > For relevant prior discussion on this patch, see:
-> >
-> > https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-> >
-> > I didn't make any changes from the prior version since I never found
-> > out what Rob thought of my previous arguments.  If folks want a
-> > change, perhaps they could choose from these options:
-> >
-> > 1. Assume that all dwc2 hosts would like to keep their PHY on for
-> >    suspend if there's a USB wakeup enabled, thus we totally drop this
-> >    binding.  This doesn't seem super great to me since I'd bet that
-> >    many devices that use dwc2 weren't designed for USB wakeup (they
-> >    may not keep enough clocks or rails on) so we might be wasting
-> >    power for nothing.
-> > 2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
-> >    it more obvious that this property is intended both to document
-> >    that wakeup from suspend is possible and that we need the PHY for
-> >    said wakeup.
-> > 3. Rename this property to "snps,can-wakeup-from-suspend" and assume
-> >    it's implicit that if we can wakeup from suspend that we need to
-> >    keep the PHY on.  If/when someone shows that a device exists using
-> >    dwc2 where we can wakeup from suspend without the PHY they can add
-> >    a new property.
-> >
-> > Changes in v2: None
-> >
-> >  Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
 >
-> checking file Documentation/devicetree/bindings/usb/dwc2.txt
-> Hunk #1 FAILED at 37.
-> Hunk #2 succeeded at 52 (offset -1 lines).
-> 1 out of 2 hunks FAILED
+> > -----Original Message-----
+> > From: Greg KH
+> >
+> > On Wed, May 01, 2019 at 04:01:25PM -0700, Brendan Higgins wrote:
+> > > From: Iurii Zaikin <yzaikin@google.com>
+> > >
+> > > KUnit tests for initialized data behavior of proc_dointvec that is
+> > > explicitly checked in the code. Includes basic parsing tests including
+> > > int min/max overflow.
+> > >
+> > > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > ---
+> > >  kernel/Makefile      |   2 +
+> > >  kernel/sysctl-test.c | 292
+> > +++++++++++++++++++++++++++++++++++++++++++
+> > >  lib/Kconfig.debug    |   6 +
+> > >  3 files changed, 300 insertions(+)
+> > >  create mode 100644 kernel/sysctl-test.c
+> > >
+> > > diff --git a/kernel/Makefile b/kernel/Makefile
+> > > index 6c57e78817dad..c81a8976b6a4b 100644
+> > > --- a/kernel/Makefile
+> > > +++ b/kernel/Makefile
+> > > @@ -112,6 +112,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+> > >  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+> > >  obj-$(CONFIG_RSEQ) += rseq.o
+> > >
+> > > +obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+> >
+> > You are going to have to have a "standard" naming scheme for test
+> > modules, are you going to recommend "foo-test" over "test-foo"?  If so,
+> > that's fine, we should just be consistant and document it somewhere.
+> >
+> > Personally, I'd prefer "test-foo", but that's just me, naming is hard...
+>
+> My preference would be "test-foo" as well.  Just my 2 cents.
 
-Can you try applying this and the next two patches again?  ...or let
-me know that you'd like me to repost?
+I definitely agree we should be consistent. My personal bias
+(unsurprisingly) is "foo-test," but this is just because that is the
+convention I am used to in other projects I have worked on.
 
-Thanks!
+On an unbiased note, we are currently almost evenly split between the
+two conventions with *slight* preference for "foo-test": I ran the two
+following grep commands on v5.1-rc7:
 
--Doug
+grep -Hrn --exclude-dir="build" -e "config [a-zA-Z_0-9]\+_TEST$" | wc -l
+grep -Hrn --exclude-dir="build" -e "config TEST_[a-zA-Z_0-9]\+" | wc -l
+
+"foo-test" has 36 occurrences.
+"test-foo" has 33 occurrences.
+
+The things I am more concerned about is how this would affect file
+naming. If we have a unit test for foo.c, I think foo_test.c is more
+consistent with our namespacing conventions. The other thing, is if we
+already have a Kconfig symbol called FOO_TEST (or TEST_FOO) what
+should we name the KUnit test in this case? FOO_UNIT_TEST?
+FOO_KUNIT_TEST, like I did above?
+
+Cheers
