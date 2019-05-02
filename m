@@ -1,126 +1,187 @@
-Return-Path: <SRS0=w9il=TD=nxp.com=aisheng.dong@kernel.org>
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to parse
- clocks from device tree
-Date: Fri, 3 May 2019 01:33:22 +0000
-Message-ID: <1556846746-8535-2-git-send-email-aisheng.dong@nxp.com>
-References: <1556846746-8535-1-git-send-email-aisheng.dong@nxp.com>
-In-Reply-To: <1556846746-8535-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=PrsS=TC=mxic.com.tw=masonccyang@kernel.org>
+In-Reply-To: <20190502024103.GT14916@sirena.org.uk>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-4-git-send-email-masonccyang@mxic.com.tw> <20190419145151.GR2803@sirena.org.uk> <OF7742B4A9.445066F6-ON482583EC.0037E377-482583EC.0039125B@mxic.com.tw> <20190502024103.GT14916@sirena.org.uk>
+Subject: Re: [PATCH v3 3/4] spi: Patch Macronix SPI controller driver according to
+ MX25F0A MFD driver
 MIME-Version: 1.0
-To: "aiseng.dong@nxp.com" <aiseng.dong@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Message-ID: <OFA2A891D4.B6E07B39-ON482583EE.0012A872-482583EE.0012F9E4@mxic.com.tw>
+From: masonccyang@mxic.com.tw
+Date: Thu, 2 May 2019 11:27:15 +0800
+Content-Type: multipart/alternative; boundary="=_alternative 0012F9E2482583EE_="
+To: Mark Brown <broonie@kernel.org>
+Cc: bbrezillon@kernel.org, christophe.kerello@st.com, computersforpeace@gmal.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, miquel.raynal@bootlin.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
 List-ID: <devicetree@vger.kernel.org>
 
-VGhlcmUncyBhIGZldyBsaW1pdGF0aW9ucyBvbiB0aGUgb3JpZ2luYWwgb25lIGNlbGwgY2xvY2sg
-YmluZGluZw0KKCNjbG9jay1jZWxscyA9IDwxPikgdGhhdCB3ZSBoYXZlIHRvIGRlZmluZSBhbGwg
-Y2xvY2sgSURzIGZvciBkZXZpY2UNCnRyZWUgdG8gcmVmZXJlbmNlLiBUaGlzIG1heSBjYXVzZSB0
-cm91YmxlcyBpZiB3ZSB3YW50IHRvIHVzZSBjb21tb24NCmNsb2NrIElEcyBmb3IgbXVsdGkgcGxh
-dGZvcm1zIHN1cHBvcnQgd2hlbiB0aGUgY2xvY2sgb2YgdGhvc2UgcGxhdGZvcm1zDQphcmUgbW9z
-dGx5IHRoZSBzYW1lLg0KZS5nLiBDdXJyZW50IGNsb2NrIElEcyBuYW1lIGFyZSBkZWZpbmVkIHdp
-dGggU1MgcHJlZml4Lg0KDQpIb3dldmVyIHRoZSBkZXZpY2UgbWF5IHJlc2lkZSBpbiBkaWZmZXJl
-bnQgU1MgYWNyb3NzIENQVXMsIHRoYXQgbWVhbnMgdGhlDQpTUyBwcmVmaXggbWF5IG5vdCB2YWxp
-ZCBhbnltb3JlIGZvciBhIG5ldyBTb0MuIEZ1cnRoZXJtb3JlLCB0aGUgZGV2aWNlDQphdmFpbGFi
-aWxpdHkgb2YgdGhvc2UgY2xvY2tzIG1heSBhbHNvIHZhcnkgYSBiaXQuDQoNCkZvciBzdWNoIHNp
-dHVhdGlvbiwgV2UgZm9ybWVybHkgcGxhbm5lZCB0byBhZGQgYWxsIG5ldyBJRHMgZm9yIGVhY2gg
-U1MNCmFuZCBkeW5hbWljYWxseSBjaGVjayBhdmFpbGFiaWxpdHkgZm9yIGRpZmZlcmVudCBTb0Mg
-aW4gZHJpdmVyLiBUaGF0IGNhbg0KYmUgZG9uZSBidXQgdGhhdCBtYXkgaW52b2x2ZSBhIGxvdCBl
-ZmZvcnQgYW5kIG1heSByZXN1bHQgaW4gbW9yZSBjaGFuZ2VzDQphbmQgZHVwbGljYXRlZCBjb2Rl
-IGluIGRyaXZlciwgYWxzbyBtYWtlIGRldmljZSB0cmVlIHVwc3RyZWFtaW5nIGhhcmQgd2hpY2gN
-CmRlcGVuZHMgb24gQ2xvY2sgSURzLg0KDQpUbyByZWxpZWYgdGhpcyBzaXR1YXRpb24sIHdlIHdh
-bnQgdG8gbW92ZSB0aGUgY2xvY2sgZGVmaW5pdGlvbiBpbnRvDQpkZXZpY2UgdHJlZSB3aGljaCBj
-YW4gZnVsbHkgZGVjb3VwbGUgdGhlIGRlcGVuZGVuY3kgb2YgQ2xvY2sgSUQgZGVmaW5pdGlvbg0K
-ZnJvbSBkZXZpY2UgdHJlZS4gVGhpcyBjYW4gbWFrZSB1cyB3cml0ZSBhIGZ1bGwgZ2VuZXJpYyBj
-bG9jayBkcml2ZXINCmZvciBTQ1UgYmFzZWQgU29Dcy4gTm8gbW9yZSBmcmVxdWVudCBjaGFuZ2Vz
-IG5lZWRlZCBpbiBjbG9jayBkcml2ZXINCmFueSBtb3JlLg0KDQpJbiB0aGUgbWVhbndoaWxlLCB3
-ZSBjYW4gYWxzbyB1c2UgdGhlIGV4aXN0ZW5jZSBvZiBjbG9jayBub2RlcyBpbiBkZXZpY2UNCnRy
-ZWUgdG8gYWRkcmVzcyB0aGUgZGV2aWNlIGFuZCBjbG9jayBhdmFpbGFiaWxpdHkgZGlmZmVyZW5j
-ZXMgYWNyb3NzDQpkaWZmZXJlbnQgU29Dcy4NCg0KRm9yIFNDVSBjbG9ja3MsIG9ubHkgdHdvIHBh
-cmFtcyByZXF1aXJlZC4gVGhlIGZpcnN0IG9uZSBpcyByZXNvdXJjZSBpZA0Kd2hpY2ggaXMgZW5j
-b2RlZCBpbiByZWcgcHJvcGVydHkgYW5kIHRoZSBzZWNvbmQgaXMgY2xvY2sgdHlwZSBpbmRleA0K
-d2hpY2ggaXMgZW5jb2RlZCBpbiBnZW5lcmljIGNsb2NrLWluZGljZXMgcHJvcGVydHkgdGhleSdy
-ZSBub3QgY29udGludW91c2x5Lg0KDQpBbmQgYXMgd2UgYWxzbyB3YW50IHRvIHN1cHBvcnQgY2xv
-Y2sgc2V0IHBhcmVudCBmdW5jdGlvbiwgJ2Nsb2NrcycgcHJvcGVydHkNCmlzIGFsc28gdXNlZCB0
-byBwYXNzIGFsbCB0aGUgcG9zc2libGUgaW5wdXQgcGFyZW50cy4NCg0KQ2M6IFJvYiBIZXJyaW5n
-IDxyb2JoK2R0QGtlcm5lbC5vcmc+DQpDYzogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3Jn
-Pg0KQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCkNjOiBTYXNjaGEgSGF1ZXIg
-PGtlcm5lbEBwZW5ndXRyb25peC5kZT4NCkNjOiBNaWNoYWVsIFR1cnF1ZXR0ZSA8bXR1cnF1ZXR0
-ZUBiYXlsaWJyZS5jb20+DQpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNClNpZ25lZC1v
-ZmYtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQotLS0NCkNoYW5nZUxv
-ZzoNCnYxLT52MjoNCiAqIGNoYW5nZWQgdG8gb25lIGNlbGwgYmluZGluZyBpbnNwaXJlZCBieSBh
-cm0sc2NwaS50eHQNCiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXJt
-LHNjcGkudHh0DQogICBSZXNvdXJjZSBJRCBpcyBlbmNvZGVkIGluICdyZWcnIHByb3BlcnR5Lg0K
-ICAgQ2xvY2sgdHlwZSBpcyBlbmNvZGVkIGluIGdlbmVyaWMgY2xvY2staW5kaWNlcyBwcm9wZXJ0
-eS4NCiAgIFRoZW4gd2UgZG9uJ3QgaGF2ZSB0byBzZWFyY2ggYWxsIHRoZSBEVCBub2RlcyB0byBm
-ZXRjaA0KICAgdGhvc2UgdHdvIHZhbHVlIHRvIGNvbnN0cnVjdCBjbG9ja3Mgd2hpY2ggaXMgcmVs
-YXRpdmVseQ0KICAgbG93IGVmZmljaWVuY3kuDQogKiBBZGQgcmVxdWlyZWQgcG93ZXItZG9tYWlu
-IHByb3BlcnR5IGFzIHdlbGwuDQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJl
-ZXNjYWxlL2ZzbCxzY3UudHh0ICB8IDQ1ICsrKysrKysrKysrKysrKysrKy0tLS0NCiBpbmNsdWRl
-L2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmggICAgICAgICAgICB8IDE3ICsrKysrKysr
-DQogMiBmaWxlcyBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0KDQpk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
-bGUvZnNsLHNjdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Zy
-ZWVzY2FsZS9mc2wsc2N1LnR4dA0KaW5kZXggNWQ3ZGJhYi4uMmY0NmU4OSAxMDA2NDQNCi0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3Uu
-dHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2Fs
-ZS9mc2wsc2N1LnR4dA0KQEAgLTg5LDYgKzg5LDI3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQog
-CQkJICAiZnNsLGlteDhxbS1jbG9jayINCiAJCQkgICJmc2wsaW14OHF4cC1jbG9jayINCiAJCQlm
-b2xsb3dlZCBieSAiZnNsLHNjdS1jbGsiDQorLSAjYWRkcmVzcy1jZWxsczoJU2hvdWxkIGJlIDEu
-DQorLSAjc2l6ZS1jZWxsczoJCVNob3VsZCBiZSAwLg0KKw0KK1N1YiBub2RlcyBhcmUgcmVxdWly
-ZWQgdG8gcmVwcmVzZW50IGFsbCBhdmFpbGFibGUgU0NVIGNsb2NrcyB3aXRoaW4gdGhpcw0KK2hh
-cmR3YXJlIHN1YnN5c3RlbSBhbmQgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzIGFyZSBuZWVkZWQ6
-DQorDQorLSByZWc6CQkJU2hvdWxkIGNvbnRhaW4gdGhlIFJlc291cmNlIElEIG9mIHRoaXMgU0NV
-IGNsb2NrLg0KKy0gI2Nsb2NrLWNlbGxzOgkJU2hvdWxkIGJlIDEuDQorLSBjbG9jay1pbmRpY2Vz
-OglJbmRleCBvZiBhbGwgY2xvY2sgdHlwZXMgc3VwcG9ydGVkIGJ5IHRoaXMgU0NVIGNsb2NrLg0K
-KwkJCVRoZSBvcmRlciBzaG91bGQgbWF0Y2ggdGhlIGNsb2NrLW91dHB1dC1uYW1lcyBhcnJheS4N
-CisJCQlSZWZlciB0byA8aW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPiBm
-b3INCisJCQlhdmFpbGFibGUgY2xvY2sgdHlwZXMgc3VwcG9ydGVkIGJ5IFNDVS4NCistIGNsb2Nr
-LW91dHB1dC1uYW1lczoJU2hhbGwgYmUgdGhlIGNvcnJlc3BvbmRpbmcgbmFtZXMgb2YgdGhlIG91
-dHB1dHMuDQorLSBwb3dlci1kb21haW5zOglTaG91bGQgY29udGFpbiB0aGUgcG93ZXIgZG9tYWlu
-IHVzZWQgYnkgdGhpcyBTQ1UgY2xvY2suDQorDQorT3B0aW9uYWwgcHJvcGVydGllczoNCistIGNs
-b2NrczoJCVNoYWxsIGJlIHRoZSBpbnB1dCBwYXJlbnQgY2xvY2socykgcGhhbmRsZSBmb3IgdGhl
-IGNsb2NrLg0KKwkJCUZvciBtdWx0aXBsZXhlZCBjbG9ja3MsIHRoZSBsaXN0IG9yZGVyIG11c3Qg
-bWF0Y2ggdGhlIGhhcmR3YXJlDQorCQkJcHJvZ3JhbW1pbmcgb3JkZXIuDQorDQorTGVnYWN5IENs
-b2NrIGJpbmRpbmcgKE5vIHN1Yi1ub2RlcyB3aGljaCBpcyBERVBSRUNBVEVEKToNCiAtICNjbG9j
-ay1jZWxsczoJCVNob3VsZCBiZSAxLiBDb250YWlucyB0aGUgQ2xvY2sgSUQgdmFsdWUuDQogLSBj
-bG9ja3M6CQlMaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMsIG11c3QgY29udGFpbiBhbiBlbnRyeSBm
-b3INCiAJCQllYWNoIHJlcXVpcmVkIGVudHJ5IGluIGNsb2NrLW5hbWVzDQpAQCAtMTQ0LDYgKzE2
-NSwyMSBAQCBsc2lvX211MTogbWFpbGJveEA1ZDFjMDAwMCB7DQogCSNtYm94LWNlbGxzID0gPDI+
-Ow0KIH07DQogDQorY29ubi1zY3UtY2xvY2stY29udHJvbGxlciB7DQorCWNvbXBhdGlibGUgPSAi
-ZnNsLGlteDhxeHAtY2xrIiwgImZzbCxzY3UtY2xrIjsNCisJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-DQorCSNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKwl1YXJ0MF9jbGs6IGNsb2NrLXNjdUA1NyB7DQor
-CQlyZWcgPSA8NTc+Ow0KKwkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJY2xvY2staW5kaWNlcyA9
-IDxJTVhfU0NfUE1fQ0xLX1BFUj47DQorCQljbG9jay1vdXRwdXQtbmFtZXMgPSAidWFydDBfY2xr
-IjsNCisJCXBvd2VyLWRvbWFpbnMgPSA8JnBkIElNWF9TQ19SX1VBUlRfMD47DQorCX07DQorCS4u
-Lg0KK30NCisNCiBmaXJtd2FyZSB7DQogCXNjdSB7DQogCQljb21wYXRpYmxlID0gImZzbCxpbXgt
-c2N1IjsNCkBAIC0xNjAsMTEgKzE5Niw2IEBAIGZpcm13YXJlIHsNCiAJCQkgICZsc2lvX211MSAx
-IDMNCiAJCQkgICZsc2lvX211MSAzIDM+Ow0KIA0KLQkJY2xrOiBjbGsgew0KLQkJCWNvbXBhdGli
-bGUgPSAiZnNsLGlteDhxeHAtY2xrIiwgImZzbCxzY3UtY2xrIjsNCi0JCQkjY2xvY2stY2VsbHMg
-PSA8MT47DQotCQl9Ow0KLQ0KIAkJaW9tdXhjIHsNCiAJCQljb21wYXRpYmxlID0gImZzbCxpbXg4
-cXhwLWlvbXV4YyI7DQogDQpAQCAtMTkyLDggKzIyMyw2IEBAIHNlcmlhbEA1YTA2MDAwMCB7DQog
-CS4uLg0KIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KIAlwaW5jdHJsLTAgPSA8JnBpbmN0
-cmxfbHB1YXJ0MD47DQotCWNsb2NrcyA9IDwmY2xrIElNWDhRWFBfVUFSVDBfQ0xLPiwNCi0JCSA8
-JmNsayBJTVg4UVhQX1VBUlQwX0lQR19DTEs+Ow0KLQljbG9jay1uYW1lcyA9ICJwZXIiLCAiaXBn
-IjsNCisJY2xvY2tzID0gPCZ1YXJ0MF9jbGsgSU1YX1NDX1BNX0NMS19QRVI+Ow0KIAlwb3dlci1k
-b21haW5zID0gPCZwZCBJTVhfU0NfUl9VQVJUXzA+Ow0KIH07DQpkaWZmIC0tZ2l0IGEvaW5jbHVk
-ZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9m
-aXJtd2FyZS9pbXgvcnNyYy5oDQppbmRleCA0ZTYxZjY0Li5mYmVhY2E3IDEwMDY0NA0KLS0tIGEv
-aW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oDQorKysgYi9pbmNsdWRlL2R0
-LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmgNCkBAIC01NDcsNCArNTQ3LDIxIEBADQogI2Rl
-ZmluZSBJTVhfU0NfUl9BVFRFU1RBVElPTgkJNTQ1DQogI2RlZmluZSBJTVhfU0NfUl9MQVNUCQkJ
-NTQ2DQogDQorLyoNCisgKiBEZWZpbmVzIGZvciBTQyBQTSBDTEsNCisgKi8NCisjZGVmaW5lIElN
-WF9TQ19QTV9DTEtfU0xWX0JVUwkJMAkvKiBTbGF2ZSBidXMgY2xvY2sgKi8NCisjZGVmaW5lIElN
-WF9TQ19QTV9DTEtfTVNUX0JVUwkJMQkvKiBNYXN0ZXIgYnVzIGNsb2NrICovDQorI2RlZmluZSBJ
-TVhfU0NfUE1fQ0xLX1BFUgkJMgkvKiBQZXJpcGhlcmFsIGNsb2NrICovDQorI2RlZmluZSBJTVhf
-U0NfUE1fQ0xLX1BIWQkJMwkvKiBQaHkgY2xvY2sgKi8NCisjZGVmaW5lIElNWF9TQ19QTV9DTEtf
-TUlTQwkJNAkvKiBNaXNjIGNsb2NrICovDQorI2RlZmluZSBJTVhfU0NfUE1fQ0xLX01JU0MwCQkw
-CS8qIE1pc2MgMCBjbG9jayAqLw0KKyNkZWZpbmUgSU1YX1NDX1BNX0NMS19NSVNDMQkJMQkvKiBN
-aXNjIDEgY2xvY2sgKi8NCisjZGVmaW5lIElNWF9TQ19QTV9DTEtfTUlTQzIJCTIJLyogTWlzYyAy
-IGNsb2NrICovDQorI2RlZmluZSBJTVhfU0NfUE1fQ0xLX01JU0MzCQkzCS8qIE1pc2MgMyBjbG9j
-ayAqLw0KKyNkZWZpbmUgSU1YX1NDX1BNX0NMS19NSVNDNAkJNAkvKiBNaXNjIDQgY2xvY2sgKi8N
-CisjZGVmaW5lIElNWF9TQ19QTV9DTEtfQ1BVCQkyCS8qIENQVSBjbG9jayAqLw0KKyNkZWZpbmUg
-SU1YX1NDX1BNX0NMS19QTEwJCTQJLyogUExMICovDQorI2RlZmluZSBJTVhfU0NfUE1fQ0xLX0JZ
-UEFTUwkJNAkvKiBCeXBhc3MgY2xvY2sgKi8NCisNCiAjZW5kaWYgLyogX19EVF9CSU5ESU5HU19S
-U0NSQ19JTVhfSCAqLw0KLS0gDQoyLjcuNA0KDQo=
+This is a multipart message in MIME format.
+--=_alternative 0012F9E2482583EE_=
+Content-Type: text/plain; charset="US-ASCII"
+
+
+Hi Mark,
+
+> Subject
+> 
+> Re: [PATCH v3 3/4] spi: Patch Macronix SPI controller driver 
+> according to MX25F0A MFD driver
+> 
+> On Tue, Apr 30, 2019 at 06:23:21PM +0800, masonccyang@mxic.com.tw wrote:
+> 
+> > > It'd be much better to describe what the above actually means - what
+> > > changes have been made in the introduction of the MFD driver?  It 
+does
+> > > feel like there's not as much abstraction as I'd expect between the 
+MFD
+> > > and the child, there's a lot of peering into the parent and enabling 
+and
+> > > disabling individual clocks for example rather than either having 
+this
+> > > hidden behind a function or just having the clocks owned by the 
+child
+> > > driver. 
+> 
+> > Do you mean I should remove ps_clk/send_clk/send_dly_clk resource from 
+MFD 
+> 
+> > and patch them to spi-mxic.c ?
+> 
+> > Or any other ?
+> 
+> I think you need to have a clear idea that you can explain as to what
+> the MFD is and how it's split up.  What's being abstracted, what's not
+> and why.  Without knowing anything about the device or what the series
+> is trying to accomplish it's hard to be sure exactly what the best thing
+> to do is.
+
+okay, got your point.
+thanks for your comments & suggestions.
+
+> 
+> > The driver also isn't using the MFD interfaces to pass through
+> > > the register subblocks for the IP - instead the child driver is 
+peering
+> > > straight into the MFD structure and looking at a variable in there.
+> 
+> > Patch regmap for mfd, nand and spi ?
+> > or any other patches is needed ?
+> 
+> This is a memory mapped device so there should be no need to use regmap
+> unless you want to.  The MFD subsystem has facilities for passing
+> through memory regions to subdevices.
+
+Got it!
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+--=_alternative 0012F9E2482583EE_=
+Content-Type: text/html; charset="US-ASCII"
+
+
+<tt><font size=2>Hi Mark,</font></tt>
+<br><tt><font size=2><br>
+&gt; Subject</font></tt>
+<br><tt><font size=2>&gt; <br>
+&gt; Re: [PATCH v3 3/4] spi: Patch Macronix SPI controller driver <br>
+&gt; according to MX25F0A MFD driver</font></tt>
+<br><tt><font size=2>&gt; <br>
+&gt; On Tue, Apr 30, 2019 at 06:23:21PM +0800, masonccyang@mxic.com.tw
+wrote:<br>
+&gt; <br>
+&gt; &gt; &gt; It'd be much better to describe what the above actually
+means - what<br>
+&gt; &gt; &gt; changes have been made in the introduction of the MFD driver?
+&nbsp;It does<br>
+&gt; &gt; &gt; feel like there's not as much abstraction as I'd expect
+between the MFD<br>
+&gt; &gt; &gt; and the child, there's a lot of peering into the parent
+and enabling and<br>
+&gt; &gt; &gt; disabling individual clocks for example rather than either
+having this<br>
+&gt; &gt; &gt; hidden behind a function or just having the clocks owned
+by the child<br>
+&gt; &gt; &gt; driver. <br>
+&gt; <br>
+&gt; &gt; Do you mean I should remove ps_clk/send_clk/send_dly_clk resource
+from MFD <br>
+&gt; <br>
+&gt; &gt; and patch them to spi-mxic.c ?<br>
+&gt; <br>
+&gt; &gt; Or any other ?<br>
+&gt; <br>
+&gt; I think you need to have a clear idea that you can explain as to what<br>
+&gt; the MFD is and how it's split up. &nbsp;What's being abstracted, what's
+not<br>
+&gt; and why. &nbsp;Without knowing anything about the device or what the
+series<br>
+&gt; is trying to accomplish it's hard to be sure exactly what the best
+thing<br>
+&gt; to do is.</font></tt>
+<br>
+<br><tt><font size=2>okay, got your point.</font></tt>
+<br><tt><font size=2>thanks for your comments &amp; suggestions.</font></tt>
+<br><tt><font size=2><br>
+&gt; <br>
+&gt; &gt; The driver also isn't using the MFD interfaces to pass through<br>
+&gt; &gt; &gt; the register subblocks for the IP - instead the child driver
+is peering<br>
+&gt; &gt; &gt; straight into the MFD structure and looking at a variable
+in there.<br>
+&gt; <br>
+&gt; &gt; Patch regmap for mfd, nand and spi ?<br>
+&gt; &gt; or any other patches is needed ?<br>
+&gt; <br>
+&gt; This is a memory mapped device so there should be no need to use regmap<br>
+&gt; unless you want to. &nbsp;The MFD subsystem has facilities for passing<br>
+&gt; through memory regions to subdevices.</font></tt>
+<br>
+<br><tt><font size=2>Got it!</font></tt>
+<br>
+<br><tt><font size=2>thanks &amp; best regards,</font></tt>
+<br><tt><font size=2>Mason<br>
+<br>
+CONFIDENTIALITY NOTE:<br>
+<br>
+This e-mail and any attachments may contain confidential information and/or
+personal data, which is protected by applicable laws. Please be reminded
+that duplication, disclosure, distribution, or use of this e-mail (and/or
+its attachments) or any part thereof is prohibited. If you receive this
+e-mail in error, please notify us immediately and delete this mail as well
+as its attachment(s) from your system. In addition, please be informed
+that collection, processing, and/or use of personal data is prohibited
+unless expressly permitted by personal data protection laws. Thank you
+for your attention and cooperation.<br>
+<br>
+Macronix International Co., Ltd.<br>
+<br>
+=====================================================================<br>
+</font></tt>
+
+--=_alternative 0012F9E2482583EE_=--
