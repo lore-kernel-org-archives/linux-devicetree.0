@@ -1,195 +1,48 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V2 3/3] watchdog: stm32: add dynamic prescaler support
-Date: Thu, 2 May 2019 13:35:25 -0700
-Message-ID: <20190502203525.GA29063@roeck-us.net>
+Subject: Re: [PATCH V2 0/3] watchdog: stm32: add dynamic prescaler support
+Date: Thu, 2 May 2019 13:37:46 -0700
+Message-ID: <20190502203746.GB29063@roeck-us.net>
 References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
- <1556806126-15890-4-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1556806126-15890-4-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ludovic Barre <ludovic.Barre@st.com>
 Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:08:46PM +0200, Ludovic Barre wrote:
+On Thu, May 02, 2019 at 04:08:43PM +0200, Ludovic Barre wrote:
 > From: Ludovic Barre <ludovic.barre@st.com>
 > 
-> This patch allows to define the max prescaler by compatible.
-> To set a large range of timeout, the prescaler should be set
-> dynamically (from the timeout request) to improve the resolution
-> in order to have a timeout close to the expected value.
+> This patch series updates stm32 watchdog driver on:
+> -use devm_watchdog_register_device
+> -Guenter's recommendation about return value:
+> set_timeout return 0 on succes, -EINVAL for "parameter out of range"
+> and -EIO for "could not write value to the watchdog".
+
+No, sorry, that is not what I meant.
+
+set_timeout() should set ->timeout either to the requested value
+if equal to or larger than the maximum timeout supported by the
+hardware, and to the actually selected timeout otherwise.
+
+Guenter
+
+> Set of reload and prescaler registers are stay in start function,
+> because the stm32 watchdog must be enabled to write these registers.
+> -adds dynamic prescaler support
 > 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/watchdog/stm32_iwdg.c | 76 ++++++++++++++++++++++++-------------------
->  1 file changed, 42 insertions(+), 34 deletions(-)
+> Ludovic Barre (3):
+>   watchdog: stm32: update to devm_watchdog_register_device
+>   watchdog: stm32: update return values recommended by watchdog kernel
+>     api
+>   watchdog: stm32: add dynamic prescaler support
 > 
-> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-> index f19a6d4..0c765d4 100644
-> --- a/drivers/watchdog/stm32_iwdg.c
-> +++ b/drivers/watchdog/stm32_iwdg.c
-> @@ -34,18 +34,12 @@
->  #define KR_KEY_EWA	0x5555 /* write access enable */
->  #define KR_KEY_DWA	0x0000 /* write access disable */
->  
-> -/* IWDG_PR register bit values */
-> -#define PR_4		0x00 /* prescaler set to 4 */
-> -#define PR_8		0x01 /* prescaler set to 8 */
-> -#define PR_16		0x02 /* prescaler set to 16 */
-> -#define PR_32		0x03 /* prescaler set to 32 */
-> -#define PR_64		0x04 /* prescaler set to 64 */
-> -#define PR_128		0x05 /* prescaler set to 128 */
-> -#define PR_256		0x06 /* prescaler set to 256 */
-> +#define PR_SHIFT	2
-> +#define PR_MIN		BIT(PR_SHIFT)
->  
->  /* IWDG_RLR register values */
-> -#define RLR_MIN		0x07C /* min value supported by reload register */
-> -#define RLR_MAX		0xFFF /* max value supported by reload register */
-> +#define RLR_MIN		0x2		/* min value recommended */
-> +#define RLR_MAX		GENMASK(11, 0)	/* max value of reload register */
->  
->  /* IWDG_SR register bit mask */
->  #define FLAG_PVU	BIT(0) /* Watchdog prescaler value update */
-> @@ -55,15 +49,28 @@
->  #define TIMEOUT_US	100000
->  #define SLEEP_US	1000
->  
-> -#define HAS_PCLK	true
-> +struct stm32_iwdg_data {
-> +	bool has_pclk;
-> +	u32 max_prescaler;
-> +};
-> +
-> +static const struct stm32_iwdg_data stm32_iwdg_data = {
-> +	.has_pclk = false,
-> +	.max_prescaler = 256,
-> +};
-> +
-> +static const struct stm32_iwdg_data stm32mp1_iwdg_data = {
-> +	.has_pclk = true,
-> +	.max_prescaler = 1024,
-> +};
->  
->  struct stm32_iwdg {
->  	struct watchdog_device	wdd;
-> +	const struct stm32_iwdg_data *data;
->  	void __iomem		*regs;
->  	struct clk		*clk_lsi;
->  	struct clk		*clk_pclk;
->  	unsigned int		rate;
-> -	bool			has_pclk;
->  };
->  
->  static inline u32 reg_read(void __iomem *base, u32 reg)
-> @@ -79,26 +86,28 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
->  static int stm32_iwdg_start(struct watchdog_device *wdd)
->  {
->  	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
-> -	u32 val = FLAG_PVU | FLAG_RVU;
-> -	u32 reload;
-> +	u32 presc, iwdg_rlr, iwdg_pr, iwdg_sr;
->  
->  	dev_dbg(wdd->parent, "%s\n", __func__);
->  
-> -	/* prescaler fixed to 256 */
-> -	reload = clamp_t(unsigned int, ((wdd->timeout * wdt->rate) / 256) - 1,
-> -			 RLR_MIN, RLR_MAX);
-> +	presc = DIV_ROUND_UP(wdd->timeout * wdt->rate, RLR_MAX + 1);
-> +
-> +	/* The prescaler is align on power of 2 and start at 2 ^ PR_SHIFT. */
-> +	presc = roundup_pow_of_two(presc);
-> +	iwdg_pr = presc <= 1 << PR_SHIFT ? 0 : ilog2(presc) - PR_SHIFT;
-> +	iwdg_rlr = ((wdd->timeout * wdt->rate) / presc) - 1;
->  
-> +	/* enable watchdog */
-> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
->  	/* enable write access */
->  	reg_write(wdt->regs, IWDG_KR, KR_KEY_EWA);
-> -
->  	/* set prescaler & reload registers */
-> -	reg_write(wdt->regs, IWDG_PR, PR_256); /* prescaler fix to 256 */
-> -	reg_write(wdt->regs, IWDG_RLR, reload);
-> -	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-> +	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
-> +	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
->  
->  	/* wait for the registers to be updated (max 100ms) */
-> -	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
-> -				       !(val & (FLAG_PVU | FLAG_RVU)),
-> +	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
-> +				       !(iwdg_sr & (FLAG_PVU | FLAG_RVU)),
->  				       SLEEP_US, TIMEOUT_US)) {
->  		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
->  		return -EIO;
-
-As mentioned in the other patch, pelase return the error returned from
-readl_relaxed_poll_timeout(). If that returns a timeout, we want to know
-about it and not just hide it behind -EIO.
-
-> @@ -155,7 +164,7 @@ static int stm32_iwdg_clk_init(struct platform_device *pdev,
->  	}
->  
->  	/* optional peripheral clock */
-> -	if (wdt->has_pclk) {
-> +	if (wdt->data->has_pclk) {
->  		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
->  		if (IS_ERR(wdt->clk_pclk)) {
->  			dev_err(&pdev->dev, "Unable to get pclk clock\n");
-> @@ -196,8 +205,8 @@ static const struct watchdog_ops stm32_iwdg_ops = {
->  };
->  
->  static const struct of_device_id stm32_iwdg_of_match[] = {
-> -	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
-> -	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
-> +	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_data },
-> +	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_data },
->  	{ /* end node */ }
->  };
->  MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-> @@ -205,20 +214,17 @@ MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
->  static int stm32_iwdg_probe(struct platform_device *pdev)
->  {
->  	struct watchdog_device *wdd;
-> -	const struct of_device_id *match;
->  	struct stm32_iwdg *wdt;
->  	struct resource *res;
->  	int ret;
->  
-> -	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
-> -	if (!match)
-> -		return -ENODEV;
-> -
->  	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
->  	if (!wdt)
->  		return -ENOMEM;
->  
-> -	wdt->has_pclk = match->data;
-> +	wdt->data = of_device_get_match_data(&pdev->dev);
-> +	if (!wdt->data)
-> +		return -ENODEV;
->  
->  	/* This is the timer base. */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -236,8 +242,10 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
->  	wdd = &wdt->wdd;
->  	wdd->info = &stm32_iwdg_info;
->  	wdd->ops = &stm32_iwdg_ops;
-> -	wdd->min_timeout = ((RLR_MIN + 1) * 256) / wdt->rate;
-> -	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * 256 * 1000) / wdt->rate;
-> +	wdd->min_timeout = max_t(unsigned int, 1,
-> +				 (((RLR_MIN + 1) * PR_MIN) / wdt->rate));
-
-Is that any different to DIV_ROUND_UP() ?
-
-> +	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
-> +				    1000) / wdt->rate;
->  	wdd->parent = &pdev->dev;
->  
->  	watchdog_set_drvdata(wdd, wdt);
+>  drivers/watchdog/stm32_iwdg.c | 96 ++++++++++++++++++++++++-------------------
+>  1 file changed, 54 insertions(+), 42 deletions(-)
+> 
 > -- 
 > 2.7.4
 > 
