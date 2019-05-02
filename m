@@ -1,48 +1,57 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V2 0/3] watchdog: stm32: add dynamic prescaler support
-Date: Thu, 2 May 2019 13:37:46 -0700
-Message-ID: <20190502203746.GB29063@roeck-us.net>
-References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: perf: stm32: ddrperfm support
+Date: Thu, 2 May 2019 15:51:24 -0500
+Message-ID: <20190502205124.GA17384@bogus>
+References: <1556532194-27904-1-git-send-email-gerald.baeza@st.com>
+ <1556532194-27904-3-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1556532194-27904-3-git-send-email-gerald.baeza@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Gerald BAEZA <gerald.baeza@st.com>
+Cc: "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:08:43PM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
+On Mon, Apr 29, 2019 at 10:03:37AM +0000, Gerald BAEZA wrote:
+> The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
 > 
-> This patch series updates stm32 watchdog driver on:
-> -use devm_watchdog_register_device
-> -Guenter's recommendation about return value:
-> set_timeout return 0 on succes, -EINVAL for "parameter out of range"
-> and -EIO for "could not write value to the watchdog".
-
-No, sorry, that is not what I meant.
-
-set_timeout() should set ->timeout either to the requested value
-if equal to or larger than the maximum timeout supported by the
-hardware, and to the actually selected timeout otherwise.
-
-Guenter
-
-> Set of reload and prescaler registers are stay in start function,
-> because the stm32 watchdog must be enabled to write these registers.
-> -adds dynamic prescaler support
+> This documentation indicates how to enable stm32-ddr-pmu driver on
+> DDRPERFM peripheral, via the device tree.
 > 
-> Ludovic Barre (3):
->   watchdog: stm32: update to devm_watchdog_register_device
->   watchdog: stm32: update return values recommended by watchdog kernel
->     api
->   watchdog: stm32: add dynamic prescaler support
+> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+> ---
+>  .../devicetree/bindings/perf/stm32-ddr-pmu.txt         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
 > 
->  drivers/watchdog/stm32_iwdg.c | 96 ++++++++++++++++++++++++-------------------
->  1 file changed, 54 insertions(+), 42 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+> new file mode 100644
+> index 0000000..dabc4c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+> @@ -0,0 +1,18 @@
+> +* STM32 DDR Performance Monitor (DDRPERFM)
+> +
+> +Required properties:
+> +- compatible: must be "st,stm32-ddr-pmu".
+> +- reg: physical address and length of the registers set.
+> +- clocks: list of phandles and specifiers to all input clocks listed in
+> +	  clock-names property.
+> +- clock-names: "bus" corresponds to the DDRPERFM bus clock and "ddr" to
+> +	       the DDR frequency.
+
+You have 'resets' in the dts.
+
+> +
+> +Example:
+> +	ddrperfm: perf@5a007000 {
+> +		compatible = "st,stm32-ddr-pmu";
+> +		reg = <0x5a007000 0x400>;
+> +		clocks = <&rcc DDRPERFM>, <&rcc PLL2_R>;
+> +		clock-names = "bus", "ddr";
+> +	};
+> +
 > -- 
 > 2.7.4
-> 
