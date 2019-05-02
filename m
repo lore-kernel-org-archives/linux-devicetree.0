@@ -1,81 +1,129 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v2 1/4] of_net: Add NVMEM support to of_get_mac_address
-Date: Thu, 2 May 2019 11:05:38 +0200
-Message-ID: <20190502090538.GD346@meh.true.cz>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-2-git-send-email-ynezz@true.cz>
- <20190501201925.GA15495@bogus>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 2/4] drivers: devfreq: events: extend events by type
+ of counted data
+Date: Thu, 2 May 2019 11:07:43 +0200
+Message-ID: <4cd7b7a3-7458-2166-a784-1a94830f5507@partner.samsung.com>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134821eucas1p2461a27e28387ff2b87c149f09582d2a0@eucas1p2.samsung.com>
+        <1555681688-19643-3-git-send-email-l.luba@partner.samsung.com>
+        <3557d507-0463-89de-4025-fbeaaef78bed@samsung.com>
+        <adb6e86a-880e-f9b7-76b2-777a531895d2@partner.samsung.com>
+        <be9dfa71-b6fd-ebe3-e8be-a7ea28765225@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190501201925.GA15495@bogus>
+In-Reply-To: <be9dfa71-b6fd-ebe3-e8be-a7ea28765225@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>
+To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> [2019-05-01 15:19:25]:
 
-Hi Rob,
 
-> > +	struct property *pp;
-
-...
-
-> > +	pp = kzalloc(sizeof(*pp), GFP_KERNEL);
-> > +	if (!pp)
-> > +		return NULL;
-> > +
-> > +	pp->name = "nvmem-mac-address";
-> > +	pp->length = ETH_ALEN;
-> > +	pp->value = kmemdup(mac, ETH_ALEN, GFP_KERNEL);
-> > +	if (!pp->value || of_add_property(np, pp))
-> > +		goto free;
+On 5/2/19 3:25 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
 > 
-> Why add this to the DT?
+> On 19. 5. 1. 오전 6:19, Lukasz Luba wrote:
+>> Hi Chanwoo,
+>>
+>> On 4/30/19 9:34 AM, Chanwoo Choi wrote:
+>>> Hi Lukasz,
+>>>
+>>> On 19. 4. 19. 오후 10:48, Lukasz Luba wrote:
+>>>> This patch adds posibility to choose what type of data should be counted
+>>>> by the PPMU counter. Now the type comes from DT where the event has been
+>>>> defined. When there is no 'event-data-type' the default value is used,
+>>>> which is 'read data in bytes'.
+>>>> It is needed when you want to know not only read+write data bytes but
+>>>> i.e. only write data in byte, or number of read requests, etc.
+>>>>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    drivers/devfreq/event/exynos-ppmu.c | 61 +++++++++++++++++++++++++------------
+>>>>    include/linux/devfreq-event.h       |  6 ++++
+>>>>    2 files changed, 48 insertions(+), 19 deletions(-)
+>>>>
+>>>> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+>>>> index c61de0b..073bf2c 100644
+>>>> --- a/drivers/devfreq/event/exynos-ppmu.c
+>>>> +++ b/drivers/devfreq/event/exynos-ppmu.c
+>>>> @@ -154,9 +154,9 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
+>>>>    	if (ret < 0)
+>>>>    		return ret;
+>>>>    
+>>>> -	/* Set the event of Read/Write data count  */
+>>>> +	/* Set the event of proper data type monitoring */
+>>>>    	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id),
+>>>> -				PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT);
+>>>> +			   edev->desc->data_type);
+>>>>    	if (ret < 0)
+>>>>    		return ret;
+>>>>    
+>>>> @@ -368,23 +368,11 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
+>>>>    	if (ret < 0)
+>>>>    		return ret;
+>>>>    
+>>>> -	/* Set the event of Read/Write data count  */
+>>>> -	switch (id) {
+>>>> -	case PPMU_PMNCNT0:
+>>>> -	case PPMU_PMNCNT1:
+>>>> -	case PPMU_PMNCNT2:
+>>>> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+>>>> -				PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT);
+>>>> -		if (ret < 0)
+>>>> -			return ret;
+>>>> -		break;
+>>>> -	case PPMU_PMNCNT3:
+>>>> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+>>>> -				PPMU_V2_EVT3_RW_DATA_CNT);
+>>>> -		if (ret < 0)
+>>>> -			return ret;
+>>>> -		break;
+>>>> -	}
+>>>> +	/* Set the event of proper data type monitoring */
+>>>> +	ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
+>>>> +			   edev->desc->data_type);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>>>    
+>>>>    	/* Reset cycle counter/performance counter and enable PPMU */
+>>>>    	ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
+>>>> @@ -508,6 +496,7 @@ static int of_get_devfreq_events(struct device_node *np,
+>>>>    	struct device *dev = info->dev;
+>>>>    	struct device_node *events_np, *node;
+>>>>    	int i, j, count;
+>>>> +	int ret;
+>>>>    
+>>>>    	events_np = of_get_child_by_name(np, "events");
+>>>>    	if (!events_np) {
+>>>> @@ -544,6 +533,40 @@ static int of_get_devfreq_events(struct device_node *np,
+>>>>    		desc[j].driver_data = info;
+>>>>    
+>>>>    		of_property_read_string(node, "event-name", &desc[j].name);
+>>>> +		ret = of_property_read_u32(node, "event-data-type",
+>>>> +					   &desc[j].data_type);
+>>>> +		if (ret) {
+>>>> +			/* Set the event of proper data type counting.
+>>>> +			 * Check if the data type has been defined in DT,
+>>>> +			 * use default if not.
+>>>> +			 */
+>>>> +			if (of_device_is_compatible(np,
+>>>> +					"samsung,exynos-ppmu-v2")) {
+>>>
+>>> It is not proper to compare the compatible string again
+>>> in the device driver. Instead, you can define the ppmu device type
+>>> as following and then use 'struct of_device_id' in order to
+>>> identify the device type.
+>> I have been thinking about modifying the code in similar fashion as you
+>> did. Good to see similar approach. I'll take your changes with a small
+>> additional code, which sets the 'info->ppmu_type' before the for
+>> loop, as an additional patch. Would it be OK if I add you as an author
+>> and add Sign-off-by: Chanwoo Choi <cw00.choi@samsung.com>?
+> 
+> If you agree, just add the my signed-off-by on second line.
+OK
 
-I've just carried it over from v1 ("of_net: add mtd-mac-address support to
-of_get_mac_address()")[1] as nobody objected about this so far. 
-
-Honestly I don't know if it's necessary to have it, but so far address,
-mac-address and local-mac-address properties provide this DT nodes, so I've
-simply thought, that it would be good to have it for MAC address from NVMEM as
-well in order to stay consistent.
-
-Just FYI, my testing ar9331_8dev_carambola2.dts[2] currently produces
-following runtime DT content:
-
- root@OpenWrt:/# find /sys/firmware/devicetree/ -name *nvmem* -o -name *addr@*
- /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells
- /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells/eth-mac-addr@0
- /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells/eth-mac-addr@6
- /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells/wifi-mac-addr@1002
- /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-cells
- /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-mac-address
- /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-cell-names
- /sys/firmware/devicetree/base/ahb/eth@1a000000/nvmem-cells
- /sys/firmware/devicetree/base/ahb/eth@1a000000/nvmem-mac-address
- /sys/firmware/devicetree/base/ahb/eth@1a000000/nvmem-cell-names
- /sys/firmware/devicetree/base/ahb/eth@19000000/nvmem-cells
- /sys/firmware/devicetree/base/ahb/eth@19000000/nvmem-mac-address
- /sys/firmware/devicetree/base/ahb/eth@19000000/nvmem-cell-names
-
- root@OpenWrt:/# hexdump -C /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-mac-address
- 00000000  00 03 7f 11 52 da                                 |....R.|
- 00000006
-
- root@OpenWrt:/# ip addr show wlan0
- 4: wlan0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
-    link/ether 00:03:7f:11:52:da brd ff:ff:ff:ff:ff:ff
-
-1. https://patchwork.ozlabs.org/patch/1086628/
-2. https://git.openwrt.org/?p=openwrt/staging/ynezz.git;a=blob;f=target/linux/ath79/dts/ar9331_8dev_carambola2.dts;h=349c91e760ca5a56d65c587c949fed5fb6ea980e;hb=349c91e760ca5a56d65c587c949fed5fb6ea980e
-
-> You have the struct device ptr, so just use devm_kzalloc() if you need an
-> allocation.
-
-I'll address this in v3, thanks.
-
--- ynezz
+Regards,
+Lukasz
