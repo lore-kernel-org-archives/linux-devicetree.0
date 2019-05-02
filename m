@@ -1,41 +1,43 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 2 May 2019 08:04:14 -0600
-Message-ID: <76e84d54-6b7e-8cc1-492b-43822fc43ac4@kernel.org>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190502105053.GA12416@kroah.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 0/3] watchdog: stm32: add dynamic prescaler support
+Date: Thu, 2 May 2019 16:08:43 +0200
+Message-ID: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502105053.GA12416@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>
-Cc: frowand.list@gmail.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@l
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/2/19 4:50 AM, Greg KH wrote:
-> On Wed, May 01, 2019 at 04:01:09PM -0700, Brendan Higgins wrote:
->> ## TLDR
->>
->> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
->> 5.2.
-> 
-> That might be rushing it, normally trees are already closed now for
-> 5.2-rc1 if 5.1-final comes out this Sunday.
-> 
->> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
->> we would merge through your tree when the time came? Am I remembering
->> correctly?
-> 
-> No objection from me.
-> 
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Yes. I can take these through kselftest tree when the time comes.
-Agree with Greg that 5.2 might be rushing it. 5.3 would be a good
-target.
+This patch series updates stm32 watchdog driver on:
+-use devm_watchdog_register_device
+-Guenter's recommendation about return value:
+set_timeout return 0 on succes, -EINVAL for "parameter out of range"
+and -EIO for "could not write value to the watchdog".
+Set of reload and prescaler registers are stay in start function,
+because the stm32 watchdog must be enabled to write these registers.
+-adds dynamic prescaler support
 
-thanks,
--- Shuah
+Ludovic Barre (3):
+  watchdog: stm32: update to devm_watchdog_register_device
+  watchdog: stm32: update return values recommended by watchdog kernel
+    api
+  watchdog: stm32: add dynamic prescaler support
+
+ drivers/watchdog/stm32_iwdg.c | 96 ++++++++++++++++++++++++-------------------
+ 1 file changed, 54 insertions(+), 42 deletions(-)
+
+-- 
+2.7.4
