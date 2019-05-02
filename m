@@ -1,61 +1,149 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 1/3] arm64: dts: allwinner: a64: Move I2C pinctrl to
- dtsi
-Date: Thu, 2 May 2019 09:15:21 +0200
-Message-ID: <20190502071521.7ekih3bgjth54sry@flea>
-References: <20190418174720.17230-1-jagan@amarulasolutions.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree
+ support
+Date: Thu, 2 May 2019 09:21:26 +0200
+Message-ID: <20190502092126.22f1ace5@collabora.com>
+References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
+        <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com>
+        <20190502015408.GA11612@bogus>
+        <CA+Ln22HLqnbbY37FG6CwjZvZH7G35Z+0kNq7XFU4WtZyk_EqZQ@mail.gmail.com>
+        <20190502083632.0ec0fb4e@collabora.com>
+        <CA+Ln22H4ua9Zuh4eKaWfHtqh8DieyiS=5s7wS6-TbmA5Dsop4A@mail.gmail.com>
+        <20190502085518.5d248167@collabora.com>
+        <CA+Ln22EJ3G9ez4XZ3ysZBt6thsqDYDtik8fw-gfExR9Y7wFN9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l3fjic7vuxbz5vss"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190418174720.17230-1-jagan@amarulasolutions.com>
+In-Reply-To: <CA+Ln22EJ3G9ez4XZ3ysZBt6thsqDYDtik8fw-gfExR9Y7wFN9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com
+To: Tomasz Figa <tomasz.figa@gmail.com>, computersforpeace@gmail.com, marek.vasut@gmail.com, Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh@kernel.org>, =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2 May 2019 15:58:24 +0900
+Tomasz Figa <tomasz.figa@gmail.com> wrote:
 
---l3fjic7vuxbz5vss
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 2019年5月2日(木) 15:55 Boris Brezillon <boris.brezillon@collabora.com>:
+> >
+> > On Thu, 2 May 2019 15:42:59 +0900
+> > Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> >  
+> > > 2019年5月2日(木) 15:36 Boris Brezillon <boris.brezillon@collabora.com>:  
+> > > >
+> > > > Hi Tomasz,
+> > > >
+> > > > On Thu, 2 May 2019 15:23:33 +0900
+> > > > Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> > > >  
+> > > > > 2019年5月2日(木) 10:54 Rob Herring <robh@kernel.org>:  
+> > > > > >
+> > > > > > On Fri, Apr 26, 2019 at 06:42:23PM +0200, Paweł Chmiel wrote:  
+> > > > > > > From: Tomasz Figa <tomasz.figa@gmail.com>
+> > > > > > >
+> > > > > > > This patch adds dt-bindings for Samsung OneNAND driver.
+> > > > > > >
+> > > > > > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > > > > > > Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > > > > > > ---
+> > > > > > >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++++++++++++
+> > > > > > >  1 file changed, 46 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..341d97cc1513
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > > > > @@ -0,0 +1,46 @@
+> > > > > > > +Device tree bindings for Samsung SoC OneNAND controller
+> > > > > > > +
+> > > > > > > +Required properties:
+> > > > > > > + - compatible : value should be either of the following.
+> > > > > > > +   (a) "samsung,s3c6400-onenand" - for onenand controller compatible with
+> > > > > > > +       S3C6400 SoC,
+> > > > > > > +   (b) "samsung,s3c6410-onenand" - for onenand controller compatible with
+> > > > > > > +       S3C6410 SoC,
+> > > > > > > +   (c) "samsung,s5pc100-onenand" - for onenand controller compatible with
+> > > > > > > +       S5PC100 SoC,
+> > > > > > > +   (d) "samsung,s5pv210-onenand" - for onenand controller compatible with
+> > > > > > > +       S5PC110/S5PV210 SoCs.
+> > > > > > > +
+> > > > > > > + - reg : two memory mapped register regions:
+> > > > > > > +   - first entry: control registers.
+> > > > > > > +   - second and next entries: memory windows of particular OneNAND chips;
+> > > > > > > +     for variants a), b) and c) only one is allowed, in case of d) up to
+> > > > > > > +     two chips can be supported.
+> > > > > > > +
+> > > > > > > + - interrupt-parent : phandle of interrupt controller to which the OneNAND
+> > > > > > > +   controller is wired,  
+> > > > > >
+> > > > > > This is implied and can be removed.
+> > > > > >  
+> > > > > > > + - interrupts : specifier of interrupt signal to which the OneNAND controller
+> > > > > > > +   is wired; should contain just one entry.
+> > > > > > > + - clock-names : should contain two entries:
+> > > > > > > +   - "bus" - bus clock of the controller,
+> > > > > > > +   - "onenand" - clock supplied to OneNAND memory.  
+> > > > > >
+> > > > > > If the clock just goes to the OneNAND device, then it should be in the
+> > > > > > nand device node rather than the controller node.
+> > > > > >  
+> > > > >
+> > > > > (Trying hard to recall the details about this hardware.)
+> > > > > AFAIR the clock goes to the controller and the controller then feeds
+> > > > > it to the memory chips.
+> > > > >
+> > > > > Also I don't think we should have any nand device nodes here, since
+> > > > > the memory itself is only exposed via the controller, which offers
+> > > > > various queries to probe the memory at runtime, so there is no need to
+> > > > > describe it in DT.  
+> > > >
+> > > > It's probably true, though not providing this controller/device
+> > > > separation for NAND controller/devices has proven to be a mistake for
+> > > > raw NAND controllers (some props apply to the controllers and others to
+> > > > the NAND device, not to mention that some controllers support
+> > > > interacting with several chips), so, if that's a new binding, I'd
+> > > > recommend having this separation even if it's not strictly required.
+> > > >  
+> > >
+> > > Note that OneNAND is a totally different thing than the typical NAND
+> > > memory with NAND interface. OneNAND chips have a NOR-like interface,
+> > > with internal controller and buffers inside, so technically they can
+> > > be even used without any special controller on the SoC, via a generic
+> > > parallel host interface and possibly some regular DMA engine for CPU
+> > > offload.  
+> >
+> > Yes, I know that.
+> >  
+> > >
+> > > The controller design of the SoCs in question further abstracts the
+> > > OneNAND's programming interface into a number of high level operations
+> > > and attempts to hide the details of the underlying memory, so I don't
+> > > see the point of describing the memory in DT here, it would actually
+> > > defeat the purpose of this controller.  
+> >
+> > I don't see how having a subnode for the NAND chip would change
+> > anything on how the controller interacts with the NAND device. My point
+> > is, if we ever need to add props that apply to the device rather than
+> > the controller itself, having a single node to represent both elements
+> > is not that great.  
+> 
+> You mean, just having a very generic onenand@0 node that doesn't
+> really include any information, except maybe the partition table?
 
-Hi,
+Yes.
 
-On Thu, Apr 18, 2019 at 11:17:18PM +0530, Jagan Teki wrote:
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> index f4e78531f639..bef4abf6fa25 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> @@ -121,8 +121,6 @@
->
->  /* i2c1 connected with gpio headers like pine64, bananapi */
->  &i2c1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&i2c1_pins>;
->  	status = "disabled";
->  };
+> I
+> guess that wouldn't have any negative side effects indeed.
+> 
+> My point was that we don't want to put things like chip vendor, size,
+> etc. in DT, since that's enumerable.
 
-That node can be removed entirely
-
-It looks fine otherwise.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---l3fjic7vuxbz5vss
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMqZCQAKCRDj7w1vZxhR
-xU9OAQDxTAEtGhuPzyZjpKPIGQXLaALohb8tDqQ5pCkcRraUIQEAvx/AzS8BBrHq
-CikCMIi3e4lw8EMelHNzyKK0j78UpQc=
-=gnAK
------END PGP SIGNATURE-----
-
---l3fjic7vuxbz5vss--
+Oh, definitely not, and that's exactly how we do it for NAND devices.
+Everything that's discoverable is not described in the DT, but some
+things can't be discovered this way (like when you want to override the
+ECC strength and use SW-based implem instead of the HW-based one). I
+know none of this applies to OneNAND yet, I'm just over-cautious about
+that since DT bindings changes are hard to make once the bindings are
+in use.
