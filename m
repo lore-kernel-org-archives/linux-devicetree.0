@@ -1,49 +1,41 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-Date: Thu, 2 May 2019 11:07:57 -0700
-Message-ID: <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/5] ARM: dts: sun8i: v40 Rewrite BPi M2
+ Berry DTS based on BPi M2 Ultra
+Date: Thu, 2 May 2019 20:09:52 +0200
+Message-ID: <20190502180952.vsnccuoefnbzddu7@flea>
+References: <1556804030-25291-1-git-send-email-pgreco@centosproject.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502110220.GD12416@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah@kernel.org, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@gmail.com>, Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="slwwbo4od3ptjqjp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5HEVTTAKGQEHO453NQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1556804030-25291-1-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
-> > From: Felix Guo <felixguoxiuping@gmail.com>
-> >
-> > The ultimate goal is to create minimal isolated test binaries; in the
-> > meantime we are using UML to provide the infrastructure to run tests, so
-> > define an abstract way to configure and run tests that allow us to
-> > change the context in which tests are built without affecting the user.
-> > This also makes pretty and dynamic error reporting, and a lot of other
-> > nice features easier.
-> >
-> > kunit_config.py:
-> >   - parse .config and Kconfig files.
-> >
-> > kunit_kernel.py: provides helper functions to:
-> >   - configure the kernel using kunitconfig.
-> >   - build the kernel with the appropriate configuration.
-> >   - provide function to invoke the kernel and stream the output back.
-> >
-> > Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->
-> Ah, here's probably my answer to my previous logging format question,
-> right?  What's the chance that these wrappers output stuff in a standard
-> format that test-framework-tools can already parse?  :)
 
-It should be pretty easy to do. I had some patches that pack up the
-results into a serialized format for a presubmit service; it should be
-pretty straightforward to take the same logic and just change the
-output format.
+--slwwbo4od3ptjqjp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Cheers
+On Thu, May 02, 2019 at 10:33:44AM -0300, Pablo Greco wrote:
+> BPi M2 Berry is a trimmed down version of the BPi M2 Ultra, completely
+> software compatible.
+
+Queued all for 5.3, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--slwwbo4od3ptjqjp--
