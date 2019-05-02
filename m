@@ -1,74 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
-Date: Wed, 1 May 2019 18:54:10 -0500
-Message-ID: <20190501235410.GA25492@bogus>
-References: <20190426055558.44544-1-ran.wang_1@nxp.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+Date: Thu, 2 May 2019 03:06:24 +0300
+Message-ID: <137c766e-66f6-828a-5c3b-f526d66d37bd@gmail.com>
+References: <20190414202009.31268-1-digetx@gmail.com>
+ <20190414202009.31268-3-digetx@gmail.com> <20190429220542.GA17924@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190426055558.44544-1-ran.wang_1@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190429220542.GA17924@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
-> This patch adds USB dt nodes for LS1028A.
+30.04.2019 1:05, Rob Herring пишет:
+> On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
+>> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+>> The binding is based on the Tegra124 EMC binding since hardware is
+>> similar, although there are couple significant differences.
 > 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Changes in v2:
->   - Rename node from usb3@... to usb@... to meet DTSpec
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20 ++++++++++++++++++++
->  1 files changed, 20 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 8dd3501..188cfb8 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -144,6 +144,26 @@
->  			clocks = <&sysclk>;
->  		};
->  
-> +		usb0:usb@3100000 {
-                     ^ space needed
+> My comments on Tegra124 binding apply here.
 
-> +			compatible= "snps,dwc3";
-
-Needs an SoC specific compatible.
-
-> +			reg= <0x0 0x3100000 0x0 0x10000>;
-> +			interrupts= <0 80 0x4>;
-> +			dr_mode= "host";
-> +			snps,dis_rxdet_inp3_quirk;
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> +		};
-> +
-> +		usb1:usb@3110000 {
-> +			compatible= "snps,dwc3";
-> +			reg= <0x0 0x3110000 0x0 0x10000>;
-> +			interrupts= <0 81 0x4>;
-> +			dr_mode= "host";
-> +			snps,dis_rxdet_inp3_quirk;
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> +		};
-> +
->  		i2c0: i2c@2000000 {
->  			compatible = "fsl,vf610-i2c";
->  			#address-cells = <1>;
-> -- 
-> 1.7.1
-> 
+The common timing definition doesn't fully match the definition that is
+used by Tegra's Memory Controller, thus the DQS (data strobe) timing
+parameter is comprised of multiple sub-parameters that describe how to
+generate the strobe in hardware. There are also more additional
+parameters that are specific to Tegra and they are individually
+characterized for each memory model and clock rate. Hence the common
+timing definition isn't usable.
