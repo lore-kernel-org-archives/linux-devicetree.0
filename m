@@ -1,186 +1,45 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree support
-Date: Thu, 2 May 2019 17:41:20 +0900
-Message-ID: <CA+Ln22Es-P9J5unVYwH2kM-+3Zz6Jb9GtsL=HcHsgbjwmi5sMw@mail.gmail.com>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
- <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com> <20190502015408.GA11612@bogus>
- <CA+Ln22HLqnbbY37FG6CwjZvZH7G35Z+0kNq7XFU4WtZyk_EqZQ@mail.gmail.com>
- <20190502083632.0ec0fb4e@collabora.com> <CA+Ln22H4ua9Zuh4eKaWfHtqh8DieyiS=5s7wS6-TbmA5Dsop4A@mail.gmail.com>
- <20190502085518.5d248167@collabora.com> <CA+Ln22EJ3G9ez4XZ3ysZBt6thsqDYDtik8fw-gfExR9Y7wFN9A@mail.gmail.com>
- <20190502092126.22f1ace5@collabora.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage switching for SD card
+Date: Thu, 2 May 2019 14:17:48 +0530
+Message-ID: <20190502084748.22518-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502092126.22f1ace5@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: computersforpeace@gmail.com, marek.vasut@gmail.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com, ulf.hansson@linaro.org, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
-2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 16:21 Boris Brezillon <boris.b=
-rezillon@collabora.com>:
->
-> On Thu, 2 May 2019 15:58:24 +0900
-> Tomasz Figa <tomasz.figa@gmail.com> wrote:
->
-> > 2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 15:55 Boris Brezillon <bor=
-is.brezillon@collabora.com>:
-> > >
-> > > On Thu, 2 May 2019 15:42:59 +0900
-> > > Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> > >
-> > > > 2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 15:36 Boris Brezillon =
-<boris.brezillon@collabora.com>:
-> > > > >
-> > > > > Hi Tomasz,
-> > > > >
-> > > > > On Thu, 2 May 2019 15:23:33 +0900
-> > > > > Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> > > > >
-> > > > > > 2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 10:54 Rob Herring =
-<robh@kernel.org>:
-> > > > > > >
-> > > > > > > On Fri, Apr 26, 2019 at 06:42:23PM +0200, Pawe=C5=82 Chmiel w=
-rote:
-> > > > > > > > From: Tomasz Figa <tomasz.figa@gmail.com>
-> > > > > > > >
-> > > > > > > > This patch adds dt-bindings for Samsung OneNAND driver.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> > > > > > > > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmai=
-l.com>
-> > > > > > > > ---
-> > > > > > > >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++=
-++++++++++++
-> > > > > > > >  1 file changed, 46 insertions(+)
-> > > > > > > >  create mode 100644 Documentation/devicetree/bindings/mtd/s=
-amsung-onenand.txt
-> > > > > > > >
-> > > > > > > > diff --git a/Documentation/devicetree/bindings/mtd/samsung-=
-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> > > > > > > > new file mode 100644
-> > > > > > > > index 000000000000..341d97cc1513
-> > > > > > > > --- /dev/null
-> > > > > > > > +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand=
-.txt
-> > > > > > > > @@ -0,0 +1,46 @@
-> > > > > > > > +Device tree bindings for Samsung SoC OneNAND controller
-> > > > > > > > +
-> > > > > > > > +Required properties:
-> > > > > > > > + - compatible : value should be either of the following.
-> > > > > > > > +   (a) "samsung,s3c6400-onenand" - for onenand controller =
-compatible with
-> > > > > > > > +       S3C6400 SoC,
-> > > > > > > > +   (b) "samsung,s3c6410-onenand" - for onenand controller =
-compatible with
-> > > > > > > > +       S3C6410 SoC,
-> > > > > > > > +   (c) "samsung,s5pc100-onenand" - for onenand controller =
-compatible with
-> > > > > > > > +       S5PC100 SoC,
-> > > > > > > > +   (d) "samsung,s5pv210-onenand" - for onenand controller =
-compatible with
-> > > > > > > > +       S5PC110/S5PV210 SoCs.
-> > > > > > > > +
-> > > > > > > > + - reg : two memory mapped register regions:
-> > > > > > > > +   - first entry: control registers.
-> > > > > > > > +   - second and next entries: memory windows of particular=
- OneNAND chips;
-> > > > > > > > +     for variants a), b) and c) only one is allowed, in ca=
-se of d) up to
-> > > > > > > > +     two chips can be supported.
-> > > > > > > > +
-> > > > > > > > + - interrupt-parent : phandle of interrupt controller to w=
-hich the OneNAND
-> > > > > > > > +   controller is wired,
-> > > > > > >
-> > > > > > > This is implied and can be removed.
-> > > > > > >
-> > > > > > > > + - interrupts : specifier of interrupt signal to which the=
- OneNAND controller
-> > > > > > > > +   is wired; should contain just one entry.
-> > > > > > > > + - clock-names : should contain two entries:
-> > > > > > > > +   - "bus" - bus clock of the controller,
-> > > > > > > > +   - "onenand" - clock supplied to OneNAND memory.
-> > > > > > >
-> > > > > > > If the clock just goes to the OneNAND device, then it should =
-be in the
-> > > > > > > nand device node rather than the controller node.
-> > > > > > >
-> > > > > >
-> > > > > > (Trying hard to recall the details about this hardware.)
-> > > > > > AFAIR the clock goes to the controller and the controller then =
-feeds
-> > > > > > it to the memory chips.
-> > > > > >
-> > > > > > Also I don't think we should have any nand device nodes here, s=
-ince
-> > > > > > the memory itself is only exposed via the controller, which off=
-ers
-> > > > > > various queries to probe the memory at runtime, so there is no =
-need to
-> > > > > > describe it in DT.
-> > > > >
-> > > > > It's probably true, though not providing this controller/device
-> > > > > separation for NAND controller/devices has proven to be a mistake=
- for
-> > > > > raw NAND controllers (some props apply to the controllers and oth=
-ers to
-> > > > > the NAND device, not to mention that some controllers support
-> > > > > interacting with several chips), so, if that's a new binding, I'd
-> > > > > recommend having this separation even if it's not strictly requir=
-ed.
-> > > > >
-> > > >
-> > > > Note that OneNAND is a totally different thing than the typical NAN=
-D
-> > > > memory with NAND interface. OneNAND chips have a NOR-like interface=
-,
-> > > > with internal controller and buffers inside, so technically they ca=
-n
-> > > > be even used without any special controller on the SoC, via a gener=
-ic
-> > > > parallel host interface and possibly some regular DMA engine for CP=
-U
-> > > > offload.
-> > >
-> > > Yes, I know that.
-> > >
-> > > >
-> > > > The controller design of the SoCs in question further abstracts the
-> > > > OneNAND's programming interface into a number of high level operati=
-ons
-> > > > and attempts to hide the details of the underlying memory, so I don=
-'t
-> > > > see the point of describing the memory in DT here, it would actuall=
-y
-> > > > defeat the purpose of this controller.
-> > >
-> > > I don't see how having a subnode for the NAND chip would change
-> > > anything on how the controller interacts with the NAND device. My poi=
-nt
-> > > is, if we ever need to add props that apply to the device rather than
-> > > the controller itself, having a single node to represent both element=
-s
-> > > is not that great.
-> >
-> > You mean, just having a very generic onenand@0 node that doesn't
-> > really include any information, except maybe the partition table?
->
-> Yes.
->
-> > I
-> > guess that wouldn't have any negative side effects indeed.
-> >
-> > My point was that we don't want to put things like chip vendor, size,
-> > etc. in DT, since that's enumerable.
->
-> Oh, definitely not, and that's exactly how we do it for NAND devices.
-> Everything that's discoverable is not described in the DT, but some
-> things can't be discovered this way (like when you want to override the
-> ECC strength and use SW-based implem instead of the HW-based one). I
-> know none of this applies to OneNAND yet, I'm just over-cautious about
-> that since DT bindings changes are hard to make once the bindings are
-> in use.
+If UHS speed modes are enabled, a compatible SD card switches down to
+1.8V during enumeration. If after this a software reboot/crash takes
+place and on-chip ROM tries to enumerate the SD card, the difference in
+IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
 
-Makes sense. Thanks for clarifying!
+The fix for this is to have support for power cycling the card in
+hardware (with a PORz/soft-reset line causing a power cycle of the
+card). Since am571x-, am572x- and am574x-idk don't have this
+capability, disable voltage switching for these boards.
+
+The major effect of this is that the maximum supported speed
+mode is now high speed(50 MHz) down from SDR104(200 MHz).
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm/boot/dts/am57xx-idk-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index f7bd26458915..42e433da79ec 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -420,6 +420,7 @@
+ 	vqmmc-supply = <&ldo1_reg>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
++	no-1-8-v;
+ };
+ 
+ &mmc2 {
+-- 
+2.19.2
