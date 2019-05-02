@@ -1,48 +1,58 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 1/5] dt-bindings: drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus
-Date: Thu,  2 May 2019 15:53:32 -0700
-Message-ID: <20190502225336.206885-1-dianders@chromium.org>
+Subject: [PATCH 3/5] ARM: dts: rockchip: Switch to builtin HDMI DDC bus on rk3288-veyron
+Date: Thu,  2 May 2019 15:53:34 -0700
+Message-ID: <20190502225336.206885-3-dianders@chromium.org>
+References: <20190502225336.206885-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190502225336.206885-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-rockchip@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, mka@chromium.org, Sean Paul <seanpaul@chromium.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, linux-arm-kernel@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-rockchip@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, mka@chromium.org, Sean Paul <seanpaul@chromium.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In certain situations it was seen that we could wedge up the DDC bus
-on the HDMI adapter on rk3288.  The only way to unwedge was to mux one
-of the pins over to GPIO output-driven-low temporarily and then
-quickly mux back.  Full details can be found in the patch
-("drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus").
+Downstream Chrome OS kernels use the builtin DDC bus from dw_hdmi on
+veyron.  This is the only way to get them to negotiate HDCP.
 
-Since unwedge requires remuxing the pins, we first need to add to the
-bindings so that we can specify what state the pins should be in for
-unwedging.
+Although HDCP isn't currently all supported upstream, it still seems
+like it makes sense to use dw_hdmi's builtin I2C.  Maybe eventually we
+can get HDCP negotiation working.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- .../bindings/display/rockchip/dw_hdmi-rockchip.txt         | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-index 39143424a474..8346bac81f1c 100644
---- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-@@ -38,6 +38,13 @@ Optional properties
- - phys: from general PHY binding: the phandle for the PHY device.
- - phy-names: Should be "hdmi" if phys references an external phy.
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 1252522392c7..e1bee663d2c5 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -163,7 +163,8 @@
+ };
  
-+Optional pinctrl entry:
-+- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
-+  will switch to the unwedge pinctrl state for 10ms if it ever gets an
-+  i2c timeout.  It's intended that this unwedge pinctrl entry will
-+  cause the SDA line to be driven low to work around a hardware
-+  errata.
-+
- Example:
+ &hdmi {
+-	ddc-i2c-bus = <&i2c5>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_ddc>;
+ 	status = "okay";
+ };
  
- hdmi: hdmi@ff980000 {
+@@ -334,14 +335,6 @@
+ 	i2c-scl-rising-time-ns = <300>;		/* 225ns measured */
+ };
+ 
+-&i2c5 {
+-	status = "okay";
+-
+-	clock-frequency = <100000>;
+-	i2c-scl-falling-time-ns = <300>;
+-	i2c-scl-rising-time-ns = <1000>;
+-};
+-
+ &io_domains {
+ 	status = "okay";
+ 
 -- 
 2.21.0.1020.gf2820cf01a-goog
