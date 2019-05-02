@@ -1,35 +1,58 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] doc: dt-binding: usbmisc-imx: add compatible string
- for  imx7ulp
-Date: Thu, 2 May 2019 14:46:44 -0500
-Message-ID: <20190502194644.GA20807@bogus>
-References: <20190428024847.5046-1-peter.chen@nxp.com>
- <20190428024847.5046-5-peter.chen@nxp.com>
+Subject: Re: [PATCH] dt-binding: usb: add usb-role-switch property
+Date: Thu, 2 May 2019 14:49:05 -0500
+Message-ID: <20190502194905.GA22144@bogus>
+References: <5756e05930f5e6a3940ad9d019399c8e63d24f18.1556454324.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190428024847.5046-5-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <5756e05930f5e6a3940ad9d019399c8e63d24f18.1556454324.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 28 Apr 2019 02:51:23 +0000, Peter Chen wrote:
-> Add compatible string for imx7ulp
+On Sun, Apr 28, 2019 at 08:27:46PM +0800, Chunfeng Yun wrote:
+> Add a property usb-role-switch to tell Dual-Role controller driver
+> that use USB Role Switch framework to handle the role switch between
+> host mode and device mode, it's useful when the driver has already
+> supported other ways, such as extcon framework etc.
 > 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> Cc: Biju Das <biju.das@bp.renesas.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/usb/usbmisc-imx.txt | 1 +
->  1 file changed, 1 insertion(+)
+> v1:
+> the property is discussed in:
+> [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
+> https://patchwork.kernel.org/patch/10852497/
 > 
+> Mediatek and Hisilicon also try to use it:
+> [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
+> https://patchwork.kernel.org/patch/10918385/
+> [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
+> https://patchwork.kernel.org/patch/10918367/
+> 
+> [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
+> https://patchwork.kernel.org/patch/10909981/
+> ---
+>  Documentation/devicetree/bindings/usb/generic.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> index 0a74ab8dfdc2..c73950b72513 100644
+> --- a/Documentation/devicetree/bindings/usb/generic.txt
+> +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> @@ -30,6 +30,9 @@ Optional properties:
+>  			optional for OTG device.
+>   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+>  			optional for OTG device.
+> + - usb-role-switch: tells Dual-Role USB controller driver that we want to use
+> +			USB Role Switch framework to handle the role switch
+> +			between host mode and device mode.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please describe this in terms of h/w functionality, not drivers and 
+Linux things.
+
+Rob
