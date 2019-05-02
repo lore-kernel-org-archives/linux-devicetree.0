@@ -1,33 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: phy: Add binding for Qualcomm PCIe2
- PHY
-Date: Thu, 2 May 2019 16:36:40 -0500
-Message-ID: <20190502213640.GA21552@bogus>
-References: <20190502001406.10431-1-bjorn.andersson@linaro.org>
- <20190502001406.10431-2-bjorn.andersson@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: unittest: Remove error printing on OOM
+Date: Thu, 2 May 2019 16:41:34 -0500
+Message-ID: <CAL_JsqKrjmE9_huT-ViKhCo1mFbHka6reVKzo9Z1qJL0u3x2-g@mail.gmail.com>
+References: <20190502124535.6292-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190502001406.10431-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20190502124535.6292-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  1 May 2019 17:14:05 -0700, Bjorn Andersson wrote:
-> The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
-> Qualcomm platforms, add a binding to describe this.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Thu, May 2, 2019 at 7:45 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> There is no need to print a backtrace or other error message if
+> kzalloc(), kmemdup(), or devm_kzalloc() fails, as the memory allocation
+> core already takes care of that.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> 
-> Changes since v2:
-> - Add #clock-cells
-> 
->  .../bindings/phy/qcom-pcie2-phy.txt           | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-> 
+>  drivers/of/unittest.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied both patches.
+
+Rob
