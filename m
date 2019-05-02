@@ -1,125 +1,81 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
- description
-Date: Thu, 2 May 2019 10:52:25 +0200
-Message-ID: <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
-        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
-        <20190430223629.GA22317@bogus>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v2 1/4] of_net: Add NVMEM support to of_get_mac_address
+Date: Thu, 2 May 2019 11:05:38 +0200
+Message-ID: <20190502090538.GD346@meh.true.cz>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-2-git-send-email-ynezz@true.cz>
+ <20190501201925.GA15495@bogus>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430223629.GA22317@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190501201925.GA15495@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, krzk@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
+
+Rob Herring <robh@kernel.org> [2019-05-01 15:19:25]:
 
 Hi Rob,
 
-On 5/1/19 12:36 AM, Rob Herring wrote:
-> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
->> Extend the documenation by events description with new 'event-data-type'
->> field. Add example how the event might be defined in DT.
-> 
-> Why do we need event types in DT? We don't do this for other h/w such as
-> ARM PMU.
-In ARM PMU all the events are hard-coded into the driver code i.e. in v7
-arch/arm/kernel/perf_event_v7.c
-and are seen from perf. They are different type and for different
-purpose. The Ecynos PPMU events are not seen in perf, they are
-for internal monitoring and must not be reset by other actors like perf.
-They are used by the 'bus drivers' to made some heuristics and tune the
-internal settings, like frequency.
+> > +	struct property *pp;
 
-Chanwoo has written PPMU driver which relies on DT definition.
-The DT events are used by other DT devices by phandle.
-In Exynos 5x SoCs we have many 'bus devices' which use events to
-monitor their usage and react accordingly.
----------------8<------------------------
-[    4.140923] exynos-bus: new bus device registered: soc:bus_wcore ( 
-84000 KHz ~ 400000 KHz)
-[    4.149179] exynos-bus: new bus device registered: soc:bus_noc ( 
-67000 KHz ~ 100000 KHz)
-[    4.156825] exynos-bus: new bus device registered: soc:bus_fsys_apb 
-(100000 KHz ~ 200000 KHz)
-[    4.165071] exynos-bus: new bus device registered: soc:bus_fsys 
-(100000 KHz ~ 200000 KHz)
-[    4.173577] exynos-bus: new bus device registered: soc:bus_fsys2 ( 
-75000 KHz ~ 150000 KHz)
-[    4.182141] exynos-bus: new bus device registered: soc:bus_mfc ( 
-96000 KHz ~ 333000 KHz)
-[    4.190099] exynos-bus: new bus device registered: soc:bus_gen ( 
-89000 KHz ~ 267000 KHz)
-[    4.197953] exynos-bus: new bus device registered: soc:bus_peri ( 
-67000 KHz ~  67000 KHz)
-[    4.206523] exynos-bus: new bus device registered: soc:bus_g2d ( 
-84000 KHz ~ 333000 KHz)
-[    4.214516] exynos-bus: new bus device registered: soc:bus_g2d_acp ( 
-67000 KHz ~ 267000 KHz)
-[    4.222850] exynos-bus: new bus device registered: soc:bus_jpeg ( 
-75000 KHz ~ 300000 KHz)
-[    4.231052] exynos-bus: new bus device registered: soc:bus_jpeg_apb ( 
-84000 KHz ~ 167000 KHz)
-[    4.239202] exynos-bus: new bus device registered: soc:bus_disp1_fimd 
-(120000 KHz ~ 200000 KHz)
-[    4.248033] exynos-bus: new bus device registered: soc:bus_disp1 
-(120000 KHz ~ 300000 KHz)
-[    4.256304] exynos-bus: new bus device registered: 
-soc:bus_gscl_scaler (150000 KHz ~ 300000 KHz)
-[    4.265397] exynos-bus: new bus device registered: soc:bus_mscl ( 
-84000 KHz ~ 400000 KHz)
--------------------------->8----------------------------------------
-The PPMU driver made some assumption, though. It always monitors only
-'read+write data bytes' as an event data type.
-Thus, it is not possible to monitor other stuff and maybe improve the
-heuristics.
+...
 
-This simple modification allows to define different data type, which is
-acquired by the counter, still being compatible with all the Exynos
-drivers in the existing implementation.
+> > +	pp = kzalloc(sizeof(*pp), GFP_KERNEL);
+> > +	if (!pp)
+> > +		return NULL;
+> > +
+> > +	pp->name = "nvmem-mac-address";
+> > +	pp->length = ETH_ALEN;
+> > +	pp->value = kmemdup(mac, ETH_ALEN, GFP_KERNEL);
+> > +	if (!pp->value || of_add_property(np, pp))
+> > +		goto free;
+> 
+> Why add this to the DT?
 
-Regards,
-Lukasz
+I've just carried it over from v1 ("of_net: add mtd-mac-address support to
+of_get_mac_address()")[1] as nobody objected about this so far. 
 
-> 
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> index 3e36c1d..47feb5f 100644
->> --- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> +++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> @@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
->>   			reg = <0x104d0000 0x2000>;
->>   			status = "disabled";
->>   		};
->> +
->> +The 'event' type specified in the PPMU node defines 'event-name'
->> +which also contains 'id' number and optionally 'event-data-type'.
->> +
->> +Example:
->> +
->> +		events {
->> +			ppmu_leftbus_0: ppmu-event0-leftbus {
->> +				event-name = "ppmu-event0-leftbus";
->> +				event-data-type = <PPMU_RO_DATA_CNT>;
->> +			};
->> +		};
->> +
->> +The 'event-data-type' defines the type of data which shell be counted
->> +by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
->> +all possible type, i.e. count read requests, count write data in bytes,
->> +etc. This field is optional and when it is missing, the driver code will
->> +use default data type.
->> -- 
->> 2.7.4
->>
-> 
-> 
+Honestly I don't know if it's necessary to have it, but so far address,
+mac-address and local-mac-address properties provide this DT nodes, so I've
+simply thought, that it would be good to have it for MAC address from NVMEM as
+well in order to stay consistent.
+
+Just FYI, my testing ar9331_8dev_carambola2.dts[2] currently produces
+following runtime DT content:
+
+ root@OpenWrt:/# find /sys/firmware/devicetree/ -name *nvmem* -o -name *addr@*
+ /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells
+ /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells/eth-mac-addr@0
+ /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells/eth-mac-addr@6
+ /sys/firmware/devicetree/base/ahb/spi@1f000000/flash@0/partitions/partition@ff0000/nvmem-cells/wifi-mac-addr@1002
+ /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-cells
+ /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-mac-address
+ /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-cell-names
+ /sys/firmware/devicetree/base/ahb/eth@1a000000/nvmem-cells
+ /sys/firmware/devicetree/base/ahb/eth@1a000000/nvmem-mac-address
+ /sys/firmware/devicetree/base/ahb/eth@1a000000/nvmem-cell-names
+ /sys/firmware/devicetree/base/ahb/eth@19000000/nvmem-cells
+ /sys/firmware/devicetree/base/ahb/eth@19000000/nvmem-mac-address
+ /sys/firmware/devicetree/base/ahb/eth@19000000/nvmem-cell-names
+
+ root@OpenWrt:/# hexdump -C /sys/firmware/devicetree/base/ahb/wmac@18100000/nvmem-mac-address
+ 00000000  00 03 7f 11 52 da                                 |....R.|
+ 00000006
+
+ root@OpenWrt:/# ip addr show wlan0
+ 4: wlan0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 00:03:7f:11:52:da brd ff:ff:ff:ff:ff:ff
+
+1. https://patchwork.ozlabs.org/patch/1086628/
+2. https://git.openwrt.org/?p=openwrt/staging/ynezz.git;a=blob;f=target/linux/ath79/dts/ar9331_8dev_carambola2.dts;h=349c91e760ca5a56d65c587c949fed5fb6ea980e;hb=349c91e760ca5a56d65c587c949fed5fb6ea980e
+
+> You have the struct device ptr, so just use devm_kzalloc() if you need an
+> allocation.
+
+I'll address this in v3, thanks.
+
+-- ynezz
