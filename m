@@ -1,77 +1,99 @@
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v3 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
-Date: Thu, 2 May 2019 10:10:03 +0200
-Message-ID: <1556784606-3016-6-git-send-email-fabien.dessenne@st.com>
-References: <1556784606-3016-1-git-send-email-fabien.dessenne@st.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH v5 7/7] ARM: dts: sun8i: v40:
+ bananapi-m2-berry: Add Bluetooth device node
+Date: Thu, 2 May 2019 16:20:02 +0800
+Message-ID: <CAGb2v65eaRLRkJ2hvoOc1Cr=ncSeqy7Tq2pzt4rk4uiWQeag2w@mail.gmail.com>
+References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
+ <1556040365-10913-8-git-send-email-pgreco@centosproject.org> <20190502074103.vtuxmsl55u3ygyvl@flea>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556784606-3016-1-git-send-email-fabien.dessenne@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQOQVLTAKGQEQ7Y32CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190502074103.vtuxmsl55u3ygyvl@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Declare reserved memories shared by the processors for STM32MP157c-ed1
-board.
+On Thu, May 2, 2019 at 3:41 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> On Tue, Apr 23, 2019 at 02:26:04PM -0300, Pablo Greco wrote:
+> > The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+> > identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+> >
+> > The Bluetooth side is connected to UART3 in a 4 wire configuration. Same
+> > as the WiFi side, due to being the same chip and package, DLDO1 and
+> > DLDO2 regulator outputs from the PMIC provide overall power via VBAT and
+> > I/O power via VDDIO. The CLK_OUT_A clock output from the SoC provides
+> > the LPO low power clock at 32.768 kHz.
+> >
+> > This patch enables Bluetooth on this board, and also adds the missing
+> > LPO clock on the WiFi side. There is also a PCM connection for
+> > Bluetooth, but this is not covered here.
+> >
+> > The LPO clock is fed from CLK_OUT_A, which needs to be muxed on pin
+> > PI12. This can be represented in multiple ways. This patch puts the
+> > pinctrl property in the pin controller node. This is due to limitations
+> > in Linux, where pinmux settings, even the same one, can not be shared
+> > by multiple devices. Thus we cannot put it in both the WiFi and
+> > Bluetooth device nodes. Putting it the CCU node is another option, but
+> > Linux's CCU driver does not handle pinctrl. Also the pin controller is
+> > guaranteed to be initialized after the CCU, when clocks are available.
+> > And any other devices that use muxed pins are guaranteed to be
+> > initialized after the pin controller. Thus having the CLK_OUT_A pinmux
+> > reference be in the pin controller node is a good choice without having
+> > to deal with implementation issues.
+> >
+> > Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > index c87f2c0..15c22b0 100644
+> > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > @@ -96,6 +96,8 @@
+> >       wifi_pwrseq: wifi_pwrseq {
+> >               compatible = "mmc-pwrseq-simple";
+> >               reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+> > +             clocks = <&ccu CLK_OUTA>;
+> > +             clock-names = "ext_clock";
+>
+> So if you don't have that patch (that enables bluetooth) the wifi
+> doesn't work (even though the previous patch is supposed to enable it)
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Maybe we should just squash the two (WiFi and Bluetooth) together?
+After all, they are in the same package, and depend on some of the
+same things, such as clocks and regulators.
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 626ceb3..acfc5cd 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -21,6 +21,48 @@
- 		reg = <0xC0000000 0x40000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		mcuram2: mcuram2@10000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10000000 0x40000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@10040000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10040000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@10041000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10041000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0buffer: vdev0buffer@10042000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10042000 0x4000>;
-+			no-map;
-+		};
-+
-+		mcuram: mcuram@30000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x30000000 0x40000>;
-+			no-map;
-+		};
-+
-+		retram: retram@38000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x38000000 0x10000>;
-+			no-map;
-+		};
-+	};
-+
- 	aliases {
- 		serial0 = &uart4;
- 	};
--- 
-2.7.4
+ChenYu
+
+> >       };
+> >  };
+> >
+> > @@ -173,6 +175,7 @@
+> >
+> >  &pio {
+> >       pinctrl-names = "default";
+> > +     pinctrl-0 = <&clk_out_a_pin>;
+>
+> This one should bein the previous one as well
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
