@@ -1,28 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] usb: usb251xb: Add US lanes inversion dts-bindings
-Date: Wed, 1 May 2019 19:32:45 -0500
-Message-ID: <20190502003245.GA19265@bogus>
-References: <20190424211208.17499-1-fancer.lancer@gmail.com>
- <20190424211208.17499-2-fancer.lancer@gmail.com>
+Subject: Re: [PATCH]  of/device.c: fix the wrong comments
+Date: Wed, 1 May 2019 19:33:17 -0500
+Message-ID: <20190502003317.GA19775@bogus>
+References: <1556156754-18993-1-git-send-email-jojo_zeng@126.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190424211208.17499-2-fancer.lancer@gmail.com>
+In-Reply-To: <1556156754-18993-1-git-send-email-jojo_zeng@126.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Serge Semin <Sergey.Semin@t-platforms.ru>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jojo_zeng@126.com
+Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Apr 2019 00:12:05 +0300, Serge Semin wrote:
-> Since a separate US ports lanes polarity inversion property is going to
-> be available the bindings doc-file should be updated with information
-> about swap-us-lanes bool property, which will be responsible for it.
+On Thu, Apr 25, 2019 at 09:45:54AM +0800, jojo_zeng@126.com wrote:
+> From: Jojo Zeng <jojo_zeng@126.com>
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> the comments which discribed the input parameters of of_match_device(). 
+> the name is changed, so fix it.
+> 
+> Signed-off-by: Jojo Zeng <jojo_zeng@126.com>
 > ---
->  Documentation/devicetree/bindings/usb/usb251xb.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+>  drivers/of/device.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied.
+
+Rob
