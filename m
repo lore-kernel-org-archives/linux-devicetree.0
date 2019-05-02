@@ -1,7 +1,7 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V2 2/3] watchdog: stm32: update return values recommended by watchdog kernel api
-Date: Thu, 2 May 2019 16:08:45 +0200
-Message-ID: <1556806126-15890-3-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH V2 1/3] watchdog: stm32: update to devm_watchdog_register_device
+Date: Thu, 2 May 2019 16:08:44 +0200
+Message-ID: <1556806126-15890-2-git-send-email-ludovic.Barre@st.com>
 References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,62 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch updates return values on watchdog-kernel-api.txt:
-return 0 on succes, -EINVAL for "parameter out of range"
-and -EIO for "could not write value to the watchdog".
+This patch updates to devm_watchdog_register_device interface
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- drivers/watchdog/stm32_iwdg.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ drivers/watchdog/stm32_iwdg.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index e191bd8..f19a6d4 100644
+index e00e3b3..e191bd8 100644
 --- a/drivers/watchdog/stm32_iwdg.c
 +++ b/drivers/watchdog/stm32_iwdg.c
-@@ -81,7 +81,6 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
- 	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
- 	u32 val = FLAG_PVU | FLAG_RVU;
- 	u32 reload;
--	int ret;
+@@ -243,7 +243,7 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+ 		dev_warn(&pdev->dev,
+ 			 "unable to set timeout value, using default\n");
  
- 	dev_dbg(wdd->parent, "%s\n", __func__);
- 
-@@ -98,13 +97,11 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
- 	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
- 
- 	/* wait for the registers to be updated (max 100ms) */
--	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
--					 !(val & (FLAG_PVU | FLAG_RVU)),
--					 SLEEP_US, TIMEOUT_US);
--	if (ret) {
--		dev_err(wdd->parent,
--			"Fail to set prescaler or reload registers\n");
--		return ret;
-+	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
-+				       !(val & (FLAG_PVU | FLAG_RVU)),
-+				       SLEEP_US, TIMEOUT_US)) {
-+		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
-+		return -EIO;
- 	}
- 
- 	/* reload watchdog */
-@@ -128,8 +125,16 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
- static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
- 				  unsigned int timeout)
+-	ret = watchdog_register_device(wdd);
++	ret = devm_watchdog_register_device(&pdev->dev, wdd);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register watchdog device\n");
+ 		goto err;
+@@ -263,7 +263,6 @@ static int stm32_iwdg_remove(struct platform_device *pdev)
  {
-+	unsigned int tout = clamp(timeout, wdd->min_timeout,
-+				  wdd->max_hw_heartbeat_ms / 1000);
-+
- 	dev_dbg(wdd->parent, "%s timeout: %d sec\n", __func__, timeout);
+ 	struct stm32_iwdg *wdt = platform_get_drvdata(pdev);
  
-+	if (tout != timeout) {
-+		dev_err(wdd->parent, "parameter out of range\n");
-+		return -EINVAL;
-+	}
-+
- 	wdd->timeout = timeout;
+-	watchdog_unregister_device(&wdt->wdd);
+ 	clk_disable_unprepare(wdt->clk_lsi);
+ 	clk_disable_unprepare(wdt->clk_pclk);
  
- 	if (watchdog_active(wdd))
 -- 
 2.7.4
