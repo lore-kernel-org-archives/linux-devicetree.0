@@ -1,91 +1,59 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: add PIO VCC bank
- supplies for Pine H64
-Date: Thu, 2 May 2019 20:10:29 +0200
-Message-ID: <20190502181029.dy4bu2v3qdqljejs@flea>
-References: <20190424062543.61852-1-icenowy@aosc.io>
- <20190502074303.g3px63n4v4o7xade@flea>
- <8CB1EDA4-E4B7-486D-8BCD-884E0025C6EA@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: <Tim.Bird@sony.com>
+Subject: RE: [PATCH v2 16/17] kernel/sysctl-test: Add null pointer test for
+ sysctl.c:proc_dointvec()
+Date: Thu, 2 May 2019 18:14:53 +0000
+Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-17-brendanhiggins@google.com>
+ <20190502110347.GE12416@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ogx5tjikbf2c3v7p"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGHFVTTAKGQEC3HPS5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <8CB1EDA4-E4B7-486D-8BCD-884E0025C6EA-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190502110347.GE12416@kroah.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, brendanhiggins@google.com
+Cc: frowand.list@gmail.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, ric
 List-Id: devicetree@vger.kernel.org
 
 
---ogx5tjikbf2c3v7p
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 02, 2019 at 03:46:17PM +0800, Icenowy Zheng wrote:
->
->
-> =E4=BA=8E 2019=E5=B9=B45=E6=9C=882=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
-:43:03, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >Hi,
+> -----Original Message-----
+> From: Greg KH=20
+>=20
+> On Wed, May 01, 2019 at 04:01:25PM -0700, Brendan Higgins wrote:
+> > From: Iurii Zaikin <yzaikin@google.com>
 > >
-> >On Wed, Apr 24, 2019 at 02:25:43PM +0800, Icenowy Zheng wrote:
-> >> The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
-> >> banks.
-> >>
-> >> This patch adds supplies for PC and PD banks on Pine H64 board. PG
-> >and
-> >> PM banks are used for Wi-Fi and should be added when Wi-Fi is added
+> > KUnit tests for initialized data behavior of proc_dointvec that is
+> > explicitly checked in the code. Includes basic parsing tests including
+> > int min/max overflow.
 > >
-> >Not really. The regulator is still there, whether we use it or not. If
-> >it's not used, then it will be left disabled so it doesn't really
-> >change anything.
->
-> Okay, I will include them in the next revision.
->
+> > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+> >  kernel/Makefile      |   2 +
+> >  kernel/sysctl-test.c | 292
+> +++++++++++++++++++++++++++++++++++++++++++
+> >  lib/Kconfig.debug    |   6 +
+> >  3 files changed, 300 insertions(+)
+> >  create mode 100644 kernel/sysctl-test.c
 > >
-> >> PL bank is where PMIC is attached, and currently if a PMIC regulator
-> >> is added for it a dependency loop will happen.
+> > diff --git a/kernel/Makefile b/kernel/Makefile
+> > index 6c57e78817dad..c81a8976b6a4b 100644
+> > --- a/kernel/Makefile
+> > +++ b/kernel/Makefile
+> > @@ -112,6 +112,8 @@ obj-$(CONFIG_HAS_IOMEM) +=3D iomem.o
+> >  obj-$(CONFIG_ZONE_DEVICE) +=3D memremap.o
+> >  obj-$(CONFIG_RSEQ) +=3D rseq.o
 > >
-> >I guess we should fix that somehow
->
-> But this patch is needed for eMMC to be functional again in HS200 mode, s=
-o I hope
-> it can get applied before this get fixed.
+> > +obj-$(CONFIG_SYSCTL_KUNIT_TEST) +=3D sysctl-test.o
+>=20
+> You are going to have to have a "standard" naming scheme for test
+> modules, are you going to recommend "foo-test" over "test-foo"?  If so,
+> that's fine, we should just be consistant and document it somewhere.
+>=20
+> Personally, I'd prefer "test-foo", but that's just me, naming is hard...
 
-Yep, sure
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---ogx5tjikbf2c3v7p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMsylQAKCRDj7w1vZxhR
-xeoiAP44NHYBSHTIGLN3XJxbGfAnItMHslGpuTmzgJu/MEen1AD/UKdw+42VNQ70
-d3em7IPxIATxVLFG4eOlrhX6/oqsBQM=
-=G4jo
------END PGP SIGNATURE-----
-
---ogx5tjikbf2c3v7p--
+My preference would be "test-foo" as well.  Just my 2 cents.
+ -- Tim
