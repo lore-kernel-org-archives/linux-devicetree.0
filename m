@@ -1,47 +1,46 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v6 1/3] backlight: lm3630a: return 0 on success in
- update_status functions
-Date: Thu, 2 May 2019 06:42:39 -0400
-Message-ID: <20190502104239.GA24563@basecamp>
-References: <20190424092505.6578-1-masneyb@onstation.org>
- <20190424092505.6578-2-masneyb@onstation.org>
- <864c1ddc-1008-0041-1559-e491ca0186ef@linaro.org>
+From: michael.kao <michael.kao@mediatek.com>
+Subject: [PATCH 3/8] arm64: dts: mt8183: Add #cooling-cells to CPU nodes
+Date: Thu, 2 May 2019 18:43:10 +0800
+Message-ID: <1556793795-25204-4-git-send-email-michael.kao@mediatek.com>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <864c1ddc-1008-0041-1559-e491ca0186ef@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca, Daniel Thompson <daniel@redfelineninja.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: michael.kao@mediatek.com, fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2019 at 11:07:51AM +0100, Daniel Thompson wrote:
-> On 24/04/2019 10:25, Brian Masney wrote:
-> > lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-> > both return the brightness value if the brightness was successfully
-> > updated. Writing to these attributes via sysfs would cause a 'Bad
-> > address' error to be returned. These functions should return 0 on
-> > success, so let's change it to correct that error.
-> > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
-> Hi Brian, sorry for the delay. For some reason your mails are being dumped
-> before they reach me so I only discovered these patches when I paid proper
-> attention to the replies and fetched them from patchwork.
-> 
-> Hi Lee, is the same thing happening for you? ;-)
+The #cooling-cells property needs to be specified to allow a CPU
+to be used as cooling device.
 
-Huh, that's odd. I haven't ran into that issue when working with people
-from Linaro in other subsystems.
+Signed-off-by: michael.kao <Michael.Kao@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-As a sanity check, I used 'git send-email' to send this patch to
-check-auth@verifier.port25.com and it verified that I still have SPF,
-DKIM, reverse DNS, etc. all setup properly on this domain.
-
-hotmail.com addresses are the only ones I've had issues with in the
-past, but I doubt you're forwarding your email there. :)
-
-Brian
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 5668fb8..95f1d7b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -11,6 +11,8 @@
+ #include <dt-bindings/power/mt8183-power.h>
+ #include <dt-bindings/reset-controller/mt8183-resets.h>
+ #include "mt8183-pinfunc.h"
++#include <dt-bindings/thermal/thermal.h>
++
+ / {
+ 	compatible = "mediatek,mt8183";
+ 	interrupt-parent = <&sysirq>;
+-- 
+1.9.1
