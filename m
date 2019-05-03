@@ -1,66 +1,76 @@
-From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v3 00/10] Add Support for MediaTek PMIC MT6358
-Date: Fri, 3 May 2019 17:31:07 +0800
-Message-ID: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] [PATCH v4 5/9] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Fri, 3 May 2019 17:28:53 +0530
+Message-ID: <CAMty3ZDx6NXyYhQehYT9geeGwAk2PZidiVMwVw1nnZJa3zwyOg@mail.gmail.com>
+References: <20190413165418.27880-1-megous@megous.com> <20190413165418.27880-6-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190413165418.27880-6-megous@megous.com>
+Sender: netdev-owner@vger.kernel.org
+To: megous@megous.com
+Cc: linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-This patchset including refactoring interrupt add support to MT6358 PMIC.
-MT6358 is the primary PMIC for MT8183 platform.
+On Sat, Apr 13, 2019 at 10:24 PM megous via linux-sunxi
+<linux-sunxi@googlegroups.com> wrote:
+>
+> From: Ondrej Jirman <megous@megous.com>
+>
+> Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+> to the phy datasheet, both regulators need to be enabled at the same time,
+> but we can only specify a single phy-supply in the DT.
+>
+> This can be achieved by making one regulator depedning on the other via
+> vin-supply. While it's not a technically correct description of the
+> hardware, it achieves the purpose.
+>
+> All values of RX/TX delay were tested exhaustively and a middle one of the
+> working values was chosen.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> index 17d496990108..6d6b1f66796d 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> @@ -15,6 +15,7 @@
+>
+>         aliases {
+>                 serial0 = &uart0;
+> +               ethernet0 = &emac;
+>         };
+>
+>         chosen {
+> @@ -44,6 +45,27 @@
+>                 regulator-max-microvolt = <5000000>;
+>                 regulator-always-on;
+>         };
+> +
+> +       /*
+> +        * The board uses 2.5V RGMII signalling. Power sequence to enable
+> +        * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
+> +        * at the same time and to wait 100ms.
+> +        */
+> +       reg_gmac_2v5: gmac-2v5 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "gmac-2v5";
+> +               regulator-min-microvolt = <2500000>;
+> +               regulator-max-microvolt = <2500000>;
+> +               startup-delay-us = <100000>;
+> +               enable-active-high;
+> +               gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+> +
+> +               /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
+> +                * enable two regulators to power the phy. This is one way
+> +                * to achieve that.
+> +                */
+> +               vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
 
-changes since v2:
-- rewrite the description of MT6358 regulators.
-- refine some coding style in the dts for better code quality.
-- refine the suspend behavior of mfd driver.
-- some minor bug fix of mfd driver, like adding IRQCHIP_SKIP_SET_WAKE
-  flag.
-- remove unused MT6358 register.
-- merge the same voltage table and remove unused chip id in the MT6358
-  regulator driver.
-
-Hsin-Hsiung Wang (8):
-  mfd: mt6397: clean up code
-  mfd: mt6397: extract irq related code from core driver
-  mfd: mt6397: modify suspend/resume behavior
-  dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
-  regulator: Add document for MT6358 regulator
-  mfd: Add support for the MediaTek MT6358 PMIC
-  regulator: mt6358: Add support for MT6358 regulator
-  arm64: dts: mt6358: add PMIC MT6358 related nodes
-
-Ran Bi (2):
-  rtc: mt6397: fix alarm register overwrite
-  rtc: Add support for the MediaTek MT6358 RTC
-
- .../devicetree/bindings/mfd/mt6397.txt        |  11 +-
- .../bindings/regulator/mt6358-regulator.txt   | 358 +++++++++++
- arch/arm64/boot/dts/mediatek/mt6358.dtsi      | 358 +++++++++++
- drivers/mfd/Makefile                          |   4 +-
- drivers/mfd/mt6358-irq.c                      | 229 +++++++
- drivers/mfd/mt6397-core.c                     | 293 +++------
- drivers/mfd/mt6397-irq.c                      | 214 +++++++
- drivers/regulator/Kconfig                     |   9 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/mt6358-regulator.c          | 586 ++++++++++++++++++
- drivers/rtc/rtc-mt6397.c                      |  90 ++-
- include/linux/mfd/mt6358/core.h               | 158 +++++
- include/linux/mfd/mt6358/registers.h          | 282 +++++++++
- include/linux/mfd/mt6397/core.h               |  15 +
- include/linux/regulator/mt6358-regulator.h    |  56 ++
- 15 files changed, 2442 insertions(+), 222 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
- create mode 100644 drivers/mfd/mt6358-irq.c
- create mode 100644 drivers/mfd/mt6397-irq.c
- create mode 100644 drivers/regulator/mt6358-regulator.c
- create mode 100644 include/linux/mfd/mt6358/core.h
- create mode 100644 include/linux/mfd/mt6358/registers.h
- create mode 100644 include/linux/regulator/mt6358-regulator.h
-
--- 
-2.18.0
+The actual output supply pin name is GMAC-3V which has an input of
+VCC3V3-MAC (ie aldo2), if we compatible to schematics better to use
+the same, IMHO.
