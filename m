@@ -1,66 +1,34 @@
-From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH v3 04/10] net: davinci: support of_get_mac_address new ERR_PTR error
-Date: Fri,  3 May 2019 09:56:01 +0200
-Message-ID: <1556870168-26864-5-git-send-email-ynezz@true.cz>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1556870168-26864-1-git-send-email-ynezz@true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 0/7] Add support for H6 thermal sensor
+Date: Fri,  3 May 2019 03:28:06 -0400
+Message-ID: <20190503072813.2719-1-tiny.windzz@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-There was NVMEM support added directly to of_get_mac_address, and it
-uses nvmem_get_mac_address under the hood, so we can remove it. As
-of_get_mac_address can now return NULL and ERR_PTR encoded error values,
-adjust to that as well.
+This patchset adds support for the H6 ths sensor.
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
+Based on IIO-based thermal sensor driver for Allwinner H3 and A83T SoC,
+thx to Philipp Rossak's work.
 
- Changes since v2:
+TODO: calibrate thermal sensor by using information from sid.
 
- * ERR_PTR handling
+Yangtao Li (7):
+  iio: adc: sun4i-gpadc: rework for support multiple thermal sensor
+  iio: adc: sun4i-gpadc: introduce temp_data in gpadc_data
+  iio: adc: sun4i-gpadc: introduce gpadc_enable and gpadc_disable in
+    gpadc_data
+  iio: adc: sun4i-gpadc-iio: support clocks and reset
+  dt-bindings: mfd: Add H6 GPADC binding
+  iio: adc: sun4i-gpadc-iio: add support for H6 thermal sensor
+  iio: adc: sun4i-gpadc-iio convert to SPDX license tags
 
- drivers/net/ethernet/ti/davinci_emac.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ .../devicetree/bindings/mfd/sun4i-gpadc.txt   |  27 ++-
+ drivers/iio/adc/sun4i-gpadc-iio.c             | 208 +++++++++++++++---
+ include/linux/mfd/sun4i-gpadc.h               |   9 +
+ 3 files changed, 213 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 57450b1..4229ef0 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1714,7 +1714,7 @@ static struct net_device_stats *emac_dev_getnetstats(struct net_device *ndev)
- 
- 	if (!is_valid_ether_addr(pdata->mac_addr)) {
- 		mac_addr = of_get_mac_address(np);
--		if (mac_addr)
-+		if (!IS_ERR_OR_NULL(mac_addr))
- 			ether_addr_copy(pdata->mac_addr, mac_addr);
- 	}
- 
-@@ -1912,15 +1912,11 @@ static int davinci_emac_probe(struct platform_device *pdev)
- 		ether_addr_copy(ndev->dev_addr, priv->mac_addr);
- 
- 	if (!is_valid_ether_addr(priv->mac_addr)) {
--		/* Try nvmem if MAC wasn't passed over pdata or DT. */
--		rc = nvmem_get_mac_address(&pdev->dev, priv->mac_addr);
--		if (rc) {
--			/* Use random MAC if still none obtained. */
--			eth_hw_addr_random(ndev);
--			memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
--			dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
--				 priv->mac_addr);
--		}
-+		/* Use random MAC if still none obtained. */
-+		eth_hw_addr_random(ndev);
-+		memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
-+		dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
-+			 priv->mac_addr);
- 	}
- 
- 	ndev->netdev_ops = &emac_netdev_ops;
 -- 
-1.9.1
+2.17.1
