@@ -1,60 +1,63 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 09/15] usb: renesas_usbhs: add support for CNEN bit
-Date: Thu, 9 May 2019 15:11:36 -0500
-Message-ID: <20190509201142.10543-10-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
-References: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=+B9Q=TD=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: How do I tell a dual role PHY to always be host or peripheral?
+Date: Fri, 3 May 2019 14:46:13 +0000
+Message-ID: 
+ <TY1PR01MB1562C3DF1D5D538AF0156B738A350@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-For some SoC, CNEN must be set for USB Device mode operation.
+I'm preparing patches to add USB support (host and device) for the=20
+RZ/A2M SoC. The internal HW is similar to the R-Car Gen 3 (USB 2.0, not
+USB 3.0).
+So I'm reusing drivers/phy/renesas/phy-rcar-gen3-usb2.c
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/usb/renesas_usbhs/common.c | 6 ++++++
- drivers/usb/renesas_usbhs/common.h | 2 ++
- 2 files changed, 8 insertions(+)
+But, I'm not doing OTG, so I need to tell the PHY that it explicitly=20
+needs to be configured as host or peripheral mode.
+The controllers are individual (host or peripheral), but they use the=20
+same internal PHY.
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index efb26ffd9809..820636fc4dc9 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -116,6 +116,12 @@ void usbhs_sys_function_ctrl(struct usbhs_priv *priv, int enable)
- 	u16 mask = DCFM | DRPD | DPRPU | HSE | USBE;
- 	u16 val  = HSE | USBE;
- 
-+	/* CNEN bit is required for function operation */
-+	if (usbhsc_flags_has(priv, USBHSF_HAS_CNEN)) {
-+		mask |= CNEN;
-+		val  |= CNEN;
-+	}
-+
- 	/*
- 	 * if enable
- 	 *
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index 1ca94b8f5508..211ab8e741be 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -104,6 +104,7 @@ struct usbhs_priv;
- 
- /* SYSCFG */
- #define SCKE	(1 << 10)	/* USB Module Clock Enable */
-+#define CNEN	(1 << 8)	/* Single-ended receiver operation Enable */
- #define HSE	(1 << 7)	/* High-Speed Operation Enable */
- #define DCFM	(1 << 6)	/* Controller Function Select */
- #define DRPD	(1 << 5)	/* D+ Line/D- Line Resistance Control */
-@@ -343,6 +344,7 @@ struct usbhs_priv *usbhs_pdev_to_priv(struct platform_device *pdev);
-  * flags
-  */
- #define USBHSF_RUNTIME_PWCTRL	(1 << 0)
-+#define USBHSF_HAS_CNEN		(1 << 1) /* Single-ended receiver */
- 
- #define usbhsc_flags_init(p)   ((p)->flags = 0)
- #define usbhsc_flags_set(p, b) ((p)->flags |=  (b))
--- 
-2.16.1
+Looking at:
+
+https://www.kernel.org/doc/Documentation/devicetree/bindings/usb/generic.tx=
+t
+
+Technically, I should not add "dr_mode" to the USB controller nodes (and
+let the PHY driver check that) because the "controller" is not dual=20
+role, only PHY is.
+
+I was adding a new property "renesas,is_peripheral" to the=20
+phy-rcar-gen3-usb2.c PHY driver that it would check if it was not OTG which=
+ of course
+works.
+
+However, if I look at the PHY dt-bindings of:
+  Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+  Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+
+They are both using the name "dr_mode" in the PHY node.
+
+So, instead of adding something like "renesas,is_peripheral" to the=20
+current R-Car USB2 PHY driver, can I just use the generic name "dr_mode"?
+
+The PHY driver code change is pretty simple:
+
+	if (channel->is_otg_channel) {
+		x x x (existing code today)
++	} else
++		if (usb_get_dr_mode(channel->dev) =3D=3D USB_DR_MODE_PERIPHERAL)
++			writel(0x80000000, usb2_base + USB2_COMMCTRL);
++		else
++			writel(0x00000000, usb2_base + USB2_COMMCTRL);
+
+
+
+I figured I would ask BEFORE I start submitting patches for review.
+
+
+Thank you,
+Chris
