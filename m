@@ -1,16 +1,16 @@
 From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH v4 07/10] net: wireless: support of_get_mac_address new ERR_PTR error
-Date: Fri,  3 May 2019 16:27:12 +0200
-Message-ID: <1556893635-18549-8-git-send-email-ynezz@true.cz>
+Subject: [PATCH v4 06/10] net: usb: support of_get_mac_address new ERR_PTR error
+Date: Fri,  3 May 2019 16:27:11 +0200
+Message-ID: <1556893635-18549-7-git-send-email-ynezz@true.cz>
 References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1556893635-18549-1-git-send-email-ynezz@true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, QCA ath9k Development <ath9k-devel@qca.qualcomm.com>, Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stanislaw Gruszka <sgruszka@redhat.com>, Helmut Schaa <helmut.schaa@googlemail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Steve Glendinning <steve.glendinning@shawell.net>, "David S. Miller" <davem@davemloft.net>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 There was NVMEM support added to of_get_mac_address, so it could now return
@@ -24,49 +24,35 @@ Signed-off-by: Petr Štetiar <ynezz@true.cz>
 
   * IS_ERR_OR_NULL -> IS_ERR
 
- drivers/net/wireless/ath/ath9k/init.c          | 2 +-
- drivers/net/wireless/mediatek/mt76/eeprom.c    | 2 +-
- drivers/net/wireless/ralink/rt2x00/rt2x00dev.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/usb/smsc75xx.c | 2 +-
+ drivers/net/usb/smsc95xx.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-index 98141b6..a04d861 100644
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -642,7 +642,7 @@ static int ath9k_of_init(struct ath_softc *sc)
- 	}
+diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
+index ec287c9..d27b627 100644
+--- a/drivers/net/usb/smsc75xx.c
++++ b/drivers/net/usb/smsc75xx.c
+@@ -774,7 +774,7 @@ static void smsc75xx_init_mac_address(struct usbnet *dev)
  
- 	mac = of_get_mac_address(np);
--	if (mac)
-+	if (!IS_ERR(mac))
- 		ether_addr_copy(common->macaddr, mac);
- 
- 	return 0;
-diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
-index a1529920d..0496493 100644
---- a/drivers/net/wireless/mediatek/mt76/eeprom.c
-+++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
-@@ -94,7 +94,7 @@
+ 	/* maybe the boot loader passed the MAC address in devicetree */
+ 	mac_addr = of_get_mac_address(dev->udev->dev.of_node);
+-	if (mac_addr) {
++	if (!IS_ERR(mac_addr)) {
+ 		memcpy(dev->net->dev_addr, mac_addr, ETH_ALEN);
  		return;
+ 	}
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index e3d08626..ab23911 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -917,7 +917,7 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
  
- 	mac = of_get_mac_address(np);
--	if (mac)
-+	if (!IS_ERR(mac))
- 		memcpy(dev->macaddr, mac, ETH_ALEN);
- #endif
- 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-index 357c094..19a794a 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-@@ -1007,7 +1007,7 @@ void rt2x00lib_set_mac_address(struct rt2x00_dev *rt2x00dev, u8 *eeprom_mac_addr
- 	const char *mac_addr;
- 
- 	mac_addr = of_get_mac_address(rt2x00dev->dev->of_node);
--	if (mac_addr)
-+	if (!IS_ERR(mac_addr))
- 		ether_addr_copy(eeprom_mac_addr, mac_addr);
- 
- 	if (!is_valid_ether_addr(eeprom_mac_addr)) {
+ 	/* maybe the boot loader passed the MAC address in devicetree */
+ 	mac_addr = of_get_mac_address(dev->udev->dev.of_node);
+-	if (mac_addr) {
++	if (!IS_ERR(mac_addr)) {
+ 		memcpy(dev->net->dev_addr, mac_addr, ETH_ALEN);
+ 		return;
+ 	}
 -- 
 1.9.1
