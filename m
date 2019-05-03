@@ -1,39 +1,36 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 26/29] PCI: Add DT binding for "reset-gpios" property
-Date: Mon, 13 May 2019 23:37:41 +0530
-Message-ID: <20190513180744.16493-27-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=WSjT=TD=linaro.org=ulf.hansson@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+References: <20190429090310.25484-1-haibo.chen@nxp.com>
+In-Reply-To: <20190429090310.25484-1-haibo.chen@nxp.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 3 May 2019 15:29:01 +0200
+Message-ID: <CAPDyKFqi=v6WBR5+n_U6ngQDgeDtrdHwS2xBgntqqLmNMPuK=A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add struct esdhc_soc_data for i.MX7ULP
+Content-Type: text/plain; charset="UTF-8"
+To: BOUGH CHEN <haibo.chen@nxp.com>
+Cc: "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT binding for "reset-gpios" property which supports GPIO based PERST#
-signal.
+On Mon, 29 Apr 2019 at 10:55, BOUGH CHEN <haibo.chen@nxp.com> wrote:
+>
+> ---
+> Changes for V2:
+> -remove the request on the subsequent error paths in pm_runtime_resume
+>
+> Haibo Chen (3):
+>   dt-bindings: mmc: fsl-imx-esdhc: add imx7ulp compatible string
+>   mmc: sdhci-esdhc-imx: add pm_qos to interact with cpuidle
+>   mmc: add HS400 support for iMX7ULP
+>
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt |  1 +
+>  drivers/mmc/host/sdhci-esdhc-imx.c            | 41 +++++++++++++++++--
+>  2 files changed, 39 insertions(+), 3 deletions(-)
+>
+> --
+> 2.17.1
+>
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: Moved to common pci binding doc
+Applied for next, thanks!
 
-V2: Using standard "reset-gpio" property
-
- Documentation/devicetree/bindings/pci/pci.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index c77981c5dd18..79124898aa5b 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -24,3 +24,6 @@ driver implementation may support the following properties:
-    unsupported link speed, for instance, trying to do training for
-    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-    for gen2, and '1' for gen1. Any other values are invalid.
-+- reset-gpios:
-+   If present this property specifies PERST# GPIO. Host drivers can parse the
-+   GPIO and apply fundamental reset to endpoints.
--- 
-2.17.1
+Kind regards
+Uffe
