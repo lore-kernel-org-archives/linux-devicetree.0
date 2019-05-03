@@ -1,51 +1,90 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v3 08/10] staging: octeon-ethernet: support
- of_get_mac_address new ERR_PTR error
-Date: Fri, 3 May 2019 21:07:30 +0200
-Message-ID: <20190503190730.GH71477@meh.true.cz>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
- <1556870168-26864-9-git-send-email-ynezz@true.cz>
- <20190503103456.GF2269@kadam>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 0/5] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Fri, 3 May 2019 15:29:15 +0200
+Message-ID: <CAPDyKFoURwnai1hbCbO+Uh6+hc7A4dYHjWkqeFAEgMQET-BzwA@mail.gmail.com>
+References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFqbn=UcbwoH_z+yjrjvHQZaMtmsD=n0yrBV7DAK5VRJEQ@mail.gmail.com> <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20190503103456.GF2269@kadam>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: devel@driverdev.osuosl.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-RGFuIENhcnBlbnRlciA8ZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tPiBbMjAxOS0wNS0wMyAxMzoz
-NDo1Nl06CgpIaSwKCj4gT24gRnJpLCBNYXkgMDMsIDIwMTkgYXQgMDk6NTY6MDVBTSArMDIwMCwg
-UGV0ciDFoHRldGlhciB3cm90ZToKPiA+IFRoZXJlIHdhcyBOVk1FTSBzdXBwb3J0IGFkZGVkIHRv
-IG9mX2dldF9tYWNfYWRkcmVzcywgc28gaXQgY291bGQgbm93Cj4gPiByZXR1cm4gTlVMTCBhbmQg
-RVJSX1BUUiBlbmNvZGVkIGVycm9yIHZhbHVlcywgc28gd2UgbmVlZCB0byBhZGp1c3QgYWxsCj4g
-PiBjdXJyZW50IHVzZXJzIG9mIG9mX2dldF9tYWNfYWRkcmVzcyB0byB0aGlzIG5ldyBmYWN0Lgo+
-IAo+IFdoaWNoIGNvbW1pdCBhZGRlZCBOVk1FTSBzdXBwb3J0PyAgSXQgaGFzbid0IGhpdCBuZXQt
-bmV4dCBvciBsaW51eC1uZXh0Cj4geWV0Li4uICBWZXJ5IHN0cmFuZ2UuCgp0aGlzIHBhdGNoIGlz
-IGEgcGFydCBvZiB0aGUgcGF0Y2ggc2VyaWVzWzFdLCB3aGVyZSB0aGUgMXN0IHBhdGNoWzJdIGFk
-ZHMgdGhpcwpOVk1FTSBzdXBwb3J0IHRvIG9mX2dldF9tYWNfYWRkcmVzcyBhbmQgZm9sbG93LXVw
-IHBhdGNoZXMgYXJlIGFkanVzdGluZwpjdXJyZW50IG9mX2dldF9tYWNfYWRkcmVzcyB1c2VycyB0
-byB0aGUgbmV3IEVSUl9QVFIgcmV0dXJuIHZhbHVlLgoKPiBXaHkgd291bGQgb2ZfZ2V0X21hY19h
-ZGRyZXNzKCkgcmV0dXJuIGEgbWl4IG9mIE5VTEwgYW5kIGVycm9yIHBvaW50ZXJzPwoKSSd2ZSBp
-bnRyb2R1Y2VkIHRoaXMgbWlzbGVhZGluZyBBUEkgaW4gdjMsIGJ1dCBjb3JyZWN0ZWQgaXQgaW4g
-djQsIHNvIGl0IG5vdwpyZXR1cm5zIG9ubHkgdmFsaWQgcG9pbnRlciBvciBFUlJfUFRSIGVuY29k
-ZWQgZXJyb3IgdmFsdWUuCgpKdXN0IEZZSSwgY2hhbmdlcyBmb3Igc3RhZ2luZy9vY3Rlb24gYXJl
-IGN1cnJlbnRseSBhdCB2NVszXS4KCjEuIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcHJv
-amVjdC9uZXRkZXYvbGlzdC8/c2VyaWVzPTEwNTk3MgoyLiBodHRwczovL3BhdGNod29yay5vemxh
-YnMub3JnL3BhdGNoLzEwOTQ5MTYvCjMuIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0
-Y2gvMTA5NDk0Mi8KCi0tIHluZXp6Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
-b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaXZlcmRldi1kZXZlbAo=
+On Tue, 30 Apr 2019 at 14:06, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+>
+>
+> On 4/30/19 1:13 PM, Ulf Hansson wrote:
+> > On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> >>
+> >> From: Ludovic Barre <ludovic.barre@st.com>
+> >>
+> >> This patch series adds busy detect for stm32 sdmmc variant.
+> >> Some adaptations are required:
+> >> -Avoid to check and poll busy status when is not expected.
+> >> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
+> >>   different.
+> >> -Add hardware busy timeout with MMCIDATATIMER register.
+> >>
+> >> V2:
+> >> -mmci_cmd_irq cleanup in separate patch.
+> >> -simplify the busy_detect_flag exclude
+> >> -replace sdmmc specific comment in
+> >> "mmc: mmci: avoid fake busy polling in mmci_irq"
+> >> to focus on common behavior
+> >>
+> >> Ludovic Barre (5):
+> >>    mmc: mmci: cleanup mmci_cmd_irq for busy detect feature
+> >>    mmc: mmci: avoid fake busy polling in mmci_irq
+> >>    mmc: mmci: fix clear of busy detect status
+> >>    mmc: mmci: add hardware busy timeout feature
+> >>    mmc: mmci: add busy detect for stm32 sdmmc variant
+> >>
+> >>   drivers/mmc/host/mmci.c | 61 ++++++++++++++++++++++++++++++++++++++-----------
+> >>   drivers/mmc/host/mmci.h |  3 +++
+> >>   2 files changed, 51 insertions(+), 13 deletions(-)
+> >>
+> >> --
+> >> 2.7.4
+> >>
+> >
+> > Ludovic, just wanted to let you know that I am reviewing and testing
+> > this series.
+> >
+> > However, while running some tests on Ux500 for validating the busy
+> > detection code, even without your series applied, I encounter some odd
+> > behaviors. I am looking into the problem to understand better and will
+> > let you know as soon as I have some more data to share.
+>
+> Oops, don't hesitate to share your status, if I could help.
+
+Thanks! Good and bad news here, then.
+
+I now understand what is going on - and there is certainly room for
+improvements here, but more importantly the actual mmci busy detection
+works as expected.
+
+When it comes to improvements, the main issue I have found is how we
+treat DATA WRITES. In many cases we simply don't use the HW busy
+detection at all, but instead rely on the mmc core to send CMD13 in a
+loop to poll. Well, then if the polling would have consisted of a
+couple of CMD13s that wouldn't be an issue, but my observations is
+rather that the numbers of CMD13 sent to poll is in the range or
+hundreds/thousands - per each WRITE request!
+
+I am going to send a patch (or two) that improves the behavior. It
+might even involve changing parts in core layer, not sure how the end
+result will look like yet.
+
+In any case, I have applied patch 1 and patch2 for next, as the tests
+turned out well at my side. I also took the liberty of updating some
+of the comments/changelogs, please have look and tell if there is
+something you want to change.
+
+I will continue with the rest of series next week.
+
+Kind regards
+Uffe
