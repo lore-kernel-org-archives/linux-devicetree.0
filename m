@@ -1,189 +1,126 @@
-MIME-Version: 1.0
-Date: Fri, 3 May 2019 09:53:16 -0500
+Return-Path: <SRS0=w9il=TD=nxp.com=aisheng.dong@kernel.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to parse
+ clocks from device tree
+Date: Fri, 3 May 2019 01:34:32 +0000
+Message-ID: <1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
 References: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
-	<1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
-In-Reply-To: <1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
-Message-ID: <CAL_JsqLJ+Lc_3huQizy4BVFgVV94Yg8KsOOgXLv4dQU8H=WfWw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
- parse clocks from device tree
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 2, 2019 at 8:34 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> There's a few limitations on the original one cell clock binding
-> (#clock-cells = <1>) that we have to define all clock IDs for device
-> tree to reference. This may cause troubles if we want to use common
-> clock IDs for multi platforms support when the clock of those platforms
-> are mostly the same.
-> e.g. Current clock IDs name are defined with SS prefix.
->
-> However the device may reside in different SS across CPUs, that means the
-> SS prefix may not valid anymore for a new SoC. Furthermore, the device
-> availability of those clocks may also vary a bit.
->
-> For such situation, We formerly planned to add all new IDs for each SS
-> and dynamically check availability for different SoC in driver. That can
-> be done but that may involve a lot effort and may result in more changes
-> and duplicated code in driver, also make device tree upstreaming hard which
-> depends on Clock IDs.
->
-> To relief this situation, we want to move the clock definition into
-> device tree which can fully decouple the dependency of Clock ID definition
-> from device tree. This can make us write a full generic clock driver
-> for SCU based SoCs. No more frequent changes needed in clock driver
-> any more.
->
-> In the meanwhile, we can also use the existence of clock nodes in device
-> tree to address the device and clock availability differences across
-> different SoCs.
->
-> For SCU clocks, only two params required. The first one is resource id
-> which is encoded in reg property and the second is clock type index
-> which is encoded in generic clock-indices property they're not continuously.
->
-> And as we also want to support clock set parent function, 'clocks' property
-> is also used to pass all the possible input parents.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> ChangeLog:
-> v1->v2:
->  * changed to one cell binding inspired by arm,scpi.txt
->    Documentation/devicetree/bindings/arm/arm,scpi.txt
->    Resource ID is encoded in 'reg' property.
->    Clock type is encoded in generic clock-indices property.
->    Then we don't have to search all the DT nodes to fetch
->    those two value to construct clocks which is relatively
->    low efficiency.
->  * Add required power-domain property as well.
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 45 ++++++++++++++++++----
->  include/dt-bindings/firmware/imx/rsrc.h            | 17 ++++++++
->  2 files changed, 54 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index 5d7dbab..2f46e89 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -89,6 +89,27 @@ Required properties:
->                           "fsl,imx8qm-clock"
->                           "fsl,imx8qxp-clock"
->                         followed by "fsl,scu-clk"
-> +- #address-cells:      Should be 1.
-> +- #size-cells:         Should be 0.
-> +
-> +Sub nodes are required to represent all available SCU clocks within this
-> +hardware subsystem and the following properties are needed:
-> +
-> +- reg:                 Should contain the Resource ID of this SCU clock.
-> +- #clock-cells:                Should be 1.
-> +- clock-indices:       Index of all clock types supported by this SCU clock.
-> +                       The order should match the clock-output-names array.
-> +                       Refer to <include/dt-bindings/firmware/imx/rsrc.h> for
-> +                       available clock types supported by SCU.
-
-I would have expected the clock cell to contain the Resource ID.
-
-Also, this still has one clock per node which you should avoid unless
-there's only a small number of clocks (say ~20). Move this all to a
-single node with the list of clock IDs in clock-indices and other
-properties like power-domains can match up with clock-indices. IOW,
-both should have the same length (in elements).
-
-For the clock type, perhaps combine that in the clock cell with the
-resource ID such as using the upper 8-bits.
-
-> +- clock-output-names:  Shall be the corresponding names of the outputs.
-> +- power-domains:       Should contain the power domain used by this SCU clock.
-> +
-> +Optional properties:
-> +- clocks:              Shall be the input parent clock(s) phandle for the clock.
-> +                       For multiplexed clocks, the list order must match the hardware
-> +                       programming order.
-> +
-> +Legacy Clock binding (No sub-nodes which is DEPRECATED):
->  - #clock-cells:                Should be 1. Contains the Clock ID value.
->  - clocks:              List of clock specifiers, must contain an entry for
->                         each required entry in clock-names
-> @@ -144,6 +165,21 @@ lsio_mu1: mailbox@5d1c0000 {
->         #mbox-cells = <2>;
->  };
->
-> +conn-scu-clock-controller {
-> +       compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       uart0_clk: clock-scu@57 {
-> +               reg = <57>;
-> +               #clock-cells = <1>;
-> +               clock-indices = <IMX_SC_PM_CLK_PER>;
-> +               clock-output-names = "uart0_clk";
-> +               power-domains = <&pd IMX_SC_R_UART_0>;
-> +       };
-> +       ...
-> +}
-> +
->  firmware {
->         scu {
->                 compatible = "fsl,imx-scu";
-> @@ -160,11 +196,6 @@ firmware {
->                           &lsio_mu1 1 3
->                           &lsio_mu1 3 3>;
->
-> -               clk: clk {
-> -                       compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
-> -                       #clock-cells = <1>;
-> -               };
-> -
->                 iomuxc {
->                         compatible = "fsl,imx8qxp-iomuxc";
->
-> @@ -192,8 +223,6 @@ serial@5a060000 {
->         ...
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_lpuart0>;
-> -       clocks = <&clk IMX8QXP_UART0_CLK>,
-> -                <&clk IMX8QXP_UART0_IPG_CLK>;
-> -       clock-names = "per", "ipg";
-> +       clocks = <&uart0_clk IMX_SC_PM_CLK_PER>;
->         power-domains = <&pd IMX_SC_R_UART_0>;
->  };
-> diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
-> index 4e61f64..fbeaca7 100644
-> --- a/include/dt-bindings/firmware/imx/rsrc.h
-> +++ b/include/dt-bindings/firmware/imx/rsrc.h
-> @@ -547,4 +547,21 @@
->  #define IMX_SC_R_ATTESTATION           545
->  #define IMX_SC_R_LAST                  546
->
-> +/*
-> + * Defines for SC PM CLK
-> + */
-> +#define IMX_SC_PM_CLK_SLV_BUS          0       /* Slave bus clock */
-> +#define IMX_SC_PM_CLK_MST_BUS          1       /* Master bus clock */
-> +#define IMX_SC_PM_CLK_PER              2       /* Peripheral clock */
-> +#define IMX_SC_PM_CLK_PHY              3       /* Phy clock */
-> +#define IMX_SC_PM_CLK_MISC             4       /* Misc clock */
-> +#define IMX_SC_PM_CLK_MISC0            0       /* Misc 0 clock */
-> +#define IMX_SC_PM_CLK_MISC1            1       /* Misc 1 clock */
-> +#define IMX_SC_PM_CLK_MISC2            2       /* Misc 2 clock */
-> +#define IMX_SC_PM_CLK_MISC3            3       /* Misc 3 clock */
-> +#define IMX_SC_PM_CLK_MISC4            4       /* Misc 4 clock */
-> +#define IMX_SC_PM_CLK_CPU              2       /* CPU clock */
-> +#define IMX_SC_PM_CLK_PLL              4       /* PLL */
-> +#define IMX_SC_PM_CLK_BYPASS           4       /* Bypass clock */
-
-I don't understand how these work with overlapping numbers.
-
-Rob
+VGhlcmUncyBhIGZldyBsaW1pdGF0aW9ucyBvbiB0aGUgb3JpZ2luYWwgb25lIGNlbGwgY2xvY2sg
+YmluZGluZw0KKCNjbG9jay1jZWxscyA9IDwxPikgdGhhdCB3ZSBoYXZlIHRvIGRlZmluZSBhbGwg
+Y2xvY2sgSURzIGZvciBkZXZpY2UNCnRyZWUgdG8gcmVmZXJlbmNlLiBUaGlzIG1heSBjYXVzZSB0
+cm91YmxlcyBpZiB3ZSB3YW50IHRvIHVzZSBjb21tb24NCmNsb2NrIElEcyBmb3IgbXVsdGkgcGxh
+dGZvcm1zIHN1cHBvcnQgd2hlbiB0aGUgY2xvY2sgb2YgdGhvc2UgcGxhdGZvcm1zDQphcmUgbW9z
+dGx5IHRoZSBzYW1lLg0KZS5nLiBDdXJyZW50IGNsb2NrIElEcyBuYW1lIGFyZSBkZWZpbmVkIHdp
+dGggU1MgcHJlZml4Lg0KDQpIb3dldmVyIHRoZSBkZXZpY2UgbWF5IHJlc2lkZSBpbiBkaWZmZXJl
+bnQgU1MgYWNyb3NzIENQVXMsIHRoYXQgbWVhbnMgdGhlDQpTUyBwcmVmaXggbWF5IG5vdCB2YWxp
+ZCBhbnltb3JlIGZvciBhIG5ldyBTb0MuIEZ1cnRoZXJtb3JlLCB0aGUgZGV2aWNlDQphdmFpbGFi
+aWxpdHkgb2YgdGhvc2UgY2xvY2tzIG1heSBhbHNvIHZhcnkgYSBiaXQuDQoNCkZvciBzdWNoIHNp
+dHVhdGlvbiwgV2UgZm9ybWVybHkgcGxhbm5lZCB0byBhZGQgYWxsIG5ldyBJRHMgZm9yIGVhY2gg
+U1MNCmFuZCBkeW5hbWljYWxseSBjaGVjayBhdmFpbGFiaWxpdHkgZm9yIGRpZmZlcmVudCBTb0Mg
+aW4gZHJpdmVyLiBUaGF0IGNhbg0KYmUgZG9uZSBidXQgdGhhdCBtYXkgaW52b2x2ZSBhIGxvdCBl
+ZmZvcnQgYW5kIG1heSByZXN1bHQgaW4gbW9yZSBjaGFuZ2VzDQphbmQgZHVwbGljYXRlZCBjb2Rl
+IGluIGRyaXZlciwgYWxzbyBtYWtlIGRldmljZSB0cmVlIHVwc3RyZWFtaW5nIGhhcmQgd2hpY2gN
+CmRlcGVuZHMgb24gQ2xvY2sgSURzLg0KDQpUbyByZWxpZWYgdGhpcyBzaXR1YXRpb24sIHdlIHdh
+bnQgdG8gbW92ZSB0aGUgY2xvY2sgZGVmaW5pdGlvbiBpbnRvDQpkZXZpY2UgdHJlZSB3aGljaCBj
+YW4gZnVsbHkgZGVjb3VwbGUgdGhlIGRlcGVuZGVuY3kgb2YgQ2xvY2sgSUQgZGVmaW5pdGlvbg0K
+ZnJvbSBkZXZpY2UgdHJlZS4gVGhpcyBjYW4gbWFrZSB1cyB3cml0ZSBhIGZ1bGwgZ2VuZXJpYyBj
+bG9jayBkcml2ZXINCmZvciBTQ1UgYmFzZWQgU29Dcy4gTm8gbW9yZSBmcmVxdWVudCBjaGFuZ2Vz
+IG5lZWRlZCBpbiBjbG9jayBkcml2ZXINCmFueSBtb3JlLg0KDQpJbiB0aGUgbWVhbndoaWxlLCB3
+ZSBjYW4gYWxzbyB1c2UgdGhlIGV4aXN0ZW5jZSBvZiBjbG9jayBub2RlcyBpbiBkZXZpY2UNCnRy
+ZWUgdG8gYWRkcmVzcyB0aGUgZGV2aWNlIGFuZCBjbG9jayBhdmFpbGFiaWxpdHkgZGlmZmVyZW5j
+ZXMgYWNyb3NzDQpkaWZmZXJlbnQgU29Dcy4NCg0KRm9yIFNDVSBjbG9ja3MsIG9ubHkgdHdvIHBh
+cmFtcyByZXF1aXJlZC4gVGhlIGZpcnN0IG9uZSBpcyByZXNvdXJjZSBpZA0Kd2hpY2ggaXMgZW5j
+b2RlZCBpbiByZWcgcHJvcGVydHkgYW5kIHRoZSBzZWNvbmQgaXMgY2xvY2sgdHlwZSBpbmRleA0K
+d2hpY2ggaXMgZW5jb2RlZCBpbiBnZW5lcmljIGNsb2NrLWluZGljZXMgcHJvcGVydHkgdGhleSdy
+ZSBub3QgY29udGludW91c2x5Lg0KDQpBbmQgYXMgd2UgYWxzbyB3YW50IHRvIHN1cHBvcnQgY2xv
+Y2sgc2V0IHBhcmVudCBmdW5jdGlvbiwgJ2Nsb2NrcycgcHJvcGVydHkNCmlzIGFsc28gdXNlZCB0
+byBwYXNzIGFsbCB0aGUgcG9zc2libGUgaW5wdXQgcGFyZW50cy4NCg0KQ2M6IFJvYiBIZXJyaW5n
+IDxyb2JoK2R0QGtlcm5lbC5vcmc+DQpDYzogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3Jn
+Pg0KQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCkNjOiBTYXNjaGEgSGF1ZXIg
+PGtlcm5lbEBwZW5ndXRyb25peC5kZT4NCkNjOiBNaWNoYWVsIFR1cnF1ZXR0ZSA8bXR1cnF1ZXR0
+ZUBiYXlsaWJyZS5jb20+DQpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNClNpZ25lZC1v
+ZmYtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQotLS0NCkNoYW5nZUxv
+ZzoNCnYxLT52MjoNCiAqIGNoYW5nZWQgdG8gb25lIGNlbGwgYmluZGluZyBpbnNwaXJlZCBieSBh
+cm0sc2NwaS50eHQNCiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXJt
+LHNjcGkudHh0DQogICBSZXNvdXJjZSBJRCBpcyBlbmNvZGVkIGluICdyZWcnIHByb3BlcnR5Lg0K
+ICAgQ2xvY2sgdHlwZSBpcyBlbmNvZGVkIGluIGdlbmVyaWMgY2xvY2staW5kaWNlcyBwcm9wZXJ0
+eS4NCiAgIFRoZW4gd2UgZG9uJ3QgaGF2ZSB0byBzZWFyY2ggYWxsIHRoZSBEVCBub2RlcyB0byBm
+ZXRjaA0KICAgdGhvc2UgdHdvIHZhbHVlIHRvIGNvbnN0cnVjdCBjbG9ja3Mgd2hpY2ggaXMgcmVs
+YXRpdmVseQ0KICAgbG93IGVmZmljaWVuY3kuDQogKiBBZGQgcmVxdWlyZWQgcG93ZXItZG9tYWlu
+IHByb3BlcnR5IGFzIHdlbGwuDQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJl
+ZXNjYWxlL2ZzbCxzY3UudHh0ICB8IDQ1ICsrKysrKysrKysrKysrKysrKy0tLS0NCiBpbmNsdWRl
+L2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmggICAgICAgICAgICB8IDE3ICsrKysrKysr
+DQogMiBmaWxlcyBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0KDQpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
+bGUvZnNsLHNjdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Zy
+ZWVzY2FsZS9mc2wsc2N1LnR4dA0KaW5kZXggNWQ3ZGJhYi4uMmY0NmU4OSAxMDA2NDQNCi0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3Uu
+dHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2Fs
+ZS9mc2wsc2N1LnR4dA0KQEAgLTg5LDYgKzg5LDI3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQog
+CQkJICAiZnNsLGlteDhxbS1jbG9jayINCiAJCQkgICJmc2wsaW14OHF4cC1jbG9jayINCiAJCQlm
+b2xsb3dlZCBieSAiZnNsLHNjdS1jbGsiDQorLSAjYWRkcmVzcy1jZWxsczoJU2hvdWxkIGJlIDEu
+DQorLSAjc2l6ZS1jZWxsczoJCVNob3VsZCBiZSAwLg0KKw0KK1N1YiBub2RlcyBhcmUgcmVxdWly
+ZWQgdG8gcmVwcmVzZW50IGFsbCBhdmFpbGFibGUgU0NVIGNsb2NrcyB3aXRoaW4gdGhpcw0KK2hh
+cmR3YXJlIHN1YnN5c3RlbSBhbmQgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzIGFyZSBuZWVkZWQ6
+DQorDQorLSByZWc6CQkJU2hvdWxkIGNvbnRhaW4gdGhlIFJlc291cmNlIElEIG9mIHRoaXMgU0NV
+IGNsb2NrLg0KKy0gI2Nsb2NrLWNlbGxzOgkJU2hvdWxkIGJlIDEuDQorLSBjbG9jay1pbmRpY2Vz
+OglJbmRleCBvZiBhbGwgY2xvY2sgdHlwZXMgc3VwcG9ydGVkIGJ5IHRoaXMgU0NVIGNsb2NrLg0K
+KwkJCVRoZSBvcmRlciBzaG91bGQgbWF0Y2ggdGhlIGNsb2NrLW91dHB1dC1uYW1lcyBhcnJheS4N
+CisJCQlSZWZlciB0byA8aW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPiBm
+b3INCisJCQlhdmFpbGFibGUgY2xvY2sgdHlwZXMgc3VwcG9ydGVkIGJ5IFNDVS4NCistIGNsb2Nr
+LW91dHB1dC1uYW1lczoJU2hhbGwgYmUgdGhlIGNvcnJlc3BvbmRpbmcgbmFtZXMgb2YgdGhlIG91
+dHB1dHMuDQorLSBwb3dlci1kb21haW5zOglTaG91bGQgY29udGFpbiB0aGUgcG93ZXIgZG9tYWlu
+IHVzZWQgYnkgdGhpcyBTQ1UgY2xvY2suDQorDQorT3B0aW9uYWwgcHJvcGVydGllczoNCistIGNs
+b2NrczoJCVNoYWxsIGJlIHRoZSBpbnB1dCBwYXJlbnQgY2xvY2socykgcGhhbmRsZSBmb3IgdGhl
+IGNsb2NrLg0KKwkJCUZvciBtdWx0aXBsZXhlZCBjbG9ja3MsIHRoZSBsaXN0IG9yZGVyIG11c3Qg
+bWF0Y2ggdGhlIGhhcmR3YXJlDQorCQkJcHJvZ3JhbW1pbmcgb3JkZXIuDQorDQorTGVnYWN5IENs
+b2NrIGJpbmRpbmcgKE5vIHN1Yi1ub2RlcyB3aGljaCBpcyBERVBSRUNBVEVEKToNCiAtICNjbG9j
+ay1jZWxsczoJCVNob3VsZCBiZSAxLiBDb250YWlucyB0aGUgQ2xvY2sgSUQgdmFsdWUuDQogLSBj
+bG9ja3M6CQlMaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMsIG11c3QgY29udGFpbiBhbiBlbnRyeSBm
+b3INCiAJCQllYWNoIHJlcXVpcmVkIGVudHJ5IGluIGNsb2NrLW5hbWVzDQpAQCAtMTQ0LDYgKzE2
+NSwyMSBAQCBsc2lvX211MTogbWFpbGJveEA1ZDFjMDAwMCB7DQogCSNtYm94LWNlbGxzID0gPDI+
+Ow0KIH07DQogDQorY29ubi1zY3UtY2xvY2stY29udHJvbGxlciB7DQorCWNvbXBhdGlibGUgPSAi
+ZnNsLGlteDhxeHAtY2xrIiwgImZzbCxzY3UtY2xrIjsNCisJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQorCSNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKwl1YXJ0MF9jbGs6IGNsb2NrLXNjdUA1NyB7DQor
+CQlyZWcgPSA8NTc+Ow0KKwkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJY2xvY2staW5kaWNlcyA9
+IDxJTVhfU0NfUE1fQ0xLX1BFUj47DQorCQljbG9jay1vdXRwdXQtbmFtZXMgPSAidWFydDBfY2xr
+IjsNCisJCXBvd2VyLWRvbWFpbnMgPSA8JnBkIElNWF9TQ19SX1VBUlRfMD47DQorCX07DQorCS4u
+Lg0KK30NCisNCiBmaXJtd2FyZSB7DQogCXNjdSB7DQogCQljb21wYXRpYmxlID0gImZzbCxpbXgt
+c2N1IjsNCkBAIC0xNjAsMTEgKzE5Niw2IEBAIGZpcm13YXJlIHsNCiAJCQkgICZsc2lvX211MSAx
+IDMNCiAJCQkgICZsc2lvX211MSAzIDM+Ow0KIA0KLQkJY2xrOiBjbGsgew0KLQkJCWNvbXBhdGli
+bGUgPSAiZnNsLGlteDhxeHAtY2xrIiwgImZzbCxzY3UtY2xrIjsNCi0JCQkjY2xvY2stY2VsbHMg
+PSA8MT47DQotCQl9Ow0KLQ0KIAkJaW9tdXhjIHsNCiAJCQljb21wYXRpYmxlID0gImZzbCxpbXg4
+cXhwLWlvbXV4YyI7DQogDQpAQCAtMTkyLDggKzIyMyw2IEBAIHNlcmlhbEA1YTA2MDAwMCB7DQog
+CS4uLg0KIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KIAlwaW5jdHJsLTAgPSA8JnBpbmN0
+cmxfbHB1YXJ0MD47DQotCWNsb2NrcyA9IDwmY2xrIElNWDhRWFBfVUFSVDBfQ0xLPiwNCi0JCSA8
+JmNsayBJTVg4UVhQX1VBUlQwX0lQR19DTEs+Ow0KLQljbG9jay1uYW1lcyA9ICJwZXIiLCAiaXBn
+IjsNCisJY2xvY2tzID0gPCZ1YXJ0MF9jbGsgSU1YX1NDX1BNX0NMS19QRVI+Ow0KIAlwb3dlci1k
+b21haW5zID0gPCZwZCBJTVhfU0NfUl9VQVJUXzA+Ow0KIH07DQpkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9m
+aXJtd2FyZS9pbXgvcnNyYy5oDQppbmRleCA0ZTYxZjY0Li5mYmVhY2E3IDEwMDY0NA0KLS0tIGEv
+aW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oDQorKysgYi9pbmNsdWRlL2R0
+LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmgNCkBAIC01NDcsNCArNTQ3LDIxIEBADQogI2Rl
+ZmluZSBJTVhfU0NfUl9BVFRFU1RBVElPTgkJNTQ1DQogI2RlZmluZSBJTVhfU0NfUl9MQVNUCQkJ
+NTQ2DQogDQorLyoNCisgKiBEZWZpbmVzIGZvciBTQyBQTSBDTEsNCisgKi8NCisjZGVmaW5lIElN
+WF9TQ19QTV9DTEtfU0xWX0JVUwkJMAkvKiBTbGF2ZSBidXMgY2xvY2sgKi8NCisjZGVmaW5lIElN
+WF9TQ19QTV9DTEtfTVNUX0JVUwkJMQkvKiBNYXN0ZXIgYnVzIGNsb2NrICovDQorI2RlZmluZSBJ
+TVhfU0NfUE1fQ0xLX1BFUgkJMgkvKiBQZXJpcGhlcmFsIGNsb2NrICovDQorI2RlZmluZSBJTVhf
+U0NfUE1fQ0xLX1BIWQkJMwkvKiBQaHkgY2xvY2sgKi8NCisjZGVmaW5lIElNWF9TQ19QTV9DTEtf
+TUlTQwkJNAkvKiBNaXNjIGNsb2NrICovDQorI2RlZmluZSBJTVhfU0NfUE1fQ0xLX01JU0MwCQkw
+CS8qIE1pc2MgMCBjbG9jayAqLw0KKyNkZWZpbmUgSU1YX1NDX1BNX0NMS19NSVNDMQkJMQkvKiBN
+aXNjIDEgY2xvY2sgKi8NCisjZGVmaW5lIElNWF9TQ19QTV9DTEtfTUlTQzIJCTIJLyogTWlzYyAy
+IGNsb2NrICovDQorI2RlZmluZSBJTVhfU0NfUE1fQ0xLX01JU0MzCQkzCS8qIE1pc2MgMyBjbG9j
+ayAqLw0KKyNkZWZpbmUgSU1YX1NDX1BNX0NMS19NSVNDNAkJNAkvKiBNaXNjIDQgY2xvY2sgKi8N
+CisjZGVmaW5lIElNWF9TQ19QTV9DTEtfQ1BVCQkyCS8qIENQVSBjbG9jayAqLw0KKyNkZWZpbmUg
+SU1YX1NDX1BNX0NMS19QTEwJCTQJLyogUExMICovDQorI2RlZmluZSBJTVhfU0NfUE1fQ0xLX0JZ
+UEFTUwkJNAkvKiBCeXBhc3MgY2xvY2sgKi8NCisNCiAjZW5kaWYgLyogX19EVF9CSU5ESU5HU19S
+U0NSQ19JTVhfSCAqLw0KLS0gDQoyLjcuNA0KDQo=
