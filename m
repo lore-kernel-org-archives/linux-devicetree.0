@@ -1,68 +1,128 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 Subject: Re: [PATCH v4 01/10] of_net: add NVMEM support to of_get_mac_address
-Date: Fri, 3 May 2019 17:44:07 +0200
-Message-ID: <20190503154407.GE71477@meh.true.cz>
+Date: Fri, 3 May 2019 16:36:43 +0200
+Message-ID: <20190503143643.hhfamnptcuriav4k@flea>
 References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
  <1556893635-18549-2-git-send-email-ynezz@true.cz>
- <20190503143643.hhfamnptcuriav4k@flea>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w5grxr2nn7x6p3l6"
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190503143643.hhfamnptcuriav4k@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
+In-Reply-To: <1556893635-18549-2-git-send-email-ynezz@true.cz>
+Sender: netdev-owner@vger.kernel.org
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> [2019-05-03 16:36:43]:
 
-Hi,
+--w5grxr2nn7x6p3l6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
+On Fri, May 03, 2019 at 04:27:06PM +0200, Petr =C5=A0tetiar wrote:
+> Many embedded devices have information such as MAC addresses stored
+> inside NVMEMs like EEPROMs and so on. Currently there are only two
+> drivers in the tree which benefit from NVMEM bindings.
+>
+> Adding support for NVMEM into every other driver would mean adding a lot
+> of repetitive code. This patch allows us to configure MAC addresses in
+> various devices like ethernet and wireless adapters directly from
+> of_get_mac_address, which is already used by almost every driver in the
+> tree.
+>
+> Predecessor of this patch which used directly MTD layer has originated
+> in OpenWrt some time ago and supports already about 497 use cases in 357
+> device tree files.
+>
+> Cc: Alban Bedel <albeu@free.fr>
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
+> ---
+>
+>  Changes since v1:
+>
+>   * moved handling of nvmem after mac-address and local-mac-address prope=
+rties
+>
+>  Changes since v2:
+>
+>   * moved of_get_mac_addr_nvmem after of_get_mac_addr(np, "address") call
+>   * replaced kzalloc, kmemdup and kfree with it's devm variants
+>   * introduced of_has_nvmem_mac_addr helper which checks if DT node has n=
+vmem
+>     cell with `mac-address`
+>   * of_get_mac_address now returns ERR_PTR encoded error value
+>
+>  Changes since v3:
+>
+>   * removed of_has_nvmem_mac_addr helper as it's not needed now
+>   * of_get_mac_address now returns only valid pointer or ERR_PTR encoded =
+error value
+>
+>  drivers/of/of_net.c | 54 +++++++++++++++++++++++++++++++++++++++++++++++=
++++---
+>  1 file changed, 51 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+> index d820f3e..9649cd5 100644
+> --- a/drivers/of/of_net.c
+> +++ b/drivers/of/of_net.c
+> @@ -8,8 +8,10 @@
+>  #include <linux/etherdevice.h>
+>  #include <linux/kernel.h>
+>  #include <linux/of_net.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/phy.h>
+>  #include <linux/export.h>
+> +#include <linux/device.h>
+>
+>  /**
+>   * of_get_phy_mode - Get phy mode for given device_node
+> @@ -47,12 +49,52 @@ static const void *of_get_mac_addr(struct device_node=
+ *np, const char *name)
+>  	return NULL;
+>  }
+>
+> +static const void *of_get_mac_addr_nvmem(struct device_node *np)
+> +{
+> +	int ret;
+> +	u8 mac[ETH_ALEN];
+> +	struct property *pp;
+> +	struct platform_device *pdev =3D of_find_device_by_node(np);
+> +
+> +	if (!pdev)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	ret =3D nvmem_get_mac_address(&pdev->dev, &mac);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	pp =3D devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
+> +	if (!pp)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pp->name =3D "nvmem-mac-address";
+> +	pp->length =3D ETH_ALEN;
+> +	pp->value =3D devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
+> +	if (!pp->value) {
+> +		ret =3D -ENOMEM;
+> +		goto free;
+> +	}
+> +
+> +	ret =3D of_add_property(np, pp);
+> +	if (ret)
+> +		goto free;
+> +
+> +	return pp->value;
 
-> > +	pp = devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
-> > +	if (!pp)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	pp->name = "nvmem-mac-address";
-> > +	pp->length = ETH_ALEN;
-> > +	pp->value = devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
-> > +	if (!pp->value) {
-> > +		ret = -ENOMEM;
-> > +		goto free;
-> > +	}
-> > +
-> > +	ret = of_add_property(np, pp);
-> > +	if (ret)
-> > +		goto free;
-> > +
-> > +	return pp->value;
-> 
-> I'm not sure why you need to do that allocation here, and why you need
-> to modify the DT?
+I'm not sure why you need to do that allocation here, and why you need
+to modify the DT?
 
-I was asked about that in v2[0] already, so just copy&pasting relevant part of
-my response here:
+can't you just return the mac address directly since it's what the
+of_get_mac_address caller will expect anyway?
 
- I've just carried it over from v1 ("of_net: add mtd-mac-address support to
- of_get_mac_address()")[1] as nobody objected about this so far.
-
- Honestly I don't know if it's necessary to have it, but so far address,
- mac-address and local-mac-address properties provide this DT nodes, so I've
- simply thought, that it would be good to have it for MAC address from NVMEM as
- well in order to stay consistent.
-
- [...]
-
-0. https://patchwork.ozlabs.org/patch/1092248/#2164089
-1. https://patchwork.ozlabs.org/patch/1086628/
-
-> can't you just return the mac address directly since it's what the
-> of_get_mac_address caller will expect anyway?
-
-I don't need this stuff, I can remove it, please just tell me what is
-appropriate and I'm going to do that.
-
--- ynezz
+maxime
+--w5grxr2nn7x6p3l6--
