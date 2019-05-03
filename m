@@ -1,32 +1,61 @@
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: [PATCH] powerpc/dts/fsl: add crypto node alias for B4
-Date: Fri,  3 May 2019 16:59:09 +1000 (AEST)
-Message-ID: <44wNK93JC5z9sNm@ozlabs.org>
-References: <20190320125516.12277-1-horia.geanta@nxp.com>
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20190320125516.12277-1-horia.geanta@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: =?utf-8?q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Scott Wood <oss@buserror.net>, devicetree@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH v4 03/10] net: macb: support of_get_mac_address new ERR_PTR error
+Date: Fri,  3 May 2019 16:27:08 +0200
+Message-ID: <1556893635-18549-4-git-send-email-ynezz@true.cz>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S. Miller" <davem@davemloft.net>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-03-20 at 12:55:16 UTC, =?utf-8?q?Horia_Geant=C4=83?= wrote:
-> crypto node alias is needed by U-boot to identify the node and
-> perform fix-ups, like adding "fsl,sec-era" property.
-> 
-> Signed-off-by: Horia GeantÄ <horia.geanta@nxp.com>
+There was NVMEM support added directly to of_get_mac_address, and it uses
+nvmem_get_mac_address under the hood, so we can remove it. As
+of_get_mac_address can now return ERR_PTR encoded error values, adjust to
+that as well.
 
-Applied to powerpc next, thanks.
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+---
 
-https://git.kernel.org/powerpc/c/32eebf96669568014b79b83a03f7895f
+ Changes since v2:
 
-cheers
+ * ERR_PTR and EPROBE_DEFER handling
+
+ Changes since v3:
+
+  * IS_ERR_OR_NULL -> IS_ERR
+
+ drivers/net/ethernet/cadence/macb_main.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 3da2795..f0466e8 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4172,15 +4172,13 @@ static int macb_probe(struct platform_device *pdev)
+ 		bp->rx_intr_mask |= MACB_BIT(RXUBR);
+ 
+ 	mac = of_get_mac_address(np);
+-	if (mac) {
++	if (PTR_ERR(mac) == -EPROBE_DEFER) {
++		err = -EPROBE_DEFER;
++		goto err_out_free_netdev;
++	} else if (!IS_ERR(mac)) {
+ 		ether_addr_copy(bp->dev->dev_addr, mac);
+ 	} else {
+-		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
+-		if (err) {
+-			if (err == -EPROBE_DEFER)
+-				goto err_out_free_netdev;
+-			macb_get_hwaddr(bp);
+-		}
++		macb_get_hwaddr(bp);
+ 	}
+ 
+ 	err = of_get_phy_mode(np);
+-- 
+1.9.1
