@@ -1,82 +1,40 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v5 3/3] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable GT911 CTP
-Date: Fri,  3 May 2019 16:17:53 +0530
-Message-ID: <20190503104753.27562-3-jagan@amarulasolutions.com>
-References: <20190503104753.27562-1-jagan@amarulasolutions.com>
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH v3 09/10] ARM: Kirkwood: support of_get_mac_address new ERR_PTR error
+Date: Fri,  3 May 2019 09:56:06 +0200
+Message-ID: <1556870168-26864-10-git-send-email-ynezz@true.cz>
+References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503104753.27562-1-jagan@amarulasolutions.com>
+In-Reply-To: <1556870168-26864-1-git-send-email-ynezz@true.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
+There was NVMEM support added to of_get_mac_address, so it could now
+return NULL and ERR_PTR encoded error values, so we need to adjust all
+current users of of_get_mac_address to this new fact.
 
-The CTP connected to board with,
-- SDA, SCK from i2c0
-- GPIO-LD0 as AVDD28 supply
-- PH4 gpio as interrupt pin
-- PH11 gpio as reset pin
-- X axis is inverted
-- Y axis is inverted
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
-Changes for v5:
-- none
-Changes for v4:
-- drop i2c1 pinctrl
-Changes for v3:
-- Use 2.8v for reg_ldo_io0
-Changes for v2:
-- drop i2c1, bias-pull-up
+ arch/arm/mach-mvebu/kirkwood.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
- .../sun50i-a64-oceanic-5205-5inmfd.dts        | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index 6a2154525d1e..787ebd805a3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -37,6 +37,22 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/mach-mvebu/kirkwood.c b/arch/arm/mach-mvebu/kirkwood.c
+index 0aa8810..903a4cb 100644
+--- a/arch/arm/mach-mvebu/kirkwood.c
++++ b/arch/arm/mach-mvebu/kirkwood.c
+@@ -92,7 +92,8 @@ static void __init kirkwood_dt_eth_fixup(void)
+ 			continue;
  
-+&i2c0 {
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
-@@ -52,6 +68,13 @@
- 	regulator-name = "vcc-phy";
- };
+ 		/* skip disabled nodes or nodes with valid MAC address*/
+-		if (!of_device_is_available(pnp) || of_get_mac_address(np))
++		if (!of_device_is_available(pnp) ||
++		    !IS_ERR_OR_NULL(of_get_mac_address(np)))
+ 			goto eth_fixup_skip;
  
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vdd-ctp";
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+ 		clk = of_clk_get(pnp, 0);
 -- 
-2.18.0.321.gffc6fa0e3
+1.9.1
