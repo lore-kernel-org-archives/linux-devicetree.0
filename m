@@ -1,122 +1,105 @@
-From: Dragan Cvetic <draganc@xilinx.com>
-Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Date: Fri, 3 May 2019 16:41:21 +0000
-Message-ID: <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 0/5] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Fri, 3 May 2019 17:15:03 +0200
+Message-ID: <bccca4e0-849d-2589-c144-296cc273245d@st.com>
+References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFqbn=UcbwoH_z+yjrjvHQZaMtmsD=n0yrBV7DAK5VRJEQ@mail.gmail.com>
+ <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
+ <CAPDyKFoURwnai1hbCbO+Uh6+hc7A4dYHjWkqeFAEgMQET-BzwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502172007.GA1874@kroah.com>
+In-Reply-To: <CAPDyKFoURwnai1hbCbO+Uh6+hc7A4dYHjWkqeFAEgMQET-BzwA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+hi Ulf
 
-Please find my inline comments below,
+On 5/3/19 3:29 PM, Ulf Hansson wrote:
+> On Tue, 30 Apr 2019 at 14:06, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>>
+>>
+>>
+>> On 4/30/19 1:13 PM, Ulf Hansson wrote:
+>>> On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>>>
+>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> This patch series adds busy detect for stm32 sdmmc variant.
+>>>> Some adaptations are required:
+>>>> -Avoid to check and poll busy status when is not expected.
+>>>> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
+>>>>    different.
+>>>> -Add hardware busy timeout with MMCIDATATIMER register.
+>>>>
+>>>> V2:
+>>>> -mmci_cmd_irq cleanup in separate patch.
+>>>> -simplify the busy_detect_flag exclude
+>>>> -replace sdmmc specific comment in
+>>>> "mmc: mmci: avoid fake busy polling in mmci_irq"
+>>>> to focus on common behavior
+>>>>
+>>>> Ludovic Barre (5):
+>>>>     mmc: mmci: cleanup mmci_cmd_irq for busy detect feature
+>>>>     mmc: mmci: avoid fake busy polling in mmci_irq
+>>>>     mmc: mmci: fix clear of busy detect status
+>>>>     mmc: mmci: add hardware busy timeout feature
+>>>>     mmc: mmci: add busy detect for stm32 sdmmc variant
+>>>>
+>>>>    drivers/mmc/host/mmci.c | 61 ++++++++++++++++++++++++++++++++++++++-----------
+>>>>    drivers/mmc/host/mmci.h |  3 +++
+>>>>    2 files changed, 51 insertions(+), 13 deletions(-)
+>>>>
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>
+>>> Ludovic, just wanted to let you know that I am reviewing and testing
+>>> this series.
+>>>
+>>> However, while running some tests on Ux500 for validating the busy
+>>> detection code, even without your series applied, I encounter some odd
+>>> behaviors. I am looking into the problem to understand better and will
+>>> let you know as soon as I have some more data to share.
+>>
+>> Oops, don't hesitate to share your status, if I could help.
+> 
+> Thanks! Good and bad news here, then.
+> 
+> I now understand what is going on - and there is certainly room for
+> improvements here, but more importantly the actual mmci busy detection
+> works as expected.
+> 
+> When it comes to improvements, the main issue I have found is how we
+> treat DATA WRITES. In many cases we simply don't use the HW busy
+> detection at all, but instead rely on the mmc core to send CMD13 in a
+> loop to poll. Well, then if the polling would have consisted of a
+> couple of CMD13s that wouldn't be an issue, but my observations is
+> rather that the numbers of CMD13 sent to poll is in the range or
+> hundreds/thousands - per each WRITE request!
+> 
+> I am going to send a patch (or two) that improves the behavior. It
+> might even involve changing parts in core layer, not sure how the end
+> result will look like yet.
 
-Regards
-Dragan
+yes, these will improve the drivers without hardware busy completion.
+great
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday 2 May 2019 18:20
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
->=20
-> On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
-> > +#define DRIVER_NAME "xilinx_sdfec"
-> > +#define DRIVER_VERSION "0.3"
->=20
-> Version means nothing with the driver in the kernel tree, please remove
-> it.
+> 
+> In any case, I have applied patch 1 and patch2 for next, as the tests
+> turned out well at my side. I also took the liberty of updating some
+> of the comments/changelogs, please have look and tell if there is
+> something you want to change.
+> 
+> I will continue with the rest of series next week.
 
-Will be removed. Thank you.
+thanks, and good week-end.
 
->=20
-> > +#define DRIVER_MAX_DEV BIT(MINORBITS)
->=20
-> Why this number?  Why limit yourself to any number?
->=20
-
-There can be max 8 devices for this driver. I'll change to 8.
-
-> > +
-> > +static struct class *xsdfec_class;
->=20
-> Do you really need your own class?
-
-When writing a character device driver, my goal is to create and register a=
-n instance
-of that structure associated with a struct file_operations, exposing a set =
-of operations
-to the user-space. One of the steps to make this goal is Create a class for=
- a devices,
-visible in /sys/class/.
-
->=20
-> > +static atomic_t xsdfec_ndevs =3D ATOMIC_INIT(0);
->=20
-> Why?
-
-At the end this become a minor number.=20
-It is not needed, will be removed. Thanks.
-
->=20
-> > +static dev_t xsdfec_devt;
->=20
-> Why?
->=20
-> Why not use misc_device for this?  Why do you need your own major with a
-> bunch of minor devices reserved ahead of time?  Why not just create a
-> new misc device for every individual device that happens to be found in
-> the system?  That will make the code a lot simpler and smaller and
-> easier.
->
->=20
->=20
-> > +
-> > +/**
-> > + * struct xsdfec_dev - Driver data for SDFEC
-> > + * @regs: device physical base address
-> > + * @dev: pointer to device struct
-> > + * @config: Configuration of the SDFEC device
-> > + * @open_count: Count of char device being opened
-> > + * @xsdfec_cdev: Character device handle
-> > + * @irq_lock: Driver spinlock
-> > + *
-> > + * This structure contains necessary state for SDFEC driver to operate
-> > + */
-> > +struct xsdfec_dev {
-> > +	void __iomem *regs;
-> > +	struct device *dev;
-> > +	struct xsdfec_config config;
-> > +	atomic_t open_count;
-> > +	struct cdev xsdfec_cdev;
-> > +	/* Spinlock to protect state_updated and stats_updated */
-> > +	spinlock_t irq_lock;
-> > +};
-> > +
-> > +static const struct file_operations xsdfec_fops =3D {
-> > +	.owner =3D THIS_MODULE,
-> > +};
->=20
-> No operations at all?  That's an easy driver :)
-
-
-The operations are implemented in the later patches.
-
-
->=20
-> thanks,
->=20
-> greg k-h
+> 
+> Kind regards
+> Uffe
+> 
