@@ -1,89 +1,76 @@
-Return-Path: <SRS0=UGtl=TD=pengutronix.de=mtr@kernel.org>
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v5 2/5] media: dt-bindings: media: document allegro-dvt bindings
-Date: Fri,  3 May 2019 14:20:07 +0200
-Message-Id: <20190503122010.16663-3-m.tretter@pengutronix.de>
-In-Reply-To: <20190503122010.16663-1-m.tretter@pengutronix.de>
-References: <20190503122010.16663-1-m.tretter@pengutronix.de>
+Return-Path: <SRS0=w9il=TD=nxp.com=aisheng.dong@kernel.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V2 2/2] dt-bindings: clock: imx-lpcg: add support to parse
+ clocks from device tree
+Date: Fri, 3 May 2019 01:34:35 +0000
+Message-ID: <1556846821-8581-3-git-send-email-aisheng.dong@nxp.com>
+References: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device-tree bindings for the Allegro DVT video IP core found on the
-Xilinx ZynqMP EV family.
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v4 -> v5:
-none
-
-v3 -> v4:
-none
-
-v2 -> v3:
-- rename node to video-codec
-- drop interrupt-names
-- fix compatible in example
-- add clocks to required properties
-
-v1 -> v2:
-none
----
- .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
-
-diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
-new file mode 100644
-index 000000000000..a92e2fbf26c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allegro.txt
-@@ -0,0 +1,43 @@
-+Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
-+ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
-+decoder ip core.
-+
-+Each actual codec engines is controlled by a microcontroller (MCU). Host
-+software uses a provided mailbox interface to communicate with the MCU. The
-+MCU share an interrupt.
-+
-+Required properties:
-+  - compatible: value should be one of the following
-+    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
-+    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
-+  - reg: base and length of the memory mapped register region and base and
-+    length of the memory mapped sram
-+  - reg-names: must include "regs" and "sram"
-+  - interrupts: shared interrupt from the MCUs to the processing system
-+  - clocks: must contain an entry for each entry in clock-names
-+  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
-+    "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+
-+Example:
-+	al5e: video-codec@a0009000 {
-+		compatible = "allegro,al5e-1.1", "allegro,al5e";
-+		reg = <0 0xa0009000 0 0x1000>,
-+		      <0 0xa0000000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
-+	al5d: video-codec@a0029000 {
-+		compatible = "allegro,al5d-1.1", "allegro,al5d";
-+		reg = <0 0xa0029000 0 0x1000>,
-+		      <0 0xa0020000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
--- 
-2.20.1
+TVg4UU0gYW5kIE1YOFFYUCBMUENHIENsb2NrcyBhcmUgbW9zdGx5IHRoZSBzYW1lIGV4Y2VwdCB0
+aGV5IG1heSByZXNpZGUNCmluIGRpZmZlcmVudCBzdWJzeXN0ZW1zIGFjcm9zcyBDUFVzIGFuZCBh
+bHNvIHZhcnkgYSBiaXQgb24gdGhlIGF2YWlsYWJpbGl0eS4NCg0KU2FtZSBhcyBTQ1UgY2xvY2ss
+IHdlIHdhbnQgdG8gbW92ZSB0aGUgY2xvY2sgZGVmaW5pdGlvbiBpbnRvIGRldmljZSB0cmVlDQp3
+aGljaCBjYW4gZnVsbHkgZGVjb3VwbGUgdGhlIGRlcGVuZGVuY3kgb2YgQ2xvY2sgSUQgZGVmaW5p
+dGlvbiBmcm9tIGRldmljZQ0KdHJlZSBhbmQgbWFrZSB1cyBiZSBhYmxlIHRvIHdyaXRlIGEgZnVs
+bHkgZ2VuZXJpYyBscGNnIGNsb2NrIGRyaXZlci4NCg0KQW5kIHdlIGNhbiBhbHNvIHVzZSB0aGUg
+ZXhpc3RlbmNlIG9mIGNsb2NrIG5vZGVzIGluIGRldmljZSB0cmVlIHRvIGFkZHJlc3MNCnRoZSBk
+ZXZpY2UgYW5kIGNsb2NrIGF2YWlsYWJpbGl0eSBkaWZmZXJlbmNlcyBhY3Jvc3MgZGlmZmVyZW50
+IFNvQ3MuDQoNCkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KQ2M6IFN0ZXBo
+ZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCkNjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
+bC5vcmc+DQpDYzogU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQpDYzogTWlj
+aGFlbCBUdXJxdWV0dGUgPG10dXJxdWV0dGVAYmF5bGlicmUuY29tPg0KQ2M6IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnDQpTaWduZWQtb2ZmLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9u
+Z0BueHAuY29tPg0KLS0tDQpDaGFuZ2VMb2c6DQp2MS0+djI6DQogKiBVcGRhdGUgZXhhbXBsZQ0K
+ICogQWRkIHBvd2VyIGRvbWFpbiBwcm9wZXJ0eQ0KLS0tDQogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvY2xvY2svaW14OHF4cC1scGNnLnR4dCAgICAgfCAzNCArKysrKysrKysrKysrKysrKystLS0t
+DQogMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14OHF4
+cC1scGNnLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg4
+cXhwLWxwY2cudHh0DQppbmRleCA5NjVjZmE0Li42ZmMyZmQ4IDEwMDY0NA0KLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDhxeHAtbHBjZy50eHQNCisrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg4cXhwLWxwY2cudHh0
+DQpAQCAtMTEsNiArMTEsMjEgQEAgZW5hYmxlZCBieSB0aGVzZSBjb250cm9sIGJpdHMsIGl0IG1p
+Z2h0IHN0aWxsIG5vdCBiZSBydW5uaW5nIGJhc2VkDQogb24gdGhlIGJhc2UgcmVzb3VyY2UuDQog
+DQogUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNvbXBhdGlibGU6CQlTaG91bGQgYmUgb25lIG9m
+Og0KKwkJCSAgImZzbCxpbXg4cXhwLWxwY2ciDQorCQkJICAiZnNsLGlteDhxbS1scGNnIiBmb2xs
+b3dlZCBieSAiZnNsLGlteDhxeHAtbHBjZyIuDQorLSByZWc6CQkJQWRkcmVzcyBhbmQgbGVuZ3Ro
+IG9mIHRoZSByZWdpc3RlciBzZXQuDQorLSAjY2xvY2stY2VsbHM6CQlTaG91bGQgYmUgMS4gT25l
+IExQQ0cgc3VwcG9ydHMgbXVsdGlwbGUgY2xvY2tzLg0KKy0gY2xvY2tzOgkJSW5wdXQgcGFyZW50
+IGNsb2NrcyBwaGFuZGxlIGFycmF5IGZvciBlYWNoIGNsb2NrLg0KKy0gYml0LW9mZnNldDoJCUFu
+IGludGVnZXIgYXJyYXkgaW5kaWNhdGluZyB0aGUgYml0IG9mZnNldCBmb3IgZWFjaCBjbG9jay4N
+CistIGh3LWF1dG9nYXRlOgkJQm9vbGVhbiBhcnJheSBpbmRpY2F0aW5nIHdoZXRoZXIgc3VwcG9y
+dHMgSFcgYXV0b2dhdGUgZm9yDQorCQkJZWFjaCBjbG9jay4NCistIGNsb2NrLW91dHB1dC1uYW1l
+czoJU2hhbGwgYmUgdGhlIGNvcnJlc3BvbmRpbmcgbmFtZXMgb2YgdGhlIG91dHB1dHMuDQorCQkJ
+Tk9URSB0aGlzIHByb3BlcnR5IG11c3QgYmUgc3BlY2lmaWVkIGluIHRoZSBzYW1lIG9yZGVyDQor
+CQkJYXMgdGhlIGNsb2NrIGJpdC1vZmZzZXQgYW5kIGh3LWF1dG9nYXRlIHByb3BlcnR5Lg0KKy0g
+cG93ZXItZG9tYWluczoJU2hvdWxkIGNvbnRhaW4gdGhlIHBvd2VyIGRvbWFpbiB1c2VkIGJ5IHRo
+aXMgY2xvY2suDQorDQorTGVnYWN5IGJpbmRpbmcgKERFUFJFQ0FURUQpOg0KIC0gY29tcGF0aWJs
+ZToJU2hvdWxkIGJlIG9uZSBvZjoNCiAJCSAgImZzbCxpbXg4cXhwLWxwY2ctYWRtYSIsDQogCQkg
+ICJmc2wsaW14OHF4cC1scGNnLWNvbm4iLA0KQEAgLTMzLDEwICs0OCwxNyBAQCBFeGFtcGxlczoN
+CiANCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svaW14OHF4cC1jbG9jay5oPg0KIA0KLWNv
+bm5fbHBjZzogY2xvY2stY29udHJvbGxlckA1YjIwMDAwMCB7DQotCWNvbXBhdGlibGUgPSAiZnNs
+LGlteDhxeHAtbHBjZy1jb25uIjsNCi0JcmVnID0gPDB4NWIyMDAwMDAgMHhiMDAwMD47DQorc2Ro
+YzBfbHBjZzogY2xvY2stY29udHJvbGxlckA1YjIwMDAwMCB7DQorCWNvbXBhdGlibGUgPSAiZnNs
+LGlteDhxeHAtbHBjZyI7DQorCXJlZyA9IDwweDViMjAwMDAwIDB4MTAwMDA+Ow0KIAkjY2xvY2st
+Y2VsbHMgPSA8MT47DQorCWNsb2NrcyA9IDwmc2RoYzBfY2xrIElNWF9TQ19QTV9DTEtfUEVSPiwN
+CisJCSA8JmNvbm5faXBnX2Nsaz4sIDwmY29ubl9heGlfY2xrPjsNCisJYml0LW9mZnNldCA9IDww
+IDE2IDIwPjsNCisJY2xvY2stb3V0cHV0LW5hbWVzID0gInNkaGMwX2xwY2dfcGVyX2NsayIsDQor
+CQkJICAgICAic2RoYzBfbHBjZ19pcGdfY2xrIiwNCisJCQkgICAgICJzZGhjMF9scGNnX2FoYl9j
+bGsiOw0KKwlwb3dlci1kb21haW5zID0gPCZwZCBJTVhfU0NfUl9TREhDXzA+Ow0KIH07DQogDQog
+dXNkaGMxOiBtbWNANWIwMTAwMDAgew0KQEAgLTQ0LDggKzY2LDggQEAgdXNkaGMxOiBtbWNANWIw
+MTAwMDAgew0KIAlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KIAlpbnRlcnJ1cHRzID0gPEdJ
+Q19TUEkgMjMyIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KIAlyZWcgPSA8MHg1YjAxMDAwMCAweDEw
+MDAwPjsNCi0JY2xvY2tzID0gPCZjb25uX2xwY2cgSU1YOFFYUF9DT05OX0xQQ0dfU0RIQzBfSVBH
+X0NMSz4sDQotCQkgPCZjb25uX2xwY2cgSU1YOFFYUF9DT05OX0xQQ0dfU0RIQzBfUEVSX0NMSz4s
+DQotCQkgPCZjb25uX2xwY2cgSU1YOFFYUF9DT05OX0xQQ0dfU0RIQzBfSENMSz47DQorCWNsb2Nr
+cyA9IDwmc2RoYzBfbHBjZyAxPiwNCisJCSA8JnNkaGMwX2xwY2cgMD4sDQorCQkgPCZzZGhjMF9s
+cGNnIDI+Ow0KIAljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIiwgImFoYiI7DQogfTsNCi0tIA0K
+Mi43LjQNCg0K
