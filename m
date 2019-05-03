@@ -1,44 +1,74 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 2 May 2019 17:44:05 -0700
-Message-ID: <CAFd5g47JiSXHvMEu9NovkGdG7ugMCwVO0pGwT7bC=NCghD0w-g@mail.gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190502105053.GA12416@kroah.com> <76e84d54-6b7e-8cc1-492b-43822fc43ac4@kernel.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 0/2] clk: imx: scu: add parsing clocks from device tree
+ support
+Date: Fri, 3 May 2019 00:52:17 +0000
+Message-ID: <AM0PR04MB4211508CC25111598527757A80350@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <76e84d54-6b7e-8cc1-492b-43822fc43ac4@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@gmail.com>, Dan
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1556645270-20648-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2019 at 7:04 AM shuah <shuah@kernel.org> wrote:
->
-> On 5/2/19 4:50 AM, Greg KH wrote:
-> > On Wed, May 01, 2019 at 04:01:09PM -0700, Brendan Higgins wrote:
-> >> ## TLDR
-> >>
-> >> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
-> >> 5.2.
-> >
-> > That might be rushing it, normally trees are already closed now for
-> > 5.2-rc1 if 5.1-final comes out this Sunday.
-> >
-> >> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
-> >> we would merge through your tree when the time came? Am I remembering
-> >> correctly?
-> >
-> > No objection from me.
-> >
->
-> Yes. I can take these through kselftest tree when the time comes.
+Hi Rob,
 
-Awesome.
+Do you have a chance to help look at this?
 
-> Agree with Greg that 5.2 might be rushing it. 5.3 would be a good
-> target.
+Regards
+Dong Aisheng
 
-Whoops. I guess I should have sent this out a bit earlier. Oh well, as
-long as we are on our way!
+> From: Aisheng Dong
+> Sent: Wednesday, May 1, 2019 1:35 AM
+> 
+> This is a follow up of the patch thread.
+> https://www.spinics.net/lists/devicetree/msg283675.html
+> 
+> This patch series is a preparation for the MX8 Architecture improvement.
+> As for IMX SCU based platforms like MX8QM and MX8QXP, they are comprised
+> of a couple of SS(Subsystems) while most of them within the same SS can be
+> shared. e.g. Clocks, Devices and etc.
+> 
+> However, current device tree is heavily depends on Clocks IDs defined which
+> cause some troubles in writing the common <soc>-ss-xx.dtsi file.
+> 
+> This patch series adds a new binding to support parsing clocks from device tree
+> which can fully decouple the dependency of Clock IDs in device tree and make
+> us be able to write a fully generic clock driver for SCU based SoCs.
+> And it can make the driver much easily to be maintained in the future and
+> avoid writing a lot of duplicated codes.
+> 
+> ChangeLog:
+> v1->v2:
+>  * SCU clock changed to one cell clock binding inspired by arm,scpi.txt
+>    Documentation/devicetree/bindings/arm/arm,scpi.txt
+>  * Add required power domain property
+>  * Dropped PATCH 3&4 first, will send the updated version accordingly
+>    after the binding is finally determined,
+> 
+> Dong Aisheng (2):
+>   dt-bindings: firmware: imx-scu: new binding to parse clocks from
+>     device tree
+>   dt-bindings: clock: imx-lpcg: add support to parse clocks from device
+>     tree
+> 
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 45
+> ++++++++++++++++++----
+>  .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 34 +++++++++++++---
+>  include/dt-bindings/firmware/imx/rsrc.h            | 17 ++++++++
+>  3 files changed, 82 insertions(+), 14 deletions(-)
+> 
+> --
+> 2.7.4
