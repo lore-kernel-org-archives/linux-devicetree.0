@@ -1,58 +1,73 @@
-From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH v4 06/10] net: usb: support of_get_mac_address new ERR_PTR error
-Date: Fri,  3 May 2019 16:27:11 +0200
-Message-ID: <1556893635-18549-7-git-send-email-ynezz@true.cz>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v2 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
+ driver for SiFive SoCs
+Date: Fri, 3 May 2019 16:52:46 +0530
+Message-ID: <CAJ2_jOEBDyG_7THdbGzny3gAmijGSQGV7eUO8MBwQaTgqKdN5g@mail.gmail.com>
+References: <1556793293-21019-1-git-send-email-yash.shah@sifive.com>
+ <1556793293-21019-3-git-send-email-yash.shah@sifive.com> <a92e356d-aadc-2c4f-8b23-3d732e7aa58a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+In-Reply-To: <a92e356d-aadc-2c4f-8b23-3d732e7aa58a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Steve Glendinning <steve.glendinning@shawell.net>, "David S. Miller" <davem@davemloft.net>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-There was NVMEM support added to of_get_mac_address, so it could now return
-ERR_PTR encoded error values, so we need to adjust all current users of
-of_get_mac_address to this new fact.
+On Thu, May 2, 2019 at 7:07 PM Andrew F. Davis <afd@ti.com> wrote:
+>
+> On 5/2/19 6:34 AM, Yash Shah wrote:
+> > The driver currently supports only SiFive FU540-C000 platform.
+> >
+> > The initial version of L2 cache controller driver includes:
+> > - Initial configuration reporting at boot up.
+> > - Support for ECC related functionality.
+> >
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+> >  arch/riscv/mm/Makefile          |   1 +
+> >  arch/riscv/mm/sifive_l2_cache.c | 221 ++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 222 insertions(+)
+> >  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+> >
+> > diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> > index eb22ab4..1523ee5 100644
+> > --- a/arch/riscv/mm/Makefile
+> > +++ b/arch/riscv/mm/Makefile
+> > @@ -3,3 +3,4 @@ obj-y += fault.o
+> >  obj-y += extable.o
+> >  obj-y += ioremap.o
+> >  obj-y += cacheflush.o
+> > +obj-y += sifive_l2_cache.o
+> > diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
+> > new file mode 100644
+> > index 0000000..923ab34
+> > --- /dev/null
+> > +++ b/arch/riscv/mm/sifive_l2_cache.c
+> > @@ -0,0 +1,221 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * SiFive L2 cache controller Driver
+> > + *
+> > + * Copyright (C) 2018-2019 SiFive, Inc.
+> > + *
+> > + */
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
+...
 
- Changes since v3:
+> > +static unsigned int l2_datfail_count(void)
+> > +{
+> > +     return readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
+> > +}
+>
+> Do you really need all these single line functions? Below in several
+> spots you use the readl directly, just do that everywhere.
 
-  * IS_ERR_OR_NULL -> IS_ERR
+Ok. Will remove these single line functions.
+Thanks for your comments.
 
- drivers/net/usb/smsc75xx.c | 2 +-
- drivers/net/usb/smsc95xx.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+- Yash
 
-diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
-index ec287c9..d27b627 100644
---- a/drivers/net/usb/smsc75xx.c
-+++ b/drivers/net/usb/smsc75xx.c
-@@ -774,7 +774,7 @@ static void smsc75xx_init_mac_address(struct usbnet *dev)
- 
- 	/* maybe the boot loader passed the MAC address in devicetree */
- 	mac_addr = of_get_mac_address(dev->udev->dev.of_node);
--	if (mac_addr) {
-+	if (!IS_ERR(mac_addr)) {
- 		memcpy(dev->net->dev_addr, mac_addr, ETH_ALEN);
- 		return;
- 	}
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index e3d08626..ab23911 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -917,7 +917,7 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
- 
- 	/* maybe the boot loader passed the MAC address in devicetree */
- 	mac_addr = of_get_mac_address(dev->udev->dev.of_node);
--	if (mac_addr) {
-+	if (!IS_ERR(mac_addr)) {
- 		memcpy(dev->net->dev_addr, mac_addr, ETH_ALEN);
- 		return;
- 	}
--- 
-1.9.1
+>
+> Andrew
+>
