@@ -1,102 +1,518 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 4/7] iio: adc: sun4i-gpadc-iio: support clocks and reset
-Date: Fri,  3 May 2019 03:28:10 -0400
-Message-ID: <20190503072813.2719-5-tiny.windzz@gmail.com>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH] dt-bindings: pinctrl: Convert stm32 pinctrl bindings to jason-schema
+Date: Fri, 3 May 2019 11:47:34 +0200
+Message-ID: <1556876854-32441-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503072813.2719-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-H6 has bus clock and a reset, so introduce something in
-gpadc_data/sun4i_gpadc_iio and adds the process of the
-clocks and resets.
+Convert the STM32 pinctrl binding to DT schema format using json-schema.
 
-This is pre-work for supprt it.
-
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 32 +++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index de6b8556a549..f24eb76d65c0 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -22,6 +22,7 @@
-  * shutdown for not being used.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -31,6 +32,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- #include <linux/thermal.h>
- #include <linux/delay.h>
- 
-@@ -52,6 +54,8 @@ static unsigned int sun6i_gpadc_chan_select(unsigned int chan)
- struct sun4i_gpadc_iio;
- 
- struct gpadc_data {
-+	bool            has_bus_clk;
-+	bool            has_bus_rst;
- 	int		temp_offset;
- 	int		temp_scale;
- 	unsigned int	tp_mode_en;
-@@ -140,6 +144,8 @@ struct sun4i_gpadc_iio {
- 	struct mutex			mutex;
- 	struct sun4i_sensor_tzd         tzds[MAX_SENSOR_COUNT];
- 	struct device			*sensor_device;
-+	struct clk                      *bus_clk;
-+	struct reset_control            *reset;
- };
- 
- #define SUN4I_GPADC_ADC_CHANNEL(_channel, _name) {		\
-@@ -564,14 +570,36 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
--					     &sun4i_gpadc_regmap_config);
-+	if (info->data->has_bus_clk)
-+		info->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "bus",
-+							 base,
-+						&sun4i_gpadc_regmap_config);
-+	else
-+		info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+						&sun4i_gpadc_regmap_config);
+Hi,
+
+First pacth to convert DT bindings file (here pinctrl STM32) to jsaon-schema
+in order to take advantage of devicetree validation tool for STM32.
+
+regards
+Alex
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+deleted file mode 100644
+index 0016925..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ /dev/null
+@@ -1,208 +0,0 @@
+-* STM32 GPIO and Pin Mux/Config controller
+-
+-STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
+-controller. It controls the input/output settings on the available pins and
+-also provides ability to multiplex and configure the output of various on-chip
+-controllers onto these pads.
+-
+-Pin controller node:
+-Required properies:
+- - compatible: value should be one of the following:
+-   "st,stm32f429-pinctrl"
+-   "st,stm32f469-pinctrl"
+-   "st,stm32f746-pinctrl"
+-   "st,stm32f769-pinctrl"
+-   "st,stm32h743-pinctrl"
+-   "st,stm32mp157-pinctrl"
+-   "st,stm32mp157-z-pinctrl"
+- - #address-cells: The value of this property must be 1
+- - #size-cells	: The value of this property must be 1
+- - ranges	: defines mapping between pin controller node (parent) to
+-   gpio-bank node (children).
+- - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+-   specify pins.
+-
+-GPIO controller/bank node:
+-Required properties:
+- - gpio-controller : Indicates this device is a GPIO controller
+- - #gpio-cells	  : Should be two.
+-			The first cell is the pin number
+-			The second one is the polarity:
+-				- 0 for active high
+-				- 1 for active low
+- - reg		  : The gpio address range, relative to the pinctrl range
+- - clocks	  : clock that drives this bank
+- - st,bank-name	  : Should be a name string for this bank as specified in
+-   the datasheet
+-
+-Optional properties:
+- - reset:	  : Reference to the reset controller
+- - st,syscfg: Should be phandle/offset/mask.
+-	-The phandle to the syscon node which includes IRQ mux selection register.
+-	-The offset of the IRQ mux selection register
+-	-The field mask of IRQ mux, needed if different of 0xf.
+- - gpio-ranges: Define a dedicated mapping between a pin-controller and
+-   a gpio controller. Format is <&phandle a b c> with:
+-	-(phandle): phandle of pin-controller.
+-	-(a): gpio base offset in range.
+-	-(b): pin base offset in range.
+-	-(c): gpio count in range
+-   This entry has to be used either if there are holes inside a bank:
+-	GPIOB0/B1/B2/B14/B15 (see example 2)
+-   or if banks are not contiguous:
+-	GPIOA/B/C/E...
+-   NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
+-   have to use a "gpio-ranges" entry.
+-   More details in Documentation/devicetree/bindings/gpio/gpio.txt.
+- - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+-   used to select GPIOs as interrupts).
+- - hwlocks: reference to a phandle of a hardware spinlock provider node.
+- - st,package: Indicates the SOC package used.
+-   More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
+-
+-Example 1:
+-#include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+-...
+-
+-	pin-controller {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "st,stm32f429-pinctrl";
+-		ranges = <0 0x40020000 0x3000>;
+-		pins-are-numbered;
+-
+-		gpioa: gpio@40020000 {
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			reg = <0x0 0x400>;
+-			resets = <&reset_ahb1 0>;
+-			st,bank-name = "GPIOA";
+-		};
+-		...
+-		pin-functions nodes follow...
+-	};
+-
+-Example 2:
+-#include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+-...
+-
+-	pinctrl: pin-controller {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "st,stm32f429-pinctrl";
+-		ranges = <0 0x40020000 0x3000>;
+-		pins-are-numbered;
+-
+-		gpioa: gpio@40020000 {
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			reg = <0x0 0x400>;
+-			resets = <&reset_ahb1 0>;
+-			st,bank-name = "GPIOA";
+-			gpio-ranges = <&pinctrl 0 0 16>;
+-		};
+-
+-		gpiob: gpio@40020400 {
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			reg = <0x0 0x400>;
+-			resets = <&reset_ahb1 0>;
+-			st,bank-name = "GPIOB";
+-			ngpios = 4;
+-			gpio-ranges = <&pinctrl 0 16 3>,
+-				      <&pinctrl 14 30 2>;
+-		};
+-
+-
+-		...
+-		pin-functions nodes follow...
+-	};
+-
+-
+-Contents of function subnode node:
+-----------------------------------
+-Subnode format
+-A pinctrl node should contain at least one subnode representing the
+-pinctrl group available on the machine. Each subnode will list the
+-pins it needs, and how they should be configured, with regard to muxer
+-configuration, pullups, drive, output high/low and output speed.
+-
+-    node {
+-	pinmux = <PIN_NUMBER_PINMUX>;
+-	GENERIC_PINCONFIG;
+-    };
+-
+-Required properties:
+-- pinmux: integer array, represents gpio pin number and mux setting.
+-  Supported pin number and mux varies for different SoCs, and are defined in
+-  dt-bindings/pinctrl/<soc>-pinfunc.h directly.
+-  These defines are calculated as:
+-    ((port * 16 + line) << 8) | function
+-  With:
+-    - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
+-    - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
+-    - function: The function number, can be:
+-      * 0 : GPIO
+-      * 1 : Alternate Function 0
+-      * 2 : Alternate Function 1
+-      * 3 : Alternate Function 2
+-      * ...
+-      * 16 : Alternate Function 15
+-      * 17 : Analog
+-
+-  To simplify the usage, macro is available to generate "pinmux" field.
+-  This macro is available here:
+-    - include/dt-bindings/pinctrl/stm32-pinfunc.h
+-
+-  Some examples of using macro:
+-    /* GPIO A9 set as alernate function 2 */
+-    ... {
+-		pinmux = <STM32_PINMUX('A', 9, AF2)>;
+-    };
+-    /* GPIO A9 set as GPIO  */
+-    ... {
+-		pinmux = <STM32_PINMUX('A', 9, GPIO)>;
+-    };
+-    /* GPIO A9 set as analog */
+-    ... {
+-		pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+-    };
+-
+-Optional properties:
+-- GENERIC_PINCONFIG: is the generic pinconfig options to use.
+-  Available options are:
+-   - bias-disable,
+-   - bias-pull-down,
+-   - bias-pull-up,
+-   - drive-push-pull,
+-   - drive-open-drain,
+-   - output-low
+-   - output-high
+-   - slew-rate = <x>, with x being:
+-       < 0 > : Low speed
+-       < 1 > : Medium speed
+-       < 2 > : Fast speed
+-       < 3 > : High speed
+-
+-Example:
+-
+-pin-controller {
+-...
+-	usart1_pins_a: usart1@0 {
+-		pins1 {
+-			pinmux = <STM32_PINMUX('A', 9, AF7)>;
+-			bias-disable;
+-			drive-push-pull;
+-			slew-rate = <0>;
+-		};
+-		pins2 {
+-			pinmux = <STM32_PINMUX('A', 10, AF7)>;
+-			bias-disable;
+-		};
+-	};
+-};
+-
+-&usart1 {
+-	pinctrl-0 = <&usart1_pins_a>;
+-	pinctrl-names = "default";
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+new file mode 100644
+index 0000000..fcceca0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+@@ -0,0 +1,271 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (C) STMicroelectronics 2019.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/st,stm32-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	if (IS_ERR(info->regmap)) {
- 		ret = PTR_ERR(info->regmap);
- 		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
- 		return ret;
- 	}
- 
-+	if (info->data->has_bus_rst) {
-+		info->reset = devm_reset_control_get(&pdev->dev, "bus");
-+		if (IS_ERR(info->reset)) {
-+			ret = PTR_ERR(info->reset);
-+			return ret;
-+		}
-+	}
++title: STM32 GPIO and Pin Mux/Config controller
 +
-+	if (info->data->has_bus_clk) {
-+		info->bus_clk = devm_clk_get(&pdev->dev, "bus");
-+		if (IS_ERR(info->bus_clk)) {
-+			ret = PTR_ERR(info->bus_clk);
-+			return ret;
-+		}
-+	}
++maintainers:
++  - Alexandre TORGUE <alexandre.torgue@st.com>
++description: |
++  STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
++  controller. It controls the input/output settings on the available pins and
++  also provides ability to multiplex and configure the output of various
++  on-chip controllers onto these pads.
 +
- 	if (IS_ENABLED(CONFIG_THERMAL_OF))
- 		info->sensor_device = &pdev->dev;
- 
++properties:
++  compatible:
++      items:
++        - enum:
++          - st,stm32f429-pinctrl
++          - st,stm32f469-pinctrl
++          - st,stm32f746-pinctrl
++          - st,stm32f769-pinctrl
++          - st,stm32h743-pinctrl
++          - st,stm32mp157-pinctrl
++          - st,stm32mp157-z-pinctrl
++
++  '#address-cells':
++    const: 1
++  '#size-cells':
++    const: 1
++    description:
++      Defines mapping between pin controller node (parent) to
++      gpio-bank node (children).
++
++  ranges:
++    description:
++      Defines mapping between pin controller node (parent) to
++      gpio-bank node (children).
++  pins-are-numbered:
++    description:
++      Specify the subnodes are using numbered pinmux to
++      specify pins.
++  st,syscfg:
++    description: |
++      Should be phandle/offset/mask:
++        - The phandle to the syscon node which includes IRQ mux selection register.
++        - The offset of the IRQ mux selection register
++        - The field mask of IRQ mux, needed if different of 0xf.
++
++  hwlocks:
++    description: Reference to a phandle of a hardware spinlock provider node.
++  st,package:
++    description:
++     Indicates the SOC package used.
++     More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [1, 2, 4, 8]
++
++patternProperties:
++  '^gpio@[0-9a-z]*$':
++    properties:
++      gpio-controller:
++        description:
++          Indicates this device is a GPIO controller.
++      '#gpio-cells':
++        const: 2
++        description: |
++          The first cell is the pin number.
++          The second one is the polarity
++          * 0 for active high.
++          * 1 for active low.
++
++      reg:
++        description:
++          The gpio address range, relative to the pinctrl range.
++      clocks:
++        description:
++          Clock that drives this bank.
++      st,bank-name:
++        description:
++          Should be a name string for this bank as specified in the datasheet.
++      reset:
++        description:
++          Reference to the reset controller.
++      gpio-ranges:
++        description: |
++          Define a dedicated mapping between a pin-controller and
++          a gpio controller. Format is <&phandle a b c> with:
++          -(phandle): phandle of pin-controller.
++          -(a): gpio base offset in range.
++          -(b): pin base offset in range.
++          -(c): gpio count in range.
++          This entry has to be used either if there are holes inside a bank:
++          GPIOB0/B1/B2/B14/B15 (see example 2) or if banks are not contiguous:
++          GPIOA/B/C/E...
++          NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
++          have to use a "gpio-ranges" entry.
++          More details in Documentation/devicetree/bindings/gpio/gpio.txt.
++
++      ngpios:
++        description:
++          Number of available gpios in a bank.
++        minimum: 1
++        maximum: 16
++
++      st,bank-ioport:
++        description:
++          Should correspond to the EXTI IOport selection (EXTI line used
++          to select GPIOs as interrupts).
++
++    required:
++      - gpio-controller
++      - '#gpio-cells'
++      - reg
++      - clocks
++      - st,bank-name
++
++  '-[0-9]*$':
++    patternProperties:
++      '^pins':
++        description: |
++          A pinctrl node should contain at least one subnode representing the
++          pinctrl group available on the machine. Each subnode will list the
++          pins it needs, and how they should be configured, with regard to muxer
++          configuration, pullups, drive, output high/low and output speed.
++        properties:
++          pinmux:
++            allOf:
++              - $ref: "/schemas/types.yaml#/definitions/uint32-array"
++            description: |
++              Integer array, represents gpio pin number and mux setting.
++              Supported pin number and mux varies for different SoCs, and are
++              defined in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
++              These defines are calculated as: ((port * 16 + line) << 8) | function
++              With:
++              - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
++              - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
++              - function: The function number, can be:
++              * 0 : GPIO
++              * 1 : Alternate Function 0
++              * 2 : Alternate Function 1
++              * 3 : Alternate Function 2
++              * ...
++              * 16 : Alternate Function 15
++              * 17 : Analog
++              To simplify the usage, macro is available to generate "pinmux" field.
++              This macro is available here:
++                - include/dt-bindings/pinctrl/stm32-pinfunc.h
++              Some examples of using macro:
++               /* GPIO A9 set as alernate function 2 */
++               ... {
++                          pinmux = <STM32_PINMUX('A', 9, AF2)>;
++               };
++               /* GPIO A9 set as GPIO  */
++               ... {
++                          pinmux = <STM32_PINMUX('A', 9, GPIO)>;
++               };
++               /* GPIO A9 set as analog */
++               ... {
++                          pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
++               };
++
++          bias-disable:
++            type: boolean
++          bias-pull-down:
++            type: boolean
++          bias-pull-up:
++            type: boolean
++          drive-push-pull:
++            type: boolean
++          drive-open-drain:
++            type: boolean
++          output-low:
++            type: boolean
++          output-high:
++            type: boolean
++          slew-rate:
++            description: |
++              0: Low speed
++              1: Medium speed
++              2: Fast speed
++              3: High speed
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint32
++              - enum: [0, 1, 2, 3]
++
++        required:
++          - pinmux
++
++required:
++  - compatible
++  - '#address-cells'
++  - '#size-cells'
++  - ranges
++  - pins-are-numbered
++
++examples:
++  - |
++    #include <dt-bindings/pinctrl/stm32-pinfunc.h>
++    //Example 1
++      pin-controller@40020000 {
++              #address-cells = <1>;
++              #size-cells = <1>;
++              compatible = "st,stm32f429-pinctrl";
++              ranges = <0 0x40020000 0x3000>;
++              pins-are-numbered;
++
++              gpioa: gpio@0 {
++                      gpio-controller;
++                      #gpio-cells = <2>;
++                      reg = <0x0 0x400>;
++                      resets = <&reset_ahb1 0>;
++                      st,bank-name = "GPIOA";
++              };
++       };
++
++    //Example 2 (using gpio-ranges)
++      pin-controller@50020000 {
++              #address-cells = <1>;
++              #size-cells = <1>;
++              compatible = "st,stm32f429-pinctrl";
++              ranges = <0 0x50020000 0x3000>;
++              pins-are-numbered;
++
++              gpiob: gpio@1000 {
++                      gpio-controller;
++                      #gpio-cells = <2>;
++                      reg = <0x1000 0x400>;
++                      resets = <&reset_ahb1 0>;
++                      st,bank-name = "GPIOB";
++                      gpio-ranges = <&pinctrl 0 0 16>;
++              };
++
++              gpioc: gpio@2000 {
++                      gpio-controller;
++                      #gpio-cells = <2>;
++                      reg = <0x2000 0x400>;
++                      resets = <&reset_ahb1 0>;
++                      st,bank-name = "GPIOC";
++                      ngpios = <5>;
++                      gpio-ranges = <&pinctrl 0 16 3>,
++                                    <&pinctrl 14 30 2>;
++              };
++      };
++
++    //Example 3 pin groups
++      pin-controller@60020000 {
++        usart1_pins_a: usart1-0 {
++                pins1 {
++                        pinmux = <STM32_PINMUX('A', 9, AF7)>;
++                        bias-disable;
++                        drive-push-pull;
++                        slew-rate = <0>;
++                };
++                pins2 {
++                        pinmux = <STM32_PINMUX('A', 10, AF7)>;
++                        bias-disable;
++                };
++        };
++    };
++
++    usart1 {
++                pinctrl-0 = <&usart1_pins_a>;
++                pinctrl-names = "default";
++    };
++
++...
 -- 
-2.17.1
+2.7.4
