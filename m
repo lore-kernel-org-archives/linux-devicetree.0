@@ -1,67 +1,82 @@
-From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH v3 07/10] net: wireless: support of_get_mac_address new ERR_PTR error
-Date: Fri,  3 May 2019 09:56:04 +0200
-Message-ID: <1556870168-26864-8-git-send-email-ynezz@true.cz>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v5 3/3] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable GT911 CTP
+Date: Fri,  3 May 2019 16:17:53 +0530
+Message-ID: <20190503104753.27562-3-jagan@amarulasolutions.com>
+References: <20190503104753.27562-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1556870168-26864-1-git-send-email-ynezz@true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, QCA ath9k Development <ath9k-devel@qca.qualcomm.com>, Kalle Valo <kvalo@codeaurora.org>, Stanislaw Gruszka <sgruszka@redhat.com>, Helmut Schaa <helmut.schaa@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190503104753.27562-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-There was NVMEM support added to of_get_mac_address, so it could now
-return NULL and ERR_PTR encoded error values, so we need to adjust all
-current users of of_get_mac_address to this new fact.
+Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
+The CTP connected to board with,
+- SDA, SCK from i2c0
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH11 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/net/wireless/ath/ath9k/init.c          | 2 +-
- drivers/net/wireless/mediatek/mt76/eeprom.c    | 2 +-
- drivers/net/wireless/ralink/rt2x00/rt2x00dev.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Changes for v5:
+- none
+Changes for v4:
+- drop i2c1 pinctrl
+Changes for v3:
+- Use 2.8v for reg_ldo_io0
+Changes for v2:
+- drop i2c1, bias-pull-up
 
-diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-index 98141b6..8be2da8 100644
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -642,7 +642,7 @@ static int ath9k_of_init(struct ath_softc *sc)
- 	}
+
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index 6a2154525d1e..787ebd805a3b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -37,6 +37,22 @@
+ 	status = "okay";
+ };
  
- 	mac = of_get_mac_address(np);
--	if (mac)
-+	if (!IS_ERR_OR_NULL(mac))
- 		ether_addr_copy(common->macaddr, mac);
++&i2c0 {
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt911";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
++
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
+@@ -52,6 +68,13 @@
+ 	regulator-name = "vcc-phy";
+ };
  
- 	return 0;
-diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
-index a1529920d..7cb16ba 100644
---- a/drivers/net/wireless/mediatek/mt76/eeprom.c
-+++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
-@@ -94,7 +94,7 @@
- 		return;
- 
- 	mac = of_get_mac_address(np);
--	if (mac)
-+	if (!IS_ERR_OR_NULL(mac))
- 		memcpy(dev->macaddr, mac, ETH_ALEN);
- #endif
- 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-index 357c094..ef52467 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-@@ -1007,7 +1007,7 @@ void rt2x00lib_set_mac_address(struct rt2x00_dev *rt2x00dev, u8 *eeprom_mac_addr
- 	const char *mac_addr;
- 
- 	mac_addr = of_get_mac_address(rt2x00dev->dev->of_node);
--	if (mac_addr)
-+	if (!IS_ERR_OR_NULL(mac_addr))
- 		ether_addr_copy(eeprom_mac_addr, mac_addr);
- 
- 	if (!is_valid_ether_addr(eeprom_mac_addr)) {
++&reg_ldo_io0 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vdd-ctp";
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
-1.9.1
+2.18.0.321.gffc6fa0e3
