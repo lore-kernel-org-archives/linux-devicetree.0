@@ -1,69 +1,48 @@
-From: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 08/24] dt-bindings: mmc: mtk-sd: add mtk-sd support for
- MT8516
-Date: Fri, 3 May 2019 17:12:34 +0200
-Message-ID: <CAOwMV_z8RrmoK+bfEqgwOv97uJarnuTCUo7aczZz=gyvg8CDzQ@mail.gmail.com>
-References: <20190323211612.860-1-fparent@baylibre.com>
- <20190323211612.860-9-fparent@baylibre.com>
- <CAPDyKFrAxmBv+1i3qJpD=M1Wq33U2PMfQv_99xDm9MLhLxSWYg@mail.gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v3 08/10] staging: octeon-ethernet: support
+ of_get_mac_address new ERR_PTR error
+Date: Fri, 3 May 2019 22:40:01 +0300
+Message-ID: <20190503194001.GP2239@kadam>
+References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+ <1556870168-26864-9-git-send-email-ynezz@true.cz>
+ <20190503103456.GF2269@kadam> <20190503190730.GH71477@meh.true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAPDyKFrAxmBv+1i3qJpD=M1Wq33U2PMfQv_99xDm9MLhLxSWYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20190503190730.GH71477@meh.true.cz>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc: devel@driverdev.osuosl.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On Mon, Mar 25, 2019 at 2:27 PM Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
-> - trimmed cc list
->
-> On Sat, 23 Mar 2019 at 22:17, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> >
-> > Add binding documentation of mtk-sd for MT8516 SoCs.
-> >
-> > Signed-off-by: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->
-> Applied for next, thanks!
-
-I think this patch got lost since I cannot see it in your tree.
-
-Thanks,
-Fabien
-
->
-> Kind regards
-> Uffe
->
->
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > index f5bcda3980cc..91a2ec59e497 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > @@ -11,6 +11,7 @@ Required properties:
-> >         "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
-> >         "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
-> >         "mediatek,mt8183-mmc": for mmc host ip compatible with mt8183
-> > +       "mediatek,mt8516-mmc": for mmc host ip compatible with mt8516
-> >         "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
-> >         "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> >         "mediatek,mt7622-mmc": for MT7622 SoC
-> > --
-> > 2.20.1
-> >
+T24gRnJpLCBNYXkgMDMsIDIwMTkgYXQgMDk6MDc6MzBQTSArMDIwMCwgUGV0ciDFoHRldGlhciB3
+cm90ZToKPiBEYW4gQ2FycGVudGVyIDxkYW4uY2FycGVudGVyQG9yYWNsZS5jb20+IFsyMDE5LTA1
+LTAzIDEzOjM0OjU2XToKPiAKPiBIaSwKPiAKPiA+IE9uIEZyaSwgTWF5IDAzLCAyMDE5IGF0IDA5
+OjU2OjA1QU0gKzAyMDAsIFBldHIgxaB0ZXRpYXIgd3JvdGU6Cj4gPiA+IFRoZXJlIHdhcyBOVk1F
+TSBzdXBwb3J0IGFkZGVkIHRvIG9mX2dldF9tYWNfYWRkcmVzcywgc28gaXQgY291bGQgbm93Cj4g
+PiA+IHJldHVybiBOVUxMIGFuZCBFUlJfUFRSIGVuY29kZWQgZXJyb3IgdmFsdWVzLCBzbyB3ZSBu
+ZWVkIHRvIGFkanVzdCBhbGwKPiA+ID4gY3VycmVudCB1c2VycyBvZiBvZl9nZXRfbWFjX2FkZHJl
+c3MgdG8gdGhpcyBuZXcgZmFjdC4KPiA+IAo+ID4gV2hpY2ggY29tbWl0IGFkZGVkIE5WTUVNIHN1
+cHBvcnQ/ICBJdCBoYXNuJ3QgaGl0IG5ldC1uZXh0IG9yIGxpbnV4LW5leHQKPiA+IHlldC4uLiAg
+VmVyeSBzdHJhbmdlLgo+IAo+IHRoaXMgcGF0Y2ggaXMgYSBwYXJ0IG9mIHRoZSBwYXRjaCBzZXJp
+ZXNbMV0sIHdoZXJlIHRoZSAxc3QgcGF0Y2hbMl0gYWRkcyB0aGlzCj4gTlZNRU0gc3VwcG9ydCB0
+byBvZl9nZXRfbWFjX2FkZHJlc3MgYW5kIGZvbGxvdy11cCBwYXRjaGVzIGFyZSBhZGp1c3RpbmcK
+PiBjdXJyZW50IG9mX2dldF9tYWNfYWRkcmVzcyB1c2VycyB0byB0aGUgbmV3IEVSUl9QVFIgcmV0
+dXJuIHZhbHVlLgoKQmFzaWNhbGx5IGFsbCB0aGUgcGF0Y2hlcyBuZWVkIHRvIGJlIGZvbGRlZCB0
+b2dldGhlciBvdGhlcndpc2UgeW91J3JlCmJyZWFraW5nIGdpdCBiaXNlY3RpYmlsaXR5LiAgSW1h
+Z2luZSB0aGF0IHdlIGp1c3QgYXBwbHkgcGF0Y2ggIzEgcmlnaHQ/ClRoZW4gYWxsIHRoZSBjYWxs
+ZXJzIHdpbGwgYmUgYnJva2VuLiAgSXQncyBub3QgYWxsb3dlZC4KCnJlZ2FyZHMsCmRhbiBjYXJw
+ZW50ZXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRl
+dmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2
+ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1k
+ZXZlbAo=
