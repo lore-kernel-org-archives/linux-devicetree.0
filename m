@@ -1,388 +1,100 @@
-From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v3 05/10] regulator: Add document for MT6358 regulator
-Date: Fri, 3 May 2019 17:31:12 +0800
-Message-ID: <20190503093117.54830-6-hsin-hsiung.wang@mediatek.com>
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+From: Rocky Liao <rjliao@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
+ firmware-name for QCA6174
+Date: Fri, 03 May 2019 15:56:23 +0800
+Message-ID: <17221139821fb6ee35f3119df7405401@codeaurora.org>
+References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
+ <1554888476-17560-1-git-send-email-rjliao@codeaurora.org>
+ <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
+ <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
+ <CAL_JsqLnM4XqQTCT7VTUSmukujz0VHJoCbXMF2--RmTEx_LZww@mail.gmail.com>
+ <60C7AC89-37B6-441C-9349-BCB15717EB2C@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <60C7AC89-37B6-441C-9349-BCB15717EB2C@holtmann.org>
+Sender: netdev-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, Thierry Escande <thierry.escande@linaro.org>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Balakrishna Godavarthi <bgodavar@codeaurora.org>, linux-bluetooth-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add dt-binding document for MediaTek MT6358 PMIC
+Hi Marcel,
 
-Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
----
- .../bindings/regulator/mt6358-regulator.txt   | 358 ++++++++++++++++++
- 1 file changed, 358 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+On 2019-04-27 13:59, Marcel Holtmann wrote:
+> Hi Rob,
+> 
+>>>>> This patch adds an optional device property "firmware-name" to 
+>>>>> allow
+>>>>> the
+>>>>> driver to load customized nvm firmware file based on this property.
+>>>>> 
+>>>>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>>>>> ---
+>>>>> Changes in v3:
+>>>>> * added firmware-name instead of nvm-postfix to specify full 
+>>>>> firmware
+>>>>> name
+>>>>> ---
+>>>>> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
+>>>>> 1 file changed, 2 insertions(+)
+>>>>> 
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> index 824c0e2..2bcea50 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> @@ -16,6 +16,7 @@ Optional properties for compatible string
+>>>>> qcom,qca6174-bt:
+>>>>> 
+>>>>> - enable-gpios: gpio specifier used to enable chip
+>>>>> - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>>>>> + - firmware-name: specify the name of nvm firmware to load
+>>>>> 
+>>>>> Required properties for compatible string qcom,wcn3990-bt:
+>>>>> 
+>>>>> @@ -39,6 +40,7 @@ serial@7570000 {
+>>>>> 
+>>>>>             enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+>>>>>             clocks = <&divclk4>;
+>>>>> +            firmware-name = "nvm_00440302.bin";
+>>>>>     };
+>>>> 
+>>>> and how is this a firmware-name property. Wouldn’t this be more like
+>>>> nvm-file or something along these lines. This really needs to be
+>>>> cleared with Rob to pick the right property name.
+>>>> 
+>>>> Regards
+>>>> 
+>>>> Marcel
+>>> 
+>>> Hi Rob,
+>>> 
+>>> Are you OK to use a property name "nvm-file" or "firmware-nvm-file"?
+>>> Actually we have two firmware files, one is the patch file which is
+>>> common to all of the products, the other is the nvm file which is
+>>> customized. Using a "nvm-file" or "firmware-nvm-file" property name
+>>> would be more clear.
+>> 
+>> 'firmware-name' is the standard name for specifying firmware file 
+>> names.
+> 
+> but it is not a firmware file, it is a NVM file. What happens if in
+> the future they need a firmware file and a NVM file?
+> 
+> Regards
+> 
+> Marcel
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
-new file mode 100644
-index 000000000000..9a90a92f2d7e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
-@@ -0,0 +1,358 @@
-+MediaTek MT6358 Regulator
-+
-+All voltage regulators provided by the MT6358 PMIC are described as the
-+subnodes of the MT6358 regulators node. Each regulator is named according
-+to its regulator type, buck_<name> and ldo_<name>. The definition for each
-+of these nodes is defined using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are::
-+BUCK:
-+  buck_vdram1, buck_vcore, buck_vpa, buck_vproc11, buck_vproc12, buck_vgpu,
-+  buck_vs2, buck_vmodem, buck_vs1
-+LDO:
-+  ldo_vdram2, ldo_vsim1, ldo_vibr, ldo_vrf12, ldo_vio18, ldo_vusb, ldo_vcamio,
-+  ldo_vcamd, ldo_vcn18, ldo_vfe28, ldo_vsram_proc11, ldo_vcn28, ldo_vsram_others,
-+  ldo_vsram_gpu, ldo_vxo22, ldo_vefuse, ldo_vaux18, ldo_vmch, ldo_vbif28,
-+  ldo_vsram_proc12, ldo_vcama1, ldo_vemc, ldo_vio28, ldo_va12, ldo_vrf18,
-+  ldo_vcn33_bt, ldo_vcn33_wifi, ldo_vcama2, ldo_vmc, ldo_vldo28, ldo_vaud28,
-+  ldo_vsim2
-+
-+Example:
-+
-+	pmic {
-+		compatible = "mediatek,mt6358";
-+
-+		mt6358regulator: mt6358regulator {
-+			compatible = "mediatek,mt6358-regulator";
-+
-+			mt6358_vdram1_reg: buck_vdram1 {
-+				regulator-compatible = "buck_vdram1";
-+				regulator-name = "vdram1";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2087500>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <0>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vcore_reg: buck_vcore {
-+				regulator-name = "vcore";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <200>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vpa_reg: buck_vpa {
-+				regulator-name = "vpa";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <3650000>;
-+				regulator-ramp-delay = <50000>;
-+				regulator-enable-ramp-delay = <250>;
-+			};
-+
-+			mt6358_vproc11_reg: buck_vproc11 {
-+				regulator-name = "vproc11";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <200>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vproc12_reg: buck_vproc12 {
-+				regulator-name = "vproc12";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <200>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vgpu_reg: buck_vgpu {
-+				regulator-name = "vgpu";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <200>;
-+			};
-+
-+			mt6358_vs2_reg: buck_vs2 {
-+				regulator-name = "vs2";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2087500>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <0>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vmodem_reg: buck_vmodem {
-+				regulator-name = "vmodem";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <900>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vs1_reg: buck_vs1 {
-+				regulator-name = "vs1";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <2587500>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <0>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vdram2_reg: ldo_vdram2 {
-+				regulator-name = "vdram2";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <3300>;
-+			};
-+
-+			mt6358_vsim1_reg: ldo_vsim1 {
-+				regulator-name = "vsim1";
-+				regulator-min-microvolt = <1700000>;
-+				regulator-max-microvolt = <3100000>;
-+				regulator-enable-ramp-delay = <540>;
-+			};
-+
-+			mt6358_vibr_reg: ldo_vibr {
-+				regulator-name = "vibr";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <60>;
-+			};
-+
-+			mt6358_vrf12_reg: ldo_vrf12 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vrf12";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-enable-ramp-delay = <120>;
-+			};
-+
-+			mt6358_vio18_reg: ldo_vio18 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vio18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <2700>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vusb_reg: ldo_vusb {
-+				regulator-name = "vusb";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3100000>;
-+				regulator-enable-ramp-delay = <270>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vcamio_reg: ldo_vcamio {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vcamio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vcamd_reg: ldo_vcamd {
-+				regulator-name = "vcamd";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vcn18_reg: ldo_vcn18 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vcn18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vfe28_reg: ldo_vfe28 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vfe28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vsram_proc11_reg: ldo_vsram_proc11 {
-+				regulator-name = "vsram_proc11";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <240>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vcn28_reg: ldo_vcn28 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vcn28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vsram_others_reg: ldo_vsram_others {
-+				regulator-name = "vsram_others";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <240>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vsram_gpu_reg: ldo_vsram_gpu {
-+				regulator-name = "vsram_gpu";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <240>;
-+			};
-+
-+			mt6358_vxo22_reg: ldo_vxo22 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vxo22";
-+				regulator-min-microvolt = <2200000>;
-+				regulator-max-microvolt = <2200000>;
-+				regulator-enable-ramp-delay = <120>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vefuse_reg: ldo_vefuse {
-+				regulator-name = "vefuse";
-+				regulator-min-microvolt = <1700000>;
-+				regulator-max-microvolt = <1900000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vaux18_reg: ldo_vaux18 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vaux18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vmch_reg: ldo_vmch {
-+				regulator-name = "vmch";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <60>;
-+			};
-+
-+			mt6358_vbif28_reg: ldo_vbif28 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vbif28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vsram_proc12_reg: ldo_vsram_proc12 {
-+				regulator-name = "vsram_proc12";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <1293750>;
-+				regulator-ramp-delay = <6250>;
-+				regulator-enable-ramp-delay = <240>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vcama1_reg: ldo_vcama1 {
-+				regulator-name = "vcama1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vemc_reg: ldo_vemc {
-+				regulator-name = "vemc";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <60>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vio28_reg: ldo_vio28 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vio28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_va12_reg: ldo_va12 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "va12";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-enable-ramp-delay = <270>;
-+				regulator-always-on;
-+			};
-+
-+			mt6358_vrf18_reg: ldo_vrf18 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vrf18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <120>;
-+			};
-+
-+			mt6358_vcn33_bt_reg: ldo_vcn33_bt {
-+				regulator-name = "vcn33_bt";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3500000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vcn33_wifi_reg: ldo_vcn33_wifi {
-+				regulator-name = "vcn33_wifi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3500000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vcama2_reg: ldo_vcama2 {
-+				regulator-name = "vcama2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vmc_reg: ldo_vmc {
-+				regulator-name = "vmc";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <60>;
-+			};
-+
-+			mt6358_vldo28_reg: ldo_vldo28 {
-+				regulator-name = "vldo28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vaud28_reg: ldo_vaud28 {
-+				compatible = "regulator-fixed";
-+				regulator-name = "vaud28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <270>;
-+			};
-+
-+			mt6358_vsim2_reg: ldo_vsim2 {
-+				regulator-name = "vsim2";
-+				regulator-min-microvolt = <1700000>;
-+				regulator-max-microvolt = <3100000>;
-+				regulator-enable-ramp-delay = <540>;
-+			};
-+		};
-+	};
+We won't need to specify a rampatch firmware file in future as it's a 
+same file for all the boards with same chip, only the NVM firmware file 
+may have board differences. NVM file is also one of the firmware files 
+so I think it should be OK to use "firmware-name" property to specify 
+it.
+
 -- 
-2.18.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
