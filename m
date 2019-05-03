@@ -1,126 +1,52 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 13/29] PCI: tegra: Increase the deskew retry time
-Date: Mon, 13 May 2019 23:37:28 +0530
-Message-ID: <20190513180744.16493-14-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=+6/i=TD=the-dreams.de=wsa@kernel.org>
+Date: Fri, 3 May 2019 16:53:43 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 3/7] dt-bindings: i2c: riic: document r7s9210 support
+Message-ID: <20190503145343.GF24385@kunai>
+References: <20190430132309.12473-1-chris.brandt@renesas.com>
+ <20190430132309.12473-4-chris.brandt@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hK8Uo4Yp55NZU70L"
+Content-Disposition: inline
+In-Reply-To: <20190430132309.12473-4-chris.brandt@renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Sometimes link speed change from Gen2 to Gen1 fails due to instability
-in deskew logic on lane-0 in Tegra210. Increase the deskew retry time
-to resolve this issue.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: No change
+--hK8Uo4Yp55NZU70L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-V2: Took care of typos in commit log and coding style comments.
+On Tue, Apr 30, 2019 at 08:23:05AM -0500, Chris Brandt wrote:
+> Document support for the R7S9210 (RZ/A2) SoC. Also explicitly document
+> bindings for the R7S72100 (RZ/A1) SoC.
+>=20
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
- drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Applied to for-next, thanks!
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 96cd75821872..9c28f1d9f177 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -209,6 +209,10 @@
- #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
- #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
- 
-+#define RP_VEND_CTL0	0x00000f44
-+#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
-+#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH	(0x9 << 12)
-+
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
- 
-@@ -305,6 +309,7 @@ struct tegra_pcie_soc {
- 	bool force_pca_enable;
- 	bool program_uphy;
- 	bool update_clamp_threshold;
-+	bool program_deskew_time;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -620,6 +625,24 @@ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
- 	writel(value, port->base + RP_ECTL_6_R2);
- }
- 
-+static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
-+{
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
-+	u32 value;
-+
-+	/*
-+	 * Sometimes link speed change from Gen2 to Gen1 fails due to
-+	 * instability in deskew logic on lane-0. Increase the deskew
-+	 * retry time to resolve this issue.
-+	 */
-+	if (soc->program_deskew_time) {
-+		value = readl(port->base + RP_VEND_CTL0);
-+		value &= ~RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK;
-+		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
-+		writel(value, port->base + RP_VEND_CTL0);
-+	}
-+}
-+
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -649,6 +672,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 
- 	if (soc->ectl.enable)
- 		tegra_pcie_program_ectl_settings(port);
-+
-+	tegra_pcie_apply_sw_fixup(port);
- }
- 
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
-@@ -2356,6 +2381,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2381,6 +2407,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2399,6 +2426,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2417,6 +2445,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.force_pca_enable = true,
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
-+	.program_deskew_time = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2454,6 +2483,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = false,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+
+--hK8Uo4Yp55NZU70L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzMVfcACgkQFA3kzBSg
+Kbat+A/9HYjbx6Aq6tJ3Oo4NN0UU6Et6HxsROxT3fNzcUGiHJNWY7wEc+hGavCFr
+lO51Fme0Jj04hF2KGXy6/zMRzO99t72fEfhMlTNtmp8CJ/CNXjVKCnhdEC7U2ZIP
+ClaD7vzfymhJeYUWhJj94Zs2P0xKFqZoU92vkjceK73juLWQz9whPW7dLbv+ijFx
+Uau4Z6g8IQapAvxzYg2vBk1EbLjC7CPCHAXgUqDM9WYxKEjLbjoZbdXk2DPfA2a+
+iIfNdO/CJvI+0pq0jrIbEjTYVgP0U0nvBIMxsOlEMcleFm2s9+oqtqsgXKAtLMrA
+Mb1ULNxTSO5xJ43uaBo8zeyiiECs/STXrl2giC73XVVzUGYLKRCYPd6DUv9H2eTT
+Cym8sip9lyUpiQSZEhf2MgdDRb7EqXuZuUOHA1iZH3SPeEFEwMY1gmK7WKOWWGku
+FXK+Ytp/FlBBPnU1r3MrPh7QPTlVoocQTqW8p4hJy6oIYwcds2Ixqs2ynfGecGzM
+569IgHIQKhvQXoHmYTD1mbkrG2Snei+0Aw736BANLXjUb0iPMNkcTvEA/5wZGzTx
+0CNSdHa0biUlXRhzFiVAa86SNB9b9f/CTFupcrTJzYuvBhnIGKnMCoGoyDNua24Y
+DGZ2oBWjJOIMQsXGPkZq7h7vF4prLKZyQXwcm7qNw0yWmDW1M8A=
+=8+kg
+-----END PGP SIGNATURE-----
+
+--hK8Uo4Yp55NZU70L--
