@@ -1,128 +1,137 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 01/10] of_net: add NVMEM support to of_get_mac_address
-Date: Fri, 3 May 2019 16:36:43 +0200
-Message-ID: <20190503143643.hhfamnptcuriav4k@flea>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <1556893635-18549-2-git-send-email-ynezz@true.cz>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree
+ support for T194
+Date: Fri, 3 May 2019 13:19:23 +0200
+Message-ID: <20190503111923.GE32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-11-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w5grxr2nn7x6p3l6"
-Return-path: <netdev-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="gMR3gsNFwZpnI/Ts"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1556893635-18549-2-git-send-email-ynezz@true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190424052004.6270-11-vidyas@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---w5grxr2nn7x6p3l6
-Content-Type: text/plain; charset=utf-8
+--gMR3gsNFwZpnI/Ts
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 03, 2019 at 04:27:06PM +0200, Petr =C5=A0tetiar wrote:
-> Many embedded devices have information such as MAC addresses stored
-> inside NVMEMs like EEPROMs and so on. Currently there are only two
-> drivers in the tree which benefit from NVMEM bindings.
->
-> Adding support for NVMEM into every other driver would mean adding a lot
-> of repetitive code. This patch allows us to configure MAC addresses in
-> various devices like ethernet and wireless adapters directly from
-> of_get_mac_address, which is already used by almost every driver in the
-> tree.
->
-> Predecessor of this patch which used directly MTD layer has originated
-> in OpenWrt some time ago and supports already about 497 use cases in 357
-> device tree files.
->
-> Cc: Alban Bedel <albeu@free.fr>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
+On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
+> Add support for Tegra194 PCIe controllers. These controllers are based
+> on Synopsys DesignWare core IP.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->
->  Changes since v1:
->
->   * moved handling of nvmem after mac-address and local-mac-address prope=
-rties
->
->  Changes since v2:
->
->   * moved of_get_mac_addr_nvmem after of_get_mac_addr(np, "address") call
->   * replaced kzalloc, kmemdup and kfree with it's devm variants
->   * introduced of_has_nvmem_mac_addr helper which checks if DT node has n=
-vmem
->     cell with `mac-address`
->   * of_get_mac_address now returns ERR_PTR encoded error value
->
->  Changes since v3:
->
->   * removed of_has_nvmem_mac_addr helper as it's not needed now
->   * of_get_mac_address now returns only valid pointer or ERR_PTR encoded =
-error value
->
->  drivers/of/of_net.c | 54 +++++++++++++++++++++++++++++++++++++++++++++++=
-+++---
->  1 file changed, 51 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index d820f3e..9649cd5 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-> @@ -8,8 +8,10 @@
->  #include <linux/etherdevice.h>
->  #include <linux/kernel.h>
->  #include <linux/of_net.h>
-> +#include <linux/of_platform.h>
->  #include <linux/phy.h>
->  #include <linux/export.h>
-> +#include <linux/device.h>
->
->  /**
->   * of_get_phy_mode - Get phy mode for given device_node
-> @@ -47,12 +49,52 @@ static const void *of_get_mac_addr(struct device_node=
- *np, const char *name)
->  	return NULL;
->  }
->
-> +static const void *of_get_mac_addr_nvmem(struct device_node *np)
-> +{
-> +	int ret;
-> +	u8 mac[ETH_ALEN];
-> +	struct property *pp;
-> +	struct platform_device *pdev =3D of_find_device_by_node(np);
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Using only 'Cx' (x-being controller number) format to represent a contr=
+oller
+> * Changed to 'value: description' format where applicable
+> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+> * Provided more documentation for 'nvidia,init-link-speed' property
+> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+>=20
+> Changes since [v1]:
+> * Added documentation for 'power-domains' property
+> * Removed 'window1' and 'window2' properties
+> * Removed '_clk' and '_rst' from clock and reset names
+> * Dropped 'pcie' from phy-names
+> * Added entry for BPMP-FW handle
+> * Removed offsets for some of the registers and added them in code and wo=
+uld be pickedup based on
+>   controller ID
+> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an option=
+al
+> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with invert=
+ed operation
+> * Added more documentation for 'nvidia,update-fc-fixup' property
+> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+> * Added '-us' to all properties that represent time in microseconds
+> * Moved P2U documentation to a separate file
+>=20
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
+>  1 file changed, 187 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194=
+-pcie.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
+xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> new file mode 100644
+> index 000000000000..208dff126108
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> @@ -0,0 +1,187 @@
+> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
 > +
-> +	if (!pdev)
-> +		return ERR_PTR(-ENODEV);
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.t=
+xt.
 > +
-> +	ret =3D nvmem_get_mac_address(&pdev->dev, &mac);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	pp =3D devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
-> +	if (!pp)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	pp->name =3D "nvmem-mac-address";
-> +	pp->length =3D ETH_ALEN;
-> +	pp->value =3D devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
-> +	if (!pp->value) {
-> +		ret =3D -ENOMEM;
-> +		goto free;
-> +	}
-> +
-> +	ret =3D of_add_property(np, pp);
-> +	if (ret)
-> +		goto free;
-> +
-> +	return pp->value;
+> +Required properties:
+> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+> +- device_type: Must be "pci"
+> +- power-domains: A phandle to the node that controls power to the respec=
+tive
+> +  PCIe controller and a specifier name for the PCIe controller. Followin=
+g are
+> +  the specifiers for the different PCIe controllers
+> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
+> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+> +  these specifiers are defined in
+> +  "include/dt-bindings/power/tegra194-powergate.h" file.
+> +- reg: A list of physical base address and length for each set of contro=
+ller
 
-I'm not sure why you need to do that allocation here, and why you need
-to modify the DT?
+Perhaps "list of physical base address and length pairs".
 
-can't you just return the mac address directly since it's what the
-of_get_mac_address caller will expect anyway?
+> +  registers. Must contain an entry for each entry in the reg-names prope=
+rty.
+> +- reg-names: Must include the following entries:
+> +  "appl": Controller's application logic registers
+> +  "config": As per the definition in designware-pcie.txt
+> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Ad=
+dress
+> +             Translation Unit) registers of the PCIe core are made avail=
+able
+> +             fow SW access.
 
-maxime
---w5grxr2nn7x6p3l6--
+s/fow/for/
+
+Thierry
+
+--gMR3gsNFwZpnI/Ts
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMI7sACgkQ3SOs138+
+s6EIIQ/+JneyIE1QInUy25Ht9TxH6uK1NfNwHzcE3w7WQOHSFZ6cCm60usW9tX7y
+5bVqKGD/Qk/van6DX4OJbVWqUXSU4kKpCvL6e9ImuJn50qtt+SZCvzn2ITB1RrMY
+cx9g/qtQjrRgv9lnezcEBGFGFk0Mr828WkPfzZSIIT2xqJ7Hn+Irp5gvU+6LoDhv
+7J3FiCWf08MsSP/GmoTROtgkEl72UkltbhPUNb+YtL/AZd858eXm7ao/zP3mUIO2
+f67wTlzzqC1kYJYLERm4DOVlrpPehlz+fp+4QXbKsBovY4qkkRJCW4FM9F9d7Qe9
+z5wGlqk7SRZQPNDAVGhZ4XWRjpyiMss72Mqv4FjHU+FQiuney9b/NVu60XtJ0JqA
+LMo+JVI8w+5Pqq/n5+5mN9aM/dmmumTyaPZiQ/AASYX7iU8dXe6aKIcgZo+a10LW
+X4fezVQ/BlzdHQ72ADFg66g1UkONCAYFaLemAf60OYJQQPKLTy4dAaemtleMoLsF
+hbKQng3PJSkG8L33JiMlvGg4N0cIaWx+1ugkMLrjbgrx8z8qceHyc3nrGvBPUyTU
+X9srLQMC7WsiahwlWUZPqMewXYPPXFKDg1+ExlLkQi/vSt88iJcu4X+ljt693WmR
+GOIY4OkOtmYrcJZEdJLmxCjqTNMkxCRrKjSpv3OEHCigvugwYeo=
+=pPtB
+-----END PGP SIGNATURE-----
+
+--gMR3gsNFwZpnI/Ts--
