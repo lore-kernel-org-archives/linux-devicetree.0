@@ -1,130 +1,106 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/3] reset: Add reset controller support for BM1880 SoC
-Date: Fri, 03 May 2019 16:55:21 +0200
-Message-ID: <1556895321.3046.3.camel@pengutronix.de>
-References: <20190425125508.5965-1-manivannan.sadhasivam@linaro.org>
-         <20190425125508.5965-4-manivannan.sadhasivam@linaro.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
+Date: Fri, 3 May 2019 09:46:51 -0700
+Message-ID: <20190503164651.GB40515@google.com>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
+ <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
+ <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190425125508.5965-4-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: "michael.kao" <michael.kao@mediatek.com>, fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
+Hi,
 
-thank you for the patch. A few issues below:
+On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
+> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+> >
+> > Add thermal zone node to Mediatek MT8183 dts file.
+> >
+> > Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 64 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > index 926df75..b92116f 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > @@ -334,6 +334,67 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               thermal: thermal@1100b000 {
+> > +                       #thermal-sensor-cells = <1>;
+> > +                       compatible = "mediatek,mt8183-thermal";
+> > +                       reg = <0 0x1100b000 0 0x1000>;
+> > +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_THERM>,
+> > +                                <&infracfg CLK_INFRA_AUXADC>;
+> > +                       clock-names = "therm", "auxadc";
+> > +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
+> > +                       mediatek,auxadc = <&auxadc>;
+> > +                       mediatek,apmixedsys = <&apmixedsys>;
+> > +                       mediatek,hw-reset-temp = <117000>;
+> > +                       nvmem-cells = <&thermal_calibration>;
+> > +                       nvmem-cell-names = "calibration-data";
+> > +               };
+> > +
+> > +               thermal-zones {
+> > +                       cpu_thermal: cpu_thermal {
+> > +                               polling-delay-passive = <1000>;
+> > +                               polling-delay = <1000>;
+> > +
+> > +                               thermal-sensors = <&thermal 0>;
+> > +                               sustainable-power = <1500>;
+> > +                       };
+> > +
+> > +                       tzts1: tzts1 {
+> > +                               polling-delay-passive = <1000>;
+> > +                               polling-delay = <1000>;
+> > +                               thermal-sensors = <&thermal 1>;
+> Is sustainable-power required for tzts? Though it's an optional
+> property, kernel would have warning:
+> [    0.631556] thermal thermal_zone1: power_allocator:
+> sustainable_power will be estimated
+> [    0.639586] thermal thermal_zone2: power_allocator:
+> sustainable_power will be estimated
+> [    0.647611] thermal thermal_zone3: power_allocator:
+> sustainable_power will be estimated
+> [    0.655635] thermal thermal_zone4: power_allocator:
+> sustainable_power will be estimated
+> [    0.663658] thermal thermal_zone5: power_allocator:
+> sustainable_power will be estimated
+> if no sustainable-power assigned.
 
-On Thu, 2019-04-25 at 18:25 +0530, Manivannan Sadhasivam wrote:
-> Add reset controller support for Bitmain BM1880 SoC reusing the
-> reset-simple driver. While we are at it, this driver has also been
-> modified to make use of the SPDX license identifier.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/reset/Kconfig        |  3 ++-
->  drivers/reset/Makefile       |  1 +
->  drivers/reset/reset-simple.c | 16 +++++++++++-----
->  3 files changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 2c8c23db92fb..b25e8d139f0d 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -117,7 +117,7 @@ config RESET_QCOM_PDC
->  
->  config RESET_SIMPLE
->  	bool "Simple Reset Controller Driver" if COMPILE_TEST
-> -	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-> +	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
->  	help
->  	  This enables a simple reset controller driver for reset lines that
->  	  that can be asserted and deasserted by toggling bits in a contiguous,
-> @@ -129,6 +129,7 @@ config RESET_SIMPLE
->  	   - RCC reset controller in STM32 MCUs
->  	   - Allwinner SoCs
->  	   - ZTE's zx2967 family
-> +	   - Bitmain BM1880 SoC
->  
->  config RESET_STM32MP157
->  	bool "STM32MP157 Reset Driver" if COMPILE_TEST
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 61456b8f659c..b87968771166 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
->  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
->  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-> +#obj-$(CONFIG_RESET_BM1880) += reset-bm1880.o
+The property is indeed optional, if it isn't specified IPA will use
+the sum of the minimum power of all 'power actors' of the zone as
+estimate (see estimate_sustainable_power()). This may lead to overly
+agressive throttling, since the nominal sustainable power will always
+be <= the requested power.
 
-Leftover from a previous patch version? You can remove this.
+In my understanding the sustainable power may varies between devices,
+even for the same SoC. One could have all the hardware crammed into a
+tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
+laptop form factor and a metal enclosure (e.g. ASUS C201). Both
+examples are based on an Rockchip rk3288, but they have completely
+different thermal behavior, and would likely have different values for
+'sustainable-power'.
 
->  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
->  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-> index 77fbba3100c8..fd1fa4984d76 100644
-> --- a/drivers/reset/reset-simple.c
-> +++ b/drivers/reset/reset-simple.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0+
->  /*
->   * Simple Reset Controller Driver
->   *
-> @@ -8,11 +9,6 @@
->   * Copyright 2013 Maxime Ripard
->   *
->   * Maxime Ripard <maxime.ripard@free-electrons.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
->   */
+In this sense I tend to consider 'sustainable-power' more a device,
+than a SoC property. You could specify a 'reasonable' value as a
+starting point, but it will likely not be optimal for all or even most
+devices. The warning might even be useful for device makers by
+indicating them that there is room for tweaking.
 
-Please split this change into a separate patch and add Maxime to Cc:
- 
->  #include <linux/device.h>
-> @@ -119,6 +115,14 @@ static const struct reset_simple_devdata reset_simple_active_low = {
->  	.status_active_low = true,
->  };
->  
-> +#define BM1880_NR_BANKS		2
-> +
-> +static const struct reset_simple_devdata reset_simple_bm1880 = {
-> +	.nr_resets = BM1880_NR_BANKS * 32,
+I'm not an expert in the matter though, just happend to look into this
+recently :)
 
-This is not necessary, given your device tree changes, the
+Cheers
 
-        data->rcdev.nr_resets = resource_size(res) * BITS_PER_BYTE;
-
-in reset_simple_probe should already do the right thing.
-You can remove the .nr_resets from reset_simple_bm1880 and the
-BM1880_NR_BANKS #define.
-
-> +	.active_low = true,
-> +	.status_active_low = true,
-> +};
-> +
->  static const struct of_device_id reset_simple_dt_ids[] = {
->  	{ .compatible = "altr,stratix10-rst-mgr",
->  		.data = &reset_simple_socfpga },
-> @@ -129,6 +133,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
->  		.data = &reset_simple_active_low },
->  	{ .compatible = "aspeed,ast2400-lpc-reset" },
->  	{ .compatible = "aspeed,ast2500-lpc-reset" },
-> +	{ .compatible = "bitmain,bm1880-reset",
-> +		.data = &reset_simple_bm1880 },
->  	{ /* sentinel */ },
->  };
-
-With these changes,
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-for both parts. 
-
-regards
-Philipp
+Matthias
