@@ -1,103 +1,58 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH 2/8] arm64: dts: mt8183: add/update dynamic power coefficients
-Date: Fri, 3 May 2019 15:16:29 +0800
-Message-ID: <CAJMQK-jujDXt18M8610G4GpHdrikTD0ZZG_=C2YTt63UfxuHuQ@mail.gmail.com>
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com> <1556793795-25204-3-git-send-email-michael.kao@mediatek.com>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v3 01/10] of_net: add NVMEM support to of_get_mac_address
+Date: Fri, 3 May 2019 11:15:42 +0200
+Message-ID: <20190503091542.GE346@meh.true.cz>
+References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+ <1556870168-26864-2-git-send-email-ynezz@true.cz>
+ <2a5fcdec-c661-6dc5-6741-7d6675457b9b@cogentembedded.com>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556793795-25204-3-git-send-email-michael.kao@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <2a5fcdec-c661-6dc5-6741-7d6675457b9b@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "michael.kao" <michael.kao@mediatek.com>
-Cc: fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
->
-> Add dynamic power coefficients for all cores and update those of
-> CPU0 and CPU4.
->
-> Signed-off-by: Michael.Kao <michael.kao@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index b92116f..5668fb8 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -58,6 +58,8 @@
->                         compatible = "arm,cortex-a53";
->                         reg = <0x000>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <84>;
-> +                       #cooling-cells = <2>;
-Should this line be in [3/8] arm64: dts: mt8183: Add #cooling-cells to
-CPU nodes?
+Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> [2019-05-03 11:44:54]:
 
->                 };
->
->                 cpu1: cpu@1 {
-> @@ -65,6 +67,8 @@
->                         compatible = "arm,cortex-a53";
->                         reg = <0x001>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <84>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu2: cpu@2 {
-> @@ -72,6 +76,8 @@
->                         compatible = "arm,cortex-a53";
->                         reg = <0x002>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <84>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu3: cpu@3 {
-> @@ -79,6 +85,8 @@
->                         compatible = "arm,cortex-a53";
->                         reg = <0x003>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <84>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu4: cpu@100 {
-> @@ -86,6 +94,8 @@
->                         compatible = "arm,cortex-a73";
->                         reg = <0x100>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <211>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu5: cpu@101 {
-> @@ -93,6 +103,8 @@
->                         compatible = "arm,cortex-a73";
->                         reg = <0x101>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <211>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu6: cpu@102 {
-> @@ -100,6 +112,8 @@
->                         compatible = "arm,cortex-a73";
->                         reg = <0x102>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <211>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu7: cpu@103 {
-> @@ -107,6 +121,8 @@
->                         compatible = "arm,cortex-a73";
->                         reg = <0x103>;
->                         enable-method = "psci";
-> +                       dynamic-power-coefficient = <211>;
-> +                       #cooling-cells = <2>;
->                 };
->         };
->
+Hi Sergei,
+
+> > diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+> > index d820f3e..258ceb8 100644
+> > --- a/drivers/of/of_net.c
+> > +++ b/drivers/of/of_net.c
+> [...]
+> > @@ -64,6 +113,9 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
+> >    * addresses.  Some older U-Boots only initialized 'local-mac-address'.  In
+> >    * this case, the real MAC is in 'local-mac-address', and 'mac-address' exists
+> >    * but is all zeros.
+> > + *
+> > + * Return: Will be a valid pointer on success, NULL in case there wasn't
+> > + *         'mac-address' nvmem cell node found, and ERR_PTR in case of error.
+> 
+>    Returning both NULL and error codes on failure is usually a sign of a
+> misdesigned API. 
+
+well, then there's a lot of misdesigned APIs in the tree already, as I've just
+grepped for IS_ERR_OR_NULL usage and found this pointer/NULL/ERR_PTR usage
+pretty legit.
+
+> Why not always return an error code?
+
+I've received following comment[1] from Andrew:
+
+ "What you have to be careful of, is the return value from your new code
+  looking in NVMEM. It should only return EPROBE_DEFER, or another error
+  if there really is expected to be a value in NVMEM, or getting it from
+  NVMEM resulted in an error."
+
+So in order to fullfil this remark, I can't simply use ENOENT instead of
+current NULL, as the caller couldn't distinguish between ENOENT from
+of_get_mac_address or ENOENT from NVMEM subsystem.
+
+1. https://patchwork.ozlabs.org/patch/1092243/#2161764
+
+-- ynezz
