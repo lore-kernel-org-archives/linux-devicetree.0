@@ -1,31 +1,32 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/6] arm64: dts: meson: mmc clean-up
-Date: Fri, 03 May 2019 15:04:27 -0700
-Message-ID: <7hh8abkxec.fsf@baylibre.com>
-References: <20190418122714.30805-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Pablo Greco <pgreco@centosproject.org>
+Subject: [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra: Remove regulator-always-on
+Date: Fri,  3 May 2019 20:05:19 -0300
+Message-ID: <1556924720-49372-1-git-send-email-pgreco@centosproject.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418122714.30805-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
+To: linux-sunxi@googlegroups.com
+Cc: Pablo Greco <pgreco@centosproject.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Now that the regulators are tied to the GPIO bank, we can remove the
+unneeded regulator-always-on in reg_aldo2
 
-> The patchset is bunch of clean-up found while debugging meson mmc.
->
-> * The first 2 patches address the libretech-cc which actually uses 1.8v
->   eMMC modules.
-> * Patch 3 is a pin bias fixup depending on mmc pins.
-> * Patch 4 lower the mmc max frequencies on gx chips. It was not easy
->   to spot but, according to the datasheet, the maximum UHS rate
->   supported by these chips is 100MHz (SDR50). This explains why we
->   never really managed to get a stable SDR104. SDIO is limited to HS.
-> * Patch 5 adds missing pinctrl definition on the vim2
-> * Patch 6 remove hs400 from the supported modes of the vim2. This mode is
->   mode reliable enough with HW/SW ATM.
+Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+---
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-Queued for v5.3 (branch: v5.3/dt64)
-
-Kevin
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 699579d..42d62d1 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -210,7 +210,6 @@
+ };
+ 
+ &reg_aldo2 {
+-	regulator-always-on;
+ 	regulator-min-microvolt = <2500000>;
+ 	regulator-max-microvolt = <2500000>;
+ 	regulator-name = "vcc-pa";
+-- 
+1.8.3.1
