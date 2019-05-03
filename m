@@ -1,47 +1,78 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: add PIO VCC
- bank supplies for Pine H64
-Date: Fri, 3 May 2019 16:41:42 +0200
-Message-ID: <20190503144142.a5yvqghyqjm26g5u@flea>
-References: <20190503094720.21502-1-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="siexvtguxgppryms"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKFGWHTAKGQEH5XQPLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190503094720.21502-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 2/7] iio: adc: sun4i-gpadc: introduce temp_data in gpadc_data
+Date: Fri,  3 May 2019 03:28:08 -0400
+Message-ID: <20190503072813.2719-3-tiny.windzz@gmail.com>
+References: <20190503072813.2719-1-tiny.windzz@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190503072813.2719-1-tiny.windzz@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+For some SOCs, the temperature data register start address may be
+different, so introduce temp_data in gpadc_data.
 
---siexvtguxgppryms
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Also modify read temperature to support multiple sensor.
 
-On Fri, May 03, 2019 at 05:47:20PM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
-> banks.
->
-> This patch adds supplies for these banks except PL bank. PL bank is
-> where PMIC is attached, and currently if a PMIC regulator is added
-> for it a dependency loop will happen.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/iio/adc/sun4i-gpadc-iio.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Applied for 5.3, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---siexvtguxgppryms--
+diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+index 844fd52bd22f..b41ec0d5964d 100644
+--- a/drivers/iio/adc/sun4i-gpadc-iio.c
++++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+@@ -57,6 +57,7 @@ struct gpadc_data {
+ 	unsigned int	(*adc_chan_select)(unsigned int chan);
+ 	unsigned int	adc_chan_mask;
+ 	unsigned int    sensor_count;
++	unsigned int    temp_data_base;
+ };
+ 
+ static const struct gpadc_data sun4i_gpadc_data = {
+@@ -67,6 +68,7 @@ static const struct gpadc_data sun4i_gpadc_data = {
+ 	.adc_chan_select = &sun4i_gpadc_chan_select,
+ 	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
+ 	.sensor_count = 1,
++	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
+ };
+ 
+ static const struct gpadc_data sun5i_gpadc_data = {
+@@ -77,6 +79,7 @@ static const struct gpadc_data sun5i_gpadc_data = {
+ 	.adc_chan_select = &sun4i_gpadc_chan_select,
+ 	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
+ 	.sensor_count = 1,
++	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
+ };
+ 
+ static const struct gpadc_data sun6i_gpadc_data = {
+@@ -87,6 +90,7 @@ static const struct gpadc_data sun6i_gpadc_data = {
+ 	.adc_chan_select = &sun6i_gpadc_chan_select,
+ 	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
+ 	.sensor_count = 1,
++	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
+ };
+ 
+ static const struct gpadc_data sun8i_a33_gpadc_data = {
+@@ -94,6 +98,7 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
+ 	.temp_scale = 162,
+ 	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
+ 	.sensor_count = 1,
++	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
+ };
+ 
+ struct sun4i_sensor_tzd {
+@@ -291,7 +296,8 @@ static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val,
+ 	if (info->no_irq) {
+ 		pm_runtime_get_sync(indio_dev->dev.parent);
+ 
+-		regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
++		regmap_read(info->regmap, info->data->temp_data_base +
++			    0x4 * sensor, val);
+ 
+ 		pm_runtime_mark_last_busy(indio_dev->dev.parent);
+ 		pm_runtime_put_autosuspend(indio_dev->dev.parent);
+-- 
+2.17.1
