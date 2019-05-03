@@ -1,75 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 01/10] of_net: add NVMEM support to of_get_mac_address
-Date: Fri, 3 May 2019 11:44:54 +0300
-Message-ID: <2a5fcdec-c661-6dc5-6741-7d6675457b9b@cogentembedded.com>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
- <1556870168-26864-2-git-send-email-ynezz@true.cz>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] arm64: dts: allwinner:
+ a64-oceanic-5205-5inmfd: Enable GT911 CTP
+Date: Fri, 3 May 2019 16:40:12 +0200
+Message-ID: <20190503144012.hvbm54xjldyqysk4@flea>
+References: <20190503104753.27562-1-jagan@amarulasolutions.com>
+ <20190503104753.27562-3-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1556870168-26864-2-git-send-email-ynezz@true.cz>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gxwv7dhu5oerttl5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT5FWHTAKGQETKTM2XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190503104753.27562-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
 
-On 03.05.2019 10:55, Petr Štetiar wrote:
+--gxwv7dhu5oerttl5
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> Many embedded devices have information such as MAC addresses stored
-> inside NVMEMs like EEPROMs and so on. Currently there are only two
-> drivers in the tree which benefit from NVMEM bindings.
-> 
-> Adding support for NVMEM into every other driver would mean adding a lot
-> of repetitive code. This patch allows us to configure MAC addresses in
-> various devices like ethernet and wireless adapters directly from
-> of_get_mac_address, which is already used by almost every driver in the
-> tree.
-> 
-> Predecessor of this patch which used directly MTD layer has originated
-> in OpenWrt some time ago and supports already about 497 use cases in 357
-> device tree files.
-> 
-> Cc: Alban Bedel <albeu@free.fr>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Petr Štetiar <ynezz@true.cz>
-> ---
-> 
->   Changes since v1:
-> 
->    * moved handling of nvmem after mac-address and local-mac-address properties
-> 
->   Changes since v2:
-> 
->    * moved of_get_mac_addr_nvmem after of_get_mac_addr(np, "address") call
->    * replaced kzalloc, kmemdup and kfree with it's devm variants
->    * introduced of_has_nvmem_mac_addr helper which checks if DT node has nvmem
->      cell with `mac-address`
->    * of_get_mac_address now returns ERR_PTR encoded error value
-> 
->   drivers/of/of_net.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++++---
->   1 file changed, 62 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index d820f3e..258ceb8 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-[...]
-> @@ -64,6 +113,9 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
->    * addresses.  Some older U-Boots only initialized 'local-mac-address'.  In
->    * this case, the real MAC is in 'local-mac-address', and 'mac-address' exists
->    * but is all zeros.
-> + *
-> + * Return: Will be a valid pointer on success, NULL in case there wasn't
-> + *         'mac-address' nvmem cell node found, and ERR_PTR in case of error.
+On Fri, May 03, 2019 at 04:17:53PM +0530, Jagan Teki wrote:
+> Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
+>
+> The CTP connected to board with,
+> - SDA, SCK from i2c0
+> - GPIO-LD0 as AVDD28 supply
+> - PH4 gpio as interrupt pin
+> - PH11 gpio as reset pin
+> - X axis is inverted
+> - Y axis is inverted
+>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-    Returning both NULL and error codes on failure is usually a sign of a 
-misdesigned API. Why not always return an error code?
+Applied all three for 5.3, thanks
 
-[...]
+Maxime
 
-MBR, Sergei
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--gxwv7dhu5oerttl5--
