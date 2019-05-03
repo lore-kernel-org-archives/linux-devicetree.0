@@ -1,148 +1,103 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 6/7] iio: adc: sun4i-gpadc-iio: add support for H6 thermal sensor
-Date: Fri,  3 May 2019 03:28:12 -0400
-Message-ID: <20190503072813.2719-7-tiny.windzz@gmail.com>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH 2/8] arm64: dts: mt8183: add/update dynamic power coefficients
+Date: Fri, 3 May 2019 15:16:29 +0800
+Message-ID: <CAJMQK-jujDXt18M8610G4GpHdrikTD0ZZG_=C2YTt63UfxuHuQ@mail.gmail.com>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com> <1556793795-25204-3-git-send-email-michael.kao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503072813.2719-1-tiny.windzz@gmail.com>
+In-Reply-To: <1556793795-25204-3-git-send-email-michael.kao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: "michael.kao" <michael.kao@mediatek.com>
+Cc: fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the H6 ths sensor.
+On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+>
+> Add dynamic power coefficients for all cores and update those of
+> CPU0 and CPU4.
+>
+> Signed-off-by: Michael.Kao <michael.kao@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index b92116f..5668fb8 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -58,6 +58,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x000>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+Should this line be in [3/8] arm64: dts: mt8183: Add #cooling-cells to
+CPU nodes?
 
-TODO: calibrate thermal sensor by using information from sid.
-
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/iio/adc/sun4i-gpadc-iio.c | 65 +++++++++++++++++++++++++++++++
- include/linux/mfd/sun4i-gpadc.h   |  9 +++++
- 2 files changed, 74 insertions(+)
-
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index f24eb76d65c0..9b6fc592f54c 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -120,6 +120,20 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
- 	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
- };
- 
-+static int sun50i_gpadc_disable(struct sun4i_gpadc_iio *info);
-+static int sun50i_gpadc_enable(struct sun4i_gpadc_iio *info);
-+
-+static const struct gpadc_data sun50i_h6_gpadc_data = {
-+	.temp_offset = -2809,
-+	.temp_scale = -67,
-+	.has_bus_clk = true,
-+	.has_bus_rst = true,
-+	.gpadc_enable = sun50i_gpadc_enable,
-+	.gpadc_disable = sun50i_gpadc_disable,
-+	.sensor_count = 2,
-+	.temp_data_base = SUN50I_H6_GPADC_TEMP_DATA,
-+};
-+
- struct sun4i_sensor_tzd {
- 	struct sun4i_gpadc_iio          *info;
- 	struct thermal_zone_device      *tzd;
-@@ -452,6 +466,53 @@ static int sun4i_gpadc_enable(struct sun4i_gpadc_iio *info)
- 	return 0;
- }
- 
-+static int sun50i_gpadc_enable(struct sun4i_gpadc_iio *info)
-+{
-+	int ret, val;
-+
-+	ret = reset_control_deassert(info->reset);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(info->bus_clk);
-+	if (ret)
-+		goto assert_reset;
-+
-+	/*
-+	 * clkin = 24MHz
-+	 * T acquire = clkin / (SUN50I_GPADC_CTRL0_T_ACQ + 1)
-+	 *           = 20us
-+	 */
-+	regmap_write(info->regmap, SUN4I_GPADC_CTRL0,
-+		     SUN50I_GPADC_CTRL0_T_ACQ(479));
-+	/* average over 4 samples */
-+	regmap_write(info->regmap, SUN50I_H6_GPADC_CTRL3,
-+		     SUN4I_GPADC_CTRL3_FILTER_EN |
-+		     SUN4I_GPADC_CTRL3_FILTER_TYPE(1));
-+	/* period = (SUN50I_GPADC_TPR_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
-+	regmap_write(info->regmap, SUN50I_GPADC_TPR,
-+		     SUN50I_GPADC_TPR_TEMP_PERIOD(58));
-+	/* TODO: calibrate ths */
-+	/* enable sensor */
-+	val = GENMASK(info->data->sensor_count - 1, 0);
-+	regmap_write(info->regmap, SUN4I_GPADC_CTRL1, val);
-+
-+	return 0;
-+
-+assert_reset:
-+	reset_control_assert(info->reset);
-+
-+	return ret;
-+}
-+
-+static int sun50i_gpadc_disable(struct sun4i_gpadc_iio *info)
-+{
-+	clk_disable_unprepare(info->bus_clk);
-+	reset_control_assert(info->reset);
-+
-+	return 0;
-+}
-+
- static int sun4i_gpadc_runtime_suspend(struct device *dev)
- {
- 	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
-@@ -546,6 +607,10 @@ static const struct of_device_id sun4i_gpadc_of_id[] = {
- 		.compatible = "allwinner,sun8i-a33-ths",
- 		.data = &sun8i_a33_gpadc_data,
- 	},
-+	{
-+		.compatible = "allwinner,sun50i-h6-ths",
-+		.data = &sun50i_h6_gpadc_data,
-+	},
- 	{ /* sentinel */ }
- };
- 
-diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-index 139872c2e0fe..f505013e9c0d 100644
---- a/include/linux/mfd/sun4i-gpadc.h
-+++ b/include/linux/mfd/sun4i-gpadc.h
-@@ -19,6 +19,9 @@
- #define SUN4I_GPADC_CTRL0_FS_DIV(x)			((GENMASK(3, 0) & (x)) << 16)
- #define SUN4I_GPADC_CTRL0_T_ACQ(x)			(GENMASK(15, 0) & (x))
- 
-+/* TP_CTRL0 bits for sun50i SOCs */
-+#define SUN50I_GPADC_CTRL0_T_ACQ(x)			((GENMASK(15, 0) & (x)) << 16)
-+
- #define SUN4I_GPADC_CTRL1				0x04
- 
- #define SUN4I_GPADC_CTRL1_STYLUS_UP_DEBOUNCE(x)		((GENMASK(7, 0) & (x)) << 12)
-@@ -49,6 +52,9 @@
- #define SUN4I_GPADC_CTRL2_PRE_MEA_EN			BIT(24)
- #define SUN4I_GPADC_CTRL2_PRE_MEA_THRE_CNT(x)		(GENMASK(23, 0) & (x))
- 
-+#define SUN50I_GPADC_TPR				0x08
-+#define SUN50I_GPADC_TPR_TEMP_PERIOD(x)			((GENMASK(19, 0) & (x)) << 12)
-+
- #define SUN4I_GPADC_CTRL3				0x0c
- 
- #define SUN4I_GPADC_CTRL3_FILTER_EN			BIT(2)
-@@ -84,6 +90,9 @@
- #define SUN4I_GPADC_TEMP_DATA				0x20
- #define SUN4I_GPADC_DATA				0x24
- 
-+#define SUN50I_H6_GPADC_CTRL3				0x30
-+#define SUN50I_H6_GPADC_TEMP_DATA			0xc0
-+
- #define SUN4I_GPADC_IRQ_FIFO_DATA			0
- #define SUN4I_GPADC_IRQ_TEMP_DATA			1
- 
--- 
-2.17.1
+>                 };
+>
+>                 cpu1: cpu@1 {
+> @@ -65,6 +67,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x001>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu2: cpu@2 {
+> @@ -72,6 +76,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x002>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu3: cpu@3 {
+> @@ -79,6 +85,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x003>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu4: cpu@100 {
+> @@ -86,6 +94,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x100>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu5: cpu@101 {
+> @@ -93,6 +103,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x101>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu6: cpu@102 {
+> @@ -100,6 +112,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x102>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu7: cpu@103 {
+> @@ -107,6 +121,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x103>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>         };
+>
