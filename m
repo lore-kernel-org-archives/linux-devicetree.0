@@ -1,154 +1,109 @@
-From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH v3 01/10] of_net: add NVMEM support to of_get_mac_address
-Date: Fri,  3 May 2019 09:55:58 +0200
-Message-ID: <1556870168-26864-2-git-send-email-ynezz@true.cz>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v3 09/10] rtc: mt6397: fix alarm register overwrite
+Date: Fri, 3 May 2019 17:31:16 +0800
+Message-ID: <20190503093117.54830-10-hsin-hsiung.wang@mediatek.com>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+In-Reply-To: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com, Ran Bi <ran.bi@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Many embedded devices have information such as MAC addresses stored
-inside NVMEMs like EEPROMs and so on. Currently there are only two
-drivers in the tree which benefit from NVMEM bindings.
+From: Ran Bi <ran.bi@mediatek.com>
 
-Adding support for NVMEM into every other driver would mean adding a lot
-of repetitive code. This patch allows us to configure MAC addresses in
-various devices like ethernet and wireless adapters directly from
-of_get_mac_address, which is already used by almost every driver in the
-tree.
+Alarm registers high byte was reserved for other functions.
+This add mask in alarm registers operation functions.
+This also fix error condition in interrupt handler.
 
-Predecessor of this patch which used directly MTD layer has originated
-in OpenWrt some time ago and supports already about 497 use cases in 357
-device tree files.
+Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
 
-Cc: Alban Bedel <albeu@free.fr>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 ---
+ drivers/rtc/rtc-mt6397.c | 47 ++++++++++++++++++++++++++++------------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
- Changes since v1:
-
-  * moved handling of nvmem after mac-address and local-mac-address properties
-
- Changes since v2:
-
-  * moved of_get_mac_addr_nvmem after of_get_mac_addr(np, "address") call
-  * replaced kzalloc, kmemdup and kfree with it's devm variants
-  * introduced of_has_nvmem_mac_addr helper which checks if DT node has nvmem
-    cell with `mac-address`
-  * of_get_mac_address now returns ERR_PTR encoded error value
-
- drivers/of/of_net.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 62 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index d820f3e..258ceb8 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -8,8 +8,10 @@
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
- #include <linux/of_net.h>
-+#include <linux/of_platform.h>
- #include <linux/phy.h>
- #include <linux/export.h>
-+#include <linux/device.h>
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index e9a25ec4d434..f85f1fc29e32 100644
+--- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -55,6 +55,14 @@
  
- /**
-  * of_get_phy_mode - Get phy mode for given device_node
-@@ -47,12 +49,59 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
- 	return NULL;
- }
+ #define RTC_AL_SEC		0x0018
  
-+static const void *of_get_mac_addr_nvmem(struct device_node *np)
-+{
-+	int ret;
-+	u8 mac[ETH_ALEN];
-+	struct property *pp;
-+	struct platform_device *pdev = of_find_device_by_node(np);
++#define RTC_AL_SEC_MASK		0x003f
++#define RTC_AL_MIN_MASK		0x003f
++#define RTC_AL_HOU_MASK		0x001f
++#define RTC_AL_DOM_MASK		0x001f
++#define RTC_AL_DOW_MASK		0x0007
++#define RTC_AL_MTH_MASK		0x000f
++#define RTC_AL_YEA_MASK		0x007f
 +
-+	if (!pdev)
-+		return ERR_PTR(-ENODEV);
-+
-+	ret = nvmem_get_mac_address(&pdev->dev, &mac);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	pp = devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
-+	if (!pp)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pp->name = "nvmem-mac-address";
-+	pp->length = ETH_ALEN;
-+	pp->value = devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
-+	if (!pp->value) {
-+		ret = -ENOMEM;
-+		goto free;
-+	}
-+
-+	ret = of_add_property(np, pp);
-+	if (ret)
-+		goto free;
-+
-+	return pp->value;
-+free:
-+	devm_kfree(&pdev->dev, pp->value);
-+	devm_kfree(&pdev->dev, pp);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+static inline bool of_has_nvmem_mac_addr(struct device_node *np)
-+{
-+	int index = of_property_match_string(np, "nvmem-cell-names",
-+					     "mac-address");
-+	return of_parse_phandle(np, "nvmem-cells", index) != NULL;
-+}
-+
- /**
-  * Search the device tree for the best MAC address to use.  'mac-address' is
-  * checked first, because that is supposed to contain to "most recent" MAC
-  * address. If that isn't set, then 'local-mac-address' is checked next,
-- * because that is the default address.  If that isn't set, then the obsolete
-- * 'address' is checked, just in case we're using an old device tree.
-+ * because that is the default address. If that isn't set, then the obsolete
-+ * 'address' is checked, just in case we're using an old device tree. If any
-+ * of the above isn't set, then try to get MAC address from nvmem cell named
-+ * 'mac-address'.
-  *
-  * Note that the 'address' property is supposed to contain a virtual address of
-  * the register set, but some DTS files have redefined that property to be the
-@@ -64,6 +113,9 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
-  * addresses.  Some older U-Boots only initialized 'local-mac-address'.  In
-  * this case, the real MAC is in 'local-mac-address', and 'mac-address' exists
-  * but is all zeros.
-+ *
-+ * Return: Will be a valid pointer on success, NULL in case there wasn't
-+ *         'mac-address' nvmem cell node found, and ERR_PTR in case of error.
- */
- const void *of_get_mac_address(struct device_node *np)
- {
-@@ -77,6 +129,13 @@ const void *of_get_mac_address(struct device_node *np)
- 	if (addr)
- 		return addr;
+ #define RTC_PDN2		0x002e
+ #define RTC_PDN2_PWRON_ALARM	BIT(4)
  
--	return of_get_mac_addr(np, "address");
-+	addr = of_get_mac_addr(np, "address");
-+	if (addr)
-+		return addr;
+@@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+ 		irqen = irqsta & ~RTC_IRQ_EN_AL;
+ 		mutex_lock(&rtc->lock);
+ 		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+-				 irqen) < 0)
++				 irqen) == 0)
+ 			mtk_rtc_write_trigger(rtc);
+ 		mutex_unlock(&rtc->lock);
+ 
+@@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+ 	mutex_unlock(&rtc->lock);
+ 
+-	tm->tm_sec = data[RTC_OFFSET_SEC];
+-	tm->tm_min = data[RTC_OFFSET_MIN];
+-	tm->tm_hour = data[RTC_OFFSET_HOUR];
+-	tm->tm_mday = data[RTC_OFFSET_DOM];
+-	tm->tm_mon = data[RTC_OFFSET_MTH];
+-	tm->tm_year = data[RTC_OFFSET_YEAR];
++	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
++	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
++	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
++	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
++	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
++	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+ 
+ 	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+ 	tm->tm_mon--;
+@@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+ 	tm->tm_mon++;
+ 
+-	data[RTC_OFFSET_SEC] = tm->tm_sec;
+-	data[RTC_OFFSET_MIN] = tm->tm_min;
+-	data[RTC_OFFSET_HOUR] = tm->tm_hour;
+-	data[RTC_OFFSET_DOM] = tm->tm_mday;
+-	data[RTC_OFFSET_MTH] = tm->tm_mon;
+-	data[RTC_OFFSET_YEAR] = tm->tm_year;
+-
+ 	mutex_lock(&rtc->lock);
++	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
++			       data, RTC_OFFSET_COUNT);
++	if (ret < 0)
++		goto exit;
 +
-+	if (!of_has_nvmem_mac_addr(np))
-+		return NULL;
++	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
++				(tm->tm_sec & RTC_AL_SEC_MASK));
++	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
++				(tm->tm_min & RTC_AL_MIN_MASK));
++	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
++				(tm->tm_hour & RTC_AL_HOU_MASK));
++	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
++				(tm->tm_mday & RTC_AL_DOM_MASK));
++	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
++				(tm->tm_mon & RTC_AL_MTH_MASK));
++	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
++				(tm->tm_year & RTC_AL_YEA_MASK));
 +
-+	return of_get_mac_addr_nvmem(np);
- }
- EXPORT_SYMBOL(of_get_mac_address);
+ 	if (alm->enabled) {
+ 		ret = regmap_bulk_write(rtc->regmap,
+ 					rtc->addr_base + RTC_AL_SEC,
 -- 
-1.9.1
+2.18.0
