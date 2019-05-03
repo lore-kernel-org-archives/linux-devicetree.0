@@ -1,34 +1,89 @@
-Return-Path: <SRS0=YSTV=TE=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 4/8] media: imx7-media-csi: Propagate the correct error for platform_get_irq()
-Date: Sat,  4 May 2019 11:40:22 -0300
-Message-Id: <20190504144027.31920-3-festevam@gmail.com>
-In-Reply-To: <20190504144027.31920-1-festevam@gmail.com>
-References: <20190504144027.31920-1-festevam@gmail.com>
-To: hverkuil-cisco@xs4all.nl
-Cc: rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Return-Path: <SRS0=UGtl=TD=pengutronix.de=mtr@kernel.org>
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v5 2/5] media: dt-bindings: media: document allegro-dvt bindings
+Date: Fri,  3 May 2019 14:20:07 +0200
+Message-Id: <20190503122010.16663-3-m.tretter@pengutronix.de>
+In-Reply-To: <20190503122010.16663-1-m.tretter@pengutronix.de>
+References: <20190503122010.16663-1-m.tretter@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-In the case of platform_get_irq() failure, let's propagate the real error
-code instead of a fake one.
+Add device-tree bindings for the Allegro DVT video IP core found on the
+Xilinx ZynqMP EV family.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/staging/media/imx/imx7-media-csi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v4 -> v5:
+none
 
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index e0286c322fad..a4cc9a342674 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1206,7 +1206,7 @@ static int imx7_csi_probe(struct platform_device *pdev)
- 	csi->irq = platform_get_irq(pdev, 0);
- 	if (csi->irq < 0) {
- 		dev_err(dev, "Missing platform resources data\n");
--		return -ENODEV;
-+		return csi->irq;
- 	}
- 
- 	csi->regbase = devm_platform_ioremap_resource(pdev, 0);
+v3 -> v4:
+none
+
+v2 -> v3:
+- rename node to video-codec
+- drop interrupt-names
+- fix compatible in example
+- add clocks to required properties
+
+v1 -> v2:
+none
+---
+ .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
+
+diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
+new file mode 100644
+index 000000000000..a92e2fbf26c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allegro.txt
+@@ -0,0 +1,43 @@
++Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
++ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
++decoder ip core.
++
++Each actual codec engines is controlled by a microcontroller (MCU). Host
++software uses a provided mailbox interface to communicate with the MCU. The
++MCU share an interrupt.
++
++Required properties:
++  - compatible: value should be one of the following
++    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
++    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
++  - reg: base and length of the memory mapped register region and base and
++    length of the memory mapped sram
++  - reg-names: must include "regs" and "sram"
++  - interrupts: shared interrupt from the MCUs to the processing system
++  - clocks: must contain an entry for each entry in clock-names
++  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
++    "m_axi_mcu_aclk", "s_axi_lite_aclk"
++
++Example:
++	al5e: video-codec@a0009000 {
++		compatible = "allegro,al5e-1.1", "allegro,al5e";
++		reg = <0 0xa0009000 0 0x1000>,
++		      <0 0xa0000000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
++	};
++	al5d: video-codec@a0029000 {
++		compatible = "allegro,al5d-1.1", "allegro,al5d";
++		reg = <0 0xa0029000 0 0x1000>,
++		      <0 0xa0020000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
++	};
 -- 
-2.17.1
+2.20.1
