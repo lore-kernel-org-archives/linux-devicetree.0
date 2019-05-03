@@ -1,106 +1,126 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
-Date: Fri, 3 May 2019 09:46:51 -0700
-Message-ID: <20190503164651.GB40515@google.com>
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
- <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
- <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V5 02/16] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Date: Fri, 3 May 2019 13:01:59 +0200
+Message-ID: <20190503110159.GB32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-3-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+In-Reply-To: <20190424052004.6270-3-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: "michael.kao" <michael.kao@mediatek.com>, fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
-> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
-> >
-> > Add thermal zone node to Mediatek MT8183 dts file.
-> >
-> > Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 64 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > index 926df75..b92116f 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > @@ -334,6 +334,67 @@
-> >                         status = "disabled";
-> >                 };
-> >
-> > +               thermal: thermal@1100b000 {
-> > +                       #thermal-sensor-cells = <1>;
-> > +                       compatible = "mediatek,mt8183-thermal";
-> > +                       reg = <0 0x1100b000 0 0x1000>;
-> > +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clocks = <&infracfg CLK_INFRA_THERM>,
-> > +                                <&infracfg CLK_INFRA_AUXADC>;
-> > +                       clock-names = "therm", "auxadc";
-> > +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
-> > +                       mediatek,auxadc = <&auxadc>;
-> > +                       mediatek,apmixedsys = <&apmixedsys>;
-> > +                       mediatek,hw-reset-temp = <117000>;
-> > +                       nvmem-cells = <&thermal_calibration>;
-> > +                       nvmem-cell-names = "calibration-data";
-> > +               };
-> > +
-> > +               thermal-zones {
-> > +                       cpu_thermal: cpu_thermal {
-> > +                               polling-delay-passive = <1000>;
-> > +                               polling-delay = <1000>;
-> > +
-> > +                               thermal-sensors = <&thermal 0>;
-> > +                               sustainable-power = <1500>;
-> > +                       };
-> > +
-> > +                       tzts1: tzts1 {
-> > +                               polling-delay-passive = <1000>;
-> > +                               polling-delay = <1000>;
-> > +                               thermal-sensors = <&thermal 1>;
-> Is sustainable-power required for tzts? Though it's an optional
-> property, kernel would have warning:
-> [    0.631556] thermal thermal_zone1: power_allocator:
-> sustainable_power will be estimated
-> [    0.639586] thermal thermal_zone2: power_allocator:
-> sustainable_power will be estimated
-> [    0.647611] thermal thermal_zone3: power_allocator:
-> sustainable_power will be estimated
-> [    0.655635] thermal thermal_zone4: power_allocator:
-> sustainable_power will be estimated
-> [    0.663658] thermal thermal_zone5: power_allocator:
-> sustainable_power will be estimated
-> if no sustainable-power assigned.
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The property is indeed optional, if it isn't specified IPA will use
-the sum of the minimum power of all 'power actors' of the zone as
-estimate (see estimate_sustainable_power()). This may lead to overly
-agressive throttling, since the nominal sustainable power will always
-be <= the requested power.
+On Wed, Apr 24, 2019 at 10:49:50AM +0530, Vidya Sagar wrote:
+> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+> using this API be able to build as loadable modules.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes from [v4]:
+> * None
+>=20
+> Changes from [v3]:
+> * None
+>=20
+> Changes from [v2]:
+> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a sta=
+tic
+>=20
+> Changes from [v1]:
+> * This is a new patch in v2 series
+>=20
+>  drivers/pci/pcie/pme.c     | 14 +++++++++++++-
+>  drivers/pci/pcie/portdrv.h | 16 +++-------------
+>  2 files changed, 16 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+> index 54d593d10396..d5e0ea4a62fc 100644
+> --- a/drivers/pci/pcie/pme.c
+> +++ b/drivers/pci/pcie/pme.c
+> @@ -25,7 +25,19 @@
+>   * that using MSI for PCIe PME signaling doesn't play well with PCIe PME=
+-based
+>   * wake-up from system sleep states.
+>   */
+> -bool pcie_pme_msi_disabled;
+> +static bool pcie_pme_msi_disabled;
+> +
+> +void pcie_pme_disable_msi(void)
+> +{
+> +	pcie_pme_msi_disabled =3D true;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
+> +
+> +bool pcie_pme_no_msi(void)
+> +{
+> +	return pcie_pme_msi_disabled;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
+> =20
+>  static int __init pcie_pme_setup(char *str)
+>  {
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 1d50dc58ac40..7c8c3da4bd58 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -125,22 +125,12 @@ void pcie_port_bus_unregister(void);
+>  struct pci_dev;
+> =20
+>  #ifdef CONFIG_PCIE_PME
+> -extern bool pcie_pme_msi_disabled;
+> -
+> -static inline void pcie_pme_disable_msi(void)
+> -{
+> -	pcie_pme_msi_disabled =3D true;
+> -}
+> -
+> -static inline bool pcie_pme_no_msi(void)
+> -{
+> -	return pcie_pme_msi_disabled;
+> -}
+> -
+> +void pcie_pme_disable_msi(void);
+> +bool pcie_pme_no_msi(void);
+>  void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
+>  #else /* !CONFIG_PCIE_PME */
+>  static inline void pcie_pme_disable_msi(void) {}
+> -static inline bool pcie_pme_no_msi(void) { return false; }
+> +static inline bool pcie_pme_no_msi(void) {}
 
-In my understanding the sustainable power may varies between devices,
-even for the same SoC. One could have all the hardware crammed into a
-tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
-laptop form factor and a metal enclosure (e.g. ASUS C201). Both
-examples are based on an Rockchip rk3288, but they have completely
-different thermal behavior, and would likely have different values for
-'sustainable-power'.
+This looks wrong.
 
-In this sense I tend to consider 'sustainable-power' more a device,
-than a SoC property. You could specify a 'reasonable' value as a
-starting point, but it will likely not be optimal for all or even most
-devices. The warning might even be useful for device makers by
-indicating them that there is room for tweaking.
+Thierry
 
-I'm not an expert in the matter though, just happend to look into this
-recently :)
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers
+-----BEGIN PGP SIGNATURE-----
 
-Matthias
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMH6YACgkQ3SOs138+
+s6E4xw//dFTo8a4I8XRjFuw8mmRxoi0ZrVcgaoQ/hqpIqu/cew7PXc9XaqiB0JIK
+KJjArrSz8XHoez/vrmk4CBNk5ECEAeVV6Eyrm3R99fPoBuBihH+B3QYkeMALa6hh
+l2WUQRuDIYbRF71GjZlcgslAqZ8Bde19bxdwPg1T9kyOZmQrAiFq/PsRUPGscz1T
+b5EVJMR+GiKQ/dceyluUz1bqp0JFpdX6Ae6IgCKrw2Z1plVvGi39Pzix1Za1Q3pY
+EAlwOo6cebEhx0D7j/W/PLQM8+nQhBBAZiUWlwCOq/lsaL8Gt3r0RoLZchbX11Fp
+hOmz1535bjHaUx/NT6zz2QgKvJ8tErCCooq+RUlubv6QLdOTIegaLDVpCAa4CsTv
+wByyM7+oWwCvmIkWmv+nfllINKUiRFZOWASJ7aXAQh/1GGpx6wU/eaI+fbGMI/XJ
+c0n031xH/GPAL5fx9BnX5M0mYBUkxTEWWvMuAwrodEtJEqc++RIs9CHGXNICSqPs
+39NNzOS3tlhFDdR/KMe86vNYl8vfhjbM7m5v+8hmLwi4tOFO2KYY4KUXHNSgfnIi
+tMbUOjs3ojI3E3vvLqiYYPQ1F0xLCuY1KshgaZ/V7tdqn/pzPQtYaEedA3jh7XVd
+FVqPM1w7coRP7ty0PfJtfkUjOiV16jmSZdeMbzIJUqd7+9u5h74=
+=+xfr
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
