@@ -1,135 +1,392 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v5 1/3] arm64: dts: allwinner: a64: move I2C
- pinctrl to dtsi
-Date: Fri,  3 May 2019 16:17:51 +0530
-Message-ID: <20190503104753.27562-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Add Avenger96 devicetree support based on
+ STM32MP157A
+Date: Fri, 3 May 2019 11:01:00 +0200
+Message-ID: <7e693155-d1d4-b12d-74fd-0236d9d52257@st.com>
+References: <20190503053123.6828-1-manivannan.sadhasivam@linaro.org>
+ <20190503053123.6828-4-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB3FYWDTAKGQE2TMAOCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190503053123.6828-4-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, mcoquelin.stm32@gmail.com, robh+dt@kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com
 List-Id: devicetree@vger.kernel.org
 
-There is only one pinmuxing available for each I2C controller.
+Hi Mani
 
-So, move pinctrl for i2c0, i2c1 from board dts files into SoC dtsi.
+On 5/3/19 7:31 AM, Manivannan Sadhasivam wrote:
+> Add devicetree support for Avenger96 board based on STM32MP157A MPU
+> from ST Micro. This board is one of the 96Boards Consumer Edition board
+> from Arrow Electronics and has the following features:
+> 
+> SoC: STM32MP157AAC
+> PMIC: STPMIC1A
+> RAM: 1024 Mbyte @ 533MHz
+> Storage: eMMC v4.51: 8 Gbyte
+>           microSD Socket: UHS-1 v3.01
+> Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
+> Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
+>            Bluetooth®v4.2 (BR/EDR/BLE)
+> USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
+> Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
+> LED: 4x User LED, 1x WiFi LED, 1x BT LED
+> 
+> More information about this board can be found in 96Boards website:
+> https://www.96boards.org/product/avenger96/
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   arch/arm/boot/dts/Makefile                  |   1 +
+>   arch/arm/boot/dts/stm32mp157a-avenger96.dts | 320 ++++++++++++++++++++
+>   2 files changed, 321 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 8a1d0b3f55dd..f1d2f0bfa7c2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -965,6 +965,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
+>   	stm32h743i-eval.dtb \
+>   	stm32h743i-disco.dtb \
+>   	stm32mp157a-dk1.dtb \
+> +	stm32mp157a-avenger96.dtb \
 
-By moving these pinctrls the i2c1 node from Nanopi A64 just have a
-status, which is disabled already so remove the entire node from it.
+follow alphabetic order please.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v5:
-- drop the i2c1 node from nanopi-a64 
-Changes for v4:
-- new patch
+>   	stm32mp157c-dk2.dtb \
+>   	stm32mp157c-ed1.dtb \
+>   	stm32mp157c-ev1.dtb
+> diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+> new file mode 100644
+> index 000000000000..a3b8af82ac70
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+> @@ -0,0 +1,320 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +/*
+> + * Copyright (C) Linaro Ltd 2019 - All Rights Reserved
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "stm32mp157c.dtsi"
+> +#include "stm32mp157-pinctrl.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/mfd/st,stpmic1.h>
+> +
+> +/ {
+> +	model = "Arrow Electronics STM32MP157A Avenger96 board";
+> +	compatible = "arrow,stm32mp157a-avenger96", "st,stm32mp157";
+> +
+> +	aliases {
+> +		ethernet0 = &ethernet0;
+> +		mmc0 = &sdmmc1;
+> +		serial0 = &uart4;
+> +		serial1 = &uart7;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@c0000000 {
+> +		reg = <0xc0000000 0x40000000>;
 
- arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts  | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts    | 6 ------
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts        | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts       | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi              | 4 ++++
- 6 files changed, 4 insertions(+), 14 deletions(-)
+you could add device_type = "memory";
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 019ae09ea0fd..c41131c03231 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -85,8 +85,6 @@
- };
- 
- &i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
- 
- 	sensor@48 {
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 0a56c0c23ba1..c2a6b73b17cf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -145,8 +145,6 @@
- };
- 
- &i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index f4e78531f639..9b9d9157128c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -120,12 +120,6 @@
- };
- 
- /* i2c1 connected with gpio headers like pine64, bananapi */
--&i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
--	status = "disabled";
--};
--
- &i2c1_pins {
- 	bias-pull-up;
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index b7ac6374b178..409523cb0950 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -122,8 +122,6 @@
- };
- 
- &i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 0ec46b969a75..12afc52e169e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -92,8 +92,6 @@
-  */
- &i2c0 {
- 	clock-frequency = <100000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8c5b521e6389..b275c6d35420 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -842,6 +842,8 @@
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C0>;
- 			resets = <&ccu RST_BUS_I2C0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -853,6 +855,8 @@
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C1>;
- 			resets = <&ccu RST_BUS_I2C1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.18.0.321.gffc6fa0e3
+> +	};
+> +
+> +	led {
+> +		compatible = "gpio-leds";
+> +		led1 {
+> +			label = "green:user1";
+> +			gpios = <&gpioz 7 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			default-state = "off";
+> +		};
+> +
+> +		led2 {
+> +			label = "green:user2";
+> +			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "mmc0";
+> +			default-state = "off";
+> +		};
+> +
+> +		led3 {
+> +			label = "green:user3";
+> +			gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "mmc1";
+> +			default-state = "off";
+> +		};
+> +
+> +		led4 {
+> +			label = "green:user3";
+> +			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "none";
+> +			default-state = "off";
+> +			panic-indicator;
+> +		};
+> +
+> +		led5 {
+> +			label = "yellow:wifi";
+> +			gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "phy0tx";
+> +			default-state = "off";
+> +		};
+> +
+> +		led6 {
+> +			label = "blue:bt";
+> +			gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "bluetooth-power";
+> +			default-state = "off";
+> +		};
+> +	};
+> +};
+> +
+> +&ethernet0 {
+> +	status = "okay";
+> +	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+> +	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
+> +	pinctrl-names = "default", "sleep";
+> +	phy-mode = "rgmii";
+> +	max-speed = <1000>;
+> +	phy-handle = <&phy0>;
+> +
+> +	mdio0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "snps,dwmac-mdio";
+> +		phy0: ethernet-phy@7 {
+> +			reg = <7>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins_b>;
+> +	i2c-scl-rising-time-ns = <185>;
+> +	i2c-scl-falling-time-ns = <20>;
+> +	status = "okay";
+> +	/delete-property/dmas;
+> +	/delete-property/dma-names;
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins_b>;
+> +	i2c-scl-rising-time-ns = <185>;
+> +	i2c-scl-falling-time-ns = <20>;
+> +	status = "okay";
+> +	/delete-property/dmas;
+> +	/delete-property/dma-names;
+> +};
+> +
+> +&i2c4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c4_pins_a>;
+> +	i2c-scl-rising-time-ns = <185>;
+> +	i2c-scl-falling-time-ns = <20>;
+> +	status = "okay";
+> +	/delete-property/dmas;
+> +	/delete-property/dma-names;
+> +
+> +	pmic: stpmic@33 {
+> +		compatible = "st,stpmic1";
+> +		reg = <0x33>;
+> +		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		status = "okay";
+> +
+> +		st,main-control-register = <0x04>;
+> +		st,vin-control-register = <0xc0>;
+> +		st,usb-control-register = <0x30>;
+> +
+> +		regulators {
+> +			compatible = "st,stpmic1-regulators";
+> +
+> +			ldo1-supply = <&v3v3>;
+> +			ldo2-supply = <&v3v3>;
+> +			ldo3-supply = <&vdd_ddr>;
+> +			ldo5-supply = <&v3v3>;
+> +			ldo6-supply = <&v3v3>;
+> +			pwr_sw1-supply = <&bst_out>;
+> +			pwr_sw2-supply = <&bst_out>;
+> +
+> +			vddcore: buck1 {
+> +				regulator-name = "vddcore";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-always-on;
+> +				regulator-initial-mode = <0>;
+> +				regulator-over-current-protection;
+> +			};
+> +
+> +			vdd_ddr: buck2 {
+> +				regulator-name = "vdd_ddr";
+> +				regulator-min-microvolt = <1350000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-always-on;
+> +				regulator-initial-mode = <0>;
+> +				regulator-over-current-protection;
+> +			};
+> +
+> +			vdd: buck3 {
+> +				regulator-name = "vdd";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +				st,mask_reset;
+> +				regulator-initial-mode = <0>;
+> +				regulator-over-current-protection;
+> +			};
+> +
+> +			v3v3: buck4 {
+> +				regulator-name = "v3v3";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +				regulator-over-current-protection;
+> +				regulator-initial-mode = <0>;
+> +			};
+> +
+> +			vdda: ldo1 {
+> +				regulator-name = "vdda";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <2900000>;
+> +				interrupts = <IT_CURLIM_LDO1 0>;
+> +				interrupt-parent = <&pmic>;
+> +			};
+> +
+> +			v2v8: ldo2 {
+> +				regulator-name = "v2v8";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				interrupts = <IT_CURLIM_LDO2 0>;
+> +				interrupt-parent = <&pmic>;
+> +			};
+> +
+> +			vtt_ddr: ldo3 {
+> +				regulator-name = "vtt_ddr";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <750000>;
+> +				regulator-always-on;
+> +				regulator-over-current-protection;
+> +			};
+> +
+> +			vdd_usb: ldo4 {
+> +				regulator-name = "vdd_usb";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				interrupts = <IT_CURLIM_LDO4 0>;
+> +				interrupt-parent = <&pmic>;
+> +			};
+> +
+> +			vdd_sd: ldo5 {
+> +				regulator-name = "vdd_sd";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <2900000>;
+> +				interrupts = <IT_CURLIM_LDO5 0>;
+> +				interrupt-parent = <&pmic>;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			v1v8: ldo6 {
+> +				regulator-name = "v1v8";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				interrupts = <IT_CURLIM_LDO6 0>;
+> +				interrupt-parent = <&pmic>;
+> +				regulator-enable-ramp-delay = <300000>;
+> +			};
+> +
+> +			vref_ddr: vref_ddr {
+> +				regulator-name = "vref_ddr";
+> +				regulator-always-on;
+> +				regulator-over-current-protection;
+> +			};
+> +
+> +			bst_out: boost {
+> +				regulator-name = "bst_out";
+> +				interrupts = <IT_OCP_BOOST 0>;
+> +				interrupt-parent = <&pmic>;
+> +			};
+> +
+> +			vbus_otg: pwr_sw1 {
+> +				regulator-name = "vbus_otg";
+> +				interrupts = <IT_OCP_OTG 0>;
+> +				interrupt-parent = <&pmic>;
+> +				regulator-active-discharge;
+> +			};
+> +
+> +			vbus_sw: pwr_sw2 {
+> +				regulator-name = "vbus_sw";
+> +				interrupts = <IT_OCP_SWOUT 0>;
+> +				interrupt-parent = <&pmic>;
+> +				regulator-active-discharge;
+> +			};
+> +		};
+> +
+> +		onkey {
+> +			compatible = "st,stpmic1-onkey";
+> +			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
+> +			interrupt-names = "onkey-falling", "onkey-rising";
+> +			status = "okay";
+> +		};
+> +
+> +		watchdog {
+> +			compatible = "st,stpmic1-wdt";
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> +
+> +&iwdg2 {
+> +	timeout-sec = <32>;
+> +	status = "okay";
+> +};
+> +
+> +&rng1 {
+> +	status = "okay";
+> +};
+> +
+> +&rtc {
+> +	status = "okay";
+> +};
+> +
+> +&sdmmc1 {
+> +	pinctrl-names = "default", "opendrain", "sleep";
+> +	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
+> +	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
+> +	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
+> +	broken-cd;
+> +	st,sig-dir;
+> +	st,neg-edge;
+> +	st,use-ckin;
+> +	bus-width = <4>;
+> +	vmmc-supply = <&vdd_sd>;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	/* On Low speed expansion header */
+> +	label = "LS-UART1";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart4_pins_b>;
+> +	status = "okay";
+> +};
+> +
+> +&uart7 {
+> +	/* On Low speed expansion header */
+> +	label = "LS-UART0";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart7_pins_a>;
+> +	status = "okay";
+> +};
+> 
