@@ -1,392 +1,421 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add Avenger96 devicetree support based on
- STM32MP157A
-Date: Fri, 3 May 2019 11:01:00 +0200
-Message-ID: <7e693155-d1d4-b12d-74fd-0236d9d52257@st.com>
-References: <20190503053123.6828-1-manivannan.sadhasivam@linaro.org>
- <20190503053123.6828-4-manivannan.sadhasivam@linaro.org>
+From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v3 02/10] mfd: mt6397: extract irq related code from core driver
+Date: Fri, 3 May 2019 17:31:09 +0800
+Message-ID: <20190503093117.54830-3-hsin-hsiung.wang@mediatek.com>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503053123.6828-4-manivannan.sadhasivam@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, mcoquelin.stm32@gmail.com, robh+dt@kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mani
+In order to support different types of irq design, we decide to add
+separate irq drivers for different design and keep mt6397 mfd core
+simple and reusable to all generations of PMICs so far.
 
-On 5/3/19 7:31 AM, Manivannan Sadhasivam wrote:
-> Add devicetree support for Avenger96 board based on STM32MP157A MPU
-> from ST Micro. This board is one of the 96Boards Consumer Edition board
-> from Arrow Electronics and has the following features:
-> 
-> SoC: STM32MP157AAC
-> PMIC: STPMIC1A
-> RAM: 1024 Mbyte @ 533MHz
-> Storage: eMMC v4.51: 8 Gbyte
->           microSD Socket: UHS-1 v3.01
-> Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
-> Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
->            Bluetooth®v4.2 (BR/EDR/BLE)
-> USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
-> Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
-> LED: 4x User LED, 1x WiFi LED, 1x BT LED
-> 
-> More information about this board can be found in 96Boards website:
-> https://www.96boards.org/product/avenger96/
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   arch/arm/boot/dts/Makefile                  |   1 +
->   arch/arm/boot/dts/stm32mp157a-avenger96.dts | 320 ++++++++++++++++++++
->   2 files changed, 321 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 8a1d0b3f55dd..f1d2f0bfa7c2 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -965,6 +965,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
->   	stm32h743i-eval.dtb \
->   	stm32h743i-disco.dtb \
->   	stm32mp157a-dk1.dtb \
-> +	stm32mp157a-avenger96.dtb \
+Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+---
+ drivers/mfd/Makefile            |   3 +-
+ drivers/mfd/mt6397-core.c       | 146 --------------------------
+ drivers/mfd/mt6397-irq.c        | 181 ++++++++++++++++++++++++++++++++
+ include/linux/mfd/mt6397/core.h |   9 ++
+ 4 files changed, 192 insertions(+), 147 deletions(-)
+ create mode 100644 drivers/mfd/mt6397-irq.c
 
-follow alphabetic order please.
-
->   	stm32mp157c-dk2.dtb \
->   	stm32mp157c-ed1.dtb \
->   	stm32mp157c-ev1.dtb
-> diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> new file mode 100644
-> index 000000000000..a3b8af82ac70
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> @@ -0,0 +1,320 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) Linaro Ltd 2019 - All Rights Reserved
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "stm32mp157c.dtsi"
-> +#include "stm32mp157-pinctrl.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/mfd/st,stpmic1.h>
-> +
-> +/ {
-> +	model = "Arrow Electronics STM32MP157A Avenger96 board";
-> +	compatible = "arrow,stm32mp157a-avenger96", "st,stm32mp157";
-> +
-> +	aliases {
-> +		ethernet0 = &ethernet0;
-> +		mmc0 = &sdmmc1;
-> +		serial0 = &uart4;
-> +		serial1 = &uart7;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@c0000000 {
-> +		reg = <0xc0000000 0x40000000>;
-
-you could add device_type = "memory";
-
-> +	};
-> +
-> +	led {
-> +		compatible = "gpio-leds";
-> +		led1 {
-> +			label = "green:user1";
-> +			gpios = <&gpioz 7 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "off";
-> +		};
-> +
-> +		led2 {
-> +			label = "green:user2";
-> +			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "mmc0";
-> +			default-state = "off";
-> +		};
-> +
-> +		led3 {
-> +			label = "green:user3";
-> +			gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "mmc1";
-> +			default-state = "off";
-> +		};
-> +
-> +		led4 {
-> +			label = "green:user3";
-> +			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "none";
-> +			default-state = "off";
-> +			panic-indicator;
-> +		};
-> +
-> +		led5 {
-> +			label = "yellow:wifi";
-> +			gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "phy0tx";
-> +			default-state = "off";
-> +		};
-> +
-> +		led6 {
-> +			label = "blue:bt";
-> +			gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "bluetooth-power";
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&ethernet0 {
-> +	status = "okay";
-> +	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-> +	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-> +	pinctrl-names = "default", "sleep";
-> +	phy-mode = "rgmii";
-> +	max-speed = <1000>;
-> +	phy-handle = <&phy0>;
-> +
-> +	mdio0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +		phy0: ethernet-phy@7 {
-> +			reg = <7>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins_b>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins_b>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +};
-> +
-> +&i2c4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c4_pins_a>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +
-> +	pmic: stpmic@33 {
-> +		compatible = "st,stpmic1";
-> +		reg = <0x33>;
-> +		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		status = "okay";
-> +
-> +		st,main-control-register = <0x04>;
-> +		st,vin-control-register = <0xc0>;
-> +		st,usb-control-register = <0x30>;
-> +
-> +		regulators {
-> +			compatible = "st,stpmic1-regulators";
-> +
-> +			ldo1-supply = <&v3v3>;
-> +			ldo2-supply = <&v3v3>;
-> +			ldo3-supply = <&vdd_ddr>;
-> +			ldo5-supply = <&v3v3>;
-> +			ldo6-supply = <&v3v3>;
-> +			pwr_sw1-supply = <&bst_out>;
-> +			pwr_sw2-supply = <&bst_out>;
-> +
-> +			vddcore: buck1 {
-> +				regulator-name = "vddcore";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd_ddr: buck2 {
-> +				regulator-name = "vdd_ddr";
-> +				regulator-min-microvolt = <1350000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd: buck3 {
-> +				regulator-name = "vdd";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				st,mask_reset;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			v3v3: buck4 {
-> +				regulator-name = "v3v3";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +				regulator-initial-mode = <0>;
-> +			};
-> +
-> +			vdda: ldo1 {
-> +				regulator-name = "vdda";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <2900000>;
-> +				interrupts = <IT_CURLIM_LDO1 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			v2v8: ldo2 {
-> +				regulator-name = "v2v8";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				interrupts = <IT_CURLIM_LDO2 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			vtt_ddr: ldo3 {
-> +				regulator-name = "vtt_ddr";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <750000>;
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd_usb: ldo4 {
-> +				regulator-name = "vdd_usb";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				interrupts = <IT_CURLIM_LDO4 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			vdd_sd: ldo5 {
-> +				regulator-name = "vdd_sd";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <2900000>;
-> +				interrupts = <IT_CURLIM_LDO5 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			v1v8: ldo6 {
-> +				regulator-name = "v1v8";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				interrupts = <IT_CURLIM_LDO6 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-enable-ramp-delay = <300000>;
-> +			};
-> +
-> +			vref_ddr: vref_ddr {
-> +				regulator-name = "vref_ddr";
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			bst_out: boost {
-> +				regulator-name = "bst_out";
-> +				interrupts = <IT_OCP_BOOST 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			vbus_otg: pwr_sw1 {
-> +				regulator-name = "vbus_otg";
-> +				interrupts = <IT_OCP_OTG 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-active-discharge;
-> +			};
-> +
-> +			vbus_sw: pwr_sw2 {
-> +				regulator-name = "vbus_sw";
-> +				interrupts = <IT_OCP_SWOUT 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-active-discharge;
-> +			};
-> +		};
-> +
-> +		onkey {
-> +			compatible = "st,stpmic1-onkey";
-> +			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
-> +			interrupt-names = "onkey-falling", "onkey-rising";
-> +			status = "okay";
-> +		};
-> +
-> +		watchdog {
-> +			compatible = "st,stpmic1-wdt";
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> +
-> +&iwdg2 {
-> +	timeout-sec = <32>;
-> +	status = "okay";
-> +};
-> +
-> +&rng1 {
-> +	status = "okay";
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc1 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
-> +	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-> +	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-> +	broken-cd;
-> +	st,sig-dir;
-> +	st,neg-edge;
-> +	st,use-ckin;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&vdd_sd>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	/* On Low speed expansion header */
-> +	label = "LS-UART1";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart4_pins_b>;
-> +	status = "okay";
-> +};
-> +
-> +&uart7 {
-> +	/* On Low speed expansion header */
-> +	label = "LS-UART0";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart7_pins_a>;
-> +	status = "okay";
-> +};
-> 
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index b4569ed7f3f3..ab1e228b5a2f 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -234,7 +234,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+-obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
++mt6397-objs	:= mt6397-core.o mt6397-irq.o
++obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+ 
+ obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+ obj-$(CONFIG_MFD_STPMIC1)	+= stpmic1.o
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index c9393bc86743..c80f0449fe7e 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -26,10 +26,6 @@
+ #define MT6397_RTC_BASE		0xe000
+ #define MT6397_RTC_SIZE		0x3e
+ 
+-#define MT6323_CHIP_ID		0x23
+-#define MT6391_CHIP_ID		0x91
+-#define MT6397_CHIP_ID		0x97
+-
+ static const struct resource mt6397_rtc_resources[] = {
+ 	{
+ 		.start = MT6397_RTC_BASE,
+@@ -94,148 +90,6 @@ static const struct mfd_cell mt6397_devs[] = {
+ 	}
+ };
+ 
+-static void mt6397_irq_lock(struct irq_data *data)
+-{
+-	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+-
+-	mutex_lock(&mt6397->irqlock);
+-}
+-
+-static void mt6397_irq_sync_unlock(struct irq_data *data)
+-{
+-	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+-
+-	regmap_write(mt6397->regmap, mt6397->int_con[0],
+-		     mt6397->irq_masks_cur[0]);
+-	regmap_write(mt6397->regmap, mt6397->int_con[1],
+-		     mt6397->irq_masks_cur[1]);
+-
+-	mutex_unlock(&mt6397->irqlock);
+-}
+-
+-static void mt6397_irq_disable(struct irq_data *data)
+-{
+-	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+-	int shift = data->hwirq & 0xf;
+-	int reg = data->hwirq >> 4;
+-
+-	mt6397->irq_masks_cur[reg] &= ~BIT(shift);
+-}
+-
+-static void mt6397_irq_enable(struct irq_data *data)
+-{
+-	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
+-	int shift = data->hwirq & 0xf;
+-	int reg = data->hwirq >> 4;
+-
+-	mt6397->irq_masks_cur[reg] |= BIT(shift);
+-}
+-
+-#ifdef CONFIG_PM_SLEEP
+-static int mt6397_irq_set_wake(struct irq_data *irq_data, unsigned int on)
+-{
+-	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(irq_data);
+-	int shift = irq_data->hwirq & 0xf;
+-	int reg = irq_data->hwirq >> 4;
+-
+-	if (on)
+-		mt6397->wake_mask[reg] |= BIT(shift);
+-	else
+-		mt6397->wake_mask[reg] &= ~BIT(shift);
+-
+-	return 0;
+-}
+-#else
+-#define mt6397_irq_set_wake NULL
+-#endif
+-
+-static struct irq_chip mt6397_irq_chip = {
+-	.name = "mt6397-irq",
+-	.irq_bus_lock = mt6397_irq_lock,
+-	.irq_bus_sync_unlock = mt6397_irq_sync_unlock,
+-	.irq_enable = mt6397_irq_enable,
+-	.irq_disable = mt6397_irq_disable,
+-	.irq_set_wake = mt6397_irq_set_wake,
+-};
+-
+-static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+-		int irqbase)
+-{
+-	unsigned int status;
+-	int i, irq, ret;
+-
+-	ret = regmap_read(mt6397->regmap, reg, &status);
+-	if (ret) {
+-		dev_err(mt6397->dev, "Failed to read irq status: %d\n", ret);
+-		return;
+-	}
+-
+-	for (i = 0; i < 16; i++) {
+-		if (status & BIT(i)) {
+-			irq = irq_find_mapping(mt6397->irq_domain, irqbase + i);
+-			if (irq)
+-				handle_nested_irq(irq);
+-		}
+-	}
+-
+-	regmap_write(mt6397->regmap, reg, status);
+-}
+-
+-static irqreturn_t mt6397_irq_thread(int irq, void *data)
+-{
+-	struct mt6397_chip *mt6397 = data;
+-
+-	mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
+-	mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
+-					irq_hw_number_t hw)
+-{
+-	struct mt6397_chip *mt6397 = d->host_data;
+-
+-	irq_set_chip_data(irq, mt6397);
+-	irq_set_chip_and_handler(irq, &mt6397_irq_chip, handle_level_irq);
+-	irq_set_nested_thread(irq, 1);
+-	irq_set_noprobe(irq);
+-
+-	return 0;
+-}
+-
+-static const struct irq_domain_ops mt6397_irq_domain_ops = {
+-	.map = mt6397_irq_domain_map,
+-};
+-
+-static int mt6397_irq_init(struct mt6397_chip *mt6397)
+-{
+-	int ret;
+-
+-	mutex_init(&mt6397->irqlock);
+-
+-	/* Mask all interrupt sources */
+-	regmap_write(mt6397->regmap, mt6397->int_con[0], 0x0);
+-	regmap_write(mt6397->regmap, mt6397->int_con[1], 0x0);
+-
+-	mt6397->irq_domain = irq_domain_add_linear(mt6397->dev->of_node,
+-		MT6397_IRQ_NR, &mt6397_irq_domain_ops, mt6397);
+-	if (!mt6397->irq_domain) {
+-		dev_err(mt6397->dev, "could not create irq domain\n");
+-		return -ENOMEM;
+-	}
+-
+-	ret = devm_request_threaded_irq(mt6397->dev, mt6397->irq, NULL,
+-		mt6397_irq_thread, IRQF_ONESHOT, "mt6397-pmic", mt6397);
+-	if (ret) {
+-		dev_err(mt6397->dev, "failed to register irq=%d; err: %d\n",
+-			mt6397->irq, ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PM_SLEEP
+ static int mt6397_irq_suspend(struct device *dev)
+ {
+diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+new file mode 100644
+index 000000000000..b2d3ce1f3115
+--- /dev/null
++++ b/drivers/mfd/mt6397-irq.c
+@@ -0,0 +1,181 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2019 MediaTek Inc.
++
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/mt6323/core.h>
++#include <linux/mfd/mt6323/registers.h>
++#include <linux/mfd/mt6397/core.h>
++#include <linux/mfd/mt6397/registers.h>
++
++static void mt6397_irq_lock(struct irq_data *data)
++{
++	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
++
++	mutex_lock(&mt6397->irqlock);
++}
++
++static void mt6397_irq_sync_unlock(struct irq_data *data)
++{
++	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
++
++	regmap_write(mt6397->regmap, mt6397->int_con[0],
++		     mt6397->irq_masks_cur[0]);
++	regmap_write(mt6397->regmap, mt6397->int_con[1],
++		     mt6397->irq_masks_cur[1]);
++
++	mutex_unlock(&mt6397->irqlock);
++}
++
++static void mt6397_irq_disable(struct irq_data *data)
++{
++	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
++	int shift = data->hwirq & 0xf;
++	int reg = data->hwirq >> 4;
++
++	mt6397->irq_masks_cur[reg] &= ~BIT(shift);
++}
++
++static void mt6397_irq_enable(struct irq_data *data)
++{
++	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
++	int shift = data->hwirq & 0xf;
++	int reg = data->hwirq >> 4;
++
++	mt6397->irq_masks_cur[reg] |= BIT(shift);
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int mt6397_irq_set_wake(struct irq_data *irq_data, unsigned int on)
++{
++	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(irq_data);
++	int shift = irq_data->hwirq & 0xf;
++	int reg = irq_data->hwirq >> 4;
++
++	if (on)
++		mt6397->wake_mask[reg] |= BIT(shift);
++	else
++		mt6397->wake_mask[reg] &= ~BIT(shift);
++
++	return 0;
++}
++#else
++#define mt6397_irq_set_wake NULL
++#endif
++
++static struct irq_chip mt6397_irq_chip = {
++	.name = "mt6397-irq",
++	.irq_bus_lock = mt6397_irq_lock,
++	.irq_bus_sync_unlock = mt6397_irq_sync_unlock,
++	.irq_enable = mt6397_irq_enable,
++	.irq_disable = mt6397_irq_disable,
++	.irq_set_wake = mt6397_irq_set_wake,
++};
++
++static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
++				  int irqbase)
++{
++	unsigned int status;
++	int i, irq, ret;
++
++	ret = regmap_read(mt6397->regmap, reg, &status);
++	if (ret) {
++		dev_err(mt6397->dev, "Failed to read irq status: %d\n", ret);
++		return;
++	}
++
++	for (i = 0; i < 16; i++) {
++		if (status & BIT(i)) {
++			irq = irq_find_mapping(mt6397->irq_domain, irqbase + i);
++			if (irq)
++				handle_nested_irq(irq);
++		}
++	}
++
++	regmap_write(mt6397->regmap, reg, status);
++}
++
++static irqreturn_t mt6397_irq_thread(int irq, void *data)
++{
++	struct mt6397_chip *mt6397 = data;
++
++	mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
++	mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
++
++	return IRQ_HANDLED;
++}
++
++static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
++				 irq_hw_number_t hw)
++{
++	struct mt6397_chip *mt6397 = d->host_data;
++
++	irq_set_chip_data(irq, mt6397);
++	irq_set_chip_and_handler(irq, &mt6397_irq_chip, handle_level_irq);
++	irq_set_nested_thread(irq, 1);
++	irq_set_noprobe(irq);
++
++	return 0;
++}
++
++static const struct irq_domain_ops mt6397_irq_domain_ops = {
++	.map = mt6397_irq_domain_map,
++};
++
++int mt6397_irq_init(struct mt6397_chip *chip)
++{
++	int ret;
++
++	mutex_init(&chip->irqlock);
++
++	switch (chip->chip_id) {
++	case MT6323_CHIP_ID:
++		chip->int_con[0] = MT6323_INT_CON0;
++		chip->int_con[1] = MT6323_INT_CON1;
++		chip->int_status[0] = MT6323_INT_STATUS0;
++		chip->int_status[1] = MT6323_INT_STATUS1;
++		break;
++
++	case MT6391_CHIP_ID:
++	case MT6397_CHIP_ID:
++		chip->int_con[0] = MT6397_INT_CON0;
++		chip->int_con[1] = MT6397_INT_CON1;
++		chip->int_status[0] = MT6397_INT_STATUS0;
++		chip->int_status[1] = MT6397_INT_STATUS1;
++		break;
++
++	default:
++		dev_err(chip->dev, "unsupported chip: 0x%x\n", chip->chip_id);
++		return -ENODEV;
++	}
++
++	/* Mask all interrupt sources */
++	regmap_write(chip->regmap, chip->int_con[0], 0x0);
++	regmap_write(chip->regmap, chip->int_con[1], 0x0);
++
++	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
++						 MT6397_IRQ_NR,
++						 &mt6397_irq_domain_ops,
++						 chip);
++	if (!chip->irq_domain) {
++		dev_err(chip->dev, "could not create irq domain\n");
++		return -ENOMEM;
++	}
++
++	ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
++					mt6397_irq_thread, IRQF_ONESHOT,
++					"mt6397-pmic", chip);
++	if (ret) {
++		dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
++			chip->irq, ret);
++		return ret;
++	}
++
++	return 0;
++}
+diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/core.h
+index d678f526e498..93f9f5235575 100644
+--- a/include/linux/mfd/mt6397/core.h
++++ b/include/linux/mfd/mt6397/core.h
+@@ -15,6 +15,12 @@
+ #ifndef __MFD_MT6397_CORE_H__
+ #define __MFD_MT6397_CORE_H__
+ 
++enum chip_id {
++	MT6323_CHIP_ID = 0x23,
++	MT6391_CHIP_ID = 0x91,
++	MT6397_CHIP_ID = 0x97,
++};
++
+ enum mt6397_irq_numbers {
+ 	MT6397_IRQ_SPKL_AB = 0,
+ 	MT6397_IRQ_SPKR_AB,
+@@ -62,6 +68,9 @@ struct mt6397_chip {
+ 	u16 irq_masks_cache[2];
+ 	u16 int_con[2];
+ 	u16 int_status[2];
++	u16 chip_id;
+ };
+ 
++int mt6397_irq_init(struct mt6397_chip *chip);
++
+ #endif /* __MFD_MT6397_CORE_H__ */
+-- 
+2.18.0
