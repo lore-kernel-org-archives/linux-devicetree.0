@@ -1,184 +1,126 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple thermal sensor
-Date: Fri,  3 May 2019 03:28:07 -0400
-Message-ID: <20190503072813.2719-2-tiny.windzz@gmail.com>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 2/3] ARM: dts: stm32mp157: Add missing pinctrl definitions
+Date: Fri, 3 May 2019 09:13:27 +0200
+Message-ID: <369b2593-71b6-0b00-b72c-041967ffba73@st.com>
+References: <20190503053123.6828-1-manivannan.sadhasivam@linaro.org>
+ <20190503053123.6828-3-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503072813.2719-1-tiny.windzz@gmail.com>
+In-Reply-To: <20190503053123.6828-3-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, mcoquelin.stm32@gmail.com, robh+dt@kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com
 List-Id: devicetree@vger.kernel.org
 
-For some SOCs, there are more than one thermal sensor, and there are
-currently four sensors on the A80. So we need to do some work in order
-to support multiple thermal sensors:
+Hi Mani
 
-  1) add sensor_count in gpadc_data.
-  2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support multiple
-     thermal_zone_device and distinguish between different sensors.
-  3) modify read temperature and initialization function.
+On 5/3/19 7:31 AM, Manivannan Sadhasivam wrote:
+> Add missing pinctrl definitions for STM32MP157 MPU.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 62 +++++++++++++++++++++++
+>   1 file changed, 62 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> index 85c417d9983b..0b5bcf6a7c97 100644
+> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> @@ -241,6 +241,23 @@
+>   				};
+>   			};
+>   
+> +			i2c1_pins_b: i2c1-2 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('F', 14, AF5)>, /* I2C1_SCL */
+> +						 <STM32_PINMUX('F', 15, AF5)>; /* I2C1_SDA */
+> +					bias-disable;
+> +					drive-open-drain;
+> +					slew-rate = <0>;
+> +				};
+> +			};
+> +
+> +			i2c1_pins_sleep_b: i2c1-3 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('F', 14, ANALOG)>, /* I2C1_SCL */
+> +						 <STM32_PINMUX('F', 15, ANALOG)>; /* I2C1_SDA */
+> +				};
+> +			};
+> +
+>   			i2c2_pins_a: i2c2-0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 4, AF4)>, /* I2C2_SCL */
+> @@ -258,6 +275,23 @@
+>   				};
+>   			};
+>   
+> +			i2c2_pins_b: i2c2-2 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('Z', 0, AF3)>, /* I2C2_SCL */
+> +						 <STM32_PINMUX('H', 5, AF4)>; /* I2C2_SDA */
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/iio/adc/sun4i-gpadc-iio.c | 61 +++++++++++++++++++++++--------
- 1 file changed, 45 insertions(+), 16 deletions(-)
+You can't do that. <STM32_PINMUX('Z', 0, AF3)> has to be declared in 
+pincontroller-z. So in your case, you have to define 2 groups for i2C2 
+for your default state (the same for the sleep state).
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 04d7147e0110..844fd52bd22f 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -56,6 +56,7 @@ struct gpadc_data {
- 	unsigned int	tp_adc_select;
- 	unsigned int	(*adc_chan_select)(unsigned int chan);
- 	unsigned int	adc_chan_mask;
-+	unsigned int    sensor_count;
- };
- 
- static const struct gpadc_data sun4i_gpadc_data = {
-@@ -65,6 +66,7 @@ static const struct gpadc_data sun4i_gpadc_data = {
- 	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
- 	.adc_chan_select = &sun4i_gpadc_chan_select,
- 	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
-+	.sensor_count = 1,
- };
- 
- static const struct gpadc_data sun5i_gpadc_data = {
-@@ -74,6 +76,7 @@ static const struct gpadc_data sun5i_gpadc_data = {
- 	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
- 	.adc_chan_select = &sun4i_gpadc_chan_select,
- 	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
-+	.sensor_count = 1,
- };
- 
- static const struct gpadc_data sun6i_gpadc_data = {
-@@ -83,14 +86,24 @@ static const struct gpadc_data sun6i_gpadc_data = {
- 	.tp_adc_select = SUN6I_GPADC_CTRL1_TP_ADC_SELECT,
- 	.adc_chan_select = &sun6i_gpadc_chan_select,
- 	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
-+	.sensor_count = 1,
- };
- 
- static const struct gpadc_data sun8i_a33_gpadc_data = {
- 	.temp_offset = -1662,
- 	.temp_scale = 162,
- 	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
-+	.sensor_count = 1,
- };
- 
-+struct sun4i_sensor_tzd {
-+	struct sun4i_gpadc_iio          *info;
-+	struct thermal_zone_device      *tzd;
-+	unsigned int                    sensor_id;
-+};
-+
-+#define MAX_SENSOR_COUNT	4
-+
- struct sun4i_gpadc_iio {
- 	struct iio_dev			*indio_dev;
- 	struct completion		completion;
-@@ -105,7 +118,7 @@ struct sun4i_gpadc_iio {
- 	bool				no_irq;
- 	/* prevents concurrent reads of temperature and ADC */
- 	struct mutex			mutex;
--	struct thermal_zone_device	*tzd;
-+	struct sun4i_sensor_tzd         tzds[MAX_SENSOR_COUNT];
- 	struct device			*sensor_device;
- };
- 
-@@ -270,7 +283,8 @@ static int sun4i_gpadc_adc_read(struct iio_dev *indio_dev, int channel,
- 	return sun4i_gpadc_read(indio_dev, channel, val, info->fifo_data_irq);
- }
- 
--static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
-+static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val,
-+				 unsigned int sensor)
- {
- 	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
- 
-@@ -324,7 +338,7 @@ static int sun4i_gpadc_read_raw(struct iio_dev *indio_dev,
- 			ret = sun4i_gpadc_adc_read(indio_dev, chan->channel,
- 						   val);
- 		else
--			ret = sun4i_gpadc_temp_read(indio_dev, val);
-+			ret = sun4i_gpadc_temp_read(indio_dev, val, 0);
- 
- 		if (ret)
- 			return ret;
-@@ -417,10 +431,11 @@ static int sun4i_gpadc_runtime_resume(struct device *dev)
- 
- static int sun4i_gpadc_get_temp(void *data, int *temp)
- {
--	struct sun4i_gpadc_iio *info = data;
-+	struct sun4i_sensor_tzd *tzd = data;
-+	struct sun4i_gpadc_iio *info = tzd->info;
- 	int val, scale, offset;
- 
--	if (sun4i_gpadc_temp_read(info->indio_dev, &val))
-+	if (sun4i_gpadc_temp_read(info->indio_dev, &val, tzd->sensor_id))
- 		return -ETIMEDOUT;
- 
- 	sun4i_gpadc_temp_scale(info->indio_dev, &scale);
-@@ -609,6 +624,28 @@ static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static int sun4i_sensor_init(struct sun4i_gpadc_iio *info)
-+{
-+	int i = 0;
-+
-+	for (; i < info->data->sensor_count; i++) {
-+		info->tzds[i].info = info;
-+		info->tzds[i].sensor_id = i;
-+		info->tzds[i].tzd = devm_thermal_zone_of_sensor_register(
-+					info->sensor_device, i, &info->tzds[i],
-+					&sun4i_ts_tz_ops);
-+
-+		if (IS_ERR(info->tzds[i].tzd)) {
-+			dev_err(info->sensor_device,
-+				"could not register thermal sensor: %ld\n",
-+				PTR_ERR(info->tzds[i].tzd));
-+			return PTR_ERR(info->tzds[i].tzd);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int sun4i_gpadc_probe(struct platform_device *pdev)
- {
- 	struct sun4i_gpadc_iio *info;
-@@ -646,19 +683,13 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
- 
- 	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
--		info->tzd = thermal_zone_of_sensor_register(info->sensor_device,
--							    0, info,
--							    &sun4i_ts_tz_ops);
-+		ret = sun4i_sensor_init(info);
- 		/*
- 		 * Do not fail driver probing when failing to register in
- 		 * thermal because no thermal DT node is found.
- 		 */
--		if (IS_ERR(info->tzd) && PTR_ERR(info->tzd) != -ENODEV) {
--			dev_err(&pdev->dev,
--				"could not register thermal sensor: %ld\n",
--				PTR_ERR(info->tzd));
--			return PTR_ERR(info->tzd);
--		}
-+		if (ret && ret != -ENODEV)
-+			return ret;
- 	}
- 
- 	ret = devm_iio_device_register(&pdev->dev, indio_dev);
-@@ -690,8 +721,6 @@ static int sun4i_gpadc_remove(struct platform_device *pdev)
- 	if (!IS_ENABLED(CONFIG_THERMAL_OF))
- 		return 0;
- 
--	thermal_zone_of_sensor_unregister(info->sensor_device, info->tzd);
--
- 	if (!info->no_irq)
- 		iio_map_array_unregister(indio_dev);
- 
--- 
-2.17.1
+regards
+Alex
+
+
+
+
+> +					bias-disable;
+> +					drive-open-drain;
+> +					slew-rate = <0>;
+> +				};
+> +			};
+> +
+> +			i2c2_pins_sleep_b: i2c2-3 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('Z', 0, ANALOG)>, /* I2C2_SCL */
+> +						 <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
+> +				};
+> +			};
+> +
+>   			i2c5_pins_a: i2c5-0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('A', 11, AF4)>, /* I2C5_SCL */
+> @@ -599,6 +633,34 @@
+>   					bias-disable;
+>   				};
+>   			};
+> +
+> +			uart4_pins_b: uart4-1 {
+> +				pins1 {
+> +					pinmux = <STM32_PINMUX('D', 1, AF8)>; /* UART4_TX */
+> +					bias-disable;
+> +					drive-push-pull;
+> +					slew-rate = <0>;
+> +				};
+> +				pins2 {
+> +					pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
+> +					bias-disable;
+> +				};
+> +			};
+> +
+> +			uart7_pins_a: uart7-0 {
+> +				pins1 {
+> +					pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
+> +					bias-disable;
+> +					drive-push-pull;
+> +					slew-rate = <0>;
+> +				};
+> +				pins2 {
+> +					pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
+> +						 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
+> +						 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
+> +					bias-disable;
+> +				};
+> +			};
+>   		};
+>   
+>   		pinctrl_z: pin-controller-z@54004000 {
+> 
