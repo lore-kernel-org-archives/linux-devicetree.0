@@ -1,76 +1,55 @@
-Return-Path: <SRS0=w9il=TD=nxp.com=aisheng.dong@kernel.org>
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V2 2/2] dt-bindings: clock: imx-lpcg: add support to parse
- clocks from device tree
-Date: Fri, 3 May 2019 01:33:25 +0000
-Message-ID: <1556846746-8535-3-git-send-email-aisheng.dong@nxp.com>
-References: <1556846746-8535-1-git-send-email-aisheng.dong@nxp.com>
-In-Reply-To: <1556846746-8535-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=LlLF=TD=linaro.org=bjorn.andersson@kernel.org>
+Date: Fri, 3 May 2019 15:42:13 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404-evb: Fix typo
+Message-ID: <20190503224213.GI3137@builder>
+References: <20190502121306.3374-1-vkoul@kernel.org>
 MIME-Version: 1.0
-To: "aiseng.dong@nxp.com" <aiseng.dong@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502121306.3374-1-vkoul@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-TVg4UU0gYW5kIE1YOFFYUCBMUENHIENsb2NrcyBhcmUgbW9zdGx5IHRoZSBzYW1lIGV4Y2VwdCB0
-aGV5IG1heSByZXNpZGUNCmluIGRpZmZlcmVudCBzdWJzeXN0ZW1zIGFjcm9zcyBDUFVzIGFuZCBh
-bHNvIHZhcnkgYSBiaXQgb24gdGhlIGF2YWlsYWJpbGl0eS4NCg0KU2FtZSBhcyBTQ1UgY2xvY2ss
-IHdlIHdhbnQgdG8gbW92ZSB0aGUgY2xvY2sgZGVmaW5pdGlvbiBpbnRvIGRldmljZSB0cmVlDQp3
-aGljaCBjYW4gZnVsbHkgZGVjb3VwbGUgdGhlIGRlcGVuZGVuY3kgb2YgQ2xvY2sgSUQgZGVmaW5p
-dGlvbiBmcm9tIGRldmljZQ0KdHJlZSBhbmQgbWFrZSB1cyBiZSBhYmxlIHRvIHdyaXRlIGEgZnVs
-bHkgZ2VuZXJpYyBscGNnIGNsb2NrIGRyaXZlci4NCg0KQW5kIHdlIGNhbiBhbHNvIHVzZSB0aGUg
-ZXhpc3RlbmNlIG9mIGNsb2NrIG5vZGVzIGluIGRldmljZSB0cmVlIHRvIGFkZHJlc3MNCnRoZSBk
-ZXZpY2UgYW5kIGNsb2NrIGF2YWlsYWJpbGl0eSBkaWZmZXJlbmNlcyBhY3Jvc3MgZGlmZmVyZW50
-IFNvQ3MuDQoNCkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KQ2M6IFN0ZXBo
-ZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCkNjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
-bC5vcmc+DQpDYzogU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQpDYzogTWlj
-aGFlbCBUdXJxdWV0dGUgPG10dXJxdWV0dGVAYmF5bGlicmUuY29tPg0KQ2M6IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnDQpTaWduZWQtb2ZmLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9u
-Z0BueHAuY29tPg0KLS0tDQpDaGFuZ2VMb2c6DQp2MS0+djI6DQogKiBVcGRhdGUgZXhhbXBsZQ0K
-ICogQWRkIHBvd2VyIGRvbWFpbiBwcm9wZXJ0eQ0KLS0tDQogLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svaW14OHF4cC1scGNnLnR4dCAgICAgfCAzNCArKysrKysrKysrKysrKysrKystLS0t
-DQogMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14OHF4
-cC1scGNnLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg4
-cXhwLWxwY2cudHh0DQppbmRleCA5NjVjZmE0Li42ZmMyZmQ4IDEwMDY0NA0KLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDhxeHAtbHBjZy50eHQNCisrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg4cXhwLWxwY2cudHh0
-DQpAQCAtMTEsNiArMTEsMjEgQEAgZW5hYmxlZCBieSB0aGVzZSBjb250cm9sIGJpdHMsIGl0IG1p
-Z2h0IHN0aWxsIG5vdCBiZSBydW5uaW5nIGJhc2VkDQogb24gdGhlIGJhc2UgcmVzb3VyY2UuDQog
-DQogUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNvbXBhdGlibGU6CQlTaG91bGQgYmUgb25lIG9m
-Og0KKwkJCSAgImZzbCxpbXg4cXhwLWxwY2ciDQorCQkJICAiZnNsLGlteDhxbS1scGNnIiBmb2xs
-b3dlZCBieSAiZnNsLGlteDhxeHAtbHBjZyIuDQorLSByZWc6CQkJQWRkcmVzcyBhbmQgbGVuZ3Ro
-IG9mIHRoZSByZWdpc3RlciBzZXQuDQorLSAjY2xvY2stY2VsbHM6CQlTaG91bGQgYmUgMS4gT25l
-IExQQ0cgc3VwcG9ydHMgbXVsdGlwbGUgY2xvY2tzLg0KKy0gY2xvY2tzOgkJSW5wdXQgcGFyZW50
-IGNsb2NrcyBwaGFuZGxlIGFycmF5IGZvciBlYWNoIGNsb2NrLg0KKy0gYml0LW9mZnNldDoJCUFu
-IGludGVnZXIgYXJyYXkgaW5kaWNhdGluZyB0aGUgYml0IG9mZnNldCBmb3IgZWFjaCBjbG9jay4N
-CistIGh3LWF1dG9nYXRlOgkJQm9vbGVhbiBhcnJheSBpbmRpY2F0aW5nIHdoZXRoZXIgc3VwcG9y
-dHMgSFcgYXV0b2dhdGUgZm9yDQorCQkJZWFjaCBjbG9jay4NCistIGNsb2NrLW91dHB1dC1uYW1l
-czoJU2hhbGwgYmUgdGhlIGNvcnJlc3BvbmRpbmcgbmFtZXMgb2YgdGhlIG91dHB1dHMuDQorCQkJ
-Tk9URSB0aGlzIHByb3BlcnR5IG11c3QgYmUgc3BlY2lmaWVkIGluIHRoZSBzYW1lIG9yZGVyDQor
-CQkJYXMgdGhlIGNsb2NrIGJpdC1vZmZzZXQgYW5kIGh3LWF1dG9nYXRlIHByb3BlcnR5Lg0KKy0g
-cG93ZXItZG9tYWluczoJU2hvdWxkIGNvbnRhaW4gdGhlIHBvd2VyIGRvbWFpbiB1c2VkIGJ5IHRo
-aXMgY2xvY2suDQorDQorTGVnYWN5IGJpbmRpbmcgKERFUFJFQ0FURUQpOg0KIC0gY29tcGF0aWJs
-ZToJU2hvdWxkIGJlIG9uZSBvZjoNCiAJCSAgImZzbCxpbXg4cXhwLWxwY2ctYWRtYSIsDQogCQkg
-ICJmc2wsaW14OHF4cC1scGNnLWNvbm4iLA0KQEAgLTMzLDEwICs0OCwxNyBAQCBFeGFtcGxlczoN
-CiANCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svaW14OHF4cC1jbG9jay5oPg0KIA0KLWNv
-bm5fbHBjZzogY2xvY2stY29udHJvbGxlckA1YjIwMDAwMCB7DQotCWNvbXBhdGlibGUgPSAiZnNs
-LGlteDhxeHAtbHBjZy1jb25uIjsNCi0JcmVnID0gPDB4NWIyMDAwMDAgMHhiMDAwMD47DQorc2Ro
-YzBfbHBjZzogY2xvY2stY29udHJvbGxlckA1YjIwMDAwMCB7DQorCWNvbXBhdGlibGUgPSAiZnNs
-LGlteDhxeHAtbHBjZyI7DQorCXJlZyA9IDwweDViMjAwMDAwIDB4MTAwMDA+Ow0KIAkjY2xvY2st
-Y2VsbHMgPSA8MT47DQorCWNsb2NrcyA9IDwmc2RoYzBfY2xrIElNWF9TQ19QTV9DTEtfUEVSPiwN
-CisJCSA8JmNvbm5faXBnX2Nsaz4sIDwmY29ubl9heGlfY2xrPjsNCisJYml0LW9mZnNldCA9IDww
-IDE2IDIwPjsNCisJY2xvY2stb3V0cHV0LW5hbWVzID0gInNkaGMwX2xwY2dfcGVyX2NsayIsDQor
-CQkJICAgICAic2RoYzBfbHBjZ19pcGdfY2xrIiwNCisJCQkgICAgICJzZGhjMF9scGNnX2FoYl9j
-bGsiOw0KKwlwb3dlci1kb21haW5zID0gPCZwZCBJTVhfU0NfUl9TREhDXzA+Ow0KIH07DQogDQog
-dXNkaGMxOiBtbWNANWIwMTAwMDAgew0KQEAgLTQ0LDggKzY2LDggQEAgdXNkaGMxOiBtbWNANWIw
-MTAwMDAgew0KIAlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KIAlpbnRlcnJ1cHRzID0gPEdJ
-Q19TUEkgMjMyIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KIAlyZWcgPSA8MHg1YjAxMDAwMCAweDEw
-MDAwPjsNCi0JY2xvY2tzID0gPCZjb25uX2xwY2cgSU1YOFFYUF9DT05OX0xQQ0dfU0RIQzBfSVBH
-X0NMSz4sDQotCQkgPCZjb25uX2xwY2cgSU1YOFFYUF9DT05OX0xQQ0dfU0RIQzBfUEVSX0NMSz4s
-DQotCQkgPCZjb25uX2xwY2cgSU1YOFFYUF9DT05OX0xQQ0dfU0RIQzBfSENMSz47DQorCWNsb2Nr
-cyA9IDwmc2RoYzBfbHBjZyAxPiwNCisJCSA8JnNkaGMwX2xwY2cgMD4sDQorCQkgPCZzZGhjMF9s
-cGNnIDI+Ow0KIAljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIiwgImFoYiI7DQogfTsNCi0tIA0K
-Mi43LjQNCg0K
+On Thu 02 May 05:13 PDT 2019, Vinod Koul wrote:
+
+> Fix the typo "dreive-strength" and use correct property drive-strength
+> 
+> Fixes: 7241ab944da3 ("arm64: dts: qcom: qcs404: Add sdcc1 node")
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+
+Thanks for spotting this, picked up.
+
+Regards,
+Bjorn
+
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index 2c3127167e3c..7cc0b7842ac2 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -200,7 +200,7 @@
+>  		data {
+>  			pins = "sdc1_data";
+>  			bias-pull-up;
+> -			dreive-strength = <10>;
+> +			drive-strength = <10>;
+>  		};
+>  
+>  		rclk {
+> @@ -225,7 +225,7 @@
+>  		data {
+>  			pins = "sdc1_data";
+>  			bias-pull-up;
+> -			dreive-strength = <2>;
+> +			drive-strength = <2>;
+>  		};
+>  
+>  		rclk {
+> -- 
+> 2.20.1
+> 
