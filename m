@@ -1,128 +1,130 @@
-From: Dragan Cvetic <draganc@xilinx.com>
-Subject: RE: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Date: Fri, 3 May 2019 16:44:57 +0000
-Message-ID: <BL0PR02MB5681F4C4AF4786AC6241DDA1CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172304.GB1874@kroah.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 3/3] reset: Add reset controller support for BM1880 SoC
+Date: Fri, 03 May 2019 16:55:21 +0200
+Message-ID: <1556895321.3046.3.camel@pengutronix.de>
+References: <20190425125508.5965-1-manivannan.sadhasivam@linaro.org>
+         <20190425125508.5965-4-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502172304.GB1874@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20190425125508.5965-4-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+Hi Manivannan,
 
-Please find inline comments below.
+thank you for the patch. A few issues below:
 
-Regards
-Dragan
+On Thu, 2019-04-25 at 18:25 +0530, Manivannan Sadhasivam wrote:
+> Add reset controller support for Bitmain BM1880 SoC reusing the
+> reset-simple driver. While we are at it, this driver has also been
+> modified to make use of the SPDX license identifier.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/reset/Kconfig        |  3 ++-
+>  drivers/reset/Makefile       |  1 +
+>  drivers/reset/reset-simple.c | 16 +++++++++++-----
+>  3 files changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 2c8c23db92fb..b25e8d139f0d 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -117,7 +117,7 @@ config RESET_QCOM_PDC
+>  
+>  config RESET_SIMPLE
+>  	bool "Simple Reset Controller Driver" if COMPILE_TEST
+> -	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
+> +	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
+>  	help
+>  	  This enables a simple reset controller driver for reset lines that
+>  	  that can be asserted and deasserted by toggling bits in a contiguous,
+> @@ -129,6 +129,7 @@ config RESET_SIMPLE
+>  	   - RCC reset controller in STM32 MCUs
+>  	   - Allwinner SoCs
+>  	   - ZTE's zx2967 family
+> +	   - Bitmain BM1880 SoC
+>  
+>  config RESET_STM32MP157
+>  	bool "STM32MP157 Reset Driver" if COMPILE_TEST
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 61456b8f659c..b87968771166 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> +#obj-$(CONFIG_RESET_BM1880) += reset-bm1880.o
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday 2 May 2019 18:23
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioc=
-tl
->=20
-> On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> > +static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
-> > +{
-> > +	struct xsdfec_dev *xsdfec;
-> > +
-> > +	xsdfec =3D container_of(iptr->i_cdev, struct xsdfec_dev, xsdfec_cdev)=
-;
-> > +
-> > +	if (!atomic_dec_and_test(&xsdfec->open_count)) {
->=20
-> Why do you care about this?
->=20
-> And do you really think it matters?  What are you trying to protect from
-> here?
+Leftover from a previous patch version? You can remove this.
 
-There is a request to increase the driver security.=20
-It is acceptable for us for now, even with non-perfections (will not be pro=
-tected if opened twice with dup() or fork()).
-This is covered in the documentation.
->=20
-> > +		atomic_inc(&xsdfec->open_count);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	fptr->private_data =3D xsdfec;
-> > +	return 0;
-> > +}
-> > +
-> > +static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
-> > +{
-> > +	struct xsdfec_dev *xsdfec;
-> > +
-> > +	xsdfec =3D container_of(iptr->i_cdev, struct xsdfec_dev, xsdfec_cdev)=
-;
-> > +
-> > +	atomic_inc(&xsdfec->open_count);
->=20
-> You increment a number when the device is closed?
->=20
-> You are trying to make it hard to maintain this code over time :)
->=20
->=20
-> > +	return 0;
-> > +}
-> > +
-> > +static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
-> > +			     unsigned long data)
-> > +{
-> > +	struct xsdfec_dev *xsdfec =3D fptr->private_data;
-> > +	void __user *arg =3D NULL;
-> > +	int rval =3D -EINVAL;
-> > +	int err =3D 0;
-> > +
-> > +	if (!xsdfec)
-> > +		return rval;
-> > +
-> > +	if (_IOC_TYPE(cmd) !=3D XSDFEC_MAGIC)
-> > +		return -ENOTTY;
-> > +
-> > +	/* check if ioctl argument is present and valid */
-> > +	if (_IOC_DIR(cmd) !=3D _IOC_NONE) {
-> > +		arg =3D (void __user *)data;
-> > +		if (!arg) {
-> > +			dev_err(xsdfec->dev,
-> > +				"xilinx sdfec ioctl argument is NULL Pointer");
->=20
-> You just created a way for userspace to spam the kernel log, please do
-> not do that :(
+>  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+> index 77fbba3100c8..fd1fa4984d76 100644
+> --- a/drivers/reset/reset-simple.c
+> +++ b/drivers/reset/reset-simple.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /*
+>   * Simple Reset Controller Driver
+>   *
+> @@ -8,11 +9,6 @@
+>   * Copyright 2013 Maxime Ripard
+>   *
+>   * Maxime Ripard <maxime.ripard@free-electrons.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License as published by
+> - * the Free Software Foundation; either version 2 of the License, or
+> - * (at your option) any later version.
+>   */
 
-Will be removed.
+Please split this change into a separate patch and add Maxime to Cc:
+ 
+>  #include <linux/device.h>
+> @@ -119,6 +115,14 @@ static const struct reset_simple_devdata reset_simple_active_low = {
+>  	.status_active_low = true,
+>  };
+>  
+> +#define BM1880_NR_BANKS		2
+> +
+> +static const struct reset_simple_devdata reset_simple_bm1880 = {
+> +	.nr_resets = BM1880_NR_BANKS * 32,
 
->=20
->=20
->=20
-> > +			return rval;
-> > +		}
-> > +	}
-> > +
-> > +	if (err) {
-> > +		dev_err(xsdfec->dev, "Invalid xilinx sdfec ioctl argument");
-> > +		return -EFAULT;
->=20
-> Wrong error, you did not have a memory fault.
+This is not necessary, given your device tree changes, the
 
-Absolutely useless code. Will be removed. Thanks.
+        data->rcdev.nr_resets = resource_size(res) * BITS_PER_BYTE;
 
->=20
-> Again, you just created a way to spam the kernel log by a user :(
->=20
-> thanks,
->=20
-> greg k-h
+in reset_simple_probe should already do the right thing.
+You can remove the .nr_resets from reset_simple_bm1880 and the
+BM1880_NR_BANKS #define.
+
+> +	.active_low = true,
+> +	.status_active_low = true,
+> +};
+> +
+>  static const struct of_device_id reset_simple_dt_ids[] = {
+>  	{ .compatible = "altr,stratix10-rst-mgr",
+>  		.data = &reset_simple_socfpga },
+> @@ -129,6 +133,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+>  		.data = &reset_simple_active_low },
+>  	{ .compatible = "aspeed,ast2400-lpc-reset" },
+>  	{ .compatible = "aspeed,ast2500-lpc-reset" },
+> +	{ .compatible = "bitmain,bm1880-reset",
+> +		.data = &reset_simple_bm1880 },
+>  	{ /* sentinel */ },
+>  };
+
+With these changes,
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+for both parts. 
+
+regards
+Philipp
