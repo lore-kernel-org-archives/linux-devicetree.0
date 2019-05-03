@@ -1,90 +1,106 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 0/5] mmc: mmci: add busy detect for stm32 sdmmc variant
-Date: Fri, 3 May 2019 15:29:15 +0200
-Message-ID: <CAPDyKFoURwnai1hbCbO+Uh6+hc7A4dYHjWkqeFAEgMQET-BzwA@mail.gmail.com>
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFqbn=UcbwoH_z+yjrjvHQZaMtmsD=n0yrBV7DAK5VRJEQ@mail.gmail.com> <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V5 12/16] arm64: tegra: Add P2U and PCIe controller nodes
+ to Tegra194 DT
+Date: Fri, 3 May 2019 13:26:37 +0200
+Message-ID: <20190503112637.GF32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-13-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jkO+KyKz7TfD21mV"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
+Content-Disposition: inline
+In-Reply-To: <20190424052004.6270-13-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Apr 2019 at 14:06, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
->
->
-> On 4/30/19 1:13 PM, Ulf Hansson wrote:
-> > On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> >>
-> >> From: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> This patch series adds busy detect for stm32 sdmmc variant.
-> >> Some adaptations are required:
-> >> -Avoid to check and poll busy status when is not expected.
-> >> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
-> >>   different.
-> >> -Add hardware busy timeout with MMCIDATATIMER register.
-> >>
-> >> V2:
-> >> -mmci_cmd_irq cleanup in separate patch.
-> >> -simplify the busy_detect_flag exclude
-> >> -replace sdmmc specific comment in
-> >> "mmc: mmci: avoid fake busy polling in mmci_irq"
-> >> to focus on common behavior
-> >>
-> >> Ludovic Barre (5):
-> >>    mmc: mmci: cleanup mmci_cmd_irq for busy detect feature
-> >>    mmc: mmci: avoid fake busy polling in mmci_irq
-> >>    mmc: mmci: fix clear of busy detect status
-> >>    mmc: mmci: add hardware busy timeout feature
-> >>    mmc: mmci: add busy detect for stm32 sdmmc variant
-> >>
-> >>   drivers/mmc/host/mmci.c | 61 ++++++++++++++++++++++++++++++++++++++-----------
-> >>   drivers/mmc/host/mmci.h |  3 +++
-> >>   2 files changed, 51 insertions(+), 13 deletions(-)
-> >>
-> >> --
-> >> 2.7.4
-> >>
-> >
-> > Ludovic, just wanted to let you know that I am reviewing and testing
-> > this series.
-> >
-> > However, while running some tests on Ux500 for validating the busy
-> > detection code, even without your series applied, I encounter some odd
-> > behaviors. I am looking into the problem to understand better and will
-> > let you know as soon as I have some more data to share.
->
-> Oops, don't hesitate to share your status, if I could help.
 
-Thanks! Good and bad news here, then.
+--jkO+KyKz7TfD21mV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I now understand what is going on - and there is certainly room for
-improvements here, but more importantly the actual mmci busy detection
-works as expected.
+On Wed, Apr 24, 2019 at 10:50:00AM +0530, Vidya Sagar wrote:
+> Add P2U (PIPE to UPHY) and PCIe controller nodes to device tree.
+> The Tegra194 SoC contains six PCIe controllers and twenty P2U instances
+> grouped into two different PHY bricks namely High-Speed IO (HSIO-12 P2Us)
+> and NVIDIA High Speed (NVHS-8 P2Us) respectively.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Included 'hsio' or 'nvhs' in P2U node's label names to reflect which br=
+ick
+>   they belong to
+> * Removed leading zeros in unit address
+>=20
+> Changes since [v1]:
+> * Flattened all P2U nodes by removing 'hsio-p2u' and 'nvhs-p2u' super nod=
+es
+> * Changed P2U nodes compatible string from 'nvidia,tegra194-phy-p2u' to '=
+nvidia,tegra194-p2u'
+> * Changed reg-name from 'base' to 'ctl'
+> * Updated all PCIe nodes according to the changes made to DT documentatio=
+n file
+>=20
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 449 +++++++++++++++++++++++
+>  1 file changed, 449 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/d=
+ts/nvidia/tegra194.dtsi
+> index c77ca211fa8f..dc433b446ff5 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+[...]
+> +	pcie@14180000 {
+[...]
+> +		ranges =3D <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000   =
+ /* downstream I/O (1MB) */
+> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000  /* prefe=
+tchable memory (13GB) */
+> +			  0x82000000 0x0 0x40000000 0x1B 0x40000000 0x0 0xC0000000>; /* non-p=
+refetchable memory (3GB) */
 
-When it comes to improvements, the main issue I have found is how we
-treat DATA WRITES. In many cases we simply don't use the HW busy
-detection at all, but instead rely on the mmc core to send CMD13 in a
-loop to poll. Well, then if the polling would have consisted of a
-couple of CMD13s that wouldn't be an issue, but my observations is
-rather that the numbers of CMD13 sent to poll is in the range or
-hundreds/thousands - per each WRITE request!
+Please be consistent in the capitalization of hexadecimal numbers. You
+use lowercase hexdigits in one place and upprecase in others. Just stick
+to one (preferably lowercase since that's already used elsewhere in this
+file).
 
-I am going to send a patch (or two) that improves the behavior. It
-might even involve changing parts in core layer, not sure how the end
-result will look like yet.
+> +	};
+> +
+> +	pcie@14100000 {
 
-In any case, I have applied patch 1 and patch2 for next, as the tests
-turned out well at my side. I also took the liberty of updating some
-of the comments/changelogs, please have look and tell if there is
-something you want to change.
+Also, entries should be sorted by unit-address, so controller 0 above
+needs to go further down.
 
-I will continue with the rest of series next week.
+Thierry
 
-Kind regards
-Uffe
+--jkO+KyKz7TfD21mV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMJW0ACgkQ3SOs138+
+s6E+CxAAl1IP5hPwNub+ynrfDHIlvS8wnANVpXA+TBShMg1rBrA2c7ErQwRKFKrH
+nt0A/GAU1JPp+Ugy6Rvesx1f+mNpHl3ueZY9DnlY7FRjfgv39qKvFuCRAPHR2YDk
+CCgNJjCBroY3+OvmMxtK0b46pB7xtAwDXVBp0DbUGibGU+6wQ5XplqmwqQONu9YU
+tmMCy2vpr1PNzwgLGfhC7owYfz4vQVzJDWeSfUVbuf0uuhaYg9Lak5cfPJqEPPEF
+husujx86GqI+xk4zhAN/mvoMN9OoJplO7icUXCJRrB9lHOycZOA3SZwDFZm/rRmA
+q7AwE+bXW0FIX6Zel+6wAxBdpwvqc/RJmsRAe1efSh88NuTFn3AWW8Fc4K+4mOn/
+royxYh3z7Z/91PmfgoF9Ku6xtpeZVmD63lDQ+LHbTgrDb2lEjZ66Wcque1mYn4pt
+N6ko8YOVjwSEu0kVTk36j7Qyrk7VMTzuloelaaplcXY8iX0ClplKPTYH8+FbzXgQ
+W3itYlLXLNJQpfEceRZwuqWCcerLyURykmeVOih1n8PLuK0yEK8fr8GvyGP2JMvG
+hoF0m1QDdjnm1G7LvfLCBrngb6Bze4wQ+wLqn2u3ydi0m1gU5vJ0ac1oKIhMm6Si
+ntXZJ7cuJbnw4M3fkL8zHz+2HPyVZ+ZmZV/1GNX6KMKocNI8A6o=
+=IZEE
+-----END PGP SIGNATURE-----
+
+--jkO+KyKz7TfD21mV--
