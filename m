@@ -1,93 +1,116 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for fec 'ahb' clock
-Date: Sat, 4 May 2019 08:03:55 -0300
-Message-ID: <CAOMZO5BbA6oq8okTR-r800k4XY76XxxEdufd1mjcV6HdTpVotA@mail.gmail.com>
-References: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v3 10/10] rtc: Add support for the MediaTek MT6358 RTC
+Date: Sat, 4 May 2019 22:04:16 +0800
+Message-ID: <1556978656.25811.1.camel@mtksdaap41>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+         <20190503093117.54830-11-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
+In-Reply-To: <20190503093117.54830-11-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kay-Liu <liuk@cetca.net.cn>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Ran Bi <ran.bi@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kay-Liu,
-
-On Thu, Apr 25, 2019 at 8:09 AM <liuk@cetca.net.cn> wrote:
->
-> From: Kay-Liu <liuk@cetca.net.cn>
->
-> The imx6sx's dts file defines five clocks for fec, the
-> 'ahb'clock's value is IMX6SX_CLK_ENET_AHB, but in the
-> i.MX6SX Reference Manual there is no such enet ahb clock,
-> there is only one "enet clock" in the CCM_CCGR3 register
-> which is controlled by bits 5-4, the enet clock is defined
-> for the 'ipg' clock, this can cause problem.
-> The original phenomenon is using imx6-solox processor and
-> Marvel 88E6390 switch with linux OS, the kernel will hang
-> during the startup of the linux OS.
-> After analyzing the phenomenon, the reason of CPU hang is
-> read/write enet module's register when the enet clock
-> is disabled. The kernel code try to avoids the problem
-> by resume enet clock before read/write enet register.
-> But the enet module's clock config will cause a special
-> environment which can bypass the clock resume mechanism.
-> The CPU has only one enet clock, after kernel parses
-> the dts file, the two clock variables 'ipg' and 'ahb'
-> finnaly point to the same enet clock register. This will
-> cause enet clock be disabled after fec probe over.
-> Because the power saving module will affect the BUG, so
-> there are two situations for this problem:
-> 1)Turn off power saving
-> Turn off power saving means that the resume mechanism is
-> disabled, so after fec probe over if any one read/write
-> enet module's register, the CPU will hang because no one
-> could resume the enet clock.
-> 2)Turn on power saving
-> Turn on power saving could resume enet clock before
-> read/write enet register by enable 'ipg' clk, this will
-> cause 'ahb' variable state and enet clock register value
-> don't match.If any task read/write enet at a high
-> frequently, the kernel will keep resume state and never
-> enter suspend process, this means that the kernel will
-> only modifies the register value during the first resume.
-> But the kernel init will check unused clock variable in
-> the late initcall, the 'ahb' clock will be treated as
-> unused, at this time, the enet clock will be disabled
-> bypass the resume mechanism, then the next read/write
-> enet module's register will cause the CPU hang.
-> Proposed solution is delete the 'ahb' clock's definition
-> in the clk-imx6sx.c, and modify fec device=E2=80=99s clocks in
-> the dts file, point =E2=80=98ahb=E2=80=99 from IMX6SX_CLK_ENET_AHB to
-> IMX6SX_CLK_ENET
->
-> Signed-off-by: Kay-Liu <liuk@cetca.net.cn>
+On Fri, 2019-05-03 at 17:31 +0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 > ---
-> Change since v1:
-> -inproved commit log description
-> -add platform related clock change instead of describe is in the external=
- URL
->
->  arch/arm/boot/dts/imx6sx.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dts=
-i
-> index 5b16e65..b8b23a6 100644
-> --- a/arch/arm/boot/dts/imx6sx.dtsi
-> +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> @@ -919,7 +919,7 @@
->                                 interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVE=
-L_HIGH>,
->                                              <GIC_SPI 119 IRQ_TYPE_LEVEL_=
-HIGH>;
->                                 clocks =3D <&clks IMX6SX_CLK_ENET>,
-> -                                        <&clks IMX6SX_CLK_ENET_AHB>,
-> +                                        <&clks IMX6SX_CLK_ENET>,
+>  drivers/rtc/rtc-mt6397.c | 43 ++++++++++++++++++++++++++++++++--------
+>  1 file changed, 35 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index f85f1fc29e32..3476e29db87c 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/io.h>
+>  #include <linux/mfd/mt6397/core.h>
+> @@ -27,7 +28,8 @@
+>  #define RTC_BBPU		0x0000
+>  #define RTC_BBPU_CBUSY		BIT(6)
+>  
+> -#define RTC_WRTGR		0x003c
+> +#define RTC_WRTGR_MT6358	0x3a
+> +#define RTC_WRTGR_MT6397	0x3c
+>  
+>  #define RTC_IRQ_STA		0x0002
+>  #define RTC_IRQ_STA_AL		BIT(0)
+> @@ -71,6 +73,10 @@
+>  #define RTC_NUM_YEARS		128
+>  #define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+>  
+> +struct mtk_rtc_compatible {
+> +	u32			wrtgr_addr;
+> +};
+> +
+>  struct mt6397_rtc {
+>  	struct device		*dev;
+>  	struct rtc_device	*rtc_dev;
+> @@ -78,7 +84,25 @@ struct mt6397_rtc {
+>  	struct regmap		*regmap;
+>  	int			irq;
+>  	u32			addr_base;
+> +	const struct mtk_rtc_compatible *dev_comp;
+> +};
+> +
+> +static const struct mtk_rtc_compatible mt6358_rtc_compat = {
+> +	.wrtgr_addr = RTC_WRTGR_MT6358,
+> +};
+> +
+> +static const struct mtk_rtc_compatible mt6397_rtc_compat = {
+> +	.wrtgr_addr = RTC_WRTGR_MT6397,
+> +};
+> +
+> +static const struct of_device_id mt6397_rtc_of_match[] = {
+> +	{ .compatible = "mediatek,mt6358-rtc",
+> +		.data = (void *)&mt6358_rtc_compat, },
+> +	{ .compatible = "mediatek,mt6397-rtc",
+> +		.data = (void *)&mt6397_rtc_compat, },
+> +	{}
+>  };
+> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+>  
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+> @@ -86,7 +110,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  	int ret;
+>  	u32 data;
+>  
+> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret = regmap_write(rtc->regmap,
+> +			   rtc->addr_base + rtc->dev_comp->wrtgr_addr, 1);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -332,6 +357,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
+>  	struct mt6397_rtc *rtc;
+> +	const struct of_device_id *of_id;
+>  	int ret;
+>  
+>  	rtc = devm_kzalloc(&pdev->dev, sizeof(struct mt6397_rtc), GFP_KERNEL);
+> @@ -341,6 +367,13 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base = res->start;
+>  
+> +	of_id = of_match_device(mt6397_rtc_of_match, &pdev->dev);
+> +	if (!of_id) {
 
-Yes, there is really no IMX6SX_CLK_ENET_AHB as per the Refernce Manual
-and it is the same we do on imx6qdl.dtsi:
+This will never happens, but I'm fine with it.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Review-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+
+Joe.C
