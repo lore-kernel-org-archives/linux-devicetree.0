@@ -1,17 +1,17 @@
 From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Date: Sat, 4 May 2019 09:55:02 +0200
-Message-ID: <20190504075502.GA11133@kroah.com>
+Subject: Re: [PATCH V3 07/12] misc: xilinx_sdfec: Add ability to configure LDPC
+Date: Sat, 4 May 2019 11:00:25 +0200
+Message-ID: <20190504090025.GB13840@kroah.com>
 References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
- <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <1556402706-176271-8-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172713.GD1874@kroah.com>
+ <BL0PR02MB5681D386363988CB2CA4D040CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+In-Reply-To: <BL0PR02MB5681D386363988CB2CA4D040CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,51 +25,56 @@ To: Dragan Cvetic <draganc@xilinx.com>
 Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Derek Kiernan <dkiernan@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+On Fri, May 03, 2019 at 04:49:19PM +0000, Dragan Cvetic wrote:
 > Hi Greg,
 > 
-> Please find my inline comments below,
-> 
-> Regards
-> Dragan
-> 
+> Please find inline comments below.
+
+As they should be, no need to mention it :)
+
 > > -----Original Message-----
 > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > Sent: Thursday 2 May 2019 18:20
+> > Sent: Thursday 2 May 2019 18:27
 > > To: Dragan Cvetic <draganc@xilinx.com>
 > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
 > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > Subject: Re: [PATCH V3 07/12] misc: xilinx_sdfec: Add ability to configure LDPC
 > > 
-> > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
-> > > +#define DRIVER_NAME "xilinx_sdfec"
-> > > +#define DRIVER_VERSION "0.3"
+> > On Sat, Apr 27, 2019 at 11:05:01PM +0100, Dragan Cvetic wrote:
+> > > --- a/include/uapi/misc/xilinx_sdfec.h
+> > > +++ b/include/uapi/misc/xilinx_sdfec.h
 > > 
-> > Version means nothing with the driver in the kernel tree, please remove
-> > it.
+> > <snip>
+> > 
+> > > +/**
+> > > + * xsdfec_calculate_shared_ldpc_table_entry_size - Calculates shared code
+> > > + * table sizes.
+> > > + * @ldpc: Pointer to the LPDC Code Parameters
+> > > + * @table_sizes: Pointer to structure containing the calculated table sizes
+> > > + *
+> > > + * Calculates the size of shared LDPC code tables used for a specified LPDC code
+> > > + * parameters.
+> > > + */
+> > > +inline void
+> > > +xsdfec_calculate_shared_ldpc_table_entry_size(struct xsdfec_ldpc_params *ldpc,
+> > > +	struct xsdfec_ldpc_param_table_sizes *table_sizes)
+> > > +{
+> > > +	/* Calculate the sc_size in 32 bit words */
+> > > +	table_sizes->sc_size = (ldpc->nlayers + 3) >> 2;
+> > > +	/* Calculate the la_size in 256 bit words */
+> > > +	table_sizes->la_size = ((ldpc->nlayers << 2) + 15) >> 4;
+> > > +	/* Calculate the qc_size in 256 bit words */
+> > > +	table_sizes->qc_size = ((ldpc->nqc << 2) + 15) >> 4;
+> > > +}
+> > 
+> > Why do you have an inline function in a user api .h file?  That's really
+> > not a good idea.
 > 
-> Will be removed. Thank you.
-> 
-> > 
-> > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
-> > 
-> > Why this number?  Why limit yourself to any number?
-> > 
-> 
-> There can be max 8 devices for this driver. I'll change to 8.
-> 
-> > > +
-> > > +static struct class *xsdfec_class;
-> > 
-> > Do you really need your own class?
-> 
-> When writing a character device driver, my goal is to create and register an instance
-> of that structure associated with a struct file_operations, exposing a set of operations
-> to the user-space. One of the steps to make this goal is Create a class for a devices,
-> visible in /sys/class/.
+> This is just a Helper function for users aligning the calculations.
+> Please advise, is this acceptable?
 
-Why do you need a class?  Again, why not just use the misc_device api,
-that seems much more relevant here and will make the code a lot simpler.
+Not really, just have actual api functions in a uapi .h file, why would
+userspace care about this type of thing?
 
 thanks,
 
