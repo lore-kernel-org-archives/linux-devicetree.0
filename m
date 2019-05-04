@@ -1,42 +1,76 @@
-From: Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: [PATCH 6/6] Revert "arm64: dts: renesas: r8a77995: add DMA for SCIF2"
-Date: Sat,  4 May 2019 02:42:58 +0200
-Message-ID: <20190504004258.23574-7-erosca@de.adit-jv.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Date: Sat, 4 May 2019 09:55:02 +0200
+Message-ID: <20190504075502.GA11133@kroah.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190504004258.23574-1-erosca@de.adit-jv.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dragan Cvetic <draganc@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Derek Kiernan <dkiernan@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit af2ea3df851ffa68ad07ff59d4dabadbf33b45ef.
+On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+> Hi Greg,
+> 
+> Please find my inline comments below,
+> 
+> Regards
+> Dragan
+> 
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Thursday 2 May 2019 18:20
+> > To: Dragan Cvetic <draganc@xilinx.com>
+> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > 
+> > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
+> > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > +#define DRIVER_VERSION "0.3"
+> > 
+> > Version means nothing with the driver in the kernel tree, please remove
+> > it.
+> 
+> Will be removed. Thank you.
+> 
+> > 
+> > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > 
+> > Why this number?  Why limit yourself to any number?
+> > 
+> 
+> There can be max 8 devices for this driver. I'll change to 8.
+> 
+> > > +
+> > > +static struct class *xsdfec_class;
+> > 
+> > Do you really need your own class?
+> 
+> When writing a character device driver, my goal is to create and register an instance
+> of that structure associated with a struct file_operations, exposing a set of operations
+> to the user-space. One of the steps to make this goal is Create a class for a devices,
+> visible in /sys/class/.
 
-Both empirically and based on the existing documentation, it looks like
-SCIF2 does not support DMA. Let's disable it. Full reasoning is given in
-commit ("Revert "arm64: dts: renesas: r8a7796: Enable DMA for SCIF2"").
+Why do you need a class?  Again, why not just use the misc_device api,
+that seems much more relevant here and will make the code a lot simpler.
 
-Fixes: af2ea3df851ffa ("arm64: dts: renesas: r8a77995: add DMA for SCIF2")
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+thanks,
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 5bf3af246e14..bd3ac5d00b2e 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -740,9 +740,6 @@
- 				 <&cpg CPG_CORE R8A77995_CLK_S3D1C>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
--			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
--			       <&dmac2 0x13>, <&dmac2 0x12>;
--			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
--- 
-2.21.0
+greg k-h
