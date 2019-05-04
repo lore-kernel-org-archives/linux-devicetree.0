@@ -1,71 +1,79 @@
-Return-Path: <SRS0=HuYX=TE=ucw.cz=pavel@kernel.org>
-Date: Sun, 5 May 2019 00:17:19 +0200
+Return-Path: <SRS0=XfsU=TE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:44702 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727404AbfEDUeu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 May 2019 16:34:50 -0400
+Date: Sat, 4 May 2019 22:34:48 +0200
 From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: [PATCH 1/2] dt-bindings: leds: Add binding for ubnt-spi LED.
-Message-ID: <20190504221719.GA7237@amd>
+Message-ID: <20190504203448.GA24856@amd>
 References: <20190504122825.11883-1-list@c-mauderer.de>
  <4889e87a-5c7a-da74-bff6-c20fd07ea0f4@gmail.com>
  <0175bf00-f2eb-98c7-ce0b-d9a2858872e7@c-mauderer.de>
  <5cc8907f-5cb4-e8b4-7309-cc446ef5bde7@gmail.com>
- <20190504203448.GA24856@amd>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
 Content-Disposition: inline
-In-Reply-To: <20190504203448.GA24856@amd>
+In-Reply-To: <5cc8907f-5cb4-e8b4-7309-cc446ef5bde7@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
 To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: Christian Mauderer <list@c-mauderer.de>, oss@c-mauderer.de, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
 
---DocE+STaALJfprDB
+--45Z9DzgjV8m4Oswq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> > >I wasn't aware of that list. Maybe "power" or even better "status" wou=
-ld
-> > >match the function.
-> >=20
-> > Hmm, I've just found out that there are two "wlan-ap" occurrences in
-> > the existing mainline bindings, so I propose to follow that.
-
-Let me see... dove-d3plug.dts has "status", "wlan-ap", "wlan-act".
-
-> > >Should I add the color too? So "white:status"?
-> >=20
-> > Yes, why not if it is known. So, having the above I propose:
-> >=20
-> > 		label =3D "white:wlan-ap";
+> >I wasn't aware of that list. Maybe "power" or even better "status" would
+> >match the function.
 >=20
-> Linux now runs on many different devices, and I believe userland wants
-> to know "this is main notification LED for this device" (and the only
-> one in this case).
+> Hmm, I've just found out that there are two "wlan-ap" occurrences in
+> the existing mainline bindings, so I propose to follow that.
+>=20
+> >Should I add the color too? So "white:status"?
+>=20
+> Yes, why not if it is known. So, having the above I propose:
+>=20
+> 		label =3D "white:wlan-ap";
 
-=2E..and I guess if you have single LED it will be used for more than
-"is AP active". IOW it will likely to be more similar to "status" than
-"wlan-ap".
+Linux now runs on many different devices, and I believe userland wants
+to know "this is main notification LED for this device" (and the only
+one in this case).
+
+Phones normally have at most one such LED. Now access point. Someone
+will make ethernet switch with just one LED. Maybe thermostat will
+have only one LED. Bluetooth GPS. ...
+
+I'd prefer not to mention type of device, and simply state that this
+is status LED for the device. Droid 4 uses
+"status-led:{red,green,blue}", so "status-led:white" would seem
+reasonable.
+
+"white:status" sounds good, too. But I'd prefer not to mention type of
+the device, it is simply status LED.
 
 Best regards,
 									Pavel
-
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---DocE+STaALJfprDB
+--45Z9DzgjV8m4Oswq
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlzOD28ACgkQMOfwapXb+vL4ngCgtVbAoiGxgNP8zN0wPkqGWv7h
-ok8AmwcT1g1zJplSnehnX+5oE0EpcTed
-=XWpT
+iEYEARECAAYFAlzN92gACgkQMOfwapXb+vL9MQCfY2e5IRx5LbBsfQeF25qYn147
+y1EAoLh1wTw7azf3Ikp4+awsB3aMwPXO
+=h9G+
 -----END PGP SIGNATURE-----
 
---DocE+STaALJfprDB--
+--45Z9DzgjV8m4Oswq--
