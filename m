@@ -1,52 +1,55 @@
-Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 05/10] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
-Date: Mon, 6 May 2019 18:46:26 -0500
-Message-ID: <20190506234631.113226-6-chris.brandt@renesas.com>
-In-Reply-To: <20190506234631.113226-1-chris.brandt@renesas.com>
-References: <20190506234631.113226-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=HuYX=TE=ucw.cz=pavel@kernel.org>
+Date: Sat, 4 May 2019 19:25:57 +0200
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] leds: ubnt-spi: Add Ubnt AirCube ISP LED driver
+Message-ID: <20190504172557.GA14428@amd>
+References: <20190504122825.11883-1-list@c-mauderer.de>
+ <20190504122825.11883-2-list@c-mauderer.de>
+ <20190504162009.GB24060@amd>
+ <111a3461-d784-021b-d6d6-9a74d5bb3a42@c-mauderer.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <111a3461-d784-021b-d6d6-9a74d5bb3a42@c-mauderer.de>
+To: Christian Mauderer <list@c-mauderer.de>
+Cc: oss@c-mauderer.de, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/A2 (R7S9210) SoC bindings.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 646a1748d3c4..e7bbee43e268 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -1,10 +1,12 @@
- * Renesas R-Car generation 3 USB 2.0 PHY
- 
- This file provides information on what the device node for the R-Car generation
--3, RZ/G1C and RZ/G2 USB 2.0 PHY contain.
-+3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
- 
- Required properties:
--- compatible: "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
-+- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
-+	      SoC.
-+	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
- 	      SoC.
- 	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
- 	      SoC.
-@@ -20,8 +22,8 @@ Required properties:
- 	      R8A77990 SoC.
- 	      "renesas,usb2-phy-r8a77995" if the device is a part of an
- 	      R8A77995 SoC.
--	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 or RZ/G2
--	      compatible device.
-+	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
-+	      RZ/A2 compatible device.
- 
- 	      When compatible with the generic version, nodes must list the
- 	      SoC-specific version corresponding to the platform first
--- 
-2.16.1
+Hi!
+
+> First: Thanks for the quick review. I haven't expected an answer for
+> some days.
+
+Thanks for simple driver :-).
+
+You may want to wait day or two before submitting v2, you may get some
+other review comment.
+
+Best regards,
+
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzNyyUACgkQMOfwapXb+vLEcACgg1ZazjLLP+C03TmrRgn+T4UN
+Z1EAn1Fxx4h0KyVHrBEeztOKKmihq0gH
+=4mOB
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
