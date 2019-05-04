@@ -1,31 +1,63 @@
-Return-Path: <SRS0=TMMq=TD=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=ik/T=TE=intel.com=lkp@kernel.org>
+Date: Sat, 4 May 2019 19:40:50 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] allegro: allegro_alloc_buffer() can be static
+Message-ID: <20190504114050.GA12462@lkp-kbuild10>
+References: <20190503122010.16663-5-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-References: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp> <1556155517-5054-5-git-send-email-cv-dong@jinso.co.jp>
-In-Reply-To: <1556155517-5054-5-git-send-email-cv-dong@jinso.co.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 3 May 2019 11:28:30 +0200
-Message-ID: <CAMuHMdVtmn-mDMXZh8F6C6oC_Qd809VvZHFyBN-SATXNJ9_T8w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: r8a77965: Add TPU support
-Content-Type: text/plain; charset="UTF-8"
-To: Cao Van Dong <cv-dong@jinso.co.jp>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, =?UTF-8?B?56iy5ZCJ?= <h-inayoshi@jinso.co.jp>, Hoan Nguyen An <na-hoan@jinso.co.jp>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503122010.16663-5-m.tretter@pengutronix.de>
+To: Michael Tretter <m.tretter@pengutronix.de>
+Cc: kbuild-all@01.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Apr 25, 2019 at 3:25 AM Cao Van Dong <cv-dong@jinso.co.jp> wrote:
-> Add tpu device node to dtsi for TPU support on r8a77965 SoC.
->
-> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: ccd8b4b2b72d ("allegro: add Allegro DVT video IP core driver")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ allegro-core.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/drivers/media/platform/allegro-dvt/allegro-core.c b/drivers/media/platform/allegro-dvt/allegro-core.c
+index 5ed8553..f4313cc 100644
+--- a/drivers/media/platform/allegro-dvt/allegro-core.c
++++ b/drivers/media/platform/allegro-dvt/allegro-core.c
+@@ -732,8 +732,8 @@ allegro_get_firmware_info(struct allegro_dev *dev,
+  * Buffers that are used internally by the MCU.
+  */
+ 
+-int allegro_alloc_buffer(struct allegro_dev *dev,
+-			 struct allegro_buffer *buffer, size_t size)
++static int allegro_alloc_buffer(struct allegro_dev *dev,
++				struct allegro_buffer *buffer, size_t size)
+ {
+ 	buffer->vaddr = dma_alloc_coherent(&dev->plat_dev->dev, size,
+ 					   &buffer->paddr, GFP_KERNEL);
+@@ -744,7 +744,7 @@ int allegro_alloc_buffer(struct allegro_dev *dev,
+ 	return 0;
+ }
+ 
+-void allegro_free_buffer(struct allegro_dev *dev, struct allegro_buffer *buffer)
++static void allegro_free_buffer(struct allegro_dev *dev, struct allegro_buffer *buffer)
+ {
+ 	if (buffer->vaddr) {
+ 		dma_free_coherent(&dev->plat_dev->dev, buffer->size,
+@@ -1604,7 +1604,7 @@ static int allegro_receive_message(struct allegro_dev *dev)
+ 	return err;
+ }
+ 
+-irqreturn_t allegro_hardirq(int irq, void *data)
++static irqreturn_t allegro_hardirq(int irq, void *data)
+ {
+ 	struct allegro_dev *dev = data;
+ 	unsigned int status;
+@@ -1618,7 +1618,7 @@ irqreturn_t allegro_hardirq(int irq, void *data)
+ 	return IRQ_WAKE_THREAD;
+ }
+ 
+-irqreturn_t allegro_irq_thread(int irq, void *data)
++static irqreturn_t allegro_irq_thread(int irq, void *data)
+ {
+ 	struct allegro_dev *dev = data;
+ 
