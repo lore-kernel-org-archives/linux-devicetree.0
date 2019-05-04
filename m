@@ -1,79 +1,80 @@
 Return-Path: <SRS0=XfsU=TE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:44702 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfEDUeu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 May 2019 16:34:50 -0400
-Date: Sat, 4 May 2019 22:34:48 +0200
-From: Pavel Machek <pavel@ucw.cz>
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35749 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfEDUHx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 May 2019 16:07:53 -0400
 Subject: Re: [PATCH 1/2] dt-bindings: leds: Add binding for ubnt-spi LED.
-Message-ID: <20190504203448.GA24856@amd>
 References: <20190504122825.11883-1-list@c-mauderer.de>
  <4889e87a-5c7a-da74-bff6-c20fd07ea0f4@gmail.com>
- <0175bf00-f2eb-98c7-ce0b-d9a2858872e7@c-mauderer.de>
- <5cc8907f-5cb4-e8b4-7309-cc446ef5bde7@gmail.com>
+ <d1704398-ae90-b4e8-50d3-f9533d94ab2b@gmail.com>
+ <1ae5880f-7af3-ac14-6515-31217b6ed8fb@c-mauderer.de>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <3bfa6347-d957-f57e-ce11-6a26cd2b7817@gmail.com>
+Date: Sat, 4 May 2019 22:07:47 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <5cc8907f-5cb4-e8b4-7309-cc446ef5bde7@gmail.com>
+In-Reply-To: <1ae5880f-7af3-ac14-6515-31217b6ed8fb@c-mauderer.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Christian Mauderer <list@c-mauderer.de>, oss@c-mauderer.de, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Christian Mauderer <oss@c-mauderer.de>, list@c-mauderer.de, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
+On 5/4/19 10:01 PM, Christian Mauderer wrote:
+> On 04/05/2019 21:45, Jacek Anaszewski wrote:
+>> I missed two issues, please take a look below.
+>>
+>>> On 5/4/19 2:28 PM, list@c-mauderer.de wrote:
+>>>> From: Christian Mauderer <oss@c-mauderer.de>
+>>>>
+>> [...]
+>>>> +- ubnt-spi,max_bright:    Value for the maximum brightness. Default
+>>
+>>  From DT POV the only valid reason for which max brightness level would
+>> need to be limited is a protection against hardware damage. Please use
+>> led-max-microamp property for that if this is the case. Otherwise such
+>> setting can be skipped.
+>>
+>> There are two bindings that allow for configuring max-brightness level
+>> but they quite old.
+>>
+> 
+> My intention with that has been slightly different than limiting the
+> current:
+> 
+> The driver uses a very simple protocol for setting the brightness: It
+> sends one byte via SPI. The value of that byte can be (for that
+> controller) between 0 and 63. My intention when adding the limits has
+> been to allow adaption to similar hardware by changing the values. If
+> for example some other controller wants brightness values between 42 and
+> 173 the off_bright could be set to 42 and the max_bright to 173.
+> 
+> Note that Pavel Machek suggested: "Alternatively, call its led-spi-byte,
+> or something, as it is really trivial protocol. Maybe other chips will
+> have same interface?"
+> 
+> If I follow that suggestion (which I think would be a good idea), I
+> would even need the values as mandatory ones instead of optional ones.
+> Would "led-spi-byte,off-value" and "led-spi-byte,max-value" be better
+> names in that case?
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that makes perfect sense.
 
-Hi!
+>>>> value for that
+>>>> +            is 63.
+>>>> +- label:        A label for the LED. If one is given, the LED will be
+>>>> +            named "ubnt-spi:<label>" or "ubnt-spi::" otherwise.
+>>>> +
+>>
+>> Please use just:
+>>
+>> label : see Documentation/devicetree/bindings/leds/common.txt
+>>
+> I'll use that.
 
-> >I wasn't aware of that list. Maybe "power" or even better "status" would
-> >match the function.
->=20
-> Hmm, I've just found out that there are two "wlan-ap" occurrences in
-> the existing mainline bindings, so I propose to follow that.
->=20
-> >Should I add the color too? So "white:status"?
->=20
-> Yes, why not if it is known. So, having the above I propose:
->=20
-> 		label =3D "white:wlan-ap";
+Thanks!
 
-Linux now runs on many different devices, and I believe userland wants
-to know "this is main notification LED for this device" (and the only
-one in this case).
-
-Phones normally have at most one such LED. Now access point. Someone
-will make ethernet switch with just one LED. Maybe thermostat will
-have only one LED. Bluetooth GPS. ...
-
-I'd prefer not to mention type of device, and simply state that this
-is status LED for the device. Droid 4 uses
-"status-led:{red,green,blue}", so "status-led:white" would seem
-reasonable.
-
-"white:status" sounds good, too. But I'd prefer not to mention type of
-the device, it is simply status LED.
-
+-- 
 Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzN92gACgkQMOfwapXb+vL9MQCfY2e5IRx5LbBsfQeF25qYn147
-y1EAoLh1wTw7azf3Ikp4+awsB3aMwPXO
-=h9G+
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+Jacek Anaszewski
