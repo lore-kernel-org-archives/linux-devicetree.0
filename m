@@ -1,208 +1,123 @@
-Return-Path: <SRS0=vTZI=TE=c-mauderer.de=list@kernel.org>
-From: list@c-mauderer.de
-Subject: [PATCH 2/2] leds: ubnt-spi: Add Ubnt AirCube ISP LED driver
-Date: Sat,  4 May 2019 14:28:25 +0200
-Message-Id: <20190504122825.11883-2-list@c-mauderer.de>
-In-Reply-To: <20190504122825.11883-1-list@c-mauderer.de>
-References: <20190504122825.11883-1-list@c-mauderer.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
+Return-Path: <SRS0=YSTV=TE=gmail.com=festevam@kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 2/8] media: imx7-media-csi: Acquire a single clock
+Date: Sat,  4 May 2019 11:40:20 -0300
+Message-Id: <20190504144027.31920-1-festevam@gmail.com>
+To: hverkuil-cisco@xs4all.nl
+Cc: rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Christian Mauderer <oss@c-mauderer.de>
+As per the i.MX7D Reference Manual only the MCLK is used for
+the CSI block, so only handle this single clock.
 
-This driver adds support for the custom LED controller used in Ubiquity
-airCube ISP devices and most likely some other simmilar Ubiquity
-products.
-
-Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- drivers/leds/Kconfig         |  10 +++
- drivers/leds/Makefile        |   1 +
- drivers/leds/leds-ubnt-spi.c | 140 +++++++++++++++++++++++++++++++++++
- 3 files changed, 151 insertions(+)
- create mode 100644 drivers/leds/leds-ubnt-spi.c
+ drivers/staging/media/imx/imx7-media-csi.c | 51 ++++------------------
+ 1 file changed, 8 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index a72f97fca57b..e96ab93860ec 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -766,6 +766,16 @@ config LEDS_NIC78BX
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-nic78bx.
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index 18eb5d3ecf10..3e02cfa2f07c 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -152,8 +152,6 @@
+ #define CSI_CSICR18		0x48
+ #define CSI_CSICR19		0x4c
  
-+config LEDS_UBNT_SPI
-+	tristate "LED support for Ubnt aircube ISP custom SPI LED controller"
-+	depends on LEDS_CLASS
-+	depends on SPI
-+	depends on OF
-+	help
-+	  This option enables basic support for the LED controller used in
-+	  Ubiquity airCube ISP devices. The controller is microcontroller based
-+	  and uses a single byte on the SPI to set brightness or blink patterns.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
+-static const char * const imx7_csi_clk_id[] = {"axi", "dcic", "mclk"};
+-
+ struct imx7_csi {
+ 	struct device *dev;
+ 	struct v4l2_subdev sd;
+@@ -180,9 +178,7 @@ struct imx7_csi {
  
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 4c1b0054f379..f272bfac109c 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -75,6 +75,7 @@ obj-$(CONFIG_LEDS_PM8058)		+= leds-pm8058.o
- obj-$(CONFIG_LEDS_MLXCPLD)		+= leds-mlxcpld.o
- obj-$(CONFIG_LEDS_MLXREG)		+= leds-mlxreg.o
- obj-$(CONFIG_LEDS_NIC78BX)		+= leds-nic78bx.o
-+obj-$(CONFIG_LEDS_UBNT_SPI)		+= leds-ubnt-spi.o
- obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
- obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
- obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
-diff --git a/drivers/leds/leds-ubnt-spi.c b/drivers/leds/leds-ubnt-spi.c
-new file mode 100644
-index 000000000000..a3cb0dd5b0da
---- /dev/null
-+++ b/drivers/leds/leds-ubnt-spi.c
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Christian Mauderer <oss@c-mauderer.de>
-+
-+/*
-+ *  Custom controller based LED controller used in Ubiquity airCube ISP.
-+ *
-+ *  Reverse engineered protocol:
-+ *  - The device uses only a single byte sent via SPI.
-+ *  - The SPI input doesn't contain any relevant information.
-+ *  - Higher two bits set a mode. Lower six bits are a parameter.
-+ *  - Mode: 00 -> set brightness between 0x00 (min) and 0x3F (max)
-+ *  - Mode: 01 -> pulsing pattern (min -> max -> min) with an interval. From
-+ *    some tests, the period is about (50ms + 102ms * parameter). There is a
-+ *    slightly different pattern starting from 0x100 (longer gap between the
-+ *    pulses) but the time still follows that calculation.
-+ *  - Mode: 10 -> same as 01 but with only a ramp from min to max. Again a
-+ *    slight jump in the pattern at 0x100.
-+ *  - Mode: 11 -> blinking (off -> 25% -> off -> 25% -> ...) with a period of
-+ *    (105ms * parameter)
-+ *
-+ *  NOTE: This driver currently only implements mode 00 (brightness).
-+ */
-+
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/mutex.h>
-+#include <uapi/linux/uleds.h>
-+
-+#define UBNT_SPI_OFF_BRIGHTNESS	0x0
-+#define UBNT_SPI_MAX_BRIGHTNESS	0x3F
-+
-+struct ubnt_spi_led {
-+	struct led_classdev	ldev;
-+	struct spi_device	*spi;
-+	char			name[LED_MAX_NAME_SIZE];
-+	struct mutex		mutex;
-+	u8			off_bright;
-+	u8			max_bright;
-+};
-+
-+static int ubnt_spi_brightness_set_blocking(struct led_classdev *dev,
-+					    enum led_brightness brightness)
-+{
-+	struct ubnt_spi_led *led = container_of(dev, struct ubnt_spi_led, ldev);
-+	u8 value;
-+	int ret;
-+
-+	value = (u8) brightness + led->off_bright;
-+
-+	mutex_lock(&led->mutex);
-+	ret = spi_write(led->spi, &value, sizeof(value));
-+	mutex_unlock(&led->mutex);
-+
-+	return ret;
-+}
-+
-+static int ubnt_spi_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct device_node *child;
-+	struct ubnt_spi_led	*led;
-+	int ret;
-+	const char *tmp;
-+	const char *default_name = ":";
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	if (of_get_child_count(dev->of_node) != 1) {
-+		dev_err(dev, "Device must have exactly one LED sub-node.");
-+		return -EINVAL;
-+	}
-+	child = of_get_next_child(dev->of_node, NULL);
-+
-+	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+
-+	led->spi	= spi;
-+
-+	ret = of_property_read_string(child, "label", &tmp);
-+	if (ret < 0)
-+		tmp = default_name;
-+	snprintf(led->name, sizeof(led->name), "ubnt-spi-led:%s", tmp);
-+
-+	ret = of_property_read_u8(child, "ubnt-spi,off_bright",
-+				  &led->off_bright);
-+	if (ret != 0)
-+		led->off_bright = UBNT_SPI_OFF_BRIGHTNESS;
-+
-+	ret = of_property_read_u8(child, "ubnt-spi,max_bright",
-+				  &led->max_bright);
-+	if (ret != 0)
-+		led->max_bright = UBNT_SPI_MAX_BRIGHTNESS;
-+
-+	mutex_init(&led->mutex);
-+	led->ldev.name = led->name;
-+	led->ldev.brightness = LED_OFF;
-+	led->ldev.max_brightness = led->max_bright - led->off_bright;
-+	led->ldev.brightness_set_blocking = ubnt_spi_brightness_set_blocking;
-+	ret = led_classdev_register(&spi->dev, &led->ldev);
-+	if (ret >= 0)
-+		spi_set_drvdata(spi, led);
-+
-+	return ret;
-+}
-+
-+static int ubnt_spi_remove(struct spi_device *spi)
-+{
-+	struct ubnt_spi_led	*led = spi_get_drvdata(spi);
-+
-+	led_classdev_unregister(&led->ldev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ubnt_spi_dt_ids[] = {
-+	{ .compatible = "ubnt,spi-led", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, ubnt_spi_dt_ids);
-+
-+static struct spi_driver ubnt_spi_driver = {
-+	.probe		= ubnt_spi_probe,
-+	.remove		= ubnt_spi_remove,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= ubnt_spi_dt_ids,
-+	},
-+};
-+
-+module_spi_driver(ubnt_spi_driver);
-+
-+MODULE_AUTHOR("Christian Mauderer <oss@c-mauderer.de>");
-+MODULE_DESCRIPTION("Ubnt AirCube ISP LED driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("spi:ubnt-spi-led");
+ 	void __iomem *regbase;
+ 	int irq;
+-
+-	int num_clks;
+-	struct clk_bulk_data *clks;
++	struct clk *mclk;
+ 
+ 	/* active vb2 buffers to send to video dev sink */
+ 	struct imx_media_buffer *active_vb2_buf[2];
+@@ -204,20 +200,6 @@ struct imx7_csi {
+ #define imx7_csi_reg_write(_csi, _val, _offset) \
+ 	__raw_writel(_val, (_csi)->regbase + (_offset))
+ 
+-static void imx7_csi_clk_enable(struct imx7_csi *csi)
+-{
+-	int ret;
+-
+-	ret = clk_bulk_prepare_enable(csi->num_clks, csi->clks);
+-	if (ret < 0)
+-		dev_err(csi->dev, "failed to enable clocks\n");
+-}
+-
+-static void imx7_csi_clk_disable(struct imx7_csi *csi)
+-{
+-	clk_bulk_disable_unprepare(csi->num_clks, csi->clks);
+-}
+-
+ static void imx7_csi_hw_reset(struct imx7_csi *csi)
+ {
+ 	imx7_csi_reg_write(csi,
+@@ -413,7 +395,7 @@ static void imx7_csi_init(struct imx7_csi *csi)
+ 	if (csi->is_init)
+ 		return;
+ 
+-	imx7_csi_clk_enable(csi);
++	clk_prepare_enable(csi->mclk);
+ 	imx7_csi_hw_reset(csi);
+ 	imx7_csi_init_interface(csi);
+ 	imx7_csi_dmareq_rff_enable(csi);
+@@ -429,7 +411,7 @@ static void imx7_csi_deinit(struct imx7_csi *csi)
+ 	imx7_csi_hw_reset(csi);
+ 	imx7_csi_init_interface(csi);
+ 	imx7_csi_dmareq_rff_disable(csi);
+-	imx7_csi_clk_disable(csi);
++	clk_disable_unprepare(csi->mclk);
+ 
+ 	csi->is_init = false;
+ }
+@@ -1200,24 +1182,6 @@ static int imx7_csi_parse_endpoint(struct device *dev,
+ 	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
+ }
+ 
+-static int imx7_csi_clocks_get(struct imx7_csi *csi)
+-{
+-	struct device *dev = csi->dev;
+-	int i;
+-
+-	csi->num_clks = ARRAY_SIZE(imx7_csi_clk_id);
+-	csi->clks = devm_kcalloc(dev, csi->num_clks, sizeof(*csi->clks),
+-				 GFP_KERNEL);
+-
+-	if (!csi->clks)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < csi->num_clks; i++)
+-		csi->clks[i].id = imx7_csi_clk_id[i];
+-
+-	return devm_clk_bulk_get(dev, csi->num_clks, csi->clks);
+-}
+-
+ static int imx7_csi_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1233,10 +1197,11 @@ static int imx7_csi_probe(struct platform_device *pdev)
+ 
+ 	csi->dev = dev;
+ 
+-	ret = imx7_csi_clocks_get(csi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to get clocks");
+-		return -ENODEV;
++	csi->mclk = devm_clk_get(&pdev->dev, "mclk");
++	if (IS_ERR(csi->mclk)) {
++		ret = PTR_ERR(csi->mclk);
++		dev_err(dev, "Failed to get mclk: %d", ret);
++		return ret;
+ 	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
-2.21.0
+2.17.1
