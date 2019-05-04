@@ -1,47 +1,42 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Date: Sat, 4 May 2019 16:41:28 +0200
-Message-ID: <20190504144128.GA13454@kroah.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172345.GC1874@kroah.com>
- <CAK8P3a2EKXrg4amHDi5zVvOQ8AM+u6EAhBc=T8Hk_tU20xSV4w@mail.gmail.com>
+From: Chuanhong Guo <gch981213@gmail.com>
+Subject: Re: [PATCH v3 3/3] net: ethernet: add ag71xx driver
+Date: Sat, 4 May 2019 23:40:53 +0800
+Message-ID: <CAJsYDVJ84RsNVe9Mj9sYYwwLmmMkinRSJW4ziW22Sf04wS5gyw@mail.gmail.com>
+References: <20190422064046.2822-1-o.rempel@pengutronix.de>
+ <20190422064046.2822-4-o.rempel@pengutronix.de> <20190422132533.GA12718@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2EKXrg4amHDi5zVvOQ8AM+u6EAhBc=T8Hk_tU20xSV4w@mail.gmail.com>
+In-Reply-To: <20190422132533.GA12718@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Derek Kiernan <derek.kiernan@xilinx.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 04, 2019 at 10:35:02AM -0400, Arnd Bergmann wrote:
-> On Thu, May 2, 2019 at 1:23 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> > > Add char device interface per DT node present and support
-> > > file operations:
-> > > - open(),
-> > > - close(),
-> > > - unlocked_ioctl(),
-> > > - compat_ioctl().
-> >
-> > Why do you need compat_ioctl() at all?  Any "new" driver should never
-> > need it.  Just create your structures properly.
-> 
-> The function he added was the version that is needed when the structures
-> are compatible. I submitted a series to add a generic 'compat_ptr_ioctl'
-> implementation that would save a few lines here doing the same thing,
-> but it's not merged yet.
-> 
-> Generally speaking, every driver that has a .ioctl() function should also
-> have a .compat_ioctl(), and ideally it should be exactly this trivial
-> version.
+Hi!
 
-Ok, for some reason I thought if there was no need for a compat ioctl
-(i.e. no pointer mess), then no need for a callback at all.
+On Mon, Apr 22, 2019 at 9:28 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> [...]
+> > +     /*
+> > +      * On most (all?) Atheros/QCA SoCs dual eth interfaces are not equal.
+> > +      *
+> > +      * That is to say eth0 can not work independently. It only works
+> > +      * when eth1 is working.
+> > +      */
+>
+> Please could you explain that some more? Is there just one MDIO bus
+> shared by two ethernet controllers? If so, it would be better to have
+> the MDIO bus controller as a separate driver.
 
-thanks,
+mdio registers exists on both ethernet blocks. And due to how reset
+works on this ethernet IP, it's hard to split it into a separated
+driver. (Only asserting both eth and mdio resets together will reset
+everything including register values.)
+The reason why gmac1 should be brought up first is that on some chips,
+mdio on gmac0 connects to nothing and phy used by gmac0 is on mdio bus
+of gmac1.
 
-greg k-h
+> [...]
+
+Regards,
+Chuanhong Guo
