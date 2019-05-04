@@ -1,91 +1,50 @@
-Return-Path: <SRS0=d6pY=TH=sifive.com=sagar.kadam@kernel.org>
+Return-Path: <SRS0=XfsU=TE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:32405 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfEDMZh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 May 2019 08:25:37 -0400
+Date: Sat, 4 May 2019 20:25:00 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 5/5] [media] allegro: add SPS/PPS nal unit writer
+Message-ID: <201905042054.cJaeaTEE%lkp@intel.com>
+References: <20190503122010.16663-6-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com> <20190507152725.GE25013@lunn.ch>
-In-Reply-To: <20190507152725.GE25013@lunn.ch>
-From: Sagar Kadam <sagar.kadam@sifive.com>
-Date: Tue, 7 May 2019 21:30:30 +0530
-Message-ID: <CAARK3HnAo+DQ81VyCTPe9dY924+m_g0_9yJ2pDDc-mVWR_peJA@mail.gmail.com>
-Subject: Re: [PATCH v2 v2 0/3] Extend dt bindings to support I2C on sifive
- devices and a fix broken IRQ in polling mode.
-Content-Type: multipart/alternative; boundary="000000000000aa7ca305884e516e"
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503122010.16663-6-m.tretter@pengutronix.de>
+Sender: devicetree-owner@vger.kernel.org
+To: Michael Tretter <m.tretter@pengutronix.de>
+Cc: kbuild-all@01.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000aa7ca305884e516e
-Content-Type: text/plain; charset="UTF-8"
+Hi Michael,
 
-On Tue, May 7, 2019 at 8:57 PM Andrew Lunn <andrew@lunn.ch> wrote:
+I love your patch! Perhaps something to improve:
 
-> > The information transmitted is intended only for the person or entity to
-> > which it is addressed and may contain confidential and/or privileged
-> > material. If you are not the intended recipient of this message please
-> do
-> > not read, copy, use or disclose this communication and notify the sender
-> > immediately. It should be noted that any review, retransmission,
-> > dissemination or other use of, or taking action or reliance upon, this
-> > information by persons or entities other than the intended recipient is
-> > prohibited.
->
-> You need to remove this. It is nonsense anyway. You are mailing to a
-> public list....
->
->
-Apologies for this. I will make a note of it an remove this footer.
+[auto build test WARNING on linuxtv-media/master]
+[also build test WARNING on v5.1-rc7 next-20190503]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-       Andrew
->
+url:    https://github.com/0day-ci/linux/commits/Michael-Tretter/Add-ZynqMP-VCU-Allegro-DVT-H-264-encoder-driver/20190504-161958
+base:   git://linuxtv.org/media_tree.git master
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
--- 
-The information transmitted is intended only for the person or entity to 
-which it is addressed and may contain confidential and/or privileged 
-material. If you are not the intended recipient of this message please do 
-not read, copy, use or disclose this communication and notify the sender 
-immediately. It should be noted that any review, retransmission, 
-dissemination or other use of, or taking action or reliance upon, this 
-information by persons or entities other than the intended recipient is 
-prohibited.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
---000000000000aa7ca305884e516e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr"><div><br></div></div><br><br><div class=
-=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, May 7, 2019 =
-at 8:57 PM Andrew Lunn &lt;<a href=3D"mailto:andrew@lunn.ch">andrew@lunn.ch=
-</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:=
-0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">=
-&gt; The information transmitted is intended only for the person or entity =
-to <br>
-&gt; which it is addressed and may contain confidential and/or privileged <=
-br>
-&gt; material. If you are not the intended recipient of this message please=
- do <br>
-&gt; not read, copy, use or disclose this communication and notify the send=
-er <br>
-&gt; immediately. It should be noted that any review, retransmission, <br>
-&gt; dissemination or other use of, or taking action or reliance upon, this=
- <br>
-&gt; information by persons or entities other than the intended recipient i=
-s <br>
-&gt; prohibited.<br>
-<br>
-You need to remove this. It is nonsense anyway. You are mailing to a<br>
-public list....<br>
-<br></blockquote><div><br></div><div>Apologies for this. I will make a note=
- of it an remove this footer.</div><div><br></div><blockquote class=3D"gmai=
-l_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,20=
-4,204);padding-left:1ex">
-=C2=A0 =C2=A0 =C2=A0 =C2=A0Andrew<br>
-</blockquote></div></div>
+sparse warnings: (new ones prefixed by >>)
 
-<br>
-<font face=3D"Arial, Helvetica, sans-serif" size=3D"2" color=3D"#808080">Th=
-e information transmitted is intended only for the person or entity to whic=
-h it is addressed and may contain confidential and/or privileged material. =
-If you are not the intended recipient of this message please do not read, c=
-opy, use or disclose this communication and notify the sender immediately. =
-It should be noted that any review, retransmission, dissemination or other =
-use of, or taking action or reliance upon, this information by persons or e=
-ntities other than the intended recipient is prohibited.</font>
---000000000000aa7ca305884e516e--
+>> drivers/media/platform/allegro-dvt/nal-h264.c:433:6: sparse: sparse: symbol 'nal_h264_write_start_code_prefix' was not declared. Should it be static?
+>> drivers/media/platform/allegro-dvt/nal-h264.c:451:6: sparse: sparse: symbol 'nal_h264_read_start_code_prefix' was not declared. Should it be static?
+>> drivers/media/platform/allegro-dvt/nal-h264.c:469:6: sparse: sparse: symbol 'nal_h264_write_filler_data' was not declared. Should it be static?
+>> drivers/media/platform/allegro-dvt/nal-h264.c:480:6: sparse: sparse: symbol 'nal_h264_read_filler_data' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
