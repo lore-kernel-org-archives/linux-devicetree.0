@@ -1,110 +1,98 @@
-Return-Path: <SRS0=HuYX=TE=ucw.cz=pavel@kernel.org>
-Date: Sat, 4 May 2019 18:12:37 +0200
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] dt-bindings: leds: Add binding for ubnt-spi LED.
-Message-ID: <20190504161237.GA24060@amd>
-References: <20190504122825.11883-1-list@c-mauderer.de>
+Return-Path: <SRS0=vTZI=TE=c-mauderer.de=list@kernel.org>
+From: list@c-mauderer.de
+Subject: [PATCH 1/2] dt-bindings: leds: Add binding for ubnt-spi LED.
+Date: Sat,  4 May 2019 14:28:24 +0200
+Message-Id: <20190504122825.11883-1-list@c-mauderer.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <20190504122825.11883-1-list@c-mauderer.de>
-To: list@c-mauderer.de
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
+Content-Transfer-Encoding: 8bit
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Christian Mauderer <oss@c-mauderer.de>
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds the binding documentation for the LED controller found
+in Ubiquity airCube ISP devices.
 
-On Sat 2019-05-04 14:28:24, list@c-mauderer.de wrote:
-> From: Christian Mauderer <oss@c-mauderer.de>
->=20
-> This patch adds the binding documentation for the LED controller found
-> in Ubiquity airCube ISP devices.
->=20
-> Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
-> ---
->=20
-> I tested the patches with a 4.14 and a 4.19 kernel on the current OpenWRT.
-> Although I didn't get the kernel running due to file system problems they=
- build
-> fine with a 5.1-rc7.
->=20
-> I shortly described the protocol of the controller in a comment in the dr=
-iver
-> file in the second patch.
->=20
-> Checkpatch gives the following warning for both patches:
->=20
->   WARNING: added, moved or deleted file(s), does MAINTAINERS need
-> updating?
+Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
+---
 
-Ignore that :-).
+I tested the patches with a 4.14 and a 4.19 kernel on the current OpenWRT.
+Although I didn't get the kernel running due to file system problems they build
+fine with a 5.1-rc7.
 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt b/D=
-ocumentation/devicetree/bindings/leds/leds-ubnt-spi.txt
-> new file mode 100644
-> index 000000000000..ab1478cdc139
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
-> @@ -0,0 +1,49 @@
-> +Binding for the controller based LED found in Ubiquity airCube ISP and m=
-ost
-> +likely some other Ubiquity devices.
+I shortly described the protocol of the controller in a comment in the driver
+file in the second patch.
 
-It would be good to know what chip it is.. and name the binding
-accordingly.
+Checkpatch gives the following warning for both patches:
 
-Alternatively, call its led-spi-byte, or something, as it is really
-trivial protocol. Maybe other chips will have same interface?
+  WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
 
-> +Example for the airCube ISP (with SPI controller matching that device):
-> +
-> +led_spi {
-> +	compatible =3D "spi-gpio";
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +
-> +	gpio-sck =3D <&gpio 3 GPIO_ACTIVE_HIGH>;
-> +	gpio-mosi =3D <&gpio 2 GPIO_ACTIVE_HIGH>;
-> +	cs-gpios =3D <&gpio 1 GPIO_ACTIVE_HIGH>;
-> +	num-chipselects =3D <1>;
-> +
-> +	led_ubnt@0 {
-> +		compatible =3D "ubnt,spi-led";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <100000>;
-> +
-> +		led {
-> +			label =3D "system";
-> +			/* keep the LED slightly on to show powered device */
-> +			ubnt-spi,off_bright =3D /bits/ 8 <4>;
-> +		};
-> +	};
-> +};
+To be honest: I don't know what to do with it. Please excuse my ignorance here.
+It's the first driver that I want to add to the Linux kernel.
 
-Otherwise looks good to me,
+Please point me to some documentation if I did miss some big points for
+submitting patches.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+ .../bindings/leds/leds-ubnt-spi.txt           | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
 
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzNufUACgkQMOfwapXb+vIO8QCdETjkj7yT1KkKezOd83CRZ96K
-DMkAoLrHGuBriWED+hd3nfBTrFNU/L5B
-=7/sq
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+diff --git a/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt b/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
+new file mode 100644
+index 000000000000..ab1478cdc139
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-ubnt-spi.txt
+@@ -0,0 +1,49 @@
++Binding for the controller based LED found in Ubiquity airCube ISP and most
++likely some other Ubiquity devices.
++
++The protocol of the controller is quite simple. Only one byte will be sent. The
++value of the byte can be between the ubnt-spi,off_bright value and the
++ubnt-spi,max_bright value.
++
++The driver maybe can be used for other devices with a similar protocol too.
++
++Required properties:
++- compatible:		Should be "ubnt,spi-led".
++- spi-max-frequency:	Should be <100000> for this device.
++
++Optional sub-node properties:
++- ubnt-spi,off_bright:	The value that will be sent if the LED should be
++			switched off. Default value is 0.
++- ubnt-spi,max_bright:	Value for the maximum brightness. Default value for that
++			is 63.
++- label:		A label for the LED. If one is given, the LED will be
++			named "ubnt-spi:<label>" or "ubnt-spi::" otherwise.
++
++Being a SPI device this driver should be a sub-node of a SPI controller. The
++controller only supports one LED. For consistence with other controllers, the
++LED is defined as a sub-node.
++
++Example for the airCube ISP (with SPI controller matching that device):
++
++led_spi {
++	compatible = "spi-gpio";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	gpio-sck = <&gpio 3 GPIO_ACTIVE_HIGH>;
++	gpio-mosi = <&gpio 2 GPIO_ACTIVE_HIGH>;
++	cs-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
++	num-chipselects = <1>;
++
++	led_ubnt@0 {
++		compatible = "ubnt,spi-led";
++		reg = <0>;
++		spi-max-frequency = <100000>;
++
++		led {
++			label = "system";
++			/* keep the LED slightly on to show powered device */
++			ubnt-spi,off_bright = /bits/ 8 <4>;
++		};
++	};
++};
+-- 
+2.21.0
