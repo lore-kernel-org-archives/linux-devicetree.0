@@ -1,38 +1,61 @@
-Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 07/10] dt-bindings: usb: renesas_usbhs: Add support for r7s9210
-Date: Mon, 6 May 2019 18:46:28 -0500
-Message-ID: <20190506234631.113226-8-chris.brandt@renesas.com>
-In-Reply-To: <20190506234631.113226-1-chris.brandt@renesas.com>
-References: <20190506234631.113226-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=ik/T=TE=intel.com=lkp@kernel.org>
+Date: Sat, 4 May 2019 20:25:00 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] allegro: nal_h264_write_start_code_prefix() can be static
+Message-ID: <20190504122500.GA82569@lkp-kbuild10>
+References: <20190503122010.16663-6-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503122010.16663-6-m.tretter@pengutronix.de>
+To: Michael Tretter <m.tretter@pengutronix.de>
+Cc: kbuild-all@01.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for r7s9210 (RZ/A2M) SoC
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Fixes: eba69588199f ("allegro: add SPS/PPS nal unit writer")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ nal-h264.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index b8acc2a994a8..11c99d079dfb 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -20,9 +20,11 @@ Required properties:
- 	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
- 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
- 	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
-+	- "renesas,usbhs-r7s9210" for r7s72100 (RZ/A2) compatible device
- 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
- 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 or RZ/G2 compatible devices
- 	- "renesas,rza1-usbhs" for RZ/A1 compatible device
-+	- "renesas,rza2-usbhs" for RZ/A2 compatible device
+diff --git a/drivers/media/platform/allegro-dvt/nal-h264.c b/drivers/media/platform/allegro-dvt/nal-h264.c
+index fed1180c..a78c633 100644
+--- a/drivers/media/platform/allegro-dvt/nal-h264.c
++++ b/drivers/media/platform/allegro-dvt/nal-h264.c
+@@ -430,7 +430,7 @@ static void nal_h264_rbsp_trailing_bits(struct rbsp *rbsp)
+ 		  &rbsp_alignment_zero_bit);
+ }
  
- 	When compatible with the generic version, nodes must list the
- 	SoC-specific version corresponding to the platform first followed
--- 
-2.16.1
+-void nal_h264_write_start_code_prefix(struct rbsp *rbsp)
++static void nal_h264_write_start_code_prefix(struct rbsp *rbsp)
+ {
+ 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
+ 	int i = 4;
+@@ -448,7 +448,7 @@ void nal_h264_write_start_code_prefix(struct rbsp *rbsp)
+ 	rbsp->pos += i * 8;
+ }
+ 
+-void nal_h264_read_start_code_prefix(struct rbsp *rbsp)
++static void nal_h264_read_start_code_prefix(struct rbsp *rbsp)
+ {
+ 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
+ 	int i = 4;
+@@ -466,7 +466,7 @@ void nal_h264_read_start_code_prefix(struct rbsp *rbsp)
+ 	rbsp->pos += i * 8;
+ }
+ 
+-void nal_h264_write_filler_data(struct rbsp *rbsp)
++static void nal_h264_write_filler_data(struct rbsp *rbsp)
+ {
+ 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
+ 	int i;
+@@ -477,7 +477,7 @@ void nal_h264_write_filler_data(struct rbsp *rbsp)
+ 	rbsp->pos += i * 8;
+ }
+ 
+-void nal_h264_read_filler_data(struct rbsp *rbsp)
++static void nal_h264_read_filler_data(struct rbsp *rbsp)
+ {
+ 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
+ 
