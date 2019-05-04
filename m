@@ -1,67 +1,45 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 03/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC SPI0 interface
-Date: Thu,  9 May 2019 17:58:20 +0200
-Message-Id: <20190509155834.22838-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org, Michael Grzeschik <m.grzeschik@pengutronix.de>
+Return-Path: <SRS0=YSTV=TE=gmail.com=festevam@kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 8/8] media: imx7-media-csi: Change imx7_csi_enable() to void
+Date: Sat,  4 May 2019 11:40:27 -0300
+Message-Id: <20190504144027.31920-8-festevam@gmail.com>
+In-Reply-To: <20190504144027.31920-1-festevam@gmail.com>
+References: <20190504144027.31920-1-festevam@gmail.com>
+To: hverkuil-cisco@xs4all.nl
+Cc: rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+imx7_csi_enable() always return 0 and its return value is never checked,
+so convert it to void.
 
-Add support according the SMARC Spec 1.1 [1] and provided schematics.
-Due to the lack of hardware the interface can't be tested right now.
-
-[1] https://sget.org/standards/smarc
-
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/staging/media/imx/imx7-media-csi.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index e546d46365f5..a92f6e31fd71 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -113,6 +113,14 @@
- 	pinctrl-0 = <&pinctrl_flexcan2>;
- };
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index dcc6027fe32b..0f51791f788a 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -799,7 +799,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
+ 	return 0;
+ }
  
-+/* SPI0 */
-+&ecspi4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi4>;
-+	cs-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>,
-+		   <&gpio3 29 GPIO_ACTIVE_HIGH>;
-+};
-+
- /* GBE */
- &fec {
- 	pinctrl-names = "default";
-@@ -244,6 +252,19 @@
- };
+-static int imx7_csi_enable(struct imx7_csi *csi)
++static void imx7_csi_enable(struct imx7_csi *csi)
+ {
+ 	imx7_csi_sw_reset(csi);
  
- &iomuxc {
-+	pinctrl_ecspi4: ecspi4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__ECSPI4_SCLK 0x100b1
-+			MX6QDL_PAD_EIM_D28__ECSPI4_MOSI 0x100b1
-+			MX6QDL_PAD_EIM_D22__ECSPI4_MISO 0x100b1
-+
-+			/* SPI_IMX_CS2# - connected to internal flash */
-+			MX6QDL_PAD_EIM_D24__GPIO3_IO24 0x1b0b0
-+			/* SPI_IMX_CS0# - connected to SMARC SPI0_CS0# */
-+			MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_flexcan1: flexcan1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x1b0b0
+@@ -807,10 +807,7 @@ static int imx7_csi_enable(struct imx7_csi *csi)
+ 		imx7_csi_dmareq_rff_enable(csi);
+ 		imx7_csi_hw_enable_irq(csi);
+ 		imx7_csi_hw_enable(csi);
+-		return 0;
+ 	}
+-
+-	return 0;
+ }
+ 
+ static void imx7_csi_disable(struct imx7_csi *csi)
 -- 
-2.20.1
+2.17.1
