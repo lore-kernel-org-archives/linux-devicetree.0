@@ -1,67 +1,99 @@
-From: Chuanhua Han <chuanhua.han@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
- I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Date: Sat, 4 May 2019 09:28:48 +0000
-Message-ID: <AM6PR04MB43571B8D52C1FE9ED20DBA1D97360@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190430044719.30720-1-chuanhua.han@nxp.com>
- <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 16/17] kernel/sysctl-test: Add null pointer test for
+ sysctl.c:proc_dointvec()
+Date: Sat, 4 May 2019 12:40:12 +0200
+Message-ID: <20190504104012.GA1478@kroah.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-17-brendanhiggins@google.com>
+ <20190502110347.GE12416@kroah.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
+ <CAFd5g471Wawu6g14p0AO3aY8VPBKLA0mjHSdfR1qStFGzp3iGQ@mail.gmail.com>
+ <20190503064241.GC20723@kroah.com>
+ <CAFd5g44NrKM9WQCF1xW-BWpFNsC05UAS9jt1-S+vNRuBDZVsHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sumit Batra <sumit.batra@nxp.com>, "eha@deif.com" <eha@deif.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "linux@rempel-privat.de" <linux@rempel-privat.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "peda@axentia.se" <peda@axentia.se>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd5g44NrKM9WQCF1xW-BWpFNsC05UAS9jt1-S+vNRuBDZVsHQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: "Bird, Timothy" <Tim.Bird@sony.com>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, Amir Goldstein <amir73il@gmail.com>, Dan Carpenter <dan.carpent>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVyIDxz
-LmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBTZW50OiAyMDE5xOo01MIzMMjVIDIwOjUxDQo+IFRv
-OiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiBDYzogc2hhd25ndW9Aa2Vy
-bmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7
-DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
-PiBsaW51eC1pMmNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBmZXN0ZXZhbUBnbWFpbC5j
-b207IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+OyB3c2ErcmVuZXNhc0BzYW5n
-LWVuZ2luZWVyaW5nLmNvbTsNCj4gdS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlOyBlaGFA
-ZGVpZi5jb207IGxpbnV4QHJlbXBlbC1wcml2YXQuZGU7DQo+IGwuc3RhY2hAcGVuZ3V0cm9uaXgu
-ZGU7IHBlZGFAYXhlbnRpYS5zZTsgU3VtaXQgQmF0cmENCj4gPHN1bWl0LmJhdHJhQG54cC5jb20+
-DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0ggMS8yXSBpMmM6IGlteDogSTJDIERyaXZlciBk
-b2Vzbid0IGNvbnNpZGVyDQo+IEkyQ19JUEdDTEtfU0VMIFJDVyBiaXQgd2hlbiB1c2luZyBsczEw
-NDZhIFNvQw0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBUdWUsIEFwciAzMCwg
-MjAxOSBhdCAxMjo0NzoxOFBNICswODAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6DQo+ID4gVGhlIGN1
-cnJlbnQga2VybmVsIGRyaXZlciBkb2VzIG5vdCBjb25zaWRlciBJMkNfSVBHQ0xLX1NFTCAoNDI0
-IGJpdCBvZg0KPiA+IFJDVykgaW4gZGVjaWRpbmcgIGkyY19jbGtfcmF0ZSBpbiBmdW5jdGlvbiBp
-MmNfaW14X3NldF9jbGsoKSB7IDANCj4gPiBQbGF0Zm9ybSBjbG9jay80LCAxIFBsYXRmb3JtIGNs
-b2NrLzJ9Lg0KPiA+DQo+ID4gV2hlbiB1c2luZyBsczEwNDZhIFNvQywgdGhpcyBwb3B1bGF0ZXMg
-aW5jb3JyZWN0IHZhbHVlIGluIElCRkQNCj4gPiByZWdpc3RlciBpZiBJMkNfSVBHQ0xLX1NFTCA9
-IDAsIHdoaWNoIGdlbmVyYXRlcyBoYWxmIG9mIHRoZSBkZXNpcmVkIENsb2NrLg0KPiA+DQo+ID4g
-VGhlcmVmb3JlLCBpZiBsczEwNDZhIFNvQyBpcyB1c2VkLCB3ZSBuZWVkIHRvIHNldCB0aGUgaTJj
-IGNsb2NrDQo+ID4gYWNjb3JkaW5nIHRvIHRoZSBjb3JyZXNwb25kaW5nIFJDVy4NCj4gDQo+IFNv
-IHRoZSBjbG9jayBkcml2ZXIgcmVwb3J0cyB0aGUgd3JvbmcgY2xvY2suIFBsZWFzZSBmaXggdGhl
-IGNsb2NrIGRyaXZlciB0aGVuLg0KTm8sIHRoaXMgaXMgYSBwcm9ibGVtIHdpdGggdGhlIGkyYyBk
-cml2ZXIuIEl0IGlzIG5vdCBhIHByb2JsZW0gd2l0aCB0aGUgY2xvY2sgZHJpdmVyLCBzbyB0aGUg
-aTJjIGRyaXZlciBuZWVkcyB0byBiZSBtb2RpZmllZC4NCj4gDQo+IFNhc2NoYQ0KPiANCj4gLS0N
-Cj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCj4gfA0KPiBJ
-bmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAgICAgfA0KPiBodHRwczovL2V1
-cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3
-dy5wZQ0KPiBuZ3V0cm9uaXguZGUlMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2NodWFuaHVhLmhhbiU0
-MG54cC5jb20lN0MyYmINCj4gYTg5YzkwOGZiNGJkMzdiNjcwOGQ2Y2Q2YTdmZjclN0M2ODZlYTFk
-M2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNQ0KPiAlN0MwJTdDMCU3QzYzNjkyMjI1NDYyNTQ3MjAz
-NyZhbXA7c2RhdGE9ZUM0YkdETkFPaEV1MjR4dDlGMGgNCj4ga3hFJTJCMWZmb29DWjRDVXI0bzBn
-UUdENCUzRCZhbXA7cmVzZXJ2ZWQ9MCAgfA0KPiBQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRl
-c2hlaW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTANCj4gfA0KPiBBbXRzZ2Vy
-aWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6DQo+ICs0OS01MTIxLTIw
-NjkxNy01NTU1IHwNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Fri, May 03, 2019 at 04:41:10PM -0700, Brendan Higgins wrote:
+> > On Thu, May 02, 2019 at 11:45:43AM -0700, Brendan Higgins wrote:
+> > > On Thu, May 2, 2019 at 11:15 AM <Tim.Bird@sony.com> wrote:
+> > > >
+> > > >
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Greg KH
+> > > > >
+> > > > > On Wed, May 01, 2019 at 04:01:25PM -0700, Brendan Higgins wrote:
+> > > > > > From: Iurii Zaikin <yzaikin@google.com>
+> > > > > >
+> > > > > > KUnit tests for initialized data behavior of proc_dointvec that is
+> > > > > > explicitly checked in the code. Includes basic parsing tests including
+> > > > > > int min/max overflow.
+> > > > > >
+> > > > > > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> > > > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > > > > ---
+> > > > > >  kernel/Makefile      |   2 +
+> > > > > >  kernel/sysctl-test.c | 292
+> > > > > +++++++++++++++++++++++++++++++++++++++++++
+> > > > > >  lib/Kconfig.debug    |   6 +
+> > > > > >  3 files changed, 300 insertions(+)
+> > > > > >  create mode 100644 kernel/sysctl-test.c
+> > > > > >
+> > > > > > diff --git a/kernel/Makefile b/kernel/Makefile
+> > > > > > index 6c57e78817dad..c81a8976b6a4b 100644
+> > > > > > --- a/kernel/Makefile
+> > > > > > +++ b/kernel/Makefile
+> > > > > > @@ -112,6 +112,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+> > > > > >  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+> > > > > >  obj-$(CONFIG_RSEQ) += rseq.o
+> > > > > >
+> > > > > > +obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+> > > > >
+> > > > > You are going to have to have a "standard" naming scheme for test
+> > > > > modules, are you going to recommend "foo-test" over "test-foo"?  If so,
+> > > > > that's fine, we should just be consistant and document it somewhere.
+> > > > >
+> > > > > Personally, I'd prefer "test-foo", but that's just me, naming is hard...
+> > > >
+> > > > My preference would be "test-foo" as well.  Just my 2 cents.
+> > >
+> > > I definitely agree we should be consistent. My personal bias
+> > > (unsurprisingly) is "foo-test," but this is just because that is the
+> > > convention I am used to in other projects I have worked on.
+> > >
+> > > On an unbiased note, we are currently almost evenly split between the
+> > > two conventions with *slight* preference for "foo-test": I ran the two
+> > > following grep commands on v5.1-rc7:
+> > >
+> > > grep -Hrn --exclude-dir="build" -e "config [a-zA-Z_0-9]\+_TEST$" | wc -l
+> > > grep -Hrn --exclude-dir="build" -e "config TEST_[a-zA-Z_0-9]\+" | wc -l
+> > >
+> > > "foo-test" has 36 occurrences.
+> > > "test-foo" has 33 occurrences.
+> > >
+> > > The things I am more concerned about is how this would affect file
+> > > naming. If we have a unit test for foo.c, I think foo_test.c is more
+> > > consistent with our namespacing conventions. The other thing, is if we
+> > > already have a Kconfig symbol called FOO_TEST (or TEST_FOO) what
+> > > should we name the KUnit test in this case? FOO_UNIT_TEST?
+> > > FOO_KUNIT_TEST, like I did above?
+> >
+> > Ok, I can live with "foo-test", as you are right, in a directory listing
+> > and config option, it makes more sense to add it as a suffix.
+> 
+> Cool, so just for future reference, if we already have a Kconfig
+> symbol called FOO_TEST (or TEST_FOO) what should we name the KUnit
+> test in this case? FOO_UNIT_TEST? FOO_KUNIT_TEST, like I did above?
+
+FOO_KUNIT_TEST is fine, I doubt that's going to come up very often.
+
+thanks,
+
+greg k-h
