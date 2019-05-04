@@ -1,113 +1,208 @@
-Return-Path: <SRS0=XfsU=TE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39297 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfEDQUL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 May 2019 12:20:11 -0400
-Date: Sat, 4 May 2019 18:20:09 +0200
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/2] leds: ubnt-spi: Add Ubnt AirCube ISP LED driver
-Message-ID: <20190504162009.GB24060@amd>
+Return-Path: <SRS0=vTZI=TE=c-mauderer.de=list@kernel.org>
+From: list@c-mauderer.de
+Subject: [PATCH 2/2] leds: ubnt-spi: Add Ubnt AirCube ISP LED driver
+Date: Sat,  4 May 2019 14:28:25 +0200
+Message-Id: <20190504122825.11883-2-list@c-mauderer.de>
+In-Reply-To: <20190504122825.11883-1-list@c-mauderer.de>
 References: <20190504122825.11883-1-list@c-mauderer.de>
- <20190504122825.11883-2-list@c-mauderer.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
-Content-Disposition: inline
-In-Reply-To: <20190504122825.11883-2-list@c-mauderer.de>
-Sender: devicetree-owner@vger.kernel.org
-To: list@c-mauderer.de
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
+Content-Transfer-Encoding: 8bit
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Christian Mauderer <oss@c-mauderer.de>
 
---eAbsdosE1cNLO4uF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This driver adds support for the custom LED controller used in Ubiquity
+airCube ISP devices and most likely some other simmilar Ubiquity
+products.
 
-On Sat 2019-05-04 14:28:25, list@c-mauderer.de wrote:
-> From: Christian Mauderer <oss@c-mauderer.de>
->=20
-> This driver adds support for the custom LED controller used in Ubiquity
-> airCube ISP devices and most likely some other simmilar Ubiquity
-> products.
+Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
+---
+ drivers/leds/Kconfig         |  10 +++
+ drivers/leds/Makefile        |   1 +
+ drivers/leds/leds-ubnt-spi.c | 140 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 151 insertions(+)
+ create mode 100644 drivers/leds/leds-ubnt-spi.c
 
-similar.
-
-> +config LEDS_UBNT_SPI
-> +	tristate "LED support for Ubnt aircube ISP custom SPI LED controller"
-> +	depends on LEDS_CLASS
-> +	depends on SPI
-> +	depends on OF
-> +	help
-> +	  This option enables basic support for the LED controller used in
-> +	  Ubiquity airCube ISP devices. The controller is microcontroller based
-> +	  and uses a single byte on the SPI to set brightness or blink patterns.
-
-> +/*
-> + *  Custom controller based LED controller used in Ubiquity airCube ISP.
-> + *
-> + *  Reverse engineered protocol:
-> + *  - The device uses only a single byte sent via SPI.
-> + *  - The SPI input doesn't contain any relevant information.
-> + *  - Higher two bits set a mode. Lower six bits are a parameter.
-> + *  - Mode: 00 -> set brightness between 0x00 (min) and 0x3F (max)
-> + *  - Mode: 01 -> pulsing pattern (min -> max -> min) with an interval. =
-=46rom
-> + *    some tests, the period is about (50ms + 102ms * parameter). There =
-is a
-> + *    slightly different pattern starting from 0x100 (longer gap between=
- the
-> + *    pulses) but the time still follows that calculation.
-> + *  - Mode: 10 -> same as 01 but with only a ramp from min to max. Again=
- a
-> + *    slight jump in the pattern at 0x100.
-> + *  - Mode: 11 -> blinking (off -> 25% -> off -> 25% -> ...) with a peri=
-od of
-> + *    (105ms * parameter)
-> + *
-> + *  NOTE: This driver currently only implements mode 00 (brightness).
-> + */
-
-Aha, so this is not as simple as I thought.
-
-"Slightly different pattern starting from 0x100"? What does 0x100 mean
-here.
-
-> +	mutex_init(&led->mutex);
-> +	led->ldev.name =3D led->name;
-> +	led->ldev.brightness =3D LED_OFF;
-> +	led->ldev.max_brightness =3D led->max_bright - led->off_bright;
-
-What happens when DTS has off_bright > max_bright? :-).
-
-> +
-> +static int ubnt_spi_remove(struct spi_device *spi)
-> +{
-> +	struct ubnt_spi_led	*led =3D spi_get_drvdata(spi);
-> +
-> +	led_classdev_unregister(&led->ldev);
-> +
-> +	return 0;
-> +}
-
-Do you need to do mutex_destroy?
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---eAbsdosE1cNLO4uF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzNu7kACgkQMOfwapXb+vJhQACeNvTmhpog0jZ1KsNJt4pYf+H3
-LroAnAoMKZEN/BYIwnQ5TdnysNXdj+JP
-=y9kP
------END PGP SIGNATURE-----
-
---eAbsdosE1cNLO4uF--
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a72f97fca57b..e96ab93860ec 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -766,6 +766,16 @@ config LEDS_NIC78BX
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called leds-nic78bx.
+ 
++config LEDS_UBNT_SPI
++	tristate "LED support for Ubnt aircube ISP custom SPI LED controller"
++	depends on LEDS_CLASS
++	depends on SPI
++	depends on OF
++	help
++	  This option enables basic support for the LED controller used in
++	  Ubiquity airCube ISP devices. The controller is microcontroller based
++	  and uses a single byte on the SPI to set brightness or blink patterns.
++
+ comment "LED Triggers"
+ source "drivers/leds/trigger/Kconfig"
+ 
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 4c1b0054f379..f272bfac109c 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -75,6 +75,7 @@ obj-$(CONFIG_LEDS_PM8058)		+= leds-pm8058.o
+ obj-$(CONFIG_LEDS_MLXCPLD)		+= leds-mlxcpld.o
+ obj-$(CONFIG_LEDS_MLXREG)		+= leds-mlxreg.o
+ obj-$(CONFIG_LEDS_NIC78BX)		+= leds-nic78bx.o
++obj-$(CONFIG_LEDS_UBNT_SPI)		+= leds-ubnt-spi.o
+ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
+ obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
+ obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
+diff --git a/drivers/leds/leds-ubnt-spi.c b/drivers/leds/leds-ubnt-spi.c
+new file mode 100644
+index 000000000000..a3cb0dd5b0da
+--- /dev/null
++++ b/drivers/leds/leds-ubnt-spi.c
+@@ -0,0 +1,140 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2019 Christian Mauderer <oss@c-mauderer.de>
++
++/*
++ *  Custom controller based LED controller used in Ubiquity airCube ISP.
++ *
++ *  Reverse engineered protocol:
++ *  - The device uses only a single byte sent via SPI.
++ *  - The SPI input doesn't contain any relevant information.
++ *  - Higher two bits set a mode. Lower six bits are a parameter.
++ *  - Mode: 00 -> set brightness between 0x00 (min) and 0x3F (max)
++ *  - Mode: 01 -> pulsing pattern (min -> max -> min) with an interval. From
++ *    some tests, the period is about (50ms + 102ms * parameter). There is a
++ *    slightly different pattern starting from 0x100 (longer gap between the
++ *    pulses) but the time still follows that calculation.
++ *  - Mode: 10 -> same as 01 but with only a ramp from min to max. Again a
++ *    slight jump in the pattern at 0x100.
++ *  - Mode: 11 -> blinking (off -> 25% -> off -> 25% -> ...) with a period of
++ *    (105ms * parameter)
++ *
++ *  NOTE: This driver currently only implements mode 00 (brightness).
++ */
++
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/spi/spi.h>
++#include <linux/mutex.h>
++#include <uapi/linux/uleds.h>
++
++#define UBNT_SPI_OFF_BRIGHTNESS	0x0
++#define UBNT_SPI_MAX_BRIGHTNESS	0x3F
++
++struct ubnt_spi_led {
++	struct led_classdev	ldev;
++	struct spi_device	*spi;
++	char			name[LED_MAX_NAME_SIZE];
++	struct mutex		mutex;
++	u8			off_bright;
++	u8			max_bright;
++};
++
++static int ubnt_spi_brightness_set_blocking(struct led_classdev *dev,
++					    enum led_brightness brightness)
++{
++	struct ubnt_spi_led *led = container_of(dev, struct ubnt_spi_led, ldev);
++	u8 value;
++	int ret;
++
++	value = (u8) brightness + led->off_bright;
++
++	mutex_lock(&led->mutex);
++	ret = spi_write(led->spi, &value, sizeof(value));
++	mutex_unlock(&led->mutex);
++
++	return ret;
++}
++
++static int ubnt_spi_probe(struct spi_device *spi)
++{
++	struct device *dev = &spi->dev;
++	struct device_node *child;
++	struct ubnt_spi_led	*led;
++	int ret;
++	const char *tmp;
++	const char *default_name = ":";
++
++	if (!dev->of_node)
++		return -ENODEV;
++
++	if (of_get_child_count(dev->of_node) != 1) {
++		dev_err(dev, "Device must have exactly one LED sub-node.");
++		return -EINVAL;
++	}
++	child = of_get_next_child(dev->of_node, NULL);
++
++	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
++	if (!led)
++		return -ENOMEM;
++
++	led->spi	= spi;
++
++	ret = of_property_read_string(child, "label", &tmp);
++	if (ret < 0)
++		tmp = default_name;
++	snprintf(led->name, sizeof(led->name), "ubnt-spi-led:%s", tmp);
++
++	ret = of_property_read_u8(child, "ubnt-spi,off_bright",
++				  &led->off_bright);
++	if (ret != 0)
++		led->off_bright = UBNT_SPI_OFF_BRIGHTNESS;
++
++	ret = of_property_read_u8(child, "ubnt-spi,max_bright",
++				  &led->max_bright);
++	if (ret != 0)
++		led->max_bright = UBNT_SPI_MAX_BRIGHTNESS;
++
++	mutex_init(&led->mutex);
++	led->ldev.name = led->name;
++	led->ldev.brightness = LED_OFF;
++	led->ldev.max_brightness = led->max_bright - led->off_bright;
++	led->ldev.brightness_set_blocking = ubnt_spi_brightness_set_blocking;
++	ret = led_classdev_register(&spi->dev, &led->ldev);
++	if (ret >= 0)
++		spi_set_drvdata(spi, led);
++
++	return ret;
++}
++
++static int ubnt_spi_remove(struct spi_device *spi)
++{
++	struct ubnt_spi_led	*led = spi_get_drvdata(spi);
++
++	led_classdev_unregister(&led->ldev);
++
++	return 0;
++}
++
++static const struct of_device_id ubnt_spi_dt_ids[] = {
++	{ .compatible = "ubnt,spi-led", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, ubnt_spi_dt_ids);
++
++static struct spi_driver ubnt_spi_driver = {
++	.probe		= ubnt_spi_probe,
++	.remove		= ubnt_spi_remove,
++	.driver = {
++		.name		= KBUILD_MODNAME,
++		.of_match_table	= ubnt_spi_dt_ids,
++	},
++};
++
++module_spi_driver(ubnt_spi_driver);
++
++MODULE_AUTHOR("Christian Mauderer <oss@c-mauderer.de>");
++MODULE_DESCRIPTION("Ubnt AirCube ISP LED driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("spi:ubnt-spi-led");
+-- 
+2.21.0
