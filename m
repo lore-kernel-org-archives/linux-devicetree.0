@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v5 01/10] media: dt-bindings: marvell,mmp2-ccic: Add Marvell MMP2 camera
-Date: Sun,  5 May 2019 16:00:22 +0200
-Message-ID: <20190505140031.9636-2-lkundrak@v3.sk>
+Subject: [PATCH v5 08/10] [media] marvell-ccic/mmp: add devicetree support
+Date: Sun,  5 May 2019 16:00:29 +0200
+Message-ID: <20190505140031.9636-9-lkundrak@v3.sk>
 References: <20190505140031.9636-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,90 +12,111 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Add Marvell MMP2 camera host interface.
+The platform data is actually not used anywhere (along with the CSI
+support) and should be safe to remove.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
 ---
-Changes since v4:
-- s/Nust/Must/
-- Documented required endpoint properties; bus-type, hsync-active,
-  vsync-active and pclk-sample.
+Changes since v1:
+- s/This are/These are/ in a comment
 
-Changes since v3:
-- Dropped the video-interfaces.txt reference
-- Clarify "clocks", "clock-names" and "clock-output-names" descriptions
-- Refer to other documentation by full path
+ .../media/platform/marvell-ccic/mmp-driver.c  | 36 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-Changes since v2:
-- Added #clock-cells, clock-names, port
-
- .../bindings/media/marvell,mmp2-ccic.txt      | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-=
-ccic.txt
-
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.tx=
-t b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-new file mode 100644
-index 0000000000000..7ec2c8c8a3b98
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-@@ -0,0 +1,50 @@
-+Marvell MMP2 camera host interface
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
+edia/platform/marvell-ccic/mmp-driver.c
+index 8f1d2a972bc9f..54c2dd8c29d82 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -19,6 +19,8 @@
+ #include <media/v4l2-device.h>
+ #include <linux/platform_data/media/mmp-camera.h>
+ #include <linux/device.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+ #include <linux/io.h>
+@@ -196,6 +198,9 @@ static void mmpcam_calc_dphy(struct mcam_camera *mcam=
+)
+ 	struct device *dev =3D &cam->pdev->dev;
+ 	unsigned long tx_clk_esc;
+=20
++	if (!pdata)
++		return;
 +
-+Required properties:
-+ - compatible: Should be "marvell,mmp2-ccic".
-+ - reg: Register base and size.
-+ - interrupts: The interrupt number.
-+ - #clock-cells: Must be 0.
-+
-+Optional properties:
-+ - clocks: Reference to the input clock as specified by
-+           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-+ - clock-names: Names of the clocks used; "axi" for the AXI bus interfac=
-e,
-+                "func" for the peripheral clock and "phy" for the parall=
-el
-+                video bus interface.
-+ - clock-output-names: Optional clock source for sensors. Shall be "mclk=
-".
-+
-+Required subnodes:
-+ - port: The parallel bus interface port with a single endpoint linked t=
-o
-+         the sensor's endpoint as described in
-+         Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Required endpoint properties:
-+ - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respective=
-ly
-+ - pclk-sample: pixel clock polarity
-+ - hsync-active: horizontal synchronization polarity (only required for
-+   parallel bus)
-+ - vsync-active: vertical synchronization polarity (only required for
-+   parallel bus)
-+
-+Example:
-+
-+	camera0: camera@d420a000 {
-+		compatible =3D "marvell,mmp2-ccic";
-+		reg =3D <0xd420a000 0x800>;
-+		interrupts =3D <42>;
-+		clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
-+		clock-names =3D "axi";
-+		#clock-cells =3D <0>;
-+		clock-output-names =3D "mclk";
-+
-+		port {
-+			camera0_0: endpoint {
-+				remote-endpoint =3D <&ov7670_0>;
-+                                bus-type =3D <5>;      /* Parallel */
-+                                hsync-active =3D <1>;  /* Active high */
-+                                vsync-active =3D <1>;  /* Active high */
-+                                pclk-sample =3D <0>;   /* Falling */
-+			};
-+		};
-+	};
+ 	/*
+ 	 * If CSI2_DPHY3 is calculated dynamically,
+ 	 * pdata->lane_clk should be already set
+@@ -314,10 +319,6 @@ static int mmpcam_probe(struct platform_device *pdev=
+)
+ 	struct mmp_camera_platform_data *pdata;
+ 	int ret;
+=20
+-	pdata =3D pdev->dev.platform_data;
+-	if (!pdata)
+-		return -ENODEV;
+-
+ 	cam =3D devm_kzalloc(&pdev->dev, sizeof(*cam), GFP_KERNEL);
+ 	if (cam =3D=3D NULL)
+ 		return -ENOMEM;
+@@ -330,17 +331,29 @@ static int mmpcam_probe(struct platform_device *pde=
+v)
+ 	mcam->calc_dphy =3D mmpcam_calc_dphy;
+ 	mcam->dev =3D &pdev->dev;
+ 	mcam->use_smbus =3D 0;
+-	mcam->mclk_src =3D pdata->mclk_src;
+-	mcam->mclk_div =3D pdata->mclk_div;
+-	mcam->bus_type =3D pdata->bus_type;
+-	mcam->dphy =3D pdata->dphy;
++	pdata =3D pdev->dev.platform_data;
++	if (pdata) {
++		mcam->mclk_src =3D pdata->mclk_src;
++		mcam->mclk_div =3D pdata->mclk_div;
++		mcam->bus_type =3D pdata->bus_type;
++		mcam->dphy =3D pdata->dphy;
++		mcam->lane =3D pdata->lane;
++	} else {
++		/*
++		 * These are values that used to be hardcoded in mcam-core and
++		 * work well on a OLPC XO 1.75 with a parallel bus sensor.
++		 * If it turns out other setups make sense, the values should
++		 * be obtained from the device tree.
++		 */
++		mcam->mclk_src =3D 3;
++		mcam->mclk_div =3D 2;
++	}
+ 	if (mcam->bus_type =3D=3D V4L2_MBUS_CSI2_DPHY) {
+ 		cam->mipi_clk =3D devm_clk_get(mcam->dev, "mipi");
+ 		if ((IS_ERR(cam->mipi_clk) && mcam->dphy[2] =3D=3D 0))
+ 			return PTR_ERR(cam->mipi_clk);
+ 	}
+ 	mcam->mipi_enabled =3D false;
+-	mcam->lane =3D pdata->lane;
+ 	mcam->chip_id =3D MCAM_ARMADA610;
+ 	mcam->buffer_mode =3D B_DMA_sg;
+ 	strscpy(mcam->bus_info, "platform:mmp-camera", sizeof(mcam->bus_info));
+@@ -475,6 +488,10 @@ static int mmpcam_resume(struct platform_device *pde=
+v)
+=20
+ #endif
+=20
++static const struct of_device_id mmpcam_of_match[] =3D {
++	{ .compatible =3D "marvell,mmp2-ccic", },
++	{},
++};
+=20
+ static struct platform_driver mmpcam_driver =3D {
+ 	.probe		=3D mmpcam_probe,
+@@ -485,6 +502,7 @@ static struct platform_driver mmpcam_driver =3D {
+ #endif
+ 	.driver =3D {
+ 		.name	=3D "mmp-camera",
++		.of_match_table =3D of_match_ptr(mmpcam_of_match),
+ 	}
+ };
+=20
 --=20
 2.21.0
