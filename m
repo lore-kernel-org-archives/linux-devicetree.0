@@ -1,61 +1,25 @@
-Return-Path: <SRS0=ik/T=TE=intel.com=lkp@kernel.org>
-Date: Sat, 4 May 2019 20:25:00 +0800
-From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] allegro: nal_h264_write_start_code_prefix() can be static
-Message-ID: <20190504122500.GA82569@lkp-kbuild10>
-References: <20190503122010.16663-6-m.tretter@pengutronix.de>
+Return-Path: <SRS0=IWi0=TF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from outils.crapouillou.net ([89.234.176.41]:57940 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfEES4g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 May 2019 14:56:36 -0400
+Date: Sun, 05 May 2019 20:56:21 +0200
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Multiple device drivers sharing one node
+Message-Id: <1557082581.1990.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503122010.16663-6-m.tretter@pengutronix.de>
-To: Michael Tretter <m.tretter@pengutronix.de>
-Cc: kbuild-all@01.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+Hi,
 
-Fixes: eba69588199f ("allegro: add SPS/PPS nal unit writer")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- nal-h264.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I have one devicetree node shared by several drivers.
 
-diff --git a/drivers/media/platform/allegro-dvt/nal-h264.c b/drivers/media/platform/allegro-dvt/nal-h264.c
-index fed1180c..a78c633 100644
---- a/drivers/media/platform/allegro-dvt/nal-h264.c
-+++ b/drivers/media/platform/allegro-dvt/nal-h264.c
-@@ -430,7 +430,7 @@ static void nal_h264_rbsp_trailing_bits(struct rbsp *rbsp)
- 		  &rbsp_alignment_zero_bit);
- }
- 
--void nal_h264_write_start_code_prefix(struct rbsp *rbsp)
-+static void nal_h264_write_start_code_prefix(struct rbsp *rbsp)
- {
- 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
- 	int i = 4;
-@@ -448,7 +448,7 @@ void nal_h264_write_start_code_prefix(struct rbsp *rbsp)
- 	rbsp->pos += i * 8;
- }
- 
--void nal_h264_read_start_code_prefix(struct rbsp *rbsp)
-+static void nal_h264_read_start_code_prefix(struct rbsp *rbsp)
- {
- 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
- 	int i = 4;
-@@ -466,7 +466,7 @@ void nal_h264_read_start_code_prefix(struct rbsp *rbsp)
- 	rbsp->pos += i * 8;
- }
- 
--void nal_h264_write_filler_data(struct rbsp *rbsp)
-+static void nal_h264_write_filler_data(struct rbsp *rbsp)
- {
- 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
- 	int i;
-@@ -477,7 +477,7 @@ void nal_h264_write_filler_data(struct rbsp *rbsp)
- 	rbsp->pos += i * 8;
- }
- 
--void nal_h264_read_filler_data(struct rbsp *rbsp)
-+static void nal_h264_read_filler_data(struct rbsp *rbsp)
- {
- 	u8 *p = rbsp->data + DIV_ROUND_UP(rbsp->pos, 8);
- 
+Should the node have one single compatible string, and each
+driver matches it, or should it have one different compatible
+string per driver?
+
+Thanks,
+-Paul
