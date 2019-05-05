@@ -1,12 +1,13 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V3 1/3] dt-bindings: watchdog: move i.MX system controller
- watchdog binding to SCU
-Date: Sun, 5 May 2019 02:14:47 +0000
-Message-ID: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V3 2/3] arm64: dts: imx8qxp: Move watchdog node into scu node
+Date: Sun, 5 May 2019 02:14:54 +0000
+Message-ID: <1557022189-10993-2-git-send-email-Anson.Huang@nxp.com>
+References: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,42 +22,21 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX system controller watchdog depends on SCU driver to support
-interrupt function, so it needs to be subnode of SCU node in DT,
-binding doc should be moved to fsl,scu.txt as well.
+i.MX system controller watchdog has pretimeout function which
+depends on i.MX SCU driver, so it should be a subnode of SCU.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V2:
-	- no content change, just merge two dt-binding patches and improve the commit message.
+No change.
 ---
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 15 ++++++++++++++
- .../bindings/watchdog/fsl-imx-sc-wdt.txt           | 24 ----------------------
- 2 files changed, 15 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 72d481c..9967212 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -122,6 +122,16 @@ RTC bindings based on SCU Message Protocol
- Required properties:
- - compatible: should be "fsl,imx8qxp-sc-rtc";
- 
-+Watchdog bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible: should be:
-+              "fsl,imx8qxp-sc-wdt"
-+              followed by "fsl,imx-sc-wdt";
-+Optional properties:
-+- timeout-sec: contains the watchdog timeout in seconds.
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -168,6 +178,11 @@ firmware {
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 0683ee2..b17c22e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -149,6 +149,11 @@
  		rtc: rtc {
  			compatible = "fsl,imx8qxp-sc-rtc";
  		};
@@ -66,37 +46,17 @@ index 72d481c..9967212 100644
 +			timeout-sec = <60>;
 +		};
  	};
- };
  
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
-deleted file mode 100644
-index 02b87e9..0000000
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--* Freescale i.MX System Controller Watchdog
+ 	timer {
+@@ -517,9 +522,4 @@
+ 			power-domains = <&pd IMX_SC_R_GPIO_7>;
+ 		};
+ 	};
 -
--i.MX system controller watchdog is for i.MX SoCs with system controller inside,
--the watchdog is managed by system controller, users can ONLY communicate with
--system controller from secure mode for watchdog operations, so Linux i.MX system
--controller watchdog driver will call ARM SMC API and trap into ARM-Trusted-Firmware
--for watchdog operations, ARM-Trusted-Firmware is running at secure EL3 mode and
--it will request system controller to execute the watchdog operation passed from
--Linux kernel.
--
--Required properties:
--- compatible:	Should be :
--		"fsl,imx8qxp-sc-wdt"
--		followed by "fsl,imx-sc-wdt";
--
--Optional properties:
--- timeout-sec : Contains the watchdog timeout in seconds.
--
--Examples:
--
--watchdog {
--	compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
--	timeout-sec = <60>;
--};
+-	watchdog {
+-		compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+-		timeout-sec = <60>;
+-	};
+ };
 -- 
 2.7.4
