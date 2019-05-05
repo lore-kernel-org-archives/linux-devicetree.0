@@ -1,42 +1,71 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 04/15] dt-bindings: rcar-gen3-phy-usb2: Document use of usb_x1
-Date: Thu, 9 May 2019 15:11:31 -0500
-Message-ID: <20190509201142.10543-5-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
-References: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 5 May 2019 15:33:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: iio: ad7949: Add
+ adi,reference-select
+Message-ID: <20190505153316.6c444eef@archlinux>
+In-Reply-To: <1556813672-49861-2-git-send-email-adam.michaelis@rockwellcollins.com>
+References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
+	<1556813672-49861-2-git-send-email-adam.michaelis@rockwellcollins.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Cc: linux-iio@vger.kernel.org, lars@metafoo.de, michael.hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com
 List-ID: <devicetree@vger.kernel.org>
 
-Document the optional renesas,uses_usb_x1 property.
+On Thu,  2 May 2019 11:14:28 -0500
+Adam Michaelis <adam.michaelis@rockwellcollins.com> wrote:
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
- * removed 'use_usb_x1' option
- * document that 'usb_x1' clock node will be detected to determine if
-   48MHz clock exists
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> Adding optional parameter to AD7949 to specify the source for the
+> reference voltage signal. Default value is maintaned with option '6' to
+> match previous version of driver.
+> 
+> Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+See reply to v1.  I missed there was already a v2 until after writing a
+reply for this one!
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index d46188f450bf..79d8360d92e5 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -28,7 +28,9 @@ Required properties:
- 	      followed by the generic version.
- 
- - reg: offset and length of the partial USB 2.0 Host register block.
--- clocks: clock phandle and specifier pair(s).
-+- clocks: clock phandle and specifier pair(s). For SoCs that have a separate
-+          dedicated 48MHz USB_X1 input, if a 'usb_x1' clock node exists and is
-+          set to non-zero, the PHY will use the 48MHZ input for the PLL.
- - #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
- 	      using <0> is deprecated).
- 
--- 
-2.16.1
+Jonathan
+
+> ---
+> 	V2: Add some defines to reduce use of magic numbers.
+> ---
+>  .../devicetree/bindings/iio/adc/ad7949.txt         | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> index c7f5057356b1..14ee9a2cb2a5 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> @@ -6,11 +6,29 @@ Required properties:
+>  	* "adi,ad7682"
+>  	* "adi,ad7689"
+>   - reg: spi chip select number for the device
+> - - vref-supply: The regulator supply for ADC reference voltage
+>  
+> -Example:
+> +Optional properties:
+> + - adi,reference-select: Select the reference voltage source to use
+> + when converting the input voltages. Valid values are:
+> +   0: Internal 2.5V reference; temperature sensor enabled
+> +   1: Internal 4.096V reference; temperature sensor enabled
+> +   2: External reference, temperature sensor enabled, no buffer
+> +   3: External reference, temperature sensor enabled, buffer enabled
+> +   6: External reference, temperature sensor disabled, no buffer
+> +   7: External reference, temperature sensor disabled, buffer enabled
+> + - vref-supply: The regulator supply for ADC reference voltage. Required
+> + if external reference selected by 'adi,reference-select'.
+> +
+> +Examples:
+>  adc@0 {
+>  	compatible = "adi,ad7949";
+>  	reg = <0>;
+> +	adi,reference-select = <2>;
+>  	vref-supply = <&vdd_supply>;
+>  };
+> +
+> +adc@0 {
+> +	compatible = "adi,ad7949";
+> +	reg = <0>;
+> +	adi,reference-select = <0>;
+> +};
