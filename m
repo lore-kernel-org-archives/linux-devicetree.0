@@ -1,105 +1,50 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH 6/7] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Sun, 5 May 2019 03:13:20 +0000
-Message-ID: <VI1PR04MB5327641FD0A21BB4C93A85A58B370@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20190428024847.5046-1-peter.chen@nxp.com>
- <20190428024847.5046-7-peter.chen@nxp.com>
- <CAL_JsqLPK8kuYTT7ekZbAzywp2kr9xKA0_X3BAqVn5hShbPM+w@mail.gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] net: ethernet: add ag71xx driver
+Date: Sun, 5 May 2019 07:41:19 +0200
+Message-ID: <20190505054119.ac3jxtonkpn4pszn@pengutronix.de>
+References: <20190422064046.2822-1-o.rempel@pengutronix.de>
+ <20190422064046.2822-4-o.rempel@pengutronix.de>
+ <20190422132533.GA12718@lunn.ch>
+ <CAJsYDVJ84RsNVe9Mj9sYYwwLmmMkinRSJW4ziW22Sf04wS5gyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLPK8kuYTT7ekZbAzywp2kr9xKA0_X3BAqVn5hShbPM+w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJsYDVJ84RsNVe9Mj9sYYwwLmmMkinRSJW4ziW22Sf04wS5gyw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Chuanhong Guo <gch981213@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
- 
-> > ---
-> >  arch/arm/boot/dts/imx7ulp.dtsi | 30 ++++++++++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
-> > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..e2944f98eac6
-> > 100644
-> > --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> > @@ -30,6 +30,7 @@
-> >                 serial1 = &lpuart5;
-> >                 serial2 = &lpuart6;
-> >                 serial3 = &lpuart7;
-> > +               usbphy0 = &usbphy1;
+On Sat, May 04, 2019 at 11:40:53PM +0800, Chuanhong Guo wrote:
+> Hi!
 > 
-> Drop this. You shouldn't need an alias.
-> 
-
-It is a derived USB PHY and used on most of i.mx chipidea USB controllers.
-At the source code, we use aligned id to know the controller number.
-
-        ret = of_alias_get_id(np, "usbphy");
-        if (ret < 0)
-                dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-        mxs_phy->port_id = ret;
-
-> >         };
+> On Mon, Apr 22, 2019 at 9:28 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > [...]
+> > > +     /*
+> > > +      * On most (all?) Atheros/QCA SoCs dual eth interfaces are not equal.
+> > > +      *
+> > > +      * That is to say eth0 can not work independently. It only works
+> > > +      * when eth1 is working.
+> > > +      */
 > >
-> >         cpus {
-> > @@ -133,6 +134,35 @@
-> >                         clock-names = "ipg", "per";
-> >                 };
-> >
-> > +               usbotg1: usb@40330000 {
-> > +                       compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
-> > +                               "fsl,imx27-usb";
-> > +                       reg = <0x40330000 0x200>;
-> > +                       interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&pcc2 IMX7ULP_CLK_USB0>;
-> > +                       fsl,usbphy = <&usbphy1>;
+> > Please could you explain that some more? Is there just one MDIO bus
+> > shared by two ethernet controllers? If so, it would be better to have
+> > the MDIO bus controller as a separate driver.
 > 
-> Don't use this for new users. Use the phy binding instead.
-> 
+> mdio registers exists on both ethernet blocks. And due to how reset
+> works on this ethernet IP, it's hard to split it into a separated
+> driver. (Only asserting both eth and mdio resets together will reset
+> everything including register values.)
+> The reason why gmac1 should be brought up first is that on some chips,
+> mdio on gmac0 connects to nothing and phy used by gmac0 is on mdio bus
+> of gmac1.
 
-It is not a new user, the USB PHY used at imx7ulp is the same with imx6's.
+It could be implemented as mfd device. Not sure if it is worth it.
+Pro/contra argumentation is welcome.
 
-Thanks.
-
-Peter
-
-> > +                       fsl,usbmisc = <&usbmisc1 0>;
-> > +                       ahb-burst-config = <0x0>;
-> > +                       tx-burst-size-dword = <0x8>;
-> > +                       rx-burst-size-dword = <0x8>;
-> > +                       status = "disabled";
-> > +               };
-> > +
-> > +               usbmisc1: usbmisc@40330200 {
-> > +                       #index-cells = <1>;
-> > +                       compatible = "fsl,imx7ulp-usbmisc", "fsl,imx7d-usbmisc",
-> > +                               "fsl,imx6q-usbmisc";
-> > +                       reg = <0x40330200 0x200>;
-> > +               };
-> > +
-> > +               usbphy1: usbphy@0x40350000 {
-> > +                       compatible = "fsl,imx7ulp-usbphy",
-> > +                               "fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
-> > +                       reg = <0x40350000 0x1000>;
-> > +                       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&pcc2 IMX7ULP_CLK_USB_PHY>;
-> > +               };
-> > +
-> >                 usdhc0: mmc@40370000 {
-> >                         compatible = "fsl,imx7ulp-usdhc", "fsl,imx6sx-usdhc";
-> >                         reg = <0x40370000 0x10000>;
-> > --
-> > 2.14.1
-> >
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
