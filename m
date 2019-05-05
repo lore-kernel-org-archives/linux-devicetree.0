@@ -1,98 +1,629 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v1] arm64: ls1028: dtsi: Add esdhc node in dtsi
-Date: Sun, 5 May 2019 06:06:46 +0000
-Message-ID: <VI1PR04MB415896DA3F0AF8BA6AB149C9E9370@VI1PR04MB4158.eurprd04.prod.outlook.com>
-References: <20190423114424.3578-1-yinbo.zhu@nxp.com>
- <CAL_Jsq+4g+inxc+qcC3oLrXuR+L9AMvXFShGaU5Y3iRDsK3P6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Andrew Peng <pengms1@lenovo.com>
+Subject: [PATCH v6] ARM: dts: aspeed: Adding Lenovo Hr630 BMC
+Date: Sun,  5 May 2019 14:08:38 +0800
+Message-ID: <1557036518-286348-1-git-send-email-pengms1@lenovo.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+4g+inxc+qcC3oLrXuR+L9AMvXFShGaU5Y3iRDsK3P6A@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
+To: venture@google.com, benjaminfair@google.com, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, andrew@aj.id.au, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: pengms1@lenovo.com, liuyj19@lenovo.com, dukh@lenovo.com, liuyh21@lenovo.com, hsung1@lenovo.com, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
-aWx0bzpyb2JoK2R0QGtlcm5lbC5vcmddDQo+IFNlbnQ6IDIwMTnlubQ15pyIMuaXpSAxOjUwDQo+
-IFRvOiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBYaWFvYm8NCj4g
-WGllIDx4aWFvYm8ueGllQG54cC5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-bW1jQHZnZXIua2VybmVsLm9yZzsgWS5iLiBMdQ0KPiA8eWFuZ2JvLmx1QG54cC5jb20+OyBKaWFm
-ZWkgUGFuIDxqaWFmZWkucGFuQG54cC5jb20+OyBBc2hpc2ggS3VtYXINCj4gPGFzaGlzaC5rdW1h
-ckBueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIIHYxXSBhcm02NDogbHMxMDI4
-OiBkdHNpOiBBZGQgZXNkaGMgbm9kZSBpbiBkdHNpDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwN
-Cj4gDQo+IE9uIFR1ZSwgQXByIDIzLCAyMDE5IGF0IDY6NDIgQU0gWWluYm8gWmh1IDx5aW5iby56
-aHVAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBBc2hpc2ggS3VtYXIgPEFzaGlzaC5L
-dW1hckBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBpcyB0byBhZGQgZXNkaGMgbm9kZSBh
-bmQgZW5hYmxlIFNEIFVIUy1JLCBlTU1DIEhTMjAwIGZvcg0KPiA+IGxzMTAyOGFyZGIvbHMxMDI4
-YXFkcyBib2FyZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFzaGlzaCBLdW1hciA8QXNoaXNo
-Lkt1bWFyQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWWFuZ2JvIEx1IDx5YW5nYm8ubHVA
-bnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICAuLi4vYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5k
-dHMgICAgfCAgOCArKysrKysNCj4gPiAgLi4uL2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
-YS1yZGIuZHRzICAgIHwgMTMgKysrKysrKysrDQo+ID4gIC4uLi9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDI3DQo+ID4gKysrKysrKysrKysrKysrKysrKw0KPiA+
-ICAzIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4g
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4g
-aW5kZXggMTRjNzlmNDY5MWVhLi4xODBlNWQyYTAwZDEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiA+ICsrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiBAQCAt
-NDIsNiArNDIsMTQgQEANCj4gPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiAgfTsNCj4g
-Pg0KPiA+ICsmZXNkaGMgew0KPiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ICt9Ow0K
-PiA+ICsNCj4gPiArJmVzZGhjMSB7DQo+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7DQo+ID4g
-K307DQo+ID4gKw0KPiA+ICAmaTJjMCB7DQo+ID4gICAgICAgICBzdGF0dXMgPSAib2theSI7DQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTAyOGEtcmRiLmR0cw0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTAyOGEtcmRiLmR0cw0KPiA+IGluZGV4IGY4NmIwNTRhNzRhZS4uMWJmYWY0Mjk0ZGI0IDEwMDY0
-NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJk
-Yi5kdHMNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
-YS1yZGIuZHRzDQo+ID4gQEAgLTMwLDYgKzMwLDE5IEBADQo+ID4gICAgICAgICB9Ow0KPiA+ICB9
-Ow0KPiA+DQo+ID4gKyZlc2RoYyB7DQo+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7DQo+ID4g
-KyAgICAgICBzZC11aHMtc2RyMTA0Ow0KPiA+ICsgICAgICAgc2QtdWhzLXNkcjUwOw0KPiA+ICsg
-ICAgICAgc2QtdWhzLXNkcjI1Ow0KPiA+ICsgICAgICAgc2QtdWhzLXNkcjEyOw0KPiA+ICsgICAg
-ICAgfTsNCj4gPiArDQo+ID4gKyZlc2RoYzEgew0KPiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXki
-Ow0KPiA+ICsgICAgICAgbW1jLWhzMjAwLTFfOHY7DQo+ID4gKyAgICAgICB9Ow0KPiA+ICsNCj4g
-PiAgJmkyYzAgew0KPiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4g
-PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBp
-bmRleCAyODk2YmJjZmEzYmIuLmQxM2NkM2ZiNDU1YiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gKysrIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+IEBAIC0yNzQsNiAr
-Mjc0LDMzIEBADQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVk
-IjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPg0KPiA+ICsgICAgICAgICAgICAgICBlc2Ro
-YzogZXNkaGNAMjE0MDAwMCB7DQo+IA0KPiBtbWNALi4uDQo+IA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEtZXNkaGMiLCAiZnNsLGVzZGhjIjsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjE0MDAwMCAweDAgMHgx
-MDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDI4IDB4
-ND47IC8qIExldmVsIGhpZ2ggdHlwZSAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNs
-b2NrLWZyZXF1ZW5jeSA9IDwwPjsNCj4gDQo+IEZpbGxlZCBpbiBieSBib290bG9hZGVyPyBJZiBz
-bywgYWRkIGEgY29tbWVudC4NCkhpIHJvYiwNCkZpbGxlZCBpbiBieSBrZXJuZWwsIHBsZWFzZSB5
-b3Ugbm90ZS4NCg0KUmVnYXJkcywNCllpbmJvLg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGNsb2NrcyA9IDwmY2xvY2tnZW4gMiAxPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB2
-b2x0YWdlLXJhbmdlcyA9IDwxODAwIDE4MDAgMzMwMCAzMzAwPjsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICBzZGhjaSxhdXRvLWNtZDEyOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGxpdHRsZS1lbmRpYW47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVzLXdpZHRoID0g
-PDQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+
-ID4gKyAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBlc2RoYzE6
-IGVzZGhjQDIxNTAwMDAgew0KPiANCj4gbW1jQC4uLg0KPiANCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczEwMjhhLWVzZGhjIiwgImZzbCxlc2RoYyI7DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDIxNTAwMDAgMHgwIDB4MTAw
-MDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA2MyAweDQ+
-OyAvKiBMZXZlbCBoaWdoIHR5cGUgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjbG9j
-ay1mcmVxdWVuY3kgPSA8MD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0g
-PCZjbG9ja2dlbiAyIDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHZvbHRhZ2UtcmFu
-Z2VzID0gPDE4MDAgMTgwMCAzMzAwIDMzMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHNkaGNpLGF1dG8tY21kMTI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJva2VuLWNk
-Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpdHRsZS1lbmRpYW47DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgYnVzLXdpZHRoID0gPDQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKyAgICAgICAgICAgICAgIH07DQo+ID4g
-Kw0KPiA+ICAgICAgICAgICAgICAgICBzYXRhOiBzYXRhQDMyMDAwMDAgew0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEtYWhjaSI7DQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDMyMDAwMDAgMHgwIDB4MTAwMDA+LA0K
-PiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
+Initial introduction of Lenovo Hr630 family equipped with
+Aspeed 2500 BMC SoC. Hr630 is a x86 server development kit
+with a ASPEED ast2500 BMC manufactured by Lenovo.
+Specifically, This adds the Hr630 platform device tree file
+used by the Hr630 BMC machines.
+
+This also adds an entry of Hr630 device tree file in Makefile
+
+Signed-off-by: Andrew Peng <pengms1@lenovo.com>
+Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
+Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
+---
+Changes in v6:
+ - add appropriate pinctrl property for uar1, uart2, uart3 and adc.
+ - remove vhub definition and comment.
+ - remove some GPIO definitions.
+ - revise Makefile according to sort alphabetically.
+Changes in v5:
+ - revise pca9545 and pca9546 switch aliases name.
+Changes in v4:
+ - add pca9546 switch aliases name.
+Changes in v3:
+ - revise i2c switch aliases name.
+Changes in v2:
+ - add i2c switch aliases name.
+ - remove the unused eeprom device from DT file.
+ - remove "Licensed under..." sentence.
+
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts | 566 ++++++++++++++++++++++++++
+ 2 files changed, 567 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f4f5aea..1276167 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1255,6 +1255,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-facebook-cmm.dtb \
+ 	aspeed-bmc-facebook-tiogapass.dtb \
+ 	aspeed-bmc-intel-s2600wf.dtb \
++	aspeed-bmc-lenovo-hr630.dtb \
+ 	aspeed-bmc-opp-lanyang.dtb \
+ 	aspeed-bmc-opp-palmetto.dtb \
+ 	aspeed-bmc-opp-romulus.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+new file mode 100644
+index 0000000..d3695a3
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+@@ -0,0 +1,566 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Device Tree file for Lenovo Hr630 platform
++ *
++ * Copyright (C) 2019-present Lenovo
++ */
++
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "HR630 BMC";
++	compatible = "lenovo,hr630-bmc", "aspeed,ast2500";
++
++	aliases {
++		i2c14 = &i2c_rbp;
++		i2c15 = &i2c_fbp1;
++		i2c16 = &i2c_fbp2;
++		i2c17 = &i2c_fbp3;
++		i2c18 = &i2c_riser2;
++		i2c19 = &i2c_pcie4;
++		i2c20 = &i2c_riser1;
++		i2c21 = &i2c_ocp;
++	};
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x00100000>; /* 1M */
++		};
++
++		gfx_memory: framebuffer {
++			size = <0x01000000>;
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		fault {
++			gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
++		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
++		<&adc 8>, <&adc 9>, <&adc 10>,
++		<&adc 12>, <&adc 13>, <&adc 14>;
++	};
++
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "bmc";
++		spi-max-frequency = <50000000>;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
++&uart1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++			&pinctrl_rxd1_default>;
++};
++
++&uart2 {
++	/* Rear RS-232 connector */
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd2_default
++			&pinctrl_rxd2_default
++			&pinctrl_nrts2_default
++			&pinctrl_ndtr2_default
++			&pinctrl_ndsr2_default
++			&pinctrl_ncts2_default
++			&pinctrl_ndcd2_default
++			&pinctrl_nri2_default>;
++};
++
++&uart3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd3_default
++			&pinctrl_rxd3_default>;
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&ibt {
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&mac1 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
++};
++
++&adc {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++			&pinctrl_adc1_default
++			&pinctrl_adc2_default
++			&pinctrl_adc3_default
++			&pinctrl_adc4_default
++			&pinctrl_adc5_default
++			&pinctrl_adc6_default
++			&pinctrl_adc7_default
++			&pinctrl_adc8_default
++			&pinctrl_adc9_default
++			&pinctrl_adc10_default
++			&pinctrl_adc12_default
++			&pinctrl_adc13_default
++			&pinctrl_adc14_default>;
++};
++
++&i2c0 {
++	status = "okay";
++	/* temp1 inlet */
++	tmp75@4e {
++		compatible = "national,lm75";
++		reg = <0x4e>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++	/* temp2 outlet */
++	tmp75@4d {
++		compatible = "national,lm75";
++		reg = <0x4d>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&i2c6 {
++	status = "okay";
++	/*	Slot 0,
++	 *	Slot 1,
++	 *	Slot 2,
++	 *	Slot 3
++	 */
++
++	i2c-switch@70 {
++		compatible = "nxp,pca9545";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;	/* may use mux@70 next. */
++
++		i2c_rbp: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c_fbp1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		i2c_fbp2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		i2c_fbp3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	/*	Slot 0,
++	 *	Slot 1,
++	 *	Slot 2,
++	 *	Slot 3
++	 */
++	i2c-switch@76 {
++		compatible = "nxp,pca9546";
++		reg = <0x76>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;  /* may use mux@76 next. */
++
++		i2c_riser2: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c_pcie4: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		i2c_riser1: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		i2c_ocp: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c8 {
++	status = "okay";
++
++	eeprom@57 {
++		compatible = "atmel,24c256";
++		reg = <0x57>;
++		pagesize = <16>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++};
++
++&i2c12 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&uhci {
++	status = "okay";
++};
++
++&gfx {
++	status = "okay";
++	memory-region = <&gfx_memory>;
++};
++
++&pwm_tacho {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default
++	&pinctrl_pwm1_default
++	&pinctrl_pwm2_default
++	&pinctrl_pwm3_default
++	&pinctrl_pwm4_default
++	&pinctrl_pwm5_default
++	&pinctrl_pwm6_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++
++	fan@2 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++
++	fan@3 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
++	};
++
++	fan@4 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++	fan@5 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
++	};
++
++	fan@6 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
++	};
++
++	fan@7 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
++	};
++
++	fan@8 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
++	};
++
++	fan@9 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
++	};
++
++	fan@10 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
++	};
++
++	fan@11 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
++	};
++
++	fan@12 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
++	};
++
++	fan@13 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
++	};
++};
++
++&gpio {
++
++	pin_gpio_b5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "IRQ_BMC_PCH_SMI_LPC_N";
++	};
++
++	pin_gpio_f0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "IRQ_BMC_PCH_NMI_R";
++	};
++
++	pin_gpio_f3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_BUS0_RST_OUT_N";
++	};
++
++	pin_gpio_f4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "FM_SKT0_FAULT_LED";
++	};
++
++	pin_gpio_f5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 5) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "FM_SKT1_FAULT_LED";
++	};
++
++	pin_gpio_g4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "FAN_PWR_CTL_N";
++	};
++
++	pin_gpio_g7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "RST_BMC_PCIE_I2CMUX_N";
++	};
++
++	pin_gpio_h2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PSU1_FFS_N_R";
++	};
++
++	pin_gpio_h3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PSU2_FFS_N_R";
++	};
++
++	pin_gpio_i3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_INTRUDED_COVER";
++	};
++
++	pin_gpio_j2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_BIOS_UPDATE_N";
++	};
++
++	pin_gpio_j3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "RST_BMC_HDD_I2CMUX_N";
++	};
++
++	pin_gpio_s2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_VGA_SW";
++	};
++
++	pin_gpio_s4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 4) GPIO_ACTIVE_HIGH>;
++		output;
++		line-name = "VBAT_EN_N";
++	};
++
++	pin_gpio_s6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PU_BMC_GPIOS6";
++	};
++
++	pin_gpio_y0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_NCSI_MUX_CTL_S0";
++	};
++
++	pin_gpio_y1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 1) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_NCSI_MUX_CTL_S1";
++	};
++
++	pin_gpio_z0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 0) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_RISER2_INT_N";
++	};
++
++	pin_gpio_z2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_RISER2_RESET_N";
++	};
++
++	pin_gpio_z3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "FM_BMC_PCH_SCI_LPC_N";
++	};
++
++	pin_gpio_z7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 7) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_POST_CMPLT_N";
++	};
++
++	pin_gpio_aa0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "HOST_BMC_USB_SEL";
++	};
++
++	pin_gpio_aa5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 5) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_BUS1_RST_OUT_N";
++	};
++
++};
+--
+2.7.4
