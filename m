@@ -1,10 +1,15 @@
-Return-Path: <SRS0=r3/y=TF=c-mauderer.de=oss@kernel.org>
+Return-Path: <SRS0=IWi0=TF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hamsrv800.servertools24.de ([213.238.32.28]:58397 "EHLO
+        hamsrv800.servertools24.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727649AbfEEMxV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 May 2019 08:53:21 -0400
 From: oss@c-mauderer.de
-Subject: [PATCH v3 1/2] dt-bindings: leds: Add binding for spi-byte LED.
-Date: Sun,  5 May 2019 22:00:21 +0200
-Message-Id: <20190505200022.32209-1-oss@c-mauderer.de>
+Subject: [PATCH v2 1/2] dt-bindings: leds: Add binding for spi-byte LED.
+Date: Sun,  5 May 2019 14:52:41 +0200
+Message-Id: <20190505125242.10298-1-oss@c-mauderer.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
 To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
 Cc: Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christian Mauderer <oss@c-mauderer.de>
 List-ID: <devicetree@vger.kernel.org>
@@ -16,9 +21,6 @@ controller which use only one byte for setting the brightness.
 
 Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
 ---
-
-Changes compared to v2:
-- None
 
 Changes compared to v1:
 - rename ubnt-spi to leds-spi-byte
