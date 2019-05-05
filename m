@@ -1,48 +1,47 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML
- format
-Date: Sun, 5 May 2019 12:42:07 +0100
-Message-ID: <20190505124207.650e6a83@archlinux>
-References: <20190427182359.27254-1-masneyb@onstation.org>
-        <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/4] dt-bindings: fsl: scu: add ocotp binding
+Date: Sun, 5 May 2019 13:28:13 +0000
+Message-ID: <20190505134130.28071-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+Wzc8W11E0XYg5bKfGoYNxFu0U0-Rdk5PqXZf40W21ZA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Brian Masney <masneyb@onstation.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Anson Huang <anson.huang@nxp.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Rhyland Klein <rklein@nvidia.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Peng Fan <peng.fan@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Apr 2019 07:44:14 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
-
-> On Sat, Apr 27, 2019 at 1:25 PM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > Convert the isl29018 device tree bindings to the new YAML format.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> > I'm willing to be listed as the maintainer since this is one of the
-> > drivers that I moved out out of staging unless one of the original
-> > authors wants to be listed instead.
-> >
-> > I added the BSD-2-Clause to the new binding document. I wrote the
-> > original document and the only commit since then was from Rob in
-> > commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
-> > bindings")
-> >
-> >  .../bindings/iio/light/isl29018.txt           | 27 ---------
-> >  .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
-> >  2 files changed, 56 insertions(+), 27 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml  
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
+TlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRl
+IGFzDQpzeXN0ZW0gY29udHJvbGxlcihTQ1UpLCB0aGUgb2NvdHAgY29udHJvbGxlciBpcyBiZWlu
+ZyBjb250cm9sbGVkDQpieSB0aGUgU0NVLCBzbyBMaW51eCBuZWVkIHVzZSBSUEMgdG8gU0NVIGZv
+ciBvY290cCBoYW5kbGluZy4gVGhpcw0KcGF0Y2ggYWRkcyBiaW5kaW5nIGRvYyBmb3IgaS5NWDgg
+U0NVIE9DT1RQIGRyaXZlci4NCg0KU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54
+cC5jb20+DQpDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCkNjOiBNYXJrIFJ1
+dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KQ2M6IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5k
+b25nQG54cC5jb20+DQpDYzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KQ2M6IFVs
+ZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPg0KQ2M6IFN0ZXBoZW4gQm95ZCA8c2Jv
+eWRAa2VybmVsLm9yZz4NCkNjOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCkNj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KLS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgfCAxMyArKysrKysrKysrKysr
+DQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50
+eHQNCmluZGV4IDVkN2RiYWJiYjc4NC4uOWNiN2Q1MmJkZjI2IDEwMDY0NA0KLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCisr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
+Y3UudHh0DQpAQCAtMTAwLDYgKzEwMCwxMyBAQCBJRCBpbiBpdHMgImNsb2NrcyIgcGhhbmRsZSBj
+ZWxsLg0KIFNlZSB0aGUgZnVsbCBsaXN0IG9mIGNsb2NrIElEcyBmcm9tOg0KIGluY2x1ZGUvZHQt
+YmluZGluZ3MvY2xvY2svaW14OHF4cC1jbG9jay5oDQogDQorT0NPVFAgYmluZGluZ3MgYmFzZWQg
+b24gU0NVIE1lc3NhZ2UgUHJvdG9jb2wNCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCitSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KKy0g
+Y29tcGF0aWJsZToJCVNob3VsZCBiZSAiZnNsLGlteDhxeHAtb2NvdHAiDQorLSAjYWRkcmVzcy1j
+ZWxsczoJTXVzdCBiZSAxLiBDb250YWlucyBieXRlIGluZGV4DQorLSAjc2l6ZS1jZWxsczoJCU11
+c3QgYmUgMS4gQ29udGFpbnMgYnl0ZSBsZW5ndGgNCisNCiBQaW5jdHJsIGJpbmRpbmdzIGJhc2Vk
+IG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQogDQpAQCAtMTc3LDYgKzE4NCwxMiBAQCBm
+aXJtd2FyZSB7DQogCQkJLi4uDQogCQl9Ow0KIA0KKwkJb2NvdHA6IGlteDhxeC1vY290cCB7DQor
+CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkJI3NpemUtY2VsbHMgPSA8MT47DQorCQkJY29t
+cGF0aWJsZSA9ICJmc2wsaW14OHF4cC1vY290cCI7DQorCQl9Ow0KKw0KIAkJcGQ6IGlteDhxeC1w
+ZCB7DQogCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zY3UtcGQiLCAiZnNsLHNjdS1wZCI7
+DQogCQkJI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwxPjsNCi0tIA0KMi4xNi40DQoNCg==
