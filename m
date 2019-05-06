@@ -1,43 +1,49 @@
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH v4 00/10] of_net: Add NVMEM support to of_get_mac_address
-Date: Mon, 6 May 2019 16:41:32 +0200
-Message-ID: <20190506164132.10342ef6@bootlin.com>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <20190505.214727.1839442238121977055.davem@davemloft.net>
- <20190506083207.GG81826@meh.true.cz>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280
+ LCD panel
+Date: Mon, 6 May 2019 10:04:10 -0500
+Message-ID: <CAL_Jsq+mYy1JF_cM7sD82aLuUSnZnwsSD6-Q-W1uTp+_oSdRmg@mail.gmail.com>
+References: <20190501121448.3812-1-jagan@amarulasolutions.com>
+ <20190501193429.GA9075@ravnborg.org> <CAMty3ZAfwVyvmAmenhrQHJcy3eq-Yb61a4WLop_8jS-7vM940A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190506083207.GG81826@meh.true.cz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Petr =?UTF-8?B?xaB0ZXRpYXI=?= <ynezz@true.cz>
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, maxime.ripard@bootlin.com, netdev@vger.kernel.org, srinivas.kandagatla@linaro.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, frowand.list@gmail.com, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, hkallweit1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMty3ZAfwVyvmAmenhrQHJcy3eq-Yb61a4WLop_8jS-7vM940A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ciwKCk9uIE1vbiwgNiBNYXkgMjAxOSAxMDozMjowNyArMDIwMApQZXRyIMWgdGV0aWFy
-IDx5bmV6ekB0cnVlLmN6PiB3cm90ZToKCj5EYXZpZCBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5u
-ZXQ+IFsyMDE5LTA1LTA1IDIxOjQ3OjI3XToKPgo+SGkgRGF2aWQsCj4KPj4gU2VyaWVzIGFwcGxp
-ZWQsIHRoYW5rIHlvdS4gIAo+Cj5JIGRpZCBwcm9iYWJseSBzb21ldGhpbmcgdGVycmlibHkgd3Jv
-bmcsIGJ1dCBwYXRjaCAiW1BBVENIIHY0IDA1LzEwXSBuZXQ6Cj5ldGhlcm5ldDogc3VwcG9ydCBv
-Zl9nZXRfbWFjX2FkZHJlc3MgbmV3IEVSUl9QVFIgZXJyb3IiIGhhcyBub3QgcmVhY2hlZCB0aGUK
-PnBhdGNod29yaywgYnV0IEknbSBzdXJlLCB0aGF0IGl0IHdhcyBzZW50IG91dCBhcyBIYXVrZSBN
-ZWhydGVucyAobWFpbnRhaW5lcgo+Zm9yIGV0aGVybmV0L2xhbnRpcV94cngyMDAuYykgaGFzIGNv
-bmZpcm1lZCB0byBtZSBvbiBJUkMsIHRoYXQgaGUgaGFzIHJlY2VpdmVkCj5pdC4KCkl0IHNlZW1z
-IGluZGVlZCB0aGF0IHRoZSA1dGggcGF0Y2ggaGFzbid0IGJlZWQgYXBwbGllZCwgd2hpY2ggZWZm
-ZWN0aXZlbHkKYnJlYWtzIG12bmV0YSBvbiBuZXQtbmV4dCwgYW5kIEkgZ3Vlc3MgYSBsb3Qgb2Yg
-b3RoZXIgZHJpdmVycyB0aGF0IHJlbHkKb24gaGFuZGxpbmcgdGhlIG5ldyByZXR1cm4gdmFsdWVz
-LgoKSSBzYXcgeW91IHNlbnQgYSBmb2xsb3d1cCBzZXJpZXMgZml4aW5nIHRoYXQsIGJ1dCBvbmx5
-IHBhdGNoIDIvMwpzaG93cy11cCBvbiBuZXRkZXYsIHNvIHlvdSBtaWdodCBiZSBmYWNpbmcgYSBz
-aW1pbGFyIGlzc3VlIGhlcmUuCgpNYXhpbWUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Mon, May 6, 2019 at 4:56 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> Hi Sam,
+>
+> On Thu, May 2, 2019 at 1:04 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Jagan
+> >
+> > On Wed, May 01, 2019 at 05:44:47PM +0530, Jagan Teki wrote:
+> > > HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
+> > > resolution. It has built in Goodix, GT9271 captive touchscreen
+> > > with backlight adjustable via PWM.
+> > >
+> > > Add support for it.
+> > >
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > Cc: David Airlie <airlied@linux.ie>
+> > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > Cc: dri-devel@lists.freedesktop.org
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> >
+> > Please submit the binding in a separate patch as per
+> > Documentation/devicetree/bindings/submitting-patches.txt
+>
+> Hmm.. prepared like this initially but few of my patches were combined
+> earlier even-though I sent it separately. anyway let me separate it
+> again.
+
+For what subsystem? All the maintainers that I was aware of doing that
+have stopped.
+
+Rob
