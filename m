@@ -1,16 +1,24 @@
-Return-Path: <SRS0=/GKQ=TH=collins.com=adam.michaelis@kernel.org>
+Return-Path: <SRS0=7/M/=TG=collins.com=adam.michaelis@kernel.org>
 MIME-Version: 1.0
 References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
  <1556813672-49861-3-git-send-email-adam.michaelis@rockwellcollins.com> <20190505154227.1735b1b2@archlinux>
 In-Reply-To: <20190505154227.1735b1b2@archlinux>
 From: Adam Michaelis <adam.michaelis@collins.com>
-Date: Tue, 7 May 2019 14:53:32 -0500
-Message-ID: <CALMrGWV6rtYQShtm7uBQygtdOpPW30mLnKMxb2Jk8pY68B6yyw@mail.gmail.com>
+Date: Mon, 6 May 2019 14:32:30 -0500
+Message-ID: <CALMrGWUCd5FfWLGvWppwS3EEYYkBSMAB1CLTg6jJL-BffwQAEw@mail.gmail.com>
 Subject: Re: [PATCH v2 3/6] iio: ad7949: Support configuration read-back
 Content-Type: text/plain; charset="UTF-8"
 To: Jonathan Cameron <jic23@kernel.org>
 Cc: linux-iio@vger.kernel.org, lars@metafoo.de, michael.hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, Couret Charles-Antoine <charles-antoine.couret@essensium.com>, devicetree@vger.kernel.org, Brandon Maier <brandon.maier@rockwellcollins.com>, Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
+
+The configuration read-back feature is being maintained from the
+original version of this driver. Before adding the device tree entry,
+there was no way to change this setting other than debugfs raw access
+to the SPI interface, and there is still no access to the returned
+configuration data should the feature be enabled. I would be willing
+to remove the feature altogether, but wanted to tread softly on
+existing features.
 
 On Sun, May 5, 2019 at 9:42 AM Jonathan Cameron <jic23@kernel.org> wrote:
 >
@@ -32,15 +40,6 @@ On Sun, May 5, 2019 at 9:42 AM Jonathan Cameron <jic23@kernel.org> wrote:
 >
 > Jonathan
 >
-The configuration read-back feature is being maintained from the
-original version of this driver. Before adding the device tree entry,
-there was no way to change this setting other than debugfs raw access
-to the SPI interface, and there is still no access to the returned
-configuration data should the feature be enabled. I would be willing
-to remove the feature altogether, but wanted to tread softly on
-existing features.
-
-Adam
 > >
 > > Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
 > > ---
@@ -95,4 +94,25 @@ Adam
 > >                       &temp);
 >
 
---
+
+-- 
+
+Adam Michaelis | Sr Software Engineer | Comm Engineering | Mission Systems
+
+COLLINS AEROSPACE
+
+400 Collins Road, Cedar Rapids, IA 52498 U.S.A.
+
+Tel: +1 319 295 4102
+
+adam.michaelis@collins.com | collinsaerospace.com
+
+
+
+CONFIDENTIALITY WARNING: This message may contain proprietary and/or
+privileged information of Collins Aerospace and its affiliated
+companies. If you are not the intended recipient, please 1) Do not
+disclose, copy, distribute or use this message or its contents. 2)
+Advise the sender by return email. 3) Delete all copies (including all
+attachments) from your computer. Your cooperation is greatly
+appreciated.
