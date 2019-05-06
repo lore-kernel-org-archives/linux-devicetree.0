@@ -1,61 +1,52 @@
-Return-Path: <SRS0=YSTV=TE=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 7/8] media: imx7-media-csi: Check the return value from clk_prepare_enable()
-Date: Sat,  4 May 2019 11:40:26 -0300
-Message-Id: <20190504144027.31920-7-festevam@gmail.com>
-In-Reply-To: <20190504144027.31920-1-festevam@gmail.com>
-References: <20190504144027.31920-1-festevam@gmail.com>
-To: hverkuil-cisco@xs4all.nl
-Cc: rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 05/10] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
+Date: Mon, 6 May 2019 18:46:26 -0500
+Message-ID: <20190506234631.113226-6-chris.brandt@renesas.com>
+In-Reply-To: <20190506234631.113226-1-chris.brandt@renesas.com>
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-clk_prepare_enable() may fail, so we should better check its return value
-and propagate it in the case of error.
+Document RZ/A2 (R7S9210) SoC bindings.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- drivers/staging/media/imx/imx7-media-csi.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index d1ecdcfc792e..dcc6027fe32b 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -390,17 +390,23 @@ static void imx7_csi_error_recovery(struct imx7_csi *csi)
- 	imx7_csi_hw_enable(csi);
- }
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+index 646a1748d3c4..e7bbee43e268 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+@@ -1,10 +1,12 @@
+ * Renesas R-Car generation 3 USB 2.0 PHY
  
--static void imx7_csi_init(struct imx7_csi *csi)
-+static int imx7_csi_init(struct imx7_csi *csi)
- {
-+	int ret;
-+
- 	if (csi->is_init)
--		return;
-+		return 0;
+ This file provides information on what the device node for the R-Car generation
+-3, RZ/G1C and RZ/G2 USB 2.0 PHY contain.
++3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
  
--	clk_prepare_enable(csi->mclk);
-+	ret = clk_prepare_enable(csi->mclk);
-+	if (ret < 0)
-+		return ret;
- 	imx7_csi_hw_reset(csi);
- 	imx7_csi_init_interface(csi);
- 	imx7_csi_dmareq_rff_enable(csi);
+ Required properties:
+-- compatible: "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
++- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
++	      SoC.
++	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
+ 	      SoC.
+ 	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+ 	      SoC.
+@@ -20,8 +22,8 @@ Required properties:
+ 	      R8A77990 SoC.
+ 	      "renesas,usb2-phy-r8a77995" if the device is a part of an
+ 	      R8A77995 SoC.
+-	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 or RZ/G2
+-	      compatible device.
++	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
++	      RZ/A2 compatible device.
  
- 	csi->is_init = true;
-+
-+	return 0;
- }
- 
- static void imx7_csi_deinit(struct imx7_csi *csi)
-@@ -513,7 +519,7 @@ static int imx7_csi_link_setup(struct media_entity *entity,
- 
- init:
- 	if (csi->sink || csi->src_sd)
--		imx7_csi_init(csi);
-+		ret = imx7_csi_init(csi);
- 	else
- 		imx7_csi_deinit(csi);
- 
+ 	      When compatible with the generic version, nodes must list the
+ 	      SoC-specific version corresponding to the platform first
 -- 
-2.17.1
+2.16.1
