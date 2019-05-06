@@ -1,20 +1,41 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
-Date: Tue, 7 May 2019 01:27:36 +0800
-Message-ID: <CAEExFWsVgAV=br1kAfgMTLnS6ELfMjFegiusUYPK6A3k7Nq9Mg@mail.gmail.com>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
- <20190426211540.GA890@bogus> <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
- <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
- <20190430044245.s4viduudej6q2eq6@vireshk-i7> <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
+From: Sagar Kadam <sagar.kadam@sifive.com>
+Subject: Re: [PATCH v1 v1 1/3] dt-bindings: i2c: add documentation for adding
+ SiFive I2C driver
+Date: Mon, 6 May 2019 23:11:25 +0530
+Message-ID: <CAARK3H=fY=Y9GDR-t6RLBV4wOEduPD++F5NKAayNGeuHudrtew@mail.gmail.com>
+References: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
+ <1557147240-29551-2-git-send-email-sagar.kadam@sifive.com> <20190506131919.GC15291@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
+In-Reply-To: <20190506131919.GC15291@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, peter@korsgaard.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, May 6, 2019 at 6:49 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Mon, May 06, 2019 at 06:23:58PM +0530, Sagar Shrikant Kadam wrote:
+> > Add DT binding for OpenCore's based i2c device as found in
+> > FU540 Chipset on HiFive Unleashed Platform (Rev A00).
+> >
+> > The doc explains, how to add DT support for I2C devices.
+> >
+> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> > ---
+> >  .../devicetree/bindings/i2c/i2c-sifive.txt         | 29 ++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sifive.txt
+>
+> Hi Sagar
+>
+> Please extend the existing i2c-ocores.txt file, not add a new file.
 
-PING...
+Hi Andrew,
+Thanks for your review.
+Yes I will extend the i2c-ocores.txt to support sifive devices, and
+will submit a v2 of this patch.
+
+>
+>        Andrew
