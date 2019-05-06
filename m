@@ -1,82 +1,55 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 6/7] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Mon, 6 May 2019 10:30:27 -0500
-Message-ID: <CAL_Jsq+OywH+_caxtrBJF=nMVxFeHsuL8jbLq=a6VBXWiZ0ktA@mail.gmail.com>
-References: <20190428024847.5046-1-peter.chen@nxp.com>
- <20190428024847.5046-7-peter.chen@nxp.com>
- <CAL_JsqLPK8kuYTT7ekZbAzywp2kr9xKA0_X3BAqVn5hShbPM+w@mail.gmail.com>
- <VI1PR04MB5327641FD0A21BB4C93A85A58B370@VI1PR04MB5327.eurprd04.prod.outlook.com>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v4 00/10] of_net: Add NVMEM support to of_get_mac_address
+Date: Mon, 6 May 2019 18:19:17 +0200
+Message-ID: <20190506161917.GH81826@meh.true.cz>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+ <20190505.214727.1839442238121977055.davem@davemloft.net>
+ <20190506083207.GG81826@meh.true.cz>
+ <20190506164132.10342ef6@bootlin.com>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB5327641FD0A21BB4C93A85A58B370@VI1PR04MB5327.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190506164132.10342ef6@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, matthias.bgg@gmail.com, andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, frowand.list@gmail.com, srinivas.kandagatla@linaro.org, maxime.ripard@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 4, 2019 at 10:13 PM Peter Chen <peter.chen@nxp.com> wrote:
->
->
-> > > ---
-> > >  arch/arm/boot/dts/imx7ulp.dtsi | 30 ++++++++++++++++++++++++++++++
-> > >  1 file changed, 30 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
-> > > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..e2944f98eac6
-> > > 100644
-> > > --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> > > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> > > @@ -30,6 +30,7 @@
-> > >                 serial1 = &lpuart5;
-> > >                 serial2 = &lpuart6;
-> > >                 serial3 = &lpuart7;
-> > > +               usbphy0 = &usbphy1;
-> >
-> > Drop this. You shouldn't need an alias.
-> >
->
-> It is a derived USB PHY and used on most of i.mx chipidea USB controllers.
-> At the source code, we use aligned id to know the controller number.
->
->         ret = of_alias_get_id(np, "usbphy");
->         if (ret < 0)
->                 dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
->         mxs_phy->port_id = ret;
+Maxime Chevallier <maxime.chevallier@bootlin.com> [2019-05-06 16:41:32]:
 
-fsl,anatop property should probably have cell to specify this.
+Hi Maxime,
 
->
-> > >         };
-> > >
-> > >         cpus {
-> > > @@ -133,6 +134,35 @@
-> > >                         clock-names = "ipg", "per";
-> > >                 };
-> > >
-> > > +               usbotg1: usb@40330000 {
-> > > +                       compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
-> > > +                               "fsl,imx27-usb";
-> > > +                       reg = <0x40330000 0x200>;
-> > > +                       interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> > > +                       clocks = <&pcc2 IMX7ULP_CLK_USB0>;
-> > > +                       fsl,usbphy = <&usbphy1>;
+> On Mon, 6 May 2019 10:32:07 +0200
+> Petr Štetiar <ynezz@true.cz> wrote:
+> 
+> >David Miller <davem@davemloft.net> [2019-05-05 21:47:27]:
 > >
-> > Don't use this for new users. Use the phy binding instead.
+> >Hi David,
 > >
->
-> It is not a new user, the USB PHY used at imx7ulp is the same with imx6's.
+> >> Series applied, thank you.  
+> >
+> >I did probably something terribly wrong, but patch "[PATCH v4 05/10] net:
+> >ethernet: support of_get_mac_address new ERR_PTR error" has not reached the
+> >patchwork, but I'm sure, that it was sent out as Hauke Mehrtens (maintainer
+> >for ethernet/lantiq_xrx200.c) has confirmed to me on IRC, that he has received
+> >it.
+> 
+> It seems indeed that the 5th patch hasn't beed applied, which effectively
+> breaks mvneta on net-next, and I guess a lot of other drivers that rely
+> on handling the new return values.
 
-New SoC is a new user. The chipidea core already supports using 'phys'
-so you should be able to just use the common code.
+Yep, sorry for that.
 
-Rob
+> I saw you sent a followup series fixing that, but only patch 2/3
+> shows-up on netdev, so you might be facing a similar issue here.
+
+Indeed, seems like patchwork hiccup with a long list of recepients in the
+To/Cc headers, so I've just resend it again with only netdev@vger.kernel.org
+in the To: header and it was happily picked up[1].
+
+1. https://patchwork.ozlabs.org/project/netdev/list/?series=106369
+
+-- ynezz
