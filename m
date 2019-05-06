@@ -1,243 +1,165 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V3 3/3] watchdog: imx_sc: Add pretimeout support
-Date: Mon, 6 May 2019 11:27:52 -0700
-Message-ID: <20190506182752.GA358@roeck-us.net>
-References: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
- <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
+ U2 entries
+Date: Mon, 6 May 2019 19:21:02 +0000
+Message-ID: <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
+References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 05, 2019 at 02:15:00AM +0000, Anson Huang wrote:
-> i.MX system controller watchdog can support pretimeout IRQ
-> via general SCU MU IRQ, it depends on IMX_SCU and driver MUST
-> be probed after SCU IPC ready, then enable corresponding SCU
-> IRQ group and register SCU IRQ notifier, when watchdog pretimeout
-> IRQ fires, SCU MU IRQ will be handled and watchdog pretimeout
-> notifier will be called to handle the event.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  drivers/watchdog/Kconfig      |   1 +
->  drivers/watchdog/imx_sc_wdt.c | 114 ++++++++++++++++++++++++++++++++++--------
->  2 files changed, 95 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index e19960a..dbc74e1 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -710,6 +710,7 @@ config IMX2_WDT
->  config IMX_SC_WDT
->  	tristate "IMX SC Watchdog"
->  	depends on HAVE_ARM_SMCCC
-> +	depends on IMX_SCU
->  	select WATCHDOG_CORE
->  	help
->  	  This is the driver for the system controller watchdog
-> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-> index 49848b6..d8493a3 100644
-> --- a/drivers/watchdog/imx_sc_wdt.c
-> +++ b/drivers/watchdog/imx_sc_wdt.c
-> @@ -4,6 +4,7 @@
->   */
->  
->  #include <linux/arm-smccc.h>
-> +#include <linux/firmware/imx/sci.h>
->  #include <linux/io.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
-> @@ -33,11 +34,19 @@
->  
->  #define SC_TIMER_WDOG_ACTION_PARTITION	0
->  
-> +#define SC_IRQ_WDOG			1
-> +#define SC_IRQ_GROUP_WDOG		1
-> +
->  static bool nowayout = WATCHDOG_NOWAYOUT;
->  module_param(nowayout, bool, 0000);
->  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->  		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->  
-> +struct imx_sc_wdt_device {
-> +	struct watchdog_device wdd;
-> +	struct notifier_block wdt_notifier;
-> +};
-> +
->  static int imx_sc_wdt_ping(struct watchdog_device *wdog)
->  {
->  	struct arm_smccc_res res;
-> @@ -85,24 +94,66 @@ static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
->  	return res.a0 ? -EACCES : 0;
->  }
->  
-> +static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
-> +				     unsigned int pretimeout)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_PRETIME_WDOG,
-> +		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
-> +	if (res.a0)
-> +		return -EACCES;
-> +
-> +	wdog->pretimeout = pretimeout;
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_sc_wdt_notify(struct notifier_block *nb,
-> +			     unsigned long event, void *group)
-> +{
-> +	struct imx_sc_wdt_device *imx_sc_wdd =
-> +				 container_of(nb,
-> +					      struct imx_sc_wdt_device,
-> +					      wdt_notifier);
-> +
-> +	if (event & SC_IRQ_WDOG &&
-> +	    *(u8 *)group == SC_IRQ_GROUP_WDOG)
-> +		watchdog_notify_pretimeout(&imx_sc_wdd->wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static void imx_sc_wdt_action(void *data)
-> +{
-> +	struct notifier_block *wdt_notifier = data;
-> +
-> +	imx_scu_irq_unregister_notifier(wdt_notifier);
-> +	imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
-> +				 SC_IRQ_WDOG,
-> +				 false);
-> +}
-> +
->  static const struct watchdog_ops imx_sc_wdt_ops = {
->  	.owner = THIS_MODULE,
->  	.start = imx_sc_wdt_start,
->  	.stop  = imx_sc_wdt_stop,
->  	.ping  = imx_sc_wdt_ping,
->  	.set_timeout = imx_sc_wdt_set_timeout,
-> +	.set_pretimeout = imx_sc_wdt_set_pretimeout,
->  };
->  
-> -static const struct watchdog_info imx_sc_wdt_info = {
-> +static struct watchdog_info imx_sc_wdt_info = {
->  	.identity	= "i.MX SC watchdog timer",
->  	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> -			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
-> +			  WDIOF_MAGICCLOSE,
->  };
->  
->  static int imx_sc_wdt_probe(struct platform_device *pdev)
->  {
-> +	struct imx_sc_wdt_device *imx_sc_wdd;
-> +	struct watchdog_device *wdog;
->  	struct device *dev = &pdev->dev;
-> -	struct watchdog_device *imx_sc_wdd;
->  	int ret;
->  
->  	imx_sc_wdd = devm_kzalloc(dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
-> @@ -111,42 +162,65 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, imx_sc_wdd);
->  
-> -	imx_sc_wdd->info = &imx_sc_wdt_info;
-> -	imx_sc_wdd->ops = &imx_sc_wdt_ops;
-> -	imx_sc_wdd->min_timeout = 1;
-> -	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
-> -	imx_sc_wdd->parent = dev;
-> -	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
-> +	wdog = &imx_sc_wdd->wdd;
-> +	wdog->info = &imx_sc_wdt_info;
-> +	wdog->ops = &imx_sc_wdt_ops;
-> +	wdog->min_timeout = 1;
-> +	wdog->max_timeout = MAX_TIMEOUT;
-> +	wdog->parent = dev;
-> +	wdog->timeout = DEFAULT_TIMEOUT;
->  
-> -	watchdog_init_timeout(imx_sc_wdd, 0, dev);
-> -	watchdog_stop_on_reboot(imx_sc_wdd);
-> -	watchdog_stop_on_unregister(imx_sc_wdd);
-> +	watchdog_init_timeout(wdog, 0, dev);
-> +	watchdog_stop_on_reboot(wdog);
-> +	watchdog_stop_on_unregister(wdog);
->  
-> -	ret = devm_watchdog_register_device(dev, imx_sc_wdd);
-> +	ret = devm_watchdog_register_device(dev, wdog);
->  	if (ret) {
->  		dev_err(dev, "Failed to register watchdog device\n");
->  		return ret;
->  	}
->  
-> -	return 0;
-> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
-> +				       SC_IRQ_WDOG,
-> +				       true);
-> +	if (ret) {
-> +		dev_warn(dev, "Enable irq failed, pretimeout NOT supported\n");
-> +		return 0;
-> +	}
-> +
-> +	imx_sc_wdd->wdt_notifier.notifier_call = imx_sc_wdt_notify;
-> +	ret = imx_scu_irq_register_notifier(&imx_sc_wdd->wdt_notifier);
-> +	if (ret) {
-> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
-> +					 SC_IRQ_WDOG,
-> +					 false);
-> +		dev_warn(dev,
-> +			 "Register irq notifier failed, pretimeout NOT supported\n");
-> +		return 0;
-> +	}
-> +
-> +	imx_sc_wdt_info.options |= WDIOF_PRETIMEOUT;
-> +	ret = devm_add_action(dev, imx_sc_wdt_action,
-> +			      &imx_sc_wdd->wdt_notifier);
-
-This needs devm_add_action_or_reset() because otherwise the notifier would
-not be removed, and the interrupt group would not be disabled.
-
-> +	return ret;
-
-This should not return an error. Accepting that the notifier can not be
-registered and that the irq group can not be enabled but bailing out if
-devm_add_action() fails is inconsistent.
-
-Guenter
-
->  }
->  
->  static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
->  {
-> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
-> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
->  
-> -	if (watchdog_active(imx_sc_wdd))
-> -		imx_sc_wdt_stop(imx_sc_wdd);
-> +	if (watchdog_active(&imx_sc_wdd->wdd))
-> +		imx_sc_wdt_stop(&imx_sc_wdd->wdd);
->  
->  	return 0;
->  }
->  
->  static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
->  {
-> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
-> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
->  
-> -	if (watchdog_active(imx_sc_wdd))
-> -		imx_sc_wdt_start(imx_sc_wdd);
-> +	if (watchdog_active(&imx_sc_wdd->wdd))
-> +		imx_sc_wdt_start(&imx_sc_wdd->wdd);
->  
->  	return 0;
->  }
-> -- 
-> 2.7.4
-> 
+Hi Anurag,=0A=
+=0A=
+Anurag Kumar Vulisha wrote:=0A=
+> Gadget applications may have a requirement to disable the U1 and U2=0A=
+> entry based on the usecase. For example, when performing performance=0A=
+> benchmarking on mass storage gadget the U1 and U2 entries can be disabled=
+.=0A=
+> Another example is when periodic transfers like ISOC transfers are used=
+=0A=
+> with bInterval of 1 which doesn't require the link to enter into U1 or U2=
+=0A=
+> state (since ping is issued from host for every uframe interval). In this=
+=0A=
+> case the U1 and U2 entry can be disabled. This can be done by setting=0A=
+> U1DevExitLat and U2DevExitLat values to 0 in the BOS descriptor. Host on=
+=0A=
+> seeing 0 value for U1DevExitLat and U2DevExitLat, it doesn't send SET_SEL=
+=0A=
+> commands to the gadget. Thus entry of U1 and U2 states can be avioded.=0A=
+> This patch updates the same=0A=
+=0A=
+I don't think we should assume that's the case for every host driver.=0A=
+=0A=
+>=0A=
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>=0A=
+> ---=0A=
+>  drivers/usb/dwc3/core.c   |  4 ++++=0A=
+>  drivers/usb/dwc3/core.h   |  4 ++++=0A=
+>  drivers/usb/dwc3/gadget.c | 19 +++++++++++++++++++=0A=
+>  drivers/usb/dwc3/gadget.h |  6 ++++++=0A=
+>  4 files changed, 33 insertions(+)=0A=
+>=0A=
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c=0A=
+> index a1b126f..4f0912c 100644=0A=
+> --- a/drivers/usb/dwc3/core.c=0A=
+> +++ b/drivers/usb/dwc3/core.c=0A=
+> @@ -1285,6 +1285,10 @@ static void dwc3_get_properties(struct dwc3 *dwc)=
+=0A=
+>  				"snps,dis_u2_susphy_quirk");=0A=
+>  	dwc->dis_enblslpm_quirk =3D device_property_read_bool(dev,=0A=
+>  				"snps,dis_enblslpm_quirk");=0A=
+> +	dwc->dis_u1_entry_quirk =3D device_property_read_bool(dev,=0A=
+> +				"snps,dis_u1_entry_quirk");=0A=
+> +	dwc->dis_u2_entry_quirk =3D device_property_read_bool(dev,=0A=
+> +				"snps,dis_u2_entry_quirk");=0A=
+=0A=
+Please use "-" rather than "_" in the property names.=0A=
+=0A=
+>  	dwc->dis_rxdet_inp3_quirk =3D device_property_read_bool(dev,=0A=
+>  				"snps,dis_rxdet_inp3_quirk");=0A=
+>  	dwc->dis_u2_freeclk_exists_quirk =3D device_property_read_bool(dev,=0A=
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h=0A=
+> index 1528d39..fa398e2 100644=0A=
+> --- a/drivers/usb/dwc3/core.h=0A=
+> +++ b/drivers/usb/dwc3/core.h=0A=
+> @@ -1015,6 +1015,8 @@ struct dwc3_scratchpad_array {=0A=
+>   * @dis_u2_susphy_quirk: set if we disable usb2 suspend phy=0A=
+>   * @dis_enblslpm_quirk: set if we clear enblslpm in GUSB2PHYCFG,=0A=
+>   *                      disabling the suspend signal to the PHY.=0A=
+> + * @dis_u1_entry_quirk: set if link entering into U1 state needs to be d=
+isabled.=0A=
+> + * @dis_u2_entry_quirk: set if link entering into U2 state needs to be d=
+isabled.=0A=
+>   * @dis_rxdet_inp3_quirk: set if we disable Rx.Detect in P3=0A=
+>   * @dis_u2_freeclk_exists_quirk : set if we clear u2_freeclk_exists=0A=
+>   *			in GUSB2PHYCFG, specify that USB2 PHY doesn't=0A=
+> @@ -1206,6 +1208,8 @@ struct dwc3 {=0A=
+>  	unsigned		dis_u3_susphy_quirk:1;=0A=
+>  	unsigned		dis_u2_susphy_quirk:1;=0A=
+>  	unsigned		dis_enblslpm_quirk:1;=0A=
+> +	unsigned		dis_u1_entry_quirk:1;=0A=
+> +	unsigned		dis_u2_entry_quirk:1;=0A=
+>  	unsigned		dis_rxdet_inp3_quirk:1;=0A=
+>  	unsigned		dis_u2_freeclk_exists_quirk:1;=0A=
+>  	unsigned		dis_del_phy_power_chg_quirk:1;=0A=
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=0A=
+> index e293400..f2d3112 100644=0A=
+> --- a/drivers/usb/dwc3/gadget.c=0A=
+> +++ b/drivers/usb/dwc3/gadget.c=0A=
+> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget *g)=
+=0A=
+>  	return 0;=0A=
+>  }=0A=
+>  =0A=
+> +static void dwc3_gadget_config_params(struct usb_gadget *g,=0A=
+> +				      struct usb_dcd_config_params *params)=0A=
+> +{=0A=
+> +	struct dwc3		*dwc =3D gadget_to_dwc(g);=0A=
+> +=0A=
+> +	/* U1 Device exit Latency */=0A=
+> +	if (dwc->dis_u1_entry_quirk)=0A=
+> +		params->bU1devExitLat =3D 0;=0A=
+> +	else=0A=
+> +		params->bU1devExitLat =3D DWC3_DEFAULT_U1_DEV_EXIT_LAT;=0A=
+> +=0A=
+> +	/* U2 Device exit Latency */=0A=
+> +	if (dwc->dis_u2_entry_quirk)=0A=
+> +		params->bU2DevExitLat =3D 0;=0A=
+> +	else=0A=
+> +		params->bU2DevExitLat =3D DWC3_DEFAULT_U2_DEV_EXIT_LAT;=0A=
+> +}=0A=
+> +=0A=
+>  static void dwc3_gadget_set_speed(struct usb_gadget *g,=0A=
+>  				  enum usb_device_speed speed)=0A=
+>  {=0A=
+> @@ -2142,6 +2160,7 @@ static const struct usb_gadget_ops dwc3_gadget_ops =
+=3D {=0A=
+>  	.udc_start		=3D dwc3_gadget_start,=0A=
+>  	.udc_stop		=3D dwc3_gadget_stop,=0A=
+>  	.udc_set_speed		=3D dwc3_gadget_set_speed,=0A=
+> +	.get_config_params	=3D dwc3_gadget_config_params,=0A=
+>  };=0A=
+>  =0A=
+>  /* ---------------------------------------------------------------------=
+----- */=0A=
+> diff --git a/drivers/usb/dwc3/gadget.h b/drivers/usb/dwc3/gadget.h=0A=
+> index 3ed738e..5faf4d1 100644=0A=
+> --- a/drivers/usb/dwc3/gadget.h=0A=
+> +++ b/drivers/usb/dwc3/gadget.h=0A=
+> @@ -48,6 +48,12 @@ struct dwc3;=0A=
+>  /* DEPXFERCFG parameter 0 */=0A=
+>  #define DWC3_DEPXFERCFG_NUM_XFER_RES(n)	((n) & 0xffff)=0A=
+>  =0A=
+> +/* U1 Device exit Latency */=0A=
+> +#define DWC3_DEFAULT_U1_DEV_EXIT_LAT	0x0A	/* Less then 10 microsec */=0A=
+> +=0A=
+> +/* U2 Device exit Latency */=0A=
+> +#define DWC3_DEFAULT_U2_DEV_EXIT_LAT	0x1FF	/* Less then 511 microsec */=
+=0A=
+> +=0A=
+>  /* ---------------------------------------------------------------------=
+----- */=0A=
+>  =0A=
+>  #define to_dwc3_request(r)	(container_of(r, struct dwc3_request, request=
+))=0A=
+=0A=
+Setting the exit latency for U1/U2 to 0 to prevent U1/U2 entry looks=0A=
+more like a workaround than actually disabling U1/U2. There are=0A=
+DCTL.INITU1/2ENA and DCTL.ACCEPTU1/2ENA for that.=0A=
+=0A=
+Also, if these properties are set, then the device should rejects=0A=
+SET_FEATURE(U1/U2) requests.=0A=
+=0A=
+You can review Felipe's little code snippet from here to disable U1/U2:=0A=
+https://marc.info/?l=3Dlinux-usb&m=3D155419284426942&w=3D2=0A=
+=0A=
+BR,=0A=
+Thinh=0A=
