@@ -1,30 +1,61 @@
-Return-Path: <SRS0=HSAE=TV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
+Return-Path: <SRS0=hkqx=TG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:48062 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbfEUSyV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 May 2019 14:54:21 -0400
-Content-Type: text/plain; charset="utf-8"
+        id S1726322AbfEFVJF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 May 2019 17:09:05 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] clk: ti: clkctrl: Fix clkdm_clk handling
+Date: Mon,  6 May 2019 14:08:54 -0700
+Message-Id: <20190506210854.24300-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190506210854.24300-1-tony@atomide.com>
-References: <20190506210854.24300-1-tony@atomide.com>
-Subject: Re: [PATCH] clk: ti: clkctrl: Fix clkdm_clk handling
-From: Stephen Boyd <sboyd@kernel.org>
-Date: Tue, 21 May 2019 11:54:19 -0700
-Message-Id: <20190521185420.745FF2173C@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
 Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Tony Lindgren (2019-05-06 14:08:54)
-> We need to always call clkdm_clk_enable() and clkdm_clk_disable() even
-> the clkctrl clock(s) enabled for the domain do not have any gate register
-> bits. Otherwise clockdomains may never get enabled except when devices get
-> probed with the legacy "ti,hwmods" devicetree property.
->=20
-> Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
+We need to always call clkdm_clk_enable() and clkdm_clk_disable() even
+the clkctrl clock(s) enabled for the domain do not have any gate register
+bits. Otherwise clockdomains may never get enabled except when devices get
+probed with the legacy "ti,hwmods" devicetree property.
 
-Applied to clk-fixes
+Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/clk/ti/clkctrl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -137,9 +137,6 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
+ 	int ret;
+ 	union omap4_timeout timeout = { 0 };
+ 
+-	if (!clk->enable_bit)
+-		return 0;
+-
+ 	if (clk->clkdm) {
+ 		ret = ti_clk_ll_ops->clkdm_clk_enable(clk->clkdm, hw->clk);
+ 		if (ret) {
+@@ -151,6 +148,9 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
+ 		}
+ 	}
+ 
++	if (!clk->enable_bit)
++		return 0;
++
+ 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 
+ 	val &= ~OMAP4_MODULEMODE_MASK;
+@@ -179,7 +179,7 @@ static void _omap4_clkctrl_clk_disable(struct clk_hw *hw)
+ 	union omap4_timeout timeout = { 0 };
+ 
+ 	if (!clk->enable_bit)
+-		return;
++		goto exit;
+ 
+ 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 
+-- 
+2.21.0
