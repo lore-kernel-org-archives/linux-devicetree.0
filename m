@@ -1,169 +1,115 @@
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for
- SCIF2"
-Date: Mon, 6 May 2019 21:42:33 +0200
-Message-ID: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
- <20190504004258.23574-3-erosca@de.adit-jv.com>
- <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
+From: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Mon, 6 May 2019 16:50:59 -0300
+Message-ID: <20190506165059.51eb2959@coco.lan>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
+	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
+	<20190423103053.07cf2149@lwn.net>
+	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
+	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
+	<20190423213816.GE16353@zn.tnic>
+	<20190424065209.GC4038@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Rodin <mrodin@de.adit-jv.com>Eugeniu Rosca <er>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190424065209.GC4038-Nxj+rRp3nVydTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Linux Doc Mailing List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, kernel-hardening-ZwoEplunGu1jrUoiu81ncdBPR1lH4CV8@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless@v
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Em Wed, 24 Apr 2019 08:52:09 +0200
+Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> escreveu:
 
-On Mon, May 06, 2019 at 12:02:41PM +0200, Geert Uytterhoeven wrote:
-> Hi Eugeniu,
+> On Tue, Apr 23, 2019 at 11:38:16PM +0200, Borislav Petkov wrote:
+> > If that is all the changes it would need, then I guess that's ok. Btw,
+> > those rst-conversion patches don't really show what got changed. Dunno
+> > if git can even show that properly. I diffed the two files by hand to
+> > see what got changed, see end of mail.  
 > 
-> Thanks for your report!
+> That is not a happy diff; that table has gotten waay worse to read due
+> to all that extra table crap.
 
-Thanks for your feedback.
+Not that I'm proposing such change, but, as a reference, I just discovered 
+today that there's a way to make it even lighter than it is while still
+showing it as a table:
 
-> 
-> On Sat, May 4, 2019 at 2:45 AM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
-> > This reverts commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4.
-> >
-> > Here is the story behind this revert.
-> >
-> > Mainline commit [0] landed in the stable tree as commit [1], from where
-> > it reached us in the form of regular stable update. After that, Michael
-> > started to report occasional (30-50%) freezes of serial console on
-> > booting M3-ES1.1-Salvator-XS. Same happened on M3-ES1.1-Salvator-X.
-> >
-> > Every time the issue occurs, the serial console outputs below [2]
-> > before becoming totally unresponsive and printing nothing else:
-> >   rcar-dmac e7300000.dma-controller: Channel Address Error
-> >
-> > Git bisecting shows that the problem is contributed by commits [0-1].
-> >
-> > While we can't be 100% certain (since we don't have the SCIF design docs
-> > revealing its internal implementation detail) we think there is plenty
-> > of evidence to assume that DMA is not supported on SCIF2, hence should
-> > stay disabled on this specific channel:
-> >
-> >  - Excerpt from Chapter 17. Direct Memory Access Controller for System
-> >    (SYS-DMAC) of R19UH0105EJ0150 Rev.1.50:
-> >    ---------8<---------
-> >    [H3, H3-N, M3-W, V3M, V3H, D3, M3-N, E3]
-> >    The following modules can issue on-chip peripheral module requests.
-> >    [..] HSCIF0/1/2/3/4, [..] SCIF0/1/3/4/5,
-> >    ---------8<---------
-> >
-> >  - Excerpt from RENESAS_RCH3M3M3NE3_SCIF_UME_v2.00.pdf (Yocto v3.15.0):
-> >    ---------8<---------
-> >    DMA Transfer:
-> >    - Support: SCIF0, SCIF1, SCIF3, SCIF4, SCIF5
-> >    - Not support: SCIF2
-> >    ---------8<---------
-> 
-> >  - Disabled SCIF2 DMA in official Renesas v4.9/v4.14 kernels, e.g. see:
-> >    https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=e79c418fda8c
-> 
-> Table 17.5 ("Selecting On-Chip Peripheral Module Request Modes") of
-> "R-Car Series, 3rd Generation User’s Manual: Hardware" gained entries
-> for SCIF2 in Revision 1.50 of the document, but it seems 17.1.1
-> ("Features") and Table 17.6 ("Data Length of DMA Transfer for Each of
-> the On-Chip Peripheral Modules") were forgotten to be updated.
-> The addition of the entry for SCIF2 is also mentioned in "Renesas
-> Technical Update  TN-RCT-S019A/E / R-Car M3-W Additional Explanation for
-> Direct Memory Access Controller for System (SYS-DMAC)".
-> Unfortunately both documents report wrong MID/RID values, due to a
-> hexadecimal vs. decimal mistake, which were corrected in the Feb 12
-> errata for Rev. 1.50.
+=================  ======== ==   ================  ===== ==  ===========================================================
+    Start addr        Offset        End addr         Size    VM area description
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
+ 0000000000000000      0         00007fffffffffff    128 TB   user-space virtual memory, different per mm
 
-I do observe now that the most recent Rev. 1.50 of "R-Car Series, 3rd
-Generation User’s Manual: Hardware" does update _some_ of its internal
-chapters/tables to reflect the support of DMA on SCIF2. These SCIF2
-changes look to be also tracked in the "Revision History" companion doc:
+ 0000800000000000   +128    TB   ffff7fffffffffff   ~16M TB   ... huge, almost 64 bits wide hole of non-canonical
+                                                                  virtual memory addresses up to the -128 TB
+                                                                  starting offset of kernel mappings.
 
-Rev  | Date         | Page     | Summary
-1.50 | Nov 30, 2018 | 17-86-87 | Table 17.5 Selecting On-Chip Peripheral
-                                 Module Request Modes: DMA Transfer
-                                 Request Source, changed. SCIF2
-                                 reception and SCIF2 transmission, added
-                    | 17-91    | Table 17.6 Data Length of DMA Transfer
-                                 for Each of the On-Chip Peripheral
-                                 Modules: SCIF2, added
+-----------------  -------- --   ----------------  ----- --  -----------------------------------------------------------
+-                                                            Kernel-space virtual memory, shared between all processes:
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
 
-As you have already stated, it looks like certain chapters like
-"17.1.1 Features" didn't receive a proper update, generating confusion.
-I will report this in parallel to Renesas Duesseldorf.
+ ffff800000000000   -128    TB   ffff87ffffffffff      8 TB   ... guard hole, also reserved for hypervisor
+ ffff880000000000   -120    TB   ffff887fffffffff    0.5 TB   LDT remap for PTI
+ ffff888000000000   -119.5  TB   ffffc87fffffffff     64 TB   direct mapping of all physical memory (page_offset_base)
+ ffffc88000000000    -55.5  TB   ffffc8ffffffffff    0.5 TB   ... unused hole
+ ffffc90000000000    -55    TB   ffffe8ffffffffff     32 TB   vmalloc/ioremap space (vmalloc_base)
+ ffffe90000000000    -23    TB   ffffe9ffffffffff      1 TB   ... unused hole
+ ffffea0000000000    -22    TB   ffffeaffffffffff      1 TB   virtual memory map (vmemmap_base)
+ ffffeb0000000000    -21    TB   ffffebffffffffff      1 TB   ... unused hole
+ ffffec0000000000    -20    TB   fffffbffffffffff     16 TB   KASAN shadow memory
+-----------------  -------- --   ----------------  ----- --  -----------------------------------------------------------
+-                                                            Identical layout to the 56-bit one from here on:
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
 
-> 
-> So in my understanding, and according to my testing, DMA has always
-> worked for SCIF2 on (at least) R-Car H3 ES1.0/2.0, M3-W, and M3-N.
+ fffffc0000000000     -4    TB   fffffdffffffffff      2 TB   ... unused hole
+                                                              vaddr_end for KASLR
+ fffffe0000000000     -2    TB   fffffe7fffffffff    0.5 TB   cpu_entry_area mapping
+ fffffe8000000000     -1.5  TB   fffffeffffffffff    0.5 TB   ... unused hole
+ ffffff0000000000     -1    TB   ffffff7fffffffff    0.5 TB   %esp fixup stacks
+ ffffff8000000000   -512    GB   ffffffeeffffffff    444 GB   ... unused hole
+ ffffffef00000000    -68    GB   fffffffeffffffff     64 GB   EFI region mapping space
+ ffffffff00000000     -4    GB   ffffffff7fffffff      2 GB   ... unused hole
+ ffffffff80000000     -2    GB   ffffffff9fffffff    512 MB   kernel text mapping, mapped to physical address 0
+ ffffffff80000000  -2048    MB
+ ffffffffa0000000  -1536    MB   fffffffffeffffff   1520 MB   module mapping space
+ ffffffffff000000    -16    MB
+    FIXADDR_START   ~-11    MB   ffffffffff5fffff   ~0.5 MB   kernel-internal fixmap range, variable size and offset
+ ffffffffff600000    -10    MB   ffffffffff600fff      4 kB   legacy vsyscall ABI
+ ffffffffffe00000     -2    MB   ffffffffffffffff      2 MB   ... unused hole
+=================  ======== ==   ================  ===== ==  ===========================================================
 
-Well, my testing shows different results. Using M3-W-ES1.1-Salvator-XS,
-I can reproduce the issue since v4.17 (also reproduced on v4.18, v4.19
-and v5.1 with cherry picking 97f26702bc95b5 ("arm64: dts: renesas:
-r8a7796: Enable DMA for SCIF2") where appropriate).
+If one wants the table headers as such, an extra line is required:
 
-> However, early firmware versions (before IPL and Secure Monitor
-> Rev1.0.6, released on Feb 25, 2016) prohibited the use of SYS-DMAC2,
-> cfr. commit eb21089c32054ecd ("arm64: dts: renesas: r8a7795: Add missing
-> SYS-DMAC2 dmas").
 
-I use a very recent Rev2.0.2 of
-https://github.com/renesas-rcar/arm-trusted-firmware .
+=================  ======== ==   ================  ===== ==  ===========================================================
+    Start addr        Offset        End addr         Size    VM area description
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
+=================  ======== ==   ================  ===== ==  ===========================================================
 
-> 
-> Perhaps some firmware versions may impose additional restrictions?
+<snip/>
 
-I would have some suspicions about ATF if the issue was consistent.
-Since it is not, I believe there is a race going on in the kernel.
+=================  ======== ==   ================  ===== ==  ===========================================================
 
-> 
-> > Based on the issues generated by [0-1] (reproduced on H3, M3 and M3N)
-> > and the doc statements presented above, we think it makes sense to
-> > disable DMA on SCIF2 for most/all R-Car3 SoCs.
-> >
-> > [0] v5.0-rc6 commit 97f26702bc95b5 ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> > [1] v4.14.106 commit 703db5d1b1759f ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> > [2] scif (DEBUG) and rcar-dmac logs:
-> >     https://gist.github.com/erosca/132cce76a619724a9e4fa61d1db88c66
-> 
-> I have checked my kernel logs, and found a few instances of "Channel
-> Address Error".  In all cases, I had enabled/added extra debug prints in
-> the sh-sci driver, which may have had impact.
-> Last occurrence was in a kernel based on v4.18-rc2, which predates
-> several recent fixes for the sh-sci and rcar-dmac drivers.
-> Can the issue be reproduced on current mainline?
 
-With pure vanilla sources, arm64 defconfig and DTS (+97f26702bc95b5
-where appropriate), the issue is seen on M3-W-ES1.1-Salvator-XS since
-v4.17. Can you please confirm you are seeing it too?
+The output using this approach and a markup to use mono-spaced cells
+e. g. either using ..raw or using .. cssclass as commented before in
+this thread is at:
 
-Enabling DEBUG in drivers/dma/sh/rcar-dmac.c, I can notice that one of
-the symptoms is a NULL dst_addr revealed by:
+	https://www.infradead.org/~mchehab/rst_conversion/x86/x86_64/mm_alternative.html
 
-rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
+Just converted the first table, keeping the other as a literal block.
 
-In working scenarios, dst_addr is never zero. Does it give any hints?
-
-> 
-> Thanks!
-
-Likewise!
-
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
--- 
-Best Regards,
-Eugeniu.
+Thanks,
+Mauro
