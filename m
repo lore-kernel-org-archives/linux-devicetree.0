@@ -1,37 +1,101 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
-Date: Mon, 6 May 2019 15:47:05 +0200
-Message-ID: <20190506134700.ya565idfzzc3enbm@verge.net.au>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
- <20190504004258.23574-2-erosca@de.adit-jv.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 01/10] of_net: add NVMEM support to of_get_mac_address
+Date: Mon, 6 May 2019 16:04:04 +0200
+Message-ID: <20190506140404.rg63wecj4qet2244@flea>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+ <1556893635-18549-2-git-send-email-ynezz@true.cz>
+ <20190503143643.hhfamnptcuriav4k@flea>
+ <20190503154407.GE71477@meh.true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p37qtcksadkvh5cm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190504004258.23574-2-erosca@de.adit-jv.com>
+In-Reply-To: <20190503154407.GE71477@meh.true.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniu Rosca <roscaeugeniu@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniu Rosca <erosca@de.adit-jv.com>
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
-> Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
-> printed with %p"), enabling debug prints in sh-sci.c would generate
-> output like below confusing the users who try to sneak into the
-> internals of the driver:
-> 
-> sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
-> sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
-> sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
-> sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
-> 
-> There are two possible fixes for that:
->  - get rid of '%p' prints if they don't reveal any useful information
->  - s/%p/%px/, since it is unlikely we have any concerns leaking the
->    pointer values when running a debug/non-production kernel
 
-I am concerned that this may expose information in circumstances
-where it is undesirable. Is it generally accepted practice to
-use %px in conjunction with dev_dbg() ?
+--p37qtcksadkvh5cm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
+On Fri, May 03, 2019 at 05:44:07PM +0200, Petr =C5=A0tetiar wrote:
+> Maxime Ripard <maxime.ripard@bootlin.com> [2019-05-03 16:36:43]:
+>
+> Hi,
+>
+> ...
+>
+> > > +	pp =3D devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
+> > > +	if (!pp)
+> > > +		return ERR_PTR(-ENOMEM);
+> > > +
+> > > +	pp->name =3D "nvmem-mac-address";
+> > > +	pp->length =3D ETH_ALEN;
+> > > +	pp->value =3D devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
+> > > +	if (!pp->value) {
+> > > +		ret =3D -ENOMEM;
+> > > +		goto free;
+> > > +	}
+> > > +
+> > > +	ret =3D of_add_property(np, pp);
+> > > +	if (ret)
+> > > +		goto free;
+> > > +
+> > > +	return pp->value;
+> >
+> > I'm not sure why you need to do that allocation here, and why you need
+> > to modify the DT?
+>
+> I was asked about that in v2[0] already, so just copy&pasting relevant pa=
+rt of
+> my response here:
+>
+>  I've just carried it over from v1 ("of_net: add mtd-mac-address support =
+to
+>  of_get_mac_address()")[1] as nobody objected about this so far.
+>
+>  Honestly I don't know if it's necessary to have it, but so far address,
+>  mac-address and local-mac-address properties provide this DT nodes, so I=
+'ve
+>  simply thought, that it would be good to have it for MAC address from NV=
+MEM as
+>  well in order to stay consistent.
+>
+>  [...]
+>
+> 0. https://patchwork.ozlabs.org/patch/1092248/#2164089
+> 1. https://patchwork.ozlabs.org/patch/1086628/
+>
+> > can't you just return the mac address directly since it's what the
+> > of_get_mac_address caller will expect anyway?
+>
+> I don't need this stuff, I can remove it, please just tell me what is
+> appropriate and I'm going to do that.
+
+Well, if no ones need it, then there's no point in adding support for
+it then?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--p37qtcksadkvh5cm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNA+1AAKCRDj7w1vZxhR
+xbBPAQDGD/fKy0R05WqaOtYm+o/xz3E7fmM55x4yVTtBBNPaBwEAlrB12chRxf7D
+hQKQJNr947sM00pol0dDHf0AdNW3xwk=
+=fTWI
+-----END PGP SIGNATURE-----
+
+--p37qtcksadkvh5cm--
