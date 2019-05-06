@@ -1,30 +1,33 @@
-Return-Path: <SRS0=znRT=TH=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH] ARM: dts: r7s9210-rza2mevb: add ethernet aliases
+Date: Mon, 6 May 2019 15:12:36 -0500
+Message-ID: <20190506201236.110281-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-References: <20190506201236.110281-1-chris.brandt@renesas.com>
-In-Reply-To: <20190506201236.110281-1-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 7 May 2019 08:50:51 +0200
-Message-ID: <CAMuHMdXZVLj1NmFJLowDBiLFqeNogqSJamZAysmQ4gMeboRpSg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: r7s9210-rza2mevb: add ethernet aliases
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 6, 2019 at 10:13 PM Chris Brandt <chris.brandt@renesas.com> wrote:
-> Add ethernet aliases so u-boot can find the device nodes.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Add ethernet aliases so u-boot can find the device nodes.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ arch/arm/boot/dts/r7s9210-rza2mevb.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+index 1eba37db7cdc..7795066d82cb 100644
+--- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
++++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+@@ -17,6 +17,8 @@
+ 
+ 	aliases {
+ 		serial0 = &scif4;
++		ethernet0 = &ether0;
++		ethernet1 = &ether1;
+ 	};
+ 
+ 	chosen {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.16.1
