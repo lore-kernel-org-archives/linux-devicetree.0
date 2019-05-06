@@ -1,30 +1,50 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v2 11/17] kunit: test: add test managed resource tests
-Date: Mon, 6 May 2019 02:03:49 -0700
-Message-ID: <CAFd5g44q3qyahykujDzOoO01DwGMUm+Kce-tOAzSW90U4mQM7w@mail.gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-12-brendanhiggins@google.com> <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Peng Ma <peng.ma@nxp.com>
+Subject: [PATCH 1/4] arm64: dts: fsl: ls1028a: Add qDMA node
+Date: Mon,  6 May 2019 09:03:41 +0000
+Message-ID: <20190506090344.37784-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@gmail.com>, Dan
+To: vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peng Ma <peng.ma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 3, 2019 at 7:34 AM shuah <shuah@kernel.org> wrote:
->
-> On 5/1/19 5:01 PM, Brendan Higgins wrote:
-> > From: Avinash Kondareddy <akndr41@gmail.com>
-> >
-> > Tests how tests interact with test managed resources in their lifetime.
-> >
-> > Signed-off-by: Avinash Kondareddy <akndr41@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
->
-> I think this change log could use more details. It is vague on what it
-> does.
+Add the qDMA device tree nodes for LS1028A devices
 
-Agreed. Will fix in next revision.
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2896bbc..8116fb3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -336,6 +336,26 @@
+ 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1028a-qdma", "fsl,ls1021a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++			      <0x0 0x8390000 0x0 0x10000>, /* Status regs */
++			      <0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue0",
++				"qdma-queue1", "qdma-queue2", "qdma-queue3";
++			dma-channels = <8>;
++			block-number = <1>;
++			block-offset = <0x10000>;
++			fsl,dma-queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++		};
++
+ 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+ 			compatible = "pci-host-ecam-generic";
+ 			reg = <0x01 0xf0000000 0x0 0x100000>;
+-- 
+1.7.1
