@@ -1,23 +1,28 @@
-Return-Path: <SRS0=7lMX=TH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from secvs02.rockwellcollins.com ([205.175.225.241]:56631 "EHLO
-        secvs02.rockwellcollins.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725859AbfEGSVQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 May 2019 14:21:16 -0400
-Received: by mail-it1-f200.google.com with SMTP id t196so15422119ita.7
-        for <devicetree@vger.kernel.org>; Tue, 07 May 2019 11:21:14 -0700 (PDT)
+Return-Path: <SRS0=7/M/=TG=collins.com=adam.michaelis@kernel.org>
 MIME-Version: 1.0
 References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
  <1556745423-11368-2-git-send-email-adam.michaelis@rockwellcollins.com> <20190505132234.313b78e9@archlinux>
 In-Reply-To: <20190505132234.313b78e9@archlinux>
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Date: Tue, 7 May 2019 13:21:03 -0500
-Message-ID: <CALMrGWUVnixueCbzKKkZ0af0rWze=N3SLD5EuynC869=nLw3PA@mail.gmail.com>
+From: Adam Michaelis <adam.michaelis@collins.com>
+Date: Mon, 6 May 2019 14:28:06 -0500
+Message-ID: <CALMrGWVOZbnomuSXdg=Z-a+Az=gRKHgj5_gSnDYiGPGJGp71pQ@mail.gmail.com>
 Subject: Re: [PATCH 2/6] dt-bindings: iio: ad7949: Add adi,reference-select
 Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
 To: Jonathan Cameron <jic23@kernel.org>
 Cc: linux-iio@vger.kernel.org, lars@metafoo.de, michael.hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, Couret Charles-Antoine <charles-antoine.couret@essensium.com>, devicetree@vger.kernel.org, Brandon Maier <brandon.maier@rockwellcollins.com>, Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
+
+The property name "adi,reference-select" was copied from the
+adi,ad7124 bindings as a similar hardware register configuration value
+field. If the property was separated into three independent fields,
+there would be a lot of explanation and checking required since many
+of the combinations are invalid (for example, temperature sensor and
+buffer are always enabled if internal reference is used). I could
+possibly see removing the temperature sensor configuration from the
+device tree, but, the current driver (even after these patches) does
+not provide any support to read the temperature sensor's value. I
+include that information in the configuration options as a summary of
+the datasheet.
 
 On Sun, May 5, 2019 at 7:22 AM Jonathan Cameron <jic23@kernel.org> wrote:
 >
@@ -79,19 +84,6 @@ On Sun, May 5, 2019 at 7:22 AM Jonathan Cameron <jic23@kernel.org> wrote:
 >
 > Jonathan
 >
-The property name "adi,reference-select" was copied from the
-adi,ad7124 bindings as a similar hardware register configuration value
-field. If the property was separated into three independent fields,
-there would be a lot of explanation and checking required since many
-of the combinations are invalid (for example, temperature sensor and
-buffer are always enabled if internal reference is used). I could
-possibly see removing the temperature sensor configuration from the
-device tree, but, the current driver (even after these patches) does
-not provide any support to read the temperature sensor's value. I
-include that information in the configuration options as a summary of
-the datasheet.
-
-Adam
 >
 > > +   0: Internal 2.5V reference; temperature sensor enabled
 > > +   1: Internal 4.096V reference; temperature sensor enabled
@@ -116,3 +108,26 @@ Adam
 > > +     adi,reference-select = <0>;
 > > +};
 >
+
+
+-- 
+
+Adam Michaelis | Sr Software Engineer | Comm Engineering | Mission Systems
+
+COLLINS AEROSPACE
+
+400 Collins Road, Cedar Rapids, IA 52498 U.S.A.
+
+Tel: +1 319 295 4102
+
+adam.michaelis@collins.com | collinsaerospace.com
+
+
+
+CONFIDENTIALITY WARNING: This message may contain proprietary and/or
+privileged information of Collins Aerospace and its affiliated
+companies. If you are not the intended recipient, please 1) Do not
+disclose, copy, distribute or use this message or its contents. 2)
+Advise the sender by return email. 3) Delete all copies (including all
+attachments) from your computer. Your cooperation is greatly
+appreciated.
