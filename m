@@ -1,107 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for SCIF2"
-Date: Mon, 6 May 2019 12:02:41 +0200
-Message-ID: <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-3-erosca@de.adit-jv.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/3] Add Avenger96 board support
+Date: Mon,  6 May 2019 15:35:31 +0530
+Message-ID: <20190506100534.24145-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190504004258.23574-3-erosca@de.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniu Rosca <roscaeugeniu@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Michael Rodin <mrodin@de.adit-jv.com>
+To: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, robh+dt@kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eugeniu,
+Hello,
 
-Thanks for your report!
+This patchset adds Avenger96 board support. This board is one of the
+Consumer Edition boards of the 96Boards family from Arrow Electronics
+featuring STM32MP157A MPU and has the following features:
 
-On Sat, May 4, 2019 at 2:45 AM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
-> This reverts commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4.
->
-> Here is the story behind this revert.
->
-> Mainline commit [0] landed in the stable tree as commit [1], from where
-> it reached us in the form of regular stable update. After that, Michael
-> started to report occasional (30-50%) freezes of serial console on
-> booting M3-ES1.1-Salvator-XS. Same happened on M3-ES1.1-Salvator-X.
->
-> Every time the issue occurs, the serial console outputs below [2]
-> before becoming totally unresponsive and printing nothing else:
->   rcar-dmac e7300000.dma-controller: Channel Address Error
->
-> Git bisecting shows that the problem is contributed by commits [0-1].
->
-> While we can't be 100% certain (since we don't have the SCIF design docs
-> revealing its internal implementation detail) we think there is plenty
-> of evidence to assume that DMA is not supported on SCIF2, hence should
-> stay disabled on this specific channel:
->
->  - Excerpt from Chapter 17. Direct Memory Access Controller for System
->    (SYS-DMAC) of R19UH0105EJ0150 Rev.1.50:
->    ---------8<---------
->    [H3, H3-N, M3-W, V3M, V3H, D3, M3-N, E3]
->    The following modules can issue on-chip peripheral module requests.
->    [..] HSCIF0/1/2/3/4, [..] SCIF0/1/3/4/5,
->    ---------8<---------
->
->  - Excerpt from RENESAS_RCH3M3M3NE3_SCIF_UME_v2.00.pdf (Yocto v3.15.0):
->    ---------8<---------
->    DMA Transfer:
->    - Support: SCIF0, SCIF1, SCIF3, SCIF4, SCIF5
->    - Not support: SCIF2
->    ---------8<---------
+SoC: STM32MP157AAC
+PMIC: STPMIC1A
+RAM: 1024 Mbyte @ 533MHz
+Storage: eMMC v4.51: 8 Gbyte
+         microSD Socket: UHS-1 v3.01
+Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
+Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
+          Bluetooth®v4.2 (BR/EDR/BLE)
+USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
+Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
+LED: 4x User LED, 1x WiFi LED, 1x BT LED
 
->  - Disabled SCIF2 DMA in official Renesas v4.9/v4.14 kernels, e.g. see:
->    https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=e79c418fda8c
+More information about this board can be found in 96Boards website:
+https://www.96boards.org/product/avenger96/
 
-Table 17.5 ("Selecting On-Chip Peripheral Module Request Modes") of
-"R-Car Series, 3rd Generation User’s Manual: Hardware" gained entries
-for SCIF2 in Revision 1.50 of the document, but it seems 17.1.1
-("Features") and Table 17.6 ("Data Length of DMA Transfer for Each of
-the On-Chip Peripheral Modules") were forgotten to be updated.
-The addition of the entry for SCIF2 is also mentioned in "Renesas
-Technical Update  TN-RCT-S019A/E / R-Car M3-W Additional Explanation for
-Direct Memory Access Controller for System (SYS-DMAC)".
-Unfortunately both documents report wrong MID/RID values, due to a
-hexadecimal vs. decimal mistake, which were corrected in the Feb 12
-errata for Rev. 1.50.
+Thanks,
+Mani
 
-So in my understanding, and according to my testing, DMA has always
-worked for SCIF2 on (at least) R-Car H3 ES1.0/2.0, M3-W, and M3-N.
-However, early firmware versions (before IPL and Secure Monitor
-Rev1.0.6, released on Feb 25, 2016) prohibited the use of SYS-DMAC2,
-cfr. commit eb21089c32054ecd ("arm64: dts: renesas: r8a7795: Add missing
-SYS-DMAC2 dmas").
+Changes in v2:
 
-Perhaps some firmware versions may impose additional restrictions?
+As per Alex's review:
 
-> Based on the issues generated by [0-1] (reproduced on H3, M3 and M3N)
-> and the doc statements presented above, we think it makes sense to
-> disable DMA on SCIF2 for most/all R-Car3 SoCs.
->
-> [0] v5.0-rc6 commit 97f26702bc95b5 ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> [1] v4.14.106 commit 703db5d1b1759f ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> [2] scif (DEBUG) and rcar-dmac logs:
->     https://gist.github.com/erosca/132cce76a619724a9e4fa61d1db88c66
+* Fixed I2C2 pinctrl node
+* Sorted the avenger96 dtb in alphabetical order
+* Added device-type property to memory node
 
-I have checked my kernel logs, and found a few instances of "Channel
-Address Error".  In all cases, I had enabled/added extra debug prints in
-the sh-sci driver, which may have had impact.
-Last occurrence was in a kernel based on v4.18-rc2, which predates
-several recent fixes for the sh-sci and rcar-dmac drivers.
-Can the issue be reproduced on current mainline?
+Manivannan Sadhasivam (3):
+  dt-bindings: arm: stm32: Document Avenger96 devicetree binding
+  ARM: dts: stm32mp157: Add missing pinctrl definitions
+  ARM: dts: Add Avenger96 devicetree support based on STM32MP157A
 
-Thanks!
+ .../devicetree/bindings/arm/stm32/stm32.txt   |   6 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  75 ++++
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts   | 321 ++++++++++++++++++
+ 4 files changed, 403 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+2.17.1
