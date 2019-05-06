@@ -1,155 +1,154 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 2/4] nvmem: imx: add i.MX8 nvmem driver
-Date: Mon, 6 May 2019 08:45:27 +0000
-Message-ID: <AM0PR04MB44819A6FA84A71ED01CC9C4E88300@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190505134130.28071-1-peng.fan@nxp.com>
- <20190505134130.28071-2-peng.fan@nxp.com>
- <AM0PR04MB421139D3806F75ED9426C8DB80300@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 08/17] kunit: test: add support for test abort
+Date: Mon, 6 May 2019 01:48:09 -0700
+Message-ID: <CAFd5g47LzBfE8J-rCgd4TU_P_=iwbctgeOMM9JZFDN8ZK6R7iw@mail.gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-9-brendanhiggins@google.com> <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
+ <CAFd5g47hxAd=+72xbPJbWPdZCXRXmtLpsGhUh=zc7MSwfcaGJQ@mail.gmail.com> <b2379db6-634a-001e-6f67-37427d8a2666@deltatee.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB421139D3806F75ED9426C8DB80300@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b2379db6-634a-001e-6f67-37427d8a2666@deltatee.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@>
 List-Id: devicetree@vger.kernel.org
 
-Hi Aisheng,
-
-> Subject: RE: [PATCH 2/4] nvmem: imx: add i.MX8 nvmem driver
-> 
-> > From: Peng Fan
-> > Sent: Sunday, May 5, 2019 9:28 PM
-> > Subject: [PATCH 2/4] nvmem: imx: add i.MX8 nvmem driver
+On Fri, May 3, 2019 at 5:33 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+>
+>
+> On 2019-05-03 12:48 a.m., Brendan Higgins wrote:
+> > On Thu, May 2, 2019 at 8:15 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >> On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
+> >>> +/*
+> >>> + * struct kunit_try_catch - provides a generic way to run code which might fail.
+> >>> + * @context: used to pass user data to the try and catch functions.
+> >>> + *
+> >>> + * kunit_try_catch provides a generic, architecture independent way to execute
+> >>> + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
+> >>> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
+> >>> + * is stopped at the site of invocation and @catch is catch is called.
+> >>
+> >> I found some of the C++ comparisons in this series a bit distasteful but
+> >> wasn't going to say anything until I saw the try catch.... But looking
+> >> into the implementation it's just a thread that can exit early which
+> >> seems fine to me. Just a poor choice of name I guess...
 > >
-> > This patch adds i.MX8 nvmem ocotp driver to access fuse via RPC to
-> > i.MX8 system controller.
+> > Guilty as charged (I have a long history with C++, sorry). Would you
+> > prefer I changed the name? I just figured that try-catch is a commonly
+> > understood pattern that describes exactly what I am doing.
+>
+> It is a commonly understood pattern, but I don't think it's what the
+> code is doing. Try-catch cleans up an entire stack and allows each level
+> of the stack to apply local cleanup. This implementation simply exits a
+> thread and has none of that complexity. To me, it seems like an odd
+> abstraction here as it's really just a test runner that can exit early
+> (though I haven't seen the follow-up UML implementation).
+
+Yeah, that is closer to what the UML specific version does, but that's
+a conversation for another time.
+
+>
+> I would prefer to see this cleaned up such that the abstraction matches
+> more what's going on but I don't feel that strongly about it so I'll
+> leave it up to you to figure out what's best unless other reviewers have
+> stronger opinions.
+
+Cool. Let's revisit this with the follow-up patchset.
+
+>
+> >>
+> >> [snip]
+> >>
+> >>> +static void __noreturn kunit_abort(struct kunit *test)
+> >>> +{
+> >>> +     kunit_set_death_test(test, true);
+> >>> +
+> >>> +     kunit_try_catch_throw(&test->try_catch);
+> >>> +
+> >>> +     /*
+> >>> +      * Throw could not abort from test.
+> >>> +      *
+> >>> +      * XXX: we should never reach this line! As kunit_try_catch_throw is
+> >>> +      * marked __noreturn.
+> >>> +      */
+> >>> +     WARN_ONCE(true, "Throw could not abort from test!\n");
+> >>> +}
+> >>> +
+> >>>  int kunit_init_test(struct kunit *test, const char *name)
+> >>>  {
+> >>>       spin_lock_init(&test->lock);
+> >>> @@ -77,6 +103,7 @@ int kunit_init_test(struct kunit *test, const char *name)
+> >>>       test->name = name;
+> >>>       test->vprintk = kunit_vprintk;
+> >>>       test->fail = kunit_fail;
+> >>> +     test->abort = kunit_abort;
+> >>
+> >> There are a number of these function pointers which seem to be pointless
+> >> to me as you only ever set them to one function. Just call the function
+> >> directly. As it is, it is an unnecessary indirection for someone reading
+> >> the code. If and when you have multiple implementations of the function
+> >> then add the pointer. Don't assume you're going to need it later on and
+> >> add all this maintenance burden if you never use it..
 > >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> 
-> Only a few minor comments.
-> Otherwise, this patch looks good to me.
-> 
-> First, the patch title probably better to be:
-> nvmem: imx: add i.MX8 SCU based ocotp driver support
+> > Ah, yes, Frank (and probably others) previously asked me to remove
+> > unnecessary method pointers; I removed all the totally unused ones. As
+> > for these, I don't use them in this patchset, but I use them in my
+> > patchsets that will follow up this one. These in particular are
+> > present so that they can be mocked out for testing.
+>
+> Adding indirection and function pointers solely for the purpose of
+> mocking out while testing doesn't sit well with me and I don't think it
+> should be a pattern that's encouraged. Adding extra complexity like this
+> to a design to make it unit-testable doesn't seem like something that
+> makes sense in kernel code. Especially given that indirect calls are
+> more expensive in the age of spectre.
 
-Fix in V2.
+Indirection is a pretty common method to make something mockable or
+fakeable. Nevertheless, probably an easier discussion to have once we
+have some examples to discuss.
 
-> 
-> > Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <festevam@gmail.com>
-> > Cc: NXP Linux Team <linux-imx@nxp.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > ---
-> >  drivers/nvmem/Kconfig         |   7 +++
-> >  drivers/nvmem/Makefile        |   2 +
-> >  drivers/nvmem/imx-ocotp-scu.c | 135
-> > ++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 144 insertions(+)
-> >  create mode 100644 drivers/nvmem/imx-ocotp-scu.c
+>
+> Also, mocking these particular functions seems like it's an artifact of
+> how you've designed the try/catch abstraction. If the abstraction was
+> more around an abort-able test runner then it doesn't make sense to need
+> to mock out the abort/fail functions as you will be testing overly
+> generic features of something that don't seem necessary to the
+> implementation.
+>
+> >>
+> >> [snip]
+> >>
+> >>> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
+> >>> +{
+> >>> +     try_catch->run = kunit_generic_run_try_catch;
+> >>> +     try_catch->throw = kunit_generic_throw;
+> >>> +}
+> >>
+> >> Same here. There's only one implementation of try_catch and I can't
+> >> really see any sensible justification for another implementation. Even
+> >> if there is, add the indirection when the second implementation is
+> >> added. This isn't C++ and we don't need to make everything a "method".
 > >
-> > diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig index
-> > 530d570724c9..0e705c04bd8c 100644
-> > --- a/drivers/nvmem/Kconfig
-> > +++ b/drivers/nvmem/Kconfig
-> > @@ -36,6 +36,13 @@ config NVMEM_IMX_OCOTP
-> >  	  This driver can also be built as a module. If so, the module
-> >  	  will be called nvmem-imx-ocotp.
+> > These methods are for a UML specific implementation in a follow up
+> > patchset, which is needed for some features like crash recovery, death
+> > tests, and removes dependence on kthreads.
 > >
-> > +config NVMEM_IMX_OCOTP_SCU
-> > +	tristate "i.MX8 On-Chip OTP Controller support"
-> 
-> i.MX8 SCU On-Chip OTP Controller support
-Fix in V2
-> 
-> > +	depends on IMX_SCU
-> > +	help
-> > +	  This is a driver for the On-Chip OTP Controller (OCOTP)
-> 
-> SCU On-Chip OTP
-Fix in V2.
-> 
-> > +	  available on i.MX8 SoCs.
-> > +
-[.....]
+> > I know this probably sounds like premature complexity. Arguably it is
+> > in hindsight, but I wrote those features before I pulled out these
+> > interfaces (they were actually both originally in this patchset, but I
+> > dropped them to make this patchset easier to review). I can remove
+> > these methods and add them back in when I actually use them in the
+> > follow up patchsets if you prefer.
+>
+> Yes, remove them now and add them back when you use them in follow-up
+> patches. If reviewers find problems with the follow-up patches or have a
+> better suggestion on how to do what ever it is you are doing, then you
+> just have this unnecessary code and there's wasted developer time and
+> review bandwidth that will need to be spent cleaning it up.
 
-> > +
-> > +static int imx_scu_ocotp_read(void *context, unsigned int offset,
-> > +			      void *val, size_t bytes)
-> > +{
-> > +	struct ocotp_priv *priv = context;
-> > +	u32 count, index, num_bytes;
-> > +	u8 *buf, *p;
-> 
-> It seems buf has never been used as u8.
-> So probably a better way is:
-> U32 *buf;
-> Void *p.
-> Then we can save all the explicit conversion of u32.
+Fair enough. Next patchset will have the remaining unused indirection
+you pointed out removed.
 
-Fix in V2.
-
-> 
-> > +	int i, ret;
-> > +
-> > +	index = offset >> 2;
-> > +	num_bytes = round_up((offset % 4) + bytes, 4);
-> > +	count = num_bytes >> 2;
-> > +
-> > +	if (count > (priv->data->nregs - index))
-> > +		count = priv->data->nregs - index;
-> > +
-> > +	p = kzalloc(num_bytes, GFP_KERNEL);
-> > +	if (!p)
-> > +		return -ENOMEM;
-> > +
-> > +	buf = p;
-> > +
-> > +	for (i = index; i < (index + count); i++) {
-> > +		if (priv->data->devtype == IMX8QXP) {
-> > +			if ((i > 271) && (i < 544)) {
-> > +				*(u32 *)buf = 0;
-> > +				buf += 4;
-> > +				continue;
-> > +			}
-> > +		}
-> > +
-> > +		ret = imx_sc_misc_otp_fuse_read(priv->nvmem_ipc, i,
-> > +						(u32 *)buf);
-> 
-> Is this API already in kernel?
-
-Ah. I forgot to post out that API in this patchset. Will add that in V2.
-
-[....]
-> > +
-> > +MODULE_AUTHOR("Peng Fan <peng.fan@nxp.com>");
-> > +MODULE_DESCRIPTION("i.MX8QM OCOTP fuse box driver");
-> 
-> i.MX8 SCU OCOTP fuse box driver
-
-Fix in V2.
-
-Thanks,
-Peng.
-
-> 
-> Regards
-> Dong Aisheng
-> 
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.16.4
+Thanks!
