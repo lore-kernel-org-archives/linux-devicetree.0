@@ -1,33 +1,36 @@
 Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
 From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH] ARM: dts: r7s9210-rza2mevb: add ethernet aliases
-Date: Mon, 6 May 2019 15:12:36 -0500
-Message-ID: <20190506201236.110281-1-chris.brandt@renesas.com>
+Subject: [PATCH 04/10] dt-bindings: rcar-gen3-phy-usb2: Document dr_mode
+Date: Mon, 6 May 2019 18:46:25 -0500
+Message-ID: <20190506234631.113226-5-chris.brandt@renesas.com>
+In-Reply-To: <20190506234631.113226-1-chris.brandt@renesas.com>
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add ethernet aliases so u-boot can find the device nodes.
+Document the optional dr_mode property
 
 Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-index 1eba37db7cdc..7795066d82cb 100644
---- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -17,6 +17,8 @@
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+index 26bf377102d3..646a1748d3c4 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+@@ -48,6 +48,9 @@ channel as USB OTG:
+ 		       otg pins.
+ - renesas,use_usb_x1: boolean, the dedicated 48MHz crystal inputs USB_X1 are
+                       used for the PLL source
++- dr_mode: string, indicates the working mode for the PHY. Can be "host",
++           "peripheral", or "otg". Defaults to "host" if not defined.
++
  
- 	aliases {
- 		serial0 = &scif4;
-+		ethernet0 = &ether0;
-+		ethernet1 = &ether1;
- 	};
+ Example (R-Car H3):
  
- 	chosen {
 -- 
 2.16.1
