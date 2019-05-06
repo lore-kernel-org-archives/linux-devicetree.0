@@ -1,53 +1,108 @@
-From: Kees Cook <keescook@google.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-Date: Mon, 6 May 2019 10:43:55 -0700
-Message-ID: <CAGXu5jJpp2HyEWMtAde+VUt=9ni3HRu69NM4rUQJu4kBrnx9Kw@mail.gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
- <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
- <a49c5088-a821-210c-66de-f422536f5b01@gmail.com> <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
- <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com> <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
- <052fa196-4ea9-8384-79b7-fe6bacc0ee82@gmail.com> <CAFd5g47aY-CL+d7DfiyTidY4aAVY+eg1TM1UJ4nYqKSfHOi-0w@mail.gmail.com>
- <63f63c7c-6185-5e64-b338-6a5e7fb9e27c@gmail.com>
+From: Sagar Kadam <sagar.kadam@sifive.com>
+Subject: Re: [PATCH v1 v1 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Date: Mon, 6 May 2019 23:24:28 +0530
+Message-ID: <CAARK3H=9frKMTB6aWBwEmCxXxQuZgjAij_Uam+U8of48hjq=bA@mail.gmail.com>
+References: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
+ <1557147240-29551-4-git-send-email-sagar.kadam@sifive.com> <20190506132924.GD15291@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <63f63c7c-6185-5e64-b338-6a5e7fb9e27c@gmail.com>
+In-Reply-To: <20190506132924.GD15291@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, Shuah Khan <shuah@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, peter@korsgaard.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 5, 2019 at 5:19 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> You can see the full version 14 document in the submitter's repo:
+On Mon, May 6, 2019 at 6:59 PM Andrew Lunn <andrew@lunn.ch> wrote:
 >
->   $ git clone https://github.com/isaacs/testanything.github.io.git
->   $ cd testanything.github.io
->   $ git checkout tap14
->   $ ls tap-version-14-specification.md
+> >  /*
+> >   * 'process_lock' exists because ocores_process() and ocores_process_timeout()
+> > @@ -239,8 +240,13 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
+> >       struct ocores_i2c *i2c = dev_id;
+> >       u8 stat = oc_getreg(i2c, OCI2C_STATUS);
+> >
+> > -     if (!(stat & OCI2C_STAT_IF))
+> > +     if (i2c->flags && SIFIVE_FLAG_POLL) {
 >
-> My understanding is the the version 14 specification is not trying to
-> add new features, but instead capture what is already implemented in
-> the wild.
-
-Oh! I didn't know about the work on TAP 14. I'll go read through this.
-
-> > ## Here is what I propose for this patchset:
+> Do you really want && here?
+>
+> > +             if (stat & OCI2C_STAT_IF)
+> > +                     if (!(stat & OCI2C_STAT_BUSY))
+> > +                             return IRQ_NONE;
+> > +     } else if (!(stat & OCI2C_STAT_IF)) {
+> >               return IRQ_NONE;
+> > +     }
 > >
-> >  - Print out test number range at the beginning of each test suite.
-> >  - Print out log lines as soon as they happen as diagnostics.
-> >  - Print out the lines that state whether a test passes or fails as a
-> > ok/not ok line.
+> >       ocores_process(i2c, stat);
 > >
-> > This would be technically conforming with TAP13 and is consistent with
-> > what some kselftests have done.
+> > @@ -356,6 +362,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
+> >               ret = ocores_isr(-1, i2c);
+> >               if (ret == IRQ_NONE)
+> >                       break; /* all messages have been transferred */
+> > +             else {
+> > +                     if (i2c->flags && SIFIVE_FLAG_POLL)
+>
+> And here?
+>
+> > +                             if (i2c->state == STATE_DONE)
+> > +                                     break;
+> > +             }
+> >       }
+> >  }
+> >
+> > @@ -406,7 +417,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
+> >  {
+> >       struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+> >
+> > -     if (i2c->flags & OCORES_FLAG_POLL)
+> > +     if ((i2c->flags & OCORES_FLAG_POLL) || (i2c->flags & SIFIVE_FLAG_POLL))
+>
+> You can combine this
 
-This is what I fixed kselftest to actually do (it wasn't doing correct
-TAP13), and Shuah is testing the series now:
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=ksft-tap-refactor
+Thanks for your suggestion's Andrew.
+Yes, I will optimize this.
+>
+> if ((i2c->flags & (OCORES_FLAG_POLL | SIFIVE_FLAG_POLL))
+>
+> >               return ocores_xfer_polling(adap, msgs, num);
+> >       return ocores_xfer_core(i2c, msgs, num, false);
+> >  }
+> > @@ -597,6 +608,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+> >  {
+> >       struct ocores_i2c *i2c;
+> >       struct ocores_i2c_platform_data *pdata;
+> > +     const struct of_device_id *match;
+> >       struct resource *res;
+> >       int irq;
+> >       int ret;
+> > @@ -678,13 +690,21 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+> >
+> >       irq = platform_get_irq(pdev, 0);
+> >       if (irq == -ENXIO) {
+> > -             i2c->flags |= OCORES_FLAG_POLL;
+> > +             /*
+> > +              * Set a SIFIVE_FLAG_POLL to enable workaround for FU540
+> > +              * in polling mode interface of i2c-ocore driver.
+> > +              */
+> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> > +             if (match && (long)match->data == TYPE_SIFIVE_REV0)
+> > +                     i2c->flags |= SIFIVE_FLAG_POLL;
+> > +             else
+> > +                     i2c->flags |= OCORES_FLAG_POLL;
+>
+> Please take a look at the whole code, and consider if it is better to
+> set both SIFIVE_FLAG_POLL and OCORES_FLAG_POLL. Maybe rename
+> SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ_BIT?
+>
+The intent of this patch is to add a workaround for hardware errratum
+of FU540 a SiFive Device,
+hence I had named the flag accordingly. Yes,
+OCORES_FLAG_BROKEN_IRQ_BIT is a better and generic term,
+I will rename and resubmit this patch
 
-I'll go read TAP 14 now...
+-Thanks
+Sagar
 
--- 
-Kees Cook
+> Thanks
+>         Andrew
