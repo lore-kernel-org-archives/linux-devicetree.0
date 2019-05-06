@@ -1,255 +1,93 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v3 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
- driver for SiFive SoCs
-Date: Mon, 6 May 2019 08:18:17 -0400
-Message-ID: <d36b7a74-0d08-0143-b479-45f760c347ba@ti.com>
-References: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
- <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
+From: Dragan Cvetic <draganc@xilinx.com>
+Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Date: Mon, 6 May 2019 12:23:56 +0000
+Message-ID: <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190504075502.GA11133@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <20190504075502.GA11133@kroah.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, palmer@sifive.com
-Cc: paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, sachin.ghadi@sifive.com
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/6/19 6:48 AM, Yash Shah wrote:
-> The driver currently supports only SiFive FU540-C000 platform.
-> 
-> The initial version of L2 cache controller driver includes:
-> - Initial configuration reporting at boot up.
-> - Support for ECC related functionality.
-> 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/include/asm/sifive_l2_cache.h |  16 +++
->  arch/riscv/mm/Makefile                   |   1 +
->  arch/riscv/mm/sifive_l2_cache.c          | 175 +++++++++++++++++++++++++++++++
->  3 files changed, 192 insertions(+)
->  create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
->  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
-> 
-> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
-> new file mode 100644
-> index 0000000..04f6748
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * SiFive L2 Cache Controller header file
-> + *
-> + */
-> +
-> +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
-> +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
-> +
-> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
-> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
-> +
-> +#define SIFIVE_L2_ERR_TYPE_CE 0
-> +#define SIFIVE_L2_ERR_TYPE_UE 1
-> +
-> +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index eb22ab4..1523ee5 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -3,3 +3,4 @@ obj-y += fault.o
->  obj-y += extable.o
->  obj-y += ioremap.o
->  obj-y += cacheflush.o
-> +obj-y += sifive_l2_cache.o
-> diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
-> new file mode 100644
-> index 0000000..4eb6461
-> --- /dev/null
-> +++ b/arch/riscv/mm/sifive_l2_cache.c
-> @@ -0,0 +1,175 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SiFive L2 cache controller Driver
-> + *
-> + * Copyright (C) 2018-2019 SiFive, Inc.
-> + *
-> + */
-> +#include <linux/debugfs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <asm/sifive_l2_cache.h>
-> +
-> +#define SIFIVE_L2_DIRECCFIX_LOW 0x100
-> +#define SIFIVE_L2_DIRECCFIX_HIGH 0x104
-> +#define SIFIVE_L2_DIRECCFIX_COUNT 0x108
-> +
-> +#define SIFIVE_L2_DATECCFIX_LOW 0x140
-> +#define SIFIVE_L2_DATECCFIX_HIGH 0x144
-> +#define SIFIVE_L2_DATECCFIX_COUNT 0x148
-> +
-> +#define SIFIVE_L2_DATECCFAIL_LOW 0x160
-> +#define SIFIVE_L2_DATECCFAIL_HIGH 0x164
-> +#define SIFIVE_L2_DATECCFAIL_COUNT 0x168
-> +
-> +#define SIFIVE_L2_CONFIG 0x00
-> +#define SIFIVE_L2_WAYENABLE 0x08
-> +#define SIFIVE_L2_ECCINJECTERR 0x40
-> +
-> +#define SIFIVE_L2_MAX_ECCINTR 3
-> +
-> +static void __iomem *l2_base;
-> +static int g_irq[SIFIVE_L2_MAX_ECCINTR];
-> +
-> +enum {
-> +	DIR_CORR = 0,
-> +	DATA_CORR,
-> +	DATA_UNCORR,
-> +};
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +static struct dentry *sifive_test;
-> +
-> +static ssize_t l2_write(struct file *file, const char __user *data,
-> +			size_t count, loff_t *ppos)
-> +{
-> +	unsigned int val;
-> +
-> +	if (kstrtouint_from_user(data, count, 0, &val))
-> +		return -EINVAL;
-> +	if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
 
-I'm guessing bit 16 is the enable and the lower 8 are some kind of
-region to enable the error? This is probably a bad interface, it looks
-useful for testing but doesn't provide any debugging info useful for
-running systems. Do you really want userspace to be able to do this?
 
-Andrew
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Saturday 4 May 2019 08:55
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
+sts.infradead.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
+l.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+>=20
+> On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+> > Hi Greg,
+> >
+> > Please find my inline comments below,
+> >
+> > Regards
+> > Dragan
+> >
+> > > -----Original Message-----
+> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > Sent: Thursday 2 May 2019 18:20
+> > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
+l@lists.infradead.org; robh+dt@kernel.org;
+> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
+ernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > >
+> > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
+> > > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > > +#define DRIVER_VERSION "0.3"
+> > >
+> > > Version means nothing with the driver in the kernel tree, please remo=
+ve
+> > > it.
+> >
+> > Will be removed. Thank you.
+> >
+> > >
+> > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > >
+> > > Why this number?  Why limit yourself to any number?
+> > >
+> >
+> > There can be max 8 devices for this driver. I'll change to 8.
+> >
+> > > > +
+> > > > +static struct class *xsdfec_class;
+> > >
+> > > Do you really need your own class?
+> >
+> > When writing a character device driver, my goal is to create and regist=
+er an instance
+> > of that structure associated with a struct file_operations, exposing a =
+set of operations
+> > to the user-space. One of the steps to make this goal is Create a class=
+ for a devices,
+> > visible in /sys/class/.
+>=20
+> Why do you need a class?  Again, why not just use the misc_device api,
+> that seems much more relevant here and will make the code a lot simpler.
+>=20
 
-> +		writel(val, l2_base + SIFIVE_L2_ECCINJECTERR);
-> +	else
-> +		return -EINVAL;
-> +	return count;
-> +}
-> +
-> +static const struct file_operations l2_fops = {
-> +	.owner = THIS_MODULE,
-> +	.open = simple_open,
-> +	.write = l2_write
-> +};
-> +
-> +static void setup_sifive_debug(void)
-> +{
-> +	sifive_test = debugfs_create_dir("sifive_l2_cache", NULL);
-> +
-> +	debugfs_create_file("sifive_debug_inject_error", 0200,
-> +			    sifive_test, NULL, &l2_fops);
-> +}
-> +#endif
-> +
-> +static void l2_config_read(void)
-> +{
-> +	u32 regval, val;
-> +
-> +	regval = readl(l2_base + SIFIVE_L2_CONFIG);
-> +	val = regval & 0xFF;
-> +	pr_info("L2CACHE: No. of Banks in the cache: %d\n", val);
-> +	val = (regval & 0xFF00) >> 8;
-> +	pr_info("L2CACHE: No. of ways per bank: %d\n", val);
-> +	val = (regval & 0xFF0000) >> 16;
-> +	pr_info("L2CACHE: Sets per bank: %llu\n", (uint64_t)1 << val);
-> +	val = (regval & 0xFF000000) >> 24;
-> +	pr_info("L2CACHE: Bytes per cache block: %llu\n", (uint64_t)1 << val);
-> +
-> +	regval = readl(l2_base + SIFIVE_L2_WAYENABLE);
-> +	pr_info("L2CACHE: Index of the largest way enabled: %d\n", regval);
-> +}
-> +
-> +static const struct of_device_id sifive_l2_ids[] = {
-> +	{ .compatible = "sifive,fu540-c000-ccache" },
-> +	{ /* end of table */ },
-> +};
-> +
-> +static ATOMIC_NOTIFIER_HEAD(l2_err_chain);
-> +
-> +int register_sifive_l2_error_notifier(struct notifier_block *nb)
-> +{
-> +	return atomic_notifier_chain_register(&l2_err_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(register_sifive_l2_error_notifier);
-> +
-> +int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
-> +{
-> +	return atomic_notifier_chain_unregister(&l2_err_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
-> +
-> +static irqreturn_t l2_int_handler(int irq, void *device)
-> +{
-> +	unsigned int regval, add_h, add_l;
-> +
-> +	if (irq == g_irq[DIR_CORR]) {
-> +		add_h = readl(l2_base + SIFIVE_L2_DIRECCFIX_HIGH);
-> +		add_l = readl(l2_base + SIFIVE_L2_DIRECCFIX_LOW);
-> +		pr_err("L2CACHE: DirError @ 0x%08X.%08X\n", add_h, add_l);
-> +		regval = readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
-> +		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
-> +					   "DirECCFix");
-> +	}
-> +	if (irq == g_irq[DATA_CORR]) {
-> +		add_h = readl(l2_base + SIFIVE_L2_DATECCFIX_HIGH);
-> +		add_l = readl(l2_base + SIFIVE_L2_DATECCFIX_LOW);
-> +		pr_err("L2CACHE: DataError @ 0x%08X.%08X\n", add_h, add_l);
-> +		regval = readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
-> +		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
-> +					   "DatECCFix");
-> +	}
-> +	if (irq == g_irq[DATA_UNCORR]) {
-> +		add_h = readl(l2_base + SIFIVE_L2_DATECCFAIL_HIGH);
-> +		add_l = readl(l2_base + SIFIVE_L2_DATECCFAIL_LOW);
-> +		pr_err("L2CACHE: DataFail @ 0x%08X.%08X\n", add_h, add_l);
-> +		regval = readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
-> +		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_UE,
-> +					   "DatECCFail");
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +int __init sifive_l2_init(void)
-> +{
-> +	struct device_node *np;
-> +	struct resource res;
-> +	int i, rc;
-> +
-> +	np = of_find_matching_node(NULL, sifive_l2_ids);
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	if (of_address_to_resource(np, 0, &res))
-> +		return -ENODEV;
-> +
-> +	l2_base = ioremap(res.start, resource_size(&res));
-> +	if (!l2_base)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < SIFIVE_L2_MAX_ECCINTR; i++) {
-> +		g_irq[i] = irq_of_parse_and_map(np, i);
-> +		rc = request_irq(g_irq[i], l2_int_handler, 0, "l2_ecc", NULL);
-> +		if (rc) {
-> +			pr_err("L2CACHE: Could not request IRQ %d\n", g_irq[i]);
-> +			return rc;
-> +		}
-> +	}
-> +
-> +	l2_config_read();
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	setup_sifive_debug();
-> +#endif
-> +	return 0;
-> +}
-> +device_initcall(sifive_l2_init);
-> 
+The driver can have 8 devices in SoC plus more in Programming Logic. It loo=
+ked logical to group them under the same MAJOR, although they are independe=
+nt of each other.
+Is this argument strong enough to use class?
+
+> thanks,
+>=20
+> greg k-h
