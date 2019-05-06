@@ -1,100 +1,46 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 1/4] dt-bindings: fsl: scu: add ocotp binding
-Date: Mon, 6 May 2019 08:06:09 +0000
-Message-ID: <AM0PR04MB4211BC6C3321648BEB67927480300@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190505134130.28071-1-peng.fan@nxp.com>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v4 00/10] of_net: Add NVMEM support to of_get_mac_address
+Date: Mon, 6 May 2019 10:32:07 +0200
+Message-ID: <20190506083207.GG81826@meh.true.cz>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+ <20190505.214727.1839442238121977055.davem@davemloft.net>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190505134130.28071-1-peng.fan@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Anson Huang <anson.huang@nxp.com>, Stephen Boyd <sboyd@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190505.214727.1839442238121977055.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, matthias.bgg@gmail.com, andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, frowand.list@gmail.com, srinivas.kandagatla@linaro.org, maxime.ripard@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Peng Fan
-> Sent: Sunday, May 5, 2019 9:28 PM
-> 
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as system
-> controller(SCU), the ocotp controller is being controlled by the SCU, so Linux
-> need use RPC to SCU for ocotp handling. This patch adds binding doc for i.MX8
-> SCU OCOTP driver.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Aisheng Dong <aisheng.dong@nxp.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Anson Huang <anson.huang@nxp.com>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 13
-> +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index 5d7dbabbb784..9cb7d52bdf26 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -100,6 +100,13 @@ ID in its "clocks" phandle cell.
->  See the full list of clock IDs from:
->  include/dt-bindings/clock/imx8qxp-clock.h
-> 
-> +OCOTP bindings based on SCU Message Protocol
-> +------------------------------------------------------------
-> +Required properties:
-> +- compatible:		Should be "fsl,imx8qxp-ocotp"
-> +- #address-cells:	Must be 1. Contains byte index
-> +- #size-cells:		Must be 1. Contains byte length
-> +
+David Miller <davem@davemloft.net> [2019-05-05 21:47:27]:
 
-Please put this unimportant one to the last.
-And it's better to mention the optional child nodes for data cells as
-Above #address-cells and #size-cells are used for it.
-Just like:
-Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+Hi David,
 
->  Pinctrl bindings based on SCU Message Protocol
->  ------------------------------------------------------------
-> 
-> @@ -177,6 +184,12 @@ firmware {
->  			...
->  		};
-> 
-> +		ocotp: imx8qx-ocotp {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
+> Series applied, thank you.
 
-Not sure if it's a free choice, but AFAIK we usually write #address-cells and #size-cells
-under compatible string according to the example in DT spec and doc.
-https://elinux.org/Device_Tree_Usage
-https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.2
+I did probably something terribly wrong, but patch "[PATCH v4 05/10] net:
+ethernet: support of_get_mac_address new ERR_PTR error" has not reached the
+patchwork, but I'm sure, that it was sent out as Hauke Mehrtens (maintainer
+for ethernet/lantiq_xrx200.c) has confirmed to me on IRC, that he has received
+it.
 
-Maybe Rob can comment to avoid confusing.
+I've as well noticed, that you've not considered "[PATCH v5] staging:
+octeon-ethernet: support of_get_mac_address new ERR_PTR error"[1] which
+contained a fix for possible NULL value of mac variable:
 
-Otherwise, this patch seems good to me.
+        const u8 *mac = NULL;
 
-Regards
-Dong Aisheng
+        if (priv->of_node)
+                mac = of_get_mac_address(priv->of_node);
 
-> +			compatible = "fsl,imx8qxp-ocotp";
-> +		};
-> +
->  		pd: imx8qx-pd {
->  			compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
->  			#power-domain-cells = <1>;
-> --
-> 2.16.4
+        if (!IS_ERR(mac))
+
+I'll send those two patches again against net-next in a few moments. Sorry for
+this mess.
+
+1. https://patchwork.ozlabs.org/patch/1094942/
+
+-- ynezz
