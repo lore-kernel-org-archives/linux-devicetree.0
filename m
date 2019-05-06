@@ -1,110 +1,63 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v5 5/5] [media] allegro: add SPS/PPS nal unit
- writer
-Date: Mon, 6 May 2019 13:24:12 +0300
-Message-ID: <20190506102412.GR2239@kadam>
-References: <20190503122010.16663-6-m.tretter@pengutronix.de>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
+ description
+Date: Mon, 6 May 2019 12:29:38 +0200
+Message-ID: <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
+        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+        <20190430223629.GA22317@bogus>
+        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
+        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <kbuild-bounces@lists.01.org>
-Content-Disposition: inline
-In-Reply-To: <20190503122010.16663-6-m.tretter@pengutronix.de>
-List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/kbuild/>
-List-Post: <mailto:kbuild@lists.01.org>
-List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=subscribe>
-Errors-To: kbuild-bounces@lists.01.org
-Sender: "kbuild" <kbuild-bounces@lists.01.org>
-To: kbuild@01.org
-Cc: devicetree@vger.kernel.org, dshah@xilinx.com, Michael Tretter <m.tretter@pengutronix.de>, tfiga@chromium.org, hverkuil@xs4all.nl, robh+dt@kernel.org, kbuild-all@01.org, kernel@pengutronix.de, mchehab@kernel.org, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
+Hi Rob,
 
-url:    https://github.com/0day-ci/linux/commits/Michael-Tretter/Add-ZynqMP-VCU-Allegro-DVT-H-264-encoder-driver/20190504-161958
-base:   git://linuxtv.org/media_tree.git master
+On 5/2/19 10:24 PM, Rob Herring wrote:
+> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/1/19 12:36 AM, Rob Herring wrote:
+>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
+>>>> Extend the documenation by events description with new 'event-data-type'
+>>>> field. Add example how the event might be defined in DT.
+>>>
+>>> Why do we need event types in DT? We don't do this for other h/w such as
+>>> ARM PMU.
+>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
+>> arch/arm/kernel/perf_event_v7.c
+>> and are seen from perf. They are different type and for different
+>> purpose. The Ecynos PPMU events are not seen in perf, they are
+>> for internal monitoring and must not be reset by other actors like perf.
+>> They are used by the 'bus drivers' to made some heuristics and tune the
+>> internal settings, like frequency.
+>>
+>> Chanwoo has written PPMU driver which relies on DT definition.
+>> The DT events are used by other DT devices by phandle.
+> 
+> How is that done? I don't see anything in the binding for that.
+Here are the DT devices and how they are pinned together:
+- declared devfreq events:
+https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+- devfreq events pinned to the bus device:
+https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107
+- the bus device itself:
+https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Regards,
+Lukasz
 
-smatch warnings:
-drivers/media/platform/allegro-dvt/nal-h264.c:205 rbsp_read_bit() warn: signedness bug returning '(-22)'
-drivers/media/platform/allegro-dvt/nal-h264.c:259 rbsp_read_bits() warn: unsigned 'bit' is never less than zero.
-
-# https://github.com/0day-ci/linux/commit/eba69588199f08008a1fb4ad24e1f3e66d0080e3
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout eba69588199f08008a1fb4ad24e1f3e66d0080e3
-vim +205 drivers/media/platform/allegro-dvt/nal-h264.c
-
-eba69588 Michael Tretter 2019-05-03  188  
-eba69588 Michael Tretter 2019-05-03  189  static inline bool rbsp_read_bit(struct rbsp *rbsp)
-                                                        ^^^^
-eba69588 Michael Tretter 2019-05-03  190  {
-eba69588 Michael Tretter 2019-05-03  191  	int shift;
-eba69588 Michael Tretter 2019-05-03  192  	int ofs;
-eba69588 Michael Tretter 2019-05-03  193  	bool bit;
-eba69588 Michael Tretter 2019-05-03  194  	int err;
-eba69588 Michael Tretter 2019-05-03  195  
-eba69588 Michael Tretter 2019-05-03  196  	if (rbsp->num_consecutive_zeros == 22) {
-eba69588 Michael Tretter 2019-05-03  197  		err = discard_emulation_prevention_three_byte(rbsp);
-eba69588 Michael Tretter 2019-05-03  198  		if (err)
-eba69588 Michael Tretter 2019-05-03  199  			return err;
-                                                                ^^^^^^^^^^
-
-eba69588 Michael Tretter 2019-05-03  200  	}
-eba69588 Michael Tretter 2019-05-03  201  
-eba69588 Michael Tretter 2019-05-03  202  	shift = 7 - (rbsp->pos % 8);
-eba69588 Michael Tretter 2019-05-03  203  	ofs = rbsp->pos / 8;
-eba69588 Michael Tretter 2019-05-03  204  	if (ofs >= rbsp->size)
-eba69588 Michael Tretter 2019-05-03 @205  		return -EINVAL;
-                                                        ^^^^^^^^^^^^^^
-Probably this function should return int instead of bool.
-
-eba69588 Michael Tretter 2019-05-03  206  
-eba69588 Michael Tretter 2019-05-03  207  	bit = (rbsp->data[ofs] >> shift) & 1;
-eba69588 Michael Tretter 2019-05-03  208  
-eba69588 Michael Tretter 2019-05-03  209  	rbsp->pos++;
-eba69588 Michael Tretter 2019-05-03  210  
-eba69588 Michael Tretter 2019-05-03  211  	if (bit == 1 ||
-eba69588 Michael Tretter 2019-05-03  212  	    (rbsp->num_consecutive_zeros < 7 && (rbsp->pos % 8 == 0)))
-eba69588 Michael Tretter 2019-05-03  213  		rbsp->num_consecutive_zeros = 0;
-eba69588 Michael Tretter 2019-05-03  214  	else
-eba69588 Michael Tretter 2019-05-03  215  		rbsp->num_consecutive_zeros++;
-eba69588 Michael Tretter 2019-05-03  216  
-eba69588 Michael Tretter 2019-05-03  217  	return bit;
-eba69588 Michael Tretter 2019-05-03  218  }
-
-[ snip ]
-
-eba69588 Michael Tretter 2019-05-03  248  static inline int rbsp_read_bits(struct rbsp *rbsp, int n, unsigned int *value)
-eba69588 Michael Tretter 2019-05-03  249  {
-eba69588 Michael Tretter 2019-05-03  250  	int i;
-eba69588 Michael Tretter 2019-05-03  251  	unsigned int bit;
-                                                ^^^^^^^^^^^^^^^^
-
-eba69588 Michael Tretter 2019-05-03  252  	unsigned int tmp = 0;
-eba69588 Michael Tretter 2019-05-03  253  
-eba69588 Michael Tretter 2019-05-03  254  	if (n > 8 * sizeof(*value))
-eba69588 Michael Tretter 2019-05-03  255  		return -EINVAL;
-eba69588 Michael Tretter 2019-05-03  256  
-eba69588 Michael Tretter 2019-05-03  257  	for (i = n; i > 0; i--) {
-eba69588 Michael Tretter 2019-05-03  258  		bit = rbsp_read_bit(rbsp);
-eba69588 Michael Tretter 2019-05-03 @259  		if (bit < 0)
-                                                            ^^^^^^^
-
-eba69588 Michael Tretter 2019-05-03  260  			return bit;
-eba69588 Michael Tretter 2019-05-03  261  		tmp |= bit << (i - 1);
-eba69588 Michael Tretter 2019-05-03  262  	}
-eba69588 Michael Tretter 2019-05-03  263  
-eba69588 Michael Tretter 2019-05-03  264  	if (value)
-eba69588 Michael Tretter 2019-05-03  265  		*value = tmp;
-eba69588 Michael Tretter 2019-05-03  266  
-eba69588 Michael Tretter 2019-05-03  267  	return 0;
-eba69588 Michael Tretter 2019-05-03  268  }
-eba69588 Michael Tretter 2019-05-03  269  
+> 
+> Rob
+> 
+> 
