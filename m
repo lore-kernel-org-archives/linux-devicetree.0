@@ -1,22 +1,30 @@
-Return-Path: <mchehab@kernel.org>
-Date: Tue, 14 May 2019 15:25:45 -0300
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
+Return-Path: <SRS0=3WT1=TG=jmondi.org=jacopo@kernel.org>
+Date: Mon, 6 May 2019 12:09:39 +0200
+From: Jacopo Mondi <jacopo@jmondi.org>
 Subject: Re: [PATCH v6 05/13] media: tvp5150: add input source selection
  of_graph support
-Message-ID: <20190514152545.6020dcd8@coco.lan>
-In-Reply-To: <20190415124413.18456-6-m.felsch@pengutronix.de>
+Message-ID: <20190506100939.pyjnmc5jqyrfexdf@uno.localdomain>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
-	<20190415124413.18456-6-m.felsch@pengutronix.de>
+ <20190415124413.18456-6-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="av6bjzwu7nupzdn3"
+Content-Disposition: inline
+In-Reply-To: <20190415124413.18456-6-m.felsch@pengutronix.de>
 To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Em Mon, 15 Apr 2019 14:44:05 +0200
-Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
+--av6bjzwu7nupzdn3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Marco,
+   thanks, I still have a few more suggestions, but they're minors,
+feel free to pick what you consider more appropriate.
+
+On Mon, Apr 15, 2019 at 02:44:05PM +0200, Marco Felsch wrote:
 > This patch adds the of_graph support to describe the tvp connections.
 > Physical the TVP5150 has three ports: AIP1A, AIP1B and YOUT. As result
 > of discussion [1],[2] the device-tree maps these ports 1:1. The svideo
@@ -27,17 +35,17 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > connector nodes. If more than one connector is available the
 > media_entity_operations.link_setup() callback ensures that only one
 > connector is active.
-> 
+>
 > [1] https://www.spinics.net/lists/linux-media/msg138545.html
 > [2] https://www.spinics.net/lists/linux-media/msg138546.html
-> 
+>
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
 > Changelog:
-> 
+>
 > [1] https://patchwork.kernel.org/cover/10794703/
 > [2] https://patchwork.kernel.org/cover/10786553/
-> 
+>
 > v6:
 > - fix misspelled comments
 > - use 'unsigned int' where it's possible
@@ -48,7 +56,7 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 >   internal function do this.
 > - tvp5150_add_of_connectors: call within probe() to make it cleaner
 > - tvp5150_parse_dt: move local loop vars within the loop.
-> 
+>
 > v5:
 > - Fixing build deps:
 >   - tvp5150_mc_init: fix CONFIG_MEDIA_CONTROLLER deps
@@ -57,7 +65,7 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 >   - tvp5150_dt_cleanup: enable function only if CONFIG_OF is enabled
 >   - tvp5150_parse_dt: enable function only if CONFIG_OF is enabled
 >   - tvp5150_probe: call tvp5150_dt_cleanup only if CONFIG_OF is enabled
-> 
+>
 > - Simplify link_setup routine:
 >   - use generic connector parsing since both series [1,2] are squashed into
 >     one
@@ -72,22 +80,22 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 >     connectors without disable it first.
 >   - tvp5150_registered: simplify default link enable path due to link_setup()
 >     rework.
-> 
+>
 > - General cleanups
 >   - tvp5150_parse_dt: drop unecessary test
 >   - tvp5150_parse_dt: add err message due to misconfiguration
 >   - tvp5150_parse_dt: make use of V4L2_MBUS_UNKNOWN definition
 >   - s/dev_dbg/dev_dbg_lvl
-> 
+>
 > v4:
 >  - rebase on top of media_tree/master, fix merge conflict due to commit
 >    60359a28d592 ("media: v4l: fwnode: Initialise the V4L2 fwnode endpoints
 >    to zero")
-> 
+>
 > v3:
 > - probe(): s/err/err_free_v4l2_ctrls
 > - drop MC dependency for tvp5150_pads
-> 
+>
 > v2:
 > - adapt commit message
 > - unify ifdef switches
@@ -104,17 +112,17 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > - of: drop svideo dt port
 > - of: move svideo connector to port@0/endpoint@1
 > - of: require at least 1-in and 1-out endpoint
-> 
+>
 >  drivers/media/i2c/tvp5150.c | 409 ++++++++++++++++++++++++++++++++----
 >  1 file changed, 370 insertions(+), 39 deletions(-)
-> 
+>
 > diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
 > index 89da921c8886..4e3228b2ccbc 100644
 > --- a/drivers/media/i2c/tvp5150.c
 > +++ b/drivers/media/i2c/tvp5150.c
 > @@ -44,16 +44,29 @@ MODULE_PARM_DESC(debug, "Debug level (0-2)");
 >  #define dprintk0(__dev, __arg...) dev_dbg_lvl(__dev, 0, 0, __arg)
->  
+>
 >  enum tvp5150_pads {
 > -	TVP5150_PAD_IF_INPUT,
 > +	TVP5150_PAD_AIP1A = TVP5150_COMPOSITE0,
@@ -122,7 +130,7 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 >  	TVP5150_PAD_VID_OUT,
 >  	TVP5150_NUM_PADS
 >  };
->  
+>
 > +struct tvp5150_connector {
 > +	struct v4l2_fwnode_connector base;
 > +	struct media_entity ent;
@@ -148,7 +156,7 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > @@ -1167,6 +1180,131 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
 >  	return 0;
 >  }
->  
+>
 > +/****************************************************************************
 > + *			Media entity ops
 > + ****************************************************************************/
@@ -212,15 +220,8 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > +	/* Check if the svideo connector should be enabled */
 > +	for (i = 0; i < decoder->connectors_num; i++) {
 > +		if (remote->entity == &decoder->connectors[i].ent) {
-
 > +			is_svideo =
 > +			   decoder->connectors[i].base.type == V4L2_CON_SVIDEO;
-
-Nitpick:
-
-I would actually prefer to keep this on a single line. Ok, it will violate
-the 80-columns, but it would be better than the above (IMHO).
-
 > +			break;
 > +		}
 > +	}
@@ -253,6 +254,11 @@ the 80-columns, but it would be better than the above (IMHO).
 > +	 * connector links to be on the safe side.
 > +	 */
 > +	err = tvp5150_disable_all_input_links(decoder);
+
+Does this imply when you enable a link to comp-connector2 the existing
+link on comp-connector1 gets disabled? Is this desirable? Shouldn't
+you do this only when dealing with s-video ?
+
 > +	if (err)
 > +		return err;
 > +
@@ -261,6 +267,9 @@ the 80-columns, but it would be better than the above (IMHO).
 > +			  TVP5150_BLACK_SCREEN, 0);
 > +
 > +	if (flags & MEDIA_LNK_FL_ENABLED) {
+
+nit: you could check for is_video here.
+
 > +		/*
 > +		 * S-Video connector is conneted to both ports AIP1A and AIP1B.
 > +		 * Both links must be enabled in one-shot regardless which link
@@ -287,7 +296,7 @@ the 80-columns, but it would be better than the above (IMHO).
 > @@ -1314,6 +1452,65 @@ static int tvp5150_g_tuner(struct v4l2_subdev *sd, struct v4l2_tuner *vt)
 >  	return 0;
 >  }
->  
+>
 > +static int tvp5150_registered(struct v4l2_subdev *sd)
 > +{
 > +#if defined(CONFIG_MEDIA_CONTROLLER)
@@ -343,17 +352,23 @@ the 80-columns, but it would be better than the above (IMHO).
 > +		}
 > +	}
 > +#endif
+
+Additional blank linke maybe?
+
 > +	return 0;
 > +}
 > +
+
+Double empty line.
+
 > +
 >  /* ----------------------------------------------------------------------- */
->  
+>
 >  static const struct v4l2_ctrl_ops tvp5150_ctrl_ops = {
 > @@ -1367,6 +1564,10 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
 >  	.pad = &tvp5150_pad_ops,
 >  };
->  
+>
 > +static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
 > +	.registered = tvp5150_registered,
 > +};
@@ -364,7 +379,7 @@ the 80-columns, but it would be better than the above (IMHO).
 > @@ -1515,38 +1716,168 @@ static int tvp5150_init(struct i2c_client *c)
 >  	return 0;
 >  }
->  
+>
 > -static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
 > +#if defined(CONFIG_MEDIA_CONTROLLER)
 > +static int tvp5150_add_of_connectors(struct tvp5150 *decoder)
@@ -377,7 +392,10 @@ the 80-columns, but it would be better than the above (IMHO).
 > +	struct tvp5150_connector *connectors;
 > +	unsigned int connectors_num = decoder->connectors_num;
 > +	int i, ret;
->  
+
+i can be unsigned, and as noted below, you can remove ret.
+
+>
 > -	ep = of_graph_get_next_endpoint(np, NULL);
 > -	if (!ep)
 > -		return -EINVAL;
@@ -388,7 +406,7 @@ the 80-columns, but it would be better than the above (IMHO).
 > +	 */
 > +	if (!decoder->connectors_num)
 > +		return 0;
->  
+>
 > -	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
 > -	if (ret)
 > -		goto err;
@@ -403,6 +421,9 @@ the 80-columns, but it would be better than the above (IMHO).
 > +
 > +		ret = v4l2_fwnode_parse_connector(
 > +				   of_fwnode_handle(decoder->endpoints[i]), c);
+
+You never use ret, drop it or check for the return value.
+
 > +
 > +		connectors[i].ent.flags = MEDIA_ENT_FL_CONNECTOR;
 > +		connectors[i].ent.function = c->type == V4L2_CON_SVIDEO ?
@@ -425,6 +446,11 @@ the 80-columns, but it would be better than the above (IMHO).
 > +
 > +	/* Initialize all TVP5150 pads */
 > +	for (i = 0; i < TVP5150_NUM_PADS; i++) {
+
+Nit:
+I would loop up to NUM_PADS - 1 and initialize the only source pad
+separately. Up to you.
+
 > +		if (i < TVP5150_NUM_PADS - 1) {
 > +			decoder->pads[i].flags = MEDIA_PAD_FL_SINK;
 > +			decoder->pads[i].sig_type = PAD_SIGNAL_ANALOG;
@@ -444,14 +470,14 @@ the 80-columns, but it would be better than the above (IMHO).
 > +{
 > +	return 0;
 > +}
->  
+>
 > -	flags = bus_cfg.bus.parallel.flags;
 > +static inline int tvp5150_mc_init(struct tvp5150 *decoder)
 > +{
 > +	return 0;
 > +}
 > +#endif /* defined(CONFIG_MEDIA_CONTROLLER) */
->  
+>
 > -	if (bus_cfg.bus_type == V4L2_MBUS_PARALLEL &&
 > -	    !(flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH &&
 > -	      flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH &&
@@ -471,13 +497,19 @@ the 80-columns, but it would be better than the above (IMHO).
 >  		ret = -EINVAL;
 >  		goto err;
 >  	}
->  
+>
 > -	decoder->mbus_type = bus_cfg.bus_type;
 > +	for_each_endpoint_of_node(np, ep_np) {
 > +		struct v4l2_fwnode_endpoint bus_cfg = {
 > +			.bus_type = V4L2_MBUS_UNKNOWN
 > +		};
+
+Could you declare this inside the case block that actually uses it?
+
 > +		struct v4l2_fwnode_connector c;
+
+Same here
+
 > +		struct of_endpoint ep;
 > +		unsigned int flags;
 > +
@@ -497,6 +529,28 @@ the 80-columns, but it would be better than the above (IMHO).
 > +				goto err;
 > +			}
 > +			in++;
+
+Couldn't you increment decoder->num_connectors here?
+
+Also, I really think you should not re-parse the connctor with a
+separate tvp5150_add_of_connectors() call later. You can have up to
+two connectors, I would say just allocate both of them and use the
+appropriate ones.
+
+It would save you the need to keep track of the endpoints in
+'decoder->endpoints[]' which now you have to manually free at a later time
+with a call to dt_cleanup(). You would also save parsing the connector
+twice.
+
+I would say this is up to you, this is not wrong, just harder to
+follow.
+
+With the minor issues reported above fixed:
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Thanks
+  j
+
 > +			break;
 > +		case TVP5150_PAD_VID_OUT:
 > +			ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_np),
@@ -529,14 +583,14 @@ the 80-columns, but it would be better than the above (IMHO).
 > +
 > +		found = true;
 > +	}
->  
+>
 > +	decoder->connectors_num = in;
 > +	return found ? 0 : -ENODEV;
 >  err:
 > -	of_node_put(ep);
 >  	return ret;
 >  }
->  
+>
 > +static void tvp5150_dt_cleanup(struct tvp5150 *decoder)
 > +{
 > +	unsigned int i;
@@ -559,11 +613,11 @@ the 80-columns, but it would be better than the above (IMHO).
 >  		/* Default to BT.656 embedded sync */
 > @@ -1593,25 +1924,20 @@ static int tvp5150_probe(struct i2c_client *c,
 >  	}
->  
+>
 >  	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
 > +	sd->internal_ops = &tvp5150_internal_ops;
 >  	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
->  
+>
 > -#if defined(CONFIG_MEDIA_CONTROLLER)
 > -	core->pads[TVP5150_PAD_IF_INPUT].flags = MEDIA_PAD_FL_SINK;
 > -	core->pads[TVP5150_PAD_IF_INPUT].sig_type = PAD_SIGNAL_ANALOG;
@@ -578,17 +632,17 @@ the 80-columns, but it would be better than the above (IMHO).
 > +	res = tvp5150_mc_init(core);
 > +	if (res)
 > +		goto err_cleanup_dt;
->  
+>
 > -#endif
 > +	res = tvp5150_add_of_connectors(core);
 > +	if (res)
 > +		goto err_cleanup_dt;
->  
+>
 >  	res = tvp5150_detect_version(core);
 >  	if (res < 0)
 > -		return res;
 > +		goto err_cleanup_dt;
->  
+>
 >  	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
 >  	core->detected_norm = V4L2_STD_UNKNOWN;
 > @@ -1637,7 +1963,7 @@ static int tvp5150_probe(struct i2c_client *c,
@@ -598,7 +652,7 @@ the 80-columns, but it would be better than the above (IMHO).
 > -		goto err;
 > +		goto err_free_v4l2_ctrls;
 >  	}
->  
+>
 >  	tvp5150_set_default(tvp5150_read_std(sd), &core->rect);
 > @@ -1649,19 +1975,24 @@ static int tvp5150_probe(struct i2c_client *c,
 >  						tvp5150_isr, IRQF_TRIGGER_HIGH |
@@ -607,17 +661,17 @@ the 80-columns, but it would be better than the above (IMHO).
 > -			goto err;
 > +			goto err_free_v4l2_ctrls;
 >  	}
->  
+>
 >  	res = v4l2_async_register_subdev(sd);
 >  	if (res < 0)
 > -		goto err;
 > +		goto err_free_v4l2_ctrls;
->  
+>
 >  	if (debug > 1)
 >  		tvp5150_log_status(sd);
 > +
 >  	return 0;
->  
+>
 > -err:
 > +err_free_v4l2_ctrls:
 >  	v4l2_ctrl_handler_free(&core->hdl);
@@ -627,9 +681,29 @@ the 80-columns, but it would be better than the above (IMHO).
 > +
 >  	return res;
 >  }
->  
+>
+> --
+> 2.20.1
+>
 
+--av6bjzwu7nupzdn3
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Mauro
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlzQB9kACgkQcjQGjxah
+Vjw9bRAAq99zHqfjiYTdqk9jPPNYK2I6YdWhtDLvPhgNHzk8t8Mhm8d4/b++4izs
+kK/7ufXUZMC09fzpA4HT/koyVf1wJ6qVV+qeIFjNQr0jclpBhjj6+QO7H9L/rbtD
+97377kcIKlyoW+llA3q/Mhw8ax4P9fCnaHmCJMw84Y+4Y3dS/m0Y9OKjLjbLCAgY
+nvQIBjDE7SvVYoIX0YROd6m5I+mRouYhqVaqlctoIVeSKciUhh/5MVaCpKUXuZiE
+MVn3LLNI6yr+QB67OrkNQjjPYa0WCn3KVMdDgrkIEiXHncPDRrgSfjRP4x2wjjTj
+SFNQwTHohJDg+yjHRLobQlWEw7bdC8vL8vHZiFSgNoKshHeJlrLbYgGgWRPEDhC1
+17vHtZE6POTmeMN7Q0Aj2X2e1IFMTPjVBFf9s5rZSpyU2GHgGKE2U1Fzv4i0ZqQj
+8/1gKnNDyZs27/RpsEdhtwvu4aRPvmIVTwdVzHepC4ZQgc85oBcL2Ot3ZxSBjP24
+6ZAWgk6/IE8aaeBAvWwcWKzsrEqlhP5sU6hgU+Decc/smS9O5r63PhTJjMvvkDG+
+70IjIHq+fZUUn342x2TlPNsGC65P1uxYlZct4vbcPVoqqQ3NArXRu0KtJRYOd67F
+Pa1HaKvG6we7vrGfW/XJymIM1kh5X3Qmc6wKIAM8bPOaH7MPPUs=
+=/lm0
+-----END PGP SIGNATURE-----
+
+--av6bjzwu7nupzdn3--
