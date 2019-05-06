@@ -1,58 +1,31 @@
-Return-Path: <SRS0=wcIq=TG=c-mauderer.de=oss@kernel.org>
+Return-Path: <SRS0=hkqx=TG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hamsrv800.servertools24.de ([213.238.32.28]:43677 "EHLO
+        hamsrv800.servertools24.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726296AbfEFTVs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 May 2019 15:21:48 -0400
 Subject: Re: [PATCH v3 1/2] dt-bindings: leds: Add binding for spi-byte LED.
 References: <20190505200022.32209-1-oss@c-mauderer.de>
  <CAL_JsqKmKzSw2-mfmBbhpyY=Ku6H7cE2KZrgkcPD7kAS_GqbFw@mail.gmail.com>
- <4e91d5e7-a583-58d5-9c14-ad86029ed9e7@c-mauderer.de>
- <CAL_JsqKGhTkdMj2Vx1U6UshGFb=iv4Rwvk5Hu-Y6vErNTw6+Ug@mail.gmail.com>
+ <20190506162848.GA9522@amd>
+ <CAL_JsqJerwvjghnuiwndE9Kp_qX5ef-aSa5JcdUAoE6R6YYuYA@mail.gmail.com>
 From: Christian Mauderer <oss@c-mauderer.de>
-Message-ID: <7aa4213f-d469-3ff4-098d-e97f19902f9a@c-mauderer.de>
-Date: Mon, 6 May 2019 21:28:18 +0200
+Message-ID: <54199d69-67a9-eb9d-e46d-b3ea43e2e7a3@c-mauderer.de>
+Date: Mon, 6 May 2019 21:21:45 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKGhTkdMj2Vx1U6UshGFb=iv4Rwvk5Hu-Y6vErNTw6+Ug@mail.gmail.com>
+In-Reply-To: <CAL_JsqJerwvjghnuiwndE9Kp_qX5ef-aSa5JcdUAoE6R6YYuYA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Mark Rutland <mark.rutland@arm.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Dan Murphy <dmurphy@ti.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 06/05/2019 19:59, Rob Herring wrote:
-> On Mon, May 6, 2019 at 12:03 PM Christian Mauderer <oss@c-mauderer.de> wrote:
+On 06/05/2019 19:44, Rob Herring wrote:
+> On Mon, May 6, 2019 at 11:28 AM Pavel Machek <pavel@ucw.cz> wrote:
 >>
->> On 06/05/2019 18:21, Rob Herring wrote:
->>> On Sun, May 5, 2019 at 3:00 PM <oss@c-mauderer.de> wrote:
->>>>
->>>> From: Christian Mauderer <oss@c-mauderer.de>
->>>>
->>>> This patch adds the binding documentation for a simple SPI based LED
->>>> controller which use only one byte for setting the brightness.
->>>>
->>>> Signed-off-by: Christian Mauderer <oss@c-mauderer.de>
->>>> ---
->>>>
->>>> Changes compared to v2:
->>>> - None
->>>>
->>>> Changes compared to v1:
->>>> - rename ubnt-spi to leds-spi-byte
->>>> - rename "ubnt-spi,off_bright" and "ubnt-spi,max_bright" to
->>>>   "leds-spi-byte,off-value" and "leds-spi-byte,max-value" and mark them required
->>>> - rename led-controller node to "led-controller"
->>>> - extend description
->>>> - remove SPI controller
->>>> - use "white:status" for the example label
->>>>
->>>>
->>>>  .../bindings/leds/leds-spi-byte.txt           | 47 +++++++++++++++++++
->>>>  1 file changed, 47 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-spi-byte.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-spi-byte.txt b/Documentation/devicetree/bindings/leds/leds-spi-byte.txt
->>>> new file mode 100644
->>>> index 000000000000..1dd6ab03a56d
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-spi-byte.txt
->>>> @@ -0,0 +1,47 @@
+>> Hi!
+>>
 >>>> +* Single Byte SPI LED Device Driver.
 >>>> +
 >>>> +The driver can be used for controllers with a very simple SPI protocol: Only one
@@ -64,52 +37,13 @@ On 06/05/2019 19:59, Rob Herring wrote:
 >>>> +8F26E611LA) that has been programmed to control the single LED of the device.
 >>>
 >>> What about power control of the uC?
->>
->> You mean if the uC receives a reset or power cycle independent of the
->> main controller? I don't think that this can happen on that board. But I
->> don't have any schematics to prove that.
-> 
-> I was really only pointing out potential issues around "generic"
-> bindings. The protocol interface is not the only thing.
-
-OK.
-
-> 
+>>>
 >>>> +The controller supports four modes depending on the highest two bits in a byte:
 >>>> +One setting for brightness, the other three provide different blink patterns.
 >>>
 >>> This part seems in no way generic.
 >>>
 >>> How does one support the blink patterns?
->>
->> You are correct that this part is not generic. But a multi-purpose
->> driver like the one I proposed could deliver a basic support for the
->> device by controlling the brightness.
->>
->> It's only a basic support so the blink patterns are not supported.
-> 
-> Then you would have to change/extend the binding when you want to
-> support that. With a specific compatible, you only need a driver
-> change.
-
-Accepted.
-
-> 
->> I had a look at the functions in "struct led_classdev". There is a
->> blink_set(..) function that expects that delay_on and delay_off can be
->> set independent. That's not possible for hardware supported blinking on
->> this device. The other function pattern_set(..) would allow an even more
->> universal interface. All possible patterns of the LED could be covered
->> in that but I don't think that this is true the other way round.
->>
->> So in my opinion the only thing that can be implemented in a useful way
->> for that controller is the brightness.
-> 
-> What the OS can support evolves and should be independent of the binding.
-> 
-
-Yes OK. I maybe have seen the binding too tightly coupled.
-
 >>>
 >>>> +With the leds-spi-byte driver a basic support for the brightness mode of that
 >>>> +controller can be easily achieved by setting the minimum and maximum to the
@@ -122,49 +56,36 @@ Yes OK. I maybe have seen the binding too tightly coupled.
 >>> are either we have confidence they really can be generic or they where
 >>> created before we knew better. A sample size of 1 doesn't convince me
 >>> the former is true.
->>
->> I could construct another sample (some SPI-based digital potentiometer
->> where you set values between 17 and 213) but I doubt that it would be a
->> good idea to fight for the name.
->>
->> My original target device is a quite special one: I don't have a chip
->> number. The controller Ubiquiti built here is based on a microcontroller
->> that could be anything. The general device is named "Ubiquiti airCube
->> ISP" or (a short form that I found at some locations) ubnt-acb-isp. I
->> assume that they used the same controller in the non-ISP-version but I
->> haven't checked that. So how about one of these:
->>
->> - ubnt,spi-byte-led
->> - ubnt,spi-acb-led
->> - ubnt,acb-isp-led
-> 
-> ubnt,acb-spi-led perhaps as the order is usually <product|soc>-<sub device>.
-> 
-> Or the last one if you wanted to keep 'isp'.
-> 
-
-In your other mail you said that maybe a vendor prefix is registered.
-See my questions regarding that there.
-
->>
->> Most likely I'll get the off-value and max-value based on the binding
->> name then (0 and 63 for that device). So I'll just remove the two
->> parameters then.
->>
 >>>
 >>> This comment *only* applies to the binding, not the driver. Specific
 >>> bindings can easily be bound to generic drivers.
->>>
 >>
->> So the driver should still be called spi-byte (or something similar)?
+>> Ok, I'm afraid I caused this. What should the compatible be, then?
 > 
-> Yes, whatever the LED maintainers want there.
-
-OK. I'll discuss that with them as soon as the binding is clear.
-
+> Knowing nothing about the h/w other than the above description:
+> ubiquiti,aircube-leds
+> 
+> Not sure if that's a registered or correct vendor prefix though.
 > 
 > Rob
 > 
+
+Where would such a vendor prefix be registered? Does that mean that only
+the vendor is allowed to use it? In that case: How would a reverse
+engineered prefix look like?
+
+Regarding the vendor: I wanted to have support for the airCube in
+OpenWRT. When I started working with the device I asked Ubiquiti for the
+sources (they use a OpenWRT based system). I received more or less the
+answer that they don't have an archive but of course would create one.
+But they have no ETA for it. The hardware is quite similar to other
+boards so after some weeks I just analysed all necessary and did the
+port myself instead of fighting with the support. So something like
+three months after my question to the support, I finished the patches
+and they had been accepted to OpenWRT. Ubiquiti released a GPL archive
+(still with some missing parts like U-Boot) about two weeks later. I had
+a look at it and they are not using a device tree. So there is no
+"official" string that I could deduce from that archive.
 
 Best regards
 
