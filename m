@@ -1,7 +1,7 @@
 From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v3 1/2] RISC-V: Add DT documentation for SiFive L2 Cache Controller
-Date: Mon,  6 May 2019 16:18:39 +0530
-Message-ID: <1557139720-12384-2-git-send-email-yash.shah@sifive.com>
+Subject: [PATCH v3 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs
+Date: Mon,  6 May 2019 16:18:40 +0530
+Message-ID: <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
 References: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
@@ -10,70 +10,232 @@ To: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, palmer@sifive.c
 Cc: paul.walmsley@sifive.com, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, sachin.ghadi@sifive.com, afd@ti.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for SiFive FU540 L2 cache controller driver
+The driver currently supports only SiFive FU540-C000 platform.
+
+The initial version of L2 cache controller driver includes:
+- Initial configuration reporting at boot up.
+- Support for ECC related functionality.
 
 Signed-off-by: Yash Shah <yash.shah@sifive.com>
 ---
- .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ arch/riscv/include/asm/sifive_l2_cache.h |  16 +++
+ arch/riscv/mm/Makefile                   |   1 +
+ arch/riscv/mm/sifive_l2_cache.c          | 175 +++++++++++++++++++++++++++++++
+ 3 files changed, 192 insertions(+)
+ create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
+ create mode 100644 arch/riscv/mm/sifive_l2_cache.c
 
-diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
 new file mode 100644
-index 0000000..73d8f19
+index 0000000..04f6748
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-@@ -0,0 +1,51 @@
-+SiFive L2 Cache Controller
-+--------------------------
-+The SiFive Level 2 Cache Controller is used to provide access to fast copies
-+of memory for masters in a Core Complex. The Level 2 Cache Controller also
-+acts as directory-based coherency manager.
-+All the properties in ePAPR/DeviceTree specification applies for this platform
++++ b/arch/riscv/include/asm/sifive_l2_cache.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * SiFive L2 Cache Controller header file
++ *
++ */
 +
-+Required Properties:
-+--------------------
-+- compatible: Should be "sifive,fu540-c000-ccache" and "cache"
++#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
++#define _ASM_RISCV_SIFIVE_L2_CACHE_H
 +
-+- cache-block-size: Specifies the block size in bytes of the cache.
-+  Should be 64
++extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
++extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
 +
-+- cache-level: Should be set to 2 for a level 2 cache
++#define SIFIVE_L2_ERR_TYPE_CE 0
++#define SIFIVE_L2_ERR_TYPE_UE 1
 +
-+- cache-sets: Specifies the number of associativity sets of the cache.
-+  Should be 1024
++#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+index eb22ab4..1523ee5 100644
+--- a/arch/riscv/mm/Makefile
++++ b/arch/riscv/mm/Makefile
+@@ -3,3 +3,4 @@ obj-y += fault.o
+ obj-y += extable.o
+ obj-y += ioremap.o
+ obj-y += cacheflush.o
++obj-y += sifive_l2_cache.o
+diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
+new file mode 100644
+index 0000000..4eb6461
+--- /dev/null
++++ b/arch/riscv/mm/sifive_l2_cache.c
+@@ -0,0 +1,175 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * SiFive L2 cache controller Driver
++ *
++ * Copyright (C) 2018-2019 SiFive, Inc.
++ *
++ */
++#include <linux/debugfs.h>
++#include <linux/interrupt.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
++#include <asm/sifive_l2_cache.h>
 +
-+- cache-size: Specifies the size in bytes of the cache. Should be 2097152
++#define SIFIVE_L2_DIRECCFIX_LOW 0x100
++#define SIFIVE_L2_DIRECCFIX_HIGH 0x104
++#define SIFIVE_L2_DIRECCFIX_COUNT 0x108
 +
-+- cache-unified: Specifies the cache is a unified cache
++#define SIFIVE_L2_DATECCFIX_LOW 0x140
++#define SIFIVE_L2_DATECCFIX_HIGH 0x144
++#define SIFIVE_L2_DATECCFIX_COUNT 0x148
 +
-+- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
++#define SIFIVE_L2_DATECCFAIL_LOW 0x160
++#define SIFIVE_L2_DATECCFAIL_HIGH 0x164
++#define SIFIVE_L2_DATECCFAIL_COUNT 0x168
 +
-+- reg: Physical base address and size of L2 cache controller registers map
++#define SIFIVE_L2_CONFIG 0x00
++#define SIFIVE_L2_WAYENABLE 0x08
++#define SIFIVE_L2_ECCINJECTERR 0x40
 +
-+Optional Properties:
-+--------------------
-+- next-level-cache: phandle to the next level cache if present.
++#define SIFIVE_L2_MAX_ECCINTR 3
 +
-+- memory-region: reference to the reserved-memory for the L2 Loosely Integrated
-+  Memory region. The reserved memory node should be defined as per the bindings
-+  in reserved-memory.txt
++static void __iomem *l2_base;
++static int g_irq[SIFIVE_L2_MAX_ECCINTR];
 +
++enum {
++	DIR_CORR = 0,
++	DATA_CORR,
++	DATA_UNCORR,
++};
 +
-+Example:
++#ifdef CONFIG_DEBUG_FS
++static struct dentry *sifive_test;
 +
-+	cache-controller@2010000 {
-+		compatible = "sifive,fu540-c000-ccache", "cache";
-+		cache-block-size = <64>;
-+		cache-level = <2>;
-+		cache-sets = <1024>;
-+		cache-size = <2097152>;
-+		cache-unified;
-+		interrupt-parent = <&plic0>;
-+		interrupts = <1 2 3>;
-+		reg = <0x0 0x2010000 0x0 0x1000>;
-+		next-level-cache = <&L25 &L40 &L36>;
-+		memory-region = <&l2_lim>;
-+	};
++static ssize_t l2_write(struct file *file, const char __user *data,
++			size_t count, loff_t *ppos)
++{
++	unsigned int val;
++
++	if (kstrtouint_from_user(data, count, 0, &val))
++		return -EINVAL;
++	if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
++		writel(val, l2_base + SIFIVE_L2_ECCINJECTERR);
++	else
++		return -EINVAL;
++	return count;
++}
++
++static const struct file_operations l2_fops = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.write = l2_write
++};
++
++static void setup_sifive_debug(void)
++{
++	sifive_test = debugfs_create_dir("sifive_l2_cache", NULL);
++
++	debugfs_create_file("sifive_debug_inject_error", 0200,
++			    sifive_test, NULL, &l2_fops);
++}
++#endif
++
++static void l2_config_read(void)
++{
++	u32 regval, val;
++
++	regval = readl(l2_base + SIFIVE_L2_CONFIG);
++	val = regval & 0xFF;
++	pr_info("L2CACHE: No. of Banks in the cache: %d\n", val);
++	val = (regval & 0xFF00) >> 8;
++	pr_info("L2CACHE: No. of ways per bank: %d\n", val);
++	val = (regval & 0xFF0000) >> 16;
++	pr_info("L2CACHE: Sets per bank: %llu\n", (uint64_t)1 << val);
++	val = (regval & 0xFF000000) >> 24;
++	pr_info("L2CACHE: Bytes per cache block: %llu\n", (uint64_t)1 << val);
++
++	regval = readl(l2_base + SIFIVE_L2_WAYENABLE);
++	pr_info("L2CACHE: Index of the largest way enabled: %d\n", regval);
++}
++
++static const struct of_device_id sifive_l2_ids[] = {
++	{ .compatible = "sifive,fu540-c000-ccache" },
++	{ /* end of table */ },
++};
++
++static ATOMIC_NOTIFIER_HEAD(l2_err_chain);
++
++int register_sifive_l2_error_notifier(struct notifier_block *nb)
++{
++	return atomic_notifier_chain_register(&l2_err_chain, nb);
++}
++EXPORT_SYMBOL_GPL(register_sifive_l2_error_notifier);
++
++int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
++{
++	return atomic_notifier_chain_unregister(&l2_err_chain, nb);
++}
++EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
++
++static irqreturn_t l2_int_handler(int irq, void *device)
++{
++	unsigned int regval, add_h, add_l;
++
++	if (irq == g_irq[DIR_CORR]) {
++		add_h = readl(l2_base + SIFIVE_L2_DIRECCFIX_HIGH);
++		add_l = readl(l2_base + SIFIVE_L2_DIRECCFIX_LOW);
++		pr_err("L2CACHE: DirError @ 0x%08X.%08X\n", add_h, add_l);
++		regval = readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
++		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
++					   "DirECCFix");
++	}
++	if (irq == g_irq[DATA_CORR]) {
++		add_h = readl(l2_base + SIFIVE_L2_DATECCFIX_HIGH);
++		add_l = readl(l2_base + SIFIVE_L2_DATECCFIX_LOW);
++		pr_err("L2CACHE: DataError @ 0x%08X.%08X\n", add_h, add_l);
++		regval = readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
++		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
++					   "DatECCFix");
++	}
++	if (irq == g_irq[DATA_UNCORR]) {
++		add_h = readl(l2_base + SIFIVE_L2_DATECCFAIL_HIGH);
++		add_l = readl(l2_base + SIFIVE_L2_DATECCFAIL_LOW);
++		pr_err("L2CACHE: DataFail @ 0x%08X.%08X\n", add_h, add_l);
++		regval = readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
++		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_UE,
++					   "DatECCFail");
++	}
++
++	return IRQ_HANDLED;
++}
++
++int __init sifive_l2_init(void)
++{
++	struct device_node *np;
++	struct resource res;
++	int i, rc;
++
++	np = of_find_matching_node(NULL, sifive_l2_ids);
++	if (!np)
++		return -ENODEV;
++
++	if (of_address_to_resource(np, 0, &res))
++		return -ENODEV;
++
++	l2_base = ioremap(res.start, resource_size(&res));
++	if (!l2_base)
++		return -ENOMEM;
++
++	for (i = 0; i < SIFIVE_L2_MAX_ECCINTR; i++) {
++		g_irq[i] = irq_of_parse_and_map(np, i);
++		rc = request_irq(g_irq[i], l2_int_handler, 0, "l2_ecc", NULL);
++		if (rc) {
++			pr_err("L2CACHE: Could not request IRQ %d\n", g_irq[i]);
++			return rc;
++		}
++	}
++
++	l2_config_read();
++
++#ifdef CONFIG_DEBUG_FS
++	setup_sifive_debug();
++#endif
++	return 0;
++}
++device_initcall(sifive_l2_init);
 -- 
 1.9.1
