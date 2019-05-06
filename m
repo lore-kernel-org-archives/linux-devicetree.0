@@ -1,54 +1,63 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH 4/4] arm64: dts: stratix10: Add SDMMC EDAC node
-Date: Mon, 6 May 2019 10:17:54 -0500
-Message-ID: <bfbc2ce8-675e-fba0-5d01-cc0c9e76895d@kernel.org>
-References: <1556030197-24534-1-git-send-email-thor.thayer@linux.intel.com>
- <1556030197-24534-5-git-send-email-thor.thayer@linux.intel.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
+Date: Mon, 6 May 2019 17:24:33 +0200
+Message-ID: <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+ <20190504004258.23574-2-erosca@de.adit-jv.com>
+ <20190506134700.ya565idfzzc3enbm@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556030197-24534-5-git-send-email-thor.thayer@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190506134700.ya565idfzzc3enbm@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Helge Deller <deller@gmx.de>, Michael Neuling <mikey@neuling.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Philip Yang <Philip.Yang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
+> On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
+> > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
+> > printed with %p"), enabling debug prints in sh-sci.c would generate
+> > output like below confusing the users who try to sneak into the
+> > internals of the driver:
+> > 
+> > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
+> > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
+> > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
+> > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
+> > 
+> > There are two possible fixes for that:
+> >  - get rid of '%p' prints if they don't reveal any useful information
+> >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
+> >    pointer values when running a debug/non-production kernel
+> 
+> I am concerned that this may expose information in circumstances
+> where it is undesirable. Is it generally accepted practice to
+> use %px in conjunction with dev_dbg() ?
+> 
+> ...
 
+Below commits performed a similar s/%p/%px/ update in debug context:
 
-On 4/23/19 9:36 AM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Add the Stratix10 SDMMC EDAC node.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> index 2e3863ee12b3..91fed85cf8e5 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> @@ -67,6 +67,17 @@
->  				clock-frequency = <25000000>;
->  			};
->  		};
-> +
-> +		eccmgr {
-> +			sdmmca-ecc@ff8c8c00 {
-> +				compatible = "altr,socfpga-s10-sdmmc-ecc",
-> +					     "altr,socfpga-sdmmc-ecc";
-> +				reg = <0xff8c8c00 0x100>;
-> +				altr,ecc-parent = <&mmc>;
-> +				interrupts = <14 4>,
-> +					     <15 4>;
-> +			};
-> +		};
->  	};
->  };
->  
-> 
+Authors (CC-ed)   Commit         Subject
+----------------------------------------
+Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
+Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
+Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
+Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
+Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
+Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
+Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
+Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
+Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
 
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+To quote Matthew, with respect to any debug prints:
+If an attacker can force this message to be printed, we've already lost.
+
+In any case, I won't be affected much if the change is not accepted,
+since it doesn't resolve any major issue on my end. Thanks!
+
+-- 
+Best Regards,
+Eugeniu.
