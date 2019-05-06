@@ -1,71 +1,30 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH 1/4] dt-bindings: fsl: scu: add ocotp binding
-Date: Mon, 6 May 2019 08:50:51 +0000
-Message-ID: <AM0PR04MB44815E080F8639F597BD085E88300@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190505134130.28071-1-peng.fan@nxp.com>
- <AM0PR04MB4211BC6C3321648BEB67927480300@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 11/17] kunit: test: add test managed resource tests
+Date: Mon, 6 May 2019 02:03:49 -0700
+Message-ID: <CAFd5g44q3qyahykujDzOoO01DwGMUm+Kce-tOAzSW90U4mQM7w@mail.gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-12-brendanhiggins@google.com> <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB4211BC6C3321648BEB67927480300@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
+To: shuah <shuah@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-um@lists.infradead.org, Sasha Levin <Alexander.Levin@microsoft.com>, "Bird, Timothy" <Tim.Bird@sony.com>, Amir Goldstein <amir73il@gmail.com>, Dan
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWlzaGVuZywNCg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIDEvNF0gZHQtYmluZGluZ3M6IGZz
-bDogc2N1OiBhZGQgb2NvdHAgYmluZGluZw0KPiANCj4gPiBGcm9tOiBQZW5nIEZhbg0KPiA+IFNl
-bnQ6IFN1bmRheSwgTWF5IDUsIDIwMTkgOToyOCBQTQ0KPiA+DQo+ID4gTlhQIGkuTVg4UVhQIGlz
-IGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRlIGFzIHN5c3RlbQ0KPiA+
-IGNvbnRyb2xsZXIoU0NVKSwgdGhlIG9jb3RwIGNvbnRyb2xsZXIgaXMgYmVpbmcgY29udHJvbGxl
-ZCBieSB0aGUgU0NVLA0KPiA+IHNvIExpbnV4IG5lZWQgdXNlIFJQQyB0byBTQ1UgZm9yIG9jb3Rw
-IGhhbmRsaW5nLiBUaGlzIHBhdGNoIGFkZHMNCj4gPiBiaW5kaW5nIGRvYyBmb3IgaS5NWDggU0NV
-IE9DT1RQIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZh
-bkBueHAuY29tPg0KPiA+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KPiA+
-IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KPiA+IENjOiBBaXNoZW5n
-IERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+IENjOiBTaGF3biBHdW8gPHNoYXduZ3Vv
-QGtlcm5lbC5vcmc+DQo+ID4gQ2M6IFVsZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3Jn
-Pg0KPiA+IENjOiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IEFuc29u
-IEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZw0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-YXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dCB8IDEzDQo+ID4gKysrKysrKysrKysrKw0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdA0KPiA+
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNj
-dS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNj
-YWxlL2ZzbCxzY3UudHh0DQo+ID4gaW5kZXggNWQ3ZGJhYmJiNzg0Li45Y2I3ZDUyYmRmMjYgMTAw
-NjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVl
-c2NhbGUvZnNsLHNjdS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IEBAIC0xMDAsNiArMTAwLDEzIEBA
-IElEIGluIGl0cyAiY2xvY2tzIiBwaGFuZGxlIGNlbGwuDQo+ID4gIFNlZSB0aGUgZnVsbCBsaXN0
-IG9mIGNsb2NrIElEcyBmcm9tOg0KPiA+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2lteDhx
-eHAtY2xvY2suaA0KPiA+DQo+ID4gK09DT1RQIGJpbmRpbmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdl
-IFByb3RvY29sDQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNv
-bXBhdGlibGU6CQlTaG91bGQgYmUgImZzbCxpbXg4cXhwLW9jb3RwIg0KPiA+ICstICNhZGRyZXNz
-LWNlbGxzOglNdXN0IGJlIDEuIENvbnRhaW5zIGJ5dGUgaW5kZXgNCj4gPiArLSAjc2l6ZS1jZWxs
-czoJCU11c3QgYmUgMS4gQ29udGFpbnMgYnl0ZSBsZW5ndGgNCj4gPiArDQo+IA0KPiBQbGVhc2Ug
-cHV0IHRoaXMgdW5pbXBvcnRhbnQgb25lIHRvIHRoZSBsYXN0Lg0KDQpvay4gSSBqdXN0IGZvbGxv
-d2VkIGFscGhhYmV0aWNhbCBvcmRlciBhcyBPQ09UUCwgUGluY3RybCwgUlRDIHNlcXVlbmNlLg0K
-V2lsbCBtb3ZlIGl0IHRvIGxhc3QgaW4gVjIuDQoNCj4gQW5kIGl0J3MgYmV0dGVyIHRvIG1lbnRp
-b24gdGhlIG9wdGlvbmFsIGNoaWxkIG5vZGVzIGZvciBkYXRhIGNlbGxzIGFzIEFib3ZlDQo+ICNh
-ZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscyBhcmUgdXNlZCBmb3IgaXQuDQo+IEp1c3QgbGlr
-ZToNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL252bWVtL2lteC1vY290cC50
-eHQNCj4gDQo+ID4gIFBpbmN0cmwgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1lc3NhZ2UgUHJvdG9j
-b2wNCj4gPiAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+ID4NCj4gPiBAQCAtMTc3LDYgKzE4NCwxMiBAQCBmaXJtd2FyZSB7DQo+
-ID4gIAkJCS4uLg0KPiA+ICAJCX07DQo+ID4NCj4gPiArCQlvY290cDogaW14OHF4LW9jb3RwIHsN
-Cj4gPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCSNzaXplLWNlbGxzID0gPDE+
-Ow0KPiANCj4gTm90IHN1cmUgaWYgaXQncyBhIGZyZWUgY2hvaWNlLCBidXQgQUZBSUsgd2UgdXN1
-YWxseSB3cml0ZSAjYWRkcmVzcy1jZWxscyBhbmQNCj4gI3NpemUtY2VsbHMgdW5kZXIgY29tcGF0
-aWJsZSBzdHJpbmcgYWNjb3JkaW5nIHRvIHRoZSBleGFtcGxlIGluIERUIHNwZWMgYW5kDQo+IGRv
-Yy4NCg0KRml4IGluIFYyLg0KDQpUaGFua3MsDQpQZW5nDQoNCj4gaHR0cHM6Ly9lbGludXgub3Jn
-L0RldmljZV9UcmVlX1VzYWdlDQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9kZXZpY2V0cmVlLW9yZy9k
-ZXZpY2V0cmVlLXNwZWNpZmljYXRpb24vcmVsZWFzZXMvdGFnL3YwLg0KPiAyDQo+IA0KPiBNYXli
-ZSBSb2IgY2FuIGNvbW1lbnQgdG8gYXZvaWQgY29uZnVzaW5nLg0KPiANCj4gT3RoZXJ3aXNlLCB0
-aGlzIHBhdGNoIHNlZW1zIGdvb2QgdG8gbWUuDQo+IA0KPiBSZWdhcmRzDQo+IERvbmcgQWlzaGVu
-Zw0KPiANCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1vY290cCI7DQo+ID4gKwkJ
-fTsNCj4gPiArDQo+ID4gIAkJcGQ6IGlteDhxeC1wZCB7DQo+ID4gIAkJCWNvbXBhdGlibGUgPSAi
-ZnNsLGlteDhxeHAtc2N1LXBkIiwgImZzbCxzY3UtcGQiOw0KPiA+ICAJCQkjcG93ZXItZG9tYWlu
-LWNlbGxzID0gPDE+Ow0KPiA+IC0tDQo+ID4gMi4xNi40DQoNCg==
+On Fri, May 3, 2019 at 7:34 AM shuah <shuah@kernel.org> wrote:
+>
+> On 5/1/19 5:01 PM, Brendan Higgins wrote:
+> > From: Avinash Kondareddy <akndr41@gmail.com>
+> >
+> > Tests how tests interact with test managed resources in their lifetime.
+> >
+> > Signed-off-by: Avinash Kondareddy <akndr41@gmail.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+>
+> I think this change log could use more details. It is vague on what it
+> does.
+
+Agreed. Will fix in next revision.
