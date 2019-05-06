@@ -1,121 +1,20 @@
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
-Date: Mon, 6 May 2019 19:12:16 +0200
-Message-ID: <20190506171216.GA2181@vmlxhi-102.adit-jv.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
- <20190504004258.23574-2-erosca@de.adit-jv.com>
- <20190506134700.ya565idfzzc3enbm@verge.net.au>
- <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
- <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
+Date: Tue, 7 May 2019 01:27:36 +0800
+Message-ID: <CAEExFWsVgAV=br1kAfgMTLnS6ELfMjFegiusUYPK6A3k7Nq9Mg@mail.gmail.com>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
+ <20190426211540.GA890@bogus> <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
+ <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
+ <20190430044245.s4viduudej6q2eq6@vireshk-i7> <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
+In-Reply-To: <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Helge Deller <deller>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:46:57PM +0200, Geert Uytterhoeven wrote:
-> Hi Eugeniu,
-> 
-> On Mon, May 6, 2019 at 5:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
-> > > On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
-> > > > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
-> > > > printed with %p"), enabling debug prints in sh-sci.c would generate
-> > > > output like below confusing the users who try to sneak into the
-> > > > internals of the driver:
-> > > >
-> > > > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
-> > > > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
-> > > > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
-> > > > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
-> > > >
-> > > > There are two possible fixes for that:
-> > > >  - get rid of '%p' prints if they don't reveal any useful information
-> > > >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
-> > > >    pointer values when running a debug/non-production kernel
-> > >
-> > > I am concerned that this may expose information in circumstances
-> > > where it is undesirable. Is it generally accepted practice to
-> > > use %px in conjunction with dev_dbg() ?
-> > >
-> > > ...
-> >
-> > Below commits performed a similar s/%p/%px/ update in debug context:
-> >
-> > Authors (CC-ed)   Commit         Subject
-> > ----------------------------------------
-> > Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
-> > Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
-> > Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
-> > Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
-> > Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
-> > Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
-> > Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
-> > Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
-> > Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
-> >
-> > To quote Matthew, with respect to any debug prints:
-> > If an attacker can force this message to be printed, we've already lost.
-> 
-> I think the issue with using %px in debug code is that a distro may enable
-> CONFIG_DYNAMIC_DEBUG (it is enabled in several defconfigs), after which
-> an attacker just has to convince/trick the system into enabling debug for that
-> particular driver.
+Hi Rob,
 
-How about going the route of commit c96900435fa9fd ("xfs: use %px for
-data pointers when debugging"), i.e. s/%p/"PTR_FMT"/ like below (this
-would enable the expected debug output only on manually defining DEBUG
-in the *.c file, while still keeping the output hashed on
-DYNAMIC_DEBUG=y if DEBUG is undefined).
-
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 3cd139752d3f..69cd87c5ef0c 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -56,6 +56,12 @@
- #include <asm/sh_bios.h>
- #endif
- 
-+#ifdef DEBUG
-+#define PTR_FMT "%px"
-+#else
-+#define PTR_FMT "%p"
-+#endif
-+
- #include "serial_mctrl_gpio.h"
- #include "sh-sci.h"
- 
-@@ -1434,7 +1440,7 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
- 		goto switch_to_pio;
- 	}
- 
--	dev_dbg(port->dev, "%s: %p: %d...%d, cookie %d\n",
-+	dev_dbg(port->dev, "%s: "PTR_FMT": %d...%d, cookie %d\n",
- 		__func__, xmit->buf, xmit->tail, xmit->head, s->cookie_tx);
- 
- 	dma_async_issue_pending(chan);
-
-> 
-> > In any case, I won't be affected much if the change is not accepted,
-> > since it doesn't resolve any major issue on my end. Thanks!
-> 
-> OK.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
--- 
-Best Regards,
-Eugeniu.
+PING...
