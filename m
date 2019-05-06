@@ -1,110 +1,92 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
- thermal sensor
-Date: Mon, 6 May 2019 14:28:07 +0200
-Message-ID: <20190506122807.4u323iys74jddcet@flea>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-2-tiny.windzz@gmail.com>
- <20190505162215.3594f77d@archlinux>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Date: Mon, 6 May 2019 14:34:25 +0200
+Message-ID: <20190506123425.GA26360@kroah.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190504075502.GA11133@kroah.com>
+ <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e762al6xbx7iiess"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190505162215.3594f77d@archlinux>
+In-Reply-To: <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Yangtao Li <tiny.windzz@gmail.com>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+To: Dragan Cvetic <draganc@xilinx.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Saturday 4 May 2019 08:55
+> > To: Dragan Cvetic <draganc@xilinx.com>
+> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > 
+> > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+> > > Hi Greg,
+> > >
+> > > Please find my inline comments below,
+> > >
+> > > Regards
+> > > Dragan
+> > >
+> > > > -----Original Message-----
+> > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > Sent: Thursday 2 May 2019 18:20
+> > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > >
+> > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
+> > > > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > > > +#define DRIVER_VERSION "0.3"
+> > > >
+> > > > Version means nothing with the driver in the kernel tree, please remove
+> > > > it.
+> > >
+> > > Will be removed. Thank you.
+> > >
+> > > >
+> > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > > >
+> > > > Why this number?  Why limit yourself to any number?
+> > > >
+> > >
+> > > There can be max 8 devices for this driver. I'll change to 8.
+> > >
+> > > > > +
+> > > > > +static struct class *xsdfec_class;
+> > > >
+> > > > Do you really need your own class?
+> > >
+> > > When writing a character device driver, my goal is to create and register an instance
+> > > of that structure associated with a struct file_operations, exposing a set of operations
+> > > to the user-space. One of the steps to make this goal is Create a class for a devices,
+> > > visible in /sys/class/.
+> > 
+> > Why do you need a class?  Again, why not just use the misc_device api,
+> > that seems much more relevant here and will make the code a lot simpler.
+> > 
+> 
+> The driver can have 8 devices in SoC plus more in Programming Logic.
+> It looked logical to group them under the same MAJOR, although they
+> are independent of each other.  Is this argument strong enough to use
+> class?
 
---e762al6xbx7iiess
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not really :)
 
-Hi,
+8 devices is pretty small.  What tool will be trying to talk to all of
+these devices and how was it going to find out what devices were in the
+system?
 
-On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
-> On Fri,  3 May 2019 03:28:07 -0400
-> Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> > For some SOCs, there are more than one thermal sensor, and there are
-> > currently four sensors on the A80. So we need to do some work in order
-> > to support multiple thermal sensors:
-> >
-> >   1) add sensor_count in gpadc_data.
-> >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support multiple
-> >      thermal_zone_device and distinguish between different sensors.
-> >   3) modify read temperature and initialization function.
->
-> This comment doesn't mention the devm change. If it had it would have
-> raised immediate alarm bells.
->
-> I'm also not keen on the web of pointers that this driver is steadily
-> evolving.  I can't immediately see how to reduce that complexity however.
+thanks,
 
-So I might be responsible for that, and looking back, this has been a
-mistake.
-
-This driver was initally put together to support a controller found in
-older (A10 up to A31) Allwinner SoCs. This controller had an ADC
-driver that could be operated as a touchscreen controller, and was
-providing a CPU temperature sensor and a general purpose ADC.
-
-However, we already had a driver for that controller in drivers/input
-to report the CPU temperature, and the one in IIO was introduced to
-support the general purpose ADC (and the CPU temperature). The long
-term goal was to add the touchscreen feature as well eventually so
-that we could remove the one in drivers/input. That didn't happen.
-
-At the same time, the Allwinner hardware slowly evolved to remove the
-touchscreen and ADC features, and only keep the CPU temperature
-readout. It then evolved further on to support multiple temperatures
-(for different clusters, the GPU, and so on).
-
-So, today, we're in a situation where I was pushing everything into
-that IIO drivers since there was similiraties between all the
-generations, but the fact that we have to support so many odd cases
-(DT bindings compatibility, controllers with and without ADC, etc)
-that it becomes a real mess.
-
-And that mess isn't really used by anybody, since we want to have the
-touchscreen.
-
-There's only one SoC that is supported only by that driver, which is
-the A33 that only had a CPU temperature readout, and is still pretty
-similar to the latest SoC from Allwinner (that is supported by this
-series).
-
-I guess, for everyone's sanity and in order to not stall this further,
-it would just be better to create an hwmon driver for the A33 (and
-onwards, including the H6) for the SoC that just have the temperature
-readout feature. And for the older SoC, we just keep the older driver
-under input/. Once the A33 is supported, we'll remove the driver in
-IIO (and the related bits in drivers/mfd).
-
-Armbian already has a driver for that they never upstreamed iirc, so
-it might be a good starting point, and we would add the support for
-the H6. How does that sound?
-
-Sorry for wasting everybody's time on this.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---e762al6xbx7iiess
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNAoUgAKCRDj7w1vZxhR
-xTLvAQDqYglT93yaQujSGHibjsOVHEjlG/IsBmh8AK4LTLRYaAEAsCfJVF5ZRnpC
-1HOLCDVK5qAjlTxiKXg4tjrrxbWVEgU=
-=Rbya
------END PGP SIGNATURE-----
-
---e762al6xbx7iiess--
+greg k-h
