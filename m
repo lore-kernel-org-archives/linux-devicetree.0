@@ -1,55 +1,78 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v4 00/10] of_net: Add NVMEM support to of_get_mac_address
-Date: Mon, 6 May 2019 18:19:17 +0200
-Message-ID: <20190506161917.GH81826@meh.true.cz>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <20190505.214727.1839442238121977055.davem@davemloft.net>
- <20190506083207.GG81826@meh.true.cz>
- <20190506164132.10342ef6@bootlin.com>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
+Date: Mon, 6 May 2019 18:46:57 +0200
+Message-ID: <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-2-erosca@de.adit-jv.com>
+ <20190506134700.ya565idfzzc3enbm@verge.net.au> <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190506164132.10342ef6@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, matthias.bgg@gmail.com, andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, frowand.list@gmail.com, srinivas.kandagatla@linaro.org, maxime.ripard@bootlin.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc: Simon Horman <horms@verge.net.au>, Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Helge Deller <deller>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Chevallier <maxime.chevallier@bootlin.com> [2019-05-06 16:41:32]:
+Hi Eugeniu,
 
-Hi Maxime,
-
-> On Mon, 6 May 2019 10:32:07 +0200
-> Petr Štetiar <ynezz@true.cz> wrote:
-> 
-> >David Miller <davem@davemloft.net> [2019-05-05 21:47:27]:
+On Mon, May 6, 2019 at 5:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
+> > On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
+> > > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
+> > > printed with %p"), enabling debug prints in sh-sci.c would generate
+> > > output like below confusing the users who try to sneak into the
+> > > internals of the driver:
+> > >
+> > > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
+> > > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
+> > > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
+> > > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
+> > >
+> > > There are two possible fixes for that:
+> > >  - get rid of '%p' prints if they don't reveal any useful information
+> > >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
+> > >    pointer values when running a debug/non-production kernel
 > >
-> >Hi David,
+> > I am concerned that this may expose information in circumstances
+> > where it is undesirable. Is it generally accepted practice to
+> > use %px in conjunction with dev_dbg() ?
 > >
-> >> Series applied, thank you.  
-> >
-> >I did probably something terribly wrong, but patch "[PATCH v4 05/10] net:
-> >ethernet: support of_get_mac_address new ERR_PTR error" has not reached the
-> >patchwork, but I'm sure, that it was sent out as Hauke Mehrtens (maintainer
-> >for ethernet/lantiq_xrx200.c) has confirmed to me on IRC, that he has received
-> >it.
-> 
-> It seems indeed that the 5th patch hasn't beed applied, which effectively
-> breaks mvneta on net-next, and I guess a lot of other drivers that rely
-> on handling the new return values.
+> > ...
+>
+> Below commits performed a similar s/%p/%px/ update in debug context:
+>
+> Authors (CC-ed)   Commit         Subject
+> ----------------------------------------
+> Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
+> Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
+> Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
+> Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
+> Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
+> Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
+> Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
+> Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
+> Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
+>
+> To quote Matthew, with respect to any debug prints:
+> If an attacker can force this message to be printed, we've already lost.
 
-Yep, sorry for that.
+I think the issue with using %px in debug code is that a distro may enable
+CONFIG_DYNAMIC_DEBUG (it is enabled in several defconfigs), after which
+an attacker just has to convince/trick the system into enabling debug for that
+particular driver.
 
-> I saw you sent a followup series fixing that, but only patch 2/3
-> shows-up on netdev, so you might be facing a similar issue here.
+> In any case, I won't be affected much if the change is not accepted,
+> since it doesn't resolve any major issue on my end. Thanks!
 
-Indeed, seems like patchwork hiccup with a long list of recepients in the
-To/Cc headers, so I've just resend it again with only netdev@vger.kernel.org
-in the To: header and it was happily picked up[1].
+OK.
 
-1. https://patchwork.ozlabs.org/project/netdev/list/?series=106369
+Gr{oetje,eeting}s,
 
--- ynezz
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
