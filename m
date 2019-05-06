@@ -1,52 +1,118 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2] dt-bindings: mmc: add DT bindings for ls1028a eSDHC
- host controller
-Date: Mon, 6 May 2019 11:51:37 +0200
-Message-ID: <CAPDyKFrcFo_zCy5q2VkUP+SxOTogmAsys-X_yBrARLE1dTcqqw@mail.gmail.com>
-References: <20190505055858.37509-1-yinbo.zhu@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280
+ LCD panel
+Date: Mon, 6 May 2019 15:26:22 +0530
+Message-ID: <CAMty3ZAfwVyvmAmenhrQHJcy3eq-Yb61a4WLop_8jS-7vM940A@mail.gmail.com>
+References: <20190501121448.3812-1-jagan@amarulasolutions.com>
+ <20190501193429.GA9075@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190505055858.37509-1-yinbo.zhu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190501193429.GA9075@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 5 May 2019 at 07:57, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> From: Yinbo Zhu <yinbo.zhu@nxp.com>
->
-> Add "fsl,ls1028a-esdhc" bindings for ls1028a eSDHC host controller
->
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
-> ---
-> Change in v2:
->                 as alphabetical order to update dt-bindings
->                 update the commit information.
->
->  Documentation/devicetree/bindings/mmc/fsl-esdhc.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> index 99c5cf8507e8..edb8cadb9541 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> @@ -17,6 +17,7 @@ Required properties:
->         "fsl,t4240-esdhc"
->      Possible compatibles for ARM:
->         "fsl,ls1012a-esdhc"
-> +       "fsl,ls1028a-esdhc"
->         "fsl,ls1088a-esdhc"
->         "fsl,ls1043a-esdhc"
->         "fsl,ls1046a-esdhc"
-> --
-> 2.17.1
->
+SGkgU2FtLAoKT24gVGh1LCBNYXkgMiwgMjAxOSBhdCAxOjA0IEFNIFNhbSBSYXZuYm9yZyA8c2Ft
+QHJhdm5ib3JnLm9yZz4gd3JvdGU6Cj4KPiBIaSBKYWdhbgo+Cj4gT24gV2VkLCBNYXkgMDEsIDIw
+MTkgYXQgMDU6NDQ6NDdQTSArMDUzMCwgSmFnYW4gVGVraSB3cm90ZToKPiA+IEhENzAyRSBsY2Qg
+aXMgRnJpZW5kbHlFTEVDIGRldmVsb3BlZCBlRFAgTENEIHBhbmVsIHdpdGggODAweDEyODAKPiA+
+IHJlc29sdXRpb24uIEl0IGhhcyBidWlsdCBpbiBHb29kaXgsIEdUOTI3MSBjYXB0aXZlIHRvdWNo
+c2NyZWVuCj4gPiB3aXRoIGJhY2tsaWdodCBhZGp1c3RhYmxlIHZpYSBQV00uCj4gPgo+ID4gQWRk
+IHN1cHBvcnQgZm9yIGl0Lgo+ID4KPiA+IENjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRp
+bmdAZ21haWwuY29tPgo+ID4gQ2M6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KPiA+
+IENjOiBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+Cj4gPiBDYzogRGFuaWVsIFZldHRl
+ciA8ZGFuaWVsQGZmd2xsLmNoPgo+ID4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKPiA+IFNpZ25lZC1vZmYtYnk6IEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMu
+Y29tPgo+Cj4gUGxlYXNlIHN1Ym1pdCB0aGUgYmluZGluZyBpbiBhIHNlcGFyYXRlIHBhdGNoIGFz
+IHBlcgo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdWJtaXR0aW5nLXBhdGNo
+ZXMudHh0CgpIbW0uLiBwcmVwYXJlZCBsaWtlIHRoaXMgaW5pdGlhbGx5IGJ1dCBmZXcgb2YgbXkg
+cGF0Y2hlcyB3ZXJlIGNvbWJpbmVkCmVhcmxpZXIgZXZlbi10aG91Z2ggSSBzZW50IGl0IHNlcGFy
+YXRlbHkuIGFueXdheSBsZXQgbWUgc2VwYXJhdGUgaXQKYWdhaW4uCgo+Cj4gVGhlIGJpbmRpbmcg
+bG9va3MgbGlrZSBpdCBpcyBjb21wYXRpYmxlIHdpdGggY29tbW9uLXBhbmVsIGFuZAo+IHNpbXBs
+ZS1wYW5lbCAtIHBsZWFzZSBzYXkgc28gaW4gdGhlIGJpbmRpbmdzLgo+IFNlZSBmb3IgZXhhbXBs
+ZSB0aGUgbGFzdCBmZXcgYmluZGluZyBkb2N1bWVudHMgYWRkZWQgdG8gdGhlIGtlcm5lbCB0cmVl
+LgoKQ29ycmVjdCwgd2lsbCB1cGRhdGUuCgo+Cj4gPiAtLS0KPiA+ICAuLi4vZGlzcGxheS9wYW5l
+bC9mcmllbmRseWFybSxoZDcwMmUudHh0ICAgICAgfCAyOSArKysrKysrKysrKysrKysrKysrCj4g
+PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMjYgKysr
+KysrKysrKysrKysrKysKPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDU1IGluc2VydGlvbnMoKykKPiA+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvZnJpZW5kbHlhcm0saGQ3MDJlLnR4dAo+ID4KPiA+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9mcmllbmRseWFy
+bSxoZDcwMmUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvZnJpZW5kbHlhcm0saGQ3MDJlLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uNjczNDlkN2Y3OWJlCj4gPiAtLS0gL2Rldi9udWxsCj4gPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9mcmll
+bmRseWFybSxoZDcwMmUudHh0Cj4gPiBAQCAtMCwwICsxLDI5IEBACj4gPiArRnJpZW5kbHlFTEVD
+IEhENzAyRSA4MDB4MTI4MCBMQ0QgcGFuZWwKPiA+ICsKPiA+ICtIRDcwMkUgbGNkIGlzIEZyaWVu
+ZGx5RUxFQyBkZXZlbG9wZWQgZURQIExDRCBwYW5lbCB3aXRoIDgwMHgxMjgwCj4gPiArcmVzb2x1
+dGlvbi4gSXQgaGFzIGJ1aWx0IGluIEdvb2RpeCwgR1Q5MjcxIGNhcHRpdmUgdG91Y2hzY3JlZW4K
+PiA+ICt3aXRoIGJhY2tsaWdodCBhZGp1c3RhYmxlIHZpYSBQV00uCj4gPiArCj4gPiArUmVxdWly
+ZWQgcHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiZnJpZW5kbHlhcm0s
+aGQ3MDJlIgo+ID4gKy0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3Vw
+cGx5IHZvbHRhZ2UKPiA+ICsKPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKy0gYmFja2xp
+Z2h0OiBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5l
+bAo+ID4gKwo+ID4gK09wdGlvbmFsIG5vZGVzOgo+ID4gKy0gVmlkZW8gcG9ydCBmb3IgTENEIHBh
+bmVsIGlucHV0Lgo+ID4gKwo+ID4gK0V4YW1wbGU6Cj4gPiArCj4gPiArICAgICBwYW5lbCB7Cj4g
+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSJmcmllbmRseWFybSxoZDcwMmUiOwo+ID4gKyAg
+ICAgICAgICAgICBiYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4gPiArICAgICAgICAgICAgIHBv
+d2VyLXN1cHBseSA9IDwmdmNjM3YzX3N5cz47Cj4gPiArCj4gPiArICAgICAgICAgICAgIHBvcnQg
+ewo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHBhbmVsX2luX2VkcDogZW5kcG9pbnQgewo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfb3V0
+X3BhbmVsPjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gKyAgICAgICAgICAgICB9
+Owo+ID4gKyAgICAgfTsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
+ZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiA+IGlu
+ZGV4IDllODIxOGY2YTNmMi4uOWRiM2MwYzY1ZWYyIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMKPiA+IEBAIC0xMTg0LDYgKzExODQsMjkgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBwYW5lbF9kZXNjIGZveGxpbmtfZmw1MDB3dnIwMF9hMHQgPSB7Cj4gPiAgICAgICAu
+YnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCj4gPiAgfTsKPiA+Cj4gPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGZyaWVuZGx5YXJtX2hkNzAyZV9t
+b2RlID0gewo+ID4gKyAgICAgLmNsb2NrICAgICAgICAgID0gNjcxODUsCj4gPiArICAgICAuaGRp
+c3BsYXkgICAgICAgPSA4MDAsCj4gPiArICAgICAuaHN5bmNfc3RhcnQgICAgPSA4MDAgKyAyMCwK
+PiA+ICsgICAgIC5oc3luY19lbmQgICAgICA9IDgwMCArIDIwICsgMjQsCj4gPiArICAgICAuaHRv
+dGFsICAgICAgICAgPSA4MDAgKyAyMCArIDI0ICsgMjAsCj4gPiArICAgICAudmRpc3BsYXkgICAg
+ICAgPSAxMjgwLAo+ID4gKyAgICAgLnZzeW5jX3N0YXJ0ICAgID0gMTI4MCArIDQsCj4gPiArICAg
+ICAudnN5bmNfZW5kICAgICAgPSAxMjgwICsgNCArIDgsCj4gPiArICAgICAudnRvdGFsICAgICAg
+ICAgPSAxMjgwICsgNCArIDggKyA0LAo+ID4gKyAgICAgLnZyZWZyZXNoICAgICAgID0gNjAsCj4g
+PiArICAgICAuZmxhZ3MgICAgICAgICAgPSBEUk1fTU9ERV9GTEFHX05WU1lOQyB8IERSTV9NT0RF
+X0ZMQUdfTkhTWU5DLAo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5l
+bF9kZXNjIGZyaWVuZGx5YXJtX2hkNzAyZSA9IHsKPiA+ICsgICAgIC5tb2RlcyA9ICZmcmllbmRs
+eWFybV9oZDcwMmVfbW9kZSwKPiA+ICsgICAgIC5udW1fbW9kZXMgPSAxLAo+ID4gKyAgICAgLnNp
+emUgPSB7Cj4gPiArICAgICAgICAgICAgIC53aWR0aCAgPSA5NCwKPiA+ICsgICAgICAgICAgICAg
+LmhlaWdodCA9IDE1MSwKPiA+ICsgICAgIH0sCj4gPiArfTsKPiBBcyBJIHJlYWQgdGhlIGRhdGFz
+aGVldCB0aGVuIHRoaXMgcGFuZWwgbmVlZHMgYXQgbGVhc3QgYSBwcmVwYXJlIGRlbGF5Cj4gb2Yg
+MTAgbXMgKGl0IHNheXMgPiAxMCBtcyBmcm9tIFZHSCB1bnRpbCBEYXRhKS4KPiBBbmQgdGhlbiB3
+ZSBhbHNvIGtub3cgdGhhdCBWR0ggc2hhbGwgYmUgdmFsaWQgYXQgbGVhc3QgMTAgbXMgYWZ0ZXIg
+RFZERAo+IHNvIHByZXBhcmUgaXMgbGlrZWx5IDIwIG1zLgo+Cj4gQmFzZWQgb24gZGF0YXNoZWV0
+IGZvdW5kIGhlcmU6Cj4gaHR0cHM6Ly9wYW4uYmFpZHUuY29tL3MvMWdlRWZCTGgvCj4KPiBQbGVh
+c2UgZXZhbHVhdGUgYWxsIGRlbGF5cy4KClRoaXMgcGFydCBJJ20gdW5jbGVhciwgSSB0cmllZCB0
+byBnZXQgdGhlIGRhdGFzaGVldCBvZiB0aGlzIGJ1dApjb3VsZG4ndCBmaW5kIGl0IGVpdGhlci4g
+SSBoYXZlIGEgcmVmZXJlbmNlIGZvciB0aGVzZSBGcmllbmRseUVMRUMKcGFuZWxzIGZyb20gaHR0
+cHM6Ly9naXRodWIuY29tL2ZyaWVuZGx5YXJtL2tlcm5lbC1yb2NrY2hpcC9ibG9iL25hbm9waTQt
+bGludXgtdjQuNC55L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1mcmllbmRseWVsZWMuYwpi
+dXQgdGhleSBhcmUgbm90IHVzaW5nIGFueSBvZiB0aGVzZSBkZWxheXMuCgo+Cj4gPiArCj4gPiAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGdpYW50cGx1c19ncGc0ODI3Mzlx
+czVfbW9kZSA9IHsKPiA+ICAgICAgIC5jbG9jayA9IDkwMDAsCj4gPiAgICAgICAuaGRpc3BsYXkg
+PSA0ODAsCj4gPiBAQCAtMjYzNCw2ICsyNjU3LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKPiA+ICAgICAgIH0sIHsKPiA+ICAgICAg
+ICAgICAgICAgLmNvbXBhdGlibGUgPSAiZWR0LGV0bTA3MDBnMGVkaDYiLAo+ID4gICAgICAgICAg
+ICAgICAuZGF0YSA9ICZlZHRfZXRtMDcwMGcwYmRoNiwKPiA+ICsgICAgIH0sIHsKPiA+ICsgICAg
+ICAgICAgICAgLmNvbXBhdGlibGUgPSAiZnJpZW5kbHlhcm0saGQ3MDJlIiwKPiA+ICsgICAgICAg
+ICAgICAgLmRhdGEgPSAmZnJpZW5kbHlhcm1faGQ3MDJlLAo+ID4gICAgICAgfSwgewo+ID4gICAg
+ICAgICAgICAgICAuY29tcGF0aWJsZSA9ICJmb3hsaW5rLGZsNTAwd3ZyMDAtYTB0IiwKPiA+ICAg
+ICAgICAgICAgICAgLmRhdGEgPSAmZm94bGlua19mbDUwMHd2cjAwX2EwdCwKPgo+IEFkZCB0aGVz
+ZSBpbiBzb3J0ZWQgb3JkZXIuCj4gImZveCIgaXMgYmVmb3JlICJmcmkiCgpUcnVlLCB3aWxsIHNv
+cnQgaXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
