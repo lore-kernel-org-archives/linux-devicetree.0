@@ -1,40 +1,44 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH 3/4] dmaengine: fsl-edma: support little endian for edma driver
-Date: Mon,  6 May 2019 09:03:43 +0000
-Message-ID: <20190506090344.37784-3-peng.ma@nxp.com>
-References: <20190506090344.37784-1-peng.ma@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190506090344.37784-1-peng.ma@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peng Ma <peng.ma@nxp.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra:
+ Remove regulator-always-on
+Date: Mon, 6 May 2019 11:15:04 +0200
+Message-ID: <20190506091504.mbkr5kqyym5gngeb@flea>
+References: <1556924720-49372-1-git-send-email-pgreco@centosproject.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dvasnxeqq2ltvqq3"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBG7WX7TAKGQELVZGWBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1556924720-49372-1-git-send-email-pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-improve edma driver to support little endian.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- drivers/dma/fsl-edma-common.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+--dvasnxeqq2ltvqq3
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 680b2a0..6bf238e 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -83,9 +83,14 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	u32 ch = fsl_chan->vchan.chan.chan_id;
- 	void __iomem *muxaddr;
- 	unsigned int chans_per_mux, ch_off;
-+	int endian_diff[4] = {3, 1, -1, -3};
- 
- 	chans_per_mux = fsl_chan->edma->n_chans / DMAMUX_NR;
- 	ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
-+
-+	if (!fsl_chan->edma->big_endian)
-+		ch_off += endian_diff[ch_off % 4];
-+
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
--- 
-1.7.1
+On Fri, May 03, 2019 at 08:05:19PM -0300, Pablo Greco wrote:
+> Now that the regulators are tied to the GPIO bank, we can remove the
+> unneeded regulator-always-on in reg_aldo2
+>
+> Signed-off-by: Pablo Greco <pgreco-/kQrlZ55X3WoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+
+Queued for 5.3, thanks
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--dvasnxeqq2ltvqq3--
