@@ -1,49 +1,49 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 1/3] dt-bindings: clock: imx8mm: Add GPIO clocks
-Date: Mon, 6 May 2019 09:18:10 +0000
-Message-ID: <1557133994-5061-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/3] arm64: dts: imx8mm: add clock for GPIO node
+Date: Mon, 6 May 2019 09:18:20 +0000
+Message-ID: <1557133994-5061-3-git-send-email-Anson.Huang@nxp.com>
+References: <1557133994-5061-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557133994-5061-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add macro for the GPIO clocks of the i.MX8MM.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- include/dt-bindings/clock/imx8mm-clock.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/include/dt-bindings/clock/imx8mm-clock.h b/include/dt-bindings/clock/imx8mm-clock.h
-index 1b4353e..fe47798 100644
---- a/include/dt-bindings/clock/imx8mm-clock.h
-+++ b/include/dt-bindings/clock/imx8mm-clock.h
-@@ -239,6 +239,12 @@
- 
- #define IMX8MM_CLK_NAND_USDHC_BUS_RAWNAND_CLK	222
- 
--#define IMX8MM_CLK_END				223
-+#define IMX8MM_CLK_GPIO1_ROOT			223
-+#define IMX8MM_CLK_GPIO2_ROOT			224
-+#define IMX8MM_CLK_GPIO3_ROOT			225
-+#define IMX8MM_CLK_GPIO4_ROOT			226
-+#define IMX8MM_CLK_GPIO5_ROOT			227
-+
-+#define IMX8MM_CLK_END				228
- 
- #endif
--- 
-2.7.4
+aS5NWDhNTSBoYXMgY2xvY2sgZ2F0ZSBmb3IgZWFjaCBHUElPIGJhbmssIGFkZCBjbG9jayBpbmZv
+DQp0byBHUElPIG5vZGUgZm9yIGNsb2NrIG1hbmFnZW1lbnQuDQoNClNpZ25lZC1vZmYtYnk6IEFu
+c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0
+cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kgfCA1ICsrKysrDQogMSBmaWxlIGNoYW5nZWQsIDUgaW5z
+ZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+aW14OG1tLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0K
+aW5kZXggNmI0MDdhOTQuLmYzMmQ0ZTkgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvaW14OG1tLmR0c2kNCkBAIC0yMDYsNiArMjA2LDcgQEANCiAJCQkJcmVnID0gPDB4MzAyMDAw
+MDAgMHgxMDAwMD47DQogCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA2NCBJUlFfVFlQRV9MRVZF
+TF9ISUdIPiwNCiAJCQkJCSAgICAgPEdJQ19TUEkgNjUgSVJRX1RZUEVfTEVWRUxfSElHSD47DQor
+CQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfR1BJTzFfUk9PVD47DQogCQkJCWdwaW8tY29u
+dHJvbGxlcjsNCiAJCQkJI2dwaW8tY2VsbHMgPSA8Mj47DQogCQkJCWludGVycnVwdC1jb250cm9s
+bGVyOw0KQEAgLTIxNyw2ICsyMTgsNyBAQA0KIAkJCQlyZWcgPSA8MHgzMDIxMDAwMCAweDEwMDAw
+PjsNCiAJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDY2IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0K
+IAkJCQkJICAgICA8R0lDX1NQSSA2NyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCisJCQkJY2xvY2tz
+ID0gPCZjbGsgSU1YOE1NX0NMS19HUElPMl9ST09UPjsNCiAJCQkJZ3Bpby1jb250cm9sbGVyOw0K
+IAkJCQkjZ3Bpby1jZWxscyA9IDwyPjsNCiAJCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7DQpAQCAt
+MjI4LDYgKzIzMCw3IEBADQogCQkJCXJlZyA9IDwweDMwMjIwMDAwIDB4MTAwMDA+Ow0KIAkJCQlp
+bnRlcnJ1cHRzID0gPEdJQ19TUEkgNjggSVJRX1RZUEVfTEVWRUxfSElHSD4sDQogCQkJCQkgICAg
+IDxHSUNfU1BJIDY5IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJCQljbG9ja3MgPSA8JmNsayBJ
+TVg4TU1fQ0xLX0dQSU8zX1JPT1Q+Ow0KIAkJCQlncGlvLWNvbnRyb2xsZXI7DQogCQkJCSNncGlv
+LWNlbGxzID0gPDI+Ow0KIAkJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsNCkBAIC0yMzksNiArMjQy
+LDcgQEANCiAJCQkJcmVnID0gPDB4MzAyMzAwMDAgMHgxMDAwMD47DQogCQkJCWludGVycnVwdHMg
+PSA8R0lDX1NQSSA3MCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCiAJCQkJCSAgICAgPEdJQ19TUEkg
+NzEgSVJRX1RZUEVfTEVWRUxfSElHSD47DQorCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtf
+R1BJTzRfUk9PVD47DQogCQkJCWdwaW8tY29udHJvbGxlcjsNCiAJCQkJI2dwaW8tY2VsbHMgPSA8
+Mj47DQogCQkJCWludGVycnVwdC1jb250cm9sbGVyOw0KQEAgLTI1MCw2ICsyNTQsNyBAQA0KIAkJ
+CQlyZWcgPSA8MHgzMDI0MDAwMCAweDEwMDAwPjsNCiAJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
+IDcyIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KIAkJCQkJICAgICA8R0lDX1NQSSA3MyBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsNCisJCQkJY2xvY2tzID0gPCZjbGsgSU1YOE1NX0NMS19HUElPNV9ST09U
+PjsNCiAJCQkJZ3Bpby1jb250cm9sbGVyOw0KIAkJCQkjZ3Bpby1jZWxscyA9IDwyPjsNCiAJCQkJ
+aW50ZXJydXB0LWNvbnRyb2xsZXI7DQotLSANCjIuNy40DQoNCg==
