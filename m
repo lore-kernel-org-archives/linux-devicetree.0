@@ -1,48 +1,63 @@
-Return-Path: <SRS0=znRT=TH=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 01/10] phy: renesas: rcar-gen3-usb2: Add uses_usb_x1 option
+Date: Mon, 6 May 2019 18:46:22 -0500
+Message-ID: <20190506234631.113226-2-chris.brandt@renesas.com>
+In-Reply-To: <20190506234631.113226-1-chris.brandt@renesas.com>
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-References: <20190506234631.113226-1-chris.brandt@renesas.com> <20190506234631.113226-2-chris.brandt@renesas.com>
-In-Reply-To: <20190506234631.113226-2-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 7 May 2019 10:01:55 +0200
-Message-ID: <CAMuHMdV3yW44Y1D2Vn1mNJK8pNF3db20An9Sde8=18r8y7m9LQ@mail.gmail.com>
-Subject: Re: [PATCH 01/10] phy: renesas: rcar-gen3-usb2: Add uses_usb_x1 option
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
+The RZ/A2 has optional dedicated 48MHz crystal inputs, which adds a new
+register setting when used.
 
-On Tue, May 7, 2019 at 1:47 AM Chris Brandt <chris.brandt@renesas.com> wrote:
-> The RZ/A2 has optional dedicated 48MHz crystal inputs, which adds a new
-> register setting when used.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thanks for your patch!
-
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-
-> @@ -630,6 +635,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
->                 }
->         }
->
-> +       if (of_property_read_bool(dev->of_node, "renesas,uses_usb_x1"))
-> +               channel->uses_usb_x1 = true;
-> +
-
-Perhaps this can be checked some other way (e.g. by checking for a non-zero
-clock rate of the USB_X1 clock referenced from DT), thus removing the need for
-adding a custom property?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 1322185a00a2..218b32e458cb 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -34,6 +34,7 @@
+ #define USB2_VBCTRL		0x60c
+ #define USB2_LINECTRL1		0x610
+ #define USB2_ADPCTRL		0x630
++#define USB2_PHYCLK_CTRL	0x644
+ 
+ /* INT_ENABLE */
+ #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
+@@ -110,6 +111,7 @@ struct rcar_gen3_chan {
+ 	bool extcon_host;
+ 	bool is_otg_channel;
+ 	bool uses_otg_pins;
++	bool uses_usb_x1;
+ };
+ 
+ /*
+@@ -391,6 +393,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ 	void __iomem *usb2_base = channel->base;
+ 	u32 val;
+ 
++	if (channel->uses_usb_x1)
++		writel(0x00000001, usb2_base + USB2_PHYCLK_CTRL);
++
+ 	/* Initialize USB2 part */
+ 	val = readl(usb2_base + USB2_INT_ENABLE);
+ 	val |= USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
+@@ -630,6 +635,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	if (of_property_read_bool(dev->of_node, "renesas,uses_usb_x1"))
++		channel->uses_usb_x1 = true;
++
+ 	/*
+ 	 * devm_phy_create() will call pm_runtime_enable(&phy->dev);
+ 	 * And then, phy-core will manage runtime pm for this device.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.16.1
