@@ -1,35 +1,41 @@
-Return-Path: <mchehab@kernel.org>
-Date: Tue, 14 May 2019 15:48:23 -0300
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
+Return-Path: <SRS0=3WT1=TG=jmondi.org=jacopo@kernel.org>
+Date: Mon, 6 May 2019 15:36:33 +0200
+From: Jacopo Mondi <jacopo@jmondi.org>
 Subject: Re: [PATCH v6 07/13] media: tvp5150: add FORMAT_TRY support for
  get/set selection handlers
-Message-ID: <20190514154823.1b8619b2@coco.lan>
-In-Reply-To: <20190415124413.18456-8-m.felsch@pengutronix.de>
+Message-ID: <20190506133555.yrxaeg5lbswzcd3i@uno.localdomain>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
-	<20190415124413.18456-8-m.felsch@pengutronix.de>
+ <20190415124413.18456-8-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lqlwi3dao4omlvmz"
+Content-Disposition: inline
+In-Reply-To: <20190415124413.18456-8-m.felsch@pengutronix.de>
 To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Em Mon, 15 Apr 2019 14:44:07 +0200
-Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
+--lqlwi3dao4omlvmz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Marco,
+
+On Mon, Apr 15, 2019 at 02:44:07PM +0200, Marco Felsch wrote:
 > Since commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
 > the 'which' field for set/get_selection must be FORMAT_ACTIVE. There is
 > no way to try different selections. The patch adds a helper function to
 > select the correct selection memory space (sub-device file handle or
 > driver state) which will be set/returned.
-> 
+>
 > The TVP5150 AVID will be updated if the 'which' field is FORMAT_ACTIVE
 > and the requested selection rectangle differs from the already set one.
-> 
+>
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
 > Changelog:
-> 
+>
 > v5:
 >  - handle stub for v4l2_subdev_get_try_crop() internal since commit
 >    ("media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*")
@@ -38,10 +44,10 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > v4:
 >  - fix merge conflict due to rebase on top of media-tree/master
 >  - __tvp5150_get_pad_crop(): cosmetic alignment fixes
-> 
+>
 >  drivers/media/i2c/tvp5150.c | 130 ++++++++++++++++++++++++++----------
 >  1 file changed, 96 insertions(+), 34 deletions(-)
-> 
+>
 > diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
 > index 4e3228b2ccbc..9331609425bf 100644
 > --- a/drivers/media/i2c/tvp5150.c
@@ -51,13 +57,13 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 >  #include <media/v4l2-fwnode.h>
 >  #include <media/v4l2-mc.h>
 > +#include <media/v4l2-rect.h>
->  
+>
 >  #include "tvp5150_reg.h"
->  
+>
 > @@ -997,20 +998,48 @@ static void tvp5150_set_default(v4l2_std_id std, struct v4l2_rect *crop)
 >  		crop->height = TVP5150_V_MAX_OTHERS;
 >  }
->  
+>
 > +static struct v4l2_rect *
 > +__tvp5150_get_pad_crop(struct tvp5150 *decoder,
 > +		       struct v4l2_subdev_pad_config *cfg, unsigned int pad,
@@ -74,10 +80,10 @@ Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > +		return &decoder->rect;
 > +	default:
 > +		return NULL;
+
+Do you need this default case? Can you return -EINVAL so that...
+
 > +	}
-
-Same comments as Jacopo: use return ERR_PTR(-EINVAL) instead...
-
 > +}
 > +
 >  static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
@@ -87,34 +93,34 @@ Same comments as Jacopo: use return ERR_PTR(-EINVAL) instead...
 >  	struct v4l2_mbus_framefmt *f;
 > +	struct v4l2_rect *__crop;
 >  	struct tvp5150 *decoder = to_tvp5150(sd);
->  
+>
 >  	if (!format || (format->pad != TVP5150_PAD_VID_OUT))
 >  		return -EINVAL;
->  
+>
 >  	f = &format->format;
 > +	__crop = __tvp5150_get_pad_crop(decoder, cfg, format->pad,
 > +					format->which);
 > +	if (IS_ERR_OR_NULL(__crop)) {
+
+... here you just need to check if (IS_ERR()) and return it?
+
 > +		if (!__crop)
 > +			return -EINVAL;
 > +		else
 > +			return PTR_ERR(__crop);
-
-And here, return PTR_ERR directly. Same at the similar case below.
-
 > +	}
->  
+>
 > -	f->width = decoder->rect.width;
 > -	f->height = decoder->rect.height / 2;
 > +	f->width = __crop->width;
 > +	f->height = __crop->height / 2;
->  
+>
 >  	f->code = TVP5150_MBUS_FMT;
 >  	f->field = TVP5150_FIELD;
 > @@ -1021,17 +1050,51 @@ static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
 >  	return 0;
 >  }
->  
+>
 > +unsigned int tvp5150_get_hmax(struct v4l2_subdev *sd)
 > +{
 > +	struct tvp5150 *decoder = to_tvp5150(sd);
@@ -160,12 +166,12 @@ And here, return PTR_ERR directly. Same at the similar case below.
 > -	int hmax;
 > +	struct v4l2_rect *__crop;
 > +	unsigned int hmax;
->  
+>
 > -	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
 > -	    sel->target != V4L2_SEL_TGT_CROP)
 > +	if (sel->target != V4L2_SEL_TGT_CROP)
 >  		return -EINVAL;
->  
+>
 >  	dev_dbg_lvl(sd->dev, 1, debug, "%s left=%d, top=%d, width=%d, height=%d\n",
 > @@ -1040,17 +1103,7 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
 >  	/* tvp5150 has some special limits */
@@ -183,13 +189,13 @@ And here, return PTR_ERR directly. Same at the similar case below.
 > -	else
 > -		hmax = TVP5150_V_MAX_OTHERS;
 > +	hmax = tvp5150_get_hmax(sd);
->  
+>
 >  	/*
 >  	 * alignments:
 > @@ -1063,20 +1116,23 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
 >  			      hmax - TVP5150_MAX_CROP_TOP - rect.top,
 >  			      hmax - rect.top, 0, 0);
->  
+>
 > -	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
 > -	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
 > -		     rect.top + rect.height - hmax);
@@ -208,6 +214,9 @@ And here, return PTR_ERR directly. Same at the similar case below.
 > +			return -EINVAL;
 > +		else
 > +			return PTR_ERR(__crop);
+
+here too
+
 > +	}
 > +
 > +	/*
@@ -216,11 +225,16 @@ And here, return PTR_ERR directly. Same at the similar case below.
 > +	 */
 > +	if (!v4l2_rect_equal(&rect, __crop))
 > +		if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+
+Can this be a single condition?
+Or maybe you could check if the rects are equal and this is a TRY and
+return here.
+
 > +			__tvp5150_set_selection(sd, rect);
->  
+>
 > -	decoder->rect = rect;
 > +	*__crop = rect;
->  
+>
 >  	return 0;
 >  }
 > @@ -1086,11 +1142,9 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
@@ -229,7 +243,7 @@ And here, return PTR_ERR directly. Same at the similar case below.
 >  	struct tvp5150 *decoder = container_of(sd, struct tvp5150, sd);
 > +	struct v4l2_rect *__crop;
 >  	v4l2_std_id std;
->  
+>
 > -	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
 > -		return -EINVAL;
 > -
@@ -253,8 +267,28 @@ And here, return PTR_ERR directly. Same at the similar case below.
 >  		return 0;
 >  	default:
 >  		return -EINVAL;
+> --
+> 2.20.1
+>
 
+--lqlwi3dao4omlvmz
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Mauro
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlzQOGEACgkQcjQGjxah
+Vjwczg/+LsOHw6lFHWUQLBgIBiGHfnLrgxNrJFvJYcgBxwte9iWhdOzhZEPSUXbz
+qTkzSyV7etvrrvWHRvAXjjQrhpLl/gv4FEtblZjDx+W3sqhURIvoM8nJCXAs6b9j
+5MpOcB8MTmOd10kZl9wt74duNWfV3cWhOg57x1AeSdaCkr2zDweEYJbnhPu/cJBQ
+NXpcf5gul77C4Ahc4ZFvQ2SKPta87vGVuNQpEUyTPdWTo67lQi327tn6KmhNnOeZ
+CUiYbGY+yqT3W+fTzRg5MRkxx0677SXu9VtezT3S+4d0RrIL+E0wVWBtaxbDFQAi
+BdJZMI0dKoYthkQrQCD91AmkxNpCe5qY8Tg8SFMiAR/OPR+U2Ac6kQOqn5V7Be1R
+KR/Z2Yge5vOuyDZi9YQ+C6O6gXqyc98+F0Q8Z6lUbdMN3L0C+aXEVy/insan/c1b
+QP+9gdSJSrgoir65QwK3aYovX9wst7LuAQWRGSH2b/fwsR4mJBt+S7XC6drSQ0xY
+Is5ZWbk+iXcb/wrl17uAKs8YxmaYjA5lGnGHmrSl3+DMC/Td5qDiIs1gJtanqfEx
+UrxNbLYhJv2ntJDkxEYC+MEkF/P0LFmC8RopQBcxX5ZGfxIB3s+1mjzGq/SrIVK5
+0dq03kgQ0YplyyqycEpZVZkbfW21bwgCa+R+gkq65VLUsI4ca0E=
+=7m8K
+-----END PGP SIGNATURE-----
+
+--lqlwi3dao4omlvmz--
