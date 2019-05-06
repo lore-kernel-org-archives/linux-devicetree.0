@@ -1,382 +1,110 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 3/3] ARM: dts: Add Avenger96 devicetree support based on STM32MP157A
-Date: Mon,  6 May 2019 15:35:34 +0530
-Message-ID: <20190506100534.24145-4-manivannan.sadhasivam@linaro.org>
-References: <20190506100534.24145-1-manivannan.sadhasivam@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v5 5/5] [media] allegro: add SPS/PPS nal unit
+ writer
+Date: Mon, 6 May 2019 13:24:12 +0300
+Message-ID: <20190506102412.GR2239@kadam>
+References: <20190503122010.16663-6-m.tretter@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190506100534.24145-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, robh+dt@kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kbuild-bounces@lists.01.org>
+Content-Disposition: inline
+In-Reply-To: <20190503122010.16663-6-m.tretter@pengutronix.de>
+List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/kbuild/>
+List-Post: <mailto:kbuild@lists.01.org>
+List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=subscribe>
+Errors-To: kbuild-bounces@lists.01.org
+Sender: "kbuild" <kbuild-bounces@lists.01.org>
+To: kbuild@01.org
+Cc: devicetree@vger.kernel.org, dshah@xilinx.com, Michael Tretter <m.tretter@pengutronix.de>, tfiga@chromium.org, hverkuil@xs4all.nl, robh+dt@kernel.org, kbuild-all@01.org, kernel@pengutronix.de, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree support for Avenger96 board based on STM32MP157A MPU
-from ST Micro. This board is one of the 96Boards Consumer Edition board
-from Arrow Electronics and has the following features:
+Hi Michael,
 
-SoC: STM32MP157AAC
-PMIC: STPMIC1A
-RAM: 1024 Mbyte @ 533MHz
-Storage: eMMC v4.51: 8 Gbyte
-         microSD Socket: UHS-1 v3.01
-Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
-Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
-          Bluetooth®v4.2 (BR/EDR/BLE)
-USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
-Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
-LED: 4x User LED, 1x WiFi LED, 1x BT LED
+url:    https://github.com/0day-ci/linux/commits/Michael-Tretter/Add-ZynqMP-VCU-Allegro-DVT-H-264-encoder-driver/20190504-161958
+base:   git://linuxtv.org/media_tree.git master
 
-More information about this board can be found in 96Boards website:
-https://www.96boards.org/product/avenger96/
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/stm32mp157a-avenger96.dts | 321 ++++++++++++++++++++
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
+smatch warnings:
+drivers/media/platform/allegro-dvt/nal-h264.c:205 rbsp_read_bit() warn: signedness bug returning '(-22)'
+drivers/media/platform/allegro-dvt/nal-h264.c:259 rbsp_read_bits() warn: unsigned 'bit' is never less than zero.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8a1d0b3f55dd..07b54ef1a7a8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32746g-eval.dtb \
- 	stm32h743i-eval.dtb \
- 	stm32h743i-disco.dtb \
-+	stm32mp157a-avenger96.dtb \
- 	stm32mp157a-dk1.dtb \
- 	stm32mp157c-dk2.dtb \
- 	stm32mp157c-ed1.dtb \
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-new file mode 100644
-index 000000000000..9d00be78010f
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+/*
-+ * Copyright (C) Linaro Ltd 2019 - All Rights Reserved
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "stm32mp157c.dtsi"
-+#include "stm32mp157-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
-+/ {
-+	model = "Arrow Electronics STM32MP157A Avenger96 board";
-+	compatible = "arrow,stm32mp157a-avenger96", "st,stm32mp157";
-+
-+	aliases {
-+		ethernet0 = &ethernet0;
-+		mmc0 = &sdmmc1;
-+		serial0 = &uart4;
-+		serial1 = &uart7;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@c0000000 {
-+		device_type = "memory";
-+		reg = <0xc0000000 0x40000000>;
-+	};
-+
-+	led {
-+		compatible = "gpio-leds";
-+		led1 {
-+			label = "green:user1";
-+			gpios = <&gpioz 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "green:user2";
-+			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "green:user3";
-+			gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "green:user3";
-+			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "none";
-+			default-state = "off";
-+			panic-indicator;
-+		};
-+
-+		led5 {
-+			label = "yellow:wifi";
-+			gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		led6 {
-+			label = "blue:bt";
-+			gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "bluetooth-power";
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&ethernet0 {
-+	status = "okay";
-+	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-+	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-+	pinctrl-names = "default", "sleep";
-+	phy-mode = "rgmii";
-+	max-speed = <1000>;
-+	phy-handle = <&phy0>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@7 {
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_b>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_b1 &i2c2_pins_b2>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+
-+	pmic: stpmic@33 {
-+		compatible = "st,stpmic1";
-+		reg = <0x33>;
-+		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		status = "okay";
-+
-+		st,main-control-register = <0x04>;
-+		st,vin-control-register = <0xc0>;
-+		st,usb-control-register = <0x30>;
-+
-+		regulators {
-+			compatible = "st,stpmic1-regulators";
-+
-+			ldo1-supply = <&v3v3>;
-+			ldo2-supply = <&v3v3>;
-+			ldo3-supply = <&vdd_ddr>;
-+			ldo5-supply = <&v3v3>;
-+			ldo6-supply = <&v3v3>;
-+			pwr_sw1-supply = <&bst_out>;
-+			pwr_sw2-supply = <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name = "vddcore";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name = "vdd_ddr";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name = "vdd";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				st,mask_reset;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name = "v3v3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode = <0>;
-+			};
-+
-+			vdda: ldo1 {
-+				regulator-name = "vdda";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO1 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			v2v8: ldo2 {
-+				regulator-name = "v2v8";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				interrupts = <IT_CURLIM_LDO2 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name = "vtt_ddr";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name = "vdd_usb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				interrupts = <IT_CURLIM_LDO4 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vdd_sd: ldo5 {
-+				regulator-name = "vdd_sd";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO5 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v8: ldo6 {
-+				regulator-name = "v1v8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				interrupts = <IT_CURLIM_LDO6 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-enable-ramp-delay = <300000>;
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name = "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			bst_out: boost {
-+				regulator-name = "bst_out";
-+				interrupts = <IT_OCP_BOOST 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name = "vbus_otg";
-+				interrupts = <IT_OCP_OTG 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-active-discharge;
-+			};
-+
-+			vbus_sw: pwr_sw2 {
-+				regulator-name = "vbus_sw";
-+				interrupts = <IT_OCP_SWOUT 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-active-discharge;
-+			};
-+		};
-+
-+		onkey {
-+			compatible = "st,stpmic1-onkey";
-+			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
-+			interrupt-names = "onkey-falling", "onkey-rising";
-+			status = "okay";
-+		};
-+
-+		watchdog {
-+			compatible = "st,stpmic1-wdt";
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&iwdg2 {
-+	timeout-sec = <32>;
-+	status = "okay";
-+};
-+
-+&rng1 {
-+	status = "okay";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-+	broken-cd;
-+	st,sig-dir;
-+	st,neg-edge;
-+	st,use-ckin;
-+	bus-width = <4>;
-+	vmmc-supply = <&vdd_sd>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	/* On Low speed expansion header */
-+	label = "LS-UART1";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins_b>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	/* On Low speed expansion header */
-+	label = "LS-UART0";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart7_pins_a>;
-+	status = "okay";
-+};
--- 
-2.17.1
+# https://github.com/0day-ci/linux/commit/eba69588199f08008a1fb4ad24e1f3e66d0080e3
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout eba69588199f08008a1fb4ad24e1f3e66d0080e3
+vim +205 drivers/media/platform/allegro-dvt/nal-h264.c
+
+eba69588 Michael Tretter 2019-05-03  188  
+eba69588 Michael Tretter 2019-05-03  189  static inline bool rbsp_read_bit(struct rbsp *rbsp)
+                                                        ^^^^
+eba69588 Michael Tretter 2019-05-03  190  {
+eba69588 Michael Tretter 2019-05-03  191  	int shift;
+eba69588 Michael Tretter 2019-05-03  192  	int ofs;
+eba69588 Michael Tretter 2019-05-03  193  	bool bit;
+eba69588 Michael Tretter 2019-05-03  194  	int err;
+eba69588 Michael Tretter 2019-05-03  195  
+eba69588 Michael Tretter 2019-05-03  196  	if (rbsp->num_consecutive_zeros == 22) {
+eba69588 Michael Tretter 2019-05-03  197  		err = discard_emulation_prevention_three_byte(rbsp);
+eba69588 Michael Tretter 2019-05-03  198  		if (err)
+eba69588 Michael Tretter 2019-05-03  199  			return err;
+                                                                ^^^^^^^^^^
+
+eba69588 Michael Tretter 2019-05-03  200  	}
+eba69588 Michael Tretter 2019-05-03  201  
+eba69588 Michael Tretter 2019-05-03  202  	shift = 7 - (rbsp->pos % 8);
+eba69588 Michael Tretter 2019-05-03  203  	ofs = rbsp->pos / 8;
+eba69588 Michael Tretter 2019-05-03  204  	if (ofs >= rbsp->size)
+eba69588 Michael Tretter 2019-05-03 @205  		return -EINVAL;
+                                                        ^^^^^^^^^^^^^^
+Probably this function should return int instead of bool.
+
+eba69588 Michael Tretter 2019-05-03  206  
+eba69588 Michael Tretter 2019-05-03  207  	bit = (rbsp->data[ofs] >> shift) & 1;
+eba69588 Michael Tretter 2019-05-03  208  
+eba69588 Michael Tretter 2019-05-03  209  	rbsp->pos++;
+eba69588 Michael Tretter 2019-05-03  210  
+eba69588 Michael Tretter 2019-05-03  211  	if (bit == 1 ||
+eba69588 Michael Tretter 2019-05-03  212  	    (rbsp->num_consecutive_zeros < 7 && (rbsp->pos % 8 == 0)))
+eba69588 Michael Tretter 2019-05-03  213  		rbsp->num_consecutive_zeros = 0;
+eba69588 Michael Tretter 2019-05-03  214  	else
+eba69588 Michael Tretter 2019-05-03  215  		rbsp->num_consecutive_zeros++;
+eba69588 Michael Tretter 2019-05-03  216  
+eba69588 Michael Tretter 2019-05-03  217  	return bit;
+eba69588 Michael Tretter 2019-05-03  218  }
+
+[ snip ]
+
+eba69588 Michael Tretter 2019-05-03  248  static inline int rbsp_read_bits(struct rbsp *rbsp, int n, unsigned int *value)
+eba69588 Michael Tretter 2019-05-03  249  {
+eba69588 Michael Tretter 2019-05-03  250  	int i;
+eba69588 Michael Tretter 2019-05-03  251  	unsigned int bit;
+                                                ^^^^^^^^^^^^^^^^
+
+eba69588 Michael Tretter 2019-05-03  252  	unsigned int tmp = 0;
+eba69588 Michael Tretter 2019-05-03  253  
+eba69588 Michael Tretter 2019-05-03  254  	if (n > 8 * sizeof(*value))
+eba69588 Michael Tretter 2019-05-03  255  		return -EINVAL;
+eba69588 Michael Tretter 2019-05-03  256  
+eba69588 Michael Tretter 2019-05-03  257  	for (i = n; i > 0; i--) {
+eba69588 Michael Tretter 2019-05-03  258  		bit = rbsp_read_bit(rbsp);
+eba69588 Michael Tretter 2019-05-03 @259  		if (bit < 0)
+                                                            ^^^^^^^
+
+eba69588 Michael Tretter 2019-05-03  260  			return bit;
+eba69588 Michael Tretter 2019-05-03  261  		tmp |= bit << (i - 1);
+eba69588 Michael Tretter 2019-05-03  262  	}
+eba69588 Michael Tretter 2019-05-03  263  
+eba69588 Michael Tretter 2019-05-03  264  	if (value)
+eba69588 Michael Tretter 2019-05-03  265  		*value = tmp;
+eba69588 Michael Tretter 2019-05-03  266  
+eba69588 Michael Tretter 2019-05-03  267  	return 0;
+eba69588 Michael Tretter 2019-05-03  268  }
+eba69588 Michael Tretter 2019-05-03  269  
