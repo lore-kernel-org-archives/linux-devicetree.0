@@ -1,105 +1,80 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 07/10] regulator: mt6358: Add support for MT6358
- regulator
-Date: Mon, 6 May 2019 12:37:33 +0900
-Message-ID: <20190506033733.GH14916@sirena.org.uk>
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
- <20190503093117.54830-8-hsin-hsiung.wang@mediatek.com>
+Subject: Re: [PATCH V3 5/9] spi: export spi core function spi_set_cs
+Date: Mon, 6 May 2019 13:44:25 +0900
+Message-ID: <20190506044425.GN14916@sirena.org.uk>
+References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
+ <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
+ <20190419151823.GS2803@sirena.org.uk>
+ <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RbAp84Sx/Z5HOs1D"
+        protocol="application/pgp-signature"; boundary="UIkw8Cc2/Xz5YwHB"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190503093117.54830-8-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---RbAp84Sx/Z5HOs1D
+--UIkw8Cc2/Xz5YwHB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 03, 2019 at 05:31:14PM +0800, Hsin-Hsiung Wang wrote:
+On Mon, Apr 29, 2019 at 10:02:46PM +0000, Sowjanya Komatineni wrote:
 
-A few fairly minor things but mostly this looks good.
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
 
-> +static const u32 vcama1_voltages[] = {
-> +	1800000, 2500000, 2700000,
-> +	2800000, 2900000, 3000000,
-> +};
+> > On Mon, Apr 15, 2019 at 02:30:30PM -0700, Sowjanya Komatineni wrote:
+> > > This patch exports spi_set_cs of the spi core to allow SPI masters to=
+=20
+> > > use when gpio based chip select is needed.
 
-> +static const u32 vcama2_voltages[] = {
-> +	1800000, 2500000, 2700000,
-> +	2800000, 2900000, 3000000,
-> +};
-> +
+> > This isn't really what I meant when I said it'd be good to use the
+> > core GPIO code - this function doesn't do a huge amount really and
+> > the usage of it in your subsequent patch for the > driver isn't
+> > exactly joined up with the little it does (which is mainly swapping
+> > in the GPIO chip select instead of the hardware chip select) isn't
+> > used in your driver usage of this as far as I can see.  The bulk of
+> > the chip select handling code in the core is actually in
+> > transfer_one_message() which your driver doesn't use as it's got
+> > it's own implementation of that; I've not looked in enough detail to
+> > figure out if it could use it.
 
-These two tables look the same?
+> In SPI Tegra driver, we wanted to have GPIO based CS control when
+> cs-gpios is specified in parallel to HW/SW CS. Having parallel GPIO
+> based CS is to mimic some of the timing stuff that's needed for some
+> spi devices by not actually using HW CS on platform but only for SPI
+> HW design logic inside the chip.
 
-> +static int mt6358_get_voltage_sel(struct regulator_dev *rdev)
-> +{
-> +	int idx, ret;
-> +	u32 selector;
-> +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
-> +	const u32 *pvol;
-> +
-> +	ret = regmap_read(rdev->regmap, info->desc.vsel_reg, &selector);
-> +	if (ret != 0) {
-> +		dev_info(&rdev->dev,
-> +			 "Failed to get mt6358 %s vsel reg: %d\n",
-> +			 info->desc.name, ret);
-> +		return ret;
-> +	}
-> +
-> +	selector = (selector & info->desc.vsel_mask) >> info->vsel_shift;
-> +	pvol = (const u32 *)info->index_table;
-> +	ret = -1;
-> +	for (idx = 0; idx < info->desc.n_voltages; idx++) {
-> +		if (pvol[idx] == selector) {
-> +			ret = idx;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
+> Tegra spi driver don't use set_cs callback so looking into spi_set_cs
+> from spi core implementation when cs-gpios property is used it exactly
+> the same that is needed for GPIO control CS. So used this in V3.=20
 
-I don't entirely understand what this is intended to do which suggests
-it could use some comments.  As far as I can tell it's looking up the
-hardware selector in a table and then using the index of the entry in
-that table as the selector in order to deal with a sparse set of
-selectors, is that right?  You should be able to handle this by having
-_list_voltage() return an error code for the invalid selectors though we
-don't have helpers for that yet as it's an unusual design.
+> Can you please provide more details on what you are suggesting?
+> Do you prefer not to use SPI core spi_set_cs and gpio_set_values APIs
+> and instead implement in tegra SPI driver using GPIO descriptors ?
 
-Also -1 is not a good return value in the case where you fail to do a
-mapping, use -EINVAL.
+You're probably best open coding in the driver if there's value in using
+the hardware chip select.
 
-> +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
-> +	if (ret != 0) {
-> +		dev_info(&rdev->dev,
-> +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
-> +			 info->desc.name, ret);
-> +		return ret;
-> +	}
-
-These error messages should be dev_err().
-
---RbAp84Sx/Z5HOs1D
+--UIkw8Cc2/Xz5YwHB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPq/oACgkQJNaLcl1U
-h9BktAf/aapG5sI3j3lduVVaxhPGb7OblQA1/rmv6rhzowc0XcjywrRfMMlL6sep
-mS9qN1bqSNfzF9jPmK9OZS012K04jHqCbDzeJ8tJbRdq1SXNO0KpIukzTaPghrsc
-I42t/n4iqmnDtVyHRlBmhIpzeeJPdghqNRL+Q0WnBFEAtCjMq3TBXasmbEqPNFBs
-zMZHo7/pfbBJfeNiVYj4Z9Fujt9G1cLEiG0386sgTZLt2GXC1tFk5nsh1Z7dJppa
-U+L2jM+HMVU9ylQcVEMzsJx//3eEQHBMvGL18tkGtjU8zWnYUpue/A4MKziwwRyI
-WXOx4oPTy0KypDnnAhOZhT12VM+D1g==
-=otJk
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPu6YACgkQJNaLcl1U
+h9DM0Qf7Bykvbj1t4ndVRPemN1ZjRrYC94F5FOwPPHuLYIIFawPR0xupsoIwdZPi
+b9rbj7/L3dNBHHO+gjkDEQLYC++gMNJnL5bSo2AA8cz/qJhVqzMS0nu+F6Fgofup
+jwo4IWbjxYPAJWqrjWFj6Y79h+cXTmu+lcOiEnHoEjuqjxNH5fWJXqLrDYe7irOJ
+ST8QQXWtz2T1A9BfvWzZ56NFlieoOR+vKQFZZjwYzS7irq+F9LqT5Q/VKNQOvExL
+SLu4ZnMlPuZQBkOxFqtr8yve31kkxhyFfUrvhKCBwAHKzg+dt3Aop+gkbwJCeEEJ
+tuLSjnUOUENVdEKWAwHEj4DdEcXH7Q==
+=C76I
 -----END PGP SIGNATURE-----
 
---RbAp84Sx/Z5HOs1D--
+--UIkw8Cc2/Xz5YwHB--
