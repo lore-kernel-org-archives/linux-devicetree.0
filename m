@@ -1,74 +1,169 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Date: Mon,  6 May 2019 21:31:15 +0200
-Message-ID: <20190506193115.20909-1-niklas.cassel@linaro.org>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for
+ SCIF2"
+Date: Mon, 6 May 2019 21:42:33 +0200
+Message-ID: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+ <20190504004258.23574-3-erosca@de.adit-jv.com>
+ <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: amit.kucheria@linaro.org, jorge.ramirez-ortiz@linaro.org, lina.iyer@linaro.org, ulf.hansson@linaro.org, bjorn.andersson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Eugeniu Rosca <roscaeugeniu@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "George G . Davis" <george_davis@mentor.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Rodin <mrodin@de.adit-jv.com>Eugeniu Rosca <er>
 List-Id: devicetree@vger.kernel.org
 
-Add device bindings for CPUs to suspend using PSCI as the enable-method.
+Hi Geert,
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Mon, May 06, 2019 at 12:02:41PM +0200, Geert Uytterhoeven wrote:
+> Hi Eugeniu,
+> 
+> Thanks for your report!
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ffedf9640af7..f9db9f3ee10c 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -31,6 +31,7 @@
- 			reg = <0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		CPU1: cpu@101 {
-@@ -39,6 +40,7 @@
- 			reg = <0x101>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		CPU2: cpu@102 {
-@@ -47,6 +49,7 @@
- 			reg = <0x102>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		CPU3: cpu@103 {
-@@ -55,12 +58,24 @@
- 			reg = <0x103>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		L2_0: l2-cache {
- 			compatible = "cache";
- 			cache-level = <2>;
- 		};
-+
-+		idle-states {
-+			CPU_PC: pc {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <125>;
-+				exit-latency-us = <180>;
-+				min-residency-us = <595>;
-+				local-timer-stop;
-+			};
-+		};
- 	};
- 
- 	firmware {
+Thanks for your feedback.
+
+> 
+> On Sat, May 4, 2019 at 2:45 AM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
+> > This reverts commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4.
+> >
+> > Here is the story behind this revert.
+> >
+> > Mainline commit [0] landed in the stable tree as commit [1], from where
+> > it reached us in the form of regular stable update. After that, Michael
+> > started to report occasional (30-50%) freezes of serial console on
+> > booting M3-ES1.1-Salvator-XS. Same happened on M3-ES1.1-Salvator-X.
+> >
+> > Every time the issue occurs, the serial console outputs below [2]
+> > before becoming totally unresponsive and printing nothing else:
+> >   rcar-dmac e7300000.dma-controller: Channel Address Error
+> >
+> > Git bisecting shows that the problem is contributed by commits [0-1].
+> >
+> > While we can't be 100% certain (since we don't have the SCIF design docs
+> > revealing its internal implementation detail) we think there is plenty
+> > of evidence to assume that DMA is not supported on SCIF2, hence should
+> > stay disabled on this specific channel:
+> >
+> >  - Excerpt from Chapter 17. Direct Memory Access Controller for System
+> >    (SYS-DMAC) of R19UH0105EJ0150 Rev.1.50:
+> >    ---------8<---------
+> >    [H3, H3-N, M3-W, V3M, V3H, D3, M3-N, E3]
+> >    The following modules can issue on-chip peripheral module requests.
+> >    [..] HSCIF0/1/2/3/4, [..] SCIF0/1/3/4/5,
+> >    ---------8<---------
+> >
+> >  - Excerpt from RENESAS_RCH3M3M3NE3_SCIF_UME_v2.00.pdf (Yocto v3.15.0):
+> >    ---------8<---------
+> >    DMA Transfer:
+> >    - Support: SCIF0, SCIF1, SCIF3, SCIF4, SCIF5
+> >    - Not support: SCIF2
+> >    ---------8<---------
+> 
+> >  - Disabled SCIF2 DMA in official Renesas v4.9/v4.14 kernels, e.g. see:
+> >    https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=e79c418fda8c
+> 
+> Table 17.5 ("Selecting On-Chip Peripheral Module Request Modes") of
+> "R-Car Series, 3rd Generation User’s Manual: Hardware" gained entries
+> for SCIF2 in Revision 1.50 of the document, but it seems 17.1.1
+> ("Features") and Table 17.6 ("Data Length of DMA Transfer for Each of
+> the On-Chip Peripheral Modules") were forgotten to be updated.
+> The addition of the entry for SCIF2 is also mentioned in "Renesas
+> Technical Update  TN-RCT-S019A/E / R-Car M3-W Additional Explanation for
+> Direct Memory Access Controller for System (SYS-DMAC)".
+> Unfortunately both documents report wrong MID/RID values, due to a
+> hexadecimal vs. decimal mistake, which were corrected in the Feb 12
+> errata for Rev. 1.50.
+
+I do observe now that the most recent Rev. 1.50 of "R-Car Series, 3rd
+Generation User’s Manual: Hardware" does update _some_ of its internal
+chapters/tables to reflect the support of DMA on SCIF2. These SCIF2
+changes look to be also tracked in the "Revision History" companion doc:
+
+Rev  | Date         | Page     | Summary
+1.50 | Nov 30, 2018 | 17-86-87 | Table 17.5 Selecting On-Chip Peripheral
+                                 Module Request Modes: DMA Transfer
+                                 Request Source, changed. SCIF2
+                                 reception and SCIF2 transmission, added
+                    | 17-91    | Table 17.6 Data Length of DMA Transfer
+                                 for Each of the On-Chip Peripheral
+                                 Modules: SCIF2, added
+
+As you have already stated, it looks like certain chapters like
+"17.1.1 Features" didn't receive a proper update, generating confusion.
+I will report this in parallel to Renesas Duesseldorf.
+
+> 
+> So in my understanding, and according to my testing, DMA has always
+> worked for SCIF2 on (at least) R-Car H3 ES1.0/2.0, M3-W, and M3-N.
+
+Well, my testing shows different results. Using M3-W-ES1.1-Salvator-XS,
+I can reproduce the issue since v4.17 (also reproduced on v4.18, v4.19
+and v5.1 with cherry picking 97f26702bc95b5 ("arm64: dts: renesas:
+r8a7796: Enable DMA for SCIF2") where appropriate).
+
+> However, early firmware versions (before IPL and Secure Monitor
+> Rev1.0.6, released on Feb 25, 2016) prohibited the use of SYS-DMAC2,
+> cfr. commit eb21089c32054ecd ("arm64: dts: renesas: r8a7795: Add missing
+> SYS-DMAC2 dmas").
+
+I use a very recent Rev2.0.2 of
+https://github.com/renesas-rcar/arm-trusted-firmware .
+
+> 
+> Perhaps some firmware versions may impose additional restrictions?
+
+I would have some suspicions about ATF if the issue was consistent.
+Since it is not, I believe there is a race going on in the kernel.
+
+> 
+> > Based on the issues generated by [0-1] (reproduced on H3, M3 and M3N)
+> > and the doc statements presented above, we think it makes sense to
+> > disable DMA on SCIF2 for most/all R-Car3 SoCs.
+> >
+> > [0] v5.0-rc6 commit 97f26702bc95b5 ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
+> > [1] v4.14.106 commit 703db5d1b1759f ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
+> > [2] scif (DEBUG) and rcar-dmac logs:
+> >     https://gist.github.com/erosca/132cce76a619724a9e4fa61d1db88c66
+> 
+> I have checked my kernel logs, and found a few instances of "Channel
+> Address Error".  In all cases, I had enabled/added extra debug prints in
+> the sh-sci driver, which may have had impact.
+> Last occurrence was in a kernel based on v4.18-rc2, which predates
+> several recent fixes for the sh-sci and rcar-dmac drivers.
+> Can the issue be reproduced on current mainline?
+
+With pure vanilla sources, arm64 defconfig and DTS (+97f26702bc95b5
+where appropriate), the issue is seen on M3-W-ES1.1-Salvator-XS since
+v4.17. Can you please confirm you are seeing it too?
+
+Enabling DEBUG in drivers/dma/sh/rcar-dmac.c, I can notice that one of
+the symptoms is a NULL dst_addr revealed by:
+
+rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
+
+In working scenarios, dst_addr is never zero. Does it give any hints?
+
+> 
+> Thanks!
+
+Likewise!
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
 -- 
-2.21.0
+Best Regards,
+Eugeniu.
