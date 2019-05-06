@@ -1,41 +1,243 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
- number to GMAC node
-Date: Mon, 6 May 2019 18:19:20 +0000
-Message-ID: <1557166759.17021.9.camel@synopsys.com>
-References: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
-         <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V3 3/3] watchdog: imx_sc: Add pretimeout support
+Date: Mon, 6 May 2019 11:27:52 -0700
+Message-ID: <20190506182752.GA358@roeck-us.net>
+References: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
+ <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
-Content-Language: en-US
-Content-ID: <5A823811A20DAA43B211A7AB42CD65C2@namprd12.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
-Cc: "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkknbGwgY2hlY2sgdGhpcyBpbiB0aGUgbmV4dCBmZXcgZGF5cy4NCg0KT24gVGh1LCAy
-MDE5LTA1LTAyIGF0IDA4OjQxIC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+ICtDQyBBbGV4
-ZXksIEV1Z2VuaXkgd2hvIG1haW50YWluIGhzZGsgc3VwcG9ydCAhDQo+IA0KPiBPbiA1LzIvMTkg
-ODoxMiBBTSwgSm9zZSBBYnJldSB3cm90ZToNCj4gPiBHTUFDIGNvbnRyb2xsZXIgb24gSFNESyBi
-b2FyZHMgc3VwcG9ydHMgMjU2IEhhc2ggVGFibGUgc2l6ZSBzbyB3ZSBuZWVkIHRvDQo+ID4gYWRk
-IHRoZSBtdWx0aWNhc3QgZmlsdGVyIGJpbnMgcHJvcGVydHkuIFRoaXMgYWxsb3dzIGZvciB0aGUg
-SGFzaCBmaWx0ZXINCj4gPiB0byB3b3JrIHByb3Blcmx5IHVzaW5nIHN0bW1hYyBkcml2ZXIuDQo+
-ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9zZSBBYnJldSA8am9hYnJldUBzeW5vcHN5cy5jb20+
-DQo+ID4gQ2M6IEpvYW8gUGludG8gPGpwaW50b0BzeW5vcHN5cy5jb20+DQo+ID4gQ2M6IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5y
-dXRsYW5kQGFybS5jb20+DQo+ID4gQ2M6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNv
-bT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMgfCAxICsNCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJjL2Jvb3QvZHRzL2hzZGsuZHRzIGIvYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMNCj4g
-PiBpbmRleCA2OWJjMWM5ZThlNTAuLmIwZjA1OTM3N2FiMCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNo
-L2FyYy9ib290L2R0cy9oc2RrLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2hzZGsu
-ZHRzDQo+ID4gQEAgLTE4Nyw2ICsxODcsNyBAQA0KPiA+ICAJCQlpbnRlcnJ1cHQtbmFtZXMgPSAi
-bWFjaXJxIjsNCj4gPiAgCQkJcGh5LW1vZGUgPSAicmdtaWkiOw0KPiA+ICAJCQlzbnBzLHBibCA9
-IDwzMj47DQo+ID4gKwkJCXNucHMsbXVsdGljYXN0LWZpbHRlci1iaW5zID0gPDI1Nj47DQo+ID4g
-IAkJCWNsb2NrcyA9IDwmZ21hY2Nsaz47DQo+ID4gIAkJCWNsb2NrLW5hbWVzID0gInN0bW1hY2V0
-aCI7DQo+ID4gIAkJCXBoeS1oYW5kbGUgPSA8JnBoeTA+Ow0KPiA+IA0KPiANCj4gDQotLSANCiBF
-dWdlbml5IFBhbHRzZXY=
+On Sun, May 05, 2019 at 02:15:00AM +0000, Anson Huang wrote:
+> i.MX system controller watchdog can support pretimeout IRQ
+> via general SCU MU IRQ, it depends on IMX_SCU and driver MUST
+> be probed after SCU IPC ready, then enable corresponding SCU
+> IRQ group and register SCU IRQ notifier, when watchdog pretimeout
+> IRQ fires, SCU MU IRQ will be handled and watchdog pretimeout
+> notifier will be called to handle the event.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  drivers/watchdog/Kconfig      |   1 +
+>  drivers/watchdog/imx_sc_wdt.c | 114 ++++++++++++++++++++++++++++++++++--------
+>  2 files changed, 95 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index e19960a..dbc74e1 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -710,6 +710,7 @@ config IMX2_WDT
+>  config IMX_SC_WDT
+>  	tristate "IMX SC Watchdog"
+>  	depends on HAVE_ARM_SMCCC
+> +	depends on IMX_SCU
+>  	select WATCHDOG_CORE
+>  	help
+>  	  This is the driver for the system controller watchdog
+> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+> index 49848b6..d8493a3 100644
+> --- a/drivers/watchdog/imx_sc_wdt.c
+> +++ b/drivers/watchdog/imx_sc_wdt.c
+> @@ -4,6 +4,7 @@
+>   */
+>  
+>  #include <linux/arm-smccc.h>
+> +#include <linux/firmware/imx/sci.h>
+>  #include <linux/io.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -33,11 +34,19 @@
+>  
+>  #define SC_TIMER_WDOG_ACTION_PARTITION	0
+>  
+> +#define SC_IRQ_WDOG			1
+> +#define SC_IRQ_GROUP_WDOG		1
+> +
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+>  module_param(nowayout, bool, 0000);
+>  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>  		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>  
+> +struct imx_sc_wdt_device {
+> +	struct watchdog_device wdd;
+> +	struct notifier_block wdt_notifier;
+> +};
+> +
+>  static int imx_sc_wdt_ping(struct watchdog_device *wdog)
+>  {
+>  	struct arm_smccc_res res;
+> @@ -85,24 +94,66 @@ static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
+>  	return res.a0 ? -EACCES : 0;
+>  }
+>  
+> +static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
+> +				     unsigned int pretimeout)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_PRETIME_WDOG,
+> +		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
+> +	if (res.a0)
+> +		return -EACCES;
+> +
+> +	wdog->pretimeout = pretimeout;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_sc_wdt_notify(struct notifier_block *nb,
+> +			     unsigned long event, void *group)
+> +{
+> +	struct imx_sc_wdt_device *imx_sc_wdd =
+> +				 container_of(nb,
+> +					      struct imx_sc_wdt_device,
+> +					      wdt_notifier);
+> +
+> +	if (event & SC_IRQ_WDOG &&
+> +	    *(u8 *)group == SC_IRQ_GROUP_WDOG)
+> +		watchdog_notify_pretimeout(&imx_sc_wdd->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_sc_wdt_action(void *data)
+> +{
+> +	struct notifier_block *wdt_notifier = data;
+> +
+> +	imx_scu_irq_unregister_notifier(wdt_notifier);
+> +	imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+> +				 SC_IRQ_WDOG,
+> +				 false);
+> +}
+> +
+>  static const struct watchdog_ops imx_sc_wdt_ops = {
+>  	.owner = THIS_MODULE,
+>  	.start = imx_sc_wdt_start,
+>  	.stop  = imx_sc_wdt_stop,
+>  	.ping  = imx_sc_wdt_ping,
+>  	.set_timeout = imx_sc_wdt_set_timeout,
+> +	.set_pretimeout = imx_sc_wdt_set_pretimeout,
+>  };
+>  
+> -static const struct watchdog_info imx_sc_wdt_info = {
+> +static struct watchdog_info imx_sc_wdt_info = {
+>  	.identity	= "i.MX SC watchdog timer",
+>  	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+> -			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
+> +			  WDIOF_MAGICCLOSE,
+>  };
+>  
+>  static int imx_sc_wdt_probe(struct platform_device *pdev)
+>  {
+> +	struct imx_sc_wdt_device *imx_sc_wdd;
+> +	struct watchdog_device *wdog;
+>  	struct device *dev = &pdev->dev;
+> -	struct watchdog_device *imx_sc_wdd;
+>  	int ret;
+>  
+>  	imx_sc_wdd = devm_kzalloc(dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
+> @@ -111,42 +162,65 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, imx_sc_wdd);
+>  
+> -	imx_sc_wdd->info = &imx_sc_wdt_info;
+> -	imx_sc_wdd->ops = &imx_sc_wdt_ops;
+> -	imx_sc_wdd->min_timeout = 1;
+> -	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
+> -	imx_sc_wdd->parent = dev;
+> -	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
+> +	wdog = &imx_sc_wdd->wdd;
+> +	wdog->info = &imx_sc_wdt_info;
+> +	wdog->ops = &imx_sc_wdt_ops;
+> +	wdog->min_timeout = 1;
+> +	wdog->max_timeout = MAX_TIMEOUT;
+> +	wdog->parent = dev;
+> +	wdog->timeout = DEFAULT_TIMEOUT;
+>  
+> -	watchdog_init_timeout(imx_sc_wdd, 0, dev);
+> -	watchdog_stop_on_reboot(imx_sc_wdd);
+> -	watchdog_stop_on_unregister(imx_sc_wdd);
+> +	watchdog_init_timeout(wdog, 0, dev);
+> +	watchdog_stop_on_reboot(wdog);
+> +	watchdog_stop_on_unregister(wdog);
+>  
+> -	ret = devm_watchdog_register_device(dev, imx_sc_wdd);
+> +	ret = devm_watchdog_register_device(dev, wdog);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to register watchdog device\n");
+>  		return ret;
+>  	}
+>  
+> -	return 0;
+> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+> +				       SC_IRQ_WDOG,
+> +				       true);
+> +	if (ret) {
+> +		dev_warn(dev, "Enable irq failed, pretimeout NOT supported\n");
+> +		return 0;
+> +	}
+> +
+> +	imx_sc_wdd->wdt_notifier.notifier_call = imx_sc_wdt_notify;
+> +	ret = imx_scu_irq_register_notifier(&imx_sc_wdd->wdt_notifier);
+> +	if (ret) {
+> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+> +					 SC_IRQ_WDOG,
+> +					 false);
+> +		dev_warn(dev,
+> +			 "Register irq notifier failed, pretimeout NOT supported\n");
+> +		return 0;
+> +	}
+> +
+> +	imx_sc_wdt_info.options |= WDIOF_PRETIMEOUT;
+> +	ret = devm_add_action(dev, imx_sc_wdt_action,
+> +			      &imx_sc_wdd->wdt_notifier);
+
+This needs devm_add_action_or_reset() because otherwise the notifier would
+not be removed, and the interrupt group would not be disabled.
+
+> +	return ret;
+
+This should not return an error. Accepting that the notifier can not be
+registered and that the irq group can not be enabled but bailing out if
+devm_add_action() fails is inconsistent.
+
+Guenter
+
+>  }
+>  
+>  static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
+>  {
+> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
+>  
+> -	if (watchdog_active(imx_sc_wdd))
+> -		imx_sc_wdt_stop(imx_sc_wdd);
+> +	if (watchdog_active(&imx_sc_wdd->wdd))
+> +		imx_sc_wdt_stop(&imx_sc_wdd->wdd);
+>  
+>  	return 0;
+>  }
+>  
+>  static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
+>  {
+> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
+>  
+> -	if (watchdog_active(imx_sc_wdd))
+> -		imx_sc_wdt_start(imx_sc_wdd);
+> +	if (watchdog_active(&imx_sc_wdd->wdd))
+> +		imx_sc_wdt_start(&imx_sc_wdd->wdd);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.7.4
+> 
