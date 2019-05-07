@@ -1,59 +1,108 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH RE-RESEND 2/2] ARM: dts: opos6uldev: use OF graph to describe
- the display
-Date: Tue,  7 May 2019 17:27:13 +0200
-Message-ID: <20190507152713.27494-2-sebastien.szymanski@armadeus.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700 Adapt
+Date: Tue, 7 May 2019 12:33:39 -0300
+Message-ID: <CAOMZO5B2nMsVNO6O_D+YTSjux=-DjNPGxhkEi3AQquOZVODumA@mail.gmail.com>
 References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VG8gbWFrZSB1c2Ugb2YgdGhlIG5ldyBlTENESUYgRFJNIGRyaXZlciBPRiBncmFwaCBkZXNjcmlw
-dGlvbiBpcwpyZXF1aXJlZC4gRGVzY3JpYmUgdGhlIGRpc3BsYXkgdXNpbmcgT0YgZ3JhcGggbm9k
-ZXMuCgpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZyAjIHY0LjE5ClNpZ25lZC1vZmYtYnk6IFPD
-qWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbT4KLS0t
-CiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwtb3BvczZ1bGRldi5kdHMgfCAzNyArKysrKysrKysr
-Ky0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMjEgZGVs
-ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxk
-ZXYuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxkZXYuZHRzCmluZGV4IDBl
-NTllZTU3ZmQ1NS4uOGVjZGI5YWQyYjJlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg2dWwtb3BvczZ1bGRldi5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2
-dWxkZXYuZHRzCkBAIC01Niw3ICs1Niw3IEBACiAJCXN0ZG91dC1wYXRoID0gJnVhcnQxOwogCX07
-CiAKLQliYWNrbGlnaHQgeworCWJhY2tsaWdodDogYmFja2xpZ2h0IHsKIAkJY29tcGF0aWJsZSA9
-ICJwd20tYmFja2xpZ2h0IjsKIAkJcHdtcyA9IDwmcHdtMyAwIDE5MTAwMD47CiAJCWJyaWdodG5l
-c3MtbGV2ZWxzID0gPDAgNCA4IDE2IDMyIDY0IDEyOCAyNTU+OwpAQCAtOTcsNiArOTcsMTggQEAK
-IAkJZ3Bpb3MgPSA8JmdwaW81IDEgR1BJT19BQ1RJVkVfSElHSD47CiAJfTsKIAorCXBhbmVsOiBw
-YW5lbCB7CisJCWNvbXBhdGlibGUgPSAiYXJtYWRldXMsc3QwNzAwLWFkYXB0IjsKKwkJcG93ZXIt
-c3VwcGx5ID0gPCZyZWdfM3YzPjsKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCisJCXBv
-cnQgeworCQkJcGFuZWxfaW46IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmxj
-ZGlmX291dD47CisJCQl9OworCQl9OworCX07CisKIAlyZWdfNXY6IHJlZ3VsYXRvci01diB7CiAJ
-CWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKIAkJcmVndWxhdG9yLW5hbWUgPSAiNVYi
-OwpAQCAtMTgyLDI4ICsxOTQsMTEgQEAKICZsY2RpZiB7CiAJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsKIAlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfbGNkaWY+OwotCWRpc3BsYXkgPSA8JmRpc3Bs
-YXkwPjsKLQlsY2Qtc3VwcGx5ID0gPCZyZWdfM3YzPjsKIAlzdGF0dXMgPSAib2theSI7CiAKLQlk
-aXNwbGF5MDogZGlzcGxheTAgewotCQliaXRzLXBlci1waXhlbCA9IDwzMj47Ci0JCWJ1cy13aWR0
-aCA9IDwxOD47Ci0KLQkJZGlzcGxheS10aW1pbmdzIHsKLQkJCXRpbWluZzA6IHRpbWluZzAgewot
-CQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwzMzAwMDAzMz47Ci0JCQkJaGFjdGl2ZSA9IDw4MDA+Owot
-CQkJCXZhY3RpdmUgPSA8NDgwPjsKLQkJCQloYmFjay1wb3JjaCA9IDw5Nj47Ci0JCQkJaGZyb250
-LXBvcmNoID0gPDk2PjsKLQkJCQl2YmFjay1wb3JjaCA9IDwyMD47Ci0JCQkJdmZyb250LXBvcmNo
-ID0gPDIxPjsKLQkJCQloc3luYy1sZW4gPSA8NjQ+OwotCQkJCXZzeW5jLWxlbiA9IDw0PjsKLQkJ
-CQlkZS1hY3RpdmUgPSA8MT47Ci0JCQkJcGl4ZWxjbGstYWN0aXZlID0gPDA+OwotCQkJfTsKKwlw
-b3J0IHsKKwkJbGNkaWZfb3V0OiBlbmRwb2ludCB7CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBh
-bmVsX2luPjsKIAkJfTsKIAl9OwogfTsKLS0gCjIuMTkuMgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+[Adding Sam, who is helping to review/collect panel-simple patches]
+
+On Tue, May 7, 2019 at 12:27 PM S=C3=A9bastien Szymanski
+<sebastien.szymanski@armadeus.com> wrote:
+>
+> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+> that it can be connected on the TFT header of Armadeus Dev boards.
+>
+> Cc: stable@vger.kernel.org # v4.19
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
+>
+> ---
+>  .../display/panel/armadeus,st0700-adapt.txt   |  9 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/armad=
+eus,st0700-adapt.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0=
+700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st=
+0700-adapt.txt
+> new file mode 100644
+> index 000000000000..a30d63db3c8f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-ada=
+pt.txt
+> @@ -0,0 +1,9 @@
+> +Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT =
+with
+> +an adapter board.
+> +
+> +Required properties:
+> +- compatible: "armadeus,st0700-adapt"
+> +- power-supply: see panel-common.txt
+> +
+> +Optional properties:
+> +- backlight: see panel-common.txt
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
+/panel-simple.c
+> index 9e8218f6a3f2..45ca8d10b66f 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -446,6 +446,32 @@ static const struct panel_desc ampire_am800480r3tmqw=
+a1h =3D {
+>         .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
+>  };
+>
+> +static const struct display_timing santek_st0700i5y_rbslw_f_timing =3D {
+> +       .pixelclock =3D { 26400000, 33300000, 46800000 },
+> +       .hactive =3D { 800, 800, 800 },
+> +       .hfront_porch =3D { 16, 210, 354 },
+> +       .hback_porch =3D { 45, 36, 6 },
+> +       .hsync_len =3D { 1, 10, 40 },
+> +       .vactive =3D { 480, 480, 480 },
+> +       .vfront_porch =3D { 7, 22, 147 },
+> +       .vback_porch =3D { 22, 13, 3 },
+> +       .vsync_len =3D { 1, 10, 20 },
+> +       .flags =3D DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
+> +               DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE
+> +};
+> +
+> +static const struct panel_desc armadeus_st0700_adapt =3D {
+> +       .timings =3D &santek_st0700i5y_rbslw_f_timing,
+> +       .num_timings =3D 1,
+> +       .bpc =3D 6,
+> +       .size =3D {
+> +               .width =3D 154,
+> +               .height =3D 86,
+> +       },
+> +       .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
+> +       .bus_flags =3D DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDG=
+E,
+> +};
+> +
+>  static const struct drm_display_mode auo_b101aw03_mode =3D {
+>         .clock =3D 51450,
+>         .hdisplay =3D 1024,
+> @@ -2544,6 +2570,9 @@ static const struct of_device_id platform_of_match[=
+] =3D {
+>         }, {
+>                 .compatible =3D "arm,rtsm-display",
+>                 .data =3D &arm_rtsm,
+> +       }, {
+> +               .compatible =3D "armadeus,st0700-adapt",
+> +               .data =3D &armadeus_st0700_adapt,
+>         }, {
+>                 .compatible =3D "auo,b101aw03",
+>                 .data =3D &auo_b101aw03,
+> --
+> 2.19.2
+>
