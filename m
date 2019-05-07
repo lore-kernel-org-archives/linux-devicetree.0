@@ -1,55 +1,195 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280
- LCD panel
-Date: Tue, 7 May 2019 18:40:36 +0530
-Message-ID: <CAMty3ZBpRABe4u26ZN91JRB+vVF4Z96k-LDoe37d6EdVDkfJsg@mail.gmail.com>
-References: <20190501121448.3812-1-jagan@amarulasolutions.com>
- <20190501193429.GA9075@ravnborg.org> <CAMty3ZAfwVyvmAmenhrQHJcy3eq-Yb61a4WLop_8jS-7vM940A@mail.gmail.com>
- <CAL_Jsq+mYy1JF_cM7sD82aLuUSnZnwsSD6-Q-W1uTp+_oSdRmg@mail.gmail.com>
+From: Dragan Cvetic <draganc@xilinx.com>
+Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Date: Tue, 7 May 2019 13:15:58 +0000
+Message-ID: <BL0PR02MB5681A7C4F93F33F1C1E05114CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190504075502.GA11133@kroah.com>
+ <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190506123425.GA26360@kroah.com>
+ <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190507093941.GC20355@kroah.com>
+ <BL0PR02MB568148AD27F3FE86D168BDF9CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190507122106.GA7873@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+mYy1JF_cM7sD82aLuUSnZnwsSD6-Q-W1uTp+_oSdRmg@mail.gmail.com>
+In-Reply-To: <20190507122106.GA7873@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 6, 2019 at 8:34 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, May 6, 2019 at 4:56 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > Hi Sam,
-> >
-> > On Thu, May 2, 2019 at 1:04 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Hi Jagan
-> > >
-> > > On Wed, May 01, 2019 at 05:44:47PM +0530, Jagan Teki wrote:
-> > > > HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
-> > > > resolution. It has built in Goodix, GT9271 captive touchscreen
-> > > > with backlight adjustable via PWM.
-> > > >
-> > > > Add support for it.
-> > > >
-> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > > > Cc: David Airlie <airlied@linux.ie>
-> > > > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > > > Cc: dri-devel@lists.freedesktop.org
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > >
-> > > Please submit the binding in a separate patch as per
-> > > Documentation/devicetree/bindings/submitting-patches.txt
-> >
-> > Hmm.. prepared like this initially but few of my patches were combined
-> > earlier even-though I sent it separately. anyway let me separate it
-> > again.
->
-> For what subsystem? All the maintainers that I was aware of doing that
-> have stopped.
 
-May be it was recent, Dmitry combined by previous dt and driver changes.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ae97fb589648cd5558f1ceea317404a639307501
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a5f50c501321249d67611353dde6d68d48c5b959
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Tuesday 7 May 2019 13:21
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
+sts.infradead.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
+l.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+>=20
+> On Tue, May 07, 2019 at 11:55:42AM +0000, Dragan Cvetic wrote:
+> >
+> >
+> > > -----Original Message-----
+> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > Sent: Tuesday 7 May 2019 10:40
+> > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
+l@lists.infradead.org; robh+dt@kernel.org;
+> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
+ernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > >
+> > > On Tue, May 07, 2019 at 08:48:41AM +0000, Dragan Cvetic wrote:
+> > > >
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > Sent: Monday 6 May 2019 13:34
+> > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-k=
+ernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vg=
+er.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > > >
+> > > > > On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
+> > > > > >
+> > > > > >
+> > > > > > > -----Original Message-----
+> > > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > > > Sent: Saturday 4 May 2019 08:55
+> > > > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-a=
+rm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kerne=
+l@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core dr=
+iver
+> > > > > > >
+> > > > > > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote=
+:
+> > > > > > > > Hi Greg,
+> > > > > > > >
+> > > > > > > > Please find my inline comments below,
+> > > > > > > >
+> > > > > > > > Regards
+> > > > > > > > Dragan
+> > > > > > > >
+> > > > > > > > > -----Original Message-----
+> > > > > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > > > > > Sent: Thursday 2 May 2019 18:20
+> > > > > > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; lin=
+ux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-k=
+ernel@vger.kernel.org; Derek Kiernan
+> <dkiernan@xilinx.com>
+> > > > > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add cor=
+e driver
+> > > > > > > > >
+> > > > > > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic w=
+rote:
+> > > > > > > > > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > > > > > > > > +#define DRIVER_VERSION "0.3"
+> > > > > > > > >
+> > > > > > > > > Version means nothing with the driver in the kernel tree,=
+ please remove
+> > > > > > > > > it.
+> > > > > > > >
+> > > > > > > > Will be removed. Thank you.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > > > > > > > >
+> > > > > > > > > Why this number?  Why limit yourself to any number?
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > There can be max 8 devices for this driver. I'll change to =
+8.
+> > > > > > > >
+> > > > > > > > > > +
+> > > > > > > > > > +static struct class *xsdfec_class;
+> > > > > > > > >
+> > > > > > > > > Do you really need your own class?
+> > > > > > > >
+> > > > > > > > When writing a character device driver, my goal is to creat=
+e and register an instance
+> > > > > > > > of that structure associated with a struct file_operations,=
+ exposing a set of operations
+> > > > > > > > to the user-space. One of the steps to make this goal is Cr=
+eate a class for a devices,
+> > > > > > > > visible in /sys/class/.
+> > > > > > >
+> > > > > > > Why do you need a class?  Again, why not just use the misc_de=
+vice api,
+> > > > > > > that seems much more relevant here and will make the code a l=
+ot simpler.
+> > > > > > >
+> > > > > >
+> > > > > > The driver can have 8 devices in SoC plus more in Programming L=
+ogic.
+> > > > > > It looked logical to group them under the same MAJOR, although =
+they
+> > > > > > are independent of each other.  Is this argument strong enough =
+to use
+> > > > > > class?
+> > > > >
+> > > > > Not really :)
+> > > > >
+> > > > > 8 devices is pretty small.  What tool will be trying to talk to a=
+ll of
+> > > > > these devices and how was it going to find out what devices were =
+in the
+> > > > > system?
+> > > > >
+> > > >
+> > > > These devices are Forward Error Correction encoder/decoder
+> > > > and will be part of the RF communication chain. They will be includ=
+ed
+> > > > in the system through DT. Also, described in DT.
+> > >
+> > > Userspace doesn't mess with DT.
+> > >
+> > > I am asking what userspace tool/program is going to be interacting wi=
+th
+> > > these devices through your now-custom api you are creating.  Do you h=
+ave
+> > > a link to that software, and how is that code doing the "determine wh=
+at
+> > > device nodes are associated with what devices" logic?
+> > >
+> >
+> > Example code is not public yet, sorry.
+>=20
+> Ok, then I think we need to wait for that to get this merged at the
+> minimum, don't you agree?  Otherwise how do we even know that any of
+> these codepaths are tested?
+>=20
+> > The index number in the device name
+> > is a link to device, see snippet from the example code:
+> >
+> > #define FEC_DEC  "/dev/xsdfec0"
+> > dec_fd =3D open_xsdfec(FEC_DEC);
+> >
+> > The index number corresponds to the device order in DT.
+>=20
+> So that implies you don't need a class at all, right?
+>=20
+
+Greg, you won:(
+Thanks for patience, I appreciate it very much.
+Dragan
+
+> thanks,
+>=20
+> greg k-h
