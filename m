@@ -1,16 +1,14 @@
-From: Frederic Chen <frederic.chen@mediatek.com>
-Subject: Re: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for DIP
- shared memory
-Date: Tue, 7 May 2019 22:22:05 +0800
-Message-ID: <1557238925.11663.21.camel@mtksdccf07>
-References: <20190417104511.21514-1-frederic.chen@mediatek.com>
- <20190417104511.21514-2-frederic.chen@mediatek.com>
- <20190430011506.GA8514@bogus>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: spi: Add YAML schemas for the generic
+ SPI options
+Date: Tue, 7 May 2019 09:35:28 -0500
+Message-ID: <CAL_JsqKeLWgGLafwbKViTgpw4B=W9YGULaMr8h0p_rWX8PP_UQ@mail.gmail.com>
+References: <b7a6095a5c900fa23cc54d1ccd8e8ef0ccf6e788.1557236840.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190430011506.GA8514@bogus>
+In-Reply-To: <b7a6095a5c900fa23cc54d1ccd8e8ef0ccf6e788.1557236840.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,106 +18,343 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob,
+On Tue, May 7, 2019 at 8:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The SPI controllers have a bunch of generic options that are needed in a
+> device tree. Add a YAML schemas for those.
 
-I appreciate your comments.
+I'd started on this one, but was planning to move it to the schema
+repository. The issue there is re-licensing (adding BSD 2 clause).
+Maybe better to just move it later.
 
-On Mon, 2019-04-29 at 20:15 -0500, Rob Herring wrote:
-> On Wed, Apr 17, 2019 at 06:45:06PM +0800, Frederic Chen wrote:
-> > This patch adds the binding for describing the shared memory
-> > used to exchange configuration and tuning data between the
-> > co-processor and Digital Image Processing (DIP) unit of the
-> > camera ISP system on Mediatek SoCs.
-> > 
-> > Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
-> > ---
-> >  .../mediatek,reserve-memory-dip_smem.txt      | 45 +++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
-> > new file mode 100644
-> > index 000000000000..64c001b476b9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
-> > @@ -0,0 +1,45 @@
-> > +Mediatek DIP Shared Memory binding
-> > +
-> > +This binding describes the shared memory, which serves the purpose of
-> > +describing the shared memory region used to exchange data between Digital
-> > +Image Processing (DIP) and co-processor in Mediatek SoCs.
-> > +
-> > +The co-processor doesn't have the iommu so we need to use the physical
-> > +address to access the shared buffer in the firmware.
-> > +
-> > +The Digital Image Processing (DIP) can access memory through mt8183 IOMMU so
-> > +it can use dma address to access the memory region.
-> > +(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
-> > +
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: must be "mediatek,reserve-memory-dip_smem"
-> 
-> Don't use '_'.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-bus.txt         | 111 +-----
+>  Documentation/devicetree/bindings/spi/spi-controller.yaml | 156 +++++++-
+>  2 files changed, 156 insertions(+), 111 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-bus.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-controller.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> deleted file mode 100644
+> index 1f6e86f787ef..000000000000
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ /dev/null
+> @@ -1,111 +0,0 @@
+> -SPI (Serial Peripheral Interface) busses
+> -
+> -SPI busses can be described with a node for the SPI controller device
+> -and a set of child nodes for each SPI slave on the bus.  The system's SPI
+> -controller may be described for use in SPI master mode or in SPI slave mode,
+> -but not for both at the same time.
+> -
+> -The SPI controller node requires the following properties:
+> -- compatible      - Name of SPI bus controller following generic names
+> -                   recommended practice.
+> -
+> -In master mode, the SPI controller node requires the following additional
+> -properties:
+> -- #address-cells  - number of cells required to define a chip select
+> -               address on the SPI bus.
+> -- #size-cells     - should be zero.
+> -
+> -In slave mode, the SPI controller node requires one additional property:
+> -- spi-slave       - Empty property.
+> -
+> -No other properties are required in the SPI bus node.  It is assumed
+> -that a driver for an SPI bus device will understand that it is an SPI bus.
+> -However, the binding does not attempt to define the specific method for
+> -assigning chip select numbers.  Since SPI chip select configuration is
+> -flexible and non-standardized, it is left out of this binding with the
+> -assumption that board specific platform code will be used to manage
+> -chip selects.  Individual drivers can define additional properties to
+> -support describing the chip select layout.
+> -
+> -Optional properties (master mode only):
+> -- cs-gpios       - gpios chip select.
+> -- num-cs         - total number of chipselects.
+> -
+> -If cs-gpios is used the number of chip selects will be increased automatically
+> -with max(cs-gpios > hw cs).
+> -
+> -So if for example the controller has 2 CS lines, and the cs-gpios
+> -property looks like this:
+> -
+> -cs-gpios = <&gpio1 0 0>, <0>, <&gpio1 1 0>, <&gpio1 2 0>;
+> -
+> -Then it should be configured so that num_chipselect = 4 with the
+> -following mapping:
+> -
+> -cs0 : &gpio1 0 0
+> -cs1 : native
+> -cs2 : &gpio1 1 0
+> -cs3 : &gpio1 2 0
+> -
+> -
+> -SPI slave nodes must be children of the SPI controller node.
+> -
+> -In master mode, one or more slave nodes (up to the number of chip selects) can
+> -be present.  Required properties are:
+> -- compatible      - Name of SPI device following generic names recommended
+> -                   practice.
+> -- reg             - Chip select address of device.
+> -- spi-max-frequency - Maximum SPI clocking speed of device in Hz.
+> -
+> -In slave mode, the (single) slave node is optional.
+> -If present, it must be called "slave".  Required properties are:
+> -- compatible      - Name of SPI device following generic names recommended
+> -                   practice.
+> -
+> -All slave nodes can contain the following optional properties:
+> -- spi-cpol        - Empty property indicating device requires inverse clock
+> -                   polarity (CPOL) mode.
+> -- spi-cpha        - Empty property indicating device requires shifted clock
+> -                   phase (CPHA) mode.
+> -- spi-cs-high     - Empty property indicating device requires chip select
+> -                   active high.
+> -- spi-3wire       - Empty property indicating device requires 3-wire mode.
+> -- spi-lsb-first   - Empty property indicating device requires LSB first mode.
+> -- spi-tx-bus-width - The bus width (number of data wires) that is used for MOSI.
+> -                   Defaults to 1 if not present.
+> -- spi-rx-bus-width - The bus width (number of data wires) that is used for MISO.
+> -                   Defaults to 1 if not present.
+> -- spi-rx-delay-us - Microsecond delay after a read transfer.
+> -- spi-tx-delay-us - Microsecond delay after a write transfer.
+> -
+> -Some SPI controllers and devices support Dual and Quad SPI transfer mode.
+> -It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
+> -wires (QUAD).
+> -Now the value that spi-tx-bus-width and spi-rx-bus-width can receive is
+> -only 1 (SINGLE), 2 (DUAL) and 4 (QUAD).
+> -Dual/Quad mode is not allowed when 3-wire mode is used.
+> -
+> -If a gpio chipselect is used for the SPI slave the gpio number will be passed
+> -via the SPI master node cs-gpios property.
+> -
+> -SPI example for an MPC5200 SPI bus:
+> -       spi@f00 {
+> -               #address-cells = <1>;
+> -               #size-cells = <0>;
+> -               compatible = "fsl,mpc5200b-spi","fsl,mpc5200-spi";
+> -               reg = <0xf00 0x20>;
+> -               interrupts = <2 13 0 2 14 0>;
+> -               interrupt-parent = <&mpc5200_pic>;
+> -
+> -               ethernet-switch@0 {
+> -                       compatible = "micrel,ks8995m";
+> -                       spi-max-frequency = <1000000>;
+> -                       reg = <0>;
+> -               };
+> -
+> -               codec@1 {
+> -                       compatible = "ti,tlv320aic26";
+> -                       spi-max-frequency = <100000>;
+> -                       reg = <1>;
+> -               };
+> -       };
+> diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> new file mode 100644
+> index 000000000000..dc239083886c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> @@ -0,0 +1,156 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/spi-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SPI Controller Generic Binding
+> +
+> +maintainers:
+> +  - Mark Brown <broonie@kernel.org>
+> +
+> +description: |
+> +  SPI busses can be described with a node for the SPI controller device
+> +  and a set of child nodes for each SPI slave on the bus. The system SPI
+> +  controller may be described for use in SPI master mode or in SPI slave mode,
+> +  but not for both at the same time.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^spi(@[a-zA-Z0-9]+)?$"
 
-I got it. I will use "mediatek,reserve-memory-dip-smem" instead in next
-version of the patch
+I think we want just "(@.*)". At a minimum, you need to allow for ','.
+It would be the a bus schema for the parent which should validate unit
+addresses, so we should pretty much just allow anything here.
 
-> 
-> > +
-> > +- reg: required for static allocation (see reserved-memory.txt for
-> > +  the detailed usage)
-> > +
-> > +- alloc-range: required for dynamic allocation. The range must
-> > +  between 0x00000400 and 0x100000000 due to the co-processer's
-> > +  addressing limitation
-> 
-> Generally, you should pick either static or dynamic allocation for a 
-> given binding. Static if there's some address restriction or sharing, 
-> dynamic if not.
-> 
-> Sounds like static in this case.
-> 
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  cs-gpios:
+> +    description: |
+> +      GPIOs used as chip selects.
+> +      If that property is used, the number of chip selects will be
+> +      increased automatically with max(cs-gpios, hardware chip selects).
+> +
+> +      So if, for example, the controller has 2 CS lines, and the
+> +      cs-gpios looks like this
+> +        cs-gpios = <&gpio1 0 0>, <0>, <&gpio1 1 0>, <&gpio1 2 0>;
+> +
+> +      Then it should be configured so that num_chipselect = 4, with
+> +      the following mapping
+> +        cs0 : &gpio1 0 0
+> +        cs1 : native
+> +        cs2 : &gpio1 1 0
+> +        cs3 : &gpio1 2 0
+> +
+> +  num-cs:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Total number of chip selects.
+> +
+> +  spi-slave:
+> +    $ref: /schemas/types.yaml#/definitions/flag
 
-DIP reserved memory has address restriction so it is the static case. I
-would like to remove the dynamic allocation part and modify the
-description as following:
+"type: boolean" is sufficient here. Maybe we should just remove
+'flag'. OTOH, maybe consistency with other types and the abstraction
+is better as we could add to the flag schema.
 
-- reg: required for DIP. The range must be between 0x00000400 and
-  0x100000000 due to the co-processor's addressing limitation.
-  The size must be 26MB. Please see reserved-memory.txt for the 
-  detailed usage.
+> +    description:
+> +      The SPI controller acts as a slave, instead of a master.
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
 
-> > +
-> > +- size: required for dynamic allocation. The unit is bytes.
-> > +  If you want to enable the full feature of Digital Processing Unit,
-> > +  you need 20 MB at least.
-> > +
-> > +
-> > +Example:
-> > +
-> > +The following example shows the DIP shared memory setup for MT8183.
-> > +
-> > +	reserved-memory {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +		reserve-memory-dip_smem {
-> > +			compatible = "mediatek,reserve-memory-dip_smem";
-> > +			size = <0 0x1400000>;
-> > +			alignment = <0 0x1000>;
-> > +			alloc-ranges = <0 0x40000000 0 0x50000000>;
-> > +		};
-> > +	};
-> > -- 
-> > 2.18.0
-> > 
+Only if there are child nodes...
 
-Sincerely,
+> +
+> +patternProperties:
+> +  "^slave$":
 
-Frederic Chen
+type: object
+
+> +    properties:
+> +      compatible:
+> +        description:
+> +          Compatible of the SPI device.
+> +
+> +    required:
+> +      - compatible
+> +
+> +  "^[a-z]+@[0-9]+$":
+
+  "^.*@[0-9a-f]+":
+    type: object
+
+> +    properties:
+> +      compatible:
+> +        description:
+> +          Compatible of the SPI device.
+> +
+> +      reg:
+> +        maxItems: 1
+> +        description:
+> +          Chip select used by the device.
+
+I tend to think we should limit something like this to reasonable
+values. We're not going to have 2^32 chip selects. 256 should be
+enough for anyone(TM).
+
+> +      spi-3wire:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          The device requires 3-wire mode.
+> +
+> +      spi-cpha:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          The device requires shifted clock phase (CPHA) mode.
+> +
+> +      spi-cpol:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          The device requires inverse clock polarity (CPOL) mode.
+> +
+> +      spi-cs-high:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          The device requires the chip select active high.
+> +
+> +      spi-lsb-first:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          The device requires the LSB first mode.
+> +
+> +      spi-rx-bus-width:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [ 1, 2, 4, 8 ]
+
+Is the old doc out of date and 8 is allowed now?
+
+> +          - default: 1
+> +        description:
+> +          Bus width to the SPI bus used for MISO.
+> +
+> +      spi-rx-delay-us:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+
+This can actually be dropped because any property with a unit suffix
+is already type checked.
+
+
+> +        description:
+> +          Delay, in microseconds, after a read transfer.
+> +
+> +      spi-tx-bus-width:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [ 1, 2, 4, 8 ]
+> +          - default: 1
+> +        description:
+> +          Bus width to the SPI bus used for MOSI.
+> +
+> +      spi-tx-delay-us:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          Delay, in microseconds, after a write transfer.
+
+You missed spi-max-frequency.
+
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    spi@f00 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,mpc5200b-spi","fsl,mpc5200-spi";
+> +        reg = <0xf00 0x20>;
+> +        interrupts = <2 13 0 2 14 0>;
+> +        interrupt-parent = <&mpc5200_pic>;
+> +
+> +        ethernet-switch@0 {
+> +            compatible = "micrel,ks8995m";
+> +            spi-max-frequency = <1000000>;
+> +            reg = <0>;
+> +        };
+> +
+> +        codec@1 {
+> +            compatible = "ti,tlv320aic26";
+> +            spi-max-frequency = <100000>;
+> +            reg = <1>;
+> +        };
+> +    };
+>
+> base-commit: fcdb095ad0016d77d3729dcf8ea915ca4b80fd8b
+> --
+> git-series 0.9.1
