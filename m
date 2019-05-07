@@ -1,158 +1,53 @@
-From: Dragan Cvetic <draganc@xilinx.com>
-Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Date: Tue, 7 May 2019 11:55:42 +0000
-Message-ID: <BL0PR02MB568148AD27F3FE86D168BDF9CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
- <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190504075502.GA11133@kroah.com>
- <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190506123425.GA26360@kroah.com>
- <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190507093941.GC20355@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v3 0/6]  Add drive-strength in Meson pinctrl driver
+Date: Tue,  7 May 2019 13:57:20 +0200
+Message-ID: <20190507115726.23714-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507093941.GC20355@kroah.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
+
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-uA". The change to do so
+would be minimal and could be benefit to other platforms later on.
+
+Cheers
+Guillaume
+
+Changes since v2:
+- update driver-strength-uA property to be compliant with DT documentation
+- rework patch series for better understanding
+- rework set_bias function
+
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
+
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
 
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Tuesday 7 May 2019 10:40
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
->=20
-> On Tue, May 07, 2019 at 08:48:41AM +0000, Dragan Cvetic wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > Sent: Monday 6 May 2019 13:34
-> > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
-l@lists.infradead.org; robh+dt@kernel.org;
-> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
-ernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > >
-> > > On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
-> > > >
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > Sent: Saturday 4 May 2019 08:55
-> > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-k=
-ernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vg=
-er.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > > > >
-> > > > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
-> > > > > > Hi Greg,
-> > > > > >
-> > > > > > Please find my inline comments below,
-> > > > > >
-> > > > > > Regards
-> > > > > > Dragan
-> > > > > >
-> > > > > > > -----Original Message-----
-> > > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > > > Sent: Thursday 2 May 2019 18:20
-> > > > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-a=
-rm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kerne=
-l@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core dr=
-iver
-> > > > > > >
-> > > > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote=
-:
-> > > > > > > > +#define DRIVER_NAME "xilinx_sdfec"
-> > > > > > > > +#define DRIVER_VERSION "0.3"
-> > > > > > >
-> > > > > > > Version means nothing with the driver in the kernel tree, ple=
-ase remove
-> > > > > > > it.
-> > > > > >
-> > > > > > Will be removed. Thank you.
-> > > > > >
-> > > > > > >
-> > > > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
-> > > > > > >
-> > > > > > > Why this number?  Why limit yourself to any number?
-> > > > > > >
-> > > > > >
-> > > > > > There can be max 8 devices for this driver. I'll change to 8.
-> > > > > >
-> > > > > > > > +
-> > > > > > > > +static struct class *xsdfec_class;
-> > > > > > >
-> > > > > > > Do you really need your own class?
-> > > > > >
-> > > > > > When writing a character device driver, my goal is to create an=
-d register an instance
-> > > > > > of that structure associated with a struct file_operations, exp=
-osing a set of operations
-> > > > > > to the user-space. One of the steps to make this goal is Create=
- a class for a devices,
-> > > > > > visible in /sys/class/.
-> > > > >
-> > > > > Why do you need a class?  Again, why not just use the misc_device=
- api,
-> > > > > that seems much more relevant here and will make the code a lot s=
-impler.
-> > > > >
-> > > >
-> > > > The driver can have 8 devices in SoC plus more in Programming Logic=
-.
-> > > > It looked logical to group them under the same MAJOR, although they
-> > > > are independent of each other.  Is this argument strong enough to u=
-se
-> > > > class?
-> > >
-> > > Not really :)
-> > >
-> > > 8 devices is pretty small.  What tool will be trying to talk to all o=
-f
-> > > these devices and how was it going to find out what devices were in t=
-he
-> > > system?
-> > >
-> >
-> > These devices are Forward Error Correction encoder/decoder
-> > and will be part of the RF communication chain. They will be included
-> > in the system through DT. Also, described in DT.
->=20
-> Userspace doesn't mess with DT.
->=20
-> I am asking what userspace tool/program is going to be interacting with
-> these devices through your now-custom api you are creating.  Do you have
-> a link to that software, and how is that code doing the "determine what
-> device nodes are associated with what devices" logic?
->=20
+Guillaume La Roque (6):
+  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+  pinctrl: generic: add new 'drive-strength-microamp' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+  pinctrl: meson: Rework enable/disable bias part
+  pinctrl: meson: add support of drive-strength-microamp
+  pinctrl: meson: g12a: add DS bank value
 
-Example code is not public yet, sorry. The index number in the device name
-is a link to device, see snippet from the example code:
+ .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
+ drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 195 insertions(+), 48 deletions(-)
 
-#define FEC_DEC  "/dev/xsdfec0"
-dec_fd =3D open_xsdfec(FEC_DEC);
-
-The index number corresponds to the device order in DT.
-
-> thanks,
->=20
-> greg k-h
+-- 
+2.17.1
