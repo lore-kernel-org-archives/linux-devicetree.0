@@ -1,195 +1,71 @@
-From: Dragan Cvetic <draganc@xilinx.com>
-Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Date: Tue, 7 May 2019 13:15:58 +0000
-Message-ID: <BL0PR02MB5681A7C4F93F33F1C1E05114CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
- <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190504075502.GA11133@kroah.com>
- <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190506123425.GA26360@kroah.com>
- <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190507093941.GC20355@kroah.com>
- <BL0PR02MB568148AD27F3FE86D168BDF9CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190507122106.GA7873@kroah.com>
+From: "Claus H. Stovgaard" <cst@phaseone.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
+ U2 entries
+Date: Tue, 7 May 2019 15:17:28 +0200
+Message-ID: <1557235048.114189.22.camel@phaseone.com>
+References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
+         <1557176302.18203.20.camel@phaseone.com>
+         <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507122106.GA7873@kroah.com>
-Content-Language: en-US
+In-Reply-To: <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Derek Kiernan <dkiernan@xilinx.com>
+To: Anurag Kumar Vulisha <anuragku@xilinx.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Anurag
 
+> > > Please use "-" rather than "_" in the property names.
+> > I have thought about this feature over the weekend, and think the
+> > naming should be
+> > changed to something like "snps,bos-u1-exit-lat-in-us"
+> > and named the same in the code. And then be the value used by the
+> > get_config_params. E.g. the device-tree is used to set the values
+> > directly used for
+> > bUxdevExitLat instead of named something not related to exit
+> > latency.
+> > 
+> > With this the name and function is a 1 to 1 match, and you can
+> > among others set it to
+> > 0 for optaining what Anurag wants.
+> > 
+> Your suggestion looks good but the problem is the U1 and U2 exit
+> latencies are
+> fixed values in dwc3 controller(can be found in HCSPARAMS3). Adding
+> different
+> exit latencies may modify the U1SEL/U2SEL values sent from the host
+> but the real
+> dwc3 controller exit latencies are not getting changed. Because of
+> this reason I
+> had opted "snps,dis_u1_entry_quirk", so that the U1/U2 exit latency
+> values
+> reported in BOS descriptor can be either be zero (when U1/U2 entries
+> needs to be
+> disabled) or non-zero value (reported in HCSPARAMS3) when U1/U2
+> states allowed.
+> Based on this I think it is better if we can continue with "snps,dis-
+> u1-entry-quirk"
+> instead of the "snps,bos-u1-exit-lat-in-us". Please  provide your
+> opinion on this.
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Tuesday 7 May 2019 13:21
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
->=20
-> On Tue, May 07, 2019 at 11:55:42AM +0000, Dragan Cvetic wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > Sent: Tuesday 7 May 2019 10:40
-> > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
-l@lists.infradead.org; robh+dt@kernel.org;
-> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
-ernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > >
-> > > On Tue, May 07, 2019 at 08:48:41AM +0000, Dragan Cvetic wrote:
-> > > >
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > Sent: Monday 6 May 2019 13:34
-> > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-k=
-ernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vg=
-er.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > > > >
-> > > > > On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
-> > > > > >
-> > > > > >
-> > > > > > > -----Original Message-----
-> > > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > > > Sent: Saturday 4 May 2019 08:55
-> > > > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-a=
-rm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kerne=
-l@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core dr=
-iver
-> > > > > > >
-> > > > > > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote=
-:
-> > > > > > > > Hi Greg,
-> > > > > > > >
-> > > > > > > > Please find my inline comments below,
-> > > > > > > >
-> > > > > > > > Regards
-> > > > > > > > Dragan
-> > > > > > > >
-> > > > > > > > > -----Original Message-----
-> > > > > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > > > > > Sent: Thursday 2 May 2019 18:20
-> > > > > > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; lin=
-ux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-k=
-ernel@vger.kernel.org; Derek Kiernan
-> <dkiernan@xilinx.com>
-> > > > > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add cor=
-e driver
-> > > > > > > > >
-> > > > > > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic w=
-rote:
-> > > > > > > > > > +#define DRIVER_NAME "xilinx_sdfec"
-> > > > > > > > > > +#define DRIVER_VERSION "0.3"
-> > > > > > > > >
-> > > > > > > > > Version means nothing with the driver in the kernel tree,=
- please remove
-> > > > > > > > > it.
-> > > > > > > >
-> > > > > > > > Will be removed. Thank you.
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
-> > > > > > > > >
-> > > > > > > > > Why this number?  Why limit yourself to any number?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > There can be max 8 devices for this driver. I'll change to =
-8.
-> > > > > > > >
-> > > > > > > > > > +
-> > > > > > > > > > +static struct class *xsdfec_class;
-> > > > > > > > >
-> > > > > > > > > Do you really need your own class?
-> > > > > > > >
-> > > > > > > > When writing a character device driver, my goal is to creat=
-e and register an instance
-> > > > > > > > of that structure associated with a struct file_operations,=
- exposing a set of operations
-> > > > > > > > to the user-space. One of the steps to make this goal is Cr=
-eate a class for a devices,
-> > > > > > > > visible in /sys/class/.
-> > > > > > >
-> > > > > > > Why do you need a class?  Again, why not just use the misc_de=
-vice api,
-> > > > > > > that seems much more relevant here and will make the code a l=
-ot simpler.
-> > > > > > >
-> > > > > >
-> > > > > > The driver can have 8 devices in SoC plus more in Programming L=
-ogic.
-> > > > > > It looked logical to group them under the same MAJOR, although =
-they
-> > > > > > are independent of each other.  Is this argument strong enough =
-to use
-> > > > > > class?
-> > > > >
-> > > > > Not really :)
-> > > > >
-> > > > > 8 devices is pretty small.  What tool will be trying to talk to a=
-ll of
-> > > > > these devices and how was it going to find out what devices were =
-in the
-> > > > > system?
-> > > > >
-> > > >
-> > > > These devices are Forward Error Correction encoder/decoder
-> > > > and will be part of the RF communication chain. They will be includ=
-ed
-> > > > in the system through DT. Also, described in DT.
-> > >
-> > > Userspace doesn't mess with DT.
-> > >
-> > > I am asking what userspace tool/program is going to be interacting wi=
-th
-> > > these devices through your now-custom api you are creating.  Do you h=
-ave
-> > > a link to that software, and how is that code doing the "determine wh=
-at
-> > > device nodes are associated with what devices" logic?
-> > >
-> >
-> > Example code is not public yet, sorry.
->=20
-> Ok, then I think we need to wait for that to get this merged at the
-> minimum, don't you agree?  Otherwise how do we even know that any of
-> these codepaths are tested?
->=20
-> > The index number in the device name
-> > is a link to device, see snippet from the example code:
-> >
-> > #define FEC_DEC  "/dev/xsdfec0"
-> > dec_fd =3D open_xsdfec(FEC_DEC);
-> >
-> > The index number corresponds to the device order in DT.
->=20
-> So that implies you don't need a class at all, right?
->=20
+With this in mind I can see why having direct control over the exit
+latency value might not be optimum in many situations.
+Regarding the name, I think the snps,dis_u1_entry_quirk will be a good
+name, if it is combined with the DCTL control. E.g. remove the configfs
+part of my patch, and merge the DCTL control with your patches.
+If the dt-binding still only control the bos descriptor I think a
+better name is something with u1_force_exist_lat_0 or similar.
 
-Greg, you won:(
-Thanks for patience, I appreciate it very much.
-Dragan
+I don't think setting bos to 0 or controlling DCTL will be used
+individual, so to keep things simple I will vote for
+snps,dis_u1_entry_quirk, and then just control all elements regarding
+disabling U1/U2 from this dt-binding.
 
-> thanks,
->=20
-> greg k-h
+Please cut what your need from my patch.
+
+BR Claus
