@@ -1,89 +1,88 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 07/16] dmaengine: Add function to request slave channel
- from a dma_device
-Date: Tue, 7 May 2019 11:37:33 +0300
-Message-ID: <89b2ded6-f1f5-dda5-9ae4-d94bcf4c041f@ti.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-8-peter.ujfalusi@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/3] dt-bindings: i2c: add optional mul-value property to
+ binding
+Date: Tue, 7 May 2019 10:40:03 +0200
+Message-ID: <20190507084002.GA25688@kunai>
+References: <20190430043242.29687-1-chuanhua.han@nxp.com>
+ <20190502205901.GA24224@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190506123456.6777-8-peter.ujfalusi@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190502205901.GA24224@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com
+To: Rob Herring <robh@kernel.org>
+Cc: Chuanhua Han <chuanhua.han@nxp.com>, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com, festevam@gmail.com, wsa+renesas@sang-engineering.com, u.kleine-koenig@pengutronix.de, eha@deif.com, linux@rempel-privat.de, sumit.batra@nxp.com, l.stach@pengutronix.de, peda@axentia.se
 List-Id: devicetree@vger.kernel.org
 
 
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 06/05/2019 15.34, Peter Ujfalusi wrote:
-> dma_get_any_slave_channel() would skip using the filter function, which
-> in some cases needed to be executed before the alloc_chan_resources
-> callback to make sure that all parameters are provided for the slave
-> channel.
+On Thu, May 02, 2019 at 03:59:01PM -0500, Rob Herring wrote:
+> On Tue, Apr 30, 2019 at 12:32:40PM +0800, Chuanhua Han wrote:
+> > NXP Layerscape SoC have up to three MUL options available for all
+> > divider values, we choice of MUL determines the internal monitor rate
+> > of the I2C bus (SCL and SDA signals):
+> > A lower MUL value results in a higher sampling rate of the I2C signals.
+> > A higher MUL value results in a lower sampling rate of the I2C signals.
+> >=20
+> > So in Optional properties we added our custom mul-value property in the
+> > binding to select which mul option for the device tree i2c controller
+> > node.
+> >=20
+> > Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-imx.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Docume=
+ntation/devicetree/bindings/i2c/i2c-imx.txt
+> > index b967544590e8..ba8e7b7b3fa8 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> > @@ -18,6 +18,9 @@ Optional properties:
+> >  - sda-gpios: specify the gpio related to SDA pin
+> >  - pinctrl: add extra pinctrl to configure i2c pins to gpio function fo=
+r i2c
+> >    bus recovery, call it "gpio" state
+> > +- mul-value: NXP Layerscape SoC have up to three MUL options available=
+ for
+> > +all I2C divider values, it describes which MUL we choose to use for th=
+e driver,
+> > +the values should be 1,2,4.
+>=20
+> Needs a vendor prefix. I don't find 'value' to add anything nor do I=20
+> understand what MUL is.
+>=20
+> If it is determined by SoC rather than board, then it should perhaps be=
+=20
+> implied by compatible.
 
-This can be dropped in favor of
-https://patchwork.kernel.org/patch/10932299/
-from Baolin Wangm and using __dma_request_channel() in the k3-udma driver.
+I was wondering the same.
 
-- Péter
 
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/dmaengine.c   | 7 ++++---
->  include/linux/dmaengine.h | 5 ++++-
->  2 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 8eed5ff0fc01..7ec93be12088 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -617,7 +617,8 @@ struct dma_chan *dma_get_slave_channel(struct dma_chan *chan)
->  }
->  EXPORT_SYMBOL_GPL(dma_get_slave_channel);
->  
-> -struct dma_chan *dma_get_any_slave_channel(struct dma_device *device)
-> +struct dma_chan *dmadev_get_slave_channel(struct dma_device *device,
-> +					  dma_filter_fn fn, void *fn_param)
->  {
->  	dma_cap_mask_t mask;
->  	struct dma_chan *chan;
-> @@ -628,13 +629,13 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device)
->  	/* lock against __dma_request_channel */
->  	mutex_lock(&dma_list_mutex);
->  
-> -	chan = find_candidate(device, &mask, NULL, NULL);
-> +	chan = find_candidate(device, &mask, fn, fn_param);
->  
->  	mutex_unlock(&dma_list_mutex);
->  
->  	return IS_ERR(chan) ? NULL : chan;
->  }
-> -EXPORT_SYMBOL_GPL(dma_get_any_slave_channel);
-> +EXPORT_SYMBOL_GPL(dmadev_get_slave_channel);
->  
->  /**
->   * __dma_request_channel - try to allocate an exclusive channel
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index c1486564a314..4774b66f2064 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -1541,7 +1541,10 @@ int dmaenginem_async_device_register(struct dma_device *device);
->  void dma_async_device_unregister(struct dma_device *device);
->  void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
->  struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
-> -struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
-> +struct dma_chan *dmadev_get_slave_channel(struct dma_device *device,
-> +					  dma_filter_fn fn, void *fn_param);
-> +#define dma_get_any_slave_channel(device) \
-> +	dmadev_get_slave_channel(device, NULL, NULL)
->  #define dma_request_channel(mask, x, y) __dma_request_channel(&(mask), x, y)
->  #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
->  	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-> 
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzRRF8ACgkQFA3kzBSg
+KbbUbRAApE4I45wTxiU40khw2A2mDLGqByh6dKjqeRVRHGsUrLdKN3tptV5pVqgM
+LdX5QFuA4Hp1TEkPLhuie+S7y0DfcN1NQEOPtP2ofZFTcMV93MhvZ7W2KEegnbld
+RzvlIcqxMHoQgDBsJunkOcZuqUVicSwYETYXsbFGBAMJGTzhZR4Sh2Qt0VNRUmwu
+UMFuBqnnhDXBkl7VSeKXDgjctCJnVaiyqj2jnz5HD4eOBtHj7zvPXnSYyMfYhrUL
+Z6TXVxdloC6j8noqtORUM4YmlleDepXqp/L2SGRhZ1Qi55XQd6oexxiP7ndDZV0W
+WRu3GaJOtXyOQYqeYMkfLbUPn90FkDLCFun1HKPBO07fcX/qWZmZnoXVX2799odV
+jofYTj6X0ILs79fIUT8wAUnMCmEgjgPOynl57loP4f8lh6VoWeDAEI1nwCoPxi0l
+TKabxPYDHpbT7vFP2eaR7/dXQxb+pgLNMUeqzPpIQ7XnSHrLl+7nrhVDcpzSWTr2
+ci6eWscPRJNr/OVa0wd+L4nthna/K89ZApK4zf9aioBTLPZ/EEZscAJ/YuZiJZ2d
+ZtwvTt6ewEz6D5OF6vsNjn7FOuqp7CIEhyPqFU+E5SC3iO05TqBhb9w34F5mO2oK
+Oswf5Q47JpcE4stdbVJa7ZTUd+P8gfmH+X71qLQzcU3wujem2K4=
+=cq07
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
