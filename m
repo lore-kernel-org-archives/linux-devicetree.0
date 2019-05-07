@@ -1,52 +1,97 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [v2 PATCH] dt-binding: usb: add usb-role-switch property
-Date: Tue, 7 May 2019 17:13:05 +0300
-Message-ID: <20190507141305.GA19816@kuha.fi.intel.com>
-References: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
+From: Frederic Chen <frederic.chen@mediatek.com>
+Subject: Re: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added DIP dt-bindings
+Date: Tue, 7 May 2019 22:16:19 +0800
+Message-ID: <1557238579.11663.15.camel@mtksdccf07>
+References: <20190417104511.21514-1-frederic.chen@mediatek.com>
+ <20190417104511.21514-4-frederic.chen@mediatek.com>
+ <20190430011619.GA22170@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190430011619.GA22170@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 07, 2019 at 10:22:58AM +0800, Chunfeng Yun wrote:
-> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> index 0a74ab8dfdc2..f5a6ad053ecc 100644
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@ -30,6 +30,11 @@ Optional properties:
->  			optional for OTG device.
->   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
->  			optional for OTG device.
-> + - usb-role-switch: tells Dual-Role USB controllers we want to handle the role
-> +			switch between host and device according to the state
-> +			detected by the USB connector, typically for Type-C,
-> +			Type-B(micro).
-> +			see connector/usb-connector.txt.
-
-That does not look correct to me. Firstly, USB role switches are not
-always dual-role USB controllers. Secondly, stating what determines
-the role irrelevant IMO.
-
-Since this is a boolean property, the description for it should simply
-explain what does it tell about the capabilities of the device that
-has it. The description should not make any assumptions about the
-users of the property, and since the property is a "generic" USB
-property, I'm not sure it should make any assumptions about the type
-of the device that has the property either. Also, I would really like
-the description to show the type of the property.
-
-Why not just say something like this:
-
-"Boolean property informing that the device is capable of assigning
-the USB data role (USB host or USB device) for a given USB connector."
-
-
-thanks,
-
--- 
-heikki
+RGVhciBSb2IsCgpJIGFwcHJlY2lhdGUgeW91ciBjb21tZW50cy4KCk9uIE1vbiwgMjAxOS0wNC0y
+OSBhdCAyMDoxNiAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMTcsIDIw
+MTkgYXQgMDY6NDU6MDhQTSArMDgwMCwgRnJlZGVyaWMgQ2hlbiB3cm90ZToKPiA+IFRoaXMgcGF0
+Y2ggYWRkcyBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEaWdpdGFsIEltYWdlCj4g
+PiBQcm9jZXNzaW5nIChESVApIHVuaXQgb2YgY2FtZXJhIElTUCBzeXN0ZW0gb24gTWVkaWF0ZWsn
+cyBTb0NzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBGcmVkZXJpYyBDaGVuIDxmcmVkZXJpYy5j
+aGVuQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9tZWRpYS9tZWRpYXRl
+ayxtdDgxODMtZGlwLnR4dCAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWssbXQ4MTgzLWRpcC50eHQK
+PiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZWRpYS9tZWRpYXRlayxtdDgxODMtZGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZWRpYS9tZWRpYXRlayxtdDgxODMtZGlwLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMGUxOTk0YmY4MmYwCj4gPiAtLS0gL2Rldi9u
+dWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVk
+aWF0ZWssbXQ4MTgzLWRpcC50eHQKPiA+IEBAIC0wLDAgKzEsMzUgQEAKPiA+ICsqIE1lZGlhdGVr
+IERpZ2l0YWwgSW1hZ2UgUHJvY2Vzc29yIChESVApCj4gPiArCj4gPiArRGlnaXRhbCBJbWFnZSBQ
+cm9jZXNzb3IgKERJUCkgdW5pdCBpbiBNZWRpYXRlayBJU1Agc3lzdGVtIGlzIHJlc3BvbnNpYmxl
+IGZvcgo+ID4gK2ltYWdlIGNvbnRlbnQgYWRqdXN0bWVudCBhY2NvcmRpbmcgdG8gdGhlIHR1bmlu
+ZyBwYXJhbWV0ZXJzLiBESVAgY2FuIHByb2Nlc3MKPiA+ICt0aGUgaW1hZ2UgZm9ybSBtZW1vcnkg
+YnVmZmVyIGFuZCBvdXRwdXQgdGhlIHByb2Nlc3NlZCBpbWFnZSB0byBtdWx0aXBsZSBvdXRwdXQK
+PiA+ICtidWZmZXJzLiBGdXJ0aGVybW9yZSwgaXQgY2FuIHN1cHBvcnQgZGVtb3NhaWNpbmcgYW5k
+IG5vaXNlIHJlZHVjdGlvbiBvbiB0aGUKPiA+ICtpbWFnZXMuCj4gPiArCj4gPiArUmVxdWlyZWQg
+cHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGU6ICJtZWRpYXRlayxtdDgxODMtZGlwIgo+ID4g
+Ky0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZnVuY3Rpb24g
+YmxvY2sgcmVnaXN0ZXIgc3BhY2UKPiA+ICstIGludGVycnVwdHM6IGludGVycnVwdCBudW1iZXIg
+dG8gdGhlIGNwdQo+ID4gKy0gaW9tbXVzOiBzaG91bGQgcG9pbnQgdG8gdGhlIHJlc3BlY3RpdmUg
+SU9NTVUgYmxvY2sgd2l0aCBtYXN0ZXIgcG9ydCBhcwo+ID4gKyAgYXJndW1lbnQsIHNlZSBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvbWVkaWF0ZWssaW9tbXUudHh0Cj4g
+PiArICBmb3IgZGV0YWlscy4KPiA+ICstIG1lZGlhdGVrLGxhcmI6IG11c3QgY29udGFpbiB0aGUg
+bG9jYWwgYXJiaXRlcnMgaW4gdGhlIGN1cnJlbnQgU29jcywgc2VlCj4gPiArICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL21lZGlhdGVrLHNtaS1s
+YXJiLnR4dAo+ID4gKyAgZm9yIGRldGFpbHMuCj4gPiArLSBjbG9ja3M6IG11c3QgY29udGFpbiB0
+aGUgbG9jYWwgYXJiaXRlcnMgNSAoTEFSQjUpIGFuZCBESVAgY2xvY2sKPiA+ICstIGNsb2NrLW5h
+bWVzOiBtdXN0IGNvbnRhaW4gRElQX0NHX0lNR19MQVJCNSBhbmQgRElQX0NHX0lNR19ESVAKPiA+
+ICsKPiA+ICtFeGFtcGxlOgo+ID4gKwlkaXA6IGRpcEAxNTAyMjAwMCB7Cj4gPiArCQljb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10ODE4My1kaXAiOwo+ID4gKwkJbWVkaWF0ZWssbGFyYiA9IDwmbGFy
+YjU+Owo+IAo+ID4gKwkJbWVkaWF0ZWssbWRwMyA9IDwmbWRwX3JkbWEwPjsKPiA+ICsJCW1lZGlh
+dGVrLHZwdSA9IDwmdnB1PjsKPiAKPiBOb3QgZG9jdW1lbnRlZC4KPiAKCuKAnG1lZGlhdGVrLHZw
+deKAnSB3aWxsIGJlIHJlcGxhY2VkIGJ5IOKAnG1lZGlhdGVrLHNjcC7igJ0gSSB3b3VsZCBsaWtl
+IHRvIAphZGQgdGhlIGZvbGxvd2luZyBkZXNjcmlwdGlvbiBpbiBuZXh0IHZlcnNpb24gb2YgdGhl
+IHBhdGNoOgoKLSBtZWRpYXRlayxzY3A6IG11c3QgcG9pbnQgdG8gdGhlIHNjcCBibG9jayBvZiB0
+aGUgY28tcHJvY2Vzc29yIHVzZWQKICB3aXRoIERJUC4gUGxlYXNlIHNlZQogIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZW1vdGVwcm9jL210ayxzY3AudHh0IGZvciB0aGUKICBk
+ZXRhaWwuCgotIG1lZGlhdGVrLG1kcDM6IG11c3QgcG9pbnQgdG8gdGhlIE1lZGlhIERhdGEgUGF0
+aCAzIChNRFAzKSBibG9jay4KICBQbGVhc2Ugc2VlCiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLG10ODE4My1tZHAzLnR4dAogIGZvciB0aGUgZGV0YWls
+LgoKRXhhbXBsZToKCgltZHBfcmRtYTA6IG1kcF9yZG1hMEAxNDAwMTAwMCB7CgkJY29tcGF0aWJs
+ZSA9ICJtZWRpYXRlayxtdDgxODMtbWRwLXJkbWEiLAoJCQkgICAgICJtZWRpYXRlayxtdDgxODMt
+bWRwMyI7CgkJbWVkaWF0ZWssdnB1ID0gPCZ2cHU+OwoJCW1lZGlhdGVrLHNjcCA9IDwmc2NwPjsK
+CQltZWRpYXRlayxtZHAtaWQgPSA8MD47CgkJLyogLi4uLi4uICovCgkJfTsKCglzY3A6IHNjcEAx
+MDUwMDAwMCB7CgkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtc2NwIjsKCQlyZWcgPSA8
+MCAweDEwNTAwMDAwIDAgMHg4MDAwMD4sCgkJICAgICAgPDAgMHgxMDVjMDAwMCAwIDB4NTAwMD47
+CgkJcmVnLW5hbWVzID0gInNyYW0iLCAiY2ZnIjsKCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTc0
+IElSUV9UWVBFX0xFVkVMX0hJR0g+OwoJCWNsb2NrcyA9IDwmaW5mcmFjZmcgQ0xLX0lORlJBX1ND
+UFNZUz47CgkJY2xvY2stbmFtZXMgPSAibWFpbiI7CgkJbWVtb3J5LXJlZ2lvbiA9IDwmc2NwX21l
+bV9yZXNlcnZlZD47CgkJc3RhdHVzID0gIm9rYXkiOwoJfTsKCglkaXA6IGRpcEAxNTAyMjAwMCB7
+CgkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtZGlwIjsKCQltZWRpYXRlayxsYXJiID0g
+PCZsYXJiNT47CgkJbWVkaWF0ZWssbWRwMyA9IDwmbWRwX3JkbWEwPjsKCQltZWRpYXRlayxzY3Ag
+PSA8JnNjcD47CgkJLyogLi4uLi4uICovCgl9OwoKClRoZSBkZXBlbmRlbnQgTWVkaWF0ZWsgU0NQ
+IGFuZCBNRFAzIHBhdGNoIGhhdmUgYmVlbiBzZW50OgpbMV0gTWVkaWF0ZWsgU0NQLCBodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODk3MzE5LwpbMl0gTWVpZGF0ZWsgTURQMywg
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDg0NDIyOS8KCj4gPiArCQlpb21t
+dXMgPSA8JmlvbW11IE00VV9QT1JUX0NBTV9JTUdJPjsKPiA+ICsJCXJlZyA9IDwwIDB4MTUwMjIw
+MDAgMCAweDYwMDA+Owo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI2OCBJUlFfVFlQRV9M
+RVZFTF9MT1c+Owo+ID4gKwkJY2xvY2tzID0gPCZpbWdzeXMgQ0xLX0lNR19MQVJCNT4sCj4gPiAr
+CQkJIDwmaW1nc3lzIENMS19JTUdfRElQPjsKPiA+ICsJCWNsb2NrLW5hbWVzID0gIkRJUF9DR19J
+TUdfTEFSQjUiLAo+ID4gKwkJCSAgICAgICJESVBfQ0dfSU1HX0RJUCI7Cj4gPiArCX07Cj4gPiAt
+LSAKPiA+IDIuMTguMAo+ID4gCgpTaW5jZXJlbHksCgpGcmVkZXJpYyBDaGVuCgoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
