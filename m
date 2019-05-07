@@ -1,15 +1,16 @@
 From: Frederic Chen <frederic.chen@mediatek.com>
-Subject: Re: [RFC PATCH V1 3/6] dt-bindings: mt8183: Added DIP dt-bindings
-Date: Tue, 7 May 2019 22:16:19 +0800
-Message-ID: <1557238579.11663.15.camel@mtksdccf07>
+Subject: Re: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for DIP
+ shared memory
+Date: Tue, 7 May 2019 22:22:05 +0800
+Message-ID: <1557238925.11663.21.camel@mtksdccf07>
 References: <20190417104511.21514-1-frederic.chen@mediatek.com>
- <20190417104511.21514-4-frederic.chen@mediatek.com>
- <20190430011619.GA22170@bogus>
+ <20190417104511.21514-2-frederic.chen@mediatek.com>
+ <20190430011506.GA8514@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190430011619.GA22170@bogus>
+In-Reply-To: <20190430011506.GA8514@bogus>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,75 +24,102 @@ To: Rob Herring <robh@kernel.org>
 Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBSb2IsCgpJIGFwcHJlY2lhdGUgeW91ciBjb21tZW50cy4KCk9uIE1vbiwgMjAxOS0wNC0y
-OSBhdCAyMDoxNiAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBBcHIgMTcsIDIw
-MTkgYXQgMDY6NDU6MDhQTSArMDgwMCwgRnJlZGVyaWMgQ2hlbiB3cm90ZToKPiA+IFRoaXMgcGF0
-Y2ggYWRkcyBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEaWdpdGFsIEltYWdlCj4g
-PiBQcm9jZXNzaW5nIChESVApIHVuaXQgb2YgY2FtZXJhIElTUCBzeXN0ZW0gb24gTWVkaWF0ZWsn
-cyBTb0NzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBGcmVkZXJpYyBDaGVuIDxmcmVkZXJpYy5j
-aGVuQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9tZWRpYS9tZWRpYXRl
-ayxtdDgxODMtZGlwLnR4dCAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWssbXQ4MTgzLWRpcC50eHQK
-PiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZWRpYS9tZWRpYXRlayxtdDgxODMtZGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9tZWRpYXRlayxtdDgxODMtZGlwLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMGUxOTk0YmY4MmYwCj4gPiAtLS0gL2Rldi9u
-dWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVk
-aWF0ZWssbXQ4MTgzLWRpcC50eHQKPiA+IEBAIC0wLDAgKzEsMzUgQEAKPiA+ICsqIE1lZGlhdGVr
-IERpZ2l0YWwgSW1hZ2UgUHJvY2Vzc29yIChESVApCj4gPiArCj4gPiArRGlnaXRhbCBJbWFnZSBQ
-cm9jZXNzb3IgKERJUCkgdW5pdCBpbiBNZWRpYXRlayBJU1Agc3lzdGVtIGlzIHJlc3BvbnNpYmxl
-IGZvcgo+ID4gK2ltYWdlIGNvbnRlbnQgYWRqdXN0bWVudCBhY2NvcmRpbmcgdG8gdGhlIHR1bmlu
-ZyBwYXJhbWV0ZXJzLiBESVAgY2FuIHByb2Nlc3MKPiA+ICt0aGUgaW1hZ2UgZm9ybSBtZW1vcnkg
-YnVmZmVyIGFuZCBvdXRwdXQgdGhlIHByb2Nlc3NlZCBpbWFnZSB0byBtdWx0aXBsZSBvdXRwdXQK
-PiA+ICtidWZmZXJzLiBGdXJ0aGVybW9yZSwgaXQgY2FuIHN1cHBvcnQgZGVtb3NhaWNpbmcgYW5k
-IG5vaXNlIHJlZHVjdGlvbiBvbiB0aGUKPiA+ICtpbWFnZXMuCj4gPiArCj4gPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGU6ICJtZWRpYXRlayxtdDgxODMtZGlwIgo+ID4g
-Ky0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZnVuY3Rpb24g
-YmxvY2sgcmVnaXN0ZXIgc3BhY2UKPiA+ICstIGludGVycnVwdHM6IGludGVycnVwdCBudW1iZXIg
-dG8gdGhlIGNwdQo+ID4gKy0gaW9tbXVzOiBzaG91bGQgcG9pbnQgdG8gdGhlIHJlc3BlY3RpdmUg
-SU9NTVUgYmxvY2sgd2l0aCBtYXN0ZXIgcG9ydCBhcwo+ID4gKyAgYXJndW1lbnQsIHNlZSBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvbWVkaWF0ZWssaW9tbXUudHh0Cj4g
-PiArICBmb3IgZGV0YWlscy4KPiA+ICstIG1lZGlhdGVrLGxhcmI6IG11c3QgY29udGFpbiB0aGUg
-bG9jYWwgYXJiaXRlcnMgaW4gdGhlIGN1cnJlbnQgU29jcywgc2VlCj4gPiArICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL21lZGlhdGVrLHNtaS1s
-YXJiLnR4dAo+ID4gKyAgZm9yIGRldGFpbHMuCj4gPiArLSBjbG9ja3M6IG11c3QgY29udGFpbiB0
-aGUgbG9jYWwgYXJiaXRlcnMgNSAoTEFSQjUpIGFuZCBESVAgY2xvY2sKPiA+ICstIGNsb2NrLW5h
-bWVzOiBtdXN0IGNvbnRhaW4gRElQX0NHX0lNR19MQVJCNSBhbmQgRElQX0NHX0lNR19ESVAKPiA+
-ICsKPiA+ICtFeGFtcGxlOgo+ID4gKwlkaXA6IGRpcEAxNTAyMjAwMCB7Cj4gPiArCQljb21wYXRp
-YmxlID0gIm1lZGlhdGVrLG10ODE4My1kaXAiOwo+ID4gKwkJbWVkaWF0ZWssbGFyYiA9IDwmbGFy
-YjU+Owo+IAo+ID4gKwkJbWVkaWF0ZWssbWRwMyA9IDwmbWRwX3JkbWEwPjsKPiA+ICsJCW1lZGlh
-dGVrLHZwdSA9IDwmdnB1PjsKPiAKPiBOb3QgZG9jdW1lbnRlZC4KPiAKCuKAnG1lZGlhdGVrLHZw
-deKAnSB3aWxsIGJlIHJlcGxhY2VkIGJ5IOKAnG1lZGlhdGVrLHNjcC7igJ0gSSB3b3VsZCBsaWtl
-IHRvIAphZGQgdGhlIGZvbGxvd2luZyBkZXNjcmlwdGlvbiBpbiBuZXh0IHZlcnNpb24gb2YgdGhl
-IHBhdGNoOgoKLSBtZWRpYXRlayxzY3A6IG11c3QgcG9pbnQgdG8gdGhlIHNjcCBibG9jayBvZiB0
-aGUgY28tcHJvY2Vzc29yIHVzZWQKICB3aXRoIERJUC4gUGxlYXNlIHNlZQogIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZW1vdGVwcm9jL210ayxzY3AudHh0IGZvciB0aGUKICBk
-ZXRhaWwuCgotIG1lZGlhdGVrLG1kcDM6IG11c3QgcG9pbnQgdG8gdGhlIE1lZGlhIERhdGEgUGF0
-aCAzIChNRFAzKSBibG9jay4KICBQbGVhc2Ugc2VlCiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLG10ODE4My1tZHAzLnR4dAogIGZvciB0aGUgZGV0YWls
-LgoKRXhhbXBsZToKCgltZHBfcmRtYTA6IG1kcF9yZG1hMEAxNDAwMTAwMCB7CgkJY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDgxODMtbWRwLXJkbWEiLAoJCQkgICAgICJtZWRpYXRlayxtdDgxODMt
-bWRwMyI7CgkJbWVkaWF0ZWssdnB1ID0gPCZ2cHU+OwoJCW1lZGlhdGVrLHNjcCA9IDwmc2NwPjsK
-CQltZWRpYXRlayxtZHAtaWQgPSA8MD47CgkJLyogLi4uLi4uICovCgkJfTsKCglzY3A6IHNjcEAx
-MDUwMDAwMCB7CgkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtc2NwIjsKCQlyZWcgPSA8
-MCAweDEwNTAwMDAwIDAgMHg4MDAwMD4sCgkJICAgICAgPDAgMHgxMDVjMDAwMCAwIDB4NTAwMD47
-CgkJcmVnLW5hbWVzID0gInNyYW0iLCAiY2ZnIjsKCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTc0
-IElSUV9UWVBFX0xFVkVMX0hJR0g+OwoJCWNsb2NrcyA9IDwmaW5mcmFjZmcgQ0xLX0lORlJBX1ND
-UFNZUz47CgkJY2xvY2stbmFtZXMgPSAibWFpbiI7CgkJbWVtb3J5LXJlZ2lvbiA9IDwmc2NwX21l
-bV9yZXNlcnZlZD47CgkJc3RhdHVzID0gIm9rYXkiOwoJfTsKCglkaXA6IGRpcEAxNTAyMjAwMCB7
-CgkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtZGlwIjsKCQltZWRpYXRlayxsYXJiID0g
-PCZsYXJiNT47CgkJbWVkaWF0ZWssbWRwMyA9IDwmbWRwX3JkbWEwPjsKCQltZWRpYXRlayxzY3Ag
-PSA8JnNjcD47CgkJLyogLi4uLi4uICovCgl9OwoKClRoZSBkZXBlbmRlbnQgTWVkaWF0ZWsgU0NQ
-IGFuZCBNRFAzIHBhdGNoIGhhdmUgYmVlbiBzZW50OgpbMV0gTWVkaWF0ZWsgU0NQLCBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODk3MzE5LwpbMl0gTWVpZGF0ZWsgTURQMywg
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDg0NDIyOS8KCj4gPiArCQlpb21t
-dXMgPSA8JmlvbW11IE00VV9QT1JUX0NBTV9JTUdJPjsKPiA+ICsJCXJlZyA9IDwwIDB4MTUwMjIw
-MDAgMCAweDYwMDA+Owo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI2OCBJUlFfVFlQRV9M
-RVZFTF9MT1c+Owo+ID4gKwkJY2xvY2tzID0gPCZpbWdzeXMgQ0xLX0lNR19MQVJCNT4sCj4gPiAr
-CQkJIDwmaW1nc3lzIENMS19JTUdfRElQPjsKPiA+ICsJCWNsb2NrLW5hbWVzID0gIkRJUF9DR19J
-TUdfTEFSQjUiLAo+ID4gKwkJCSAgICAgICJESVBfQ0dfSU1HX0RJUCI7Cj4gPiArCX07Cj4gPiAt
-LSAKPiA+IDIuMTguMAo+ID4gCgpTaW5jZXJlbHksCgpGcmVkZXJpYyBDaGVuCgoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Dear Rob,
+
+I appreciate your comments.
+
+On Mon, 2019-04-29 at 20:15 -0500, Rob Herring wrote:
+> On Wed, Apr 17, 2019 at 06:45:06PM +0800, Frederic Chen wrote:
+> > This patch adds the binding for describing the shared memory
+> > used to exchange configuration and tuning data between the
+> > co-processor and Digital Image Processing (DIP) unit of the
+> > camera ISP system on Mediatek SoCs.
+> > 
+> > Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
+> > ---
+> >  .../mediatek,reserve-memory-dip_smem.txt      | 45 +++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+> > new file mode 100644
+> > index 000000000000..64c001b476b9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+> > @@ -0,0 +1,45 @@
+> > +Mediatek DIP Shared Memory binding
+> > +
+> > +This binding describes the shared memory, which serves the purpose of
+> > +describing the shared memory region used to exchange data between Digital
+> > +Image Processing (DIP) and co-processor in Mediatek SoCs.
+> > +
+> > +The co-processor doesn't have the iommu so we need to use the physical
+> > +address to access the shared buffer in the firmware.
+> > +
+> > +The Digital Image Processing (DIP) can access memory through mt8183 IOMMU so
+> > +it can use dma address to access the memory region.
+> > +(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
+> > +
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: must be "mediatek,reserve-memory-dip_smem"
+> 
+> Don't use '_'.
+
+I got it. I will use "mediatek,reserve-memory-dip-smem" instead in next
+version of the patch
+
+> 
+> > +
+> > +- reg: required for static allocation (see reserved-memory.txt for
+> > +  the detailed usage)
+> > +
+> > +- alloc-range: required for dynamic allocation. The range must
+> > +  between 0x00000400 and 0x100000000 due to the co-processer's
+> > +  addressing limitation
+> 
+> Generally, you should pick either static or dynamic allocation for a 
+> given binding. Static if there's some address restriction or sharing, 
+> dynamic if not.
+> 
+> Sounds like static in this case.
+> 
+
+DIP reserved memory has address restriction so it is the static case. I
+would like to remove the dynamic allocation part and modify the
+description as following:
+
+- reg: required for DIP. The range must be between 0x00000400 and
+  0x100000000 due to the co-processor's addressing limitation.
+  The size must be 26MB. Please see reserved-memory.txt for the 
+  detailed usage.
+
+> > +
+> > +- size: required for dynamic allocation. The unit is bytes.
+> > +  If you want to enable the full feature of Digital Processing Unit,
+> > +  you need 20 MB at least.
+> > +
+> > +
+> > +Example:
+> > +
+> > +The following example shows the DIP shared memory setup for MT8183.
+> > +
+> > +	reserved-memory {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		ranges;
+> > +		reserve-memory-dip_smem {
+> > +			compatible = "mediatek,reserve-memory-dip_smem";
+> > +			size = <0 0x1400000>;
+> > +			alignment = <0 0x1000>;
+> > +			alloc-ranges = <0 0x40000000 0 0x50000000>;
+> > +		};
+> > +	};
+> > -- 
+> > 2.18.0
+> > 
+
+Sincerely,
+
+Frederic Chen
