@@ -1,497 +1,142 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv2 2/4] firmware: add Intel Stratix10 remote system update driver
-Date: Tue,  7 May 2019 13:46:37 -0500
-Message-ID: <1557254799-7416-3-git-send-email-richard.gong@linux.intel.com>
-References: <1557254799-7416-1-git-send-email-richard.gong@linux.intel.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
+ U2 entries
+Date: Tue, 7 May 2019 18:42:20 +0000
+Message-ID: <30102591E157244384E984126FC3CB4F639E9035@us01wembx1.internal.synopsys.com>
+References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
+ <1557176302.18203.20.camel@phaseone.com>
+ <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557254799-7416-1-git-send-email-richard.gong@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
+To: Anurag Kumar Vulisha <anuragku@xilinx.com>, "Claus H. Stovgaard" <cst@phaseone.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
-
-The Intel Remote System Update (RSU) driver exposes interfaces access
-through the Intel Service Layer to user space via sysfs interface.
-The RSU interfaces report and control some of the optional RSU features
-on Intel Stratix 10 SoC.
-
-The RSU feature provides a way for customers to update the boot
-configuration of a Intel Stratix 10 SoC device with significantly reduced
-risk of corrupting the bitstream storage and bricking the system.
-
-Signed-off-by: Richard Gong <richard.gong@intel.com>
-Reviewed-by: Alan Tull <atull@kernel.org>
----
-v2: s/SysFS/sysfs, s/scnprintf/sprintf,
-    s/attr_group/ATTRIBUTE_GROUPS, use devm_device_add_groups() and
-    devm_device_remove_groups()
-    added check the return value from rsu_send_msg()
-    removed a pr_info in stratix10_rsu_probe()
-    removed compatible = "intel,stratix10-rsu"
----
- drivers/firmware/Kconfig         |  18 ++
- drivers/firmware/Makefile        |   1 +
- drivers/firmware/stratix10-rsu.c | 409 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 428 insertions(+)
- create mode 100644 drivers/firmware/stratix10-rsu.c
-
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 11fda9e..517a8d5 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -214,6 +214,24 @@ config INTEL_STRATIX10_SERVICE
- 
- 	  Say Y here if you want Stratix10 service layer support.
- 
-+config INTEL_STRATIX10_RSU
-+        tristate "Intel Stratix10 Remote System Update"
-+        depends on INTEL_STRATIX10_SERVICE
-+        help
-+          The Intel Remote System Update (RSU) driver exposes interfaces
-+          access through the Intel Service Layer to user space via sysfs
-+          device attribute nodes. The RSU interfaces report/control some of
-+          the optional RSU features of the Stratix 10 SoC FPGA.
-+
-+          The RSU provides a way for customers to update the boot
-+          configuration of a Stratix 10 SoC device with significantly reduced
-+          risk of corrupting the bitstream storage and bricking the system.
-+
-+          Enable RSU support if you are using an Intel SoC FPGA with the RSU
-+          feature enabled and you want Linux user space control.
-+
-+          Say Y here if you want Intel RSU support.
-+
- config QCOM_SCM
- 	bool
- 	depends on ARM || ARM64
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 3fa0b34..d04d5fc 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_EDD)		+= edd.o
- obj-$(CONFIG_EFI_PCDP)		+= pcdp.o
- obj-$(CONFIG_DMIID)		+= dmi-id.o
- obj-$(CONFIG_INTEL_STRATIX10_SERVICE) += stratix10-svc.o
-+obj-$(CONFIG_INTEL_STRATIX10_RSU)     += stratix10-rsu.o
- obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
- obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
- obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
-new file mode 100644
-index 0000000..770605c
---- /dev/null
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -0,0 +1,409 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018-2019, Intel Corporation
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/bitfield.h>
-+#include <linux/completion.h>
-+#include <linux/kobject.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/firmware/intel/stratix10-svc-client.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+
-+#define RSU_STATE_MASK			GENMASK_ULL(31, 0)
-+#define RSU_VERSION_MASK                GENMASK_ULL(63, 32)
-+#define RSU_ERROR_LOCATION_MASK         GENMASK_ULL(31, 0)
-+#define RSU_ERROR_DETAIL_MASK		GENMASK_ULL(63, 32)
-+
-+#define RSU_TIMEOUT	(msecs_to_jiffies(SVC_RSU_REQUEST_TIMEOUT_MS))
-+
-+/**
-+ * struct stratix10_rsu_priv - rsu data structure
-+ * @chan: pointer to the allocated service channel
-+ * @client: active service client
-+ * @completion: state for callback completion
-+ * @lock: a mutex to protect callback completion state
-+ * @status.current_image: address of image currently running in flash
-+ * @status.fail_image: address of failed image in flash
-+ * @status.version: the version number of RSU firmware
-+ * @status.state: the state of RSU system
-+ * @status.error_details: error code
-+ * @status.error_location: the error offset inside the image that failed
-+ */
-+struct stratix10_rsu_priv {
-+	struct stratix10_svc_chan *chan;
-+	struct stratix10_svc_client client;
-+	struct completion completion;
-+	struct mutex lock;
-+	struct {
-+		unsigned long current_image;
-+		unsigned long fail_image;
-+		unsigned int version;
-+		unsigned int state;
-+		unsigned int error_details;
-+		unsigned int error_location;
-+	} status;
-+};
-+
-+/**
-+ * rsu_status_callback() - Status callback from Intel service layer
-+ * @client: pointer to service client
-+ * @data: pointer to callback data structure
-+ *
-+ * Callback from Intel service layer for RSU status request. Status is
-+ * only updated after a system reboot, so a get updated status call is
-+ * made during driver probe.
-+ */
-+static void rsu_status_callback(struct stratix10_svc_client *client,
-+				struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_rsu_priv *priv = client->priv;
-+	struct arm_smccc_res *res = (struct arm_smccc_res *)data->kaddr1;
-+
-+	if (data->status == BIT(SVC_STATUS_RSU_OK)) {
-+		priv->status.version = FIELD_GET(RSU_VERSION_MASK,
-+						 res->a2);
-+		priv->status.state = FIELD_GET(RSU_STATE_MASK, res->a2);
-+		priv->status.fail_image = res->a1;
-+		priv->status.current_image = res->a0;
-+		priv->status.error_location =
-+			FIELD_GET(RSU_ERROR_LOCATION_MASK, res->a3);
-+		priv->status.error_details =
-+			FIELD_GET(RSU_ERROR_DETAIL_MASK, res->a3);
-+	} else {
-+		dev_err(client->dev, "COMMAND_RSU_STATUS returned 0x%lX\n",
-+			res->a0);
-+		priv->status.version = 0;
-+		priv->status.state = 0;
-+		priv->status.fail_image = 0;
-+		priv->status.current_image = 0;
-+		priv->status.error_location = 0;
-+		priv->status.error_details = 0;
-+	}
-+
-+	complete(&priv->completion);
-+}
-+
-+/**
-+ * rsu_command_callback() - Update callback from Intel service layer
-+ * @client: pointer to client
-+ * @data: pointer to callback data structure
-+ *
-+ * Callback from Intel service layer for RSU commands.
-+ */
-+static void rsu_command_callback(struct stratix10_svc_client *client,
-+				 struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_rsu_priv *priv = client->priv;
-+
-+	if (data->status != BIT(SVC_STATUS_RSU_OK))
-+		dev_err(client->dev, "RSU returned status is %i\n",
-+			data->status);
-+	complete(&priv->completion);
-+}
-+
-+/**
-+ * rsu_send_msg() - send a message to Intel service layer
-+ * @priv: pointer to rsu private data
-+ * @command: RSU status or update command
-+ * @arg: the request argument, the bitstream address or notify status
-+ * @callback: function pointer for the callback (status or update)
-+ *
-+ * Start an Intel service layer transaction to perform the SMC call that
-+ * is necessary to get RSU boot log or set the address of bitstream to
-+ * boot after reboot.
-+ *
-+ * Returns 0 on success or -ETIMEDOUT on error.
-+ */
-+static int rsu_send_msg(struct stratix10_rsu_priv *priv,
-+			enum stratix10_svc_command_code command,
-+	unsigned long arg,
-+	void (*callback)(struct stratix10_svc_client *client,
-+			 struct stratix10_svc_cb_data *data))
-+{
-+	struct stratix10_svc_client_msg msg;
-+	int ret;
-+
-+	mutex_lock(&priv->lock);
-+	reinit_completion(&priv->completion);
-+	priv->client.receive_cb = callback;
-+
-+	msg.command = command;
-+	if (arg)
-+		msg.arg[0] = arg;
-+
-+	ret = stratix10_svc_send(priv->chan, &msg);
-+	if (ret < 0)
-+		goto status_done;
-+
-+	ret = wait_for_completion_interruptible_timeout(&priv->completion,
-+							RSU_TIMEOUT);
-+	if (!ret) {
-+		dev_err(priv->client.dev,
-+			"timeout waiting for COMMAND_RSU_STATUS\n");
-+		ret = -ETIMEDOUT;
-+		goto status_done;
-+	} else if (ret < 0) {
-+		dev_err(priv->client.dev,
-+			"error %d waiting for COMMAND_RSU_STATUS\n", ret);
-+		goto status_done;
-+	} else {
-+		ret = 0;
-+	}
-+
-+status_done:
-+	stratix10_svc_done(priv->chan);
-+	mutex_unlock(&priv->lock);
-+	return ret;
-+}
-+
-+/*
-+ * This driver exposes some optional features of the Intel Stratix 10 SoC FPGA.
-+ * The sysfs interfaces exposed here are FPGA Remote System Update (RSU)
-+ * related.  They allow user space software to query the configuration system
-+ * status and to request optional reboot behavior specific to Intel FPGAs.
-+ */
-+
-+static ssize_t current_image_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%ld", priv->status.current_image);
-+}
-+
-+static ssize_t fail_image_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%ld", priv->status.fail_image);
-+}
-+
-+static ssize_t version_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%d", priv->status.version);
-+}
-+
-+static ssize_t state_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%d", priv->status.state);
-+}
-+
-+static ssize_t error_location_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%d", priv->status.error_location);
-+}
-+
-+static ssize_t error_details_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%d", priv->status.error_details);
-+}
-+
-+static ssize_t reboot_image_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+	unsigned long address;
-+	int ret;
-+
-+	if (priv == 0)
-+		return -ENODEV;
-+
-+	ret = kstrtoul(buf, 0, &address);
-+	if (ret)
-+		return ret;
-+
-+	ret = rsu_send_msg(priv, COMMAND_RSU_UPDATE,
-+			   address, rsu_command_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, RSU update returned %i\n", ret);
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t notify_store(struct device *dev,
-+			    struct device_attribute *attr,
-+			    const char *buf, size_t count)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+	unsigned long status;
-+	int ret;
-+
-+	if (priv == 0)
-+		return -ENODEV;
-+
-+	ret = kstrtoul(buf, 0, &status);
-+	if (ret)
-+		return ret;
-+
-+	ret = rsu_send_msg(priv, COMMAND_RSU_NOTIFY,
-+			   status, rsu_command_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, RSU notify returned %i\n", ret);
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t watchdog_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+	unsigned long wd_action;
-+	int ret;
-+
-+	if (priv == 0)
-+		return -ENODEV;
-+
-+	ret = kstrtoul(buf, 0, &wd_action);
-+	if (ret)
-+		return ret;
-+
-+	ret = rsu_send_msg(priv, COMMAND_RSU_WD,
-+			   wd_action, rsu_command_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, WD timer expiration returned %i\n", ret);
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RO(current_image);
-+static DEVICE_ATTR_RO(fail_image);
-+static DEVICE_ATTR_RO(state);
-+static DEVICE_ATTR_RO(version);
-+static DEVICE_ATTR_RO(error_location);
-+static DEVICE_ATTR_RO(error_details);
-+static DEVICE_ATTR_WO(reboot_image);
-+static DEVICE_ATTR_WO(notify);
-+static DEVICE_ATTR_WO(watchdog);
-+
-+static struct attribute *rsu_attrs[] = {
-+	&dev_attr_current_image.attr,
-+	&dev_attr_fail_image.attr,
-+	&dev_attr_state.attr,
-+	&dev_attr_version.attr,
-+	&dev_attr_error_location.attr,
-+	&dev_attr_error_details.attr,
-+	&dev_attr_reboot_image.attr,
-+	&dev_attr_notify.attr,
-+	&dev_attr_watchdog.attr,
-+	NULL
-+};
-+
-+ATTRIBUTE_GROUPS(rsu);
-+
-+static int stratix10_rsu_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stratix10_rsu_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->client.dev = dev;
-+	priv->client.receive_cb = NULL;
-+	priv->client.priv = priv;
-+	priv->status.current_image = 0;
-+	priv->status.fail_image = 0;
-+	priv->status.error_location = 0;
-+	priv->status.error_details = 0;
-+	priv->status.version = 0;
-+	priv->status.state = 0;
-+
-+	mutex_init(&priv->lock);
-+	priv->chan = stratix10_svc_request_channel_byname(&priv->client,
-+							  SVC_CLIENT_RSU);
-+	if (IS_ERR(priv->chan)) {
-+		dev_err(dev, "couldn't get service channel %s\n",
-+			SVC_CLIENT_RSU);
-+		return PTR_ERR(priv->chan);
-+	}
-+
-+	init_completion(&priv->completion);
-+	platform_set_drvdata(pdev, priv);
-+
-+	/* status is only updated after reboot */
-+	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
-+			   0, rsu_status_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting RSU status %i\n", ret);
-+		stratix10_svc_free_channel(priv->chan);
-+	}
-+
-+	ret = devm_device_add_groups(dev, rsu_groups);
-+	if (ret) {
-+		dev_err(dev, "unable to create sysfs group");
-+		stratix10_svc_free_channel(priv->chan);
-+	}
-+
-+	return ret;
-+}
-+
-+static int stratix10_rsu_remove(struct platform_device *pdev)
-+{
-+	struct stratix10_rsu_priv *priv = platform_get_drvdata(pdev);
-+
-+	stratix10_svc_free_channel(priv->chan);
-+	devm_device_remove_groups(&pdev->dev, rsu_groups);
-+	return 0;
-+}
-+
-+static struct platform_driver stratix10_rsu_driver = {
-+	.probe = stratix10_rsu_probe,
-+	.remove = stratix10_rsu_remove,
-+	.driver = {
-+		.name = "stratix10-rsu",
-+	},
-+};
-+
-+module_platform_driver(stratix10_rsu_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Intel Remote System Update Driver");
-+MODULE_AUTHOR("Richard Gong <richard.gong@intel.com>");
--- 
-2.7.4
+Hi,=0A=
+=0A=
+Anurag Kumar Vulisha wrote:=0A=
+> Hi Claus,=0A=
+>=0A=
+>> -----Original Message-----=0A=
+>> From: Claus H. Stovgaard [mailto:cst@phaseone.com]=0A=
+>> Sent: Tuesday, May 07, 2019 2:28 AM=0A=
+>> To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>; Anurag Kumar Vulisha=0A=
+>> <anuragku@xilinx.com>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; =
+Rob=0A=
+>> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Felip=
+e Balbi=0A=
+>> <balbi@kernel.org>=0A=
+>> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
+>> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
+>> Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1=
+ and U2=0A=
+>> entries=0A=
+>>=0A=
+>> Hi Thinh and Anurag=0A=
+>>=0A=
+>> On man, 2019-05-06 at 19:21 +0000, Thinh Nguyen wrote:=0A=
+>>=0A=
+>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c index=
+=0A=
+>>>> a1b126f..4f0912c 100644=0A=
+>>>> --- a/drivers/usb/dwc3/core.c=0A=
+>>>> +++ b/drivers/usb/dwc3/core.c=0A=
+>>>> @@ -1285,6 +1285,10 @@ static void dwc3_get_properties(struct dwc3=0A=
+>>>> *dwc)=0A=
+>>>>  				"snps,dis_u2_susphy_quirk");=0A=
+>>>>  	dwc->dis_enblslpm_quirk =3D device_property_read_bool(dev,=0A=
+>>>>  				"snps,dis_enblslpm_quirk");=0A=
+>>>> +	dwc->dis_u1_entry_quirk =3D device_property_read_bool(dev,=0A=
+>>>> +				"snps,dis_u1_entry_quirk");=0A=
+>>>> +	dwc->dis_u2_entry_quirk =3D device_property_read_bool(dev,=0A=
+>>>> +				"snps,dis_u2_entry_quirk");=0A=
+>>> Please use "-" rather than "_" in the property names.=0A=
+>> I have thought about this feature over the weekend, and think the naming=
+ should be=0A=
+>> changed to something like "snps,bos-u1-exit-lat-in-us"=0A=
+>> and named the same in the code. And then be the value used by the=0A=
+>> get_config_params. E.g. the device-tree is used to set the values direct=
+ly used for=0A=
+>> bUxdevExitLat instead of named something not related to exit latency.=0A=
+>>=0A=
+>> With this the name and function is a 1 to 1 match, and you can among oth=
+ers set it to=0A=
+>> 0 for optaining what Anurag wants.=0A=
+>>=0A=
+> Your suggestion looks good but the problem is the U1 and U2 exit latencie=
+s are=0A=
+> fixed values in dwc3 controller(can be found in HCSPARAMS3). Adding diffe=
+rent=0A=
+> exit latencies may modify the U1SEL/U2SEL values sent from the host but t=
+he real=0A=
+> dwc3 controller exit latencies are not getting changed. Because of this r=
+eason I=0A=
+> had opted "snps,dis_u1_entry_quirk", so that the U1/U2 exit latency value=
+s=0A=
+> reported in BOS descriptor can be either be zero (when U1/U2 entries need=
+s to be=0A=
+> disabled) or non-zero value (reported in HCSPARAMS3) when U1/U2 states al=
+lowed.=0A=
+> Based on this I think it is better if we can continue with "snps,dis-u1-e=
+ntry-quirk"=0A=
+> instead of the "snps,bos-u1-exit-lat-in-us". Please  provide your opinion=
+ on this.=0A=
+=0A=
+>  =0A=
+>> Regarding the disabling of U1 / U2. I send this to Anurag=0A=
+>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__marc.info_-3Fl-3D=
+linux-2Dusb-26m-3D155683299311954-26w-3D2&d=3DDwIGaQ&c=3DDPL6_X_6JkXFx7AXWq=
+B0tg&r=3Du9FYoxKtyhjrGFcyixFYqTjw1ZX0VsG2d8FCmzkTY-w&m=3DMBQpZmX-jgrlpT68k5=
+VR-4xv_DYb5UGUiD5objMqwpA&s=3DCa-zBV5t26-ZFPbNAkD8K3F3lbc3CwUXNpAgnkVasg4&e=
+=3D=0A=
+>> Here i created a configfs interface with the names "lpm_U1_disable" and=
+=0A=
+>> "lpm_U2_disable" for controlling the DTCL of dwc3, and reject=0A=
+>> SET_FEATURE(U1/U2)=0A=
+>>=0A=
+>> Will send this in seperate patch tomorrow, in the hope that Anurags feat=
+ure can=0A=
+>> become a way for controlling exit latency, and my patch become a way for=
+ disabling=0A=
+>> U1/U2=0A=
+>>=0A=
+> I agree with your suggestion. When U1 and U2 entries are not allowed  it =
+is always=0A=
+> better to report zero value for U1/U2 exit latencies in BOS descriptor (n=
+o point in=0A=
+> reporting non-zero exit latency values when U1/U2 states are not allowed)=
+.  Along=0A=
+> with that changes for preventing the dwc3 controller from initiating or a=
+ccepting=0A=
+> U1/U2 requests are also required (since there are some host platforms whe=
+re sending=0A=
+> 0 exit latency doesn't work). Based on these observations I believe both =
+your patch=0A=
+> changes and my patch changes needs to be added.=0A=
+>=0A=
+> @Thinh Nguyen=0A=
+> Please provide your opinion on this=0A=
+>=0A=
+=0A=
+The 0 exit latency in the BOS descriptor doesn't mean that device=0A=
+doesn't support U1/U2 (however unrealistic it may seem).=0A=
+=0A=
+The exit latency values reported in the BOS decriptor are just=0A=
+recommended latency. The host controls over what they should be (host=0A=
+has its own U1/U2 exit latency). I don't think we should have a device=0A=
+property to set the device exit latency.=0A=
+=0A=
+If the gadget driver needs to know what the recommended latency to set=0A=
+in the BOS descriptor, we can have those values exported to some new=0A=
+fields in the usb_gadget structure.=0A=
+=0A=
+BR,=0A=
+Thinh=0A=
+=0A=
+=0A=
