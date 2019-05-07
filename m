@@ -1,53 +1,63 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v3 0/6]  Add drive-strength in Meson pinctrl driver
-Date: Tue,  7 May 2019 13:57:20 +0200
-Message-ID: <20190507115726.23714-1-glaroque@baylibre.com>
+Subject: [PATCH v3 2/6] pinctrl: generic: add new 'drive-strength-microamp' property support
+Date: Tue,  7 May 2019 13:57:22 +0200
+Message-ID: <20190507115726.23714-3-glaroque@baylibre.com>
+References: <20190507115726.23714-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The purpose of this patchset is to add drive-strength support in meson pinconf
-driver. This is a new feature that was added on the g12a. It is critical for us
-to support this since many functions are failing with default pad drive-strength.
+Add drive-strength-microamp property support to allow drive strength in uA
 
-The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-'drive-strength' is expressed in mA.
-So this patch add another generic property "drive-strength-uA". The change to do so
-would be minimal and could be benefit to other platforms later on.
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+ drivers/pinctrl/pinconf-generic.c       | 2 ++
+ include/linux/pinctrl/pinconf-generic.h | 3 +++
+ 2 files changed, 5 insertions(+)
 
-Cheers
-Guillaume
-
-Changes since v2:
-- update driver-strength-uA property to be compliant with DT documentation
-- rework patch series for better understanding
-- rework set_bias function
-
-Changes since v1:
-- fix missing break
-- implement new pinctrl generic property "drive-strength-uA"
-
-[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
-
-
-Guillaume La Roque (6):
-  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-  pinctrl: generic: add new 'drive-strength-microamp' property support
-  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-  pinctrl: meson: Rework enable/disable bias part
-  pinctrl: meson: add support of drive-strength-microamp
-  pinctrl: meson: g12a: add DS bank value
-
- .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
- .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
- drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
- drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
- drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
- drivers/pinctrl/pinconf-generic.c             |   2 +
- include/linux/pinctrl/pinconf-generic.h       |   3 +
- 7 files changed, 195 insertions(+), 48 deletions(-)
-
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index b4f7f8a458ea..d0cbdb1ad76a 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -39,6 +39,7 @@ static const struct pin_config_item conf_items[] = {
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA", true),
++	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH_UA, "output drive strength", "uA", true),
+ 	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec", true),
+ 	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
+@@ -167,6 +168,7 @@ static const struct pinconf_generic_params dt_params[] = {
+ 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
+ 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
+ 	{ "drive-strength", PIN_CONFIG_DRIVE_STRENGTH, 0 },
++	{ "drive-strength-microamp", PIN_CONFIG_DRIVE_STRENGTH_UA, 0 },
+ 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
+ 	{ "input-disable", PIN_CONFIG_INPUT_ENABLE, 0 },
+ 	{ "input-enable", PIN_CONFIG_INPUT_ENABLE, 1 },
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 6c0680641108..72d06d6a3099 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -55,6 +55,8 @@
+  *	push-pull mode, the argument is ignored.
+  * @PIN_CONFIG_DRIVE_STRENGTH: the pin will sink or source at most the current
+  *	passed as argument. The argument is in mA.
++ * @PIN_CONFIG_DRIVE_STRENGTH_UA: the pin will sink or source at most the current
++ *	passed as argument. The argument is in uA.
+  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
+  *	which means it will wait for signals to settle when reading inputs. The
+  *	argument gives the debounce time in usecs. Setting the
+@@ -112,6 +114,7 @@ enum pin_config_param {
+ 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
+ 	PIN_CONFIG_DRIVE_PUSH_PULL,
+ 	PIN_CONFIG_DRIVE_STRENGTH,
++	PIN_CONFIG_DRIVE_STRENGTH_UA,
+ 	PIN_CONFIG_INPUT_DEBOUNCE,
+ 	PIN_CONFIG_INPUT_ENABLE,
+ 	PIN_CONFIG_INPUT_SCHMITT,
 -- 
 2.17.1
