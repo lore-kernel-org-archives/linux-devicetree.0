@@ -1,72 +1,55 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v2 3/3] arm64: rockchip: rk3399: nanopc-t4:
- Enable FriendlyELEC HD702E eDP panel
-Date: Tue,  7 May 2019 18:37:08 +0530
-Message-ID: <20190507130708.11255-3-jagan@amarulasolutions.com>
-References: <20190507130708.11255-1-jagan@amarulasolutions.com>
+Subject: Re: [PATCH 1/2] drm/panel: simple: Add FriendlyELEC HD702E 800x1280
+ LCD panel
+Date: Tue, 7 May 2019 18:40:36 +0530
+Message-ID: <CAMty3ZBpRABe4u26ZN91JRB+vVF4Z96k-LDoe37d6EdVDkfJsg@mail.gmail.com>
+References: <20190501121448.3812-1-jagan@amarulasolutions.com>
+ <20190501193429.GA9075@ravnborg.org> <CAMty3ZAfwVyvmAmenhrQHJcy3eq-Yb61a4WLop_8jS-7vM940A@mail.gmail.com>
+ <CAL_Jsq+mYy1JF_cM7sD82aLuUSnZnwsSD6-Q-W1uTp+_oSdRmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190507130708.11255-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+mYy1JF_cM7sD82aLuUSnZnwsSD6-Q-W1uTp+_oSdRmg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJpZW5kbHlFTEVDIEhENzAyRSBpcyBvbmUgb2Ygb3B0aW9uYWwgTENEIHBhbmVsIGZvcgpOYW5v
-UEMgVDQgZURQIGludGVyZmFjZS4KCkl0IGZlYXR1cmVzIDgwMHgxMjgwIHJlc29sdXRpb25zLCB3
-aXRoIGJ1aWx0IGluIEdUOTI3MSBjYXB0aXZlCnRvdWNoc2NyZWVuIGFuZCBhZGp1c3RhYmxlIGJh
-Y2tsaWdodCB2aWEgUFdNLgoKZURQIHBhbmVsIGNvbm5lY3Rpb25zIGFyZToKLSBWQ0MzVjNfU1lT
-OiAzLjNWIHBhbmVsIHBvd2VyIHN1cHBseQotIEdQSU80X0MyOiBQV00wX0JMIHBpbgotIEdQSU80
-X0Q1X0xDRF9CTF9FTjogQmFja2xpZ2h0IGVuYWJsZSBwaW4KLSBWQ0MxMlYwX1NZUzogMTJWIGJh
-Y2tsaWdodCBwb3dlciBzdXBwbHkKLSBUb3VjaHNjcmVlbiBjb25uZWN0ZWQgdmlhIEkyQzQKLSBH
-UElPMV9DNF9UUF9JTlQ6IHRvdWNoc2NyZWVuIGludGVycnVwdCBwaW4KLSBHUElPMV9CNV9UUF9S
-U1Q6IHRvdWNoc2NyZWVuIHJlc2V0IHBpbgoKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFn
-YW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Ci0tLQpDaGFuZ2VzIGZvciB2MjoKLSB1c2UgZm9yY2Ut
-aHBkIGFuZCBkZWxldGUtcHJvcGVydHkgZm9yIGVkcAotIHVzZSBnZW5lcmljIGJhY2tsaWdodCBi
-cmlnaHRuZXNzCi0gYWRkIHNpbXBsZS1wYW5lbCBmYWxsYmFjayBjb21wYXRpYmxlCgogLi4uL2Jv
-b3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1uYW5vcGMtdDQuZHRzICAgIHwgNTAgKysrKysrKysrKysr
-KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDUwIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1uYW5vcGMtdDQuZHRzIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTktbmFub3BjLXQ0LmR0cwppbmRleCA5MzFjM2Ri
-ZjFiN2QuLjRjYWNkMDk2NThkYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2Nr
-Y2hpcC9yazMzOTktbmFub3BjLXQ0LmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tj
-aGlwL3JrMzM5OS1uYW5vcGMtdDQuZHRzCkBAIC00Niw2ICs0NiwxNCBAQAogCQl9OwogCX07CiAK
-KwliYWNrbGlnaHQ6IGJhY2tsaWdodCB7CisJCWNvbXBhdGlibGUgPSAicHdtLWJhY2tsaWdodCI7
-CisJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzQgUktfUEQ1IEdQSU9fQUNUSVZFX0hJR0g+OwkvKiBH
-UElPNF9ENV9MQ0RfQkxfRU4gKi8KKwkJcHdtcyA9IDwmcHdtMCAwIDI1MDAwIDA+OworCQlwb3dl
-ci1zdXBwbHkgPSA8JnZjYzEydjBfc3lzPjsKKwkJc3RhdHVzID0gIm9rYXkiOworCX07CisKIAlp
-ci1yZWNlaXZlciB7CiAJCWNvbXBhdGlibGUgPSAiZ3Bpby1pci1yZWNlaXZlciI7CiAJCWdwaW9z
-ID0gPCZncGlvMCBSS19QQTYgR1BJT19BQ1RJVkVfTE9XPjsKQEAgLTY0LDYgKzcyLDE4IEBACiAJ
-CWZhbi1zdXBwbHkgPSA8JnZjYzEydjBfc3lzPjsKIAkJcHdtcyA9IDwmcHdtMSAwIDUwMDAwIDA+
-OwogCX07CisKKwlwYW5lbCB7CisJCWNvbXBhdGlibGUgPSJmcmllbmRseWFybSxoZDcwMmUiLCAi
-c2ltcGxlLXBhbmVsIjsKKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCQlwb3dlci1zdXBw
-bHkgPSA8JnZjYzN2M19zeXM+OworCisJCXBvcnQgeworCQkJcGFuZWxfaW5fZWRwOiBlbmRwb2lu
-dCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfb3V0X3BhbmVsPjsKKwkJCX07CisJCX07
-CisJfTsKIH07CiAKICZjcHVfdGhlcm1hbCB7CkBAIC05NCw2ICsxMTQsMjUgQEAKIAl9OwogfTsK
-IAorJmVkcCB7CisJc3RhdHVzID0gIm9rYXkiOworCWZvcmNlLWhwZDsKKwkvZGVsZXRlLXByb3Bl
-cnR5LyBwaW5jdHJsLTA7CisKKwlwb3J0cyB7CisJCWVkcF9vdXQ6IHBvcnRAMSB7CisJCQlyZWcg
-PSA8MT47CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDA+Owor
-CisJCQllZHBfb3V0X3BhbmVsOiBlbmRwb2ludEAwIHsKKwkJCQlyZWcgPSA8MD47CisJCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbl9lZHA+OworCQkJfTsKKwkJfTsKKwl9OworfTsKKwog
-JmdwdV90aGVybWFsIHsKIAl0cmlwcyB7CiAJCWdwdV93YXJtOiBncHVfd2FybSB7CkBAIC0xMzAs
-NiArMTY5LDE3IEBACiAJfTsKIH07CiAKKyZpMmM0IHsKKwl0b3VjaHNjcmVlbkA1ZCB7CisJCWNv
-bXBhdGlibGUgPSAiZ29vZGl4LGd0OTExIjsKKwkJcmVnID0gPDB4NWQ+OworCQlpbnRlcnJ1cHQt
-cGFyZW50ID0gPCZncGlvMT47CisJCWludGVycnVwdHMgPSA8UktfUEM0IElSUV9UWVBFX0VER0Vf
-RkFMTElORz47CisJCWlycS1ncGlvID0gPCZncGlvMSBSS19QQzQgR1BJT19BQ1RJVkVfSElHSD47
-CS8qIEdQSU8xX0M0X1RQX0lOVCAqLworCQlyZXNldC1ncGlvID0gPCZncGlvMSBSS19QQjUgR1BJ
-T19BQ1RJVkVfTE9XPjsJLyogR1BJTzFfQjVfVFBfUlNUICovCisJfTsKK307CisKICZzZGhjaSB7
-CiAJbW1jLWhzNDAwLTFfOHY7CiAJbW1jLWhzNDAwLWVuaGFuY2VkLXN0cm9iZTsKLS0gCjIuMTgu
-MC4zMjEuZ2ZmYzZmYTBlMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVs
+On Mon, May 6, 2019 at 8:34 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, May 6, 2019 at 4:56 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > Hi Sam,
+> >
+> > On Thu, May 2, 2019 at 1:04 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > >
+> > > Hi Jagan
+> > >
+> > > On Wed, May 01, 2019 at 05:44:47PM +0530, Jagan Teki wrote:
+> > > > HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
+> > > > resolution. It has built in Goodix, GT9271 captive touchscreen
+> > > > with backlight adjustable via PWM.
+> > > >
+> > > > Add support for it.
+> > > >
+> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > > Cc: David Airlie <airlied@linux.ie>
+> > > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > >
+> > > Please submit the binding in a separate patch as per
+> > > Documentation/devicetree/bindings/submitting-patches.txt
+> >
+> > Hmm.. prepared like this initially but few of my patches were combined
+> > earlier even-though I sent it separately. anyway let me separate it
+> > again.
+>
+> For what subsystem? All the maintainers that I was aware of doing that
+> have stopped.
+
+May be it was recent, Dmitry combined by previous dt and driver changes.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ae97fb589648cd5558f1ceea317404a639307501
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a5f50c501321249d67611353dde6d68d48c5b959
