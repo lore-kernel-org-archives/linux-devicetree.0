@@ -1,225 +1,76 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v2] dt-bindings: clock: Add silabs,si5341
-Date: Tue,  7 May 2019 16:04:13 +0200
-Message-ID: <20190507140413.28335-1-mike.looijmans@topic.nl>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
+From: Anurag Kumar Vulisha <anuragku@xilinx.com>
+Subject: RE: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
+ U2 entries
+Date: Tue, 7 May 2019 14:09:06 +0000
+Message-ID: <BYAPR02MB55915E6F754DC21CE0F6ADAAA7310@BYAPR02MB5591.namprd02.prod.outlook.com>
+References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
+         <1557176302.18203.20.camel@phaseone.com>
+         <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
+ <1557235048.114189.22.camel@phaseone.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424090216.18417-1-mike.looijmans@topic.nl>
+In-Reply-To: <1557235048.114189.22.camel@phaseone.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
+To: "Claus H. Stovgaard" <cst@phaseone.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds the devicetree bindings for the Si5341 and Si5340 chips from
-Silicon Labs. These are multiple-input multiple-output clock
-synthesizers.
-
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Add data sheet reference.
-    Restructured to enable use of "assigned-clock*" properties to set
-    up both outputs and internal synthesizers.
-    Nicer indentation.
-    Updated subject line and body of commit message.
-    If these bindings are (mostly) acceptable, I'll post an updated
-    driver patch v2 to implement these changes.
-
- .../bindings/clock/silabs,si5341.txt          | 187 ++++++++++++++++++
- 1 file changed, 187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5341.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-new file mode 100644
-index 000000000000..6086dfcaeecf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-@@ -0,0 +1,187 @@
-+Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
-+
-+Reference
-+[1] Si5341 Data Sheet
-+    https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
-+[2] Si5341 Reference Manual
-+    https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
-+
-+The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
-+clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
-+in turn can be directed to any of the 10 (or 4) outputs through a divider.
-+The internal structure of the clock generators can be found in [2].
-+
-+The driver can be used in "as is" mode, reading the current settings from the
-+chip at boot, in case you have a (pre-)programmed device. If the PLL is not
-+configured when the driver probes, it assumes the driver must fully initialize
-+it.
-+
-+The device type, speed grade and revision are determined runtime by probing.
-+
-+The driver currently only supports XTAL input mode, and does not support any
-+fancy input configurations. They can still be programmed into the chip and
-+the driver will leave them "as is".
-+
-+==I2C device node==
-+
-+Required properties:
-+- compatible: shall be one of the following:
-+	"silabs,si5340" - Si5340 A/B/C/D
-+	"silabs,si5341" - Si5341 A/B/C/D
-+- reg: i2c device address, usually 0x74
-+- #clock-cells: from common clock binding; shall be set to 2.
-+	The first value is "0" for outputs, "1" for synthesizers.
-+	The second value is the output or synthesizer index.
-+- clocks: from common clock binding; list of parent clock  handles,
-+	corresponding to inputs. Use a fixed clock for the "xtal" input.
-+	At least one must be present.
-+- clock-names: One of: "xtal", "in0", "in1", "in2"
-+- vdd-supply: Regulator node for VDD
-+
-+Optional properties:
-+- vdda-supply: Regulator node for VDDA
-+- vdds-supply: Regulator node for VDDS
-+- silabs,pll-m-num, silabs,pll-m-den: Numerator and denominator for PLL
-+  feedback divider. Must be such that the PLL output is in the valid range. For
-+  example, to create 14GHz from a 48MHz xtal, use m-num=14000 and m-den=48. Only
-+  the fraction matters, using 3500 and 12 will deliver the exact same result.
-+  If these are not specified, and the PLL is not yet programmed when the driver
-+  probes, the PLL will be set to 14GHz.
-+- silabs,reprogram: When present, the driver will always assume the device must
-+  be initialized, and always performs the soft-reset routine. Since this will
-+  temporarily stop all output clocks, don't do this if the chip is generating
-+  the CPU clock for example.
-+- interrupts: Interrupt for INTRb pin.
-+
-+== Child nodes: Synthesizers ==
-+
-+In order to refer to the internal synthesizers, there can be a child node named
-+"synthesizers".
-+
-+Required synthesizers node properties:
-+- #address-cells: shall be set to 1.
-+- #size-cells: shall be set to 0.
-+
-+Each child of this node corresponds to a multisynth in the Si534X chip. This
-+allows the synthesizer to be referred to with assigned-clocks.
-+
-+Required child node properties:
-+- reg: synthesizer index in range 0..4 for Si5341 and 0..3 for Si5340.
-+
-+== Child nodes: Outputs ==
-+
-+The child node "outputs" lists the output clocks.
-+
-+Required outputs node properties:
-+- #address-cells: shall be set to 1.
-+- #size-cells: shall be set to 0.
-+
-+Each of the clock outputs can be overwritten individually by
-+using a child node to the outputs child node. If a child node for a clock
-+output is not set, the configuration remains unchanged.
-+
-+Required child node properties:
-+- reg: number of clock output.
-+
-+Optional child node properties:
-+- vdd-supply: Regulator node for VDD for this output. The driver selects default
-+	values for common-mode and amplitude based on the voltage.
-+- silabs,format: Output format, one of:
-+	1 = differential (defaults to LVDS levels)
-+	2 = low-power (defaults to HCSL levels)
-+	4 = LVCMOS
-+- silabs,common-mode: Manually overide output common mode, see [2] for values
-+- silabs,amplitude: Manually override output amplitude, see [2] for values
-+- silabs,synth-master: boolean. If present, this output is allowed to change the
-+	multisynth frequency dynamically.
-+- silabs,disable-state : clock output disable state, shall be
-+	0 = clock output is driven LOW when disabled
-+	1 = clock output is driven HIGH when disabled
-+
-+==Example==
-+
-+/* 48MHz reference crystal */
-+ref48: ref48M {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <48000000>;
-+};
-+
-+i2c-master-node {
-+	/* Programmable clock (for logic) */
-+	si5341: clock-generator@74 {
-+		reg = <0x74>;
-+		compatible = "silabs,si5341";
-+		#clock-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&ref48>;
-+		clock-names = "xtal";
-+
-+		silabs,pll-m-num = <14000>; /* PLL at 14.0 GHz */
-+		silabs,pll-m-den = <48>;
-+		silabs,reprogram; /* Chips are not programmed, always reset */
-+
-+		synthesizers {
-+			synth@2 {
-+				reg = <2>;
-+			};
-+		};
-+
-+		outputs {
-+			out@0 {
-+				reg = <0>;
-+				silabs,format = <1>; /* LVDS 3v3 */
-+				silabs,common-mode = <3>;
-+				silabs,amplitude = <3>;
-+				silabs,synth-master;
-+			};
-+
-+			/*
-+			 * Output 6 configuration:
-+			 *  LVDS 1v8
-+			 */
-+			out@6 {
-+				reg = <6>;
-+				silabs,format = <1>; /* LVDS 1v8 */
-+				silabs,common-mode = <13>;
-+				silabs,amplitude = <3>;
-+			};
-+
-+			/*
-+			 * Output 8 configuration:
-+			 *  HCSL 3v3
-+			 */
-+			out@8 {
-+				reg = <8>;
-+				silabs,format = <2>;
-+				silabs,common-mode = <11>;
-+				silabs,amplitude = <3>;
-+			};
-+		};
-+	};
-+};
-+
-+some-video-node {
-+	/* Standard clock bindings */
-+	clock-names = "pixel";
-+	clocks = <&si5341 0 7>; /* Output 7 */
-+
-+	/* Set output 7 to use syntesizer 3 as its parent */
-+	assigned-clocks = <&si5341 0 7>, <&si5341 1 3>;
-+	assigned-clock-parents = <&si5341 1 3>;
-+	/* Set output 7 to 148.5 MHz using a synth frequency of 594 MHz */
-+	assigned-clock-rates = <148500000>, <594000000>;
-+};
-+
-+some-audio-node {
-+	clock-names = "i2s-clk";
-+	clocks = <&si5341 0 0>;
-+	/*
-+	 * since output 0 is a synth-master, the synth will be automatically set
-+	 * to an appropriate frequency when the audio driver requests another
-+	 * frequency. We give control over synth 2 to this output here.
-+	 */
-+	assigned-clocks = <&si5341 0 0>;
-+	assigned-clock-parents = <&si5341 1 2>;
-+};
--- 
-2.17.1
+SGkgQ2xhdXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IENsYXVzIEgu
+IFN0b3ZnYWFyZCBbbWFpbHRvOmNzdEBwaGFzZW9uZS5jb21dDQo+U2VudDogVHVlc2RheSwgTWF5
+IDA3LCAyMDE5IDY6NDcgUE0NCj5UbzogQW51cmFnIEt1bWFyIFZ1bGlzaGEgPGFudXJhZ2t1QHhp
+bGlueC5jb20+OyBUaGluaCBOZ3V5ZW4NCj48VGhpbmguTmd1eWVuQHN5bm9wc3lzLmNvbT47IEdy
+ZWcgS3JvYWgtSGFydG1hbg0KPjxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IFJvYiBIZXJy
+aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj48bWFyay5ydXRsYW5kQGFy
+bS5jb20+OyBGZWxpcGUgQmFsYmkgPGJhbGJpQGtlcm5lbC5vcmc+DQo+Q2M6IGxpbnV4LXVzYkB2
+Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyB2LmFudXJhZ2t1bWFyQGdtYWlsLmNvbQ0KPlN1YmplY3Q6IFJl
+OiBbUEFUQ0ggMy8zXSB1c2I6IGR3YzM6IGdhZGdldDogQWRkIHN1cHBvcnQgZm9yIGRpc2FibGlu
+ZyBVMSBhbmQgVTINCj5lbnRyaWVzDQo+DQo+SGkgQW51cmFnDQo+DQo+PiA+ID4gUGxlYXNlIHVz
+ZSAiLSIgcmF0aGVyIHRoYW4gIl8iIGluIHRoZSBwcm9wZXJ0eSBuYW1lcy4NCj4+ID4gSSBoYXZl
+IHRob3VnaHQgYWJvdXQgdGhpcyBmZWF0dXJlIG92ZXIgdGhlIHdlZWtlbmQsIGFuZCB0aGluayB0
+aGUNCj4+ID4gbmFtaW5nIHNob3VsZCBiZQ0KPj4gPiBjaGFuZ2VkIHRvIHNvbWV0aGluZyBsaWtl
+ICJzbnBzLGJvcy11MS1leGl0LWxhdC1pbi11cyINCj4+ID4gYW5kIG5hbWVkIHRoZSBzYW1lIGlu
+IHRoZSBjb2RlLiBBbmQgdGhlbiBiZSB0aGUgdmFsdWUgdXNlZCBieSB0aGUNCj4+ID4gZ2V0X2Nv
+bmZpZ19wYXJhbXMuIEUuZy4gdGhlIGRldmljZS10cmVlIGlzIHVzZWQgdG8gc2V0IHRoZSB2YWx1
+ZXMNCj4+ID4gZGlyZWN0bHkgdXNlZCBmb3INCj4+ID4gYlV4ZGV2RXhpdExhdCBpbnN0ZWFkIG9m
+IG5hbWVkIHNvbWV0aGluZyBub3QgcmVsYXRlZCB0byBleGl0DQo+PiA+IGxhdGVuY3kuDQo+PiA+
+DQo+PiA+IFdpdGggdGhpcyB0aGUgbmFtZSBhbmQgZnVuY3Rpb24gaXMgYSAxIHRvIDEgbWF0Y2gs
+IGFuZCB5b3UgY2FuDQo+PiA+IGFtb25nIG90aGVycyBzZXQgaXQgdG8NCj4+ID4gMCBmb3Igb3B0
+YWluaW5nIHdoYXQgQW51cmFnIHdhbnRzLg0KPj4gPg0KPj4gWW91ciBzdWdnZXN0aW9uIGxvb2tz
+IGdvb2QgYnV0IHRoZSBwcm9ibGVtIGlzIHRoZSBVMSBhbmQgVTIgZXhpdA0KPj4gbGF0ZW5jaWVz
+IGFyZQ0KPj4gZml4ZWQgdmFsdWVzIGluIGR3YzMgY29udHJvbGxlcihjYW4gYmUgZm91bmQgaW4g
+SENTUEFSQU1TMykuIEFkZGluZw0KPj4gZGlmZmVyZW50DQo+PiBleGl0IGxhdGVuY2llcyBtYXkg
+bW9kaWZ5IHRoZSBVMVNFTC9VMlNFTCB2YWx1ZXMgc2VudCBmcm9tIHRoZSBob3N0DQo+PiBidXQg
+dGhlIHJlYWwNCj4+IGR3YzMgY29udHJvbGxlciBleGl0IGxhdGVuY2llcyBhcmUgbm90IGdldHRp
+bmcgY2hhbmdlZC4gQmVjYXVzZSBvZg0KPj4gdGhpcyByZWFzb24gSQ0KPj4gaGFkIG9wdGVkICJz
+bnBzLGRpc191MV9lbnRyeV9xdWlyayIsIHNvIHRoYXQgdGhlIFUxL1UyIGV4aXQgbGF0ZW5jeQ0K
+Pj4gdmFsdWVzDQo+PiByZXBvcnRlZCBpbiBCT1MgZGVzY3JpcHRvciBjYW4gYmUgZWl0aGVyIGJl
+IHplcm8gKHdoZW4gVTEvVTIgZW50cmllcw0KPj4gbmVlZHMgdG8gYmUNCj4+IGRpc2FibGVkKSBv
+ciBub24temVybyB2YWx1ZSAocmVwb3J0ZWQgaW4gSENTUEFSQU1TMykgd2hlbiBVMS9VMg0KPj4g
+c3RhdGVzIGFsbG93ZWQuDQo+PiBCYXNlZCBvbiB0aGlzIEkgdGhpbmsgaXQgaXMgYmV0dGVyIGlm
+IHdlIGNhbiBjb250aW51ZSB3aXRoICJzbnBzLGRpcy0NCj4+IHUxLWVudHJ5LXF1aXJrIg0KPj4g
+aW5zdGVhZCBvZiB0aGUgInNucHMsYm9zLXUxLWV4aXQtbGF0LWluLXVzIi4gUGxlYXNlwqDCoHBy
+b3ZpZGUgeW91cg0KPj4gb3BpbmlvbiBvbiB0aGlzLg0KPg0KPldpdGggdGhpcyBpbiBtaW5kIEkg
+Y2FuIHNlZSB3aHkgaGF2aW5nIGRpcmVjdCBjb250cm9sIG92ZXIgdGhlIGV4aXQNCj5sYXRlbmN5
+IHZhbHVlIG1pZ2h0IG5vdCBiZSBvcHRpbXVtIGluIG1hbnkgc2l0dWF0aW9ucy4NCj5SZWdhcmRp
+bmcgdGhlIG5hbWUsIEkgdGhpbmsgdGhlIHNucHMsZGlzX3UxX2VudHJ5X3F1aXJrIHdpbGwgYmUg
+YSBnb29kDQo+bmFtZSwgaWYgaXQgaXMgY29tYmluZWQgd2l0aCB0aGUgRENUTCBjb250cm9sLiBF
+LmcuIHJlbW92ZSB0aGUgY29uZmlnZnMNCj5wYXJ0IG9mIG15IHBhdGNoLCBhbmQgbWVyZ2UgdGhl
+IERDVEwgY29udHJvbCB3aXRoIHlvdXIgcGF0Y2hlcy4NCj5JZiB0aGUgZHQtYmluZGluZyBzdGls
+bCBvbmx5IGNvbnRyb2wgdGhlIGJvcyBkZXNjcmlwdG9yIEkgdGhpbmsgYQ0KPmJldHRlciBuYW1l
+IGlzIHNvbWV0aGluZyB3aXRoIHUxX2ZvcmNlX2V4aXN0X2xhdF8wIG9yIHNpbWlsYXIuDQo+DQo+
+SSBkb24ndCB0aGluayBzZXR0aW5nIGJvcyB0byAwIG9yIGNvbnRyb2xsaW5nIERDVEwgd2lsbCBi
+ZSB1c2VkDQo+aW5kaXZpZHVhbCwgc28gdG8ga2VlcCB0aGluZ3Mgc2ltcGxlIEkgd2lsbCB2b3Rl
+IGZvcg0KPnNucHMsZGlzX3UxX2VudHJ5X3F1aXJrLCBhbmQgdGhlbiBqdXN0IGNvbnRyb2wgYWxs
+IGVsZW1lbnRzIHJlZ2FyZGluZw0KPmRpc2FibGluZyBVMS9VMiBmcm9tIHRoaXMgZHQtYmluZGlu
+Zy4NCj4NCj5QbGVhc2UgY3V0IHdoYXQgeW91ciBuZWVkIGZyb20gbXkgcGF0Y2guDQo+DQoNClRo
+YW5rcyBmb3IgcHJvdmlkaW5nIHlvdXIgaW5wdXQuIE1lcmdpbmcgeW91ciBzb2x1dGlvbiBhbmQg
+bWluZSAgd291bGQgYmUNCmdvb2QuIEkgd2lsbCBtb2RpZnkgdGhlIHBhdGNoIHRvIGluY2x1ZGUg
+eW91ciBjaGFuZ2VzIGFzIHdlbGwgYW5kIHNlbmQgaXQgdG8geW91Lg0KT25jZSB5b3UgYXJlIG9r
+YXkgd2l0aCB0aGUgY2hhbmdlcywgd2UgY2FuIHBvc3QgdGhlIHBhdGNoIHRvIG1haW5saW5lLg0K
+DQpUaGFua3MsDQpBbnVyYWcgS3VtYXIgVnVsaXNoYSANCg==
