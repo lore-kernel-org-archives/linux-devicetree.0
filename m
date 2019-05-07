@@ -1,76 +1,52 @@
-From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
- U2 entries
-Date: Tue, 7 May 2019 14:09:06 +0000
-Message-ID: <BYAPR02MB55915E6F754DC21CE0F6ADAAA7310@BYAPR02MB5591.namprd02.prod.outlook.com>
-References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
-         <1557176302.18203.20.camel@phaseone.com>
-         <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
- <1557235048.114189.22.camel@phaseone.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [v2 PATCH] dt-binding: usb: add usb-role-switch property
+Date: Tue, 7 May 2019 17:13:05 +0300
+Message-ID: <20190507141305.GA19816@kuha.fi.intel.com>
+References: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557235048.114189.22.camel@phaseone.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Claus H. Stovgaard" <cst@phaseone.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2xhdXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IENsYXVzIEgu
-IFN0b3ZnYWFyZCBbbWFpbHRvOmNzdEBwaGFzZW9uZS5jb21dDQo+U2VudDogVHVlc2RheSwgTWF5
-IDA3LCAyMDE5IDY6NDcgUE0NCj5UbzogQW51cmFnIEt1bWFyIFZ1bGlzaGEgPGFudXJhZ2t1QHhp
-bGlueC5jb20+OyBUaGluaCBOZ3V5ZW4NCj48VGhpbmguTmd1eWVuQHN5bm9wc3lzLmNvbT47IEdy
-ZWcgS3JvYWgtSGFydG1hbg0KPjxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IFJvYiBIZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj48bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBGZWxpcGUgQmFsYmkgPGJhbGJpQGtlcm5lbC5vcmc+DQo+Q2M6IGxpbnV4LXVzYkB2
-Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyB2LmFudXJhZ2t1bWFyQGdtYWlsLmNvbQ0KPlN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMy8zXSB1c2I6IGR3YzM6IGdhZGdldDogQWRkIHN1cHBvcnQgZm9yIGRpc2FibGlu
-ZyBVMSBhbmQgVTINCj5lbnRyaWVzDQo+DQo+SGkgQW51cmFnDQo+DQo+PiA+ID4gUGxlYXNlIHVz
-ZSAiLSIgcmF0aGVyIHRoYW4gIl8iIGluIHRoZSBwcm9wZXJ0eSBuYW1lcy4NCj4+ID4gSSBoYXZl
-IHRob3VnaHQgYWJvdXQgdGhpcyBmZWF0dXJlIG92ZXIgdGhlIHdlZWtlbmQsIGFuZCB0aGluayB0
-aGUNCj4+ID4gbmFtaW5nIHNob3VsZCBiZQ0KPj4gPiBjaGFuZ2VkIHRvIHNvbWV0aGluZyBsaWtl
-ICJzbnBzLGJvcy11MS1leGl0LWxhdC1pbi11cyINCj4+ID4gYW5kIG5hbWVkIHRoZSBzYW1lIGlu
-IHRoZSBjb2RlLiBBbmQgdGhlbiBiZSB0aGUgdmFsdWUgdXNlZCBieSB0aGUNCj4+ID4gZ2V0X2Nv
-bmZpZ19wYXJhbXMuIEUuZy4gdGhlIGRldmljZS10cmVlIGlzIHVzZWQgdG8gc2V0IHRoZSB2YWx1
-ZXMNCj4+ID4gZGlyZWN0bHkgdXNlZCBmb3INCj4+ID4gYlV4ZGV2RXhpdExhdCBpbnN0ZWFkIG9m
-IG5hbWVkIHNvbWV0aGluZyBub3QgcmVsYXRlZCB0byBleGl0DQo+PiA+IGxhdGVuY3kuDQo+PiA+
-DQo+PiA+IFdpdGggdGhpcyB0aGUgbmFtZSBhbmQgZnVuY3Rpb24gaXMgYSAxIHRvIDEgbWF0Y2gs
-IGFuZCB5b3UgY2FuDQo+PiA+IGFtb25nIG90aGVycyBzZXQgaXQgdG8NCj4+ID4gMCBmb3Igb3B0
-YWluaW5nIHdoYXQgQW51cmFnIHdhbnRzLg0KPj4gPg0KPj4gWW91ciBzdWdnZXN0aW9uIGxvb2tz
-IGdvb2QgYnV0IHRoZSBwcm9ibGVtIGlzIHRoZSBVMSBhbmQgVTIgZXhpdA0KPj4gbGF0ZW5jaWVz
-IGFyZQ0KPj4gZml4ZWQgdmFsdWVzIGluIGR3YzMgY29udHJvbGxlcihjYW4gYmUgZm91bmQgaW4g
-SENTUEFSQU1TMykuIEFkZGluZw0KPj4gZGlmZmVyZW50DQo+PiBleGl0IGxhdGVuY2llcyBtYXkg
-bW9kaWZ5IHRoZSBVMVNFTC9VMlNFTCB2YWx1ZXMgc2VudCBmcm9tIHRoZSBob3N0DQo+PiBidXQg
-dGhlIHJlYWwNCj4+IGR3YzMgY29udHJvbGxlciBleGl0IGxhdGVuY2llcyBhcmUgbm90IGdldHRp
-bmcgY2hhbmdlZC4gQmVjYXVzZSBvZg0KPj4gdGhpcyByZWFzb24gSQ0KPj4gaGFkIG9wdGVkICJz
-bnBzLGRpc191MV9lbnRyeV9xdWlyayIsIHNvIHRoYXQgdGhlIFUxL1UyIGV4aXQgbGF0ZW5jeQ0K
-Pj4gdmFsdWVzDQo+PiByZXBvcnRlZCBpbiBCT1MgZGVzY3JpcHRvciBjYW4gYmUgZWl0aGVyIGJl
-IHplcm8gKHdoZW4gVTEvVTIgZW50cmllcw0KPj4gbmVlZHMgdG8gYmUNCj4+IGRpc2FibGVkKSBv
-ciBub24temVybyB2YWx1ZSAocmVwb3J0ZWQgaW4gSENTUEFSQU1TMykgd2hlbiBVMS9VMg0KPj4g
-c3RhdGVzIGFsbG93ZWQuDQo+PiBCYXNlZCBvbiB0aGlzIEkgdGhpbmsgaXQgaXMgYmV0dGVyIGlm
-IHdlIGNhbiBjb250aW51ZSB3aXRoICJzbnBzLGRpcy0NCj4+IHUxLWVudHJ5LXF1aXJrIg0KPj4g
-aW5zdGVhZCBvZiB0aGUgInNucHMsYm9zLXUxLWV4aXQtbGF0LWluLXVzIi4gUGxlYXNlwqDCoHBy
-b3ZpZGUgeW91cg0KPj4gb3BpbmlvbiBvbiB0aGlzLg0KPg0KPldpdGggdGhpcyBpbiBtaW5kIEkg
-Y2FuIHNlZSB3aHkgaGF2aW5nIGRpcmVjdCBjb250cm9sIG92ZXIgdGhlIGV4aXQNCj5sYXRlbmN5
-IHZhbHVlIG1pZ2h0IG5vdCBiZSBvcHRpbXVtIGluIG1hbnkgc2l0dWF0aW9ucy4NCj5SZWdhcmRp
-bmcgdGhlIG5hbWUsIEkgdGhpbmsgdGhlIHNucHMsZGlzX3UxX2VudHJ5X3F1aXJrIHdpbGwgYmUg
-YSBnb29kDQo+bmFtZSwgaWYgaXQgaXMgY29tYmluZWQgd2l0aCB0aGUgRENUTCBjb250cm9sLiBF
-LmcuIHJlbW92ZSB0aGUgY29uZmlnZnMNCj5wYXJ0IG9mIG15IHBhdGNoLCBhbmQgbWVyZ2UgdGhl
-IERDVEwgY29udHJvbCB3aXRoIHlvdXIgcGF0Y2hlcy4NCj5JZiB0aGUgZHQtYmluZGluZyBzdGls
-bCBvbmx5IGNvbnRyb2wgdGhlIGJvcyBkZXNjcmlwdG9yIEkgdGhpbmsgYQ0KPmJldHRlciBuYW1l
-IGlzIHNvbWV0aGluZyB3aXRoIHUxX2ZvcmNlX2V4aXN0X2xhdF8wIG9yIHNpbWlsYXIuDQo+DQo+
-SSBkb24ndCB0aGluayBzZXR0aW5nIGJvcyB0byAwIG9yIGNvbnRyb2xsaW5nIERDVEwgd2lsbCBi
-ZSB1c2VkDQo+aW5kaXZpZHVhbCwgc28gdG8ga2VlcCB0aGluZ3Mgc2ltcGxlIEkgd2lsbCB2b3Rl
-IGZvcg0KPnNucHMsZGlzX3UxX2VudHJ5X3F1aXJrLCBhbmQgdGhlbiBqdXN0IGNvbnRyb2wgYWxs
-IGVsZW1lbnRzIHJlZ2FyZGluZw0KPmRpc2FibGluZyBVMS9VMiBmcm9tIHRoaXMgZHQtYmluZGlu
-Zy4NCj4NCj5QbGVhc2UgY3V0IHdoYXQgeW91ciBuZWVkIGZyb20gbXkgcGF0Y2guDQo+DQoNClRo
-YW5rcyBmb3IgcHJvdmlkaW5nIHlvdXIgaW5wdXQuIE1lcmdpbmcgeW91ciBzb2x1dGlvbiBhbmQg
-bWluZSAgd291bGQgYmUNCmdvb2QuIEkgd2lsbCBtb2RpZnkgdGhlIHBhdGNoIHRvIGluY2x1ZGUg
-eW91ciBjaGFuZ2VzIGFzIHdlbGwgYW5kIHNlbmQgaXQgdG8geW91Lg0KT25jZSB5b3UgYXJlIG9r
-YXkgd2l0aCB0aGUgY2hhbmdlcywgd2UgY2FuIHBvc3QgdGhlIHBhdGNoIHRvIG1haW5saW5lLg0K
-DQpUaGFua3MsDQpBbnVyYWcgS3VtYXIgVnVsaXNoYSANCg==
+On Tue, May 07, 2019 at 10:22:58AM +0800, Chunfeng Yun wrote:
+> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> index 0a74ab8dfdc2..f5a6ad053ecc 100644
+> --- a/Documentation/devicetree/bindings/usb/generic.txt
+> +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> @@ -30,6 +30,11 @@ Optional properties:
+>  			optional for OTG device.
+>   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+>  			optional for OTG device.
+> + - usb-role-switch: tells Dual-Role USB controllers we want to handle the role
+> +			switch between host and device according to the state
+> +			detected by the USB connector, typically for Type-C,
+> +			Type-B(micro).
+> +			see connector/usb-connector.txt.
+
+That does not look correct to me. Firstly, USB role switches are not
+always dual-role USB controllers. Secondly, stating what determines
+the role irrelevant IMO.
+
+Since this is a boolean property, the description for it should simply
+explain what does it tell about the capabilities of the device that
+has it. The description should not make any assumptions about the
+users of the property, and since the property is a "generic" USB
+property, I'm not sure it should make any assumptions about the type
+of the device that has the property either. Also, I would really like
+the description to show the type of the property.
+
+Why not just say something like this:
+
+"Boolean property informing that the device is capable of assigning
+the USB data role (USB host or USB device) for a given USB connector."
+
+
+thanks,
+
+-- 
+heikki
