@@ -1,78 +1,67 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
- description
-Date: Tue, 7 May 2019 11:05:33 +0200
-Message-ID: <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
-        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
-        <20190430223629.GA22317@bogus>
-        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
-        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
-        <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
+From: <orito.takao@socionext.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD
+ controller
+Date: Tue, 7 May 2019 09:14:47 +0000
+Message-ID: <20190507181439.9D74.F0D17A80@socionext.com>
+References: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
+ <CAPDyKFouv1MDJXwDryqhC=X4mLycoAigB3x6Xee09U+QNGTa-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
-Content-Language: en-US
+In-Reply-To: <CAPDyKFouv1MDJXwDryqhC=X4mLycoAigB3x6Xee09U+QNGTa-Q@mail.gmail.com>
+Content-Language: ja-JP
+Content-ID: <4B9D2BC15922934897589C9947C4EF2C@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
+To: ulf.hansson@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 5/6/19 12:29 PM, Lukasz Luba wrote:
-> Hi Rob,
-> 
-> On 5/2/19 10:24 PM, Rob Herring wrote:
->> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba 
->> <l.luba@partner.samsung.com> wrote:
->>>
->>> Hi Rob,
->>>
->>> On 5/1/19 12:36 AM, Rob Herring wrote:
->>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
->>>>> Extend the documenation by events description with new 
->>>>> 'event-data-type'
->>>>> field. Add example how the event might be defined in DT.
->>>>
->>>> Why do we need event types in DT? We don't do this for other h/w 
->>>> such as
->>>> ARM PMU.
->>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
->>> arch/arm/kernel/perf_event_v7.c
->>> and are seen from perf. They are different type and for different
->>> purpose. The Ecynos PPMU events are not seen in perf, they are
->>> for internal monitoring and must not be reset by other actors like perf.
->>> They are used by the 'bus drivers' to made some heuristics and tune the
->>> internal settings, like frequency.
->>>
->>> Chanwoo has written PPMU driver which relies on DT definition.
->>> The DT events are used by other DT devices by phandle.
->>
->> How is that done? I don't see anything in the binding for that.
-> Here are the DT devices and how they are pinned together:
-> - declared devfreq events:
-> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi 
-> 
-> - devfreq events pinned to the bus device:
-> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107 
-> 
-> - the bus device itself:
-> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457 
-> 
-> 
-> Regards,
-> Lukasz
-> 
->>
->> Rob
->>
->>
-Can I send the next version of the patch set, which has Chanwoo's
-suggestions, or do you have some objections to this PPMU entries?
-
-Regards,
-Lukasz
+DQpUaGFuayB5b3UgZm9yIHJldmlld2luZyBteSBwYXRjaGVzLg0KU29ycnkgZm9yIG15IGxhdGUg
+cmVwbHkuIEphcGFuIHdhcyBpbiBTcHJpbmcgVmFjYXRpb24uDQoNCj4gT24gRnJpLCAyNiBBcHIg
+MjAxOSBhdCAwNDowNCwgVGFrYW8gT3JpdG8gPG9yaXRvLnRha2FvQHNvY2lvbmV4dC5jb20+IHdy
+b3RlOg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogVGFrYW8gT3JpdG8gPG9yaXRvLnRha2FvQHNv
+Y2lvbmV4dC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9z
+ZGhjaS1taWxiZWF1dC50eHQgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1taWxiZWF1dC50eHQN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bW1jL3NkaGNpLW1pbGJlYXV0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBp
+bmRleCAwMDAwMDAwLi43MDA4NDYyDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0DQo+ID4g
+QEAgLTAsMCArMSwzNSBAQA0KPiA+ICsqIFNPQ0lPTkVYVCBTREhDSSBjb250cm9sbGVyDQo+ID4g
+Kw0KPiA+ICtUaGlzIGZpbGUgZG9jdW1lbnRzIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhlIGNvcmUg
+cHJvcGVydGllcyBpbiBtbWMudHh0DQo+ID4gK2FuZCB0aGUgcHJvcGVydGllcyB1c2VkIGJ5IHRo
+ZSBzZGhjaV9taWxiZWF1dCBkcml2ZXIuDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
+Og0KPiA+ICstIGNvbXBhdGlibGU6ICJzb2Npb25leHQsbWlsYmVhdXQtbTEwdi1zZGhjaS0zLjAi
+DQo+ID4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50cnkgaW4g
+Y2xvY2stbmFtZXMuIEl0IGlzIGENCj4gPiArICBsaXN0IG9mIHBoYW5kbGVzIGFuZCBjbG9jay1z
+cGVjaWZpZXIgcGFpcnMuDQo+ID4gKyAgU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQg
+Zm9yIGRldGFpbHMuDQo+ID4gKy0gY2xvY2stbmFtZXM6IFNob3VsZCBjb250YWluIHRoZSBmb2xs
+b3dpbmcgdHdvIGVudHJpZXM6DQo+ID4gKyAgICAgICAiaWZhY2UiIC0gY2xvY2sgdXNlZCBmb3Ig
+c2RoY2kgaW50ZXJmYWNlDQo+ID4gKyAgICAgICAiY29yZSIgIC0gY29yZSBjbG9jayBmb3Igc2Ro
+Y2kgY29udHJvbGxlcg0KPiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSB2
+cW1tYy1zdXBwbHk6IHBoYW5kbGUgdG8gdGhlIHJlZ3VsYXRvciBkZXZpY2UgdHJlZSBub2RlLCBt
+ZW50aW9uZWQNCj4gPiArICBhcyB0aGUgVkNDUS9WRERfSU8gc3VwcGx5IGluIHRoZSBlTU1DL1NE
+IHNwZWNzLg0KPiA+ICstIGZ1aml0c3UsY21kLWRhdC1kZWxheS1zZWxlY3Q6IGJvb2xlYW4gcHJv
+cGVydHkgaW5kaWNhdGluZyB0aGF0IHRoaXMgaG9zdA0KPiA+ICsgIHJlcXVpcmVzIHRoZSBDTURf
+REFUX0RFTEFZIGNvbnRyb2wgdG8gYmUgZW5hYmxlZC4NCj4gPiArLSBzbmksbW1jLXBvd2VyLWdw
+aW86IHNldCBwcm9wZXJ0eSBpbmRpY2F0aW5nIHRoYXQgcG93ZXIgb24gb3Igb2ZmIG5lZWRzDQo+
+ID4gKyAgY29udHJvbCBvZiBncGlvcy4NCj4gDQo+IFBsZWFzZSB1c2UgYSB2bW1jLXN1cHBseSBp
+bnN0ZWFkIG9mICJwb3dlci1ncGlvIiAod2hpY2ggbWVhbnMgeW91IG5lZWQNCj4gdG8gbW9kZWwg
+dGhpcyBhcyBhIGZpeGVkIEdQSU8gcmVndWxhdG9yKS4NCg0KT0ssIEkgd2lsbCBzdHVkeSBhYm91
+dCByZWd1bGF0b3Ivdm1tYy1zdXBwbHkgYW5kIGNoYW5nZSB0byB1c2UgaXQuDQoNClRoYW5rcw0K
+T3JpdG8NCg0KPiANCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKyAgICAgICBzZGhjaTM6IG1t
+Y0AxYjAxMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic29jaW9uZXh0
+LG1pbGJlYXV0LW0xMHYtc2RoY2ktMy4wIjsNCj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4
+MWIwMTAwMDAgMHgxMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCAy
+NjUgMHg0PjsNCj4gPiArICAgICAgICAgICAgICAgdm9sdGFnZS1yYW5nZXMgPSA8MzMwMCAzMzAw
+PjsNCj4gPiArICAgICAgICAgICAgICAgYnVzLXdpZHRoID0gPDQ+Ow0KPiA+ICsgICAgICAgICAg
+ICAgICBjbG9ja3MgPSA8JmNsayA3PiwgPCZhaGJfY2xrPjsNCj4gPiArICAgICAgICAgICAgICAg
+Y2xvY2stbmFtZXMgPSAiY29yZSIsICJpZmFjZSI7DQo+ID4gKyAgICAgICAgICAgICAgIGNhcC1z
+ZGlvLWlycTsNCj4gPiArICAgICAgICAgICAgICAgc25pLG1tYy1wb3dlci1ncGlvID0gPCZwaW5j
+dHJsIDUzIEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGZ1
+aml0c3UsY21kLWRhdC1kZWxheS1zZWxlY3Q7DQo+ID4gKyAgICAgICB9Ow0KPiA+IC0tDQo+ID4g
+MS45LjENCj4gPg0KPiA+DQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KDQotLSANClRha2Fv
+IE9yaXRvIDxvcml0by50YWthb0Bzb2Npb25leHQuY29tPg0K
