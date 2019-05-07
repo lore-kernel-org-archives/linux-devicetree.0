@@ -1,110 +1,62 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Date: Tue, 7 May 2019 12:36:14 +0530
-Message-ID: <20190507070614.GF16052@vkoul-mobl>
-References: <20190506193115.20909-1-niklas.cassel@linaro.org>
- <20190507053547.GE16052@vkoul-mobl>
- <20190507065555.GB2085@tuxbook-pro>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: allwinner: h6: orangepi-one-plus:
+ Add Ethernet support
+Date: Tue, 7 May 2019 09:06:17 +0200
+Message-ID: <20190507070617.h7loqiqvznqvvprq@flea>
+References: <20190503115928.27662-1-jagan@amarulasolutions.com>
+ <20190503144651.ttqfha656dykqjzo@flea>
+ <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7mpr5huweraqfrmv"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6G4YTTAKGQE2OJO6MI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190507065555.GB2085@tuxbook-pro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, amit.kucheria@linaro.org, jorge.ramirez-ortiz@linaro.org, lina.iyer@linaro.org, ulf.hansson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06-05-19, 23:55, Bjorn Andersson wrote:
-> On Mon 06 May 22:35 PDT 2019, Vinod Koul wrote:
-> 
-> > On 06-05-19, 21:31, Niklas Cassel wrote:
-> > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > > 
-> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > @@ -31,6 +31,7 @@
-> > >  			reg = <0x100>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		CPU1: cpu@101 {
-> > > @@ -39,6 +40,7 @@
-> > >  			reg = <0x101>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		CPU2: cpu@102 {
-> > > @@ -47,6 +49,7 @@
-> > >  			reg = <0x102>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		CPU3: cpu@103 {
-> > > @@ -55,12 +58,24 @@
-> > >  			reg = <0x103>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		L2_0: l2-cache {
-> > >  			compatible = "cache";
-> > >  			cache-level = <2>;
-> > >  		};
-> > > +
-> > > +		idle-states {
-> > 
-> > Since we are trying to sort the file per address and
-> > alphabetically, it would be great if this can be moved before l2-cache
-> > :)
-> > 
-> 
-> Picked up, with the order adjusted.
-> 
-> > Other than that this lgtm
-> >  
-> 
-> I presume that lgtm == Reviewed-by...
 
-yes :-) and formally here as well..
+--7mpr5huweraqfrmv
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+On Mon, May 06, 2019 at 03:03:15PM +0530, Jagan Teki wrote:
+> On Fri, May 3, 2019 at 8:16 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Fri, May 03, 2019 at 05:29:28PM +0530, Jagan Teki wrote:
+> > > Add Ethernet support for orangepi-one-plus board,
+> > >
+> > > - Ethernet port connected via RTL8211E PHY
+> > > - PHY suppiled with
+> > >   GMAC-2V5, fixed regulator with GMAC_EN pin via PD6
+> > >   GMAC-3V, which is supplied by VCC3V3-MAC via aldo2
+> > > - RGMII-RESET pin connected via PD14
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >
+> > Your commit log should be improved. We can get those informations from
+> > the patch itself...
+>
+> Thought it was a clear commit log :)  will update anyway.
 
-> 
-> Thanks,
-> Bjorn
-> 
-> > > +			CPU_PC: pc {
-> > > +				compatible = "arm,idle-state";
-> > > +				arm,psci-suspend-param = <0x40000003>;
-> > > +				entry-latency-us = <125>;
-> > > +				exit-latency-us = <180>;
-> > > +				min-residency-us = <595>;
-> > > +				local-timer-stop;
-> > > +			};
-> > > +		};
-> > >  	};
-> > >  
-> > >  	firmware {
-> > > -- 
-> > > 2.21.0
-> > 
-> > -- 
-> > ~Vinod
+Well, yes and no. The commit log is clear indeed, but it doesn't
+provide what it's supposed to provide.
 
--- 
-~Vinod
+You shouldn't put *what* is being done by the patch. That's pretty
+easy to figure out by reading the patch itself. You have to explain
+why and how you did it, which is lacking in that case.
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--7mpr5huweraqfrmv--
