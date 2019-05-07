@@ -1,29 +1,73 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 v2 0/3] Extend dt bindings to support I2C on sifive
- devices and a fix broken IRQ in polling mode.
-Date: Tue, 7 May 2019 17:27:25 +0200
-Message-ID: <20190507152725.GE25013@lunn.ch>
-References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700 Adapt
+Date: Tue,  7 May 2019 17:27:12 +0200
+Message-ID: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, palmer@sifive.com, paul.walmsley@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> The information transmitted is intended only for the person or entity to 
-> which it is addressed and may contain confidential and/or privileged 
-> material. If you are not the intended recipient of this message please do 
-> not read, copy, use or disclose this communication and notify the sender 
-> immediately. It should be noted that any review, retransmission, 
-> dissemination or other use of, or taking action or reliance upon, this 
-> information by persons or entities other than the intended recipient is 
-> prohibited.
-
-You need to remove this. It is nonsense anyway. You are mailing to a
-public list....
-
-       Andrew
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBcm1hZGV1cyBTVDA3MDAgQWRhcHQuIEl0
+IGNvbWVzIHdpdGggYQpTYW50ZWsgU1QwNzAwSTVZLVJCU0xXIDcuMCIgV1ZHQSAoODAweDQ4MCkg
+VEZUIGFuZCBhbiBhZGFwdGVyIGJvYXJkIHNvCnRoYXQgaXQgY2FuIGJlIGNvbm5lY3RlZCBvbiB0
+aGUgVEZUIGhlYWRlciBvZiBBcm1hZGV1cyBEZXYgYm9hcmRzLgoKQ2M6IHN0YWJsZUB2Z2VyLmtl
+cm5lbC5vcmcgIyB2NC4xOQpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz4KU2lnbmVkLW9mZi1ieTogU8OpYmFzdGllbiBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5z
+a2lAYXJtYWRldXMuY29tPgotLS0KIC4uLi9kaXNwbGF5L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1h
+ZGFwdC50eHQgICB8ICA5ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jICAgICAgICAgIHwgMjkgKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAz
+OCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJtYWRldXMsc3QwNzAwLWFkYXB0LnR4dAoKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L2FybWFkZXVzLHN0MDcwMC1hZGFwdC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAtYWRhcHQudHh0Cm5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYTMwZDYzZGIzYzhmCi0tLSAvZGV2L251bGwK
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJt
+YWRldXMsc3QwNzAwLWFkYXB0LnR4dApAQCAtMCwwICsxLDkgQEAKK0FybWFkZXVzIFNUMDcwMCBB
+ZGFwdC4gQSBTYW50ZWsgU1QwNzAwSTVZLVJCU0xXIDcuMCIgV1ZHQSAoODAweDQ4MCkgVEZUIHdp
+dGgKK2FuIGFkYXB0ZXIgYm9hcmQuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
+bGU6ICJhcm1hZGV1cyxzdDA3MDAtYWRhcHQiCistIHBvd2VyLXN1cHBseTogc2VlIHBhbmVsLWNv
+bW1vbi50eHQKKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gYmFja2xpZ2h0OiBzZWUgcGFuZWwt
+Y29tbW9uLnR4dApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDllODIxOGY2
+YTNmMi4uNDVjYThkMTBiNjZmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
+ZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBA
+IC00NDYsNiArNDQ2LDMyIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBhbXBpcmVf
+YW04MDA0ODByM3RtcXdhMWggPSB7CiAJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2
+Nl8xWDE4LAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBzYW50ZWtf
+c3QwNzAwaTV5X3Jic2x3X2ZfdGltaW5nID0geworCS5waXhlbGNsb2NrID0geyAyNjQwMDAwMCwg
+MzMzMDAwMDAsIDQ2ODAwMDAwIH0sCisJLmhhY3RpdmUgPSB7IDgwMCwgODAwLCA4MDAgfSwKKwku
+aGZyb250X3BvcmNoID0geyAxNiwgMjEwLCAzNTQgfSwKKwkuaGJhY2tfcG9yY2ggPSB7IDQ1LCAz
+NiwgNiB9LAorCS5oc3luY19sZW4gPSB7IDEsIDEwLCA0MCB9LAorCS52YWN0aXZlID0geyA0ODAs
+IDQ4MCwgNDgwIH0sCisJLnZmcm9udF9wb3JjaCA9IHsgNywgMjIsIDE0NyB9LAorCS52YmFja19w
+b3JjaCA9IHsgMjIsIDEzLCAzIH0sCisJLnZzeW5jX2xlbiA9IHsgMSwgMTAsIDIwIH0sCisJLmZs
+YWdzID0gRElTUExBWV9GTEFHU19IU1lOQ19MT1cgfCBESVNQTEFZX0ZMQUdTX1ZTWU5DX0xPVyB8
+CisJCURJU1BMQVlfRkxBR1NfREVfSElHSCB8IERJU1BMQVlfRkxBR1NfUElYREFUQV9QT1NFREdF
+Cit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXJtYWRldXNfc3QwNzAwX2Fk
+YXB0ID0geworCS50aW1pbmdzID0gJnNhbnRla19zdDA3MDBpNXlfcmJzbHdfZl90aW1pbmcsCisJ
+Lm51bV90aW1pbmdzID0gMSwKKwkuYnBjID0gNiwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMTU0
+LAorCQkuaGVpZ2h0ID0gODYsCisJfSwKKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdC
+NjY2XzFYMTgsCisJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19ERV9ISUdIIHwgRFJNX0JVU19G
+TEFHX1BJWERBVEFfUE9TRURHRSwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
+YXlfbW9kZSBhdW9fYjEwMWF3MDNfbW9kZSA9IHsKIAkuY2xvY2sgPSA1MTQ1MCwKIAkuaGRpc3Bs
+YXkgPSAxMDI0LApAQCAtMjU0NCw2ICsyNTcwLDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAl9LCB7CiAJCS5jb21wYXRpYmxlID0g
+ImFybSxydHNtLWRpc3BsYXkiLAogCQkuZGF0YSA9ICZhcm1fcnRzbSwKKwl9LCB7CisJCS5jb21w
+YXRpYmxlID0gImFybWFkZXVzLHN0MDcwMC1hZGFwdCIsCisJCS5kYXRhID0gJmFybWFkZXVzX3N0
+MDcwMF9hZGFwdCwKIAl9LCB7CiAJCS5jb21wYXRpYmxlID0gImF1byxiMTAxYXcwMyIsCiAJCS5k
+YXRhID0gJmF1b19iMTAxYXcwMywKLS0gCjIuMTkuMgoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
