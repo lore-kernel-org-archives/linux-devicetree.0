@@ -1,32 +1,55 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v3 6/6] pinctrl: meson: g12a: add DS bank value
-Date: Tue, 7 May 2019 20:09:44 +0200
-Message-ID: <CAFBinCB6beHBKLcmXa-gwiyUrAD1z4tD92RDs9Rnjp=hArKbHw@mail.gmail.com>
-References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-7-glaroque@baylibre.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v10 2/2] phy: Add driver for mixel mipi dphy found on
+ NXP's i.MX8 SoCs
+Date: Tue, 7 May 2019 20:12:23 +0200
+Message-ID: <20190507181223.GC15122@ravnborg.org>
+References: <cover.1557215047.git.agx@sigxcpu.org>
+ <299e28042e0a24c0cde593873bdfb15e18187a92.1557215047.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507115726.23714-7-glaroque@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <299e28042e0a24c0cde593873bdfb15e18187a92.1557215047.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> add drive-strength bank register and bit value for G12A SoC
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Hi Guido.
 
-[...]
-> +       /* name  first  last  irq  pullen  pull  dir  out  in  ds */
-> +       BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
-> +               4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
-> +       BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
-> +               3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
-a note for myself (because I keep forgetting this)
-"5, 0" stands for:
-- the register PAD_DS_REG5A as seen in the public S922X datasheet from
-Hardkernel on page 224
-- starting at bit 0
+Looks good now, stumbled upon a few details I missed in last round.
+With these considered / fixed you can add my
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
+	Sam
+
+> +#define CM(x)	(				\
+> +		((x) <	32)?0xe0|((x)-16) :	\
+> +		((x) <	64)?0xc0|((x)-32) :	\
+> +		((x) < 128)?0x80|((x)-64) :	\
+> +		((x) - 128))
+> +#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
+> +#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
+
+A few spaces around the operators may help readability a little.
+
+> +static int phy_write(struct phy *phy, u32 value, unsigned int reg)
+> +{
+> +	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = regmap_write(priv->regmap, reg, value);
+> +	if (ret < 0)
+> +		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
+
+I have recently learned that one has to remember trailign "\n"- please
+add.
+Check all other dev_xxx as I noticed the newline is missing in a few
+more places.
+
+> +
+> +	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
+                                                   ^
+
+There was another of the symbols my terminal cannot show.
