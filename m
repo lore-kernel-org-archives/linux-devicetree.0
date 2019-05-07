@@ -1,31 +1,36 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH RE-RESEND 2/2] ARM: dts: opos6uldev: use OF graph to
- describe the display
-Date: Tue, 7 May 2019 12:34:48 -0300
-Message-ID: <CAOMZO5Ca7tZAb0vO8ZM1oKR2UXNV_KqcJ7oxeiV3kkb7=2jQBA@mail.gmail.com>
-References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com> <20190507152713.27494-2-sebastien.szymanski@armadeus.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: [PATCH net] dt-bindings: net: Fix a typo in the phy-mode list for ethernet bindings
+Date: Tue,  7 May 2019 17:35:55 +0200
+Message-ID: <20190507153555.18545-1-maxime.chevallier@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190507152713.27494-2-sebastien.szymanski@armadeus.com>
-Sender: stable-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi S=C3=A9bastien,
+The phy_mode "2000base-x" is actually supposed to be "1000base-x", even
+though the commit title of the original patch says otherwise.
 
-On Tue, May 7, 2019 at 12:27 PM S=C3=A9bastien Szymanski
-<sebastien.szymanski@armadeus.com> wrote:
->
-> To make use of the new eLCDIF DRM driver OF graph description is
-> required. Describe the display using OF graph nodes.
->
-> Cc: stable@vger.kernel.org # v4.19
+Fixes: 55601a880690 ("net: phy: Add 2000base-x, 2500base-x and rxaui modes")
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ Documentation/devicetree/bindings/net/ethernet.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The Cc to stable applies to bugfixes, which is not the case here.
-
-With such tag removed:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index a68621580584..d45b5b56fa39 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -36,7 +36,7 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
+   * "smii"
+   * "xgmii"
+   * "trgmii"
+-  * "2000base-x",
++  * "1000base-x",
+   * "2500base-x",
+   * "rxaui"
+   * "xaui"
+-- 
+2.20.1
