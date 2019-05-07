@@ -1,31 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add i.mx6ul/6sx
-  compatible name
-Date: Tue, 7 May 2019 11:56:01 -0500
-Message-ID: <20190507165601.GA17194@bogus>
-References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
- <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
+Subject: Re: [PATCH v7 04/13] dt-bindings: ddr: rename lpddr2 directory
+Date: Tue, 7 May 2019 11:57:03 -0500
+Message-ID: <20190507165703.GA20137@bogus>
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190506151213eucas1p2ca40029d09ddbbcd11e4a1dd60ae9654@eucas1p2.samsung.com>
+ <1557155521-30949-5-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1557155521-30949-5-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@li>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 7 May 2019 09:16:38 +0000, Robin Gong wrote:
-> Add i.mx6ul and i.mx6sx compatible name.
+On Mon,  6 May 2019 17:11:52 +0200, Lukasz Luba wrote:
+> Change directory name to be ready for new types of memories.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/ddr/lpddr2-timings.txt     |  52 +++++++++++
+>  Documentation/devicetree/bindings/ddr/lpddr2.txt   | 102 +++++++++++++++++++++
+>  .../devicetree/bindings/lpddr2/lpddr2-timings.txt  |  52 -----------
+>  .../devicetree/bindings/lpddr2/lpddr2.txt          | 102 ---------------------
+>  4 files changed, 154 insertions(+), 154 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
+>  create mode 100644 Documentation/devicetree/bindings/ddr/lpddr2.txt
+>  delete mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
+>  delete mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2.txt
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
