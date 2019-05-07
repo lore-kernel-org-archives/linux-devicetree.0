@@ -1,62 +1,33 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH] dt-binding: usb: add usb-role-switch property
-Date: Tue, 7 May 2019 10:26:34 +0800
-Message-ID: <1557195994.10179.263.camel@mhfsdcap03>
-References: <5756e05930f5e6a3940ad9d019399c8e63d24f18.1556454324.git.chunfeng.yun@mediatek.com>
-         <20190502194905.GA22144@bogus>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6ul: add clock-frequency to CPU node
+Date: Tue, 7 May 2019 03:02:45 +0000
+Message-ID: <1557197868-6963-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502194905.GA22144@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-05-02 at 14:49 -0500, Rob Herring wrote:
-> On Sun, Apr 28, 2019 at 08:27:46PM +0800, Chunfeng Yun wrote:
-> > Add a property usb-role-switch to tell Dual-Role controller driver
-> > that use USB Role Switch framework to handle the role switch between
-> > host mode and device mode, it's useful when the driver has already
-> > supported other ways, such as extcon framework etc.
-> > 
-> > Cc: Biju Das <biju.das@bp.renesas.com>
-> > Cc: Yu Chen <chenyu56@huawei.com>
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v1:
-> > the property is discussed in:
-> > [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
-> > https://patchwork.kernel.org/patch/10852497/
-> > 
-> > Mediatek and Hisilicon also try to use it:
-> > [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-> > https://patchwork.kernel.org/patch/10918385/
-> > [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
-> > https://patchwork.kernel.org/patch/10918367/
-> > 
-> > [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
-> > https://patchwork.kernel.org/patch/10909981/
-> > ---
-> >  Documentation/devicetree/bindings/usb/generic.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> > index 0a74ab8dfdc2..c73950b72513 100644
-> > --- a/Documentation/devicetree/bindings/usb/generic.txt
-> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> > @@ -30,6 +30,9 @@ Optional properties:
-> >  			optional for OTG device.
-> >   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
-> >  			optional for OTG device.
-> > + - usb-role-switch: tells Dual-Role USB controller driver that we want to use
-> > +			USB Role Switch framework to handle the role switch
-> > +			between host mode and device mode.
-> 
-> Please describe this in terms of h/w functionality, not drivers and 
-> Linux things.
-Sorry for the late reply, v2 is posted
-
-> 
-> Rob
+QWRkIGNsb2NrLWZyZXF1ZW5jeSBwcm9wZXJ0eSB0byBDUFUgbm9kZS4gQXZvaWRzIHdhcm5pbmdz
+IGxpa2UNCiIvY3B1cy9jcHVAMCBtaXNzaW5nIGNsb2NrLWZyZXF1ZW5jeSBwcm9wZXJ0eSIgZm9y
+ICJhcm0sY29ydGV4LWE3Ii4NCg0KU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1
+YW5nQG54cC5jb20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSAgfCAxICsN
+CiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLmR0c2kgfCAxICsNCiAyIGZpbGVzIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVs
+LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KaW5kZXggYmJmMDEwYy4uZmMz
+ODhiOCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpDQorKysgYi9h
+cmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KQEAgLTU5LDYgKzU5LDcgQEANCiAJCQljb21w
+YXRpYmxlID0gImFybSxjb3J0ZXgtYTciOw0KIAkJCWRldmljZV90eXBlID0gImNwdSI7DQogCQkJ
+cmVnID0gPDA+Ow0KKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDw2OTYwMDAwMDA+Ow0KIAkJCWNsb2Nr
+LWxhdGVuY3kgPSA8NjEwMzY+OyAvKiB0d28gQ0xLMzIgcGVyaW9kcyAqLw0KIAkJCSNjb29saW5n
+LWNlbGxzID0gPDI+Ow0KIAkJCW9wZXJhdGluZy1wb2ludHMgPSA8DQpkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnVsbC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC5k
+dHNpDQppbmRleCAyMmU0YTMwLi43MjdiOTJmIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsbC5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLmR0c2kNCkBA
+IC0xMiw2ICsxMiw3IEBADQogL2RlbGV0ZS1ub2RlLyAmY3J5cHRvOw0KIA0KICZjcHUwIHsNCisJ
+Y2xvY2stZnJlcXVlbmN5ID0gPDkwMDAwMDAwMD47DQogCW9wZXJhdGluZy1wb2ludHMgPSA8DQog
+CQkvKiBrSHoJdVYgKi8NCiAJCTkwMDAwMAkxMjc1MDAwDQotLSANCjIuNy40DQoNCg==
