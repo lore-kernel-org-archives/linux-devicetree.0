@@ -1,100 +1,108 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V5 02/16] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Date: Tue, 7 May 2019 12:40:36 +0530
-Message-ID: <b8f482f4-8136-07b5-3d68-f45a6fd580ba@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-3-vidyas@nvidia.com> <20190503110159.GB32400@ulmo>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v7 01/13] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+Date: Tue, 7 May 2019 16:33:41 +0900
+Message-ID: <8b063f30-1a4d-3292-2e57-6e33e94d57ae@samsung.com>
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf@eucas1p1.samsung.com>
+        <1557155521-30949-2-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503110159.GB32400@ulmo>
+In-Reply-To: <1557155521-30949-2-git-send-email-l.luba@partner.samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 5/3/2019 4:31 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:49:50AM +0530, Vidya Sagar wrote:
->> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
->> using this API be able to build as loadable modules.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes from [v4]:
->> * None
->>
->> Changes from [v3]:
->> * None
->>
->> Changes from [v2]:
->> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a static
->>
->> Changes from [v1]:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/pcie/pme.c     | 14 +++++++++++++-
->>   drivers/pci/pcie/portdrv.h | 16 +++-------------
->>   2 files changed, 16 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
->> index 54d593d10396..d5e0ea4a62fc 100644
->> --- a/drivers/pci/pcie/pme.c
->> +++ b/drivers/pci/pcie/pme.c
->> @@ -25,7 +25,19 @@
->>    * that using MSI for PCIe PME signaling doesn't play well with PCIe PME-based
->>    * wake-up from system sleep states.
->>    */
->> -bool pcie_pme_msi_disabled;
->> +static bool pcie_pme_msi_disabled;
->> +
->> +void pcie_pme_disable_msi(void)
->> +{
->> +	pcie_pme_msi_disabled = true;
->> +}
->> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
->> +
->> +bool pcie_pme_no_msi(void)
->> +{
->> +	return pcie_pme_msi_disabled;
->> +}
->> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
->>   
->>   static int __init pcie_pme_setup(char *str)
->>   {
->> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
->> index 1d50dc58ac40..7c8c3da4bd58 100644
->> --- a/drivers/pci/pcie/portdrv.h
->> +++ b/drivers/pci/pcie/portdrv.h
->> @@ -125,22 +125,12 @@ void pcie_port_bus_unregister(void);
->>   struct pci_dev;
->>   
->>   #ifdef CONFIG_PCIE_PME
->> -extern bool pcie_pme_msi_disabled;
->> -
->> -static inline void pcie_pme_disable_msi(void)
->> -{
->> -	pcie_pme_msi_disabled = true;
->> -}
->> -
->> -static inline bool pcie_pme_no_msi(void)
->> -{
->> -	return pcie_pme_msi_disabled;
->> -}
->> -
->> +void pcie_pme_disable_msi(void);
->> +bool pcie_pme_no_msi(void);
->>   void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
->>   #else /* !CONFIG_PCIE_PME */
->>   static inline void pcie_pme_disable_msi(void) {}
->> -static inline bool pcie_pme_no_msi(void) { return false; }
->> +static inline bool pcie_pme_no_msi(void) {}
-> 
-> This looks wrong.
-Can you please give more info on what is wrong in this?
+Hi Lukasz,
 
+On 19. 5. 7. 오전 12:11, Lukasz Luba wrote:
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
 > 
-> Thierry
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5420.h | 28 ++++++++++++++++++++++------
+>  1 file changed, 22 insertions(+), 6 deletions(-)
 > 
+> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+> index 355f469..bf50d8a 100644
+> --- a/include/dt-bindings/clock/exynos5420.h
+> +++ b/include/dt-bindings/clock/exynos5420.h
+> @@ -60,6 +60,7 @@
+>  #define CLK_MAU_EPLL		159
+>  #define CLK_SCLK_HSIC_12M	160
+>  #define CLK_SCLK_MPHY_IXTAL24	161
+> +#define CLK_SCLK_BPLL		162
+>  
+>  /* gate clocks */
+>  #define CLK_UART0		257
+> @@ -195,6 +196,16 @@
+>  #define CLK_ACLK432_CAM		518
+>  #define CLK_ACLK_FL1550_CAM	519
+>  #define CLK_ACLK550_CAM		520
+> +#define CLK_CLKM_PHY0		521
+> +#define CLK_CLKM_PHY1		522
+> +#define CLK_ACLK_PPMU_DREX0_0	523
+> +#define CLK_ACLK_PPMU_DREX0_1	524
+> +#define CLK_ACLK_PPMU_DREX1_0	525
+> +#define CLK_ACLK_PPMU_DREX1_1	526
+> +#define CLK_PCLK_PPMU_DREX0_0	527
+> +#define CLK_PCLK_PPMU_DREX0_1	528
+> +#define CLK_PCLK_PPMU_DREX1_0	529
+> +#define CLK_PCLK_PPMU_DREX1_1	530
+>  
+>  /* mux clocks */
+>  #define CLK_MOUT_HDMI		640
+> @@ -217,6 +228,8 @@
+>  #define CLK_MOUT_EPLL		657
+>  #define CLK_MOUT_MAU_EPLL	658
+>  #define CLK_MOUT_USER_MAU_EPLL	659
+> +#define CLK_MOUT_SCLK_SPLL	660
+> +#define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
+>  
+>  /* divider clocks */
+>  #define CLK_DOUT_PIXEL		768
+> @@ -243,13 +256,16 @@
+>  #define CLK_DOUT_ACLK300_GSCL	789
+>  #define CLK_DOUT_ACLK400_DISP1	790
+>  #define CLK_DOUT_PCLK_CDREX	791
+> -#define CLK_DOUT_SCLK_CDREX	792
+> -#define CLK_DOUT_ACLK_CDREX1	793
+> -#define CLK_DOUT_CCLK_DREX0	794
+> -#define CLK_DOUT_CLK2X_PHY0	795
+> -#define CLK_DOUT_PCLK_CORE_MEM	796
+
+The your previous patch didn't change the id number
+of already exiting clocks. It cause the fault.
+In order to keep the compatibility, you keep
+the original id number without modification.
+
+Please don't change the id number of the existing clocks
+and then just add the new clocks.
+
+
+> +#define CLK_DOUT_PCLK_DREX0	792
+> +#define CLK_DOUT_PCLK_DREX1	793
+> +#define CLK_DOUT_SCLK_CDREX	794
+> +#define CLK_DOUT_ACLK_CDREX1	795
+> +#define CLK_DOUT_CCLK_DREX0	796
+> +#define CLK_DOUT_CLK2X_PHY0	797
+> +#define CLK_DOUT_PCLK_CORE_MEM	798
+> +#define CLK_FF_DOUT_SPLL2	799
+>  
+>  /* must be greater than maximal clock id */
+> -#define CLK_NR_CLKS		797
+> +#define CLK_NR_CLKS		800
+>  
+>  #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
+> 
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
