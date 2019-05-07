@@ -1,91 +1,59 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH 6/7] ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-Date: Tue, 7 May 2019 01:49:15 +0000
-Message-ID: <VI1PR04MB5327BED3397BFDB39800250C8B310@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20190428024847.5046-1-peter.chen@nxp.com>
- <20190428024847.5046-7-peter.chen@nxp.com>
- <CAL_JsqLPK8kuYTT7ekZbAzywp2kr9xKA0_X3BAqVn5hShbPM+w@mail.gmail.com>
- <VI1PR04MB5327641FD0A21BB4C93A85A58B370@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <CAL_Jsq+OywH+_caxtrBJF=nMVxFeHsuL8jbLq=a6VBXWiZ0ktA@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [v2 PATCH] dt-binding: usb: add usb-role-switch property
+Date: Tue, 7 May 2019 10:22:58 +0800
+Message-ID: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+OywH+_caxtrBJF=nMVxFeHsuL8jbLq=a6VBXWiZ0ktA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
+Add a property usb-role-switch to tell Dual-Role controller driver
+that use USB Role Switch framework to handle the role switch between
+host mode and device mode, it's useful when the driver has already
+supported other ways, such as extcon framework etc.
+
+Cc: Biju Das <biju.das@bp.renesas.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v2:
+    describe it in terms of h/w functionality suggested by Rob
+
+v1:
+    the property is discussed in:
+    [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
+    https://patchwork.kernel.org/patch/10852497/
+
+    Mediatek and Hisilicon also try to use it:
+    [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
+    https://patchwork.kernel.org/patch/10918385/
+    [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
+    https://patchwork.kernel.org/patch/10918367/
+
+    [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
+    https://patchwork.kernel.org/patch/10909981/
+---
+ Documentation/devicetree/bindings/usb/generic.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index 0a74ab8dfdc2..f5a6ad053ecc 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -30,6 +30,11 @@ Optional properties:
+ 			optional for OTG device.
+  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+ 			optional for OTG device.
++ - usb-role-switch: tells Dual-Role USB controllers we want to handle the role
++			switch between host and device according to the state
++			detected by the USB connector, typically for Type-C,
++			Type-B(micro).
++			see connector/usb-connector.txt.
  
-> > > > ++++++++++++++++++++++++++++++
-> > > >  1 file changed, 30 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/imx7ulp.dtsi
-> > > > b/arch/arm/boot/dts/imx7ulp.dtsi index fca6e50f37c8..e2944f98eac6
-> > > > 100644
-> > > > --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> > > > +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> > > > @@ -30,6 +30,7 @@
-> > > >                 serial1 = &lpuart5;
-> > > >                 serial2 = &lpuart6;
-> > > >                 serial3 = &lpuart7;
-> > > > +               usbphy0 = &usbphy1;
-> > >
-> > > Drop this. You shouldn't need an alias.
-> > >
-> >
-> > It is a derived USB PHY and used on most of i.mx chipidea USB controllers.
-> > At the source code, we use aligned id to know the controller number.
-> >
-> >         ret = of_alias_get_id(np, "usbphy");
-> >         if (ret < 0)
-> >                 dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-> >         mxs_phy->port_id = ret;
-> 
-> fsl,anatop property should probably have cell to specify this.
-> 
-
-imx7ulp doesn't have anatop part, the analog for imx7ulp is different with imx6.
-
-> >
-> > > >         };
-> > > >
-> > > >         cpus {
-> > > > @@ -133,6 +134,35 @@
-> > > >                         clock-names = "ipg", "per";
-> > > >                 };
-> > > >
-> > > > +               usbotg1: usb@40330000 {
-> > > > +                       compatible = "fsl,imx7ulp-usb", "fsl,imx6ul-usb",
-> > > > +                               "fsl,imx27-usb";
-> > > > +                       reg = <0x40330000 0x200>;
-> > > > +                       interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +                       clocks = <&pcc2 IMX7ULP_CLK_USB0>;
-> > > > +                       fsl,usbphy = <&usbphy1>;
-> > >
-> > > Don't use this for new users. Use the phy binding instead.
-> > >
-> >
-> > It is not a new user, the USB PHY used at imx7ulp is the same with imx6's.
-> 
-> New SoC is a new user. The chipidea core already supports using 'phys'
-> so you should be able to just use the common code.
-> 
-
-Thanks, will use below, and change the imx glue layer code which "fsl,usbphy" phandle is mandatory now.
-
-phys = <&usbphy1>; /* for usbotg1 */
-and
-#phy-cells = <0>;  /* for usbphy1 */
-
-Peter
+ This is an attribute to a USB controller such as:
+ 
+-- 
+2.21.0
