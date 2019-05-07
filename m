@@ -1,55 +1,87 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v10 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Date: Tue, 7 May 2019 20:12:23 +0200
-Message-ID: <20190507181223.GC15122@ravnborg.org>
-References: <cover.1557215047.git.agx@sigxcpu.org>
- <299e28042e0a24c0cde593873bdfb15e18187a92.1557215047.git.agx@sigxcpu.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 5/6] pinctrl: meson: add support of drive-strength-microamp
+Date: Tue, 7 May 2019 20:18:47 +0200
+Message-ID: <CAFBinCC-wYD1ZJ8Dd6mwd=qAqi8YX0=VacjbEc-bxKrQnZvwDA@mail.gmail.com>
+References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-6-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <299e28042e0a24c0cde593873bdfb15e18187a92.1557215047.git.agx@sigxcpu.org>
+In-Reply-To: <20190507115726.23714-6-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guido.
+On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> drive-strength-microamp is a new feature needed for G12A SoC.
+> the default DS setting after boot is usually 500uA and it is not enough for
+> many functions. We need to be able to set the drive strength to reliably
+> enable things like MMC, I2C, etc ...
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+with the comments below addressed:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Looks good now, stumbled upon a few details I missed in last round.
-With these considered / fixed you can add my
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-
-	Sam
-
-> +#define CM(x)	(				\
-> +		((x) <	32)?0xe0|((x)-16) :	\
-> +		((x) <	64)?0xc0|((x)-32) :	\
-> +		((x) < 128)?0x80|((x)-64) :	\
-> +		((x) - 128))
-> +#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
-> +#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
-
-A few spaces around the operators may help readability a little.
-
-> +static int phy_write(struct phy *phy, u32 value, unsigned int reg)
+> ---
+>  drivers/pinctrl/meson/pinctrl-meson.c | 102 ++++++++++++++++++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson.h |  18 ++++-
+>  2 files changed, 119 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index a216a7537564..3da867c13f47 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -219,12 +219,56 @@ static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
+>         return 0;
+>  }
+>
+> +static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
+> +                                           unsigned int pin,
+> +                                           u16 drive_strength_ua)
 > +{
-> +	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
+> +       struct meson_bank *bank;
+> +       unsigned int reg, bit;
+> +       unsigned int ds_val;
+you can move ds_val to the line above
+
+[...]
+> +       if (!pc->reg_ds) {
+> +               dev_err(pc->dev, "drive-strength not supported\n");
+I'm getting this on one of my Meson8m2 boards:
+$ # cat /sys/kernel/debug/pinctrl/c1109880.pinctrl-pinctrl-meson/pinconf-pins
+...
+[  874.748531] meson8-pinctrl c1109880.pinctrl: drive-strength not supported
+[  874.755278] meson8-pinctrl c1109880.pinctrl: drive-strength not supported
+[  874.762086] meson8-pinctrl c1109880.pinctrl: drive-strength not supported
+Pin config settings per pin
+Format: pin (name): configs
+pin 0 (GPIOX_0): input bias disabled
+pin 1 (GPIOX_1): input bias disabled
+pin 2 (GPIOX_2): input bias disabled
+...
+
+I believe we are not supposed to complain when getting the
+drive-strength when reg_ds is absent.
+all pre-G12A SoCs don't have reg_ds, so we don't need to error-out in
+that case (because that's perfectly valid)
+
+[...]
+> +static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
+> +                                           unsigned int pin,
+> +                                           u16 *drive_strength_ua)
+> +{
+> +       struct meson_bank *bank;
+> +       unsigned int reg, bit;
+> +       unsigned int val;
+> +       int ret;
 > +
-> +	ret = regmap_write(priv->regmap, reg, value);
-> +	if (ret < 0)
-> +		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
+> +       if (!pc->reg_ds) {
+> +               dev_err(pc->dev, "drive-strength not supported\n");
+based on your previous explanation (that you want to inform the .dts
+author that he's doing something wrong) I'm happy with this error if
+Linus W. doesn't veto this.
 
-I have recently learned that one has to remember trailign "\n"- please
-add.
-Check all other dev_xxx as I noticed the newline is missing in a few
-more places.
 
-> +
-> +	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
-                                                   ^
-
-There was another of the symbols my terminal cannot show.
+Regards
+Martin
