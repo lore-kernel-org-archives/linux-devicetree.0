@@ -1,102 +1,53 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree support
- for T194
-Date: Tue, 7 May 2019 14:56:19 +0530
-Message-ID: <af37a21a-a14e-70c0-8687-de2c29e2d99b@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-11-vidyas@nvidia.com> <20190503111923.GE32400@ulmo>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: Enable HDMI output on
+ orangepi 3
+Date: Tue, 7 May 2019 11:35:35 +0200
+Message-ID: <20190507093535.uapqhxduwtbdgbtq@core.my.home>
+References: <20190420145240.27400-1-tiny.windzz@gmail.com>
+ <20190502073401.3l3fl4alicyzpud7@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503111923.GE32400@ulmo>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190502073401.3l3fl4alicyzpud7@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/3/2019 4:49 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
->> Add support for Tegra194 PCIe controllers. These controllers are based
->> on Synopsys DesignWare core IP.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Using only 'Cx' (x-being controller number) format to represent a controller
->> * Changed to 'value: description' format where applicable
->> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
->> * Provided more documentation for 'nvidia,init-link-speed' property
->> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->>
->> Changes since [v1]:
->> * Added documentation for 'power-domains' property
->> * Removed 'window1' and 'window2' properties
->> * Removed '_clk' and '_rst' from clock and reset names
->> * Dropped 'pcie' from phy-names
->> * Added entry for BPMP-FW handle
->> * Removed offsets for some of the registers and added them in code and would be pickedup based on
->>    controller ID
->> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
->> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
->> * Added more documentation for 'nvidia,update-fc-fixup' property
->> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
->> * Added '-us' to all properties that represent time in microseconds
->> * Moved P2U documentation to a separate file
->>
->>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
->>   1 file changed, 187 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> new file mode 100644
->> index 000000000000..208dff126108
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> @@ -0,0 +1,187 @@
->> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
->> +
->> +This PCIe host controller is based on the Synopsis Designware PCIe IP
->> +and thus inherits all the common properties defined in designware-pcie.txt.
->> +
->> +Required properties:
->> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
->> +- device_type: Must be "pci"
->> +- power-domains: A phandle to the node that controls power to the respective
->> +  PCIe controller and a specifier name for the PCIe controller. Following are
->> +  the specifiers for the different PCIe controllers
->> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
->> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
->> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
->> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
->> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
->> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
->> +  these specifiers are defined in
->> +  "include/dt-bindings/power/tegra194-powergate.h" file.
->> +- reg: A list of physical base address and length for each set of controller
-> 
-> Perhaps "list of physical base address and length pairs".
-Ok.
+Hi Maxime,
 
+On Thu, May 02, 2019 at 09:34:01AM +0200, Maxime Ripard wrote:
+> On Sat, Apr 20, 2019 at 10:52:40AM -0400, Yangtao Li wrote:
+> > Orangepi 3 has HDMI type A connector.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > 
->> +  registers. Must contain an entry for each entry in the reg-names property.
->> +- reg-names: Must include the following entries:
->> +  "appl": Controller's application logic registers
->> +  "config": As per the definition in designware-pcie.txt
->> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
->> +             Translation Unit) registers of the PCIe core are made available
->> +             fow SW access.
-> 
-> s/fow/for/
-Done.
+> Queued for 5.3, thanks!
+> Maxime
 
-> 
-> Thierry
-> 
+This patch is not enough. HDMI support on Orange Pi 3 also needs to
+enable DDC IO. While the SoC will feed some default output singal
+into the display, without DDC enabled it will not work reliably.
+
+That support is part of my Orange Pi 3 series, and will be reworked
+for v5 of that series.
+
+While I can rebase on top of this, it would be easier if you dropped
+this patch until the propper support is ready. I don't see any reason
+why this should be rushed with half-working solution.
+
+regards,
+	o.
+
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
