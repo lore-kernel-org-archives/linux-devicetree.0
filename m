@@ -1,64 +1,120 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 5/5] ARM: dts: imx6sx-sdb: Assign corresponding power supply
- for LDOs
-Date: Tue, 7 May 2019 06:34:37 +0000
-Message-ID: <1557210565-4457-5-git-send-email-Anson.Huang@nxp.com>
-References: <1557210565-4457-1-git-send-email-Anson.Huang@nxp.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v3 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
+ driver for SiFive SoCs
+Date: Tue, 7 May 2019 12:18:54 +0530
+Message-ID: <CAJ2_jOFZjTNA3Nf=zNwLT+St21Q2_TPx_XYhggU=yef6LPkLdg@mail.gmail.com>
+References: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
+ <1557139720-12384-3-git-send-email-yash.shah@sifive.com> <d36b7a74-0d08-0143-b479-45f760c347ba@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557210565-4457-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <d36b7a74-0d08-0143-b479-45f760c347ba@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gaS5NWDZTWCBTREIgYm9hcmQsIHZnZW42IHN1cHBsaWVzIHZkZDFwMS92ZGQycDUgTERPIGFu
-ZA0Kc3cyIHN1cHBsaWVzIHZkZDNwMCBMRE8sIHRoaXMgcGF0Y2ggYXNzaWducyBjb3JyZXNwb25k
-aW5nIHBvd2VyDQpzdXBwbHkgZm9yIHZkZDFwMS92ZGQycDUvdmRkM3AwIHRvIGF2b2lkIGNvbmZ1
-c2lvbiBieSBiZWxvdyBsb2c6DQoNCnZkZDFwMTogc3VwcGxpZWQgYnkgcmVndWxhdG9yLWR1bW15
-DQp2ZGQzcDA6IHN1cHBsaWVkIGJ5IHJlZ3VsYXRvci1kdW1teQ0KdmRkMnA1OiBzdXBwbGllZCBi
-eSByZWd1bGF0b3ItZHVtbXkNCg0KV2l0aCB0aGlzIHBhdGNoLCB0aGUgcG93ZXIgc3VwcGx5IGlz
-IG1vcmUgYWNjdXJhdGU6DQoNCnZkZDFwMTogc3VwcGxpZWQgYnkgVkdFTjYNCnZkZDNwMDogc3Vw
-cGxpZWQgYnkgU1cyDQp2ZGQycDU6IHN1cHBsaWVkIGJ5IFZHRU42DQoNClNpZ25lZC1vZmYtYnk6
-IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQogYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NnN4LXNkYi1yZXZhLmR0cyB8IDEyICsrKysrKysrKysrKw0KIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZzeC1zZGIuZHRzICAgICAgfCAxMiArKysrKysrKysrKysNCiBhcmNoL2FybS9ib290
-L2R0cy9pbXg2c3guZHRzaSAgICAgICAgIHwgIDYgKysrLS0tDQogMyBmaWxlcyBjaGFuZ2VkLCAy
-NyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnN4LXNkYi1yZXZhLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1z
-ZGItcmV2YS5kdHMNCmluZGV4IDAwYzQ4NTQuLjViM2Q2YzEwIDEwMDY0NA0KLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnN4LXNkYi1yZXZhLmR0cw0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnN4LXNkYi1yZXZhLmR0cw0KQEAgLTE1NCwzICsxNTQsMTUgQEANCiAJZW5hYmxlLWFjdGl2
-ZS1oaWdoOw0KIAl2aW4tc3VwcGx5ID0gPCZyZWdfY2FuX2VuPjsNCiB9Ow0KKw0KKyZyZWdfdmRk
-MXAxIHsNCisJdmluLXN1cHBseSA9IDwmdmdlbjZfcmVnPjsNCit9Ow0KKw0KKyZyZWdfdmRkM3Aw
-IHsNCisJdmluLXN1cHBseSA9IDwmc3cyX3JlZz47DQorfTsNCisNCismcmVnX3ZkZDJwNSB7DQor
-CXZpbi1zdXBwbHkgPSA8JnZnZW42X3JlZz47DQorfTsNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9pbXg2c3gtc2RiLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zZGIuZHRz
-DQppbmRleCA5OThlM2UxLi4xMGY2ZGE4IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnN4LXNkYi5kdHMNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zZGIuZHRzDQpA
-QCAtMTM3LDYgKzEzNywxOCBAQA0KIAl2aW4tc3VwcGx5ID0gPCZzdzFhX3JlZz47DQogfTsNCiAN
-CismcmVnX3ZkZDFwMSB7DQorCXZpbi1zdXBwbHkgPSA8JnZnZW42X3JlZz47DQorfTsNCisNCism
-cmVnX3ZkZDNwMCB7DQorCXZpbi1zdXBwbHkgPSA8JnN3Ml9yZWc+Ow0KK307DQorDQorJnJlZ192
-ZGQycDUgew0KKwl2aW4tc3VwcGx5ID0gPCZ2Z2VuNl9yZWc+Ow0KK307DQorDQogJnJlZ19jYW5f
-c3RieSB7DQogCS8qIFRyYW5zY2VpdmVyIEVOL1NUQlkgaXMgYWN0aXZlIGxvdyBvbiBSZXZCIGJv
-YXJkICovDQogCWdwaW8gPSA8JmdwaW80IDI3IEdQSU9fQUNUSVZFX0xPVz47DQpkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2
-c3guZHRzaQ0KaW5kZXggYjE2YTEyMy4uYmJkZmRkOCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDZzeC5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c3guZHRzaQ0K
-QEAgLTYwMCw3ICs2MDAsNyBAQA0KIAkJCQkJICAgICA8R0lDX1NQSSA1NCBJUlFfVFlQRV9MRVZF
-TF9ISUdIPiwNCiAJCQkJCSAgICAgPEdJQ19TUEkgMTI3IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
-IA0KLQkJCQlyZWd1bGF0b3ItMXAxIHsNCisJCQkJcmVnX3ZkZDFwMTogcmVndWxhdG9yLTFwMSB7
-DQogCQkJCQljb21wYXRpYmxlID0gImZzbCxhbmF0b3AtcmVndWxhdG9yIjsNCiAJCQkJCXJlZ3Vs
-YXRvci1uYW1lID0gInZkZDFwMSI7DQogCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwx
-MDAwMDAwPjsNCkBAIC02MTUsNyArNjE1LDcgQEANCiAJCQkJCWFuYXRvcC1lbmFibGUtYml0ID0g
-PDA+Ow0KIAkJCQl9Ow0KIA0KLQkJCQlyZWd1bGF0b3ItM3AwIHsNCisJCQkJcmVnX3ZkZDNwMDog
-cmVndWxhdG9yLTNwMCB7DQogCQkJCQljb21wYXRpYmxlID0gImZzbCxhbmF0b3AtcmVndWxhdG9y
-IjsNCiAJCQkJCXJlZ3VsYXRvci1uYW1lID0gInZkZDNwMCI7DQogCQkJCQlyZWd1bGF0b3ItbWlu
-LW1pY3Jvdm9sdCA9IDwyODAwMDAwPjsNCkBAIC02MzAsNyArNjMwLDcgQEANCiAJCQkJCWFuYXRv
-cC1lbmFibGUtYml0ID0gPDA+Ow0KIAkJCQl9Ow0KIA0KLQkJCQlyZWd1bGF0b3ItMnA1IHsNCisJ
-CQkJcmVnX3ZkZDJwNTogcmVndWxhdG9yLTJwNSB7DQogCQkJCQljb21wYXRpYmxlID0gImZzbCxh
-bmF0b3AtcmVndWxhdG9yIjsNCiAJCQkJCXJlZ3VsYXRvci1uYW1lID0gInZkZDJwNSI7DQogCQkJ
-CQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwyMjUwMDAwPjsNCi0tIA0KMi43LjQNCg0K
+On Mon, May 6, 2019 at 5:48 PM Andrew F. Davis <afd@ti.com> wrote:
+>
+> On 5/6/19 6:48 AM, Yash Shah wrote:
+> > The driver currently supports only SiFive FU540-C000 platform.
+> >
+> > The initial version of L2 cache controller driver includes:
+> > - Initial configuration reporting at boot up.
+> > - Support for ECC related functionality.
+> >
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+> >  arch/riscv/include/asm/sifive_l2_cache.h |  16 +++
+> >  arch/riscv/mm/Makefile                   |   1 +
+> >  arch/riscv/mm/sifive_l2_cache.c          | 175 +++++++++++++++++++++++++++++++
+> >  3 files changed, 192 insertions(+)
+> >  create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
+> >  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+> >
+> > diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+> > new file mode 100644
+> > index 0000000..04f6748
+> > --- /dev/null
+> > +++ b/arch/riscv/include/asm/sifive_l2_cache.h
+> > @@ -0,0 +1,16 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * SiFive L2 Cache Controller header file
+> > + *
+> > + */
+> > +
+> > +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+> > +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
+> > +
+> > +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+> > +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+> > +
+> > +#define SIFIVE_L2_ERR_TYPE_CE 0
+> > +#define SIFIVE_L2_ERR_TYPE_UE 1
+> > +
+> > +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+> > diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> > index eb22ab4..1523ee5 100644
+> > --- a/arch/riscv/mm/Makefile
+> > +++ b/arch/riscv/mm/Makefile
+> > @@ -3,3 +3,4 @@ obj-y += fault.o
+> >  obj-y += extable.o
+> >  obj-y += ioremap.o
+> >  obj-y += cacheflush.o
+> > +obj-y += sifive_l2_cache.o
+> > diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
+> > new file mode 100644
+> > index 0000000..4eb6461
+> > --- /dev/null
+> > +++ b/arch/riscv/mm/sifive_l2_cache.c
+> > @@ -0,0 +1,175 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * SiFive L2 cache controller Driver
+> > + *
+> > + * Copyright (C) 2018-2019 SiFive, Inc.
+> > + *
+> > + */
+[...]
+> > +
+> > +#ifdef CONFIG_DEBUG_FS
+> > +static struct dentry *sifive_test;
+> > +
+> > +static ssize_t l2_write(struct file *file, const char __user *data,
+> > +                     size_t count, loff_t *ppos)
+> > +{
+> > +     unsigned int val;
+> > +
+> > +     if (kstrtouint_from_user(data, count, 0, &val))
+> > +             return -EINVAL;
+> > +     if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
+>
+> I'm guessing bit 16 is the enable and the lower 8 are some kind of
+> region to enable the error? This is probably a bad interface, it looks
+> useful for testing but doesn't provide any debugging info useful for
+> running systems. Do you really want userspace to be able to do this?
+
+Bit 16 selects the type of ECC error (0=data or 1=directory error).
+The lower 8 bits toggles (corrupt) that bit index.
+Are you suggesting to remove this debug interface altogether or you
+want me to improve the current interface?
+Something like providing 2 separate debugfs files for data and
+directory errors. And create a separate 8-bit debugfs variable to
+select the bit index to toggle.
+
+- Yash
+
+>
+> Andrew
+>
+
+-- 
+The information transmitted is intended only for the person or entity to 
+which it is addressed and may contain confidential and/or privileged 
+material. If you are not the intended recipient of this message please do 
+not read, copy, use or disclose this communication and notify the sender 
+immediately. It should be noted that any review, retransmission, 
+dissemination or other use of, or taking action or reliance upon, this 
+information by persons or entities other than the intended recipient is 
+prohibited.
