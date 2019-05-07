@@ -1,46 +1,62 @@
-From: Guenter Roeck <groeck@google.com>
-Subject: Re: [PATCH] of: Add dummy for of_node_is_root if not CONFIG_OF
-Date: Tue, 7 May 2019 07:52:47 -0700
-Message-ID: <CABXOdTcsDU5dSAFWZBAvrOGRa+BokgKi9huGfs=fO4ObCOvnHQ@mail.gmail.com>
-References: <20190507044801.250396-1-dianders@chromium.org>
+From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v2 v2 0/3] Extend dt bindings to support I2C on sifive devices and a fix broken IRQ in polling mode.
+Date: Tue,  7 May 2019 20:45:05 +0530
+Message-ID: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507044801.250396-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Kees Cook <keescook@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Julius Werner <jwerner@chromium.org>, Guenter Roeck <groeck@chromium.org>, Brian Norris <briannorris@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, sagar.kadam@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 6, 2019 at 9:48 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> We'll add a dummy to just return false.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+The patch is based on mainline v5.1 and extends DT-bindings for Opencore based I2C device in FU540 
+SoC, available on HiFive unleashed board (Rev A00), and also provides a workaround for broken IRQ
+which affect I2C polling mode interface on FU540 chipsets. 
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated.
 
-> ---
->
->  include/linux/of.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 0cf857012f11..62ae5c1cafa5 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -653,6 +653,11 @@ static inline bool of_have_populated_dt(void)
->         return false;
->  }
->
-> +static inline bool of_node_is_root(const struct device_node *node)
-> +{
-> +       return false;
-> +}
-> +
->  static inline struct device_node *of_get_compatible_child(const struct device_node *parent,
->                                         const char *compatible)
->  {
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
+core's IF(interrupt flag) and TIP flags to break from the polling loop upon completion of transfer.
+
+To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and 
+appropriate device node is added into board specific device tree as per the information provided in 
+dt-bindings in Documentation/devicetree/bindings/i2c/i2c-sifive.txt.
+Without this workaround, the CPU stall's infinitely.
+
+Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
+
+
+Patch History:
+
+V0<->V1:
+-Incorporate review comments from Andrew
+-Extend dt bindings into i2c-ocores.txt instead of adding new file
+-Rename SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ
+
+V0:
+-Update dt bindings for sifive i2c devices
+-Fix broken IRQ affecting i2c polling mode interface.
+
+
+Sagar Shrikant Kadam (3):
+  dt-bindings: i2c: extend existing opencore bindings.
+  i2c-ocore: sifive: add support for i2c device on FU540-c000 SoC.
+  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
+
+ .../devicetree/bindings/i2c/i2c-ocores.txt         | 20 +++++++++++++
+ drivers/i2c/busses/i2c-ocores.c                    | 33 +++++++++++++++++++---
+ 2 files changed, 49 insertions(+), 4 deletions(-)
+
+-- 
+1.9.1
+
+
+-- 
+The information transmitted is intended only for the person or entity to 
+which it is addressed and may contain confidential and/or privileged 
+material. If you are not the intended recipient of this message please do 
+not read, copy, use or disclose this communication and notify the sender 
+immediately. It should be noted that any review, retransmission, 
+dissemination or other use of, or taking action or reliance upon, this 
+information by persons or entities other than the intended recipient is 
+prohibited.
