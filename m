@@ -1,44 +1,61 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH] arm64: dts: ls1028a: Fix CPU idle fail.
-Date: Tue, 7 May 2019 07:43:37 +0000
-Message-ID: <20190507074454.41589-1-ran.wang_1@nxp.com>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH v10 1/2] dt-bindings: phy: Add documentation for mixel dphy
+Date: Tue,  7 May 2019 09:47:25 +0200
+Message-ID: <5817853945e1c707f641ae22458a0f27aa25949e.1557215047.git.agx@sigxcpu.org>
+References: <cover.1557215047.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <cover.1557215047.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
 List-Id: devicetree@vger.kernel.org
 
-UFNDSSBzcGVjIGRlZmluZSAxc3QgcGFyYW1ldGVyJ3MgYml0IDE2IG9mIGZ1bmN0aW9uIENQVV9T
-VVNQRU5EIHRvDQppbmRpY2F0ZSBDUFUgU3RhdGUgVHlwZTogMCBmb3Igc3RhbmRieSwgMSBmb3Ig
-cG93ZXIgZG93bi4gSW4gdGhpcw0KY2FzZSwgd2Ugd2FudCB0byBzZWxlY3Qgc3RhbmRieSBmb3Ig
-Q1BVIGlkbGUgZmVhdHVyZS4gQnV0IGN1cnJlbnQNCnNldHRpbmcgd3JvbmdseSBzZWxlY3QgcG93
-ZXIgZG93biBhbmQgY2F1c2UgQ1BVIFNVU1BFTkQgZmFpbCBldmVyeQ0KdGltZS4gTmVlZCB0aGlz
-IGZpeC4NCg0KU2lnbmVkLW9mZi1ieTogUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhwLmNvbT4NCi0t
-LQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAgIDE4
-ICsrKysrKysrKy0tLS0tLS0tLQ0KIDEgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCA5
-IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvZnNsLWxzMTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
-czEwMjhhLmR0c2kNCmluZGV4IGIwNDU4MTIuLmJmN2Y4NDUgMTAwNjQ0DQotLS0gYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQorKysgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQpAQCAtMjgsNyArMjgsNyBAQA0K
-IAkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQogCQkJY2xvY2tzID0gPCZjbG9ja2dlbiAxIDA+
-Ow0KIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsNCi0JCQljcHUtaWRsZS1zdGF0ZXMgPSA8
-JkNQVV9QSDIwPjsNCisJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9QVzIwPjsNCiAJCX07DQog
-DQogCQljcHUxOiBjcHVAMSB7DQpAQCAtMzgsNyArMzgsNyBAQA0KIAkJCWVuYWJsZS1tZXRob2Qg
-PSAicHNjaSI7DQogCQkJY2xvY2tzID0gPCZjbG9ja2dlbiAxIDA+Ow0KIAkJCW5leHQtbGV2ZWwt
-Y2FjaGUgPSA8JmwyPjsNCi0JCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9QSDIwPjsNCisJCQlj
-cHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9QVzIwPjsNCiAJCX07DQogDQogCQlsMjogbDItY2FjaGUg
-ew0KQEAgLTUzLDEzICs1MywxMyBAQA0KIAkJICovDQogCQllbnRyeS1tZXRob2QgPSAiYXJtLHBz
-Y2kiOw0KIA0KLQkJQ1BVX1BIMjA6IGNwdS1waDIwIHsNCi0JCQljb21wYXRpYmxlID0gImFybSxp
-ZGxlLXN0YXRlIjsNCi0JCQlpZGxlLXN0YXRlLW5hbWUgPSAiUEgyMCI7DQotCQkJYXJtLHBzY2kt
-c3VzcGVuZC1wYXJhbSA9IDwweDAwMDEwMDAwPjsNCi0JCQllbnRyeS1sYXRlbmN5LXVzID0gPDEw
-MDA+Ow0KLQkJCWV4aXQtbGF0ZW5jeS11cyA9IDwxMDAwPjsNCi0JCQltaW4tcmVzaWRlbmN5LXVz
-ID0gPDMwMDA+Ow0KKwkJQ1BVX1BXMjA6IGNwdS1wdzIwIHsNCisJCQkgIGNvbXBhdGlibGUgPSAi
-YXJtLGlkbGUtc3RhdGUiOw0KKwkJCSAgaWRsZS1zdGF0ZS1uYW1lID0gIlBXMjAiOw0KKwkJCSAg
-YXJtLHBzY2ktc3VzcGVuZC1wYXJhbSA9IDwweDA+Ow0KKwkJCSAgZW50cnktbGF0ZW5jeS11cyA9
-IDwyMDAwPjsNCisJCQkgIGV4aXQtbGF0ZW5jeS11cyA9IDwyMDAwPjsNCisJCQkgIG1pbi1yZXNp
-ZGVuY3ktdXMgPSA8NjAwMD47DQogCQl9Ow0KIAl9Ow0KIA0KLS0gDQoxLjcuMQ0KDQo=
+Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
+
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+new file mode 100644
+index 000000000000..9b23407233c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+@@ -0,0 +1,29 @@
++Mixel DSI PHY for i.MX8
++
++The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
++MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
++electrical signals for DSI.
++
++Required properties:
++- compatible: Must be:
++  - "fsl,imx8mq-mipi-dphy"
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Must contain the following entries:
++  - "phy_ref": phandle and specifier referring to the DPHY ref clock
++- reg: the register range of the PHY controller
++- #phy-cells: number of cells in PHY, as defined in
++  Documentation/devicetree/bindings/phy/phy-bindings.txt
++  this must be <0>
++
++Optional properties:
++- power-domains: phandle to power domain
++
++Example:
++	dphy: dphy@30a0030 {
++		compatible = "fsl,imx8mq-mipi-dphy";
++		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
++		clock-names = "phy_ref";
++		reg = <0x30a00300 0x100>;
++		power-domains = <&pd_mipi0>;
++		#phy-cells = <0>;
++        };
+-- 
+2.20.1
