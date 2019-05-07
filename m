@@ -1,83 +1,118 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
-Date: Tue, 7 May 2019 08:48:31 +0000
-Message-ID: <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190426055558.44544-1-ran.wang_1@nxp.com>
- <20190501235410.GA25492@bogus>
+From: Dragan Cvetic <draganc@xilinx.com>
+Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Date: Tue, 7 May 2019 08:48:41 +0000
+Message-ID: <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190504075502.GA11133@kroah.com>
+ <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190506123425.GA26360@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501235410.GA25492@bogus>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190506123425.GA26360@kroah.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Derek Kiernan <dkiernan@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Thursday, May 02, 2019 07:54 Rob Herring wrote:
->=20
-> On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
-> > This patch adds USB dt nodes for LS1028A.
+
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Monday 6 May 2019 13:34
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> 
+> On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
 > >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> > Changes in v2:
-> >   - Rename node from usb3@... to usb@... to meet DTSpec
 > >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20
-> ++++++++++++++++++++
-> >  1 files changed, 20 insertions(+), 0 deletions(-)
+> > > -----Original Message-----
+> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > Sent: Saturday 4 May 2019 08:55
+> > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > >
+> > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+> > > > Hi Greg,
+> > > >
+> > > > Please find my inline comments below,
+> > > >
+> > > > Regards
+> > > > Dragan
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > Sent: Thursday 2 May 2019 18:20
+> > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > > >
+> > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
+> > > > > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > > > > +#define DRIVER_VERSION "0.3"
+> > > > >
+> > > > > Version means nothing with the driver in the kernel tree, please remove
+> > > > > it.
+> > > >
+> > > > Will be removed. Thank you.
+> > > >
+> > > > >
+> > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > > > >
+> > > > > Why this number?  Why limit yourself to any number?
+> > > > >
+> > > >
+> > > > There can be max 8 devices for this driver. I'll change to 8.
+> > > >
+> > > > > > +
+> > > > > > +static struct class *xsdfec_class;
+> > > > >
+> > > > > Do you really need your own class?
+> > > >
+> > > > When writing a character device driver, my goal is to create and register an instance
+> > > > of that structure associated with a struct file_operations, exposing a set of operations
+> > > > to the user-space. One of the steps to make this goal is Create a class for a devices,
+> > > > visible in /sys/class/.
+> > >
+> > > Why do you need a class?  Again, why not just use the misc_device api,
+> > > that seems much more relevant here and will make the code a lot simpler.
+> > >
 > >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index 8dd3501..188cfb8 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -144,6 +144,26 @@
-> >  			clocks =3D <&sysclk>;
-> >  		};
-> >
-> > +		usb0:usb@3100000 {
->                      ^ space needed
+> > The driver can have 8 devices in SoC plus more in Programming Logic.
+> > It looked logical to group them under the same MAJOR, although they
+> > are independent of each other.  Is this argument strong enough to use
+> > class?
+> 
+> Not really :)
+> 
+> 8 devices is pretty small.  What tool will be trying to talk to all of
+> these devices and how was it going to find out what devices were in the
+> system?
+>
 
-Yes, will update this in next version.
-=20
-> > +			compatible=3D "snps,dwc3";
->=20
-> Needs an SoC specific compatible.
+These devices are Forward Error Correction encoder/decoder
+and will be part of the RF communication chain. They will be included
+in the system through DT. Also, described in DT.
+   
 
-Do you mean change compatible to "snps,dwc3", "fsl,ls1028a-dwc3" ?
-
-As I know, so far there is no SoC specific programming for this IP, so do
-you think it's still necessary to add it?
-
-Regards,
-Ran
-
-> > +			reg=3D <0x0 0x3100000 0x0 0x10000>;
-> > +			interrupts=3D <0 80 0x4>;
-> > +			dr_mode=3D "host";
-> > +			snps,dis_rxdet_inp3_quirk;
-> > +			snps,quirk-frame-length-adjustment =3D <0x20>;
-> > +			snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
-> > +		};
-> > +
-> > +		usb1:usb@3110000 {
-> > +			compatible=3D "snps,dwc3";
-> > +			reg=3D <0x0 0x3110000 0x0 0x10000>;
-> > +			interrupts=3D <0 81 0x4>;
-> > +			dr_mode=3D "host";
-> > +			snps,dis_rxdet_inp3_quirk;
-> > +			snps,quirk-frame-length-adjustment =3D <0x20>;
-> > +			snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
-> > +		};
-> > +
-> >  		i2c0: i2c@2000000 {
-> >  			compatible =3D "fsl,vf610-i2c";
-> >  			#address-cells =3D <1>;
-> > --
-> > 1.7.1
-> >
+> thanks,
+> 
+> greg k-h
