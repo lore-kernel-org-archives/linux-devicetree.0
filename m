@@ -1,263 +1,201 @@
-Return-Path: <SRS0=JPvM=TI=nxp.com=aisheng.dong@kernel.org>
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
- parse clocks from device tree
-Date: Wed, 8 May 2019 07:16:11 +0000
-Message-ID: 
- <AM0PR04MB421180CD45226B30082BDE4D80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
- <1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
- <CAL_JsqLJ+Lc_3huQizy4BVFgVV94Yg8KsOOgXLv4dQU8H=WfWw@mail.gmail.com>
- <AM0PR04MB4211B2F21350CAE370D7A93780360@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAL_JsqLNRnYxUGyhpiL2OFxOT1wXZH2LG4XUH7qf14TpA5Dk=A@mail.gmail.com>
-In-Reply-To: 
- <CAL_JsqLNRnYxUGyhpiL2OFxOT1wXZH2LG4XUH7qf14TpA5Dk=A@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Rob Herring <robh+dt@kernel.org>
+Date: Tue, 7 May 2019 13:03:00 -0500
+References: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
+	<1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
+	<CAL_JsqLJ+Lc_3huQizy4BVFgVV94Yg8KsOOgXLv4dQU8H=WfWw@mail.gmail.com>
+	<AM0PR04MB4211B2F21350CAE370D7A93780360@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4211B2F21350CAE370D7A93780360@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Message-ID: <CAL_JsqLNRnYxUGyhpiL2OFxOT1wXZH2LG4XUH7qf14TpA5Dk=A@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
+ parse clocks from device tree
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Aisheng Dong <aisheng.dong@nxp.com>
 Cc: Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmgrZHRAa2VybmVsLm9yZ10NCj4gU2VudDog
-V2VkbmVzZGF5LCBNYXkgOCwgMjAxOSAyOjAzIEFNDQo+IA0KPiBPbiBTYXQsIE1heSA0LCAyMDE5
-IGF0IDc6MTkgQU0gQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gd3JvdGU6
-DQo+ID4NCj4gPiA+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaCtkdEBrZXJuZWwub3Jn
-XQ0KPiA+ID4gU2VudDogRnJpZGF5LCBNYXkgMywgMjAxOSAxMDo1MyBQTQ0KPiA+ID4gU3ViamVj
-dDogUmU6IFtQQVRDSCBWMiAxLzJdIGR0LWJpbmRpbmdzOiBmaXJtd2FyZTogaW14LXNjdTogbmV3
-DQo+ID4gPiBiaW5kaW5nIHRvIHBhcnNlIGNsb2NrcyBmcm9tIGRldmljZSB0cmVlDQo+ID4gPg0K
-PiA+ID4gT24gVGh1LCBNYXkgMiwgMjAxOSBhdCA4OjM0IFBNIEFpc2hlbmcgRG9uZyA8YWlzaGVu
-Zy5kb25nQG54cC5jb20+DQo+ID4gPiB3cm90ZToNCj4gPiA+DQo+ID4gPiA+IFRoZXJlJ3MgYSBm
-ZXcgbGltaXRhdGlvbnMgb24gdGhlIG9yaWdpbmFsIG9uZSBjZWxsIGNsb2NrIGJpbmRpbmcNCj4g
-PiA+ID4gKCNjbG9jay1jZWxscyA9IDwxPikgdGhhdCB3ZSBoYXZlIHRvIGRlZmluZSBhbGwgY2xv
-Y2sgSURzIGZvcg0KPiA+ID4gPiBkZXZpY2UgdHJlZSB0byByZWZlcmVuY2UuIFRoaXMgbWF5IGNh
-dXNlIHRyb3VibGVzIGlmIHdlIHdhbnQgdG8NCj4gPiA+ID4gdXNlIGNvbW1vbiBjbG9jayBJRHMg
-Zm9yIG11bHRpIHBsYXRmb3JtcyBzdXBwb3J0IHdoZW4gdGhlIGNsb2NrIG9mDQo+ID4gPiA+IHRo
-b3NlIHBsYXRmb3JtcyBhcmUgbW9zdGx5IHRoZSBzYW1lLg0KPiA+ID4gPiBlLmcuIEN1cnJlbnQg
-Y2xvY2sgSURzIG5hbWUgYXJlIGRlZmluZWQgd2l0aCBTUyBwcmVmaXguDQo+ID4gPiA+DQo+ID4g
-PiA+IEhvd2V2ZXIgdGhlIGRldmljZSBtYXkgcmVzaWRlIGluIGRpZmZlcmVudCBTUyBhY3Jvc3Mg
-Q1BVcywgdGhhdA0KPiA+ID4gPiBtZWFucyB0aGUgU1MgcHJlZml4IG1heSBub3QgdmFsaWQgYW55
-bW9yZSBmb3IgYSBuZXcgU29DLg0KPiA+ID4gPiBGdXJ0aGVybW9yZSwgdGhlIGRldmljZSBhdmFp
-bGFiaWxpdHkgb2YgdGhvc2UgY2xvY2tzIG1heSBhbHNvIHZhcnkgYSBiaXQuDQo+ID4gPiA+DQo+
-ID4gPiA+IEZvciBzdWNoIHNpdHVhdGlvbiwgV2UgZm9ybWVybHkgcGxhbm5lZCB0byBhZGQgYWxs
-IG5ldyBJRHMgZm9yDQo+ID4gPiA+IGVhY2ggU1MgYW5kIGR5bmFtaWNhbGx5IGNoZWNrIGF2YWls
-YWJpbGl0eSBmb3IgZGlmZmVyZW50IFNvQyBpbg0KPiA+ID4gPiBkcml2ZXIuIFRoYXQgY2FuIGJl
-IGRvbmUgYnV0IHRoYXQgbWF5IGludm9sdmUgYSBsb3QgZWZmb3J0IGFuZCBtYXkNCj4gPiA+ID4g
-cmVzdWx0IGluIG1vcmUgY2hhbmdlcyBhbmQgZHVwbGljYXRlZCBjb2RlIGluIGRyaXZlciwgYWxz
-byBtYWtlDQo+ID4gPiA+IGRldmljZSB0cmVlIHVwc3RyZWFtaW5nIGhhcmQgd2hpY2ggZGVwZW5k
-cyBvbiBDbG9jayBJRHMuDQo+ID4gPiA+DQo+ID4gPiA+IFRvIHJlbGllZiB0aGlzIHNpdHVhdGlv
-biwgd2Ugd2FudCB0byBtb3ZlIHRoZSBjbG9jayBkZWZpbml0aW9uDQo+ID4gPiA+IGludG8gZGV2
-aWNlIHRyZWUgd2hpY2ggY2FuIGZ1bGx5IGRlY291cGxlIHRoZSBkZXBlbmRlbmN5IG9mIENsb2Nr
-DQo+ID4gPiA+IElEIGRlZmluaXRpb24gZnJvbSBkZXZpY2UgdHJlZS4gVGhpcyBjYW4gbWFrZSB1
-cyB3cml0ZSBhIGZ1bGwNCj4gPiA+ID4gZ2VuZXJpYyBjbG9jayBkcml2ZXIgZm9yIFNDVSBiYXNl
-ZCBTb0NzLiBObyBtb3JlIGZyZXF1ZW50IGNoYW5nZXMNCj4gPiA+ID4gbmVlZGVkIGluIGNsb2Nr
-IGRyaXZlciBhbnkgbW9yZS4NCj4gPiA+ID4NCj4gPiA+ID4gSW4gdGhlIG1lYW53aGlsZSwgd2Ug
-Y2FuIGFsc28gdXNlIHRoZSBleGlzdGVuY2Ugb2YgY2xvY2sgbm9kZXMgaW4NCj4gPiA+ID4gZGV2
-aWNlIHRyZWUgdG8gYWRkcmVzcyB0aGUgZGV2aWNlIGFuZCBjbG9jayBhdmFpbGFiaWxpdHkNCj4g
-PiA+ID4gZGlmZmVyZW5jZXMgYWNyb3NzIGRpZmZlcmVudCBTb0NzLg0KPiA+ID4gPg0KPiA+ID4g
-PiBGb3IgU0NVIGNsb2Nrcywgb25seSB0d28gcGFyYW1zIHJlcXVpcmVkLiBUaGUgZmlyc3Qgb25l
-IGlzDQo+ID4gPiA+IHJlc291cmNlIGlkIHdoaWNoIGlzIGVuY29kZWQgaW4gcmVnIHByb3BlcnR5
-IGFuZCB0aGUgc2Vjb25kIGlzDQo+ID4gPiA+IGNsb2NrIHR5cGUgaW5kZXggd2hpY2ggaXMgZW5j
-b2RlZCBpbiBnZW5lcmljIGNsb2NrLWluZGljZXMgcHJvcGVydHkNCj4gdGhleSdyZSBub3QgY29u
-dGludW91c2x5Lg0KPiA+ID4gPg0KPiA+ID4gPiBBbmQgYXMgd2UgYWxzbyB3YW50IHRvIHN1cHBv
-cnQgY2xvY2sgc2V0IHBhcmVudCBmdW5jdGlvbiwgJ2Nsb2NrcycNCj4gPiA+ID4gcHJvcGVydHkg
-aXMgYWxzbyB1c2VkIHRvIHBhc3MgYWxsIHRoZSBwb3NzaWJsZSBpbnB1dCBwYXJlbnRzLg0KPiA+
-ID4gPg0KPiA+ID4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gPiA+
-ID4gQ2M6IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCj4gPiA+ID4gQ2M6IFNoYXdu
-IEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+ID4gQ2M6IFNhc2NoYSBIYXVlciA8a2Vy
-bmVsQHBlbmd1dHJvbml4LmRlPg0KPiA+ID4gPiBDYzogTWljaGFlbCBUdXJxdWV0dGUgPG10dXJx
-dWV0dGVAYmF5bGlicmUuY29tPg0KPiA+ID4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcNCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhw
-LmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IENoYW5nZUxvZzoNCj4gPiA+ID4gdjEtPnYyOg0K
-PiA+ID4gPiAgKiBjaGFuZ2VkIHRvIG9uZSBjZWxsIGJpbmRpbmcgaW5zcGlyZWQgYnkgYXJtLHNj
-cGkudHh0DQo+ID4gPiA+ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-YXJtLHNjcGkudHh0DQo+ID4gPiA+ICAgIFJlc291cmNlIElEIGlzIGVuY29kZWQgaW4gJ3JlZycg
-cHJvcGVydHkuDQo+ID4gPiA+ICAgIENsb2NrIHR5cGUgaXMgZW5jb2RlZCBpbiBnZW5lcmljIGNs
-b2NrLWluZGljZXMgcHJvcGVydHkuDQo+ID4gPiA+ICAgIFRoZW4gd2UgZG9uJ3QgaGF2ZSB0byBz
-ZWFyY2ggYWxsIHRoZSBEVCBub2RlcyB0byBmZXRjaA0KPiA+ID4gPiAgICB0aG9zZSB0d28gdmFs
-dWUgdG8gY29uc3RydWN0IGNsb2NrcyB3aGljaCBpcyByZWxhdGl2ZWx5DQo+ID4gPiA+ICAgIGxv
-dyBlZmZpY2llbmN5Lg0KPiA+ID4gPiAgKiBBZGQgcmVxdWlyZWQgcG93ZXItZG9tYWluIHByb3Bl
-cnR5IGFzIHdlbGwuDQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dCAgfCA0NQ0KPiA+ID4gKysrKysrKysrKysrKysr
-KysrLS0tLQ0KPiA+ID4gPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5o
-ICAgICAgICAgICAgfCAxNyArKysrKysrKw0KPiA+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA1NCBp
-bnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0
-DQo+ID4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
-bGUvZnNsLHNjdS50eHQNCj4gPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+ID4gPiBpbmRleCA1ZDdkYmFiLi4yZjQ2
-ZTg5IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+ID4gPiBA
-QCAtODksNiArODksMjcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ID4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAiZnNsLGlteDhxbS1jbG9jayINCj4gPiA+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAiZnNsLGlteDhxeHAtY2xvY2siDQo+ID4gPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIGZvbGxvd2VkIGJ5ICJmc2wsc2N1LWNsayINCj4gPiA+ID4gKy0gI2FkZHJlc3Mt
-Y2VsbHM6ICAgICAgU2hvdWxkIGJlIDEuDQo+ID4gPiA+ICstICNzaXplLWNlbGxzOiAgICAgICAg
-IFNob3VsZCBiZSAwLg0KPiA+ID4gPiArDQo+ID4gPiA+ICtTdWIgbm9kZXMgYXJlIHJlcXVpcmVk
-IHRvIHJlcHJlc2VudCBhbGwgYXZhaWxhYmxlIFNDVSBjbG9ja3MNCj4gPiA+ID4gK3dpdGhpbiB0
-aGlzIGhhcmR3YXJlIHN1YnN5c3RlbSBhbmQgdGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzIGFyZQ0K
-PiBuZWVkZWQ6DQo+ID4gPiA+ICsNCj4gPiA+ID4gKy0gcmVnOiAgICAgICAgICAgICAgICAgU2hv
-dWxkIGNvbnRhaW4gdGhlIFJlc291cmNlIElEIG9mIHRoaXMgU0NVDQo+IGNsb2NrLg0KPiA+ID4g
-PiArLSAjY2xvY2stY2VsbHM6ICAgICAgICAgICAgICAgIFNob3VsZCBiZSAxLg0KPiA+ID4gPiAr
-LSBjbG9jay1pbmRpY2VzOiAgICAgICBJbmRleCBvZiBhbGwgY2xvY2sgdHlwZXMgc3VwcG9ydGVk
-IGJ5IHRoaXMgU0NVDQo+IGNsb2NrLg0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBU
-aGUgb3JkZXIgc2hvdWxkIG1hdGNoIHRoZQ0KPiA+ID4gPiArY2xvY2stb3V0cHV0LW5hbWVzDQo+
-ID4gPiBhcnJheS4NCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgUmVmZXIgdG8NCj4g
-PiA+IDxpbmNsdWRlL2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmg+IGZvcg0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICBhdmFpbGFibGUgY2xvY2sgdHlwZXMgc3VwcG9ydGVk
-IGJ5IFNDVS4NCj4gPiA+DQo+ID4gPiBJIHdvdWxkIGhhdmUgZXhwZWN0ZWQgdGhlIGNsb2NrIGNl
-bGwgdG8gY29udGFpbiB0aGUgUmVzb3VyY2UgSUQuDQo+ID4gPg0KPiA+ID4gQWxzbywgdGhpcyBz
-dGlsbCBoYXMgb25lIGNsb2NrIHBlciBub2RlIHdoaWNoIHlvdSBzaG91bGQgYXZvaWQNCj4gPiA+
-IHVubGVzcyB0aGVyZSdzIG9ubHkgYSBzbWFsbCBudW1iZXIgb2YgY2xvY2tzIChzYXkgfjIwKS4g
-TW92ZSB0aGlzDQo+ID4gPiBhbGwgdG8gYSBzaW5nbGUgbm9kZSB3aXRoIHRoZSBsaXN0IG9mIGNs
-b2NrIElEcyBpbiBjbG9jay1pbmRpY2VzIGFuZA0KPiA+ID4gb3RoZXIgcHJvcGVydGllcyBsaWtl
-IHBvd2VyLWRvbWFpbnMgY2FuIG1hdGNoIHVwIHdpdGggY2xvY2staW5kaWNlcy4NCj4gPiA+IElP
-VywgYm90aCBzaG91bGQgaGF2ZSB0aGUgc2FtZSBsZW5ndGggKGluIGVsZW1lbnRzKS4NCj4gPiA+
-DQo+ID4NCj4gPiBEbyB5b3UgbWVhbiBzb21ldGhpbmcgbGlrZSB0aGlzPw0KPiA+DQo+ID4gI2Rl
-ZmluZSBJTVhfU0NVX0NMS19JRChyc3JjLCB0eXBlKSAgICAgICh0eXBlIDw8IDE2IHwgcnNyYykN
-Cj4gPiBzY3VfY2xrOiBzY3UtY2xvY2stY29udHJvbGxlciB7DQo+ID4gICAgICAgICBjb21wYXRp
-YmxlID0gImZzbCxpbXg4cXhwLXNjdS1jbGsiLCAiZnNsLHNjdS1jbGsiOw0KPiA+ICAgICAgICAg
-I2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ICAgICAgICAgY2xvY2staW5kaWNlcyA9IDxJTVhfU0NV
-X0NMS19JRChJTVhfU0NfUl9FTkVUXzAsDQo+IElNWF9TQ19QTV9DTEtfUEVSKT4sDQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX0VORVRfMCwNCj4g
-SU1YX1NDX1BNX0NMS19CWVBBU1MpPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICA8SU1Y
-X1NDVV9DTEtfSUQoSU1YX1NDX1JfRU5FVF8wLA0KPiBJTVhfU0NfUE1fQ0xLX01JU0MwKT4sDQo+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX1VBUlRf
-MCwNCj4gSU1YX1NDX1BNX0NMS19QRVIpPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAu
-Li4NCj4gPg0KPiA+ICAgICAgICAgY2xvY2stb3V0cHV0LW5hbWVzID0gImVuZXQwX2NsayIsDQo+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZW5ldDBfYnlwYXNzX2NsayIsDQo+ID4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZW5ldDBfcmdtaWlfY2xrIiwNCj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICJ1YXJ0MF9jbGsiLA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLi4uDQo+ID4NCj4gPiAgICAgICAgIHBvd2VyLWRvbWFpbnMgPSA8JnBk
-IElNWF9TQ19SX0VORVRfMD4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhf
-U0NfUl9FTkVUXzA+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1Jf
-RU5FVF8wPiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICA8JnBkIElNWF9TQ19SX1VBUlRf
-MD4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgLi4uDQo+ID4gfTsNCj4gDQo+IFllcywg
-YnV0Li4uDQo+IA0KPiA+IHNlcmlhbEA1YTA2MDAwMCB7DQo+ID4gICAgICAgICAuLi4NCj4gPiAg
-ICAgICAgIGNsb2NrcyA9IDwmc2N1X2NsayBJTVhfU0NVX0NMS19JRChJTVhfU0NfUl9VQVJUXzAs
-DQo+ID4gSU1YX1NDX1BNX0NMS19QRVIpPjsNCj4gDQo+IEkgdGhvdWdodCBkZXZpY2VzIGdvdCBj
-bG9ja3MgZnJvbSB0aGUgTFBDRz8NCj4gDQoNClllcy4gSGVyZSBpcyBqdXN0IGFuIGV4YW1wbGUg
-b2YgdXNpbmcgU0NVIGNsb2Nrcy4NCkFuZCBmb3Igc29tZSBkZXZpY2VzIHdpdGhvdXQgTFBDRywg
-aXQgY291bGQgYWxzbyBnZXQgY2xvY2tzIGRpcmVjdGx5IGZyb20gU0NVIGNsb2NrLg0KIA0KPiA+
-ICAgICAgICAgcG93ZXItZG9tYWlucyA9IDwmcGQgSU1YX1NDX1JfVUFSVF8wPjsgfTsNCj4gPg0K
-PiA+IEkgd29uZGVyIG1vdmluZyBhbGwgY2xvY2sgcmVzb3VyY2VzIGludG8gYSBzaW5nbGUgY2xv
-Y2sgY29udHJvbGxlcg0KPiA+IG5vZGUgbWF5IHJlc3VsdCBpbiBsb3NpbmcgdGhlIGNvbmZpZ3Vy
-YXRpb24gZ3JhbnVsYXJpdHkgb2YgaW5kaXZpZHVhbCBjbG9ja3MNCj4gZnJvbSBkZXZpY2UgdHJl
-ZS4NCj4gPg0KPiA+IEZvciBTQ1UgYmFzZWQgcGxhdGZvcm1zLCB0aGUgcmVzb3VyY2UgYXZhaWxh
-YmlsaXR5IChlLmcuDQo+ID4gZGV2aWNlL2Nsb2Nrcy9wb3dlcikgYXJlIGNvbmZpZ3VyYWJsZSBi
-eSBTQ1UgZmlybXdhcmUgYWNjb3JkaW5nIHRvIHRoZQ0KPiBkaWZmZXJlbnQgU1cgZXhlY3V0aW9u
-IHBhcnRpdGlvbiBjb25maWd1cmF0aW9uLg0KPiA+IGUuZy4gQWNjb3JkaW5nIHRvIGN1c3RvbWVy
-J3MgcmVxdWlyZW1lbnRzLCB3ZSBtYXkgYWxsb2NhdGUgc29tZQ0KPiA+IHJlc291cmNlcyB0byBN
-NCBwYXJ0aXRpb24gbGlrZSBzb21lIEkyQywgQ0FOLCBhdWRpbyByZXNvdXJjZXMgd2hpY2ggY2Fu
-J3QgYmUNCj4gYWNjZXNzZWQgYnkgQSBjb3JlLg0KPiA+IEFuZCB3ZSBtYXkgYWxsb2NhdGUgZXZl
-biBtb3JlIGZvciB2aXJ0dWFsIG1hY2hpbmVzIHJ1bm5pbmcgYXQgYW5vdGhlciBDUFUNCj4gY29y
-ZS4NCj4gPiBUaHVzLCBkZWZpbmluZyBhbGwgdGhlIGNsb2NrIHNvdXJjZXMgKGZpeGVkKSBpbiBk
-ZXZpY2UgdHJlZSBmb3IgQSBjb3JlDQo+ID4gc2VlbXMgdG8gYmUgYSBsaXR0bGUgYml0IG1lYW5p
-bmdsZXNzIGFuZCBpdCBhbHNvIGNhdXNlcyB1cyBoYXJkIHRvIGV4dGVuZCBmb3IgYQ0KPiBuZXcg
-U29DLg0KPiANCj4gSSdtIG5vdCBzdWdnZXN0aW5nIHRoYXQuIEl0J3MgcmVhbGx5IGp1c3QgcmUt
-YXJyYW5naW5nIGFsbCB0aGUgc2FtZSBkYXRhIGZyb20gYQ0KPiBidW5jaCBvZiBjaGlsZCBub2Rl
-cyB0byBhIHNpbmdsZSBub2RlLiBHcmFudGVkLCBpdCBtYXkgYmUgZWFzaWVyIHRvIGFkZC9kZWxl
-dGUNCj4gbm9kZXMgdGhhbiBhZGQvZGVsZXRlIGVsZW1lbnRzIGZyb20gYW4gYXJyYXkgb2YgcHJv
-cGVydHkgdmFsdWVzLCBidXQgcmVhbGx5DQo+IHRoYXQncyBqdXN0IGEgdG9vbGluZyBwcm9ibGVt
-DQo+IA0KDQpPa2F5LCB1bmRlcnN0b29kLg0KU28gaXQgc2VlbXMgd2UgY291bGQgc3RpbGwgaGF2
-ZSBhIHNlcGFyYXRlIGNsb2NrIGNvbnRyb2xsZXIgbm9kZSBmb3IgZWFjaCBTUyBidXQgbWVyZ2UN
-CmFsbCB0aGUgc2FtZSBkYXRhIG9mIGNoaWxkIG5vZGVzIGRhdGEgaW50byBpdC4NCg0KSG93ZXZl
-ciwgd2Ugc3RpbGwgaGF2ZSBvbmUgY29uY2Vybi4NClRha2luZyBNWDhRWFAgRE1BIFNTIGFzIGV4
-YW1wbGUsIHdpdGggb25lIG5vZGUgZGVzY3JpcHRpb24sIGl0IG1heSBiZSBzb21ldGhpbmcNCmxp
-a2UgYmVsb3c6DQpkbWFfc2N1X2NsazogZG1hLXNjdS1jbG9jay1jb250cm9sbGVyIHsNCiAgICAg
-ICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zY3UtcGQiLCAiZnNsLHNjdS1jbGsiOw0KICAg
-ICAgICAjY2xvY2stY2VsbHMgPSA8MT47DQogICAgICAgIGNsb2NrLWluZGljZXMgPSA8SU1YX1ND
-VV9DTEtfSUQoSU1YX1NDX1JfQURDXzAsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAg
-ICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfQ0FOXzAsIElNWF9TQ19QTV9D
-TEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1ND
-X1JfRlRNXzAsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAgICA8
-SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfRlRNXzEsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAg
-ICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfSTJDXzAsIElNWF9T
-Q19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQo
-SU1YX1NDX1JfSTJDXzEsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAg
-ICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfSTJDXzIsIElNWF9TQ19QTV9DTEtfUEVSKT4s
-DQogICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfSTJDXzMs
-IElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9D
-TEtfSUQoSU1YX1NDX1JfTENEXzAsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAg
-ICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfTENEXzBfUFdNXzAsIElNWF9TQ19Q
-TV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1Y
-X1NDX1JfU1BJXzAsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAg
-ICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfU1BJXzEsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQog
-ICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfU1BJXzIsIElN
-WF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtf
-SUQoSU1YX1NDX1JfU1BJXzMsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAgICAgICAgICAg
-ICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfVUFSVF8wLCBJTVhfU0NfUE1fQ0xLX1BF
-Uik+LA0KICAgICAgICAgICAgICAgICAgICAgICAgPElNWF9TQ1VfQ0xLX0lEKElNWF9TQ19SX1VB
-UlRfMSwgSU1YX1NDX1BNX0NMS19QRVIpPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDxJTVhf
-U0NVX0NMS19JRChJTVhfU0NfUl9VQVJUXzIsIElNWF9TQ19QTV9DTEtfUEVSKT4sDQogICAgICAg
-ICAgICAgICAgICAgICAgICA8SU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfVUFSVF8zLCBJTVhfU0Nf
-UE1fQ0xLX1BFUik+Ow0KICAgICAgICBjbG9jay1vdXRwdXQtbmFtZXMgPSAiYWRjMF9jbGsiLA0K
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiY2FuMF9jbGsiLA0KICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAiZnRtMF9jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
-ZnRtMV9jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaTJjMF9jbGsiLA0KICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAiaTJjMV9jbGsiLA0KICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAiaTJjMl9jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaTJj
-M19jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAibGNkMF9jbGsiLA0KICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAibGNkMF9wd20wX2NsayIsDQogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICJzcGkwX2NsayIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICJz
-cGkxX2NsayIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICJzcGkyX2NsayIsDQogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICJzcGkzX2NsayIsDQogICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICJ1YXJ0MF9jbGsiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAidWFy
-dDFfY2xrIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInVhcnQyX2NsayIsDQogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICJ1YXJ0M19jbGsiOw0KICAgICAgICBwb3dlci1kb21h
-aW5zID0gPCZwZCBJTVhfU0NfUl9BRENfMD4sDQogICAgICAgICAgICAgICAgICAgICAgICA8JnBk
-IElNWF9TQ19SX0NBTl8wPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1Jf
-RlRNXzA+LA0KICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9GVE1fMT4sDQog
-ICAgICAgICAgICAgICAgICAgICAgICA8JnBkIElNWF9TQ19SX0kyQ18wPiwNCiAgICAgICAgICAg
-ICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1JfSTJDXzE+LA0KICAgICAgICAgICAgICAgICAgICAg
-ICAgPCZwZCBJTVhfU0NfUl9JMkNfMj4sDQogICAgICAgICAgICAgICAgICAgICAgICA8JnBkIElN
-WF9TQ19SX0kyQ18zPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1JfTENE
-XzA+LA0KICAgICAgICAgICAgICAgICAgICAgICAgPCZwZCBJTVhfU0NfUl9MQ0RfMF9QV01fMD4s
-DQogICAgICAgICAgICAgICAgICAgICAgICA8JnBkIElNWF9TQ19SX1NQSV8wPiwNCiAgICAgICAg
-ICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1JfU1BJXzE+LA0KICAgICAgICAgICAgICAgICAg
-ICAgICAgPCZwZCBJTVhfU0NfUl9TUElfMj4sDQogICAgICAgICAgICAgICAgICAgICAgICA8JnBk
-IElNWF9TQ19SX1NQSV8zPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1Jf
-VUFSVF8wPiwNCiAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1JfVUFSVF8xPiwN
-CiAgICAgICAgICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1JfVUFSVF8yPiwNCiAgICAgICAg
-ICAgICAgICAgICAgICAgIDwmcGQgSU1YX1NDX1JfVUFSVF8zPjsNCn07DQoNCkZvciBNWDhRTSwg
-ZXZlbiBpZiB3ZSBoYXZlIG9uZSBtb3JlIFVBUlRfNCwgdGhlbiB3ZSBzdGlsbCBoYXZlIHRvIHdy
-aXRlDQphbGwgdGhlIHNhbWUgdGhpbmdzIGFnYWluIHdpdGggYW4gZXh0cmEgVUFSVF80LiBJdCBz
-ZWVtcyBpdCdzIGEgYml0IHZpb2xhdGUgb3VyIGRlc2lnbg0KdGhhdCB1c2luZyBhIHNoYXJlZCBv
-bmUgYW5kIGRvIGluY3JlbWVudGFsIGNoYW5nZXMgZm9yIG5ldyBTb0NzLg0KRG8geW91IHRoaW5r
-IGlmIHRoaXMgaXMgYWNjZXB0YWJsZSB0byB5b3U/DQpCdXQgaWYgZGVzY3JpYmUgdGhlbSBwZXIg
-bm9kZXMsIHdlIGRvIG5vdCBoYXZlIHN1Y2ggaXNzdWUuDQoNCkFueXdheSwgcGxlYXNlIHRlbGwg
-bWUgeW91ciBjaG9pY2UsIHRoZW4gSSB3aWxsIGZvbGxvdy4NCg0KQlRXLCBJIGRvbid0IGtub3cg
-aG93IGEgdG9vbCBjYW4gYWRkcmVzcyB0aGlzIGlzc3VlLg0KUGxlYXNlIGxldCBtZSBrbm93IGlm
-IHlvdSBoYXZlIGJldHRlciBpZGVhLg0KDQo+ID4gRS5nLiBNWDhRTSBoYXMgbW9yZSBjbG9ja3Mg
-dGhhbiBRWFAgaW4gZGlmZmVyZW50IFNTLg0KPiA+IFRoYXQncyB3aHkgd2Ugd2FudCB0aGUgcGVy
-IGNsb2NrIHNvdXJjZSBub2RlIGRlZmluaXRpb24gaW4gRFQuDQo+ID4gVGhlbiB3ZSBjYW4gY29u
-ZmlndXJlIHRoZSBjbG9jayBzb3VyY2VzIGNvbnZlbmllbnRseSBhY2NvcmRpbmcgdG8NCj4gPiBk
-aWZmZXJlbnQgcGFydGl0aW9uIHNldHRpbmcgYW5kIG5ldyBTb0MgcHJvcGVydHkuDQo+ID4NCj4g
-PiBGdXJ0aGVybW9yZSwgcGVyIGNsb2NrIHJlc291cmNlIG5vZGUgYWxzbyBtYWtlcyB1cyBtb3Jl
-IGVhc2lseSB0bw0KPiA+IGhhbmRsZSBwb3dlciBkb21haW4gSW4gYSBtb3JlIHN0YW5kYXJkIHdh
-eSBhbmQgZG8gc3RhdGUgc2F2ZSZyZXN0b3JlDQo+ID4gZHVyaW5nIHN5c3RlbSBzdXNwZW5kL3Jl
-c3VtZSBkdWUgdG8gdGhlIGNsb2NrIHN0YXRlIHdpbGwgYmUgbG9zdCB3aGVuIHRoZQ0KPiBwb3dl
-ciBpcyBvZmYuDQo+ID4NCj4gPiBBbm90aGVyIGltcG9ydGFudCB0aGluZyBpcyB0aGF0IE1YOCBp
-cyBjb25zaXN0ZWQgb2YgYSBudW1iZXIgb2YgSFcNCj4gPiBzdWJzeXN0ZW0gd2hpbGUgZWFjaCBT
-dWJzeXN0ZW0gaGFzIHNlcGFyYXRlIGNsb2NrIGNvbnRyb2xsZXJzIChib3RoIFNDVQ0KPiBjbG9j
-ayBjb250cm9sbGVycyBhbmQgTFBDRyBjbG9jayBjb250cm9sbGVycykuDQo+ID4gSSBiZWxpZXZl
-IHRoaXMgaXMgZGlmZmVyZW50IGZyb20gb3RoZXIgdmVuZG9yIGxpa2UgVEkgYW5kIEFSTSBKdW5v
-DQo+ID4gd2hpY2ggbWlnaHQgbWFrZSB1cyBmZWVsIHdlIHNob3VsZCB1c2UgdGhlIHNhbWUgd2F5
-IGFzIHRoZWlycyBhdCB0aGUgZmlyc3QNCj4gZ2xhbmNlLiBCdXQgd2UncmUgZGlmZmVyZW50Lg0K
-PiA+DQo+ID4gVGhhdCdzIHdoeSBJIHVzZSBwZXIgY2xvY2sgcmVzb3VyY2Ugbm9kZSBhcyBpdCBz
-ZWVtcyB0byBiZSBiZXR0ZXIgZm9yIGkuTVgNCj4gc3BlY2lhbCBjaGFyYWN0ZXJpc3RpYy4NCj4g
-Pg0KPiA+IENvbnNpZGVyaW5nIGFsbCBhYm92ZSByZXF1aXJlbWVudHMsIGhvdyB3b3VsZCB5b3Ug
-c3VnZ2VzdCB1cyB0byBkbz8NCj4gPg0KPiA+ID4gRm9yIHRoZSBjbG9jayB0eXBlLCBwZXJoYXBz
-IGNvbWJpbmUgdGhhdCBpbiB0aGUgY2xvY2sgY2VsbCB3aXRoIHRoZQ0KPiA+ID4gcmVzb3VyY2Ug
-SUQgc3VjaCBhcyB1c2luZyB0aGUgdXBwZXIgOC1iaXRzLg0KPiA+ID4NCj4gPg0KPiA+IEl0IHNl
-ZW1zIHdlIG11c3QgY29tYmluZSB0aGVtIGJlY2F1c2UgY3VycmVudCBjbG9jay1pbmRpY2VzIGJp
-bmRpbmcNCj4gPiBkb2VzIG5vdCBzdXBwb3J0IHR3byBjZWxscyBpbmRleCB3aGljaCBzZWVtcyBh
-IGRyYXdiYWNrIGZyb20gdXNlciBwb2ludCBvZg0KPiB2aWV3Lg0KPiA+IGUuZy4NCj4gPiBjbG9j
-a3MgPSA8JnNjdV9jbGsgSU1YX1NDVV9DTEtfSUQoSU1YX1NDX1JfVUFSVF8wLA0KPiA+IElNWF9T
-Q19QTV9DTEtfUEVSKT47DQo+IA0KPiBUaGF0IHdhcyBteSBvcmlnaW5hbCB0aG91Z2h0LCBidXQg
-d2UgY291bGQganVzdCBzYXkgdGhlIGNsb2NrLWluZGljZXMgZWxlbWVudA0KPiBzaXplIGlzIGVx
-dWFsIHRvIHRoZSAjY2xvY2stY2VsbHMgc2l6ZSBhbmQgdXNlIDIgY2VsbHMuDQo+IA0KDQpPa2F5
-LCB0aGVuIHdlIGhhdmUgZXh0ZW5kIHRoZSBjbG9jayBjb3JlIEFQSSBvZl9jbGtfZ2V0X3BhcmVu
-dF9uYW1lDQp0byBzdXBwb3J0IGl0IGFzIHdlbGwuDQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
-DQo+IFJvYg0K
+On Sat, May 4, 2019 at 7:19 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> > From: Rob Herring [mailto:robh+dt@kernel.org]
+> > Sent: Friday, May 3, 2019 10:53 PM
+> > Subject: Re: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
+> > parse clocks from device tree
+> >
+> > On Thu, May 2, 2019 at 8:34 PM Aisheng Dong <aisheng.dong@nxp.com>
+> > wrote:
+> >
+> > > There's a few limitations on the original one cell clock binding
+> > > (#clock-cells = <1>) that we have to define all clock IDs for device
+> > > tree to reference. This may cause troubles if we want to use common
+> > > clock IDs for multi platforms support when the clock of those
+> > > platforms are mostly the same.
+> > > e.g. Current clock IDs name are defined with SS prefix.
+> > >
+> > > However the device may reside in different SS across CPUs, that means
+> > > the SS prefix may not valid anymore for a new SoC. Furthermore, the
+> > > device availability of those clocks may also vary a bit.
+> > >
+> > > For such situation, We formerly planned to add all new IDs for each SS
+> > > and dynamically check availability for different SoC in driver. That
+> > > can be done but that may involve a lot effort and may result in more
+> > > changes and duplicated code in driver, also make device tree
+> > > upstreaming hard which depends on Clock IDs.
+> > >
+> > > To relief this situation, we want to move the clock definition into
+> > > device tree which can fully decouple the dependency of Clock ID
+> > > definition from device tree. This can make us write a full generic
+> > > clock driver for SCU based SoCs. No more frequent changes needed in
+> > > clock driver any more.
+> > >
+> > > In the meanwhile, we can also use the existence of clock nodes in
+> > > device tree to address the device and clock availability differences
+> > > across different SoCs.
+> > >
+> > > For SCU clocks, only two params required. The first one is resource id
+> > > which is encoded in reg property and the second is clock type index
+> > > which is encoded in generic clock-indices property they're not continuously.
+> > >
+> > > And as we also want to support clock set parent function, 'clocks'
+> > > property is also used to pass all the possible input parents.
+> > >
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Stephen Boyd <sboyd@kernel.org>
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: Michael Turquette <mturquette@baylibre.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > > ChangeLog:
+> > > v1->v2:
+> > >  * changed to one cell binding inspired by arm,scpi.txt
+> > >    Documentation/devicetree/bindings/arm/arm,scpi.txt
+> > >    Resource ID is encoded in 'reg' property.
+> > >    Clock type is encoded in generic clock-indices property.
+> > >    Then we don't have to search all the DT nodes to fetch
+> > >    those two value to construct clocks which is relatively
+> > >    low efficiency.
+> > >  * Add required power-domain property as well.
+> > > ---
+> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 45
+> > ++++++++++++++++++----
+> > >  include/dt-bindings/firmware/imx/rsrc.h            | 17 ++++++++
+> > >  2 files changed, 54 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > index 5d7dbab..2f46e89 100644
+> > > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > @@ -89,6 +89,27 @@ Required properties:
+> > >                           "fsl,imx8qm-clock"
+> > >                           "fsl,imx8qxp-clock"
+> > >                         followed by "fsl,scu-clk"
+> > > +- #address-cells:      Should be 1.
+> > > +- #size-cells:         Should be 0.
+> > > +
+> > > +Sub nodes are required to represent all available SCU clocks within
+> > > +this hardware subsystem and the following properties are needed:
+> > > +
+> > > +- reg:                 Should contain the Resource ID of this SCU clock.
+> > > +- #clock-cells:                Should be 1.
+> > > +- clock-indices:       Index of all clock types supported by this SCU clock.
+> > > +                       The order should match the clock-output-names
+> > array.
+> > > +                       Refer to
+> > <include/dt-bindings/firmware/imx/rsrc.h> for
+> > > +                       available clock types supported by SCU.
+> >
+> > I would have expected the clock cell to contain the Resource ID.
+> >
+> > Also, this still has one clock per node which you should avoid unless there's
+> > only a small number of clocks (say ~20). Move this all to a single node with the
+> > list of clock IDs in clock-indices and other properties like power-domains can
+> > match up with clock-indices. IOW, both should have the same length (in
+> > elements).
+> >
+>
+> Do you mean something like this?
+>
+> #define IMX_SCU_CLK_ID(rsrc, type)      (type << 16 | rsrc)
+> scu_clk: scu-clock-controller {
+>         compatible = "fsl,imx8qxp-scu-clk", "fsl,scu-clk";
+>         #clock-cells = <1>;
+>         clock-indices = <IMX_SCU_CLK_ID(IMX_SC_R_ENET_0, IMX_SC_PM_CLK_PER)>,
+>                         <IMX_SCU_CLK_ID(IMX_SC_R_ENET_0, IMX_SC_PM_CLK_BYPASS)>,
+>                         <IMX_SCU_CLK_ID(IMX_SC_R_ENET_0, IMX_SC_PM_CLK_MISC0)>,
+>                         <IMX_SCU_CLK_ID(IMX_SC_R_UART_0, IMX_SC_PM_CLK_PER)>,
+>                         ...
+>
+>         clock-output-names = "enet0_clk",
+>                              "enet0_bypass_clk",
+>                              "enet0_rgmii_clk",
+>                              "uart0_clk",
+>                              ...
+>
+>         power-domains = <&pd IMX_SC_R_ENET_0>,
+>                         <&pd IMX_SC_R_ENET_0>,
+>                         <&pd IMX_SC_R_ENET_0>,
+>                         <&pd IMX_SC_R_UART_0>,
+>                         ...
+> };
+
+Yes, but...
+
+> serial@5a060000 {
+>         ...
+>         clocks = <&scu_clk IMX_SCU_CLK_ID(IMX_SC_R_UART_0, IMX_SC_PM_CLK_PER)>;
+
+I thought devices got clocks from the LPCG?
+
+>         power-domains = <&pd IMX_SC_R_UART_0>;
+> };
+>
+> I wonder moving all clock resources into a single clock controller node may result in losing
+> the configuration granularity of individual clocks from device tree.
+>
+> For SCU based platforms, the resource availability (e.g. device/clocks/power) are
+> configurable by SCU firmware according to the different SW execution partition configuration.
+> e.g. According to customer's requirements, we may allocate some resources to M4 partition
+> like some I2C, CAN, audio resources which can't be accessed by A core.
+> And we may allocate even more for virtual machines running at another CPU core.
+> Thus, defining all the clock sources (fixed) in device tree for A core seems to be a little bit
+> meaningless and it also causes us hard to extend for a new SoC.
+
+I'm not suggesting that. It's really just re-arranging all the same
+data from a bunch of child nodes to a single node. Granted, it may be
+easier to add/delete nodes than add/delete elements from an array of
+property values, but really that's just a tooling problem
+
+> E.g. MX8QM has more clocks than QXP in different SS.
+> That's why we want the per clock source node definition in DT.
+> Then we can configure the clock sources conveniently according to different partition
+> setting and new SoC property.
+>
+> Furthermore, per clock resource node also makes us more easily to handle power domain
+> In a more standard way and do state save&restore during system suspend/resume due to
+> the clock state will be lost when the power is off.
+>
+> Another important thing is that MX8 is consisted of a number of HW subsystem while each
+> Subsystem has separate clock controllers (both SCU clock controllers and LPCG clock controllers).
+> I believe this is different from other vendor like TI and ARM Juno which might make us feel we should
+> use the same way as theirs at the first glance. But we're different.
+>
+> That's why I use per clock resource node as it seems to be better for i.MX special characteristic.
+>
+> Considering all above requirements, how would you suggest us to do?
+>
+> > For the clock type, perhaps combine that in the clock cell with the resource ID
+> > such as using the upper 8-bits.
+> >
+>
+> It seems we must combine them because current clock-indices binding does not
+> support two cells index which seems a drawback from user point of view.
+> e.g.
+> clocks = <&scu_clk IMX_SCU_CLK_ID(IMX_SC_R_UART_0, IMX_SC_PM_CLK_PER)>;
+
+That was my original thought, but we could just say the clock-indices
+element size is equal to the #clock-cells size and use 2 cells.
+
+Rob
