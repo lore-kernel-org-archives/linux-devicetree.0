@@ -1,176 +1,70 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V5 05/16] PCI: dwc: Move config space capability search
- API
-Date: Tue, 7 May 2019 13:34:32 +0530
-Message-ID: <ee628f18-0f19-f501-db28-7db31fd3bcbc@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-6-vidyas@nvidia.com>
- <305100E33629484CBB767107E4246BBB0A230666@de02wembxa.internal.synopsys.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v5 03/12] dt-binding: gce: add binding for gce subsys property
+Date: Tue, 7 May 2019 16:13:46 +0800
+Message-ID: <20190507081355.52630-4-bibby.hsieh@mediatek.com>
+References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <305100E33629484CBB767107E4246BBB0A230666@de02wembxa.internal.synopsys.com>
-Content-Language: en-US
+In-Reply-To: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>
-Cc: "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kthota@nvidia.com" <kthota@nvidia.com>, "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>, "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/24/2019 1:43 PM, Gustavo Pimentel wrote:
-> On Wed, Apr 24, 2019 at 6:19:53, Vidya Sagar <vidyas@nvidia.com> wrote:
-> 
->> Move PCIe config space capability search API to common DesignWare file
->> as this can be used by both host and ep mode codes.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Changes from [v4]:
->> * Removed redundant APIs in pcie-designware-ep.c file after moving them
->>    to pcie-designware.c file based on Bjorn's comments.
->>
->> Changes from [v3]:
->> * Rebased to linux-next top of the tree
->>
->> Changes from [v2]:
->> * None
->>
->> Changes from [v1]:
->> * Removed dw_pcie_find_next_ext_capability() API from here and made a
->>    separate patch for that
->>
->>   .../pci/controller/dwc/pcie-designware-ep.c   | 37 +-----------------
->>   drivers/pci/controller/dwc/pcie-designware.c  | 39 +++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->>   3 files changed, 43 insertions(+), 35 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 2bf5a35c0570..65f479250087 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
->>   	__dw_pcie_ep_reset_bar(pci, bar, 0);
->>   }
->>   
->> -static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->> -			      u8 cap)
->> -{
->> -	u8 cap_id, next_cap_ptr;
->> -	u16 reg;
->> -
->> -	if (!cap_ptr)
->> -		return 0;
->> -
->> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> -	cap_id = (reg & 0x00ff);
->> -
->> -	if (cap_id > PCI_CAP_ID_MAX)
->> -		return 0;
->> -
->> -	if (cap_id == cap)
->> -		return cap_ptr;
->> -
->> -	next_cap_ptr = (reg & 0xff00) >> 8;
->> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->> -}
->> -
->> -static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
->> -{
->> -	u8 next_cap_ptr;
->> -	u16 reg;
->> -
->> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->> -	next_cap_ptr = (reg & 0x00ff);
->> -
->> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->> -}
->> -
->>   static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
->>   				   struct pci_epf_header *hdr)
->>   {
->> @@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->>   		return -ENOMEM;
->>   	}
->> -	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
->> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->>   
->> -	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
->> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
->>   
->>   	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
->>   	if (offset) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 8e0081ccf83b..ed21e861df82 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -20,6 +20,45 @@
->>   #define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
->>   #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
->>   
->> +/*
->> + * These APIs are different from standard pci_find_*capability() APIs in the
->> + * sense that former can only be used post device enumeration as they require
->> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
->> + * pointer and can be used before link up also.
->> + */
->> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->> +				  u8 cap)
->> +{
->> +	u8 cap_id, next_cap_ptr;
->> +	u16 reg;
->> +
->> +	if (!cap_ptr)
->> +		return 0;
->> +
->> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> +	cap_id = (reg & 0x00ff);
->> +
->> +	if (cap_id > PCI_CAP_ID_MAX)
->> +		return 0;
->> +
->> +	if (cap_id == cap)
->> +		return cap_ptr;
->> +
->> +	next_cap_ptr = (reg & 0xff00) >> 8;
->> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->> +}
->> +
->> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->> +{
->> +	u8 next_cap_ptr;
->> +	u16 reg;
->> +
->> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->> +	next_cap_ptr = (reg & 0x00ff);
->> +
->> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->> +}
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 9ee98ced1ef6..35160b4ce929 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -248,6 +248,8 @@ struct dw_pcie {
->>   #define to_dw_pcie_from_ep(endpoint)   \
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +
-> 
-> Can you remove this extra line space?
-In patch 06/15, I added dw_pcie_find_ext_capability() API so that they are grouped together
-(separated by a blank line) like how dw_pcie_read() and dw_pcie_write() are grouped.
+tcmdq driver provide a function that get the relationship
+of sub system number from device node for client.
+add specification for #subsys-cells, mediatek,gce-subsys.
 
-> 
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->>   
->> -- 
->> 2.17.1
-> 
-> 
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ .../devicetree/bindings/mailbox/mtk-gce.txt       | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+index 1f7f8f2a3f49..8fd9479bc9f6 100644
+--- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
++++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+@@ -21,11 +21,19 @@ Required properties:
+ 	priority: Priority of GCE thread.
+ 	atomic_exec: GCE processing continuous packets of commands in atomic
+ 		way.
++- #subsys-cells: Should be 3.
++	<&phandle subsys_number start_offset size>
++	phandle: Label name of a gce node.
++	subsys_number: specify the sub-system id which is corresponding
++		       to the register address.
++	start_offset: the start offset of register address that GCE can access.
++	size: the total size of register address that GCE can access.
+ 
+ Required properties for a client device:
+ - mboxes: Client use mailbox to communicate with GCE, it should have this
+   property and list of phandle, mailbox specifiers.
+-- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
++Optional propertier for a client device:
++- mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+   to the register address.
+ 
+ Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+@@ -40,6 +48,7 @@ Example:
+ 		clocks = <&infracfg CLK_INFRA_GCE>;
+ 		clock-names = "gce";
+ 		#mbox-cells = <3>;
++		#subsys-cells = <3>;
+ 	};
+ 
+ Example for a client device:
+@@ -48,9 +57,9 @@ Example for a client device:
+ 		compatible = "mediatek,mt8173-mmsys";
+ 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+ 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+-		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+ 		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+ 				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+-
++		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
++					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+ 		...
+ 	};
+-- 
+2.18.0
