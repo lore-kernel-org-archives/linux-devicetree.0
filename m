@@ -1,63 +1,61 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 73/95] xtensa: xtfpga.dtsi: fix dtc warnings about SPI
-Date: Tue,  7 May 2019 01:38:02 -0400
-Message-ID: <20190507053826.31622-73-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 69/95] arm64: dts: marvell: armada-ap806: reserve PSCI area
+Date: Tue,  7 May 2019 01:37:58 -0400
+Message-ID: <20190507053826.31622-69-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <alexander.levin@microsoft.com>, devicetree@vger.kernel.org, linux-xtensa@linux-xtensa.org
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, Sasha Levin <alexander.levin@microsoft.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-[ Upstream commit f37598be4e3896359e87c824be57ddddc280cc3f ]
+[ Upstream commit 132ac39cffbcfed80ada38ef0fc6d34d95da7be6 ]
 
-Rename SPI controller node in the XTFPGA DTS to spi@...
-This fixes the following build warnings:
+The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
+attempt to access it from Linux leads to an immediate crash.
 
-arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
+So let's make the same memory reservation as the vendor kernel.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+[gregory: added as comment that this region matches the mainline U-boot]
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- arch/xtensa/boot/dts/xtfpga.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
-index 1090528825ec..e46ae07bab05 100644
---- a/arch/xtensa/boot/dts/xtfpga.dtsi
-+++ b/arch/xtensa/boot/dts/xtfpga.dtsi
-@@ -103,7 +103,7 @@
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 30d48ecf46e0..27d2bd85d1ae 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -65,6 +65,23 @@
+ 		method = "smc";
+ 	};
  
--		spi0: spi-master@0d0a0000 {
-+		spi0: spi@0d0a0000 {
- 			compatible = "cdns,xtfpga-spi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/*
++		 * This area matches the mapping done with a
++		 * mainline U-Boot, and should be updated by the
++		 * bootloader.
++		 */
++
++		psci-area@4000000 {
++			reg = <0x0 0x4000000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	ap806 {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
 -- 
 2.20.1
