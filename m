@@ -1,172 +1,225 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
- thermal sensor
-Date: Tue, 7 May 2019 15:59:12 +0200
-Message-ID: <20190507135912.4lev7ly2w4drlt7s@flea>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-2-tiny.windzz@gmail.com>
- <20190505162215.3594f77d@archlinux>
- <20190506122807.4u323iys74jddcet@flea>
- <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
- <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
- <20190506175525.swc5u7j6ntry7v3g@core.my.home>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bydgprfj47ik7yub"
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v2] dt-bindings: clock: Add silabs,si5341
+Date: Tue,  7 May 2019 16:04:13 +0200
+Message-ID: <20190507140413.28335-1-mike.looijmans@topic.nl>
+References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190506175525.swc5u7j6ntry7v3g@core.my.home>
+In-Reply-To: <20190424090216.18417-1-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Lee <tiny.windzz@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, lars@metafoo.de, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, pmeerw@pmeerw.net, knaack.h@gmx.de, Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@kernel.org>
+To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
+Adds the devicetree bindings for the Si5341 and Si5340 chips from
+Silicon Labs. These are multiple-input multiple-output clock
+synthesizers.
 
---bydgprfj47ik7yub
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+v2: Add data sheet reference.
+    Restructured to enable use of "assigned-clock*" properties to set
+    up both outputs and internal synthesizers.
+    Nicer indentation.
+    Updated subject line and body of commit message.
+    If these bindings are (mostly) acceptable, I'll post an updated
+    driver patch v2 to implement these changes.
 
-On Mon, May 06, 2019 at 07:55:25PM +0200, Ond=C5=99ej Jirman wrote:
-> On Tue, May 07, 2019 at 01:08:39AM +0800, Frank Lee wrote:
-> > On Tue, May 7, 2019 at 12:52 AM Icenowy Zheng <icenowy@aosc.io> wrote:
-> > >
-> > > =E5=9C=A8 2019-05-06=E4=B8=80=E7=9A=84 14:28 +0200=EF=BC=8CMaxime Rip=
-ard=E5=86=99=E9=81=93=EF=BC=9A
-> > > > Hi,
-> > > >
-> > > > On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
-> > > > > On Fri,  3 May 2019 03:28:07 -0400
-> > > > > Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > > > >
-> > > > > > For some SOCs, there are more than one thermal sensor, and there
-> > > > > > are
-> > > > > > currently four sensors on the A80. So we need to do some work in
-> > > > > > order
-> > > > > > to support multiple thermal sensors:
-> > > > > >
-> > > > > >   1) add sensor_count in gpadc_data.
-> > > > > >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support
-> > > > > > multiple
-> > > > > >      thermal_zone_device and distinguish between different
-> > > > > > sensors.
-> > > > > >   3) modify read temperature and initialization function.
-> > > > >
-> > > > > This comment doesn't mention the devm change. If it had it would
-> > > > > have
-> > > > > raised immediate alarm bells.
-> > > > >
-> > > > > I'm also not keen on the web of pointers that this driver is
-> > > > > steadily
-> > > > > evolving.  I can't immediately see how to reduce that complexity
-> > > > > however.
-> > > >
-> > > > So I might be responsible for that, and looking back, this has been=
- a
-> > > > mistake.
-> > > >
-> > > > This driver was initally put together to support a controller found
-> > > > in
-> > > > older (A10 up to A31) Allwinner SoCs. This controller had an ADC
-> > > > driver that could be operated as a touchscreen controller, and was
-> > > > providing a CPU temperature sensor and a general purpose ADC.
-> > > >
-> > > > However, we already had a driver for that controller in drivers/inp=
-ut
-> > > > to report the CPU temperature, and the one in IIO was introduced to
-> > > > support the general purpose ADC (and the CPU temperature). The long
-> > > > term goal was to add the touchscreen feature as well eventually so
-> > > > that we could remove the one in drivers/input. That didn't happen.
-> > > >
-> > > > At the same time, the Allwinner hardware slowly evolved to remove t=
-he
-> > > > touchscreen and ADC features, and only keep the CPU temperature
-> > > > readout. It then evolved further on to support multiple temperatures
-> > > > (for different clusters, the GPU, and so on).
-> > > >
-> > > > So, today, we're in a situation where I was pushing everything into
-> > > > that IIO drivers since there was similiraties between all the
-> > > > generations, but the fact that we have to support so many odd cases
-> > > > (DT bindings compatibility, controllers with and without ADC, etc)
-> > > > that it becomes a real mess.
-> > > >
-> > > > And that mess isn't really used by anybody, since we want to have t=
-he
-> > > > touchscreen.
-> > > >
-> > > > There's only one SoC that is supported only by that driver, which is
-> > > > the A33 that only had a CPU temperature readout, and is still pretty
-> > > > similar to the latest SoC from Allwinner (that is supported by this
-> > > > series).
-> > > >
-> > > > I guess, for everyone's sanity and in order to not stall this
-> > > > further,
-> > > > it would just be better to create an hwmon driver for the A33 (and
-> > > > onwards, including the H6) for the SoC that just have the temperatu=
-re
-> > > > readout feature. And for the older SoC, we just keep the older driv=
-er
-> > > > under input/. Once the A33 is supported, we'll remove the driver in
-> > > > IIO (and the related bits in drivers/mfd).
-> >
-> > a hwmon driver or a thermal driver=EF=BC=9F
-> >
-> > >
-> > > I think a thermal driver is better.
-> >
-> > This is what I hope to see a few months ago.
-> >
-> > >
-> > > Other SoCs' thermal sensor drivers are all thermal drivers.
-> > >
-> > > >
-> > > > Armbian already has a driver for that they never upstreamed iirc, so
-> > > > it might be a good starting point, and we would add the support for
-> > > > the H6. How does that sound?
-> > >
-> > > I think the developer abandoned to upstream it because of the previous
-> > > problem ;-)
-> > >
-> > > Maybe it can be taken and add A33&H6 support.
-> >
-> > If OK, I am going to start some thermal driver work this weekend.  : )
->
-> There are plenty of thermal drivers flying around, with varying levels
-> of support for various SoCs:
->
-> - H3/H5: https://megous.com/git/linux/commit/?h=3Dths-5.1&id=3Db8e20c5da7=
-a00b3a3fa1b274fc8d5bea95872b0a
-> - A83T: https://megous.com/git/linux/commit/?h=3Dths-5.1&id=3D796dff9a946=
-fd475cc1e4bb948a723ea841c640c
-> - H6: https://megous.com/git/linux/commit/?h=3Dopi3-5.1&id=3Daeab762c19b4=
-aa228a295258c9d6b2e1f143bf86
->
-> For H3/H5 Icenowy also tried to upstream some variant of my THS driver, w=
-ith
-> better SID/calibration data reading support.
->
-> I'd suggest starting with the H6 driver above (as that implements the
-> calibration data readout correctly), and make it so that it can support m=
-ultiple
-> SoCs.
+ .../bindings/clock/silabs,si5341.txt          | 187 ++++++++++++++++++
+ 1 file changed, 187 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5341.txt
 
-Yeah, that seems like a good plan
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---bydgprfj47ik7yub
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNGPMAAKCRDj7w1vZxhR
-xS2VAQDOVlzfYshYqB3RzzDSqFMZPH8If+sem/QedfMd4Lyj7AD+KkQ+2ms4+Ca9
-JJceZmhL6UGhaXOTV4RQUMJQA+c6zgU=
-=DXHT
------END PGP SIGNATURE-----
-
---bydgprfj47ik7yub--
+diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
+new file mode 100644
+index 000000000000..6086dfcaeecf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
+@@ -0,0 +1,187 @@
++Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
++
++Reference
++[1] Si5341 Data Sheet
++    https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
++[2] Si5341 Reference Manual
++    https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
++
++The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
++clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
++in turn can be directed to any of the 10 (or 4) outputs through a divider.
++The internal structure of the clock generators can be found in [2].
++
++The driver can be used in "as is" mode, reading the current settings from the
++chip at boot, in case you have a (pre-)programmed device. If the PLL is not
++configured when the driver probes, it assumes the driver must fully initialize
++it.
++
++The device type, speed grade and revision are determined runtime by probing.
++
++The driver currently only supports XTAL input mode, and does not support any
++fancy input configurations. They can still be programmed into the chip and
++the driver will leave them "as is".
++
++==I2C device node==
++
++Required properties:
++- compatible: shall be one of the following:
++	"silabs,si5340" - Si5340 A/B/C/D
++	"silabs,si5341" - Si5341 A/B/C/D
++- reg: i2c device address, usually 0x74
++- #clock-cells: from common clock binding; shall be set to 2.
++	The first value is "0" for outputs, "1" for synthesizers.
++	The second value is the output or synthesizer index.
++- clocks: from common clock binding; list of parent clock  handles,
++	corresponding to inputs. Use a fixed clock for the "xtal" input.
++	At least one must be present.
++- clock-names: One of: "xtal", "in0", "in1", "in2"
++- vdd-supply: Regulator node for VDD
++
++Optional properties:
++- vdda-supply: Regulator node for VDDA
++- vdds-supply: Regulator node for VDDS
++- silabs,pll-m-num, silabs,pll-m-den: Numerator and denominator for PLL
++  feedback divider. Must be such that the PLL output is in the valid range. For
++  example, to create 14GHz from a 48MHz xtal, use m-num=14000 and m-den=48. Only
++  the fraction matters, using 3500 and 12 will deliver the exact same result.
++  If these are not specified, and the PLL is not yet programmed when the driver
++  probes, the PLL will be set to 14GHz.
++- silabs,reprogram: When present, the driver will always assume the device must
++  be initialized, and always performs the soft-reset routine. Since this will
++  temporarily stop all output clocks, don't do this if the chip is generating
++  the CPU clock for example.
++- interrupts: Interrupt for INTRb pin.
++
++== Child nodes: Synthesizers ==
++
++In order to refer to the internal synthesizers, there can be a child node named
++"synthesizers".
++
++Required synthesizers node properties:
++- #address-cells: shall be set to 1.
++- #size-cells: shall be set to 0.
++
++Each child of this node corresponds to a multisynth in the Si534X chip. This
++allows the synthesizer to be referred to with assigned-clocks.
++
++Required child node properties:
++- reg: synthesizer index in range 0..4 for Si5341 and 0..3 for Si5340.
++
++== Child nodes: Outputs ==
++
++The child node "outputs" lists the output clocks.
++
++Required outputs node properties:
++- #address-cells: shall be set to 1.
++- #size-cells: shall be set to 0.
++
++Each of the clock outputs can be overwritten individually by
++using a child node to the outputs child node. If a child node for a clock
++output is not set, the configuration remains unchanged.
++
++Required child node properties:
++- reg: number of clock output.
++
++Optional child node properties:
++- vdd-supply: Regulator node for VDD for this output. The driver selects default
++	values for common-mode and amplitude based on the voltage.
++- silabs,format: Output format, one of:
++	1 = differential (defaults to LVDS levels)
++	2 = low-power (defaults to HCSL levels)
++	4 = LVCMOS
++- silabs,common-mode: Manually overide output common mode, see [2] for values
++- silabs,amplitude: Manually override output amplitude, see [2] for values
++- silabs,synth-master: boolean. If present, this output is allowed to change the
++	multisynth frequency dynamically.
++- silabs,disable-state : clock output disable state, shall be
++	0 = clock output is driven LOW when disabled
++	1 = clock output is driven HIGH when disabled
++
++==Example==
++
++/* 48MHz reference crystal */
++ref48: ref48M {
++	compatible = "fixed-clock";
++	#clock-cells = <0>;
++	clock-frequency = <48000000>;
++};
++
++i2c-master-node {
++	/* Programmable clock (for logic) */
++	si5341: clock-generator@74 {
++		reg = <0x74>;
++		compatible = "silabs,si5341";
++		#clock-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&ref48>;
++		clock-names = "xtal";
++
++		silabs,pll-m-num = <14000>; /* PLL at 14.0 GHz */
++		silabs,pll-m-den = <48>;
++		silabs,reprogram; /* Chips are not programmed, always reset */
++
++		synthesizers {
++			synth@2 {
++				reg = <2>;
++			};
++		};
++
++		outputs {
++			out@0 {
++				reg = <0>;
++				silabs,format = <1>; /* LVDS 3v3 */
++				silabs,common-mode = <3>;
++				silabs,amplitude = <3>;
++				silabs,synth-master;
++			};
++
++			/*
++			 * Output 6 configuration:
++			 *  LVDS 1v8
++			 */
++			out@6 {
++				reg = <6>;
++				silabs,format = <1>; /* LVDS 1v8 */
++				silabs,common-mode = <13>;
++				silabs,amplitude = <3>;
++			};
++
++			/*
++			 * Output 8 configuration:
++			 *  HCSL 3v3
++			 */
++			out@8 {
++				reg = <8>;
++				silabs,format = <2>;
++				silabs,common-mode = <11>;
++				silabs,amplitude = <3>;
++			};
++		};
++	};
++};
++
++some-video-node {
++	/* Standard clock bindings */
++	clock-names = "pixel";
++	clocks = <&si5341 0 7>; /* Output 7 */
++
++	/* Set output 7 to use syntesizer 3 as its parent */
++	assigned-clocks = <&si5341 0 7>, <&si5341 1 3>;
++	assigned-clock-parents = <&si5341 1 3>;
++	/* Set output 7 to 148.5 MHz using a synth frequency of 594 MHz */
++	assigned-clock-rates = <148500000>, <594000000>;
++};
++
++some-audio-node {
++	clock-names = "i2s-clk";
++	clocks = <&si5341 0 0>;
++	/*
++	 * since output 0 is a synth-master, the synth will be automatically set
++	 * to an appropriate frequency when the audio driver requests another
++	 * frequency. We give control over synth 2 to this output here.
++	 */
++	assigned-clocks = <&si5341 0 0>;
++	assigned-clock-parents = <&si5341 1 2>;
++};
+-- 
+2.17.1
