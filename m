@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v3 2/6] pinctrl: generic: add new 'drive-strength-microamp' property support
-Date: Tue,  7 May 2019 13:57:22 +0200
-Message-ID: <20190507115726.23714-3-glaroque@baylibre.com>
+Subject: [PATCH v3 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+Date: Tue,  7 May 2019 13:57:21 +0200
+Message-ID: <20190507115726.23714-2-glaroque@baylibre.com>
 References: <20190507115726.23714-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
@@ -10,54 +10,33 @@ To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add drive-strength-microamp property support to allow drive strength in uA
+This property allow drive-strength parameter in uA instead of mA.
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/pinctrl/pinconf-generic.c       | 2 ++
- include/linux/pinctrl/pinconf-generic.h | 3 +++
- 2 files changed, 5 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index b4f7f8a458ea..d0cbdb1ad76a 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -39,6 +39,7 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA", true),
-+	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH_UA, "output drive strength", "uA", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
-@@ -167,6 +168,7 @@ static const struct pinconf_generic_params dt_params[] = {
- 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
- 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
- 	{ "drive-strength", PIN_CONFIG_DRIVE_STRENGTH, 0 },
-+	{ "drive-strength-microamp", PIN_CONFIG_DRIVE_STRENGTH_UA, 0 },
- 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
- 	{ "input-disable", PIN_CONFIG_INPUT_ENABLE, 0 },
- 	{ "input-enable", PIN_CONFIG_INPUT_ENABLE, 1 },
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 6c0680641108..72d06d6a3099 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -55,6 +55,8 @@
-  *	push-pull mode, the argument is ignored.
-  * @PIN_CONFIG_DRIVE_STRENGTH: the pin will sink or source at most the current
-  *	passed as argument. The argument is in mA.
-+ * @PIN_CONFIG_DRIVE_STRENGTH_UA: the pin will sink or source at most the current
-+ *	passed as argument. The argument is in uA.
-  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
-  *	which means it will wait for signals to settle when reading inputs. The
-  *	argument gives the debounce time in usecs. Setting the
-@@ -112,6 +114,7 @@ enum pin_config_param {
- 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
- 	PIN_CONFIG_DRIVE_PUSH_PULL,
- 	PIN_CONFIG_DRIVE_STRENGTH,
-+	PIN_CONFIG_DRIVE_STRENGTH_UA,
- 	PIN_CONFIG_INPUT_DEBOUNCE,
- 	PIN_CONFIG_INPUT_ENABLE,
- 	PIN_CONFIG_INPUT_SCHMITT,
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index cef2b5855d60..84adce9f2a75 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+ drive-open-drain	- drive with open drain
+ drive-open-source	- drive with open source
+ drive-strength		- sink or source at most X mA
++drive-strength-microamp	- sink or source at most X uA
+ input-enable		- enable input on pin (no effect on output, such as
+ 			  enabling an input buffer)
+ input-disable		- disable input on pin (no effect on output, such as
+@@ -326,6 +327,8 @@ arguments are described below.
+ 
+ - drive-strength takes as argument the target strength in mA.
+ 
++- drive-strength-microamp takes as argument the target strength in uA.
++
+ - input-debounce takes the debounce time in usec as argument
+   or 0 to disable debouncing
+ 
 -- 
 2.17.1
