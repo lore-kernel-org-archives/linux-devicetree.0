@@ -1,41 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 01/10] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-Date: Tue, 7 May 2019 12:09:32 -0500
-Message-ID: <20190507170932.GA6587@bogus>
-References: <20190505140031.9636-1-lkundrak@v3.sk>
- <20190505140031.9636-2-lkundrak@v3.sk>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: milbeaut: Add Milbeaut AXI DMA controller
+Date: Tue, 7 May 2019 22:40:43 +0530
+Message-ID: <20190507171042.GS16052@vkoul-mobl>
+References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com>
+ <1553487314-9185-3-git-send-email-kasai.kazuhiro@socionext.com>
+ <20190426114629.GU28103@vkoul-mobl>
+ <20190507053924.GA3359@ubuntu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190505140031.9636-2-lkundrak@v3.sk>
+In-Reply-To: <20190507053924.GA3359@ubuntu>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
+To: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun,  5 May 2019 16:00:22 +0200, Lubomir Rintel wrote:
-> Add Marvell MMP2 camera host interface.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v4:
-> - s/Nust/Must/
-> - Documented required endpoint properties; bus-type, hsync-active,
->   vsync-active and pclk-sample.
-> 
-> Changes since v3:
-> - Dropped the video-interfaces.txt reference
-> - Clarify "clocks", "clock-names" and "clock-output-names" descriptions
-> - Refer to other documentation by full path
-> 
-> Changes since v2:
-> - Added #clock-cells, clock-names, port
-> 
->  .../bindings/media/marvell,mmp2-ccic.txt      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> 
+On 07-05-19, 14:39, Kazuhiro Kasai wrote:
+> On Fri, Apr 26, 2019 at 17:16 +0530, Vinod Koul wrote:
+> > On 25-03-19, 13:15, Kazuhiro Kasai wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > > +struct m10v_dma_chan {
+> > > +	struct dma_chan chan;
+> > > +	struct m10v_dma_device *mdmac;
+> > > +	void __iomem *regs;
+> > > +	int irq;
+> > > +	struct m10v_dma_desc mdesc;
+> >
+> > So there is a *single* descriptor? Not a list??
+> 
+> Yes, single descriptor.
+
+And why is that, you can create a list and keep getting descriptors and
+issue them to hardware and get better pref!
+
+> > > +static dma_cookie_t m10v_xdmac_tx_submit(struct dma_async_tx_descriptor *txd)
+> > > +{
+> > > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(txd->chan);
+> > > +	dma_cookie_t cookie;
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&mchan->lock, flags);
+> > > +	cookie = dma_cookie_assign(txd);
+> > > +	spin_unlock_irqrestore(&mchan->lock, flags);
+> > > +
+> > > +	return cookie;
+> >
+> > sounds like vchan_tx_submit() i think you can use virt-dma layer and then
+> > get rid of artificial limit in driver and be able to queue up the txn on
+> > dmaengine.
+> 
+> OK, I will try to use virt-dma layer in next version.
+
+And you will get lists to manage descriptor for free! so you can use
+that to support multiple txns as well!
+
+> > > +static struct dma_async_tx_descriptor *
+> > > +m10v_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+> > > +			   dma_addr_t src, size_t len, unsigned long flags)
+> > > +{
+> > > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
+> > > +
+> > > +	dma_async_tx_descriptor_init(&mchan->mdesc.txd, chan);
+> > > +	mchan->mdesc.txd.tx_submit = m10v_xdmac_tx_submit;
+> > > +	mchan->mdesc.txd.callback = NULL;
+> > > +	mchan->mdesc.txd.flags = flags;
+> > > +	mchan->mdesc.txd.cookie = -EBUSY;
+> > > +
+> > > +	mchan->mdesc.len = len;
+> > > +	mchan->mdesc.src = src;
+> > > +	mchan->mdesc.dst = dst;
+> > > +
+> > > +	return &mchan->mdesc.txd;
+> >
+> > So you support single descriptor and dont check if this has been already
+> > configured. So I guess this has been tested by doing txn one at a time
+> > and not submitted bunch of txn and wait for them to complete. Please fix
+> > that to really enable dmaengine capabilities.
+> 
+> Thank you for advice. I want to fix it and I have 2 questions.
+> 
+> 1. Does virt-dma layer help to fix this?
+
+Yes
+
+> 2. Can dmatest test that dmaengine capabilities?
+
+Yes for memcpy operations, see Documentation/driver-api/dmaengine/dmatest.rst
+
+-- 
+~Vinod
