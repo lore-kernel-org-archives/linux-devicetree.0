@@ -1,87 +1,57 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v3 5/6] pinctrl: meson: add support of drive-strength-microamp
-Date: Tue, 7 May 2019 20:18:47 +0200
-Message-ID: <CAFBinCC-wYD1ZJ8Dd6mwd=qAqi8YX0=VacjbEc-bxKrQnZvwDA@mail.gmail.com>
-References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-6-glaroque@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: richard.gong@linux.intel.com
+Subject: [PATCHv2 0/4] add Intel Stratix10 remote system update driver
+Date: Tue,  7 May 2019 13:46:35 -0500
+Message-ID: <1557254799-7416-1-git-send-email-richard.gong@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507115726.23714-6-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> drive-strength-microamp is a new feature needed for G12A SoC.
-> the default DS setting after boot is usually 500uA and it is not enough for
-> many functions. We need to be able to set the drive strength to reliably
-> enable things like MMC, I2C, etc ...
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-with the comments below addressed:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Richard Gong <richard.gong@intel.com>
 
-> ---
->  drivers/pinctrl/meson/pinctrl-meson.c | 102 ++++++++++++++++++++++++++
->  drivers/pinctrl/meson/pinctrl-meson.h |  18 ++++-
->  2 files changed, 119 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index a216a7537564..3da867c13f47 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -219,12 +219,56 @@ static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
->         return 0;
->  }
->
-> +static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
-> +                                           unsigned int pin,
-> +                                           u16 drive_strength_ua)
-> +{
-> +       struct meson_bank *bank;
-> +       unsigned int reg, bit;
-> +       unsigned int ds_val;
-you can move ds_val to the line above
+This is the 2nd submission of Intel Stratix10 remote system update (RSU)
+driver.
 
-[...]
-> +       if (!pc->reg_ds) {
-> +               dev_err(pc->dev, "drive-strength not supported\n");
-I'm getting this on one of my Meson8m2 boards:
-$ # cat /sys/kernel/debug/pinctrl/c1109880.pinctrl-pinctrl-meson/pinconf-pins
-...
-[  874.748531] meson8-pinctrl c1109880.pinctrl: drive-strength not supported
-[  874.755278] meson8-pinctrl c1109880.pinctrl: drive-strength not supported
-[  874.762086] meson8-pinctrl c1109880.pinctrl: drive-strength not supported
-Pin config settings per pin
-Format: pin (name): configs
-pin 0 (GPIOX_0): input bias disabled
-pin 1 (GPIOX_1): input bias disabled
-pin 2 (GPIOX_2): input bias disabled
-...
+Intel Stratix10 remote system update driver patches have been reviewed by
+Alan Tull and other colleagues at Intel.
 
-I believe we are not supposed to complain when getting the
-drive-strength when reg_ds is absent.
-all pre-G12A SoCs don't have reg_ds, so we don't need to error-out in
-that case (because that's perfectly valid)
+The Intel Stratix10 Remote System Update (RSU) driver exposes interfaces
+access through the Intel Stratix10 Service Layer to user space via sysfs
+interface. The RSU interfaces report and control some of the optional RSU
+features on Intel Stratix 10 SoC.
 
-[...]
-> +static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
-> +                                           unsigned int pin,
-> +                                           u16 *drive_strength_ua)
-> +{
-> +       struct meson_bank *bank;
-> +       unsigned int reg, bit;
-> +       unsigned int val;
-> +       int ret;
-> +
-> +       if (!pc->reg_ds) {
-> +               dev_err(pc->dev, "drive-strength not supported\n");
-based on your previous explanation (that you want to inform the .dts
-author that he's doing something wrong) I'm happy with this error if
-Linus W. doesn't veto this.
+The RSU feature provides a way for customers to update the boot
+configuration of a Intel Stratix 10 SoC device with significantly reduced
+risk of corrupting the bitstream storage and bricking the system.
 
+v2: removed compatible = "intel,stratix10-rsu"
+    added intel stratix10 RSU device
+    changed to support RSU in handling watchdog timeout
+    s/attr_group/ATTRIBUTE_GROUPS, use devm_device_add_groups() and
+    devm_device_remove_groups()
+    added check the return value from rsu_send_msg()
+    removed RSU binding text file
+    other corrections/changes
 
-Regards
-Martin
+Richard Gong (4):
+  firmware: stratix10-svc: extend svc to support RSU notify and WD
+    features
+  firmware: add Intel Stratix10 remote system update driver
+  firmware: rsu: document sysfs interface
+  MAINTAINERS: add maintainer for Intel Stratix10 FW drivers
+
+ .../testing/sysfs-devices-platform-stratix10-rsu   | 100 +++++
+ MAINTAINERS                                        |  11 +
+ drivers/firmware/Kconfig                           |  18 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/stratix10-rsu.c                   | 409 +++++++++++++++++++++
+ drivers/firmware/stratix10-svc.c                   |  74 +++-
+ include/linux/firmware/intel/stratix10-smc.h       |  48 ++-
+ .../linux/firmware/intel/stratix10-svc-client.h    |  12 +-
+ 8 files changed, 663 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+ create mode 100644 drivers/firmware/stratix10-rsu.c
+
+-- 
+2.7.4
