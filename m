@@ -1,73 +1,30 @@
-Return-Path: <SRS0=cxpq=TJ=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=bzs4=TH=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
 Subject: RE: [PATCH 03/10] phy: renesas: rcar-gen3-usb2: Check dr_mode when
  not using OTG
-Date: Thu, 9 May 2019 07:14:02 +0000
+Date: Tue, 7 May 2019 14:43:41 +0000
 Message-ID: 
- <OSBPR01MB3174708A983E7148D0F2F7CCD8330@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+ <TY1PR01MB1562C153ABE676047F568BBD8A310@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20190506234631.113226-1-chris.brandt@renesas.com>
  <20190506234631.113226-4-chris.brandt@renesas.com>
-In-Reply-To: <20190506234631.113226-4-chris.brandt@renesas.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ <17bcc673-5fed-ce4f-3d61-af34bfa5d769@cogentembedded.com>
+ <TY1PR01MB1562550164C7977D28C90F128A310@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <34544f59-76aa-710a-a6ec-7d7d7f31a023@cogentembedded.com>
+In-Reply-To: <34544f59-76aa-710a-a6ec-7d7d7f31a023@cogentembedded.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris=1B$B$5$s=1B(B
-
-Thank you for the patch!
-
-> From: Chris Brandt, Sent: Tuesday, May 7, 2019 8:46 AM
->=20
-> When not using OTG, the PHY will need to know if it should function as
-> host or peripheral by checking dr_mode in the PHY node (not the parent
-> controller node).
->=20
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renes=
-as/phy-rcar-gen3-usb2.c
-> index 218b32e458cb..4eaa228ebd30 100644
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> @@ -408,7 +408,12 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
->  		if (rcar_gen3_needs_init_otg(channel))
->  			rcar_gen3_init_otg(channel);
->  		rphy->otg_initialized =3D true;
-> -	}
-> +	} else
-
-As Sergei-san said, this should be "} else {"
-
-> +		/* Not OTG, so dr_mode should be set in PHY node */
-> +		if (usb_get_dr_mode(channel->dev) =3D=3D USB_DR_MODE_PERIPHERAL)
-> +			writel(0x80000000, usb2_base + USB2_COMMCTRL);
-> +		else
-
-I would like to add "else if usb_get_dr_mode(channel->dev) =3D=3D USB_DR_MO=
-DE_HOST)"
-for a PHY node without "dr_mode" property. In other words, if the PHY node
-doesn't have dr_mode property like R-Car, this condition can be the same be=
-havior as previous.
-
-> +			writel(0x00000000, usb2_base + USB2_COMMCTRL);
->=20
->  	rphy->initialized =3D true;
->=20
-> @@ -638,6 +643,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_d=
-evice *pdev)
->  	if (of_property_read_bool(dev->of_node, "renesas,uses_usb_x1"))
->  		channel->uses_usb_x1 =3D true;
->=20
-> +
-
-As Sergei-san said, this is not needed :)
-
-Best regards,
-Yoshihiro Shimoda
+T24gVHVlLCBNYXkgMDcsIDIwMTkgMSwgU2VyZ2VpIFNodHlseW92IHdyb3RlOg0KPiAgICBEb24n
+dCB5b3UgcmVtZW1iZXIgYW5vdGhlciBydWxlOiB1c2Uge30gaW4gYWxsIGJyYW5jaGVzIGlmIGF0
+IGxlYXN0DQo+IG9uZSBicmFuY2ggdXNlcyB7fT8NCg0KQWgsIEkgc2VlIGl0IG5vdy4NCg0KRG9j
+dW1lbnRhdGlvbi9wcm9jZXNzL2NvZGluZy1zdHlsZS5yc3Q6DQoNClRoaXMgZG9lcyBub3QgYXBw
+bHkgaWYgb25seSBvbmUgYnJhbmNoIG9mIGEgY29uZGl0aW9uYWwgc3RhdGVtZW50IGlzIGEgc2lu
+Z2xlDQpzdGF0ZW1lbnQ7IGluIHRoZSBsYXR0ZXIgY2FzZSB1c2UgYnJhY2VzIGluIGJvdGggYnJh
+bmNoZXM6DQoNCi4uIGNvZGUtYmxvY2s6OiBjDQoNCglpZiAoY29uZGl0aW9uKSB7DQoJCWRvX3Ro
+aXMoKTsNCgkJZG9fdGhhdCgpOw0KCX0gZWxzZSB7DQoJCW90aGVyd2lzZSgpOw0KCX0NCg0KDQpJ
+IHdpbGwgY2hhbmdlIGl0Lg0KVGhhbmtzIQ0KDQpDaHJpcw0K
