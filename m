@@ -1,101 +1,166 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v5 04/11] of: irq: document properties for wakeup interrupt parent
-Date: Tue,  7 May 2019 14:37:42 -0600
-Message-ID: <20190507203749.3384-5-ilina@codeaurora.org>
-References: <20190507203749.3384-1-ilina@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC v1 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Date: Tue, 07 May 2019 13:49:03 -0700
+Message-ID: <155726214346.14659.17800352563837760252@swboyd.mtv.corp.google.com>
+References: <20190430112012.4514-1-roger.lu@mediatek.com> <20190430112012.4514-2-roger.lu@mediatek.com> <155665629219.168659.8221738507474891604@swboyd.mtv.corp.google.com> <1556777971.12123.35.camel@mtksdaap41> <155691770027.200842.16164651681407381397@swboyd.mtv.corp.google.com> <1557215457.2147.90.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507203749.3384-1-ilina@codeaurora.org>
+In-Reply-To: <1557215457.2147.90.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com, linus.walleij@linaro.org
-Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: Roger Lu <roger.lu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Angus.Lin@mediatek.com, devicetree@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>, linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy-YT.Liu@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, HenryC.Chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Some interrupt controllers in a SoC, are always powered on and have a
-select interrupts routed to them, so that they can wakeup the SoC from
-suspend. Add wakeup-parent DT property to refer to these interrupt
-controllers.
+Quoting Roger Lu (2019-05-07 00:50:57)
+> Dear Stephen,
+>=20
+> Sorry for the late reply.
+>=20
+> On Fri, 2019-05-03 at 14:08 -0700, Stephen Boyd wrote:
+> > Quoting Roger Lu (2019-05-01 23:19:31)
+> > > On Tue, 2019-04-30 at 13:31 -0700, Stephen Boyd wrote:
+> > > > Quoting Roger Lu (2019-04-30 04:20:10)
+> > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt =
+b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..355329db74ba
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > [..]
+> > > > > +
+> > > > > +               svs_gpu: svs_gpu {
+> > > > > +                       compatible =3D "mediatek,mt8183-svs-gpu";
+> > > > > +                       power-domains =3D <&scpsys MT8183_POWER_D=
+OMAIN_MFG_2D>;
+> > > > > +                       operating-points-v2 =3D <&gpu_opp_table>;
+> > > > > +               };
+> > > >=20
+> > > > It looks like you need multiple OPPs for a single device, because i=
+t has
+> > > > different independent power supplies it wants to associate the OPP
+> > > > tables with?
+> > > Yes. SVS has different controllers inside the hardware in order to
+> > > calculate and optimize different OPP table voltage part.
+> >=20
+> > So is there more than one SVS register region that needs certain devices
+> > to be powered on or at least have their power domain enabled so that the
+> > SVS hardware can read the voltage and adjust accordingly? I should read
+> > the driver I suppose.
+> No, basically, each SVS controller (aka SVS bank) only has one SVS
+> register region that needs to be powered on for the init.
+> In MT8183 SVS case, SVS has four controllers (banks). Each SVS bank
+> needs corresponding power domain to be on for its init.
+>=20
+> #SVS bank corresponding power domain
+> svs_cpu_little: Needs CPU-A53 power on for init
+> svs_cpu_big: Needs CPU-A73 power on for init
+> svs_cci: Needs CPU-A53 power on for init
+> svs_gpu: Needs MFG_2D power on for init
+>=20
+> P.S SVS driver will use pm_runtime_get_sync() to turn on power before
+> svs bank init and pm_runtime_put_sync() to turn off power power after
+> svs bank init.
 
-If the interrupts routed to the wakeup parent are not sequential, than a
-map needs to exist to associate the same interrupt line on multiple
-interrupt controllers. Providing this map in every driver is cumbersome.
-Let's add this in the device tree and document the properties to map the
-interrupt specifiers
+Ok. How are you making sure that certain CPUs are powered on?
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
-Changes in v5:
-	- Update documentation to describe masks in the example
-Changes in v4:
-	- Added this documentation
----
- .../interrupt-controller/interrupts.txt       | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
+>=20
+> >=20
+> > >=20
+> > > > Why can't these OPP tables be attached to the devices that
+> > > > use them, i.e. CPU, GPU, CCI, etc.? Seems odd that those devices do=
+n't
+> > > > have OPP tables that this hardware block can look up somehow.
+> > > Those OPP tables are attached by our DVFS node (please refers below
+> > > patch). SVS just shares with their OPP table and help optimize these =
+OPP
+> > > tables' voltage part.
+> > >=20
+> > > Add cpufreq DTS node to the mt8183 and mt8183-evb
+> > > https://patchwork.kernel.org/patch/10921675/
+> >=20
+> > Cool thanks for the pointer.
+> >=20
+> > >=20
+> > >=20
+> > > > Similarly,
+> > > > the power domains should probably be part of the devices that are u=
+sing
+> > > > them and not these sub-nodes that are mirroring the other hardware
+> > > > blocks in the system?
+> > > Oh. There is a svs controller in GPU power-domain. We need to turn on
+> > > GPU power so that svs controller can work functionally. Therefore, we
+> > > add GPU power-domains in our svs_gpu sub-node.
+> > >=20
+> > >=20
+> >=20
+> > Sorry, I'm not really following what you're saying too closely. I think
+> > I get it but it sounds complicated.
+> >=20
+> > I'm mostly wondering if having properties like svs-gpu =3D <&gpu_node>,
+> > and svs-cci =3D <&cci_node> would work for you. The idea would be to li=
+nk
+> > this hardware block to the nodes that it's going to adjust the OPPs of.
+> > Once you have the node, use some sort of OPP API to get the OPP table
+> > for a device_node and adjust it at runtime for the current OPP.
+> Yes, I understand your idea. Thank you. I share my design purpose and
+> the troubles I encountered when linking other hardware block.
+>=20
+> #my design purpose
+> 1. SVS bank doesn't need all the resources in other device node like
+> cci_node. Therefore, I model SVS sub-nodes to declare what svs bank
+> needs.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-index 8a3c40829899..e3e43f5d5566 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-@@ -108,3 +108,57 @@ commonly used:
- 			sensitivity = <7>;
- 		};
- 	};
-+
-+3) Interrupt wakeup parent
-+--------------------------
-+
-+Some interrupt controllers in a SoC, are always powered on and have a select
-+interrupts routed to them, so that they can wakeup the SoC from suspend. These
-+interrupt controllers do not fall into the category of a parent interrupt
-+controller and can be specified by the "wakeup-parent" property and contain a
-+single phandle referring to the wakeup capable interrupt controller.
-+
-+   Example:
-+	wakeup-parent = <&pdc_intc>;
-+
-+
-+4) Interrupt mapping
-+--------------------
-+
-+Sometimes interrupts may be detected by more than one interrupt controller
-+(depending on which controller is active). The interrupt controllers may not
-+be in hierarchy and therefore the interrupt controller driver is required to
-+establish the relationship between the same interrupt at different interrupt
-+controllers. If these interrupts are not sequential then a map needs to be
-+specified to help identify these interrupts.
-+
-+Mapping the interrupt specifiers in the device tree can be done using the
-+"irqdomain-map" property. The property contains interrupt specifier at the
-+current interrupt controller followed by the interrupt specifier at the mapped
-+interrupt controller.
-+
-+   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
-+
-+The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
-+be provided to help interpret the valid bits of the incoming and mapped
-+interrupt specifiers respectively.
-+
-+   Example:
-+	intc: interrupt-controller@17a00000 {
-+		#interrupt-cells = <3>;
-+	};
-+
-+	pinctrl@3400000 {
-+		#interrupt-cells = <2>;
-+		irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
-+		irqdomain-map-mask = <0xff 0>;
-+		irqdomain-map-pass-thru = <0 0xff>;
-+	};
-+
-+In the above example, the input interrupt specifier map-mask <0xff 0> applied
-+on the incoming interrupt specifier of the map <22 0>, <24 0>, returns the
-+input interrupt 22, 24 etc. The second argument being irq type is immaterial
-+from the map and is used from the incoming request instead. The pass-thru
-+specifier parses the output interrupt specifier from the rest of the unparsed
-+argments from the map <&intc 36 0>, <&intc 37 0> etc to return the output
-+interrupt 36, 37 etc.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Do you mean that there are other properties in the cci_node that the SVS
+hardware block doesn't use? That doesn't sound like a problem to me. I
+view nodes in the SoC bus as all memory mapped IO devices and it sounds
+like SVS is a hardware IP core that's off to the side in the system that
+has some sensors that goes into various other IP blocks in the system.
+It's correct to model the registers and interrupts, etc. as one node for
+the one hardware block that's delivered by the hardware engineers.
+
+>=20
+> #troubles - linking other hardware block
+> 1. I don't know how to get cpu devcie after we link CPU node
+> (svs_cpu_little =3D <cpu0>). I use "get_cpu_device(unsigned cpu)" in Linux
+> driver to attain cpuX device generally.
+
+This should probably be some sort of list property that points to all
+the CPUs in the little and big clusters. Then the code can iterate
+through the node pointers and look for an OPP table in any of them by
+combining of_cpu_node_to_id() with get_cpu_device()?
+
+> 2. Our MT8183 has three gpu-related node as below, svs_gpu need the
+> reference of gpu (OPP table) & gpu_core2 (power-domain MFG_2D) to make
+> sure svs_gpu can init and update gpu OPP table. I don't know how to
+> refer two nodes by one property. Therefore, I model a svs_gpu to declare
+> what it needs.
+>=20
+> gpu: mali@13040000 {
+>         ...
+>         power-domains =3D <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>;
+>         operating-points-v2 =3D <&gpu_opp_table>;
+>         ...
+> }
+>=20
+> gpu_core1: mali_gpu_core1 {
+>         ...
+>         power-domains =3D <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>;
+> };
+>=20
+> gpu_core2: mali_gpu_core2 {
+>         ...
+>         power-domains =3D <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> };
+
+These three nodes should be combined into one node for the GPU. The
+power domains will need to be referred to by name. Luckily we have
+support for multiple power domains in the kernel now so this should
+work. Let us know if it doesn't work for some reason.
+
+>=20
+> P.S MT8183 GPU won't do upstream. So, there is no patchwork weblink to
+> refer.
+
+Sure.
