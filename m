@@ -1,92 +1,118 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] dmaengine: milbeaut: Add Milbeaut AXI DMA controller
-Date: Tue, 7 May 2019 22:40:43 +0530
-Message-ID: <20190507171042.GS16052@vkoul-mobl>
-References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com>
- <1553487314-9185-3-git-send-email-kasai.kazuhiro@socionext.com>
- <20190426114629.GU28103@vkoul-mobl>
- <20190507053924.GA3359@ubuntu>
+From: "Theodore Ts'o" <tytso-3s7WtUTddSA@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Tue, 7 May 2019 13:22:56 -0400
+Message-ID: <20190507172256.GB5900@mit.edu>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190507053924.GA3359@ubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190507080119.GB28121-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07-05-19, 14:39, Kazuhiro Kasai wrote:
-> On Fri, Apr 26, 2019 at 17:16 +0530, Vinod Koul wrote:
-> > On 25-03-19, 13:15, Kazuhiro Kasai wrote:
-
-> > > +struct m10v_dma_chan {
-> > > +	struct dma_chan chan;
-> > > +	struct m10v_dma_device *mdmac;
-> > > +	void __iomem *regs;
-> > > +	int irq;
-> > > +	struct m10v_dma_desc mdesc;
-> >
-> > So there is a *single* descriptor? Not a list??
+On Tue, May 07, 2019 at 10:01:19AM +0200, Greg KH wrote:
+> > My understanding is that the intent of KUnit is to avoid booting a kernel on
+> > real hardware or in a virtual machine.  That seems to be a matter of semantics
+> > to me because isn't invoking a UML Linux just running the Linux kernel in
+> > a different form of virtualization?
+> > 
+> > So I do not understand why KUnit is an improvement over kselftest.
+> > 
+> > It seems to me that KUnit is just another piece of infrastructure that I
+> > am going to have to be familiar with as a kernel developer.  More overhead,
+> > more information to stuff into my tiny little brain.
+> > 
+> > I would guess that some developers will focus on just one of the two test
+> > environments (and some will focus on both), splitting the development
+> > resources instead of pooling them on a common infrastructure.
+> > 
+> > What am I missing?
 > 
-> Yes, single descriptor.
-
-And why is that, you can create a list and keep getting descriptors and
-issue them to hardware and get better pref!
-
-> > > +static dma_cookie_t m10v_xdmac_tx_submit(struct dma_async_tx_descriptor *txd)
-> > > +{
-> > > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(txd->chan);
-> > > +	dma_cookie_t cookie;
-> > > +	unsigned long flags;
-> > > +
-> > > +	spin_lock_irqsave(&mchan->lock, flags);
-> > > +	cookie = dma_cookie_assign(txd);
-> > > +	spin_unlock_irqrestore(&mchan->lock, flags);
-> > > +
-> > > +	return cookie;
-> >
-> > sounds like vchan_tx_submit() i think you can use virt-dma layer and then
-> > get rid of artificial limit in driver and be able to queue up the txn on
-> > dmaengine.
+> kselftest provides no in-kernel framework for testing kernel code
+> specifically.  That should be what kunit provides, an "easy" way to
+> write in-kernel tests for things.
 > 
-> OK, I will try to use virt-dma layer in next version.
+> Brendan, did I get it right?
 
-And you will get lists to manage descriptor for free! so you can use
-that to support multiple txns as well!
+Yes, that's basically right.  You don't *have* to use KUnit.  It's
+supposed to be a simple way to run a large number of small tests that
+for specific small components in a system.
 
-> > > +static struct dma_async_tx_descriptor *
-> > > +m10v_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
-> > > +			   dma_addr_t src, size_t len, unsigned long flags)
-> > > +{
-> > > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
-> > > +
-> > > +	dma_async_tx_descriptor_init(&mchan->mdesc.txd, chan);
-> > > +	mchan->mdesc.txd.tx_submit = m10v_xdmac_tx_submit;
-> > > +	mchan->mdesc.txd.callback = NULL;
-> > > +	mchan->mdesc.txd.flags = flags;
-> > > +	mchan->mdesc.txd.cookie = -EBUSY;
-> > > +
-> > > +	mchan->mdesc.len = len;
-> > > +	mchan->mdesc.src = src;
-> > > +	mchan->mdesc.dst = dst;
-> > > +
-> > > +	return &mchan->mdesc.txd;
-> >
-> > So you support single descriptor and dont check if this has been already
-> > configured. So I guess this has been tested by doing txn one at a time
-> > and not submitted bunch of txn and wait for them to complete. Please fix
-> > that to really enable dmaengine capabilities.
-> 
-> Thank you for advice. I want to fix it and I have 2 questions.
-> 
-> 1. Does virt-dma layer help to fix this?
+For example, I currently use xfstests using KVM and GCE to test all of
+ext4.  These tests require using multiple 5 GB and 20GB virtual disks,
+and it works by mounting ext4 file systems and exercising ext4 through
+the system call interfaces, using userspace tools such as fsstress,
+fsx, fio, etc.  It requires time overhead to start the VM, create and
+allocate virtual disks, etc.  For example, to run a single 3 seconds
+xfstest (generic/001), it requires full 10 seconds to run it via
+kvm-xfstests.
 
-Yes
+KUnit is something else; it's specifically intended to allow you to
+create lightweight tests quickly and easily, and by reducing the
+effort needed to write and run unit tests, hopefully we'll have a lot
+more of them and thus improve kernel quality.
 
-> 2. Can dmatest test that dmaengine capabilities?
+As an example, I have a volunteer working on developing KUinit tests
+for ext4.  We're going to start by testing the ext4 extent status
+tree.  The source code is at fs/ext4/extent_status.c; it's
+approximately 1800 LOC.  The Kunit tests for the extent status tree
+will exercise all of the corner cases for the various extent status
+tree functions --- e.g., ext4_es_insert_delayed_block(),
+ext4_es_remove_extent(), ext4_es_cache_extent(), etc.  And it will do
+this in isolation without our needing to create a test file system or
+using a test block device.
 
-Yes for memcpy operations, see Documentation/driver-api/dmaengine/dmatest.rst
+Next we'll test the ext4 block allocator, again in isolation.  To test
+the block allocator we will have to write "mock functions" which
+simulate reading allocation bitmaps from disk.  Again, this will allow
+the test writer to explicitly construct corner cases and validate that
+the block allocator works as expected without having to reverese
+engineer file system data structures which will force a particular
+code path to be executed.
 
--- 
-~Vinod
+So this is why it's largely irrelevant to me that KUinit uses UML.  In
+fact, it's a feature.  We're not testing device drivers, or the
+scheduler, or anything else architecture-specific.  UML is not about
+virtualization.  What it's about in this context is allowing us to
+start running test code as quickly as possible.  Booting KVM takes
+about 3-4 seconds, and this includes initializing virtio_scsi and
+other device drivers.  If by using UML we can hold the amount of
+unnecessary kernel subsystem initialization down to the absolute
+minimum, and if it means that we can communicating to the test
+framework via a userspace "printf" from UML/KUnit code, as opposed to
+via a virtual serial port to KVM's virtual console, it all makes for
+lighter weight testing.
+
+Why did I go looking for a volunteer to write KUnit tests for ext4?
+Well, I have a plan to make some changes in restructing how ext4's
+write path works, in order to support things like copy-on-write, a
+more efficient delayed allocation system, etc.  This will require
+making changes to the extent status tree, and by having unit tests for
+the extent status tree, we'll be able to detect any bugs that we might
+accidentally introduce in the es tree far more quickly than if we
+didn't have those tests available.  Google has long found that having
+these sorts of unit tests is a real win for developer velocity for any
+non-trivial code module (or C++ class), even when you take into
+account the time it takes to create the unit tests.
+
+					- Ted
+
+P.S.  Many thanks to Brendan for finding such a volunteer for me; the
+person in question is a SRE from Switzerland who is interested in
+getting involved with kernel testing, and this is going to be their
+20% project.  :-)
