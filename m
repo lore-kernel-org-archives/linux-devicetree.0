@@ -1,46 +1,45 @@
-Return-Path: <SRS0=TtEp=TB=rockwellcollins.com=adam.michaelis@kernel.org>
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Subject: [PATCH 4/6] dt-bindings: iio: ad7949: Add cfg-readback option
-Date: Wed,  1 May 2019 16:17:01 -0500
-Message-Id: <1556745423-11368-4-git-send-email-adam.michaelis@rockwellcollins.com>
-In-Reply-To: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
-References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
-To: linux-iio@vger.kernel.org
-Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Return-Path: <SRS0=53jk=TH=cogentembedded.com=sergei.shtylyov@kernel.org>
+Subject: Re: [PATCH 02/10] dt-bindings: rcar-gen3-phy-usb2: Document
+ uses_usb_x1
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
+ <20190506234631.113226-3-chris.brandt@renesas.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <b3c3e21d-35aa-d222-e8d4-e5f63286044e@cogentembedded.com>
+Date: Tue, 7 May 2019 11:37:53 +0300
+MIME-Version: 1.0
+In-Reply-To: <20190506234631.113226-3-chris.brandt@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Adding optional parameter to the ad7949 to indicate that the part should
-be configured to include the configuration register value used when
-acquiring the current sample value.
+Hello!
 
-Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
----
- Documentation/devicetree/bindings/iio/adc/ad7949.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 07.05.2019 2:46, Chris Brandt wrote:
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-index 14ee9a2cb2a5..cd3572828243 100644
---- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-@@ -18,6 +18,8 @@ Optional properties:
-    7: External reference, temperature sensor disabled, buffer enabled
-  - vref-supply: The regulator supply for ADC reference voltage. Required
-  if external reference selected by 'adi,reference-select'.
-+ - adi,cfg-readback: If defined, set bit in configuration register to
-+ read-back the configuration used for the current sample value.
- 
- Examples:
- adc@0 {
-@@ -32,3 +34,10 @@ adc@0 {
- 	reg = <0>;
- 	adi,reference-select = <0>;
- };
-+
-+adc@0 {
-+	compatible = "adi,ad7949";
-+	reg = <0>;
-+	adi,reference-select = <1>;
-+	adi,cfg-readback;
-+};
--- 
-1.9.1
+> Document the optional renesas,uses_usb_x1 property.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>   Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> index d46188f450bf..26bf377102d3 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -46,6 +46,8 @@ channel as USB OTG:
+>   	       regulator will be managed during the PHY power on/off sequence.
+>   - renesas,no-otg-pins: boolean, specify when a board does not provide proper
+>   		       otg pins.
+> +- renesas,use_usb_x1: boolean, the dedicated 48MHz crystal inputs USB_X1 are
+
+    Hyphens are preferred to underscores in the DT property names.
+
+> +                      used for the PLL source
+>   
+>   Example (R-Car H3):
+
+MBR, Sergei
