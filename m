@@ -1,68 +1,86 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: Enable HDMI output on
- orangepi 3
-Date: Tue, 7 May 2019 11:48:34 +0200
-Message-ID: <20190507094834.i6cj3ht37bqovn6c@flea>
-References: <20190420145240.27400-1-tiny.windzz@gmail.com>
- <20190502073401.3l3fl4alicyzpud7@flea>
- <20190507093535.uapqhxduwtbdgbtq@core.my.home>
+From: Anurag Kumar Vulisha <anuragku@xilinx.com>
+Subject: RE: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
+ U2 entries
+Date: Tue, 7 May 2019 09:50:53 +0000
+Message-ID: <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
+References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
+ <1557176302.18203.20.camel@phaseone.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kbuqvbgavmodme4h"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190507093535.uapqhxduwtbdgbtq@core.my.home>
+In-Reply-To: <1557176302.18203.20.camel@phaseone.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: "Claus H. Stovgaard" <cst@phaseone.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---kbuqvbgavmodme4h
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 07, 2019 at 11:35:35AM +0200, Ond=C5=99ej Jirman wrote:
-> Hi Maxime,
->
-> On Thu, May 02, 2019 at 09:34:01AM +0200, Maxime Ripard wrote:
-> > On Sat, Apr 20, 2019 at 10:52:40AM -0400, Yangtao Li wrote:
-> > > Orangepi 3 has HDMI type A connector.
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> >
-> > Queued for 5.3, thanks!
-> > Maxime
->
-> This patch is not enough. HDMI support on Orange Pi 3 also needs to
-> enable DDC IO. While the SoC will feed some default output singal
-> into the display, without DDC enabled it will not work reliably.
->
-> That support is part of my Orange Pi 3 series, and will be reworked
-> for v5 of that series.
->
-> While I can rebase on top of this, it would be easier if you dropped
-> this patch until the propper support is ready. I don't see any reason
-> why this should be rushed with half-working solution.
-
-ACK, consider it dropped.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---kbuqvbgavmodme4h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNFUcQAKCRDj7w1vZxhR
-xRC6AQCarXhXeoier2SFZd5W+nAp7LskYqHAVzQJWKXlWvdsAAEA5ewi2CIOkpfW
-D2p0TKo40WynsYAFuFD/Ug75A2IFbQ4=
-=Qui5
------END PGP SIGNATURE-----
-
---kbuqvbgavmodme4h--
+SGkgQ2xhdXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IENsYXVzIEgu
+IFN0b3ZnYWFyZCBbbWFpbHRvOmNzdEBwaGFzZW9uZS5jb21dDQo+U2VudDogVHVlc2RheSwgTWF5
+IDA3LCAyMDE5IDI6MjggQU0NCj5UbzogVGhpbmggTmd1eWVuIDxUaGluaC5OZ3V5ZW5Ac3lub3Bz
+eXMuY29tPjsgQW51cmFnIEt1bWFyIFZ1bGlzaGENCj48YW51cmFna3VAeGlsaW54LmNvbT47IEdy
+ZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBSb2INCj5IZXJy
+aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPjsgRmVsaXBlIEJhbGJpDQo+PGJhbGJpQGtlcm5lbC5vcmc+DQo+Q2M6IGxpbnV4LXVzYkB2
+Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyB2LmFudXJhZ2t1bWFyQGdtYWlsLmNvbQ0KPlN1YmplY3Q6IFJl
+OiBbUEFUQ0ggMy8zXSB1c2I6IGR3YzM6IGdhZGdldDogQWRkIHN1cHBvcnQgZm9yIGRpc2FibGlu
+ZyBVMSBhbmQgVTINCj5lbnRyaWVzDQo+DQo+SGkgVGhpbmggYW5kIEFudXJhZw0KPg0KPk9uIG1h
+biwgMjAxOS0wNS0wNiBhdCAxOToyMSArMDAwMCwgVGhpbmggTmd1eWVuIHdyb3RlOg0KPg0KPj4g
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMy9jb3JlLmMgYi9kcml2ZXJzL3VzYi9kd2Mz
+L2NvcmUuYyBpbmRleA0KPj4gPiBhMWIxMjZmLi40ZjA5MTJjIDEwMDY0NA0KPj4gPiAtLS0gYS9k
+cml2ZXJzL3VzYi9kd2MzL2NvcmUuYw0KPj4gPiArKysgYi9kcml2ZXJzL3VzYi9kd2MzL2NvcmUu
+Yw0KPj4gPiBAQCAtMTI4NSw2ICsxMjg1LDEwIEBAIHN0YXRpYyB2b2lkIGR3YzNfZ2V0X3Byb3Bl
+cnRpZXMoc3RydWN0IGR3YzMNCj4+ID4gKmR3YykNCj4+ID4gIAkJCQkic25wcyxkaXNfdTJfc3Vz
+cGh5X3F1aXJrIik7DQo+PiA+ICAJZHdjLT5kaXNfZW5ibHNscG1fcXVpcmsgPSBkZXZpY2VfcHJv
+cGVydHlfcmVhZF9ib29sKGRldiwNCj4+ID4gIAkJCQkic25wcyxkaXNfZW5ibHNscG1fcXVpcmsi
+KTsNCj4+ID4gKwlkd2MtPmRpc191MV9lbnRyeV9xdWlyayA9IGRldmljZV9wcm9wZXJ0eV9yZWFk
+X2Jvb2woZGV2LA0KPj4gPiArCQkJCSJzbnBzLGRpc191MV9lbnRyeV9xdWlyayIpOw0KPj4gPiAr
+CWR3Yy0+ZGlzX3UyX2VudHJ5X3F1aXJrID0gZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYs
+DQo+PiA+ICsJCQkJInNucHMsZGlzX3UyX2VudHJ5X3F1aXJrIik7DQo+Pg0KPj4gUGxlYXNlIHVz
+ZSAiLSIgcmF0aGVyIHRoYW4gIl8iIGluIHRoZSBwcm9wZXJ0eSBuYW1lcy4NCj4NCj5JIGhhdmUg
+dGhvdWdodCBhYm91dCB0aGlzIGZlYXR1cmUgb3ZlciB0aGUgd2Vla2VuZCwgYW5kIHRoaW5rIHRo
+ZSBuYW1pbmcgc2hvdWxkIGJlDQo+Y2hhbmdlZCB0byBzb21ldGhpbmcgbGlrZSAic25wcyxib3Mt
+dTEtZXhpdC1sYXQtaW4tdXMiDQo+YW5kIG5hbWVkIHRoZSBzYW1lIGluIHRoZSBjb2RlLiBBbmQg
+dGhlbiBiZSB0aGUgdmFsdWUgdXNlZCBieSB0aGUNCj5nZXRfY29uZmlnX3BhcmFtcy4gRS5nLiB0
+aGUgZGV2aWNlLXRyZWUgaXMgdXNlZCB0byBzZXQgdGhlIHZhbHVlcyBkaXJlY3RseSB1c2VkIGZv
+cg0KPmJVeGRldkV4aXRMYXQgaW5zdGVhZCBvZiBuYW1lZCBzb21ldGhpbmcgbm90IHJlbGF0ZWQg
+dG8gZXhpdCBsYXRlbmN5Lg0KPg0KPldpdGggdGhpcyB0aGUgbmFtZSBhbmQgZnVuY3Rpb24gaXMg
+YSAxIHRvIDEgbWF0Y2gsIGFuZCB5b3UgY2FuIGFtb25nIG90aGVycyBzZXQgaXQgdG8NCj4wIGZv
+ciBvcHRhaW5pbmcgd2hhdCBBbnVyYWcgd2FudHMuDQo+DQoNCllvdXIgc3VnZ2VzdGlvbiBsb29r
+cyBnb29kIGJ1dCB0aGUgcHJvYmxlbSBpcyB0aGUgVTEgYW5kIFUyIGV4aXQgbGF0ZW5jaWVzIGFy
+ZQ0KZml4ZWQgdmFsdWVzIGluIGR3YzMgY29udHJvbGxlcihjYW4gYmUgZm91bmQgaW4gSENTUEFS
+QU1TMykuIEFkZGluZyBkaWZmZXJlbnQNCmV4aXQgbGF0ZW5jaWVzIG1heSBtb2RpZnkgdGhlIFUx
+U0VML1UyU0VMIHZhbHVlcyBzZW50IGZyb20gdGhlIGhvc3QgYnV0IHRoZSByZWFsDQpkd2MzIGNv
+bnRyb2xsZXIgZXhpdCBsYXRlbmNpZXMgYXJlIG5vdCBnZXR0aW5nIGNoYW5nZWQuIEJlY2F1c2Ug
+b2YgdGhpcyByZWFzb24gSQ0KaGFkIG9wdGVkICJzbnBzLGRpc191MV9lbnRyeV9xdWlyayIsIHNv
+IHRoYXQgdGhlIFUxL1UyIGV4aXQgbGF0ZW5jeSB2YWx1ZXMNCnJlcG9ydGVkIGluIEJPUyBkZXNj
+cmlwdG9yIGNhbiBiZSBlaXRoZXIgYmUgemVybyAod2hlbiBVMS9VMiBlbnRyaWVzIG5lZWRzIHRv
+IGJlDQpkaXNhYmxlZCkgb3Igbm9uLXplcm8gdmFsdWUgKHJlcG9ydGVkIGluIEhDU1BBUkFNUzMp
+IHdoZW4gVTEvVTIgc3RhdGVzIGFsbG93ZWQuDQpCYXNlZCBvbiB0aGlzIEkgdGhpbmsgaXQgaXMg
+YmV0dGVyIGlmIHdlIGNhbiBjb250aW51ZSB3aXRoICJzbnBzLGRpcy11MS1lbnRyeS1xdWlyayIN
+Cmluc3RlYWQgb2YgdGhlICJzbnBzLGJvcy11MS1leGl0LWxhdC1pbi11cyIuIFBsZWFzZSAgcHJv
+dmlkZSB5b3VyIG9waW5pb24gb24gdGhpcy4NCiANCj5SZWdhcmRpbmcgdGhlIGRpc2FibGluZyBv
+ZiBVMSAvIFUyLiBJIHNlbmQgdGhpcyB0byBBbnVyYWcNCj5odHRwczovL21hcmMuaW5mby8/bD1s
+aW51eC11c2ImbT0xNTU2ODMyOTkzMTE5NTQmdz0yDQo+SGVyZSBpIGNyZWF0ZWQgYSBjb25maWdm
+cyBpbnRlcmZhY2Ugd2l0aCB0aGUgbmFtZXMgImxwbV9VMV9kaXNhYmxlIiBhbmQNCj4ibHBtX1Uy
+X2Rpc2FibGUiIGZvciBjb250cm9sbGluZyB0aGUgRFRDTCBvZiBkd2MzLCBhbmQgcmVqZWN0DQo+
+U0VUX0ZFQVRVUkUoVTEvVTIpDQo+DQo+V2lsbCBzZW5kIHRoaXMgaW4gc2VwZXJhdGUgcGF0Y2gg
+dG9tb3Jyb3csIGluIHRoZSBob3BlIHRoYXQgQW51cmFncyBmZWF0dXJlIGNhbg0KPmJlY29tZSBh
+IHdheSBmb3IgY29udHJvbGxpbmcgZXhpdCBsYXRlbmN5LCBhbmQgbXkgcGF0Y2ggYmVjb21lIGEg
+d2F5IGZvciBkaXNhYmxpbmcNCj5VMS9VMg0KPg0KDQpJIGFncmVlIHdpdGggeW91ciBzdWdnZXN0
+aW9uLiBXaGVuIFUxIGFuZCBVMiBlbnRyaWVzIGFyZSBub3QgYWxsb3dlZCAgaXQgaXMgYWx3YXlz
+DQpiZXR0ZXIgdG8gcmVwb3J0IHplcm8gdmFsdWUgZm9yIFUxL1UyIGV4aXQgbGF0ZW5jaWVzIGlu
+IEJPUyBkZXNjcmlwdG9yIChubyBwb2ludCBpbg0KcmVwb3J0aW5nIG5vbi16ZXJvIGV4aXQgbGF0
+ZW5jeSB2YWx1ZXMgd2hlbiBVMS9VMiBzdGF0ZXMgYXJlIG5vdCBhbGxvd2VkKS4gIEFsb25nDQp3
+aXRoIHRoYXQgY2hhbmdlcyBmb3IgcHJldmVudGluZyB0aGUgZHdjMyBjb250cm9sbGVyIGZyb20g
+aW5pdGlhdGluZyBvciBhY2NlcHRpbmcNClUxL1UyIHJlcXVlc3RzIGFyZSBhbHNvIHJlcXVpcmVk
+IChzaW5jZSB0aGVyZSBhcmUgc29tZSBob3N0IHBsYXRmb3JtcyB3aGVyZSBzZW5kaW5nDQowIGV4
+aXQgbGF0ZW5jeSBkb2Vzbid0IHdvcmspLiBCYXNlZCBvbiB0aGVzZSBvYnNlcnZhdGlvbnMgSSBi
+ZWxpZXZlIGJvdGggeW91ciBwYXRjaA0KY2hhbmdlcyBhbmQgbXkgcGF0Y2ggY2hhbmdlcyBuZWVk
+cyB0byBiZSBhZGRlZC4NCg0KQFRoaW5oIE5ndXllbg0KUGxlYXNlIHByb3ZpZGUgeW91ciBvcGlu
+aW9uIG9uIHRoaXMNCg0KVGhhbmtzLA0KQW51cmFnIEt1bWFyIFZ1bGlzaGENCg0KPkJSDQo+Q2xh
+dXMNCg==
