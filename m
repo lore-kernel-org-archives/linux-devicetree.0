@@ -1,61 +1,104 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
-Date: Tue, 7 May 2019 11:40:02 -0500
-Message-ID: <CAL_Jsq+tmUCjZw7ybhKTGg0NNfc+JsOQ30vArfHzdw14XoWm5A@mail.gmail.com>
-References: <20190426055558.44544-1-ran.wang_1@nxp.com> <20190501235410.GA25492@bogus>
- <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 02/10] dt-bindings: doc: reflect new NVMEM
+ of_get_mac_address behaviour
+Date: Tue, 7 May 2019 11:44:57 -0500
+Message-ID: <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz> <1556893635-18549-3-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+In-Reply-To: <1556893635-18549-3-git-send-email-ynezz@true.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>
+Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <sriniv>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 7, 2019 at 3:48 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+On Fri, May 3, 2019 at 9:27 AM Petr =C5=A0tetiar <ynezz@true.cz> wrote:
 >
-> Hi Rob,
+> As of_get_mac_address now supports NVMEM under the hood, we need to updat=
+e
+> the bindings documentation with the new nvmem-cell* properties, which wou=
+ld
+> mean copy&pasting a lot of redundant information to every binding
+> documentation currently referencing some of the MAC address properties.
 >
-> On Thursday, May 02, 2019 07:54 Rob Herring wrote:
-> >
-> > On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
-> > > This patch adds USB dt nodes for LS1028A.
-> > >
-> > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > > ---
-> > > Changes in v2:
-> > >   - Rename node from usb3@... to usb@... to meet DTSpec
-> > >
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20
-> > ++++++++++++++++++++
-> > >  1 files changed, 20 insertions(+), 0 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > index 8dd3501..188cfb8 100644
-> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > @@ -144,6 +144,26 @@
-> > >                     clocks = <&sysclk>;
-> > >             };
-> > >
-> > > +           usb0:usb@3100000 {
-> >                      ^ space needed
+> So I've just removed all the references to the optional MAC address
+> properties and replaced them with the small note referencing
+> net/ethernet.txt file.
 >
-> Yes, will update this in next version.
+> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
+> ---
 >
-> > > +                   compatible= "snps,dwc3";
-> >
-> > Needs an SoC specific compatible.
+>  Changes since v2:
 >
-> Do you mean change compatible to "snps,dwc3", "fsl,ls1028a-dwc3" ?
+>  * replaced only MAC address related optional properties with a text
+>    referencing ethernet.txt
+>
+>  Documentation/devicetree/bindings/net/altera_tse.txt           |  5 ++--=
+-
+>  Documentation/devicetree/bindings/net/amd-xgbe.txt             |  5 +++-=
+-
+>  Documentation/devicetree/bindings/net/brcm,amac.txt            |  4 ++--
+>  Documentation/devicetree/bindings/net/cpsw.txt                 |  4 +++-
+>  Documentation/devicetree/bindings/net/davinci_emac.txt         |  5 +++-=
+-
+>  Documentation/devicetree/bindings/net/dsa/dsa.txt              |  5 ++--=
+-
+>  Documentation/devicetree/bindings/net/ethernet.txt             |  6 ++++=
+--
+>  Documentation/devicetree/bindings/net/hisilicon-femac.txt      |  4 +++-
+>  .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt         |  4 +++-
+>  Documentation/devicetree/bindings/net/keystone-netcp.txt       | 10 ++++=
++-----
+>  Documentation/devicetree/bindings/net/macb.txt                 |  5 ++--=
+-
+>  Documentation/devicetree/bindings/net/marvell-pxa168.txt       |  4 +++-
+>  Documentation/devicetree/bindings/net/microchip,enc28j60.txt   |  3 ++-
+>  Documentation/devicetree/bindings/net/microchip,lan78xx.txt    |  5 ++--=
+-
+>  Documentation/devicetree/bindings/net/qca,qca7000.txt          |  4 +++-
+>  Documentation/devicetree/bindings/net/samsung-sxgbe.txt        |  4 +++-
+>  .../devicetree/bindings/net/snps,dwc-qos-ethernet.txt          |  5 +++-=
+-
+>  .../devicetree/bindings/net/socionext,uniphier-ave4.txt        |  4 ++--
+>  Documentation/devicetree/bindings/net/socionext-netsec.txt     |  5 +++-=
+-
+>  .../devicetree/bindings/net/wireless/mediatek,mt76.txt         |  5 +++-=
+-
+>  Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt   |  4 ++--
+>  21 files changed, 58 insertions(+), 42 deletions(-)
 
-Well, that's the wrong order, but yes.
+[...]
 
-> As I know, so far there is no SoC specific programming for this IP, so do
-> you think it's still necessary to add it?
+> diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/D=
+ocumentation/devicetree/bindings/net/keystone-netcp.txt
+> index 04ba1dc..3a65aab 100644
+> --- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
+> +++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+> @@ -135,14 +135,14 @@ Optional properties:
+>                 are swapped.  The netcp driver will swap the two DWORDs
+>                 back to the proper order when this property is set to 2
+>                 when it obtains the mac address from efuse.
+> -- local-mac-address:   the driver is designed to use the of_get_mac_addr=
+ess api
+> -                       only if efuse-mac is 0. When efuse-mac is 0, the =
+MAC
+> -                       address is obtained from local-mac-address. If th=
+is
+> -                       attribute is not present, then the driver will us=
+e a
+> -                       random MAC address.
+>  - "netcp-device label":        phandle to the device specification for e=
+ach of NetCP
+>                         sub-module attached to this interface.
+>
+> +The MAC address will be determined using the optional properties defined=
+ in
+> +ethernet.txt, as provided by the of_get_mac_address API and only if efus=
+e-mac
 
-Yes. All the bugs and quirks are discovered already?
+Don't make references to Linux in bindings. You can talk about
+expectations of client programs (e.g Linux, u-boot, BSD, etc.) though.
 
 Rob
