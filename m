@@ -1,71 +1,122 @@
-From: "Claus H. Stovgaard" <cst@phaseone.com>
-Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
- U2 entries
-Date: Tue, 7 May 2019 15:17:28 +0200
-Message-ID: <1557235048.114189.22.camel@phaseone.com>
-References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
-         <1557176302.18203.20.camel@phaseone.com>
-         <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
+ driver for SiFive SoCs
+Date: Tue, 7 May 2019 09:44:58 -0400
+Message-ID: <ba1481d0-f21b-5b0d-e3d5-ecb9faf42407@ti.com>
+References: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
+ <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
+ <d36b7a74-0d08-0143-b479-45f760c347ba@ti.com>
+ <CAJ2_jOFZjTNA3Nf=zNwLT+St21Q2_TPx_XYhggU=yef6LPkLdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
+In-Reply-To: <CAJ2_jOFZjTNA3Nf=zNwLT+St21Q2_TPx_XYhggU=yef6LPkLdg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anuragku@xilinx.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, mark.rutland@arm.com, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anurag
+On 5/7/19 2:48 AM, Yash Shah wrote:
+> On Mon, May 6, 2019 at 5:48 PM Andrew F. Davis <afd@ti.com> wrote:
+>>
+>> On 5/6/19 6:48 AM, Yash Shah wrote:
+>>> The driver currently supports only SiFive FU540-C000 platform.
+>>>
+>>> The initial version of L2 cache controller driver includes:
+>>> - Initial configuration reporting at boot up.
+>>> - Support for ECC related functionality.
+>>>
+>>> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>>> ---
+>>>  arch/riscv/include/asm/sifive_l2_cache.h |  16 +++
+>>>  arch/riscv/mm/Makefile                   |   1 +
+>>>  arch/riscv/mm/sifive_l2_cache.c          | 175 +++++++++++++++++++++++++++++++
+>>>  3 files changed, 192 insertions(+)
+>>>  create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
+>>>  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+>>>
+>>> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+>>> new file mode 100644
+>>> index 0000000..04f6748
+>>> --- /dev/null
+>>> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
+>>> @@ -0,0 +1,16 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * SiFive L2 Cache Controller header file
+>>> + *
+>>> + */
+>>> +
+>>> +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+>>> +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
+>>> +
+>>> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+>>> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+>>> +
+>>> +#define SIFIVE_L2_ERR_TYPE_CE 0
+>>> +#define SIFIVE_L2_ERR_TYPE_UE 1
+>>> +
+>>> +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+>>> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+>>> index eb22ab4..1523ee5 100644
+>>> --- a/arch/riscv/mm/Makefile
+>>> +++ b/arch/riscv/mm/Makefile
+>>> @@ -3,3 +3,4 @@ obj-y += fault.o
+>>>  obj-y += extable.o
+>>>  obj-y += ioremap.o
+>>>  obj-y += cacheflush.o
+>>> +obj-y += sifive_l2_cache.o
+>>> diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
+>>> new file mode 100644
+>>> index 0000000..4eb6461
+>>> --- /dev/null
+>>> +++ b/arch/riscv/mm/sifive_l2_cache.c
+>>> @@ -0,0 +1,175 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * SiFive L2 cache controller Driver
+>>> + *
+>>> + * Copyright (C) 2018-2019 SiFive, Inc.
+>>> + *
+>>> + */
+> [...]
+>>> +
+>>> +#ifdef CONFIG_DEBUG_FS
+>>> +static struct dentry *sifive_test;
+>>> +
+>>> +static ssize_t l2_write(struct file *file, const char __user *data,
+>>> +                     size_t count, loff_t *ppos)
+>>> +{
+>>> +     unsigned int val;
+>>> +
+>>> +     if (kstrtouint_from_user(data, count, 0, &val))
+>>> +             return -EINVAL;
+>>> +     if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
+>>
+>> I'm guessing bit 16 is the enable and the lower 8 are some kind of
+>> region to enable the error? This is probably a bad interface, it looks
+>> useful for testing but doesn't provide any debugging info useful for
+>> running systems. Do you really want userspace to be able to do this?
+> 
+> Bit 16 selects the type of ECC error (0=data or 1=directory error).
+> The lower 8 bits toggles (corrupt) that bit index.
+> Are you suggesting to remove this debug interface altogether or you
+> want me to improve the current interface?
+> Something like providing 2 separate debugfs files for data and
+> directory errors. And create a separate 8-bit debugfs variable to
+> select the bit index to toggle.
+> 
 
-> > > Please use "-" rather than "_" in the property names.
-> > I have thought about this feature over the weekend, and think the
-> > naming should be
-> > changed to something like "snps,bos-u1-exit-lat-in-us"
-> > and named the same in the code. And then be the value used by the
-> > get_config_params. E.g. the device-tree is used to set the values
-> > directly used for
-> > bUxdevExitLat instead of named something not related to exit
-> > latency.
-> > 
-> > With this the name and function is a 1 to 1 match, and you can
-> > among others set it to
-> > 0 for optaining what Anurag wants.
-> > 
-> Your suggestion looks good but the problem is the U1 and U2 exit
-> latencies are
-> fixed values in dwc3 controller(can be found in HCSPARAMS3). Adding
-> different
-> exit latencies may modify the U1SEL/U2SEL values sent from the host
-> but the real
-> dwc3 controller exit latencies are not getting changed. Because of
-> this reason I
-> had opted "snps,dis_u1_entry_quirk", so that the U1/U2 exit latency
-> values
-> reported in BOS descriptor can be either be zero (when U1/U2 entries
-> needs to be
-> disabled) or non-zero value (reported in HCSPARAMS3) when U1/U2
-> states allowed.
-> Based on this I think it is better if we can continue with "snps,dis-
-> u1-entry-quirk"
-> instead of the "snps,bos-u1-exit-lat-in-us". Please  provide your
-> opinion on this.
+I was suggesting to remove the whole thing. I don't see it being all
+that useful, but it is up to you.
 
-With this in mind I can see why having direct control over the exit
-latency value might not be optimum in many situations.
-Regarding the name, I think the snps,dis_u1_entry_quirk will be a good
-name, if it is combined with the DCTL control. E.g. remove the configfs
-part of my patch, and merge the DCTL control with your patches.
-If the dt-binding still only control the bos descriptor I think a
-better name is something with u1_force_exist_lat_0 or similar.
+Andrew
 
-I don't think setting bos to 0 or controlling DCTL will be used
-individual, so to keep things simple I will vote for
-snps,dis_u1_entry_quirk, and then just control all elements regarding
-disabling U1/U2 from this dt-binding.
-
-Please cut what your need from my patch.
-
-BR Claus
+> - Yash
+> 
+>>
+>> Andrew
+>>
+> 
