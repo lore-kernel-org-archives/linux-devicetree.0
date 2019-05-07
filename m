@@ -1,31 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 6/6] dt-bindings: devfreq: rk3399_dmc: Remove
- references of unexistant defines
-Date: Tue, 7 May 2019 12:07:30 -0500
-Message-ID: <20190507170730.GA3315@bogus>
-References: <20190502175820.25382-1-gael.portay@collabora.com>
- <20190502175820.25382-7-gael.portay@collabora.com>
+Subject: Re: [PATCH v5 01/10] media: dt-bindings: marvell,mmp2-ccic: Add
+ Marvell MMP2 camera
+Date: Tue, 7 May 2019 12:09:32 -0500
+Message-ID: <20190507170932.GA6587@bogus>
+References: <20190505140031.9636-1-lkundrak@v3.sk>
+ <20190505140031.9636-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190502175820.25382-7-gael.portay@collabora.com>
+In-Reply-To: <20190505140031.9636-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lin Huang <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Derek Basehore <dbasehore@chromium.org>, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, =?iso-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>, jacopo mondi <jacopo@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  2 May 2019 13:58:20 -0400, =?UTF-8?q?Ga=C3=ABl=20PORTAY?= wrote:
-> Those DDR related defines do not exist. Replace their references with
-> their numerical constant.
+On Sun,  5 May 2019 16:00:22 +0200, Lubomir Rintel wrote:
+> Add Marvell MMP2 camera host interface.
 > 
-> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
+> Changes since v4:
+> - s/Nust/Must/
+> - Documented required endpoint properties; bus-type, hsync-active,
+>   vsync-active and pclk-sample.
 > 
-> Changes in v5: New
+> Changes since v3:
+> - Dropped the video-interfaces.txt reference
+> - Clarify "clocks", "clock-names" and "clock-output-names" descriptions
+> - Refer to other documentation by full path
 > 
->  .../bindings/devfreq/rk3399_dmc.txt           | 73 +++++++++----------
->  1 file changed, 34 insertions(+), 39 deletions(-)
+> Changes since v2:
+> - Added #clock-cells, clock-names, port
+> 
+>  .../bindings/media/marvell,mmp2-ccic.txt      | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
