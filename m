@@ -1,61 +1,152 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 69/95] arm64: dts: marvell: armada-ap806: reserve PSCI area
-Date: Tue,  7 May 2019 01:37:58 -0400
-Message-ID: <20190507053826.31622-69-sashal@kernel.org>
-References: <20190507053826.31622-1-sashal@kernel.org>
+From: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+Subject: Re: [PATCH 2/2] dmaengine: milbeaut: Add Milbeaut AXI DMA controller
+Date: Tue, 7 May 2019 14:39:24 +0900
+Message-ID: <20190507053924.GA3359@ubuntu>
+References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com>
+ <1553487314-9185-3-git-send-email-kasai.kazuhiro@socionext.com>
+ <20190426114629.GU28103@vkoul-mobl>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, Sasha Levin <alexander.levin@microsoft.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190426114629.GU28103@vkoul-mobl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, orito.takao@socionext.com, sugaya.taichi@socionext.com, kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org, kasai.kazuhiro@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-[ Upstream commit 132ac39cffbcfed80ada38ef0fc6d34d95da7be6 ]
+Thank you very much for reviewing my patch.
+Sorry for my late reply. Japan was in Spring Vacation.
 
-The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
-attempt to access it from Linux leads to an immediate crash.
+On Fri, Apr 26, 2019 at 17:16 +0530, Vinod Koul wrote:
+> On 25-03-19, 13:15, Kazuhiro Kasai wrote:
+> > Add Milbeaut AXI DMA controller. This DMA controller has
+> > only capable of memory to memory transfer.
+>
+> Have you tested this with dmatest?
+Yes, I have tested this with dmatest.
 
-So let's make the same memory reservation as the vendor kernel.
+I use dmatest with the following parameter.
+>echo 10 > iterations
+>echo "" > channel
+>echo 1 > run
 
-[gregory: added as comment that this region matches the mainline U-boot]
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+And I got the below report from dmatest.
+[11675.231268] dmatest: dma0chan0-copy0: summary 10 tests, 0 failures 6910.84 iops 67035 KB/s (0)
+[ 5646.689234] dmatest: dma0chan1-copy0: summary 10 tests, 0 failures 7949.12 iops 59618 KB/s (0)
+[12487.712996] dmatest: dma0chan2-copy0: summary 10 tests, 0 failures 1493.87 iops 15088 KB/s (0)
+[12487.733932] dmatest: dma1chan0-copy0: summary 10 tests, 0 failures 490.98 iops 3142 KB/s (0)
+[11675.282428] dmatest: dma1chan2-copy0: summary 10 tests, 0 failures 7112.37 iops 56187 KB/s (0)
+[ 5646.754230] dmatest: dma1chan3-copy0: summary 10 tests, 0 failures 6609.38 iops 61467 KB/s (0)
+[ 5043.009255] dmatest: dma0chan3-copy0: summary 10 tests, 0 failures 498.08 iops 4183 KB/s (0)
+[ 5043.018385] dmatest: dma1chan1-copy0: summary 10 tests, 0 failures 350.62 iops 3155 KB/s (0)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 30d48ecf46e0..27d2bd85d1ae 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -65,6 +65,23 @@
- 		method = "smc";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * This area matches the mapping done with a
-+		 * mainline U-Boot, and should be updated by the
-+		 * bootloader.
-+		 */
-+
-+		psci-area@4000000 {
-+			reg = <0x0 0x4000000 0x0 0x200000>;
-+			no-map;
-+		};
-+	};
-+
- 	ap806 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
--- 
-2.20.1
+>
+> > +struct m10v_dma_chan {
+> > +	struct dma_chan chan;
+> > +	struct m10v_dma_device *mdmac;
+> > +	void __iomem *regs;
+> > +	int irq;
+> > +	struct m10v_dma_desc mdesc;
+>
+> So there is a *single* descriptor? Not a list??
+
+Yes, single descriptor.
+
+>
+> > +static void m10v_xdmac_disable_dma(struct m10v_dma_device *mdmac)
+> > +{
+> > +	unsigned int val;
+> > +
+> > +	val = readl(mdmac->regs + M10V_XDACS);
+> > +	val &= ~M10V_XDACS_XE;
+> > +	val |= FIELD_PREP(M10V_XDACS_XE, 0);
+> > +	writel(val, mdmac->regs + M10V_XDACS);
+>
+> Why not create a modifyl() macro and use it here
+
+Thank you for advise, I will creat modifyl() macro and use it in next version.
+
+>
+> > +static void m10v_xdmac_issue_pending(struct dma_chan *chan)
+> > +{
+> > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
+> > +
+> > +	m10v_xdmac_config_chan(mchan);
+> > +
+> > +	m10v_xdmac_enable_chan(mchan);
+>
+> You dont check if anything is already running or not?
+
+Yes, I think I don't need check if dma is running or not.
+Because there's a single descriptor.
+
+>
+> > +static dma_cookie_t m10v_xdmac_tx_submit(struct dma_async_tx_descriptor *txd)
+> > +{
+> > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(txd->chan);
+> > +	dma_cookie_t cookie;
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&mchan->lock, flags);
+> > +	cookie = dma_cookie_assign(txd);
+> > +	spin_unlock_irqrestore(&mchan->lock, flags);
+> > +
+> > +	return cookie;
+>
+> sounds like vchan_tx_submit() i think you can use virt-dma layer and then
+> get rid of artificial limit in driver and be able to queue up the txn on
+> dmaengine.
+
+OK, I will try to use virt-dma layer in next version.
+
+>
+> > +static struct dma_async_tx_descriptor *
+> > +m10v_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+> > +			   dma_addr_t src, size_t len, unsigned long flags)
+> > +{
+> > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
+> > +
+> > +	dma_async_tx_descriptor_init(&mchan->mdesc.txd, chan);
+> > +	mchan->mdesc.txd.tx_submit = m10v_xdmac_tx_submit;
+> > +	mchan->mdesc.txd.callback = NULL;
+> > +	mchan->mdesc.txd.flags = flags;
+> > +	mchan->mdesc.txd.cookie = -EBUSY;
+> > +
+> > +	mchan->mdesc.len = len;
+> > +	mchan->mdesc.src = src;
+> > +	mchan->mdesc.dst = dst;
+> > +
+> > +	return &mchan->mdesc.txd;
+>
+> So you support single descriptor and dont check if this has been already
+> configured. So I guess this has been tested by doing txn one at a time
+> and not submitted bunch of txn and wait for them to complete. Please fix
+> that to really enable dmaengine capabilities.
+
+Thank you for advice. I want to fix it and I have 2 questions.
+
+1. Does virt-dma layer help to fix this?
+2. Can dmatest test that dmaengine capabilities?
+
+>
+> > +static int m10v_xdmac_remove(struct platform_device *pdev)
+> > +{
+> > +	struct m10v_dma_chan *mchan;
+> > +	struct m10v_dma_device *mdmac = platform_get_drvdata(pdev);
+> > +	int i;
+> > +
+> > +	m10v_xdmac_disable_dma(mdmac);
+> > +
+> > +	for (i = 0; i < mdmac->channels; i++) {
+> > +		mchan = &mdmac->mchan[i];
+> > +		devm_free_irq(&pdev->dev, mchan->irq, mchan);
+> > +	}
+>
+> No call to dma_async_device_unregister()?
+
+Thank you, I will call dma_async_device_unregister in next version.
+
+Thanks,
+Kasai
