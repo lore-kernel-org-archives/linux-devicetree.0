@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v5 05/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-Date: Tue, 7 May 2019 16:13:48 +0800
-Message-ID: <20190507081355.52630-6-bibby.hsieh@mediatek.com>
+Subject: [PATCH v5 12/12] arm64: dts: add gce node for mt8183
+Date: Tue, 7 May 2019 16:13:55 +0800
+Message-ID: <20190507081355.52630-13-bibby.hsieh@mediatek.com>
 References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,68 +12,41 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The interrupt mask and thread number has positive correlation,
-so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-it by thread number.
+add gce device node for mt8183
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 22811784dc7d..87617dc7504d 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -17,7 +17,6 @@
- #include <linux/of_device.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index b36e37fcdfe3..d6d26fa32dd7 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/power/mt8183-power.h>
++#include <dt-bindings/gce/mt8183-gce.h>
+ #include "mt8183-pinfunc.h"
+ / {
+ 	compatible = "mediatek,mt8183";
+@@ -293,6 +294,16 @@
+ 			clock-names = "spi", "wrap";
+ 		};
  
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
--#define CMDQ_IRQ_MASK			0xffff
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-@@ -71,6 +70,7 @@ struct cmdq {
- 	void __iomem		*base;
- 	u32			irq;
- 	u32			thread_nr;
-+	u32			irq_mask;
- 	struct cmdq_thread	*thread;
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- 	unsigned long irq_status, flags = 0L;
- 	int bit;
- 
--	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
--	if (!(irq_status ^ CMDQ_IRQ_MASK))
-+	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-+	if (!(irq_status ^ cmdq->irq_mask))
- 		return IRQ_NONE;
- 
--	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-+	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
- 		struct cmdq_thread *thread = &cmdq->thread[bit];
- 
- 		spin_lock_irqsave(&thread->chan->lock, flags);
-@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to get irq\n");
- 		return -EINVAL;
- 	}
++		gce: gce@10238000 {
++			compatible = "mediatek,mt8183-gce";
++			reg = <0 0x10238000 0 0x4000>;
++			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
++			#mbox-cells = <3>;
++			#subsys-cells = <3>;
++			clocks = <&infracfg CLK_INFRA_GCE>;
++			clock-names = "gce";
++		};
 +
-+	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-+	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
- 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
- 			       "mtk_cmdq", cmdq);
- 	if (err < 0) {
-@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return PTR_ERR(cmdq->clock);
- 	}
- 
--	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
- 	cmdq->mbox.dev = dev;
- 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
- 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt8183-uart",
+ 				     "mediatek,mt6577-uart";
 -- 
 2.18.0
