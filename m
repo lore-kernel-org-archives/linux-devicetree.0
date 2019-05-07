@@ -1,55 +1,89 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V5 09/16] Documentation/devicetree: Add PCIe
- supports-clkreq property
-Date: Tue, 7 May 2019 14:01:03 +0530
-Message-ID: <d8ef9c8d-031b-4c77-b225-4a1fef3bc9eb@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-10-vidyas@nvidia.com> <20190426152229.GA8492@bogus>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 07/16] dmaengine: Add function to request slave channel
+ from a dma_device
+Date: Tue, 7 May 2019 11:37:33 +0300
+Message-ID: <89b2ded6-f1f5-dda5-9ae4-d94bcf4c041f@ti.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-8-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190426152229.GA8492@bogus>
+In-Reply-To: <20190506123456.6777-8-peter.ujfalusi@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On 4/26/2019 8:52 PM, Rob Herring wrote:
-> On Wed, Apr 24, 2019 at 10:49:57AM +0530, Vidya Sagar wrote:
->> Some host controllers need to know the existence of clkreq signal routing to
->> downstream devices to be able to advertise low power features like ASPM L1
->> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
->> states might lead to downstream devices falling off the bus. Hence a new device
->> tree property 'supports-clkreq' is added to make such host controllers
->> aware of clkreq signal routing to downstream devices.
-> 
-> Please be consistent with subjects (Use 'dt-bindings: ...')
-When I had made this change, I did a git log and saw 'Documentation/devicetree:' as
-the prefix and hence added it. But, now, with linux-next top of the tree,  I see
-two more commits with 'dt-bindings:' prefix. I'll change my patch also to the new
-'dt-bindings:' prefix.
+
+
+On 06/05/2019 15.34, Peter Ujfalusi wrote:
+> dma_get_any_slave_channel() would skip using the filter function, which
+> in some cases needed to be executed before the alloc_chan_resources
+> callback to make sure that all parameters are provided for the slave
+> channel.
+
+This can be dropped in favor of
+https://patchwork.kernel.org/patch/10932299/
+from Baolin Wangm and using __dma_request_channel() in the k3-udma driver.
+
+- Péter
 
 > 
-> With that change,
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/dmaengine.c   | 7 ++++---
+>  include/linux/dmaengine.h | 5 ++++-
+>  2 files changed, 8 insertions(+), 4 deletions(-)
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 8eed5ff0fc01..7ec93be12088 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -617,7 +617,8 @@ struct dma_chan *dma_get_slave_channel(struct dma_chan *chan)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_get_slave_channel);
+>  
+> -struct dma_chan *dma_get_any_slave_channel(struct dma_device *device)
+> +struct dma_chan *dmadev_get_slave_channel(struct dma_device *device,
+> +					  dma_filter_fn fn, void *fn_param)
+>  {
+>  	dma_cap_mask_t mask;
+>  	struct dma_chan *chan;
+> @@ -628,13 +629,13 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device)
+>  	/* lock against __dma_request_channel */
+>  	mutex_lock(&dma_list_mutex);
+>  
+> -	chan = find_candidate(device, &mask, NULL, NULL);
+> +	chan = find_candidate(device, &mask, fn, fn_param);
+>  
+>  	mutex_unlock(&dma_list_mutex);
+>  
+>  	return IS_ERR(chan) ? NULL : chan;
+>  }
+> -EXPORT_SYMBOL_GPL(dma_get_any_slave_channel);
+> +EXPORT_SYMBOL_GPL(dmadev_get_slave_channel);
+>  
+>  /**
+>   * __dma_request_channel - try to allocate an exclusive channel
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index c1486564a314..4774b66f2064 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -1541,7 +1541,10 @@ int dmaenginem_async_device_register(struct dma_device *device);
+>  void dma_async_device_unregister(struct dma_device *device);
+>  void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+>  struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+> -struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
+> +struct dma_chan *dmadev_get_slave_channel(struct dma_device *device,
+> +					  dma_filter_fn fn, void *fn_param);
+> +#define dma_get_any_slave_channel(device) \
+> +	dmadev_get_slave_channel(device, NULL, NULL)
+>  #define dma_request_channel(mask, x, y) __dma_request_channel(&(mask), x, y)
+>  #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
+>  	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
 > 
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * Rebased on top of linux-next top of the tree
->>
->> Changes since [v2]:
->> * None
->>
->> Changes since [v1]:
->> * This is a new patch in v2 series
->>
->>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
