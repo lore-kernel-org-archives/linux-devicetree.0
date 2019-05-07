@@ -1,86 +1,116 @@
-From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
- U2 entries
-Date: Tue, 7 May 2019 09:50:53 +0000
-Message-ID: <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
-References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
- <1557176302.18203.20.camel@phaseone.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [v2 1/5] drm/mediatek: move mipi_dsi_host_register to probe
+Date: Tue, 7 May 2019 17:52:15 +0800
+Message-ID: <1557222735.3498.11.camel@mtksdaap41>
+References: <20190416060501.76276-1-jitao.shi@mediatek.com>
+         <20190416060501.76276-2-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557176302.18203.20.camel@phaseone.com>
-Content-Language: en-US
+In-Reply-To: <20190416060501.76276-2-jitao.shi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Claus H. Stovgaard" <cst@phaseone.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2xhdXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IENsYXVzIEgu
-IFN0b3ZnYWFyZCBbbWFpbHRvOmNzdEBwaGFzZW9uZS5jb21dDQo+U2VudDogVHVlc2RheSwgTWF5
-IDA3LCAyMDE5IDI6MjggQU0NCj5UbzogVGhpbmggTmd1eWVuIDxUaGluaC5OZ3V5ZW5Ac3lub3Bz
-eXMuY29tPjsgQW51cmFnIEt1bWFyIFZ1bGlzaGENCj48YW51cmFna3VAeGlsaW54LmNvbT47IEdy
-ZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBSb2INCj5IZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPjsgRmVsaXBlIEJhbGJpDQo+PGJhbGJpQGtlcm5lbC5vcmc+DQo+Q2M6IGxpbnV4LXVzYkB2
-Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyB2LmFudXJhZ2t1bWFyQGdtYWlsLmNvbQ0KPlN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMy8zXSB1c2I6IGR3YzM6IGdhZGdldDogQWRkIHN1cHBvcnQgZm9yIGRpc2FibGlu
-ZyBVMSBhbmQgVTINCj5lbnRyaWVzDQo+DQo+SGkgVGhpbmggYW5kIEFudXJhZw0KPg0KPk9uIG1h
-biwgMjAxOS0wNS0wNiBhdCAxOToyMSArMDAwMCwgVGhpbmggTmd1eWVuIHdyb3RlOg0KPg0KPj4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMy9jb3JlLmMgYi9kcml2ZXJzL3VzYi9kd2Mz
-L2NvcmUuYyBpbmRleA0KPj4gPiBhMWIxMjZmLi40ZjA5MTJjIDEwMDY0NA0KPj4gPiAtLS0gYS9k
-cml2ZXJzL3VzYi9kd2MzL2NvcmUuYw0KPj4gPiArKysgYi9kcml2ZXJzL3VzYi9kd2MzL2NvcmUu
-Yw0KPj4gPiBAQCAtMTI4NSw2ICsxMjg1LDEwIEBAIHN0YXRpYyB2b2lkIGR3YzNfZ2V0X3Byb3Bl
-cnRpZXMoc3RydWN0IGR3YzMNCj4+ID4gKmR3YykNCj4+ID4gIAkJCQkic25wcyxkaXNfdTJfc3Vz
-cGh5X3F1aXJrIik7DQo+PiA+ICAJZHdjLT5kaXNfZW5ibHNscG1fcXVpcmsgPSBkZXZpY2VfcHJv
-cGVydHlfcmVhZF9ib29sKGRldiwNCj4+ID4gIAkJCQkic25wcyxkaXNfZW5ibHNscG1fcXVpcmsi
-KTsNCj4+ID4gKwlkd2MtPmRpc191MV9lbnRyeV9xdWlyayA9IGRldmljZV9wcm9wZXJ0eV9yZWFk
-X2Jvb2woZGV2LA0KPj4gPiArCQkJCSJzbnBzLGRpc191MV9lbnRyeV9xdWlyayIpOw0KPj4gPiAr
-CWR3Yy0+ZGlzX3UyX2VudHJ5X3F1aXJrID0gZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYs
-DQo+PiA+ICsJCQkJInNucHMsZGlzX3UyX2VudHJ5X3F1aXJrIik7DQo+Pg0KPj4gUGxlYXNlIHVz
-ZSAiLSIgcmF0aGVyIHRoYW4gIl8iIGluIHRoZSBwcm9wZXJ0eSBuYW1lcy4NCj4NCj5JIGhhdmUg
-dGhvdWdodCBhYm91dCB0aGlzIGZlYXR1cmUgb3ZlciB0aGUgd2Vla2VuZCwgYW5kIHRoaW5rIHRo
-ZSBuYW1pbmcgc2hvdWxkIGJlDQo+Y2hhbmdlZCB0byBzb21ldGhpbmcgbGlrZSAic25wcyxib3Mt
-dTEtZXhpdC1sYXQtaW4tdXMiDQo+YW5kIG5hbWVkIHRoZSBzYW1lIGluIHRoZSBjb2RlLiBBbmQg
-dGhlbiBiZSB0aGUgdmFsdWUgdXNlZCBieSB0aGUNCj5nZXRfY29uZmlnX3BhcmFtcy4gRS5nLiB0
-aGUgZGV2aWNlLXRyZWUgaXMgdXNlZCB0byBzZXQgdGhlIHZhbHVlcyBkaXJlY3RseSB1c2VkIGZv
-cg0KPmJVeGRldkV4aXRMYXQgaW5zdGVhZCBvZiBuYW1lZCBzb21ldGhpbmcgbm90IHJlbGF0ZWQg
-dG8gZXhpdCBsYXRlbmN5Lg0KPg0KPldpdGggdGhpcyB0aGUgbmFtZSBhbmQgZnVuY3Rpb24gaXMg
-YSAxIHRvIDEgbWF0Y2gsIGFuZCB5b3UgY2FuIGFtb25nIG90aGVycyBzZXQgaXQgdG8NCj4wIGZv
-ciBvcHRhaW5pbmcgd2hhdCBBbnVyYWcgd2FudHMuDQo+DQoNCllvdXIgc3VnZ2VzdGlvbiBsb29r
-cyBnb29kIGJ1dCB0aGUgcHJvYmxlbSBpcyB0aGUgVTEgYW5kIFUyIGV4aXQgbGF0ZW5jaWVzIGFy
-ZQ0KZml4ZWQgdmFsdWVzIGluIGR3YzMgY29udHJvbGxlcihjYW4gYmUgZm91bmQgaW4gSENTUEFS
-QU1TMykuIEFkZGluZyBkaWZmZXJlbnQNCmV4aXQgbGF0ZW5jaWVzIG1heSBtb2RpZnkgdGhlIFUx
-U0VML1UyU0VMIHZhbHVlcyBzZW50IGZyb20gdGhlIGhvc3QgYnV0IHRoZSByZWFsDQpkd2MzIGNv
-bnRyb2xsZXIgZXhpdCBsYXRlbmNpZXMgYXJlIG5vdCBnZXR0aW5nIGNoYW5nZWQuIEJlY2F1c2Ug
-b2YgdGhpcyByZWFzb24gSQ0KaGFkIG9wdGVkICJzbnBzLGRpc191MV9lbnRyeV9xdWlyayIsIHNv
-IHRoYXQgdGhlIFUxL1UyIGV4aXQgbGF0ZW5jeSB2YWx1ZXMNCnJlcG9ydGVkIGluIEJPUyBkZXNj
-cmlwdG9yIGNhbiBiZSBlaXRoZXIgYmUgemVybyAod2hlbiBVMS9VMiBlbnRyaWVzIG5lZWRzIHRv
-IGJlDQpkaXNhYmxlZCkgb3Igbm9uLXplcm8gdmFsdWUgKHJlcG9ydGVkIGluIEhDU1BBUkFNUzMp
-IHdoZW4gVTEvVTIgc3RhdGVzIGFsbG93ZWQuDQpCYXNlZCBvbiB0aGlzIEkgdGhpbmsgaXQgaXMg
-YmV0dGVyIGlmIHdlIGNhbiBjb250aW51ZSB3aXRoICJzbnBzLGRpcy11MS1lbnRyeS1xdWlyayIN
-Cmluc3RlYWQgb2YgdGhlICJzbnBzLGJvcy11MS1leGl0LWxhdC1pbi11cyIuIFBsZWFzZSAgcHJv
-dmlkZSB5b3VyIG9waW5pb24gb24gdGhpcy4NCiANCj5SZWdhcmRpbmcgdGhlIGRpc2FibGluZyBv
-ZiBVMSAvIFUyLiBJIHNlbmQgdGhpcyB0byBBbnVyYWcNCj5odHRwczovL21hcmMuaW5mby8/bD1s
-aW51eC11c2ImbT0xNTU2ODMyOTkzMTE5NTQmdz0yDQo+SGVyZSBpIGNyZWF0ZWQgYSBjb25maWdm
-cyBpbnRlcmZhY2Ugd2l0aCB0aGUgbmFtZXMgImxwbV9VMV9kaXNhYmxlIiBhbmQNCj4ibHBtX1Uy
-X2Rpc2FibGUiIGZvciBjb250cm9sbGluZyB0aGUgRFRDTCBvZiBkd2MzLCBhbmQgcmVqZWN0DQo+
-U0VUX0ZFQVRVUkUoVTEvVTIpDQo+DQo+V2lsbCBzZW5kIHRoaXMgaW4gc2VwZXJhdGUgcGF0Y2gg
-dG9tb3Jyb3csIGluIHRoZSBob3BlIHRoYXQgQW51cmFncyBmZWF0dXJlIGNhbg0KPmJlY29tZSBh
-IHdheSBmb3IgY29udHJvbGxpbmcgZXhpdCBsYXRlbmN5LCBhbmQgbXkgcGF0Y2ggYmVjb21lIGEg
-d2F5IGZvciBkaXNhYmxpbmcNCj5VMS9VMg0KPg0KDQpJIGFncmVlIHdpdGggeW91ciBzdWdnZXN0
-aW9uLiBXaGVuIFUxIGFuZCBVMiBlbnRyaWVzIGFyZSBub3QgYWxsb3dlZCAgaXQgaXMgYWx3YXlz
-DQpiZXR0ZXIgdG8gcmVwb3J0IHplcm8gdmFsdWUgZm9yIFUxL1UyIGV4aXQgbGF0ZW5jaWVzIGlu
-IEJPUyBkZXNjcmlwdG9yIChubyBwb2ludCBpbg0KcmVwb3J0aW5nIG5vbi16ZXJvIGV4aXQgbGF0
-ZW5jeSB2YWx1ZXMgd2hlbiBVMS9VMiBzdGF0ZXMgYXJlIG5vdCBhbGxvd2VkKS4gIEFsb25nDQp3
-aXRoIHRoYXQgY2hhbmdlcyBmb3IgcHJldmVudGluZyB0aGUgZHdjMyBjb250cm9sbGVyIGZyb20g
-aW5pdGlhdGluZyBvciBhY2NlcHRpbmcNClUxL1UyIHJlcXVlc3RzIGFyZSBhbHNvIHJlcXVpcmVk
-IChzaW5jZSB0aGVyZSBhcmUgc29tZSBob3N0IHBsYXRmb3JtcyB3aGVyZSBzZW5kaW5nDQowIGV4
-aXQgbGF0ZW5jeSBkb2Vzbid0IHdvcmspLiBCYXNlZCBvbiB0aGVzZSBvYnNlcnZhdGlvbnMgSSBi
-ZWxpZXZlIGJvdGggeW91ciBwYXRjaA0KY2hhbmdlcyBhbmQgbXkgcGF0Y2ggY2hhbmdlcyBuZWVk
-cyB0byBiZSBhZGRlZC4NCg0KQFRoaW5oIE5ndXllbg0KUGxlYXNlIHByb3ZpZGUgeW91ciBvcGlu
-aW9uIG9uIHRoaXMNCg0KVGhhbmtzLA0KQW51cmFnIEt1bWFyIFZ1bGlzaGENCg0KPkJSDQo+Q2xh
-dXMNCg==
+Hi, Jitao:
+
+On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
+> DSI panel driver need attach function which is inculde in
+> mipi_dsi_host_ops.
+> 
+> If mipi_dsi_host_register is not in probe, dsi panel will
+> probe fail or more delay.
+
+I think this patch just prevent delay, not to prevent dsi panel probe
+fail. In [1], you mention mipi_dsi_attach() is called in
+panel_simple_dsi_probe(), but panel_simple_dsi_probe() is trigger by
+mipi_dsi_host_register(), so the probe would success.
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/panel/panel-simple.c?h=v5.0-rc6#n2987
+
+
+> 
+> So move the mipi_dsi_host_register to probe from bind.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 50 ++++++++++++++++++------------
+>  1 file changed, 30 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index b00eb2d2e086..6c4ac37f983d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+>  		return ret;
+>  	}
+>  
+> -	ret = mipi_dsi_host_register(&dsi->host);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to register DSI host: %d\n", ret);
+> -		goto err_ddp_comp_unregister;
+> -	}
+> -
+>  	ret = mtk_dsi_create_conn_enc(drm, dsi);
+>  	if (ret) {
+>  		DRM_ERROR("Encoder create failed with %d\n", ret);
+> @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+>  	return 0;
+>  
+>  err_unregister:
+> -	mipi_dsi_host_unregister(&dsi->host);
+> -err_ddp_comp_unregister:
+>  	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+>  	return ret;
+>  }
+> @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  
+>  	dsi->host.ops = &mtk_dsi_ops;
+>  	dsi->host.dev = dev;
+> +	dsi->dev = dev;
+
+Why do this?
+
+Regards,
+CK
+
+> +	ret = mipi_dsi_host_register(&dsi->host);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register DSI host: %d\n", ret);
+> +		return ret;
+> +	}
+>  
+>  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+>  					  &dsi->panel, &dsi->bridge);
+>  	if (ret)
+> -		return ret;
+> +		goto err_unregister_host;
+>  
+>  	dsi->engine_clk = devm_clk_get(dev, "engine");
+>  	if (IS_ERR(dsi->engine_clk)) {
+>  		ret = PTR_ERR(dsi->engine_clk);
+>  		dev_err(dev, "Failed to get engine clock: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	dsi->digital_clk = devm_clk_get(dev, "digital");
+>  	if (IS_ERR(dsi->digital_clk)) {
+>  		ret = PTR_ERR(dsi->digital_clk);
+>  		dev_err(dev, "Failed to get digital clock: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	dsi->hs_clk = devm_clk_get(dev, "hs");
+>  	if (IS_ERR(dsi->hs_clk)) {
+>  		ret = PTR_ERR(dsi->hs_clk);
+>  		dev_err(dev, "Failed to get hs clock: %d\n", ret);
+> -		return ret;
+> +		goto err_unregister_host;
+>  	}
+>  
+>  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
