@@ -1,286 +1,133 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 3/3] watchdog: imx_sc: Add pretimeout support
-Date: Tue, 7 May 2019 01:20:19 +0000
-Message-ID: <DB3PR0402MB39164F95173C3D302C21FBD4F5310@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
- <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
- <20190506182752.GA358@roeck-us.net>
+Subject: [PATCH V4 3/3] watchdog: imx_sc: Add pretimeout support
+Date: Tue, 7 May 2019 01:28:23 +0000
+Message-ID: <1557192198-19640-3-git-send-email-Anson.Huang@nxp.com>
+References: <1557192198-19640-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190506182752.GA358@roeck-us.net>
+In-Reply-To: <1557192198-19640-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Guenter
-
-> -----Original Message-----
-> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter
-> Roeck
-> Sent: Tuesday, May 7, 2019 2:28 AM
-> To: Anson Huang <anson.huang@nxp.com>
-> Cc: robh+dt@kernel.org; mark.rutland@arm.com; wim@linux-watchdog.org;
-> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> festevam@gmail.com; Aisheng Dong <aisheng.dong@nxp.com>;
-> ulf.hansson@linaro.org; sboyd@kernel.org; Daniel Baluta
-> <daniel.baluta@nxp.com>; Peng Fan <peng.fan@nxp.com>;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> watchdog@vger.kernel.org; linux-arm-kernel@lists.infradead.org; dl-linux-
-> imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH V3 3/3] watchdog: imx_sc: Add pretimeout support
->=20
-> On Sun, May 05, 2019 at 02:15:00AM +0000, Anson Huang wrote:
-> > i.MX system controller watchdog can support pretimeout IRQ via general
-> > SCU MU IRQ, it depends on IMX_SCU and driver MUST be probed after SCU
-> > IPC ready, then enable corresponding SCU IRQ group and register SCU
-> > IRQ notifier, when watchdog pretimeout IRQ fires, SCU MU IRQ will be
-> > handled and watchdog pretimeout notifier will be called to handle the
-> > event.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > No change.
-> > ---
-> >  drivers/watchdog/Kconfig      |   1 +
-> >  drivers/watchdog/imx_sc_wdt.c | 114
-> > ++++++++++++++++++++++++++++++++++--------
-> >  2 files changed, 95 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig index
-> > e19960a..dbc74e1 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -710,6 +710,7 @@ config IMX2_WDT
-> >  config IMX_SC_WDT
-> >  	tristate "IMX SC Watchdog"
-> >  	depends on HAVE_ARM_SMCCC
-> > +	depends on IMX_SCU
-> >  	select WATCHDOG_CORE
-> >  	help
-> >  	  This is the driver for the system controller watchdog diff --git
-> > a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c index
-> > 49848b6..d8493a3 100644
-> > --- a/drivers/watchdog/imx_sc_wdt.c
-> > +++ b/drivers/watchdog/imx_sc_wdt.c
-> > @@ -4,6 +4,7 @@
-> >   */
-> >
-> >  #include <linux/arm-smccc.h>
-> > +#include <linux/firmware/imx/sci.h>
-> >  #include <linux/io.h>
-> >  #include <linux/init.h>
-> >  #include <linux/kernel.h>
-> > @@ -33,11 +34,19 @@
-> >
-> >  #define SC_TIMER_WDOG_ACTION_PARTITION	0
-> >
-> > +#define SC_IRQ_WDOG			1
-> > +#define SC_IRQ_GROUP_WDOG		1
-> > +
-> >  static bool nowayout =3D WATCHDOG_NOWAYOUT;
-> module_param(nowayout,
-> > bool, 0000);  MODULE_PARM_DESC(nowayout, "Watchdog cannot be
-> stopped
-> > once started (default=3D"
-> >  		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> >
-> > +struct imx_sc_wdt_device {
-> > +	struct watchdog_device wdd;
-> > +	struct notifier_block wdt_notifier;
-> > +};
-> > +
-> >  static int imx_sc_wdt_ping(struct watchdog_device *wdog)  {
-> >  	struct arm_smccc_res res;
-> > @@ -85,24 +94,66 @@ static int imx_sc_wdt_set_timeout(struct
-> watchdog_device *wdog,
-> >  	return res.a0 ? -EACCES : 0;
-> >  }
-> >
-> > +static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
-> > +				     unsigned int pretimeout)
-> > +{
-> > +	struct arm_smccc_res res;
-> > +
-> > +	arm_smccc_smc(IMX_SIP_TIMER,
-> IMX_SIP_TIMER_SET_PRETIME_WDOG,
-> > +		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
-> > +	if (res.a0)
-> > +		return -EACCES;
-> > +
-> > +	wdog->pretimeout =3D pretimeout;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx_sc_wdt_notify(struct notifier_block *nb,
-> > +			     unsigned long event, void *group) {
-> > +	struct imx_sc_wdt_device *imx_sc_wdd =3D
-> > +				 container_of(nb,
-> > +					      struct imx_sc_wdt_device,
-> > +					      wdt_notifier);
-> > +
-> > +	if (event & SC_IRQ_WDOG &&
-> > +	    *(u8 *)group =3D=3D SC_IRQ_GROUP_WDOG)
-> > +		watchdog_notify_pretimeout(&imx_sc_wdd->wdd);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void imx_sc_wdt_action(void *data) {
-> > +	struct notifier_block *wdt_notifier =3D data;
-> > +
-> > +	imx_scu_irq_unregister_notifier(wdt_notifier);
-> > +	imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
-> > +				 SC_IRQ_WDOG,
-> > +				 false);
-> > +}
-> > +
-> >  static const struct watchdog_ops imx_sc_wdt_ops =3D {
-> >  	.owner =3D THIS_MODULE,
-> >  	.start =3D imx_sc_wdt_start,
-> >  	.stop  =3D imx_sc_wdt_stop,
-> >  	.ping  =3D imx_sc_wdt_ping,
-> >  	.set_timeout =3D imx_sc_wdt_set_timeout,
-> > +	.set_pretimeout =3D imx_sc_wdt_set_pretimeout,
-> >  };
-> >
-> > -static const struct watchdog_info imx_sc_wdt_info =3D {
-> > +static struct watchdog_info imx_sc_wdt_info =3D {
-> >  	.identity	=3D "i.MX SC watchdog timer",
-> >  	.options	=3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> > -			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
-> > +			  WDIOF_MAGICCLOSE,
-> >  };
-> >
-> >  static int imx_sc_wdt_probe(struct platform_device *pdev)  {
-> > +	struct imx_sc_wdt_device *imx_sc_wdd;
-> > +	struct watchdog_device *wdog;
-> >  	struct device *dev =3D &pdev->dev;
-> > -	struct watchdog_device *imx_sc_wdd;
-> >  	int ret;
-> >
-> >  	imx_sc_wdd =3D devm_kzalloc(dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
-> @@
-> > -111,42 +162,65 @@ static int imx_sc_wdt_probe(struct platform_device
-> > *pdev)
-> >
-> >  	platform_set_drvdata(pdev, imx_sc_wdd);
-> >
-> > -	imx_sc_wdd->info =3D &imx_sc_wdt_info;
-> > -	imx_sc_wdd->ops =3D &imx_sc_wdt_ops;
-> > -	imx_sc_wdd->min_timeout =3D 1;
-> > -	imx_sc_wdd->max_timeout =3D MAX_TIMEOUT;
-> > -	imx_sc_wdd->parent =3D dev;
-> > -	imx_sc_wdd->timeout =3D DEFAULT_TIMEOUT;
-> > +	wdog =3D &imx_sc_wdd->wdd;
-> > +	wdog->info =3D &imx_sc_wdt_info;
-> > +	wdog->ops =3D &imx_sc_wdt_ops;
-> > +	wdog->min_timeout =3D 1;
-> > +	wdog->max_timeout =3D MAX_TIMEOUT;
-> > +	wdog->parent =3D dev;
-> > +	wdog->timeout =3D DEFAULT_TIMEOUT;
-> >
-> > -	watchdog_init_timeout(imx_sc_wdd, 0, dev);
-> > -	watchdog_stop_on_reboot(imx_sc_wdd);
-> > -	watchdog_stop_on_unregister(imx_sc_wdd);
-> > +	watchdog_init_timeout(wdog, 0, dev);
-> > +	watchdog_stop_on_reboot(wdog);
-> > +	watchdog_stop_on_unregister(wdog);
-> >
-> > -	ret =3D devm_watchdog_register_device(dev, imx_sc_wdd);
-> > +	ret =3D devm_watchdog_register_device(dev, wdog);
-> >  	if (ret) {
-> >  		dev_err(dev, "Failed to register watchdog device\n");
-> >  		return ret;
-> >  	}
-> >
-> > -	return 0;
-> > +	ret =3D imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
-> > +				       SC_IRQ_WDOG,
-> > +				       true);
-> > +	if (ret) {
-> > +		dev_warn(dev, "Enable irq failed, pretimeout NOT
-> supported\n");
-> > +		return 0;
-> > +	}
-> > +
-> > +	imx_sc_wdd->wdt_notifier.notifier_call =3D imx_sc_wdt_notify;
-> > +	ret =3D imx_scu_irq_register_notifier(&imx_sc_wdd->wdt_notifier);
-> > +	if (ret) {
-> > +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
-> > +					 SC_IRQ_WDOG,
-> > +					 false);
-> > +		dev_warn(dev,
-> > +			 "Register irq notifier failed, pretimeout NOT
-> supported\n");
-> > +		return 0;
-> > +	}
-> > +
-> > +	imx_sc_wdt_info.options |=3D WDIOF_PRETIMEOUT;
-> > +	ret =3D devm_add_action(dev, imx_sc_wdt_action,
-> > +			      &imx_sc_wdd->wdt_notifier);
->=20
-> This needs devm_add_action_or_reset() because otherwise the notifier
-> would not be removed, and the interrupt group would not be disabled.
-
-Right, fix it in V4.
-
->=20
-> > +	return ret;
->=20
-> This should not return an error. Accepting that the notifier can not be
-> registered and that the irq group can not be enabled but bailing out if
-> devm_add_action() fails is inconsistent.
->=20
-
-Agreed, the pretimeout function should ONLT be enabled after the notifier
-register, irq group enable and add action all success, so I use below code
-in V4, please help review, thanks,
-
-+
-+       ret =3D devm_add_action_or_reset(dev, imx_sc_wdt_action,
-+                                      &imx_sc_wdd->wdt_notifier);
-+       if (!ret)
-+               imx_sc_wdt_info.options |=3D WDIOF_PRETIMEOUT;
-+       else
-+               dev_warn(dev, "Add action failed, pretimeout NOT supported\=
-n");
-+
-        return 0;
-
-Anson.
-
-> Guenter
->=20
-> >  }
-> >
-> >  static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)  {
-> > -	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
-> > +	struct imx_sc_wdt_device *imx_sc_wdd =3D dev_get_drvdata(dev);
-> >
-> > -	if (watchdog_active(imx_sc_wdd))
-> > -		imx_sc_wdt_stop(imx_sc_wdd);
-> > +	if (watchdog_active(&imx_sc_wdd->wdd))
-> > +		imx_sc_wdt_stop(&imx_sc_wdd->wdd);
-> >
-> >  	return 0;
-> >  }
-> >
-> >  static int __maybe_unused imx_sc_wdt_resume(struct device *dev)  {
-> > -	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
-> > +	struct imx_sc_wdt_device *imx_sc_wdd =3D dev_get_drvdata(dev);
-> >
-> > -	if (watchdog_active(imx_sc_wdd))
-> > -		imx_sc_wdt_start(imx_sc_wdd);
-> > +	if (watchdog_active(&imx_sc_wdd->wdd))
-> > +		imx_sc_wdt_start(&imx_sc_wdd->wdd);
-> >
-> >  	return 0;
-> >  }
-> > --
-> > 2.7.4
-> >
+aS5NWCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRvZyBjYW4gc3VwcG9ydCBwcmV0aW1lb3V0IElS
+UQ0KdmlhIGdlbmVyYWwgU0NVIE1VIElSUSwgaXQgZGVwZW5kcyBvbiBJTVhfU0NVIGFuZCBkcml2
+ZXIgTVVTVA0KYmUgcHJvYmVkIGFmdGVyIFNDVSBJUEMgcmVhZHksIHRoZW4gZW5hYmxlIGNvcnJl
+c3BvbmRpbmcgU0NVDQpJUlEgZ3JvdXAgYW5kIHJlZ2lzdGVyIFNDVSBJUlEgbm90aWZpZXIsIHdo
+ZW4gd2F0Y2hkb2cgcHJldGltZW91dA0KSVJRIGZpcmVzLCBTQ1UgTVUgSVJRIHdpbGwgYmUgaGFu
+ZGxlZCBhbmQgd2F0Y2hkb2cgcHJldGltZW91dA0Kbm90aWZpZXIgd2lsbCBiZSBjYWxsZWQgdG8g
+aGFuZGxlIHRoZSBldmVudC4NCg0KU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1
+YW5nQG54cC5jb20+DQotLS0NCkNoYW5nZXMgc2luY2UgVjM6DQoJLSB1c2UgZGV2bV9hZGRfYWN0
+aW9uX29yX3Jlc2V0IGluc3RlYWQgb2YgZGV2bV9hZGRfYWN0aW9uIHRvIG1ha2Ugc3VyZSBhY3Rp
+b24gaXMgdGFrZW4gaWYNCgkgIGFkZCBhY3Rpb24gZmFpbGVkOw0KCS0gb25seSBlbmFibGUgcHJl
+dGltZW91dCBmdW5jdGlvbiBpZiBldmVyeXRoaW5nIHN1Y2Nlc3MsIGluY2x1ZGluZyBpcnEgZ3Jv
+dXAgZW5hYmxlZCwgaXJxDQoJICBub3RpZmllciByZWdpc3RlciBhbmQgYWRkIGFjdGlvbi4NCi0t
+LQ0KIGRyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZyAgICAgIHwgICAxICsNCiBkcml2ZXJzL3dhdGNo
+ZG9nL2lteF9zY193ZHQuYyB8IDExNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0NCiAyIGZpbGVzIGNoYW5nZWQsIDk4IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9u
+cygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9LY29uZmlnIGIvZHJpdmVycy93
+YXRjaGRvZy9LY29uZmlnDQppbmRleCBmNDU3OTkyLi41NDUzODU1IDEwMDY0NA0KLS0tIGEvZHJp
+dmVycy93YXRjaGRvZy9LY29uZmlnDQorKysgYi9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcNCkBA
+IC03MTAsNiArNzEwLDcgQEAgY29uZmlnIElNWDJfV0RUDQogY29uZmlnIElNWF9TQ19XRFQNCiAJ
+dHJpc3RhdGUgIklNWCBTQyBXYXRjaGRvZyINCiAJZGVwZW5kcyBvbiBIQVZFX0FSTV9TTUNDQw0K
+KwlkZXBlbmRzIG9uIElNWF9TQ1UNCiAJc2VsZWN0IFdBVENIRE9HX0NPUkUNCiAJaGVscA0KIAkg
+IFRoaXMgaXMgdGhlIGRyaXZlciBmb3IgdGhlIHN5c3RlbSBjb250cm9sbGVyIHdhdGNoZG9nDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9pbXhfc2Nfd2R0LmMgYi9kcml2ZXJzL3dhdGNo
+ZG9nL2lteF9zY193ZHQuYw0KaW5kZXggNDk4NDhiNi4uNmVjYzAzZiAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvd2F0Y2hkb2cvaW14X3NjX3dkdC5jDQorKysgYi9kcml2ZXJzL3dhdGNoZG9nL2lteF9z
+Y193ZHQuYw0KQEAgLTQsNiArNCw3IEBADQogICovDQogDQogI2luY2x1ZGUgPGxpbnV4L2FybS1z
+bWNjYy5oPg0KKyNpbmNsdWRlIDxsaW51eC9maXJtd2FyZS9pbXgvc2NpLmg+DQogI2luY2x1ZGUg
+PGxpbnV4L2lvLmg+DQogI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCiAjaW5jbHVkZSA8bGludXgv
+a2VybmVsLmg+DQpAQCAtMzMsMTEgKzM0LDE5IEBADQogDQogI2RlZmluZSBTQ19USU1FUl9XRE9H
+X0FDVElPTl9QQVJUSVRJT04JMA0KIA0KKyNkZWZpbmUgU0NfSVJRX1dET0cJCQkxDQorI2RlZmlu
+ZSBTQ19JUlFfR1JPVVBfV0RPRwkJMQ0KKw0KIHN0YXRpYyBib29sIG5vd2F5b3V0ID0gV0FUQ0hE
+T0dfTk9XQVlPVVQ7DQogbW9kdWxlX3BhcmFtKG5vd2F5b3V0LCBib29sLCAwMDAwKTsNCiBNT0RV
+TEVfUEFSTV9ERVNDKG5vd2F5b3V0LCAiV2F0Y2hkb2cgY2Fubm90IGJlIHN0b3BwZWQgb25jZSBz
+dGFydGVkIChkZWZhdWx0PSINCiAJCSBfX01PRFVMRV9TVFJJTkcoV0FUQ0hET0dfTk9XQVlPVVQp
+ICIpIik7DQogDQorc3RydWN0IGlteF9zY193ZHRfZGV2aWNlIHsNCisJc3RydWN0IHdhdGNoZG9n
+X2RldmljZSB3ZGQ7DQorCXN0cnVjdCBub3RpZmllcl9ibG9jayB3ZHRfbm90aWZpZXI7DQorfTsN
+CisNCiBzdGF0aWMgaW50IGlteF9zY193ZHRfcGluZyhzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICp3
+ZG9nKQ0KIHsNCiAJc3RydWN0IGFybV9zbWNjY19yZXMgcmVzOw0KQEAgLTg1LDI0ICs5NCw2NiBA
+QCBzdGF0aWMgaW50IGlteF9zY193ZHRfc2V0X3RpbWVvdXQoc3RydWN0IHdhdGNoZG9nX2Rldmlj
+ZSAqd2RvZywNCiAJcmV0dXJuIHJlcy5hMCA/IC1FQUNDRVMgOiAwOw0KIH0NCiANCitzdGF0aWMg
+aW50IGlteF9zY193ZHRfc2V0X3ByZXRpbWVvdXQoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2Rv
+ZywNCisJCQkJICAgICB1bnNpZ25lZCBpbnQgcHJldGltZW91dCkNCit7DQorCXN0cnVjdCBhcm1f
+c21jY2NfcmVzIHJlczsNCisNCisJYXJtX3NtY2NjX3NtYyhJTVhfU0lQX1RJTUVSLCBJTVhfU0lQ
+X1RJTUVSX1NFVF9QUkVUSU1FX1dET0csDQorCQkgICAgICBwcmV0aW1lb3V0ICogMTAwMCwgMCwg
+MCwgMCwgMCwgMCwgJnJlcyk7DQorCWlmIChyZXMuYTApDQorCQlyZXR1cm4gLUVBQ0NFUzsNCisN
+CisJd2RvZy0+cHJldGltZW91dCA9IHByZXRpbWVvdXQ7DQorDQorCXJldHVybiAwOw0KK30NCisN
+CitzdGF0aWMgaW50IGlteF9zY193ZHRfbm90aWZ5KHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIs
+DQorCQkJICAgICB1bnNpZ25lZCBsb25nIGV2ZW50LCB2b2lkICpncm91cCkNCit7DQorCXN0cnVj
+dCBpbXhfc2Nfd2R0X2RldmljZSAqaW14X3NjX3dkZCA9DQorCQkJCSBjb250YWluZXJfb2YobmIs
+DQorCQkJCQkgICAgICBzdHJ1Y3QgaW14X3NjX3dkdF9kZXZpY2UsDQorCQkJCQkgICAgICB3ZHRf
+bm90aWZpZXIpOw0KKw0KKwlpZiAoZXZlbnQgJiBTQ19JUlFfV0RPRyAmJg0KKwkgICAgKih1OCAq
+KWdyb3VwID09IFNDX0lSUV9HUk9VUF9XRE9HKQ0KKwkJd2F0Y2hkb2dfbm90aWZ5X3ByZXRpbWVv
+dXQoJmlteF9zY193ZGQtPndkZCk7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgdm9p
+ZCBpbXhfc2Nfd2R0X2FjdGlvbih2b2lkICpkYXRhKQ0KK3sNCisJc3RydWN0IG5vdGlmaWVyX2Js
+b2NrICp3ZHRfbm90aWZpZXIgPSBkYXRhOw0KKw0KKwlpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25v
+dGlmaWVyKHdkdF9ub3RpZmllcik7DQorCWlteF9zY3VfaXJxX2dyb3VwX2VuYWJsZShTQ19JUlFf
+R1JPVVBfV0RPRywNCisJCQkJIFNDX0lSUV9XRE9HLA0KKwkJCQkgZmFsc2UpOw0KK30NCisNCiBz
+dGF0aWMgY29uc3Qgc3RydWN0IHdhdGNoZG9nX29wcyBpbXhfc2Nfd2R0X29wcyA9IHsNCiAJLm93
+bmVyID0gVEhJU19NT0RVTEUsDQogCS5zdGFydCA9IGlteF9zY193ZHRfc3RhcnQsDQogCS5zdG9w
+ICA9IGlteF9zY193ZHRfc3RvcCwNCiAJLnBpbmcgID0gaW14X3NjX3dkdF9waW5nLA0KIAkuc2V0
+X3RpbWVvdXQgPSBpbXhfc2Nfd2R0X3NldF90aW1lb3V0LA0KKwkuc2V0X3ByZXRpbWVvdXQgPSBp
+bXhfc2Nfd2R0X3NldF9wcmV0aW1lb3V0LA0KIH07DQogDQotc3RhdGljIGNvbnN0IHN0cnVjdCB3
+YXRjaGRvZ19pbmZvIGlteF9zY193ZHRfaW5mbyA9IHsNCitzdGF0aWMgc3RydWN0IHdhdGNoZG9n
+X2luZm8gaW14X3NjX3dkdF9pbmZvID0gew0KIAkuaWRlbnRpdHkJPSAiaS5NWCBTQyB3YXRjaGRv
+ZyB0aW1lciIsDQogCS5vcHRpb25zCT0gV0RJT0ZfU0VUVElNRU9VVCB8IFdESU9GX0tFRVBBTElW
+RVBJTkcgfA0KLQkJCSAgV0RJT0ZfTUFHSUNDTE9TRSB8IFdESU9GX1BSRVRJTUVPVVQsDQorCQkJ
+ICBXRElPRl9NQUdJQ0NMT1NFLA0KIH07DQogDQogc3RhdGljIGludCBpbXhfc2Nfd2R0X3Byb2Jl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogew0KKwlzdHJ1Y3QgaW14X3NjX3dkdF9k
+ZXZpY2UgKmlteF9zY193ZGQ7DQorCXN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkb2c7DQogCXN0
+cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQotCXN0cnVjdCB3YXRjaGRvZ19kZXZpY2Ug
+KmlteF9zY193ZGQ7DQogCWludCByZXQ7DQogDQogCWlteF9zY193ZGQgPSBkZXZtX2t6YWxsb2Mo
+ZGV2LCBzaXplb2YoKmlteF9zY193ZGQpLCBHRlBfS0VSTkVMKTsNCkBAIC0xMTEsNDIgKzE2Miw2
+OSBAQCBzdGF0aWMgaW50IGlteF9zY193ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
+cGRldikNCiANCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgaW14X3NjX3dkZCk7DQogDQot
+CWlteF9zY193ZGQtPmluZm8gPSAmaW14X3NjX3dkdF9pbmZvOw0KLQlpbXhfc2Nfd2RkLT5vcHMg
+PSAmaW14X3NjX3dkdF9vcHM7DQotCWlteF9zY193ZGQtPm1pbl90aW1lb3V0ID0gMTsNCi0JaW14
+X3NjX3dkZC0+bWF4X3RpbWVvdXQgPSBNQVhfVElNRU9VVDsNCi0JaW14X3NjX3dkZC0+cGFyZW50
+ID0gZGV2Ow0KLQlpbXhfc2Nfd2RkLT50aW1lb3V0ID0gREVGQVVMVF9USU1FT1VUOw0KKwl3ZG9n
+ID0gJmlteF9zY193ZGQtPndkZDsNCisJd2RvZy0+aW5mbyA9ICZpbXhfc2Nfd2R0X2luZm87DQor
+CXdkb2ctPm9wcyA9ICZpbXhfc2Nfd2R0X29wczsNCisJd2RvZy0+bWluX3RpbWVvdXQgPSAxOw0K
+Kwl3ZG9nLT5tYXhfdGltZW91dCA9IE1BWF9USU1FT1VUOw0KKwl3ZG9nLT5wYXJlbnQgPSBkZXY7
+DQorCXdkb2ctPnRpbWVvdXQgPSBERUZBVUxUX1RJTUVPVVQ7DQogDQotCXdhdGNoZG9nX2luaXRf
+dGltZW91dChpbXhfc2Nfd2RkLCAwLCBkZXYpOw0KLQl3YXRjaGRvZ19zdG9wX29uX3JlYm9vdChp
+bXhfc2Nfd2RkKTsNCi0Jd2F0Y2hkb2dfc3RvcF9vbl91bnJlZ2lzdGVyKGlteF9zY193ZGQpOw0K
+Kwl3YXRjaGRvZ19pbml0X3RpbWVvdXQod2RvZywgMCwgZGV2KTsNCisJd2F0Y2hkb2dfc3RvcF9v
+bl9yZWJvb3Qod2RvZyk7DQorCXdhdGNoZG9nX3N0b3Bfb25fdW5yZWdpc3Rlcih3ZG9nKTsNCiAN
+Ci0JcmV0ID0gZGV2bV93YXRjaGRvZ19yZWdpc3Rlcl9kZXZpY2UoZGV2LCBpbXhfc2Nfd2RkKTsN
+CisJcmV0ID0gZGV2bV93YXRjaGRvZ19yZWdpc3Rlcl9kZXZpY2UoZGV2LCB3ZG9nKTsNCiAJaWYg
+KHJldCkgew0KIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gcmVnaXN0ZXIgd2F0Y2hkb2cgZGV2
+aWNlXG4iKTsNCiAJCXJldHVybiByZXQ7DQogCX0NCiANCisJcmV0ID0gaW14X3NjdV9pcnFfZ3Jv
+dXBfZW5hYmxlKFNDX0lSUV9HUk9VUF9XRE9HLA0KKwkJCQkgICAgICAgU0NfSVJRX1dET0csDQor
+CQkJCSAgICAgICB0cnVlKTsNCisJaWYgKHJldCkgew0KKwkJZGV2X3dhcm4oZGV2LCAiRW5hYmxl
+IGlycSBmYWlsZWQsIHByZXRpbWVvdXQgTk9UIHN1cHBvcnRlZFxuIik7DQorCQlyZXR1cm4gMDsN
+CisJfQ0KKw0KKwlpbXhfc2Nfd2RkLT53ZHRfbm90aWZpZXIubm90aWZpZXJfY2FsbCA9IGlteF9z
+Y193ZHRfbm90aWZ5Ow0KKwlyZXQgPSBpbXhfc2N1X2lycV9yZWdpc3Rlcl9ub3RpZmllcigmaW14
+X3NjX3dkZC0+d2R0X25vdGlmaWVyKTsNCisJaWYgKHJldCkgew0KKwkJaW14X3NjdV9pcnFfZ3Jv
+dXBfZW5hYmxlKFNDX0lSUV9HUk9VUF9XRE9HLA0KKwkJCQkJIFNDX0lSUV9XRE9HLA0KKwkJCQkJ
+IGZhbHNlKTsNCisJCWRldl93YXJuKGRldiwNCisJCQkgIlJlZ2lzdGVyIGlycSBub3RpZmllciBm
+YWlsZWQsIHByZXRpbWVvdXQgTk9UIHN1cHBvcnRlZFxuIik7DQorCQlyZXR1cm4gMDsNCisJfQ0K
+Kw0KKwlyZXQgPSBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQoZGV2LCBpbXhfc2Nfd2R0X2FjdGlv
+biwNCisJCQkJICAgICAgICZpbXhfc2Nfd2RkLT53ZHRfbm90aWZpZXIpOw0KKwlpZiAoIXJldCkN
+CisJCWlteF9zY193ZHRfaW5mby5vcHRpb25zIHw9IFdESU9GX1BSRVRJTUVPVVQ7DQorCWVsc2UN
+CisJCWRldl93YXJuKGRldiwgIkFkZCBhY3Rpb24gZmFpbGVkLCBwcmV0aW1lb3V0IE5PVCBzdXBw
+b3J0ZWRcbiIpOw0KKw0KIAlyZXR1cm4gMDsNCiB9DQogDQogc3RhdGljIGludCBfX21heWJlX3Vu
+dXNlZCBpbXhfc2Nfd2R0X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KIHsNCi0Jc3RydWN0
+IHdhdGNoZG9nX2RldmljZSAqaW14X3NjX3dkZCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KKwlz
+dHJ1Y3QgaW14X3NjX3dkdF9kZXZpY2UgKmlteF9zY193ZGQgPSBkZXZfZ2V0X2RydmRhdGEoZGV2
+KTsNCiANCi0JaWYgKHdhdGNoZG9nX2FjdGl2ZShpbXhfc2Nfd2RkKSkNCi0JCWlteF9zY193ZHRf
+c3RvcChpbXhfc2Nfd2RkKTsNCisJaWYgKHdhdGNoZG9nX2FjdGl2ZSgmaW14X3NjX3dkZC0+d2Rk
+KSkNCisJCWlteF9zY193ZHRfc3RvcCgmaW14X3NjX3dkZC0+d2RkKTsNCiANCiAJcmV0dXJuIDA7
+DQogfQ0KIA0KIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaW14X3NjX3dkdF9yZXN1bWUoc3Ry
+dWN0IGRldmljZSAqZGV2KQ0KIHsNCi0Jc3RydWN0IHdhdGNoZG9nX2RldmljZSAqaW14X3NjX3dk
+ZCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KKwlzdHJ1Y3QgaW14X3NjX3dkdF9kZXZpY2UgKmlt
+eF9zY193ZGQgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCiANCi0JaWYgKHdhdGNoZG9nX2FjdGl2
+ZShpbXhfc2Nfd2RkKSkNCi0JCWlteF9zY193ZHRfc3RhcnQoaW14X3NjX3dkZCk7DQorCWlmICh3
+YXRjaGRvZ19hY3RpdmUoJmlteF9zY193ZGQtPndkZCkpDQorCQlpbXhfc2Nfd2R0X3N0YXJ0KCZp
+bXhfc2Nfd2RkLT53ZGQpOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSANCjIuNy40DQoNCg==
