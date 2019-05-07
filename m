@@ -1,45 +1,25 @@
-Return-Path: <SRS0=53jk=TH=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: Re: [PATCH 02/10] dt-bindings: rcar-gen3-phy-usb2: Document
+Return-Path: <SRS0=bzs4=TH=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 02/10] dt-bindings: rcar-gen3-phy-usb2: Document
  uses_usb_x1
+Date: Tue, 7 May 2019 01:17:27 +0000
+Message-ID: 
+ <TY1PR01MB15624938ECBFD6607B8827198A310@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20190506234631.113226-1-chris.brandt@renesas.com>
  <20190506234631.113226-3-chris.brandt@renesas.com>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <b3c3e21d-35aa-d222-e8d4-e5f63286044e@cogentembedded.com>
-Date: Tue, 7 May 2019 11:37:53 +0300
-MIME-Version: 1.0
-In-Reply-To: <20190506234631.113226-3-chris.brandt@renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ <CAL_Jsq+LkTXMv+YpHyLcGh4ztUMmz2dSfnzcHXymHi-_VMi_KA@mail.gmail.com>
+In-Reply-To: 
+ <CAL_Jsq+LkTXMv+YpHyLcGh4ztUMmz2dSfnzcHXymHi-_VMi_KA@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux USB List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello!
-
-On 07.05.2019 2:46, Chris Brandt wrote:
-
-> Document the optional renesas,uses_usb_x1 property.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->   Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> index d46188f450bf..26bf377102d3 100644
-> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> @@ -46,6 +46,8 @@ channel as USB OTG:
->   	       regulator will be managed during the PHY power on/off sequence.
->   - renesas,no-otg-pins: boolean, specify when a board does not provide proper
->   		       otg pins.
-> +- renesas,use_usb_x1: boolean, the dedicated 48MHz crystal inputs USB_X1 are
-
-    Hyphens are preferred to underscores in the DT property names.
-
-> +                      used for the PLL source
->   
->   Example (R-Car H3):
-
-MBR, Sergei
+T24gTW9uLCBNYXkgMDYsIDIwMTksIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+ICstIHJlbmVzYXMs
+dXNlX3VzYl94MTogYm9vbGVhbiwgdGhlIGRlZGljYXRlZCA0OE1IeiBjcnlzdGFsIGlucHV0cw0K
+PiBVU0JfWDEgYXJlDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICB1c2VkIGZvciB0aGUgUExM
+IHNvdXJjZQ0KPiANCj4gcy9fLy0vDQoNCkdvb2QgcG9pbnQuDQpUaGFua3MuDQoNCg0KQ2hyaXMN
+Cg0K
