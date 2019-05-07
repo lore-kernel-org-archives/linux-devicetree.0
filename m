@@ -1,59 +1,35 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v3 0/6]  Add drive-strength in Meson pinctrl driver
-Date: Tue, 07 May 2019 17:45:00 +0200
-Message-ID: <8c4776976c1803d4cd944d88dd73e2b414fe1201.camel@baylibre.com>
-References: <20190507115726.23714-1-glaroque@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 00/10] of_net: Add NVMEM support to of_get_mac_address
+Date: Tue, 7 May 2019 10:57:36 -0500
+Message-ID: <CAL_JsqL66PdCv7bFwfD9p6VQCcXOesz3EjPcYB9FGosgjOS8yw@mail.gmail.com>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz> <20190505.214727.1839442238121977055.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190505.214727.1839442238121977055.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-05-07 at 13:57 +0200, Guillaume La Roque wrote:
-> The purpose of this patchset is to add drive-strength support in meson pinconf
-> driver. This is a new feature that was added on the g12a. It is critical for us
-> to support this since many functions are failing with default pad drive-strength.
-> 
-> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-> 'drive-strength' is expressed in mA.
-> So this patch add another generic property "drive-strength-uA". The change to do so
-> would be minimal and could be benefit to other platforms later on.
-> 
-> Cheers
-> Guillaume
-> 
-> Changes since v2:
-> - update driver-strength-uA property to be compliant with DT documentation
-> - rework patch series for better understanding
-> - rework set_bias function
-> 
-> Changes since v1:
-> - fix missing break
-> - implement new pinctrl generic property "drive-strength-uA"
-> 
-> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
-> 
-> 
-> Guillaume La Roque (6):
->   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
->   pinctrl: generic: add new 'drive-strength-microamp' property support
->   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
->   pinctrl: meson: Rework enable/disable bias part
->   pinctrl: meson: add support of drive-strength-microamp
->   pinctrl: meson: g12a: add DS bank value
-> 
->  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
->  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
->  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
->  drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
->  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
->  drivers/pinctrl/pinconf-generic.c             |   2 +
->  include/linux/pinctrl/pinconf-generic.h       |   3 +
->  7 files changed, 195 insertions(+), 48 deletions(-)
-> 
+On Sun, May 5, 2019 at 11:47 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Petr =C5=A0tetiar <ynezz@true.cz>
+> Date: Fri,  3 May 2019 16:27:05 +0200
+>
+> > this patch series is a continuation of my previous attempt[1], where I'=
+ve
+> > tried to wire MTD layer into of_get_mac_address, so it would be possibl=
+e to
+> > load MAC addresses from various NVMEMs as EEPROMs etc.
+>  ...
+>
+> Series applied, thank you.
 
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+Patch 1 at least is still be discussed. What was implemented based on
+my comments on v2 is really broken. Now the allocated buffer is
+tracked by both devm and DT refcounting. Whoever's ref count drops
+first will free the buffer.
+
+Rob
