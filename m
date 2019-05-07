@@ -1,106 +1,113 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V5 02/16] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Date: Tue, 7 May 2019 13:21:11 +0530
-Message-ID: <f550fc06-98b1-0e08-874a-f2fba49d32b5@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-3-vidyas@nvidia.com> <20190503110159.GB32400@ulmo>
- <b8f482f4-8136-07b5-3d68-f45a6fd580ba@nvidia.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Tue, 7 May 2019 10:01:19 +0200
+Message-ID: <20190507080119.GB28121@kroah.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b8f482f4-8136-07b5-3d68-f45a6fd580ba@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54940124-50df-16ec-1a32-ad794ee05da7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/7/2019 12:40 PM, Vidya Sagar wrote:
-> On 5/3/2019 4:31 PM, Thierry Reding wrote:
->> On Wed, Apr 24, 2019 at 10:49:50AM +0530, Vidya Sagar wrote:
->>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable driver=
-s
->>> using this API be able to build as loadable modules.
->>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>> Changes from [v4]:
->>> * None
->>>
->>> Changes from [v3]:
->>> * None
->>>
->>> Changes from [v2]:
->>> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a s=
-tatic
->>>
->>> Changes from [v1]:
->>> * This is a new patch in v2 series
->>>
->>> =A0 drivers/pci/pcie/pme.c=A0=A0=A0=A0 | 14 +++++++++++++-
->>> =A0 drivers/pci/pcie/portdrv.h | 16 +++-------------
->>> =A0 2 files changed, 16 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
->>> index 54d593d10396..d5e0ea4a62fc 100644
->>> --- a/drivers/pci/pcie/pme.c
->>> +++ b/drivers/pci/pcie/pme.c
->>> @@ -25,7 +25,19 @@
->>> =A0=A0 * that using MSI for PCIe PME signaling doesn't play well with P=
-CIe PME-based
->>> =A0=A0 * wake-up from system sleep states.
->>> =A0=A0 */
->>> -bool pcie_pme_msi_disabled;
->>> +static bool pcie_pme_msi_disabled;
->>> +
->>> +void pcie_pme_disable_msi(void)
->>> +{
->>> +=A0=A0=A0 pcie_pme_msi_disabled =3D true;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
->>> +
->>> +bool pcie_pme_no_msi(void)
->>> +{
->>> +=A0=A0=A0 return pcie_pme_msi_disabled;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
->>> =A0 static int __init pcie_pme_setup(char *str)
->>> =A0 {
->>> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
->>> index 1d50dc58ac40..7c8c3da4bd58 100644
->>> --- a/drivers/pci/pcie/portdrv.h
->>> +++ b/drivers/pci/pcie/portdrv.h
->>> @@ -125,22 +125,12 @@ void pcie_port_bus_unregister(void);
->>> =A0 struct pci_dev;
->>> =A0 #ifdef CONFIG_PCIE_PME
->>> -extern bool pcie_pme_msi_disabled;
->>> -
->>> -static inline void pcie_pme_disable_msi(void)
->>> -{
->>> -=A0=A0=A0 pcie_pme_msi_disabled =3D true;
->>> -}
->>> -
->>> -static inline bool pcie_pme_no_msi(void)
->>> -{
->>> -=A0=A0=A0 return pcie_pme_msi_disabled;
->>> -}
->>> -
->>> +void pcie_pme_disable_msi(void);
->>> +bool pcie_pme_no_msi(void);
->>> =A0 void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
->>> =A0 #else /* !CONFIG_PCIE_PME */
->>> =A0 static inline void pcie_pme_disable_msi(void) {}
->>> -static inline bool pcie_pme_no_msi(void) { return false; }
->>> +static inline bool pcie_pme_no_msi(void) {}
->>
->> This looks wrong.
-> Can you please give more info on what is wrong in this?
-Is missing "return false;" the wrong here or there is more than just this?
+On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
+> On 5/1/19 4:01 PM, Brendan Higgins wrote:
+> > ## TLDR
+> > 
+> > I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
+> > 5.2.
+> > 
+> > Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
+> > we would merge through your tree when the time came? Am I remembering
+> > correctly?
+> > 
+> > ## Background
+> > 
+> > This patch set proposes KUnit, a lightweight unit testing and mocking
+> > framework for the Linux kernel.
+> > 
+> > Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+> > it does not require installing the kernel on a test machine or in a VM
+> > and does not require tests to be written in userspace running on a host
+> > kernel. Additionally, KUnit is fast: From invocation to completion KUnit
+> > can run several dozen tests in under a second. Currently, the entire
+> > KUnit test suite for KUnit runs in under a second from the initial
+> > invocation (build time excluded).
+> > 
+> > KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+> > Googletest/Googlemock for C++. KUnit provides facilities for defining
+> > unit test cases, grouping related test cases into test suites, providing
+> > common infrastructure for running tests, mocking, spying, and much more.
+> 
+> As a result of the emails replying to this patch thread, I am now
+> starting to look at kselftest.  My level of understanding is based
+> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
+> and a _tiny_ bit of looking at kselftest code.
+> 
+> tl;dr; I don't really understand kselftest yet.
+> 
+> 
+> (1) why KUnit exists
+> 
+> > ## What's so special about unit testing?
+> > 
+> > A unit test is supposed to test a single unit of code in isolation,
+> > hence the name. There should be no dependencies outside the control of
+> > the test; this means no external dependencies, which makes tests orders
+> > of magnitudes faster. Likewise, since there are no external dependencies,
+> > there are no hoops to jump through to run the tests. Additionally, this
+> > makes unit tests deterministic: a failing unit test always indicates a
+> > problem. Finally, because unit tests necessarily have finer granularity,
+> > they are able to test all code paths easily solving the classic problem
+> > of difficulty in exercising error handling code.
+> 
+> (2) KUnit is not meant to replace kselftest
+> 
+> > ## Is KUnit trying to replace other testing frameworks for the kernel?
+> > 
+> > No. Most existing tests for the Linux kernel are end-to-end tests, which
+> > have their place. A well tested system has lots of unit tests, a
+> > reasonable number of integration tests, and some end-to-end tests. KUnit
+> > is just trying to address the unit test space which is currently not
+> > being addressed.
+> 
+> My understanding is that the intent of KUnit is to avoid booting a kernel on
+> real hardware or in a virtual machine.  That seems to be a matter of semantics
+> to me because isn't invoking a UML Linux just running the Linux kernel in
+> a different form of virtualization?
+> 
+> So I do not understand why KUnit is an improvement over kselftest.
+> 
+> It seems to me that KUnit is just another piece of infrastructure that I
+> am going to have to be familiar with as a kernel developer.  More overhead,
+> more information to stuff into my tiny little brain.
+> 
+> I would guess that some developers will focus on just one of the two test
+> environments (and some will focus on both), splitting the development
+> resources instead of pooling them on a common infrastructure.
+> 
+> What am I missing?
 
->=20
->>
->> Thierry
->>
->=20
+kselftest provides no in-kernel framework for testing kernel code
+specifically.  That should be what kunit provides, an "easy" way to
+write in-kernel tests for things.
+
+Brendan, did I get it right?
+
+thanks,
+
+greg k-h
