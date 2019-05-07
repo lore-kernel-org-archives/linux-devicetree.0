@@ -1,36 +1,61 @@
-From: Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
-Date: Tue, 07 May 2019 18:27:01 +0200
-Message-ID: <mvm7eb2qlgq.fsf@suse.de>
-References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
-        <mvmbm1zueya.fsf@suse.de> <mvmpnqcsn6u.fsf@suse.de>
-        <CAJ2_jOFu-yCZV_A4B48_fLq7h7UA6LUWhgpxr0uuh7vhW9Q8pA@mail.gmail.com>
-        <mvmlfzisiwc.fsf@suse.de>
-        <CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG97eSX70=UaSbGCMMF_g@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
+Date: Tue, 7 May 2019 11:40:02 -0500
+Message-ID: <CAL_Jsq+tmUCjZw7ybhKTGg0NNfc+JsOQ30vArfHzdw14XoWm5A@mail.gmail.com>
+References: <20190426055558.44544-1-ran.wang_1@nxp.com> <20190501235410.GA25492@bogus>
+ <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG97eSX70=UaSbGCMMF_g@mail.gmail.com>
-        (Yash Shah's message of "Tue, 7 May 2019 16:31:58 +0530")
+In-Reply-To: <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mai 07 2019, Yash Shah <yash.shah@sifive.com> wrote:
-
-> Leds on HiFive Unleashed are wired to supply instead of ground.
-> And as per ./Documentation/devicetree/bindings/leds/leds-pwm.txt, you
-> need to provide additional property "active-low" in such case.
+On Tue, May 7, 2019 at 3:48 AM Ran Wang <ran.wang_1@nxp.com> wrote:
 >
-> - active-low : (optional) For PWMs where the LED is wired to supply
-> rather than ground.
+> Hi Rob,
+>
+> On Thursday, May 02, 2019 07:54 Rob Herring wrote:
+> >
+> > On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
+> > > This patch adds USB dt nodes for LS1028A.
+> > >
+> > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > ---
+> > > Changes in v2:
+> > >   - Rename node from usb3@... to usb@... to meet DTSpec
+> > >
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20
+> > ++++++++++++++++++++
+> > >  1 files changed, 20 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > index 8dd3501..188cfb8 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > @@ -144,6 +144,26 @@
+> > >                     clocks = <&sysclk>;
+> > >             };
+> > >
+> > > +           usb0:usb@3100000 {
+> >                      ^ space needed
+>
+> Yes, will update this in next version.
+>
+> > > +                   compatible= "snps,dwc3";
+> >
+> > Needs an SoC specific compatible.
+>
+> Do you mean change compatible to "snps,dwc3", "fsl,ls1028a-dwc3" ?
 
-This fixes the issue.
+Well, that's the wrong order, but yes.
 
-Thanks, Andreas.
+> As I know, so far there is no SoC specific programming for this IP, so do
+> you think it's still necessary to add it?
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Yes. All the bugs and quirks are discovered already?
+
+Rob
