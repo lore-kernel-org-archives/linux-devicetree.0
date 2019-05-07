@@ -1,53 +1,30 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: Enable HDMI output on
- orangepi 3
-Date: Tue, 7 May 2019 11:35:35 +0200
-Message-ID: <20190507093535.uapqhxduwtbdgbtq@core.my.home>
-References: <20190420145240.27400-1-tiny.windzz@gmail.com>
- <20190502073401.3l3fl4alicyzpud7@flea>
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Date: Tue, 07 May 2019 11:39:31 +0200
+Message-ID: <mvmlfzisiwc.fsf@suse.de>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+        <mvmbm1zueya.fsf@suse.de> <mvmpnqcsn6u.fsf@suse.de>
+        <CAJ2_jOFu-yCZV_A4B48_fLq7h7UA6LUWhgpxr0uuh7vhW9Q8pA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190502073401.3l3fl4alicyzpud7@flea>
+In-Reply-To: <CAJ2_jOFu-yCZV_A4B48_fLq7h7UA6LUWhgpxr0uuh7vhW9Q8pA@mail.gmail.com>
+        (Yash Shah's message of "Thu, 2 May 2019 09:31:16 +0530")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Mai 02 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-On Thu, May 02, 2019 at 09:34:01AM +0200, Maxime Ripard wrote:
-> On Sat, Apr 20, 2019 at 10:52:40AM -0400, Yangtao Li wrote:
-> > Orangepi 3 has HDMI type A connector.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> 
-> Queued for 5.3, thanks!
-> Maxime
+> The PWM default output state is high (When duty cycle is 0), So I
+> guess leds will remain on by default.
 
-This patch is not enough. HDMI support on Orange Pi 3 also needs to
-enable DDC IO. While the SoC will feed some default output singal
-into the display, without DDC enabled it will not work reliably.
+So that's the bug that needs to be fixed.
 
-That support is part of my Orange Pi 3 series, and will be reworked
-for v5 of that series.
+Andreas.
 
-While I can rebase on top of this, it would be easier if you dropped
-this patch until the propper support is ready. I don't see any reason
-why this should be rushed with half-working solution.
-
-regards,
-	o.
-
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
