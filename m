@@ -1,14 +1,16 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 2/2] dt-bindings: sound: sun4i-spdif: Document that the RX
- channel can be missing
-Date: Tue,  7 May 2019 20:07:29 +0200
-Message-ID: <d9afb19c32f8b9b2c40c8d4c0c3df74bff0ccf35.1557252411.git-series.maxime.ripard@bootlin.com>
-References: <dc84c7e9ce272109052f553a5e050bfe1a09e9d6.1557252411.git-series.maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/4] dt-bindings: spi: Add YAML schemas for the generic
+ SPI options
+Date: Tue, 7 May 2019 17:13:53 +0200
+Message-ID: <20190507151353.ns2i72ii5cw6z7lz@flea>
+References: <b7a6095a5c900fa23cc54d1ccd8e8ef0ccf6e788.1557236840.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqKeLWgGLafwbKViTgpw4B=W9YGULaMr8h0p_rWX8PP_UQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dc84c7e9ce272109052f553a5e050bfe1a09e9d6.1557252411.git-series.maxime.ripard@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKeLWgGLafwbKViTgpw4B=W9YGULaMr8h0p_rWX8PP_UQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,91 +20,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The H3 and compatibles controllers don't have any reception capabilities,
-even though it was never documented as such in the binding before.
+Hi,
 
-Therefore, on those controllers, we don't have the option to set an RX DMA
-channel.
+On Tue, May 07, 2019 at 09:35:28AM -0500, Rob Herring wrote:
+> On Tue, May 7, 2019 at 8:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > The SPI controllers have a bunch of generic options that are needed in a
+> > device tree. Add a YAML schemas for those.
+>
+> I'd started on this one, but was planning to move it to the schema
+> repository. The issue there is re-licensing (adding BSD 2 clause).
+> Maybe better to just move it later.
 
-This was already done in the DTSI, but the binding itself was never
-updated. Let's add a special case in the schemas.
+I just found out that dt-doc-validate also chokes on the reference
+URI. Maybe I should just submit it to the repo then once that is
+settled?
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^spi(@[a-zA-Z0-9]+)?$"
+>
+> I think we want just "(@.*)". At a minimum, you need to allow for ','.
+> It would be the a bus schema for the parent which should validate unit
+> addresses, so we should pretty much just allow anything here.
 
----
+The issue with this is that it will also match any node starting with
+spi. In the Allwinner case, that also means the pinctrl nodes with spi
+pins in them, but I'm sure we can find more corner cases.
 
-Changes from v1:
-  - switch to a draft7 conditional
----
- Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml | 45 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 36 insertions(+), 9 deletions(-)
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +  cs-gpios:
+> > +    description: |
+> > +      GPIOs used as chip selects.
+> > +      If that property is used, the number of chip selects will be
+> > +      increased automatically with max(cs-gpios, hardware chip selects).
+> > +
+> > +      So if, for example, the controller has 2 CS lines, and the
+> > +      cs-gpios looks like this
+> > +        cs-gpios = <&gpio1 0 0>, <0>, <&gpio1 1 0>, <&gpio1 2 0>;
+> > +
+> > +      Then it should be configured so that num_chipselect = 4, with
+> > +      the following mapping
+> > +        cs0 : &gpio1 0 0
+> > +        cs1 : native
+> > +        cs2 : &gpio1 1 0
+> > +        cs3 : &gpio1 2 0
+> > +
+> > +  num-cs:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description:
+> > +      Total number of chip selects.
+> > +
+> > +  spi-slave:
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+>
+> "type: boolean" is sufficient here. Maybe we should just remove
+> 'flag'. OTOH, maybe consistency with other types and the abstraction
+> is better as we could add to the flag schema.
 
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-index 5698e5de5e31..8f1bc1a1af96 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-@@ -44,15 +44,8 @@ properties:
-       - const: apb
-       - const: spdif
- 
--  dmas:
--    items:
--      - description: RX DMA Channel
--      - description: TX DMA Channel
--
--  dma-names:
--    items:
--      - const: rx
--      - const: tx
-+  dmas: true
-+  dma-names: true
- 
-   resets:
-     maxItems: 1
-@@ -70,6 +63,40 @@ allOf:
-       required:
-         - resets
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-h3-spdif
-+
-+    then:
-+      properties:
-+        dmas:
-+          maxItems: 1
-+          items:
-+            - description: RX DMA Channel
-+
-+        dma-names:
-+          maxItems: 1
-+          items:
-+            - const: tx
-+
-+    else:
-+      properties:
-+        dmas:
-+          minItems: 2
-+          maxItems: 2
-+          items:
-+            - description: RX DMA Channel
-+            - description: TX DMA Channel
-+
-+        dma-names:
-+          minItems: 2
-+          maxItems: 2
-+          items:
-+            - const: rx
-+            - const: tx
-+
- required:
-   - "#sound-dai-cells"
-   - compatible
--- 
-git-series 0.9.1
+I was trying to be consistent. Do you want me to remove it?
+
+> > +      spi-rx-bus-width:
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [ 1, 2, 4, 8 ]
+>
+> Is the old doc out of date and 8 is allowed now?
+
+It's not, it's a copy and paste mistake.
+
+I'll respin this with your fixes, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
