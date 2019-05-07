@@ -1,38 +1,35 @@
-Return-Path: <SRS0=XfsU=TE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39995 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfEDOkj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 May 2019 10:40:39 -0400
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 5/8] media: imx7-media-csi: Propagate the correct error for devm_request_irq()
-Date: Sat,  4 May 2019 11:40:23 -0300
-Message-Id: <20190504144027.31920-4-festevam@gmail.com>
-In-Reply-To: <20190504144027.31920-1-festevam@gmail.com>
-References: <20190504144027.31920-1-festevam@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: hverkuil-cisco@xs4all.nl
-Cc: rui.silva@linaro.org, slongerbeam@gmail.com, p.zabel@pengutronix.de, linux-media@vger.kernel.org, sebastien.szymanski@armadeus.com, otavio@ossystems.com.br, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Return-Path: <SRS0=QtQs=TH=geanix.com=sean@kernel.org>
+From: Sean Nyekjaer <sean@geanix.com>
+Subject: [PATCH 2/2] dt-bindings: can: mcp251x: add mcp25625 support
+Date: Tue,  7 May 2019 11:34:37 +0200
+Message-Id: <20190507093437.26025-2-sean@geanix.com>
+In-Reply-To: <20190507093437.26025-1-sean@geanix.com>
+References: <20190507093437.26025-1-sean@geanix.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, mkl@pengutronix.de
+Cc: Sean Nyekjaer <sean@geanix.com>, robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In the case of devm_request_irq() failure, let's propagate the real error
-code instead of a fake one.
+Fully compatible with mcp2515, the mcp25625 have
+integrated transceiver.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
 ---
- drivers/staging/media/imx/imx7-media-csi.c | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index a4cc9a342674..88265cd133ab 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1223,7 +1223,6 @@ static int imx7_csi_probe(struct platform_device *pdev)
- 			       (void *)csi);
- 	if (ret < 0) {
- 		dev_err(dev, "Request CSI IRQ failed.\n");
--		ret = -ENODEV;
- 		goto destroy_mutex;
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+index 188c8bd4eb67..5a0111d4de58 100644
+--- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+@@ -4,6 +4,7 @@ Required properties:
+  - compatible: Should be one of the following:
+    - "microchip,mcp2510" for MCP2510.
+    - "microchip,mcp2515" for MCP2515.
++   - "microchip,mcp25625" for MCP25625.
+  - reg: SPI chip select.
+  - clocks: The clock feeding the CAN controller.
+  - interrupts: Should contain IRQ line for the CAN controller.
 -- 
-2.17.1
+2.21.0
