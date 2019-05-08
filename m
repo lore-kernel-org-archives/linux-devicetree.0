@@ -1,91 +1,95 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v7 11/13] ARM: dts: exynos: add syscon to clock
- compatible
-Date: Wed, 8 May 2019 11:50:33 +0200
-Message-ID: <8d02ef2c-c5dd-6a72-9638-d858df3ea16d@partner.samsung.com>
-References: <CGME20190506151219eucas1p2feab00f7b7c1c5fdd5614423fb38eae2@eucas1p2.samsung.com>
-        <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
-        <1557155521-30949-12-git-send-email-l.luba@partner.samsung.com>
-        <CAJKOXPd6GKVPixMiG37SoHiswaih-3S+o7QJn=WbuqdZzu-s_w@mail.gmail.com>
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v1 1/4] dt-bindings: display: Add DT bindings for LS1028A HDP-TX PHY.
+Date: Wed, 8 May 2019 10:00:11 +0000
+Message-ID: <20190508100136.7009-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPd6GKVPixMiG37SoHiswaih-3S+o7QJn=WbuqdZzu-s_w@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: Wen He <wen.he_1@nxp.com>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Add DT bindings documentmation for the HDP-TX PHY controller. The describes
+which could be found on NXP Layerscape ls1028a platform.
 
-On 5/8/19 9:22 AM, Krzysztof Kozlowski wrote:
-> On Mon, 6 May 2019 at 17:12, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> In order get the clock by phandle and use it with regmap it needs to be
->> compatible with syscon. The DMC driver uses two registers from clock
->> register set and needs the regmap of them.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos5800.dtsi | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
->> index 57d3b31..0a2b328 100644
->> --- a/arch/arm/boot/dts/exynos5800.dtsi
->> +++ b/arch/arm/boot/dts/exynos5800.dtsi
->> @@ -17,7 +17,7 @@
->>   };
->>
->>   &clock {
->> -       compatible = "samsung,exynos5800-clock";
->> +       compatible = "samsung,exynos5800-clock", "syscon";
-> 
-> What about Exynos5420 DTSI?
-OK, I will also add it to 5420 dtsi.
---------------------------8<------------------------------------------
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi 
-b/arch/arm/boot/dts/exynos5420.dtsi
-index aaff158..d9203f0 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -173,7 +173,7 @@
-                 };
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+ .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/fsl,hdp.txt
 
-                 clock: clock-controller@10010000 {
--                       compatible = "samsung,exynos5420-clock";
-+                       compatible = "samsung,exynos5420-clock", "syscon";
-                         reg = <0x10010000 0x30000>;
-                         #clock-cells = <1>;
-                 };
-diff --git a/arch/arm/boot/dts/exynos5800.dtsi 
-b/arch/arm/boot/dts/exynos5800.dtsi
-index 57d3b31..0a2b328 100644
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -17,7 +17,7 @@
-  };
-
-  &clock {
--       compatible = "samsung,exynos5800-clock";
-+       compatible = "samsung,exynos5800-clock", "syscon";
-  };
------------------------------>8-----------------------------------
-
-Can I add your ack after that?
-
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
->>   };
->>
->>   &cluster_a15_opp_table {
->> --
->> 2.7.4
->>
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+new file mode 100644
+index 000000000000..36b5687a1261
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+@@ -0,0 +1,56 @@
++NXP Layerscpae ls1028a HDP-TX PHY Controller
++============================================
++
++The following bindings describe the Cadence HDP TX PHY on ls1028a that
++offer multi-protocol support of standars such as eDP and Displayport,
++supports for 25-600MHz pixel clock and up to 4k2k at 60MHz resolution.
++The HDP transmitter is a Cadence HDP TX controller IP with a companion
++PHY IP.
++
++Required properties:
++  - compatible:   Should be "fsl,ls1028a-dp" for ls1028a.
++  - reg:          Physical base address and size of the block of registers used
++  by the processor.
++  - interrupts:   HDP hotplug in/out detect interrupt number
++  - clocks:       A list of phandle + clock-specifier pairs, one for each entry
++  in 'clock-names'
++  - clock-names:  A list of clock names. It should contain:
++      - "clk_ipg": inter-Integrated circuit clock
++      - "clk_core": for the Main Display TX controller clock
++      - "clk_pxl": for the pixel clock feeding the output PLL of the processor
++      - "clk_pxl_mux": for the high PerfPLL bypass clock
++      - "clk_pxl_link": for the link rate pixel clock
++      - "clk_apb": for the APB interface clock
++      - "clk_vif": for the Video pixel clock
++
++Required sub-nodes:
++  - port: The HDP connection to an encoder output port. The connection
++    is modelled using the OF graph bindings specified in
++    Documentation/devicetree/bindings/graph.txt
++
++
++Example:
++
++/ {
++        ...
++
++	hdp: display@f200000 {
++                compatible = "fsl,ls1028a-dp";
++		reg = <0x0 0xf1f0000 0x0 0xffff>,
++		    <0x0 0xf200000 0x0 0xfffff>;
++                interrupts = <0 221 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&sysclk>, <&hdpclk>, <&dpclk>,
++                         <&dpclk>, <&dpclk>, <&pclk>, <&dpclk>;
++		clock-names = "clk_ipg", "clk_core", "clk_pxl",
++                              "clk_pxl_mux", "clk_pxl_link", "clk_apb",
++                              "clk_vif";
++
++		port {
++			dp1_output: endpoint {
++				remote-endpoint = <&dp0_input>;
++			};
++		};
++        };
++
++        ...
++};
+-- 
+2.17.1
