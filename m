@@ -1,57 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-Date: Wed, 8 May 2019 15:35:15 -0500
-Message-ID: <CAL_JsqJSbi5jNZSRhiE-h74DdbsgM7O+tqP9HOf037pyN7TbFA@mail.gmail.com>
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
- <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
- <20190507170422.GA25179@bogus> <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
- <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/5] dt-bindings: msm/disp: Introduce
+ interconnect bindings for MDSS on SDM845
+Date: Wed,  8 May 2019 13:42:13 -0700
+Message-ID: <20190508204219.31687-4-robdclark@gmail.com>
+References: <20190508204219.31687-1-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kees Cook <keescook@chromium.org>, Tony Lindgren <tony@atomide.com>, Joerg Roedel <jroedel@suse.de>, Thierry Reding <treding@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190508204219.31687-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Rob Clark <robdclark-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 8, 2019 at 4:45 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
->
-> On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
-> > On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
-> >>> +- devfreq-events : phandles of the PPMU events used by the controller.
-> >>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
-> >>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
-> >>
-> >> Looks like a hack. Can't you get this from the clocks property? What is
-> >> this for?
-> >
-> > Hi Rob,
-> >
-> > Lukasz uses these two syscon regmaps to read certain registers. For
-> > chipid he reads it to check the size of attached memory (only 2 GB
-> > version is supported). This indeed looks like a hack. However the
-> > second regmap (clk) is needed to get the timing data from registers
-> > from DMC clock driver address space. These are registers with memory
-> > timing so their data is not exposed anyway in common clk framework.
-
-Okay, please just explain what your accessing. Consider adding the
-offset as a cell in case stuff moves around on another chip.
-
-> >
-> > Best regards,
-> > Krzysztof
->
-> Thank you Krzysztof for a fast response. I have also responded to Rob.
-> I wouldn't call accessing chipid registers as a hack, though. The DMC
-> registers do not contain information about the memory chip since it is
-> in phase of production the board not the chip. Thus, chipid regs (which
-> loads from e-fuses) are best place to put information about memory
-> type/size.
-
-For efuses, we have a binding (nvmem). Maybe you should use it.
-
-Rob
+RnJvbTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEub3JnPgoKQWRkIGludGVy
+Y29ubmVjdCBwcm9wZXJ0aWVzIHN1Y2ggYXMgaW50ZXJjb25uZWN0IHByb3ZpZGVyIHNwZWNpZmll
+cgosIHRoZSBlZGdlIHNvdXJjZSBhbmQgZGVzdGluYXRpb24gcG9ydHMgd2hpY2ggYXJlIHJlcXVp
+cmVkIGJ5IHRoZQppbnRlcmNvbm5lY3QgQVBJIHRvIGNvbmZpZ3VyZSBpbnRlcmNvbm5lY3QgcGF0
+aCBmb3IgTURTUy4KCkNoYW5nZXMgaW4gdjI6CgktIE5vbmUKCkNoYW5nZXMgaW4gdjM6CgktIFJl
+bW92ZSBjb21tb24gcHJvcGVydHkgZGVmaW5pdGlvbnMgKFJvYiBIZXJyaW5nKQoKQ2hhbmdlcyBp
+biB2NDoKCS0gVXNlIHBvcnQgbWFjcm9zIGFuZCBjaGFuZ2UgcG9ydCBzdHJpbmcgbmFtZXMgKEdl
+b3JnaSBEamFrb3YpCgpDaGFuZ2VzIGluIHY1LXY3OgoJLSBOb25lCgpTaWduZWQtb2ZmLWJ5OiBT
+cmF2YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1QGNvZGVhdXJvcmEub3JnPgpTaWduZWQtb2Zm
+LWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+ClJldmlld2VkLWJ5
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpTaWduZWQtb2ZmLWJ5OiBSb2IgQ2xhcmsg
+PHJvYmRjbGFya0BjaHJvbWl1bS5vcmc+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQgfCAxMCArKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgMTAgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKaW5kZXggYWQyZTg4MzAzMjRlLi5hNjFkZDQw
+ZjM3OTIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21zbS9kcHUudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L21zbS9kcHUudHh0CkBAIC0yOCw2ICsyOCwxMSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgogLSAjYWRkcmVzcy1jZWxsczogbnVtYmVyIG9mIGFkZHJlc3MgY2VsbHMgZm9yIHRoZSBNRFNT
+IGNoaWxkcmVuLiBTaG91bGQgYmUgMS4KIC0gI3NpemUtY2VsbHM6IFNob3VsZCBiZSAxLgogLSBy
+YW5nZXM6IHBhcmVudCBidXMgYWRkcmVzcyBzcGFjZSBpcyB0aGUgc2FtZSBhcyB0aGUgY2hpbGQg
+YnVzIGFkZHJlc3Mgc3BhY2UuCistIGludGVyY29ubmVjdHMgOiBpbnRlcmNvbm5lY3QgcGF0aCBz
+cGVjaWZpZXIgZm9yIE1EU1MgYWNjb3JkaW5nIHRvCisgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dC4gU2hvdWxkIGJlCisgIDIg
+cGF0aHMgY29ycmVzcG9uZGluZyB0byAyIEFYSSBwb3J0cy4KKy0gaW50ZXJjb25uZWN0LW5hbWVz
+IDogTURTUyB3aWxsIGhhdmUgMiBwb3J0IG5hbWVzIHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiB0
+aGUKKyAgMiBpbnRlcmNvbm5lY3QgcGF0aHMgZGVmaW5lZCB3aXRoIGludGVyY29ubmVjdCBzcGVj
+aWZpZXIuCiAKIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAtIGFzc2lnbmVkLWNsb2NrczogbGlzdCBv
+ZiBjbG9jayBzcGVjaWZpZXJzIGZvciBjbG9ja3MgbmVlZGluZyByYXRlIGFzc2lnbm1lbnQKQEAg
+LTg2LDYgKzkxLDExIEBAIEV4YW1wbGU6CiAJCWludGVycnVwdC1jb250cm9sbGVyOwogCQkjaW50
+ZXJydXB0LWNlbGxzID0gPDE+OwogCisJCWludGVyY29ubmVjdHMgPSA8JnJzY19obG9zIE1BU1RF
+Ul9NRFAwICZyc2NfaGxvcyBTTEFWRV9FQkkxPiwKKwkJCQk8JnJzY19obG9zIE1BU1RFUl9NRFAx
+ICZyc2NfaGxvcyBTTEFWRV9FQkkxPjsKKworCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAibWRwMC1t
+ZW0iLCAibWRwMS1tZW0iOworCiAJCWlvbW11cyA9IDwmYXBwc19pb21tdSAwPjsKIAogCQkjYWRk
+cmVzcy1jZWxscyA9IDwyPjsKLS0gCjIuMjAuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZnJlZWRyZW5v
