@@ -1,35 +1,90 @@
-Return-Path: <SRS0=z3qq=TI=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 10/10] ARM: dts: r7s9210-rza2mevb: Add USB host support
-Date: Wed, 8 May 2019 12:48:36 +0000
-Message-ID: 
- <TY1PR01MB15624892AE0A749A63053DA98A320@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=Eida=TI=verge.net.au=horms@kernel.org>
+Date: Wed, 8 May 2019 11:42:31 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 10/10] ARM: dts: r7s9210-rza2mevb: Add USB host support
+Message-ID: <20190508094230.5j2skmmlkzlmy2ls@verge.net.au>
 References: <20190506234631.113226-1-chris.brandt@renesas.com>
  <20190506234631.113226-11-chris.brandt@renesas.com>
- <20190508094230.5j2skmmlkzlmy2ls@verge.net.au>
-In-Reply-To: <20190508094230.5j2skmmlkzlmy2ls@verge.net.au>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506234631.113226-11-chris.brandt@renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Simon,
+On Mon, May 06, 2019 at 06:46:31PM -0500, Chris Brandt wrote:
+> Enable USB Host support for both the Type-C connector on the CPU board
+> and the Type-A plug on the sub board.
+> 
+> Both boards are also capable of USB Device operation as well after the
+> appropriate Device Tree modifications.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  arch/arm/boot/dts/r7s9210-rza2mevb.dts | 37 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+> index 1eba37db7cdc..79d9d4b4779f 100644
+> --- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+> +++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+> @@ -100,6 +100,18 @@
+>  		pinmux = <RZA2_PINMUX(PORT5, 4, 3)>,	/* SD1_CD */
+>  			 <RZA2_PINMUX(PORT5, 5, 3)>;	/* SD1_WP */
+>  	};
+> +
+> +	usb0_pins: usb0 {
+> +		pinmux = <RZA2_PINMUX(PORT5, 2, 3)>,	/* VBUSIN0 */
+> +			 <RZA2_PINMUX(PORTC, 6, 1)>,	/* VBUSEN0 */
+> +			 <RZA2_PINMUX(PORTC, 7, 1)>;	/* OVRCUR0 */
+> +	};
+> +
+> +	usb1_pins: usb1 {
+> +		pinmux = <RZA2_PINMUX(PORTC, 0, 1)>,	/* VBUSIN1 */
+> +			 <RZA2_PINMUX(PORTC, 5, 1)>,	/* VBUSEN1 */
+> +			 <RZA2_PINMUX(PORT7, 5, 5)>;	/* OVRCUR1 */
+> +	};
+>  };
+>  
+>  /* High resolution System tick timers */
+> @@ -154,3 +166,28 @@
+>  	bus-width = <4>;
+>  	status = "okay";
+>  };
+> +
+> +/* USB-0 as Host */
+> +/* NOTE: Requires JP3 to be fitted */
+> +&usb2_phy0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&usb0_pins>;
+> +	renesas,uses_usb_x1;
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
 
-On Wed, May 08, 2019, Simon Horman wrote:
-> Please add a space between the usb2_phy0 and ehci0 nodes.
-> Likewise below between the usb2_phy1 and ehci1 nodes.
->=20
-> Otherwise this patch looks good to me.
+Hi Chris,
 
-I also see that you renamed some patch titles from
-  "ARM: dts: r7s9210-rza2mevb: xxx"=20
-to
-  "ARM: dts: rza2mevb: xxx"
+Please add a space between the usb2_phy0 and ehci0 nodes.
+Likewise below between the usb2_phy1 and ehci1 nodes.
 
-when you applied them.
-So I will make that change as well.
+Otherwise this patch looks good to me.
 
-Chris
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +/* USB-1 as Host */
+> +&usb2_phy1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&usb1_pins>;
+> +	renesas,uses_usb_x1;
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +&ehci1 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.16.1
+> 
