@@ -1,61 +1,276 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v1 4/4] arm64: ls1028ardb: Add support DP nodes for LS1028ARDB
-Date: Wed, 8 May 2019 10:00:19 +0000
-Message-ID: <20190508100136.7009-4-wen.he_1@nxp.com>
-References: <20190508100136.7009-1-wen.he_1@nxp.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v7 12/13] ARM: dts: exynos: add DMC device for
+ exynos5422
+Date: Wed, 8 May 2019 12:05:18 +0200
+Message-ID: <b8debbd9-fd49-5666-eab1-b905ed050067@partner.samsung.com>
+References: <CGME20190506151219eucas1p2b5c3368873696f51e7d0d3a3e6d6bf1e@eucas1p2.samsung.com>
+        <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <1557155521-30949-13-git-send-email-l.luba@partner.samsung.com>
+        <CAJKOXPcOWkUa_+sLNXdhqpQNN9oaCuHzpjvagsE+ViA0mDf4Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190508100136.7009-1-wen.he_1@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPcOWkUa_+sLNXdhqpQNN9oaCuHzpjvagsE+ViA0mDf4Vw@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: Wen He <wen.he_1@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add HDP PHY Controller related nodes on the LS1028ARDB.
-Now LS1028ARDB on DP has following features:
-- Supports 4 dp lane channel and lane mapping is 1-0-3-2.
-- By default, the pixel link rate value's 27Mhz.
-- By default, support the resoluions are 4k@60,1080p@60,720p@60,
-480p@60. also user can specify any combination of monitor supported
-resoluions by written in the node 'resoluion'.
-- By default, the edid function is not in use.
 
-Signed-off-by: Alison Wang <alison.wang@nxp.com>
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index f9c272fb0738..513b0e37ea13 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -151,3 +151,15 @@
- &sai4 {
- 	status = "okay";
- };
-+
-+&hdp {
-+	fsl,no_edid;
-+	resolution = "3840x2160@60",
-+		   "1920x1080@60",
-+		   "1280x720@60",
-+		   "720x480@60";
-+	lane_mapping = <0x4e>;
-+	edp_link_rate = <0x6>;
-+	edp_num_lanes = <0x4>;
-+	status = "okay";
-+};
--- 
-2.17.1
+On 5/8/19 9:25 AM, Krzysztof Kozlowski wrote:
+> On Mon, 6 May 2019 at 17:12, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Add description of Dynamic Memory Controller and PPMU counters.
+>> They are used by exynos5422-dmc driver.
+>> There is a definition of the memory chip, which is then used during
+>> calculation of timings for each OPP.
+>> The algorithm in the driver needs these two sets to bound the timings.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi             | 121 +++++++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 122 ++++++++++++++++++++++++++
+>>   2 files changed, 243 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index aaff158..1b66601 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -14,6 +14,7 @@
+>>   #include <dt-bindings/clock/exynos5420.h>
+>>   #include <dt-bindings/clock/exynos-audss-clk.h>
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/pmu/exynos_ppmu.h>
+>>
+>>   / {
+>>          compatible = "samsung,exynos5420", "samsung,exynos5";
+>> @@ -235,6 +236,38 @@
+>>                          status = "disabled";
+>>                  };
+>>
+>> +               dmc: memory-controller@10c20000 {
+>> +                       compatible = "samsung,exynos5422-dmc";
+>> +                       reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
+>> +                       clocks = <&clock CLK_FOUT_SPLL>,
+>> +                                <&clock CLK_MOUT_SCLK_SPLL>,
+>> +                                <&clock CLK_FF_DOUT_SPLL2>,
+>> +                                <&clock CLK_FOUT_BPLL>,
+>> +                                <&clock CLK_MOUT_BPLL>,
+>> +                                <&clock CLK_SCLK_BPLL>,
+>> +                                <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>> +                                <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>> +                                <&clock CLK_MOUT_MCLK_CDREX>,
+>> +                                <&clock CLK_DOUT_CLK2X_PHY0>,
+>> +                                <&clock CLK_CLKM_PHY0>,
+>> +                                <&clock CLK_CLKM_PHY1>;
+>> +                       clock-names = "fout_spll",
+>> +                                     "mout_sclk_spll",
+>> +                                     "ff_dout_spll2",
+>> +                                     "fout_bpll",
+>> +                                     "mout_bpll",
+>> +                                     "sclk_bpll",
+>> +                                     "mout_mx_mspll_ccore",
+>> +                                     "mout_mx_mspll_ccore_phy",
+>> +                                     "mout_mclk_cdrex",
+>> +                                     "dout_clk2x_phy0",
+>> +                                     "clkm_phy0",
+>> +                                     "clkm_phy1";
+>> +                       samsung,syscon-clk = <&clock>;
+>> +                       samsung,syscon-chipid = <&chipid>;
+>> +                       status = "disabled";
+>> +               };
+>> +
+>>                  nocp_mem0_0: nocp@10ca1000 {
+>>                          compatible = "samsung,exynos5420-nocp";
+>>                          reg = <0x10CA1000 0x200>;
+>> @@ -271,6 +304,94 @@
+>>                          status = "disabled";
+>>                  };
+>>
+>> +               ppmu_dmc0_0: ppmu@10d00000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d00000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc0_0: ppmu-event0-dmc0_0 {
+>> +                                       event-name = "ppmu-event0-dmc0_0";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc0_0: ppmu-event1-dmc0_0 {
+>> +                                       event-name = "ppmu-event1-dmc0_0";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc0_0: ppmu-event3-dmc0_0 {
+>> +                                       event-name = "ppmu-event3-dmc0_0";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc0_1: ppmu@10d10000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d10000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc0_1: ppmu-event0-dmc0_1 {
+>> +                                       event-name = "ppmu-event0-dmc0_1";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc0_1: ppmu-event1-dmc0_1 {
+>> +                                       event-name = "ppmu-event1-dmc0_1";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc0_1: ppmu-event3-dmc0_1 {
+>> +                                       event-name = "ppmu-event3-dmc0_1";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc1_0: ppmu@10d60000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d60000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc1_0: ppmu-event0-dmc1_0 {
+>> +                                       event-name = "ppmu-event0-dmc1_0";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc1_0: ppmu-event1-dmc1_0 {
+>> +                                       event-name = "ppmu-event1-dmc1_0";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc1_0: ppmu-event3-dmc1_0 {
+>> +                                       event-name = "ppmu-event3-dmc1_0";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc1_1: ppmu@10d70000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d70000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event0_dmc1_1: ppmu-event0-dmc1_1 {
+>> +                                       event-name = "ppmu-event0-dmc1_1";
+>> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event1_dmc1_1: ppmu-event1-dmc1_1 {
+>> +                                       event-name = "ppmu-event1-dmc1_1";
+>> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
+>> +                               };
+>> +                               ppmu_event3_dmc1_1: ppmu-event3-dmc1_1 {
+>> +                                       event-name = "ppmu-event3-dmc1_1";
+>> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
+>> +                                               PPMU_WO_DATA_CNT)>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>>                  gsc_pd: power-domain@10044000 {
+>>                          compatible = "samsung,exynos4210-pd";
+>>                          reg = <0x10044000 0x20>;
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> index 25d95de1..76abf03 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> @@ -34,6 +34,97 @@
+>>                          clock-frequency = <24000000>;
+>>                  };
+>>          };
+>> +
+>> +       dmc_opp_table: opp_table2 {
+>> +               compatible = "operating-points-v2";
+>> +
+>> +               opp00 {
+>> +                       opp-hz = /bits/ 64 <165000000>;
+>> +                       opp-microvolt = <875000>;
+>> +               };
+>> +               opp01 {
+>> +                       opp-hz = /bits/ 64 <206000000>;
+>> +                       opp-microvolt = <875000>;
+>> +               };
+>> +               opp02 {
+>> +                       opp-hz = /bits/ 64 <275000000>;
+>> +                       opp-microvolt = <875000>;
+>> +               };
+>> +               opp03 {
+>> +                       opp-hz = /bits/ 64 <413000000>;
+>> +                       opp-microvolt = <887500>;
+>> +               };
+>> +               opp04 {
+>> +                       opp-hz = /bits/ 64 <543000000>;
+>> +                       opp-microvolt = <937500>;
+>> +               };
+>> +               opp05 {
+>> +                       opp-hz = /bits/ 64 <633000000>;
+>> +                       opp-microvolt = <1012500>;
+>> +               };
+>> +               opp06 {
+>> +                       opp-hz = /bits/ 64 <728000000>;
+>> +                       opp-microvolt = <1037500>;
+>> +               };
+>> +               opp07 {
+>> +                       opp-hz = /bits/ 64 <825000000>;
+>> +                       opp-microvolt = <1050000>;
+>> +               };
+>> +       };
+>> +
+>> +       samsung_K3QF2F20DB: lpddr3 {
+>> +               compatible      = "Samsung,K3QF2F20DB", "jedec,lpddr3";
+>> +               density         = <16384>;
+>> +               io-width        = <32>;
+>> +               #address-cells  = <1>;
+>> +               #size-cells     = <0>;
+>> +
+>> +               tRFC-min-tck            = <17>;
+>> +               tRRD-min-tck            = <2>;
+>> +               tRPab-min-tck           = <2>;
+>> +               tRPpb-min-tck           = <2>;
+>> +               tRCD-min-tck            = <3>;
+>> +               tRC-min-tck             = <6>;
+>> +               tRAS-min-tck            = <5>;
+>> +               tWTR-min-tck            = <2>;
+>> +               tWR-min-tck             = <7>;
+>> +               tRTP-min-tck            = <2>;
+>> +               tW2W-C2C-min-tck        = <0>;
+>> +               tR2R-C2C-min-tck        = <0>;
+>> +               tWL-min-tck             = <8>;
+>> +               tDQSCK-min-tck          = <5>;
+>> +               tRL-min-tck             = <14>;
+>> +               tFAW-min-tck            = <5>;
+>> +               tXSR-min-tck            = <12>;
+>> +               tXP-min-tck             = <2>;
+>> +               tCKE-min-tck            = <2>;
+>> +               tCKESR-min-tck          = <2>;
+>> +               tMRD-min-tck            = <5>;
+>> +
+>> +               timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
+>> +                       compatible      = "jedec,lpddr3-timings";
+>> +                       reg             = <800000000>; /* workaround: it shows max-freq */
+> 
+> Please be sure that there are no new warnings (make dtbs W=1). This
+> does not look correct (reg does not match unit address).
+Rob has also pointed out in the bindings that it should have @800000000.
+Regarding the dtbs warnings, it does not produce any new even with '@0'.
+
+I have changed it to @800000000 in the next version.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
