@@ -1,57 +1,66 @@
 From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: [PATCH v2 2/3] usb: gadget: send usb_gadget as an argument in get_config_params
-Date: Wed, 8 May 2019 13:24:50 +0530
-Message-ID: <1557302091-7455-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
-References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH v2 0/3] usb: gadget: Add support for disabling U1 and U2 entries
+Date: Wed, 8 May 2019 13:24:48 +0530
+Message-ID: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, "Claus H. Stovgaard" <cst@phaseone.com>
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, v.anuragkumar@gmail.com, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Passing struct usb_gadget * as an extra argument in get_config_params
-makes gadget drivers to easily update the U1DevExitLat & U2DevExitLat
-values based on the values passed from the device tree. This patch
-does the same
+Gadget applications may have a requirement to disable the U1 and U2
+entry based on the usecase. Below are few usecases where the disabling
+U1/U2 entries may be possible.
 
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
----
- Changes in v2:
-	- None
----
- drivers/usb/gadget/composite.c | 2 +-
- include/linux/usb/gadget.h     | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Usecase 1:
+When combining dwc3 with an redriver for a USB Type-C device solution, it
+sometimes have problems with leaving U1/U2 for certain hosts, resulting in
+link training errors and reconnects. For this U1/U2 state entries may be
+avoided.
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index b8a1584..9118b42 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -653,7 +653,7 @@ static int bos_desc(struct usb_composite_dev *cdev)
- 
- 		/* Get Controller configuration */
- 		if (cdev->gadget->ops->get_config_params) {
--			cdev->gadget->ops->get_config_params(
-+			cdev->gadget->ops->get_config_params(cdev->gadget,
- 				&dcd_config_params);
- 		} else {
- 			dcd_config_params.bU1devExitLat =
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index 7595056..fb19141 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -310,7 +310,8 @@ struct usb_gadget_ops {
- 	int	(*pullup) (struct usb_gadget *, int is_on);
- 	int	(*ioctl)(struct usb_gadget *,
- 				unsigned code, unsigned long param);
--	void	(*get_config_params)(struct usb_dcd_config_params *);
-+	void	(*get_config_params)(struct usb_gadget *,
-+				     struct usb_dcd_config_params *);
- 	int	(*udc_start)(struct usb_gadget *,
- 			struct usb_gadget_driver *);
- 	int	(*udc_stop)(struct usb_gadget *);
+Usecase 2:
+When performing performance benchmarking on mass storage gadget the
+U1 and U2 entries can be disabled.
+
+Usecase 3:
+When periodic transfers like ISOC transfers are used with bInterval
+of 1 which doesn't require the link to enter into U1 or U2 state entry
+(since ping is issued from host for every uframe interval). In this
+case the U1 and U2 entry can be disabled.
+
+Disablement of U1/U2 can be done by setting U1DevExitLat and U2DevExitLat
+values to 0 in the BOS descriptor. Host on seeing 0 value for U1DevExitLat
+and U2DevExitLat, it doesn't send SET_SEL requests to the gadget. There
+may be some hosts which may send SET_SEL requests even after seeing 0 in
+the UxDevExitLat of BOS descriptor. To aviod U1/U2 entries for these type
+of hosts, dwc3 controller can be programmed to reject those U1/U2 requests
+by not enabling ACCEPTUxENA bits in DCTL register.
+
+This patch series updates the same.
+
+Changes in v2:
+	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
+	   to "snps,dis-u1-entry-quirk"
+	2. Merged the changes done by Claus H. Stovgaard in ep0.c for rejecting
+	   U1/U2 requests into this patch. Changes done by Claus can be found
+	   here https://marc.info/?l=linux-kernel&m=155722068820568&w=2
+
+Anurag Kumar Vulisha (3):
+  doc: dt: bindings: usb: dwc3: Update entries for disabling U1 and U2
+  usb: gadget: send usb_gadget as an argument in get_config_params
+  usb: dwc3: gadget: Add support for disabling U1 and U2 entries
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+ drivers/usb/dwc3/core.c                        |  4 ++++
+ drivers/usb/dwc3/core.h                        |  4 ++++
+ drivers/usb/dwc3/ep0.c                         |  9 ++++++++-
+ drivers/usb/dwc3/gadget.c                      | 19 +++++++++++++++++++
+ drivers/usb/dwc3/gadget.h                      |  6 ++++++
+ drivers/usb/gadget/composite.c                 |  2 +-
+ include/linux/usb/gadget.h                     |  3 ++-
+ 8 files changed, 46 insertions(+), 3 deletions(-)
+
 -- 
 2.1.1
