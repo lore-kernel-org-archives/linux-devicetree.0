@@ -1,85 +1,48 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v7 05/13] dt-bindings: ddr: add LPDDR3 memories
-Date: Wed, 8 May 2019 10:37:15 +0200
-Message-ID: <8ace8d5a-9cb2-4b41-0ed2-bcb33b349d69@partner.samsung.com>
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190506151214eucas1p17114a7dce506c77ae0bb96b93fd2d838@eucas1p1.samsung.com>
-        <1557155521-30949-6-git-send-email-l.luba@partner.samsung.com>
-        <20190507170004.GA20489@bogus>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v4 02/10] dt-bindings: doc: reflect new NVMEM
+ of_get_mac_address behaviour
+Date: Wed, 8 May 2019 10:41:52 +0200
+Message-ID: <20190508084152.GM81826@meh.true.cz>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+ <1556893635-18549-3-git-send-email-ynezz@true.cz>
+ <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190507170004.GA20489@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <sriniv>
 List-Id: devicetree@vger.kernel.org
 
+Rob Herring <robh+dt@kernel.org> [2019-05-07 11:44:57]:
 
-On 5/7/19 7:00 PM, Rob Herring wrote:
-> On Mon, May 06, 2019 at 05:11:53PM +0200, Lukasz Luba wrote:
->> Specifies the AC timing parameters of the LPDDR3 memory device.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   .../devicetree/bindings/ddr/lpddr3-timings.txt     | 58 +++++++++++++
->>   Documentation/devicetree/bindings/ddr/lpddr3.txt   | 97 ++++++++++++++++++++++
->>   2 files changed, 155 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
->>   create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
->>
->> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt b/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
->> new file mode 100644
->> index 0000000..3a2ef3a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
->> @@ -0,0 +1,58 @@
->> +* AC timing parameters of LPDDR3 memories for a given speed-bin.
->> +
->> +The structures are based on LPDDR2 and extended where needed.
->> +
->> +Required properties:
->> +- compatible : Should be "jedec,lpddr3-timings"
->> +- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
->> +- reg : maximum DDR clock frequency for the speed-bin. Type is <u32>
->> +
->> +Optional properties:
->> +
->> +The following properties represent AC timing parameters from the memory
->> +data-sheet of the device for a given speed-bin. All these properties are
->> +of type <u32> and the default unit is ps (pico seconds).
->> +- tRFC
->> +- tRRD
->> +- tRPab
->> +- tRPpb
->> +- tRCD
->> +- tRC
->> +- tRAS
->> +- tWTR
->> +- tWR
->> +- tRTP
->> +- tW2W-C2C
->> +- tR2R-C2C
->> +- tFAW
->> +- tXSR
->> +- tXP
->> +- tCKE
->> +- tCKESR
->> +- tMRD
->> +
->> +Example:
->> +
->> +timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
-> 
-> Now the unit-address should be @800000000
-Added @800000000 to the both files.
-> 
-> With that and the other example fixed,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Thank you.
+Hi,
 
-Regards,
-Lukasz
+> > -- local-mac-address:   the driver is designed to use the of_get_mac_address api
+> > -                       only if efuse-mac is 0. When efuse-mac is 0, the MAC
+> > -                       address is obtained from local-mac-address. If this
+> > -                       attribute is not present, then the driver will use a
+> > -                       random MAC address.
+> >  - "netcp-device label":        phandle to the device specification for each of NetCP
+> >                         sub-module attached to this interface.
+> >
+> > +The MAC address will be determined using the optional properties defined in
+> > +ethernet.txt, as provided by the of_get_mac_address API and only if efuse-mac
+> 
+> Don't make references to Linux in bindings. You can talk about
+> expectations of client programs (e.g Linux, u-boot, BSD, etc.) though.
+
+I've just tried to reword what was already there, anyway, did I understood
+your remark properly, would this be more appropriate?
+
+ The MAC address will be determined using the optional properties defined in
+ ethernet.txt and only if efuse-mac is set to 0. If any of the optional MAC
+ address properties are not present, then the driver will use random MAC
+ address.
+
+Thanks!
+
+-- ynezz
