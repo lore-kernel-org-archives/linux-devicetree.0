@@ -1,51 +1,63 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
-Date: Wed, 8 May 2019 02:20:30 +0000
-Message-ID: <AM5PR0402MB286549DC56A28B010CE711D6F1320@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190426055558.44544-1-ran.wang_1@nxp.com>
- <20190501235410.GA25492@bogus>
- <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <CAL_Jsq+tmUCjZw7ybhKTGg0NNfc+JsOQ30vArfHzdw14XoWm5A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 07/11] arm64: dts: hi6220: Update coresight DT bindings
+Date: Wed,  8 May 2019 10:18:58 +0800
+Message-ID: <20190508021902.10358-8-leo.yan@linaro.org>
+References: <20190508021902.10358-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+tmUCjZw7ybhKTGg0NNfc+JsOQ30vArfHzdw14XoWm5A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190508021902.10358-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gma>
+Cc: Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBXZWRuZXNkYXksIE1heSAwOCwgMjAxOSAwMDo0MCwgUm9iIEhlcnJpbmcg
-d3JvdGU6DQo+IA0KPiBPbiBUdWUsIE1heSA3LCAyMDE5IGF0IDM6NDggQU0gUmFuIFdhbmcgPHJh
-bi53YW5nXzFAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBSb2IsDQo+ID4NCj4gPiBPbiBU
-aHVyc2RheSwgTWF5IDAyLCAyMDE5IDA3OjU0IFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+ID4NCj4g
-PiA+IE9uIEZyaSwgQXByIDI2LCAyMDE5IGF0IDA1OjU0OjI2QU0gKzAwMDAsIFJhbiBXYW5nIHdy
-b3RlOg0KPiA+ID4gPiBUaGlzIHBhdGNoIGFkZHMgVVNCIGR0IG5vZGVzIGZvciBMUzEwMjhBLg0K
-PiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8cmFuLndhbmdfMUBueHAu
-Y29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiA+ID4gICAtIFJl
-bmFtZSBub2RlIGZyb20gdXNiM0AuLi4gdG8gdXNiQC4uLiB0byBtZWV0IERUU3BlYw0KPiA+ID4g
-Pg0KPiA+ID4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
-aSB8ICAgMjANCj4gPiA+ICsrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAxIGZpbGVzIGNo
-YW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5k
-dHNpDQo+ID4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
-c2kNCj4gPiA+ID4gaW5kZXggOGRkMzUwMS4uMTg4Y2ZiOCAxMDA2NDQNCj4gPiA+ID4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4gPiAr
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4g
-PiA+IEBAIC0xNDQsNiArMTQ0LDI2IEBADQo+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgY2xv
-Y2tzID0gPCZzeXNjbGs+Ow0KPiA+ID4gPiAgICAgICAgICAgICB9Ow0KPiA+ID4gPg0KPiA+ID4g
-PiArICAgICAgICAgICB1c2IwOnVzYkAzMTAwMDAwIHsNCj4gPiA+ICAgICAgICAgICAgICAgICAg
-ICAgIF4gc3BhY2UgbmVlZGVkDQo+ID4NCj4gPiBZZXMsIHdpbGwgdXBkYXRlIHRoaXMgaW4gbmV4
-dCB2ZXJzaW9uLg0KPiA+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZT0g
-InNucHMsZHdjMyI7DQo+ID4gPg0KPiA+ID4gTmVlZHMgYW4gU29DIHNwZWNpZmljIGNvbXBhdGli
-bGUuDQo+ID4NCj4gPiBEbyB5b3UgbWVhbiBjaGFuZ2UgY29tcGF0aWJsZSB0byAic25wcyxkd2Mz
-IiwgImZzbCxsczEwMjhhLWR3YzMiID8NCj4gDQo+IFdlbGwsIHRoYXQncyB0aGUgd3Jvbmcgb3Jk
-ZXIsIGJ1dCB5ZXMuDQoNCk9LLCB3aWxsIHVwZGF0ZSB0aGlzLg0KIA0KPiA+IEFzIEkga25vdywg
-c28gZmFyIHRoZXJlIGlzIG5vIFNvQyBzcGVjaWZpYyBwcm9ncmFtbWluZyBmb3IgdGhpcyBJUCwg
-c28NCj4gPiBkbyB5b3UgdGhpbmsgaXQncyBzdGlsbCBuZWNlc3NhcnkgdG8gYWRkIGl0Pw0KPiAN
-Cj4gWWVzLiBBbGwgdGhlIGJ1Z3MgYW5kIHF1aXJrcyBhcmUgZGlzY292ZXJlZCBhbHJlYWR5Pw0K
-DQpZZXMsIHNvIGZhciBJIGRvbid0IHJlY2VpdmUgYW55IFNvQyBzcGVjaWZpYyBkZWZlY3QgcmVw
-b3J0LCBJIHRoaW5rIGl0J3MgZmluZS4NCiBXaWxsIHdvcmsgb3V0IG5leHQgdmVyc2lvbiBwYXRj
-aCwgdGhhbmtzIGZvciB5b3VyIHRpbWUuDQoNClJlZ2FyZHMsDQpSYW4NCg0K
+CoreSight DT bindings have been updated, thus the old compatible strings
+are obsolete and the drivers will report warning if DTS uses these
+obsolete strings.
+
+This patch switches to the new bindings for CoreSight dynamic funnel and
+static replicator, so can dismiss warning during initialisation.
+
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+index 68c52f1149be..5a34217d823a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+@@ -15,7 +15,7 @@
+ / {
+ 	soc {
+ 		funnel@f6401000 {
+-			compatible = "arm,coresight-funnel", "arm,primecell";
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0 0xf6401000 0 0x1000>;
+ 			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
+ 			clock-names = "apb_pclk";
+@@ -65,7 +65,7 @@
+ 		};
+ 
+ 		replicator {
+-			compatible = "arm,coresight-replicator";
++			compatible = "arm,coresight-static-replicator";
+ 			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
+ 			clock-names = "apb_pclk";
+ 
+@@ -133,7 +133,7 @@
+ 		};
+ 
+ 		funnel@f6501000 {
+-			compatible = "arm,coresight-funnel", "arm,primecell";
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0 0xf6501000 0 0x1000>;
+ 			clocks = <&acpu_sctrl HI6220_ACPU_SFT_AT_S>;
+ 			clock-names = "apb_pclk";
+-- 
+2.17.1
