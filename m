@@ -1,75 +1,103 @@
-From: allen <allen.chen@ite.com.tw>
-Subject: [PATCH 1/3] dt-bindings: Add binding for IT6505.
-Date: Wed, 8 May 2019 15:48:40 +0800
-Message-ID: <1557301722-20827-2-git-send-email-allen.chen@ite.com.tw>
-References: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
+ description
+Date: Wed, 8 May 2019 10:28:03 +0200
+Message-ID: <d48d6629-f171-aae3-ba5a-ae4c13d29407@partner.samsung.com>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
+        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+        <20190430223629.GA22317@bogus>
+        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
+        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
+        <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
+        <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
+        <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Allen Chen <allen.chen@ite.com.tw>, Pi-Hsun Shih <pihsun@chromium.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Koen Kooi <koen@dominion.thruhere.net>, Vladimir Zapolskiy <vz@mleia.com>, Ben Whitten <ben.whitten@gmail.com>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Allen Chen <allen.chen@ite.com.tw>
+Hi Rob,
 
-Add a DT binding documentation for IT6505.
+On 5/7/19 6:50 PM, Rob Herring wrote:
+> On Tue, May 7, 2019 at 4:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/6/19 12:29 PM, Lukasz Luba wrote:
+>>> Hi Rob,
+>>>
+>>> On 5/2/19 10:24 PM, Rob Herring wrote:
+>>>> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba
+>>>> <l.luba@partner.samsung.com> wrote:
+>>>>>
+>>>>> Hi Rob,
+>>>>>
+>>>>> On 5/1/19 12:36 AM, Rob Herring wrote:
+>>>>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
+>>>>>>> Extend the documenation by events description with new
+>>>>>>> 'event-data-type'
+>>>>>>> field. Add example how the event might be defined in DT.
+>>>>>>
+>>>>>> Why do we need event types in DT? We don't do this for other h/w
+>>>>>> such as
+>>>>>> ARM PMU.
+>>>>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
+>>>>> arch/arm/kernel/perf_event_v7.c
+>>>>> and are seen from perf. They are different type and for different
+>>>>> purpose. The Ecynos PPMU events are not seen in perf, they are
+>>>>> for internal monitoring and must not be reset by other actors like perf.
+>>>>> They are used by the 'bus drivers' to made some heuristics and tune the
+>>>>> internal settings, like frequency.
+>>>>>
+>>>>> Chanwoo has written PPMU driver which relies on DT definition.
+>>>>> The DT events are used by other DT devices by phandle.
+>>>>
+>>>> How is that done? I don't see anything in the binding for that.
+>>> Here are the DT devices and how they are pinned together:
+>>> - declared devfreq events:
+>>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+>>>
+>>> - devfreq events pinned to the bus device:
+>>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107
+>>>
+>>> - the bus device itself:
+>>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457
+>>>
+>>>
+>>> Regards,
+>>> Lukasz
+>>>
+>>>>
+>>>> Rob
+>>>>
+>>>>
+>> Can I send the next version of the patch set, which has Chanwoo's
+>> suggestions, or do you have some objections to this PPMU entries?
+> 
+> I think the existing binding which this is based on needs some
+> changes, so it's pointless really for me to comment on additions.
+Maybe the bindings description is not perfect, but it contains
+examples which might help clarifying the idea.
+Regarding the real value of the patch set, it is needed for some
+research. Currently, the Odroid xu3/4 is the best 'mainline' platform
+with big.LITTLE, has good performance and these counters.
+Willy, who is doing his PhD, wants to experiment with it. I agree that
+it could be better documented but it requires more effort.
+I will extend the documentation it in my free time slots (it is not my
+main task for now).
 
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+For now, I have received comments and parts of code from Chanwoo which
+made the next patch set mature and ready to merge (IMHO).
 
----
- .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+If you have suggestions how to improve these bindings or links for good
+examples, I would really appreciate. Thank you for your time and review.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-new file mode 100644
-index 0000000..c3506ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-@@ -0,0 +1,30 @@
-+iTE it6505 DP bridge bindings
-+
-+Required properties:
-+        - compatible: "ite,it6505"
-+        - reg: i2c address of the bridge
-+        - ovdd-supply: I/O voltage
-+        - pwr18-supply: Core voltage
-+        - interrupts: interrupt specifier of INT pin
-+        - reset-gpios: gpio specifier of RESET pin
-+
-+Example:
-+	it6505dptx: it6505dptx@5c {
-+                compatible = "ite,it6505";
-+                status = "okay";
-+                interrupt-parent = <&pio>;
-+                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-+                reg = <0x5c>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&it6505_pins>;
-+                ovdd-supply = <&mt6358_vsim1_reg>;
-+                pwr18-supply = <&it6505_pp18_reg>;
-+                reset-gpios = <&pio 179 1>;
-+                hpd-gpios = <&pio 9 0>;
-+                extcon = <&usbc_extcon>;
-+                port {
-+                        it6505_in: endpoint {
-+                                remote-endpoint = <&dpi_out>;
-+                        };
-+                };
-+        };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2c3fc51..c088646 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -184,6 +184,7 @@ iom	Iomega Corporation
- isee	ISEE 2007 S.L.
- isil	Intersil
- issi	Integrated Silicon Solutions Inc.
-+ite	iTE Tech. Inc.
- itead	ITEAD Intelligent Systems Co.Ltd
- iwave  iWave Systems Technologies Pvt. Ltd.
- jdi	Japan Display Inc.
--- 
-1.9.1
+Regards,
+Lukasz
