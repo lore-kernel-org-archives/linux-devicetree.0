@@ -1,7 +1,7 @@
 From: <neal.liu@mediatek.com>
-Subject: [PATCH 1/3] soc: mediatek: add SMC fid table for SIP interface
-Date: Wed, 8 May 2019 11:58:55 +0800
-Message-ID: <1557287937-2410-2-git-send-email-neal.liu@mediatek.com>
+Subject: [PATCH 2/3] dt-bindings: rng: update bindings for MT67xx SoCs
+Date: Wed, 8 May 2019 11:58:56 +0800
+Message-ID: <1557287937-2410-3-git-send-email-neal.liu@mediatek.com>
 References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,76 +14,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Neal Liu <neal.liu@mediatek.com>
 
-1. Add a header file to provide SIP interface to ARM
-Trusted Firmware(ATF)
-2. Add hwrng SMC fid
+Document the binding used by the Mediatek MT67xx SoCs random
+number generator with TrustZone enabled.
 
 Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 ---
- include/linux/soc/mediatek/mtk_sip_svc.h |   55 ++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+ Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
-new file mode 100644
-index 0000000..ac73f68
---- /dev/null
-+++ b/include/linux/soc/mediatek/mtk_sip_svc.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
+diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
+index 2bc89f1..5f40316 100644
+--- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
++++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
+@@ -3,9 +3,12 @@ found in MediaTek SoC family
+ 
+ Required properties:
+ - compatible	    : Should be
+-			"mediatek,mt7622-rng", 	"mediatek,mt7623-rng" : for MT7622
+-			"mediatek,mt7629-rng",  "mediatek,mt7623-rng" : for MT7629
+-			"mediatek,mt7623-rng" : for MT7623
++			"mediatek,mt7622-rng", "mediatek,mt7623-rng" for MT7622
++			"mediatek,mt7629-rng", "mediatek,mt7623-rng" for MT7629
++			"mediatek,mt7623-rng" for MT7623
++			"mediatek,mt67xx-rng" for MT67xx ARMv8 SoCs
 +
-+#ifndef _MTK_SECURE_API_H_
-+#define _MTK_SECURE_API_H_
++Optional properties:
+ - clocks	    : list of clock specifiers, corresponding to
+ 		      entries in clock-names property;
+ - clock-names	    : Should contain "rng" entries;
+@@ -19,3 +22,7 @@ rng: rng@1020f000 {
+ 	clocks = <&infracfg CLK_INFRA_TRNG>;
+ 	clock-names = "rng";
+ };
 +
-+#include <linux/kernel.h>
-+
-+
-+/* Error Code */
-+#define SIP_SVC_E_SUCCESS			0
-+#define SIP_SVC_E_NOT_SUPPORTED			-1
-+#define SIP_SVC_E_INVALID_PARAMS		-2
-+#define SIP_SVC_E_INVALID_RANGE			-3
-+#define SIP_SVC_E_PERMISSION_DENY		-4
-+
-+#ifdef CONFIG_ARM64
-+#define MTK_SIP_SMC_AARCH_BIT			0x40000000
-+#else
-+#define MTK_SIP_SMC_AARCH_BIT			0x00000000
-+#endif
-+
-+
-+/*******************************************************************************
-+ * Defines for Mediatek runtime services func ids
-+ ******************************************************************************/
-+
-+/* Debug feature and ATF related SMC call */
-+
-+/* CPU operations related SMC call */
-+
-+/* SPM related SMC call */
-+
-+/* Low power related SMC call */
-+
-+/* AMMS related SMC call */
-+
-+/* Security related SMC call */
-+/* HWRNG */
-+#define MTK_SIP_KERNEL_GET_RND \
-+	(0x82000206 | MTK_SIP_SMC_AARCH_BIT)
-+
-+/* Storage Encryption related SMC call */
-+
-+/* Platform related SMC call */
-+
-+/* Pheripheral related SMC call */
-+
-+/* MM related SMC call */
-+
-+
-+#endif /* _MTK_SECURE_API_H_ */
-+
++hwrng: hwrng {
++	compatible = "mediatek,mt67xx-rng";
++};
 -- 
 1.7.9.5
