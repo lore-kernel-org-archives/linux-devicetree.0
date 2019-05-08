@@ -1,88 +1,66 @@
-From: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Subject: [RFC 3/3] dt-bindings: net: dsa: document additional Microchip KSZ8863 family switches
-Date: Wed,  8 May 2019 23:13:30 +0200
-Message-ID: <20190508211330.19328-4-m.grzeschik@pengutronix.de>
-References: <20190508211330.19328-1-m.grzeschik@pengutronix.de>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190508211330.19328-1-m.grzeschik@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Tristram.Ha@microchip.com
-Cc: kernel@pengutronix.de, UNGLinuxDriver@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v4] clk: gcc-qcs404: Add PCIe resets
+Date: Wed,  8 May 2019 15:39:22 -0700
+Message-ID: <20190508223922.5609-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document additional Microchip KSZ8863 family switches.
+Enabling PCIe requires several of the PCIe related resets from GCC, so
+add them all.
 
-Show how KSZ8863 switch should be configured as the host port is port 3.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../devicetree/bindings/net/dsa/ksz.txt       | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-index e7db7268fd0fd..4ac576e1cc34e 100644
---- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-@@ -5,6 +5,8 @@ Required properties:
+Changes since v3:
+- Fix rebase mistake in v2
+
+Changes since v2:
+- Rebase patch
+
+ drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
+ include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+index a54807eb3b28..29cf464dd2c8 100644
+--- a/drivers/clk/qcom/gcc-qcs404.c
++++ b/drivers/clk/qcom/gcc-qcs404.c
+@@ -2766,6 +2766,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
+ 	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
+ 	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
+ 	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
++	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = { 0x3e040, 6},
++	[GCC_PCIE_0_AHB_ARES] = { 0x3e040, 5 },
++	[GCC_PCIE_0_AXI_SLAVE_ARES] = { 0x3e040, 4 },
++	[GCC_PCIE_0_AXI_MASTER_ARES] = { 0x3e040, 3 },
++	[GCC_PCIE_0_CORE_STICKY_ARES] = { 0x3e040, 2 },
++	[GCC_PCIE_0_SLEEP_ARES] = { 0x3e040, 1 },
++	[GCC_PCIE_0_PIPE_ARES] = { 0x3e040, 0 },
+ 	[GCC_EMAC_BCR] = { 0x4e000 },
+ };
  
- - compatible: For external switch chips, compatible string must be exactly one
-   of the following:
-+  - "microchip,ksz8863"
-+  - "microchip,ksz8873"
-   - "microchip,ksz9477"
-   - "microchip,ksz9897"
-   - "microchip,ksz9896"
-@@ -31,6 +33,48 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
- 		};
- 	};
+diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+index 454b3f43f538..2cd62c98561f 100644
+--- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
++++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+@@ -166,5 +166,12 @@
+ #define GCC_PCIEPHY_0_PHY_BCR				12
+ #define GCC_EMAC_BCR					13
+ #define GCC_CDSP_RESTART				14
++#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		15
++#define GCC_PCIE_0_AHB_ARES				16
++#define GCC_PCIE_0_AXI_SLAVE_ARES			17
++#define GCC_PCIE_0_AXI_MASTER_ARES			18
++#define GCC_PCIE_0_CORE_STICKY_ARES			19
++#define GCC_PCIE_0_SLEEP_ARES				20
++#define GCC_PCIE_0_PIPE_ARES				21
  
-+	mdio0: mdio-gpio {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_mdio_1>;
-+		compatible = "virtual,mdio-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		gpios = <&gpio1 31 0 &gpio1 22 0>;
-+
-+		ksz8863@3 {
-+			compatible = "microchip,ksz8863";
-+			interrupt-parrent = <&gpio3>;
-+			interrupt = <30 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ports@0 {
-+					reg = <0>;
-+					label = "lan1";
-+				};
-+
-+				ports@1 {
-+					reg = <1>;
-+					label = "lan2";
-+				};
-+
-+				ports@2 {
-+					reg = <2>;
-+					label = "cpu";
-+					ethernet = <&eth0>;
-+
-+					fixed-link {
-+						speed = <100>;
-+						full-duplex;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	spi1: spi@f8008000 {
- 		pinctrl-0 = <&pinctrl_spi_ksz>;
- 		cs-gpios = <&pioC 25 0>;
+ #endif
 -- 
-2.20.1
+2.18.0
