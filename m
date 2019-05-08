@@ -1,48 +1,30 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v4 02/10] dt-bindings: doc: reflect new NVMEM
- of_get_mac_address behaviour
-Date: Wed, 8 May 2019 10:41:52 +0200
-Message-ID: <20190508084152.GM81826@meh.true.cz>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <1556893635-18549-3-git-send-email-ynezz@true.cz>
- <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 1/4] dt-bindings: fsl: scu: add ocotp binding
+Date: Wed, 8 May 2019 08:55:05 +0000
+Message-ID: <AM0PR04MB42115A523D5CD5FFF8144F0C80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190508030927.16668-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
+In-Reply-To: <20190508030927.16668-1-peng.fan@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <sriniv>
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh+dt@kernel.org> [2019-05-07 11:44:57]:
-
-Hi,
-
-> > -- local-mac-address:   the driver is designed to use the of_get_mac_address api
-> > -                       only if efuse-mac is 0. When efuse-mac is 0, the MAC
-> > -                       address is obtained from local-mac-address. If this
-> > -                       attribute is not present, then the driver will use a
-> > -                       random MAC address.
-> >  - "netcp-device label":        phandle to the device specification for each of NetCP
-> >                         sub-module attached to this interface.
-> >
-> > +The MAC address will be determined using the optional properties defined in
-> > +ethernet.txt, as provided by the of_get_mac_address API and only if efuse-mac
-> 
-> Don't make references to Linux in bindings. You can talk about
-> expectations of client programs (e.g Linux, u-boot, BSD, etc.) though.
-
-I've just tried to reword what was already there, anyway, did I understood
-your remark properly, would this be more appropriate?
-
- The MAC address will be determined using the optional properties defined in
- ethernet.txt and only if efuse-mac is set to 0. If any of the optional MAC
- address properties are not present, then the driver will use random MAC
- address.
-
-Thanks!
-
--- ynezz
+PiBGcm9tOiBQZW5nIEZhbg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA4LCAyMDE5IDEwOjU2IEFN
+DQo+IA0KPiBOWFAgaS5NWDhRWFAgaXMgYW4gQVJNdjggU29DIHdpdGggYSBDb3J0ZXgtTTQgY29y
+ZSBpbnNpZGUgYXMgc3lzdGVtDQo+IGNvbnRyb2xsZXIoU0NVKSwgdGhlIG9jb3RwIGNvbnRyb2xs
+ZXIgaXMgYmVpbmcgY29udHJvbGxlZCBieSB0aGUgU0NVLCBzbyBMaW51eA0KPiBuZWVkIHVzZSBS
+UEMgdG8gU0NVIGZvciBvY290cCBoYW5kbGluZy4gVGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9j
+IGZvciBpLk1YOA0KPiBTQ1UgT0NPVFAgZHJpdmVyLg0KPiANCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
+b2JoK2R0QGtlcm5lbC5vcmc+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPg0KPiBDYzogQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gQ2M6IFNo
+YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IFVsZiBIYW5zc29uIDx1bGYuaGFu
+c3NvbkBsaW5hcm8ub3JnPg0KPiBDYzogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPg0K
+PiBDYzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5Abnhw
+LmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+
+DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
