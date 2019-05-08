@@ -1,81 +1,75 @@
 Return-Path: <SRS0=Eida=TI=verge.net.au=horms@kernel.org>
-Date: Wed, 8 May 2019 11:45:00 +0200
+Date: Wed, 8 May 2019 11:43:13 +0200
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 09/10] ARM: dts: r7s9210: Add USB Device support
-Message-ID: <20190508094459.aqb4qmnh4qw56a5k@verge.net.au>
+Message-ID: <20190508094313.f7h6b2mwb6ghangp@verge.net.au>
 References: <20190506234631.113226-1-chris.brandt@renesas.com>
  <20190506234631.113226-10-chris.brandt@renesas.com>
- <20190508094313.f7h6b2mwb6ghangp@verge.net.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508094313.f7h6b2mwb6ghangp@verge.net.au>
+In-Reply-To: <20190506234631.113226-10-chris.brandt@renesas.com>
 To: Chris Brandt <chris.brandt@renesas.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, May 08, 2019 at 11:43:13AM +0200, Simon Horman wrote:
-> On Mon, May 06, 2019 at 06:46:30PM -0500, Chris Brandt wrote:
-> > Add USB Device support for RZ/A2.
-> > 
-> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> > ---
-> >  arch/arm/boot/dts/r7s9210.dtsi | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-> > index 1a992e6197c3..67ac746142d0 100644
-> > --- a/arch/arm/boot/dts/r7s9210.dtsi
-> > +++ b/arch/arm/boot/dts/r7s9210.dtsi
-> > @@ -354,6 +354,18 @@
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		usbhs0: usbhs@e8219000 {
-> > +			compatible = "renesas,usbhs-r7s9210","renesas,rza2-usbhs";
+On Mon, May 06, 2019 at 06:46:30PM -0500, Chris Brandt wrote:
+> Add USB Device support for RZ/A2.
 > 
-> Hi Chris,
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  arch/arm/boot/dts/r7s9210.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> please add a space after ",". Likewise below.
-> 
-> Otherwise this patch looks good to me.
+> diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
+> index 1a992e6197c3..67ac746142d0 100644
+> --- a/arch/arm/boot/dts/r7s9210.dtsi
+> +++ b/arch/arm/boot/dts/r7s9210.dtsi
+> @@ -354,6 +354,18 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		usbhs0: usbhs@e8219000 {
+> +			compatible = "renesas,usbhs-r7s9210","renesas,rza2-usbhs";
 
-I meant to say, that it looks good but please address Sergei's feedback.
+Hi Chris,
 
-> 
-> > +			reg = <0xe8219000 0x724>;
-> > +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&cpg CPG_MOD 61>;
-> > +			renesas,buswait = <7>;
-> > +			phys = <&usb2_phy0>;
-> > +			phy-names = "usb";
-> > +			power-domains = <&cpg>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> >  		ohci1: usbhcd@e821a000 {
-> >  			compatible = "generic-ohci";
-> >  			reg = <0xe821a000 0x100>;
-> > @@ -386,6 +398,18 @@
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		usbhs1: usbhs@e821b000 {
-> > +			compatible = "renesas,usbhs-r7s9210","renesas,rza2-usbhs";
-> > +			reg = <0xe821b000 0x724>;
-> > +			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&cpg CPG_MOD 60>;
-> > +			renesas,buswait = <7>;
-> > +			phys = <&usb2_phy1>;
-> > +			phy-names = "usb";
-> > +			power-domains = <&cpg>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> >  		sdhi0: sd@e8228000 {
-> >  			compatible = "renesas,sdhi-r7s9210";
-> >  			reg = <0xe8228000 0x8c0>;
-> > -- 
-> > 2.16.1
-> > 
+please add a space after ",". Likewise below.
+
+Otherwise this patch looks good to me.
+
+> +			reg = <0xe8219000 0x724>;
+> +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 61>;
+> +			renesas,buswait = <7>;
+> +			phys = <&usb2_phy0>;
+> +			phy-names = "usb";
+> +			power-domains = <&cpg>;
+> +			status = "disabled";
+> +		};
+> +
+>  		ohci1: usbhcd@e821a000 {
+>  			compatible = "generic-ohci";
+>  			reg = <0xe821a000 0x100>;
+> @@ -386,6 +398,18 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		usbhs1: usbhs@e821b000 {
+> +			compatible = "renesas,usbhs-r7s9210","renesas,rza2-usbhs";
+> +			reg = <0xe821b000 0x724>;
+> +			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 60>;
+> +			renesas,buswait = <7>;
+> +			phys = <&usb2_phy1>;
+> +			phy-names = "usb";
+> +			power-domains = <&cpg>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sdhi0: sd@e8228000 {
+>  			compatible = "renesas,sdhi-r7s9210";
+>  			reg = <0xe8228000 0x8c0>;
+> -- 
+> 2.16.1
 > 
