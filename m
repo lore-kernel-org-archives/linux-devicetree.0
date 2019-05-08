@@ -1,30 +1,52 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 4/4] arm64: dts: imx: add i.MX8QXP ocotp support
-Date: Wed, 8 May 2019 11:49:06 +0000
-Message-ID: <AM0PR04MB4211A76AA2D65894CCB0F39A80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190508030927.16668-1-peng.fan@nxp.com>
- <20190508030927.16668-4-peng.fan@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD and Regulator due for the
+ v5.2 merge window
+Date: Wed, 8 May 2019 12:51:37 +0100
+Message-ID: <20190508115137.GM31645@dell>
+References: <20190505154325.30026-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508030927.16668-4-peng.fan@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190505154325.30026-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBQZW5nIEZhbg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA4LCAyMDE5IDEwOjU2IEFN
-DQo+IA0KPiBBZGQgaS5NWDhRWFAgb2NvdHAgbm9kZQ0KPiANCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
-b2JoK2R0QGtlcm5lbC5vcmc+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBDYzogU2FzY2hh
-IEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBDYzogUGVuZ3V0cm9uaXggS2VybmVs
-IFRlYW0gPGtlcm5lbEBwZW5ndXRyb25peC5kZT4NCj4gQ2M6IEZhYmlvIEVzdGV2YW0gPGZlc3Rl
-dmFtQGdtYWlsLmNvbT4NCj4gQ2M6IE5YUCBMaW51eCBUZWFtIDxsaW51eC1pbXhAbnhwLmNvbT4N
-Cj4gQ2M6IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+IENjOiBBbnNvbiBI
-dWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IERhbmllbCBCYWx1dGEgPGRhbmllbC5i
-YWx1dGFAbnhwLmNvbT4NCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogUGVu
-ZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFp
-c2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg==
+Enjoy!
+
+The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
+
+  Linux 5.1 (2019-05-05 17:42:58 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v5.2
+
+for you to fetch changes up to 744b13107d0d2ec36c5293d7b59129d3186c9396:
+
+  mfd: max77620: Provide system power-off functionality (2019-05-08 12:50:14 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and Regulator due for the v5.2 merge window
+
+----------------------------------------------------------------
+Dmitry Osipenko (5):
+      dt-bindings: mfd: max77620: Add compatible for Maxim 77663
+      dt-bindings: mfd: max77620: Add system-power-controller property
+      mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
+      mfd: max77620: Support Maxim 77663
+      mfd: max77620: Provide system power-off functionality
+
+ Documentation/devicetree/bindings/mfd/max77620.txt |  9 ++-
+ drivers/mfd/max77620.c                             | 87 +++++++++++++++++++++-
+ include/linux/mfd/max77620.h                       |  5 +-
+ 3 files changed, 97 insertions(+), 4 deletions(-)
+ 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
