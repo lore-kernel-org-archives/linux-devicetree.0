@@ -1,56 +1,37 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-Date: Wed, 8 May 2019 12:19:04 +0200
-Message-ID: <CAJKOXPc2Swoi+xc_=QTMdY8p2DTtf5SprpfMFC6B9QCNUtxm-w@mail.gmail.com>
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
- <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
- <20190507170422.GA25179@bogus> <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
- <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/3] mfd: axp20x: add USB power supply mfd cell to AXP803
+Date: Wed, 8 May 2019 11:25:08 +0100
+Message-ID: <20190508102508.GH3995@dell>
+References: <20190418161804.17723-1-wens@kernel.org>
+ <20190418161804.17723-2-wens@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190418161804.17723-2-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 8 May 2019 at 11:45, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
->
-> On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
-> > On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
-> >>> +- devfreq-events : phandles of the PPMU events used by the controller.
-> >>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
-> >>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
-> >>
-> >> Looks like a hack. Can't you get this from the clocks property? What is
-> >> this for?
-> >
-> > Hi Rob,
-> >
-> > Lukasz uses these two syscon regmaps to read certain registers. For
-> > chipid he reads it to check the size of attached memory (only 2 GB
-> > version is supported). This indeed looks like a hack. However the
-> > second regmap (clk) is needed to get the timing data from registers
-> > from DMC clock driver address space. These are registers with memory
-> > timing so their data is not exposed anyway in common clk framework.
-> >
-> > Best regards,
-> > Krzysztof
->
-> Thank you Krzysztof for a fast response. I have also responded to Rob.
-> I wouldn't call accessing chipid registers as a hack, though. The DMC
-> registers do not contain information about the memory chip since it is
-> in phase of production the board not the chip. Thus, chipid regs (which
-> loads from e-fuses) are best place to put information about memory
-> type/size.
+On Fri, 19 Apr 2019, Chen-Yu Tsai wrote:
 
-By hack I meant that you have to read chipid instead of DTS... but as
-you pointed, the DTS could not match the real fused values so actually
-it makes sense to read them.
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The AXP803 has a VBUS power input. Its functionality is the same as the
+> one found in the AXP813. Now that the axp20x_usb_power driver supports
+> this variant, we can add an mfd cell for it to use it.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/mfd/axp20x.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Best regards,
-Krzysztof
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
