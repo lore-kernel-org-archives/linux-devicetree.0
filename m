@@ -1,41 +1,76 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v3] arm64: dts: ls1028a: Add USB dt nodes
-Date: Wed, 8 May 2019 06:46:37 +0000
-Message-ID: <20190508064814.14223-1-ran.wang_1@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/4] dt-bindings: spi: Add YAML schemas for the generic
+ SPI options
+Date: Wed, 8 May 2019 09:02:17 +0200
+Message-ID: <CAMuHMdX7KjJf4yDiEBBXLogHGbo9LcfTM5TvCHAXu_0Bvf0uzA@mail.gmail.com>
+References: <b7a6095a5c900fa23cc54d1ccd8e8ef0ccf6e788.1557236840.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqKeLWgGLafwbKViTgpw4B=W9YGULaMr8h0p_rWX8PP_UQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKeLWgGLafwbKViTgpw4B=W9YGULaMr8h0p_rWX8PP_UQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-spi <linux-spi@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIFVTQiBkdCBub2RlcyBmb3IgTFMxMDI4QS4NCg0KU2lnbmVkLW9mZi1i
-eTogUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhwLmNvbT4NCi0tLQ0KQ2hhbmdlcyBpbiB2MzoNCiAg
-LSBBZGQgc3BhY2UgYmV0d2VlbiBsYWJlbCBhbmQgbm9kZSBuYW1lLg0KICAtIEFkZCBzcGNhZSB3
-aXRoIHByb3BlcnRpZXMgYW5kICc9Jy4NCiAgLSBBZGQgU29DIHNwZWNpZmljIGNvbXBhdGlibGUu
-DQoNCkNoYW5nZXMgaW4gdjI6DQogIC0gUmVuYW1lIG5vZGUgZnJvbSB1c2IzQC4uLiB0byB1c2JA
-Li4uIHRvIG1lZXQgRFRTcGVjDQoNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDI4YS5kdHNpIHwgICAyMCArKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZXMgY2hhbmdl
-ZCwgMjAgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQppbmRleCA4ZGQzNTAxLi4xOTUxOWRm
-IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEu
-ZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
-aQ0KQEAgLTE0NCw2ICsxNDQsMjYgQEANCiAJCQljbG9ja3MgPSA8JnN5c2Nsaz47DQogCQl9Ow0K
-IA0KKwkJdXNiMDogdXNiQDMxMDAwMDAgew0KKwkJCWNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEt
-ZHdjMyIsICJzbnBzLGR3YzMiOw0KKwkJCXJlZyA9IDwweDAgMHgzMTAwMDAwIDB4MCAweDEwMDAw
-PjsNCisJCQlpbnRlcnJ1cHRzID0gPDAgODAgMHg0PjsNCisJCQlkcl9tb2RlID0gImhvc3QiOw0K
-KwkJCXNucHMsZGlzX3J4ZGV0X2lucDNfcXVpcms7DQorCQkJc25wcyxxdWlyay1mcmFtZS1sZW5n
-dGgtYWRqdXN0bWVudCA9IDwweDIwPjsNCisJCQlzbnBzLGluY3ItYnVyc3QtdHlwZS1hZGp1c3Rt
-ZW50ID0gPDE+LCA8ND4sIDw4PiwgPDE2PjsNCisJCX07DQorDQorCQl1c2IxOiB1c2JAMzExMDAw
-MCB7DQorCQkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1kd2MzIiwgInNucHMsZHdjMyI7DQor
-CQkJcmVnID0gPDB4MCAweDMxMTAwMDAgMHgwIDB4MTAwMDA+Ow0KKwkJCWludGVycnVwdHMgPSA8
-MCA4MSAweDQ+Ow0KKwkJCWRyX21vZGUgPSAiaG9zdCI7DQorCQkJc25wcyxkaXNfcnhkZXRfaW5w
-M19xdWlyazsNCisJCQlzbnBzLHF1aXJrLWZyYW1lLWxlbmd0aC1hZGp1c3RtZW50ID0gPDB4MjA+
-Ow0KKwkJCXNucHMsaW5jci1idXJzdC10eXBlLWFkanVzdG1lbnQgPSA8MT4sIDw0PiwgPDg+LCA8
-MTY+Ow0KKwkJfTsNCisNCiAJCWkyYzA6IGkyY0AyMDAwMDAwIHsNCiAJCQljb21wYXRpYmxlID0g
-ImZzbCx2ZjYxMC1pMmMiOw0KIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KLS0gDQoxLjcuMQ0K
-DQo=
+On Tue, May 7, 2019 at 4:35 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Tue, May 7, 2019 at 8:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > The SPI controllers have a bunch of generic options that are needed in a
+> > device tree. Add a YAML schemas for those.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+> > index 1f6e86f787ef..000000000000
+> > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > +++ /dev/null
+
+> > -In master mode, the SPI controller node requires the following additional
+> > -properties:
+> > -- #address-cells  - number of cells required to define a chip select
+> > -               address on the SPI bus.
+> > -- #size-cells     - should be zero.
+> > -
+> > -In slave mode, the SPI controller node requires one additional property:
+> > -- spi-slave       - Empty property.
+
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+
+> > +  spi-slave:
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+>
+> "type: boolean" is sufficient here. Maybe we should just remove
+> 'flag'. OTOH, maybe consistency with other types and the abstraction
+> is better as we could add to the flag schema.
+>
+> > +    description:
+> > +      The SPI controller acts as a slave, instead of a master.
+> > +
+> > +required:
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+>
+> Only if there are child nodes...
+
+... and spi-slave is not present.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
