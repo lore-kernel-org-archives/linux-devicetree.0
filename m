@@ -1,66 +1,25 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4] clk: gcc-qcs404: Add PCIe resets
-Date: Wed,  8 May 2019 15:39:22 -0700
-Message-ID: <20190508223922.5609-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v4 0/3] arm64: dts: qcom: qcs404: Enable PCIe
+Date: Wed,  8 May 2019 15:43:06 -0700
+Message-ID: <20190508224309.5744-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enabling PCIe requires several of the PCIe related resets from GCC, so
-add them all.
+This series defines the PCIe PHY and controller on QCS404 and enable them for
+EVB. This was 1 commit, but per Vinod's request its split up in its individual
+pieces.
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Bjorn Andersson (3):
+  arm64: dts: qcom: qcs404: Make gcc as reset-controller
+  arm64: dts: qcom: qcs404: Add PCIe related nodes
+  arm64: dts: qcom: qcs404-evb: Enable PCIe
 
-Changes since v3:
-- Fix rebase mistake in v2
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 26 ++++++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi     | 66 ++++++++++++++++++++++++
+ 2 files changed, 92 insertions(+)
 
-Changes since v2:
-- Rebase patch
-
- drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
- include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
- 2 files changed, 14 insertions(+)
-
-diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-index a54807eb3b28..29cf464dd2c8 100644
---- a/drivers/clk/qcom/gcc-qcs404.c
-+++ b/drivers/clk/qcom/gcc-qcs404.c
-@@ -2766,6 +2766,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
- 	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
- 	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
- 	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
-+	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = { 0x3e040, 6},
-+	[GCC_PCIE_0_AHB_ARES] = { 0x3e040, 5 },
-+	[GCC_PCIE_0_AXI_SLAVE_ARES] = { 0x3e040, 4 },
-+	[GCC_PCIE_0_AXI_MASTER_ARES] = { 0x3e040, 3 },
-+	[GCC_PCIE_0_CORE_STICKY_ARES] = { 0x3e040, 2 },
-+	[GCC_PCIE_0_SLEEP_ARES] = { 0x3e040, 1 },
-+	[GCC_PCIE_0_PIPE_ARES] = { 0x3e040, 0 },
- 	[GCC_EMAC_BCR] = { 0x4e000 },
- };
- 
-diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-index 454b3f43f538..2cd62c98561f 100644
---- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-+++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-@@ -166,5 +166,12 @@
- #define GCC_PCIEPHY_0_PHY_BCR				12
- #define GCC_EMAC_BCR					13
- #define GCC_CDSP_RESTART				14
-+#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		15
-+#define GCC_PCIE_0_AHB_ARES				16
-+#define GCC_PCIE_0_AXI_SLAVE_ARES			17
-+#define GCC_PCIE_0_AXI_MASTER_ARES			18
-+#define GCC_PCIE_0_CORE_STICKY_ARES			19
-+#define GCC_PCIE_0_SLEEP_ARES				20
-+#define GCC_PCIE_0_PIPE_ARES				21
- 
- #endif
 -- 
 2.18.0
