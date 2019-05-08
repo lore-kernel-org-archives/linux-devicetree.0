@@ -1,366 +1,142 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: at91-usart: add DMA support" to the spi tree
-Date: Wed,  8 May 2019 10:08:57 +0100 (BST)
-Message-ID: <20190508090857.1B5D444003B@finisterre.sirena.org.uk>
-References: <20190505180646.1442-3-radu_nicolae.pirea@upb.ro>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+Date: Wed, 8 May 2019 11:17:43 +0200
+Message-ID: <fdcbad67-65c8-36f4-1473-e2c46ccc431a@partner.samsung.com>
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
+        <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+        <20190507170422.GA25179@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190505180646.1442-3-radu_nicolae.pirea@upb.ro>
+In-Reply-To: <20190507170422.GA25179@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Genoud <richard.genoud@gmail.com>, Rob Herring <robh+dt@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Rob,
 
-   spi: at91-usart: add DMA support
+On 5/7/19 7:04 PM, Rob Herring wrote:
+> On Mon, May 06, 2019 at 05:11:55PM +0200, Lukasz Luba wrote:
+>> The patch adds description for DT binding for a new Exynos5422 Dynamic
+>> Memory Controller device.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   .../bindings/memory-controllers/exynos5422-dmc.txt | 74 ++++++++++++++++++++++
+>>   1 file changed, 74 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> new file mode 100644
+>> index 0000000..be602a9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> @@ -0,0 +1,74 @@
+>> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+>> +
+>> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+>> +memory chips are connected. The driver is to monitor the controller in runtime
+>> +and switch frequency and voltage. To monitor the usage of the controller in
+>> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+>> +is able to measure the current load of the memory.
+>> +When 'userspace' governor is used for the driver, an application is able to
+>> +switch the DMC and memory frequency.
+>> +
+>> +Required properties for DMC device for Exynos5422:
+>> +- compatible: Should be "samsung,exynos5422-dmc".
+>> +- clock-names : the name of clock used by the controller.
+>> +- clocks : phandles for clock specified in "clock-names" property.
+> 
+> Need to enumerate the clocks and their order.
+OK I will add a list here and above in 'clock-names' in the right order.
+> 
+>> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+>> +- vdd-supply : phandle for voltage regulator which is connected.
+>> +- reg : registers of two CDREX controllers.
+>> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+>> +- device-handle : phandle of the connected DRAM memory device. For more
+>> +	information please refer to Documentation
+> 
+> Documentation... ?
+I should have changed it after I moved the lpddr3.txt files in the doc
+dir. I missed it, my apologies.
+> 
+>> +- devfreq-events : phandles of the PPMU events used by the controller.
+>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
+>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+> 
+> Looks like a hack. Can't you get this from the clocks property? What is
+> this for?
+As Krzysztof commented in the next message, the chipid register contains
+information about memory size and the clock register set has some
+registers from DMC (timings settings) which are not typical 'clocks'.
+Chanwoo suggested to use syscon regmap to access these clock registers
+safely. Krzysztof suggested to use syscon regmap similar to Sylwester's
+AVS driver while accessing chipid registers.
+That's why they are here. Both register sets contain needed information
+for proper operation of the driver.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c3fdefc2d79e38d20e955d2d3ad48261d99c2936 Mon Sep 17 00:00:00 2001
-From: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Date: Sun, 5 May 2019 21:06:46 +0300
-Subject: [PATCH] spi: at91-usart: add DMA support
-
-This patch adds support for DMA. Transfers are done with dma only if
-they are longer than 16 bytes in order to achieve a better performance.
-DMA setup introduces a little overhead and for transfers shorter than 16
-bytes there is no performance improvement.
-
-Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-at91-usart.c | 221 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 219 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
-index f763e14bdf12..a40bb2ef89dc 100644
---- a/drivers/spi/spi-at91-usart.c
-+++ b/drivers/spi/spi-at91-usart.c
-@@ -8,9 +8,12 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-direction.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_platform.h>
- #include <linux/of_gpio.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-@@ -59,6 +62,8 @@
- 
- #define US_INIT \
- 	(US_MR_SPI_MASTER | US_MR_CHRL | US_MR_CLKO | US_MR_WRDBT)
-+#define US_DMA_MIN_BYTES       16
-+#define US_DMA_TIMEOUT         (msecs_to_jiffies(1000))
- 
- /* Register access macros */
- #define at91_usart_spi_readl(port, reg) \
-@@ -72,14 +77,19 @@
- 	writeb_relaxed((value), (port)->regs + US_##reg)
- 
- struct at91_usart_spi {
-+	struct platform_device  *mpdev;
- 	struct spi_transfer	*current_transfer;
- 	void __iomem		*regs;
- 	struct device		*dev;
- 	struct clk		*clk;
- 
-+	struct completion	xfer_completion;
-+
- 	/*used in interrupt to protect data reading*/
- 	spinlock_t		lock;
- 
-+	phys_addr_t		phybase;
-+
- 	int			irq;
- 	unsigned int		current_tx_remaining_bytes;
- 	unsigned int		current_rx_remaining_bytes;
-@@ -88,8 +98,182 @@ struct at91_usart_spi {
- 	u32			status;
- 
- 	bool			xfer_failed;
-+	bool			use_dma;
- };
- 
-+static void dma_callback(void *data)
-+{
-+	struct spi_controller   *ctlr = data;
-+	struct at91_usart_spi   *aus = spi_master_get_devdata(ctlr);
-+
-+	at91_usart_spi_writel(aus, IER, US_IR_RXRDY);
-+	aus->current_rx_remaining_bytes = 0;
-+	complete(&aus->xfer_completion);
-+}
-+
-+static bool at91_usart_spi_can_dma(struct spi_controller *ctrl,
-+				   struct spi_device *spi,
-+				   struct spi_transfer *xfer)
-+{
-+	struct at91_usart_spi *aus = spi_master_get_devdata(ctrl);
-+
-+	return aus->use_dma && xfer->len >= US_DMA_MIN_BYTES;
-+}
-+
-+static int at91_usart_spi_configure_dma(struct spi_controller *ctlr,
-+					struct at91_usart_spi *aus)
-+{
-+	struct dma_slave_config slave_config;
-+	struct device *dev = &aus->mpdev->dev;
-+	phys_addr_t phybase = aus->phybase;
-+	dma_cap_mask_t mask;
-+	int err = 0;
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+
-+	ctlr->dma_tx = dma_request_slave_channel_reason(dev, "tx");
-+	if (IS_ERR_OR_NULL(ctlr->dma_tx)) {
-+		if (IS_ERR(ctlr->dma_tx)) {
-+			err = PTR_ERR(ctlr->dma_tx);
-+			goto at91_usart_spi_error_clear;
-+		}
-+
-+		dev_dbg(dev,
-+			"DMA TX channel not available, SPI unable to use DMA\n");
-+		err = -EBUSY;
-+		goto at91_usart_spi_error_clear;
-+	}
-+
-+	ctlr->dma_rx = dma_request_slave_channel_reason(dev, "rx");
-+	if (IS_ERR_OR_NULL(ctlr->dma_rx)) {
-+		if (IS_ERR(ctlr->dma_rx)) {
-+			err = PTR_ERR(ctlr->dma_rx);
-+			goto at91_usart_spi_error;
-+		}
-+
-+		dev_dbg(dev,
-+			"DMA RX channel not available, SPI unable to use DMA\n");
-+		err = -EBUSY;
-+		goto at91_usart_spi_error;
-+	}
-+
-+	slave_config.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	slave_config.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	slave_config.dst_addr = (dma_addr_t)phybase + US_THR;
-+	slave_config.src_addr = (dma_addr_t)phybase + US_RHR;
-+	slave_config.src_maxburst = 1;
-+	slave_config.dst_maxburst = 1;
-+	slave_config.device_fc = false;
-+
-+	slave_config.direction = DMA_DEV_TO_MEM;
-+	if (dmaengine_slave_config(ctlr->dma_rx, &slave_config)) {
-+		dev_err(&ctlr->dev,
-+			"failed to configure rx dma channel\n");
-+		err = -EINVAL;
-+		goto at91_usart_spi_error;
-+	}
-+
-+	slave_config.direction = DMA_MEM_TO_DEV;
-+	if (dmaengine_slave_config(ctlr->dma_tx, &slave_config)) {
-+		dev_err(&ctlr->dev,
-+			"failed to configure tx dma channel\n");
-+		err = -EINVAL;
-+		goto at91_usart_spi_error;
-+	}
-+
-+	aus->use_dma = true;
-+	return 0;
-+
-+at91_usart_spi_error:
-+	if (!IS_ERR_OR_NULL(ctlr->dma_tx))
-+		dma_release_channel(ctlr->dma_tx);
-+	if (!IS_ERR_OR_NULL(ctlr->dma_rx))
-+		dma_release_channel(ctlr->dma_rx);
-+	ctlr->dma_tx = NULL;
-+	ctlr->dma_rx = NULL;
-+
-+at91_usart_spi_error_clear:
-+	return err;
-+}
-+
-+static void at91_usart_spi_release_dma(struct spi_controller *ctlr)
-+{
-+	if (ctlr->dma_rx)
-+		dma_release_channel(ctlr->dma_rx);
-+	if (ctlr->dma_tx)
-+		dma_release_channel(ctlr->dma_tx);
-+}
-+
-+static void at91_usart_spi_stop_dma(struct spi_controller *ctlr)
-+{
-+	if (ctlr->dma_rx)
-+		dmaengine_terminate_all(ctlr->dma_rx);
-+	if (ctlr->dma_tx)
-+		dmaengine_terminate_all(ctlr->dma_tx);
-+}
-+
-+static int at91_usart_spi_dma_transfer(struct spi_controller *ctlr,
-+				       struct spi_transfer *xfer)
-+{
-+	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
-+	struct dma_chan	 *rxchan = ctlr->dma_rx;
-+	struct dma_chan *txchan = ctlr->dma_tx;
-+	struct dma_async_tx_descriptor *rxdesc;
-+	struct dma_async_tx_descriptor *txdesc;
-+	dma_cookie_t cookie;
-+
-+	/* Disable RX interrupt */
-+	at91_usart_spi_writel(aus, IDR, US_IR_RXRDY);
-+
-+	rxdesc = dmaengine_prep_slave_sg(rxchan,
-+					 xfer->rx_sg.sgl,
-+					 xfer->rx_sg.nents,
-+					 DMA_DEV_TO_MEM,
-+					 DMA_PREP_INTERRUPT |
-+					 DMA_CTRL_ACK);
-+	if (!rxdesc)
-+		goto at91_usart_spi_err_dma;
-+
-+	txdesc = dmaengine_prep_slave_sg(txchan,
-+					 xfer->tx_sg.sgl,
-+					 xfer->tx_sg.nents,
-+					 DMA_MEM_TO_DEV,
-+					 DMA_PREP_INTERRUPT |
-+					 DMA_CTRL_ACK);
-+	if (!txdesc)
-+		goto at91_usart_spi_err_dma;
-+
-+	rxdesc->callback = dma_callback;
-+	rxdesc->callback_param = ctlr;
-+
-+	cookie = rxdesc->tx_submit(rxdesc);
-+	if (dma_submit_error(cookie))
-+		goto at91_usart_spi_err_dma;
-+
-+	cookie = txdesc->tx_submit(txdesc);
-+	if (dma_submit_error(cookie))
-+		goto at91_usart_spi_err_dma;
-+
-+	rxchan->device->device_issue_pending(rxchan);
-+	txchan->device->device_issue_pending(txchan);
-+
-+	return 0;
-+
-+at91_usart_spi_err_dma:
-+	/* Enable RX interrupt if something fails and fallback to PIO */
-+	at91_usart_spi_writel(aus, IER, US_IR_RXRDY);
-+	at91_usart_spi_stop_dma(ctlr);
-+
-+	return -ENOMEM;
-+}
-+
-+static unsigned long at91_usart_spi_dma_timeout(struct at91_usart_spi *aus)
-+{
-+	return wait_for_completion_timeout(&aus->xfer_completion,
-+					   US_DMA_TIMEOUT);
-+}
-+
- static inline u32 at91_usart_spi_tx_ready(struct at91_usart_spi *aus)
- {
- 	return aus->status & US_IR_TXRDY;
-@@ -216,6 +400,8 @@ static int at91_usart_spi_transfer_one(struct spi_controller *ctlr,
- 				       struct spi_transfer *xfer)
- {
- 	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
-+	unsigned long dma_timeout = 0;
-+	int ret = 0;
- 
- 	at91_usart_spi_set_xfer_speed(aus, xfer);
- 	aus->xfer_failed = false;
-@@ -225,8 +411,25 @@ static int at91_usart_spi_transfer_one(struct spi_controller *ctlr,
- 
- 	while ((aus->current_tx_remaining_bytes ||
- 		aus->current_rx_remaining_bytes) && !aus->xfer_failed) {
--		at91_usart_spi_read_status(aus);
--		at91_usart_spi_tx(aus);
-+		reinit_completion(&aus->xfer_completion);
-+		if (at91_usart_spi_can_dma(ctlr, spi, xfer) &&
-+		    !ret) {
-+			ret = at91_usart_spi_dma_transfer(ctlr, xfer);
-+			if (ret)
-+				continue;
-+
-+			dma_timeout = at91_usart_spi_dma_timeout(aus);
-+
-+			if (WARN_ON(dma_timeout == 0)) {
-+				dev_err(&spi->dev, "DMA transfer timeout\n");
-+				return -EIO;
-+			}
-+			aus->current_tx_remaining_bytes = 0;
-+		} else {
-+			at91_usart_spi_read_status(aus);
-+			at91_usart_spi_tx(aus);
-+		}
-+
- 		cpu_relax();
- 	}
- 
-@@ -345,6 +548,7 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
- 	controller->transfer_one = at91_usart_spi_transfer_one;
- 	controller->prepare_message = at91_usart_spi_prepare_message;
- 	controller->unprepare_message = at91_usart_spi_unprepare_message;
-+	controller->can_dma = at91_usart_spi_can_dma;
- 	controller->cleanup = at91_usart_spi_cleanup;
- 	controller->max_speed_hz = DIV_ROUND_UP(clk_get_rate(clk),
- 						US_MIN_CLK_DIV);
-@@ -376,7 +580,17 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
- 	aus->spi_clk = clk_get_rate(clk);
- 	at91_usart_spi_init(aus);
- 
-+	aus->phybase = regs->start;
-+
-+	aus->mpdev = to_platform_device(pdev->dev.parent);
-+
-+	ret = at91_usart_spi_configure_dma(controller, aus);
-+	if (ret)
-+		goto at91_usart_fail_dma;
-+
- 	spin_lock_init(&aus->lock);
-+	init_completion(&aus->xfer_completion);
-+
- 	ret = devm_spi_register_master(&pdev->dev, controller);
- 	if (ret)
- 		goto at91_usart_fail_register_master;
-@@ -389,6 +603,8 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
- 	return 0;
- 
- at91_usart_fail_register_master:
-+	at91_usart_spi_release_dma(controller);
-+at91_usart_fail_dma:
- 	clk_disable_unprepare(clk);
- at91_usart_spi_probe_fail:
- 	spi_master_put(controller);
-@@ -453,6 +669,7 @@ static int at91_usart_spi_remove(struct platform_device *pdev)
- 	struct spi_controller *ctlr = platform_get_drvdata(pdev);
- 	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
- 
-+	at91_usart_spi_release_dma(ctlr);
- 	clk_disable_unprepare(aus->clk);
- 
- 	return 0;
--- 
-2.20.1
+Regards,
+Lukasz
+> 
+>> +
+>> +Example:
+>> +
+>> +	ppmu_dmc0_0: ppmu@10d00000 {
+>> +		compatible = "samsung,exynos-ppmu";
+>> +		reg = <0x10d00000 0x2000>;
+>> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+>> +		clock-names = "ppmu";
+>> +		events {
+>> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+>> +				event-name = "ppmu-event3-dmc0_0";
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	dmc: memory-controller@10c20000 {
+>> +		compatible = "samsung,exynos5422-dmc";
+>> +		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
+>> +		clocks = 	<&clock CLK_FOUT_SPLL>,
+>> +				<&clock CLK_MOUT_SCLK_SPLL>,
+>> +				<&clock CLK_FF_DOUT_SPLL2>,
+>> +				<&clock CLK_FOUT_BPLL>,
+>> +				<&clock CLK_MOUT_BPLL>,
+>> +				<&clock CLK_SCLK_BPLL>,
+>> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>> +				<&clock CLK_MOUT_MCLK_CDREX>,
+>> +				<&clock CLK_DOUT_CLK2X_PHY0>,
+>> +				<&clock CLK_CLKM_PHY0>,
+>> +				<&clock CLK_CLKM_PHY1>;
+>> +		clock-names =	"fout_spll",
+>> +				"mout_sclk_spll",
+>> +				"ff_dout_spll2",
+>> +				"fout_bpll",
+>> +				"mout_bpll",
+>> +				"sclk_bpll",
+>> +				"mout_mx_mspll_ccore",
+>> +				"mout_mx_mspll_ccore_phy",
+>> +				"mout_mclk_cdrex",
+>> +				"dout_clk2x_phy0",
+>> +				"clkm_phy0",
+>> +			        "clkm_phy1";
+>> +		operating-points-v2 = <&dmc_opp_table>;
+>> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+>> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+>> +		operating-points-v2 = <&dmc_opp_table>;
+>> +		device-handle = <&samsung_K3QF2F20DB>;
+>> +		vdd-supply = <&buck1_reg>;
+>> +		samsung,syscon-clk = <&clock>;
+>> +		samsung,syscon-chipid = <&chipid>;
+>> +	};
+>> -- 
+>> 2.7.4
+>>
+> 
+> 
