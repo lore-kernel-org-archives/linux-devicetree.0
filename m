@@ -1,396 +1,75 @@
-From: Ran Bi <ran.bi@mediatek.com>
-Subject: Re: [PATCH v3 08/10] arm64: dts: mt6358: add PMIC MT6358 related
- nodes
-Date: Wed, 8 May 2019 16:00:39 +0800
-Message-ID: <1557302439.22641.4.camel@mhfsdcap03>
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
-         <20190503093117.54830-9-hsin-hsiung.wang@mediatek.com>
+From: allen <allen.chen@ite.com.tw>
+Subject: [PATCH 1/3] dt-bindings: Add binding for IT6505.
+Date: Wed, 8 May 2019 15:48:40 +0800
+Message-ID: <1557301722-20827-2-git-send-email-allen.chen@ite.com.tw>
+References: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190503093117.54830-9-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org
+Cc: Allen Chen <allen.chen@ite.com.tw>, Pi-Hsun Shih <pihsun@chromium.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Koen Kooi <koen@dominion.thruhere.net>, Vladimir Zapolskiy <vz@mleia.com>, Ben Whitten <ben.whitten@gmail.com>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-05-03 at 17:31 +0800, Hsin-Hsiung Wang wrote:
-> add PMIC MT6358 related nodes which is for MT8183 platform
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt6358.dtsi | 358 +++++++++++++++++++++++
->  1 file changed, 358 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-> new file mode 100644
-> index 000000000000..74da59de3794
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-> @@ -0,0 +1,358 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + */
-> +
-> +&pwrap {
-> +	pmic: mt6358 {
-> +		compatible = "mediatek,mt6358";
-> +		interrupt-controller;
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <182 IRQ_TYPE_LEVEL_HIGH>;
-> +		#interrupt-cells = <2>;
-> +
-> +		mt6358codec: mt6358codec {
-> +			compatible = "mediatek,mt6358-sound";
-> +		};
-> +
-> +		mt6358regulator: mt6358regulator {
-> +			compatible = "mediatek,mt6358-regulator";
-> +
-> +			mt6358_vdram1_reg: buck_vdram1 {
-> +				regulator-compatible = "buck_vdram1";
-> +				regulator-name = "vdram1";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <2087500>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-enable-ramp-delay = <0>;
-> +				regulator-always-on;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vcore_reg: buck_vcore {
-> +				regulator-name = "vcore";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <200>;
-> +				regulator-always-on;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vpa_reg: buck_vpa {
-> +				regulator-name = "vpa";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <3650000>;
-> +				regulator-ramp-delay = <50000>;
-> +				regulator-enable-ramp-delay = <250>;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vproc11_reg: buck_vproc11 {
-> +				regulator-name = "vproc11";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <200>;
-> +				regulator-always-on;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vproc12_reg: buck_vproc12 {
-> +				regulator-name = "vproc12";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <200>;
-> +				regulator-always-on;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vgpu_reg: buck_vgpu {
-> +				regulator-name = "vgpu";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <200>;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vs2_reg: buck_vs2 {
-> +				regulator-name = "vs2";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <2087500>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-enable-ramp-delay = <0>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vmodem_reg: buck_vmodem {
-> +				regulator-name = "vmodem";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <900>;
-> +				regulator-always-on;
-> +				regulator-allowed-modes = <0 1>;
-> +			};
-> +
-> +			mt6358_vs1_reg: buck_vs1 {
-> +				regulator-name = "vs1";
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <2587500>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-enable-ramp-delay = <0>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vdram2_reg: ldo_vdram2 {
-> +				regulator-name = "vdram2";
-> +				regulator-min-microvolt = <600000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <3300>;
-> +			};
-> +
-> +			mt6358_vsim1_reg: ldo_vsim1 {
-> +				regulator-name = "vsim1";
-> +				regulator-min-microvolt = <1700000>;
-> +				regulator-max-microvolt = <3100000>;
-> +				regulator-enable-ramp-delay = <540>;
-> +			};
-> +
-> +			mt6358_vibr_reg: ldo_vibr {
-> +				regulator-name = "vibr";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <60>;
-> +			};
-> +
-> +			mt6358_vrf12_reg: ldo_vrf12 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vrf12";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-enable-ramp-delay = <120>;
-> +			};
-> +
-> +			mt6358_vio18_reg: ldo_vio18 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vio18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <2700>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vusb_reg: ldo_vusb {
-> +				regulator-name = "vusb";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3100000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vcamio_reg: ldo_vcamio {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vcamio";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vcamd_reg: ldo_vcamd {
-> +				regulator-name = "vcamd";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vcn18_reg: ldo_vcn18 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vcn18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vfe28_reg: ldo_vfe28 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vfe28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vsram_proc11_reg: ldo_vsram_proc11 {
-> +				regulator-name = "vsram_proc11";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <240>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vcn28_reg: ldo_vcn28 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vcn28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vsram_others_reg: ldo_vsram_others {
-> +				regulator-name = "vsram_others";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <240>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vsram_gpu_reg: ldo_vsram_gpu {
-> +				regulator-name = "vsram_gpu";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <240>;
-> +			};
-> +
-> +			mt6358_vxo22_reg: ldo_vxo22 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vxo22";
-> +				regulator-min-microvolt = <2200000>;
-> +				regulator-max-microvolt = <2200000>;
-> +				regulator-enable-ramp-delay = <120>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vefuse_reg: ldo_vefuse {
-> +				regulator-name = "vefuse";
-> +				regulator-min-microvolt = <1700000>;
-> +				regulator-max-microvolt = <1900000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vaux18_reg: ldo_vaux18 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vaux18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vmch_reg: ldo_vmch {
-> +				regulator-name = "vmch";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <60>;
-> +			};
-> +
-> +			mt6358_vbif28_reg: ldo_vbif28 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vbif28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vsram_proc12_reg: ldo_vsram_proc12 {
-> +				regulator-name = "vsram_proc12";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1293750>;
-> +				regulator-ramp-delay = <6250>;
-> +				regulator-enable-ramp-delay = <240>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vcama1_reg: ldo_vcama1 {
-> +				regulator-name = "vcama1";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vemc_reg: ldo_vemc {
-> +				regulator-name = "vemc";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <60>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vio28_reg: ldo_vio28 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vio28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_va12_reg: ldo_va12 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "va12";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			mt6358_vrf18_reg: ldo_vrf18 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vrf18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <120>;
-> +			};
-> +
-> +			mt6358_vcn33_bt_reg: ldo_vcn33_bt {
-> +				regulator-name = "vcn33_bt";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3500000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vcn33_wifi_reg: ldo_vcn33_wifi {
-> +				regulator-name = "vcn33_wifi";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3500000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vcama2_reg: ldo_vcama2 {
-> +				regulator-name = "vcama2";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vmc_reg: ldo_vmc {
-> +				regulator-name = "vmc";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <60>;
-> +			};
-> +
-> +			mt6358_vldo28_reg: ldo_vldo28 {
-> +				regulator-name = "vldo28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vaud28_reg: ldo_vaud28 {
-> +				compatible = "regulator-fixed";
-> +				regulator-name = "vaud28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <270>;
-> +			};
-> +
-> +			mt6358_vsim2_reg: ldo_vsim2 {
-> +				regulator-name = "vsim2";
-> +				regulator-min-microvolt = <1700000>;
-> +				regulator-max-microvolt = <3100000>;
-> +				regulator-enable-ramp-delay = <540>;
-> +			};
-> +		};
+From: Allen Chen <allen.chen@ite.com.tw>
 
-Missing mt6358 rtc node here:
-+		mt6358rtc: mt6358rtc {
-+			compatible = "mediatek,mt6358-rtc";
-+		};
+Add a DT binding documentation for IT6505.
 
-> +	};
-> +};
+Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+
+---
+ .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+new file mode 100644
+index 0000000..c3506ac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+@@ -0,0 +1,30 @@
++iTE it6505 DP bridge bindings
++
++Required properties:
++        - compatible: "ite,it6505"
++        - reg: i2c address of the bridge
++        - ovdd-supply: I/O voltage
++        - pwr18-supply: Core voltage
++        - interrupts: interrupt specifier of INT pin
++        - reset-gpios: gpio specifier of RESET pin
++
++Example:
++	it6505dptx: it6505dptx@5c {
++                compatible = "ite,it6505";
++                status = "okay";
++                interrupt-parent = <&pio>;
++                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
++                reg = <0x5c>;
++                pinctrl-names = "default";
++                pinctrl-0 = <&it6505_pins>;
++                ovdd-supply = <&mt6358_vsim1_reg>;
++                pwr18-supply = <&it6505_pp18_reg>;
++                reset-gpios = <&pio 179 1>;
++                hpd-gpios = <&pio 9 0>;
++                extcon = <&usbc_extcon>;
++                port {
++                        it6505_in: endpoint {
++                                remote-endpoint = <&dpi_out>;
++                        };
++                };
++        };
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c3fc51..c088646 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -184,6 +184,7 @@ iom	Iomega Corporation
+ isee	ISEE 2007 S.L.
+ isil	Intersil
+ issi	Integrated Silicon Solutions Inc.
++ite	iTE Tech. Inc.
+ itead	ITEAD Intelligent Systems Co.Ltd
+ iwave  iWave Systems Technologies Pvt. Ltd.
+ jdi	Japan Display Inc.
+-- 
+1.9.1
