@@ -1,68 +1,225 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH v10 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Date: Wed, 8 May 2019 10:36:22 +0200
-Message-ID: <20190508083622.GA3948@bogon.m.sigxcpu.org>
-References: <cover.1557215047.git.agx@sigxcpu.org>
- <299e28042e0a24c0cde593873bdfb15e18187a92.1557215047.git.agx@sigxcpu.org>
- <20190507181223.GC15122@ravnborg.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 2/9] mfd: Add ST Multi-Function eXpander (STMFX) core
+ driver
+Date: Wed, 8 May 2019 09:36:22 +0100
+Message-ID: <20190508083622.GE3995@dell>
+References: <1554794651-6874-1-git-send-email-amelie.delaunay@st.com>
+ <1554794651-6874-3-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190507181223.GC15122@ravnborg.org>
+In-Reply-To: <1554794651-6874-3-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Robert
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Tue, May 07, 2019 at 08:12:23PM +0200, Sam Ravnborg wrote:
-> Hi Guido.
-> 
-> Looks good now, stumbled upon a few details I missed in last round.
-> With these considered / fixed you can add my
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> 
-> 	Sam
-> 
-> > +#define CM(x)	(				\
-> > +		((x) <	32)?0xe0|((x)-16) :	\
-> > +		((x) <	64)?0xc0|((x)-32) :	\
-> > +		((x) < 128)?0x80|((x)-64) :	\
-> > +		((x) - 128))
-> > +#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
-> > +#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
-> 
-> A few spaces around the operators may help readability a little.
-> 
-> > +static int phy_write(struct phy *phy, u32 value, unsigned int reg)
-> > +{
-> > +	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = regmap_write(priv->regmap, reg, value);
-> > +	if (ret < 0)
-> > +		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
-> 
-> I have recently learned that one has to remember trailign "\n"- please
-> add.
-> Check all other dev_xxx as I noticed the newline is missing in a few
-> more places.
+On Tue, 09 Apr 2019, Amelie Delaunay wrote:
 
-Argh...I thought I've fixed these up already but that was in the
-corresponding NWL driver only. Fixed now, thanks.
+> STMicroelectronics Multi-Function eXpander (STMFX) is a slave controller
+> using I2C for communication with the main MCU. Main features are:
+> - 16 fast GPIOs individually configurable in input/output
+> - 8 alternate GPIOs individually configurable in input/output when other
+> STMFX functions are not used
+> - Main MCU IDD measurement
+> - Resistive touchscreen controller
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  drivers/mfd/Kconfig       |  13 ++
+>  drivers/mfd/Makefile      |   2 +-
+>  drivers/mfd/stmfx.c       | 566 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/stmfx.h | 123 ++++++++++
+>  4 files changed, 703 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/stmfx.c
+>  create mode 100644 include/linux/mfd/stmfx.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3443f1a..9783e18 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1907,6 +1907,19 @@ config MFD_STPMIC1
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called stpmic1.
+>  
+> +config MFD_STMFX
+> +	tristate "Support for STMicroelectronics Multi-Function eXpander (STMFX)"
+> +	depends on I2C
+> +	depends on OF || COMPILE_TEST
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	help
+> +	  Support for the STMicroelectronics Multi-Function eXpander.
+> +
+> +	  This driver provides common support for accessing the device,
+> +	  additional drivers must be enabled in order to use the functionality
+> +	  of the device.
+> +
+>  menu "Multimedia Capabilities Port drivers"
+>  	depends on ARCH_SA1100
+>  
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index b4569ed7..614eea8 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -246,4 +246,4 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+>  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
+>  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
+>  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+> -
+> +obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+> new file mode 100644
+> index 0000000..59f0a03
+> --- /dev/null
+> +++ b/drivers/mfd/stmfx.c
+> @@ -0,0 +1,566 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for STMicroelectronics Multi-Function eXpander (STMFX) core
+> + *
+> + * Copyright (C) 2019 STMicroelectronics
+> + * Author(s): Amelie Delaunay <amelie.delaunay@st.com>.
+> + */
+> +#include <linux/bitfield.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/stmfx.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
 
-> 
-> > +
-> > +	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
->                                                    ^
-> 
-> There was another of the symbols my terminal cannot show.
-> 
+[...]
 
-Thanks! I've incorporated your suggestions and will send out a v11 by
-the end of the week in case there's more comments coming in.
-Cheers,
- -- Guido
+> +static int stmfx_chip_init(struct i2c_client *client)
+> +{
+> +	struct stmfx *stmfx = i2c_get_clientdata(client);
+> +	u32 id;
+> +	u8 version[2];
+> +	int ret;
+> +
+> +	stmfx->vdd = devm_regulator_get_optional(&client->dev, "vdd");
+> +	if (IS_ERR(stmfx->vdd)) {
+> +		ret = PTR_ERR(stmfx->vdd);
+> +		if (ret != -ENODEV) {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(&client->dev,
+> +					"Can't get VDD regulator:%d\n", ret);
+> +			return ret;
+> +		}
+
+Any reason you've decided to stick with this 3-layer nested if instead
+of going with my suggestion?
+
+> +	} else {
+> +		ret = regulator_enable(stmfx->vdd);
+> +		if (ret) {
+> +			dev_err(&client->dev, "VDD enable failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+
+[...]
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int stmfx_backup_regs(struct stmfx *stmfx)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_raw_read(stmfx->map, STMFX_REG_SYS_CTRL,
+> +			      &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_raw_read(stmfx->map, STMFX_REG_IRQ_OUT_PIN,
+> +			      &stmfx->bkp_irqoutpin,
+> +			      sizeof(stmfx->bkp_irqoutpin));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_restore_regs(struct stmfx *stmfx)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
+> +			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_IRQ_OUT_PIN,
+> +			       &stmfx->bkp_irqoutpin,
+> +			       sizeof(stmfx->bkp_irqoutpin));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_IRQ_SRC_EN,
+> +			       &stmfx->irq_src, sizeof(stmfx->irq_src));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_suspend(struct device *dev)
+> +{
+> +	struct stmfx *stmfx = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = stmfx_backup_regs(stmfx);
+> +	if (ret) {
+> +		dev_err(stmfx->dev, "Registers backup failure\n");
+> +		return ret;
+> +	}
+
+This doesn't need to be an extra function.  You're just adding more
+lines of code for no real gain in reusability/readability.
+
+> +	if (!IS_ERR(stmfx->vdd)) {
+> +		ret = regulator_disable(stmfx->vdd);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_resume(struct device *dev)
+> +{
+> +	struct stmfx *stmfx = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (!IS_ERR(stmfx->vdd)) {
+> +		ret = regulator_enable(stmfx->vdd);
+> +		if (ret) {
+> +			dev_err(stmfx->dev,
+> +				"VDD enable failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = stmfx_restore_regs(stmfx);
+> +	if (ret) {
+> +		dev_err(stmfx->dev, "Registers restoration failure\n");
+> +		return ret;
+> +	}
+
+This doesn't need to be an extra function.  You're just adding more
+lines of code for no real gain in reusability/readability.
+
+> +	return 0;
+> +}
+> +#endif
+
+[...]
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
