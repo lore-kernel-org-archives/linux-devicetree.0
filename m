@@ -1,76 +1,52 @@
-From: allen <allen.chen@ite.com.tw>
-Subject: [PATCH 1/3] dt-bindings: Add binding for IT6505.
-Date: Wed, 8 May 2019 17:31:56 +0800
-Message-ID: <1557307985-21228-2-git-send-email-allen.chen@ite.com.tw>
-References: <1557307985-21228-1-git-send-email-allen.chen@ite.com.tw>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+Date: Wed, 8 May 2019 11:45:29 +0200
+Message-ID: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
+        <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+        <20190507170422.GA25179@bogus>
+        <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557307985-21228-1-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: allen.chen@ite.com.tw
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Johan Hovold <johan@kernel.org>, Nickey Yang <nickey.yang@rock-chips.com>, Michal Simek <monstr@monstr.eu>, Linus Walleij <linus.walleij@linaro.org>, Ben Whitten <ben.whitten@gmail.com>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Allen Chen <allen.chen@ite.com.tw>
 
-Add a DT binding documentation for IT6505.
+On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
+> On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
+>>> +- devfreq-events : phandles of the PPMU events used by the controller.
+>>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
+>>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+>>
+>> Looks like a hack. Can't you get this from the clocks property? What is
+>> this for?
+> 
+> Hi Rob,
+> 
+> Lukasz uses these two syscon regmaps to read certain registers. For
+> chipid he reads it to check the size of attached memory (only 2 GB
+> version is supported). This indeed looks like a hack. However the
+> second regmap (clk) is needed to get the timing data from registers
+> from DMC clock driver address space. These are registers with memory
+> timing so their data is not exposed anyway in common clk framework.
+> 
+> Best regards,
+> Krzysztof
 
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+Thank you Krzysztof for a fast response. I have also responded to Rob.
+I wouldn't call accessing chipid registers as a hack, though. The DMC
+registers do not contain information about the memory chip since it is
+in phase of production the board not the chip. Thus, chipid regs (which
+loads from e-fuses) are best place to put information about memory
+type/size.
 
----
- .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-new file mode 100644
-index 0000000..c3506ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-@@ -0,0 +1,30 @@
-+iTE it6505 DP bridge bindings
-+
-+Required properties:
-+        - compatible: "ite,it6505"
-+        - reg: i2c address of the bridge
-+        - ovdd-supply: I/O voltage
-+        - pwr18-supply: Core voltage
-+        - interrupts: interrupt specifier of INT pin
-+        - reset-gpios: gpio specifier of RESET pin
-+
-+Example:
-+	it6505dptx: it6505dptx@5c {
-+                compatible = "ite,it6505";
-+                status = "okay";
-+                interrupt-parent = <&pio>;
-+                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-+                reg = <0x5c>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&it6505_pins>;
-+                ovdd-supply = <&mt6358_vsim1_reg>;
-+                pwr18-supply = <&it6505_pp18_reg>;
-+                reset-gpios = <&pio 179 1>;
-+                hpd-gpios = <&pio 9 0>;
-+                extcon = <&usbc_extcon>;
-+                port {
-+                        it6505_in: endpoint {
-+                                remote-endpoint = <&dpi_out>;
-+                        };
-+                };
-+        };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2c3fc51..c088646 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -184,6 +184,7 @@ iom	Iomega Corporation
- isee	ISEE 2007 S.L.
- isil	Intersil
- issi	Integrated Silicon Solutions Inc.
-+ite	iTE Tech. Inc.
- itead	ITEAD Intelligent Systems Co.Ltd
- iwave  iWave Systems Technologies Pvt. Ltd.
- jdi	Japan Display Inc.
--- 
-1.9.1
+Regards,
+Lukasz
