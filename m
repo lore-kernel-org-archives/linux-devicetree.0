@@ -1,58 +1,43 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 3/4] reset: Add reset controller support for BM1880 SoC
-Date: Wed,  8 May 2019 22:23:18 +0530
-Message-ID: <20190508165319.19822-4-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 4/4] reset: Switch to SPDX license identifier for reset-simple
+Date: Wed,  8 May 2019 22:23:19 +0530
+Message-ID: <20190508165319.19822-5-manivannan.sadhasivam@linaro.org>
 References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add reset controller support for Bitmain BM1880 SoC reusing the
-reset-simple driver.
+Switch to SPDX license identifier for reset-simple driver.
 
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/reset/Kconfig        | 3 ++-
- drivers/reset/reset-simple.c | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/reset/reset-simple.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 2c8c23db92fb..b25e8d139f0d 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -117,7 +117,7 @@ config RESET_QCOM_PDC
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-+	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-@@ -129,6 +129,7 @@ config RESET_SIMPLE
- 	   - RCC reset controller in STM32 MCUs
- 	   - Allwinner SoCs
- 	   - ZTE's zx2967 family
-+	   - Bitmain BM1880 SoC
- 
- config RESET_STM32MP157
- 	bool "STM32MP157 Reset Driver" if COMPILE_TEST
 diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 77fbba3100c8..5e8c86470e6b 100644
+index 5e8c86470e6b..8043ba48a30a 100644
 --- a/drivers/reset/reset-simple.c
 +++ b/drivers/reset/reset-simple.c
-@@ -129,6 +129,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "aspeed,ast2400-lpc-reset" },
- 	{ .compatible = "aspeed,ast2500-lpc-reset" },
-+	{ .compatible = "bitmain,bm1880-reset",
-+		.data = &reset_simple_active_low },
- 	{ /* sentinel */ },
- };
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Simple Reset Controller Driver
+  *
+@@ -8,11 +9,6 @@
+  * Copyright 2013 Maxime Ripard
+  *
+  * Maxime Ripard <maxime.ripard@free-electrons.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
  
+ #include <linux/device.h>
 -- 
 2.17.1
