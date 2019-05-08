@@ -1,36 +1,30 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 5/6] mfd: max77620: Provide system power-off
- functionality
-Date: Wed, 8 May 2019 12:48:23 +0100
-Message-ID: <20190508114823.GL31645@dell>
-References: <20190505154325.30026-1-digetx@gmail.com>
- <20190505154325.30026-6-digetx@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v4 02/10] dt-bindings: doc: reflect new NVMEM
+ of_get_mac_address behaviour
+Date: Wed, 8 May 2019 13:48:50 +0200
+Message-ID: <20190508114850.GC30557@lunn.ch>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+ <1556893635-18549-3-git-send-email-ynezz@true.cz>
+ <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
+ <20190508084152.GM81826@meh.true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190505154325.30026-6-digetx@gmail.com>
+In-Reply-To: <20190508084152.GM81826@meh.true.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc: Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <sr>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 05 May 2019, Dmitry Osipenko wrote:
-
-> Provide system power-off functionality that allows to turn off machine
-> gracefully.
+> I've just tried to reword what was already there, anyway, did I understood
+> your remark properly, would this be more appropriate?
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/mfd/max77620.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  The MAC address will be determined using the optional properties defined in
+>  ethernet.txt and only if efuse-mac is set to 0. If any of the optional MAC
+>  address properties are not present, then the driver will use random MAC
+>  address.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+If _all_ of the optional ...
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+   Andrew
