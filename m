@@ -1,124 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-Date: Wed, 8 May 2019 11:07:11 -0500
-Message-ID: <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
- <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
- <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com> <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/4] Add reset controller support for BM1880 SoC
+Date: Wed,  8 May 2019 22:23:15 +0530
+Message-ID: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>
+To: p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 8, 2019 at 10:06 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> On Wed, May 8, 2019 at 10:04 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, May 7, 2019 at 11:08 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > >
-> > > On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > +boot-architecture list as there was some discussion about this IIRC.
-> > > >
-> > > > On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > > > >
-> > > > > Introducing a chosen node, rng-seed, which is an 64 bytes entropy
-> > > > > that can be passed to kernel called very early to increase device
-> > > > > randomness. Bootloader should provide this entropy and the value is
-> > > > > read from /chosen/rng-seed in DT.
-> > > > >
-> > > > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > > >
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
-> > > >
-> > > > Actually, this file has been converted to json-schema and lives
-> > > > here[1]. I need to remove this one (or leave it with a reference to
-> > > > the new one).
-> > > >
-> > > > >  arch/arm64/kernel/setup.c                    |  2 ++
-> > > > >  drivers/of/fdt.c                             | 33 ++++++++++++++++++++
-> > > > >  include/linux/of_fdt.h                       |  1 +
-> > > > >  4 files changed, 50 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > > > > index 45e79172a646..bfd360691650 100644
-> > > > > --- a/Documentation/devicetree/bindings/chosen.txt
-> > > > > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > > > > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
-> > > > >  the Linux EFI stub (which will populate the property itself, using
-> > > > >  EFI_RNG_PROTOCOL).
-> > > > >
-> > > > > +rng-seed
-> > > > > +-----------
-> > > > > +
-> > > > > +This property served as an entropy to add device randomness. It is parsed
-> > > > > +as a 64 byte value, e.g.
-> > > >
-> > > > Why only 64-bytes?
-> > > We can also not specify size and read what bootloader can provide.
-> > > >
-> > > > > +
-> > > > > +/ {
-> > > > > +       chosen {
-> > > > > +               rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
-> > > > > +       };
-> > > > > +};
-> > > > > +
-> > > > > +This random value should be provided by bootloader.
-> > > > > +
-> > > > >  stdout-path
-> > > > >  -----------
-> > > > >
-> > > > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > > > > index 413d566405d1..ade4261516dd 100644
-> > > > > --- a/arch/arm64/kernel/setup.c
-> > > > > +++ b/arch/arm64/kernel/setup.c
-> > > > > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
-> > > > >         early_fixmap_init();
-> > > > >         early_ioremap_init();
-> > > > >
-> > > > > +       early_init_dt_rng_seed(__fdt_pointer);
-> > > > > +
-> > > >
-> > > > I'm trying to reduce or eliminate all these early_init_dt_* calls.
-> > > >
-> > > > Why is this arch specific and why can't this be done after
-> > > > unflattening? It doesn't look like add_device_randomness() needs
-> > > > anything early.
-> > > Currently unflattening is called after setup_machine_fdt(), which
-> > > called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
-> > > PAGE_KERNEL_RO), and we can't modify DT after that since it's read
-> > > only. But we need to clear (eg. write 0 to it) the rng-seed after
-> > > reading from DT.
-> >
-> > Why do you need to clear it? That wasn't necessary for kaslr-seed.
-> I think it's for security purpose. If we know the random seed, it's
-> more likely we can predict randomness.
-> Currently on arm64, kaslr-seed will be wiped out (in
-> arch/arm64/kernel/kaslr.c#get_kaslr_seed(), it's set to 0) so we can't
-> read from sysfs (eg. /sys/firmware/devicetree/.../kaslr-seed)
-> I'm not sure on other arch if it will be wiped out.
+Hello,
 
-The difference is if I have the kaslr seed, I can calculate the kernel
-base address.
+This patchset adds reset controller support for Bitmain BM1880 SoC.
+BM1880 SoC has two reset controllers each controlling reset lines of
+different peripherals. And the reset-simple driver has been reused here.
 
-In your case, you are feeding an RNG which continually has entropy
-added to it. I can't see that knowing one piece of the entropy data is
-a security hole. It looks more like you've just copied what what done
-for kaslr-seed.
+This patchset has been tested on 96Boards Sophon Edge board.
 
-> > Why not change the mapping to RW? It would be nice if this worked on
-> > more than one arch.
+Thanks,
+Mani
 
-Still wondering on this question. Mapping it R/W would mean rng-seed
-could be handled later and completely out of the arch code and so
-could the zeroing of the kaslr-seed. Also, we generally assume the FDT
-is modifiable for any fixups. This happens on arm32 and powerpc, but I
-guess we haven't needed that yet on arm64.
+Changes in v2:
 
-Rob
+As per review from Philipp:
+
+* Reused reset_simple_active_low struct instead of a new one for bm1880
+* Splitted the SPDX license change to a separate commit
+* Added Reviewed-by tags from Rob and Philipp
+
+Manivannan Sadhasivam (4):
+  dt-bindings: reset: Add devicetree binding for BM1880 reset controller
+  arm64: dts: bitmain: Add reset controller support for BM1880 SoC
+  reset: Add reset controller support for BM1880 SoC
+  reset: Switch to SPDX license identifier for reset-simple
+
+ .../bindings/reset/bitmain,bm1880-reset.txt   |  18 +++
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  17 +++
+ drivers/reset/Kconfig                         |   3 +-
+ drivers/reset/reset-simple.c                  |   8 +-
+ .../dt-bindings/reset/bitmain,bm1880-reset.h  | 106 ++++++++++++++++++
+ 5 files changed, 146 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/bitmain,bm1880-reset.txt
+ create mode 100644 include/dt-bindings/reset/bitmain,bm1880-reset.h
+
+-- 
+2.17.1
