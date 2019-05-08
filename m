@@ -1,37 +1,46 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 1/3] arm64: dts: qcom: qcs404: Make gcc as reset-controller
-Date: Wed,  8 May 2019 15:43:07 -0700
-Message-ID: <20190508224309.5744-2-bjorn.andersson@linaro.org>
-References: <20190508224309.5744-1-bjorn.andersson@linaro.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 00/11] dts: Update DT bindings for CoreSight
+ replicator and funnel
+Date: Thu, 9 May 2019 07:17:06 +0800
+Message-ID: <20190508231706.GA5840@leoy-ThinkPad-X240s>
+References: <20190508021902.10358-1-leo.yan@linaro.org>
+ <9c56323b-7b14-c662-b824-ed60fbb1638f@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508224309.5744-1-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <9c56323b-7b14-c662-b824-ed60fbb1638f@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org, mike.leach@linaro.org, xuwei5@hisilicon.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, agross@kernel.org, david.brown@linaro.org, linus.walleij@linaro.org, liviu.dudau@arm.com, Sudeep.Holla@arm.com, Lorenzo.Pieralisi@arm.com, orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, guodong.xu@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, cphealy@gmail.com, andrew@lunn.ch, lee.jones@linaro.org, zhang.chunyan@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-GCC is a reset-controller, so define #reset-cells.
+On Wed, May 08, 2019 at 03:29:12PM +0100, Suzuki K Poulose wrote:
+> 
+> On 08/05/2019 03:18, Leo Yan wrote:
+> > Since the DT bindings consolidatoins for CoreSight replicator and funnel
+> > is ready for kernel v5.2 merge window [1], this patch set is to update
+> > the related CoreSight DT bindings for platforms; IIUC, this patch set
+> > will be safe for merging into kernel v5.2 because the dependency
+> > patches in [1] will be landed into mainline kernel v5.2 cycle.
+> > 
+> > In this patch set, it tries to update below two compatible strings to
+> > the latest strings:
+> > 
+> >    s/"arm,coresight-replicator"/"arm,coresight-static-replicator"
+> >    s/"arm,coresight-funnel"/"arm,coresight-dynamic-funnel"
+> > 
+> > Please note, some platforms have two continuous patches, one is for
+> > updating static replicator compatible string and another is for dynamic
+> > funnel change; and other platforms have only one patch since it only
+> > needs to change for dynamic funnel.
+> 
+> This is now misleading ;-), but that doesn't matter.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Oops ...
 
-Changes since v3:
-- Split single patch, no functional change
+> For the entire series :
+> 
+> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ffedf9640af7..65a2cbeb28be 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -383,6 +383,7 @@
- 			compatible = "qcom,gcc-qcs404";
- 			reg = <0x01800000 0x80000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 
- 			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
- 			assigned-clock-rates = <19200000>;
--- 
-2.18.0
+Thanks for reviewing!
