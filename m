@@ -1,83 +1,35 @@
-Return-Path: <SRS0=7lMX=TH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:63388 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfEGFsv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 May 2019 01:48:51 -0400
-Subject: Re: [PATCH v2 0/5] Add TPU support for R-Car H3/M3-W/M3-N
-References: <1556155517-5054-1-git-send-email-cv-dong@jinso.co.jp>
- <20190426094112.r6nyvpnhcb2j4qv6@verge.net.au>
-From: Cao Van Dong <cv-dong@jinso.co.jp>
-Message-ID: <9a454bb2-2391-22d4-3dc4-5084e0654740@jinso.co.jp>
-Date: Tue, 7 May 2019 14:48:48 +0900
-MIME-Version: 1.0
-In-Reply-To: <20190426094112.r6nyvpnhcb2j4qv6@verge.net.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Return-Path: <SRS0=z3qq=TI=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 10/10] ARM: dts: r7s9210-rza2mevb: Add USB host support
+Date: Wed, 8 May 2019 12:48:36 +0000
+Message-ID: 
+ <TY1PR01MB15624892AE0A749A63053DA98A320@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
+ <20190506234631.113226-11-chris.brandt@renesas.com>
+ <20190508094230.5j2skmmlkzlmy2ls@verge.net.au>
+In-Reply-To: <20190508094230.5j2skmmlkzlmy2ls@verge.net.au>
 Content-Language: en-US
-Sender: devicetree-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 To: Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, geert+renesas@glider.be, broonie@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org, yoshihiro.shimoda.uh@renesas.com, kuninori.morimoto.gx@renesas.com, h-inayoshi@jinso.co.jp, na-hoan@jinso.co.jp
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Dear Simon-san,
+Hi Simon,
 
-On 2019/04/26 18:41, Simon Horman wrote:
-> Hi,
->
-> On Thu, Apr 25, 2019 at 10:25:12AM +0900, Cao Van Dong wrote:
->> This series adds tpu support for r8a7795/r8a7796/r8a77965 SoCs.
->> Based on the renesas-drivers-2019-04-02-v5.1-rc3 tag of renesas-drivers tree.
->> For test, after booting, I found the device was registered in the booting log.
-> Could you clarify some details of this test.
->
-> Looking at the DTS patches I see 'status = "disabled";' for each
-> of the newly added devices. So I would not expect them to be probed
-> at run-time without some extra tweaking.
-Test procedure:
-   - Apply patch series "[PATCH 0/4] pinctrl: sh-pfc: r8a7795/6/65: Add 
-TPU pins, groups and functions".
-   - Make sure switches { SW29-[1-2] are switched off or SW31-[1-4] are 
-switched off(only for Salvator-xs) }.
-   - Enable TPU and pin control in DTS (salvator-x/xs.dtsi):
+On Wed, May 08, 2019, Simon Horman wrote:
+> Please add a space between the usb2_phy0 and ehci0 nodes.
+> Likewise below between the usb2_phy1 and ehci1 nodes.
+>=20
+> Otherwise this patch looks good to me.
 
-     +
-     +&tpu {
-     +       pinctrl-0 = <&tpu_pins>;
-     +       pinctrl-names = "default";
-     +
-     +       status = "okay";
-     +};
-     +
-     +&pfc {
-     +       tpu_pins: tpu {
-     +               groups = "tpu_to2", "tpu_to3";
-     +               function = "tpu";
-     +       };
-     +};
+I also see that you renamed some patch titles from
+  "ARM: dts: r7s9210-rza2mevb: xxx"=20
+to
+  "ARM: dts: rza2mevb: xxx"
 
-   - Exercise userspace PWM control for pwm[2,3] of 
-/sys/class/pwm/pwmchip1/ .
-   - Inspect PWM signals on the input side of { CN29-[58,60] or 
-SW31-[1,2] (only for Salvator-xs) } using an oscilloscope.
+when you applied them.
+So I will make that change as well.
 
-Thank you,
-Dong
->> Cao Van Dong (5):
->>    clk: renesas: r8a779{5|6|65}: Add TPU clock
->>    arm64: dts: renesas: r8a7795: Add TPU support
->>    arm64: dts: renesas: r8a7796: Add TPU support
->>    arm64: dts: renesas: r8a77965: Add TPU support
->>    dt-bindings: pwm: renesas: tpu: Document R8A779{5|6|65} bindings
->>
->>   Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt |  3 +++
->>   arch/arm64/boot/dts/renesas/r8a7795.dtsi                  | 11 +++++++++++
->>   arch/arm64/boot/dts/renesas/r8a7796.dtsi                  | 11 +++++++++++
->>   arch/arm64/boot/dts/renesas/r8a77965.dtsi                 | 11 +++++++++++
->>   drivers/clk/renesas/r8a7795-cpg-mssr.c                    |  1 +
->>   drivers/clk/renesas/r8a7796-cpg-mssr.c                    |  1 +
->>   drivers/clk/renesas/r8a77965-cpg-mssr.c                   |  1 +
->>   7 files changed, 39 insertions(+)
->>
->> -- 
->> 2.7.4
->>
+Chris
