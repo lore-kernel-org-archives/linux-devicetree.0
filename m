@@ -1,34 +1,80 @@
-From: Andy Duan <fugang.duan@nxp.com>
-Subject: RE: [EXT] Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for
- fec 'ahb' clock
-Date: Wed, 8 May 2019 03:42:12 +0000
-Message-ID: <VI1PR0402MB3600C57B5922EC20D87DF913FF320@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
- <CAOMZO5BbA6oq8okTR-r800k4XY76XxxEdufd1mjcV6HdTpVotA@mail.gmail.com>
- <AM0PR04MB421133A3F3C6B534B6ECEA7880370@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <VI1PR0402MB360058CE70AD60C116EE0634FF370@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5 03/12] dt-binding: gce: add binding for gce subsys
+ property
+Date: Wed, 8 May 2019 11:43:55 +0800
+Message-ID: <1557287035.3936.2.camel@mtksdaap41>
+References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
+         <20190507081355.52630-4-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190507081355.52630-4-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Kay-Liu <liuk@cetca.net.cn>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBIaSBBbmR5LA0KPiAN
-Cj4gT24gU3VuLCBNYXkgNSwgMjAxOSBhdCA1OjE1IEFNIEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5A
-bnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+IE5hY2sgdGhlIHBhdGNoICENCj4gPg0KLi4uDQo+ID4g
-U2Vjb25kbHksICBmb3IgeW91ciBpc3N1ZSB5b3UgY2F1Z2h0LCB3aGljaCB3YXMgZml4ZWQgYnkg
-cGF0Y2g6DQo+ID4gY29tbWl0IGQ3YzNhMjA2ZTYzMzhlNGNjZGYwMzA3MTlkZWMwMjhlMjZhNTIx
-ZDUNCj4gPiBBdXRob3I6IEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT4NCj4gPiBEYXRl
-OiAgIFR1ZSBBcHIgOSAwMzo0MDo1NiAyMDE5ICswMDAwDQo+ID4NCj4gPiAgICAgbmV0OiBmZWM6
-IG1hbmFnZSBhaGIgY2xvY2sgaW4gcnVudGltZSBwbQ0KPiANCj4gV291bGQgdGhpcyBhbHNvIGZp
-eCB0aGUgY2FzZSB3aGVyZSBwb3dlciBtYW5hZ2VtZW50IHN1cHBvcnQgaXMgZGlzYWJsZWQ/DQo+
-IA0KPiBJZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5IHRoZSBleHBsYW5hdGlvbiBmcm9tIEtheS1M
-aXUgaGUgd291bGQgc3RpbGwgc2VlIGENCj4gaGFuZyBpbiB0aGUgY2FzZSB3aGVuIFBNIGlzIGRp
-c2FibGVkLg0KPiANCj4gVGhhbmtzDQpGcm9tIGN1cnJlbnQgZGVzaWduLCBpdCBzdGlsbCB3b3Jr
-IGV2ZW4gaWYgZGlzYWJsZSBQTS4NClBsZWFzZSBkb3VibGUgY2hlY2sgaXQuDQoNCkFuZHkNCg==
+Hi, Bibby:
+
+On Tue, 2019-05-07 at 16:13 +0800, Bibby Hsieh wrote:
+> tcmdq driver provide a function that get the relationship
+> of sub system number from device node for client.
+> add specification for #subsys-cells, mediatek,gce-subsys.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  .../devicetree/bindings/mailbox/mtk-gce.txt       | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index 1f7f8f2a3f49..8fd9479bc9f6 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -21,11 +21,19 @@ Required properties:
+>  	priority: Priority of GCE thread.
+>  	atomic_exec: GCE processing continuous packets of commands in atomic
+>  		way.
+> +- #subsys-cells: Should be 3.
+> +	<&phandle subsys_number start_offset size>
+> +	phandle: Label name of a gce node.
+> +	subsys_number: specify the sub-system id which is corresponding
+> +		       to the register address.
+> +	start_offset: the start offset of register address that GCE can access.
+> +	size: the total size of register address that GCE can access.
+>  
+>  Required properties for a client device:
+>  - mboxes: Client use mailbox to communicate with GCE, it should have this
+>    property and list of phandle, mailbox specifiers.
+> -- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+> +Optional propertier for a client device:
+
+properties
+
+Regards,
+CK
+
+> +- mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+>    to the register address.
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+> @@ -40,6 +48,7 @@ Example:
+>  		clocks = <&infracfg CLK_INFRA_GCE>;
+>  		clock-names = "gce";
+>  		#mbox-cells = <3>;
+> +		#subsys-cells = <3>;
+>  	};
+>  
+>  Example for a client device:
+> @@ -48,9 +57,9 @@ Example for a client device:
+>  		compatible = "mediatek,mt8173-mmsys";
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+>  		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+>  				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> -
+> +		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
+> +					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+>  		...
+>  	};
