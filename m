@@ -1,393 +1,50 @@
-From: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-Subject: [PATCH v2] arm64: dts: mediatek: add cpufreq and cci devfreq nodes
- for mt8183
-Date: Wed, 8 May 2019 10:42:06 +0800
-Message-ID: <1557283326-6739-1-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 1/4] dt-bindings: fsl: scu: add ocotp binding
+Date: Wed, 8 May 2019 02:56:02 +0000
+Message-ID: <20190508030927.16668-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Peng Fan <peng.fan@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-
-add cpufreq and cci devfreq nodes for mt8183
-
-Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  36 ++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 245 ++++++++++++++++++++++++++++
- 2 files changed, 281 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 9b525597e5ec..27a4f96324a4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -26,6 +26,42 @@
- 	};
- };
- 
-+&cci {
-+	proc-supply = <&mt6358_vproc12_reg>;
-+};
-+
-+&cpu0 {
-+	proc-supply = <&mt6358_vproc12_reg>;
-+};
-+
-+&cpu1 {
-+	proc-supply = <&mt6358_vproc12_reg>;
-+};
-+
-+&cpu2 {
-+	proc-supply = <&mt6358_vproc12_reg>;
-+};
-+
-+&cpu3 {
-+	proc-supply = <&mt6358_vproc12_reg>;
-+};
-+
-+&cpu4 {
-+	proc-supply = <&mt6358_vproc11_reg>;
-+};
-+
-+&cpu5 {
-+	proc-supply = <&mt6358_vproc11_reg>;
-+};
-+
-+&cpu6 {
-+	proc-supply = <&mt6358_vproc11_reg>;
-+};
-+
-+&cpu7 {
-+	proc-supply = <&mt6358_vproc11_reg>;
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 75c4881bbe5e..a2cdf8db13fe 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -16,6 +16,219 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	cluster0_opp: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+		opp00 {
-+			opp-hz = /bits/ 64 <793000000>;
-+			opp-microvolt = <650000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <910000000>;
-+			opp-microvolt = <687500>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <1014000000>;
-+			opp-microvolt = <718750>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <1131000000>;
-+			opp-microvolt = <756250>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp05 {
-+			opp-hz = /bits/ 64 <1326000000>;
-+			opp-microvolt = <818750>;
-+		};
-+		opp06 {
-+			opp-hz = /bits/ 64 <1417000000>;
-+			opp-microvolt = <850000>;
-+		};
-+		opp07 {
-+			opp-hz = /bits/ 64 <1508000000>;
-+			opp-microvolt = <868750>;
-+		};
-+		opp08 {
-+			opp-hz = /bits/ 64 <1586000000>;
-+			opp-microvolt = <893750>;
-+		};
-+		opp09 {
-+			opp-hz = /bits/ 64 <1625000000>;
-+			opp-microvolt = <906250>;
-+		};
-+		opp10 {
-+			opp-hz = /bits/ 64 <1677000000>;
-+			opp-microvolt = <931250>;
-+		};
-+		opp11 {
-+			opp-hz = /bits/ 64 <1716000000>;
-+			opp-microvolt = <943750>;
-+		};
-+		opp12 {
-+			opp-hz = /bits/ 64 <1781000000>;
-+			opp-microvolt = <975000>;
-+		};
-+		opp13 {
-+			opp-hz = /bits/ 64 <1846000000>;
-+			opp-microvolt = <1000000>;
-+		};
-+		opp14 {
-+			opp-hz = /bits/ 64 <1924000000>;
-+			opp-microvolt = <1025000>;
-+		};
-+		opp15 {
-+			opp-hz = /bits/ 64 <1989000000>;
-+			opp-microvolt = <1050000>;
-+		};	};
-+
-+	cluster1_opp: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+		opp00 {
-+			opp-hz = /bits/ 64 <793000000>;
-+			opp-microvolt = <650000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <910000000>;
-+			opp-microvolt = <675000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <1014000000>;
-+			opp-microvolt = <700000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <1131000000>;
-+			opp-microvolt = <725000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			opp-microvolt = <750000>;
-+		};
-+		opp05 {
-+			opp-hz = /bits/ 64 <1326000000>;
-+			opp-microvolt = <775000>;
-+		};
-+		opp06 {
-+			opp-hz = /bits/ 64 <1417000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp07 {
-+			opp-hz = /bits/ 64 <1508000000>;
-+			opp-microvolt = <825000>;
-+		};
-+		opp08 {
-+			opp-hz = /bits/ 64 <1586000000>;
-+			opp-microvolt = <850000>;
-+		};
-+		opp09 {
-+			opp-hz = /bits/ 64 <1625000000>;
-+			opp-microvolt = <862500>;
-+		};
-+		opp10 {
-+			opp-hz = /bits/ 64 <1677000000>;
-+			opp-microvolt = <881250>;
-+		};
-+		opp11 {
-+			opp-hz = /bits/ 64 <1716000000>;
-+			opp-microvolt = <900000>;
-+		};
-+		opp12 {
-+			opp-hz = /bits/ 64 <1781000000>;
-+			opp-microvolt = <925000>;
-+		};
-+		opp13 {
-+			opp-hz = /bits/ 64 <1846000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp14 {
-+			opp-hz = /bits/ 64 <1924000000>;
-+			opp-microvolt = <975000>;
-+		};
-+		opp15 {
-+			opp-hz = /bits/ 64 <1989000000>;
-+			opp-microvolt = <1000000>;
-+		};
-+	};
-+
-+	cci_opp: opp_table2 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+		opp00 {
-+			opp-hz = /bits/ 64 <273000000>;
-+			opp-microvolt = <650000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <338000000>;
-+			opp-microvolt = <687500>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <403000000>;
-+			opp-microvolt = <718750>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <463000000>;
-+			opp-microvolt = <756250>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <546000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp05 {
-+			opp-hz = /bits/ 64 <624000000>;
-+			opp-microvolt = <818750>;
-+		};
-+		opp06 {
-+			opp-hz = /bits/ 64 <689000000>;
-+			opp-microvolt = <850000>;
-+		};
-+		opp07 {
-+			opp-hz = /bits/ 64 <767000000>;
-+			opp-microvolt = <868750>;
-+		};
-+		opp08 {
-+			opp-hz = /bits/ 64 <845000000>;
-+			opp-microvolt = <893750>;
-+		};
-+		opp09 {
-+			opp-hz = /bits/ 64 <871000000>;
-+			opp-microvolt = <906250>;
-+		};
-+		opp10 {
-+			opp-hz = /bits/ 64 <923000000>;
-+			opp-microvolt = <931250>;
-+		};
-+		opp11 {
-+			opp-hz = /bits/ 64 <962000000>;
-+			opp-microvolt = <943750>;
-+		};
-+		opp12 {
-+			opp-hz = /bits/ 64 <1027000000>;
-+			opp-microvolt = <975000>;
-+		};
-+		opp13 {
-+			opp-hz = /bits/ 64 <1092000000>;
-+			opp-microvolt = <1000000>;
-+		};
-+		opp14 {
-+			opp-hz = /bits/ 64 <1144000000>;
-+			opp-microvolt = <1025000>;
-+		};
-+		opp15 {
-+			opp-hz = /bits/ 64 <1196000000>;
-+			opp-microvolt = <1050000>;
-+		};
-+	};
-+
-+	cci: cci {
-+		compatible = "mediatek,mt8183-cci";
-+		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
-+		clock-names = "cci_clock";
-+		operating-points-v2 = <&cci_opp>;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -57,6 +270,10 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x000>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP0_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -64,6 +281,10 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP0_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -71,6 +292,10 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x002>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP0_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -78,6 +303,10 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x003>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP0_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu4: cpu@100 {
-@@ -85,6 +314,10 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP2_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -92,6 +325,10 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP2_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		cpu6: cpu@102 {
-@@ -99,6 +336,10 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x102>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP2_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		cpu7: cpu@103 {
-@@ -106,6 +347,10 @@
- 			compatible = "arm,cortex-a73";
- 			reg = <0x103>;
- 			enable-method = "psci";
-+			clocks = <&mcucfg CLK_MCU_MP2_SEL>,
-+				 <&topckgen CLK_TOP_ARMPLL_DIV_PLL1>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 	};
- 
--- 
-2.12.5
+TlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRl
+IGFzDQpzeXN0ZW0gY29udHJvbGxlcihTQ1UpLCB0aGUgb2NvdHAgY29udHJvbGxlciBpcyBiZWlu
+ZyBjb250cm9sbGVkDQpieSB0aGUgU0NVLCBzbyBMaW51eCBuZWVkIHVzZSBSUEMgdG8gU0NVIGZv
+ciBvY290cCBoYW5kbGluZy4gVGhpcw0KcGF0Y2ggYWRkcyBiaW5kaW5nIGRvYyBmb3IgaS5NWDgg
+U0NVIE9DT1RQIGRyaXZlci4NCg0KQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
+DQpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCkNjOiBBaXNoZW5nIERv
+bmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
+Lm9yZz4NCkNjOiBVbGYgSGFuc3NvbiA8dWxmLmhhbnNzb25AbGluYXJvLm9yZz4NCkNjOiBTdGVw
+aGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+DQpDYzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5n
+QG54cC5jb20+DQpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNClNpZ25lZC1vZmYtYnk6
+IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KLS0tDQoNClYyOg0KIE1vdmUgT0NPVFAgdG8g
+ZW5kLCBhZGQgZXhhbXBsZSwgYWRkICJzY3UiDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0ICB8IDIyICsrKysrKysrKysrKysrKysrKysrKysNCiAx
+IGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0K
+aW5kZXggNWQ3ZGJhYmJiNzg0Li5mMzc4OTIyOTA2ZjYgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50
+eHQNCkBAIC0xMzMsNiArMTMzLDE4IEBAIFJUQyBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVzc2Fn
+ZSBQcm90b2NvbA0KIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogLSBjb21wYXRpYmxlOiBzaG91bGQg
+YmUgImZzbCxpbXg4cXhwLXNjLXJ0YyI7DQogDQorT0NPVFAgYmluZGluZ3MgYmFzZWQgb24gU0NV
+IE1lc3NhZ2UgUHJvdG9jb2wNCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCitSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KKy0gY29tcGF0
+aWJsZToJCVNob3VsZCBiZSAiZnNsLGlteDhxeHAtc2N1LW9jb3RwIg0KKy0gI2FkZHJlc3MtY2Vs
+bHM6CU11c3QgYmUgMS4gQ29udGFpbnMgYnl0ZSBpbmRleA0KKy0gI3NpemUtY2VsbHM6CQlNdXN0
+IGJlIDEuIENvbnRhaW5zIGJ5dGUgbGVuZ3RoDQorDQorT3B0aW9uYWwgQ2hpbGQgbm9kZXM6DQor
+DQorLSBEYXRhIGNlbGxzIG9mIG9jb3RwOg0KKyAgRGV0YWlsZWQgYmluZGluZ3MgYXJlIGRlc2Ny
+aWJlZCBpbiBiaW5kaW5ncy9udm1lbS9udm1lbS50eHQNCisNCiBFeGFtcGxlIChpbXg4cXhwKToN
+CiAtLS0tLS0tLS0tLS0tDQogYWxpYXNlcyB7DQpAQCAtMTc3LDYgKzE4OSwxNiBAQCBmaXJtd2Fy
+ZSB7DQogCQkJLi4uDQogCQl9Ow0KIA0KKwkJb2NvdHA6IGlteDhxeC1vY290cCB7DQorCQkJY29t
+cGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zY3Utb2NvdHAiOw0KKwkJCSNhZGRyZXNzLWNlbGxzID0g
+PDE+Ow0KKwkJCSNzaXplLWNlbGxzID0gPDE+Ow0KKw0KKwkJCWZlY19tYWMwOiBtYWNAMmM0IHsN
+CisJCQkJcmVnID0gPDB4MmM0IDg+Ow0KKwkJCX07DQorCQl9Ow0KKw0KIAkJcGQ6IGlteDhxeC1w
+ZCB7DQogCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zY3UtcGQiLCAiZnNsLHNjdS1wZCI7
+DQogCQkJI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwxPjsNCi0tIA0KMi4xNi40DQoNCg==
