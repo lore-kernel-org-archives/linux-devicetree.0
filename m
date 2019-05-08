@@ -1,66 +1,396 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: [PATCH v2 0/3] usb: gadget: Add support for disabling U1 and U2 entries
-Date: Wed, 8 May 2019 13:24:48 +0530
-Message-ID: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+From: Ran Bi <ran.bi@mediatek.com>
+Subject: Re: [PATCH v3 08/10] arm64: dts: mt6358: add PMIC MT6358 related
+ nodes
+Date: Wed, 8 May 2019 16:00:39 +0800
+Message-ID: <1557302439.22641.4.camel@mhfsdcap03>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+         <20190503093117.54830-9-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190503093117.54830-9-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, "Claus H. Stovgaard" <cst@phaseone.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, v.anuragkumar@gmail.com, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Gadget applications may have a requirement to disable the U1 and U2
-entry based on the usecase. Below are few usecases where the disabling
-U1/U2 entries may be possible.
+On Fri, 2019-05-03 at 17:31 +0800, Hsin-Hsiung Wang wrote:
+> add PMIC MT6358 related nodes which is for MT8183 platform
+> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt6358.dtsi | 358 +++++++++++++++++++++++
+>  1 file changed, 358 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+> new file mode 100644
+> index 000000000000..74da59de3794
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+> @@ -0,0 +1,358 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
+> +
+> +&pwrap {
+> +	pmic: mt6358 {
+> +		compatible = "mediatek,mt6358";
+> +		interrupt-controller;
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <182 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <2>;
+> +
+> +		mt6358codec: mt6358codec {
+> +			compatible = "mediatek,mt6358-sound";
+> +		};
+> +
+> +		mt6358regulator: mt6358regulator {
+> +			compatible = "mediatek,mt6358-regulator";
+> +
+> +			mt6358_vdram1_reg: buck_vdram1 {
+> +				regulator-compatible = "buck_vdram1";
+> +				regulator-name = "vdram1";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2087500>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-enable-ramp-delay = <0>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vcore_reg: buck_vcore {
+> +				regulator-name = "vcore";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vpa_reg: buck_vpa {
+> +				regulator-name = "vpa";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <3650000>;
+> +				regulator-ramp-delay = <50000>;
+> +				regulator-enable-ramp-delay = <250>;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vproc11_reg: buck_vproc11 {
+> +				regulator-name = "vproc11";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vproc12_reg: buck_vproc12 {
+> +				regulator-name = "vproc12";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vgpu_reg: buck_vgpu {
+> +				regulator-name = "vgpu";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vs2_reg: buck_vs2 {
+> +				regulator-name = "vs2";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2087500>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-enable-ramp-delay = <0>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vmodem_reg: buck_vmodem {
+> +				regulator-name = "vmodem";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <900>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vs1_reg: buck_vs1 {
+> +				regulator-name = "vs1";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <2587500>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-enable-ramp-delay = <0>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vdram2_reg: ldo_vdram2 {
+> +				regulator-name = "vdram2";
+> +				regulator-min-microvolt = <600000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <3300>;
+> +			};
+> +
+> +			mt6358_vsim1_reg: ldo_vsim1 {
+> +				regulator-name = "vsim1";
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <3100000>;
+> +				regulator-enable-ramp-delay = <540>;
+> +			};
+> +
+> +			mt6358_vibr_reg: ldo_vibr {
+> +				regulator-name = "vibr";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +			};
+> +
+> +			mt6358_vrf12_reg: ldo_vrf12 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vrf12";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +			};
+> +
+> +			mt6358_vio18_reg: ldo_vio18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vio18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <2700>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vusb_reg: ldo_vusb {
+> +				regulator-name = "vusb";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3100000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vcamio_reg: ldo_vcamio {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vcamio";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcamd_reg: ldo_vcamd {
+> +				regulator-name = "vcamd";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcn18_reg: ldo_vcn18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vcn18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vfe28_reg: ldo_vfe28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vfe28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsram_proc11_reg: ldo_vsram_proc11 {
+> +				regulator-name = "vsram_proc11";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vcn28_reg: ldo_vcn28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vcn28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsram_others_reg: ldo_vsram_others {
+> +				regulator-name = "vsram_others";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vsram_gpu_reg: ldo_vsram_gpu {
+> +				regulator-name = "vsram_gpu";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +			};
+> +
+> +			mt6358_vxo22_reg: ldo_vxo22 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vxo22";
+> +				regulator-min-microvolt = <2200000>;
+> +				regulator-max-microvolt = <2200000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vefuse_reg: ldo_vefuse {
+> +				regulator-name = "vefuse";
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <1900000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vaux18_reg: ldo_vaux18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vaux18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vmch_reg: ldo_vmch {
+> +				regulator-name = "vmch";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +			};
+> +
+> +			mt6358_vbif28_reg: ldo_vbif28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vbif28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsram_proc12_reg: ldo_vsram_proc12 {
+> +				regulator-name = "vsram_proc12";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vcama1_reg: ldo_vcama1 {
+> +				regulator-name = "vcama1";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vemc_reg: ldo_vemc {
+> +				regulator-name = "vemc";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vio28_reg: ldo_vio28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vio28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_va12_reg: ldo_va12 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "va12";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vrf18_reg: ldo_vrf18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vrf18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +			};
+> +
+> +			mt6358_vcn33_bt_reg: ldo_vcn33_bt {
+> +				regulator-name = "vcn33_bt";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3500000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcn33_wifi_reg: ldo_vcn33_wifi {
+> +				regulator-name = "vcn33_wifi";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3500000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcama2_reg: ldo_vcama2 {
+> +				regulator-name = "vcama2";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vmc_reg: ldo_vmc {
+> +				regulator-name = "vmc";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +			};
+> +
+> +			mt6358_vldo28_reg: ldo_vldo28 {
+> +				regulator-name = "vldo28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vaud28_reg: ldo_vaud28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vaud28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsim2_reg: ldo_vsim2 {
+> +				regulator-name = "vsim2";
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <3100000>;
+> +				regulator-enable-ramp-delay = <540>;
+> +			};
+> +		};
 
-Usecase 1:
-When combining dwc3 with an redriver for a USB Type-C device solution, it
-sometimes have problems with leaving U1/U2 for certain hosts, resulting in
-link training errors and reconnects. For this U1/U2 state entries may be
-avoided.
+Missing mt6358 rtc node here:
++		mt6358rtc: mt6358rtc {
++			compatible = "mediatek,mt6358-rtc";
++		};
 
-Usecase 2:
-When performing performance benchmarking on mass storage gadget the
-U1 and U2 entries can be disabled.
-
-Usecase 3:
-When periodic transfers like ISOC transfers are used with bInterval
-of 1 which doesn't require the link to enter into U1 or U2 state entry
-(since ping is issued from host for every uframe interval). In this
-case the U1 and U2 entry can be disabled.
-
-Disablement of U1/U2 can be done by setting U1DevExitLat and U2DevExitLat
-values to 0 in the BOS descriptor. Host on seeing 0 value for U1DevExitLat
-and U2DevExitLat, it doesn't send SET_SEL requests to the gadget. There
-may be some hosts which may send SET_SEL requests even after seeing 0 in
-the UxDevExitLat of BOS descriptor. To aviod U1/U2 entries for these type
-of hosts, dwc3 controller can be programmed to reject those U1/U2 requests
-by not enabling ACCEPTUxENA bits in DCTL register.
-
-This patch series updates the same.
-
-Changes in v2:
-	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
-	   to "snps,dis-u1-entry-quirk"
-	2. Merged the changes done by Claus H. Stovgaard in ep0.c for rejecting
-	   U1/U2 requests into this patch. Changes done by Claus can be found
-	   here https://marc.info/?l=linux-kernel&m=155722068820568&w=2
-
-Anurag Kumar Vulisha (3):
-  doc: dt: bindings: usb: dwc3: Update entries for disabling U1 and U2
-  usb: gadget: send usb_gadget as an argument in get_config_params
-  usb: dwc3: gadget: Add support for disabling U1 and U2 entries
-
- Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
- drivers/usb/dwc3/core.c                        |  4 ++++
- drivers/usb/dwc3/core.h                        |  4 ++++
- drivers/usb/dwc3/ep0.c                         |  9 ++++++++-
- drivers/usb/dwc3/gadget.c                      | 19 +++++++++++++++++++
- drivers/usb/dwc3/gadget.h                      |  6 ++++++
- drivers/usb/gadget/composite.c                 |  2 +-
- include/linux/usb/gadget.h                     |  3 ++-
- 8 files changed, 46 insertions(+), 3 deletions(-)
-
--- 
-2.1.1
+> +	};
+> +};
