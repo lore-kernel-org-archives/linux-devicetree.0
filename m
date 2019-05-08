@@ -1,48 +1,53 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v5] arm64: dts: ls1028a: Add properties for Mali DP500 node
-Date: Wed, 8 May 2019 10:44:39 +0000
-Message-ID: <20190508104614.42481-1-wen.he_1@nxp.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: RE: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
+ number to GMAC node
+Date: Wed, 8 May 2019 10:46:36 +0000
+Message-ID: <CY4PR1201MB01206801C1C2B8272ABE9B17A1320@CY4PR1201MB0120.namprd12.prod.outlook.com>
+References: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
+ <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
+ <1557166759.17021.9.camel@synopsys.com>
+ <78EB27739596EE489E55E81C33FEC33A0B478870@DE02WEMBXB.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B478870@DE02WEMBXB.internal.synopsys.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, Wen He <wen.he_1@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>"Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIExTMTAyOEEgaGFzIGEgTENEIGNvbnRyb2xsZXIgYW5kIERpc3BsYXlwb3J0IGludGVyZmFj
-ZSB0aGF0DQpjb25uZWN0cyB0byBlRFAgYW5kIERpc3BsYXlwb3J0IGNvbm5lY3RvcnMgb24gdGhl
-IExTMTAyOEEgYm9hcmQuDQoNClRoaXMgcGF0Y2ggZW5hYmxlcyB0aGUgTENEIGNvbnRyb2xsZXIg
-ZHJpdmVyIG9uIHRoZSBMUzEwMjhBLg0KDQpTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YWxp
-c29uLndhbmdAbnhwLmNvbT4NClNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNv
-bT4NClJldmlld2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4NClJldmll
-d2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KLS0tDQpjaGFuZ2UgaW4gdjU6
-DQogICAgICAgIC0gUmV2aWV3ZWQgYnkgZnJvbSBSb2IsIHRoYW5rcy4NCg0KIC4uLi9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDM4ICsrKysrKysrKysrKysrKysr
-KysNCiAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCmluZGV4IGIwNDU4MTI0OWYwYi4u
-YzBhMTNmOWU1Yjk1IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNs
-LWxzMTAyOGEuZHRzaQ0KQEAgLTcwLDYgKzcwLDI3IEBADQogCQljbG9jay1vdXRwdXQtbmFtZXMg
-PSAic3lzY2xrIjsNCiAJfTsNCiANCisJZHBjbGs6IGNsb2NrLWRwIHsNCisJCWNvbXBhdGlibGUg
-PSAiZml4ZWQtY2xvY2siOw0KKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVl
-bmN5ID0gPDI3MDAwMDAwPjsNCisJCWNsb2NrLW91dHB1dC1uYW1lcz0gImRwY2xrIjsNCisJfTsN
-CisNCisJYWNsazogY2xvY2stYXhpIHsNCisJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0K
-KwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVlbmN5ID0gPDY1MDAwMDAwMD47
-DQorCQljbG9jay1vdXRwdXQtbmFtZXM9ICJhY2xrIjsNCisJfTsNCisNCisJcGNsazogY2xvY2st
-YXBiIHsNCisJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KKwkJI2Nsb2NrLWNlbGxzID0g
-PDA+Ow0KKwkJY2xvY2stZnJlcXVlbmN5ID0gPDY1MDAwMDAwMD47DQorCQljbG9jay1vdXRwdXQt
-bmFtZXM9ICJwY2xrIjsNCisJfTsNCisNCiAJcmVib290IHsNCiAJCWNvbXBhdGlibGUgPSJzeXNj
-b24tcmVib290IjsNCiAJCXJlZ21hcCA9IDwmZGNmZz47DQpAQCAtNDMzLDQgKzQ1NCwyMSBAQA0K
-IAkJCX07DQogCQl9Ow0KIAl9Ow0KKw0KKwltYWxpZHAwOiBkaXNwbGF5QGYwODAwMDAgew0KKwkJ
-Y29tcGF0aWJsZSA9ICJhcm0sbWFsaS1kcDUwMCI7DQorCQlyZWcgPSA8MHgwIDB4ZjA4MDAwMCAw
-eDAgMHgxMDAwMD47DQorCQlpbnRlcnJ1cHRzID0gPDAgMjIyIElSUV9UWVBFX0xFVkVMX0hJR0g+
-LA0KKwkJCSAgICAgPDAgMjIzIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJaW50ZXJydXB0LW5h
-bWVzID0gIkRFIiwgIlNFIjsNCisJCWNsb2NrcyA9IDwmZHBjbGs+LCA8JmFjbGs+LCA8JmFjbGs+
-LCA8JnBjbGs+Ow0KKwkJY2xvY2stbmFtZXMgPSAicHhsY2xrIiwgIm1jbGsiLCAiYWNsayIsICJw
-Y2xrIjsNCisJCWFybSxtYWxpZHAtb3V0cHV0LXBvcnQtbGluZXMgPSAvYml0cy8gOCA8OCA4IDg+
-Ow0KKw0KKwkJcG9ydCB7DQorCQkJZHAwX291dDogZW5kcG9pbnQgew0KKw0KKwkJCX07DQorCQl9
-Ow0KKwl9Ow0KIH07DQotLSANCjIuMTcuMQ0KDQo=
+Hi Jose,
+
+> -----Original Message-----
+> From: Jose Abreu <joabreu@synopsys.com>
+> Sent: Wednesday, May 8, 2019 10:29 AM
+> To: Eugeniy Paltsev <paltsev@synopsys.com>; Jose.Abreu@synopsys.com; linux-kernel@vger.kernel.org;
+> Vineet Gupta <vgupta@synopsys.com>; devicetree@vger.kernel.org; linux-snps-arc@lists.infradead.org
+> Cc: Joao.Pinto@synopsys.com; Vineet.Gupta1@synopsys.com; Eugeniy.Paltsev@synopsys.com; Alexey Brodkin
+> <abrodkin@synopsys.com>
+> Subject: RE: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+> 
+> From: Eugeniy Paltsev <paltsev@synopsys.com>
+> Date: Mon, May 06, 2019 at 19:19:20
+> 
+> > Hi,
+> >
+> > I'll check this in the next few days.
+> >
+> 
+> I also noticed that FIFO size entry is missing. DWMAC1000 does not
+> support automatic FIFO size detection so this entry needs to be added.
+
+Could you please propose a patch?
+
+-Alexey
