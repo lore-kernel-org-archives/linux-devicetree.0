@@ -1,52 +1,37 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add
- Exynos5422 DMC device description
-Date: Wed, 8 May 2019 11:45:29 +0200
-Message-ID: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
-        <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
-        <20190507170422.GA25179@bogus>
-        <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add
+ i.mx6ul/6sx  compatible name
+Date: Wed, 8 May 2019 09:47:38 +0000
+Message-ID: <VI1PR04MB45434F10FA0AC88AFE2DB09489320@VI1PR04MB4543.eurprd04.prod.outlook.com>
+References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+ <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
+ <20190507165601.GA17194@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+In-Reply-To: <20190507165601.GA17194@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vge
 List-Id: devicetree@vger.kernel.org
 
-
-On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
-> On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
->>> +- devfreq-events : phandles of the PPMU events used by the controller.
->>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
->>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
->>
->> Looks like a hack. Can't you get this from the clocks property? What is
->> this for?
-> 
-> Hi Rob,
-> 
-> Lukasz uses these two syscon regmaps to read certain registers. For
-> chipid he reads it to check the size of attached memory (only 2 GB
-> version is supported). This indeed looks like a hack. However the
-> second regmap (clk) is needed to get the timing data from registers
-> from DMC clock driver address space. These are registers with memory
-> timing so their data is not exposed anyway in common clk framework.
-> 
-> Best regards,
-> Krzysztof
-
-Thank you Krzysztof for a fast response. I have also responded to Rob.
-I wouldn't call accessing chipid registers as a hack, though. The DMC
-registers do not contain information about the memory chip since it is
-in phase of production the board not the chip. Thus, chipid regs (which
-loads from e-fuses) are best place to put information about memory
-type/size.
-
-Regards,
-Lukasz
+> On Wed, 8 May 2019 09:16:38 +0000, Rob Herring wrote:
+> On Tue, 7 May 2019 09:16:38 +0000, Robin Gong wrote:
+> > Add i.mx6ul and i.mx6sx compatible name.
+> >
+> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+Sorry, no tags and no comments get from V2 for this patch. Just resend the =
+whole
+patch set for v3 since other comments addressed from other patch.=20
+>=20
+> If a tag was not added on purpose, please state why and what changed.
