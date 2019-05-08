@@ -1,30 +1,54 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 1/4] dt-bindings: fsl: scu: add ocotp binding
-Date: Wed, 8 May 2019 08:55:05 +0000
-Message-ID: <AM0PR04MB42115A523D5CD5FFF8144F0C80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190508030927.16668-1-peng.fan@nxp.com>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH v2 1/4] of_net: Add NVMEM support to of_get_mac_address
+Date: Wed, 8 May 2019 11:02:04 +0200
+Message-ID: <20190508090204.GN81826@meh.true.cz>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-2-git-send-email-ynezz@true.cz>
+ <20190501201925.GA15495@bogus>
+ <20190502090538.GD346@meh.true.cz>
+ <CAL_JsqKLgEjgDOHaNHbu7Bqw1gYCBMRcdO_S98nASnCxtinZ=g@mail.gmail.com>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508030927.16668-1-peng.fan@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKLgEjgDOHaNHbu7Bqw1gYCBMRcdO_S98nASnCxtinZ=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBQZW5nIEZhbg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA4LCAyMDE5IDEwOjU2IEFN
-DQo+IA0KPiBOWFAgaS5NWDhRWFAgaXMgYW4gQVJNdjggU29DIHdpdGggYSBDb3J0ZXgtTTQgY29y
-ZSBpbnNpZGUgYXMgc3lzdGVtDQo+IGNvbnRyb2xsZXIoU0NVKSwgdGhlIG9jb3RwIGNvbnRyb2xs
-ZXIgaXMgYmVpbmcgY29udHJvbGxlZCBieSB0aGUgU0NVLCBzbyBMaW51eA0KPiBuZWVkIHVzZSBS
-UEMgdG8gU0NVIGZvciBvY290cCBoYW5kbGluZy4gVGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9j
-IGZvciBpLk1YOA0KPiBTQ1UgT0NPVFAgZHJpdmVyLg0KPiANCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
-b2JoK2R0QGtlcm5lbC5vcmc+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPg0KPiBDYzogQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gQ2M6IFNo
-YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IFVsZiBIYW5zc29uIDx1bGYuaGFu
-c3NvbkBsaW5hcm8ub3JnPg0KPiBDYzogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPg0K
-PiBDYzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5Abnhw
-LmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+
-DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
+Rob Herring <robh@kernel.org> [2019-05-07 11:06:43]:
+
+Hi,
+
+> > Honestly I don't know if it's necessary to have it, but so far address,
+> > mac-address and local-mac-address properties provide this DT nodes, so I've
+> > simply thought, that it would be good to have it for MAC address from NVMEM as
+> > well in order to stay consistent.
+> 
+> If you want to be consistent, then fill in 'local-mac-address' with
+> the value from nvmem. We don't need the same thing with a new name
+> added to DT. (TBC, I'm not suggesting you do that here.)
+
+Ok, got it.
+
+> But really, my point with using devm_kzalloc() is just return the
+> data, not store in DT and free it when the driver unbinds. 
+
+Ok, I've simply misunderstood your point, sorry, I'll handle it in the follow
+up fix series, along with the DT documentation update.
+
+> Allocating it with devm_kzalloc AND adding it to DT as you've done in v4
+> leads to 2 entities refcounting the allocation. If the driver unbinds, the
+> buffer is freed, but DT code is still referencing that memory.
+
+Indeed, I did it wrong, will fix that.
+
+> 'nvmem-mac-address' is not a documented property. That would need to
+> be documented before using upstream. Though, for reasons above, I
+> don't think it should be.
+
+Ok, it makes sense now. Thanks for the detailed explanation.
+
+-- ynezz
