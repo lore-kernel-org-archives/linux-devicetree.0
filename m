@@ -1,43 +1,87 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 4/4] reset: Switch to SPDX license identifier for reset-simple
-Date: Wed,  8 May 2019 22:23:19 +0530
-Message-ID: <20190508165319.19822-5-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/4] arm64: dts: bitmain: Add reset controller support for BM1880 SoC
+Date: Wed,  8 May 2019 22:23:17 +0530
+Message-ID: <20190508165319.19822-3-manivannan.sadhasivam@linaro.org>
 References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Switch to SPDX license identifier for reset-simple driver.
+Add reset controller support for Bitmain BM1880 SoC. This SoC has two
+reset controllers, each controlling reset lines of different peripherals.
+This commit also adds reset support to UART peripherals.
 
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/reset/reset-simple.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 5e8c86470e6b..8043ba48a30a 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Simple Reset Controller Driver
-  *
-@@ -8,11 +9,6 @@
-  * Copyright 2013 Maxime Ripard
-  *
-  * Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
+diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+index fdfdc65d29ef..37ecb760a2d2 100644
+--- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
++++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+@@ -5,6 +5,7 @@
   */
  
- #include <linux/device.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/bitmain,bm1880-reset.h>
+ 
+ / {
+ 	compatible = "bitmain,bm1880";
+@@ -92,6 +93,18 @@
+ 				compatible = "bitmain,bm1880-pinctrl";
+ 				reg = <0x50 0x4B0>;
+ 			};
++
++			clk_rst: reset-controller@800 {
++				compatible = "bitmain,bm1880-reset";
++				reg = <0x800 0x8>;
++				#reset-cells = <1>;
++			};
++
++			rst: reset-controller@C00 {
++				compatible = "bitmain,bm1880-reset";
++				reg = <0xC00 0x8>;
++				#reset-cells = <1>;
++			};
+ 		};
+ 
+ 		uart0: serial@58018000 {
+@@ -100,6 +113,7 @@
+ 			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
++			resets = <&rst BM1880_RST_UART0_1_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -109,6 +123,7 @@
+ 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
++			resets = <&rst BM1880_RST_UART0_1_ACLK>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -118,6 +133,7 @@
+ 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
++			resets = <&rst BM1880_RST_UART2_3_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -127,6 +143,7 @@
+ 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
++			resets = <&rst BM1880_RST_UART2_3_ACLK>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.17.1
