@@ -1,90 +1,81 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 09/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC CSI Camera interface
-Date: Thu,  9 May 2019 17:58:26 +0200
-Message-Id: <20190509155834.22838-10-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=Eida=TI=verge.net.au=horms@kernel.org>
+Date: Wed, 8 May 2019 11:45:00 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 09/10] ARM: dts: r7s9210: Add USB Device support
+Message-ID: <20190508094459.aqb4qmnh4qw56a5k@verge.net.au>
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
+ <20190506234631.113226-10-chris.brandt@renesas.com>
+ <20190508094313.f7h6b2mwb6ghangp@verge.net.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508094313.f7h6b2mwb6ghangp@verge.net.au>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support according the SMARC Spec 1.1 [1] and provided schematics.
+On Wed, May 08, 2019 at 11:43:13AM +0200, Simon Horman wrote:
+> On Mon, May 06, 2019 at 06:46:30PM -0500, Chris Brandt wrote:
+> > Add USB Device support for RZ/A2.
+> > 
+> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > ---
+> >  arch/arm/boot/dts/r7s9210.dtsi | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
+> > index 1a992e6197c3..67ac746142d0 100644
+> > --- a/arch/arm/boot/dts/r7s9210.dtsi
+> > +++ b/arch/arm/boot/dts/r7s9210.dtsi
+> > @@ -354,6 +354,18 @@
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		usbhs0: usbhs@e8219000 {
+> > +			compatible = "renesas,usbhs-r7s9210","renesas,rza2-usbhs";
+> 
+> Hi Chris,
+> 
+> please add a space after ",". Likewise below.
+> 
+> Otherwise this patch looks good to me.
 
-As specified in [1] the data lanes are shared to cover the csi and the
-parallel case. The case depends on the baseboard so we hide muxing the
-data lanes. The csi data lanes are not muxable at all.
+I meant to say, that it looks good but please address Sergei's feedback.
 
-[1] https://sget.org/standards/smarc
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index e0372687d8f4..19f97ab26e83 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -168,6 +168,18 @@
- 		#size-cells = <0>;
- 		status = "disabld";
- 	};
-+
-+	i2c_cam: i2c-gpio-cam {
-+		compatible = "i2c-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_i2c_gpio_cam>;
-+		sda-gpios = <&gpio4 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>; /* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabld";
-+	};
- };
- 
- /* CAN0 */
-@@ -397,6 +409,13 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c_gpio_cam: i2c-gpiocamgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_6__GPIO1_IO06	0x1b0b0 /* SCL */
-+			MX6QDL_PAD_KEY_COL2__GPIO4_IO10	0x1b0b0 /* SDA */
-+		>;
-+	};
-+
- 	pinctrl_i2c_gpio_intern: i2c-gpiointerngrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30  0x1b0b0 /* SCL */
-@@ -471,6 +490,12 @@
- 		>;
- 	};
- 
-+	pinctrl_mipi_csi: mipi-csigrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1	0x000b0	/* CSI0/1 MCLK */
-+		>;
-+	};
-+
- 	pinctrl_mgmt_gpios: mgmt-gpiosgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_WAIT__GPIO5_IO00		0x1b0b0	/* LID#           */
-@@ -571,6 +596,11 @@
- 	};
- };
- 
-+&mipi_csi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_mipi_csi>;
-+};
-+
- &pcie {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pcie>;
--- 
-2.20.1
+> 
+> > +			reg = <0xe8219000 0x724>;
+> > +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cpg CPG_MOD 61>;
+> > +			renesas,buswait = <7>;
+> > +			phys = <&usb2_phy0>;
+> > +			phy-names = "usb";
+> > +			power-domains = <&cpg>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> >  		ohci1: usbhcd@e821a000 {
+> >  			compatible = "generic-ohci";
+> >  			reg = <0xe821a000 0x100>;
+> > @@ -386,6 +398,18 @@
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		usbhs1: usbhs@e821b000 {
+> > +			compatible = "renesas,usbhs-r7s9210","renesas,rza2-usbhs";
+> > +			reg = <0xe821b000 0x724>;
+> > +			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cpg CPG_MOD 60>;
+> > +			renesas,buswait = <7>;
+> > +			phys = <&usb2_phy1>;
+> > +			phy-names = "usb";
+> > +			power-domains = <&cpg>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> >  		sdhi0: sd@e8228000 {
+> >  			compatible = "renesas,sdhi-r7s9210";
+> >  			reg = <0xe8228000 0x8c0>;
+> > -- 
+> > 2.16.1
+> > 
+> 
