@@ -1,54 +1,34 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [v2 5/5] drm/mediatek: add mt8183 dsi driver support
-Date: Wed, 8 May 2019 11:00:34 +0800
-Message-ID: <1557284434.31731.10.camel@mtksdaap41>
-References: <20190416060501.76276-1-jitao.shi@mediatek.com>
-         <20190416060501.76276-6-jitao.shi@mediatek.com>
+From: Andy Duan <fugang.duan@nxp.com>
+Subject: RE: [EXT] Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for
+ fec 'ahb' clock
+Date: Wed, 8 May 2019 03:42:12 +0000
+Message-ID: <VI1PR0402MB3600C57B5922EC20D87DF913FF320@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
+ <CAOMZO5BbA6oq8okTR-r800k4XY76XxxEdufd1mjcV6HdTpVotA@mail.gmail.com>
+ <AM0PR04MB421133A3F3C6B534B6ECEA7880370@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <VI1PR0402MB360058CE70AD60C116EE0634FF370@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190416060501.76276-6-jitao.shi@mediatek.com>
+In-Reply-To: <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Kay-Liu <liuk@cetca.net.cn>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jitao:
-
-On Tue, 2019-04-16 at 14:05 +0800, Jitao Shi wrote:
-> Add mt8183 dsi driver data. Enable size control and
-> reg commit control.
-> 
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 458a700ce74c..f0b36ec38e4f 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -1104,11 +1104,19 @@ static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
->  	.reg_cmdq_off = 0x180,
->  };
->  
-> +static const struct mtk_dsi_driver_data mt8183_dsi_driver_data = {
-> +	.reg_cmdq_off = 0x200,
-> +	.has_shadow_ctl = true,
-> +	.has_size_ctl = true,
-> +};
-> +
->  static const struct of_device_id mtk_dsi_of_match[] = {
->  	{ .compatible = "mediatek,mt2701-dsi",
->  	  .data = &mt2701_dsi_driver_data },
->  	{ .compatible = "mediatek,mt8173-dsi",
->  	  .data = &mt8173_dsi_driver_data },
-> +	{ .compatible = "mediatek,mt8183-dsi",
-> +	  .data = &mt8183_dsi_driver_data },
->  	{ },
->  };
->  
+RnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBIaSBBbmR5LA0KPiAN
+Cj4gT24gU3VuLCBNYXkgNSwgMjAxOSBhdCA1OjE1IEFNIEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5A
+bnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+IE5hY2sgdGhlIHBhdGNoICENCj4gPg0KLi4uDQo+ID4g
+U2Vjb25kbHksICBmb3IgeW91ciBpc3N1ZSB5b3UgY2F1Z2h0LCB3aGljaCB3YXMgZml4ZWQgYnkg
+cGF0Y2g6DQo+ID4gY29tbWl0IGQ3YzNhMjA2ZTYzMzhlNGNjZGYwMzA3MTlkZWMwMjhlMjZhNTIx
+ZDUNCj4gPiBBdXRob3I6IEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT4NCj4gPiBEYXRl
+OiAgIFR1ZSBBcHIgOSAwMzo0MDo1NiAyMDE5ICswMDAwDQo+ID4NCj4gPiAgICAgbmV0OiBmZWM6
+IG1hbmFnZSBhaGIgY2xvY2sgaW4gcnVudGltZSBwbQ0KPiANCj4gV291bGQgdGhpcyBhbHNvIGZp
+eCB0aGUgY2FzZSB3aGVyZSBwb3dlciBtYW5hZ2VtZW50IHN1cHBvcnQgaXMgZGlzYWJsZWQ/DQo+
+IA0KPiBJZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5IHRoZSBleHBsYW5hdGlvbiBmcm9tIEtheS1M
+aXUgaGUgd291bGQgc3RpbGwgc2VlIGENCj4gaGFuZyBpbiB0aGUgY2FzZSB3aGVuIFBNIGlzIGRp
+c2FibGVkLg0KPiANCj4gVGhhbmtzDQpGcm9tIGN1cnJlbnQgZGVzaWduLCBpdCBzdGlsbCB3b3Jr
+IGV2ZW4gaWYgZGlzYWJsZSBQTS4NClBsZWFzZSBkb3VibGUgY2hlY2sgaXQuDQoNCkFuZHkNCg==
