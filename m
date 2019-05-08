@@ -1,59 +1,52 @@
-Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 9 May 2019 16:35:48 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 25/28] PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-Message-ID: <20190509143548.GT8907@ulmo>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-26-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=6wVR=TI=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2mNuWrpDTYoom6W8"
-Content-Disposition: inline
-In-Reply-To: <20190423092825.759-26-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+References: <20190506234631.113226-1-chris.brandt@renesas.com>
+ <20190506234631.113226-2-chris.brandt@renesas.com> <CAMuHMdV3yW44Y1D2Vn1mNJK8pNF3db20An9Sde8=18r8y7m9LQ@mail.gmail.com>
+ <TY1PR01MB15621F21D3A3F1F550D85CD68A310@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdWBR-069LJZ12pe1azystGp7egzYjKYFVkuRwMoukvzrQ@mail.gmail.com> <TY1PR01MB1562A5D204AD0104862D09FE8A310@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562A5D204AD0104862D09FE8A310@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 8 May 2019 08:59:33 +0200
+Message-ID: <CAMuHMdXyuXOGxa=xVwEFWRWB_yHLGG4kLs-ECesSnoD2ctEVRQ@mail.gmail.com>
+Subject: Re: [PATCH 01/10] phy: renesas: rcar-gen3-usb2: Add uses_usb_x1 option
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Chris,
 
---2mNuWrpDTYoom6W8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 7, 2019 at 10:27 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Tue, May 07, 2019 1, Geert Uytterhoeven wrote:
+> > > So with that said, does a uses-usb-x1 property make more sense?
+> >
+> > No ;-)
+>
+> So....
+>
+> I guess the first patch in the series needs to add this to the .dtsi:
+>
+>         usb_x1_clk: usb_x1 {
+>                 #clock-cells = <0>;
+>                 compatible = "fixed-clock";
+>                 /* If clk present, value must be set by board */
+>                 clock-frequency = <0>;
+>         };
+>
+> Then I can reference "usb_x1" in the driver and see if it is set to
+> non-zero.
+>
+> What do you think?
 
-On Tue, Apr 23, 2019 at 02:58:22PM +0530, Manikanta Maddireddy wrote:
-> In Tegra210 AFI design has clamp value for the BIAS pad as 0, which keeps
-> the bias pad in non power down mode. This is leading to power consumption
-> of 2 mW in BIAS pad, even if the PCIe partition is powergated. To avoid
-> unnecessary power consumption, put PEX CLK & BIAS pads in deep power down
-> mode when PCIe partition is power gated.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2: Using standard pinctrl functions to apply default and idle states
->=20
->  drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+Exactly!
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Gr{oetje,eeting}s,
 
---2mNuWrpDTYoom6W8
-Content-Type: application/pgp-signature; name="signature.asc"
+                        Geert
 
------BEGIN PGP SIGNATURE-----
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUOsQACgkQ3SOs138+
-s6HXahAAjFPWMpQsvEGOlqVlUTWHSBFAFGhPNDZtZO3/1w3FZLLA7z8jAVhF0ZMU
-pM9Izyc84Y9P5MNQGXH++noKX6BilbKw1ku0Bdk0IC/jrXXQ8xfmrPy81IrmniE3
-xuylXqcdaFtfmveyrtGLWLSKXQBrO0t+UY7qvPFnZpLUVoo4ghWM1fLlIKYT3vMC
-+hz9mOMEO4tH0kFKxUFPiN9fROX9JUq2MDCo3pYD8qxqGwWRxvLTolotHAfSJisf
-K43ChvCEI4hdOr+6fyBK50/jKLrMgC77XIizFG/F2adqehFsVN3WKerigb/HqLKo
-tHeUs5boX5OB1l52TW9dv2VhJMrIsgURK2zyz1zFd2sHiiJkYwS2MioLDn3/s6rB
-VPLIIS6vPU4mK99TTH3R4d80JosZ9V5nkqwMXZGtLQP3QSNyNe0iPWJ0ZPHYnb65
-ez2fEeDW/nfJ84bEjxZNIq1cB2GPUgOK52Q/sRmFikXd7eEzVFYhG8MhnBpn9iLp
-cxFxuehOzD3rDAhU24OUJOjoZnC2qo3qU4Iytdn1BSTWqvBO2W1kHfDnBxwajtUf
-DLeINLvoJg0GrRzN7uEWJC0iuGzERE9oXfZdQYOVdUvI8rF80NQ7pfW/+qp2Pt3g
-Om/mWgzq/JhpWDD7+hkblTocp9yQMttDDUY+wzxTfsVwID9z4+g=
-=hei3
------END PGP SIGNATURE-----
-
---2mNuWrpDTYoom6W8--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
