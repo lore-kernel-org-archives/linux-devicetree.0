@@ -1,25 +1,42 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: RE: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
- number to GMAC node
-Date: Wed, 8 May 2019 07:28:57 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B478870@DE02WEMBXB.internal.synopsys.com>
-References: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
-         <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
- <1557166759.17021.9.camel@synopsys.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH v2 1/3] doc: dt: bindings: usb: dwc3: Update entries for disabling U1 and U2
+Date: Wed, 8 May 2019 13:24:49 +0530
+Message-ID: <1557302091-7455-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557166759.17021.9.camel@synopsys.com>
-Content-Language: en-US
+In-Reply-To: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
-Cc: "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, "Claus H. Stovgaard" <cst@phaseone.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, v.anuragkumar@gmail.com, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRXVnZW5peSBQYWx0c2V2IDxwYWx0c2V2QHN5bm9wc3lzLmNvbT4NCkRhdGU6IE1vbiwg
-TWF5IDA2LCAyMDE5IGF0IDE5OjE5OjIwDQoNCj4gSGksDQo+IA0KPiBJJ2xsIGNoZWNrIHRoaXMg
-aW4gdGhlIG5leHQgZmV3IGRheXMuDQo+IA0KDQpJIGFsc28gbm90aWNlZCB0aGF0IEZJRk8gc2l6
-ZSBlbnRyeSBpcyBtaXNzaW5nLiBEV01BQzEwMDAgZG9lcyBub3QgDQpzdXBwb3J0IGF1dG9tYXRp
-YyBGSUZPIHNpemUgZGV0ZWN0aW9uIHNvIHRoaXMgZW50cnkgbmVlZHMgdG8gYmUgYWRkZWQuDQoN
-ClRoYW5rcywNCkpvc2UgTWlndWVsIEFicmV1DQo=
+This patch updates the documentation with the information related
+to the quirks that needs to be added for disabling the link entering
+into the U1 and U2 states
+
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+---
+ Changes in v2
+	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
+	   to "snps,dis-u1-entry-quirk"
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 8e5265e..66780a4 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -64,6 +64,8 @@ Optional properties:
+  - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
+  - snps,dis_enblslpm_quirk: when set clears the enblslpm in GUSB2PHYCFG,
+ 			disabling the suspend signal to the PHY.
++ - snps,dis-u1-entry-quirk: set if link entering into U1 needs to be disabled.
++ - snps,dis-u2-entry-quirk: set if link entering into U2 needs to be disabled.
+  - snps,dis_rxdet_inp3_quirk: when set core will disable receiver detection
+ 			in PHY P3 power state.
+  - snps,dis-u2-freeclk-exists-quirk: when set, clear the u2_freeclk_exists
+-- 
+2.1.1
