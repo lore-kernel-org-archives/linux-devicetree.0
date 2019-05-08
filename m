@@ -1,54 +1,57 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v2 1/4] of_net: Add NVMEM support to of_get_mac_address
-Date: Wed, 8 May 2019 11:02:04 +0200
-Message-ID: <20190508090204.GN81826@meh.true.cz>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-2-git-send-email-ynezz@true.cz>
- <20190501201925.GA15495@bogus>
- <20190502090538.GD346@meh.true.cz>
- <CAL_JsqKLgEjgDOHaNHbu7Bqw1gYCBMRcdO_S98nASnCxtinZ=g@mail.gmail.com>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700
+ Adapt
+Date: Wed, 8 May 2019 11:06:12 +0200
+Message-ID: <20190508090612.GT17751@phenom.ffwll.local>
+References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
+ <CAOMZO5B2nMsVNO6O_D+YTSjux=-DjNPGxhkEi3AQquOZVODumA@mail.gmail.com>
+ <20190507161950.GA24879@ravnborg.org>
+ <20190508083303.GR17751@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKLgEjgDOHaNHbu7Bqw1gYCBMRcdO_S98nASnCxtinZ=g@mail.gmail.com>
+In-Reply-To: <20190508083303.GR17751@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Fabio Estevam <festevam@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, stable <stable@vger.kernel.org>, =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> [2019-05-07 11:06:43]:
-
-Hi,
-
-> > Honestly I don't know if it's necessary to have it, but so far address,
-> > mac-address and local-mac-address properties provide this DT nodes, so I've
-> > simply thought, that it would be good to have it for MAC address from NVMEM as
-> > well in order to stay consistent.
+On Wed, May 08, 2019 at 10:33:03AM +0200, Daniel Vetter wrote:
+> On Tue, May 07, 2019 at 06:19:50PM +0200, Sam Ravnborg wrote:
+> > Hi Fabio
+> > 
+> > On Tue, May 07, 2019 at 12:33:39PM -0300, Fabio Estevam wrote:
+> > > [Adding Sam, who is helping to review/collect panel-simple patches]
+> > > 
+> > > On Tue, May 7, 2019 at 12:27 PM Sébastien Szymanski
+> > > <sebastien.szymanski@armadeus.com> wrote:
+> > > >
+> > > > This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+> > > > Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+> > > > that it can be connected on the TFT header of Armadeus Dev boards.
+> > > >
+> > > > Cc: stable@vger.kernel.org # v4.19
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > 
+> > If you wil lresend the patch I can apply it.
+> > I have lost the original mail.
 > 
-> If you want to be consistent, then fill in 'local-mac-address' with
-> the value from nvmem. We don't need the same thing with a new name
-> added to DT. (TBC, I'm not suggesting you do that here.)
+> Usually patchwork should have it already (and you can pipe the raw
+> patchwork mbox into dim apply), but somehow it's not there either.
+> Not sure why, sometimes this is because mails are stuck in moderation,
+> sometimes because people do interesting things with their mails (e.g. smtp
+> servers mangling formatting).
 
-Ok, got it.
+patchwork was just a bit slow, it's there now:
 
-> But really, my point with using devm_kzalloc() is just return the
-> data, not store in DT and free it when the driver unbinds. 
+https://patchwork.freedesktop.org/series/60408/
 
-Ok, I've simply misunderstood your point, sorry, I'll handle it in the follow
-up fix series, along with the DT documentation update.
-
-> Allocating it with devm_kzalloc AND adding it to DT as you've done in v4
-> leads to 2 entities refcounting the allocation. If the driver unbinds, the
-> buffer is freed, but DT code is still referencing that memory.
-
-Indeed, I did it wrong, will fix that.
-
-> 'nvmem-mac-address' is not a documented property. That would need to
-> be documented before using upstream. Though, for reasons above, I
-> don't think it should be.
-
-Ok, it makes sense now. Thanks for the detailed explanation.
-
--- ynezz
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
