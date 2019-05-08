@@ -1,38 +1,210 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v1 4/4] arm64: ls1028ardb: Add support DP nodes for LS1028ARDB
-Date: Wed, 8 May 2019 10:35:33 +0000
-Message-ID: <20190508103703.40885-4-wen.he_1@nxp.com>
-References: <20190508103703.40885-1-wen.he_1@nxp.com>
+From: Neal Liu <neal.liu@mediatek.com>
+Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
+Date: Wed, 8 May 2019 18:35:37 +0800
+Message-ID: <1557311737.11818.11.camel@mtkswgap22>
+References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
+         <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
+         <12193108.aNnqf5ydOJ@tauon.chronox.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508103703.40885-1-wen.he_1@nxp.com>
-Content-Language: en-US
+In-Reply-To: <12193108.aNnqf5ydOJ@tauon.chronox.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, Wen He <wen.he_1@nxp.com>
+To: Stephan Mueller <smueller@chronox.de>
+Cc: mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, wsd_upstream@mediatek.com, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Crystal.Guo@mediatek.com, neal.liu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgSERQIFBIWSBDb250cm9sbGVyIHJlbGF0ZWQgbm9kZXMgb24gdGhlIExT
-MTAyOEFSREIuDQpOb3cgTFMxMDI4QVJEQiBvbiBEUCBoYXMgZm9sbG93aW5nIGZlYXR1cmVzOg0K
-LSBTdXBwb3J0cyA0IGRwIGxhbmUgY2hhbm5lbCBhbmQgbGFuZSBtYXBwaW5nIGlzIDEtMC0zLTIu
-DQotIEJ5IGRlZmF1bHQsIHRoZSBwaXhlbCBsaW5rIHJhdGUgdmFsdWUncyAyN01oei4NCi0gQnkg
-ZGVmYXVsdCwgc3VwcG9ydCB0aGUgcmVzb2x1aW9ucyBhcmUgNGtANjAsMTA4MHBANjAsNzIwcEA2
-MCwNCjQ4MHBANjAuIGFsc28gdXNlciBjYW4gc3BlY2lmeSBhbnkgY29tYmluYXRpb24gb2YgbW9u
-aXRvciBzdXBwb3J0ZWQNCnJlc29sdWlvbnMgYnkgd3JpdHRlbiBpbiB0aGUgbm9kZSAncmVzb2x1
-aW9uJy4NCi0gQnkgZGVmYXVsdCwgdGhlIGVkaWQgZnVuY3Rpb24gaXMgbm90IGluIHVzZS4NCg0K
-U2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGFsaXNvbi53YW5nQG54cC5jb20+DQpTaWduZWQt
-b2ZmLWJ5OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQotLS0NCiBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzIHwgMTIgKysrKysrKysrKysrDQogMSBm
-aWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5kdHMgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQppbmRleCBmOWMyNzJmYjA3MzguLjUx
-M2IwZTM3ZWExMyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
-bC1sczEwMjhhLXJkYi5kdHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
-bC1sczEwMjhhLXJkYi5kdHMNCkBAIC0xNTEsMyArMTUxLDE1IEBADQogJnNhaTQgew0KIAlzdGF0
-dXMgPSAib2theSI7DQogfTsNCisNCismaGRwIHsNCisJZnNsLG5vX2VkaWQ7DQorCXJlc29sdXRp
-b24gPSAiMzg0MHgyMTYwQDYwIiwNCisJCSAgICIxOTIweDEwODBANjAiLA0KKwkJICAgIjEyODB4
-NzIwQDYwIiwNCisJCSAgICI3MjB4NDgwQDYwIjsNCisJbGFuZV9tYXBwaW5nID0gPDB4NGU+Ow0K
-KwllZHBfbGlua19yYXRlID0gPDB4Nj47DQorCWVkcF9udW1fbGFuZXMgPSA8MHg0PjsNCisJc3Rh
-dHVzID0gIm9rYXkiOw0KK307DQotLSANCjIuMTcuMQ0KDQo=
+Hi Stephan,
+	We think the cast is fine, and it cannot guarantee the buf is
+word-align.
+	I reference multiple rng driver's implementation and found it's common
+usage for this. So it might be general usage for community. Is there any
+suggestion that is more appropriate?
+
+	Thanks
+Best Regards,
+-Neal Liu
+
+
+On Wed, 2019-05-08 at 08:34 +0200, Stephan Mueller wrote:
+> Am Mittwoch, 8. Mai 2019, 05:58:57 CEST schrieb neal.liu@mediatek.com:
+> 
+> Hi liu,
+> 
+> > From: Neal Liu <neal.liu@mediatek.com>
+> > 
+> > For Mediatek SoCs on ARMv8 with TrustZone enabled, peripherals like
+> > entropy sources is not accessible from normal world (linux) and
+> > rather accessible from secure world (ATF/TEE) only. This driver aims
+> > to provide a generic interface to ATF rng service.
+> > 
+> > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > ---
+> >  drivers/char/hw_random/Kconfig      |   16 ++++++
+> >  drivers/char/hw_random/Makefile     |    1 +
+> >  drivers/char/hw_random/mt67xx-rng.c |  104
+> > +++++++++++++++++++++++++++++++++++ 3 files changed, 121 insertions(+)
+> >  create mode 100644 drivers/char/hw_random/mt67xx-rng.c
+> > 
+> > diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> > index 25a7d8f..98751d3 100644
+> > --- a/drivers/char/hw_random/Kconfig
+> > +++ b/drivers/char/hw_random/Kconfig
+> > @@ -398,6 +398,22 @@ config HW_RANDOM_MTK
+> > 
+> >  	  If unsure, say Y.
+> > 
+> > +config HW_RANDOM_MT67XX
+> > +	tristate "Mediatek MT67XX Random Number Generator support"
+> > +	depends on HW_RANDOM
+> > +	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > +	default HW_RANDOM
+> > +	help
+> > +	  This driver provides kernel-side support for the Random Number
+> > +	  Generator hardware found on Mediatek MT67xx SoCs. The difference
+> > +	  with mtk-rng is the Random Number Generator hardware is secure
+> > +	  access only.
+> > +
+> > +	  To compile this driver as a module, choose M here. the
+> > +	  module will be called mt67xx-rng.
+> > +
+> > +	  If unsure, say Y.
+> > +
+> >  config HW_RANDOM_S390
+> >  	tristate "S390 True Random Number Generator support"
+> >  	depends on S390
+> > diff --git a/drivers/char/hw_random/Makefile
+> > b/drivers/char/hw_random/Makefile index 7c9ef4a..4be95ab 100644
+> > --- a/drivers/char/hw_random/Makefile
+> > +++ b/drivers/char/hw_random/Makefile
+> > @@ -36,6 +36,7 @@ obj-$(CONFIG_HW_RANDOM_PIC32) += pic32-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
+> >  obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
+> > +obj-$(CONFIG_HW_RANDOM_MT67XX) += mt67xx-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+> >  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+> > diff --git a/drivers/char/hw_random/mt67xx-rng.c
+> > b/drivers/char/hw_random/mt67xx-rng.c new file mode 100644
+> > index 0000000..e70cbbe
+> > --- /dev/null
+> > +++ b/drivers/char/hw_random/mt67xx-rng.c
+> > @@ -0,0 +1,104 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2019 MediaTek Inc.
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/hw_random.h>
+> > +#include <linux/of.h>
+> > +#include <linux/arm-smccc.h>
+> > +#include <linux/soc/mediatek/mtk_sip_svc.h>
+> > +
+> > +#define PFX			KBUILD_MODNAME ": "
+> > +#define MT67XX_RNG_MAGIC	0x74726e67
+> > +#define SMC_RET_NUM		4
+> > +
+> > +struct mt67xx_rng_priv {
+> > +	struct hwrng rng;
+> > +};
+> > +
+> > +
+> > +static void __rng_sec_read(uint32_t *val)
+> > +{
+> > +	struct arm_smccc_res res;
+> > +
+> > +	arm_smccc_smc(MTK_SIP_KERNEL_GET_RND,
+> > +		      MT67XX_RNG_MAGIC, 0, 0, 0, 0, 0, 0, &res);
+> > +
+> > +	val[0] = res.a0;
+> > +	val[1] = res.a1;
+> > +	val[2] = res.a2;
+> > +	val[3] = res.a3;
+> > +}
+> > +
+> > +static int mt67xx_rng_read(struct hwrng *rng, void *buf, size_t max, bool
+> > wait) +{
+> > +	int i, retval = 0;
+> > +	uint32_t val[4] = {0};
+> > +	size_t get_rnd_size = sizeof(u32) * SMC_RET_NUM;
+> > +
+> > +	if (!buf) {
+> > +		pr_err("%s, buf is NULL\n", __func__);
+> > +		return -EFAULT;
+> > +	}
+> > +
+> > +	while (max >= get_rnd_size) {
+> > +		__rng_sec_read(val);
+> > +
+> > +		for (i = 0; i < SMC_RET_NUM; i++) {
+> > +			*(u32 *)buf = val[i];
+> 
+> I am not sure this cast is right - or how is it guaranteed that buf is word-
+> aligned?
+> 
+> > +			buf += sizeof(u32);
+> > +		}
+> > +
+> > +		retval += get_rnd_size;
+> > +		max -= get_rnd_size;
+> > +	}
+> > +
+> > +	return retval;
+> > +}
+> > +
+> > +static int mt67xx_rng_probe(struct platform_device *pdev)
+> > +{
+> > +	int ret;
+> > +	struct mt67xx_rng_priv *priv;
+> > +
+> > +	pr_info(PFX "driver registered\n");
+> > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	priv->rng.name = KBUILD_MODNAME;
+> > +	priv->rng.read = mt67xx_rng_read;
+> > +	priv->rng.priv = (unsigned long)&pdev->dev;
+> > +	priv->rng.quality = 900;
+> > +
+> > +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "failed to register rng device: %d\n", 
+> ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id mt67xx_rng_match[] = {
+> > +	{ .compatible = "mediatek,mt67xx-rng", },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mt67xx_rng_match);
+> > +
+> > +static struct platform_driver mt67xx_rng_driver = {
+> > +	.probe = mt67xx_rng_probe,
+> > +	.driver = {
+> > +		.name = KBUILD_MODNAME,
+> > +		.owner = THIS_MODULE,
+> > +		.of_match_table = mt67xx_rng_match,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(mt67xx_rng_driver);
+> > +
+> > +MODULE_DESCRIPTION("Mediatek MT67XX Random Number Generator Driver");
+> > +MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
+> > +MODULE_LICENSE("GPL");
+> 
+> 
+> 
+> Ciao
+> Stephan
+> 
+> 
