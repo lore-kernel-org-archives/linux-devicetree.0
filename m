@@ -1,7 +1,7 @@
 From: Wen He <wen.he_1@nxp.com>
-Subject: [v1 2/4] arm64: dts: ls1028a: Add properties for HDP Controller.
-Date: Wed, 8 May 2019 10:00:14 +0000
-Message-ID: <20190508100136.7009-2-wen.he_1@nxp.com>
+Subject: [v1 4/4] arm64: ls1028ardb: Add support DP nodes for LS1028ARDB
+Date: Wed, 8 May 2019 10:00:19 +0000
+Message-ID: <20190508100136.7009-4-wen.he_1@nxp.com>
 References: <20190508100136.7009-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,57 +22,40 @@ To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org
 Cc: Wen He <wen.he_1@nxp.com>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the HDP controller driver on the LS1028A.
+This patch add HDP PHY Controller related nodes on the LS1028ARDB.
+Now LS1028ARDB on DP has following features:
+- Supports 4 dp lane channel and lane mapping is 1-0-3-2.
+- By default, the pixel link rate value's 27Mhz.
+- By default, support the resoluions are 4k@60,1080p@60,720p@60,
+480p@60. also user can specify any combination of monitor supported
+resoluions by written in the node 'resoluion'.
+- By default, the edid function is not in use.
 
-Signed-off-by: Alison Wang <aslion.wang@nxp.com>
+Signed-off-by: Alison Wang <alison.wang@nxp.com>
 Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index c0a13f9e5b95..158fdf26a117 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -91,6 +91,13 @@
- 		clock-output-names= "pclk";
- 	};
- 
-+	hdpclk: clock-hdpcore {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <162500000>;
-+		clock-output-names= "hdpclk";
-+	};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index f9c272fb0738..513b0e37ea13 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -151,3 +151,15 @@
+ &sai4 {
+ 	status = "okay";
+ };
 +
- 	reboot {
- 		compatible ="syscon-reboot";
- 		regmap = <&dcfg>;
-@@ -467,7 +474,25 @@
- 
- 		port {
- 			dp0_out: endpoint {
-+				remote-endpoint = <&dp1_out>;
-+			};
-+		};
-+	};
- 
-+	hdp: display@f200000 {
-+		compatible = "fsl,ls1028a-dp";
-+		reg = <0x0 0xf1f0000 0x0 0xffff>,
-+		    <0x0 0xf200000 0x0 0xfffff>;
-+		interrupts = <0 221 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sysclk>, <&hdpclk>, <&dpclk>,
-+			 <&dpclk>, <&dpclk>, <&pclk>, <&dpclk>;
-+		clock-names = "clk_ipg", "clk_core", "clk_pxl",
-+			      "clk_pxl_mux", "clk_pxl_link", "clk_apb",
-+			      "clk_vif";
-+
-+		port {
-+			dp1_out: endpoint {
-+				remote-endpoint = <&dp0_out>;
- 			};
- 		};
- 	};
++&hdp {
++	fsl,no_edid;
++	resolution = "3840x2160@60",
++		   "1920x1080@60",
++		   "1280x720@60",
++		   "720x480@60";
++	lane_mapping = <0x4e>;
++	edp_link_rate = <0x6>;
++	edp_num_lanes = <0x4>;
++	status = "okay";
++};
 -- 
 2.17.1
