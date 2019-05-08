@@ -1,30 +1,30 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 02/10] dt-bindings: doc: reflect new NVMEM
- of_get_mac_address behaviour
-Date: Wed, 8 May 2019 13:48:50 +0200
-Message-ID: <20190508114850.GC30557@lunn.ch>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <1556893635-18549-3-git-send-email-ynezz@true.cz>
- <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
- <20190508084152.GM81826@meh.true.cz>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 4/4] arm64: dts: imx: add i.MX8QXP ocotp support
+Date: Wed, 8 May 2019 11:49:06 +0000
+Message-ID: <AM0PR04MB4211A76AA2D65894CCB0F39A80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190508030927.16668-1-peng.fan@nxp.com>
+ <20190508030927.16668-4-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190508084152.GM81826@meh.true.cz>
+In-Reply-To: <20190508030927.16668-4-peng.fan@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc: Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <sr>
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> I've just tried to reword what was already there, anyway, did I understood
-> your remark properly, would this be more appropriate?
-> 
->  The MAC address will be determined using the optional properties defined in
->  ethernet.txt and only if efuse-mac is set to 0. If any of the optional MAC
->  address properties are not present, then the driver will use random MAC
->  address.
-
-If _all_ of the optional ...
-
-   Andrew
+PiBGcm9tOiBQZW5nIEZhbg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA4LCAyMDE5IDEwOjU2IEFN
+DQo+IA0KPiBBZGQgaS5NWDhRWFAgb2NvdHAgbm9kZQ0KPiANCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
+b2JoK2R0QGtlcm5lbC5vcmc+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPg0KPiBDYzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBDYzogU2FzY2hh
+IEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBDYzogUGVuZ3V0cm9uaXggS2VybmVs
+IFRlYW0gPGtlcm5lbEBwZW5ndXRyb25peC5kZT4NCj4gQ2M6IEZhYmlvIEVzdGV2YW0gPGZlc3Rl
+dmFtQGdtYWlsLmNvbT4NCj4gQ2M6IE5YUCBMaW51eCBUZWFtIDxsaW51eC1pbXhAbnhwLmNvbT4N
+Cj4gQ2M6IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+IENjOiBBbnNvbiBI
+dWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IERhbmllbCBCYWx1dGEgPGRhbmllbC5i
+YWx1dGFAbnhwLmNvbT4NCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogUGVu
+ZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFp
+c2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg==
