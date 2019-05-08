@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 10/11] arm64: dts: sc9836: Update coresight DT bindings
-Date: Wed,  8 May 2019 10:19:01 +0800
-Message-ID: <20190508021902.10358-11-leo.yan@linaro.org>
+Subject: [PATCH v2 11/11] arm64: dts: sc9860: Update coresight DT bindings
+Date: Wed,  8 May 2019 10:19:02 +0800
+Message-ID: <20190508021902.10358-12-leo.yan@linaro.org>
 References: <20190508021902.10358-1-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190508021902.10358-1-leo.yan@linaro.org>
@@ -24,21 +24,48 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 ---
- arch/arm64/boot/dts/sprd/sc9836.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/sprd/sc9860.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/sprd/sc9836.dtsi b/arch/arm64/boot/dts/sprd/sc9836.dtsi
-index 286d7173f94f..231436be0e3f 100644
---- a/arch/arm64/boot/dts/sprd/sc9836.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9836.dtsi
-@@ -60,7 +60,7 @@
- 	};
+diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+index b25d19977170..e27eb3ed1d47 100644
+--- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
++++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+@@ -300,7 +300,7 @@
+ 		};
  
- 	funnel@10001000 {
--		compatible = "arm,coresight-funnel", "arm,primecell";
-+		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 		reg = <0 0x10001000 0 0x1000>;
- 		clocks = <&clk26mhz>;
- 		clock-names = "apb_pclk";
+ 		funnel@10001000 { /* SoC Funnel */
+-			compatible = "arm,coresight-funnel", "arm,primecell";
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0 0x10001000 0 0x1000>;
+ 			clocks = <&ext_26m>;
+ 			clock-names = "apb_pclk";
+@@ -367,7 +367,7 @@
+ 		};
+ 
+ 		funnel@11001000 { /* Cluster0 Funnel */
+-			compatible = "arm,coresight-funnel", "arm,primecell";
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0 0x11001000 0 0x1000>;
+ 			clocks = <&ext_26m>;
+ 			clock-names = "apb_pclk";
+@@ -415,7 +415,7 @@
+ 		};
+ 
+ 		funnel@11002000 { /* Cluster1 Funnel */
+-			compatible = "arm,coresight-funnel", "arm,primecell";
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0 0x11002000 0 0x1000>;
+ 			clocks = <&ext_26m>;
+ 			clock-names = "apb_pclk";
+@@ -513,7 +513,7 @@
+ 		};
+ 
+ 		funnel@11005000 { /* Main Funnel */
+-			compatible = "arm,coresight-funnel", "arm,primecell";
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0 0x11005000 0 0x1000>;
+ 			clocks = <&ext_26m>;
+ 			clock-names = "apb_pclk";
 -- 
 2.17.1
