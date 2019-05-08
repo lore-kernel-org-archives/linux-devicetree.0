@@ -1,99 +1,42 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-Date: Wed, 8 May 2019 09:04:10 -0500
-Message-ID: <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com>
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
- <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 00/11] dts: Update DT bindings for CoreSight replicator
+ and funnel
+Date: Wed, 8 May 2019 15:29:12 +0100
+Message-ID: <9c56323b-7b14-c662-b824-ed60fbb1638f@arm.com>
+References: <20190508021902.10358-1-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
+In-Reply-To: <20190508021902.10358-1-leo.yan@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>
+To: leo.yan@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org, mike.leach@linaro.org, xuwei5@hisilicon.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, agross@kernel.org, david.brown@linaro.org, linus.walleij@linaro.org, liviu.dudau@arm.com, Sudeep.Holla@arm.com, Lorenzo.Pieralisi@arm.com, orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: guodong.xu@linaro.org, zhangfei.gao@linaro.org, haojian.zhuang@linaro.org, cphealy@gmail.com, andrew@lunn.ch, lee.jones@linaro.org, zhang.chunyan@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 7, 2019 at 11:08 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > +boot-architecture list as there was some discussion about this IIRC.
-> >
-> > On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > >
-> > > Introducing a chosen node, rng-seed, which is an 64 bytes entropy
-> > > that can be passed to kernel called very early to increase device
-> > > randomness. Bootloader should provide this entropy and the value is
-> > > read from /chosen/rng-seed in DT.
-> > >
-> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > >
-> > > ---
-> > >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
-> >
-> > Actually, this file has been converted to json-schema and lives
-> > here[1]. I need to remove this one (or leave it with a reference to
-> > the new one).
-> >
-> > >  arch/arm64/kernel/setup.c                    |  2 ++
-> > >  drivers/of/fdt.c                             | 33 ++++++++++++++++++++
-> > >  include/linux/of_fdt.h                       |  1 +
-> > >  4 files changed, 50 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > > index 45e79172a646..bfd360691650 100644
-> > > --- a/Documentation/devicetree/bindings/chosen.txt
-> > > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
-> > >  the Linux EFI stub (which will populate the property itself, using
-> > >  EFI_RNG_PROTOCOL).
-> > >
-> > > +rng-seed
-> > > +-----------
-> > > +
-> > > +This property served as an entropy to add device randomness. It is parsed
-> > > +as a 64 byte value, e.g.
-> >
-> > Why only 64-bytes?
-> We can also not specify size and read what bootloader can provide.
-> >
-> > > +
-> > > +/ {
-> > > +       chosen {
-> > > +               rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
-> > > +       };
-> > > +};
-> > > +
-> > > +This random value should be provided by bootloader.
-> > > +
-> > >  stdout-path
-> > >  -----------
-> > >
-> > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > > index 413d566405d1..ade4261516dd 100644
-> > > --- a/arch/arm64/kernel/setup.c
-> > > +++ b/arch/arm64/kernel/setup.c
-> > > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
-> > >         early_fixmap_init();
-> > >         early_ioremap_init();
-> > >
-> > > +       early_init_dt_rng_seed(__fdt_pointer);
-> > > +
-> >
-> > I'm trying to reduce or eliminate all these early_init_dt_* calls.
-> >
-> > Why is this arch specific and why can't this be done after
-> > unflattening? It doesn't look like add_device_randomness() needs
-> > anything early.
-> Currently unflattening is called after setup_machine_fdt(), which
-> called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
-> PAGE_KERNEL_RO), and we can't modify DT after that since it's read
-> only. But we need to clear (eg. write 0 to it) the rng-seed after
-> reading from DT.
 
-Why do you need to clear it? That wasn't necessary for kaslr-seed.
 
-Why not change the mapping to RW? It would be nice if this worked on
-more than one arch.
+On 08/05/2019 03:18, Leo Yan wrote:
+> Since the DT bindings consolidatoins for CoreSight replicator and funnel
+> is ready for kernel v5.2 merge window [1], this patch set is to update
+> the related CoreSight DT bindings for platforms; IIUC, this patch set
+> will be safe for merging into kernel v5.2 because the dependency
+> patches in [1] will be landed into mainline kernel v5.2 cycle.
+> 
+> In this patch set, it tries to update below two compatible strings to
+> the latest strings:
+> 
+>    s/"arm,coresight-replicator"/"arm,coresight-static-replicator"
+>    s/"arm,coresight-funnel"/"arm,coresight-dynamic-funnel"
+> 
+> Please note, some platforms have two continuous patches, one is for
+> updating static replicator compatible string and another is for dynamic
+> funnel change; and other platforms have only one patch since it only
+> needs to change for dynamic funnel.
 
-Rob
+This is now misleading ;-), but that doesn't matter.
+
+For the entire series :
+
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
