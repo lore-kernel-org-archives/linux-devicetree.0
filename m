@@ -1,41 +1,89 @@
 From: <neal.liu@mediatek.com>
-Subject: [PATCH 0/3] MT67XX random number generator support
-Date: Wed, 8 May 2019 11:58:54 +0800
-Message-ID: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
+Subject: [PATCH 1/3] soc: mediatek: add SMC fid table for SIP interface
+Date: Wed, 8 May 2019 11:58:55 +0800
+Message-ID: <1557287937-2410-2-git-send-email-neal.liu@mediatek.com>
+References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com
-Cc: wsd_upstream@mediatek.com, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: wsd_upstream@mediatek.com, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Neal Liu <neal.liu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-These patch series introduce a generic rng driver for Trustzone
-based kernel driver which would like to communicate with ATF
-SIP services.
+From: Neal Liu <neal.liu@mediatek.com>
 
-Patch #1 initials SMC fid table for Mediatek SIP interfaces and
-adds HWRNG related SMC call.
+1. Add a header file to provide SIP interface to ARM
+Trusted Firmware(ATF)
+2. Add hwrng SMC fid
 
-Patch #2..3 adds mt67xx-rng kernel driver for Trustzone based SoCs.
-For Mediatek SoCs on ARMv8 with TrustZone enabled, peripherals like
-entropy sources is not accessible from normal world (linux) and
-rather accessible from secure world (ATF/TEE) only. This driver aims
-to provide a generic interface to ATF rng service.
-
-Neal Liu (3):
-  soc: mediatek: add SMC fid table for SIP interface
-  dt-bindings: rng: update bindings for MT67xx SoCs
-  hwrng: add mt67xx-rng driver
-
- Documentation/devicetree/bindings/rng/mtk-rng.txt |   13 ++-
- drivers/char/hw_random/Kconfig                    |   16 ++++
- drivers/char/hw_random/Makefile                   |    1 +
- drivers/char/hw_random/mt67xx-rng.c               |  104 +++++++++++++++++++++
- include/linux/soc/mediatek/mtk_sip_svc.h          |   55 +++++++++++
- 5 files changed, 186 insertions(+), 3 deletions(-)
- create mode 100644 drivers/char/hw_random/mt67xx-rng.c
+Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+---
+ include/linux/soc/mediatek/mtk_sip_svc.h |   55 ++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
 
+diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
+new file mode 100644
+index 0000000..ac73f68
+--- /dev/null
++++ b/include/linux/soc/mediatek/mtk_sip_svc.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#ifndef _MTK_SECURE_API_H_
++#define _MTK_SECURE_API_H_
++
++#include <linux/kernel.h>
++
++
++/* Error Code */
++#define SIP_SVC_E_SUCCESS			0
++#define SIP_SVC_E_NOT_SUPPORTED			-1
++#define SIP_SVC_E_INVALID_PARAMS		-2
++#define SIP_SVC_E_INVALID_RANGE			-3
++#define SIP_SVC_E_PERMISSION_DENY		-4
++
++#ifdef CONFIG_ARM64
++#define MTK_SIP_SMC_AARCH_BIT			0x40000000
++#else
++#define MTK_SIP_SMC_AARCH_BIT			0x00000000
++#endif
++
++
++/*******************************************************************************
++ * Defines for Mediatek runtime services func ids
++ ******************************************************************************/
++
++/* Debug feature and ATF related SMC call */
++
++/* CPU operations related SMC call */
++
++/* SPM related SMC call */
++
++/* Low power related SMC call */
++
++/* AMMS related SMC call */
++
++/* Security related SMC call */
++/* HWRNG */
++#define MTK_SIP_KERNEL_GET_RND \
++	(0x82000206 | MTK_SIP_SMC_AARCH_BIT)
++
++/* Storage Encryption related SMC call */
++
++/* Platform related SMC call */
++
++/* Pheripheral related SMC call */
++
++/* MM related SMC call */
++
++
++#endif /* _MTK_SECURE_API_H_ */
++
 -- 
 1.7.9.5
