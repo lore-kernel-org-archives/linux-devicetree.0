@@ -1,83 +1,89 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 25/29] PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-Date: Mon, 13 May 2019 23:37:40 +0530
-Message-ID: <20190513180744.16493-26-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:02:47 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 01/28] soc/tegra: pmc: Export
+ tegra_powergate_power_on()
+Message-ID: <20190509140247.GA8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-2-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-2-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In Tegra210 AFI design has clamp value for the BIAS pad as 0, which keeps
-the bias pad in non power down mode. This is leading to power consumption
-of 2 mW in BIAS pad, even if the PCIe partition is powergated. To avoid
-unnecessary power consumption, put PEX CLK & BIAS pads in deep power down
-mode when PCIe partition is power gated.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 23, 2019 at 02:57:58PM +0530, Manikanta Maddireddy wrote:
+> tegra_powergate_sequence_power_up() powers up partition and also enables
+> clock & reset. However, if a controller like PCIe have multiple clocks
+> & resets and they need to be enabled in a sequence, driver must use
+> standalone function tegra_powergate_power_on() to power up partition.
+>=20
+> Export tegra_powergate_power_on() to allow Tegra controller drivers to
+> unpower gate partition independent to clock & reset.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2: No change
+>=20
+>  drivers/soc/tegra/pmc.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 0c5f79528e5f..cb3de81348bd 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
+> =20
+>  	return tegra_powergate_set(pmc, id, true);
+>  }
+> +EXPORT_SYMBOL(tegra_powergate_power_on);
+> =20
+>  /**
+>   * tegra_powergate_power_off() - power off partition
+
+If the sequence for the PCI power partition is becoming non-standard,
+this is going to hamper our efforts to move to generic PM domains. But
+it is what it is, so let's do this for now. We might need to revise this
+later on if/when we come up with a better solution.
+
+Bjorn, do you want to pick this up as part of this series, given the
+build dependency? If so:
+
 Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: No change
 
-V2: Using standard pinctrl functions to apply default and idle states
+Alternatively I could provide a stable branch for you to pull in. But I
+don't think it'd be necessary, the PMC driver is a fairly slow-moving
+target these days.
 
- drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Thierry
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 33f4dfab9e35..06b99fcbf382 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -30,6 +30,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
-@@ -2875,6 +2876,7 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		tegra_pcie_disable_msi(pcie);
- 
-+	pinctrl_pm_select_idle_state(dev);
- 	tegra_pcie_power_off(pcie);
- 
- 	return 0;
-@@ -2890,6 +2892,13 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- 		dev_err(dev, "tegra pcie power on fail: %d\n", err);
- 		return err;
- 	}
-+
-+	err = pinctrl_pm_select_default_state(dev);
-+	if (err < 0) {
-+		dev_err(dev, "failed to disable PCIe IO DPD: %d\n", err);
-+		goto poweroff;
-+	}
-+
- 	tegra_pcie_enable_controller(pcie);
- 	tegra_pcie_setup_translations(pcie);
- 
-@@ -2899,7 +2908,7 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- 	err = clk_prepare_enable(pcie->pex_clk);
- 	if (err) {
- 		dev_err(dev, "failed to enable PEX clock: %d\n", err);
--		goto poweroff;
-+		goto pex_dpd_enable;
- 	}
- 
- 	reset_control_deassert(pcie->pex_rst);
-@@ -2920,6 +2929,8 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
- disable_pex_clk:
- 	reset_control_assert(pcie->pex_rst);
- 	clk_disable_unprepare(pcie->pex_clk);
-+pex_dpd_enable:
-+	pinctrl_pm_select_idle_state(dev);
- poweroff:
- 	tegra_pcie_power_off(pcie);
- 
--- 
-2.17.1
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUMwMACgkQ3SOs138+
+s6HprA/9F4gXqL3jv8cXkVNJm079C4WLCBNlKQk0065YfmbsRGwyqJgSkMQcQybk
+N9At6Dmh4fAUPh5xwJ8yQ5eOphdPtbpci1cPMJk6Ze/tuQTtObDjHeggFz3Zx6M7
++R/AmRcbiyBomUrcey7bO398IFSF6bhpaKXxmJxzwlNY2JAzRS77jo1JcCnYolh2
+2WZypuJmC6Vp9Z9yC8u+nGdZRu2ca9VYDezV9yVrTN0mG+YYN/eFyjUcuRypLScF
+lm2hoAXu5M3RywjACzJltQgJd1+y2looqmrTlBxXm5xlNq7DdHK8d7KVLrtb2Qn5
+ml3BtQ540YQmzaWyeukbP3XGxJ2/gIkKhjQ249u0AV8Op+LcDuaduHzhTUjeIFTL
+1o/Vhc5FO+uqlyF7ete2R3jejJF99dPIbB2qq3E1H7Wt2EBiNpMVeCYD4cwRH9R+
+xsgEb9SjshqMoAbr3sx+9AumfGchj33Mf0WIDCmZYXzk2L4pERBMi4PtMABd2NY5
+XHbKEBy7iYnQCmDnKqcf+3+8Y+EZx6voh9ntDQiZBcCEhpaPKVOFiUuP9naEar8K
+ue23LYfeIOFjZyeI6Cbj9FmS3JDtSNcciymoVOGdby3n6rDh+2FrHkhpbkbA9C+3
+fA0BNLhVJl7lQJ8SwdQqEbIbiVzw5lNlvPFW8CthRf12SmR7keI=
+=Bhb3
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
