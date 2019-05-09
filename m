@@ -1,77 +1,86 @@
-From: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Thu, 9 May 2019 17:40:48 -0600
-Message-ID: <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
-References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
- <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
- <20190509233043.GC20877@mit.edu>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
+ and U2 entries
+Date: Thu, 9 May 2019 23:59:43 +0000
+Message-ID: <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
+References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
+ <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20190509233043.GC20877-3s7WtUTddSA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim.Bird-7U/KSKJipcs@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, pmladek-IBi9RG/b67k@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anurag Kumar Vulisha <anuragku@xilinx.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "Claus H. Stovgaard" <cst@phaseone.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2019-05-09 5:30 p.m., Theodore Ts'o wrote:
-> On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
->>
->> The second item, arguably, does have significant overlap with kselftest.
->> Whether you are running short tests in a light weight UML environment or
->> higher level tests in an heavier VM the two could be using the same
->> framework for writing or defining in-kernel tests. It *may* also be valuable
->> for some people to be able to run all the UML tests in the heavy VM
->> environment along side other higher level tests.
->>
->> Looking at the selftests tree in the repo, we already have similar items to
->> what Kunit is adding as I described in point (2) above. kselftest_harness.h
->> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
->> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
->>
->> However, the number of users of this harness appears to be quite small. Most
->> of the code in the selftests tree seems to be a random mismash of scripts
->> and userspace code so it's not hard to see it as something completely
->> different from the new Kunit:
->>
->> $ git grep --files-with-matches kselftest_harness.h *
-> 
-> To the extent that we can unify how tests are written, I agree that
-> this would be a good thing.  However, you should note that
-> kselftest_harness.h is currently assums that it will be included in
-> userspace programs.  This is most obviously seen if you look closely
-> at the functions defined in the header files which makes calls to
-> fork(), abort() and fprintf().
-
-Ah, yes. I obviously did not dig deep enough. Using kunit for in-kernel 
-tests and kselftest_harness for userspace tests seems like a sensible 
-line to draw to me. Trying to unify kernel and userspace here sounds 
-like it could be difficult so it's probably not worth forcing the issue 
-unless someone wants to do some really fancy work to get it done.
-
-Based on some of the other commenters, I was under the impression that 
-kselftests had in-kernel tests but I'm not sure where or if they exist. 
-If they do exists, it seems like it would make sense to convert those to 
-kunit and have Kunit tests run-able in a VM or baremetal instance.
-
-Logan
+Hi Anurag,=0A=
+=0A=
+Anurag Kumar Vulisha wrote:=0A=
+>>> +		return -EINVAL;=0A=
+>>>=0A=
+>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
+>>>  	if (set)=0A=
+>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, s=
+truct=0A=
+>> usb_ctrlrequest *ctrl)=0A=
+>>>  			 * nothing is pending from application.=0A=
+>>>  			 */=0A=
+>>>  			reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
+>>> -			reg |=3D (DWC3_DCTL_ACCEPTU1ENA |=0A=
+>> DWC3_DCTL_ACCEPTU2ENA);=0A=
+>>> +			if (!dwc->dis_u1_entry_quirk)=0A=
+>>> +				reg |=3D DWC3_DCTL_ACCEPTU1ENA;=0A=
+>>> +			if (!dwc->dis_u2_entry_quirk)=0A=
+>>> +				reg |=3D DWC3_DCTL_ACCEPTU2ENA;=0A=
+>>>  			dwc3_writel(dwc->regs, DWC3_DCTL, reg);=0A=
+>>>  		}=0A=
+>>>  		break;=0A=
+>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=0A=
+>>> index e293400..f2d3112 100644=0A=
+>>> --- a/drivers/usb/dwc3/gadget.c=0A=
+>>> +++ b/drivers/usb/dwc3/gadget.c=0A=
+>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget *g=
+)=0A=
+>>>  	return 0;=0A=
+>>>  }=0A=
+>>>=0A=
+>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,=0A=
+>>> +				      struct usb_dcd_config_params *params)=0A=
+>>> +{=0A=
+>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);=0A=
+>>> +=0A=
+>>> +	/* U1 Device exit Latency */=0A=
+>>> +	if (dwc->dis_u1_entry_quirk)=0A=
+>>> +		params->bU1devExitLat =3D 0;=0A=
+>> It doesn't make sense to have exit latency of 0. Rejecting=0A=
+>> SET_FEATURE(enable U1/U2) should already let the host know that the=0A=
+>> device doesn't support U1/U2.=0A=
+>>=0A=
+> I am okay to remove this, but I feel that it is better to report zero val=
+ue instead=0A=
+> of a non-zero value in exit latency of BOS when U1 or U2 entries are not =
+supported. =0A=
+> Advantage of reporting 0 is that some hosts doesn't even send SET_FEATURE=
+(U1/U2)=0A=
+> requests on seeing zero value in BOS descriptor. Also there can be cases =
+where U1 is=0A=
+> disabled and U2 entry is allowed or vice versa, for these kind of cases t=
+he driver can=0A=
+> set zero exit latency value for U1 and non-zero exit latency value for U2=
+ . Based on this=0A=
+> I think it would be better to report 0 when U1/U2 states are not enabled.=
+ Please provide=0A=
+> your opinion on this.=0A=
+=0A=
+Hm... I assume you're testing against linux usb stack and xhci host. If=0A=
+that's the case, it looks like host will still request the device to=0A=
+enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). This=0A=
+needs to be fixed. I think what you have is fine to workaround this issue.=
+=0A=
+=0A=
+Thanks,=0A=
+Thinh=0A=
