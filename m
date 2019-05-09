@@ -1,70 +1,42 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Wed, 8 May 2019 19:18:30 -0700
-Message-ID: <458dcb03-8dee-a005-97e1-7296a9e5bbfd@gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com> <20190507172256.GB5900@mit.edu>
- <4d963cdc-1cbb-35a3-292c-552f865ed1f7@gmail.com>
- <20190509014407.GA7031@mit.edu>
+From: Qiang Zhao <qiang.zhao@nxp.com>
+Subject: RE: PATCH v2 1/6] soc/fsl/qe: qe.c: drop useless static qualifier
+Date: Thu, 9 May 2019 02:28:25 +0000
+Message-ID: <VI1PR04MB324703AD3D285BA287A389FD91330@VI1PR04MB3247.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190509014407.GA7031@mit.edu>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Theodore Ts'o <tytso@mit.edu>, Greg KH <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
 List-Id: devicetree@vger.kernel.org
 
-On 5/8/19 6:44 PM, Theodore Ts'o wrote:
-> On Wed, May 08, 2019 at 05:58:49PM -0700, Frank Rowand wrote:
->>
->> If KUnit is added to the kernel, and a subsystem that I am submitting
->> code for has chosen to use KUnit instead of kselftest, then yes, I do
->> *have* to use KUnit if my submission needs to contain a test for the
->> code unless I want to convince the maintainer that somehow my case
->> is special and I prefer to use kselftest instead of KUnittest.
-> 
-> That's going to be between you and the maintainer.  Today, if you want
-> to submit a substantive change to xfs or ext4, you're going to be
-> asked to create test for that new feature using xfstests.  It doesn't
-> matter that xfstests isn't in the kernel --- if that's what is
-> required by the maintainer.
-
-Yes, that is exactly what I was saying.
-
-Please do not cut the pertinent parts of context that I am replying to.
-
-
->>> supposed to be a simple way to run a large number of small tests that
->>> for specific small components in a system.
->>
->> kselftest also supports running a subset of tests.  That subset of tests
->> can also be a large number of small tests.  There is nothing inherent
->> in KUnit vs kselftest in this regard, as far as I am aware.
-
-
-> The big difference is that kselftests are driven by a C program that
-> runs in userspace.  Take a look at tools/testing/selftests/filesystem/dnotify_test.c
-> it has a main(int argc, char *argv) function.
-> 
-> In contrast, KUnit are fragments of C code which run in the kernel;
-> not in userspace.  This allows us to test internal functions inside
-> complex file system (such as the block allocator in ext4) directly.
-> This makes it *fundamentally* different from kselftest.
-
-No, totally incorrect.  kselftests also supports in kernel modules as
-I mention in another reply to this patch.
-
-This is talking past each other a little bit, because your next reply
-is a reply to my email about modules.
-
--Frank
-
-> 
-> Cheers,
-> 
-> 						- Ted
-> 
+T24gMjAxOS81LzEgMTc6MjksIFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJl
+dmFzLmRrPiB3cm90ZToNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFz
+bXVzIFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0BwcmV2YXMuZGs+DQo+IFNlbnQ6IDIwMTnl
+ubQ15pyIMeaXpSAxNzoyOQ0KPiBUbzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFFpYW5n
+IFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT47IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29t
+Pg0KPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUm9i
+IEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFNjb3R0IFdvb2QNCj4gPG9zc0BidXNlcnJv
+ci5uZXQ+OyBDaHJpc3RvcGhlIExlcm95IDxjaHJpc3RvcGhlLmxlcm95QGMtcy5mcj47IE1hcmsN
+Cj4gUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBSYXNtdXMgVmlsbGVtb2VzDQo+IDxS
+YXNtdXMuVmlsbGVtb2VzQHByZXZhcy5zZT4NCj4gU3ViamVjdDogW1BBVENIIHYyIDEvNl0gc29j
+L2ZzbC9xZTogcWUuYzogZHJvcCB1c2VsZXNzIHN0YXRpYyBxdWFsaWZpZXINCj4gDQo+IFRoZSBs
+b2NhbCB2YXJpYWJsZSBzbnVtX2luaXQgaGFzIG5vIHJlYXNvbiB0byBoYXZlIHN0YXRpYyBzdG9y
+YWdlIGR1cmF0aW9uLg0KPiANCj4gUmV2aWV3ZWQtYnk6IENocmlzdG9waGUgTGVyb3kgPGNocmlz
+dG9waGUubGVyb3lAYy1zLmZyPg0KPiBTaWduZWQtb2ZmLWJ5OiBSYXNtdXMgVmlsbGVtb2VzIDxy
+YXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCg0KUmV2aWV3ZWQtYnk6IFFpYW5nIFpoYW8gPHFp
+YW5nLnpoYW9AbnhwLmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL2ZzbC9xZS9xZS5jIHwg
+MiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMgYi9kcml2ZXJzL3NvYy9m
+c2wvcWUvcWUuYyBpbmRleA0KPiA2MTJkOWM1NTFiZTUuLjg1NTM3M2RlYjc0NiAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3Fl
+L3FlLmMNCj4gQEAgLTMwNiw3ICszMDYsNyBAQCBzdGF0aWMgdm9pZCBxZV9zbnVtc19pbml0KHZv
+aWQpDQo+ICAgICAgICAgICAgICAgICAweDI4LCAweDI5LCAweDM4LCAweDM5LCAweDQ4LCAweDQ5
+LCAweDU4LCAweDU5LA0KPiAgICAgICAgICAgICAgICAgMHg2OCwgMHg2OSwgMHg3OCwgMHg3OSwg
+MHg4MCwgMHg4MSwNCj4gICAgICAgICB9Ow0KPiAtICAgICAgIHN0YXRpYyBjb25zdCB1OCAqc251
+bV9pbml0Ow0KPiArICAgICAgIGNvbnN0IHU4ICpzbnVtX2luaXQ7DQo+IA0KPiAgICAgICAgIHFl
+X251bV9vZl9zbnVtID0gcWVfZ2V0X251bV9vZl9zbnVtcygpOw0KPiANCj4gLS0NCj4gMi4yMC4x
+DQoNCg0KQmVzdCBSZWdhcmRzDQpRaWFuZyBaaGFvDQo=
