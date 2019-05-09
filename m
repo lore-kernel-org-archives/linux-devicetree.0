@@ -1,78 +1,140 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
- I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Date: Thu, 9 May 2019 09:55:28 +0200
-Message-ID: <20190509075528.obzchc3midbjpvzs@katana>
-References: <20190430044719.30720-1-chuanhua.han@nxp.com>
- <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
- <AM6PR04MB43571B8D52C1FE9ED20DBA1D97360@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <20190506073735.ctzybytamu44pbvv@pengutronix.de>
- <AM0PR04MB43534A9B1A146DEFA929844C97320@AM0PR04MB4353.eurprd04.prod.outlook.com>
- <AM6PR04MB4629DEDAAA6559EBBD20E974EF330@AM6PR04MB4629.eurprd04.prod.outlook.com>
- <20190509074851.czcjlpfm2iooqjv4@pengutronix.de>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH] arm64: add support for rng-seed
+Date: Thu, 9 May 2019 16:00:26 +0800
+Message-ID: <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com>
+References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
+ <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
+ <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com>
+ <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com> <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gv6qjm3xh6s2jhl3"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190509074851.czcjlpfm2iooqjv4@pengutronix.de>
+In-Reply-To: <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Sumit Batra <sumit.batra@nxp.com>, Chuanhua Han <chuanhua.han@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "eha@deif.com" <eha@deif.com>"linux@rempel-privat.de" <l>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 9, 2019 at 12:07 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Wed, May 8, 2019 at 10:06 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> >
+> > On Wed, May 8, 2019 at 10:04 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Tue, May 7, 2019 at 11:08 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> > > >
+> > > > On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > >
+> > > > > +boot-architecture list as there was some discussion about this IIRC.
+> > > > >
+> > > > > On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> > > > > >
+> > > > > > Introducing a chosen node, rng-seed, which is an 64 bytes entropy
+> > > > > > that can be passed to kernel called very early to increase device
+> > > > > > randomness. Bootloader should provide this entropy and the value is
+> > > > > > read from /chosen/rng-seed in DT.
+> > > > > >
+> > > > > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > > > > >
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
+> > > > >
+> > > > > Actually, this file has been converted to json-schema and lives
+> > > > > here[1]. I need to remove this one (or leave it with a reference to
+> > > > > the new one).
+> > > > >
+> > > > > >  arch/arm64/kernel/setup.c                    |  2 ++
+> > > > > >  drivers/of/fdt.c                             | 33 ++++++++++++++++++++
+> > > > > >  include/linux/of_fdt.h                       |  1 +
+> > > > > >  4 files changed, 50 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > > > > > index 45e79172a646..bfd360691650 100644
+> > > > > > --- a/Documentation/devicetree/bindings/chosen.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > > > > > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
+> > > > > >  the Linux EFI stub (which will populate the property itself, using
+> > > > > >  EFI_RNG_PROTOCOL).
+> > > > > >
+> > > > > > +rng-seed
+> > > > > > +-----------
+> > > > > > +
+> > > > > > +This property served as an entropy to add device randomness. It is parsed
+> > > > > > +as a 64 byte value, e.g.
+> > > > >
+> > > > > Why only 64-bytes?
+> > > > We can also not specify size and read what bootloader can provide.
+> > > > >
+> > > > > > +
+> > > > > > +/ {
+> > > > > > +       chosen {
+> > > > > > +               rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
+> > > > > > +       };
+> > > > > > +};
+> > > > > > +
+> > > > > > +This random value should be provided by bootloader.
+> > > > > > +
+> > > > > >  stdout-path
+> > > > > >  -----------
+> > > > > >
+> > > > > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> > > > > > index 413d566405d1..ade4261516dd 100644
+> > > > > > --- a/arch/arm64/kernel/setup.c
+> > > > > > +++ b/arch/arm64/kernel/setup.c
+> > > > > > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
+> > > > > >         early_fixmap_init();
+> > > > > >         early_ioremap_init();
+> > > > > >
+> > > > > > +       early_init_dt_rng_seed(__fdt_pointer);
+> > > > > > +
+> > > > >
+> > > > > I'm trying to reduce or eliminate all these early_init_dt_* calls.
+> > > > >
+> > > > > Why is this arch specific and why can't this be done after
+> > > > > unflattening? It doesn't look like add_device_randomness() needs
+> > > > > anything early.
+> > > > Currently unflattening is called after setup_machine_fdt(), which
+> > > > called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
+> > > > PAGE_KERNEL_RO), and we can't modify DT after that since it's read
+> > > > only. But we need to clear (eg. write 0 to it) the rng-seed after
+> > > > reading from DT.
+> > >
+> > > Why do you need to clear it? That wasn't necessary for kaslr-seed.
+> > I think it's for security purpose. If we know the random seed, it's
+> > more likely we can predict randomness.
+> > Currently on arm64, kaslr-seed will be wiped out (in
+> > arch/arm64/kernel/kaslr.c#get_kaslr_seed(), it's set to 0) so we can't
+> > read from sysfs (eg. /sys/firmware/devicetree/.../kaslr-seed)
+> > I'm not sure on other arch if it will be wiped out.
+>
+> The difference is if I have the kaslr seed, I can calculate the kernel
+> base address.
+>
+> In your case, you are feeding an RNG which continually has entropy
+> added to it. I can't see that knowing one piece of the entropy data is
+> a security hole. It looks more like you've just copied what what done
+> for kaslr-seed.
++Kees who can probably explain this better.
 
---gv6qjm3xh6s2jhl3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This early added entropy is also going to be used for stack canary. At
+the time it's created there's not be much entropy (before
+boot_init_stack_canary(), there's only add_latent_entropy() and
+command_line).
+On arm64, there is a single canary for all tasks. If RNG is weak or
+the seed can be read, it might be easier to figure out the canary.
 
+>
+> > > Why not change the mapping to RW? It would be nice if this worked on
+> > > more than one arch.
+>
+> Still wondering on this question. Mapping it R/W would mean rng-seed
+> could be handled later and completely out of the arch code and so
+> could the zeroing of the kaslr-seed. Also, we generally assume the FDT
+> is modifiable for any fixups. This happens on arm32 and powerpc, but I
+> guess we haven't needed that yet on arm64.
+We can try to map it to RW and map back to RO later if needed on
+arm64, like Stephen's suggestion.
+>
+> Rob
 
-> > There are 2 places where clock division takes place -
-> >=20
-> > 1) There is a clock divider outside of I2C block, which makes the clock=
- reaching
-> >    I2C module as - Platform Clock/2
-> > 2) There is another clock divider which specifically divides the clock =
-to the I2C block,
-> >    based on RCW bit 424 (if 424th bit is 0 then the baud clock source i=
-s Platform Clock/4,
-> >    if 424th bit is 1 then it remains Platform Clock/2)
->=20
-> So there is a clock divider which based on RCW bit 424 divides the clock
-> *to* the i2c module. This suggests the divider is outside of the i2c
-> module itself and thus part of the clock module.
->=20
-> We could argue that this divider sits between the clock module and the
-> i2c module, but for sure it's not in the i2c module. I really suggest to
-> put this SoC specific into the SoC specific clock driver rather than
-> littering the i2c driver with it.
-
-I am with Sascha here. The fact that you need to of_ioremap some
-registers is a really strong indication that the code should go
-somewhere else. I can't tell the best place (clock driver or seperate
-GUTS driver or syscon driver), but the I2C bus driver seems not
-suitable.
-
-
---gv6qjm3xh6s2jhl3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzT3OsACgkQFA3kzBSg
-KbbgNQ/8CGasqnfiTpZ11DFig8JEAVVpHiW7URbOcwfSNliiGRcajU0Z15c9dQrB
-FXq50Xgz1DAf+yhNgfWk28gZ9DdbGEdEvRUyZsW1oq/Vf2vJEx5wBQUB04Rw12KS
-6OjdgBK1mWDHsbRcI7/Ug9nL2gWPTz/u0bzL9btM/AT7CDnKi+CiLlcjqrLGWT0b
-KasALzS/AfnrtXTqyNL2wdqkTZC6wrdjgiUswYQ1Yr065NZnHxrH/zR6RgOIA1ya
-p5A//ME3DiCQRLToYXM8KU8Rb/PW29n1GtefaiFyrrhXAg7ZPfR4y8n+AQTkgPUq
-2Mcpz2nRod1e79YpgYm5+XpcTD7bgV7XZD8RH9uPKfpAW0W33QP0OFKG92RigTTW
-6mJRvtus8S3VfaHatBupH/kQsnoyZXktZXRAdgWEa713zybXoGUzwvQICnJAUp5T
-sB2LxykMYyb8T862XbNzQtC+0cCDotY4ZZ2plIOlUrNomf37ZunQu5/uEecPf6s6
-2MlVlzgTYTwG6lz5WxkZ6A2RTnx8rXvcr7jwo7wwVcjf9W2erTR18+tqU7bmtrol
-qh1V0XeufPewhKfCmSR+9yyP029AP4cwdRHNQNsg9oDQGzqYZxhHSKH1IMBt2PI1
-Ozxlx/gjom3K5yCe1tWBIG0yzxnFvXJBHgGKimBFmYt4I8Eh2Uo=
-=q/1n
------END PGP SIGNATURE-----
-
---gv6qjm3xh6s2jhl3--
+Thanks for the comments and suggestions.
