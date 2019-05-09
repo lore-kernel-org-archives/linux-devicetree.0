@@ -1,417 +1,248 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: Add YAML schemas for the generic
- MMC options
-Date: Thu, 9 May 2019 11:45:26 -0500
-Message-ID: <CAL_JsqJi0iwM61anziC-cHXp0PL2AEtXiWFCLn943vTxK5eeig@mail.gmail.com>
-References: <68d3fb999d16e49696e832e1d1a6bcd7b76a6e8d.1557389988.git-series.maxime.ripard@bootlin.com>
+From: <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+Subject: RE: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Thu, 9 May 2019 17:00:08 +0000
+Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <68d3fb999d16e49696e832e1d1a6bcd7b76a6e8d.1557389988.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20190509133551.GD29703-3s7WtUTddSA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: tytso-3s7WtUTddSA@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 9, 2019 at 3:21 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> The MMC controllers have a bunch of generic options that are needed in a
-> device tree. Add a YAML schemas for those.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 342 +++++++-
->  Documentation/devicetree/bindings/mmc/mmc.txt             | 177 +----
->  2 files changed, 342 insertions(+), 177 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-controller.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mmc/mmc.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> new file mode 100644
-> index 000000000000..d06f1764f02e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> @@ -0,0 +1,342 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/mmc-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SPI Controller Generic Binding
+> -----Original Message-----
+> From: Theodore Ts'o 
+> 
+> On Thu, May 09, 2019 at 01:52:15PM +0200, Knut Omang wrote:
+> > 1) Tests that exercises typically algorithmic or intricate, complex
+> >    code with relatively few outside dependencies, or where the
+> dependencies
+> >    are considered worth mocking, such as the basics of container data
+> >    structures or page table code. If I get you right, Ted, the tests
+> >    you refer to in this thread are such tests. I believe covering this space
+> >    is the goal Brendan has in mind for KUnit.
+> 
+> Yes, that's correct.  I'd also add that one of the key differences is
+> that it sounds like Frank and you are coming from the perspective of
+> testing *device drivers* where in general there aren't a lot of
+> complex code which is hardware independent.
 
-SPI?
+Ummm.  Not to speak for Frank, but he's representing the device tree
+layer, which I'd argue sits exactly at the intersection of testing device drivers
+AND lots of complex code which is hardware independent.  So maybe his
+case is special.
 
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +description: |
-> +  These properties are common to multiple MMC host controllers. Any host
-> +  that requires the respective functionality should implement them using
-> +  these definitions.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^mmc(@.*)?$"
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  # Card Detection.
-> +  # If none of these properties are supplied, the host native card
-> +  # detect will be used. Only one of them should be provided.
-> +
-> +  broken-cd:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      There is no card detection available; polling must be used.
-> +
-> +  cd-gpios:
-> +    description:
-> +      The card detection will be done using the GPIO provided.
-> +
-> +  non-removable:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Non-removable slot (like eMMC); assume always present.
-> +
-> +  # Other properties
-> +
-> +  bus-width:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [1, 4, 8]
-> +      - default: 1
+> After all, the vast
+> majority of device drivers are primarily interface code to hardware,
+> with as much as possible abstracted away to common code.  (Take, for
+> example, the model of the SCSI layer; or all of the kobject code.)
+> 
+> > 2) Tests that exercises interaction between a module under test and other
+> >    parts of the kernel, such as testing intricacies of the interaction of
+> >    a driver or file system with the rest of the kernel, and with hardware,
+> >    whether that is real hardware or a model/emulation.
+> >    Using your testing needs as example again, Ted, from my shallow
+> understanding,
+> >    you have such needs within the context of xfstests
+> (https://github.com/tytso/xfstests)
+> 
+> Well, upstream is for xfstests is git://git.kernel.org/pub/scm/fs/xfs/xfstests-
+> dev.git
+> 
+> The test framework where I can run 20 hours worth of xfstests
+> (multiple file system features enabled, multiple mount options, etc.)
+> in 3 hours of wall clock time using multiple cloud VM is something
+> called gce-xfstests.
+> 
+> I also have kvm-xfstests, which optimizes low test latency, where I
+> want to run a one or a small number of tests with a minimum of
+> overhead --- gce startup and shutdown is around 2 minutes, where as
+> kvm startup and shutdown is about 7 seconds.  As far as I'm concerned,
+> 7 seconds is still too slow, but that's the best I've been able to do
+> given all of the other things I want a test framework to do, including
+> archiving test results, parsing the test results so it's easy to
+> interpret, etc.  Both kvm-xfstests and gce-xfstests are located at:
+> 
+> 	git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+> 
+> So if Frank's primary argument is "too many frameworks", it's already
+> too late.  The block layer has blktests has a seprate framework,
+> called blktests --- and yeah, it's a bit painful to launch or learn
+> how to set things up.
+> 
+> That's why I added support to run blktests using gce-xfstests and
+> kvm-xfstests, so that "gce-xfstests --blktests" or "kvm-xfstests
+> --xfstests" will pluck a kernel from your build tree, and launch at
+> test appliance VM using that kernel and run the block layer tests.
+> 
+> The point is we *already* have multiple test frameworks, which are
+> optimized for testing different parts of the kernel.  And if you plan
+> to do a lot of work in these parts of the kernel, you're going to have
+> to learn how to use some other test framework other than kselftest.
+> Sorry, that's just the way it goes.
+> 
+> Of course, I'll accept trivial patches that haven't been tested using
+> xfstests --- but that's because I can trivially run the smoke test for
+> you.  Of course, if I get a lot of patches from a contributor which
+> cause test regressions, I'll treat them much like someone who
+> contribute patches which fail to build.  I'll apply pressure to the
+> contributor to actually build test, or run a ten minute kvm-xfstests
+> smoke test.  Part of the reason why I feel comfortable to do this is
+> it's really easy to run the smoke test.  There are pre-compiled test
+> appliances, and a lot of documentation:
+> 
+> https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-
+> quickstart.md
+> 
+> This is why I have close to zero sympathy to Frank's complaint that
+> extra test frameworks are a bad thing.  To me, that's whining.  I've
+> done a huge amount of work to meet contributors more than half-way.
+> The insistence that "There Must Be One", ala the Highlander movie, is
+> IMHO so wrong that it's not even close.  Is it really that hard to do
+> a "git pull", download a test appliance, set up a config file to tell
+> kvm-xfstests where to find your build tree, and then run "kvm-xfstests
+> --smoke" or "gce-xfstests --smoke"?  Cry me a river.
 
-This works, but make enum and default a single schema.
+Handling these types of things that are not "really that hard to do" is
+exactly what meta-frameworks like KCI, Fuego, and LKFT are for.
+For a core developer in a sub-system, having them learn a particular
+specialized framework is OK.  However, for someone doing integration
+testing of the kernel (not a core developer
+in a particular subsystem), having lots of different frameworks turns
+into death by a thousand cuts.  But we're working to fix that.
+(Which reminds me that I have an outstanding action item to add an xfstest
+test definition to Fuego. :-) )
 
-> +    description:
-> +      Number of data lines.
-> +
-> +  max-frequency:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 400000
-> +      - maximum: 200000000
-> +    description:
-> +      Maximum operating frequency of the bus.
-> +
-> +  disable-wp:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      When set, no physical write-protect line is present. This
-> +      property should only be specified when the controller has a
-> +      dedicated write-protect detection logic. If a GPIO is always
-> +      used for the write-protect detection. If a GPIO is always used
-> +      for the write-protect detection logic, it is sufficient to not
-> +      specify the wp-gpios property in the absence of a write-protect
-> +      line.
-> +
-> +  wp-inverted:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The CD line polarity is inverted.
+> 
+> There are already multiple test frameworks, and if you expect to do a
+> lot of work in a particular subsystem, you'll be expected to use the
+> Maintainer's choice of tests.  Deal with it.  We do this so we can
+> scale to the number of contributors we have in our subsystem.
 
-s/CD/write protect/
+This seems to me to be exactly backwards.  You scale your contributors
+by making it easier for them, which means adopting something already
+well-know or established - not by being different.
 
-> +
-> +  wp-gpios:
-> +    description:
-> +      GPIO to use for the write-protect detection.
-> +
-> +  cd-debounce-delay-ms:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+I understand your vise grip metaphor, and agree with you.  In my opinion
+kselftest and kunit are optimized for different things, and are different tools
+in the Linux kernel testing toolbox.  But if you start having too many tools, or
+the tools are too specialized, there are less people familiar with them and
+ready to use them to help contribute.
 
-Anything using a unit suffix is already typed.
+> 
+> > To 1) I agree with Frank in that the problem with using UML is that you still
+> have to
+> > relate to the complexity of a kernel run time system, while what you really
+> want for these
+> > types of tests is just to compile a couple of kernel source files in a normal
+> user land
+> > context, to allow the use of Valgrind and other user space tools on the
+> code.
+> 
+> "Just compiling a couple of kernel source files in a normal user land"
+> is much harder than you think.  It requires writing vast numbers of
+> mocking functions --- for a file system I would have to simulate the
+> block device layer, large portions of the VFS layer, the scheduler and
+> the locking layer if I want to test locking bugs, etc., etc.  In
+> practice, UML itself is serving as mocking layer, by its mere
+> existence.  So when Frank says that KUnit doesn't provide any mocking
+> functions, I don't at all agree.  Using KUnit and UML makes testing
+> internal interfaces *far* simpler, especially if the comparison is
+> "just compile some kernel source files as part of a userspace test
+> program".
 
-> +    description:
-> +      Set delay time before detecting card after card insert
-> +      interrupt.
-> +
-> +  cd-inverted:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The CD line polarity is inverted.
-> +
-> +  no-1-8-v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      When specified, denotes that 1.8V card voltage is not supported
-> +      on this system, even if the controller claims it.
-> +
-> +  cap-sd-highspeed:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SD high-speed timing is supported.
-> +
-> +  cap-mmc-highspeed:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      MMC high-speed timing is supported.
-> +
-> +  sd-uhs-sdr12:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SD UHS SDR12 speed is supported.
-> +
-> +  sd-uhs-sdr25:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SD UHS SDR25 speed is supported.
-> +
-> +  sd-uhs-sdr50:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SD UHS SDR50 speed is supported.
-> +
-> +  sd-uhs-sdr104:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SD UHS SDR104 speed is supported.
-> +
-> +  sd-uhs-ddr50:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SD UHS DDR50 speed is supported.
-> +
-> +  cap-power-off-card:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Powering off the card is safe.
-> +
-> +  cap-mmc-hw-reset:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC hardware reset is supported
-> +
-> +  cap-sdio-irq:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      enable SDIO IRQ signalling on this interface
-> +
-> +  full-pwr-cycle:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Full power cycle of the card is supported.
-> +
-> +  mmc-ddr-1_2v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC high-speed DDR mode (1.2V I/O) is supported.
-> +
-> +  mmc-ddr-1_8v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC high-speed DDR mode (1.8V I/O) is supported.
-> +
-> +  mmc-ddr-3_3v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC high-speed DDR mode (3.3V I/O) is supported.
-> +
-> +  mmc-hs200-1_2v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC HS200 mode (1.2V I/O) is supported.
-> +
-> +  mmc-hs200-1_8v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC HS200 mode (1.8V I/O) is supported.
-> +
-> +  mmc-hs400-1_2v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC HS400 mode (1.2V I/O) is supported.
-> +
-> +  mmc-hs400-1_8v:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC HS400 mode (1.8V I/O) is supported.
-> +
-> +  mmc-hs400-enhanced-strobe:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      eMMC HS400 enhanced strobe mode is supported
-> +
-> +  dsr:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - maximum: 65535
+I had one thing I wanted to ask about here.  You said previously that
+you plan to use KUnit to test a complicated but hardware independent
+part of the filesystem code.  If you test only via UML, will that give you
+coverage for non-x86 platforms? More specifically, will you get coverage
+for 32-bit, for big-endian as well as little-endian, for weird architectures?
+It seems like the software for these complicated sections of code is
+subject to regressions due to toolchain issues as much as from coding errors.
+That's why I was initially turned off when I  heard that KUnit only planned
+to support UML and not cross-compilation.
 
-0xffff is clearer IMO
+I'm not sure what the status is of UML for all the weird embedded processors
+that get only cross-compiled and not natively-compiled, but there are multiple
+reasons why UML is less commonly used in the embedded space.
+ 
+> Perhaps your and Frank's experience is different --- perhaps that can
+> be explained by your past experience and interest in testing device
+> drivers as opposed to file systems.
+> 
+> The other thing I'd add is that at least for me, a really important
+> consideration is how quickly we can run tests.  I consider
+> minimization of developer friction (e.g., all you need to do is
+> running "make ; kvm-xfstests --smoke" to run tests), and maximizing
+> developer velocity to be high priority goals.  Developer velocity is
+> how quickly can you run the tests; ideally, less than 5-10 seconds.
+> 
+> And that's the other reason why I consider unit tests to be a
+> complement to integration tests.  "gce-xfstests --smoke" takes 10-15
+> minutes.  If I can have unit tests which takes 5-15 seconds for a
+> smoke test of the specific part of ext4 that I am modifying (and often
+> with much better coverage than integration tests from userspace),
+> that's at really big deal.  I can do this for e2fsprogs; but if I have
+> to launch a VM, the VM overhead pretty much eats all or most of that
+> time budget right there.
+> 
+> From looking at your documentation of KTF, you are targetting the use
+> case of continuous testing.  That's a different testing scenario than
+> what I'm describing; with continuous testing, overhead measured in
+> minutes or even tens of minutes is not a big deal.  But if you are
+> trying to do real-time testing as part of your development process ---
+> *real* Test Driven Development, then test latency is a really big
+> deal.
+> 
+> I'll grant that for people who are working on device drivers where
+> architecture dependencies are a big deal, building for an architecture
+> where you can run in a virtual environment or using test hardware is
+> going to be a better way to go.  And Brendan has said he's willing to
+> look at adapting KUnit so it can be built for use in a virtual
+> environment to accomodate your requirements.
 
-> +    description:
-> +      Value the card Driver Stage Register (DSR) should be programmed
-> +      with.
-> +
-> +  no-sdio:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Controller is limited to send SDIO commands during
-> +      initialization.
-> +
-> +  no-sd:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Controller is limited to send SD commands during initialization.
-> +
-> +  no-mmc:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Controller is limited to send MMC commands during
-> +      initialization.
-> +
-> +  fixed-emmc-driver-type:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - maximum: 4
-> +    description:
-> +      For non-removable eMMC, enforce this driver type. The value is
-> +      the driver type as specified in the eMMC specification (table
-> +      206 in spec version 5.1)
-> +
-> +  post-power-on-delay-ms:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - default: 10
-> +    description:
-> +      It was invented for MMC pwrseq-simple which could be referred to
-> +      mmc-pwrseq-simple.txt. But now it\'s reused as a tunable delay
-> +      waiting for I/O signalling and card power supply to be stable,
-> +      regardless of whether pwrseq-simple is used. Default to 10ms if
-> +      no available.
-> +
-> +  supports-cqe:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The presence of this property indicates that the corresponding
-> +      MMC host controller supports HW command queue feature.
-> +
-> +  disable-cqe-dcmd:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      The presence of this property indicates that the MMC
-> +      controller\'s command queue engine (CQE) does not support direct
-> +      commands (DCMDs).
-> +
-> +  keep-power-in-suspend:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SDIO only. Preserves card power during a suspend/resume cycle.
-> +
-> +  # Deprecated: enable-sdio-wakeup
-> +  wakeup-source:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      SDIO only. Enables wake up of host system on SDIO IRQ assertion.
-> +
-> +  vmmc-supply:
-> +    description:
-> +      Supply for the card power
-> +
-> +  vqmmc-supply:
-> +    description:
-> +      Supply for the bus IO line power
-> +
-> +  mmc-pwrseq:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      System-on-Chip designs may specify a specific MMC power
-> +      sequence. To successfully detect an (e)MMC/SD/SDIO card, that
-> +      power sequence must be maintained while initializing the card.
-> +
-> +patternProperties:
-> +  "^.*@[0-9]+$":
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        minimum: 0
-> +        maximum: 7
+This might solve my cross-compile needs, so that's good.
 
-I don't think this works. You need:
+> 
+> As far as I'm concerned, however, I would *not* be interested in KTF
+> unless you could demonstrate to me that launching at test VM, somehow
+> getting the kernel modules copied into the VM, and running the tests
+> as kernel modules, has zero overhead compared to using UML.
+> 
+> Ultimately, I'm a pragmatist.  If KTF serves your needs best, good for
+> you.  If other approaches are better for other parts of the kernel,
+> let's not try to impose a strict "There Must Be Only One" religion.
+> That's already not true today, and for good reason.  There are many
+> different kinds of kernel code, and many different types of test
+> philosophies.  Trying to force all kernel testing into a single
+> Procrustean Bed is simply not productive.
 
-      reg:
-        items:
-          - description: Must contain the SDIO function number of the function
-              this subnode describes. A value of 0 denotes the memory SD
-              function, values from 1 to 7 denote the SDIO functions.
-            minimum: 0
-            maximum: 7
+Had to look up "Procrustean Bed" - great phrase.  :-)
 
-> +        description:
-> +          Must contain the SDIO function number of the function this
-> +          subnode describes. A value of 0 denotes the memory SD
-> +          function, values from 1 to 7 denote the SDIO functions.
-> +
-> +      broken-hpi:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +        description:
-> +          Use this to indicate that the mmc-card has a broken hpi
-> +          implementation, and that hpi should not be used.
-> +
-> +    required:
-> +      - reg
-> +
-> +dependencies:
-> +  cd-inverted: [ cd-gpios ]
+I'm not of the opinion that there must only be one test framework
+in the kernel. But we should avoid unnecessary multiplication. Every
+person is going to have a different idea for where the line of necessity
+is drawn.  My own opinion is that what KUnit is adding is different enough
+from kselftest, that it's a valuable addition.  
 
-The note (which you dropped) says 'cd-inverted' applies for built-in CD too.
-
-At least that is what I take "Polarity of dedicated pins can be
-specified, using *-inverted properties." to mean.
-
-> +  cd-debounce-delay-ms: [ cd-gpios ]
-> +  wp-inverted: [ wp-gpios ]
-> +  fixed-emmc-driver-type: [ non-removable ]
-> +
-> +examples:
-> +  - |
-> +    sdhci@ab000000 {
-> +        compatible = "sdhci";
-> +        reg = <0xab000000 0x200>;
-> +        interrupts = <23>;
-> +        bus-width = <4>;
-> +        cd-gpios = <&gpio 69 0>;
-> +        cd-inverted;
-> +        wp-gpios = <&gpio 70 0>;
-> +        max-frequency = <50000000>;
-> +        keep-power-in-suspend;
-> +        wakeup-source;
-> +        mmc-pwrseq = <&sdhci0_pwrseq>;
-> +    };
-> +
-> +  - |
-> +    mmc3: mmc@1c12000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&mmc3_pins_a>;
-> +        vmmc-supply = <&reg_vmmc3>;
-> +        bus-width = <4>;
-> +        non-removable;
-> +        mmc-pwrseq = <&sdhci0_pwrseq>;
-> +
-> +        brcmf: bcrmf@1 {
-> +            reg = <1>;
-> +            compatible = "brcm,bcm43xx-fmac";
-> +            interrupt-parent = <&pio>;
-> +            interrupts = <10 8>;
-> +            interrupt-names = "host-wake";
-> +        };
-> +    };
+ -- Tim
