@@ -1,62 +1,101 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 00/29] Enable Tegra PCIe root port features
-Date: Mon, 13 May 2019 23:37:15 +0530
-Message-ID: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 13/15] ARM: dts: r7s9210: Add USB Host support
+Date: Thu, 9 May 2019 15:11:40 -0500
+Message-ID: <20190509201142.10543-14-chris.brandt@renesas.com>
+In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
+References: <20190509201142.10543-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-This series of patches adds,
-- Tegra root port features like Gen2, AER, etc
-- Power and perf optimizations
-- Fixes like "power up sequence", "dev_err prints", etc
+Add EHCI and OHCI host support for RZ/A2.
 
-This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
-based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
-platforms.
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+v2:
+ * changed to generic name usb@xxx
+ * Add space between compatible strings
+---
+ arch/arm/boot/dts/r7s9210.dtsi | 64 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-Manikanta Maddireddy (29):
-  soc/tegra: pmc: Export tegra_powergate_power_on()
-  PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-  PCI: tegra: Rearrange Tegra PCIe driver functions
-  PCI: tegra: Mask AFI_INTR in runtime suspend
-  PCI: tegra: Fix PCIe host power up sequence
-  PCI: tegra: Add PCIe Gen2 link speed support
-  PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-  PCI: tegra: Program UPHY electrical settings for Tegra210
-  PCI: tegra: Enable opportunistic UpdateFC and ACK
-  PCI: tegra: Disable AFI dynamic clock gating
-  PCI: tegra: Process pending DLL transactions before entering L1 or L2
-  PCI: tegra: Enable PCIe xclk clock clamping
-  PCI: tegra: Increase the deskew retry time
-  PCI: tegra: Add SW fixup for RAW violations
-  PCI: tegra: Update flow control timer frequency in Tegra210
-  PCI: tegra: Set target speed as Gen1 before starting LTSSM
-  PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
-  PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-  PCI: tegra: Change PRSNT_SENSE IRQ log to debug
-  PCI: tegra: Use legacy IRQ for port service drivers
-  PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
-  PCI: tegra: Access endpoint config only if PCIe link is up
-  dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
-  arm64: tegra: Add PEX DPD states as pinctrl properties
-  PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
-  PCI: Add DT binding for "reset-gpios" property
-  PCI: OF: Add of_pci_get_reset_gpio() to parse reset-gpios from DT
-  PCI: tegra: Add support for GPIO based PERST#
-  PCI: tegra: Change link retry log level to debug
-
- .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
- Documentation/devicetree/bindings/pci/pci.txt |   3 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
- drivers/pci/controller/pci-tegra.c            | 616 +++++++++++++++---
- drivers/pci/of.c                              |  18 +
- drivers/soc/tegra/pmc.c                       |   1 +
- include/linux/of_pci.h                        |  10 +
- 7 files changed, 595 insertions(+), 80 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
+index 73041f04fef5..1877871af3fc 100644
+--- a/arch/arm/boot/dts/r7s9210.dtsi
++++ b/arch/arm/boot/dts/r7s9210.dtsi
+@@ -329,6 +329,70 @@
+ 			status = "disabled";
+ 		};
+ 
++		ohci0: usb@e8218000 {
++			compatible = "generic-ohci";
++			reg = <0xe8218000 0x100>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 61>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ehci0: usb@e8218100 {
++			compatible = "generic-ehci";
++			reg = <0xe8218100 0x100>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 61>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		usb2_phy0: usb-phy@e8218200 {
++			compatible = "renesas,usb2-phy-r7s9210", "renesas,rcar-gen3-usb2-phy";
++			reg = <0xe8218200 0x10>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 61>;
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		ohci1: usb@e821a000 {
++			compatible = "generic-ohci";
++			reg = <0xe821a000 0x100>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 60>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ehci1: usb@e821a100 {
++			compatible = "generic-ehci";
++			reg = <0xe821a100 0x100>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 60>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		usb2_phy1: usb-phy@e821a200 {
++			compatible = "renesas,usb2-phy-r7s9210", "renesas,rcar-gen3-usb2-phy";
++			reg = <0xe821a200 0x10>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 60>;
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
+ 		sdhi0: sd@e8228000 {
+ 			compatible = "renesas,sdhi-r7s9210";
+ 			reg = <0xe8228000 0x8c0>;
 -- 
-2.17.1
+2.16.1
