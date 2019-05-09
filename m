@@ -1,38 +1,72 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 12/15] dt-bindings: usb: renesas_usbhs: Add support for r7s9210
-Date: Thu, 9 May 2019 15:11:39 -0500
-Message-ID: <20190509201142.10543-13-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
-References: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 16/17] ARCH: arm: dts: imx6q-kontron-samx6i: add Kontron SMARC Quad/Dual SoM
+Date: Thu,  9 May 2019 17:58:33 +0200
+Message-Id: <20190509155834.22838-17-m.felsch@pengutronix.de>
+In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
+References: <20190509155834.22838-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Content-Transfer-Encoding: 8bit
+To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
+Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for r7s9210 (RZ/A2M) SoC
+Add dtsi for iMX6 Quad/Dual based SMARC SoM's from Kontron.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+The differences between the quad/dual and the dual-lite/solo are:
+ * quad/dual has a 2nd IPU
+ * quad/dual has three chip selects for SMARC SPI0 interface
+ * quad/dual has a pcie_wake# signal
+
+Only the 3th spi-cs signal is added by this commit.
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi | 36 +++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index b8acc2a994a8..11c99d079dfb 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -20,9 +20,11 @@ Required properties:
- 	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
- 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
- 	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
-+	- "renesas,usbhs-r7s9210" for r7s72100 (RZ/A2) compatible device
- 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
- 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 or RZ/G2 compatible devices
- 	- "renesas,rza1-usbhs" for RZ/A1 compatible device
-+	- "renesas,rza2-usbhs" for RZ/A2 compatible device
- 
- 	When compatible with the generic version, nodes must list the
- 	SoC-specific version corresponding to the platform first followed
+diff --git a/arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
+new file mode 100644
+index 000000000000..2618eccfe50d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Copyright 2019 (C) Pengutronix, Marco Felsch <kernel@pengutronix.de>
++ */
++
++#include "imx6q.dtsi"
++#include "imx6qdl-kontron-samx6i.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Kontron SMARC sAMX6i Quad/Dual";
++	compatible = "kontron,imx6q-samx6i", "fsl,imx6q";
++};
++
++/* Quad/Dual SoMs have 3 chip-select signals */
++&ecspi4 {
++	fsl,spi-num-chipselects = <3>;
++	cs-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>,
++		   <&gpio3 29 GPIO_ACTIVE_HIGH>,
++		   <&gpio3 25 GPIO_ACTIVE_HIGH>;
++};
++
++&pinctrl_ecspi4 {
++	fsl,pins = <
++		MX6QDL_PAD_EIM_D21__ECSPI4_SCLK 0x100b1
++		MX6QDL_PAD_EIM_D28__ECSPI4_MOSI 0x100b1
++		MX6QDL_PAD_EIM_D22__ECSPI4_MISO 0x100b1
++
++		/* SPI4_IMX_CS2# - connected to internal flash */
++		MX6QDL_PAD_EIM_D24__GPIO3_IO24 0x1b0b0
++		/* SPI4_IMX_CS0# - connected to SMARC SPI0_CS0# */
++		MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1b0b0
++		/* SPI4_CS3# - connected to  SMARC SPI0_CS1# */
++		MX6QDL_PAD_EIM_D25__GPIO3_IO25 0x1b0b0
++	>;
++};
 -- 
-2.16.1
+2.20.1
