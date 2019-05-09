@@ -1,56 +1,45 @@
-Return-Path: <SRS0=9+SW=TV=linaro.org=masahisa.kojima@kernel.org>
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
-Subject: [PATCH v5 0/3] spi: support for Socionext Synquacer platform
-Date: Tue, 21 May 2019 20:59:55 +0900
-Message-Id: <20190521115958.22504-1-masahisa.kojima@linaro.org>
-To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, geert@linux-m68k.org, tpiepho@impinj.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, ard.biesheuvel@linaro.org, jaswinder.singh@linaro.org, masami.hiramatsu@linaro.org, okamoto.satoru@socionext.com, osaki.yoshitoyo@socionext.com, Masahisa Kojima <masahisa.kojima@linaro.org>
+Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 14/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add boot spi-nor
+Date: Thu,  9 May 2019 17:58:31 +0200
+Message-Id: <20190509155834.22838-15-m.felsch@pengutronix.de>
+In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
+References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
+Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org, Michael Grzeschik <m.grzeschik@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
- Support for Socionext's FIP controller intended for flash device interfacing.
-The controller can operate in 'direct' or 'command' mode. One mode directly
-talks and provide a read/write i/f to the flash device. Other works as plain
-SPI mode. This driver runs the controller as a SPI controller.
+Since Kontron still uses silicon version below 1.3 they have add a
+spi-nor to implement Workaround #1 of erratum ERR006282.
 
-I took over this driver update from Jassi.
-Although more than a year has passed from previous version,
-it would be great if you could review this patch series.
+Sigend-off-by; Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Changes since v4:
-        # Supported interrupt based data handling instead of polling
-        # Added prefix "SYNQUACER_HSSPI_"
-        # Replaced data read/write access with readsx()/writesx()
-        # Updated clock source handling, explicitly specify "iHCLK" or "iPCKL"
-          and removed array of clk
-
-Changes since v3:
-        # Convert IS_ERR returned from devm_clk_get(iPCLK) to NULL, that way
-          we can call clk_xxx(IPCLK) without first checking for it being valid.
-
-Changes since v2:
-        # Made iHCLK clock property required in DT, and iPCLK an optional extra.
-        # Hardcode max number of slaves to 4, as specified in the manual.
-
-Changes since v1:
-        # Changed licence header to C++ style comment.
-        # Removed redundant lock and transfer_mode backup member.
-        # Fixed divisor to allow upto 254.
-
-Masahisa Kojima (3):
-  MAINTAINERS: Add entry for Synquacer SPI driver
-  dt-bindings: spi: Add DT bindings for Synquacer
-  spi: Add spi driver for Socionext Synquacer platform
-
- .../devicetree/bindings/spi/spi-synquacer.txt      |  27 +
- MAINTAINERS                                        |   8 +
- drivers/spi/Kconfig                                |  11 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-synquacer.c                        | 731 +++++++++++++++++++++
- 5 files changed, 778 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
- create mode 100644 drivers/spi/spi-synquacer.c
-
+diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+index 0b45b3062358..7e60142f09c1 100644
+--- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+@@ -255,6 +255,14 @@
+ 	pinctrl-0 = <&pinctrl_ecspi4>;
+ 	cs-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>,
+ 		   <&gpio3 29 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	/* default boot source: workaround #1 for errata ERR006282 */
++	m25p80@0 {
++		compatible = "winbond,w25q16dw", "jedec,spi-nor";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
+ };
+ 
+ /* GBE */
 -- 
-2.14.2
+2.20.1
