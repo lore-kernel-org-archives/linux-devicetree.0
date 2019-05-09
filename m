@@ -1,120 +1,65 @@
-Return-Path: <shawnguo@kernel.org>
-Date: Sun, 12 May 2019 16:29:30 +0800
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx7d-sdb: add SD3.0 support for USDHC1
-Message-ID: <20190512082928.GP15856@dragon>
-References: <20190429124547.19928-1-haibo.chen@nxp.com>
- <20190429124547.19928-2-haibo.chen@nxp.com>
+Return-Path: <SRS0=MMxF=TJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33453 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfEIOUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 May 2019 10:20:06 -0400
+Date: Thu, 9 May 2019 16:20:02 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 12/28] PCI: tegra: Enable PCIe xclk clock clamping
+Message-ID: <20190509142002.GI8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-13-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YhFoJY/gx7awiIuK"
 Content-Disposition: inline
-In-Reply-To: <20190429124547.19928-2-haibo.chen@nxp.com>
-To: BOUGH CHEN <haibo.chen@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20190423092825.759-13-mmaddireddy@nvidia.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Apr 29, 2019 at 12:38:00PM +0000, BOUGH CHEN wrote:
-> i.MX7D-SDB board support SD3.0 for USDHC1, so add it here.
-> 
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+
+--YhFoJY/gx7awiIuK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 23, 2019 at 02:58:09PM +0530, Manikanta Maddireddy wrote:
+> Enable xclk clock clamping when entering L1. Clamp threshold will
+> determine the time spent waiting for clock module to turn on xclk after
+> signaling it. Default threshold value in Tegra124 and Tegra210 is not
+> enough to turn on xclk clock. Increase the clamp threshold to meet the
+> clock module timing in Tegra124 and Tegra210. Default threshold value is
+> enough in Tegra20, Tegra30 and Tegra186.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 > ---
->  arch/arm/boot/dts/imx7d-sdb.dts | 53 +++++++++++++++++++++++++++++----
->  1 file changed, 48 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-> index 6a6035b2bc22..f468557c121b 100644
-> --- a/arch/arm/boot/dts/imx7d-sdb.dts
-> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
-> @@ -87,6 +87,17 @@
->  		regulator-max-microvolt = <1800000>;
->  	};
->  
-> +	reg_sd1_vmmc: regulator-sd1-vmmc {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDD_SD1";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-> +		startup-delay-us = <200000>;
-> +		enable-active-high;
-> +	};
-> +
-> +
->  	reg_brcm: regulator-brcm {
->  		compatible = "regulator-fixed";
->  		gpio = <&gpio4 21 GPIO_ACTIVE_HIGH>;
-> @@ -408,12 +419,16 @@
->  };
->  
->  &usdhc1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
->  	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
->  	wp-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
->  	wakeup-source;
->  	keep-power-in-suspend;
-> +	vmmc-supply = <&reg_sd1_vmmc>;
-> +	fsl,tuning-step = <2>;
->  	status = "okay";
->  };
->  
-> @@ -638,6 +653,15 @@
->  			>;
->  		};
->  
-> +		pinctrl_usdhc1_gpio: usdhc1_gpiogrp {
-> +			fsl,pins = <
-> +				MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
-> +				MX7D_PAD_SD1_WP__GPIO5_IO1		0x59 /* WP */
-> +				MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x59 /* VMMC */
-> +				 MX7D_PAD_GPIO1_IO08__SD1_VSELECT	0x59 /* VSELECT */
+> V2: Took care of typos in commit log and coding style comments.
+>=20
+>  drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 
-The indentation of this line doesn't align with above ones.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Shawn
+--YhFoJY/gx7awiIuK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +			>;
-> +		};
-> +
->  		pinctrl_usdhc1: usdhc1grp {
->  			fsl,pins = <
->  				MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-> @@ -646,9 +670,28 @@
->  				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
->  				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
->  				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-> -				MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
-> -				MX7D_PAD_SD1_WP__GPIO5_IO1		0x59 /* WP */
-> -				MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x59 /* vmmc */
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-> +			fsl,pins = <
-> +				MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-> +				MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-> +				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-> +				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-> +				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-> +				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-> +			fsl,pins = <
-> +				MX7D_PAD_SD1_CMD__SD1_CMD		0x5b
-> +				MX7D_PAD_SD1_CLK__SD1_CLK		0x1b
-> +				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5b
-> +				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5b
-> +				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5b
-> +				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5b
->  			>;
->  		};
->  
-> -- 
-> 2.17.1
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUNxIACgkQ3SOs138+
+s6HO2xAAkvI5x63ZPIRP0XJqegRNMwVI8Q8Qq2ywkDegjbNJew4Ddqf8HLiSUIep
+m0P0+nFUC3ueZxsTalaA00w6Tfs+6E64PCWYmtbjoXMzX13Zkk2G657odg66eL7D
+whjb0PIRMba0+nIdrN/YSRm8OU45+ZzBRQBMby25u6ijvMv8gV8856M13IrDPXUo
+y5d29VHhYmt5FsVY7Oqnkw5q0NvTdmm4RdrrpGiTjoZDSc1j08QNM012dVOVC7iv
++LXvlZvE7FZ52A3nK/KVpIScxjHrkm5nNisI3kh9mP21sIPcxluMpZU2/w3nIjl8
+yR7TAiSRKhg6E0bLO08/zNEsUS3PEMjeEkvfF4sNCHlBqqWjxZl7pj5lgTdY0bQ7
+1CY8703sR9fb9G+O7m4uGTSGwJzz0pbmijyRzgD7jLdo3n/qi8jxF6tjuufTfnEp
+yN9hdaUF6AdX5fRglNXQZdB5ZNXOMHFhdf24vfQSMe6vt0YA7EtiQOYpiy97zsGw
+qTiDwPQAxhXuQhhhrpCnDOP8b0+Kyu5CpCIRiAAn8Ev50u8ypWzYmE35qSsLfNLa
+evSdqYvzkxJ7l0/9L6WwV4vx1w4w4McVVe2gqiO4lRvLZPqj3Cp65Iu47AjQc8ZS
+6aaOQNGSIlLjx5t7DmsMACpsBdqsiZh8XoOlkyMQoRr/RLnVQZ4=
+=9Ujd
+-----END PGP SIGNATURE-----
+
+--YhFoJY/gx7awiIuK--
