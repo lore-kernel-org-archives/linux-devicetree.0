@@ -1,230 +1,140 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-Date: Wed, 08 May 2019 17:01:23 -0700
-Message-ID: <155736008376.14659.15159246866536630666@swboyd.mtv.corp.google.com>
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com> <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com> <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com> <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com> <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Wed, 8 May 2019 17:43:35 -0700
+Message-ID: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>, Rob Herring <robh+dt@kernel.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20190507080119.GB28121-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2019-05-08 09:07:11)
-> On Wed, May 8, 2019 at 10:06 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > On Wed, May 8, 2019 at 10:04 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Tue, May 7, 2019 at 11:08 PM Hsin-Yi Wang <hsinyi@chromium.org> wr=
-ote:
-> > > >
-> > > > On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wro=
-te:
-> > > > >
-> > > > > +boot-architecture list as there was some discussion about this I=
-IRC.
-> > > > >
-> > > > > On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org=
-> wrote:
-> > > > > >
-> > > > > > Introducing a chosen node, rng-seed, which is an 64 bytes entro=
-py
-> > > > > > that can be passed to kernel called very early to increase devi=
-ce
-> > > > > > randomness. Bootloader should provide this entropy and the valu=
-e is
-> > > > > > read from /chosen/rng-seed in DT.
-> > > > > >
-> > > > > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > > > >
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
-> > > > >
-> > > > > Actually, this file has been converted to json-schema and lives
-> > > > > here[1]. I need to remove this one (or leave it with a reference =
-to
-> > > > > the new one).
-> > > > >
-> > > > > >  arch/arm64/kernel/setup.c                    |  2 ++
-> > > > > >  drivers/of/fdt.c                             | 33 ++++++++++++=
-++++++++
-> > > > > >  include/linux/of_fdt.h                       |  1 +
-> > > > > >  4 files changed, 50 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Doc=
-umentation/devicetree/bindings/chosen.txt
-> > > > > > index 45e79172a646..bfd360691650 100644
-> > > > > > --- a/Documentation/devicetree/bindings/chosen.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > > > > > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it=
- will be overwritten by
-> > > > > >  the Linux EFI stub (which will populate the property itself, u=
-sing
-> > > > > >  EFI_RNG_PROTOCOL).
-> > > > > >
-> > > > > > +rng-seed
-> > > > > > +-----------
-> > > > > > +
-> > > > > > +This property served as an entropy to add device randomness. I=
-t is parsed
-> > > > > > +as a 64 byte value, e.g.
-> > > > >
-> > > > > Why only 64-bytes?
-> > > > We can also not specify size and read what bootloader can provide.
-> > > > >
-> > > > > > +
-> > > > > > +/ {
-> > > > > > +       chosen {
-> > > > > > +               rng-seed =3D <0x31951b3c 0xc9fab3a5 0xffdf1660 =
-...>
-> > > > > > +       };
-> > > > > > +};
-> > > > > > +
-> > > > > > +This random value should be provided by bootloader.
-> > > > > > +
-> > > > > >  stdout-path
-> > > > > >  -----------
-> > > > > >
-> > > > > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setu=
-p.c
-> > > > > > index 413d566405d1..ade4261516dd 100644
-> > > > > > --- a/arch/arm64/kernel/setup.c
-> > > > > > +++ b/arch/arm64/kernel/setup.c
-> > > > > > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
-> > > > > >         early_fixmap_init();
-> > > > > >         early_ioremap_init();
-> > > > > >
-> > > > > > +       early_init_dt_rng_seed(__fdt_pointer);
-> > > > > > +
-> > > > >
-> > > > > I'm trying to reduce or eliminate all these early_init_dt_* calls.
-> > > > >
-> > > > > Why is this arch specific and why can't this be done after
-> > > > > unflattening? It doesn't look like add_device_randomness() needs
-> > > > > anything early.
-> > > > Currently unflattening is called after setup_machine_fdt(), which
-> > > > called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
-> > > > PAGE_KERNEL_RO), and we can't modify DT after that since it's read
-> > > > only. But we need to clear (eg. write 0 to it) the rng-seed after
-> > > > reading from DT.
-> > >
-> > > Why do you need to clear it? That wasn't necessary for kaslr-seed.
-> > I think it's for security purpose. If we know the random seed, it's
-> > more likely we can predict randomness.
-> > Currently on arm64, kaslr-seed will be wiped out (in
-> > arch/arm64/kernel/kaslr.c#get_kaslr_seed(), it's set to 0) so we can't
-> > read from sysfs (eg. /sys/firmware/devicetree/.../kaslr-seed)
-> > I'm not sure on other arch if it will be wiped out.
->=20
-> The difference is if I have the kaslr seed, I can calculate the kernel
-> base address.
->=20
-> In your case, you are feeding an RNG which continually has entropy
-> added to it. I can't see that knowing one piece of the entropy data is
-> a security hole. It looks more like you've just copied what what done
-> for kaslr-seed.
->=20
-> > > Why not change the mapping to RW? It would be nice if this worked on
-> > > more than one arch.
->=20
-> Still wondering on this question. Mapping it R/W would mean rng-seed
-> could be handled later and completely out of the arch code and so
-> could the zeroing of the kaslr-seed. Also, we generally assume the FDT
-> is modifiable for any fixups. This happens on arm32 and powerpc, but I
-> guess we haven't needed that yet on arm64.
->=20
+On 5/7/19 1:01 AM, Greg KH wrote:
+> On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
+>> On 5/1/19 4:01 PM, Brendan Higgins wrote:
+>>> ## TLDR
+>>>
+>>> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
+>>> 5.2.
+>>>
+>>> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
+>>> we would merge through your tree when the time came? Am I remembering
+>>> correctly?
+>>>
+>>> ## Background
+>>>
+>>> This patch set proposes KUnit, a lightweight unit testing and mocking
+>>> framework for the Linux kernel.
+>>>
+>>> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+>>> it does not require installing the kernel on a test machine or in a VM
+>>> and does not require tests to be written in userspace running on a host
+>>> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
+>>> can run several dozen tests in under a second. Currently, the entire
+>>> KUnit test suite for KUnit runs in under a second from the initial
+>>> invocation (build time excluded).
+>>>
+>>> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+>>> Googletest/Googlemock for C++. KUnit provides facilities for defining
+>>> unit test cases, grouping related test cases into test suites, providing
+>>> common infrastructure for running tests, mocking, spying, and much more.
+>>
+>> As a result of the emails replying to this patch thread, I am now
+>> starting to look at kselftest.  My level of understanding is based
+>> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
+>> and a _tiny_ bit of looking at kselftest code.
+>>
+>> tl;dr; I don't really understand kselftest yet.
+>>
+>>
+>> (1) why KUnit exists
+>>
+>>> ## What's so special about unit testing?
+>>>
+>>> A unit test is supposed to test a single unit of code in isolation,
+>>> hence the name. There should be no dependencies outside the control of
+>>> the test; this means no external dependencies, which makes tests orders
+>>> of magnitudes faster. Likewise, since there are no external dependencies,
+>>> there are no hoops to jump through to run the tests. Additionally, this
+>>> makes unit tests deterministic: a failing unit test always indicates a
+>>> problem. Finally, because unit tests necessarily have finer granularity,
+>>> they are able to test all code paths easily solving the classic problem
+>>> of difficulty in exercising error handling code.
+>>
+>> (2) KUnit is not meant to replace kselftest
+>>
+>>> ## Is KUnit trying to replace other testing frameworks for the kernel?
+>>>
+>>> No. Most existing tests for the Linux kernel are end-to-end tests, which
+>>> have their place. A well tested system has lots of unit tests, a
+>>> reasonable number of integration tests, and some end-to-end tests. KUnit
+>>> is just trying to address the unit test space which is currently not
+>>> being addressed.
+>>
+>> My understanding is that the intent of KUnit is to avoid booting a kernel on
+>> real hardware or in a virtual machine.  That seems to be a matter of semantics
+>> to me because isn't invoking a UML Linux just running the Linux kernel in
+>> a different form of virtualization?
+>>
+>> So I do not understand why KUnit is an improvement over kselftest.
+>>
+>> It seems to me that KUnit is just another piece of infrastructure that I
+>> am going to have to be familiar with as a kernel developer.  More overhead,
+>> more information to stuff into my tiny little brain.
+>>
+>> I would guess that some developers will focus on just one of the two test
+>> environments (and some will focus on both), splitting the development
+>> resources instead of pooling them on a common infrastructure.
+>>
+>> What am I missing?
+> 
+> kselftest provides no in-kernel framework for testing kernel code
+> specifically.  That should be what kunit provides, an "easy" way to
+> write in-kernel tests for things.
 
-Maybe we can make the mapping of the FDT be RW until unflattening and
-then provide a weak arch hook to remap the FDT as RO if the architecture
-supports it? This way arm64 can mark it RO after any fixes have been
-made.
+kselftest provides a mechanism for in-kernel tests via modules.  For
+example, see:
 
-BTW, maybe we should put the 'initial_boot_params' pointer into
-__ro_after_init? That way it can't be repointed after init, but it looks
-like almost no code uses the flat DT after init anyway besides sysfs
-raw read.
+  tools/testing/selftests/vm/run_vmtests invokes:
+    tools/testing/selftests/vm/test_vmalloc.sh
+      loads module:
+        test_vmalloc
+        (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 4734223ab702..483e48f860ec 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -38,7 +38,7 @@
-  * memory entries in the /memory node. This function may be called
-  * any time after initial_boot_param is set.
-  */
--void of_fdt_limit_memory(int limit)
-+void __init of_fdt_limit_memory(int limit)
- {
- 	int memory;
- 	int len;
-@@ -145,8 +145,8 @@ static bool of_fdt_device_is_available(const void *blob=
-, unsigned long node)
- /**
-  * of_fdt_match - Return true if node matches a list of compatible values
-  */
--int of_fdt_match(const void *blob, unsigned long node,
--                 const char *const *compat)
-+static int __init of_fdt_match(const void *blob, unsigned long node,
-+			       const char *const *compat)
- {
- 	unsigned int tmp, score =3D 0;
-=20
-@@ -535,7 +535,7 @@ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- int __initdata dt_root_addr_cells;
- int __initdata dt_root_size_cells;
-=20
--void *initial_boot_params;
-+void *initial_boot_params __ro_after_init;
-=20
- #ifdef CONFIG_OF_EARLY_FLATTREE
-=20
-@@ -758,7 +758,7 @@ int __init of_scan_flat_dt_subnodes(unsigned long paren=
-t,
-  * @return offset of the subnode, or -FDT_ERR_NOTFOUND if there is none
-  */
-=20
--int of_get_flat_dt_subnode_by_name(unsigned long node, const char *uname)
-+int __init of_get_flat_dt_subnode_by_name(unsigned long node, const char *=
-uname)
- {
- 	return fdt_subnode_offset(initial_boot_params, node, uname);
- }
-@@ -804,7 +804,7 @@ int __init of_flat_dt_is_compatible(unsigned long node,=
- const char *compat)
- /**
-  * of_flat_dt_match - Return true if node matches a list of compatible val=
-ues
-  */
--int __init of_flat_dt_match(unsigned long node, const char *const *compat)
-+static int __init of_flat_dt_match(unsigned long node, const char *const *=
-compat)
- {
- 	return of_fdt_match(initial_boot_params, node, compat);
- }
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index a713e5d156d8..97b646e0ff2c 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -30,8 +30,6 @@ extern void *of_fdt_get_property(const void *blob,
- 				 int *size);
- extern bool of_fdt_is_big_endian(const void *blob,
- 				 unsigned long node);
--extern int of_fdt_match(const void *blob, unsigned long node,
--			const char *const *compat);
- extern void *of_fdt_unflatten_tree(const unsigned long *blob,
- 				   struct device_node *dad,
- 				   struct device_node **mynodes);
-@@ -64,7 +62,6 @@ extern int of_get_flat_dt_subnode_by_name(unsigned long n=
-ode,
- extern const void *of_get_flat_dt_prop(unsigned long node, const char *nam=
-e,
- 				       int *size);
- extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
--extern int of_flat_dt_match(unsigned long node, const char *const *matches=
-);
- extern unsigned long of_get_flat_dt_root(void);
- extern int of_get_flat_dt_size(void);
- extern uint32_t of_get_flat_dt_phandle(unsigned long node);
+A very quick and dirty search (likely to miss some tests) finds modules:
+
+  test_bitmap
+  test_bpf
+  test_firmware
+  test_printf
+  test_static_key_base
+  test_static_keys
+  test_user_copy
+  test_vmalloc
+
+-Frank
+
+> 
+> Brendan, did I get it right?
+> 
+> thanks,
+> 
+> greg k-h
+> .
+> 
