@@ -1,149 +1,212 @@
-Return-Path: <SRS0=hdwz=TD=intel.com=adrian.hunter@kernel.org>
-Subject: Re: [PATCH v2 2/3] mmc: sdhci-esdhc-imx: add pm_qos to interact with
- cpuidle
-References: <20190429090310.25484-1-haibo.chen@nxp.com>
- <20190429090310.25484-3-haibo.chen@nxp.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Message-ID: <5ceb72f5-3dca-d2b4-5cd1-0d1c1d5db0ef@intel.com>
-Date: Fri, 3 May 2019 09:53:02 +0300
+Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 05/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC LCD interface
+Date: Thu,  9 May 2019 17:58:22 +0200
+Message-Id: <20190509155834.22838-6-m.felsch@pengutronix.de>
+In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
+References: <20190509155834.22838-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190429090310.25484-3-haibo.chen@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: BOUGH CHEN <haibo.chen@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
+Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 29/04/19 11:55 AM, BOUGH CHEN wrote:
-> On some SoCs such as i.MX7ULP, there is no busfreq
-> driver, but cpuidle has some levels which may disable
-> system/bus clocks, so need to add pm_qos to prevent
-> cpuidle from entering low level idles and make sure
-> system/bus clocks are enabled when usdhc is active.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Add support according the SMARC Spec 1.1 [1] and provided schematics.
+Only the backlight and the i2c was tested due to the lack of hardware.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+[1] https://sget.org/standards/smarc
 
-> ---
->  drivers/mmc/host/sdhci-esdhc-imx.c | 32 +++++++++++++++++++++++++++++-
->  1 file changed, 31 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index 8dbbc1f62b70..053e8586d557 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -14,6 +14,7 @@
->  #include <linux/clk.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> +#include <linux/pm_qos.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/mmc.h>
->  #include <linux/mmc/sdio.h>
-> @@ -156,6 +157,8 @@
->  #define ESDHC_FLAG_HS400_ES		BIT(11)
->  /* The IP has Host Controller Interface for Command Queuing */
->  #define ESDHC_FLAG_CQHCI		BIT(12)
-> +/* need request pmqos during low power */
-> +#define ESDHC_FLAG_PMQOS		BIT(13)
->  
->  struct esdhc_soc_data {
->  	u32 flags;
-> @@ -204,6 +207,12 @@ static const struct esdhc_soc_data usdhc_imx7d_data = {
->  			| ESDHC_FLAG_HS400,
->  };
->  
-> +static struct esdhc_soc_data usdhc_imx7ulp_data = {
-> +	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
-> +			| ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> +			| ESDHC_FLAG_PMQOS,
-> +};
-> +
->  static struct esdhc_soc_data usdhc_imx8qxp_data = {
->  	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
->  			| ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> @@ -229,6 +238,7 @@ struct pltfm_imx_data {
->  		WAIT_FOR_INT,        /* sent CMD12, waiting for response INT */
->  	} multiblock_status;
->  	u32 is_ddr;
-> +	struct pm_qos_request pm_qos_req;
->  };
->  
->  static const struct platform_device_id imx_esdhc_devtype[] = {
-> @@ -257,6 +267,7 @@ static const struct of_device_id imx_esdhc_dt_ids[] = {
->  	{ .compatible = "fsl,imx6q-usdhc", .data = &usdhc_imx6q_data, },
->  	{ .compatible = "fsl,imx6ull-usdhc", .data = &usdhc_imx6ull_data, },
->  	{ .compatible = "fsl,imx7d-usdhc", .data = &usdhc_imx7d_data, },
-> +	{ .compatible = "fsl,imx7ulp-usdhc", .data = &usdhc_imx7ulp_data, },
->  	{ .compatible = "fsl,imx8qxp-usdhc", .data = &usdhc_imx8qxp_data, },
->  	{ /* sentinel */ }
->  };
-> @@ -1436,6 +1447,10 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->  	imx_data->socdata = of_id ? of_id->data : (struct esdhc_soc_data *)
->  						  pdev->id_entry->driver_data;
->  
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-> +		pm_qos_add_request(&imx_data->pm_qos_req,
-> +			PM_QOS_CPU_DMA_LATENCY, 0);
-> +
->  	imx_data->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
->  	if (IS_ERR(imx_data->clk_ipg)) {
->  		err = PTR_ERR(imx_data->clk_ipg);
-> @@ -1557,6 +1572,8 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->  disable_per_clk:
->  	clk_disable_unprepare(imx_data->clk_per);
->  free_sdhci:
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-> +		pm_qos_remove_request(&imx_data->pm_qos_req);
->  	sdhci_pltfm_free(pdev);
->  	return err;
->  }
-> @@ -1578,6 +1595,9 @@ static int sdhci_esdhc_imx_remove(struct platform_device *pdev)
->  	clk_disable_unprepare(imx_data->clk_ipg);
->  	clk_disable_unprepare(imx_data->clk_ahb);
->  
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-> +		pm_qos_remove_request(&imx_data->pm_qos_req);
-> +
->  	sdhci_pltfm_free(pdev);
->  
->  	return 0;
-> @@ -1649,6 +1669,9 @@ static int sdhci_esdhc_runtime_suspend(struct device *dev)
->  	}
->  	clk_disable_unprepare(imx_data->clk_ahb);
->  
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-> +		pm_qos_remove_request(&imx_data->pm_qos_req);
-> +
->  	return ret;
->  }
->  
-> @@ -1659,9 +1682,13 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
->  	struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
->  	int err;
->  
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-> +		pm_qos_add_request(&imx_data->pm_qos_req,
-> +			PM_QOS_CPU_DMA_LATENCY, 0);
-> +
->  	err = clk_prepare_enable(imx_data->clk_ahb);
->  	if (err)
-> -		return err;
-> +		goto remove_pm_qos_request;
->  
->  	if (!sdhci_sdio_irq_enabled(host)) {
->  		err = clk_prepare_enable(imx_data->clk_per);
-> @@ -1690,6 +1717,9 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
->  		clk_disable_unprepare(imx_data->clk_per);
->  disable_ahb_clk:
->  	clk_disable_unprepare(imx_data->clk_ahb);
-> +remove_pm_qos_request:
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_PMQOS)
-> +		pm_qos_remove_request(&imx_data->pm_qos_req);
->  	return err;
->  }
->  #endif
-> 
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 134 ++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+index b96684ff92e8..577048f96f22 100644
+--- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+@@ -70,6 +70,28 @@
+ 		vin-supply = <&reg_smarc_suppy>;
+ 	};
+ 
++	reg_smarc_lcdbklt: regulator-smarc-lcdbklt {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_lcdbklt_en>;
++		regulator-name = "LCD_BKLT_EN";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		gpio = <&gpio1 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_smarc_lcdvdd: regulator-smarc-lcdvdd {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_lcdvdd_en>;
++		regulator-name = "LCD_VDD_EN";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		gpio = <&gpio1 17 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	reg_smarc_rtc: regulator-smarc-rtc {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "V_IN_RTC_BATT";
+@@ -89,6 +111,41 @@
+ 		regulator-boot-on;
+ 	};
+ 
++	lcd: lcd {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "fsl,imx-parallel-display";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_lcd>;
++		status = "disabled";
++
++		port@0 {
++			reg = <0>;
++
++			lcd_in: endpoint {
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			lcd_out: endpoint {
++			};
++		};
++	};
++
++	lcd_backlight: lcd-backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm4 0 5000000>;
++		pwm-names = "LCD_BKLT_PWM";
++
++		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
++		default-brightness-level = <4>;
++
++		power-supply = <&reg_smarc_lcdbklt>;
++		status = "disabled";
++	};
++
+ 	i2c_intern: i2c-gpio-intern {
+ 		compatible = "i2c-gpio";
+ 		pinctrl-names = "default";
+@@ -99,6 +156,18 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 	};
++
++	i2c_lcd: i2c-gpio-lcd {
++		compatible = "i2c-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c_gpio_lcd>;
++		sda-gpios = <&gpio1 21 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio1 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <2>; /* ~100 kHz */
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabld";
++	};
+ };
+ 
+ /* CAN0 */
+@@ -308,6 +377,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c_gpio_lcd: i2c-gpiolcdgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT2__GPIO1_IO19 0x1b0b0 /* SCL */
++			MX6QDL_PAD_SD1_DAT3__GPIO1_IO21 0x1b0b0 /* SDA */
++		>;
++	};
++
+ 	pinctrl_i2c3: i2c3grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
+@@ -315,6 +391,52 @@
+ 		>;
+ 	};
+ 
++	pinctrl_lcd: lcdgrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00  0x100f1
++			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01  0x100f1
++			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02  0x100f1
++			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03  0x100f1
++			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04  0x100f1
++			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05  0x100f1
++			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06  0x100f1
++			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07  0x100f1
++			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08  0x100f1
++			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09  0x100f1
++			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10 0x100f1
++			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11 0x100f1
++			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12 0x100f1
++			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13 0x100f1
++			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14 0x100f1
++			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15 0x100f1
++			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16 0x100f1
++			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17 0x100f1
++			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18 0x100f1
++			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19 0x100f1
++			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20 0x100f1
++			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21 0x100f1
++			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22 0x100f1
++			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23 0x100f1
++
++			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x100f1
++			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x100f1 /* DE */
++			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x100f1 /* HSYNC */
++			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x100f1 /* VSYNC */
++		>;
++	};
++
++	pinctrl_lcdbklt_en: lcdbkltengrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT0__GPIO1_IO16	0x1b0b1
++		>;
++	};
++
++	pinctrl_lcdvdd_en: lcdvddengrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 0x1b0b0
++		>;
++	};
++
+ 	pinctrl_pcie: pciegrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D18__GPIO3_IO18	0x1b0b0 /* PCI_A_PRSNT# */
+@@ -323,6 +445,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
++		>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
+@@ -402,6 +530,12 @@
+ 	reset-gpio = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+ };
+ 
++/* LCD_BKLT_PWM */
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
++};
++
+ /* SER0 */
+ &uart1 {
+ 	pinctrl-names = "default";
+-- 
+2.20.1
