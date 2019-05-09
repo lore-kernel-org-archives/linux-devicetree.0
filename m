@@ -1,75 +1,66 @@
-Return-Path: <SRS0=TtEp=TB=rockwellcollins.com=adam.michaelis@kernel.org>
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Subject: [PATCH 6/6] iio: ad7949: Fix dummy read cycle placement
-Date: Wed,  1 May 2019 16:17:03 -0500
-Message-Id: <1556745423-11368-6-git-send-email-adam.michaelis@rockwellcollins.com>
-In-Reply-To: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
-References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
-To: linux-iio@vger.kernel.org
-Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:21:49 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 14/28] PCI: tegra: Add SW fixup for RAW violations
+Message-ID: <20190509142149.GK8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-15-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iSeZnk6FyAS3EJ1y"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-15-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The AD7949 requires two conversion cycles following any configuration
-change (including changing the analog channel being sampled). Therefore,
-adding a dummy read cycle when config is changed and removing the extra
-cycles at initial configuration.
 
-Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
----
- drivers/iio/adc/ad7949.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+--iSeZnk6FyAS3EJ1y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
-index dc1ae4c143b0..4e8ad4217e5b 100644
---- a/drivers/iio/adc/ad7949.c
-+++ b/drivers/iio/adc/ad7949.c
-@@ -115,6 +115,25 @@ static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
- 		 * time to send a new command to the device
- 		 */
- 		udelay(2);
-+
-+		/*
-+		 * Perform extra read cycle to allow configuration, acquisition,
-+		 * and conversion sequences to complete for new configuration.
-+		 */
-+		(void)memset(&tx, 0, sizeof(tx));
-+		(void)memset(ad7949_adc->buffer, 0, AD7949_BUFFER_LEN);
-+
-+		tx.rx_buf = ad7949_adc->buffer;
-+		tx.len = ad7949_spi_cfg_is_read_back(ad7949_adc) ? 4 : 2;
-+
-+		spi_message_init_with_transfers(&msg, &tx, 1);
-+		ret = spi_sync(ad7949_adc->spi, &msg);
-+
-+		/*
-+		 * This delay is to avoid a new request before the required time
-+		 * to send a new command to the device.
-+		 */
-+		udelay(2);
- 	}
- 
- 	return ret;
-@@ -247,7 +266,6 @@ static int ad7949_spi_reg_access(struct iio_dev *indio_dev,
- static int ad7949_spi_init(struct ad7949_adc_chip *ad7949_adc)
- {
- 	int ret;
--	int val;
- 	u16 adc_config = 0;
- 
- 	ad7949_adc->current_channel = 0;
-@@ -261,13 +279,6 @@ static int ad7949_spi_init(struct ad7949_adc_chip *ad7949_adc)
- 
- 	ret = ad7949_spi_write_cfg(ad7949_adc, adc_config, AD7949_MASK_TOTAL);
- 
--	/*
--	 * Do two dummy conversions to apply the first configuration setting.
--	 * Required only after the start up of the device.
--	 */
--	ad7949_spi_read_channel(ad7949_adc, &val, ad7949_adc->current_channel);
--	ad7949_spi_read_channel(ad7949_adc, &val, ad7949_adc->current_channel);
--
- 	return ret;
- }
- 
--- 
-1.9.1
+On Tue, Apr 23, 2019 at 02:58:11PM +0530, Manikanta Maddireddy wrote:
+> The logic which blocks read requests till AFI gets ACK for all outstanding
+> writes from memory controller does not behave correctly when number of
+> outstanding writes become more than 32 in Tegra124 and Tegra132.
+>=20
+> SW fixup is to prevent writes from accumulating more than 32 by,
+>  - limiting outstanding posted writes to 14
+>  - modifying Gen1 and Gen2 UpdateFC timer frequency
+>=20
+> UpdateFC timer frequency is equal to twice the value of register content
+> in nsec. These settings are recommended after stress testing with differe=
+nt
+> values.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2: Changed update_fc_val to update_fc_threshold
+>=20
+>  drivers/pci/controller/pci-tegra.c | 34 ++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--iSeZnk6FyAS3EJ1y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUN30ACgkQ3SOs138+
+s6HFQw/+PTC7RN71AKKN6opIjXVg0LiEMaoj3Q48f4ybfsn53m38RUQj8EhdxpMX
+LXr8NflHDE0i1nJA/B1NXqAtVWASiM+4fPZOQHtHznUQip/910twhFMabhcxJ6sM
+8vBcNe4pBDgnlpPltf/G/F4ztf8lYbffAdGM8X6swv955SVB3UL2g7LCpiwoawSZ
+mpvKNTSdiwd+8okBeFvRcqu1WSnt9Gqd3JH99t1NM83IwU1kMCmJNG9BiwYmUMck
+OD3grHpwffxRJde+MDZ0OPDOPhYxSJh1qQ2j9a682Vk4QYMtFzFnNXmFLweQqwV8
+Ajp++bGjdSRbasjXXdaCyLa/o/z7sMZLTb793yy19PjF1mJR6SuSqLgmcMLaX/GB
+pu4qhZGyfHVVGwvB9eo/JQ74/7Q0dJnW8oPnQULjf3wB/iSP3VC53bYQ+d0RcuoO
+QSzBwCypk/91xA32xWxoG6xxV7xM4drsp4jplgFwGwldgEdxMIclBdZGxi5jdSLG
+aJ1f/WhveIB6f3DVsMM55vwkNDW13fSMI9oD2hCUhYa3bOqbcw//FQz8ZZUhj82f
+vuTJG/7XBLObZWea9AyAn5tpg/EFmWAHHGcwHsxTZUuL35b/fgPu0NGeZmtEQyNS
+b90w0j9e6RV4xeGqaSas4ORQIybgJN6NTcTzehZrDfCMlHxPehQ=
+=cly3
+-----END PGP SIGNATURE-----
+
+--iSeZnk6FyAS3EJ1y--
