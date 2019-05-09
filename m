@@ -1,55 +1,57 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 12/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC Watchdog
-Date: Thu,  9 May 2019 17:58:29 +0200
-Message-Id: <20190509155834.22838-13-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:04:59 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 02/28] PCI: tegra: Handle failure cases in
+ tegra_pcie_power_on()
+Message-ID: <20190509140459.GB8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-3-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-3-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support according the SMARC Spec 1.1 [1] and provided schematics.
 
-Kontron connected the pin to the SoM CPLD too. The CPLD performs after a
-30s timeout so we need to enable the watchdog per default.
+--CdrF4e02JqNVZeln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://sget.org/standards/smarc
+On Tue, Apr 23, 2019 at 02:57:59PM +0530, Manikanta Maddireddy wrote:
+> Unroll the PCIe power on sequence if any one of the steps fail in
+> tegra_pcie_power_on().
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2: New patch to handle error cleanup in tegra_pcie_power_on().
+>=20
+>  drivers/pci/controller/pci-tegra.c | 26 +++++++++++++++++++++-----
+>  1 file changed, 21 insertions(+), 5 deletions(-)
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index 1b2764a9ba7f..e62f349a351a 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -691,6 +691,12 @@
- 			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17059
- 		>;
- 	};
-+
-+	pinctrl_wdog1: wdog1rp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_9__WDOG1_B	0x1b0b0
-+		>;
-+	};
- };
- 
- &mipi_csi {
-@@ -770,3 +776,10 @@
- 	no-1-8-v;
- 	non-removable;
- };
-+
-+&wdog1 {
-+	/* CPLD is feeded by watchdog (hardwired) */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog1>;
-+	status = "okay";
-+};
--- 
-2.20.1
+--CdrF4e02JqNVZeln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUM4sACgkQ3SOs138+
+s6G6vw//ZlsjzvQq+kNiozjqfF+5tWoDBYISiX4LL5kIRZ7AuoP5rk/FWwBP1QAl
+ONLeFgXNzcbxXlIwvbWyEF1ls+zM3Tjo9cd//0nUOvdRr44nvSvT4XAXv3QwhyPj
+XO4yZonLvXL5fh2YxXkrX/vvG6dEfTk+aY+nrBil8Aojq9kwczLgK6pnTDuDQRNf
+gECbdjKmlRHLMamLb2hqnzSjWDV0cNdF3y0c8lsjeo+unSDRx2zJ5MJp6VOHyRj4
+8/MpuUfsV+ozusZeUYtWJPp2Vxdc3v/4SM9zOx9rDEB3kdZuO4WnEE4FKD39viAm
+4lekg9IvtK1VBG3MyS9wCxlHAu+WvFoxe2asFmy51zsps0Zc1UzXnPRp5hU1q+C5
+1JGArhghofw6a229Ki2IaV/u68DglkUR6QivB4yxdHODxO5/w21S1CC9IU9Rn4OO
+n0qq51KSGqZbN8dQaRUo2EOEFxxIZ1i3mJqltKOIJ4gutkQ7GJR2gX02KwFT6/x0
+j7GLq/qqGAV686hQAFVkoYiurwbMmz2MlsnHJ4ZdqWcqjj8Is+jtHpCBiIPPI29u
+94WIPIiy0I0IhJz0WuV7f18zFY3DShrrTffuy5Bdchll444OD/a9OV7gSl/J7zrk
+9yPlgGbxzgHBjqEsvmX9OrcEe0YTcQ0rlaXNtFME9NwuzrLmzaI=
+=ENnA
+-----END PGP SIGNATURE-----
+
+--CdrF4e02JqNVZeln--
