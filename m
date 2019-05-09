@@ -1,96 +1,47 @@
-From: Qiang Zhao <qiang.zhao@nxp.com>
-Subject: RE: [EXT] [PATCH v2 6/6] soc/fsl/qe: qe.c: fold qe_get_num_of_snums
- into qe_snums_init
-Date: Thu, 9 May 2019 02:35:56 +0000
-Message-ID: <VI1PR04MB3247EC77FE4096B891DFAA1F91330@VI1PR04MB3247.eurprd04.prod.outlook.com>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
+From: "Theodore Ts'o" <tytso-3s7WtUTddSA@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Wed, 8 May 2019 23:20:17 -0400
+Message-ID: <20190509032017.GA29703@mit.edu>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS81LzEgMTc6MjksIFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJl
-dmFzLmRrPiB3cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBS
-YXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4gU2VudDogMjAx
-OeW5tDXmnIgx5pelIDE3OjI5DQo+IFRvOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgUWlh
-bmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5j
-b20+DQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBS
-b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgU2NvdHQgV29vZA0KPiA8b3NzQGJ1c2Vy
-cm9yLm5ldD47IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPjsgTWFy
-aw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJhc211cyBWaWxsZW1vZXMNCj4g
-PFJhc211cy5WaWxsZW1vZXNAcHJldmFzLnNlPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjIgNi82XSBz
-b2MvZnNsL3FlOiBxZS5jOiBmb2xkIHFlX2dldF9udW1fb2Zfc251bXMgaW50bw0KPiBxZV9zbnVt
-c19pbml0DQo+IA0KPiBUaGUgY29tbWVudCAiTm8gUUUgZXZlciBoYXMgZmV3ZXIgdGhhbiAyOCBT
-TlVNcyIgaXMgZmFsc2U7IGUuZy4gdGhlDQo+IE1QQzgzMDkgaGFzIDE0LiBUaGUgY29kZSBwYXRo
-IHJldHVybmluZyAtRUlOVkFMIGlzIGFsc28gYSByZWNpcGUgZm9yIGluc3RhbnQNCj4gZGlzYXN0
-ZXIsIHNpbmNlIHRoZSBjYWxsZXIgKHFlX3NudW1zX2luaXQpIHVuY3JpdGljYWxseSBhc3NpZ25z
-IHRoZSByZXR1cm4gdmFsdWUgdG8NCj4gdGhlIHVuc2lnbmVkIHFlX251bV9vZl9zbnVtLCBhbmQg
-d291bGQgdGh1cyBwcm9jZWVkIHRvIGF0dGVtcHQgdG8gY29weQ0KPiA0R0IgZnJvbSBzbnVtX2lu
-aXRfNDZbXSB0byB0aGUgc251bVtdIGFycmF5Lg0KPiANCj4gU28gZm9sZCB0aGUgaGFuZGxpbmcg
-b2YgdGhlIGxlZ2FjeSBmc2wscWUtbnVtLXNudW1zIGludG8gcWVfc251bXNfaW5pdCwgYW5kDQo+
-IG1ha2Ugc3VyZSB3ZSBkbyBub3QgZW5kIHVwIHVzaW5nIHRoZSBzbnVtX2luaXRfNDYgYXJyYXkg
-aW4gY2FzZXMgb3RoZXIgdGhhbg0KPiB0aGUgdHdvIHdoZXJlIHdlIGtub3cgaXQgbWFrZXMgc2Vu
-c2UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVt
-b2VzQHByZXZhcy5kaz4NCj4gLS0tDQogDQpSZXZpZXdlZC1ieTogUWlhbmcgWmhhbyA8cWlhbmcu
-emhhb0BueHAuY29tPg0KDQo+ICBkcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyB8IDQ2ICsrKysrKysr
-KysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTYg
-aW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9zb2MvZnNsL3FlL3FlLmMgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyBpbmRleA0KPiAzMjVk
-Njg5Y2JmNWMuLjI3NmQ3ZDc4ZWJmYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3Fl
-L3FlLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMNCj4gQEAgLTMwOCwyNCArMzA4
-LDMzIEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9pZCkNCj4gICAgICAgICBpbnQgaTsN
-Cj4gDQo+ICAgICAgICAgYml0bWFwX3plcm8oc251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0K
-PiArICAgICAgIHFlX251bV9vZl9zbnVtID0gMjg7IC8qIFRoZSBkZWZhdWx0IG51bWJlciBvZiBz
-bnVtIGZvciB0aHJlYWRzDQo+ICsgaXMgMjggKi8NCj4gICAgICAgICBxZSA9IHFlX2dldF9kZXZp
-Y2Vfbm9kZSgpOw0KPiAgICAgICAgIGlmIChxZSkgew0KPiAgICAgICAgICAgICAgICAgaSA9IG9m
-X3Byb3BlcnR5X3JlYWRfdmFyaWFibGVfdThfYXJyYXkocWUsICJmc2wscWUtc251bXMiLA0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc251
-bXMsIDEsDQo+IFFFX05VTV9PRl9TTlVNKTsNCj4gLSAgICAgICAgICAgICAgIG9mX25vZGVfcHV0
-KHFlKTsNCj4gICAgICAgICAgICAgICAgIGlmIChpID4gMCkgew0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICBvZl9ub2RlX3B1dChxZSk7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHFlX251
-bV9vZl9zbnVtID0gaTsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOw0KPiAgICAg
-ICAgICAgICAgICAgfQ0KPiArICAgICAgICAgICAgICAgLyoNCj4gKyAgICAgICAgICAgICAgICAq
-IEZhbGwgYmFjayB0byBsZWdhY3kgYmluZGluZyBvZiB1c2luZyB0aGUgdmFsdWUgb2YNCj4gKyAg
-ICAgICAgICAgICAgICAqIGZzbCxxZS1udW0tc251bXMgdG8gY2hvb3NlIG9uZSBvZiB0aGUgc3Rh
-dGljIGFycmF5cw0KPiArICAgICAgICAgICAgICAgICogYWJvdmUuDQo+ICsgICAgICAgICAgICAg
-ICAgKi8NCj4gKyAgICAgICAgICAgICAgIG9mX3Byb3BlcnR5X3JlYWRfdTMyKHFlLCAiZnNsLHFl
-LW51bS1zbnVtcyIsDQo+ICZxZV9udW1fb2Zfc251bSk7DQo+ICsgICAgICAgICAgICAgICBvZl9u
-b2RlX3B1dChxZSk7DQo+ICAgICAgICAgfQ0KPiANCj4gLSAgICAgICBxZV9udW1fb2Zfc251bSA9
-IHFlX2dldF9udW1fb2Zfc251bXMoKTsNCj4gLQ0KPiAtICAgICAgIGlmIChxZV9udW1fb2Zfc251
-bSA9PSA3NikNCj4gKyAgICAgICBpZiAocWVfbnVtX29mX3NudW0gPT0gNzYpIHsNCj4gICAgICAg
-ICAgICAgICAgIHNudW1faW5pdCA9IHNudW1faW5pdF83NjsNCj4gLSAgICAgICBlbHNlDQo+ICsg
-ICAgICAgfSBlbHNlIGlmIChxZV9udW1fb2Zfc251bSA9PSAyOCB8fCBxZV9udW1fb2Zfc251bSA9
-PSA0Nikgew0KPiAgICAgICAgICAgICAgICAgc251bV9pbml0ID0gc251bV9pbml0XzQ2Ow0KPiAt
-DQo+ICsgICAgICAgfSBlbHNlIHsNCj4gKyAgICAgICAgICAgICAgIHByX2VycigiUUU6IHVuc3Vw
-cG9ydGVkIHZhbHVlIG9mIGZzbCxxZS1udW0tc251bXM6ICV1XG4iLA0KPiBxZV9udW1fb2Zfc251
-bSk7DQo+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+ICsgICAgICAgfQ0KPiAgICAgICAgIG1l
-bWNweShzbnVtcywgc251bV9pbml0LCBxZV9udW1fb2Zfc251bSk7ICB9DQo+IA0KPiBAQCAtNjQx
-LDMwICs2NTAsNyBAQCBFWFBPUlRfU1lNQk9MKHFlX2dldF9udW1fb2ZfcmlzYyk7DQo+IA0KPiAg
-dW5zaWduZWQgaW50IHFlX2dldF9udW1fb2Zfc251bXModm9pZCkNCj4gIHsNCj4gLSAgICAgICBz
-dHJ1Y3QgZGV2aWNlX25vZGUgKnFlOw0KPiAtICAgICAgIGludCBzaXplOw0KPiAtICAgICAgIHVu
-c2lnbmVkIGludCBudW1fb2Zfc251bXM7DQo+IC0gICAgICAgY29uc3QgdTMyICpwcm9wOw0KPiAt
-DQo+IC0gICAgICAgbnVtX29mX3NudW1zID0gMjg7IC8qIFRoZSBkZWZhdWx0IG51bWJlciBvZiBz
-bnVtIGZvciB0aHJlYWRzIGlzIDI4DQo+ICovDQo+IC0gICAgICAgcWUgPSBxZV9nZXRfZGV2aWNl
-X25vZGUoKTsNCj4gLSAgICAgICBpZiAoIXFlKQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIG51
-bV9vZl9zbnVtczsNCj4gLQ0KPiAtICAgICAgIHByb3AgPSBvZl9nZXRfcHJvcGVydHkocWUsICJm
-c2wscWUtbnVtLXNudW1zIiwgJnNpemUpOw0KPiAtICAgICAgIGlmIChwcm9wICYmIHNpemUgPT0g
-c2l6ZW9mKCpwcm9wKSkgew0KPiAtICAgICAgICAgICAgICAgbnVtX29mX3NudW1zID0gKnByb3A7
-DQo+IC0gICAgICAgICAgICAgICBpZiAoKG51bV9vZl9zbnVtcyA8IDI4KSB8fCAobnVtX29mX3Nu
-dW1zID4NCj4gUUVfTlVNX09GX1NOVU0pKSB7DQo+IC0gICAgICAgICAgICAgICAgICAgICAgIC8q
-IE5vIFFFIGV2ZXIgaGFzIGZld2VyIHRoYW4gMjggU05VTXMgKi8NCj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgcHJfZXJyKCJRRTogbnVtYmVyIG9mIHNudW0gaXMgaW52YWxpZFxuIik7DQo+IC0g
-ICAgICAgICAgICAgICAgICAgICAgIG9mX25vZGVfcHV0KHFlKTsNCj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+IC0gICAgICAgICAgICAgICB9DQo+IC0gICAgICAg
-fQ0KPiAtDQo+IC0gICAgICAgb2Zfbm9kZV9wdXQocWUpOw0KPiAtDQo+IC0gICAgICAgcmV0dXJu
-IG51bV9vZl9zbnVtczsNCj4gKyAgICAgICByZXR1cm4gcWVfbnVtX29mX3NudW07DQo+ICB9DQo+
-ICBFWFBPUlRfU1lNQk9MKHFlX2dldF9udW1fb2Zfc251bXMpOw0KPiANCj4gLS0NCj4gMi4yMC4x
-DQoNCkJlc3QgUmVnYXJkcw0KUWlhbmcgWmhhbw0K
+On Wed, May 08, 2019 at 07:13:59PM -0700, Frank Rowand wrote:
+> > If you want to use vice grips as a hammer, screwdriver, monkey wrench,
+> > etc.  there's nothing stopping you from doing that.  But it's not fair
+> > to object to other people who might want to use better tools.
+> > 
+> > The reality is that we have a lot of testing tools.  It's not just
+> > kselftests.  There is xfstests for file system code, blktests for
+> > block layer tests, etc.   We use the right tool for the right job.
+> 
+> More specious arguments.
+
+Well, *I* don't think they are specious; so I think we're going to
+have to agree to disagree.
+
+Cheers,
+
+						- Ted
