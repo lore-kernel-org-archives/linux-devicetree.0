@@ -1,47 +1,23 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH repost] dt-bindings: timer: renesas, cmt: Document r8a779{5|65|90} CMT support
-Date: Thu,  9 May 2019 14:29:49 +0200
-Message-ID: <20190509122949.23256-1-horms+renesas@verge.net.au>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v4] clk: gcc-qcs404: Add PCIe resets
+Date: Thu, 9 May 2019 18:21:35 +0530
+Message-ID: <20190509125135.GE16052@vkoul-mobl>
+References: <20190508223922.5609-1-bjorn.andersson@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190508223922.5609-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-renesas-soc@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>, Simon Horman <horms+renesas@verge.net.au>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Cao Van Dong <cv-dong@jinso.co.jp>
+On 08-05-19, 15:39, Bjorn Andersson wrote:
+> Enabling PCIe requires several of the PCIe related resets from GCC, so
+> add them all.
 
-Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index c0594450e9ef..c5220bcd852b 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -42,12 +42,18 @@ Required Properties:
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-+    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
-+    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
-     - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
-     - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
-+    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
-+    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
-     - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
-     - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-     - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
-     - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-+    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
-+    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
- 
-     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
- 		and RZ/G1.
 -- 
-2.11.0
+~Vinod
