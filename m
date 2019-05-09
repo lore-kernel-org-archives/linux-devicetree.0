@@ -1,58 +1,75 @@
-From: "Theodore Ts'o" <tytso@mit.edu>
+From: Frank Rowand <frowand.list@gmail.com>
 Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
  testing framework
-Date: Wed, 8 May 2019 21:58:56 -0400
-Message-ID: <20190509015856.GB7031@mit.edu>
+Date: Wed, 8 May 2019 19:13:59 -0700
+Message-ID: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
 References: <20190501230126.229218-1-brendanhiggins@google.com>
  <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
  <20190507080119.GB28121@kroah.com>
  <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, dan.j.williams@intel.com, kunit-dev@googlegroups.com, richard@nod.at, sboyd@kernel.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, mcgrof@kernel.org, keescook@google.com, linux-fsdevel@vger.kernel.org, logang@deltatee.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190509015856.GB7031@mit.edu>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Theodore Ts'o <tytso@mit.edu>, Greg KH <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDgsIDIwMTkgYXQgMDU6NDM6MzVQTSAtMDcwMCwgRnJhbmsgUm93YW5kIHdy
-b3RlOgo+IGtzZWxmdGVzdCBwcm92aWRlcyBhIG1lY2hhbmlzbSBmb3IgaW4ta2VybmVsIHRlc3Rz
-IHZpYSBtb2R1bGVzLiAgRm9yCj4gZXhhbXBsZSwgc2VlOgo+IAo+ICAgdG9vbHMvdGVzdGluZy9z
-ZWxmdGVzdHMvdm0vcnVuX3ZtdGVzdHMgaW52b2tlczoKPiAgICAgdG9vbHMvdGVzdGluZy9zZWxm
-dGVzdHMvdm0vdGVzdF92bWFsbG9jLnNoCj4gICAgICAgbG9hZHMgbW9kdWxlOgo+ICAgICAgICAg
-dGVzdF92bWFsbG9jCj4gICAgICAgICAod2hpY2ggaXMgYnVpbHQgZnJvbSBsaWIvdGVzdF92bWFs
-bG9jLmMgaWYgQ09ORklHX1RFU1RfVk1BTExPQykKClRoZSBtYWpvcml0eSBvZiB0aGUga3NlbGZ0
-ZXN0cyBhcmUgaW1wbGVtZW50ZWQgYXMgdXNlcnNwYWNlIHByb2dyYW1zLgoKWW91ICpjYW4qIHJ1
-biBpbi1rZXJuZWwgdGVzdCB1c2luZyBtb2R1bGVzOyBidXQgdGhlcmUgaXMgbm8gZnJhbWV3b3Jr
-CmZvciB0aGUgaW4ta2VybmVsIGNvZGUgZm91bmQgaW4gdGhlIHRlc3QgbW9kdWxlcywgd2hpY2gg
-bWVhbnMgZWFjaCBvZgp0aGUgaW4ta2VybmVsIGNvZGUgaGFzIHRvIGNyZWF0ZSB0aGVpciBvd24g
-aW4ta2VybmVsIHRlc3QKaW5mcmFzdHJ1Y3R1cmUuICAKClRoYXQncyBtdWNoIGxpa2Ugc2F5aW5n
-IHlvdSBjYW4gdXNlIHZpY2UgZ3JpcHMgdG8gdHVybiBhIG51dCBvcgpib2x0LWhlYWQuICBZb3Ug
-KmNhbiosIGJ1dCBpdCBtaWdodCBiZSB0aGF0IHVzaW5nIGEgbW9ua2V5IHdyZW5jaAp3b3VsZCBi
-ZSBhIG11Y2ggYmV0dGVyIHRvb2wgdGhhdCBpcyBtdWNoIGVhc2llci4KCldoYXQgd291bGQgeW91
-IHNheSB0byBhIHdvb2Qgd29ya2VyIG9iamVjdGluZyB0aGF0IGEgdG9vbGJveCBzaG91bGQKY29u
-dGFpbiBhIG1vbmtleSB3cmVuY2ggYmVjYXVzZSBoZSBhbHJlYWR5IGtub3dzIGhvdyB0byB1c2Ug
-dmlzZQpncmlwcywgYW5kIGhpcyB0aW55IGJyYWluIHNob3VsZG4ndCBiZSBmb3JjZWQgdG8gbGVh
-cm4gaG93IHRvIHVzZSBhCndyZW5jaCB3aGVuIGhlIGtub3dzIGhvdyB0byB1c2UgYSB2aXNlIGdy
-aXAsIHdoaWNoIGlzIGEgcGVyZmVjdGx5IGdvb2QKdG9vbD8KCklmIHlvdSB3YW50IHRvIHVzZSB2
-aWNlIGdyaXBzIGFzIGEgaGFtbWVyLCBzY3Jld2RyaXZlciwgbW9ua2V5IHdyZW5jaCwKZXRjLiAg
-dGhlcmUncyBub3RoaW5nIHN0b3BwaW5nIHlvdSBmcm9tIGRvaW5nIHRoYXQuICBCdXQgaXQncyBu
-b3QgZmFpcgp0byBvYmplY3QgdG8gb3RoZXIgcGVvcGxlIHdobyBtaWdodCB3YW50IHRvIHVzZSBi
-ZXR0ZXIgdG9vbHMuCgpUaGUgcmVhbGl0eSBpcyB0aGF0IHdlIGhhdmUgYSBsb3Qgb2YgdGVzdGlu
-ZyB0b29scy4gIEl0J3Mgbm90IGp1c3QKa3NlbGZ0ZXN0cy4gIFRoZXJlIGlzIHhmc3Rlc3RzIGZv
-ciBmaWxlIHN5c3RlbSBjb2RlLCBibGt0ZXN0cyBmb3IKYmxvY2sgbGF5ZXIgdGVzdHMsIGV0Yy4g
-ICBXZSB1c2UgdGhlIHJpZ2h0IHRvb2wgZm9yIHRoZSByaWdodCBqb2IuCgoJCQkJCQktIFRlZApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On 5/8/19 6:58 PM, Theodore Ts'o wrote:
+> On Wed, May 08, 2019 at 05:43:35PM -0700, Frank Rowand wrote:
+>> kselftest provides a mechanism for in-kernel tests via modules.  For
+>> example, see:
+>>
+>>   tools/testing/selftests/vm/run_vmtests invokes:
+>>     tools/testing/selftests/vm/test_vmalloc.sh
+>>       loads module:
+>>         test_vmalloc
+>>         (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
+> 
+> The majority of the kselftests are implemented as userspace programs.
+
+Non-argument.
+
+
+> You *can* run in-kernel test using modules; but there is no framework
+> for the in-kernel code found in the test modules, which means each of
+> the in-kernel code has to create their own in-kernel test
+> infrastructure.
+
+Why create an entire new subsystem (KUnit) when you can add a header
+file (and .c code as appropriate) that outputs the proper TAP formatted
+results from kselftest kernel test modules?
+
+There are already a multitude of in kernel test modules used by
+kselftest.  It would be good if they all used a common TAP compliant
+mechanism to report results.
+
+ 
+> That's much like saying you can use vice grips to turn a nut or
+> bolt-head.  You *can*, but it might be that using a monkey wrench
+> would be a much better tool that is much easier.
+> 
+> What would you say to a wood worker objecting that a toolbox should
+> contain a monkey wrench because he already knows how to use vise
+> grips, and his tiny brain shouldn't be forced to learn how to use a
+> wrench when he knows how to use a vise grip, which is a perfectly good
+> tool?
+> 
+> If you want to use vice grips as a hammer, screwdriver, monkey wrench,
+> etc.  there's nothing stopping you from doing that.  But it's not fair
+> to object to other people who might want to use better tools.
+> 
+> The reality is that we have a lot of testing tools.  It's not just
+> kselftests.  There is xfstests for file system code, blktests for
+> block layer tests, etc.   We use the right tool for the right job.
+
+More specious arguments.
+
+-Frank
+
+> 
+> 						- Ted
+> 
