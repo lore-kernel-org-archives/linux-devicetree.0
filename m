@@ -1,65 +1,104 @@
-Return-Path: <SRS0=MMxF=TJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33453 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfEIOUG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 May 2019 10:20:06 -0400
-Date: Thu, 9 May 2019 16:20:02 +0200
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:29:36 +0200
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 12/28] PCI: tegra: Enable PCIe xclk clock clamping
-Message-ID: <20190509142002.GI8907@ulmo>
+Subject: Re: [PATCH V2 20/28] PCI: tegra: Use legacy irq for port service
+ drivers
+Message-ID: <20190509142936.GQ8907@ulmo>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-13-mmaddireddy@nvidia.com>
+ <20190423092825.759-21-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YhFoJY/gx7awiIuK"
+	protocol="application/pgp-signature"; boundary="3mUD2hqWbnBptYHy"
 Content-Disposition: inline
-In-Reply-To: <20190423092825.759-13-mmaddireddy@nvidia.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20190423092825.759-21-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---YhFoJY/gx7awiIuK
+--3mUD2hqWbnBptYHy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2019 at 02:58:09PM +0530, Manikanta Maddireddy wrote:
-> Enable xclk clock clamping when entering L1. Clamp threshold will
-> determine the time spent waiting for clock module to turn on xclk after
-> signaling it. Default threshold value in Tegra124 and Tegra210 is not
-> enough to turn on xclk clock. Increase the clamp threshold to meet the
-> clock module timing in Tegra124 and Tegra210. Default threshold value is
-> enough in Tegra20, Tegra30 and Tegra186.
+On Tue, Apr 23, 2019 at 02:58:17PM +0530, Manikanta Maddireddy wrote:
+> Tegra signals PCIe services like AER, PME, etc over legacy IRQ line.
+> By default, service drivers register interrupt routine over MSI IRQ line.
+> Use pcie_pme_disable_msi() function to disable MSI for service drivers.
+>=20
+> PME and AER interrupts registered to MSI without this change,
+> cat /proc/interrupts | grep -i pci
+> 36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
+> 37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
+> 76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+>=20
+> PME and AER interrupts registered to legacy IRQ with this change,
+> cat /proc/interrupts | grep -i pci
+> 36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW not=
+if
+> 37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
 >=20
 > Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 > ---
-> V2: Took care of typos in commit log and coding style comments.
+> V2: No change
 >=20
->  drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/pci-tegra.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+
+I think I mentioned this before, but it would be nice to make this
+setting per-controller rather than system-global. In practice I guess
+this doesn't really matter at this point, and I'm not sure how much
+Bjorn cares, so:
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---YhFoJY/gx7awiIuK
+>=20
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/=
+pci-tegra.c
+> index 72634ce6d3da..edc6a0f27397 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -41,6 +41,7 @@
+>  #include <soc/tegra/pmc.h>
+> =20
+>  #include "../pci.h"
+> +#include "../pcie/portdrv.h"
+> =20
+>  #define INT_PCI_MSI_NR (8 * 32)
+> =20
+> @@ -2721,6 +2722,9 @@ static int tegra_pcie_probe(struct platform_device =
+*pdev)
+>  		goto put_resources;
+>  	}
+> =20
+> +	/* Switch to legacy IRQ for PCIe services like AER, PME*/
+> +	pcie_pme_disable_msi();
+> +
+>  	pm_runtime_enable(pcie->dev);
+>  	err =3D pm_runtime_get_sync(pcie->dev);
+>  	if (err) {
+> --=20
+> 2.17.1
+>=20
+
+--3mUD2hqWbnBptYHy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUNxIACgkQ3SOs138+
-s6HO2xAAkvI5x63ZPIRP0XJqegRNMwVI8Q8Qq2ywkDegjbNJew4Ddqf8HLiSUIep
-m0P0+nFUC3ueZxsTalaA00w6Tfs+6E64PCWYmtbjoXMzX13Zkk2G657odg66eL7D
-whjb0PIRMba0+nIdrN/YSRm8OU45+ZzBRQBMby25u6ijvMv8gV8856M13IrDPXUo
-y5d29VHhYmt5FsVY7Oqnkw5q0NvTdmm4RdrrpGiTjoZDSc1j08QNM012dVOVC7iv
-+LXvlZvE7FZ52A3nK/KVpIScxjHrkm5nNisI3kh9mP21sIPcxluMpZU2/w3nIjl8
-yR7TAiSRKhg6E0bLO08/zNEsUS3PEMjeEkvfF4sNCHlBqqWjxZl7pj5lgTdY0bQ7
-1CY8703sR9fb9G+O7m4uGTSGwJzz0pbmijyRzgD7jLdo3n/qi8jxF6tjuufTfnEp
-yN9hdaUF6AdX5fRglNXQZdB5ZNXOMHFhdf24vfQSMe6vt0YA7EtiQOYpiy97zsGw
-qTiDwPQAxhXuQhhhrpCnDOP8b0+Kyu5CpCIRiAAn8Ev50u8ypWzYmE35qSsLfNLa
-evSdqYvzkxJ7l0/9L6WwV4vx1w4w4McVVe2gqiO4lRvLZPqj3Cp65Iu47AjQc8ZS
-6aaOQNGSIlLjx5t7DmsMACpsBdqsiZh8XoOlkyMQoRr/RLnVQZ4=
-=9Ujd
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUOVAACgkQ3SOs138+
+s6HCxA//UrUL86LMU95RJrjuqvwVYJKT0fSy7PVkjFQQcnF3C+aVPEG/OyiG/B8B
+5nwRFNZfmen44uPLeEqbBW8G4kMhFeackzeVTBCHxMUCFnJg6j1hlxqtWJgSo9Lt
+se00pexpTVeFsG8s3r7ovdkAtLeWRtgt4W6ldwre7mrSpzQiXs6H7uPB10Z/0QYN
+/XkHEoOmivy7AjOSKjBNTox/8vH/buzrbhmnZhYM5wMpT80AaeQ3Laj9s7SWTLvf
+ETGaEVwM2KnEouBydan3YXENlSz/auglamH7radXcOHYLGCD35fssZtBb0kUAD2+
+pMN6kJOmJmJ0LVAFBDraE8IMRKE4ybfX1i+iZKNLLg0X/cciAy5/4+PID+zYN/92
+aPPS1ZeBrRy9kGHQe4xcpgJkcD0yOAtHmXyB5BZrK/CEXwUANRElsMN3MitAfx/9
+gR+3orUkfw7dKh5ptyrhmxDo9WOwxC3BvQO5r/xXyaxSCApcEget3Y2sJRJ+pX4G
+1RjaFdoSPV4sas+qilLWuXGtRcFZVYzb2FOP0jpOEY/RxMfjTISnQDtW/kttSwrt
+uVknQgtMzTPDa7ra6cuufQE8syse2T5rrF/N0r5+3u0/vjQA8sI21rriXi3I8nNJ
+BbK01FlMYnj/QS2cavbotIduJkCd50x4r/IpmMTBg+09E6MhJxo=
+=ePGI
 -----END PGP SIGNATURE-----
 
---YhFoJY/gx7awiIuK--
+--3mUD2hqWbnBptYHy--
