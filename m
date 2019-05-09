@@ -1,171 +1,58 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 3/3] pinctrl: bcm2835: bcm7211: Add support for 7211 pull-up functionality
-Date: Thu,  9 May 2019 13:59:55 -0700
-Message-ID: <20190509205955.27842-4-f.fainelli@gmail.com>
-References: <20190509205955.27842-1-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190509205955.27842-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Al Cooper <alcooperx@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Doug Berger <opendmb@gmail.com>, Matheus Castello <matheus@castello.eng.br>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Lukas Wunner <lukas@wunner.de>, Nathan Chancellor <natechancellor@gmail.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND" <devicetree@vger.kernel.org>
+From: "Theodore Ts'o" <tytso-3s7WtUTddSA@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Thu, 9 May 2019 17:42:33 -0400
+Message-ID: <20190509214233.GA20877@mit.edu>
+References: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <875c546d-9713-bb59-47e4-77a1d2c69a6d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Al Cooper <alcooperx@gmail.com>
+On Thu, May 09, 2019 at 11:12:12AM -0700, Frank Rowand wrote:
+> 
+>    "My understanding is that the intent of KUnit is to avoid booting a kernel on
+>    real hardware or in a virtual machine.  That seems to be a matter of semantics
+>    to me because isn't invoking a UML Linux just running the Linux kernel in
+>    a different form of virtualization?
+> 
+>    So I do not understand why KUnit is an improvement over kselftest.
+> 
+>    ...
+> 
+>    What am I missing?"
 
-The 7211 has a new way of selecting the pull-up/pull-down setting
-for a GPIO pin. The registers used for the bcm2837, GP_PUD and
-GP_PUDCLKn0, are no longer connected. A new set of registers,
-GP_GPIO_PUP_PDN_CNTRL_REGx must be used. This commit will add
-a new compatible string "brcm,bcm7211-gpio" and the kernel
-driver will use it to select which method is used to select
-pull-up/pull-down.
+One major difference: kselftest requires a userspace environment; it
+starts systemd, requires a root file system from which you can load
+modules, etc.  Kunit doesn't require a root file system; doesn't
+require that you start systemd; doesn't allow you to run arbitrary
+perl, python, bash, etc. scripts.  As such, it's much lighter weight
+than kselftest, and will have much less overhead before you can start
+running tests.  So it's not really the same kind of virtualization.
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 85 +++++++++++++++++++++++++--
- 1 file changed, 80 insertions(+), 5 deletions(-)
+Does this help?
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 183d1ffe6a75..35d9f9593000 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -57,15 +57,26 @@
- #define GPAFEN0		0x88	/* Pin Async Falling Edge Detect */
- #define GPPUD		0x94	/* Pin Pull-up/down Enable */
- #define GPPUDCLK0	0x98	/* Pin Pull-up/down Enable Clock */
-+#define GP_GPIO_PUP_PDN_CNTRL_REG0 0xe4 /* 7211 Pin Pull-up/down select */
- 
- #define FSEL_REG(p)		(GPFSEL0 + (((p) / 10) * 4))
- #define FSEL_SHIFT(p)		(((p) % 10) * 3)
- #define GPIO_REG_OFFSET(p)	((p) / 32)
- #define GPIO_REG_SHIFT(p)	((p) % 32)
- 
-+#define PUD_7211_MASK		0x3
-+#define PUD_7211_REG_OFFSET(p)	((p) / 16)
-+#define PUD_7211_REG_SHIFT(p)	(((p) % 16) * 2)
-+
- /* argument: bcm2835_pinconf_pull */
- #define BCM2835_PINCONF_PARAM_PULL	(PIN_CONFIG_END + 1)
- 
-+enum bcm7211_pinconf_pull {
-+	BCM7211_PINCONFIG_PULL_NONE,
-+	BCM7211_PINCONFIG_PULL_UP,
-+	BCM7211_PINCONFIG_PULL_DOWN,
-+};
-+
- struct bcm2835_pinctrl {
- 	struct device *dev;
- 	void __iomem *base;
-@@ -975,6 +986,55 @@ static const struct pinconf_ops bcm2835_pinconf_ops = {
- 	.pin_config_set = bcm2835_pinconf_set,
- };
- 
-+static int bcm7211_pinconf_set(struct pinctrl_dev *pctldev,
-+			       unsigned int pin, unsigned long *configs,
-+			       unsigned int num_configs)
-+{
-+	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	u32 param, arg;
-+	u32 shifter;
-+	u32 value;
-+	u32 off;
-+	int i;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		param = pinconf_to_config_param(configs[i]);
-+		if (param != BCM2835_PINCONF_PARAM_PULL)
-+			return -EINVAL;
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		/* convert to 7211 value */
-+		switch (arg) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			arg = BCM7211_PINCONFIG_PULL_NONE;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			arg = BCM7211_PINCONFIG_PULL_DOWN;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			arg = BCM7211_PINCONFIG_PULL_UP;
-+			break;
-+		}
-+
-+		off = PUD_7211_REG_OFFSET(pin);
-+		shifter = PUD_7211_REG_SHIFT(pin);
-+
-+		value = bcm2835_gpio_rd(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 +
-+					(off * 4));
-+		value &= ~(PUD_7211_MASK << shifter);
-+		value |= (arg << shifter);
-+		bcm2835_gpio_wr(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 + (off * 4),
-+				value);
-+	} /* for each config */
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops bcm7211_pinconf_ops = {
-+	.pin_config_get = bcm2835_pinconf_get,
-+	.pin_config_set = bcm7211_pinconf_set,
-+};
-+
- static struct pinctrl_desc bcm2835_pinctrl_desc = {
- 	.name = MODULE_NAME,
- 	.pins = bcm2835_gpio_pins,
-@@ -990,6 +1050,18 @@ static struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
- 	.npins = BCM2835_NUM_GPIOS,
- };
- 
-+static const struct of_device_id bcm2835_pinctrl_match[] = {
-+	{
-+		.compatible = "brcm,bcm2835-gpio",
-+		.data = &bcm2835_pinconf_ops,
-+	},
-+	{
-+		.compatible = "brcm,bcm7211-gpio",
-+		.data = &bcm7211_pinconf_ops,
-+	},
-+	{}
-+};
-+
- static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -997,6 +1069,8 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	struct bcm2835_pinctrl *pc;
- 	struct resource iomem;
- 	int err, i;
-+	const struct of_device_id *match;
-+
- 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2835_NUM_GPIOS);
- 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2835_NUM_GPIOS);
- 
-@@ -1073,6 +1147,12 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 					     bcm2835_gpio_irq_handler);
- 	}
- 
-+	match = of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-+	if (match) {
-+		bcm2835_pinctrl_desc.confops =
-+			(const struct pinconf_ops *)match->data;
-+	}
-+
- 	pc->pctl_dev = devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
- 	if (IS_ERR(pc->pctl_dev)) {
- 		gpiochip_remove(&pc->gpio_chip);
-@@ -1087,11 +1167,6 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id bcm2835_pinctrl_match[] = {
--	{ .compatible = "brcm,bcm2835-gpio" },
--	{}
--};
--
- static struct platform_driver bcm2835_pinctrl_driver = {
- 	.probe = bcm2835_pinctrl_probe,
- 	.driver = {
--- 
-2.17.1
+					- Ted
