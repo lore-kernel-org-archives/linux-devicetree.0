@@ -1,61 +1,47 @@
-Return-Path: <SRS0=63HK=TO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.lunchkarty.eu ([80.211.141.150]:60075 "EHLO lunchkarty.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfENHkk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 May 2019 03:40:40 -0400
-Received: by mail.lunchkarty.eu for <devicetree@vger.kernel.org>; Tue, 14 May 2019 07:30:47 GMT
-Message-ID: <20190514084500-0.1.r.2h2l.0.aqpa6zer1w@lunchkarty.eu>
-Date: Tue, 14 May 2019 07:30:47 GMT
-From: "Radoslav Dobrev" <radoslav.dobrev@lunchkarty.eu>
-Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
+Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 17/17] ARCH: arm: dts: imx6dl-kontron-samx6i: add Kontron SMARC Dual-Lite/Solo SoM
+Date: Thu,  9 May 2019 17:58:34 +0200
+Message-Id: <20190509155834.22838-18-m.felsch@pengutronix.de>
+In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
+References: <20190509155834.22838-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
+Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5!
+Add dtsi for iMX6 Dual-Lite/Solo based SMARC SoM's from Kontron.
 
-=D0=9D=D1=83=D0=B6=D0=B4=D0=B0=D0=B5=D1=82=D0=B5 =D0=BB=D0=B8 =D1=81=D0=B5=
- =D0=BE=D1=82 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=
-=D0=B5=D0=BD =D0=BF=D0=B0=D0=BA=D0=B5=D1=82 =D0=B7=D0=B0 =D0=BF=D0=B5=D1=80=
-=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=B5=
- =D1=83=D0=B4=D0=BE=D0=B1=D0=B5=D0=BD =D0=B8 =D0=BF=D1=80=D0=B8=D0=B2=D0=BB=
-=D0=B5=D0=BA=D0=B0=D1=82=D0=B5=D0=BB=D0=B5=D0=BD, =D0=BA=D0=B0=D0=BA=D1=82=
-=D0=BE =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=
-=D0=B5=D0=BB=D1=8F, =D1=82=D0=B0=D0=BA=D0=B0 =D0=B8 =D0=B7=D0=B0 =D1=81=D0=
-=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=B8=D1=82=D0=B5?
+The differences between the quad/dual and the dual-lite/solo are:
+* dual-lite/solo has no 2nd IPU and maps those signals as GPIOs
+* dual-lite/solo has only two chip select signals for the SMARC SPI0
+  interface
+* dual-lite/solo has no pcie_wake# signal
 
-=D0=92 =D1=82=D0=B0=D0=BA=D1=8A=D0=B2 =D1=81=D0=BB=D1=83=D1=87=D0=B0=D0=B9=
- =D0=92=D0=B8 =D0=BF=D1=80=D0=B5=D0=BF=D0=BE=D1=80=D1=8A=D1=87=D0=B2=D0=B0=
-=D0=BC=D0=B5 =D0=B4=D0=B0 =D0=BE=D0=B1=D0=BC=D0=B8=D1=81=D0=BB=D0=B8=D1=82=
-=D0=B5 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=
-=D0=BE =D0=BD=D0=B0 =D0=B2=D1=81=D0=B5 =D0=BF=D0=BE-=D0=BF=D0=BE=D0=BF=D1=
-=83=D0=BB=D1=8F=D1=80=D0=BD=D0=B8=D1=82=D0=B5 =D0=BA=D0=B0=D1=80=D1=82=D0=
-=B8 =D0=B7=D0=B0 =D0=BE=D0=B1=D1=8F=D0=B4 - =D1=80=D0=B0=D0=B1=D0=BE=D1=82=
-=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D1=8F=D1=82 =D0=B7=D0=B0=D1=80=D0=B5=
-=D0=B6=D0=B4=D0=B0 =D0=BA=D0=B0=D1=80=D1=82=D0=B0=D1=82=D0=B0 =D1=81 =D0=BE=
-=D0=BF=D1=80=D0=B5=D0=B4=D0=B5=D0=BB=D0=B5=D0=BD=D0=B0 =D1=81=D1=83=D0=BC=
-=D0=B0, =D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D1=8F=D1=82=
- =D0=BC=D0=BE=D0=B6=D0=B5 =D0=B4=D0=B0 =D1=8F =D0=B8=D0=B7=D0=BF=D0=BE=D0=
-=BB=D0=B7=D0=B2=D0=B0 =D0=B2=D1=8A=D0=B2 =D0=B2=D1=81=D1=8F=D0=BA=D0=BE =D0=
-=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B7=D0=B0 =D1=85=D1=
-=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5, =D0=BA=D0=B0=D0=BA=D1=82=D0=BE =D0=B8 =
-=D0=BE=D0=BD=D0=BB=D0=B0=D0=B9=D0=BD =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=
-=D0=B0 =D0=BF=D0=BE =D1=81=D0=B2=D0=BE=D0=B5 =D0=B6=D0=B5=D0=BB=D0=B0=D0=BD=
-=D0=B8=D0=B5.
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi
 
-=D0=A9=D0=B5 =D1=81=D0=B5 =D1=80=D0=B0=D0=B4=D0=B2=D0=B0=D0=BC =D0=B4=D0=B0=
- =D0=92=D0=B8 =D0=BF=D1=80=D0=B5=D0=B4=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=B2=
-=D1=8A=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =
-=D0=BD=D0=B0 =D0=BA=D0=B0=D1=80=D1=82=D0=B0=D1=82=D0=B0 =E2=80=93 =D0=BC=D0=
-=BE=D0=B3=D0=B0 =D0=BB=D0=B8 =D0=B4=D0=B0 =D0=92=D0=B8 =D1=81=D0=B5 =D0=BE=
-=D0=B1=D0=B0=D0=B4=D1=8F, =D0=B7=D0=B0 =D0=B4=D0=B0 =D0=BE=D0=B1=D1=81=D1=
-=8A=D0=B4=D0=B8=D0=BC =D0=B2 =D0=B4=D0=B5=D1=82=D0=B0=D0=B9=D0=BB=D0=B8?
-
-
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.lunchkarty.eu 
+diff --git a/arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi
+new file mode 100644
+index 000000000000..a864fdbd5f16
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-kontron-samx6i.dtsi
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Copyright 2019 (C) Pengutronix, Marco Felsch <kernel@pengutronix.de>
++ */
++
++#include "imx6dl.dtsi"
++#include "imx6qdl-kontron-samx6i.dtsi"
++
++/ {
++	model = "Kontron SMARC sAMX6i Dual-Lite/Solo";
++	compatible = "kontron,imx6dl-samx6i", "fsl,imx6dl";
++};
+-- 
+2.20.1
