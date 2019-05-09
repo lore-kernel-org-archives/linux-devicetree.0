@@ -1,72 +1,69 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 16/17] ARCH: arm: dts: imx6q-kontron-samx6i: add Kontron SMARC Quad/Dual SoM
-Date: Thu,  9 May 2019 17:58:33 +0200
-Message-Id: <20190509155834.22838-17-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:05:59 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 03/28] PCI: tegra: Rearrange Tegra PCIe driver
+ functions
+Message-ID: <20190509140559.GC8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-4-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-4-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add dtsi for iMX6 Quad/Dual based SMARC SoM's from Kontron.
 
-The differences between the quad/dual and the dual-lite/solo are:
- * quad/dual has a 2nd IPU
- * quad/dual has three chip selects for SMARC SPI0 interface
- * quad/dual has a pcie_wake# signal
+--adJ1OR3c6QgCpb/j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Only the 3th spi-cs signal is added by this commit.
+On Tue, Apr 23, 2019 at 02:58:00PM +0530, Manikanta Maddireddy wrote:
+> Tegra PCIe has register spec for,
+>  - AXI to FPCI(AFI) bridge
+>  - Multiple PCIe root ports
+>  - PCIe PHY
+>  - PCIe pad control
+>=20
+> Rearrange Tegra PCIe driver functions such that each function programs
+> required module only.
+>  - tegra_pcie_enable_controller(): Program AFI module and enable PCIe
+> controller.
+>  - tegra_pcie_phy_power_on(): Bring up PCIe PHY.
+>  - tegra_pcie_apply_pad_settings(): Program PCIe REFCLK pad settings.
+>  - tegra_pcie_enable_ports(): Program each root port and bring up PCIe
+> link.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2: This is new patch in V2
+>=20
+>  drivers/pci/controller/pci-tegra.c | 70 +++++++++++++-----------------
+>  1 file changed, 30 insertions(+), 40 deletions(-)
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi | 36 +++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-diff --git a/arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
-new file mode 100644
-index 000000000000..2618eccfe50d
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-kontron-samx6i.dtsi
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0 OR X11
-+/*
-+ * Copyright 2019 (C) Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+ */
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-kontron-samx6i.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "Kontron SMARC sAMX6i Quad/Dual";
-+	compatible = "kontron,imx6q-samx6i", "fsl,imx6q";
-+};
-+
-+/* Quad/Dual SoMs have 3 chip-select signals */
-+&ecspi4 {
-+	fsl,spi-num-chipselects = <3>;
-+	cs-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>,
-+		   <&gpio3 29 GPIO_ACTIVE_HIGH>,
-+		   <&gpio3 25 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&pinctrl_ecspi4 {
-+	fsl,pins = <
-+		MX6QDL_PAD_EIM_D21__ECSPI4_SCLK 0x100b1
-+		MX6QDL_PAD_EIM_D28__ECSPI4_MOSI 0x100b1
-+		MX6QDL_PAD_EIM_D22__ECSPI4_MISO 0x100b1
-+
-+		/* SPI4_IMX_CS2# - connected to internal flash */
-+		MX6QDL_PAD_EIM_D24__GPIO3_IO24 0x1b0b0
-+		/* SPI4_IMX_CS0# - connected to SMARC SPI0_CS0# */
-+		MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1b0b0
-+		/* SPI4_CS3# - connected to  SMARC SPI0_CS1# */
-+		MX6QDL_PAD_EIM_D25__GPIO3_IO25 0x1b0b0
-+	>;
-+};
--- 
-2.20.1
+--adJ1OR3c6QgCpb/j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUM8cACgkQ3SOs138+
+s6HBUw/+Nge0hAU4yobAmEA4PrdYseRVfQdBLh5I0sOnjta7vUd8lhBu+ZHXLUxT
+sQ1SLFFnDK2iq1dOmxlr98Lzfm+WSZ/uBINcD60pwv+dDxDJCBQg2pbT+FmMZjOl
+c2xcpE3aEdO2PhPslMTJkOkZPvjzahB9EZRw++AUb/1cmnJlpbR2vN1W9qpO9Yvf
++SihoeLiDEd8J84z7FASb+6UOtan6YmDfVPXzFuvkRs/ZTVg9Zn8/1SvxYgRkJyy
+nHnNxLMiaJ6G1G3vb6jLG/QZ2WRJA7EwnhNB9znJQjOKl5ydZ4BPt5Md4RrQKiwo
+PHVi7ujVbKbkgES3plvtt5TVv6jPdCopg/8kMj4zgjZLjp37G8GrToKR9a9rczg1
+JQRZ3lK65qDqM97JlywjQViLCRr8eFLWL+fb5fNvKf534nqjTz3pBy7BLpRRTJlw
+ZLAnrtR1LR78bKfMyPfiBNnYovrUiOyYWyppKqDWIHXmL4VRJjmXtHcVB48Z334Y
+K1Wx5nvBnTHhBbN1tKdTSaw5XyoXddvvG3GtIJrzlEkLhSGj0zjpMAyUpuOo3Juf
+1IGY5xIo4MA9Smua3qpUNL7vlTXRV3QBor25ka2m02Ic6oA/ueUZfo4nLJMbHhTR
+0lffVkIlyZ7QPm5hSBjREi5Dc6u7UZ5q6RPyVxopflUJCU+pGRQ=
+=hZ3Q
+-----END PGP SIGNATURE-----
+
+--adJ1OR3c6QgCpb/j--
