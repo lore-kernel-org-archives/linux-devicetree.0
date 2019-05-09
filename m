@@ -1,51 +1,51 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 4/4] reset: Switch to SPDX license identifier for
- reset-simple
-Date: Thu, 9 May 2019 08:24:12 +0200
-Message-ID: <20190509062412.wwxi2wsxh5qxuynk@flea>
-References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
- <20190508165319.19822-5-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b2ls5al25iuwpocw"
+From: Chuanhua Han <chuanhua.han@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Date: Thu,  9 May 2019 15:06:57 +0800
+Message-ID: <20190509070657.18281-1-chuanhua.han@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190508165319.19822-5-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com
+To: shawnguo@kernel.org, leoyang.li@nxp.com, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chuanhua Han <chuanhua.han@nxp.com>, Zhang Ying-22455 <ying.zhang22455@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+ls1028a platform uses sp805 watchdog, and use 1/16 platform clock as
+timer clock, this patch fix device tree node.
 
---b2ls5al25iuwpocw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+---
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-On Wed, May 08, 2019 at 10:23:19PM +0530, Manivannan Sadhasivam wrote:
-> Switch to SPDX license identifier for reset-simple driver.
->
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---b2ls5al25iuwpocw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNPHhgAKCRDj7w1vZxhR
-xcsGAQDWw03uN6SKonzQo7n9s7K1TZI+Z7qjYYNYj1jsijXp3wD/ddEo49lQII4g
-ZZcHpUtsMt0+tE4cKqmnwom4SS5TGgM=
-=rFRJ
------END PGP SIGNATURE-----
-
---b2ls5al25iuwpocw--
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index b04581249f0b..1510b1858246 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -285,13 +285,18 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
+-		wdog0: watchdog@23c0000 {
+-			compatible = "fsl,ls1028a-wdt", "fsl,imx21-wdt";
+-			reg = <0x0 0x23c0000 0x0 0x10000>;
+-			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 1>;
+-			big-endian;
+-			status = "disabled";
++		cluster1_core0_watchdog: wdt@c000000 {
++			compatible = "arm,sp805", "arm,primecell";
++			reg = <0x0 0xc000000 0x0 0x1000>;
++			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster1_core1_watchdog: wdt@c010000 {
++			compatible = "arm,sp805", "arm,primecell";
++			reg = <0x0 0xc010000 0x0 0x1000>;
++			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
++			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		sata: sata@3200000 {
+-- 
+2.17.1
