@@ -1,68 +1,62 @@
-Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 9 May 2019 16:23:32 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 16/28] PCI: tegra: Set target speed as Gen1 before
- starting LTSSM
-Message-ID: <20190509142332.GM8907@ulmo>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-17-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 07/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC GPIO interface
+Date: Thu,  9 May 2019 17:58:24 +0200
+Message-Id: <20190509155834.22838-8-m.felsch@pengutronix.de>
+In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
+References: <20190509155834.22838-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+ARLBH93C7pgvpZY"
-Content-Disposition: inline
-In-Reply-To: <20190423092825.759-17-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
+Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+Add support according the SMARC Spec 1.1 [1] and provided schematics.
+Due to the lack of hardware the interface can't be tested right now.
 
---+ARLBH93C7pgvpZY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[1] https://sget.org/standards/smarc
 
-On Tue, Apr 23, 2019 at 02:58:13PM +0530, Manikanta Maddireddy wrote:
-> PCIe link up fails with few legacy endpoints if root port advertises both
-> Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
-> fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
-> advertising only Gen1. Hence, the strategy followed here is to initially
-> advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
->=20
-> Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
-> even if Gen2 is advertised, so there is no downside of this change.
->=20
-> This behavior is observed with following two PCIe devices on Tegra,
->  - Fusion HDTV 5 Express card
->  - IOGear SIL - PCIE - SATA card
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2: Updated commit log to reflect why this issue is observed on Tegra with
-> these particular cards
->=20
->  drivers/pci/controller/pci-tegra.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---+ARLBH93C7pgvpZY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUN+MACgkQ3SOs138+
-s6GQrRAAo+2k8UeW7UF1AajkUxrBvVxbQQRIy+pZSYqFbg6dy6nOnB4ZEDVsnEZS
-gfxZhX8qStod8gWagEMF25nctyiVHuQGU+P07GJY3FIcOEx4Y/EYv0wW65H6OACD
-gbscLMB5kXRLbVg26nY3SIjB2IZDG/nFXmfdkkDpsOurd4CPulleUAovtp6q1Sfe
-BAcbDC4vQ5cov/Ms2oJeEtZMBJICGPCDyFLZRU0D+xhuDyEVvFVnmGWM5vPKGAzM
-hfMXyU4uWkm6TYExw9LMUoFiH5n7NPC4FnbQSO+vLw/9JGtnBu/wXVMAn63IwqcF
-ezOMxxOeQwGxxbr/aJCF7VGeCNdcxlJvyAlOwESK5nIiAvXHW5mlOAUpuLplIxsS
-2cXr75echyXlZlIP4l52qZj8K31E17Y61MWaO0/dwXMw6nEyB9uirZ2pZeSHVFxo
-apAO6EJoBjWLbIEzKr8DAaZYWdpzu+IArVwFm1+sbasQ7GDM9ail0Q77gXdg2jP7
-GXRgT7qwctB93JPqrDfwM/0i7KkKXs2zkV19ga3/2Ae9F+SoaGCElYSOKsuUKQ+t
-yEg+JROfGJik40qUz/Skr/QR2VB4IMBDEGalKdsq22krZuqCaIx+Py4RgQ69L7+G
-pJYDV3BBPNdq6RQBP5uC1jyivg75l4kzUOxGMJBhgD2FFyVw0lQ=
-=BWzF
------END PGP SIGNATURE-----
-
---+ARLBH93C7pgvpZY--
+diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+index 7a32767c35f1..9b8a1d99d967 100644
+--- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+@@ -322,7 +322,7 @@
+ 
+ &iomuxc {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_mgmt_gpios>;
++	pinctrl-0 = <&pinctrl_mgmt_gpios &pinctrl_gpio>;
+ 
+ 	pinctrl_ecspi4: ecspi4grp {
+ 		fsl,pins = <
+@@ -351,6 +351,23 @@
+ 		>;
+ 	};
+ 
++	pinctrl_gpio: gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_DA0__GPIO3_IO00	0x1b0b0	/* GPIO0 / CAM0_PWR# */
++			MX6QDL_PAD_EIM_DA1__GPIO3_IO01	0x1b0b0 /* GPIO1 / CAM1_PWR# */
++			MX6QDL_PAD_EIM_DA2__GPIO3_IO02	0x1b0b0 /* GPIO2 / CAM0_RST# */
++			MX6QDL_PAD_EIM_DA3__GPIO3_IO03	0x1b0b0 /* GPIO3 / CAM1_RST# */
++			MX6QDL_PAD_EIM_DA4__GPIO3_IO04	0x1b0b0 /* GPIO4 / HDA_RST#  */
++			MX6QDL_PAD_EIM_DA5__GPIO3_IO05	0x1b0b0 /* GPIO5 / PWM_OUT   */
++			MX6QDL_PAD_EIM_DA6__GPIO3_IO06	0x1b0b0 /* GPIO6 / TACHIN    */
++			MX6QDL_PAD_EIM_DA7__GPIO3_IO07	0x1b0b0 /* GPIO7 / PCAM_FLD  */
++			MX6QDL_PAD_EIM_DA8__GPIO3_IO08	0x1b0b0 /* GPIO8 / CAN0_ERR# */
++			MX6QDL_PAD_EIM_DA9__GPIO3_IO09	0x1b0b0 /* GPIO9 / CAN1_ERR# */
++			MX6QDL_PAD_EIM_DA10__GPIO3_IO10	0x1b0b0 /* GPIO10            */
++			MX6QDL_PAD_EIM_DA11__GPIO3_IO11	0x1b0b0 /* GPIO11            */
++		>;
++	};
++
+ 	pinctrl_enet: enetgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
+-- 
+2.20.1
