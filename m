@@ -1,60 +1,57 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 08/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC HDMI interface
-Date: Thu,  9 May 2019 17:58:25 +0200
-Message-Id: <20190509155834.22838-9-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 10/15] usb: renesas_usbhs: support byte addressable CFIFO
+Date: Thu, 9 May 2019 15:11:37 -0500
+Message-ID: <20190509201142.10543-11-chris.brandt@renesas.com>
+In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
+References: <20190509201142.10543-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-Add support according the SMARC Spec 1.1 [1] and provided schematics.
-Due to the lack of hardware the interface can't be tested right now.
+Some SoC have a CFIFO register that is byte addressable. This means
+when the CFIFO access is set to 32-bit, you can write 8-bit values to
+addresses CFIFO+0, CFIFO+1, CFIFO+2, CFIFO+3.
 
-Since the imx6 HDMI signals are not muxable we only have to add the
-dedicated i2c-hdmi signals.
-
-[1] https://sget.org/standards/smarc
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/usb/renesas_usbhs/common.h | 1 +
+ drivers/usb/renesas_usbhs/fifo.c   | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index 9b8a1d99d967..e0372687d8f4 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -313,6 +313,13 @@
- 	};
- };
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index 211ab8e741be..af4aec703ab1 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -345,6 +345,7 @@ struct usbhs_priv *usbhs_pdev_to_priv(struct platform_device *pdev);
+  */
+ #define USBHSF_RUNTIME_PWCTRL	(1 << 0)
+ #define USBHSF_HAS_CNEN		(1 << 1) /* Single-ended receiver */
++#define USBHSF_CFIFO_BYTE_ADDR	(1 << 2) /* Byte addressable */
  
-+/* HDMI_CTRL */
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+};
-+
- /* I2C_PM */
- &i2c3 {
- 	clock-frequency = <100000>;
-@@ -404,6 +411,13 @@
- 		>;
- 	};
+ #define usbhsc_flags_init(p)   ((p)->flags = 0)
+ #define usbhsc_flags_set(p, b) ((p)->flags |=  (b))
+diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
+index 39fa2fc1b8b7..b313ee637e53 100644
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -543,8 +543,13 @@ static int usbhsf_pio_try_push(struct usbhs_pkt *pkt, int *is_done)
+ 	}
  
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
- 	pinctrl_i2c3: i2c3grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
+ 	/* the rest operation */
+-	for (i = 0; i < len; i++)
+-		iowrite8(buf[i], addr + (0x03 - (i & 0x03)));
++	if (usbhsc_flags_has(priv, USBHSF_CFIFO_BYTE_ADDR)) {
++		for (i = 0; i < len; i++)
++			iowrite8(buf[i], addr + (i & 0x03));
++	} else {
++		for (i = 0; i < len; i++)
++			iowrite8(buf[i], addr + (0x03 - (i & 0x03)));
++	}
+ 
+ 	/*
+ 	 * variable update
 -- 
-2.20.1
+2.16.1
