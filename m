@@ -1,133 +1,83 @@
-Return-Path: <SRS0=Hucj=TO=renesas.com=prvs=40371367b7=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 08/15] usb: renesas_usbhs: move flags to param
-Date: Tue, 14 May 2019 09:55:58 -0500
-Message-ID: <20190514145605.19112-9-chris.brandt@renesas.com>
-In-Reply-To: <20190514145605.19112-1-chris.brandt@renesas.com>
-References: <20190514145605.19112-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:47:04 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 28/28] PCI: tegra: Change link retry log level to info
+Message-ID: <20190509144704.GY8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-29-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pM5zeTSooDOHDhuH"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-29-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Move options from 'flags' field in private structure to param structure
-where other options are already being kept.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/usb/renesas_usbhs/common.c | 23 +++++++----------------
- drivers/usb/renesas_usbhs/common.h |  2 --
- include/linux/usb/renesas_usbhs.h  |  1 +
- 3 files changed, 8 insertions(+), 18 deletions(-)
+--pM5zeTSooDOHDhuH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 0ca89de7f842..1de7a44f3415 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -43,15 +43,6 @@
-  *			| ....  |	+-----------+
-  */
- 
--
--#define USBHSF_RUNTIME_PWCTRL	(1 << 0)
--
--/* status */
--#define usbhsc_flags_init(p)   do {(p)->flags = 0; } while (0)
--#define usbhsc_flags_set(p, b) ((p)->flags |=  (b))
--#define usbhsc_flags_clr(p, b) ((p)->flags &= ~(b))
--#define usbhsc_flags_has(p, b) ((p)->flags &   (b))
--
- /*
-  * platform call back
-  *
-@@ -479,7 +470,7 @@ static void usbhsc_hotplug(struct usbhs_priv *priv)
- 		dev_dbg(&pdev->dev, "%s enable\n", __func__);
- 
- 		/* power on */
--		if (usbhsc_flags_has(priv, USBHSF_RUNTIME_PWCTRL))
-+		if (usbhs_get_dparam(priv, runtime_pwctrl))
- 			usbhsc_power_ctrl(priv, enable);
- 
- 		/* bus init */
-@@ -499,7 +490,7 @@ static void usbhsc_hotplug(struct usbhs_priv *priv)
- 		usbhsc_bus_init(priv);
- 
- 		/* power off */
--		if (usbhsc_flags_has(priv, USBHSF_RUNTIME_PWCTRL))
-+		if (usbhs_get_dparam(priv, runtime_pwctrl))
- 			usbhsc_power_ctrl(priv, enable);
- 
- 		usbhs_mod_change(priv, -1);
-@@ -733,7 +724,7 @@ static int usbhs_probe(struct platform_device *pdev)
- 	/* FIXME */
- 	/* runtime power control ? */
- 	if (priv->pfunc.get_vbus)
--		usbhsc_flags_set(priv, USBHSF_RUNTIME_PWCTRL);
-+		usbhs_get_dparam(priv, runtime_pwctrl) = 1;
- 
- 	/*
- 	 * priv settings
-@@ -807,7 +798,7 @@ static int usbhs_probe(struct platform_device *pdev)
- 
- 	/* power control */
- 	pm_runtime_enable(&pdev->dev);
--	if (!usbhsc_flags_has(priv, USBHSF_RUNTIME_PWCTRL)) {
-+	if (!usbhs_get_dparam(priv, runtime_pwctrl)) {
- 		usbhsc_power_ctrl(priv, 1);
- 		usbhs_mod_autonomy_mode(priv);
- 	}
-@@ -848,7 +839,7 @@ static int usbhs_remove(struct platform_device *pdev)
- 	dfunc->notify_hotplug = NULL;
- 
- 	/* power off */
--	if (!usbhsc_flags_has(priv, USBHSF_RUNTIME_PWCTRL))
-+	if (!usbhs_get_dparam(priv, runtime_pwctrl))
- 		usbhsc_power_ctrl(priv, 0);
- 
- 	pm_runtime_disable(&pdev->dev);
-@@ -873,7 +864,7 @@ static __maybe_unused int usbhsc_suspend(struct device *dev)
- 		usbhs_mod_change(priv, -1);
- 	}
- 
--	if (mod || !usbhsc_flags_has(priv, USBHSF_RUNTIME_PWCTRL))
-+	if (mod || !usbhs_get_dparam(priv, runtime_pwctrl))
- 		usbhsc_power_ctrl(priv, 0);
- 
- 	return 0;
-@@ -884,7 +875,7 @@ static __maybe_unused int usbhsc_resume(struct device *dev)
- 	struct usbhs_priv *priv = dev_get_drvdata(dev);
- 	struct platform_device *pdev = usbhs_priv_to_pdev(priv);
- 
--	if (!usbhsc_flags_has(priv, USBHSF_RUNTIME_PWCTRL)) {
-+	if (!usbhs_get_dparam(priv, runtime_pwctrl)) {
- 		usbhsc_power_ctrl(priv, 1);
- 		usbhs_mod_autonomy_mode(priv);
- 	}
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index de1a6638bf68..1fbffb7bbc8f 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -260,8 +260,6 @@ struct usbhs_priv {
- 
- 	spinlock_t		lock;
- 
--	u32 flags;
--
- 	/*
- 	 * module control
- 	 */
-diff --git a/include/linux/usb/renesas_usbhs.h b/include/linux/usb/renesas_usbhs.h
-index 53924f8e840c..17fae6e504cc 100644
---- a/include/linux/usb/renesas_usbhs.h
-+++ b/include/linux/usb/renesas_usbhs.h
-@@ -189,6 +189,7 @@ struct renesas_usbhs_driver_param {
- 	u32 has_otg:1; /* for controlling PWEN/EXTLP */
- 	u32 has_sudmac:1; /* for SUDMAC */
- 	u32 has_usb_dmac:1; /* for USB-DMAC */
-+	u32 runtime_pwctrl:1;
- #define USBHS_USB_DMAC_XFER_SIZE	32	/* hardcode the xfer size */
- };
- 
--- 
-2.16.1
+On Tue, Apr 23, 2019 at 02:58:25PM +0530, Manikanta Maddireddy wrote:
+> Driver checks for link up three times before giving up, each retry attempt
+> is printed as an error. Letting users know that PCIe link is down and in =
+the
+> process of being brought up again is informational, not an error conditio=
+n.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2: Updated commit log
+>=20
+>  drivers/pci/controller/pci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+I wonder if we even need the informational message at all. Is there any
+information in there that's useful to know? Do we care about how often
+the link-up was tried if it ends up being brought up in the end?
+
+Thierry
+
+>=20
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/=
+pci-tegra.c
+> index 09b3b3e847c5..563958104dd0 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2370,7 +2370,7 @@ static bool tegra_pcie_port_check_link(struct tegra=
+_pcie_port *port)
+>  		} while (--timeout);
+> =20
+>  		if (!timeout) {
+> -			dev_err(dev, "link %u down, retrying\n", port->index);
+> +			dev_info(dev, "link %u down, retrying\n", port->index);
+>  			goto retry;
+>  		}
+> =20
+> --=20
+> 2.17.1
+>=20
+
+--pM5zeTSooDOHDhuH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUPWgACgkQ3SOs138+
+s6HFBg/9FC/ijtApzxY1VYwus5Z6wQc45LtkkBKwv0pdSYFIcXr8Rovhvgx4AcRa
+U1FqT63dzWlBatO9/aWj6vVBUuzIin0DG0RRn58wWezKP/Qhtdyzu0sp8I2CsCpY
+zuvS9KB5phGJ45g/Dyzw3n1CDtyzw45UJV0WeZjdqOfG9Sa4uGoEUe0ZWNX1yHRl
+jl6yTcGQG2yfHz71dZeEVUHDY0hURW/ByXsfvI4NNKv5nG99C9Z2Xo2tZNWwrJ4+
+hTxt6qJKkxRWPhZIXGFAVwuutLRKD+jGvg+eEqIuooZ2pLPU+94BnRgskaXOyIrh
+xbix299OBhjWuTkeRjBFdD9g0d9BHGD+YQeeK1cvjdaSckvcc9ZD7LQnEiso1Zfz
+Z42/AFT85vy1UViS6AabxW8yjaCvaQq5clcO6c6hH6Lm2wi283Y8s6EX5Xm1slxR
+Osj6OmxXpbWpmM8wU1iWuQOnEkd9/mmTldWIJJH7+og6t5Ys1vSDtPQPLcVubKmA
+sPgpz5Mv/SHDeqz7mJVNvkcb51zPbOM+9Vusv4kAgezvjuyeCGvkmI0aub3VsRQk
+w20Dip7BIbmnYpuGy/YzEgUWqpnW48Y7z1oOZcvrvwOr9IPVdNU5d0KbJ2ONBb9M
+0WTiqlsuTpA6RgUQB/M24Bv8zAXYZyBtr8MMUbeqsBRGmAhWWgo=
+=vEwq
+-----END PGP SIGNATURE-----
+
+--pM5zeTSooDOHDhuH--
