@@ -1,57 +1,83 @@
 Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 9 May 2019 16:17:41 +0200
+Date: Thu, 9 May 2019 16:34:53 +0200
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 07/28] PCI: tegra: Advertise PCIe Advanced Error
- Reporting (AER) capability
-Message-ID: <20190509141741.GG8907@ulmo>
+Subject: Re: [PATCH V2 23/28] dt-bindings: pci: tegra: Document PCIe DPD
+ pinctrl optional prop
+Message-ID: <20190509143453.GS8907@ulmo>
 References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-8-mmaddireddy@nvidia.com>
+ <20190423092825.759-24-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sLx0z+5FKKtIVDwd"
+	protocol="application/pgp-signature"; boundary="+nLR7g8KNfrRqv5t"
 Content-Disposition: inline
-In-Reply-To: <20190423092825.759-8-mmaddireddy@nvidia.com>
+In-Reply-To: <20190423092825.759-24-mmaddireddy@nvidia.com>
 To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---sLx0z+5FKKtIVDwd
+--+nLR7g8KNfrRqv5t
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2019 at 02:58:04PM +0530, Manikanta Maddireddy wrote:
-> Default root port setting hides AER capability. This patch enables the
-> advertisement of AER capability by root port.
+On Tue, Apr 23, 2019 at 02:58:20PM +0530, Manikanta Maddireddy wrote:
+> Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
+> in low power mode.
 >=20
 > Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 > ---
-> V2: No change
+> V2: Using standard pinctrl names, default and idle
 >=20
->  drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---sLx0z+5FKKtIVDwd
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.tx=
+t b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> index 145a4f04194f..7939bca47861 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> @@ -65,6 +65,14 @@ Required properties:
+>    - afi
+>    - pcie_x
+> =20
+> +Optional properties:
+> +- pinctrl-names: A list of pinctrl state names. Must contain the followi=
+ng
+> +  entries:
+> +  - "default": active state, puts PCIe I/O out of deep power down state
+> +  - "idle": puts PCIe I/O into deep power down state
+> +- pinctrl-0: phandle for the default/active state of pin configurations.
+> +- pinctrl-1: phandle for the idle state of pin configurations.
+> +
+>  Required properties on Tegra124 and later (deprecated):
+>  - phys: Must contain an entry for each entry in phy-names.
+>  - phy-names: Must include the following entries:
+> --=20
+> 2.17.1
+>=20
+
+--+nLR7g8KNfrRqv5t
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUNoQACgkQ3SOs138+
-s6FbsQ//YavA3usgKFIoR6+YrHrTJrgo7tDpFnGll8ELzOqKV5vKdaCSdPeCKkpM
-qqErThvDrgMzb9M6S30IymhkoO2LNGNMqGtOdVqHNX/murNGOkcs7CABE+va75LA
-EpyQnOHbpNKfxV4SXlAyf+N7eR4v4fHjE6qAGurni4/+JDRiTyAOpnr1MKaCaXN2
-NJpfX2zwBncj4BaKZ6GSUu2nWs/1jqNMl8XroKXNc129qF6PV3OUegE3vvrUiLIf
-E6om1GJLAD+ep/hV3qMwJGzgqpkdI2HyKCWlsRYkyz1UyqrdSKQ5enu033xh1FKS
-QtdeNX+l7VHnrUDBZ6DEvGatqspf/Q3Aj7+zfFXGL+NLG6t+1TnlGOpTFlVkU8fi
-7We6eG8wMjcI1xV1+YMTf467P2ZClTJhrwrrGRXQa5KTqffqU4XCtT40AeaDfUCK
-vEd3d1RMdmlP6WZNOe7gqYsGyZHSX5ofN0VzGlQ5/UkpnDi2qg0e4lbHu+uPsz2s
-PAWlkyY0Vv391xwFXQv1PP1E9sl0rLWwjQsWbwV88Dm5aWEgpI5eoyJu3tINQtUB
-jRu5SrGyObAuWMEtXE6gIBT3ULGuUmCVksgHaGtpYTl2oubr7+bUzIA2tyEeXhh2
-pQblXHZtOCzfVDn5ZbWPCaA9OygGj9/hI7Eb8CA7SyiX1nQeoW4=
-=3/Hz
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUOo0ACgkQ3SOs138+
+s6Gc2Q/9Hij/GDFHZDNoiDPFsx/57/eFWGTCouIYLoDXk08VWpubGSl2sD+jksB3
+OHYY7LaaXH72gI1xgRAPxEmoklwFUVldTP3NjBFxn0g0h6eorrsTOwBedUqOZxoC
+pcDnfQ+WiOPXMJzHXae/21cTVv+/4zYmChGai48nMaRu16GvYPANre/welPJxFBM
+BDqXImcvWJnORttaDRVfOkP2RgZT2TTwi4OOs+BeraczXNKyXPHlwYeN+4ZaSHRt
+3jn69q3+7LplLQNEdCUc1toKzAjDR6NSM8H4HLwkRyNQRKRsDbGw2v6b1R0qm8gc
+0QhUi0tC15s24z/iEl0+30+Kh2qe9ql0d8KdBXsxmQD9vFd/WE1qNCHHPBBjXUBu
+VzJ+TmrF2assLlxagjAQdwxEV+BAX/UW5y3VbBl/l6jJ+VorAsaif+x5qYRc+2AF
+sUHzMzQN7EhbVz43y52vuS7pTzV443KKbGcVKxuO+SGZC4OMRDeibvB4A9mDRQ7a
+RzV1z5fqH6+0qJMi6YKVjuTnPlC7bw3RIHALM1SbfOLCU2O7dBIAApNrHgOjiYLV
+Wtps3Na4c9dq6qVBrfQizN8BNGNko25oTgfrekh0glFD5Uqhu/MzxNYJ4oeIu0Zm
+5YEos99KzjUA4z79Ron5WgAM1GoJ7aJiS9H0XYphm61tFHDP0Nw=
+=w2IF
 -----END PGP SIGNATURE-----
 
---sLx0z+5FKKtIVDwd--
+--+nLR7g8KNfrRqv5t--
