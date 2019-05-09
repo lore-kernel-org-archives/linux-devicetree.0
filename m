@@ -1,67 +1,41 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 04/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC SDIO interface
-Date: Thu,  9 May 2019 17:58:21 +0200
-Message-Id: <20190509155834.22838-5-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=MMxF=TJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from first.geanix.com ([116.203.34.67]:51776 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbfEIH2I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 May 2019 03:28:08 -0400
+Subject: Re: [PATCH 1/2] can: mcp251x: add support for mcp25625
+References: <20190507093437.26025-1-sean@geanix.com>
+ <18a26b2f-5166-2142-4b8d-59818ac6fd8b@pengutronix.de>
+From: Sean Nyekjaer <sean@geanix.com>
+Message-ID: <d6d3ae60-f457-989a-ca6c-028b75d9d115@geanix.com>
+Date: Thu, 9 May 2019 09:27:58 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
+In-Reply-To: <18a26b2f-5166-2142-4b8d-59818ac6fd8b@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support according the SMARC Spec 1.1 [1] and provided schematics.
-Due to the lack of hardware the interface can't be tested right now.
 
-[1] https://sget.org/standards/smarc
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On 08/05/2019 14.45, Marc Kleine-Budde wrote:
+> On 5/7/19 11:34 AM, Sean Nyekjaer wrote:
+>> Fully compatible with mcp2515, the mcp25625 have
+>> integrated transceiver.
+>>
+>> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+> 
+> I've mentioned the mcp25625 to the .in file and properly introduced the
+> mcp25625 as a new model in the driver itself. This way the debug output
+> is formated properly:
+> 
+>> 	netdev_info(net, "MCP%x successfully initialized.\n", priv->model);
+> 
+> This is how the patch looks like now:
+> 
 
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index a92f6e31fd71..b96684ff92e8 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -364,6 +364,21 @@
- 		>;
- 	};
- 
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK 0x17059
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD 0x17059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
-+
-+			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14 0x1b0b0 /* CD */
-+			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26 0x1b0b0 /* WP */
-+			MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x1b0b0 /* PWR_EN */
-+		>;
-+	};
-+
- 	pinctrl_usdhc4: usdhc4grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD4_CLK__SD4_CLK 0x17059
-@@ -428,6 +443,15 @@
- 	vbus-supply = <&reg_5p0v_s0>;
- };
- 
-+/* SDIO */
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
-+	no-1-8-v;
-+};
-+
- /* SDMMC */
- &usdhc4 {
- 	/* Internal eMMC, optional on some boards */
--- 
-2.20.1
+Thanks looks good :-)
+/Sean
