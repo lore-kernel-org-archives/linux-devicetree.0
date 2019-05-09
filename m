@@ -1,136 +1,65 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Wed, 8 May 2019 18:01:00 -0700
-Message-ID: <911e44bb-9bb1-e603-a260-fac63760fff6@gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
- <1b1efa91-0523-21a9-e541-fdc3612bd117@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V11 0/5] Add i.MX7ULP EVK PWM backlight support
+Date: Thu, 9 May 2019 01:44:53 +0000
+Message-ID: <DB3PR0402MB39166E774B176ADCA82EE46BF5330@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1554860547-18237-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR0402MB39113C3CA7E1AB8969882B41F53C0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1b1efa91-0523-21a9-e541-fdc3612bd117@kernel.org>
+In-Reply-To: <AM6PR0402MB39113C3CA7E1AB8969882B41F53C0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
-Cc: Brendan Higgins <brendanhiggins@google.com>, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at, rientjes@google.com, roste
+To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "stefan@agner.ch" <stefan@agner.ch>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/7/19 8:23 AM, shuah wrote:
-> On 5/7/19 2:01 AM, Greg KH wrote:
->> On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
->>> On 5/1/19 4:01 PM, Brendan Higgins wrote:
->>>> ## TLDR
->>>>
->>>> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
->>>> 5.2.
->>>>
->>>> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
->>>> we would merge through your tree when the time came? Am I remembering
->>>> correctly?
->>>>
->>>> ## Background
->>>>
->>>> This patch set proposes KUnit, a lightweight unit testing and mocking
->>>> framework for the Linux kernel.
->>>>
->>>> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
->>>> it does not require installing the kernel on a test machine or in a VM
->>>> and does not require tests to be written in userspace running on a host
->>>> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
->>>> can run several dozen tests in under a second. Currently, the entire
->>>> KUnit test suite for KUnit runs in under a second from the initial
->>>> invocation (build time excluded).
->>>>
->>>> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
->>>> Googletest/Googlemock for C++. KUnit provides facilities for defining
->>>> unit test cases, grouping related test cases into test suites, providing
->>>> common infrastructure for running tests, mocking, spying, and much more.
->>>
->>> As a result of the emails replying to this patch thread, I am now
->>> starting to look at kselftest.  My level of understanding is based
->>> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
->>> and a _tiny_ bit of looking at kselftest code.
->>>
->>> tl;dr; I don't really understand kselftest yet.
->>>
->>>
->>> (1) why KUnit exists
->>>
->>>> ## What's so special about unit testing?
->>>>
->>>> A unit test is supposed to test a single unit of code in isolation,
->>>> hence the name. There should be no dependencies outside the control of
->>>> the test; this means no external dependencies, which makes tests orders
->>>> of magnitudes faster. Likewise, since there are no external dependencies,
->>>> there are no hoops to jump through to run the tests. Additionally, this
->>>> makes unit tests deterministic: a failing unit test always indicates a
->>>> problem. Finally, because unit tests necessarily have finer granularity,
->>>> they are able to test all code paths easily solving the classic problem
->>>> of difficulty in exercising error handling code.
->>>
->>> (2) KUnit is not meant to replace kselftest
->>>
->>>> ## Is KUnit trying to replace other testing frameworks for the kernel?
->>>>
->>>> No. Most existing tests for the Linux kernel are end-to-end tests, which
->>>> have their place. A well tested system has lots of unit tests, a
->>>> reasonable number of integration tests, and some end-to-end tests. KUnit
->>>> is just trying to address the unit test space which is currently not
->>>> being addressed.
->>>
->>> My understanding is that the intent of KUnit is to avoid booting a kernel on
->>> real hardware or in a virtual machine.  That seems to be a matter of semantics
->>> to me because isn't invoking a UML Linux just running the Linux kernel in
->>> a different form of virtualization?
->>>
->>> So I do not understand why KUnit is an improvement over kselftest.
-> 
-> They are in two different categories. Kselftest falls into black box
-> regression test suite which is a collection of user-space tests with a
-> few kernel test modules back-ending the tests in some cases.
-> 
-> Kselftest can be used by both kernel developers and users and provides
-> a good way to regression test releases in test rings.
-> 
-> KUnit is a white box category and is a better fit as unit test framework
-> for development and provides a in-kernel testing. I wouldn't view them
-> one replacing the other. They just provide coverage for different areas
-> of testing.
-
-I don't see what about kselftest or KUnit is inherently black box or
-white box.  I would expect both frameworks to be used for either type
-of testing.
-
-
-> I wouldn't view KUnit as something that would be easily run in test rings for example.
-
-I don't see why not.
-
--Frank
-
-> 
-> Brendan, does that sound about right?
-> 
->>>
->>> It seems to me that KUnit is just another piece of infrastructure that I
->>> am going to have to be familiar with as a kernel developer.  More overhead,
->>> more information to stuff into my tiny little brain.
->>>
->>> I would guess that some developers will focus on just one of the two test
->>> environments (and some will focus on both), splitting the development
->>> resources instead of pooling them on a common infrastructure.
-> 
->>> What am I missing?
->>
->> kselftest provides no in-kernel framework for testing kernel code
->> specifically.  That should be what kunit provides, an "easy" way to
->> write in-kernel tests for things.
->>
->> Brendan, did I get it right?
-> thanks,
-> -- Shuah
-> .
-> 
+UGluZy4uLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuc29uIEh1
+YW5nDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwgMjQsIDIwMTkgMTA6NTkgQU0NCj4gVG86IHRo
+aWVycnkucmVkaW5nQGdtYWlsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRA
+YXJtLmNvbTsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsg
+a2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGxpbnV4QGFybWxp
+bnV4Lm9yZy51azsgc3RlZmFuQGFnbmVyLmNoOw0KPiBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsg
+TGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IFJvYmluIEdvbmcg
+PHlpYmluLmdvbmdAbnhwLmNvbT47IHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZTsgbGlu
+dXgtDQo+IHB3bUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBT
+dWJqZWN0OiBSRTogW1BBVENIIFYxMSAwLzVdIEFkZCBpLk1YN1VMUCBFVksgUFdNIGJhY2tsaWdo
+dCBzdXBwb3J0DQo+IA0KPiBHZW50bGUgcGluZy4uLg0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+IEZyb206IEFuc29uIEh1YW5nDQo+ID4gU2VudDogV2VkbmVzZGF5LCBB
+cHJpbCAxMCwgMjAxOSA5OjQ3IEFNDQo+ID4gVG86IHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbTsg
+cm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0Br
+ZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOw0KPiA+IGtlcm5lbEBwZW5ndXRyb25p
+eC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOyBsaW51eEBhcm1saW51eC5vcmcudWs7DQo+ID4gc3Rl
+ZmFuQGFnbmVyLmNoOyBvdGF2aW9Ab3NzeXN0ZW1zLmNvbS5icjsgTGVvbmFyZCBDcmVzdGV6DQo+
+ID4gPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsgUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAu
+Y29tPjsNCj4gPiB1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGxpbnV4LSBwd21Admdl
+ci5rZXJuZWwub3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmcNCj4gPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiBTdWJq
+ZWN0OiBbUEFUQ0ggVjExIDAvNV0gQWRkIGkuTVg3VUxQIEVWSyBQV00gYmFja2xpZ2h0IHN1cHBv
+cnQNCj4gPg0KPiA+IGkuTVg3VUxQIEVWSyBib2FyZCBoYXMgTUlQSS1EU0kgZGlzcGxheSwgaXRz
+IGJhY2tsaWdodCBpcyBzdXBwbGllZCBieQ0KPiA+IFRQTSBQV00gbW9kdWxlLCB0aGlzIHBhdGNo
+IHNldCBlbmFibGVzIGkuTVg3VUxQIFRQTSBQV00gZHJpdmVyDQo+IHN1cHBvcnQNCj4gPiBhbmQg
+YWxzbyBhZGQgYmFja2xpZ2h0IHN1cHBvcnQgZm9yIE1JUEktRFNJIGRpc3BsYXkuDQo+ID4NCj4g
+PiBDaGFuZ2VzIHNpbmNlIFYxMDoNCj4gPiAJLSBPTkxZIGNoYW5nZSB0aGUgcHdtIGRyaXZlciBw
+YXRjaC4NCj4gPg0KPiA+IEFuc29uIEh1YW5nICg1KToNCj4gPiAgIGR0LWJpbmRpbmdzOiBwd206
+IEFkZCBpLk1YIFRQTSBQV00gYmluZGluZw0KPiA+ICAgcHdtOiBBZGQgaS5NWCBUUE0gUFdNIGRy
+aXZlciBzdXBwb3J0DQo+ID4gICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBUUE0gUFdN
+IHN1cHBvcnQgYnkgZGVmYXVsdA0KPiA+ICAgQVJNOiBkdHM6IGlteDd1bHA6IEFkZCB0cG0gcHdt
+IHN1cHBvcnQNCj4gPiAgIEFSTTogZHRzOiBpbXg3dWxwLWV2azogQWRkIGJhY2tsaWdodCBzdXBw
+b3J0DQo+ID4NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC10cG0tcHdtLnR4
+dCAgICAgICAgfCAgMjIgKw0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLWV2ay5kdHMg
+ICAgICAgICAgICAgICAgICB8ICAyMSArDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAu
+ZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsNCj4gPiAgYXJjaC9hcm0vY29uZmlncy9p
+bXhfdjZfdjdfZGVmY29uZmlnICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+ICBkcml2ZXJzL3B3
+bS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArDQo+ID4gIGRy
+aXZlcnMvcHdtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsN
+Cj4gPiAgZHJpdmVycy9wd20vcHdtLWlteC10cG0uYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCA0NDINCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDcgZmlsZXMgY2hhbmdlZCwgNTA4
+IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wd20vaW14LXRwbS0NCj4gPiBwd20udHh0DQo+ID4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL3B3bS9wd20taW14LXRwbS5jDQo+ID4NCj4gPiAtLQ0KPiA+IDIu
+Ny40DQoNCg==
