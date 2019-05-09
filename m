@@ -1,138 +1,130 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Date: Thu, 9 May 2019 23:19:23 +0530
-Message-ID: <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
-References: <20190506193115.20909-1-niklas.cassel@linaro.org>
- <CAP245DXLHqU3tv5cii=Z1G4J5m=Emy7yiHP=zSTpY6GX02NKcg@mail.gmail.com> <20190508145600.GA26843@centauri>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Thu, 9 May 2019 11:12:12 -0700
+Message-ID: <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508145600.GA26843@centauri>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Tim.Bird@sony.com, tytso@mit.edu, knut.omang@oracle.com
+Cc: gregkh@linuxfoundation.org, brendanhiggins@google.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at, rientjes@google.com, rostedt@goodmis.org
 List-Id: devicetree@vger.kernel.org
 
-(Adding Lorenzo and Sudeep)
+On 5/9/19 10:00 AM, Tim.Bird@sony.com wrote:
+>> -----Original Message-----
+>> From: Theodore Ts'o 
+>>
 
-On Wed, May 8, 2019 at 8:26 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> On Wed, May 08, 2019 at 02:48:19AM +0530, Amit Kucheria wrote:
-> > On Tue, May 7, 2019 at 1:01 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > >
-> > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > >
-> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > @@ -31,6 +31,7 @@
-> > >                         reg = <0x100>;
-> > >                         enable-method = "psci";
-> > >                         next-level-cache = <&L2_0>;
-> > > +                       cpu-idle-states = <&CPU_PC>;
-> > >                 };
-> > >
-> > >                 CPU1: cpu@101 {
-> > > @@ -39,6 +40,7 @@
-> > >                         reg = <0x101>;
-> > >                         enable-method = "psci";
-> > >                         next-level-cache = <&L2_0>;
-> > > +                       cpu-idle-states = <&CPU_PC>;
-> > >                 };
-> > >
-> > >                 CPU2: cpu@102 {
-> > > @@ -47,6 +49,7 @@
-> > >                         reg = <0x102>;
-> > >                         enable-method = "psci";
-> > >                         next-level-cache = <&L2_0>;
-> > > +                       cpu-idle-states = <&CPU_PC>;
-> > >                 };
-> > >
-> > >                 CPU3: cpu@103 {
-> > > @@ -55,12 +58,24 @@
-> > >                         reg = <0x103>;
-> > >                         enable-method = "psci";
-> > >                         next-level-cache = <&L2_0>;
-> > > +                       cpu-idle-states = <&CPU_PC>;
-> > >                 };
-> > >
-> > >                 L2_0: l2-cache {
-> > >                         compatible = "cache";
-> > >                         cache-level = <2>;
-> > >                 };
-> > > +
-> > > +               idle-states {
-> >
-> > entry-method="psci" property goes here. I have a patch fixing it for 410c ;-)
-> >
-> > I don't think the psci_cpuidle_ops will even get called without this.
->
-> Hello Amit,
->
-> I added debug prints in psci_cpu_suspend_enter() and arm_cpuidle_suspend()
-> when verifying this patch, and psci_cpu_suspend_enter() is indeed called,
-> with the correct psci suspend parameter.
->
-> The output from:
-> grep "" /sys/bus/cpu/devices/cpu0/cpuidle/state?/*
-> also looks sane.
->
-> However, if 'entry-method="psci"' is required according to the DT binding,
-> perhaps you can send a 2/2 series that fixes both this patch and msm8916 ?
+< massive snip >
 
-Last time I discussed this with Lorenzo and Sudeep (on IRC), I pointed
-out that entry-method="psci" isn't checked for in code anywhere. Let's
-get their view on this for posterity.
+I'll reply in more detail to some other earlier messages in this thread
+later.
 
-What does entry-method="psci" in the idle-states node achieve that
-enable-method="psci" in the cpu node doesn't achieve? (Note: enable-
-vs. entry-).
-
-The enable-method property is the one that sets up the
-psci_cpuidle_ops callbacks through the CPUIDLE_METHOD_OF_DECLARE
-macro.
-
-IOW, if we deprecated the entry-method property, everything would
-still work, wouldn't it?
-Do we expect to support PSCI platforms that might have a different
-entry-method for idle states?
-Should I whip up a patch removing entry-method? Since we don't check
-for it today, it won't break the old DTs either.
-
-Regards,
-Amit
+This reply is an attempt to return to the intent of my original reply to
+patch 0 of this series.
 
 
-> > Did you see any changes in consumption with this patch? I was trying
-> > to measure that before sending this out.
->
-> I don't know of any way to measure the power consumption on this board,
-> so no, I haven't been able to verify that the firmware actually does
-> the right thing here.
->
->
-> Kind regards,
-> Niklas
->
-> >
-> > > +                       CPU_PC: pc {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               arm,psci-suspend-param = <0x40000003>;
-> > > +                               entry-latency-us = <125>;
-> > > +                               exit-latency-us = <180>;
-> > > +                               min-residency-us = <595>;
-> > > +                               local-timer-stop;
-> > > +                       };
-> > > +               };
-> > >         };
-> > >
-> > >         firmware {
-> > > --
-> > > 2.21.0
-> > >
+>> Ultimately, I'm a pragmatist.  If KTF serves your needs best, good for
+>> you.  If other approaches are better for other parts of the kernel,
+>> let's not try to impose a strict "There Must Be Only One" religion.
+>> That's already not true today, and for good reason.  There are many
+>> different kinds of kernel code, and many different types of test
+>> philosophies.  Trying to force all kernel testing into a single
+>> Procrustean Bed is simply not productive.
+> 
+> Had to look up "Procrustean Bed" - great phrase.  :-)
+> 
+> I'm not of the opinion that there must only be one test framework
+> in the kernel. But we should avoid unnecessary multiplication. Every
+> person is going to have a different idea for where the line of necessity
+> is drawn.  My own opinion is that what KUnit is adding is different enough
+> from kselftest, that it's a valuable addition.  
+> 
+>  -- Tim
+
+My first reply to patch 0 was in the context of knowing next to nothing
+about kselftest.  My level of understanding was essentially from slideware.
+(As the thread progressed, I dug a little deeper into kselftest, so now have
+a slightly better, though still fairly surface understanding of kselftest).
+
+Maybe I did not explain myself clearly enough in that reply.  I will try
+again here.
+
+Patch 0 provided a one paragraph explanation of why KUnit exists, titled
+
+   "## What's so special about unit testing?"
+
+Patch 0 also provided a statement that it is not meant to replace
+kselftest, in a paragraph titled
+
+   "## Is KUnit trying to replace other testing frameworks for the kernel?"
+
+I stated:
+
+   "My understanding is that the intent of KUnit is to avoid booting a kernel on
+   real hardware or in a virtual machine.  That seems to be a matter of semantics
+   to me because isn't invoking a UML Linux just running the Linux kernel in
+   a different form of virtualization?
+
+   So I do not understand why KUnit is an improvement over kselftest.
+
+   ...
+
+   What am I missing?"
+
+
+I was looking for a fuller, better explanation than was given in patch 0
+of how KUnit provides something that is different than what kselftest
+provides for creating unit tests for kernel code.
+
+New question "(2)":
+
+(2) If KUnit provides something unique, then the obvious follow on
+question would be: does it make sense to (a) integrate that feature into
+kselftest, (b) integrate the current kselftest in kernel test functionality
+into KUnit and convert the in kernel test portion of kselftest to use
+KUnit, or (c) KUnit and kselftest are so different that they need to
+remain separate features.
+
+*****  Please do not reply to this email with a discussion of "(2)".
+*****  Such a discussion is premature if there is not an answer
+*****  to my first question.
+
+Observation (3), rephrased:
+
+(3) I also brought up the issue that if option (c) was the answer to
+question "(2)" (instead of either option (a) or option (b)) then this
+is extra overhead for any developer or maintainer involved in different
+subsystems that use the different frameworks.  I intended this as one
+possible motivation for why my first question mattered.
+
+Ted grabbed hold of this issue and basically ignored what I intended
+to be my core question.  Nobody else has answered my core question,
+though Knut's first reply did manage to get somewhere near the
+intent of my core question.
+
+*****  Please do not reply to this email with a discussion of "(3)".
+*****  Such a discussion is premature if there is not an answer
+*****  to my first question.
+*****
+*****  Also that discussion is already occurring in this thread,
+*****  feel free to discuss it there if you want, even though I
+*****  feel such discussion is premature.
+
+I still do not have an answer to my original question.
+
+-Frank
