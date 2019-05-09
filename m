@@ -1,41 +1,112 @@
-From: Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-Date: Thu, 9 May 2019 14:58:07 -0700
-Message-ID: <CAGXu5j+S3tQ3DFtmTJT_O1rNx4ofZWvaFpPrES9peHRhMqRGjg@mail.gmail.com>
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
- <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
- <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com>
- <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
- <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com> <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com>
+From: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Thu, 9 May 2019 16:20:05 -0600
+Message-ID: <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+References: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20190509214233.GA20877-3s7WtUTddSA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim.Bird-7U/KSKJipcs@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, pmladek-IBi9RG/b67k@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 9, 2019 at 1:00 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> This early added entropy is also going to be used for stack canary. At
-> the time it's created there's not be much entropy (before
-> boot_init_stack_canary(), there's only add_latent_entropy() and
-> command_line).
-> On arm64, there is a single canary for all tasks. If RNG is weak or
-> the seed can be read, it might be easier to figure out the canary.
 
-With newer compilers[1] there will be a per-task canary on arm64[2],
-which will improve this situation, but many architectures lack a
-per-task canary, unfortunately. I've also recently rearranged the RNG
-initialization[3] which should also help with better entropy mixing.
-But each of these are kind of band-aids against not having sufficient
-initial entropy, which leaves the canary potentially exposed.
 
--Kees
+On 2019-05-09 3:42 p.m., Theodore Ts'o wrote:
+> On Thu, May 09, 2019 at 11:12:12AM -0700, Frank Rowand wrote:
+>>
+>>     "My understanding is that the intent of KUnit is to avoid booting a kernel on
+>>     real hardware or in a virtual machine.  That seems to be a matter of semantics
+>>     to me because isn't invoking a UML Linux just running the Linux kernel in
+>>     a different form of virtualization?
+>>
+>>     So I do not understand why KUnit is an improvement over kselftest.
+>>
+>>     ...
+>>
+>>     What am I missing?"
+> 
+> One major difference: kselftest requires a userspace environment; it
+> starts systemd, requires a root file system from which you can load
+> modules, etc.  Kunit doesn't require a root file system; doesn't
+> require that you start systemd; doesn't allow you to run arbitrary
+> perl, python, bash, etc. scripts.  As such, it's much lighter weight
+> than kselftest, and will have much less overhead before you can start
+> running tests.  So it's not really the same kind of virtualization.
 
-[1] https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=359c1bf35e3109d2f3882980b47a5eae46123259
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0a1213fa7432778b71a1c0166bf56660a3aab030
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/tytso/random.git/commit/?h=dev&id=d55535232c3dbde9a523a9d10d68670f5fe5dec3
+I largely agree with everything Ted has said in this thread, but I 
+wonder if we are conflating two different ideas that is causing an 
+impasse. From what I see, Kunit actually provides two different things:
 
--- 
-Kees Cook
+1) An execution environment that can be run very quickly in userspace on 
+tests in the kernel source. This speeds up the tests and gives a lot of 
+benefit to developers using those tests because they can get feedback on 
+their code changes a *lot* quicker.
+
+2) A framework to write unit tests that provides a lot of the same 
+facilities as other common unit testing frameworks from userspace (ie. a 
+runner that runs a list of tests and a bunch of helpers such as 
+KUNIT_EXPECT_* to simplify test passes and failures).
+
+The first item from Kunit is novel and I see absolutely no overlap with 
+anything kselftest does. It's also the valuable thing I'd like to see 
+merged and grow.
+
+The second item, arguably, does have significant overlap with kselftest. 
+Whether you are running short tests in a light weight UML environment or 
+higher level tests in an heavier VM the two could be using the same 
+framework for writing or defining in-kernel tests. It *may* also be 
+valuable for some people to be able to run all the UML tests in the 
+heavy VM environment along side other higher level tests.
+
+Looking at the selftests tree in the repo, we already have similar items 
+to what Kunit is adding as I described in point (2) above. 
+kselftest_harness.h contains macros like EXPECT_* and ASSERT_* with very 
+similar intentions to the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
+
+However, the number of users of this harness appears to be quite small. 
+Most of the code in the selftests tree seems to be a random mismash of 
+scripts and userspace code so it's not hard to see it as something 
+completely different from the new Kunit:
+
+$ git grep --files-with-matches kselftest_harness.h *
+Documentation/dev-tools/kselftest.rst
+MAINTAINERS
+tools/testing/selftests/kselftest_harness.h
+tools/testing/selftests/net/tls.c
+tools/testing/selftests/rtc/rtctest.c
+tools/testing/selftests/seccomp/Makefile
+tools/testing/selftests/seccomp/seccomp_bpf.c
+tools/testing/selftests/uevent/Makefile
+tools/testing/selftests/uevent/uevent_filtering.c
+
+Thus, I can personally see a lot of value in integrating the kunit test 
+framework with this kselftest harness. There's only a small number of 
+users of the kselftest harness today, so one way or another it seems 
+like getting this integrated early would be a good idea. Letting Kunit 
+and Kselftests progress independently for a few years will only make 
+this worse and may become something we end up regretting.
+
+Logan
