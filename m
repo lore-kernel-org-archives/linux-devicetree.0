@@ -1,71 +1,63 @@
-Return-Path: <SRS0=WgTi=TG=renesas.com=prvs=40290ccc1f=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 00/10] usb: Add host and device support for RZ/A2
-Date: Mon, 6 May 2019 18:46:21 -0500
-Message-ID: <20190506234631.113226-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 9 May 2019 16:38:43 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 24/28] arm64: tegra: Add PEX DPD states as pinctrl
+ properties
+Message-ID: <20190509143843.GW8907@ulmo>
+References: <20190423092825.759-1-mmaddireddy@nvidia.com>
+ <20190423092825.759-25-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j2Klb18PAKd8hQ5U"
+Content-Disposition: inline
+In-Reply-To: <20190423092825.759-25-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-For the most part, the RZ/A2 has the same USB 2.0 host and device
-HW as the R-Car Gen3, so we can reuse a lot of the code.
 
-However, there are a couple extra register bits, and the CFIFO
-register 8-bit access works a little different (weird, no idea why).
+--j2Klb18PAKd8hQ5U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is a dedicated DMAC for the RZ/A2 USB Device HW, but we
-have not been able to reliably get that working yet, so device
-operation is pio only at the moment.
+On Tue, Apr 23, 2019 at 02:58:21PM +0530, Manikanta Maddireddy wrote:
+> Add PEX deep power down states as pinctrl properties to set in PCIe drive=
+r.
+> In Tegra210, BIAS pads are not in power down mode when clamps are applied.
+> To set the pads in DPD, pass the PEX DPD states as pinctrl properties to
+> PCIe driver.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2: Using standard pinctrl names, default and idle
+>=20
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
-On the RZ/A2M eval board, both USB channels can be used as either
-host or device. But, it's not set up for otg (ie, there are jumpers
-and separate connectors). Therefore, below is an example of what it
-would look like to enable USB channel 0 as a device instead of a host.
+I'll pick this up into the Tegra tree once the rest of the set has been
+merged.
 
-&usb2_phy0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&usb0_pins>;
-	renesas,uses_usb_x1;
-	dr_mode = "peripheral";
-	status = "okay";
-};
-&usbhs0 {
-	status = "okay";
-};
+Thierry
 
+--j2Klb18PAKd8hQ5U
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUO3MACgkQ3SOs138+
+s6EqPg/9Hf1Lj2EaSE+1o808c0caXI47Ve9zySckGhNFOIJ+dmvrAs0CI0ZXWXuV
+F03ZGRR9OqCx9rh8LXzPraHx2iPHR9sG5vsbCRTpddiH6ye9nQ0E+bvwapADwHNF
+7pu1VD5F8tXXjd6FAblVKd2kBhej0e0pZySh4nNKjRe/kiyOisVOSDWV2qFc5xEI
+KlFUcdDIe6lDIxfvVVobdcqxb4jA6ln4Coghefv9WiwvrTtQsFkTQoRIa2fIvffC
+DgD2GxxkLC0P87iIbIhl3NPNgKavAQ12kEh5bD8wVuoDH1qCgTXMQYNyUZ4SOcwN
+c+7jIVI2SiKlt5A55aBpz0Zn+jPNDH3pX2D3cjFigNM4OJwpam2Qd1said6C8CWu
+mr4vcUv1kRwo4BmqtDoSs7cI42EaXclJBqG8LKHaSVUcMGYH4jIVzfpOrhgECcYL
+xe18d2tWUv+OTJxLf1LXZFfu1sTx6fkltqODIsEsw2PPdYglXyZhqx/0yAbLSqAN
+eIvlsI9gZY5jH5zq84BWaQTcsRhYKx+qwTyQqnigfEjnA9yVhLTdKxjODNjycImk
+paqk29gGDtohGN8o9RfBTWbhq04UFSAyVeBYDtqMeMkTBIz9mezAtNoR4v33WHwf
+Go5Nsipm6Wg/liA4+vB1lNti8GU7eVJItmJhxFxe+8QfZXmd6lQ=
+=LNbR
+-----END PGP SIGNATURE-----
 
-
-
-Chris Brandt (10):
-  phy: renesas: rcar-gen3-usb2: Add uses_usb_x1 option
-  dt-bindings: rcar-gen3-phy-usb2: Document uses_usb_x1
-  phy: renesas: rcar-gen3-usb2: Check dr_mode when not using OTG
-  dt-bindings: rcar-gen3-phy-usb2: Document dr_mode
-  dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
-  usb: renesas_usbhs: Add support for RZ/A2
-  dt-bindings: usb: renesas_usbhs: Add support for r7s9210
-  ARM: dts: r7s9210: Add USB Host support
-  ARM: dts: r7s9210: Add USB Device support
-  ARM: dts: r7s9210-rza2mevb: Add USB host support
-
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 15 +++-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |  2 +
- arch/arm/boot/dts/r7s9210-rza2mevb.dts             | 37 +++++++++
- arch/arm/boot/dts/r7s9210.dtsi                     | 88 ++++++++++++++++++++++
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 16 +++-
- drivers/usb/renesas_usbhs/Makefile                 |  2 +-
- drivers/usb/renesas_usbhs/common.c                 | 27 +++++--
- drivers/usb/renesas_usbhs/common.h                 | 13 ++++
- drivers/usb/renesas_usbhs/fifo.c                   |  8 +-
- drivers/usb/renesas_usbhs/rza.h                    |  1 +
- drivers/usb/renesas_usbhs/rza2.c                   | 82 ++++++++++++++++++++
- include/linux/usb/renesas_usbhs.h                  |  1 +
- 12 files changed, 277 insertions(+), 15 deletions(-)
- create mode 100644 drivers/usb/renesas_usbhs/rza2.c
-
--- 
-2.16.1
+--j2Klb18PAKd8hQ5U--
