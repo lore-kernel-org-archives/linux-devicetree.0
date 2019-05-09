@@ -1,63 +1,90 @@
-Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 9 May 2019 16:38:43 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 24/28] arm64: tegra: Add PEX DPD states as pinctrl
- properties
-Message-ID: <20190509143843.GW8907@ulmo>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-25-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 09/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC CSI Camera interface
+Date: Thu,  9 May 2019 17:58:26 +0200
+Message-Id: <20190509155834.22838-10-m.felsch@pengutronix.de>
+In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
+References: <20190509155834.22838-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="j2Klb18PAKd8hQ5U"
-Content-Disposition: inline
-In-Reply-To: <20190423092825.759-25-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
+Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+Add support according the SMARC Spec 1.1 [1] and provided schematics.
 
---j2Klb18PAKd8hQ5U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As specified in [1] the data lanes are shared to cover the csi and the
+parallel case. The case depends on the baseboard so we hide muxing the
+data lanes. The csi data lanes are not muxable at all.
 
-On Tue, Apr 23, 2019 at 02:58:21PM +0530, Manikanta Maddireddy wrote:
-> Add PEX deep power down states as pinctrl properties to set in PCIe drive=
-r.
-> In Tegra210, BIAS pads are not in power down mode when clamps are applied.
-> To set the pads in DPD, pass the PEX DPD states as pinctrl properties to
-> PCIe driver.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2: Using standard pinctrl names, default and idle
->=20
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+[1] https://sget.org/standards/smarc
 
-I'll pick this up into the Tegra tree once the rest of the set has been
-merged.
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Thierry
-
---j2Klb18PAKd8hQ5U
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUO3MACgkQ3SOs138+
-s6EqPg/9Hf1Lj2EaSE+1o808c0caXI47Ve9zySckGhNFOIJ+dmvrAs0CI0ZXWXuV
-F03ZGRR9OqCx9rh8LXzPraHx2iPHR9sG5vsbCRTpddiH6ye9nQ0E+bvwapADwHNF
-7pu1VD5F8tXXjd6FAblVKd2kBhej0e0pZySh4nNKjRe/kiyOisVOSDWV2qFc5xEI
-KlFUcdDIe6lDIxfvVVobdcqxb4jA6ln4Coghefv9WiwvrTtQsFkTQoRIa2fIvffC
-DgD2GxxkLC0P87iIbIhl3NPNgKavAQ12kEh5bD8wVuoDH1qCgTXMQYNyUZ4SOcwN
-c+7jIVI2SiKlt5A55aBpz0Zn+jPNDH3pX2D3cjFigNM4OJwpam2Qd1said6C8CWu
-mr4vcUv1kRwo4BmqtDoSs7cI42EaXclJBqG8LKHaSVUcMGYH4jIVzfpOrhgECcYL
-xe18d2tWUv+OTJxLf1LXZFfu1sTx6fkltqODIsEsw2PPdYglXyZhqx/0yAbLSqAN
-eIvlsI9gZY5jH5zq84BWaQTcsRhYKx+qwTyQqnigfEjnA9yVhLTdKxjODNjycImk
-paqk29gGDtohGN8o9RfBTWbhq04UFSAyVeBYDtqMeMkTBIz9mezAtNoR4v33WHwf
-Go5Nsipm6Wg/liA4+vB1lNti8GU7eVJItmJhxFxe+8QfZXmd6lQ=
-=LNbR
------END PGP SIGNATURE-----
-
---j2Klb18PAKd8hQ5U--
+diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+index e0372687d8f4..19f97ab26e83 100644
+--- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
+@@ -168,6 +168,18 @@
+ 		#size-cells = <0>;
+ 		status = "disabld";
+ 	};
++
++	i2c_cam: i2c-gpio-cam {
++		compatible = "i2c-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c_gpio_cam>;
++		sda-gpios = <&gpio4 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <2>; /* ~100 kHz */
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabld";
++	};
+ };
+ 
+ /* CAN0 */
+@@ -397,6 +409,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c_gpio_cam: i2c-gpiocamgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_6__GPIO1_IO06	0x1b0b0 /* SCL */
++			MX6QDL_PAD_KEY_COL2__GPIO4_IO10	0x1b0b0 /* SDA */
++		>;
++	};
++
+ 	pinctrl_i2c_gpio_intern: i2c-gpiointerngrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30  0x1b0b0 /* SCL */
+@@ -471,6 +490,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_mipi_csi: mipi-csigrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1	0x000b0	/* CSI0/1 MCLK */
++		>;
++	};
++
+ 	pinctrl_mgmt_gpios: mgmt-gpiosgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_WAIT__GPIO5_IO00		0x1b0b0	/* LID#           */
+@@ -571,6 +596,11 @@
+ 	};
+ };
+ 
++&mipi_csi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_mipi_csi>;
++};
++
+ &pcie {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pcie>;
+-- 
+2.20.1
