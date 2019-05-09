@@ -1,140 +1,234 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-Date: Thu, 9 May 2019 16:00:26 +0800
-Message-ID: <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com>
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
- <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
- <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com>
- <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com> <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
+From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: [Patch-V2 3/4] pinctrl: tegra: Add Tegra194 pinmux driver
+Date: Thu, 9 May 2019 13:38:15 +0530
+Message-ID: <1557389296-10257-3-git-send-email-kyarlagadda@nvidia.com>
+References: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
+In-Reply-To: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Architecture Mailman List <boot-architecture@lists.linaro.org>, Kees Cook <keescook@chromium.org>
+To: linus.walleij@linaro.org, thierry.reding@gmail.com, jonathanh@nvidia.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Cc: pdeschrijver@nvidia.com, josephl@nvidia.com, smangipudi@nvidia.com, ldewangan@nvidia.com, vidyas@nvidia.com, Krishna Yarlagadda <kyarlagadda@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 9, 2019 at 12:07 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Wed, May 8, 2019 at 10:06 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > On Wed, May 8, 2019 at 10:04 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Tue, May 7, 2019 at 11:08 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > > >
-> > > > On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > >
-> > > > > +boot-architecture list as there was some discussion about this IIRC.
-> > > > >
-> > > > > On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > > > > >
-> > > > > > Introducing a chosen node, rng-seed, which is an 64 bytes entropy
-> > > > > > that can be passed to kernel called very early to increase device
-> > > > > > randomness. Bootloader should provide this entropy and the value is
-> > > > > > read from /chosen/rng-seed in DT.
-> > > > > >
-> > > > > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > > > >
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
-> > > > >
-> > > > > Actually, this file has been converted to json-schema and lives
-> > > > > here[1]. I need to remove this one (or leave it with a reference to
-> > > > > the new one).
-> > > > >
-> > > > > >  arch/arm64/kernel/setup.c                    |  2 ++
-> > > > > >  drivers/of/fdt.c                             | 33 ++++++++++++++++++++
-> > > > > >  include/linux/of_fdt.h                       |  1 +
-> > > > > >  4 files changed, 50 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > > > > > index 45e79172a646..bfd360691650 100644
-> > > > > > --- a/Documentation/devicetree/bindings/chosen.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > > > > > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
-> > > > > >  the Linux EFI stub (which will populate the property itself, using
-> > > > > >  EFI_RNG_PROTOCOL).
-> > > > > >
-> > > > > > +rng-seed
-> > > > > > +-----------
-> > > > > > +
-> > > > > > +This property served as an entropy to add device randomness. It is parsed
-> > > > > > +as a 64 byte value, e.g.
-> > > > >
-> > > > > Why only 64-bytes?
-> > > > We can also not specify size and read what bootloader can provide.
-> > > > >
-> > > > > > +
-> > > > > > +/ {
-> > > > > > +       chosen {
-> > > > > > +               rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
-> > > > > > +       };
-> > > > > > +};
-> > > > > > +
-> > > > > > +This random value should be provided by bootloader.
-> > > > > > +
-> > > > > >  stdout-path
-> > > > > >  -----------
-> > > > > >
-> > > > > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > > > > > index 413d566405d1..ade4261516dd 100644
-> > > > > > --- a/arch/arm64/kernel/setup.c
-> > > > > > +++ b/arch/arm64/kernel/setup.c
-> > > > > > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
-> > > > > >         early_fixmap_init();
-> > > > > >         early_ioremap_init();
-> > > > > >
-> > > > > > +       early_init_dt_rng_seed(__fdt_pointer);
-> > > > > > +
-> > > > >
-> > > > > I'm trying to reduce or eliminate all these early_init_dt_* calls.
-> > > > >
-> > > > > Why is this arch specific and why can't this be done after
-> > > > > unflattening? It doesn't look like add_device_randomness() needs
-> > > > > anything early.
-> > > > Currently unflattening is called after setup_machine_fdt(), which
-> > > > called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
-> > > > PAGE_KERNEL_RO), and we can't modify DT after that since it's read
-> > > > only. But we need to clear (eg. write 0 to it) the rng-seed after
-> > > > reading from DT.
-> > >
-> > > Why do you need to clear it? That wasn't necessary for kaslr-seed.
-> > I think it's for security purpose. If we know the random seed, it's
-> > more likely we can predict randomness.
-> > Currently on arm64, kaslr-seed will be wiped out (in
-> > arch/arm64/kernel/kaslr.c#get_kaslr_seed(), it's set to 0) so we can't
-> > read from sysfs (eg. /sys/firmware/devicetree/.../kaslr-seed)
-> > I'm not sure on other arch if it will be wiped out.
->
-> The difference is if I have the kaslr seed, I can calculate the kernel
-> base address.
->
-> In your case, you are feeding an RNG which continually has entropy
-> added to it. I can't see that knowing one piece of the entropy data is
-> a security hole. It looks more like you've just copied what what done
-> for kaslr-seed.
-+Kees who can probably explain this better.
+Tegra194 has PCIE L5 rst and clkreq pins which need to be controlled
+dynamically at runtime. This driver supports change pinmux for these
+pins. Pinmux for rest of the pins is set statically by bootloader and
+will not be changed by this driver
 
-This early added entropy is also going to be used for stack canary. At
-the time it's created there's not be much entropy (before
-boot_init_stack_canary(), there's only add_latent_entropy() and
-command_line).
-On arm64, there is a single canary for all tasks. If RNG is weak or
-the seed can be read, it might be easier to figure out the canary.
+Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Signed-off-by: Suresh Mangipudi <smangipudi@nvidia.com>
+---
+Changes in V2:
+split V1 patch into 3 patches driver change, updating header to support
+new driver and select pinmux drier in soc.
+Remove irrelevant macros.
 
->
-> > > Why not change the mapping to RW? It would be nice if this worked on
-> > > more than one arch.
->
-> Still wondering on this question. Mapping it R/W would mean rng-seed
-> could be handled later and completely out of the arch code and so
-> could the zeroing of the kaslr-seed. Also, we generally assume the FDT
-> is modifiable for any fixups. This happens on arm32 and powerpc, but I
-> guess we haven't needed that yet on arm64.
-We can try to map it to RW and map back to RO later if needed on
-arm64, like Stephen's suggestion.
->
-> Rob
+ drivers/pinctrl/tegra/Kconfig            |   4 +
+ drivers/pinctrl/tegra/Makefile           |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra194.c | 168 +++++++++++++++++++++++++++++++
+ 3 files changed, 173 insertions(+)
+ create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra194.c
 
-Thanks for the comments and suggestions.
+diff --git a/drivers/pinctrl/tegra/Kconfig b/drivers/pinctrl/tegra/Kconfig
+index 24e20cc..6f79f1f 100644
+--- a/drivers/pinctrl/tegra/Kconfig
++++ b/drivers/pinctrl/tegra/Kconfig
+@@ -23,6 +23,10 @@ config PINCTRL_TEGRA210
+ 	bool
+ 	select PINCTRL_TEGRA
+ 
++config PINCTRL_TEGRA194
++	bool
++	select PINCTRL_TEGRA
++
+ config PINCTRL_TEGRA_XUSB
+ 	def_bool y if ARCH_TEGRA
+ 	select GENERIC_PHY
+diff --git a/drivers/pinctrl/tegra/Makefile b/drivers/pinctrl/tegra/Makefile
+index bbcb043..ead4e10 100644
+--- a/drivers/pinctrl/tegra/Makefile
++++ b/drivers/pinctrl/tegra/Makefile
+@@ -5,4 +5,5 @@ obj-$(CONFIG_PINCTRL_TEGRA30)		+= pinctrl-tegra30.o
+ obj-$(CONFIG_PINCTRL_TEGRA114)		+= pinctrl-tegra114.o
+ obj-$(CONFIG_PINCTRL_TEGRA124)		+= pinctrl-tegra124.o
+ obj-$(CONFIG_PINCTRL_TEGRA210)		+= pinctrl-tegra210.o
++obj-$(CONFIG_PINCTRL_TEGRA194)		+= pinctrl-tegra194.o
+ obj-$(CONFIG_PINCTRL_TEGRA_XUSB)	+= pinctrl-tegra-xusb.o
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra194.c b/drivers/pinctrl/tegra/pinctrl-tegra194.c
+new file mode 100644
+index 0000000..399598a
+--- /dev/null
++++ b/drivers/pinctrl/tegra/pinctrl-tegra194.c
+@@ -0,0 +1,168 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Pinctrl data for the NVIDIA Tegra194 pinmux
++ *
++ * Copyright (c) 2019, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++
++/* Define unique ID for each pins */
++enum pin_id {
++	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0 = 256,
++	TEGRA_PIN_PEX_L5_RST_N_PGG1 = 257,
++	TEGRA_PIN_NUM_GPIOS = 258,
++};
++
++/* Table for pin descriptor */
++static const struct pinctrl_pin_desc tegra194_pins[] = {
++	PINCTRL_PIN(TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
++		    "TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0"),
++	PINCTRL_PIN(TEGRA_PIN_PEX_L5_RST_N_PGG1,
++		    "TEGRA_PIN_PEX_L5_RST_N_PGG1"),
++};
++
++static const unsigned int pex_l5_clkreq_n_pgg0_pins[] = {
++	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
++};
++
++static const unsigned int pex_l5_rst_n_pgg1_pins[] = {
++	TEGRA_PIN_PEX_L5_RST_N_PGG1,
++};
++
++/* Define unique ID for each function */
++enum tegra_mux_dt {
++	TEGRA_MUX_RSVD0,
++	TEGRA_MUX_RSVD1,
++	TEGRA_MUX_RSVD2,
++	TEGRA_MUX_RSVD3,
++	TEGRA_MUX_PE5,
++};
++
++/* Make list of each function name */
++#define TEGRA_PIN_FUNCTION(lid)			\
++	{					\
++		.name = #lid,			\
++	}
++static struct tegra_function tegra194_functions[] = {
++	TEGRA_PIN_FUNCTION(rsvd0),
++	TEGRA_PIN_FUNCTION(rsvd1),
++	TEGRA_PIN_FUNCTION(rsvd2),
++	TEGRA_PIN_FUNCTION(rsvd3),
++	TEGRA_PIN_FUNCTION(pe5),
++};
++
++#define DRV_PINGROUP_ENTRY_Y(r, drvdn_b, drvdn_w, drvup_b,	\
++			     drvup_w, slwr_b, slwr_w, slwf_b,	\
++			     slwf_w, bank)			\
++		.drv_reg = DRV_PINGROUP_Y(r),			\
++		.drv_bank = bank,				\
++		.drvdn_bit = drvdn_b,				\
++		.drvdn_width = drvdn_w,				\
++		.drvup_bit = drvup_b,				\
++		.drvup_width = drvup_w,				\
++		.slwr_bit = slwr_b,				\
++		.slwr_width = slwr_w,				\
++		.slwf_bit = slwf_b,				\
++		.slwf_width = slwf_w
++
++#define PIN_PINGROUP_ENTRY_Y(r, bank, pupd, e_lpbk, e_input,	\
++			     e_od, schmitt_b, drvtype)		\
++		.mux_reg = ((r)),				\
++		.lpmd_bit = -1,					\
++		.lock_bit = -1,					\
++		.hsm_bit = -1,					\
++		.parked_bit = -1,				\
++		.mux_bank = bank,				\
++		.mux_bit = 0,					\
++		.pupd_reg = PINGROUP_REG_##pupd(r),		\
++		.pupd_bank = bank,				\
++		.pupd_bit = 2,					\
++		.tri_reg = ((r)),				\
++		.tri_bank = bank,				\
++		.tri_bit = 4,					\
++		.einput_bit = e_input,				\
++		.odrain_bit = e_od,				\
++		.schmitt_bit = schmitt_b,			\
++		.drvtype_bit = 13,				\
++		.drv_reg = -1
++
++#define drive_pex_l5_clkreq_n_pgg0				\
++	DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
++#define drive_pex_l5_rst_n_pgg1					\
++	DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
++
++#define PINGROUP(pg_name, f0, f1, f2, f3, r, bank, pupd, e_lpbk,	\
++		 e_input, e_lpdr, e_od, schmitt_b, drvtype, io_rail)	\
++	{							\
++		.name = #pg_name,				\
++		.pins = pg_name##_pins,				\
++		.npins = ARRAY_SIZE(pg_name##_pins),		\
++			.funcs = {				\
++				TEGRA_MUX_##f0,			\
++				TEGRA_MUX_##f1,			\
++				TEGRA_MUX_##f2,			\
++				TEGRA_MUX_##f3,			\
++			},					\
++		PIN_PINGROUP_ENTRY_Y(r, bank, pupd, e_lpbk,	\
++				     e_input, e_od,		\
++				     schmitt_b, drvtype),	\
++		drive_##pg_name,				\
++	}
++
++static const struct tegra_pingroup tegra194_groups[] = {
++	PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, 0,
++		 Y, -1, 6, 8, 11, 12, N, "vddio_pex_ctl_2"),
++	PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
++		 Y, -1, 6, 8, 11, 12, N, "vddio_pex_ctl_2"),
++};
++
++static const struct tegra_pinctrl_soc_data tegra194_pinctrl = {
++	.ngpios = TEGRA_PIN_NUM_GPIOS,
++	.pins = tegra194_pins,
++	.npins = ARRAY_SIZE(tegra194_pins),
++	.functions = tegra194_functions,
++	.nfunctions = ARRAY_SIZE(tegra194_functions),
++	.groups = tegra194_groups,
++	.ngroups = ARRAY_SIZE(tegra194_groups),
++	.hsm_in_mux = true,
++	.schmitt_in_mux = true,
++	.drvtype_in_mux = true,
++};
++
++static int tegra194_pinctrl_probe(struct platform_device *pdev)
++{
++	return tegra_pinctrl_probe(pdev, &tegra194_pinctrl);
++}
++
++static const struct of_device_id tegra194_pinctrl_of_match[] = {
++	{ .compatible = "nvidia,tegra194-pinmux", },
++	{ },
++};
++
++static struct platform_driver tegra194_pinctrl_driver = {
++	.driver = {
++		.name = "tegra194-pinctrl",
++		.of_match_table = tegra194_pinctrl_of_match,
++	},
++	.probe = tegra194_pinctrl_probe,
++};
++
++static int __init tegra194_pinctrl_init(void)
++{
++	return platform_driver_register(&tegra194_pinctrl_driver);
++}
++arch_initcall(tegra194_pinctrl_init);
+-- 
+2.7.4
