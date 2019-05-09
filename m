@@ -1,29 +1,38 @@
-Return-Path: <robherring2@gmail.com>
-Date: Wed, 1 May 2019 14:52:05 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 23/28] dt-bindings: pci: tegra: Document PCIe DPD
- pinctrl optional prop
-Message-ID: <20190501195205.GA16256@bogus>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-24-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 12/15] dt-bindings: usb: renesas_usbhs: Add support for r7s9210
+Date: Thu, 9 May 2019 15:11:39 -0500
+Message-ID: <20190509201142.10543-13-chris.brandt@renesas.com>
+In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
+References: <20190509201142.10543-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423092825.759-24-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 23 Apr 2019 14:58:20 +0530, Manikanta Maddireddy wrote:
-> Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
-> in low power mode.
-> 
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2: Using standard pinctrl names, default and idle
-> 
->  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+Add support for r7s9210 (RZ/A2M) SoC
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index b8acc2a994a8..11c99d079dfb 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -20,9 +20,11 @@ Required properties:
+ 	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
+ 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
+ 	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
++	- "renesas,usbhs-r7s9210" for r7s72100 (RZ/A2) compatible device
+ 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
+ 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 or RZ/G2 compatible devices
+ 	- "renesas,rza1-usbhs" for RZ/A1 compatible device
++	- "renesas,rza2-usbhs" for RZ/A2 compatible device
+ 
+ 	When compatible with the generic version, nodes must list the
+ 	SoC-specific version corresponding to the platform first followed
+-- 
+2.16.1
