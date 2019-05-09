@@ -1,37 +1,41 @@
-Return-Path: <SRS0=LvYT=TQ=ti.com=j-keerthy@kernel.org>
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 2/2] arm: dts: dra71-evm: Disable usb4_tm target module
-Date: Thu, 16 May 2019 16:47:19 +0530
-Message-ID: <20190516111719.18567-2-j-keerthy@ti.com>
-In-Reply-To: <20190516111719.18567-1-j-keerthy@ti.com>
-References: <20190516111719.18567-1-j-keerthy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: tony@atomide.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
+Return-Path: <>
+From: "George G. Davis" <ggdavisiv@gmail.com>
+Subject: [PATCH] serial: sh-sci: disable DMA for uart_console
+Date: Thu,  9 May 2019 10:43:30 -0400
+Message-Id: <1557413011-1662-1-git-send-email-george_davis@mentor.com>
+In-Reply-To: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+To: Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "George G. Davis" <george_davis@mentor.com>
 List-ID: <devicetree@vger.kernel.org>
 
-usb4_tm is unsed on dra71 and accessing the module
-with ti,sysc is causing a boot crash hence disable its target
-module.
+As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+console UART"), UART console lines use low-level PIO only access functions
+which will conflict with use of the line when DMA is enabled, e.g. when
+the console line is also used for systemd messages. So disable DMA
+support for UART console lines.
 
-Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+Fixes: https://patchwork.kernel.org/patch/10929511/
+Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
 ---
- arch/arm/boot/dts/dra71-evm.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/sh-sci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
-index 113afd91e5d7..2ae1a478fb34 100644
---- a/arch/arm/boot/dts/dra71-evm.dts
-+++ b/arch/arm/boot/dts/dra71-evm.dts
-@@ -277,3 +277,7 @@
- &extcon_usb2 {
- 	vbus-gpio = <&pcf_lcd 15 GPIO_ACTIVE_HIGH>;
- };
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 3cd139752d3f..885b56b1d4e4 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1557,6 +1557,9 @@ static void sci_request_dma(struct uart_port *port)
+ 
+ 	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
+ 
++	if (uart_console(port))
++		return; /* Cannot use DMA on console */
 +
-+&usb4_tm {
-+	status = "disabled";
-+};
+ 	if (!port->dev->of_node)
+ 		return;
+ 
 -- 
-2.17.1
+2.7.4
