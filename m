@@ -1,349 +1,118 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v3 2/4] clk: at91: sckc: add support to specify registers bit
- offsets
-Date: Fri, 10 May 2019 11:23:31 +0000
-Message-ID: <1557487388-32098-3-git-send-email-claudiu.beznea@microchip.com>
-References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH net 0/3] add property "nvmem_macaddr_swap" to swap
+ macaddr bytes order
+Date: Fri, 10 May 2019 13:28:22 +0200
+Message-ID: <20190510112822.GT81826@meh.true.cz>
+References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com
-Cc: devicetree@vger.kernel.org, Claudiu.Beznea@microchip.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andy Duan <fugang.duan@nxp.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Andy Duan <fugang.duan@nxp.com> [2019-05-10 08:23:58]:
 
-Different IPs uses different bit offsets in registers for the same
-functionality, thus adapt the driver to support this.
+Hi Andy,
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/clk/at91/sckc.c | 100 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 67 insertions(+), 33 deletions(-)
+you've probably forget to Cc some maintainers and mailing lists, so I'm
+adding them now to the Cc loop. This patch series should be posted against
+net-next tree as per netdev FAQ[0], but you've to wait little bit as
+net-next is currently closed for the new submissions and you would need to
+resend it anyway.
 
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index 6c55a7a86f79..2a4ac548de80 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -22,15 +22,23 @@
- #define SLOWCK_SW_TIME_USEC	((SLOWCK_SW_CYCLES * USEC_PER_SEC) / \
- 				 SLOW_CLOCK_FREQ)
- 
--#define	AT91_SCKC_CR			0x00
--#define		AT91_SCKC_RCEN		(1 << 0)
--#define		AT91_SCKC_OSC32EN	(1 << 1)
--#define		AT91_SCKC_OSC32BYP	(1 << 2)
--#define		AT91_SCKC_OSCSEL	(1 << 3)
-+#define	AT91_SCKC_CR		0x00
-+#define		AT91_SCKC_RCEN(off)	((off)->cr_rcen)
-+#define		AT91_SCKC_OSC32EN(off)	((off)->cr_osc32en)
-+#define		AT91_SCKC_OSC32BYP(off)	((off)->cr_osc32byp)
-+#define		AT91_SCKC_OSCSEL(off)	((off)->cr_oscsel)
-+
-+struct clk_slow_bits {
-+	u32 cr_rcen;
-+	u32 cr_osc32en;
-+	u32 cr_osc32byp;
-+	u32 cr_oscsel;
-+};
- 
- struct clk_slow_osc {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_bits *bits;
- 	unsigned long startup_usec;
+0. https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+
+> ethernet controller driver call .of_get_mac_address() to get
+> the mac address from devictree tree, if these properties are
+> not present, then try to read from nvmem. i.MX6x/7D/8MQ/8MM
+> platforms ethernet MAC address read from nvmem ocotp eFuses,
+> but it requires to swap the six bytes order.
+
+Thanks for bringing up this topic, as I would like to extend the
+functionality as well, but I'm still unsure how to tackle this and where,
+so I'll (ab)use this opportunity to bring other use cases I would like to
+cover in the future, so we could better understand the needs.
+
+This reverse byte order format/layout is one of a few other storage formats
+currently used by vendors, some other (creative) vendors are currently
+providing MAC addresses in NVMEMs as ASCII text in following two formats
+(hexdump -C /dev/mtdX):
+
+ a) 0090FEC9CBE5 - MAC address stored as ASCII without colon between octets
+
+  00000090  57 2e 4c 41 4e 2e 4d 41  43 2e 41 64 64 72 65 73  |W.LAN.MAC.Addres|
+  000000a0  73 3d 30 30 39 30 46 45  43 39 43 42 45 35 00 48  |s=0090FEC9CBE5.H|
+  000000b0  57 2e 4c 41 4e 2e 32 47  2e 30 2e 4d 41 43 2e 41  |W.LAN.2G.0.MAC.A|
+
+  (From https://github.com/openwrt/openwrt/pull/1448#issuecomment-442476695)
+
+ b) D4:EE:07:33:6C:20 - MAC address stored as ASCII with colon between octets
+
+  00000180  66 61 63 5f 6d 61 63 20  3d 20 44 34 3a 45 45 3a  |fac_mac = D4:EE:|
+  00000190  30 37 3a 33 33 3a 36 43  3a 32 30 0a 42 44 49 4e  |07:33:6C:20.BDIN|
+
+  (From https://github.com/openwrt/openwrt/pull/1906#issuecomment-483881911)
+
+> The patch set is to add property "nvmem_macaddr_swap" to swap
+> macaddr bytes order.
+
+so it would allow following DT construct (simplified):
+
+ &eth0 {
+	nvmem-cells = <&eth0_addr>;
+	nvmem-cell-names = "mac-address";
+	nvmem_macaddr_swap;
  };
- 
-@@ -39,6 +47,7 @@ struct clk_slow_osc {
- struct clk_sama5d4_slow_osc {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_bits *bits;
- 	unsigned long startup_usec;
- 	bool prepared;
- };
-@@ -48,6 +57,7 @@ struct clk_sama5d4_slow_osc {
- struct clk_slow_rc_osc {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_bits *bits;
- 	unsigned long frequency;
- 	unsigned long accuracy;
- 	unsigned long startup_usec;
-@@ -58,6 +68,7 @@ struct clk_slow_rc_osc {
- struct clk_sam9x5_slow {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_bits *bits;
- 	u8 parent;
- };
- 
-@@ -69,10 +80,11 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
- 	void __iomem *sckcr = osc->sckcr;
- 	u32 tmp = readl(sckcr);
- 
--	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
-+	if (tmp & (AT91_SCKC_OSC32BYP(osc->bits) |
-+		   AT91_SCKC_OSC32EN(osc->bits)))
- 		return 0;
- 
--	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
-+	writel(tmp | AT91_SCKC_OSC32EN(osc->bits), sckcr);
- 
- 	usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
-@@ -85,10 +97,10 @@ static void clk_slow_osc_unprepare(struct clk_hw *hw)
- 	void __iomem *sckcr = osc->sckcr;
- 	u32 tmp = readl(sckcr);
- 
--	if (tmp & AT91_SCKC_OSC32BYP)
-+	if (tmp & AT91_SCKC_OSC32BYP(osc->bits))
- 		return;
- 
--	writel(tmp & ~AT91_SCKC_OSC32EN, sckcr);
-+	writel(tmp & ~AT91_SCKC_OSC32EN(osc->bits), sckcr);
- }
- 
- static int clk_slow_osc_is_prepared(struct clk_hw *hw)
-@@ -97,10 +109,10 @@ static int clk_slow_osc_is_prepared(struct clk_hw *hw)
- 	void __iomem *sckcr = osc->sckcr;
- 	u32 tmp = readl(sckcr);
- 
--	if (tmp & AT91_SCKC_OSC32BYP)
-+	if (tmp & AT91_SCKC_OSC32BYP(osc->bits))
- 		return 1;
- 
--	return !!(tmp & AT91_SCKC_OSC32EN);
-+	return !!(tmp & AT91_SCKC_OSC32EN(osc->bits));
- }
- 
- static const struct clk_ops slow_osc_ops = {
-@@ -114,7 +126,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
- 			   const char *name,
- 			   const char *parent_name,
- 			   unsigned long startup,
--			   bool bypass)
-+			   bool bypass,
-+			   const struct clk_slow_bits *bits)
- {
- 	struct clk_slow_osc *osc;
- 	struct clk_hw *hw;
-@@ -137,10 +150,11 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
- 	osc->hw.init = &init;
- 	osc->sckcr = sckcr;
- 	osc->startup_usec = startup;
-+	osc->bits = bits;
- 
- 	if (bypass)
--		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN) | AT91_SCKC_OSC32BYP,
--		       sckcr);
-+		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN(osc->bits)) |
-+					AT91_SCKC_OSC32BYP(osc->bits), sckcr);
- 
- 	hw = &osc->hw;
- 	ret = clk_hw_register(NULL, &osc->hw);
-@@ -173,7 +187,7 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
- 	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
- 	void __iomem *sckcr = osc->sckcr;
- 
--	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
-+	writel(readl(sckcr) | AT91_SCKC_RCEN(osc->bits), sckcr);
- 
- 	usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
-@@ -185,14 +199,14 @@ static void clk_slow_rc_osc_unprepare(struct clk_hw *hw)
- 	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
- 	void __iomem *sckcr = osc->sckcr;
- 
--	writel(readl(sckcr) & ~AT91_SCKC_RCEN, sckcr);
-+	writel(readl(sckcr) & ~AT91_SCKC_RCEN(osc->bits), sckcr);
- }
- 
- static int clk_slow_rc_osc_is_prepared(struct clk_hw *hw)
- {
- 	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
- 
--	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN);
-+	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN(osc->bits));
- }
- 
- static const struct clk_ops slow_rc_osc_ops = {
-@@ -208,7 +222,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
- 			      const char *name,
- 			      unsigned long frequency,
- 			      unsigned long accuracy,
--			      unsigned long startup)
-+			      unsigned long startup,
-+			      const struct clk_slow_bits *bits)
- {
- 	struct clk_slow_rc_osc *osc;
- 	struct clk_hw *hw;
-@@ -230,6 +245,7 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
- 
- 	osc->hw.init = &init;
- 	osc->sckcr = sckcr;
-+	osc->bits = bits;
- 	osc->frequency = frequency;
- 	osc->accuracy = accuracy;
- 	osc->startup_usec = startup;
-@@ -255,14 +271,14 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
- 
- 	tmp = readl(sckcr);
- 
--	if ((!index && !(tmp & AT91_SCKC_OSCSEL)) ||
--	    (index && (tmp & AT91_SCKC_OSCSEL)))
-+	if ((!index && !(tmp & AT91_SCKC_OSCSEL(slowck->bits))) ||
-+	    (index && (tmp & AT91_SCKC_OSCSEL(slowck->bits))))
- 		return 0;
- 
- 	if (index)
--		tmp |= AT91_SCKC_OSCSEL;
-+		tmp |= AT91_SCKC_OSCSEL(slowck->bits);
- 	else
--		tmp &= ~AT91_SCKC_OSCSEL;
-+		tmp &= ~AT91_SCKC_OSCSEL(slowck->bits);
- 
- 	writel(tmp, sckcr);
- 
-@@ -275,7 +291,7 @@ static u8 clk_sam9x5_slow_get_parent(struct clk_hw *hw)
- {
- 	struct clk_sam9x5_slow *slowck = to_clk_sam9x5_slow(hw);
- 
--	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL);
-+	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL(slowck->bits));
- }
- 
- static const struct clk_ops sam9x5_slow_ops = {
-@@ -287,7 +303,8 @@ static struct clk_hw * __init
- at91_clk_register_sam9x5_slow(void __iomem *sckcr,
- 			      const char *name,
- 			      const char **parent_names,
--			      int num_parents)
-+			      int num_parents,
-+			      const struct clk_slow_bits *bits)
- {
- 	struct clk_sam9x5_slow *slowck;
- 	struct clk_hw *hw;
-@@ -309,7 +326,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
- 
- 	slowck->hw.init = &init;
- 	slowck->sckcr = sckcr;
--	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL);
-+	slowck->bits = bits;
-+	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL(slowck->bits));
- 
- 	hw = &slowck->hw;
- 	ret = clk_hw_register(NULL, &slowck->hw);
-@@ -322,7 +340,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
- }
- 
- static void __init at91sam9x5_sckc_register(struct device_node *np,
--					    unsigned int rc_osc_startup_us)
-+					    unsigned int rc_osc_startup_us,
-+					    const struct clk_slow_bits *bits)
- {
- 	const char *parent_names[2] = { "slow_rc_osc", "slow_osc" };
- 	void __iomem *regbase = of_iomap(np, 0);
-@@ -335,7 +354,8 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
- 		return;
- 
- 	hw = at91_clk_register_slow_rc_osc(regbase, parent_names[0], 32768,
--					   50000000, rc_osc_startup_us);
-+					   50000000, rc_osc_startup_us,
-+					   bits);
- 	if (IS_ERR(hw))
- 		return;
- 
-@@ -358,11 +378,12 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
- 		return;
- 
- 	hw = at91_clk_register_slow_osc(regbase, parent_names[1], xtal_name,
--					1200000, bypass);
-+					1200000, bypass, bits);
- 	if (IS_ERR(hw))
- 		return;
- 
--	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
-+	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
-+					   bits);
- 	if (IS_ERR(hw))
- 		return;
- 
-@@ -373,16 +394,23 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
- 		of_clk_add_hw_provider(child, of_clk_hw_simple_get, hw);
- }
- 
-+static const struct clk_slow_bits at91sam9x5_bits = {
-+	.cr_rcen = BIT(0),
-+	.cr_osc32en = BIT(1),
-+	.cr_osc32byp = BIT(2),
-+	.cr_oscsel = BIT(3),
-+};
-+
- static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
- {
--	at91sam9x5_sckc_register(np, 75);
-+	at91sam9x5_sckc_register(np, 75, &at91sam9x5_bits);
- }
- CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
- 	       of_at91sam9x5_sckc_setup);
- 
- static void __init of_sama5d3_sckc_setup(struct device_node *np)
- {
--	at91sam9x5_sckc_register(np, 500);
-+	at91sam9x5_sckc_register(np, 500, &at91sam9x5_bits);
- }
- CLK_OF_DECLARE(sama5d3_clk_sckc, "atmel,sama5d3-sckc",
- 	       of_sama5d3_sckc_setup);
-@@ -398,7 +426,7 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
- 	 * Assume that if it has already been selected (for example by the
- 	 * bootloader), enough time has aready passed.
- 	 */
--	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL)) {
-+	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL(osc->bits))) {
- 		osc->prepared = true;
- 		return 0;
- 	}
-@@ -421,6 +449,10 @@ static const struct clk_ops sama5d4_slow_osc_ops = {
- 	.is_prepared = clk_sama5d4_slow_osc_is_prepared,
- };
- 
-+static const struct clk_slow_bits at91sama5d4_bits = {
-+	.cr_oscsel = BIT(3),
-+};
-+
- static void __init of_sama5d4_sckc_setup(struct device_node *np)
- {
- 	void __iomem *regbase = of_iomap(np, 0);
-@@ -455,6 +487,7 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
- 	osc->hw.init = &init;
- 	osc->sckcr = regbase;
- 	osc->startup_usec = 1200000;
-+	osc->bits = &at91sama5d4_bits;
- 
- 	hw = &osc->hw;
- 	ret = clk_hw_register(NULL, &osc->hw);
-@@ -463,7 +496,8 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
- 		return;
- 	}
- 
--	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
-+	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
-+					   &at91sama5d4_bits);
- 	if (IS_ERR(hw))
- 		return;
- 
--- 
-2.7.4
+
+I'm not sure about the `nvmem_macaddr_swap` property name, as currently there
+are no other properties with underscores, so it should be probably named as
+`nvmem-macaddr-swap`. DT specs permits use of the underscores, but the
+estabilished convention is probably prefered.
+
+In order to cover all above mentioned use cases, it would make more sense
+to add a description of the MAC address layout to the DT and use this
+information to properly postprocess the NVMEM content into usable MAC
+address?
+
+Something like this?
+
+ - nvmem-cells: phandle, reference to an nvmem node for the MAC address
+ - nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
+ - nvmem-mac-address-layout: string, specifies MAC address storage layout.
+   Supported values are: "binary", "binary-swapped", "ascii", "ascii-delimited".
+   "binary" is the default.
+
+Or perhaps something like this?
+
+ - nvmem-cells: phandle, reference to an nvmem node for the MAC address
+ - nvmem-cell-names: string, should be any of the supported values.
+   Supported values are: "mac-address", "mac-address-swapped",
+   "mac-address-ascii", "mac-address-ascii-delimited".
+
+I'm more inclined towards the first proposed solution, as I would like to
+propose MAC address octet incrementation feature in the future, so it would
+become:
+
+ - nvmem-cells: phandle, reference to an nvmem node for the MAC address
+ - nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
+ - nvmem-mac-address-layout: string, specifies MAC address storage layout.
+   Supported values are: "binary", "binary-swapped", "ascii", "ascii-delimited".
+   "binary" is the default.
+ - nvmem-mac-address-increment: number, value by which should be
+   incremented MAC address octet, could be negative value as well.
+ - nvmem-mac-address-increment-octet: number, valid values 0-5, default is 5.
+   Specifies MAC address octet used for `nvmem-mac-address-increment`.
+
+What do you think?
+
+Cheers,
+
+Petr
