@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 2/4] arm64: dts: bitmain: Add reset controller support for BM1880 SoC
-Date: Sat, 11 May 2019 00:15:23 +0530
-Message-ID: <20190510184525.13568-3-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 3/4] reset: Add reset controller support for BM1880 SoC
+Date: Sat, 11 May 2019 00:15:24 +0530
+Message-ID: <20190510184525.13568-4-manivannan.sadhasivam@linaro.org>
 References: <20190510184525.13568-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510184525.13568-1-manivannan.sadhasivam@linaro.org>
@@ -10,71 +10,49 @@ To: p.zabel@pengutronix.de, robh+dt@kernel.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add reset controller support for Bitmain BM1880 SoC. This commit also
-adds reset support to UART peripherals.
+Add reset controller support for Bitmain BM1880 SoC reusing the
+reset-simple driver.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm64/boot/dts/bitmain/bm1880.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/reset/Kconfig        | 3 ++-
+ drivers/reset/reset-simple.c | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-index fdfdc65d29ef..3ab039029bf2 100644
---- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-+++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-@@ -5,6 +5,7 @@
-  */
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 2c8c23db92fb..b25e8d139f0d 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -117,7 +117,7 @@ config RESET_QCOM_PDC
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/bitmain,bm1880-reset.h>
+ config RESET_SIMPLE
+ 	bool "Simple Reset Controller Driver" if COMPILE_TEST
+-	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
++	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
+ 	help
+ 	  This enables a simple reset controller driver for reset lines that
+ 	  that can be asserted and deasserted by toggling bits in a contiguous,
+@@ -129,6 +129,7 @@ config RESET_SIMPLE
+ 	   - RCC reset controller in STM32 MCUs
+ 	   - Allwinner SoCs
+ 	   - ZTE's zx2967 family
++	   - Bitmain BM1880 SoC
  
- / {
- 	compatible = "bitmain,bm1880";
-@@ -92,6 +93,12 @@
- 				compatible = "bitmain,bm1880-pinctrl";
- 				reg = <0x50 0x4B0>;
- 			};
-+
-+			rst: reset-controller@c00 {
-+				compatible = "bitmain,bm1880-reset";
-+				reg = <0xc00 0x8>;
-+				#reset-cells = <1>;
-+			};
- 		};
+ config RESET_STM32MP157
+ 	bool "STM32MP157 Reset Driver" if COMPILE_TEST
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+index 77fbba3100c8..5e8c86470e6b 100644
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -129,6 +129,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 		.data = &reset_simple_active_low },
+ 	{ .compatible = "aspeed,ast2400-lpc-reset" },
+ 	{ .compatible = "aspeed,ast2500-lpc-reset" },
++	{ .compatible = "bitmain,bm1880-reset",
++		.data = &reset_simple_active_low },
+ 	{ /* sentinel */ },
+ };
  
- 		uart0: serial@58018000 {
-@@ -100,6 +107,7 @@
- 			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART0_1_CLK>;
- 			status = "disabled";
- 		};
- 
-@@ -109,6 +117,7 @@
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART0_1_ACLK>;
- 			status = "disabled";
- 		};
- 
-@@ -118,6 +127,7 @@
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART2_3_CLK>;
- 			status = "disabled";
- 		};
- 
-@@ -127,6 +137,7 @@
- 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART2_3_ACLK>;
- 			status = "disabled";
- 		};
- 	};
 -- 
 2.17.1
