@@ -1,78 +1,64 @@
-Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18115 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732314AbfEMSJF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 14:09:05 -0400
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 17/29] PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
-Date: Mon, 13 May 2019 23:37:32 +0530
-Message-ID: <20190513180744.16493-18-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=QQZT=TK=gmail.com=peron.clem@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+References: <CAJiuCceeLwY+myYtUf15frSYsLKmGaUBifAOxUkNWwSjbF4oDg@mail.gmail.com>
+ <20190429220503.GA4720@bogus>
+In-Reply-To: <20190429220503.GA4720@bogus>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date: Fri, 10 May 2019 21:47:27 +0200
+Message-ID: <CAJiuCcc2_HWKvHyBepu_PXG+T-qD_4KFw=qT_rtrvqJDEXbrZw@mail.gmail.com>
+Subject: Re: Question about compatible fallback and documentation
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Disable controllers which failed to link up and configure CLKREQ# signals
-of these controllers as GPIO. This is required to avoid CLKREQ# signal of
-inactive controllers interfering with PLLE power down sequence.
+Hi,
 
-PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
-these bits in other SoCs doesn't cause any side effects. Program these
-bits for all Tegra SoCs to avoid conditional check.
+On Tue, 30 Apr 2019 at 00:05, Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Apr 14, 2019 at 06:18:04PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi,
+> >
+> > I have to bind an already existing IP by a vendor in a new SoC called
+> > "SOC3" device-tree.
+> >
+> > In the 1st gen of "SOC1" the IP is introduced :
+> > soc1.dtsi :
+> > compatible =3D "vendor,ip-soc1";
+> >
+> > Then a 2nd gen of the IP is introduced in "SOC2" with new registers.
+> > But the driver of the 1st gen is still working fine and no update of
+> > the existing driver has been introduced because not required.
+> > soc2.dtsi :
+> > compatible =3D "vendor,ip-soc2", "vendor,ip-soc1";
+> >
+> > Finally in "SOC3" and regardind the user manual we think that the IP
+> > introduced is the same as "SOC2".
+> > Should the compatible in soc3.dtsi be A or B?
+> > A) compatible =3D "vendor,ip-soc2", "vendor,ip-soc1";
+> > or
+> > B) compatible =3D "vendor,ip-soc3", "vendor,ip-soc2", "vendor,ip-soc1";
+> >
+> > I propose the solution B) because we don't know what could happens
+> > maybe the IP could need a quirks only for "SOC3". And device tree
+> > shouldn't move for the user only the driver.
+>
+> B is correct.
+>
+> Or you could list soc3 and soc2 given you do know there are additional
+> features. That would require a driver update, but likely the new SoC
+> requires some OS changes. Maybe someday SoC design will be disciplined
+> enough that new SoCs are fully backwards compatible.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: No change
+Thanks for the answer,
+Clement
 
-V2: Corrected the comment in driver
-
- drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9ee111062ab7..4767af9f3b88 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -160,6 +160,8 @@
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_211	(0x1 << 20)
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_411	(0x2 << 20)
- #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_111	(0x2 << 20)
-+#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(x)		(1 << ((x) + 29))
-+#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL		(0x7 << 29)
- 
- #define AFI_FUSE			0x104
- #define  AFI_FUSE_PCIE_T0_GEN2_DIS	(1 << 2)
-@@ -741,6 +743,12 @@ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
- 
- 	value &= ~AFI_PEX_CTRL_REFCLK_EN;
- 	afi_writel(port->pcie, value, ctrl);
-+
-+	/* disable PCIe port and set CLKREQ# as GPIO to allow PLLE power down */
-+	value = afi_readl(port->pcie, AFI_PCIE_CONFIG);
-+	value |= AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
-+	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
-+	afi_writel(port->pcie, value, AFI_PCIE_CONFIG);
- }
- 
- static void tegra_pcie_port_free(struct tegra_pcie_port *port)
-@@ -1153,9 +1161,12 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 	value = afi_readl(pcie, AFI_PCIE_CONFIG);
- 	value &= ~AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK;
- 	value |= AFI_PCIE_CONFIG_PCIE_DISABLE_ALL | pcie->xbar_config;
-+	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL;
- 
--	list_for_each_entry(port, &pcie->ports, list)
-+	list_for_each_entry(port, &pcie->ports, list) {
- 		value &= ~AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
-+		value &= ~AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
-+	}
- 
- 	afi_writel(pcie, value, AFI_PCIE_CONFIG);
- 
--- 
-2.17.1
+>
+> > Last question does we have to document all the compatible use in
+> > DTS(i) files in the Documentation ? or only the compatible used by the
+> > drivers ?
+>
+> What is used in DTS files.
+>
+> Rob
