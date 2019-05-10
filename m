@@ -1,42 +1,58 @@
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-Date: Fri, 10 May 2019 10:23:19 +0200
-Message-ID: <20190510082324.21181-2-glaroque@baylibre.com>
-References: <20190510082324.21181-1-glaroque@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, khilman@baylibre.com
-Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH V3 0/8] Add EMC scaling support for Tegra210
+Date: Fri, 10 May 2019 16:47:11 +0800
+Message-ID: <20190510084719.18902-1-josephl@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob
+ Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This property allow drive-strength parameter in uA instead of mA.
+This series introduces the EMC clock scaling support for Tegra210. The
+new version has a significant change, which drops the EMC table bindings
+and replaces by memory region node of EMC table.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
- 1 file changed, 3 insertions(+)
+And most of the comments in V1 have been addressed.
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index cef2b5855d60..fcd37e93ed4d 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
- drive-open-drain	- drive with open drain
- drive-open-source	- drive with open source
- drive-strength		- sink or source at most X mA
-+drive-strength-microamp	- sink or source at most X uA
- input-enable		- enable input on pin (no effect on output, such as
- 			  enabling an input buffer)
- input-disable		- disable input on pin (no effect on output, such as
-@@ -326,6 +327,8 @@ arguments are described below.
- 
- - drive-strength takes as argument the target strength in mA.
- 
-+- drive-strength-microamp takes as argument the target strength in uA.
-+
- - input-debounce takes the debounce time in usec as argument
-   or 0 to disable debouncing
- 
+Joseph Lo (8):
+  dt-bindings: memory: tegra: Add external memory controller binding for
+    Tegra210
+  clk: tegra: Add PLLP_UD and PLLMB_UD for Tegra210
+  clk: tegra: Export functions for EMC clock scaling
+  memory: tegra: Add Tegra210 EMC clock driver
+  memory: tegra: Add EMC scaling support code for Tegra210
+  memory: tegra: Add EMC scaling sequence code for Tegra210
+  clk: tegra: Remove the old emc_mux clock for Tegra210
+  arm64: tegra: Add external memory controller node for Tegra210
+
+ .../nvidia,tegra210-emc.txt                   |   55 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi      |   33 +
+ drivers/clk/tegra/clk-tegra210.c              |   85 +-
+ drivers/memory/tegra/Kconfig                  |   10 +
+ drivers/memory/tegra/Makefile                 |    1 +
+ drivers/memory/tegra/tegra210-emc-cc-r21021.c | 1953 +++++++++++++++
+ drivers/memory/tegra/tegra210-emc.c           | 2123 +++++++++++++++++
+ drivers/memory/tegra/tegra210-emc.h           | 1037 ++++++++
+ include/dt-bindings/clock/tegra210-car.h      |    4 +-
+ include/linux/clk/tegra.h                     |    5 +
+ 10 files changed, 5288 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.txt
+ create mode 100644 drivers/memory/tegra/tegra210-emc-cc-r21021.c
+ create mode 100644 drivers/memory/tegra/tegra210-emc.c
+ create mode 100644 drivers/memory/tegra/tegra210-emc.h
+
 -- 
-2.17.1
+2.21.0
