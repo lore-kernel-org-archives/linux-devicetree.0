@@ -1,138 +1,203 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Fri, 10 May 2019 10:12:13 +0200
-Message-ID: <CAKMK7uFd1xUx8u3xWLwifVSq4OEnMO4S-m0hESe68UzONXnMFg@mail.gmail.com>
-References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
- <20190509015856.GB7031@mit.edu> <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu> <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu> <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com> <20190509214233.GA20877@mit.edu>
- <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com> <20190509233043.GC20877@mit.edu>
- <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com> <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
- <a1b88d5add15d43de0468c32d9a2427629337abb.camel@oracle.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
+Date: Fri, 10 May 2019 10:14:14 +0200
+Message-ID: <12a0f86c-d6ee-6abf-8b2e-c901934dd1ae@linaro.org>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
+ <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
+ <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+ <20190503164651.GB40515@google.com>
+ <c6cf6170-331d-8ffc-d272-e5d8ee648eda@linaro.org>
+ <1557318215.29634.7.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a1b88d5add15d43de0468c32d9a2427629337abb.camel@oracle.com>
+In-Reply-To: <1557318215.29634.7.camel@mtksdccf07>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Knut Omang <knut.omang@oracle.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Logan Gunthorpe <logang@deltatee.com>, Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com, Greg KH <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, sboyd@kernel.org, Shuah Khan <shuah@kernel.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vg>
+To: Michael Kao <michael.kao@mediatek.com>
+Cc: Matthias Kaehlcke <mka@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 7:49 AM Knut Omang <knut.omang@oracle.com> wrote:
->
-> On Thu, 2019-05-09 at 22:18 -0700, Frank Rowand wrote:
-> > On 5/9/19 4:40 PM, Logan Gunthorpe wrote:
-> > >
-> > >
-> > > On 2019-05-09 5:30 p.m., Theodore Ts'o wrote:
-> > >> On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
-> > >>>
-> > >>> The second item, arguably, does have significant overlap with kselftest.
-> > >>> Whether you are running short tests in a light weight UML environment or
-> > >>> higher level tests in an heavier VM the two could be using the same
-> > >>> framework for writing or defining in-kernel tests. It *may* also be valuable
-> > >>> for some people to be able to run all the UML tests in the heavy VM
-> > >>> environment along side other higher level tests.
-> > >>>
-> > >>> Looking at the selftests tree in the repo, we already have similar items to
-> > >>> what Kunit is adding as I described in point (2) above. kselftest_harness.h
-> > >>> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
-> > >>> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
-> > >>>
-> > >>> However, the number of users of this harness appears to be quite small. Most
-> > >>> of the code in the selftests tree seems to be a random mismash of scripts
-> > >>> and userspace code so it's not hard to see it as something completely
-> > >>> different from the new Kunit:
-> > >>>
-> > >>> $ git grep --files-with-matches kselftest_harness.h *
-> > >>
-> > >> To the extent that we can unify how tests are written, I agree that
-> > >> this would be a good thing.  However, you should note that
-> > >> kselftest_harness.h is currently assums that it will be included in
-> > >> userspace programs.  This is most obviously seen if you look closely
-> > >> at the functions defined in the header files which makes calls to
-> > >> fork(), abort() and fprintf().
-> > >
-> > > Ah, yes. I obviously did not dig deep enough. Using kunit for
-> > > in-kernel tests and kselftest_harness for userspace tests seems like
-> > > a sensible line to draw to me. Trying to unify kernel and userspace
-> > > here sounds like it could be difficult so it's probably not worth
-> > > forcing the issue unless someone wants to do some really fancy work
-> > > to get it done.
-> > >
-> > > Based on some of the other commenters, I was under the impression
-> > > that kselftests had in-kernel tests but I'm not sure where or if they
-> > > exist.
-> >
-> > YES, kselftest has in-kernel tests.  (Excuse the shouting...)
-> >
-> > Here is a likely list of them in the kernel source tree:
-> >
-> > $ grep module_init lib/test_*.c
-> > lib/test_bitfield.c:module_init(test_bitfields)
-> > lib/test_bitmap.c:module_init(test_bitmap_init);
-> > lib/test_bpf.c:module_init(test_bpf_init);
-> > lib/test_debug_virtual.c:module_init(test_debug_virtual_init);
-> > lib/test_firmware.c:module_init(test_firmware_init);
-> > lib/test_hash.c:module_init(test_hash_init);  /* Does everything */
-> > lib/test_hexdump.c:module_init(test_hexdump_init);
-> > lib/test_ida.c:module_init(ida_checks);
-> > lib/test_kasan.c:module_init(kmalloc_tests_init);
-> > lib/test_list_sort.c:module_init(list_sort_test);
-> > lib/test_memcat_p.c:module_init(test_memcat_p_init);
-> > lib/test_module.c:static int __init test_module_init(void)
-> > lib/test_module.c:module_init(test_module_init);
-> > lib/test_objagg.c:module_init(test_objagg_init);
-> > lib/test_overflow.c:static int __init test_module_init(void)
-> > lib/test_overflow.c:module_init(test_module_init);
-> > lib/test_parman.c:module_init(test_parman_init);
-> > lib/test_printf.c:module_init(test_printf_init);
-> > lib/test_rhashtable.c:module_init(test_rht_init);
-> > lib/test_siphash.c:module_init(siphash_test_init);
-> > lib/test_sort.c:module_init(test_sort_init);
-> > lib/test_stackinit.c:module_init(test_stackinit_init);
-> > lib/test_static_key_base.c:module_init(test_static_key_base_init);
-> > lib/test_static_keys.c:module_init(test_static_key_init);
-> > lib/test_string.c:module_init(string_selftest_init);
-> > lib/test_ubsan.c:module_init(test_ubsan_init);
-> > lib/test_user_copy.c:module_init(test_user_copy_init);
-> > lib/test_uuid.c:module_init(test_uuid_init);
-> > lib/test_vmalloc.c:module_init(vmalloc_test_init)
-> > lib/test_xarray.c:module_init(xarray_checks);
-> >
-> >
-> > > If they do exists, it seems like it would make sense to
-> > > convert those to kunit and have Kunit tests run-able in a VM or
-> > > baremetal instance.
-> >
-> > They already run in a VM.
-> >
-> > They already run on bare metal.
-> >
-> > They already run in UML.
-> >
-> > This is not to say that KUnit does not make sense.  But I'm still trying
-> > to get a better description of the KUnit features (and there are
-> > some).
->
-> FYI, I have a master student who looks at converting some of these to KTF, such as for
-> instance the XArray tests, which lended themselves quite good to a semi-automated
-> conversion.
->
-> The result is also a somewhat more compact code as well as the flexibility
-> provided by the Googletest executor and the KTF frameworks, such as running selected
-> tests, output formatting, debugging features etc.
+On 08/05/2019 14:23, Michael Kao wrote:
+> On Mon, 2019-05-06 at 12:43 +0200, Daniel Lezcano wrote:
+>> On 03/05/2019 18:46, Matthias Kaehlcke wrote:
+>>> Hi,
+>>> 
+>>> On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
+>>>> On Thu, May 2, 2019 at 10:43 AM michael.kao 
+>>>> <michael.kao@mediatek.com> wrote:
+>>>>> 
+>>>>> Add thermal zone node to Mediatek MT8183 dts file.
+>>>>> 
+>>>>> Signed-off-by: Michael Kao <michael.kao@mediatek.com> --- 
+>>>>> arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 
+>>>>> ++++++++++++++++++++++++++++++++ 1 file changed, 64 
+>>>>> insertions(+)
+>>>>> 
+>>>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi 
+>>>>> b/arch/arm64/boot/dts/mediatek/mt8183.dtsi index 
+>>>>> 926df75..b92116f 100644 --- 
+>>>>> a/arch/arm64/boot/dts/mediatek/mt8183.dtsi +++ 
+>>>>> b/arch/arm64/boot/dts/mediatek/mt8183.dtsi @@ -334,6 +334,67 
+>>>>> @@ status = "disabled"; };
+>>>>> 
+>>>>> +               thermal: thermal@1100b000 { + 
+>>>>> #thermal-sensor-cells = <1>; + compatible =
+>>>>> "mediatek,mt8183-thermal"; + reg = <0 0x1100b000 0 0x1000>;
+>>>>> + interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>; + clocks =
+>>>>> <&infracfg CLK_INFRA_THERM>, + <&infracfg CLK_INFRA_AUXADC>;
+>>>>> + clock-names = "therm", "auxadc"; + resets = <&infracfg
+>>>>> MT8183_INFRACFG_AO_THERM_SW_RST>; + mediatek,auxadc =
+>>>>> <&auxadc>; + mediatek,apmixedsys = <&apmixedsys>; + 
+>>>>> mediatek,hw-reset-temp = <117000>; + nvmem-cells =
+>>>>> <&thermal_calibration>; + nvmem-cell-names =
+>>>>> "calibration-data"; +               }; + + thermal-zones { +
+>>>>> cpu_thermal: cpu_thermal { + polling-delay-passive = <1000>;
+>>>>> + polling-delay = <1000>; + + thermal-sensors = <&thermal 0>;
+>>>>> + sustainable-power = <1500>; +                       }; + + 
+>>>>> tzts1: tzts1 { + polling-delay-passive = <1000>; + 
+>>>>> polling-delay = <1000>; + thermal-sensors = <&thermal 1>;
+>>>> Is sustainable-power required for tzts? Though it's an optional
+>>>> property, kernel would have warning: [    0.631556] thermal
+>>>> thermal_zone1: power_allocator: sustainable_power will be
+>>>> estimated [    0.639586] thermal thermal_zone2: 
+>>>> power_allocator: sustainable_power will be estimated [ 
+>>>> 0.647611] thermal thermal_zone3: power_allocator: 
+>>>> sustainable_power will be estimated [    0.655635] thermal 
+>>>> thermal_zone4: power_allocator: sustainable_power will be 
+>>>> estimated [    0.663658] thermal thermal_zone5: 
+>>>> power_allocator: sustainable_power will be estimated if no 
+>>>> sustainable-power assigned.
+>>> 
+>>> The property is indeed optional, if it isn't specified IPA will 
+>>> use the sum of the minimum power of all 'power actors' of the 
+>>> zone as estimate (see estimate_sustainable_power()). This may 
+>>> lead to overly agressive throttling, since the nominal 
+>>> sustainable power will always be <= the requested power.
+>>> 
+>>> In my understanding the sustainable power may varies between 
+>>> devices, even for the same SoC. One could have all the hardware 
+>>> crammed into a tiny plastic enclosure (e.g. ASUS Chromebit), 
+>>> another might have a laptop form factor and a metal enclosure 
+>>> (e.g. ASUS C201). Both examples are based on an Rockchip rk3288, 
+>>> but they have completely different thermal behavior, and would 
+>>> likely have different values for 'sustainable-power'.
+>>> 
+>>> In this sense I tend to consider 'sustainable-power' more a 
+>>> device, than a SoC property. You could specify a 'reasonable' 
+>>> value as a starting point, but it will likely not be optimal for 
+>>> all or even most devices. The warning might even be useful for 
+>>> device makers by indicating them that there is room for 
+>>> tweaking.
+>> 
+>> 
+>> The sustainable power is the power dissipated by the devices 
+>> belonging to the thermal zone at the given trip temperature.
+>> 
+>> With the power numbers and the cooling devices, the IPA will
+>> change the states of the cooling devices to leverage the dissipated
+>> power to the sustainable power.
+>> 
+>> The contribution is the cooling effect of the cooling device.
+>> 
+>> However, the IPA is limited to one thermal zone and the cooling 
+>> device is the cpu cooling device. There is the devfreq cooling 
+>> device but as the graphic driver is not upstream, it is found in 
+>> the android tree only for the moment.
+>> 
+>> As you mentioned the sustainable power can vary depending on the 
+>> form factor and the production process for the same SoC (they can 
+>> go to higher frequencies thus dissipate more power). That is the 
+>> reason why we split the DT per SoC and we override the values on a 
+>> per SoC version basis.
+>> 
+>> You can have a look the rk3399.dtsi and their variant for 
+>> experimental board (*-rock960.dts) and the chromebook version 
+>> (*-gru-kevin.dts).
+>> 
+>> Do you want a empiric procedure to find out the sustainable power 
+>> ?
+>> 
+>> 
+>> 
+> OK, I will add the cooling map. But the tzts1 ~ tzts6 don't need to 
+> binding cooler. The "cpu_thermal" is max value of tzts1 ~tzts6. And 
+> cpu_thermal bind cooler with IPA. tzts1~6 don't need to add cooler. 
+> So, do I just add cooling map without any binding any cooling-cell?
 
-So is KTF already in upstream? Or is the plan to unify the KTF and
-Kunit in-kernel test harnesses? Because there's tons of these
-in-kernel unit tests already, and every merge we get more (Frank's
-list didn't even look into drivers or anywhere else, e.g. it's missing
-the locking self tests I worked on in the past), and a more structured
-approach would really be good.
--Daniel
+For the moment, I suggest to drop the tzts1..tzts6 thermal zones
+definition, so you save the discussion with required-optional field for
+the cooling maps and you save multiple wake up on the system to poll
+thermal zones to do nothing on them.
+
+When multiple thermal zones or multiple sensors will be supported then
+you can re-add them if that makes sense.
+
+A side note, the 'max' approach will drop the performances of the board.
+If there is one core overheating because it is 100% busy, the frequency
+will be capped impacting the performances on all other cores.
+
+> I think thermal framework will add estimated sustainable power.
+> Maybe I should add by myself. What's procedure do you recommend to
+> find sustainable power?
+
+So the following assumes the values for the dynamic power coefficient
+are correct as well as the resulting computed power per OPP.
+
+Let's take the example there is one thermal zone with a cluster of 4
+cores and the cpufreq driver acting on this cluster as a cooling device.
+
+First step:
+
+ - Use the stepwise governor
+
+ - Run dhrystone on all cores for a long time
+
+ - When the mitigation begins and the temperature stabilizes on the
+desired trip point, capture the cpufreq transitions for, let's say a
+period of 30 seconds.
+
+ - Compute the total duration for each cpu freq state during this period
+
+ - Compute the total energy for each cpu freq state
+
+ - Compute the average energy for this period
+
+ - Divide the average energy by the period, you have the sustainable power
+
+Second step:
+
+Nothing is perfect, so the value found above may need to be tweaked.
+
+ - Add the sustainable power in the DT
+
+ - Switch to the IPA
+
+ - Run dhrystone on all cores for a long time
+
+ - Read the temperature and verify it stabilizes at the desired trip
+point and readjust the sustainable power if needed.
+
+Please note, as the IPA is based on a open loop regulation P-I-D, it
+should begin to acquire temperature before reaching the mitigation trip
+point, so it is a good idea to add a trip point 5 or 10 degrees under
+the mitigation trip point. The purpose of this 'pre-mitigate' trip point
+is to force the IPA to read temperature in advance.
+
+Hope that helps.
+
+  -- Daniel
+
+
+
+
+
+
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
