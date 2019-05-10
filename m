@@ -1,7 +1,7 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
-Subject: [RFC,V2,03/11] dt-bindings: mt8183: Added camera ISP Pass 1
-Date: Fri, 10 May 2019 09:57:52 +0800
-Message-ID: <20190510015755.51495-4-jungo.lin@mediatek.com>
+Subject: [RFC,V2,04/11] dts: arm64: mt8183: Add ISP Pass 1 nodes
+Date: Fri, 10 May 2019 09:57:54 +0800
+Message-ID: <20190510015755.51495-5-jungo.lin@mediatek.com>
 References: <Jungo Lin <jungo.lin@mediatek.com>
 Reply-To: Jungo Lin <jungo.lin@mediatek.com>
 Mime-Version: 1.0
@@ -22,114 +22,57 @@ To: tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideason
 Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, suleiman@chromium.org, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, ryan.yu@mediatek.com, Jerry-ch.Chen@mediatek.com, frankie.chiu@mediatek.com, Jungo Lin <jungo.lin@mediatek.com>, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, seraph.huang@mediatek.com, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding document for the Pass 1 (P1) unit in
-Mediatek's camera ISP system. The Pass 1 unit grabs the sensor data
-out from the sensor interface, applies ISP image effects from tuning
-data and outputs the image data or statistics data to DRAM.
+Add nodes for Pass 1 unit of Mediatek's camera ISP system.
+Pass 1 unit embedded in Mediatek SoCs, works with the
+co-processor to process image signal from the image sensor
+and output RAW image data.
 
 Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
 ---
- .../bindings/media/mediatek,camisp.txt        | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 32 ++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek,camisp.txt b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
-new file mode 100644
-index 000000000000..759e55a5dfac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
-@@ -0,0 +1,92 @@
-+* Mediatek Image Signal Processor Pass 1 (ISP P1)
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index d5d83a05f8a1..5f195236a762 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -382,5 +382,37 @@
+ 			reg = <0 0x1a000000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 		};
 +
-+The Pass 1 unit of Mediatek's camera ISP system grabs the sensor data out
-+from the sensor interface, applies ISP effects from tuning data and outputs
-+the image data and statistics data to DRAM. Furthermore, Pass 1 unit has
-+the ability to output two different resolutions frames at the same time to
-+increase the performance of the camera application.
-+
-+Required properties:
-+- compatible: Must be "mediatek,mt8183-camisp" for MT8183.
-+- reg: Must contain an entry for each entry in reg-names.
-+- interrupts: interrupt number to the cpu.
-+- iommus: shall point to the respective IOMMU block with master port
-+  as argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+- power-domains : a phandle to the power domain of this local arbiter.
-+- clocks: device clocks, see
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- clock-names: must be "CAMSYS_CAM_CGPDN" and "CAMSYS_CAMTG_CGPDN".
-+- mediatek,larb: must contain the local arbiters in the current SOCs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+- mediatek,scp : the node of system control processor (SCP), see
-+  Documentation/devicetree/bindings/remoteproc/mtk,scp.txt for details.
-+- memory-region : the reserved shared memory region between Pass 1 unit and
-+  system control processor.
-+
-+Example:
-+SoC specific DT entry:
-+
-+	camisp: camisp@1a000000 {
-+		compatible = "mediatek,mt8183-camisp", "syscon";
-+		reg = <0 0x1a000000 0 0x1000>,
-+		      <0 0x1a003000 0 0x1000>,
-+		      <0 0x1a004000 0 0x2000>,
-+		      <0 0x1a006000 0 0x2000>;
-+		reg-names = "camisp",
-+		            "cam1",
-+		            "cam2",
-+		            "cam3";
-+		interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 254 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 255 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "cam1",
-+				  "cam2",
-+				  "cam3";
-+		iommus = <&iommu M4U_PORT_CAM_LSCI0>,
-+			 <&iommu M4U_PORT_CAM_LSCI1>,
-+			 <&iommu M4U_PORT_CAM_BPCI>;
-+		#clock-cells = <1>;
-+		power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
-+		/* Camera CCF */
-+		clocks = <&camsys CLK_CAM_CAM>,
-+			 <&camsys CLK_CAM_CAMTG>;
-+		clock-names = "CAMSYS_CAM_CGPDN",
-+			      "CAMSYS_CAMTG_CGPDN";
-+		mediatek,larb = <&larb3>,
-+				<&larb6>;
-+		mediatek,scp = <&scp>;
-+		memory-region = <&cam_mem_reserved>;
-+	};
-+
-+Reserved memory specific DT entry (see reserved memory binding for more
-+information):
-+
-+Example:
-+SoC specific DT entry:
-+
-+	cam_mem_reserved: cam_mem_region {
-+		compatible = "mediatek,reserve-memory-cam-smem";
-+		no-map;
-+		size = <0 0x01400000>; / *20 MB share mem size */
-+		alignment = <0 0x1000>;
-+		alloc-ranges = <0 0x40000000 0 0x10000000>;
-+	};
-+
-+Mediatek ISP P1 supports a single port node with MIPI-CSI2 bus. It should
-+contain one 'port' child node with child 'endpoint' node. Please refer to
-+the bindings defined in Documentation/devicetree/bindings/media/video-interfaces.txt
-+and Documentation/devicetree/bindings/media/mediatek-seninf.txt.
-+
-+Example:
-+Board specific DT entry:
-+
-+	&camisp {
-+		port@0 {
-+			seninf_0: endpoint {
-+				remote-endpoint = <&seninf_core>;
-+			};
++		camisp: camisp@1a000000 {
++			compatible = "mediatek,mt8183-camisp", "syscon";
++			reg = <0 0x1a000000 0 0x1000>,
++			      <0 0x1a003000 0 0x1000>,
++			      <0 0x1a004000 0 0x2000>,
++			      <0 0x1a006000 0 0x2000>;
++			reg-names = "camisp",
++				    "cam1",
++				    "cam2",
++				    "cam3";
++			interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_LOW>,
++				     <GIC_SPI 254 IRQ_TYPE_LEVEL_LOW>,
++				     <GIC_SPI 255 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-names = "cam1",
++					  "cam2",
++					  "cam3";
++			iommus = <&iommu M4U_PORT_CAM_LSCI0>,
++				 <&iommu M4U_PORT_CAM_LSCI1>,
++				 <&iommu M4U_PORT_CAM_BPCI>;
++			#clock-cells = <1>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
++			/* Camera CCF */
++			clocks = <&camsys CLK_CAM_CAM>,
++				 <&camsys CLK_CAM_CAMTG>;
++			clock-names = "CAMSYS_CAM_CGPDN",
++				      "CAMSYS_CAMTG_CGPDN";
++			mediatek,larb = <&larb3>,
++					<&larb6>;
++			mediatek,scp = <&scp>;
++			memory-region = <&cam_mem_reserved>;
 +		};
-+	};
-+
+ 	};
+ };
 -- 
 2.18.0
