@@ -1,58 +1,38 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
-Date: Fri, 10 May 2019 14:43:50 -0700
-Message-ID: <7h4l62dlyh.fsf@baylibre.com>
-References: <20190510155327.5759-1-jbrunet@baylibre.com> <20190510155327.5759-2-jbrunet@baylibre.com>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: [PATCH 1/5] dt-bindings: phy: dp83867: Describe how driver behaves
+ w.r.t rgmii delay
+Date: Fri, 10 May 2019 21:46:10 +0000
+Message-ID: <20190510214550.18657-1-tpiepho@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510155327.5759-2-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> Like order boards, order nodes by address then node names then aliases.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../boot/dts/amlogic/meson-g12a-sei510.dts    | 92 +++++++++----------
->  1 file changed, 46 insertions(+), 46 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> index 34b40587e5ef..61fb30047d7f 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-> @@ -14,10 +14,6 @@
->  	compatible = "seirobotics,sei510", "amlogic,g12a";
->  	model = "SEI Robotics SEI510";
->  
-> -	aliases {
-> -		serial0 = &uart_AO;
-> -	};
-> -
->  	adc_keys {
->  		compatible = "adc-keys";
->  		io-channels = <&saradc 0>;
-> @@ -31,13 +27,8 @@
->  		};
->  	};
->  
-> -	ao_5v: regulator-ao_5v {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "AO_5V";
-> -		regulator-min-microvolt = <5000000>;
-> -		regulator-max-microvolt = <5000000>;
-> -		vin-supply = <&dc_in>;
-> -		regulator-always-on;
-> +	aliases {
-> +		serial0 = &uart_AO;
->  	};
-
-minor nit: I kind of like "aliases" and "chosen" at the top since they
-are kind of special nodes, but honestly, I can't think of a really good
-reason other than personal preference, so keeping things sorted as
-you've done here is probably better.
-
-Kevin
+QWRkIGEgbm90ZSB0byBtYWtlIGl0IG1vcmUgY2xlYXIgaG93IHRoZSBkcml2ZXIgYmVoYXZlcyB3
+aGVuICJyZ21paSIgdnMKInJnbWlpLWlkIiwgInJnbWlpLWlkcngiLCBvciAicmdtaWktaWR0eCIg
+aW50ZXJmYWNlIG1vZGVzIGFyZSBzZWxlY3RlZC4KCkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPgpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KU2lnbmVk
+LW9mZi1ieTogVHJlbnQgUGllcGhvIDx0cGllcGhvQGltcGluai5jb20+Ci0tLQogRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC90aSxkcDgzODY3LnR4dCB8IDYgKysrKysrCiAx
+IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC90aSxkcDgzODY3LnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQKaW5kZXggOWVmOTMzOGFhZWUx
+Li5lOTdmNTRhZWFjNzcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL25ldC90aSxkcDgzODY3LnR4dApAQCAtMTEsNiArMTEsMTIgQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoKIAktIHRpLGZpZm8tZGVwdGggLSBUcmFuc21pdHQgRklGTyBkZXB0aC0gc2VlIGR0
+LWJpbmRpbmdzL25ldC90aS1kcDgzODY3LmgKIAkJZm9yIGFwcGxpY2FibGUgdmFsdWVzCiAKK05v
+dGU6IElmIHRoZSBpbnRlcmZhY2UgdHlwZSBpcyBQSFlfSU5URVJGQUNFX01PREVfUkdNSUkgdGhl
+IFRYL1JYIGNsb2NrIGRlbGF5cworICAgICAgd2lsbCBiZSBsZWZ0IGF0IHRoZWlyIGRlZmF1bHQg
+dmFsdWVzLCBhcyBzZXQgYnkgdGhlIFBIWSdzIHBpbiBzdHJhcHBpbmcuCisgICAgICBUaGUgZGVm
+YXVsdCBzdHJhcHBpbmcgd2lsbCB1c2UgYSBkZWxheSBvZiAyLjAwIG5zLiAgVGh1cworICAgICAg
+UEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJIGJ5IGRlZmF1bHQgZG9lcyBub3QgYmVoYXZlIGFzIFJH
+TUlJIHdpdGggbm8KKyAgICAgIGludGVybmFsIGRlbGF5LCBidXQgYXMgUEhZX0lOVEVSRkFDRV9N
+T0RFX1JHTUlJX0lELgorCiBPcHRpb25hbCBwcm9wZXJ0eToKIAktIHRpLG1pbi1vdXRwdXQtaW1w
+ZWRhbmNlIC0gTUFDIEludGVyZmFjZSBJbXBlZGFuY2UgY29udHJvbCB0byBzZXQKIAkJCQkgICAg
+dGhlIHByb2dyYW1tYWJsZSBvdXRwdXQgaW1wZWRhbmNlIHRvCi0tIAoyLjE0LjUKCg==
