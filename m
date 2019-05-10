@@ -1,95 +1,158 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
-Date: Fri, 10 May 2019 23:20:43 +0530
-Message-ID: <484cd585-d576-e6c3-d222-0b2391b5a7fe@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-4-vidyas@nvidia.com> <20190503110732.GC32400@ulmo>
- <80616ff5-d7a5-84a4-a71b-569e340d128c@nvidia.com>
- <20190510164623.GI235064@google.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+Date: Fri, 10 May 2019 23:58:40 +0530
+Message-ID: <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
+References: <20190508145600.GA26843@centauri> <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
+ <20190510091158.GA10284@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510164623.GI235064@google.com>
-Content-Language: en-US
+In-Reply-To: <20190510091158.GA10284@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, "kishon@ti.com" <kishon@ti.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, Mikko Perttunen <mperttunen@nvidia.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@list
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/10/2019 10:16 PM, Bjorn Helgaas wrote:
-> Hi Vidya,
-> 
-> On Fri, May 10, 2019 at 11:51:24AM +0530, Vidya Sagar wrote:
->>> -----Original Message-----
->>> From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On
->>> Behalf Of Thierry Reding
->>> Sent: Friday, May 3, 2019 4:38 PM
->>> To: Vidya Sagar <vidyas@nvidia.com>
->>> On Wed, Apr 24, 2019 at 10:49:51AM +0530, Vidya Sagar wrote:
->>>> Export pcie_bus_config to enable host controller drivers setting it to
->>>> a specific configuration be able to build as loadable modules
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> 
->>> It doesn't look to me like this is something that host controller drivers are
->>> supposed to change. This is set via the pci kernel command- line parameter,
->>> meaning it's a way of tuning the system configuration.
->>> Drivers should not be allowed to override this after the fact.
->>>
->>> Why do we need to set this?
->> Here is the reason I'm doing it.
->> First things first, Tegra194 supports MPS up to 256 bytes.
->> Assume there are two endpoints with MPS supported up to
->> a) 128 bytes (Ex:- Realtek NIC with 8168 controller)
->> b) 256 bytes (Ex:- Kingston NVMe drive)
->> Now, leaving "pcie_bus_config" untouched in the driver sets it to
->> PCIE_BUS_DEFAULT by default. With this setting, for both (a) and (b),
->> MPS is set to 128, which means, even though Tegra194 supports 256 MPS, it is not
->> set to 256 even in case of (b) thereby not using RP's 256 MPS feature.
->> If I explicitly set pcie_bus_config=PCIE_BUS_PERFORMACE in the code, then 256 MPS is set when
->> (b) is connected, but when (a) is connected, for root port MPS 256 is set and for
->> endpoint MPS 128 is set, because of which root port tries to send packets with 256
->> payload that breaks functionality of Realtek NIC card.
->> The best option I've found out is that when I set 256 in PCI_EXP_DEVCTL of root port
->> explicitly before link up and use pcie_bus_config=PCIE_BUS_SAFE, then, I get the best of both
->> PCIE_BUS_DEFAULT and PCIE_BUS_PERFORMANCE i.e. with (a) connected, MPS is set to 128 in both RP
->> and EP and with (b) connected, MPS is set to 256 in both RP and EP.
->>
->> So, is it like, pcie_bus_config shouldn't be set to anything explicitly in the driver and depending on the
->> platform and what is connected to root port, kernel parameter can be passed with appropriate setting?
-> 
-> Host controller drivers shouldn't change this unless there's some host
-> controller defect that means the generic code can't do the right
-> thing.  Even then, I'd prefer that the host controller driver merely
-> set a quirk bit that describes the defect, e.g., "mps_*_broken".  Then
-> the generic code could pay attention to that and we wouldn't have to
-> make "pcie_bus_config" a part of the ABI.
-> 
->  From your description, it sounds like there's nothing actually wrong
-> with the Tegra194 hardware, but the generic code isn't as smart about
-> setting MPS as it possibly could be.  My solution to that would be to
-> make the generic code smarter so everybody can benefit.
-> 
-> Bjorn
-Thanks Bjorn for your take on this. I'll drop this patch from the current series
-and make a note to optimize PCIE_BUS_DEFAULT to do a better job of setting
-MPS in the best possible way.
+On Fri, May 10, 2019 at 2:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Thu, May 09, 2019 at 11:19:23PM +0530, Amit Kucheria wrote:
+> > (Adding Lorenzo and Sudeep)
+> >
+> > On Wed, May 8, 2019 at 8:26 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+> > >
+> > > On Wed, May 08, 2019 at 02:48:19AM +0530, Amit Kucheria wrote:
+> > > > On Tue, May 7, 2019 at 1:01 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+> > > > >
+> > > > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
+> > > > >
+> > > > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
+> > > > >  1 file changed, 15 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > > > index ffedf9640af7..f9db9f3ee10c 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > > > @@ -31,6 +31,7 @@
+> > > > >                         reg = <0x100>;
+> > > > >                         enable-method = "psci";
+> > > > >                         next-level-cache = <&L2_0>;
+> > > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > > >                 };
+> > > > >
+> > > > >                 CPU1: cpu@101 {
+> > > > > @@ -39,6 +40,7 @@
+> > > > >                         reg = <0x101>;
+> > > > >                         enable-method = "psci";
+> > > > >                         next-level-cache = <&L2_0>;
+> > > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > > >                 };
+> > > > >
+> > > > >                 CPU2: cpu@102 {
+> > > > > @@ -47,6 +49,7 @@
+> > > > >                         reg = <0x102>;
+> > > > >                         enable-method = "psci";
+> > > > >                         next-level-cache = <&L2_0>;
+> > > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > > >                 };
+> > > > >
+> > > > >                 CPU3: cpu@103 {
+> > > > > @@ -55,12 +58,24 @@
+> > > > >                         reg = <0x103>;
+> > > > >                         enable-method = "psci";
+> > > > >                         next-level-cache = <&L2_0>;
+> > > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > > >                 };
+> > > > >
+> > > > >                 L2_0: l2-cache {
+> > > > >                         compatible = "cache";
+> > > > >                         cache-level = <2>;
+> > > > >                 };
+> > > > > +
+> > > > > +               idle-states {
+> > > >
+> > > > entry-method="psci" property goes here. I have a patch fixing it for 410c ;-)
+> > > >
+> > > > I don't think the psci_cpuidle_ops will even get called without this.
+> > >
+> > > Hello Amit,
+> > >
+> > > I added debug prints in psci_cpu_suspend_enter() and arm_cpuidle_suspend()
+> > > when verifying this patch, and psci_cpu_suspend_enter() is indeed called,
+> > > with the correct psci suspend parameter.
+> > >
+> > > The output from:
+> > > grep "" /sys/bus/cpu/devices/cpu0/cpuidle/state?/*
+> > > also looks sane.
+> > >
+> > > However, if 'entry-method="psci"' is required according to the DT binding,
+> > > perhaps you can send a 2/2 series that fixes both this patch and msm8916 ?
+> >
+> > Last time I discussed this with Lorenzo and Sudeep (on IRC), I pointed
+> > out that entry-method="psci" isn't checked for in code anywhere. Let's
+> > get their view on this for posterity.
+> >
+>
+> Yes entry-method="psci" is required as per DT binding but not checked
+> in code on arm64. We have CPU ops with idle enabled only for "psci", so
+> there's not need to check.
 
-> 
->>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
->>>> f5ff01dc4b13..731f78508601 100644
->>>> --- a/drivers/pci/pci.c
->>>> +++ b/drivers/pci/pci.c
->>>> @@ -94,6 +94,7 @@ unsigned long pci_hotplug_mem_size =
->>>> DEFAULT_HOTPLUG_MEM_SIZE;  unsigned long pci_hotplug_bus_size =
->>>> DEFAULT_HOTPLUG_BUS_SIZE;
->>>>
->>>>   enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
->>>> +EXPORT_SYMBOL_GPL(pcie_bus_config);
->>>>
->>>>   /*
->>>>    * The default CLS is used if arch didn't set CLS explicitly and not
->>>> --
->>>> 2.17.1
->>>>
+I don't see it being checked on arm32 either.
+
+> Once we have DT schema validation, this will be caught, so it's better
+> to fix it.
+>
+> > What does entry-method="psci" in the idle-states node achieve that
+> > enable-method="psci" in the cpu node doesn't achieve? (Note: enable-
+> > vs. entry-).
+> >
+>
+> From DT binding perspective, we can have different CPU enable-method
+> and CPU idle entry-method. However on arm64, it's restricted to PSCI
+> only. I need to check what happens on arm32 though, as the driver
+> invocation happens via CPUIDLE_METHOD_OF_DECLARE.
+>
+> > The enable-method property is the one that sets up the
+> > psci_cpuidle_ops callbacks through the CPUIDLE_METHOD_OF_DECLARE
+> > macro.
+> >
+>
+> Indeed.
+>
+> > IOW, if we deprecated the entry-method property, everything would
+> > still work, wouldn't it?
+>
+> Why do you want to deprecated just because Linux kernel doesn't want to
+> use it. That's not a valid reason IMO.
+
+Fair enough. Just want to make sure that it isn't some vestigial
+property that was never used. Do you know if another OS is actually
+using it?
+
+> > Do we expect to support PSCI platforms that might have a different
+> > entry-method for idle states?
+>
+> Not on ARM64, but same DT bindings can be used for idle-states on
+> say RISC-V and have some value other than "psci".
+
+Both enable-method and entry-method properties are currently only used
+(and documented) for ARM platforms. Hence this discussion about
+deprecation of one of them.
+
+> > Should I whip up a patch removing entry-method? Since we don't check
+> > for it today, it won't break the old DTs either.
+> >
+>
+> Nope, I don't think so. But if it's causing issues, we can look into it.
+> I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
+
+Only a couple of minor issues:
+1. There is a trickle of DTs that need fixing up every now and then
+because they don't use entry-method in their idle-states node. Schema
+validation ought to fix that.
+2. A property that isn't ready by any code is a bit confusing. Perhaps
+we can mention something to the effect in the documentation?
+
+Regards,
+Amit
