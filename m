@@ -1,76 +1,62 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v5 0/6] Add drive-strength in Meson pinctrl driver
-Date: Fri, 10 May 2019 10:52:07 +0200
-Message-ID: <331673da2c1cad1c72d61b45e0c614961445ec90.camel@baylibre.com>
-References: <20190510082324.21181-1-glaroque@baylibre.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 0/4] Add reset controller support for BM1880 SoC
+Date: Fri, 10 May 2019 14:27:56 +0530
+Message-ID: <20190510085756.GA4974@Mani-XPS-13-9360>
+References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>, linus.walleij@linaro.org, khilman@baylibre.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-05-10 at 10:23 +0200, Guillaume La Roque wrote:
-> The purpose of this patchset is to add drive-strength support in meson pinconf
-> driver. This is a new feature that was added on the g12a. It is critical for us
-> to support this since many functions are failing with default pad drive-strength.
+On Wed, May 08, 2019 at 10:23:15PM +0530, Manivannan Sadhasivam wrote:
+> Hello,
 > 
-> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-> 'drive-strength' is expressed in mA.
-> So this patch add another generic property "drive-strength-microamp". The change to do so
-> would be minimal and could be benefit to other platforms later on.
+> This patchset adds reset controller support for Bitmain BM1880 SoC.
+> BM1880 SoC has two reset controllers each controlling reset lines of
+> different peripherals. And the reset-simple driver has been reused here.
 > 
-> Cheers
-> Guillaume
 
-Guillaume,
+Sorry, above information was wrong! Actually there is only one reset
+controller in this SoC. The other one (clk_rst) is a set of registers used
+for clock gating functionality (clarified by Bitmain Engineer), so I will
+remove it in next version.
 
-Several tags, such as Acked-by, Reviewed-by or Tested-by have been given on this
-series.
+Thanks,
+Mani
 
-Please remember to collect and add them to the commit description when posting newer
-revision of a series
-
-If you didn't already, please have a look at Documentation/process/submitting-patches.rst
-
-Thanks
-
+> This patchset has been tested on 96Boards Sophon Edge board.
 > 
-> Changes since v4:
-> - fix dt-binding documentation
-> - rename drive-strength-uA to drive-strength-microamp in coverletter
+> Thanks,
+> Mani
 > 
-> Changes since v3:
-> - remove dev_err in meson_get_drive_strength
-> - cleanup code
+> Changes in v2:
 > 
-> Changes since v2:
-> - rename driver-strength-uA property to drive-strength-microamp
-> - rework patch series for better understanding
-> - rework set_bias function
+> As per review from Philipp:
 > 
-> Changes since v1:
-> - fix missing break
-> - implement new pinctrl generic property "drive-strength-uA"
+> * Reused reset_simple_active_low struct instead of a new one for bm1880
+> * Splitted the SPDX license change to a separate commit
+> * Added Reviewed-by tags from Rob and Philipp
 > 
-> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+> Manivannan Sadhasivam (4):
+>   dt-bindings: reset: Add devicetree binding for BM1880 reset controller
+>   arm64: dts: bitmain: Add reset controller support for BM1880 SoC
+>   reset: Add reset controller support for BM1880 SoC
+>   reset: Switch to SPDX license identifier for reset-simple
 > 
-> Guillaume La Roque (6):
->   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
->   pinctrl: generic: add new 'drive-strength-microamp' property support
->   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
->   pinctrl: meson: Rework enable/disable bias part
->   pinctrl: meson: add support of drive-strength-microamp
->   pinctrl: meson: g12a: add DS bank value
+>  .../bindings/reset/bitmain,bm1880-reset.txt   |  18 +++
+>  arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  17 +++
+>  drivers/reset/Kconfig                         |   3 +-
+>  drivers/reset/reset-simple.c                  |   8 +-
+>  .../dt-bindings/reset/bitmain,bm1880-reset.h  | 106 ++++++++++++++++++
+>  5 files changed, 146 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/bitmain,bm1880-reset.txt
+>  create mode 100644 include/dt-bindings/reset/bitmain,bm1880-reset.h
 > 
->  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
->  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
->  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
->  drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
->  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
->  drivers/pinctrl/pinconf-generic.c             |   2 +
->  include/linux/pinctrl/pinconf-generic.h       |   3 +
->  7 files changed, 193 insertions(+), 53 deletions(-)
+> -- 
+> 2.17.1
+> 
