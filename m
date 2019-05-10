@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 6/6] pinctrl: meson: g12a: add DS bank value
-Date: Fri, 10 May 2019 10:23:24 +0200
-Message-ID: <20190510082324.21181-7-glaroque@baylibre.com>
+Subject: [PATCH v5 4/6] pinctrl: meson: Rework enable/disable bias part
+Date: Fri, 10 May 2019 10:23:22 +0200
+Message-ID: <20190510082324.21181-5-glaroque@baylibre.com>
 References: <20190510082324.21181-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
@@ -10,63 +10,129 @@ To: linus.walleij@linaro.org, khilman@baylibre.com
 Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add drive-strength bank regiter and bit value for G12A SoC
+rework bias enable/disable part to prepare drive-strength integration
+no functional changes
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/pinctrl/meson/pinctrl-meson-g12a.c | 36 +++++++++++-----------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson.c | 85 +++++++++++++++------------
+ 1 file changed, 49 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-index d494492e98e9..3475cd7bd2af 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-@@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
- };
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 96a4a72708e4..8ea5c1527064 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -174,62 +174,75 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
+ 	return 0;
+ }
  
- static struct meson_bank meson_g12a_periphs_banks[] = {
--	/* name  first  last  irq  pullen  pull  dir  out  in */
--	BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
--	     4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
--	BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
--	     3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
--	BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
--	     0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
--	BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
--	     1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
--	BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
--	     5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
--	BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
--	     2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
-+	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
-+	BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
-+		4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
-+	BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
-+		3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
-+	BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
-+		0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
-+	BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
-+		1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
-+	BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
-+		5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
-+	BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
-+		2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
- };
+-static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+-			     unsigned long *configs, unsigned num_configs)
++static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
++				      unsigned int pin)
+ {
+-	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+ 	struct meson_bank *bank;
+-	enum pin_config_param param;
+-	unsigned int reg, bit;
+-	int i, ret;
++	unsigned int reg, bit = 0;
++	int ret;
  
- static struct meson_bank meson_g12a_aobus_banks[] = {
--	/* name  first  last  irq  pullen  pull  dir  out  in  */
--	BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
--	     3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
-+	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
-+	BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
-+		0, 0),
- 	/* GPIOE actually located in the AO bank */
--	BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
--	     3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
-+	BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
-+		16, 1, 0),
- };
+ 	ret = meson_get_bank(pc, pin, &bank);
+ 	if (ret)
+ 		return ret;
  
- static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
++	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
++	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit), 0);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
++				     bool pull_up)
++{
++	struct meson_bank *bank;
++	unsigned int reg, bit, val = 0;
++	int ret;
++
++	ret = meson_get_bank(pc, pin, &bank);
++	if (ret)
++		return ret;
++
++	meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
++	if (pull_up)
++		val = BIT(bit);
++
++	ret = regmap_update_bits(pc->reg_pull, reg, BIT(bit), val);
++	if (ret)
++		return ret;
++
++	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
++	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),	BIT(bit));
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
++			     unsigned long *configs, unsigned num_configs)
++{
++	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
++	enum pin_config_param param;
++	int i, ret;
++
+ 	for (i = 0; i < num_configs; i++) {
+ 		param = pinconf_to_config_param(configs[i]);
+ 
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+-			dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
+-					       &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), 0);
++			ret = meson_pinconf_disable_bias(pc, pin);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+-					       &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), BIT(bit));
+-			if (ret)
+-				return ret;
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pull, reg,
+-						 BIT(bit), BIT(bit));
++			ret = meson_pinconf_enable_bias(pc, pin, true);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
+-			dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+-					       &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), BIT(bit));
+-			if (ret)
+-				return ret;
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pull, reg,
+-						 BIT(bit), 0);
++			ret = meson_pinconf_enable_bias(pc, pin, false);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
 2.17.1
