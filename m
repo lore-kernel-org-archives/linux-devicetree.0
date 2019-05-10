@@ -1,84 +1,67 @@
 From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH net 1/5] of_net: remove nvmem-mac-address property
-Date: Fri, 10 May 2019 11:35:14 +0200
-Message-ID: <1557480918-9627-2-git-send-email-ynezz@true.cz>
+Subject: [PATCH net 2/5] dt-bindings: doc: net: remove Linux API references
+Date: Fri, 10 May 2019 11:35:15 +0200
+Message-ID: <1557480918-9627-3-git-send-email-ynezz@true.cz>
 References: <1557480918-9627-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1557480918-9627-1-git-send-email-ynezz@true.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kalle Valo <kvalo@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In commit d01f449c008a ("of_net: add NVMEM support to
-of_get_mac_address") I've added `nvmem-mac-address` property which was
-wrong idea as I've allocated the property with devm_kzalloc and then
-added it to DT, so then 2 entities would be refcounting the allocation.
-So if the driver unbinds, the buffer is freed, but DT code would be
-still referencing that memory.
-
-I'm removing this property completely instead of fixing it, as it's not
-needed to have it.
-
-Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
- drivers/of/of_net.c | 29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index 9649cd53e955..a4b392a5406b 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -52,39 +52,22 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
- static const void *of_get_mac_addr_nvmem(struct device_node *np)
- {
- 	int ret;
--	u8 mac[ETH_ALEN];
--	struct property *pp;
-+	const void *mac;
-+	u8 nvmem_mac[ETH_ALEN];
- 	struct platform_device *pdev = of_find_device_by_node(np);
- 
- 	if (!pdev)
- 		return ERR_PTR(-ENODEV);
- 
--	ret = nvmem_get_mac_address(&pdev->dev, &mac);
-+	ret = nvmem_get_mac_address(&pdev->dev, &nvmem_mac);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
--	pp = devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
--	if (!pp)
-+	mac = devm_kmemdup(&pdev->dev, nvmem_mac, ETH_ALEN, GFP_KERNEL);
-+	if (!mac)
- 		return ERR_PTR(-ENOMEM);
- 
--	pp->name = "nvmem-mac-address";
--	pp->length = ETH_ALEN;
--	pp->value = devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
--	if (!pp->value) {
--		ret = -ENOMEM;
--		goto free;
--	}
--
--	ret = of_add_property(np, pp);
--	if (ret)
--		goto free;
--
--	return pp->value;
--free:
--	devm_kfree(&pdev->dev, pp->value);
--	devm_kfree(&pdev->dev, pp);
--
--	return ERR_PTR(ret);
-+	return mac;
- }
- 
- /**
--- 
-1.9.1
+SW4gY29tbWl0IDY4N2UzZDU1NTBjNyAoImR0LWJpbmRpbmdzOiBkb2M6IHJlZmxlY3QgbmV3IE5W
+TUVNCm9mX2dldF9tYWNfYWRkcmVzcyBiZWhhdmlvdXIiKSBJJ3ZlIGtlcHQgb3IgYWRkZWQgcmVm
+ZXJlbmNlcyB0byBMaW51eApvZl9nZXRfbWFjX2FkZHJlc3MgQVBJIHdoaWNoIGlzIHVud2FudGVk
+IHNvIHRoaXMgcGF0Y2ggZml4ZXMgdGhhdCBieQpyZW1vdmluZyB0aG9zZSByZWZlcmVuY2VzLgoK
+Rml4ZXM6IDY4N2UzZDU1NTBjNyAoImR0LWJpbmRpbmdzOiBkb2M6IHJlZmxlY3QgbmV3IE5WTUVN
+IG9mX2dldF9tYWNfYWRkcmVzcyBiZWhhdmlvdXIiKQpTdWdnZXN0ZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IFBldHIgxaB0ZXRpYXIgPHluZXp6QHRy
+dWUuY3o+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9rZXlzdG9u
+ZS1uZXRjcC50eHQgICAgICAgICB8IDYgKysrLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbmV0L3dpcmVsZXNzL21lZGlhdGVrLG10NzYudHh0IHwgNCArKy0tCiAyIGZpbGVz
+IGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2tleXN0b25lLW5ldGNwLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQva2V5c3RvbmUtbmV0Y3AudHh0
+CmluZGV4IDNhNjVhYWJjNzZhMi4uNjI2MmMyZjI5M2IwIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2tleXN0b25lLW5ldGNwLnR4dAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2tleXN0b25lLW5ldGNwLnR4dApAQCAt
+MTM5LDkgKzEzOSw5IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAJCQlzdWItbW9kdWxlIGF0dGFj
+aGVkIHRvIHRoaXMgaW50ZXJmYWNlLgogCiBUaGUgTUFDIGFkZHJlc3Mgd2lsbCBiZSBkZXRlcm1p
+bmVkIHVzaW5nIHRoZSBvcHRpb25hbCBwcm9wZXJ0aWVzIGRlZmluZWQgaW4KLWV0aGVybmV0LnR4
+dCwgYXMgcHJvdmlkZWQgYnkgdGhlIG9mX2dldF9tYWNfYWRkcmVzcyBBUEkgYW5kIG9ubHkgaWYg
+ZWZ1c2UtbWFjCi1pcyBzZXQgdG8gMC4gSWYgYW55IG9mIHRoZSBvcHRpb25hbCBNQUMgYWRkcmVz
+cyBwcm9wZXJ0aWVzIGFyZSBub3QgcHJlc2VudCwKLXRoZW4gdGhlIGRyaXZlciB3aWxsIHVzZSBy
+YW5kb20gTUFDIGFkZHJlc3MuCitldGhlcm5ldC50eHQgYW5kIG9ubHkgaWYgZWZ1c2UtbWFjIGlz
+IHNldCB0byAwLiBJZiBhbGwgb2YgdGhlIG9wdGlvbmFsIE1BQworYWRkcmVzcyBwcm9wZXJ0aWVz
+IGFyZSBub3QgcHJlc2VudCwgdGhlbiB0aGUgZHJpdmVyIHdpbGwgdXNlIGEgcmFuZG9tIE1BQwor
+YWRkcmVzcy4KIAogRXhhbXBsZSBiaW5kaW5nOgogCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNzL21lZGlhdGVrLG10NzYudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9tZWRpYXRlayxtdDc2
+LnR4dAppbmRleCA3NDY2NTUwMmY0Y2YuLjdlNjc1ZGFmYzI1NiAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9tZWRpYXRlayxtdDc2LnR4
+dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNzL21l
+ZGlhdGVrLG10NzYudHh0CkBAIC0xNiw4ICsxNiw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAt
+IGllZWU4MDIxMS1mcmVxLWxpbWl0OiBTZWUgaWVlZTgwMjExLnR4dAogLSBtZWRpYXRlayxtdGQt
+ZWVwcm9tOiBTcGVjaWZ5IGEgTVREIHBhcnRpdGlvbiArIG9mZnNldCBjb250YWluaW5nIEVFUFJP
+TSBkYXRhCiAKLVRoZSBkcml2ZXIgaXMgdXNpbmcgb2ZfZ2V0X21hY19hZGRyZXNzIEFQSSwgc28g
+dGhlIE1BQyBhZGRyZXNzIGNhbiBiZSBhcyB3ZWxsCi1iZSBzZXQgd2l0aCBjb3JyZXNwb25kaW5n
+IG9wdGlvbmFsIHByb3BlcnRpZXMgZGVmaW5lZCBpbiBuZXQvZXRoZXJuZXQudHh0LgorVGhlIE1B
+QyBhZGRyZXNzIGNhbiBhcyB3ZWxsIGJlIHNldCB3aXRoIGNvcnJlc3BvbmRpbmcgb3B0aW9uYWwg
+cHJvcGVydGllcworZGVmaW5lZCBpbiBuZXQvZXRoZXJuZXQudHh0LgogCiBPcHRpb25hbCBub2Rl
+czoKIC0gbGVkOiBQcm9wZXJ0aWVzIGZvciBhIGNvbm5lY3RlZCBMRUQKLS0gCjEuOS4xCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
