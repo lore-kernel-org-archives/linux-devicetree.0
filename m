@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 2/6] pinctrl: generic: add new 'drive-strength-microamp' property support
-Date: Fri, 10 May 2019 10:23:20 +0200
-Message-ID: <20190510082324.21181-3-glaroque@baylibre.com>
+Subject: [PATCH v5 5/6] pinctrl: meson: add support of drive-strength-microamp
+Date: Fri, 10 May 2019 10:23:23 +0200
+Message-ID: <20190510082324.21181-6-glaroque@baylibre.com>
 References: <20190510082324.21181-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
@@ -10,54 +10,207 @@ To: linus.walleij@linaro.org, khilman@baylibre.com
 Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add drive-strength-microamp property support to allow drive strength in uA
+drive-strength-microamp is a new feature needed for G12A SoC.
+the default DS setting after boot is usually 500uA and it is not enough for
+many functions. We need to be able to set the drive strength to reliably
+enable things like MMC, I2C, etc ...
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/pinctrl/pinconf-generic.c       | 2 ++
- include/linux/pinctrl/pinconf-generic.h | 3 +++
- 2 files changed, 5 insertions(+)
+ drivers/pinctrl/meson/pinctrl-meson.c | 99 +++++++++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.h | 18 ++++-
+ 2 files changed, 116 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index b4f7f8a458ea..d0cbdb1ad76a 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -39,6 +39,7 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA", true),
-+	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH_UA, "output drive strength", "uA", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
-@@ -167,6 +168,7 @@ static const struct pinconf_generic_params dt_params[] = {
- 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
- 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
- 	{ "drive-strength", PIN_CONFIG_DRIVE_STRENGTH, 0 },
-+	{ "drive-strength-microamp", PIN_CONFIG_DRIVE_STRENGTH_UA, 0 },
- 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
- 	{ "input-disable", PIN_CONFIG_INPUT_ENABLE, 0 },
- 	{ "input-enable", PIN_CONFIG_INPUT_ENABLE, 1 },
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 6c0680641108..72d06d6a3099 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -55,6 +55,8 @@
-  *	push-pull mode, the argument is ignored.
-  * @PIN_CONFIG_DRIVE_STRENGTH: the pin will sink or source at most the current
-  *	passed as argument. The argument is in mA.
-+ * @PIN_CONFIG_DRIVE_STRENGTH_UA: the pin will sink or source at most the current
-+ *	passed as argument. The argument is in uA.
-  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
-  *	which means it will wait for signals to settle when reading inputs. The
-  *	argument gives the debounce time in usecs. Setting the
-@@ -112,6 +114,7 @@ enum pin_config_param {
- 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
- 	PIN_CONFIG_DRIVE_PUSH_PULL,
- 	PIN_CONFIG_DRIVE_STRENGTH,
-+	PIN_CONFIG_DRIVE_STRENGTH_UA,
- 	PIN_CONFIG_INPUT_DEBOUNCE,
- 	PIN_CONFIG_INPUT_ENABLE,
- 	PIN_CONFIG_INPUT_SCHMITT,
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 8ea5c1527064..33b4b141baac 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -220,11 +220,54 @@ static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
+ 	return 0;
+ }
+ 
++static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
++					    unsigned int pin,
++					    u16 drive_strength_ua)
++{
++	struct meson_bank *bank;
++	unsigned int reg, bit, ds_val;
++	int ret;
++
++	if (!pc->reg_ds) {
++		dev_err(pc->dev, "drive-strength not supported\n");
++		return -ENOTSUPP;
++	}
++
++	ret = meson_get_bank(pc, pin, &bank);
++	if (ret)
++		return ret;
++
++	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
++	bit = bit << 1;
++
++	if (drive_strength_ua <= 500) {
++		ds_val = MESON_PINCONF_DRV_500UA;
++	} else if (drive_strength_ua <= 2500) {
++		ds_val = MESON_PINCONF_DRV_2500UA;
++	} else if (drive_strength_ua <= 3000) {
++		ds_val = MESON_PINCONF_DRV_3000UA;
++	} else if (drive_strength_ua <= 4000) {
++		ds_val = MESON_PINCONF_DRV_4000UA;
++	} else {
++		dev_warn_once(pc->dev,
++			      "pin %u: invalid drive-strength : %d , default to 4mA\n",
++			      pin, drive_strength_ua);
++		ds_val = MESON_PINCONF_DRV_4000UA;
++	}
++
++	ret = regmap_update_bits(pc->reg_ds, reg, 0x3 << bit, ds_val << bit);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+ 			     unsigned long *configs, unsigned num_configs)
+ {
+ 	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+ 	enum pin_config_param param;
++	unsigned int drive_strength_ua;
+ 	int i, ret;
+ 
+ 	for (i = 0; i < num_configs; i++) {
+@@ -246,6 +289,14 @@ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+ 			if (ret)
+ 				return ret;
+ 			break;
++		case PIN_CONFIG_DRIVE_STRENGTH_UA:
++			drive_strength_ua =
++				pinconf_to_config_argument(configs[i]);
++			ret = meson_pinconf_set_drive_strength
++				(pc, pin, drive_strength_ua);
++			if (ret)
++				return ret;
++			break;
+ 		default:
+ 			return -ENOTSUPP;
+ 		}
+@@ -288,12 +339,55 @@ static int meson_pinconf_get_pull(struct meson_pinctrl *pc, unsigned int pin)
+ 	return conf;
+ }
+ 
++static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
++					    unsigned int pin,
++					    u16 *drive_strength_ua)
++{
++	struct meson_bank *bank;
++	unsigned int reg, bit;
++	unsigned int val;
++	int ret;
++
++	if (!pc->reg_ds)
++		return -ENOTSUPP;
++
++	ret = meson_get_bank(pc, pin, &bank);
++	if (ret)
++		return ret;
++
++	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
++
++	ret = regmap_read(pc->reg_ds, reg, &val);
++	if (ret)
++		return ret;
++
++	switch ((val >> bit) & 0x3) {
++	case MESON_PINCONF_DRV_500UA:
++		*drive_strength_ua = 500;
++		break;
++	case MESON_PINCONF_DRV_2500UA:
++		*drive_strength_ua = 2500;
++		break;
++	case MESON_PINCONF_DRV_3000UA:
++		*drive_strength_ua = 3000;
++		break;
++	case MESON_PINCONF_DRV_4000UA:
++		*drive_strength_ua = 4000;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
+ 			     unsigned long *config)
+ {
+ 	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+ 	enum pin_config_param param = pinconf_to_config_param(*config);
+ 	u16 arg;
++	int ret;
+ 
+ 	switch (param) {
+ 	case PIN_CONFIG_BIAS_DISABLE:
+@@ -304,6 +398,11 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
+ 		else
+ 			return -EINVAL;
+ 		break;
++	case PIN_CONFIG_DRIVE_STRENGTH_UA:
++		ret = meson_pinconf_get_drive_strength(pc, pin, &arg);
++		if (ret)
++			return ret;
++		break;
+ 	default:
+ 		return -ENOTSUPP;
+ 	}
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index 5eaab925f427..cd955fb7c2ce 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -71,9 +71,20 @@ enum meson_reg_type {
+ 	REG_DIR,
+ 	REG_OUT,
+ 	REG_IN,
++	REG_DS,
+ 	NUM_REG,
+ };
+ 
++/**
++ * enum meson_pinconf_drv - value of drive-strength supported
++ */
++enum meson_pinconf_drv {
++	MESON_PINCONF_DRV_500UA,
++	MESON_PINCONF_DRV_2500UA,
++	MESON_PINCONF_DRV_3000UA,
++	MESON_PINCONF_DRV_4000UA,
++};
++
+ /**
+  * struct meson bank
+  *
+@@ -132,7 +143,8 @@ struct meson_pinctrl {
+ 		.num_groups = ARRAY_SIZE(fn ## _groups),		\
+ 	}
+ 
+-#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib)	\
++#define BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib,     \
++		dsr, dsb)                                                      \
+ 	{								\
+ 		.name		= n,					\
+ 		.first		= f,					\
+@@ -145,9 +157,13 @@ struct meson_pinctrl {
+ 			[REG_DIR]	= { dr, db },			\
+ 			[REG_OUT]	= { or, ob },			\
+ 			[REG_IN]	= { ir, ib },			\
++			[REG_DS]	= { dsr, dsb },			\
+ 		},							\
+ 	 }
+ 
++#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib) \
++	BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib, 0, 0)
++
+ #define MESON_PIN(x) PINCTRL_PIN(x, #x)
+ 
+ /* Common pmx functions */
 -- 
 2.17.1
