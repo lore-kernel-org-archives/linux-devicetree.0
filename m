@@ -1,82 +1,44 @@
-From: michael.kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 8/8] thermal: mediatek: use spinlock to protect PTPCORESEL
-Date: Fri, 10 May 2019 21:27:06 +0800
-Message-ID: <1557494826-6044-9-git-send-email-michael.kao@mediatek.com>
-References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com>
+From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+Subject: [PATCH v2 0/5] Add supply property for DSI controller
+Date: Fri, 10 May 2019 16:20:18 +0200
+Message-ID: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1557494826-6044-1-git-send-email-michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, hsinyi-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "michael.kao" <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, Vincent Abriou <vincent.abriou@st.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The driver of thermal and svs will use the
-same register for the project which should select
-bank before reading sensor value.
-
-Signed-off-by: Michael.Kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/thermal/mtk_thermal.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index d5c78b0..6d7e839 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -30,6 +30,7 @@
- #include <linux/thermal.h>
- #include <linux/reset.h>
- #include <linux/types.h>
-+#include <linux/power/mtk_svs.h>
- 
- /* AUXADC Registers */
- #define AUXADC_CON1_SET_V	0x008
-@@ -267,7 +268,7 @@ struct mtk_thermal {
- 	struct clk *clk_peri_therm;
- 	struct clk *clk_auxadc;
- 	/* lock: for getting and putting banks */
--	struct mutex lock;
-+	unsigned long flags;
- 
- 	/* Calibration values */
- 	s32 adc_ge;
-@@ -566,7 +567,7 @@ static void mtk_thermal_get_bank(struct mtk_thermal_bank *bank)
- 	u32 val;
- 
- 	if (mt->conf->need_switch_bank) {
--		mutex_lock(&mt->lock);
-+		mt->flags = claim_mtk_svs_lock();
- 
- 		val = readl(mt->thermal_base + PTPCORESEL);
- 		val &= ~0xf;
-@@ -586,7 +587,7 @@ static void mtk_thermal_put_bank(struct mtk_thermal_bank *bank)
- 	struct mtk_thermal *mt = bank->mt;
- 
- 	if (mt->conf->need_switch_bank)
--		mutex_unlock(&mt->lock);
-+		release_mtk_svs_lock(mt->flags);
- }
- 
- /**
-@@ -941,8 +942,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	mutex_init(&mt->lock);
--
- 	mt->dev = &pdev->dev;
- 
- 	auxadc = of_parse_phandle(np, "mediatek,auxadc", 0);
--- 
-2.6.4
+VGhlIERTSSBjb250cm9sbGVyIG5lZWRzIGEgbmV3IHByb3BlcnR5IHRoYXQgcG93ZXJzIGl0cyBw
+aHlzaWNhbCBsYXllci4KQmluZGluZyBoYXMgYmVlbiB1cGRhdGVkIHRvIGRvY3VtZW50ZWQgdGhp
+cyBwcm9wZXJ0eS4KRGV2aWNlIHRyZWUgb2Ygc3RtMzJtcDE1N2Mgc29jLgpNb3ZlIHJlZzE4ICYg
+cmVnMTEgdG8gc3RtMzJtcDE1N2MgZGV2aWNlIHRyZWUgZmlsZS4KUmVtb3ZlIHByb3BlcnR5IHBo
+eS1kc2ktc3VwcGx5IHByb3BlcnR5IHRvIHN0bTMybXAxNTdjLWRrMi5kdHMgZmlsZS4KCgpDaGFu
+Z2VzIGluIHYyOgotIHJlbmFtZSBwYXRjaCBkcm0vc3RtOiBkc2k6IGFkZCBzdXBwb3J0IG9mIGFu
+IG9wdGlvbmFsIHJlZ3VsYXRvcgotIHJld29yayBkd19taXBpX2RzaS1zdG0gcHJvYmUgc2VxdWVu
+Y2UKCllhbm5pY2sgRmVydHLDqSAoNSk6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHN0bTMyOiBh
+ZGQgc3VwcGx5IHByb3BlcnR5IHRvIERTSSBjb250cm9sbGVyCiAgZHJtL3N0bTogZHNpOiBhZGQg
+c3VwcG9ydCBvZiBhbiBvcHRpb25hbCByZWd1bGF0b3IKICBBUk06IGR0czogc3RtMzI6IGFkZCBw
+aHktZHNpLXN1cHBseSBwcm9wZXJ0eSBvbiBzdG0zMm1wMTU3YwogIEFSTTogZHRzOiBzdG0zMjog
+bW92ZSBmaXhlIHJlZ3VsYXRvcnMgcmVnMTEgJiByZWcxOAogIEFSTTogZHRzOiBzdG0zMjogcmVt
+b3ZlIHBoeS1kc2ktc3VwcGx5IHByb3BlcnR5IG9uIHN0bTMybXAxNTdjLWRrMgogICAgYm9hcmQK
+CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0ICAgIHwg
+IDMgKysrCiBhcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1kazIuZHRzICAgICAgICAgICAg
+ICAgIHwgIDkgLS0tLS0tLS0tCiBhcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1lZDEuZHRz
+ICAgICAgICAgICAgICAgIHwgMTYgLS0tLS0tLS0tLS0tLS0tLQogYXJjaC9hcm0vYm9vdC9kdHMv
+c3RtMzJtcDE1N2MuZHRzaSAgICAgICAgICAgICAgICAgICB8IDE3ICsrKysrKysrKysrKysrKysr
+CiBkcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jICAgICAgICAgICAgICB8IDQ1
+ICsrKysrKysrKysrKysrKysrKystLS0KIDUgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygr
+KSwgMjUgZGVsZXRpb25zKC0pCgotLQoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVs
