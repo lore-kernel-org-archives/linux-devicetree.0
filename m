@@ -1,146 +1,200 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH net 0/3] add property "nvmem_macaddr_swap" to swap
- macaddr bytes order
-Date: Fri, 10 May 2019 13:31:55 +0200
-Message-ID: <20190510113155.mvpuhe4yzxdaanei@flea>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v2] arm64: dts: sdm845: Add PSCI cpuidle low power states
+Date: Fri, 10 May 2019 17:02:34 +0530
+Message-ID: <CAHLCerOsQVHhFfkDX-+dJ9SZjUzW64+B85S6cLMHjqhRBoW1vw@mail.gmail.com>
+References: <1540920209-28954-1-git-send-email-rplsssn@codeaurora.org> <CAHLCerPi4Fd1eoPY=Gvo=FkVTGOt=ummAqHfWBi645Yb0O5-sg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xg7fylka47a3m4qs"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190510112822.GT81826@meh.true.cz>
-Sender: netdev-owner@vger.kernel.org
-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc: Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHLCerPi4Fd1eoPY=Gvo=FkVTGOt=ummAqHfWBi645Yb0O5-sg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, mkshah@codeaurora.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, ilina@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 8, 2019 at 3:50 AM Amit Kucheria
+<amit.kucheria@verdurent.com> wrote:
+>
+> On Tue, Oct 30, 2018 at 10:53 PM Raju P.L.S.S.S.N
+> <rplsssn@codeaurora.org> wrote:
+> >
+> > Add device bindings for cpuidle states for cpu devices.
+>
+> Raju: Did this patch fall through the cracks? It would be nice to land
+> this while Lina works on setting up the infrastructure to do
+> hierarchical power domains.
 
---xg7fylka47a3m4qs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+After talking offline with Raju, I've added this patch with some
+cleanups to my qcom cpuidle series.
 
-On Fri, May 10, 2019 at 01:28:22PM +0200, Petr =C5=A0tetiar wrote:
-> Andy Duan <fugang.duan@nxp.com> [2019-05-10 08:23:58]:
+> > Cc: <devicetree@vger.kernel.org>
+> > Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> > ---
+> > Changes in v2
+> >  - Address comments from Doug
+> > ---
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 62 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 0c9a2aa..3a8381e 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -96,6 +96,7 @@
+> >                         reg = <0x0 0x0>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_0>;
+> > +                       cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
 >
-> Hi Andy,
+> May I suggest using more generic names here instead of C0_CPU_PD and
+> move the QC-specific description to the idle-state-name property? C0
+> and C4 isn't easy to understand at a glance. Neither is PD and RPD.
 >
-> you've probably forget to Cc some maintainers and mailing lists, so I'm
-> adding them now to the Cc loop. This patch series should be posted against
-> net-next tree as per netdev FAQ[0], but you've to wait little bit as
-> net-next is currently closed for the new submissions and you would need to
-> resend it anyway.
+> Something like big_cpu_retention, big_cpu_sleep, little_cpu_retention,
+> little_cpu_sleep, cluster_sleep?
+> Or big_cpu_idle_0, big_cpu_idle_1, big_cpu_idle_2 for states with
+> increasing breakeven times.
 >
-> 0. https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+> I've commented below on what it might look like.
 >
-> > ethernet controller driver call .of_get_mac_address() to get
-> > the mac address from devictree tree, if these properties are
-> > not present, then try to read from nvmem. i.MX6x/7D/8MQ/8MM
-> > platforms ethernet MAC address read from nvmem ocotp eFuses,
-> > but it requires to swap the six bytes order.
+> >                         L2_0: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -111,6 +112,7 @@
+> >                         reg = <0x0 0x100>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_100>;
+> > +                       cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+> >                         L2_100: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -123,6 +125,7 @@
+> >                         reg = <0x0 0x200>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_200>;
+> > +                       cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+> >                         L2_200: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -135,6 +138,7 @@
+> >                         reg = <0x0 0x300>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_300>;
+> > +                       cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
+> >                         L2_300: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -147,6 +151,7 @@
+> >                         reg = <0x0 0x400>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_400>;
+> > +                       cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+> >                         L2_400: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -159,6 +164,7 @@
+> >                         reg = <0x0 0x500>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_500>;
+> > +                       cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+> >                         L2_500: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -171,6 +177,7 @@
+> >                         reg = <0x0 0x600>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_600>;
+> > +                       cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+> >                         L2_600: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> > @@ -183,11 +190,66 @@
+> >                         reg = <0x0 0x700>;
+> >                         enable-method = "psci";
+> >                         next-level-cache = <&L2_700>;
+> > +                       cpu-idle-states = <&C4_CPU_PD &C4_CPU_RPD &CLUSTER_PD>;
+> >                         L2_700: l2-cache {
+> >                                 compatible = "cache";
+> >                                 next-level-cache = <&L3_0>;
+> >                         };
+> >                 };
+> > +
+> > +               idle-states {
+> > +                       entry-method = "psci";
+> > +
+> > +                       C0_CPU_PD: c0-power-down {
 >
-> Thanks for bringing up this topic, as I would like to extend the
-> functionality as well, but I'm still unsure how to tackle this and where,
-> so I'll (ab)use this opportunity to bring other use cases I would like to
-> cover in the future, so we could better understand the needs.
+> big_cpu_retention: big-cpu-retention
 >
-> This reverse byte order format/layout is one of a few other storage forma=
-ts
-> currently used by vendors, some other (creative) vendors are currently
-> providing MAC addresses in NVMEMs as ASCII text in following two formats
-> (hexdump -C /dev/mtdX):
+> > +                               compatible = "arm,idle-state";
+> > +                               arm,psci-suspend-param = <0x40000003>;
+> > +                               entry-latency-us = <350>;
+> > +                               exit-latency-us = <461>;
+> > +                               min-residency-us = <1890>;
+> > +                               local-timer-stop;
+> > +                               idle-state-name = "power-down";
 >
->  a) 0090FEC9CBE5 - MAC address stored as ASCII without colon between octe=
-ts
+> "big-cpu-power-down"
 >
->   00000090  57 2e 4c 41 4e 2e 4d 41  43 2e 41 64 64 72 65 73  |W.LAN.MAC.=
-Addres|
->   000000a0  73 3d 30 30 39 30 46 45  43 39 43 42 45 35 00 48  |s=3D0090FE=
-C9CBE5.H|
->   000000b0  57 2e 4c 41 4e 2e 32 47  2e 30 2e 4d 41 43 2e 41  |W.LAN.2G.0=
-=2EMAC.A|
+> > +                       };
+> > +
+> > +                       C0_CPU_RPD: c0-rail-power-down {
 >
->   (From https://github.com/openwrt/openwrt/pull/1448#issuecomment-4424766=
-95)
+> big_cpu_sleep: big-cpu-sleep
 >
->  b) D4:EE:07:33:6C:20 - MAC address stored as ASCII with colon between oc=
-tets
+> > +                               compatible = "arm,idle-state";
+> > +                               arm,psci-suspend-param = <0x40000004>;
+> > +                               entry-latency-us = <360>;
+> > +                               exit-latency-us = <531>;
+> > +                               min-residency-us = <3934>;
+> > +                               local-timer-stop;
+> > +                               idle-state-name = "rail-power-down";
 >
->   00000180  66 61 63 5f 6d 61 63 20  3d 20 44 34 3a 45 45 3a  |fac_mac =
-=3D D4:EE:|
->   00000190  30 37 3a 33 33 3a 36 43  3a 32 30 0a 42 44 49 4e  |07:33:6C:2=
-0.BDIN|
+> "big-cpu-rail-power-down"
 >
->   (From https://github.com/openwrt/openwrt/pull/1906#issuecomment-4838819=
-11)
+> > +                       };
+> > +
+> > +                       C4_CPU_PD: c4-power-down {
 >
-> > The patch set is to add property "nvmem_macaddr_swap" to swap
-> > macaddr bytes order.
+> little_cpu_retention: little-cpu-retention
 >
-> so it would allow following DT construct (simplified):
+> > +                               compatible = "arm,idle-state";
+> > +                               arm,psci-suspend-param = <0x40000003>;
+> > +                               entry-latency-us = <264>;
+> > +                               exit-latency-us = <621>;
+> > +                               min-residency-us = <952>;
+> > +                               local-timer-stop;
+> > +                               idle-state-name = "power-down";
 >
->  &eth0 {
-> 	nvmem-cells =3D <&eth0_addr>;
-> 	nvmem-cell-names =3D "mac-address";
-> 	nvmem_macaddr_swap;
->  };
+> "little-cpu-power-down" and so and so forth. You get the idea.
 >
-> I'm not sure about the `nvmem_macaddr_swap` property name, as currently t=
-here
-> are no other properties with underscores, so it should be probably named =
-as
-> `nvmem-macaddr-swap`. DT specs permits use of the underscores, but the
-> estabilished convention is probably prefered.
->
-> In order to cover all above mentioned use cases, it would make more sense
-> to add a description of the MAC address layout to the DT and use this
-> information to properly postprocess the NVMEM content into usable MAC
-> address?
->
-> Something like this?
->
->  - nvmem-cells: phandle, reference to an nvmem node for the MAC address
->  - nvmem-cell-names: string, should be "mac-address" if nvmem is to be us=
-ed
->  - nvmem-mac-address-layout: string, specifies MAC address storage layout.
->    Supported values are: "binary", "binary-swapped", "ascii", "ascii-deli=
-mited".
->    "binary" is the default.
->
-> Or perhaps something like this?
->
->  - nvmem-cells: phandle, reference to an nvmem node for the MAC address
->  - nvmem-cell-names: string, should be any of the supported values.
->    Supported values are: "mac-address", "mac-address-swapped",
->    "mac-address-ascii", "mac-address-ascii-delimited".
->
-> I'm more inclined towards the first proposed solution, as I would like to
-> propose MAC address octet incrementation feature in the future, so it wou=
-ld
-> become:
->
->  - nvmem-cells: phandle, reference to an nvmem node for the MAC address
->  - nvmem-cell-names: string, should be "mac-address" if nvmem is to be us=
-ed
->  - nvmem-mac-address-layout: string, specifies MAC address storage layout.
->    Supported values are: "binary", "binary-swapped", "ascii", "ascii-deli=
-mited".
->    "binary" is the default.
->  - nvmem-mac-address-increment: number, value by which should be
->    incremented MAC address octet, could be negative value as well.
->  - nvmem-mac-address-increment-octet: number, valid values 0-5, default i=
-s 5.
->    Specifies MAC address octet used for `nvmem-mac-address-increment`.
->
-> What do you think?
-
-It looks to me that it should be abstracted away by the nvmem
-interface and done at the provider level, not the customer.
-
-Maxime
---xg7fylka47a3m4qs--
+> > +                       };
+> > +
+> > +                       C4_CPU_RPD: c4-rail-power-down {
+> > +                               compatible = "arm,idle-state";
+> > +                               arm,psci-suspend-param = <0x40000004>;
+> > +                               entry-latency-us = <702>;
+> > +                               exit-latency-us = <1061>;
+> > +                               min-residency-us = <4488>;
+> > +                               local-timer-stop;
+> > +                               idle-state-name = "rail-power-down";
+> > +                       };
+> > +
+> > +                       CLUSTER_PD: cluster-power-down {
+> > +                               compatible = "arm,idle-state";
+> > +                               arm,psci-suspend-param = <0x400000F4>;
+> > +                               entry-latency-us = <3263>;
+> > +                               exit-latency-us = <6562>;
+> > +                               min-residency-us = <9987>;
+> > +                               local-timer-stop;
+> > +                               idle-state-name = "cluster-power-down";
+> > +                       };
+> > +               };
+> >         };
+> >
+> >         pmu {
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of the Code Aurora Forum, hosted by The Linux Foundation.
+> >
