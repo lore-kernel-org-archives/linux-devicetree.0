@@ -1,71 +1,84 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: [PATCH v3 0/3] usb: gadget: Add support for disabling U1 and U2 entries
-Date: Fri, 10 May 2019 12:37:25 +0530
-Message-ID: <1557472048-10536-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
+ zone node
+Date: Fri, 10 May 2019 09:16:32 +0200
+Message-ID: <9fb2e306-38c7-2af7-5470-ff5bc4e23370@linaro.org>
+References: <20190423022507.34969-1-andy.tang@nxp.com>
+ <20190510031335.GD15856@dragon>
+ <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, "Claus H. Stovgaard" <cst@phaseone.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, v.anuragkumar@gmail.com, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+To: Andy Tang <andy.tang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Gadget applications may have a requirement to disable the U1 and U2
-entry based on the usecase. Below are few usecases where the disabling
-U1/U2 entries may be possible.
+On 10/05/2019 05:40, Andy Tang wrote:
+>> -----Original Message-----
+>> From: Shawn Guo <shawnguo@kernel.org>
+>> Sent: 2019Äê5ÔÂ10ÈÕ 11:14
+>> To: Andy Tang <andy.tang@nxp.com>
+>> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+>> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linux-pm@vger.kernel.org; daniel.lezcano@linaro.org; rui.zhang@intel.com;
+>> edubezval@gmail.com
+>> Subject: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
+>> zone node
+>>
+>> Caution: EXT Email
+>>
+>> On Tue, Apr 23, 2019 at 10:25:07AM +0800, Yuantian Tang wrote:
+>>> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
+>>> cluster sensor is used to monitor the temperature of core and SoC
+>>> platform is for platform. The current dts only support the first sensor.
+>>> This patch adds the second sensor node to dts to enable it.
+>>>
+>>> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+>>> ---
+>>> v6:
+>>>         - add cooling device map to cpu0-7 in platform node.
+> I like to explain a little. I think it makes sense that multiple thermal zone map to same cooling device. 
+> In this way, no matter which thermal zone raises a temp alarm, it can call cooling device to chill out.
+> I also asked cpufreq maintainer about the cooling map issue, he think it would be fine.
+> I have tested and no issue found. 
+> 
+> Daniel, what's your thought?
 
-Usecase 1:
-When combining dwc3 with an redriver for a USB Type-C device solution, it
-sometimes have problems with leaving U1/U2 for certain hosts, resulting in
-link training errors and reconnects. For this U1/U2 state entries may be
-avoided.
+If there are multiple thermal zones, they will be managed by different
+instances of a thermal governor. Each instances will act on the shared
+cooling device and will collide in their decisions:
 
-Usecase 2:
-When performing performance benchmarking on mass storage gadget the
-U1 and U2 entries can be disabled.
+ - If the sensors are closed, their behavior will be similar regarding
+the temperature. The governors may take the same decision for the
+cooling device. But in such case having just one thermal zone managed is
+enough.
 
-Usecase 3:
-When periodic transfers like ISOC transfers are used with bInterval
-of 1 which doesn't require the link to enter into U1 or U2 state entry
-(since ping is issued from host for every uframe interval). In this
-case the U1 and U2 entry can be disabled.
+ - If the sensors are not closed, their behavior will be different
+regarding the temperature. The governors will take different decision
+regarding the cooling device (one will decrease the freq, other will
+increase the freq).
 
-Disablement of U1/U2 can be done by setting U1DevExitLat and U2DevExitLat
-values to 0 in the BOS descriptor. Host on seeing 0 value for U1DevExitLat
-and U2DevExitLat, it doesn't send SET_SEL requests to the gadget. There
-may be some hosts which may send SET_SEL requests even after seeing 0 in
-the UxDevExitLat of BOS descriptor. To aviod U1/U2 entries for these type
-of hosts, dwc3 controller can be programmed to reject those U1/U2 requests
-by not enabling ACCEPTUxENA bits in DCTL register.
+As the thermal governors are not able to manage several thermal zones
+and there is one cooling device (the cpu cooling device), this setup
+won't work as expected IMO.
 
-This patch series updates the same.
+The setup making sense is having a thermal zone per 'cluster' and a
+cooling device per 'cluster'. That means the platform has one clock line
+per 'cluster'. The thermal management happens in a self-contained
+thermal zone (one cooling device - one governor - one thermal zone).
 
-Changes in v3:
-	1. As suggested by Thinh Nguyen modified the logic for rejecting only
-	   SET_FEATURE(enable U1/U2) from host.
-	2. Used cpu_to_le16() before assigning the value to bU2DevExitLat.
+In the case of HMP, other combinations are possible to be optimal.
 
-Changes in v2:
-	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
-	   to "snps,dis-u1-entry-quirk"
-	2. Merged the changes done by Claus H. Stovgaard in ep0.c for rejecting
-	   U1/U2 requests into this patch. Changes done by Claus can be found
-	   here https://marc.info/?l=linux-kernel&m=155722068820568&w=2
 
-Anurag Kumar Vulisha (3):
-  doc: dt: bindings: usb: dwc3: Update entries for disabling U1 and U2
-  usb: gadget: send usb_gadget as an argument in get_config_params
-  usb: dwc3: gadget: Add support for disabling U1 and U2 entries
-
- Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
- drivers/usb/dwc3/core.c                        |  4 ++++
- drivers/usb/dwc3/core.h                        |  4 ++++
- drivers/usb/dwc3/ep0.c                         |  9 ++++++++-
- drivers/usb/dwc3/gadget.c                      | 20 ++++++++++++++++++++
- drivers/usb/dwc3/gadget.h                      |  6 ++++++
- drivers/usb/gadget/composite.c                 |  2 +-
- include/linux/usb/gadget.h                     |  3 ++-
- 8 files changed, 47 insertions(+), 3 deletions(-)
 
 -- 
-2.1.1
+ <http://www.linaro.org/> Linaro.org ©¦ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
