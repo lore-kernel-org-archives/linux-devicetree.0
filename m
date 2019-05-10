@@ -1,160 +1,110 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCHv1 8/8] arm64: dts: qcom: sdm845: Add PSCI cpuidle low power states
-Date: Fri, 10 May 2019 16:59:46 +0530
-Message-ID: <044cd74e461a1dd7934f44531802f4b557264365.1557486950.git.amit.kucheria@linaro.org>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+Date: Fri, 10 May 2019 17:01:12 +0530
+Message-ID: <CAHLCerMnXdPvDNpdoJNix9JMzztB+bNnENW064=qGEwhqnicFQ@mail.gmail.com>
+References: <20190506193115.20909-1-niklas.cassel@linaro.org>
+ <20190507053547.GE16052@vkoul-mobl> <20190507065555.GB2085@tuxbook-pro>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1557486950.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1557486950.git.amit.kucheria@linaro.org>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190507065555.GB2085@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, devicetree@vger.kernel.org, mkshah@codeaurora.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+On Tue, May 7, 2019 at 12:25 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 06 May 22:35 PDT 2019, Vinod Koul wrote:
+>
+> > On 06-05-19, 21:31, Niklas Cassel wrote:
+> > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
+> > >
+> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > index ffedf9640af7..f9db9f3ee10c 100644
+> > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > @@ -31,6 +31,7 @@
+> > >                     reg = <0x100>;
+> > >                     enable-method = "psci";
+> > >                     next-level-cache = <&L2_0>;
+> > > +                   cpu-idle-states = <&CPU_PC>;
+> > >             };
+> > >
+> > >             CPU1: cpu@101 {
+> > > @@ -39,6 +40,7 @@
+> > >                     reg = <0x101>;
+> > >                     enable-method = "psci";
+> > >                     next-level-cache = <&L2_0>;
+> > > +                   cpu-idle-states = <&CPU_PC>;
+> > >             };
+> > >
+> > >             CPU2: cpu@102 {
+> > > @@ -47,6 +49,7 @@
+> > >                     reg = <0x102>;
+> > >                     enable-method = "psci";
+> > >                     next-level-cache = <&L2_0>;
+> > > +                   cpu-idle-states = <&CPU_PC>;
+> > >             };
+> > >
+> > >             CPU3: cpu@103 {
+> > > @@ -55,12 +58,24 @@
+> > >                     reg = <0x103>;
+> > >                     enable-method = "psci";
+> > >                     next-level-cache = <&L2_0>;
+> > > +                   cpu-idle-states = <&CPU_PC>;
+> > >             };
+> > >
+> > >             L2_0: l2-cache {
+> > >                     compatible = "cache";
+> > >                     cache-level = <2>;
+> > >             };
+> > > +
+> > > +           idle-states {
+> >
+> > Since we are trying to sort the file per address and
+> > alphabetically, it would be great if this can be moved before l2-cache
+> > :)
+> >
+>
+> Picked up, with the order adjusted.
+>
+> > Other than that this lgtm
+> >
+>
+> I presume that lgtm == Reviewed-by...
+>
+> Thanks,
+> Bjorn
 
-Add device bindings for cpuidle states for cpu devices.
+Hi Bjorn,
 
-[amit: rename the idle-states to more generic names and fixups]
+Please drop this patch and check the one I've sent as part of the qcom
+cpuidle series?
 
-Cc: <devicetree@vger.kernel.org>
-Cc: <mkshah@codeaurora.org>
-Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+Regards,
+Amit
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 5308f1671824..2c8c54e4bd77 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -119,6 +119,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_PD &LITTLE_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
-@@ -136,6 +137,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_PD &LITTLE_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_100>;
-@@ -150,6 +152,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_PD &LITTLE_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_200>;
-@@ -164,6 +167,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_PD &LITTLE_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_300>;
-@@ -178,6 +182,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_PD &BIG_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_400>;
-@@ -192,6 +197,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_PD &BIG_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_500>;
-@@ -206,6 +212,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_PD &BIG_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_600>;
-@@ -220,6 +227,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_PD &BIG_CPU_RPD &CLUSTER_PD>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_700>;
-@@ -228,6 +236,60 @@
- 				next-level-cache = <&L3_0>;
- 			};
- 		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			LITTLE_CPU_PD: little-power-down {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <350>;
-+				exit-latency-us = <461>;
-+				min-residency-us = <1890>;
-+				local-timer-stop;
-+			};
-+
-+			LITTLE_CPU_RPD: little-rail-power-down {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <360>;
-+				exit-latency-us = <531>;
-+				min-residency-us = <3934>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_PD: big-power-down {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <264>;
-+				exit-latency-us = <621>;
-+				min-residency-us = <952>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_RPD: big-rail-power-down {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <702>;
-+				exit-latency-us = <1061>;
-+				min-residency-us = <4488>;
-+				local-timer-stop;
-+			};
-+
-+			CLUSTER_PD: cluster-power-down {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "cluster-power-down";
-+				arm,psci-suspend-param = <0x400000F4>;
-+				entry-latency-us = <3263>;
-+				exit-latency-us = <6562>;
-+				min-residency-us = <9987>;
-+				local-timer-stop;
-+			};
-+		};
- 	};
- 
- 	pmu {
--- 
-2.17.1
+> > > +                   CPU_PC: pc {
+> > > +                           compatible = "arm,idle-state";
+> > > +                           arm,psci-suspend-param = <0x40000003>;
+> > > +                           entry-latency-us = <125>;
+> > > +                           exit-latency-us = <180>;
+> > > +                           min-residency-us = <595>;
+> > > +                           local-timer-stop;
+> > > +                   };
+> > > +           };
+> > >     };
+> > >
+> > >     firmware {
+> > > --
+> > > 2.21.0
+> >
+> > --
+> > ~Vinod
