@@ -1,88 +1,158 @@
-From: "Theodore Ts'o" <tytso-3s7WtUTddSA@public.gmane.org>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Fri, 10 May 2019 06:43:38 -0400
-Message-ID: <20190510104338.GB6889@mit.edu>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
- <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
- <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <78e4d46e-6212-9871-51d6-dd2126f39d45@gmail.com>
+From: Michael Kao <michael.kao@mediatek.com>
+Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
+Date: Fri, 10 May 2019 18:52:17 +0800
+Message-ID: <1557485537.29634.27.camel@mtksdccf07>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
+         <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
+         <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+         <20190503164651.GB40515@google.com>
+         <c6cf6170-331d-8ffc-d272-e5d8ee648eda@linaro.org>
+         <1557318215.29634.7.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <78e4d46e-6212-9871-51d6-dd2126f39d45-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557318215.29634.7.camel@mtksdccf07>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, fan.chen@mediatek.com, jamesjj.liao@mediatek.com, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>hsinyi@chromium.org, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 09, 2019 at 10:11:01PM -0700, Frank Rowand wrote:
-> >> You *can* run in-kernel test using modules; but there is no framework
-> >> for the in-kernel code found in the test modules, which means each of
-> >> the in-kernel code has to create their own in-kernel test
-> >> infrastructure.
+On Wed, 2019-05-08 at 20:23 +0800, Michael Kao wrote:
+> On Mon, 2019-05-06 at 12:43 +0200, Daniel Lezcano wrote:
+> > On 03/05/2019 18:46, Matthias Kaehlcke wrote:
+> > > Hi,
+> > > 
+> > > On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
+> > >> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+> > >>>
+> > >>> Add thermal zone node to Mediatek MT8183 dts file.
+> > >>>
+> > >>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> > >>> ---
+> > >>>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
+> > >>>  1 file changed, 64 insertions(+)
+> > >>>
+> > >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > >>> index 926df75..b92116f 100644
+> > >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > >>> @@ -334,6 +334,67 @@
+> > >>>                         status = "disabled";
+> > >>>                 };
+> > >>>
+> > >>> +               thermal: thermal@1100b000 {
+> > >>> +                       #thermal-sensor-cells = <1>;
+> > >>> +                       compatible = "mediatek,mt8183-thermal";
+> > >>> +                       reg = <0 0x1100b000 0 0x1000>;
+> > >>> +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
+> > >>> +                       clocks = <&infracfg CLK_INFRA_THERM>,
+> > >>> +                                <&infracfg CLK_INFRA_AUXADC>;
+> > >>> +                       clock-names = "therm", "auxadc";
+> > >>> +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
+> > >>> +                       mediatek,auxadc = <&auxadc>;
+> > >>> +                       mediatek,apmixedsys = <&apmixedsys>;
+> > >>> +                       mediatek,hw-reset-temp = <117000>;
+> > >>> +                       nvmem-cells = <&thermal_calibration>;
+> > >>> +                       nvmem-cell-names = "calibration-data";
+> > >>> +               };
+> > >>> +
+> > >>> +               thermal-zones {
+> > >>> +                       cpu_thermal: cpu_thermal {
+> > >>> +                               polling-delay-passive = <1000>;
+> > >>> +                               polling-delay = <1000>;
+> > >>> +
+> > >>> +                               thermal-sensors = <&thermal 0>;
+> > >>> +                               sustainable-power = <1500>;
+> > >>> +                       };
+> > >>> +
+> > >>> +                       tzts1: tzts1 {
+> > >>> +                               polling-delay-passive = <1000>;
+> > >>> +                               polling-delay = <1000>;
+> > >>> +                               thermal-sensors = <&thermal 1>;
+> > >> Is sustainable-power required for tzts? Though it's an optional
+> > >> property, kernel would have warning:
+> > >> [    0.631556] thermal thermal_zone1: power_allocator:
+> > >> sustainable_power will be estimated
+> > >> [    0.639586] thermal thermal_zone2: power_allocator:
+> > >> sustainable_power will be estimated
+> > >> [    0.647611] thermal thermal_zone3: power_allocator:
+> > >> sustainable_power will be estimated
+> > >> [    0.655635] thermal thermal_zone4: power_allocator:
+> > >> sustainable_power will be estimated
+> > >> [    0.663658] thermal thermal_zone5: power_allocator:
+> > >> sustainable_power will be estimated
+> > >> if no sustainable-power assigned.
+> > > 
+> > > The property is indeed optional, if it isn't specified IPA will use
+> > > the sum of the minimum power of all 'power actors' of the zone as
+> > > estimate (see estimate_sustainable_power()). This may lead to overly
+> > > agressive throttling, since the nominal sustainable power will always
+> > > be <= the requested power.
+> > > 
+> > > In my understanding the sustainable power may varies between devices,
+> > > even for the same SoC. One could have all the hardware crammed into a
+> > > tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
+> > > laptop form factor and a metal enclosure (e.g. ASUS C201). Both
+> > > examples are based on an Rockchip rk3288, but they have completely
+> > > different thermal behavior, and would likely have different values for
+> > > 'sustainable-power'.
+> > > 
+> > > In this sense I tend to consider 'sustainable-power' more a device,
+> > > than a SoC property. You could specify a 'reasonable' value as a
+> > > starting point, but it will likely not be optimal for all or even most
+> > > devices. The warning might even be useful for device makers by
+> > > indicating them that there is room for tweaking.
+> > 
+> > 
+> > The sustainable power is the power dissipated by the devices belonging
+> > to the thermal zone at the given trip temperature.
+> > 
+> > With the power numbers and the cooling devices, the IPA will change the
+> > states of the cooling devices to leverage the dissipated power to the
+> > sustainable power.
+> > 
+> > The contribution is the cooling effect of the cooling device.
+> > 
+> > However, the IPA is limited to one thermal zone and the cooling device
+> > is the cpu cooling device. There is the devfreq cooling device but as
+> > the graphic driver is not upstream, it is found in the android tree only
+> > for the moment.
+> > 
+> > As you mentioned the sustainable power can vary depending on the form
+> > factor and the production process for the same SoC (they can go to
+> > higher frequencies thus dissipate more power). That is the reason why we
+> > split the DT per SoC and we override the values on a per SoC version basis.
+> > 
+> > You can have a look the rk3399.dtsi and their variant for experimental
+> > board (*-rock960.dts) and the chromebook version (*-gru-kevin.dts).
+> > 
+> > Do you want a empiric procedure to find out the sustainable power ?
+> > 
+> > 
+> > 
+> OK, I will add the cooling map. But the tzts1 ~ tzts6 don't need to binding cooler.
+> The "cpu_thermal" is max value of tzts1 ~tzts6. And cpu_thermal bind
+> cooler with IPA. tzts1~6 don't need to add cooler. So, do I just add
+> cooling map without any binding any cooling-cell?
 > 
-> The kselftest in-kernel tests follow a common pattern.  As such, there
-> is a framework.
-
-So we may have different definitions of "framework".  In my book, code
-reuse by "cut and paste" does not make a framework.  Could they be
-rewritten to *use* a framework, whether it be KTF or KUnit?  Sure!
-But they are not using a framework *today*.
-
-> This next two paragraphs you ignored entirely in your reply:
+> I think thermal framework will add estimated sustainable power. Maybe I
+> should add by myself. What's procedure do you recommend to find
+> sustainable power?
 > 
-> > Why create an entire new subsystem (KUnit) when you can add a header
-> > file (and .c code as appropriate) that outputs the proper TAP formatted
-> > results from kselftest kernel test modules?
+The tzts1~6 are just thermal sensor in the 8183 SoC,
+The purpose of adding the six thermal is to support svs driver to read
+thermal sensor in the SoC.
+https://patchwork.kernel.org/patch/10923289/
 
-And you keep ignoring my main observation, which is that spinning up a
-VM, letting systemd start, mounting a root file system, etc., is all
-unnecessary overhead which takes time.  This is important to me,
-because developer velocity is extremely important if you are doing
-test driven development.
-
-Yes, you can manually unload a module, recompile the module, somehow
-get the module back into the VM (perhaps by using virtio-9p), and then
-reloading the module with the in-kernel test code, and the restart the
-test.  BUT: (a) even if it is faster, it requires a lot of manual
-steps, and would be very hard to automate, and (b) if the test code
-ever OOPS or triggers a lockdep warning, you will need to restart the
-VM, and so this involves all of the VM restart overhead, plus trying
-to automate determining when you actually do need to restart the VM
-versus unloading and reloading the module.   It's clunky.
-
-Being able to do the equivalent of "make && make check" is a really
-big deal.  And "make check" needs to go fast.
-
-You keep ignore this point, perhaps because you don't care about this
-issue?  Which is fine, and why we may just need to agree to disagree.
-
-Cheers,
-
-						- Ted
-
-P.S.  Running scripts is Turing-equivalent, so it's self-evident that
-*anything* you can do with other test frameworks you can somehow do in
-kselftests.  That argument doesn't impress me, and why I do consider
-it quite flippant.  (Heck, /bin/vi is Turing equivalent so we could
-use vi to as a kernel test framework.  Or we could use emacs.  Let's
-not.  :-)
-
-The question is whether it is the most best and most efficient way to
-do that testing.  And developer velocity is a really big part of my
-evaluation function when judging whether or a test framework is fit
-for that purpose.
+The IPA cooling SoC will be applied by cpu_thermal which is the max
+sensor value of tzts1~6.
+In Document/devicetree/binding/thermal/thermal.txt, I find the statement
+that the trip and cooling-map is required for thermal zone.
+If we don't set trip and cooling map, it will set disable mode
+"tz->mode = THERMAL_DEVICE_DISABLED"
+in the drivers/thermal/of-thermal.c
+But it still work to read the temperature of thermal zone.
+And we don't need to let these thermal zone to bind cooler.
+So, we use these way to provide temperature node for svs to read
+temperature by thermal_zone_get_zone_by_name only.
