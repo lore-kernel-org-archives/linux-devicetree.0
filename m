@@ -1,8 +1,8 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
 Subject: [RFC, V2,
- 06/11] media: platform: Add Mediatek ISP P1 image & meta formats
-Date: Fri, 10 May 2019 09:57:58 +0800
-Message-ID: <20190510015755.51495-7-jungo.lin@mediatek.com>
+ 01/11] dt-bindings: mt8183: Add binding for ISP Pass 1 reserved memory
+Date: Fri, 10 May 2019 09:57:47 +0800
+Message-ID: <20190510015755.51495-2-jungo.lin@mediatek.com>
 References: <Jungo Lin <jungo.lin@mediatek.com>
 Reply-To: Jungo Lin <jungo.lin@mediatek.com>
 Mime-Version: 1.0
@@ -23,52 +23,64 @@ To: tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideason
 Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, suleiman@chromium.org, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, ryan.yu@mediatek.com, Jerry-ch.Chen@mediatek.com, frankie.chiu@mediatek.com, Jungo Lin <jungo.lin@mediatek.com>, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, seraph.huang@mediatek.com, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add packed/unpacked/full-g bayer format with 8/10/12/14 bit
-for image output. Add Pass 1 (P1) specific meta formats for
-parameter processing and 3A/other statistics.
+This patch adds the binding for describing the reserved
+shared memory used to exchange ISP configuration and tuning
+data between the co-processor and Pass 1 (P1) unit of the
+camera ISP system on Mediatek SoCs.
 
 Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
 ---
- include/uapi/linux/videodev2.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ .../mediatek,reserve-memory-cam-smem.txt      | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-cam-smem.txt
 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 1db220da3bcc..b79046d2d812 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -711,6 +711,20 @@ struct v4l2_pix_format {
- #define V4L2_PIX_FMT_IPU3_SGRBG10	v4l2_fourcc('i', 'p', '3', 'G') /* IPU3 packed 10-bit GRBG bayer */
- #define V4L2_PIX_FMT_IPU3_SRGGB10	v4l2_fourcc('i', 'p', '3', 'r') /* IPU3 packed 10-bit RGGB bayer */
- 
-+/* Vendor specific - Mediatek ISP compressed formats */
-+#define V4L2_PIX_FMT_MTISP_U8	v4l2_fourcc('M', 'T', 'U', '8') /* Unpacked bayer format, 16-bit */
-+#define V4L2_PIX_FMT_MTISP_U10  v4l2_fourcc('M', 'T', 'U', 'A') /* Unpacked bayer format, 16-bit */
-+#define V4L2_PIX_FMT_MTISP_U12  v4l2_fourcc('M', 'T', 'U', 'C') /* Unpacked bayer format, 16-bit */
-+#define V4L2_PIX_FMT_MTISP_U14  v4l2_fourcc('M', 'T', 'U', 'E') /* Unpacked bayer format, 16-bit */
-+#define V4L2_PIX_FMT_MTISP_B8	v4l2_fourcc('M', 'T', 'B', '8') /* Packed   bayer format,  8-bit */
-+#define V4L2_PIX_FMT_MTISP_B10  v4l2_fourcc('M', 'T', 'B', 'A') /* Packed   bayer format, 10-bit */
-+#define V4L2_PIX_FMT_MTISP_B12  v4l2_fourcc('M', 'T', 'B', 'C') /* Packed   bayer format, 12-bit */
-+#define V4L2_PIX_FMT_MTISP_B14  v4l2_fourcc('M', 'T', 'B', 'E') /* Packed   bayer format, 14-bit */
-+#define V4L2_PIX_FMT_MTISP_F8	v4l2_fourcc('M', 'T', 'F', '8') /* Full-G   bayer format,  8-bit */
-+#define V4L2_PIX_FMT_MTISP_F10  v4l2_fourcc('M', 'T', 'F', 'A') /* Full-G   bayer format, 10-bit */
-+#define V4L2_PIX_FMT_MTISP_F12  v4l2_fourcc('M', 'T', 'F', 'C') /* Full-G   bayer format, 12-bit */
-+#define V4L2_PIX_FMT_MTISP_F14  v4l2_fourcc('M', 'T', 'F', 'E') /* Full-G   bayer format, 14-bit */
+diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-cam-smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-cam-smem.txt
+new file mode 100644
+index 000000000000..65a967cff91e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-cam-smem.txt
+@@ -0,0 +1,42 @@
++Mediatek ISP Pass 1 Shared Memory binding
 +
- /* SDR formats - used only for Software Defined Radio devices */
- #define V4L2_SDR_FMT_CU8          v4l2_fourcc('C', 'U', '0', '8') /* IQ u8 */
- #define V4L2_SDR_FMT_CU16LE       v4l2_fourcc('C', 'U', '1', '6') /* IQ u16le */
-@@ -732,6 +746,12 @@ struct v4l2_pix_format {
- #define V4L2_META_FMT_VSP1_HGT    v4l2_fourcc('V', 'S', 'P', 'T') /* R-Car VSP1 2-D Histogram */
- #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
- #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
-+/* Vendor specific - Mediatek ISP parameters for firmware */
-+#define V4L2_META_FMT_MTISP_PARAMS v4l2_fourcc('M', 'T', 'f', 'p') /* ISP tuning parameters */
-+#define V4L2_META_FMT_MTISP_3A	   v4l2_fourcc('M', 'T', 'f', 'a') /* AE/AWB histogram */
-+#define V4L2_META_FMT_MTISP_AF	   v4l2_fourcc('M', 'T', 'f', 'f') /* AF histogram */
-+#define V4L2_META_FMT_MTISP_LCS	   v4l2_fourcc('M', 'T', 'f', 'c') /* Local contrast enhanced statistics */
-+#define V4L2_META_FMT_MTISP_LMV	   v4l2_fourcc('M', 'T', 'f', 'm') /* Local motion vector histogram */
- 
- /* priv field value to indicates that subsequent fields are valid. */
- #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
++This binding describes the shared memory, which serves the purpose of
++describing the shared memory region used to exchange data between Pass 1
++unit of Image Signal Processor (ISP) and the co-processor in Mediatek
++SoCs.
++
++The co-processor doesn't have the iommu so we need to use the physical
++address to access the shared buffer in the firmware.
++
++The Pass 1 unit of ISP can access memory through the iommu so it
++uses the dma address to access the memory region.
++(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
++
++For additional details about reserved memory regions see reserved-memory.txt
++
++Required properties:
++
++- compatible: must be "mediatek,reserve-memory-cam-smem"
++
++- size: required for dynamic allocation. The unit is bytes.
++
++- alloc-range: required for dynamic allocation. The range must
++  between 0x40000000 and 0x100000000 due to the co-processer's
++  addressing limitation.
++
++Example:
++
++The following example shows the ISP Pass 1 shared memory setup for MT8183.
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		cam_mem_reserved: cam_mem_region {
++			compatible = "mediatek,reserve-memory-cam-smem";
++			size = <0 0x1400000>;
++			no-map;
++			alignment = <0 0x1000>;
++			alloc-ranges = <0 0x40000000 0 0x10000000>;
++		};
++	};
 -- 
 2.18.0
