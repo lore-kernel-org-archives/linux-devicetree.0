@@ -1,54 +1,26 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 05/15] phy: renesas: rcar-gen3-usb2: Check dr_mode when not using OTG
-Date: Thu, 9 May 2019 15:11:32 -0500
-Message-ID: <20190509201142.10543-6-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=Jc5u=TK=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v2 08/15] usb: renesas_usbhs: move flags macros
+Date: Fri, 10 May 2019 14:00:55 +0000
+Message-ID: 
+ <TY1PR01MB156247F77F157DDB495A41EB8A0C0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20190509201142.10543-1-chris.brandt@renesas.com>
+ <20190509201142.10543-9-chris.brandt@renesas.com>
+ <c57f8a55-ef94-5b28-9345-88805de52ed1@cogentembedded.com>
+In-Reply-To: <c57f8a55-ef94-5b28-9345-88805de52ed1@cogentembedded.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-When not using OTG, the PHY will need to know if it should function as
-host or peripheral by checking dr_mode in the PHY node (not the parent
-controller node).
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
- * added braces to else statement
- * check if dr_mode is "host"
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 1ebb08f8323f..5e5e5e938f80 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -391,6 +391,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	struct rcar_gen3_phy *rphy = phy_get_drvdata(p);
- 	struct rcar_gen3_chan *channel = rphy->ch;
- 	void __iomem *usb2_base = channel->base;
-+	enum usb_dr_mode mode;
- 	u32 val;
- 
- 	if (channel->uses_usb_x1)
-@@ -408,6 +409,13 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 		if (rcar_gen3_needs_init_otg(channel))
- 			rcar_gen3_init_otg(channel);
- 		rphy->otg_initialized = true;
-+	} else {
-+		/* Not OTG, so dr_mode should be set in PHY node */
-+		mode = usb_get_dr_mode(channel->dev);
-+		if (mode == USB_DR_MODE_HOST)
-+			writel(0x00000000, usb2_base + USB2_COMMCTRL);
-+		else if (mode == USB_DR_MODE_PERIPHERAL)
-+			writel(0x80000000, usb2_base + USB2_COMMCTRL);
- 	}
- 
- 	rphy->initialized = true;
--- 
-2.16.1
+T24gRnJpLCBNYXkgMTAsIDIwMTksIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gPiAtI2RlZmlu
+ZSBVU0JIU0ZfUlVOVElNRV9QV0NUUkwJKDEgPDwgMCkNCj4gPiAtDQo+ID4gLS8qIHN0YXR1cyAq
+Lw0KPiA+IC0jZGVmaW5lIHVzYmhzY19mbGFnc19pbml0KHApICAgZG8geyhwKS0+ZmxhZ3MgPSAw
+OyB9IHdoaWxlICgwKQ0KPiA+IC0jZGVmaW5lIHVzYmhzY19mbGFnc19zZXQocCwgYikgKChwKS0+
+ZmxhZ3MgfD0gIChiKSkNCj4gPiAtI2RlZmluZSB1c2Joc2NfZmxhZ3NfY2xyKHAsIGIpICgocCkt
+PmZsYWdzICY9IH4oYikpDQo+ID4gLSNkZWZpbmUgdXNiaHNjX2ZsYWdzX2hhcyhwLCBiKSAoKHAp
+LT5mbGFncyAmICAgKGIpKQ0KPiA+DQo+IA0KPiAgICAgV2h5IGxlYXZlIDMgZW1wdHkgbGluZXM/
+DQoNCk9LLCBJJ2xsIGdldCByaWQgb2YgMiBvZiB0aGVtLg0KDQpDaHJpcw0K
