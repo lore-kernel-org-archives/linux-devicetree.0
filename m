@@ -1,84 +1,62 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
- zone node
-Date: Fri, 10 May 2019 09:16:32 +0200
-Message-ID: <9fb2e306-38c7-2af7-5470-ff5bc4e23370@linaro.org>
-References: <20190423022507.34969-1-andy.tang@nxp.com>
- <20190510031335.GD15856@dragon>
- <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD and Pinctrl due for the v5.2
+ merge window
+Date: Fri, 10 May 2019 08:23:14 +0100
+Message-ID: <20190510072314.GC7321@dell>
+References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Tang <andy.tang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/2019 05:40, Andy Tang wrote:
->> -----Original Message-----
->> From: Shawn Guo <shawnguo@kernel.org>
->> Sent: 2019ƒÍ5‘¬10»’ 11:14
->> To: Andy Tang <andy.tang@nxp.com>
->> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
->> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->> linux-pm@vger.kernel.org; daniel.lezcano@linaro.org; rui.zhang@intel.com;
->> edubezval@gmail.com
->> Subject: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
->> zone node
->>
->> Caution: EXT Email
->>
->> On Tue, Apr 23, 2019 at 10:25:07AM +0800, Yuantian Tang wrote:
->>> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
->>> cluster sensor is used to monitor the temperature of core and SoC
->>> platform is for platform. The current dts only support the first sensor.
->>> This patch adds the second sensor node to dts to enable it.
->>>
->>> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
->>> ---
->>> v6:
->>>         - add cooling device map to cpu0-7 in platform node.
-> I like to explain a little. I think it makes sense that multiple thermal zone map to same cooling device. 
-> In this way, no matter which thermal zone raises a temp alarm, it can call cooling device to chill out.
-> I also asked cpufreq maintainer about the cooling map issue, he think it would be fine.
-> I have tested and no issue found. 
-> 
-> Daniel, what's your thought?
+Enjoy!
 
-If there are multiple thermal zones, they will be managed by different
-instances of a thermal governor. Each instances will act on the shared
-cooling device and will collide in their decisions:
+The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
 
- - If the sensors are closed, their behavior will be similar regarding
-the temperature. The governors may take the same decision for the
-cooling device. But in such case having just one thermal zone managed is
-enough.
+  Linux 5.1 (2019-05-05 17:42:58 -0700)
 
- - If the sensors are not closed, their behavior will be different
-regarding the temperature. The governors will take different decision
-regarding the cooling device (one will decrease the freq, other will
-increase the freq).
+are available in the Git repository at:
 
-As the thermal governors are not able to manage several thermal zones
-and there is one cooling device (the cpu cooling device), this setup
-won't work as expected IMO.
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-v5.2
 
-The setup making sense is having a thermal zone per 'cluster' and a
-cooling device per 'cluster'. That means the platform has one clock line
-per 'cluster'. The thermal management happens in a self-contained
-thermal zone (one cooling device - one governor - one thermal zone).
+for you to fetch changes up to 1490d9f841b186664f9d3ca213dcfa4464a60680:
 
-In the case of HMP, other combinations are possible to be optimal.
+  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver (2019-05-10 08:21:31 +0100)
 
+----------------------------------------------------------------
+Immutable branch between MFD and Pinctrl due for the v5.2 merge window
 
+----------------------------------------------------------------
+Amelie Delaunay (4):
+      dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
+      mfd: Add ST Multi-Function eXpander (STMFX) core driver
+      dt-bindings: pinctrl: document the STMFX pinctrl bindings
+      pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
+
+ Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
+ .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   2 +-
+ drivers/mfd/stmfx.c                                | 545 ++++++++++++++
+ drivers/pinctrl/Kconfig                            |  12 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
+ include/linux/mfd/stmfx.h                          | 123 ++++
+ 9 files changed, 1659 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+ create mode 100644 drivers/mfd/stmfx.c
+ create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
+ create mode 100644 include/linux/mfd/stmfx.h
 
 -- 
- <http://www.linaro.org/> Linaro.org ©¶ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Lee Jones [ÊùéÁêºÊñØ]
+Linaro Services Technical Lead
+Linaro.org ‚îÇ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
