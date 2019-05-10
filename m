@@ -1,158 +1,82 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Date: Fri, 10 May 2019 23:58:40 +0530
-Message-ID: <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
-References: <20190508145600.GA26843@centauri> <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
- <20190510091158.GA10284@e107155-lin>
+From: "George G. Davis" <george_davis@mentor.com>
+Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
+Date: Fri, 10 May 2019 14:38:47 -0400
+Message-ID: <20190510183847.GB28648@mam-gdavis-lt>
+References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+ <1557413011-1662-1-git-send-email-george_davis@mentor.com>
+ <20190510171021.GA22691@vmlxhi-102.adit-jv.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510091158.GA10284@e107155-lin>
+Content-Disposition: inline
+In-Reply-To: <20190510171021.GA22691@vmlxhi-102.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc: "George G. Davis" <ggdavisiv@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 2:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Thu, May 09, 2019 at 11:19:23PM +0530, Amit Kucheria wrote:
-> > (Adding Lorenzo and Sudeep)
-> >
-> > On Wed, May 8, 2019 at 8:26 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > >
-> > > On Wed, May 08, 2019 at 02:48:19AM +0530, Amit Kucheria wrote:
-> > > > On Tue, May 7, 2019 at 1:01 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > > > >
-> > > > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > > > >
-> > > > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > > > >  1 file changed, 15 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > > @@ -31,6 +31,7 @@
-> > > > >                         reg = <0x100>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 CPU1: cpu@101 {
-> > > > > @@ -39,6 +40,7 @@
-> > > > >                         reg = <0x101>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 CPU2: cpu@102 {
-> > > > > @@ -47,6 +49,7 @@
-> > > > >                         reg = <0x102>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 CPU3: cpu@103 {
-> > > > > @@ -55,12 +58,24 @@
-> > > > >                         reg = <0x103>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 L2_0: l2-cache {
-> > > > >                         compatible = "cache";
-> > > > >                         cache-level = <2>;
-> > > > >                 };
-> > > > > +
-> > > > > +               idle-states {
-> > > >
-> > > > entry-method="psci" property goes here. I have a patch fixing it for 410c ;-)
-> > > >
-> > > > I don't think the psci_cpuidle_ops will even get called without this.
-> > >
-> > > Hello Amit,
-> > >
-> > > I added debug prints in psci_cpu_suspend_enter() and arm_cpuidle_suspend()
-> > > when verifying this patch, and psci_cpu_suspend_enter() is indeed called,
-> > > with the correct psci suspend parameter.
-> > >
-> > > The output from:
-> > > grep "" /sys/bus/cpu/devices/cpu0/cpuidle/state?/*
-> > > also looks sane.
-> > >
-> > > However, if 'entry-method="psci"' is required according to the DT binding,
-> > > perhaps you can send a 2/2 series that fixes both this patch and msm8916 ?
-> >
-> > Last time I discussed this with Lorenzo and Sudeep (on IRC), I pointed
-> > out that entry-method="psci" isn't checked for in code anywhere. Let's
-> > get their view on this for posterity.
-> >
->
-> Yes entry-method="psci" is required as per DT binding but not checked
-> in code on arm64. We have CPU ops with idle enabled only for "psci", so
-> there's not need to check.
+Hello Eugeniu,
 
-I don't see it being checked on arm32 either.
+On Fri, May 10, 2019 at 07:10:21PM +0200, Eugeniu Rosca wrote:
+> Hi George,
+> 
+> I am able to reproduce the SCIF2 console freeze described in the
+> referenced patchwork link using M3-ES1.1-Salvator-XS and recent
+> v5.1-9573-gb970afcfcabd kernel.
+> 
+> I confirm the behavior is healed with this patch. Thanks!
+> Hope to see it accepted soon, since it fixes a super annoying
+> console breakage every fourth boot or so on lots of R-Car3 targets.
+> 
+> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-> Once we have DT schema validation, this will be caught, so it's better
-> to fix it.
->
-> > What does entry-method="psci" in the idle-states node achieve that
-> > enable-method="psci" in the cpu node doesn't achieve? (Note: enable-
-> > vs. entry-).
-> >
->
-> From DT binding perspective, we can have different CPU enable-method
-> and CPU idle entry-method. However on arm64, it's restricted to PSCI
-> only. I need to check what happens on arm32 though, as the driver
-> invocation happens via CPUIDLE_METHOD_OF_DECLARE.
->
-> > The enable-method property is the one that sets up the
-> > psci_cpuidle_ops callbacks through the CPUIDLE_METHOD_OF_DECLARE
-> > macro.
-> >
->
-> Indeed.
->
-> > IOW, if we deprecated the entry-method property, everything would
-> > still work, wouldn't it?
->
-> Why do you want to deprecated just because Linux kernel doesn't want to
-> use it. That's not a valid reason IMO.
+Thanks for testing.
 
-Fair enough. Just want to make sure that it isn't some vestigial
-property that was never used. Do you know if another OS is actually
-using it?
+Also note, for the record, that the problem is not limited to SCIF2, e.g. try
+setting console=ttySC<n> wheren <n> is not SCIF2 on any other board which
+includes support for other serial ports, e.g. r8a7795-salvator-x, and you will
+observe the same problem on other SCIF ports too. It's just a concidence that
+most boards use SCIF2 as the default serial console where the console hangs
+(resolved by this patch) have been observed on multiple boards.
 
-> > Do we expect to support PSCI platforms that might have a different
-> > entry-method for idle states?
->
-> Not on ARM64, but same DT bindings can be used for idle-states on
-> say RISC-V and have some value other than "psci".
+> 
+> On Thu, May 09, 2019 at 10:43:30AM -0400, George G. Davis wrote:
+> > As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+> > console UART"), UART console lines use low-level PIO only access functions
+> > which will conflict with use of the line when DMA is enabled, e.g. when
+> > the console line is also used for systemd messages. So disable DMA
+> > support for UART console lines.
+> > 
+> > Fixes: https://patchwork.kernel.org/patch/10929511/
+> > Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+> > Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+> > Signed-off-by: George G. Davis <george_davis@mentor.com>
+> > ---
+> >  drivers/tty/serial/sh-sci.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+> > index 3cd139752d3f..885b56b1d4e4 100644
+> > --- a/drivers/tty/serial/sh-sci.c
+> > +++ b/drivers/tty/serial/sh-sci.c
+> > @@ -1557,6 +1557,9 @@ static void sci_request_dma(struct uart_port *port)
+> >  
+> >  	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
+> >  
+> > +	if (uart_console(port))
+> > +		return; /* Cannot use DMA on console */
+> > +
+> >  	if (!port->dev->of_node)
+> >  		return;
+> >  
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Best Regards,
+> Eugeniu.
 
-Both enable-method and entry-method properties are currently only used
-(and documented) for ARM platforms. Hence this discussion about
-deprecation of one of them.
-
-> > Should I whip up a patch removing entry-method? Since we don't check
-> > for it today, it won't break the old DTs either.
-> >
->
-> Nope, I don't think so. But if it's causing issues, we can look into it.
-> I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
-
-Only a couple of minor issues:
-1. There is a trickle of DTs that need fixing up every now and then
-because they don't use entry-method in their idle-states node. Schema
-validation ought to fix that.
-2. A property that isn't ready by any code is a bit confusing. Perhaps
-we can mention something to the effect in the documentation?
-
+-- 
 Regards,
-Amit
+George
