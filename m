@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 8/8] arm64: dts: qcom: qcs404: Add fastrpc nodes
-Date: Thu,  9 May 2019 21:34:21 -0700
-Message-ID: <20190510043421.31393-9-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 7/8] arm64: dts: qcom: qcs404: Define APPS IOMMU
+Date: Thu,  9 May 2019 21:34:20 -0700
+Message-ID: <20190510043421.31393-8-bjorn.andersson@linaro.org>
 References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510043421.31393-1-bjorn.andersson@linaro.org>
@@ -10,107 +10,110 @@ To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
 Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Escande <thierry.escande@linaro.org>
+The APPS IOMMU provides contexts for FastRPC, MDP and WLAN, among other
+things.  Define these. We use the qcom_iommu binding because the
+firmware restrictions in incompatible with the arm-smmu.
 
-The ADSP fastrpc provides 3 context banks and are assigned to IOMMU
-context banks 23, 24 and 25; using SIDs 0x804, 0x805 and 0x806.  The
-CDSP fastrpc provides 5 context banks and are assigned to IOMMU context
-banks 5, 6, 7, 8 and 9; using SIDs 0x1001 through 0x1005. Add these to
-their respective remoteproc.
-
-The lower 4 bits of the SID is used to identify the context bank when
-communicating with the fastrpc firmware, so this gives the reg values.
-
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-[bjorn: Added SMMU linkage and extend commit message]
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 66 ++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 85 ++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index fcde4f0334c2..858a53160564 100644
+index b213f6acad76..fcde4f0334c2 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -243,6 +243,45 @@
- 				mboxes = <&apcs_glb 12>;
- 
- 				label = "cdsp";
-+
-+				fastrpc_cdsp: fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "cdsp";
-+
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_iommu 5>;
-+					};
-+
-+					cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_iommu 6>;
-+					};
-+
-+					cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_iommu 7>;
-+					};
-+
-+					cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_iommu 8>;
-+					};
-+
-+					cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_iommu 9>;
-+					};
-+				};
- 			};
+@@ -378,6 +378,91 @@
+ 			reg = <0x01937000 0x25000>;
  		};
  
-@@ -928,6 +967,33 @@
- 				mboxes = <&apcs_glb 8>;
- 
- 				label = "adsp";
++		apps_iommu: iommu@1e20000 {
++			compatible = "qcom,qcs404-iommu", "qcom,msm-iommu-v1";
++			clocks = <&gcc GCC_SMMU_CFG_CLK>,
++				 <&gcc GCC_APSS_TCU_CLK>;
++			clock-names = "iface", "bus";
++			qcom,iommu-secure-id = <17>;
 +
-+				fastrpc_adsp: fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "adsp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			#iommu-cells = <1>;
 +
-+					#address-cells = <1>;
-+					#size-cells = <0>;
++			/* Define ranges such that the first bank is at 0x1000 */
++			ranges = <0 0x01e20000 0x40000>;
 +
-+					cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_iommu 23>;
-+					};
++			/* Bank 5: CDSP compute bank 1 */
++			iommu-ctx@5000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x5000 0x1000>;
++				interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>;
++			};
 +
-+					cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_iommu 24>;
-+					};
++			/* Bank 6: CDSP compute bank 2 */
++			iommu-ctx@6000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x6000 0x1000>;
++				interrupts = <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>;
++			};
 +
-+					cb@6 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <6>;
-+						iommus = <&apps_iommu 25>;
-+					};
-+				};
- 			};
- 		};
- 	};
++			/* Bank 7: CDSP compute bank 3 */
++			iommu-ctx@7000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x7000 0x1000>;
++				interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 8: CDSP compute bank 4 */
++			iommu-ctx@8000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x8000 0x1000>;
++				interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 9: CDSP compute bank 5 */
++			iommu-ctx@9000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x9000 0x1000>;
++				interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 10: MDP */
++			iommu-ctx@a000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0xa000 0x1000>;
++				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 21: WLAN 0 */
++			iommu-ctx@15000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x15000 0x1000>;
++				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 23: ADSP compute bank 2 */
++			iommu-ctx@17000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x17000 0x1000>;
++				interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 24: ADSP compute bank 3 */
++			iommu-ctx@18000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x18000 0x1000>;
++				interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* Bank 25: ADSP compute bank 4 */
++			iommu-ctx@19000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x19000 0x1000>;
++				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
+ 		spmi_bus: spmi@200f000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0x0200f000 0x001000>,
 -- 
 2.18.0
