@@ -1,54 +1,48 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
- reflect documentation
-Date: Fri, 10 May 2019 13:54:22 +0100
-Message-ID: <20190510125422.GB10284@e107155-lin>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: Add YAML schemas for the generic
+ MMC options
+Date: Fri, 10 May 2019 07:59:56 -0500
+Message-ID: <CAL_JsqL+R3nWZi8u7_QRuGj=k7M2qB+NkM982OZfw0=n3+uLWA@mail.gmail.com>
+References: <68d3fb999d16e49696e832e1d1a6bcd7b76a6e8d.1557389988.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqJi0iwM61anziC-cHXp0PL2AEtXiWFCLn943vTxK5eeig@mail.gmail.com>
+ <20190510105759.z2ob5tl4ovn2ctdo@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190510105759.z2ob5tl4ovn2ctdo@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 04:59:39PM +0530, Amit Kucheria wrote:
-> The idle-states binding documentation[1] mentions that the
-> 'entry-method' property is required on 64-bit platforms and must be set
-> to "psci".
+On Fri, May 10, 2019 at 5:58 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> We fixed up all uses of the entry-method property in
-> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
-> reflect documentation"). But a new one has appeared. Fix it up.
+> Hi Rob,
 >
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> On Thu, May 09, 2019 at 11:45:26AM -0500, Rob Herring wrote:
+> > > +dependencies:
+> > > +  cd-inverted: [ cd-gpios ]
+> >
+> > The note (which you dropped) says 'cd-inverted' applies for built-in CD too.
+> >
+> > At least that is what I take "Polarity of dedicated pins can be
+> > specified, using *-inverted properties." to mean.
+>
+> Indeed, my bad. i guess we should probably keep that note. How are we
+> supposed to keep a note that would apply to multiple properties? In
+> the global description?
 
-Ah right, new ones always appear for short period.
-Anyways,
+You could do a comment next to both properties or add it to the
+description on one and refer to it from the other property (and group
+the 2 properties together).
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 2896bbcfa3bb..42e7822a0227 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -51,7 +51,7 @@
->  		 * PSCI node is not added default, U-boot will add missing
->  		 * parts if it determines to use PSCI.
->  		 */
-> -		entry-method = "arm,psci";
-> +		entry-method = "psci";
->
->  		CPU_PH20: cpu-ph20 {
->  			compatible = "arm,idle-state";
-> --
-> 2.17.1
->
+Rob
