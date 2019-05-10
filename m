@@ -1,20 +1,23 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD and Pinctrl due for the
+Subject: [GIT PULL v2] Immutable branch between MFD and Pinctrl due for the
  v5.2 merge window
-Date: Fri, 10 May 2019 16:15:56 +0100
-Message-ID: <20190510151556.GA4319@dell>
+Date: Fri, 10 May 2019 16:19:12 +0100
+Message-ID: <20190510151912.GB4319@dell>
 References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
  <20190510072314.GC7321@dell>
+ <20190510151556.GA4319@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190510072314.GC7321@dell>
+In-Reply-To: <20190510151556.GA4319@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Amelie Delaunay <amelie.delaunay@st.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
+
+Change of subject line to v2:
 
 ** Contains fix for i386 build breakage **
 
