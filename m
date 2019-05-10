@@ -1,98 +1,60 @@
-From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
- and U2 entries
-Date: Fri, 10 May 2019 06:58:09 +0000
-Message-ID: <BYAPR02MB55913E2D6F6865202DE88514A70C0@BYAPR02MB5591.namprd02.prod.outlook.com>
-References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
- <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
- <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH v3 2/3] usb: gadget: send usb_gadget as an argument in get_config_params
+Date: Fri, 10 May 2019 12:37:27 +0530
+Message-ID: <1557472048-10536-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+References: <1557472048-10536-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
-Content-Language: en-US
+In-Reply-To: <1557472048-10536-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "Claus H. Stovgaard" <cst@phaseone.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, "Claus H. Stovgaard" <cst@phaseone.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, v.anuragkumar@gmail.com, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+Passing struct usb_gadget * as an extra argument in get_config_params
+makes gadget drivers to easily update the U1DevExitLat & U2DevExitLat
+values based on the values passed from the device tree. This patch
+does the same
 
-Hi Thinh,
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+---
+ Changes in v3:
+	- None
 
->-----Original Message-----
->From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]
->Sent: Friday, May 10, 2019 5:30 AM
->To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen
-><Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman
-><gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutla=
-nd
-><mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stovgaar=
-d
-><cst@phaseone.com>
->Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-
->kernel@vger.kernel.org; v.anuragkumar@gmail.com
->Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U=
-1 and U2
->entries
->
->Hi Anurag,
->
->Anurag Kumar Vulisha wrote:
->>>> +		return -EINVAL;
->>>>
->>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);
->>>>  	if (set)
->>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc,
->struct
->>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->>>> index e293400..f2d3112 100644
->>>> --- a/drivers/usb/dwc3/gadget.c
->>>> +++ b/drivers/usb/dwc3/gadget.c
->>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget *=
-g)
->>>>  	return 0;
->>>>  }
->>>>
->>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,
->>>> +				      struct usb_dcd_config_params *params)
->>>> +{
->>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);
->>>> +
->>>> +	/* U1 Device exit Latency */
->>>> +	if (dwc->dis_u1_entry_quirk)
->>>> +		params->bU1devExitLat =3D 0;
->>> It doesn't make sense to have exit latency of 0. Rejecting
->>> SET_FEATURE(enable U1/U2) should already let the host know that the
->>> device doesn't support U1/U2.
->>>
->> I am okay to remove this, but I feel that it is better to report zero va=
-lue instead
->> of a non-zero value in exit latency of BOS when U1 or U2 entries are not=
- supported.
->> Advantage of reporting 0 is that some hosts doesn't even send
->SET_FEATURE(U1/U2)
->> requests on seeing zero value in BOS descriptor. Also there can be cases=
- where U1 is
->> disabled and U2 entry is allowed or vice versa, for these kind of cases =
-the driver can
->> set zero exit latency value for U1 and non-zero exit latency value for U=
-2 . Based on
->this
->> I think it would be better to report 0 when U1/U2 states are not enabled=
-. Please
->provide
->> your opinion on this.
->
->Hm... I assume you're testing against linux usb stack and xhci host. If
->that's the case, it looks like host will still request the device to
->enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). This
->needs to be fixed. I think what you have is fine to workaround this issue.
+ Changes in v2:
+	- None
+---
+ drivers/usb/gadget/composite.c | 2 +-
+ include/linux/usb/gadget.h     | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Thanks . Will send the next series with the other fixes that you have sugge=
-sted
-
-Best Regards,
-Anurag Kumar Vulisha
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index b8a1584..9118b42 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -653,7 +653,7 @@ static int bos_desc(struct usb_composite_dev *cdev)
+ 
+ 		/* Get Controller configuration */
+ 		if (cdev->gadget->ops->get_config_params) {
+-			cdev->gadget->ops->get_config_params(
++			cdev->gadget->ops->get_config_params(cdev->gadget,
+ 				&dcd_config_params);
+ 		} else {
+ 			dcd_config_params.bU1devExitLat =
+diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+index 7595056..fb19141 100644
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -310,7 +310,8 @@ struct usb_gadget_ops {
+ 	int	(*pullup) (struct usb_gadget *, int is_on);
+ 	int	(*ioctl)(struct usb_gadget *,
+ 				unsigned code, unsigned long param);
+-	void	(*get_config_params)(struct usb_dcd_config_params *);
++	void	(*get_config_params)(struct usb_gadget *,
++				     struct usb_dcd_config_params *);
+ 	int	(*udc_start)(struct usb_gadget *,
+ 			struct usb_gadget_driver *);
+ 	int	(*udc_stop)(struct usb_gadget *);
+-- 
+2.1.1
