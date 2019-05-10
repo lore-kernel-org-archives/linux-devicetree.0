@@ -1,108 +1,74 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
- zone node
-Date: Fri, 10 May 2019 08:47:36 +0000
-Message-ID: <VI1PR04MB4333372C1DABD0E4C9DD7FE8F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190423022507.34969-1-andy.tang@nxp.com>
- <20190510031335.GD15856@dragon>
- <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <9fb2e306-38c7-2af7-5470-ff5bc4e23370@linaro.org>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH V3 2/8] clk: tegra: Add PLLP_UD and PLLMB_UD for Tegra210
+Date: Fri, 10 May 2019 16:47:13 +0800
+Message-ID: <20190510084719.18902-3-josephl@nvidia.com>
+References: <20190510084719.18902-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9fb2e306-38c7-2af7-5470-ff5bc4e23370@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Shawn Guo <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190510084719.18902-1-josephl@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-KyBWaXJlc2ggZm9yIGhlbHAuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
-bTogRGFuaWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IFNlbnQ6IDIw
-MTnE6jXUwjEwyNUgMTU6MTcNCj4gVG86IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBT
-aGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+IENjOiBMZW8gTGkgPGxlb3lhbmcubGlA
-bnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXBtQHZnZXIu
-a2VybmVsLm9yZzsgcnVpLnpoYW5nQGludGVsLmNvbTsgZWR1YmV6dmFsQGdtYWlsLmNvbQ0KPiBT
-dWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSCB2Nl0gYXJtNjQ6IGR0czogbHMxMDg4YTogYWRk
-IG9uZSBtb3JlIHRoZXJtYWwNCj4gem9uZSBub2RlDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwN
-Cj4gDQo+IE9uIDEwLzA1LzIwMTkgMDU6NDAsIEFuZHkgVGFuZyB3cm90ZToNCj4gPj4gLS0tLS1P
-cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
-ZWwub3JnPg0KPiA+PiBTZW50OiAyMDE5xOo11MIxMMjVIDExOjE0DQo+ID4+IFRvOiBBbmR5IFRh
-bmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+PiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5j
-b20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4+IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+PiBsaW51eC1wbUB2
-Z2VyLmtlcm5lbC5vcmc7IGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc7DQo+ID4+IHJ1aS56aGFu
-Z0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb20NCj4gPj4gU3ViamVjdDogW0VYVF0gUmU6
-IFtQQVRDSCB2Nl0gYXJtNjQ6IGR0czogbHMxMDg4YTogYWRkIG9uZSBtb3JlDQo+ID4+IHRoZXJt
-YWwgem9uZSBub2RlDQo+ID4+DQo+ID4+IENhdXRpb246IEVYVCBFbWFpbA0KPiA+Pg0KPiA+PiBP
-biBUdWUsIEFwciAyMywgMjAxOSBhdCAxMDoyNTowN0FNICswODAwLCBZdWFudGlhbiBUYW5nIHdy
-b3RlOg0KPiA+Pj4gTHMxMDg4YSBoYXMgMiB0aGVybWFsIHNlbnNvcnMsIGNvcmUgY2x1c3RlciBh
-bmQgU29DIHBsYXRmb3JtLiBDb3JlDQo+ID4+PiBjbHVzdGVyIHNlbnNvciBpcyB1c2VkIHRvIG1v
-bml0b3IgdGhlIHRlbXBlcmF0dXJlIG9mIGNvcmUgYW5kIFNvQw0KPiA+Pj4gcGxhdGZvcm0gaXMg
-Zm9yIHBsYXRmb3JtLiBUaGUgY3VycmVudCBkdHMgb25seSBzdXBwb3J0IHRoZSBmaXJzdCBzZW5z
-b3IuDQo+ID4+PiBUaGlzIHBhdGNoIGFkZHMgdGhlIHNlY29uZCBzZW5zb3Igbm9kZSB0byBkdHMg
-dG8gZW5hYmxlIGl0Lg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IFl1YW50aWFuIFRhbmcg
-PGFuZHkudGFuZ0BueHAuY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiB2NjoNCj4gPj4+ICAgICAgICAg
-LSBhZGQgY29vbGluZyBkZXZpY2UgbWFwIHRvIGNwdTAtNyBpbiBwbGF0Zm9ybSBub2RlLg0KPiA+
-IEkgbGlrZSB0byBleHBsYWluIGEgbGl0dGxlLiBJIHRoaW5rIGl0IG1ha2VzIHNlbnNlIHRoYXQg
-bXVsdGlwbGUgdGhlcm1hbCB6b25lDQo+IG1hcCB0byBzYW1lIGNvb2xpbmcgZGV2aWNlLg0KPiA+
-IEluIHRoaXMgd2F5LCBubyBtYXR0ZXIgd2hpY2ggdGhlcm1hbCB6b25lIHJhaXNlcyBhIHRlbXAg
-YWxhcm0sIGl0IGNhbiBjYWxsDQo+IGNvb2xpbmcgZGV2aWNlIHRvIGNoaWxsIG91dC4NCj4gPiBJ
-IGFsc28gYXNrZWQgY3B1ZnJlcSBtYWludGFpbmVyIGFib3V0IHRoZSBjb29saW5nIG1hcCBpc3N1
-ZSwgaGUgdGhpbmsgaXQNCj4gd291bGQgYmUgZmluZS4NCj4gPiBJIGhhdmUgdGVzdGVkIGFuZCBu
-byBpc3N1ZSBmb3VuZC4NCj4gPg0KPiA+IERhbmllbCwgd2hhdCdzIHlvdXIgdGhvdWdodD8NCj4g
-DQo+IElmIHRoZXJlIGFyZSBtdWx0aXBsZSB0aGVybWFsIHpvbmVzLCB0aGV5IHdpbGwgYmUgbWFu
-YWdlZCBieSBkaWZmZXJlbnQNCj4gaW5zdGFuY2VzIG9mIGEgdGhlcm1hbCBnb3Zlcm5vci4gRWFj
-aCBpbnN0YW5jZXMgd2lsbCBhY3Qgb24gdGhlIHNoYXJlZCBjb29saW5nDQo+IGRldmljZSBhbmQg
-d2lsbCBjb2xsaWRlIGluIHRoZWlyIGRlY2lzaW9uczoNCj4gDQo+ICAtIElmIHRoZSBzZW5zb3Jz
-IGFyZSBjbG9zZWQsIHRoZWlyIGJlaGF2aW9yIHdpbGwgYmUgc2ltaWxhciByZWdhcmRpbmcgdGhl
-DQo+IHRlbXBlcmF0dXJlLiBUaGUgZ292ZXJub3JzIG1heSB0YWtlIHRoZSBzYW1lIGRlY2lzaW9u
-IGZvciB0aGUgY29vbGluZw0KPiBkZXZpY2UuIEJ1dCBpbiBzdWNoIGNhc2UgaGF2aW5nIGp1c3Qg
-b25lIHRoZXJtYWwgem9uZSBtYW5hZ2VkIGlzIGVub3VnaC4NCj4gDQo+ICAtIElmIHRoZSBzZW5z
-b3JzIGFyZSBub3QgY2xvc2VkLCB0aGVpciBiZWhhdmlvciB3aWxsIGJlIGRpZmZlcmVudCByZWdh
-cmRpbmcgdGhlDQo+IHRlbXBlcmF0dXJlLiBUaGUgZ292ZXJub3JzIHdpbGwgdGFrZSBkaWZmZXJl
-bnQgZGVjaXNpb24gcmVnYXJkaW5nIHRoZSBjb29saW5nDQo+IGRldmljZSAob25lIHdpbGwgZGVj
-cmVhc2UgdGhlIGZyZXEsIG90aGVyIHdpbGwgaW5jcmVhc2UgdGhlIGZyZXEpLg0KPiANCj4gQXMg
-dGhlIHRoZXJtYWwgZ292ZXJub3JzIGFyZSBub3QgYWJsZSB0byBtYW5hZ2Ugc2V2ZXJhbCB0aGVy
-bWFsIHpvbmVzIGFuZA0KPiB0aGVyZSBpcyBvbmUgY29vbGluZyBkZXZpY2UgKHRoZSBjcHUgY29v
-bGluZyBkZXZpY2UpLCB0aGlzIHNldHVwIHdvbid0IHdvcmsgYXMNCj4gZXhwZWN0ZWQgSU1PLg0K
-PiANCj4gVGhlIHNldHVwIG1ha2luZyBzZW5zZSBpcyBoYXZpbmcgYSB0aGVybWFsIHpvbmUgcGVy
-ICdjbHVzdGVyJyBhbmQgYSBjb29saW5nDQo+IGRldmljZSBwZXIgJ2NsdXN0ZXInLiBUaGF0IG1l
-YW5zIHRoZSBwbGF0Zm9ybSBoYXMgb25lIGNsb2NrIGxpbmUgcGVyICdjbHVzdGVyJy4NCj4gVGhl
-IHRoZXJtYWwgbWFuYWdlbWVudCBoYXBwZW5zIGluIGEgc2VsZi1jb250YWluZWQgdGhlcm1hbCB6
-b25lIChvbmUNCj4gY29vbGluZyBkZXZpY2UgLSBvbmUgZ292ZXJub3IgLSBvbmUgdGhlcm1hbCB6
-b25lKS4NCj4gDQo+IEluIHRoZSBjYXNlIG9mIEhNUCwgb3RoZXIgY29tYmluYXRpb25zIGFyZSBw
-b3NzaWJsZSB0byBiZSBvcHRpbWFsLg0KSGkgVmlyZXNoLA0KDQpJIHdhbnQgdG8gbWFwIG11bHRp
-cGxlIHRoZXJtYWwgem9uZXMgdG8gdGhlIHNhbWUgY29vbGluZyBkZXZpY2UuIFRoZSBhYm92ZSBp
-cyB0aGUgZGlzY3Vzc2lvbiBhYm91dCBpdC4NCkl0IHNlZW1zIHJlYXNvbmFibGUuIEJ1dCBJIGFt
-IG5vdCBleHBlcnQgb24gdGhpcy4gQ291bGQgeW91IHBsZWFzZSBwcm92aWRlIHNvbWUgdGhvdWdo
-dHM/IFRoYW5rcy4NCg0KQlIsDQpBbmR5DQo+IA0KPiANCj4gDQo+IC0tDQo+IA0KPiA8aHR0cHM6
-Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYl
-MkZ3d3cuDQo+IGxpbmFyby5vcmclMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2FuZHkudGFuZyU0MG54
-cC5jb20lN0M5MzViN2EwOA0KPiAzMWNjNDY2ZGE0MDgwOGQ2ZDUxNzZmOGUlN0M2ODZlYTFkM2Jj
-MmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzANCj4gJTdDMCU3QzYzNjkzMDY5Mzk2NTU0MDE4OSZh
-bXA7c2RhdGE9V0s5TkRCVnd6aENDOVdNa21qTE9iSg0KPiBPQlF3UkclMkZib2VkJTJGS3gxOHhp
-Qk5RJTNEJmFtcDtyZXNlcnZlZD0wPiBMaW5hcm8ub3JnIKmmIE9wZW4NCj4gc291cmNlIHNvZnR3
-YXJlIGZvciBBUk0gU29Dcw0KPiANCj4gRm9sbG93IExpbmFybzoNCj4gPGh0dHBzOi8vZXVyMDEu
-c2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3Lg0K
-PiBmYWNlYm9vay5jb20lMkZwYWdlcyUyRkxpbmFybyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5keS50
-YW5nJTQwbngNCj4gcC5jb20lN0M5MzViN2EwODMxY2M0NjZkYTQwODA4ZDZkNTE3NmY4ZSU3QzY4
-NmVhMWQzYmMyYjRjNmZhOTJjDQo+IGQ5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTMwNjkzOTY1
-NTUwMjAyJmFtcDtzZGF0YT1PMG1XTzc2DQo+IDlzSzJaTUdYOUF4Z0xHWU5WZmtGSEJENFpJR0Nj
-bHR0dnlQSSUzRCZhbXA7cmVzZXJ2ZWQ9MD4NCj4gRmFjZWJvb2sgfA0KPiA8aHR0cHM6Ly9ldXIw
-MS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ0d2l0
-dGUNCj4gci5jb20lMkYlMjMhJTJGbGluYXJvb3JnJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRh
-bmclNDBueHAuY29tDQo+ICU3QzkzNWI3YTA4MzFjYzQ2NmRhNDA4MDhkNmQ1MTc2ZjhlJTdDNjg2
-ZWExZDNiYzJiNGM2ZmE5MmNkOTljNQ0KPiBjMzAxNjM1JTdDMCU3QzAlN0M2MzY5MzA2OTM5NjU1
-NTAyMDImYW1wO3NkYXRhPXRWJTJCaThCazNPcU8NCj4gaCUyRlpIcEJyMk5RREFDVnZ0R2k4S05H
-UXQ1ZFphVGV5ZyUzRCZhbXA7cmVzZXJ2ZWQ9MD4gVHdpdHRlciB8DQo+IDxodHRwczovL2V1cjAx
-LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy4N
-Cj4gbGluYXJvLm9yZyUyRmxpbmFyby1ibG9nJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NhbmR5LnRh
-bmclNDBueHAuY28NCj4gbSU3QzkzNWI3YTA4MzFjYzQ2NmRhNDA4MDhkNmQ1MTc2ZjhlJTdDNjg2
-ZWExZDNiYzJiNGM2ZmE5MmNkOTkNCj4gYzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY5MzA2OTM5NjU1
-NTAyMDImYW1wO3NkYXRhPTBFOGE5Mzh4RXQ3bDINCj4gTUJMbk1FVHNDUUtmaEpNZ216Rk50dUNL
-UFhmNVNZJTNEJmFtcDtyZXNlcnZlZD0wPiBCbG9nDQoNCg==
+Introduce the low jitter path of PLLP and PLLMB which can be used as EMC
+clock source.
+
+Signed-off-by: Joseph Lo <josephl@nvidia.com>
+---
+v3:
+- split to 3 patches from the previous version
+---
+ drivers/clk/tegra/clk-tegra210.c         | 11 +++++++++++
+ include/dt-bindings/clock/tegra210-car.h |  4 ++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 7545af763d7a..4bfa9bb698be 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -3116,6 +3116,17 @@ static void __init tegra210_pll_init(void __iomem *clk_base,
+ 	clk_register_clkdev(clk, "pll_m_ud", NULL);
+ 	clks[TEGRA210_CLK_PLL_M_UD] = clk;
+ 
++	/* PLLMB_UD */
++	clk = clk_register_fixed_factor(NULL, "pll_mb_ud", "pll_mb",
++					CLK_SET_RATE_PARENT, 1, 1);
++	clk_register_clkdev(clk, "pll_mb_ud", NULL);
++	clks[TEGRA210_CLK_PLL_MB_UD] = clk;
++
++	/* PLLP_UD */
++	clk = clk_register_fixed_factor(NULL, "pll_p_ud", "pll_p",
++					0, 1, 1);
++	clks[TEGRA210_CLK_PLL_P_UD] = clk;
++
+ 	/* PLLU_VCO */
+ 	if (!tegra210_init_pllu()) {
+ 		clk = clk_register_fixed_rate(NULL, "pll_u_vco", "pll_ref", 0,
+diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
+index 6b77e721f6b1..832a89788525 100644
+--- a/include/dt-bindings/clock/tegra210-car.h
++++ b/include/dt-bindings/clock/tegra210-car.h
+@@ -349,8 +349,8 @@
+ #define TEGRA210_CLK_PLL_P_OUT_XUSB 317
+ #define TEGRA210_CLK_XUSB_SSP_SRC 318
+ #define TEGRA210_CLK_PLL_RE_OUT1 319
+-/* 320 */
+-/* 321 */
++#define TEGRA210_CLK_PLL_MB_UD 320
++#define TEGRA210_CLK_PLL_P_UD 321
+ #define TEGRA210_CLK_ISP 322
+ #define TEGRA210_CLK_PLL_A_OUT_ADSP 323
+ #define TEGRA210_CLK_PLL_A_OUT0_OUT_ADSP 324
+-- 
+2.21.0
