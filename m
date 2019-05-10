@@ -1,7 +1,7 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v8 7/9] EDAC: Add missing debugfs_create_x32 wrapper
-Date: Fri, 10 May 2019 22:15:34 +1200
-Message-ID: <20190510101536.6724-8-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v8 3/9] ARM: aurora-l2: add defines for parity and ECC registers
+Date: Fri, 10 May 2019 22:15:30 +1200
+Message-ID: <20190510101536.6724-4-chris.packham@alliedtelesis.co.nz>
 References: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,66 +9,87 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux@armlinux.org.uk, bp@alien8.de, mark.rutland@arm.com, robh+dt@kernel.org, mchehab@kernel.org, james.morse@arm.com, jlu@pengutronix.de, gregory.clement@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
 From: Jan Luebbe <jlu@pengutronix.de>
 
-We already have wrappers for x8 and x16, so add the missing x32 one.
+These defines will be used by subsequent patches to add support for the
+parity check and error correction functionality in the Aurora L2 cache
+controller.
 
 Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- drivers/edac/debugfs.c     | 11 +++++++++++
- drivers/edac/edac_module.h |  5 +++++
- 2 files changed, 16 insertions(+)
+ .../include/asm/hardware/cache-aurora-l2.h    | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/drivers/edac/debugfs.c b/drivers/edac/debugfs.c
-index 0a9277228c50..91b156b1f0c1 100644
---- a/drivers/edac/debugfs.c
-+++ b/drivers/edac/debugfs.c
-@@ -137,3 +137,14 @@ struct dentry *edac_debugfs_create_x16(const char *n=
-ame, umode_t mode,
- 	return debugfs_create_x16(name, mode, parent, value);
- }
- EXPORT_SYMBOL_GPL(edac_debugfs_create_x16);
-+
-+/* Wrapper for debugfs_create_x32() */
-+struct dentry *edac_debugfs_create_x32(const char *name, umode_t mode,
-+				       struct dentry *parent, u32 *value)
-+{
-+	if (!parent)
-+		parent =3D edac_debugfs;
-+
-+	return debugfs_create_x32(name, mode, parent, value);
-+}
-+EXPORT_SYMBOL_GPL(edac_debugfs_create_x32);
-diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
-index dd7d0b509aa3..9822f1a7e194 100644
---- a/drivers/edac/edac_module.h
-+++ b/drivers/edac/edac_module.h
-@@ -82,6 +82,8 @@ struct dentry *
- edac_debugfs_create_x8(const char *name, umode_t mode, struct dentry *pa=
-rent, u8 *value);
- struct dentry *
- edac_debugfs_create_x16(const char *name, umode_t mode, struct dentry *p=
-arent, u16 *value);
-+struct dentry *
-+edac_debugfs_create_x32(const char *name, umode_t mode, struct dentry *p=
-arent, u32 *value);
- #else
- static inline void edac_debugfs_init(void)					{ }
- static inline void edac_debugfs_exit(void)					{ }
-@@ -98,6 +100,9 @@ edac_debugfs_create_x8(const char *name, umode_t mode,
- static inline struct dentry *
- edac_debugfs_create_x16(const char *name, umode_t mode,
- 		       struct dentry *parent, u16 *value)			{ return NULL; }
-+static inline struct dentry *
-+edac_debugfs_create_x32(const char *name, umode_t mode,
-+		       struct dentry *parent, u32 *value)			{ return NULL; }
- #endif
+diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/i=
+nclude/asm/hardware/cache-aurora-l2.h
+index dc5c479ec4c3..39769ffa0051 100644
+--- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
++++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
+@@ -31,6 +31,9 @@
+ #define AURORA_ACR_REPLACEMENT_TYPE_SEMIPLRU \
+ 	(3 << AURORA_ACR_REPLACEMENT_OFFSET)
 =20
- /*
++#define AURORA_ACR_PARITY_EN	(1 << 21)
++#define AURORA_ACR_ECC_EN	(1 << 20)
++
+ #define AURORA_ACR_FORCE_WRITE_POLICY_OFFSET	0
+ #define AURORA_ACR_FORCE_WRITE_POLICY_MASK	\
+ 	(0x3 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
+@@ -41,6 +44,51 @@
+ #define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
+ 	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
+=20
++#define AURORA_ERR_CNT_REG          0x600
++#define AURORA_ERR_ATTR_CAP_REG     0x608
++#define AURORA_ERR_ADDR_CAP_REG     0x60c
++#define AURORA_ERR_WAY_CAP_REG      0x610
++#define AURORA_ERR_INJECT_CTL_REG   0x614
++#define AURORA_ERR_INJECT_MASK_REG  0x618
++
++#define AURORA_ERR_CNT_CLR_OFFSET         31
++#define AURORA_ERR_CNT_CLR		   \
++	(0x1 << AURORA_ERR_CNT_CLR_OFFSET)
++#define AURORA_ERR_CNT_UE_OFFSET          16
++#define AURORA_ERR_CNT_UE_MASK             \
++	(0x7fff << AURORA_ERR_CNT_UE_OFFSET)
++#define AURORA_ERR_CNT_CE_OFFSET           0
++#define AURORA_ERR_CNT_CE_MASK             \
++	(0xffff << AURORA_ERR_CNT_CE_OFFSET)
++
++#define AURORA_ERR_ATTR_SRC_OFF           16
++#define AURORA_ERR_ATTR_SRC_MSK            \
++	(0x7 << AURORA_ERR_ATTR_SRC_OFF)
++#define AURORA_ERR_ATTR_TXN_OFF           12
++#define AURORA_ERR_ATTR_TXN_MSK            \
++	(0xf << AURORA_ERR_ATTR_TXN_OFF)
++#define AURORA_ERR_ATTR_ERR_OFF            8
++#define AURORA_ERR_ATTR_ERR_MSK            \
++	(0x3 << AURORA_ERR_ATTR_ERR_OFF)
++#define AURORA_ERR_ATTR_CAP_VALID_OFF      0
++#define AURORA_ERR_ATTR_CAP_VALID          \
++	(0x1 << AURORA_ERR_ATTR_CAP_VALID_OFF)
++
++#define AURORA_ERR_ADDR_CAP_ADDR_MASK 0xffffffe0
++
++#define AURORA_ERR_WAY_IDX_OFF             8
++#define AURORA_ERR_WAY_IDX_MSK             \
++	(0xfff << AURORA_ERR_WAY_IDX_OFF)
++#define AURORA_ERR_WAY_CAP_WAY_OFFSET      1
++#define AURORA_ERR_WAY_CAP_WAY_MASK        \
++	(0xf << AURORA_ERR_WAY_CAP_WAY_OFFSET)
++
++#define AURORA_ERR_INJECT_CTL_ADDR_MASK 0xfffffff0
++#define AURORA_ERR_ATTR_TXN_OFF   12
++#define AURORA_ERR_INJECT_CTL_EN_MASK          0x3
++#define AURORA_ERR_INJECT_CTL_EN_PARITY        0x2
++#define AURORA_ERR_INJECT_CTL_EN_ECC           0x1
++
+ #define AURORA_MAX_RANGE_SIZE	1024
+=20
+ #define AURORA_WAY_SIZE_SHIFT	2
 --=20
 2.21.0
