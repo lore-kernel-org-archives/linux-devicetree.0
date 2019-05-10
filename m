@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 4/6] pinctrl: meson: Rework enable/disable bias part
-Date: Fri, 10 May 2019 10:23:22 +0200
-Message-ID: <20190510082324.21181-5-glaroque@baylibre.com>
+Subject: [PATCH v5 3/6] dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+Date: Fri, 10 May 2019 10:23:21 +0200
+Message-ID: <20190510082324.21181-4-glaroque@baylibre.com>
 References: <20190510082324.21181-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
@@ -10,129 +10,27 @@ To: linus.walleij@linaro.org, khilman@baylibre.com
 Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-rework bias enable/disable part to prepare drive-strength integration
-no functional changes
+Add optional drive-strength-microamp property
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 85 +++++++++++++++------------
- 1 file changed, 49 insertions(+), 36 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 96a4a72708e4..8ea5c1527064 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -174,62 +174,75 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+index a47dd990a8d3..a7618605bf1e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+@@ -51,6 +51,10 @@ Configuration nodes support the generic properties "bias-disable",
+ "bias-pull-up" and "bias-pull-down", described in file
+ pinctrl-bindings.txt
  
--static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
--			     unsigned long *configs, unsigned num_configs)
-+static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
-+				      unsigned int pin)
- {
--	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
- 	struct meson_bank *bank;
--	enum pin_config_param param;
--	unsigned int reg, bit;
--	int i, ret;
-+	unsigned int reg, bit = 0;
-+	int ret;
++Optional properties :
++ - drive-strength-microamp: Drive strength for the specified pins in uA.
++			    This property is only valid for G12A and newer.
++
+ === Example ===
  
- 	ret = meson_get_bank(pc, pin, &bank);
- 	if (ret)
- 		return ret;
- 
-+	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
-+	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit), 0);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
-+				     bool pull_up)
-+{
-+	struct meson_bank *bank;
-+	unsigned int reg, bit, val = 0;
-+	int ret;
-+
-+	ret = meson_get_bank(pc, pin, &bank);
-+	if (ret)
-+		return ret;
-+
-+	meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
-+	if (pull_up)
-+		val = BIT(bit);
-+
-+	ret = regmap_update_bits(pc->reg_pull, reg, BIT(bit), val);
-+	if (ret)
-+		return ret;
-+
-+	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
-+	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),	BIT(bit));
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
-+			     unsigned long *configs, unsigned num_configs)
-+{
-+	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
-+	enum pin_config_param param;
-+	int i, ret;
-+
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
- 
- 		switch (param) {
- 		case PIN_CONFIG_BIAS_DISABLE:
--			dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
--					       &bit);
--			ret = regmap_update_bits(pc->reg_pullen, reg,
--						 BIT(bit), 0);
-+			ret = meson_pinconf_disable_bias(pc, pin);
- 			if (ret)
- 				return ret;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
--					       &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pullen, reg,
--						 BIT(bit), BIT(bit));
--			if (ret)
--				return ret;
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pull, reg,
--						 BIT(bit), BIT(bit));
-+			ret = meson_pinconf_enable_bias(pc, pin, true);
- 			if (ret)
- 				return ret;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
--			dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
--					       &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pullen, reg,
--						 BIT(bit), BIT(bit));
--			if (ret)
--				return ret;
--
--			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
--			ret = regmap_update_bits(pc->reg_pull, reg,
--						 BIT(bit), 0);
-+			ret = meson_pinconf_enable_bias(pc, pin, false);
- 			if (ret)
- 				return ret;
- 			break;
+ 	pinctrl: pinctrl@c1109880 {
 -- 
 2.17.1
