@@ -1,29 +1,227 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal zone node
-Date: Fri, 10 May 2019 11:13:36 +0800
-Message-ID: <20190510031335.GD15856@dragon>
-References: <20190423022507.34969-1-andy.tang@nxp.com>
+Subject: Re: [PATCH v2] arm64: dts: imx8mm-evk: Add BD71847 PMIC
+Date: Fri, 10 May 2019 11:19:07 +0800
+Message-ID: <20190510031905.GE15856@dragon>
+References: <d809d10676011d1d35c3f78fe3e0ec47b73398d6.1556028030.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190423022507.34969-1-andy.tang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yuantian Tang <andy.tang@nxp.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
+In-Reply-To: <d809d10676011d1d35c3f78fe3e0ec47b73398d6.1556028030.git.leonard.crestez@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 10:25:07AM +0800, Yuantian Tang wrote:
-> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-> sensor is used to monitor the temperature of core and SoC platform is for
-> platform. The current dts only support the first sensor.
-> This patch adds the second sensor node to dts to enable it.
+On Tue, Apr 23, 2019 at 02:16:48PM +0000, Leonard Crestez wrote:
+> The BUCK2 regulator is used for cpufreq voltage control, otherwise
+> configuration is mostly static.
 > 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> This uses the newly-implemented rohm,reset-snvs-powered property to
+> properly handle the SNVS state of imx8mm.
+> 
+> Between BD71837 and BD71847 the BUCK3/4 regulators were removed but
+> datasheet and board schematics kept the names for BUCK5/6/7/8. The
+> driver however renumbered 5/6/7/8 to 3/4/5/6. Use the names from DT
+> bindings and add comments to signal this.
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Acked-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> 
 > ---
-> v6:
->         - add cooling device map to cpu0-7 in platform node.
+>  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 131 +++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+> 
+> Changes since v1:
+>  - Move compatible property first
+>  - Remove address/size numbering from regulators list
+> Link: https://marc.info/?l=linux-clk&m=155530430429151&w=2
+> 
+> Other imx8mm cpufreq patches in that series already accepted.
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> index 2d5d89475b76..623254786c2d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> @@ -37,10 +37,14 @@
+>  		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
+>  	};
+>  };
+>  
+> +&A53_0 {
+> +	cpu-supply = <&buck2_reg>;
+> +};
+> +
+>  &fec1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_fec1>;
+>  	phy-mode = "rgmii-id";
+>  	phy-handle = <&ethphy0>;
+> @@ -93,10 +97,124 @@
+>  	pinctrl-0 = <&pinctrl_wdog>;
+>  	fsl,ext-reset-output;
+>  	status = "okay";
+>  };
+>  
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	pmic@4b {
+> +		compatible = "rohm,bd71847";
+> +		reg = <0x4b>;
+> +		pinctrl-0 = <&pinctrl_pmic>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <3 GPIO_ACTIVE_LOW>;
+> +		rohm,reset-snvs-powered;
+> +
+> +		regulators {
+> +			buck1_reg: BUCK1 {
+> +				regulator-compatible = "BUCK1";
 
-@Daniel, are you fine with this version?
+bindings/regulator/regulator.txt says that regulator-compatible is a
+deprecated property.
 
 Shawn
+
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <1250>;
+> +			};
+> +
+> +			buck2_reg: BUCK2 {
+> +				regulator-compatible = "BUCK2";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <1250>;
+> +				rohm,dvs-run-voltage = <1000000>;
+> +				rohm,dvs-idle-voltage = <900000>;
+> +			};
+> +
+> +			buck3_reg: BUCK3 {
+> +				// BUCK5 in datasheet
+> +				regulator-compatible = "BUCK3";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck4_reg: BUCK4 {
+> +				// BUCK6 in datasheet
+> +				regulator-compatible = "BUCK4";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck5_reg: BUCK5 {
+> +				// BUCK7 in datasheet
+> +				regulator-compatible = "BUCK5";
+> +				regulator-min-microvolt = <1605000>;
+> +				regulator-max-microvolt = <1995000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck6_reg: BUCK6 {
+> +				// BUCK8 in datasheet
+> +				regulator-compatible = "BUCK6";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1400000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo1_reg: LDO1 {
+> +				regulator-compatible = "LDO1";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo2_reg: LDO2 {
+> +				regulator-compatible = "LDO2";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo3_reg: LDO3 {
+> +				regulator-compatible = "LDO3";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo4_reg: LDO4 {
+> +				regulator-compatible = "LDO4";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo6_reg: LDO6 {
+> +				regulator-compatible = "LDO6";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &iomuxc {
+>  	pinctrl-names = "default";
+>  
+>  	pinctrl_fec1: fec1grp {
+>  		fsl,pins = <
+> @@ -122,10 +240,23 @@
+>  		fsl,pins = <
+>  			MX8MM_IOMUXC_NAND_READY_B_GPIO3_IO16	0x19
+>  		>;
+>  	};
+>  
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x400001c3
+> +			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x400001c3
+> +		>;
+> +	};
+> +
+> +	pinctrl_pmic: pmicirq {
+> +		fsl,pins = <
+> +			MX8MM_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x41
+> +		>;
+> +	};
+> +
+>  	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+>  		fsl,pins = <
+>  			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
+>  		>;
+>  	};
+> -- 
+> 2.17.1
+> 
