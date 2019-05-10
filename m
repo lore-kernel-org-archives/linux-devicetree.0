@@ -1,57 +1,54 @@
-From: Nandor Han <nandor.han@vaisala.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Date: Fri, 10 May 2019 15:49:36 +0300
-Message-ID: <0134c853-f5eb-8d6f-6523-61688607b367@vaisala.com>
-References: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
- <20190421190913.1478-3-nandor.han@vaisala.com> <20190430224731.GA31760@bogus>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
+ reflect documentation
+Date: Fri, 10 May 2019 13:54:22 +0100
+Message-ID: <20190510125422.GB10284@e107155-lin>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190430224731.GA31760@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "sre@kernel.org" <sre@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/1/19 1:47 AM, Rob Herring wrote:
+On Fri, May 10, 2019 at 04:59:39PM +0530, Amit Kucheria wrote:
+> The idle-states binding documentation[1] mentions that the
+> 'entry-method' property is required on 64-bit platforms and must be set
+> to "psci".
+>
+> We fixed up all uses of the entry-method property in
+> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
+> reflect documentation"). But a new one has appeared. Fix it up.
+>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
 
-Hi Rob,
-   Thanks for review.
+Ah right, new ones always appear for short period.
+Anyways,
 
->> @@ -0,0 +1,32 @@
->> +NVMEM reboot mode driver
->> +
->> +This driver gets reboot mode magic value from reboot-mode driver
->> +and stores it in a NVMEM cell named "reboot-mode". Then the bootloader
->> +can read it and take different action according to the magic
->> +value stored.
-> 
-> This is also assuming the nvmem is writeable which is more often not the
-> case.
-> 
-> Is your usecase a platform that supports pstore? Adding on to that
-> binding might be a better fit.
-> 
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
-I'm using an RTC persistent memory for storing this data. The available
-memory is low and don't think pstore will fit in this case.
-
->> +The rest of the properties should follow the generic reboot-mode description
->> +found in reboot-mode.txt
->> +
->> +Example:
->> +	reboot-mode-nvmem@0 {
-> 
-> What's this node for?
-> 
->> +		compatible = "simple-mfd";
-> 
-> I only see 1 function.
-> 
-
-No need to this. Will remove
-
-Nandor
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbcfa3bb..42e7822a0227 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -51,7 +51,7 @@
+>  		 * PSCI node is not added default, U-boot will add missing
+>  		 * parts if it determines to use PSCI.
+>  		 */
+> -		entry-method = "arm,psci";
+> +		entry-method = "psci";
+>
+>  		CPU_PH20: cpu-ph20 {
+>  			compatible = "arm,idle-state";
+> --
+> 2.17.1
+>
