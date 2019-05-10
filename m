@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson: u200: consistently order nodes
-Date: Fri, 10 May 2019 17:53:27 +0200
-Message-ID: <20190510155327.5759-3-jbrunet@baylibre.com>
+Subject: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
+Date: Fri, 10 May 2019 17:53:26 +0200
+Message-ID: <20190510155327.5759-2-jbrunet@baylibre.com>
 References: <20190510155327.5759-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -16,100 +16,153 @@ Like order boards, order nodes by address then node names then aliases.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 50 ++++++++++---------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    | 92 +++++++++----------
+ 1 file changed, 46 insertions(+), 46 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index e91201809abf..7cc3e2d6a4f1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -16,13 +16,10 @@
- 	aliases {
- 		serial0 = &uart_AO;
- 	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
--	memory@0 {
--		device_type = "memory";
--		reg = <0x0 0x0 0x0 0x40000000>;
--	};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+index 34b40587e5ef..61fb30047d7f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+@@ -14,10 +14,6 @@
+ 	compatible = "seirobotics,sei510", "amlogic,g12a";
+ 	model = "SEI Robotics SEI510";
  
- 	cvbs-connector {
- 		compatible = "composite-video-connector";
-@@ -34,15 +31,6 @@
+-	aliases {
+-		serial0 = &uart_AO;
+-	};
+-
+ 	adc_keys {
+ 		compatible = "adc-keys";
+ 		io-channels = <&saradc 0>;
+@@ -31,13 +27,8 @@
  		};
  	};
  
--	flash_1v8: regulator-flash_1v8 {
+-	ao_5v: regulator-ao_5v {
 -		compatible = "regulator-fixed";
--		regulator-name = "FLASH_1V8";
+-		regulator-name = "AO_5V";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		vin-supply = <&dc_in>;
+-		regulator-always-on;
++	aliases {
++		serial0 = &uart_AO;
+ 	};
+ 
+ 	chosen {
+@@ -54,23 +45,6 @@
+ 		};
+ 	};
+ 
+-	dc_in: regulator-dc_in {
+-		compatible = "regulator-fixed";
+-		regulator-name = "DC_IN";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		regulator-always-on;
+-	};
+-
+-	emmc_1v8: regulator-emmc_1v8 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "EMMC_1V8";
 -		regulator-min-microvolt = <1800000>;
 -		regulator-max-microvolt = <1800000>;
--		vin-supply = <&vcc_3v3>;
+-		vin-supply = <&vddao_3v3>;
 -		regulator-always-on;
 -	};
 -
  	hdmi-connector {
  		compatible = "hdmi-connector";
  		type = "a";
-@@ -54,6 +42,20 @@
- 		};
+@@ -87,12 +61,30 @@
+ 		reg = <0x0 0x0 0x0 0x40000000>;
  	};
  
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	flash_1v8: regulator-flash_1v8 {
+-	reserved-memory {
+-		/* TEE Reserved Memory */
+-		bl32_reserved: bl32@5000000 {
+-			reg = <0x0 0x05300000 0x0 0x2000000>;
+-			no-map;
+-		};
++	ao_5v: regulator-ao_5v {
 +		compatible = "regulator-fixed";
-+		regulator-name = "FLASH_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
++		regulator-name = "AO_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
 +		regulator-always-on;
 +	};
 +
- 	main_12v: regulator-main_12v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "12V";
-@@ -62,6 +64,17 @@
- 		regulator-always-on;
- 	};
- 
-+	usb_pwr_en: regulator-usb_pwr_en {
++	dc_in: regulator-dc_in {
 +		compatible = "regulator-fixed";
-+		regulator-name = "USB_PWR_EN";
++		regulator-name = "DC_IN";
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
++		regulator-always-on;
 +	};
 +
- 	vcc_1v8: regulator-vcc_1v8 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VCC_1V8";
-@@ -92,17 +105,6 @@
- 		enable-active-high;
++	emmc_1v8: regulator-emmc_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "EMMC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
  	};
  
--	usb_pwr_en: regulator-usb_pwr_en {
--		compatible = "regulator-fixed";
--		regulator-name = "USB_PWR_EN";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		vin-supply = <&vcc_5v>;
+ 	vddao_3v3: regulator-vddao_3v3 {
+@@ -122,6 +114,14 @@
+ 		vin-supply = <&vddao_3v3>;
+ 		regulator-always-on;
+ 	};
++
++	reserved-memory {
++		/* TEE Reserved Memory */
++		bl32_reserved: bl32@5000000 {
++			reg = <0x0 0x05300000 0x0 0x2000000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &cec_AO {
+@@ -144,6 +144,18 @@
+ 	};
+ };
+ 
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
+ &saradc {
+ 	status = "okay";
+ 	vref-supply = <&vddio_ao1v8>;
+@@ -161,18 +173,6 @@
+ 	};
+ };
+ 
+-&hdmi_tx {
+-	status = "okay";
+-	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
+-	pinctrl-names = "default";
+-};
 -
--		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
+-&hdmi_tx_tmds_port {
+-	hdmi_tx_tmds_out: endpoint {
+-		remote-endpoint = <&hdmi_connector_in>;
 -	};
+-};
 -
- 	vddao_1v8: regulator-vddao_1v8 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VDDAO_1V8";
+ &uart_AO {
+ 	status = "okay";
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.20.1
