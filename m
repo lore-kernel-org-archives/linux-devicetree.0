@@ -1,124 +1,124 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 1/8] dt-bindings: remoteproc: Rename and amend Hexagon v56 binding
-Date: Thu,  9 May 2019 21:34:14 -0700
-Message-ID: <20190510043421.31393-2-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 5/8] arm64: dts: qcom: qcs404: Fully describe the CDSP
+Date: Thu,  9 May 2019 21:34:18 -0700
+Message-ID: <20190510043421.31393-6-bjorn.andersson@linaro.org>
 References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190510043421.31393-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The SDM845 Audio DSP peripheral image loader binding describes the
-properties needed to load and boot firmware on a Hexagon v56. Rename the
-file and add the Compute DSP (CDSP) found in QCS404 to the binding.
+Add all the properties needed to describe the CDSP for both the
+Trustzone and non-Trustzone based remoteproc case, allowing any child
+devices to be described once by just overriding the compatible to match
+the firmware available on the board.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- ...qcom,adsp-pil.txt => qcom,hexagon-v56.txt} | 35 +++++++++++++------
- 1 file changed, 25 insertions(+), 10 deletions(-)
- rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp-pil.txt => qcom,hexagon-v56.txt} (74%)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 82 +++++++++++++++++-----------
+ 1 file changed, 51 insertions(+), 31 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,hexagon-v56.txt
-similarity index 74%
-rename from Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
-rename to Documentation/devicetree/bindings/remoteproc/qcom,hexagon-v56.txt
-index 66af2c30944f..1337a3d93d35 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,hexagon-v56.txt
-@@ -1,12 +1,13 @@
--Qualcomm Technology Inc. ADSP Peripheral Image Loader
-+Qualcomm Technology Inc. Hexagon v56 Peripheral Image Loader
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 3eb6089c8024..896f95817f23 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -113,37 +113,6 @@
+ 		};
+ 	};
  
- This document defines the binding for a component that loads and boots firmware
--on the Qualcomm Technology Inc. ADSP Hexagon core.
-+on the Qualcomm Technology Inc. Hexagon v56 core.
+-	remoteproc_cdsp: remoteproc-cdsp {
+-		compatible = "qcom,qcs404-cdsp-pas";
+-
+-		interrupts-extended = <&intc GIC_SPI 229 IRQ_TYPE_EDGE_RISING>,
+-				      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+-				      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+-				      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+-				      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+-		interrupt-names = "wdog", "fatal", "ready",
+-				  "handover", "stop-ack";
+-
+-		clocks = <&xo_board>;
+-		clock-names = "xo";
+-
+-		memory-region = <&cdsp_fw_mem>;
+-
+-		qcom,smem-states = <&cdsp_smp2p_out 0>;
+-		qcom,smem-state-names = "stop";
+-
+-		status = "disabled";
+-
+-		glink-edge {
+-			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
+-
+-			qcom,remote-pid = <5>;
+-			mboxes = <&apcs_glb 12>;
+-
+-			label = "cdsp";
+-		};
+-	};
+-
+ 	remoteproc_wcss: remoteproc-wcss {
+ 		compatible = "qcom,qcs404-wcss-pas";
  
- - compatible:
- 	Usage: required
- 	Value type: <string>
- 	Definition: must be one of:
-+		    "qcom,qcs404-cdsp-pil",
- 		    "qcom,sdm845-adsp-pil"
+@@ -288,6 +257,57 @@
+ 			clock-names = "core";
+ 		};
  
- - reg:
-@@ -28,10 +29,11 @@ on the Qualcomm Technology Inc. ADSP Hexagon core.
- - clocks:
- 	Usage: required
- 	Value type: <prop-encoded-array>
--	Definition:  List of 8 phandle and clock specifier pairs for the adsp.
-+	Definition:  List of phandles and clock specifier pairs for the Hexagon,
-+		     per clock-names below.
- 
- - clock-names:
--	Usage: required
-+	Usage: required for SDM845 ADSP
- 	Value type: <stringlist>
- 	Definition: List of clock input name strings sorted in the same
- 		    order as the clocks property. Definition must have
-@@ -39,6 +41,14 @@ on the Qualcomm Technology Inc. ADSP Hexagon core.
- 		    "lpass_ahbm_aon_cbcr", "qdsp6ss_xo", "qdsp6ss_sleep"
- 		    and "qdsp6ss_core".
- 
-+- clock-names:
-+	Usage: required for QCS404 CDSP
-+	Value type: <stringlist>
-+	Definition: List of clock input name strings sorted in the same
-+		    order as the clocks property. Definition must have
-+		    "xo", "sway", "tbu", "bimc", "ahb_aon", "q6ss_slave",
-+		    "q6ss_master", "q6_axim".
++		remoteproc_cdsp: remoteproc@b00000 {
++			compatible = "qcom,qcs404-cdsp-pas";
++			reg = <0x00b00000 0x4040>;
 +
- - power-domains:
- 	Usage: required
- 	Value type: <phandle>
-@@ -47,28 +57,33 @@ on the Qualcomm Technology Inc. ADSP Hexagon core.
- - resets:
- 	Usage: required
- 	Value type: <phandle>
--	Definition: reference to the list of 2 reset-controller for the adsp.
-+	Definition: reference to the list of resets for the Hexagon.
- 
- - reset-names:
--        Usage: required
-+        Usage: required for SDM845 ADSP
-         Value type: <stringlist>
-         Definition: must be "pdc_sync" and "cc_lpass"
- 
-+- reset-names:
-+        Usage: required for QCS404 CDSP
-+        Value type: <stringlist>
-+        Definition: must be "restart"
++			interrupts-extended = <&intc GIC_SPI 229 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++					      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack";
 +
- - qcom,halt-regs:
- 	Usage: required
- 	Value type: <prop-encoded-array>
- 	Definition: a phandle reference to a syscon representing TCSR followed
--			by the offset within syscon for lpass halt register.
-+		    by the offset within syscon for Hexagon halt register.
- 
- - memory-region:
- 	Usage: required
- 	Value type: <phandle>
--	Definition: reference to the reserved-memory for the ADSP
-+	Definition: reference to the reserved-memory for the firmware
- 
- - qcom,smem-states:
- 	Usage: required
- 	Value type: <phandle>
--	Definition: reference to the smem state for requesting the ADSP to
-+	Definition: reference to the smem state for requesting the Hexagon to
- 		    shut down
- 
- - qcom,smem-state-names:
-@@ -79,7 +94,7 @@ on the Qualcomm Technology Inc. ADSP Hexagon core.
- 
- = SUBNODES
- The adsp node may have an subnode named "glink-edge" that describes the
--communication edge, channels and devices related to the ADSP.
-+communication edge, channels and devices related to the Hexagon.
- See ../soc/qcom/qcom,glink.txt for details on how to describe these.
- 
- = EXAMPLE
++			clocks = <&xo_board>,
++				 <&gcc GCC_CDSP_CFG_AHB_CLK>,
++				 <&gcc GCC_CDSP_TBU_CLK>,
++				 <&gcc GCC_BIMC_CDSP_CLK>,
++				 <&turingcc TURING_WRAPPER_AON_CLK>,
++				 <&turingcc TURING_Q6SS_AHBS_AON_CLK>,
++				 <&turingcc TURING_Q6SS_AHBM_AON_CLK>,
++				 <&turingcc TURING_Q6SS_Q6_AXIM_CLK>;
++			clock-names = "xo",
++				      "sway",
++				      "tbu",
++				      "bimc",
++				      "ahb_aon",
++				      "q6ss_slave",
++				      "q6ss_master",
++				      "q6_axim";
++
++			resets = <&gcc GCC_CDSP_RESTART>;
++			reset-names = "restart";
++
++			qcom,halt-regs = <&tcsr 0x19004>;
++
++			memory-region = <&cdsp_fw_mem>;
++
++			qcom,smem-states = <&cdsp_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			status = "disabled";
++
++			glink-edge {
++				interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
++
++				qcom,remote-pid = <5>;
++				mboxes = <&apcs_glb 12>;
++
++				label = "cdsp";
++			};
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,qcs404-pinctrl";
+ 			reg = <0x01000000 0x200000>,
 -- 
 2.18.0
