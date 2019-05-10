@@ -1,90 +1,98 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5 04/12] dt-binding: gce: add binding for gce event
- property
-Date: Fri, 10 May 2019 14:48:30 +0800
-Message-ID: <1557470910.20990.7.camel@mtksdaap41>
-References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
-         <20190507081355.52630-5-bibby.hsieh@mediatek.com>
-         <1557292247.3936.5.camel@mtksdaap41> <1557458857.29102.1.camel@mtksdaap41>
+From: Anurag Kumar Vulisha <anuragku@xilinx.com>
+Subject: RE: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
+ and U2 entries
+Date: Fri, 10 May 2019 06:58:09 +0000
+Message-ID: <BYAPR02MB55913E2D6F6865202DE88514A70C0@BYAPR02MB5591.namprd02.prod.outlook.com>
+References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
+ <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
+ <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557458857.29102.1.camel@mtksdaap41>
+In-Reply-To: <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "Claus H. Stovgaard" <cst@phaseone.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
 
-On Fri, 2019-05-10 at 11:27 +0800, Bibby Hsieh wrote:
-> Hi, CK,
-> 
-> On Wed, 2019-05-08 at 13:10 +0800, CK Hu wrote:
-> > Hi, Bibby:
-> > 
-> > On Tue, 2019-05-07 at 16:13 +0800, Bibby Hsieh wrote:
-> > > Client hardware would send event to GCE hardware,
-> > > mediatek,gce-event-names and mediatek,gce-events
-> > > can be used to present the event.
-> > > 
-> > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > index 8fd9479bc9f6..76491f194c56 100644
-> > > --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > @@ -35,6 +35,9 @@ Required properties for a client device:
-> > >  Optional propertier for a client device:
-> > >  - mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
-> > >    to the register address.
-> > > +- mediatek,gce-event-names: the event name can be defined by user.
-> > 
-> > gce-event is like an interrupt from client hardware to GCE hardware, we
-> > do not give a name to an interrupt, so do we need to give a name for
-> > gce-event?
-> > 
-> 
-> Yes, we need to know the name of gce-ecent.
-> The name can help users to figure out the problems when GCE meet the
-> event time out errors.
+Hi Thinh,
 
-For debug, driver does not need this information. In your example, The
-event 'CMDQ_EVENT_MDP_RDMA0_SOF' is used by rdma driver. I think rdma
-driver should know why it need this event (it want to know whether 'rdma
-is starting to work (SOF)'), so when this event is time out, rdma driver
-should know what is timeout (it knows RDMA_SOF is timeout).
+>-----Original Message-----
+>From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]
+>Sent: Friday, May 10, 2019 5:30 AM
+>To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen
+><Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman
+><gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutla=
+nd
+><mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stovgaar=
+d
+><cst@phaseone.com>
+>Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>kernel@vger.kernel.org; v.anuragkumar@gmail.com
+>Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U=
+1 and U2
+>entries
+>
+>Hi Anurag,
+>
+>Anurag Kumar Vulisha wrote:
+>>>> +		return -EINVAL;
+>>>>
+>>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);
+>>>>  	if (set)
+>>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc,
+>struct
+>>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+>>>> index e293400..f2d3112 100644
+>>>> --- a/drivers/usb/dwc3/gadget.c
+>>>> +++ b/drivers/usb/dwc3/gadget.c
+>>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget *=
+g)
+>>>>  	return 0;
+>>>>  }
+>>>>
+>>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,
+>>>> +				      struct usb_dcd_config_params *params)
+>>>> +{
+>>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);
+>>>> +
+>>>> +	/* U1 Device exit Latency */
+>>>> +	if (dwc->dis_u1_entry_quirk)
+>>>> +		params->bU1devExitLat =3D 0;
+>>> It doesn't make sense to have exit latency of 0. Rejecting
+>>> SET_FEATURE(enable U1/U2) should already let the host know that the
+>>> device doesn't support U1/U2.
+>>>
+>> I am okay to remove this, but I feel that it is better to report zero va=
+lue instead
+>> of a non-zero value in exit latency of BOS when U1 or U2 entries are not=
+ supported.
+>> Advantage of reporting 0 is that some hosts doesn't even send
+>SET_FEATURE(U1/U2)
+>> requests on seeing zero value in BOS descriptor. Also there can be cases=
+ where U1 is
+>> disabled and U2 entry is allowed or vice versa, for these kind of cases =
+the driver can
+>> set zero exit latency value for U1 and non-zero exit latency value for U=
+2 . Based on
+>this
+>> I think it would be better to report 0 when U1/U2 states are not enabled=
+. Please
+>provide
+>> your opinion on this.
+>
+>Hm... I assume you're testing against linux usb stack and xhci host. If
+>that's the case, it looks like host will still request the device to
+>enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). This
+>needs to be fixed. I think what you have is fine to workaround this issue.
 
-Regards,
-CK
+Thanks . Will send the next series with the other fixes that you have sugge=
+sted
 
-> 
-> 
-> > Regards,
-> > CK
-> > 
-> > > +- mediatek,gce-events: u32, the event number defined in
-> > > +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
-> > >  
-> > >  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
-> > >  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> > > @@ -57,8 +60,10 @@ Example for a client device:
-> > >  		compatible = "mediatek,mt8173-mmsys";
-> > >  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
-> > >  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> > > -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> > > -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> > > +		mediatek,gce-event-names = "rdma0_sof",
-> > > +					   "rsz0_sof";
-> > > +		mediatek,gce-events = <CMDQ_EVENT_MDP_RDMA0_SOF>,
-> > > +				      <CMDQ_EVENT_MDP_RSZ0_SOF>;
-> > >  		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
-> > >  					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
-> > >  		...
-> > 
-> > 
-> 
+Best Regards,
+Anurag Kumar Vulisha
