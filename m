@@ -1,197 +1,51 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 2/8] remoteproc: qcom: qdsp6-adsp: Add support for QCS404 CDSP
-Date: Thu,  9 May 2019 21:34:15 -0700
-Message-ID: <20190510043421.31393-3-bjorn.andersson@linaro.org>
-References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510043421.31393-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: "Theodore Ts'o" <tytso-3s7WtUTddSA@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Fri, 10 May 2019 00:47:43 -0400
+Message-ID: <20190510044743.GA6889@mit.edu>
+References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+ <20190509233043.GC20877@mit.edu>
+ <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8914afef-1e66-e6e3-f891-5855768d3018-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move the clock list to adsp_pil_data, make the pdc_reset optional and
-make the driver directly enable the xo, sleep and core clocks.
+On Thu, May 09, 2019 at 05:40:48PM -0600, Logan Gunthorpe wrote:
+> 
+> Based on some of the other commenters, I was under the impression that
+> kselftests had in-kernel tests but I'm not sure where or if they exist. If
+> they do exists, it seems like it would make sense to convert those to kunit
+> and have Kunit tests run-able in a VM or baremetal instance.
 
-The three clocks are previously toggled through the clock controller,
-but that means the same hardware block needs to be mapped in both
-drivers. Making the remoteproc driver enable the clocks is a nop when
-using the clock controller, but allow us to remove the clocks from the
-clock controller.
+There are kselftests tests which are shell scripts which load a
+module, and the module runs the in-kernel code.  However, I didn't see
+much infrastructure for the in-kernel test code; the one or two test
+modules called from kselftests looked pretty ad hoc to me.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/qcom_q6v5_adsp.c | 73 ++++++++++++++++++++++-------
- 1 file changed, 55 insertions(+), 18 deletions(-)
+That's why I used the "vise grips" analogy.  You can use a pair of
+vise grips like a monkey wrench; but it's not really a monkey wrench,
+and might not be the best tool to loosen or tighten nuts and bolts.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-index 1f3ef9ee493c..e953886b2eb7 100644
---- a/drivers/remoteproc/qcom_q6v5_adsp.c
-+++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-@@ -46,11 +46,9 @@
- #define LPASS_PWR_ON_REG		0x10
- #define LPASS_HALTREQ_REG		0x0
- 
--/* list of clocks required by ADSP PIL */
--static const char * const adsp_clk_id[] = {
--	"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
--	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
--};
-+#define QDSP6SS_XO_CBCR		0x38
-+#define QDSP6SS_CORE_CBCR	0x20
-+#define QDSP6SS_SLEEP_CBCR	0x3c
- 
- struct adsp_pil_data {
- 	int crash_reason_smem;
-@@ -59,6 +57,9 @@ struct adsp_pil_data {
- 	const char *ssr_name;
- 	const char *sysmon_name;
- 	int ssctl_id;
-+
-+	const char **clk_ids;
-+	int num_clks;
- };
- 
- struct qcom_adsp {
-@@ -75,7 +76,7 @@ struct qcom_adsp {
- 	void __iomem *qdsp6ss_base;
- 
- 	struct reset_control *pdc_sync_reset;
--	struct reset_control *cc_lpass_restart;
-+	struct reset_control *restart;
- 
- 	struct regmap *halt_map;
- 	unsigned int halt_lpass;
-@@ -143,7 +144,7 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
- 	/* Assert the LPASS PDC Reset */
- 	reset_control_assert(adsp->pdc_sync_reset);
- 	/* Place the LPASS processor into reset */
--	reset_control_assert(adsp->cc_lpass_restart);
-+	reset_control_assert(adsp->restart);
- 	/* wait after asserting subsystem restart from AOSS */
- 	usleep_range(200, 300);
- 
-@@ -153,7 +154,7 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
- 	/* De-assert the LPASS PDC Reset */
- 	reset_control_deassert(adsp->pdc_sync_reset);
- 	/* Remove the LPASS reset */
--	reset_control_deassert(adsp->cc_lpass_restart);
-+	reset_control_deassert(adsp->restart);
- 	/* wait after de-asserting subsystem restart from AOSS */
- 	usleep_range(200, 300);
- 
-@@ -192,6 +193,15 @@ static int adsp_start(struct rproc *rproc)
- 		goto disable_power_domain;
- 	}
- 
-+	/* Enable the XO clock */
-+	writel(1, adsp->qdsp6ss_base + QDSP6SS_XO_CBCR);
-+
-+	/* Enable the QDSP6SS sleep clock */
-+	writel(1, adsp->qdsp6ss_base + QDSP6SS_SLEEP_CBCR);
-+
-+	/* Enable the QDSP6 core clock */
-+	writel(1, adsp->qdsp6ss_base + QDSP6SS_CORE_CBCR);
-+
- 	/* Program boot address */
- 	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
- 
-@@ -280,8 +290,9 @@ static const struct rproc_ops adsp_ops = {
- 	.load = adsp_load,
- };
- 
--static int adsp_init_clock(struct qcom_adsp *adsp)
-+static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
- {
-+	int num_clks = 0;
- 	int i, ret;
- 
- 	adsp->xo = devm_clk_get(adsp->dev, "xo");
-@@ -292,32 +303,39 @@ static int adsp_init_clock(struct qcom_adsp *adsp)
- 		return ret;
- 	}
- 
--	adsp->num_clks = ARRAY_SIZE(adsp_clk_id);
-+	for (i = 0; clk_ids[i]; i++)
-+		num_clks++;
-+
-+	adsp->num_clks = num_clks;
- 	adsp->clks = devm_kcalloc(adsp->dev, adsp->num_clks,
- 				sizeof(*adsp->clks), GFP_KERNEL);
- 	if (!adsp->clks)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < adsp->num_clks; i++)
--		adsp->clks[i].id = adsp_clk_id[i];
-+		adsp->clks[i].id = clk_ids[i];
- 
- 	return devm_clk_bulk_get(adsp->dev, adsp->num_clks, adsp->clks);
- }
- 
- static int adsp_init_reset(struct qcom_adsp *adsp)
- {
--	adsp->pdc_sync_reset = devm_reset_control_get_exclusive(adsp->dev,
-+	adsp->pdc_sync_reset = devm_reset_control_get_optional_exclusive(adsp->dev,
- 			"pdc_sync");
- 	if (IS_ERR(adsp->pdc_sync_reset)) {
- 		dev_err(adsp->dev, "failed to acquire pdc_sync reset\n");
- 		return PTR_ERR(adsp->pdc_sync_reset);
- 	}
- 
--	adsp->cc_lpass_restart = devm_reset_control_get_exclusive(adsp->dev,
--			"cc_lpass");
--	if (IS_ERR(adsp->cc_lpass_restart)) {
--		dev_err(adsp->dev, "failed to acquire cc_lpass restart\n");
--		return PTR_ERR(adsp->cc_lpass_restart);
-+	adsp->restart = devm_reset_control_get_optional_exclusive(adsp->dev, "restart");
-+
-+	/* Fall back to the  old "cc_lpass" if "restart" is absent */
-+	if (!adsp->restart)
-+		adsp->restart = devm_reset_control_get_exclusive(adsp->dev, "cc_lpass");
-+
-+	if (IS_ERR(adsp->restart)) {
-+		dev_err(adsp->dev, "failed to acquire restart\n");
-+		return PTR_ERR(adsp->restart);
- 	}
- 
- 	return 0;
-@@ -415,7 +433,7 @@ static int adsp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = adsp_init_clock(adsp);
-+	ret = adsp_init_clock(adsp, desc->clk_ids);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -479,9 +497,28 @@ static const struct adsp_pil_data adsp_resource_init = {
- 	.ssr_name = "lpass",
- 	.sysmon_name = "adsp",
- 	.ssctl_id = 0x14,
-+	.clk_ids = (const char*[]) {
-+		"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
-+		"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core", NULL
-+	},
-+	.num_clks = 7,
-+};
-+
-+static const struct adsp_pil_data cdsp_resource_init = {
-+	.crash_reason_smem = 601,
-+	.firmware_name = "cdsp.mdt",
-+	.ssr_name = "cdsp",
-+	.sysmon_name = "cdsp",
-+	.ssctl_id = 0x17,
-+	.clk_ids = (const char*[]) {
-+		"sway", "tbu", "bimc", "ahb_aon", "q6ss_slave", "q6ss_master",
-+		"q6_axim", NULL
-+	},
-+	.num_clks = 7,
- };
- 
- static const struct of_device_id adsp_of_match[] = {
-+	{ .compatible = "qcom,qcs404-cdsp-pil", .data = &cdsp_resource_init },
- 	{ .compatible = "qcom,sdm845-adsp-pil", .data = &adsp_resource_init },
- 	{ },
- };
--- 
-2.18.0
+       	   	     	       	   - Ted
