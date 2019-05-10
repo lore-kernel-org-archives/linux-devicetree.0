@@ -1,34 +1,65 @@
-From: Pramod Kumar <pramod.kumar_1@nxp.com>
-Subject: [PATCH v2 3/3] arm64: dts: nxp: frwy-ls1046a: add support for micron
- nor flash
-Date: Fri, 10 May 2019 13:00:24 +0000
-Message-ID: <20190510130207.14330-4-pramod.kumar_1@nxp.com>
-References: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCHv1 2/8] Documentation: arm: Link idle-states binding to
+ code
+Date: Fri, 10 May 2019 14:02:40 +0100
+Message-ID: <20190510130240.GC10284@e107155-lin>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <5f25e2b3096fa73f205e1797e355e049ed9f8c9c.1557486950.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5f25e2b3096fa73f205e1797e355e049ed9f8c9c.1557486950.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ashish Kumar <ashish.kumar@nxp.com>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-YWRkIG1pY3JvbiBub3IgZmxhc2ggc3VwcG9ydCBmb3IgbHMxMDQ2YSBmcnd5IGJvYXJkLg0KDQpT
-aWduZWQtb2ZmLWJ5OiBBc2hpc2ggS3VtYXIgPGFzaGlzaC5rdW1hckBueHAuY29tPg0KU2lnbmVk
-LW9mZi1ieTogUHJhbW9kIEt1bWFyIDxwcmFtb2Qua3VtYXJfMUBueHAuY29tPg0KLS0tDQogLi4u
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS1mcnd5LmR0cyAgICAgfCAxNyArKysrKysr
-KysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1n
-aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS1mcnd5LmR0cyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLWZyd3kuZHRzDQppbmRl
-eCBkZTBkMTljMDI5NDQuLjg5MGYwNzEyMmRkMCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLWZyd3kuZHRzDQorKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS1mcnd5LmR0cw0KQEAgLTExMyw2ICsxMTMsMjMg
-QEANCiANCiB9Ow0KIA0KKw0KKyZxc3BpIHsNCisJbnVtLWNzID0gPDE+Ow0KKwlidXMtbnVtID0g
-PDA+Ow0KKwlzdGF0dXMgPSAib2theSI7DQorDQorCXFmbGFzaDA6IGZsYXNoQDAgew0KKwkJY29t
-cGF0aWJsZSA9ICJqZWRlYyxzcGktbm9yIjsNCisJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KKwkJ
-I3NpemUtY2VsbHMgPSA8MT47DQorCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDw1MDAwMDAwMD47DQor
-CQlyZWcgPSA8MD47DQorCQlzcGktcngtYnVzLXdpZHRoID0gPDQ+Ow0KKwkJc3BpLXR4LWJ1cy13
-aWR0aCA9IDw0PjsNCisJfTsNCit9Ow0KKw0KICNpbmNsdWRlICJmc2wtbHMxMDQ2LXBvc3QuZHRz
-aSINCiANCiAmZm1hbjAgew0KLS0gDQoyLjE3LjENCg0K
+On Fri, May 10, 2019 at 04:59:40PM +0530, Amit Kucheria wrote:
+> The enable-method needs to be psci for the psci_cpuidle_ops to be
+> correctly registered.
+>
+> Add a note to the binding documentation on where to find the declaration
+> of the enable-method since it is a macro and escapes any attempts to
+> grep for it.
+>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/idle-states.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+> index 45730ba60af5..3a42335a6f3d 100644
+> --- a/Documentation/devicetree/bindings/arm/idle-states.txt
+> +++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+> @@ -239,6 +239,10 @@ processor idle states, defined as device tree nodes, are listed.
+>  			# On ARM v8 64-bit this property is required and must
+>  			  be:
+>  			   - "psci"
+> +			     (This assumes that the enable-method is "psci"
+> +			     in the cpu node[6] that then uses the
+> +			     CPUIDLE_METHOD_OF_DECLARE macro to setup the
+> +			     psci_cpuidle_ops callbacks)
+
+I don't prefer to refer some Linux implementation macros in DT bindings
+as they may disappear any day. Further, the use of CPUIDLE_METHOD_OF_DECLARE
+is restricted to ARM32 platforms only. So better to move it down without
+the reference to the above macro or any kernel implementation details if
+possible.
+
+>  			# On ARM 32-bit systems this property is optional
+>
+
+Something like:
+"This assumes that the "enable-method" property is set to "psci" in
+in the cpu node[6] and use this property to set up the CPU idle
+management in OS PM implementations"
+
+With something on these line, you can add:
+
+Acked-by: Sudeep Holla <sudeep.holla@arm.com
+
+--
+Regards,
+Sudeep
