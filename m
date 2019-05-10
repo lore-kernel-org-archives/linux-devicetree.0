@@ -1,47 +1,45 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: Add YAML schemas for the generic
- MMC options
-Date: Fri, 10 May 2019 12:57:59 +0200
-Message-ID: <20190510105759.z2ob5tl4ovn2ctdo@flea>
-References: <68d3fb999d16e49696e832e1d1a6bcd7b76a6e8d.1557389988.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqJi0iwM61anziC-cHXp0PL2AEtXiWFCLn943vTxK5eeig@mail.gmail.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH v3 0/4] add slow clock support for SAM9X60
+Date: Fri, 10 May 2019 11:23:23 +0000
+Message-ID: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJi0iwM61anziC-cHXp0PL2AEtXiWFCLn943vTxK5eeig@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Thu, May 09, 2019 at 11:45:26AM -0500, Rob Herring wrote:
-> > +dependencies:
-> > +  cd-inverted: [ cd-gpios ]
->
-> The note (which you dropped) says 'cd-inverted' applies for built-in CD too.
->
-> At least that is what I take "Polarity of dedicated pins can be
-> specified, using *-inverted properties." to mean.
-
-Indeed, my bad. i guess we should probably keep that note. How are we
-supposed to keep a note that would apply to multiple properties? In
-the global description?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCkhp
+LA0KDQpUaGlzIHNlcmllcyBhZGQgc2xvdyBjbG9jayBzdXBwb3J0IGZvciBTQU05WDYwLiBBcGFy
+dCBmcm9tIHByZXZpb3VzIElQcywgdGhpcw0Kb25lIHVzZXMgZGlmZmVyZW50IG9mZnNldHMgaW4g
+Y29udHJvbCByZWdpc3RlciBmb3IgZGlmZmVyZW50IGZ1bmN0aW9uYWxpdGllcy4NClRoZSBzZXJp
+ZXMgYWRhcHQgY3VycmVudCBkcml2ZXIgdG8gd29yayBmb3IgYWxsIElQcyB1c2luZyBwZXIgSVAN
+CmNvbmZpZ3VyYXRpb25zIGluaXRpYWxpemVkIGF0IHByb2JlLg0KDQpUaGFuayB5b3UsDQpDbGF1
+ZGl1IEJlem5lYQ0KDQpDaGFuZ2VzIGluIHYzOg0KLSBhZGQgcGF0Y2ggMS8xIHRoYXQgcmVtb3Zl
+IGJ5cGFzcyBjb2RlIGluIHRoZSBjb2RlIHNwZWNpZmljIHRvIFNBTUE1RDQNCiAgKHRoZXJlIGlz
+IG5vIGJ5cGFzcyBzdXBwb3J0IG9uIFNBTUE1RDQpDQotIGFkYXB0IHJldmlldyBjb21tZW50cw0K
+LSByZWdpc3RlciBjbG9jayB3aXRoIG9mX2Nsa19od19vbmVjZWxsX2dldCB0byBlbXBoYXNpemUg
+dGhhdCB0aGlzIElQIGhhcw0KICAyIG91dHB1dCBjbG9ja3MgTURfU0xLQyBhbmQgVERfU0xDSyAo
+SSBjb25zaWRlcmVkIG5vdCBuZWNlc3NhcnkgdG8NCiAgaW50cm9kdWNlIG5ldyBjb25zdGFudHMg
+dG8gYmUgc2hhcmVkIGIvdyBkcml2ZXIgYW5kIERUIGJpbmRpbmdzOyBpZg0KICB5b3UgY29uc2lk
+ZXIgb3RoZXJ3aXNlLCBsZXQgbWUga25vdykNCi0gYWRhcHQgZHQtYmluZGluZyBwYXRjaCB3aXRo
+IGNsb2NrLWNlbGxzIGNoYW5nZXMgKHRodXMgZGlkbid0IGludHJvZHVjZWQNCiAgUmV2aWV3ZWQt
+YnkgdGFnKQ0KLSByZW5hbWVkIHN0cnVjdCBjbGtfc2xvd19vZmZzZXRzIHRvIHN0cnVjdCBjbGtf
+c2xvd19iaXRzIGFuZCB0aGUNCiAgY29ycmVzcG9uZGluZyBpbnN0YW5jZXMgb2YgaXQNCg0KQ2hh
+bmdlcyBpbiB2MjoNCi0gc3BsaXQgcGF0Y2ggMS8xIGZyb20gdjEgaW4gMiBwYXRjaGVzOiBvbmUg
+YWRkaW5nIHJlZ2lzdGVyIGJpdCBvZmZzZXRzDQogIHN1cHBvcnQgKHBhdGNoIDEvMyBmcm9tIHRo
+aXMgc2VyaWVzKSwgb25lIGFkZGluZyBzdXBwb3J0IGZvciBTQU05WDYwDQogIChwYXRjaCAyLzMg
+ZnJvbSB0aGlzIHNlcmllcykNCi0gZml4IGNvbXBhdGlibGUgc3RyaW5nIGZyb20gIm1pY3JvY2hp
+cCxhdDkxc2FtOXg2MC1zY2tjIiB0bw0KICAibWljcm9jaGlwLHNhbTl4NjAtc2NrYyINCg0KQ2xh
+dWRpdSBCZXpuZWEgKDQpOg0KICBjbGs6IGF0OTE6IHNja2M6IHNhbWE1ZDQgaGFzIG5vIGJ5cGFz
+cyBzdXBwb3J0DQogIGNsazogYXQ5MTogc2NrYzogYWRkIHN1cHBvcnQgdG8gc3BlY2lmeSByZWdp
+c3RlcnMgYml0IG9mZnNldHMNCiAgZHQtYmluZGluZ3M6IGNsazogYXQ5MTogYWRkIGJpbmRpbmdz
+IGZvciBTQU05WDYwJ3Mgc2xvdyBjbG9jaw0KICAgIGNvbnRyb2xsZXINCiAgY2xrOiBhdDkxOiBz
+Y2tjOiBhZGQgc3VwcG9ydCBmb3IgU0FNOVg2MA0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Y2xvY2svYXQ5MS1jbG9jay50eHQgICAgICAgfCAgIDcgKy0NCiBkcml2ZXJzL2Nsay9hdDkxL3Nj
+a2MuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDE4MCArKysrKysrKysrKysrKysrLS0t
+LS0NCiAyIGZpbGVzIGNoYW5nZWQsIDE0NSBpbnNlcnRpb25zKCspLCA0MiBkZWxldGlvbnMoLSkN
+Cg0KLS0gDQoyLjcuNA0KDQo=
