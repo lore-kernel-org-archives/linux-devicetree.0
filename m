@@ -1,91 +1,43 @@
 From: Pramod Kumar <pramod.kumar_1@nxp.com>
-Subject: [PATCH v2 2/3] arm64: dts: nxp: add ls1046a-frwy board support
-Date: Fri, 10 May 2019 13:00:20 +0000
-Message-ID: <20190510130207.14330-3-pramod.kumar_1@nxp.com>
-References: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
+Subject: [PATCH v2 0/3] arm64: dts: nxp: add ls1046a frwy board support
+Date: Fri, 10 May 2019 13:00:13 +0000
+Message-ID: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-bHMxMDQ2YWZyd3kgYm9hcmQgaXMgYmFzZWQgb24gbnhwIGxzMTA0NmEgU29DLg0KQm9hcmQgc3Vw
-cG9ydCdzIDRHQiBkZHIgbWVtb3J5LCBpMmMsIG1pY3JvU0QgY2FyZCwNCnNlcmlhbCBjb25zb2xl
-LHFzcGkgbm9yIGZsYXNoLGlmYyBuYW5kIGZsYXNoLHFzZ21paSBuZXR3b3JrIGludGVyZmFjZSwN
-CnVzYiAzLjAgYW5kIHNlcmRlcyBpbnRlcmZhY2UgdG8gc3VwcG9ydCB0d28geDFnZW4zIHBjaWUg
-aW50ZXJmYWNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBWYWJoYXYgU2hhcm1hIDx2YWJoYXYuc2hhcm1h
-QG54cC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBQcmFtb2QgS3VtYXIgPHByYW1vZC5rdW1hcl8xQG54
-cC5jb20+DQotLS0NCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZSAgICAg
-ICAgfCAgIDEgKw0KIC4uLi9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtZnJ3eS5kdHMg
-ICB8IDE1NiArKysrKysrKysrKysrKysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDE1NyBpbnNlcnRp
-b25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwNDZhLWZyd3kuZHRzDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2ZyZWVzY2FsZS9NYWtlZmlsZSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2Vm
-aWxlDQppbmRleCAxMzYwNGU1NThkYzEuLjg0ZmY2OTk1YjQxZSAxMDA2NDQNCi0tLSBhL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlDQorKysgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KQEAgLTgsNiArOCw3IEBAIGR0Yi0kKENPTkZJR19BUkNI
-X0xBWUVSU0NBUEUpICs9IGZzbC1sczEwMjhhLXFkcy5kdGINCiBkdGItJChDT05GSUdfQVJDSF9M
-QVlFUlNDQVBFKSArPSBmc2wtbHMxMDI4YS1yZGIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTEFZ
-RVJTQ0FQRSkgKz0gZnNsLWxzMTA0M2EtcWRzLmR0Yg0KIGR0Yi0kKENPTkZJR19BUkNIX0xBWUVS
-U0NBUEUpICs9IGZzbC1sczEwNDNhLXJkYi5kdGINCitkdGItJChDT05GSUdfQVJDSF9MQVlFUlND
-QVBFKSArPSBmc2wtbHMxMDQ2YS1mcnd5LmR0Yg0KIGR0Yi0kKENPTkZJR19BUkNIX0xBWUVSU0NB
-UEUpICs9IGZzbC1sczEwNDZhLXFkcy5kdGINCiBkdGItJChDT05GSUdfQVJDSF9MQVlFUlNDQVBF
-KSArPSBmc2wtbHMxMDQ2YS1yZGIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkg
-Kz0gZnNsLWxzMTA4OGEtcWRzLmR0Yg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2ZzbC1sczEwNDZhLWZyd3kuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTA0NmEtZnJ3eS5kdHMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAw
-MDAwMDAwMDAwMDAuLmRlMGQxOWMwMjk0NA0KLS0tIC9kZXYvbnVsbA0KKysrIGIvYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtZnJ3eS5kdHMNCkBAIC0wLDAgKzEsMTU2
-IEBADQorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wKyBPUiBNSVQpDQorLyoN
-CisgKiBEZXZpY2UgVHJlZSBJbmNsdWRlIGZpbGUgZm9yIEZyZWVzY2FsZSBMYXllcnNjYXBlLTEw
-NDZBIGZhbWlseSBTb0MuDQorICoNCisgKiBDb3B5cmlnaHQgMjAxOSBOWFAuDQorICoNCisgKi8N
-CisNCisvZHRzLXYxLzsNCisNCisjaW5jbHVkZSAiZnNsLWxzMTA0NmEuZHRzaSINCisNCisvIHsN
-CisJbW9kZWwgPSAiTFMxMDQ2QSBGUldZIEJvYXJkIjsNCisJY29tcGF0aWJsZSA9ICJmc2wsbHMx
-MDQ2YS1mcnd5IiwgImZzbCxsczEwNDZhIjsNCisNCisJYWxpYXNlcyB7DQorCQlzZXJpYWwwID0g
-JmR1YXJ0MDsNCisJCXNlcmlhbDEgPSAmZHVhcnQxOw0KKwkJc2VyaWFsMiA9ICZkdWFydDI7DQor
-CQlzZXJpYWwzID0gJmR1YXJ0MzsNCisJfTsNCisNCisJY2hvc2VuIHsNCisJCXN0ZG91dC1wYXRo
-ID0gInNlcmlhbDA6MTE1MjAwbjgiOw0KKwl9Ow0KKw0KKwlzYl8zdjM6IHJlZ3VsYXRvci1zYjN2
-MyB7DQorCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7DQorCQlyZWd1bGF0b3ItbmFt
-ZSA9ICJMVDg2NDJTRVYtMy4zViI7DQorCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAw
-MDAwPjsNCisJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KKwkJcmVndWxh
-dG9yLWJvb3Qtb247DQorCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KKwl9Ow0KK307DQorDQorJmR1
-YXJ0MCB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KKw0KKyZkdWFydDEgew0KKwlzdGF0dXMg
-PSAib2theSI7DQorfTsNCisNCismZHVhcnQyIHsNCisJc3RhdHVzID0gIm9rYXkiOw0KK307DQor
-DQorJmR1YXJ0MyB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KKw0KKyZpMmMwIHsNCisJc3Rh
-dHVzID0gIm9rYXkiOw0KKw0KKwlpMmMtbXV4QDc3IHsNCisJCWNvbXBhdGlibGUgPSAibnhwLHBj
-YTk1NDYiOw0KKwkJcmVnID0gPDB4Nzc+Ow0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkj
-c2l6ZS1jZWxscyA9IDwwPjsNCisJCWkyYy1tdXgtbmV2ZXItZGlzYWJsZTsNCisNCisJCWkyY0Aw
-IHsNCisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCisJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCisJ
-CQlyZWcgPSA8MD47DQorDQorCQkJZWVwcm9tQDUyIHsNCisJCQkJY29tcGF0aWJsZSA9ICJhdG1l
-bCwyNGM1MTIiOw0KKwkJCQlyZWcgPSA8MHg1Mj47DQorCQkJfTsNCisNCisJCQllZXByb21ANTMg
-ew0KKwkJCQljb21wYXRpYmxlID0gImF0bWVsLDI0YzUxMiI7DQorCQkJCXJlZyA9IDwweDUzPjsN
-CisJCQl9Ow0KKw0KKwkJCXBvd2VyLW1vbml0b3JANDAgew0KKwkJCQljb21wYXRpYmxlID0gInRp
-LGluYTIyMCI7DQorCQkJCXJlZyA9IDwweDQwPjsNCisJCQkJc2h1bnQtcmVzaXN0b3IgPSA8MTAw
-MD47DQorCQkJfTsNCisNCisJCQlydGNANTEgew0KKwkJCQljb21wYXRpYmxlID0gIm54cCxwY2Yy
-MTI5IjsNCisJCQkJcmVnID0gPDB4NTE+Ow0KKwkJCX07DQorDQorCQkJdGVtcGVyYXR1cmUtc2Vu
-c29yQDRjIHsNCisJCQkJY29tcGF0aWJsZSA9ICJueHAsc2E1NjAwNCI7DQorCQkJCXJlZyA9IDww
-eDRjPjsNCisJCQkJdmNjLXN1cHBseSA9IDwmc2JfM3YzPjsNCisJCQl9Ow0KKw0KKwkJfTsNCisJ
-fTsNCit9Ow0KKw0KKyZpZmMgew0KKwkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCisJI3NpemUtY2Vs
-bHMgPSA8MT47DQorCS8qIE5BTkQgRmxhc2ggKi8NCisJcmFuZ2VzID0gPDB4MCAweDAgMHgwIDB4
-N2U4MDAwMDAgMHgwMDAxMDAwMD47DQorCXN0YXR1cyA9ICJva2F5IjsNCisNCisJbmFuZEAwLDAg
-ew0KKwkJY29tcGF0aWJsZSA9ICJmc2wsaWZjLW5hbmQiOw0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47DQorCQkjc2l6ZS1jZWxscyA9IDwxPjsNCisJCXJlZyA9IDwweDAgMHgwIDB4MTAwMDA+Ow0K
-Kwl9Ow0KKw0KK307DQorDQorI2luY2x1ZGUgImZzbC1sczEwNDYtcG9zdC5kdHNpIg0KKw0KKyZm
-bWFuMCB7DQorCWV0aGVybmV0QGUwMDAwIHsNCisJCXBoeS1oYW5kbGUgPSA8JnFzZ21paV9waHk0
-PjsNCisJCXBoeS1jb25uZWN0aW9uLXR5cGUgPSAicXNnbWlpIjsNCisJfTsNCisNCisJZXRoZXJu
-ZXRAZTgwMDAgew0KKwkJcGh5LWhhbmRsZSA9IDwmcXNnbWlpX3BoeTI+Ow0KKwkJcGh5LWNvbm5l
-Y3Rpb24tdHlwZSA9ICJxc2dtaWkiOw0KKwl9Ow0KKw0KKwlldGhlcm5ldEBlYTAwMCB7DQorCQlw
-aHktaGFuZGxlID0gPCZxc2dtaWlfcGh5MT47DQorCQlwaHktY29ubmVjdGlvbi10eXBlID0gInFz
-Z21paSI7DQorCX07DQorDQorCWV0aGVybmV0QGYyMDAwIHsNCisJCXBoeS1oYW5kbGUgPSA8JnFz
-Z21paV9waHkzPjsNCisJCXBoeS1jb25uZWN0aW9uLXR5cGUgPSAicXNnbWlpIjsNCisJfTsNCisN
-CisJbWRpb0BmZDAwMCB7DQorCQlxc2dtaWlfcGh5MTogZXRoZXJuZXQtcGh5QDFjIHsNCisJCQly
-ZWcgPSA8MHgxYz47DQorCQl9Ow0KKw0KKwkJcXNnbWlpX3BoeTI6IGV0aGVybmV0LXBoeUAxZCB7
-DQorCQkJcmVnID0gPDB4MWQ+Ow0KKwkJfTsNCisNCisJCXFzZ21paV9waHkzOiBldGhlcm5ldC1w
-aHlAMWUgew0KKwkJCXJlZyA9IDwweDFlPjsNCisJCX07DQorDQorCQlxc2dtaWlfcGh5NDogZXRo
-ZXJuZXQtcGh5QDFmIHsNCisJCQlyZWcgPSA8MHgxZj47DQorCQl9Ow0KKwl9Ow0KK307DQotLSAN
-CjIuMTcuMQ0KDQo=
+Changes for v2:
+- Modified comit message
+- Add dts entry for qspi nor flash
+
+Changes for v1:
+- Add dts support for ls1046a frwy board.
+- Add "fsl,ls1046a-frwy" bindings for ls1046afrwy board based on ls1046a SoC
+
+Pramod Kumar (3):
+  dt-bindings: arm: nxp: Add device tree binding for ls1046a-frwy board
+  arm64: dts: nxp: add ls1046a-frwy board support
+  arm64: dts: nxp: frwy-ls1046a: add support for micron nor flash
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 173 ++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+
+-- 
+2.17.1
