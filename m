@@ -1,22 +1,49 @@
-Return-Path: <SRS0=Jc5u=TK=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
+Return-Path: <SRS0=12eG=TK=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Subject: RE: [PATCH v2 11/15] usb: renesas_usbhs: Add support for RZ/A2
-Date: Fri, 10 May 2019 13:10:51 +0000
+Date: Fri, 10 May 2019 11:00:20 +0000
 Message-ID: 
- <TY1PR01MB15620169FA7D402A0E33D1528A0C0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <OSBPR01MB317441157A3BFA9148FFF558D80C0@OSBPR01MB3174.jpnprd01.prod.outlook.com>
 References: <20190509201142.10543-1-chris.brandt@renesas.com>
-	 <20190509201142.10543-12-chris.brandt@renesas.com>
- <1557453204.10179.275.camel@mhfsdcap03>
-In-Reply-To: <1557453204.10179.275.camel@mhfsdcap03>
-Content-Language: en-US
+ <20190509201142.10543-12-chris.brandt@renesas.com>
+ <CAMuHMdV7aQd-g1t_t27d8ge69e3VZnG7nQ7Lzre=qrJ1UrUuuA@mail.gmail.com>
+ <OSBPR01MB3174FA32BADD2B97A6003ADCD80C0@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+In-Reply-To: 
+ <OSBPR01MB3174FA32BADD2B97A6003ADCD80C0@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gVGh1LCBNYXkgMDksIDIwMTksIENodW5mZW5nIFl1biB3cm90ZToNCj4gPiArCWlmIChJU19F
-TkFCTEVEKENPTkZJR19HRU5FUklDX1BIWSkpIHsNCj4gbm8gbmVlZCBjaGVjayBpdCwgaWYgaXQn
-cyBub3QgZW5hYmxlZCwgcGh5X2dldCgpIHdpbGwgcmV0dXJuIGFuIGVycm9yDQo+IG51bWJlci4N
-Cg0KR29vZCBwb2ludC4NClRoYW5rIHlvdS4NCg0KQ2hyaXMNCg==
+SGkgR2VlcnQtc2FuLCBDaHJpcy1zYW4sDQoNCj4gRnJvbTogWW9zaGloaXJvIFNoaW1vZGEsIFNl
+bnQ6IEZyaWRheSwgTWF5IDEwLCAyMDE5IDU6MTYgUE0NCj4gDQo+IEhpIEdlZXJ0LXNhbiwNCj4g
+DQo+ID4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuLCBTZW50OiBGcmlkYXksIE1heSAxMCwgMjAx
+OSA0OjA3IFBNDQo+ID4NCj4gPiBIaSBDaHJpcywNCj4gPg0KPiA+IE9uIFRodSwgTWF5IDksIDIw
+MTkgYXQgMTA6MTQgUE0gQ2hyaXMgQnJhbmR0IDxjaHJpcy5icmFuZHRAcmVuZXNhcy5jb20+IHdy
+b3RlOg0KPiA8c25pcD4NCj4gPiBCVFcsIHRoaXMgZHJpdmVyIHVzZXMgYSBtaXggb2YgZmVhdHVy
+ZSBjaGVja2luZyB1c2luZyBVU0JIU19UWVBFXyoNCj4gPiBlbnVtcywgYW5kIGEgcGFyYW1ldGVy
+IGJsb2NrL2NhbGxiYWNrIHN0cnVjdA0KPiA+IChyZW5lc2FzX3VzYmhzX3BsYXRmb3JtX2NhbGxi
+YWNrKS4gIFBlcmhhcHMgdGhlIGZlYXR1cmUgZmxhZ3MgY2FuIGp1c3QNCj4gPiBiZSBtb3ZlZCB0
+byB0aGUgc3RydWN0LCBhbmQgdGhlIHZhcmlvdXMgc3RydWN0cyByZWZlcmVuY2VkIGZyb20NCj4g
+PiBvZl9kZXZpY2VfaWQuZGF0YT8NCj4gDQo+IFRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50ISBJ
+IHRoaW5rIHNvLiBTbywgSSdsbCBtYWtlIHN1Y2ggYSBwYXRjaCBsYXRlci4NCg0KSSBoYXZlIHN1
+Ym1pdHRlZCBzdWNoIGEgcGF0Y2ggYXMgZm9sbG93aW5nOg0KaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMDkzODU3NS8NCg0KU2luY2UgdXNiaHNjX2lzX211bHRpX2Nsa3MoKSB1
+c2VzIHRoZSB0eXBlIG1lbWJlciwgZWFjaCBzdHJ1Y3QgYWxzbyBoYXMgdGhlIHR5cGUgbGlrZSBw
+cmV2aW91cyBjb2RlLg0KDQpBYm91dCBTb0MgcGFyYW1ldGVycywgSSB0aGluayBpdCBpcyBiZXR0
+ZXIgdG8gYWRkIG1lbWJlcnMgaW50byBzdHJ1Y3QgcmVuZXNhc191c2Joc19kcml2ZXJfcGFyYW0g
+bGlrZQ0KaGFzX3VzYl9kbWFjIGluc3RlYWQgb2YgVVNCSFNGXyogZGVmaW5pdGlvbnMuIEluIG90
+aGVyIHdvcmRzLCB3ZSBkb24ndCBuZWVkIHRoZSBwYXRjaCAwOC8xNSBhbmQNCnBhdGNoIDA5LzE1
+IGFuZCAxMC8xNSBzaG91bGQgYWRkIGVhY2ggbWVtYmVyIGZvciBpdC4gQ2hyaXMtc2FuLCB3aGF0
+IGRvIHlvdSB0aGluaz8NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiBC
+ZXN0IHJlZ2FyZHMsDQo+IFlvc2hpaGlybyBTaGltb2RhDQo+IA0KPiA+IEdye29ldGplLGVldGlu
+Z31zLA0KPiA+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gPg0KPiA+IC0t
+DQo+ID4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQg
+aWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiA+DQo+ID4gSW4gcGVyc29uYWwgY29udmVy
+c2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1
+dA0KPiA+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3Jh
+bW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
