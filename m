@@ -1,144 +1,186 @@
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
- and U2 entries
-Date: Sat, 11 May 2019 01:48:06 +0000
-Message-ID: <30102591E157244384E984126FC3CB4F639EA444@us01wembx1.internal.synopsys.com>
-References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
- <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
- <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
- <BYAPR02MB55913E2D6F6865202DE88514A70C0@BYAPR02MB5591.namprd02.prod.outlook.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH 7/8] thermal: mediatek: add another get_temp ops for
+ thermal sensors
+Date: Sat, 11 May 2019 11:31:08 +0900
+Message-ID: <CANMq1KBna0V2X3_CNQrcH==WVLs7oY=GvFGzEbWS91-oZCLKTQ@mail.gmail.com>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com> <1556793795-25204-8-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <1556793795-25204-8-git-send-email-michael.kao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anuragku@xilinx.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "Claus H. Stovgaard" <cst@phaseone.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+To: "michael.kao" <michael.kao@mediatek.com>
+Cc: Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, dawei.chien@mediatek.com, louis.yu@mediatek.com, roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,=0A=
-=0A=
-Anurag Kumar Vulisha wrote:=0A=
-> Hi Thinh,=0A=
->=0A=
->> -----Original Message-----=0A=
->> From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]=0A=
->> Sent: Friday, May 10, 2019 5:30 AM=0A=
->> To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen=0A=
->> <Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman=0A=
->> <gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark Rut=
-land=0A=
->> <mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stovga=
-ard=0A=
->> <cst@phaseone.com>=0A=
->> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
->> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
->> Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling=
- U1 and U2=0A=
->> entries=0A=
->>=0A=
->> Hi Anurag,=0A=
->>=0A=
->> Anurag Kumar Vulisha wrote:=0A=
->>>>> +		return -EINVAL;=0A=
->>>>>=0A=
->>>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
->>>>>  	if (set)=0A=
->>>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc,=
-=0A=
->> struct=0A=
->>>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=0A=
->>>>> index e293400..f2d3112 100644=0A=
->>>>> --- a/drivers/usb/dwc3/gadget.c=0A=
->>>>> +++ b/drivers/usb/dwc3/gadget.c=0A=
->>>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget =
-*g)=0A=
->>>>>  	return 0;=0A=
->>>>>  }=0A=
->>>>>=0A=
->>>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,=0A=
->>>>> +				      struct usb_dcd_config_params *params)=0A=
->>>>> +{=0A=
->>>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);=0A=
->>>>> +=0A=
->>>>> +	/* U1 Device exit Latency */=0A=
->>>>> +	if (dwc->dis_u1_entry_quirk)=0A=
->>>>> +		params->bU1devExitLat =3D 0;=0A=
->>>> It doesn't make sense to have exit latency of 0. Rejecting=0A=
->>>> SET_FEATURE(enable U1/U2) should already let the host know that the=0A=
->>>> device doesn't support U1/U2.=0A=
->>>>=0A=
->>> I am okay to remove this, but I feel that it is better to report zero v=
-alue instead=0A=
->>> of a non-zero value in exit latency of BOS when U1 or U2 entries are no=
-t supported.=0A=
->>> Advantage of reporting 0 is that some hosts doesn't even send=0A=
->> SET_FEATURE(U1/U2)=0A=
->>> requests on seeing zero value in BOS descriptor. Also there can be case=
-s where U1 is=0A=
->>> disabled and U2 entry is allowed or vice versa, for these kind of cases=
- the driver can=0A=
->>> set zero exit latency value for U1 and non-zero exit latency value for =
-U2 . Based on=0A=
->> this=0A=
->>> I think it would be better to report 0 when U1/U2 states are not enable=
-d. Please=0A=
->> provide=0A=
->>> your opinion on this.=0A=
->> Hm... I assume you're testing against linux usb stack and xhci host. If=
-=0A=
->> that's the case, it looks like host will still request the device to=0A=
->> enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). This=
-=0A=
->> needs to be fixed. I think what you have is fine to workaround this issu=
-e.=0A=
-> Thanks . Will send the next series with the other fixes that you have sug=
-gested=0A=
->=0A=
-> Best Regards,=0A=
-> Anurag Kumar Vulisha=0A=
->=0A=
-=0A=
-I want to try something. Can you see if this helps with your performance=0A=
-test without setting the U1/U2 exit latency to 0?=0A=
-(No need to change what you have in your patch. This is just for testing).=
-=0A=
-=0A=
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c=0A=
-index 2f94568ba385..619351c581cf 100644=0A=
---- a/drivers/usb/core/hub.c=0A=
-+++ b/drivers/usb/core/hub.c=0A=
-@@ -4057,8 +4057,18 @@ static void usb_enable_link_state(struct usb_hcd=0A=
-*hcd, struct usb_device *udev,=0A=
-                /* Only a configured device will accept the Set Feature=0A=
-                 * U1/U2_ENABLE=0A=
-                 */=0A=
--               if (udev->actconfig)=0A=
--                       usb_set_device_initiated_lpm(udev, state, true);=0A=
-+               if (udev->actconfig) {=0A=
-+                       if (usb_set_device_initiated_lpm(udev, state,=0A=
-true)) {=0A=
-+                               /*=0A=
-+                                * Don't request U1/U2 entry if the device=
-=0A=
-+                                * cannot enable U1/U2.=0A=
-+                                */=0A=
-+                               usb_set_lpm_timeout(udev, state, 0);=0A=
-+                              =0A=
-hcd->driver->disable_usb3_lpm_timeout(hcd, udev,=0A=
-+                                                                    =0A=
-state);=0A=
-+                               return;=0A=
-+                       }=0A=
-+               }=0A=
- =0A=
-                /* As soon as usb_set_lpm_timeout(timeout) returns 0, the=
-=0A=
-                 * hub-initiated LPM is enabled. Thus, LPM is enabled no=0A=
-=0A=
-=0A=
-Thanks,=0A=
-Thinh=0A=
+On Thu, May 2, 2019 at 7:45 PM michael.kao <michael.kao@mediatek.com> wrote:
+>
+> From: Michael Kao <michael.kao@mediatek.com>
+>
+> Provide thermal zone to read thermal sensor
+> in the SoC. We can read all the thermal sensors
+> value in the SoC by the node /sys/class/thermal/
+>
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+>  drivers/thermal/mtk_thermal.c | 68 ++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 60 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> index cb41e46..d5c78b0 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -230,6 +230,11 @@ enum {
+>
+>  struct mtk_thermal;
+>
+> +struct mtk_thermal_zone {
+> +       struct mtk_thermal *mt;
+> +       int id;
+> +};
+> +
+>  struct thermal_bank_cfg {
+>         unsigned int num_sensors;
+>         const int *sensors;
+> @@ -612,7 +617,7 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+>                  * not immediately shut down.
+>                  */
+>                 if (temp > 200000)
+> -                       temp = 0;
+> +                       temp = -EACCES;
+
+EACCES/permission denied doesn't really seem to be the right error
+code here. Maybe EAGAIN?
+
+>
+>                 if (temp > max)
+>                         max = temp;
+> @@ -623,7 +628,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+>
+>  static int mtk_read_temp(void *data, int *temperature)
+>  {
+> -       struct mtk_thermal *mt = data;
+> +       struct mtk_thermal_zone *tz = data;
+> +       struct mtk_thermal *mt = tz->mt;
+>         int i;
+>         int tempmax = INT_MIN;
+>
+> @@ -636,16 +642,48 @@ static int mtk_read_temp(void *data, int *temperature)
+>
+>                 mtk_thermal_put_bank(bank);
+>         }
+> -
+
+I'd drop that change.
+
+>         *temperature = tempmax;
+>
+>         return 0;
+>  }
+>
+> +static int mtk_read_sensor_temp(void *data, int *temperature)
+> +{
+> +       struct mtk_thermal_zone *tz = data;
+> +       struct mtk_thermal *mt = tz->mt;
+> +       const struct mtk_thermal_data *conf = mt->conf;
+> +       int id = tz->id - 1;
+> +       int temp = INT_MIN;
+
+No need to initialize temp.
+
+> +       u32 raw;
+> +
+> +       if (id < 0)
+> +               return  -EACCES;
+
+EINVAL?
+
+> +
+> +       raw = readl(mt->thermal_base + conf->msr[id]);
+> +
+> +       temp = raw_to_mcelsius(mt, id, raw);
+> +
+> +       /*
+> +        * The first read of a sensor often contains very high bogus
+> +        * temperature value. Filter these out so that the system does
+> +        * not immediately shut down.
+> +        */
+> +
+
+nit: Drop this blank line
+
+> +       if (temp > 200000)
+> +               return  -EACCES;
+
+Again, EAGAIN, maybe?
+
+> +
+> +       *temperature = temp;
+> +       return 0;
+> +}
+> +
+>  static const struct thermal_zone_of_device_ops mtk_thermal_ops = {
+>         .get_temp = mtk_read_temp,
+>  };
+>
+> +static const struct thermal_zone_of_device_ops mtk_thermal_sensor_ops = {
+> +       .get_temp = mtk_read_sensor_temp,
+> +};
+> +
+>  static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+>                                   u32 apmixed_phys_base, u32 auxadc_phys_base,
+>                                   int ctrl_id)
+> @@ -878,6 +916,7 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>         struct resource *res;
+>         u64 auxadc_phys_base, apmixed_phys_base;
+>         struct thermal_zone_device *tzdev;
+> +       struct mtk_thermal_zone *tz;
+>
+>         mt = devm_kzalloc(&pdev->dev, sizeof(*mt), GFP_KERNEL);
+>         if (!mt)
+> @@ -959,11 +998,24 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, mt);
+>
+> -       tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, mt,
+> -                                                    &mtk_thermal_ops);
+> -       if (IS_ERR(tzdev)) {
+> -               ret = PTR_ERR(tzdev);
+> -               goto err_disable_clk_peri_therm;
+> +       for (i = 0; i < mt->conf->num_sensors + 1; i++) {
+> +               tz = kmalloc(sizeof(*tz), GFP_KERNEL);
+
+Are we leaking this pointer? Should this be devm_kmalloc?
+
+> +               if (!tz)
+> +                       return -ENOMEM;
+> +
+> +               tz->mt = mt;
+> +               tz->id = i;
+> +
+> +               tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, i,
+> +                               tz, (i == 0) ?
+> +                               &mtk_thermal_ops : &mtk_thermal_sensor_ops);
+> +
+> +               if (IS_ERR(tzdev)) {
+> +                       if (IS_ERR(tzdev) != -EACCES) {
+
+Why would EACCES ever happen? AFAICT
+devm_thermal_zone_of_sensor_register does not actually try to read the
+temperature value? Or does the error come from somewhere else?
+
+> +                               ret = PTR_ERR(tzdev);
+> +                               goto err_disable_clk_peri_therm;
+> +                       }
+> +               }
+>         }
+>
+>         return 0;
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
