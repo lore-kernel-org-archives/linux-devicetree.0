@@ -1,46 +1,47 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Date: Sat, 11 May 2019 21:17:53 +0300
-Message-ID: <20190511181753.GA2444@t60.musicnaut.iki.fi>
-References: <20190510194018.28206-1-robh@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] arm64: dts: amlogic: remove ethernet-phy-idAAAA.BBBB
+ compatible strings
+Date: Sat, 11 May 2019 21:51:50 +0200
+Message-ID: <20190511195150.GI4889@lunn.ch>
+References: <20190511174534.2403-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190510194018.28206-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190511174534.2403-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> Convert the vendor prefix registry to a schema. This will enable checking
-> that new vendor prefixes are added (in addition to the less than perfect
-> checkpatch.pl check) and will also check against adding other prefixes
-> which are not vendors.
+On Sat, May 11, 2019 at 07:45:34PM +0200, Martin Blumenstingl wrote:
+> The Ethernet PHY documentation
+> (Documentation/devicetree/bindings/net/phy.txt) states that:
+>   If the PHY reports an incorrect ID (or none at all) then the
+>   "compatible" list may contain an entry with the correct PHY ID in the
+>   form: "ethernet-phy-idAAAA.BBBB"
 > 
-> Converted vendor-prefixes.txt using the following sed script:
+> An older version of the documentation suggested that the compatible
+> string can be used when the PHY ID is known.
 > 
-> sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+> Remove the ethernet-phy-id compatible string and add a comment with the
+> PHY ID instead.
+> This is a no-op on boards which are shipped with the PHY that was
+> listed (= all known cases). However, if a board manufacturer decides to
+> ship a different PHY we will now load and use the correct driver because
+> we ask the PHY to identify itself.
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-[...]
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> deleted file mode 100644
-> index e9034a6c003a..000000000000
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ /dev/null
-> @@ -1,476 +0,0 @@
-> -Device tree binding vendor prefix registry.  Keep list in alphabetical order.
-[...]
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> new file mode 100644
-> index 000000000000..be037fb2cada
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -0,0 +1,975 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+ 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Is there a license change as well?
-
-A.
+    Andrew
