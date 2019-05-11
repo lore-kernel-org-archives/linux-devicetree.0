@@ -1,70 +1,79 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v5 5/6] pinctrl: meson: add support of drive-strength-microamp
-Date: Sat, 11 May 2019 18:46:19 +0200
-Message-ID: <CAFBinCAYNvBtNwZdKJVUpObogjaiAx0W0Y-cnOL7RtARhYOW_g@mail.gmail.com>
-References: <20190510082324.21181-1-glaroque@baylibre.com> <20190510082324.21181-6-glaroque@baylibre.com>
+Subject: Re: [PATCH 3/5] arm64: dts: meson: g12a: add mdio multiplexer
+Date: Sat, 11 May 2019 18:59:47 +0200
+Message-ID: <CAFBinCAe3jd598MPLUGFEoBAOaeXovSz7_8Kn7ZMmSFvRLFSXg@mail.gmail.com>
+References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-4-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510082324.21181-6-glaroque@baylibre.com>
+In-Reply-To: <20190510164940.13496-4-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: linus.walleij@linaro.org, khilman@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, jbrunet@baylibre.com
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guillaume,
+Hi Jerome,
 
-On Fri, May 10, 2019 at 10:23 AM Guillaume La Roque
-<glaroque@baylibre.com> wrote:
+On Fri, May 10, 2019 at 6:49 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> drive-strength-microamp is a new feature needed for G12A SoC.
-> the default DS setting after boot is usually 500uA and it is not enough for
-> many functions. We need to be able to set the drive strength to reliably
-> enable things like MMC, I2C, etc ...
+> Add the g12a mdio multiplexer which allows to connect to either
+> an external phy through the SoC pins or the internal 10/100 phy
 >
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
-
-the warning messages when printing pinconf-pins (in debugfs) are gone
-on my Meson8m2 board so:
-Tested-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
-
-[...]
-> +static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
-> +                                           unsigned int pin,
-> +                                           u16 drive_strength_ua)
-> +{
-> +       struct meson_bank *bank;
-> +       unsigned int reg, bit, ds_val;
-> +       int ret;
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 32 +++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> index fe0f73730525..6e9587aafb5d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -460,6 +460,38 @@
+>                                 assigned-clock-rates = <100000000>;
+>                                 #phy-cells = <1>;
+>                         };
 > +
-> +       if (!pc->reg_ds) {
-> +               dev_err(pc->dev, "drive-strength not supported\n");
-> +               return -ENOTSUPP;
-> +       }
+> +                       eth_phy: mdio-multiplexer@4c000 {
+> +                               compatible = "amlogic,g12a-mdio-mux";
+> +                               reg = <0x0 0x4c000 0x0 0xa4>;
+> +                               clocks = <&clkc CLKID_ETH_PHY>,
+> +                                        <&xtal>,
+> +                                        <&clkc CLKID_MPLL_5OM>;
+I haven't noticed that before but there's a typo in the MPLL_5OM clock
+definition:
+the O (capital o) should be a 0 (zero).
+can you fix this typo in an additional clock patch for v5.2 - then we
+don't have to do it in v5.3 where this .dtsi might already use it
+
+> +                               clock-names = "pclk", "clkin0", "clkin1";
+> +                               mdio-parent-bus = <&mdio0>;
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
 > +
-> +       ret = meson_get_bank(pc, pin, &bank);
-> +       if (ret)
-> +               return ret;
+> +                               ext_mdio: mdio@0 {
+> +                                       reg = <0>;
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +                               };
 > +
-> +       meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
-> +       bit = bit << 1;
-I was confused by this shifting (not sure why I haven't noticed this
-in earlier revisions). however, it all made sense after I did the
-maths for two examples:
+> +                               int_mdio: mdio@1 {
+> +                                       reg = <1>;
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +
+> +                                       internal_ephy: ethernet_phy@8 {
+> +                                               compatible = "ethernet-phy-id0180.3301",
+> +                                                            "ethernet-phy-ieee802.3-c22";
+please drop the compatible string and replace it with a comment (if
+you feel that it's needed).
+quote from Documentation/devicetree/bindings/net/phy.txt:
+> If the PHY reports an incorrect ID (or none at all) then the
+> "compatible" list may contain an entry with the correct PHY ID in the
+> form: "ethernet-phy-idAAAA.BBBB"
 
-BOOT_0 uses drive-strength register 0x0 bits [1:0] so the result
-should be "bit = 0"
-meson_calc_reg_and_bit returns bit = 0
-0 << 1 = 0, so this seems right
-
-BOOT_15 uses drive-strength register 0x0 bits [31:30] so the result
-should be "bit = 30"
-meson_calc_reg_and_bit returns bit = 15
-15 << 1 = 30
-
-so all seems fine, even though it wasn't obvious to me at first sight
-that it's all good
+I am going to send a patch for other Amlogic boards to remove any
+ethernet-phy-id comaptible string
 
 
+Regards
 Martin
