@@ -1,55 +1,95 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 5/5] arm64: dts: meson: sei510: add network support
-Date: Sat, 11 May 2019 19:25:58 +0200
-Message-ID: <c474c55386dede7f541aaf8afd6c87b78ccd6577.camel@baylibre.com>
+Subject: Re: [PATCH 2/5] arm64: dts: meson: g12a: add ethernet pinctrl
+ definitions
+Date: Sat, 11 May 2019 19:27:49 +0200
+Message-ID: <7244c6d3e81e7bbb84ac508399ab64e236051673.camel@baylibre.com>
 References: <20190510164940.13496-1-jbrunet@baylibre.com>
-         <20190510164940.13496-6-jbrunet@baylibre.com> <7ho94ac4jn.fsf@baylibre.com>
-         <CAFBinCDA3kqCK9riSkNAv9069ASN8E2ECdsffi+U7mYRqHrfJg@mail.gmail.com>
+         <20190510164940.13496-3-jbrunet@baylibre.com>
+         <CAFBinCAmGRHDU5QX2VEsV8vLBXD6fJtcRHbjdW8=p9Yti0V4qA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDA3kqCK9riSkNAv9069ASN8E2ECdsffi+U7mYRqHrfJg@mail.gmail.com>
+In-Reply-To: <CAFBinCAmGRHDU5QX2VEsV8vLBXD6fJtcRHbjdW8=p9Yti0V4qA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2019-05-11 at 19:16 +0200, Martin Blumenstingl wrote:
-> Hi Kevin,
+On Sat, 2019-05-11 at 19:06 +0200, Martin Blumenstingl wrote:
+> Hi Jerome,
 > 
-> On Sat, May 11, 2019 at 12:45 AM Kevin Hilman <khilman@baylibre.com> wrote:
-> > Jerome Brunet <jbrunet@baylibre.com> writes:
+> On Fri, May 10, 2019 at 6:49 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > Add the ethernet pinctrl settings for RMII, RGMII and internal phy leds
 > > 
-> > > Enable the network interface of the SEI510 which use the internal PHY.
-> > > 
-> > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 37 +++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
 > > 
-> > I tried testing this series on SEI510, but I must still be missing some
-> > defconfig options, as the default defconfig doesn't lead to a working
-> > interface.
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> > index a32db09809f7..fe0f73730525 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> > @@ -206,6 +206,43 @@
+> >                                                 };
+> >                                         };
 > > 
-> > 
-> > I tried adding this kconfig fragment[1], and the dwmac probes/inits but
-> > I must still be missing something, as the dwmac is still failing to find
-> > a PHY.  Boot log: https://termbin.com/ivf3
-> > 
-> > I have the same result testing on the u200.
-> I wonder if we're simply missing the pinctrl definitions in the ethmac node:
->   pinctrl-0 = <&eth_rmii_pins>;
+> > +                                       eth_leds_pins: eth-leds {
+> > +                                               mux {
+> > +                                                       groups = "eth_link_led",
+> > +                                                                "eth_act_led";
+> > +                                                       function = "eth";
+> > +                                                       bias-disable;
+> > +                                               };
+> > +                                       };
+> > +
+> > +                                       eth_rmii_pins: eth-rmii {
+> > +                                               mux {
+> > +                                                       groups = "eth_mdio",
+> > +                                                                "eth_mdc",
+> > +                                                                "eth_rgmii_rx_clk",
+> > +                                                                "eth_rx_dv",
+> > +                                                                "eth_rxd0",
+> > +                                                                "eth_rxd1",
+> > +                                                                "eth_txen",
+> > +                                                                "eth_txd0",
+> > +                                                                "eth_txd1";
+> > +                                                       function = "eth";
+> > +                                                       bias-disable;
+> > +                                               };
+> > +                                       };
+> > +
+> > +                                       eth_rgmii_pins: eth-rgmii {
+> > +                                               mux {
+> > +                                                       groups = "eth_rxd2_rgmii",
+> > +                                                                "eth_rxd3_rgmii",
+> > +                                                                "eth_rgmii_tx_clk",
+> > +                                                                "eth_txd2_rgmii",
+> > +                                                                "eth_txd3_rgmii";
+> > +                                                       function = "eth";
+> > +                                                       bias-disable;
+> > +                                               };
+> > +                                       };
+> it seems that the group definition is incomplete (missing things like
+> eth_mdc, eth_rx_dv, ...)
+> 
+> we could also mix the eth_rmii_pins and eth_rgmii_pins in a board.dts
+> (maybe that was your idea in the first place?):
+
+yes that's the idea
+
+>   phy-mode = "rgmii";
+>   pinctrl-0 = <&eth_rmii_pins>, <&eth_rgmii_pins>;
 >   pinctrl-names = "default";
-> 
-> I don't know how the SoC works internally but I am assuming that the
-> MDIO pins are routed to the "internal PHY" (within the chip).
-> also we need the eth_rmii_pins anyways for the RXD/TXD pins which are
-> connected to the physical Ethernet port on the board.
-> bonus question: while writing this email I'm surprised to see that on
-> GXL we don't use the rmii pins anywhere, why is Ethernet working fine
-> there?
+> however, in this case I would prefer if "eth_rmii_pins" was named only
+> "eth_pins" (following mostly what Amlogic does with the pin group
+> naming: eth_* for pins that are valid in both, rmii and rgmii mode and
+> eth*rgmii* for pins that are only valid in rgmii mode)
 
-AFAIK, the pinmux is for the external pad Martin
-The internal phy does not use those pads.
+I can't say I share your preference. I let Kevin decide what he wants.
 
 > 
 > 
+> Regards
 > Martin
