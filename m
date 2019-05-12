@@ -1,74 +1,41 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/3] dt-bindings: thermal: add binding document for h6
- thermal controller
-Date: Sun, 12 May 2019 15:41:52 +0200
-Message-ID: <20190512134152.yrletgtiglxncyo4@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-4-tiny.windzz@gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Allwinner H6 Mali GPU support
+Date: Sun, 12 May 2019 15:45:09 +0200
+Message-ID: <20190512134509.vcduqbkmnvpkbmkb@flea>
+References: <20190417173031.9920-1-peron.clem@gmail.com>
+ <CAJiuCccu_wfgio9wUcOCP0o4XPRgQOvTOZS8St7mV88TAdwaRg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ahljv2wucenn7ylv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="rdm3gipkowzevz6z"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2OG4DTAKGQES2WYNWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190512082614.9045-4-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, andy.gross@linaro.org, olof@lixom.net, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAJiuCccu_wfgio9wUcOCP0o4XPRgQOvTOZS8St7mV88TAdwaRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ahljv2wucenn7ylv
-Content-Type: text/plain; charset=us-ascii
+--rdm3gipkowzevz6z
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Sun, May 12, 2019 at 04:26:14AM -0400, Yangtao Li wrote:
-> This patch adds binding document for allwinner h6 thermal controller.
+On Sat, May 11, 2019 at 06:39:39PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi Maxime,
 >
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/thermal/sun50i-thermal.txt       | 32 +++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
+> Is this series ok for you ?
 
-We're starting to convert to YAML for binding descriptions that will
-allow to validate that all DT are properly using the binding. It would
-be great if you could use it as well.
+I'm not the maintainer of that binding, so I'd need a ack from whoever
+that is.
 
-> diff --git a/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt b/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> new file mode 100644
-> index 000000000000..67eda7794262
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> @@ -0,0 +1,32 @@
-> +Binding for Thermal Sensor of Allwinner SOC.
-> +
-> +This describes the device tree binding for the Allwinner thermal controller
-> +which measures the on-SoC temperatures.
-> +
-> +Required properties:
-> +- compatible:
-> +  - "allwinner,sun50i-h6-ths" : For H6
-> +- reg: Address range of the thermal controller
-> +- clocks, clock-names: Clocks needed for the thermal controller.
-> +		       The required clocks for h6 are: "bus".
-
-If there's a single clock, then we don't need clock-names
-
-> +- resets, reset-names: Reference to the reset controller controlling
-> +		       the thermal controller.
-
-Ditto.
-
-> +- nvmem-cells: A phandle to the calibration data provided by a nvmem device. If
-> +	       unspecified default values shall be used.
-> +- nvmem-cell-names: Should be "calib"
-
-I thought you said that nvmem support was optional in the
-driver. Maybe we could make it optional in the DT too?
-
-Thanks!
 Maxime
 
 --
@@ -76,15 +43,24 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---ahljv2wucenn7ylv
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190512134509.vcduqbkmnvpkbmkb%40flea.
+For more options, visit https://groups.google.com/d/optout.
+
+--rdm3gipkowzevz6z
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNgioAAKCRDj7w1vZxhR
-xXgAAP9K2xJnOzxte2sR5B23CXZbzrx5rlhRaXia5y6fdipxGQD+JTw1nNbgTjV+
-hD+q/NKIiRukijuarNG8O3iM1Nov6wI=
-=TJRY
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNgjZQAKCRDj7w1vZxhR
+xYZsAQD5+ls2Dl1d2OZDihJtXIvSzrlA2EwW9o3twORAyHJbmgD/bGqu28VMWFpf
+Dp9xKj1AiGUCNUe2O3d0X2/FGXNE3wQ=
+=Uxq2
 -----END PGP SIGNATURE-----
 
---ahljv2wucenn7ylv--
+--rdm3gipkowzevz6z--
