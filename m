@@ -1,53 +1,64 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND] ARM: dts: imx6ul: add clock-frequency to CPU node
-Date: Sun, 12 May 2019 08:57:16 +0000
-Message-ID: <1557651135-12109-1-git-send-email-Anson.Huang@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 02/10] dt-bindings: display: bridge: thc63lvd1024:
+ Document dual-link operation
+Date: Sun, 12 May 2019 10:58:54 +0200
+Message-ID: <CAMuHMdXtg3Kv+zt6kS9tViu93AjaHsOrSSotemt8T=8XVJcdyA@mail.gmail.com>
+References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190511210702.18394-3-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <6D9007DE5A2E53489B735BE3A21E20B6@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190511210702.18394-3-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Add clock-frequency property to CPU node. Avoids warnings like
-"/cpus/cpu@0 missing clock-frequency property" for "arm,cortex-a7".
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No code change, just resend patch using correct encoding.
----
- arch/arm/boot/dts/imx6ul.dtsi  | 1 +
- arch/arm/boot/dts/imx6ull.dtsi | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index bbf010c..fc388b8 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -59,6 +59,7 @@
- 			compatible =3D "arm,cortex-a7";
- 			device_type =3D "cpu";
- 			reg =3D <0>;
-+			clock-frequency =3D <696000000>;
- 			clock-latency =3D <61036>; /* two CLK32 periods */
- 			#cooling-cells =3D <2>;
- 			operating-points =3D <
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dts=
-i
-index 22e4a30..727b92f 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -12,6 +12,7 @@
- /delete-node/ &crypto;
-=20
- &cpu0 {
-+	clock-frequency =3D <900000000>;
- 	operating-points =3D <
- 		/* kHz	uV */
- 		900000	1275000
---=20
-2.7.4
+SGkgTGF1cmVudCwKCk9uIFNhdCwgTWF5IDExLCAyMDE5IGF0IDExOjA3IFBNIExhdXJlbnQgUGlu
+Y2hhcnQKPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPiB3cm90ZToK
+PiBUaGUgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2RlciBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMs
+IHNpbmdsZS1saW5rIG9yCj4gZHVhbC1saW5rLiBJbiBkdWFsLWxpbmsgbW9kZSBib3RoIGlucHV0
+IHBvcnRzIGFyZSB1c2VkIHRvIGNhcnJ5IGV2ZW4tCj4gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMg
+c2VwYXJhdGVseS4gRG9jdW1lbnQgdGhpcyBpbiB0aGUgRFQgYmluZGluZ3MsCj4gYWxvbmcgd2l0
+aCB0aGUgcmVsYXRlZCBydWxlcyBnb3Zlcm5pbmcgcG9ydCBhbmQgdXNhZ2UuCj4KPiBTaWduZWQt
+b2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNv
+bmJvYXJkLmNvbT4KPiBSZXZpZXdlZC1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0Bq
+bW9uZGkub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhj
+NjNsdmQxMDI0LnR4dCAgICAgICAgICB8IDYgKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGlu
+c2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQu
+dHh0Cj4gaW5kZXggMzdmMGMwNGQ1YTI4Li5kMTdkMWU1ODIwZDcgMTAwNjQ0Cj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYz
+bHZkMTAyNC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+IEBAIC0yOCw2ICsyOCwxMiBAQCBP
+cHRpb25hbCB2aWRlbyBwb3J0IG5vZGVzOgo+ICAtIHBvcnRAMTogU2Vjb25kIExWRFMgaW5wdXQg
+cG9ydAo+ICAtIHBvcnRAMzogU2Vjb25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwgb3V0cHV0
+Cj4KPiArVGhlIGRldmljZSBjYW4gb3BlcmF0ZSBpbiBzaW5nbGUtbGluayBtb2RlIG9yIGR1YWwt
+bGluayBtb2RlLiBJbiBzaW5nbGUtbGluawo+ICttb2RlLCBhbGwgcGl4ZWxzIGFyZSByZWNlaXZl
+ZCBvbiBwb3J0QDAsIGFuZCBwb3J0QDEgc2hhbGwgbm90IGNvbnRhaW4gYW55Cj4gK2VuZHBvaW50
+LiBJbiBkdWFsLWxpbmsgbW9kZSwgZXZlbi1udW1iZXJlZCBwaXhlbHMgYXJlIHJlY2VpdmVkIG9u
+IHBvcnRAMCBhbmQKPiArb2RkLW51bWJlcmVkIHBpeGVscyBvbiBwb3J0QDEsIGFuZCBib3RoIHBv
+cnRAMCBhbmQgcG9ydEAxIHNoYWxsIGNvbnRhaW4KPiArZW5kcG9pbnRzLgoKVGhpcyBkZXNjcmli
+ZXMgc2luZ2xlL2R1YWwgaW5wdXQuCkRvZXMgc2luZ2xlL2R1YWwgb3V0cHV0IG5lZWQgdG8gYmUg
+ZGVzY3JpYmVkLCB0b28/CgpCVFcsIEkgc2VlIHRoZSBzZWNvbmQgaW5wdXQvb3V0cHV0IHNldCBp
+cyBvcHRpb25hbCwgd2lsZSB0aGUgZmlyc3Qgc2V0CmlzIHJlcXVpcmVkLiAgQ291bGQgaXQgaGFw
+cGVuIHRoZSBoYXJkd2FyZSBpcyB3aXJlZCBmb3IgdGhlIHNlY29uZApzZXQgb25seT8KCkdye29l
+dGplLGVldGluZ31zLAoKICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVydCBV
+eXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0
+QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2Fs
+IHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8g
+am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
+dC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
