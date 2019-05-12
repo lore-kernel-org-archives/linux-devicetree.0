@@ -1,75 +1,74 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND 3/3] arm64: dts: imx8mm: add clock for GPIO node
-Date: Sun, 12 May 2019 10:17:19 +0000
-Message-ID: <1557655926-12915-3-git-send-email-Anson.Huang@nxp.com>
-References: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 02/10] dt-bindings: display: bridge: thc63lvd1024:
+ Document dual-link operation
+Date: Sun, 12 May 2019 13:22:28 +0300
+Message-ID: <20190512102228.GB4960@pendragon.ideasonboard.com>
+References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20190511210702.18394-3-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdXtg3Kv+zt6kS9tViu93AjaHsOrSSotemt8T=8XVJcdyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-ID: <D71E0B23D8290D4EB06ADDAEEBBE7193@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXtg3Kv+zt6kS9tViu93AjaHsOrSSotemt8T=8XVJcdyA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MM has clock gate for each GPIO bank, add clock info
-to GPIO node for clock management.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-No change, just resend patch with correct encoding.
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mm.dtsi
-index 6b407a94..f32d4e9 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -206,6 +206,7 @@
- 				reg =3D <0x30200000 0x10000>;
- 				interrupts =3D <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_GPIO1_ROOT>;
- 				gpio-controller;
- 				#gpio-cells =3D <2>;
- 				interrupt-controller;
-@@ -217,6 +218,7 @@
- 				reg =3D <0x30210000 0x10000>;
- 				interrupts =3D <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_GPIO2_ROOT>;
- 				gpio-controller;
- 				#gpio-cells =3D <2>;
- 				interrupt-controller;
-@@ -228,6 +230,7 @@
- 				reg =3D <0x30220000 0x10000>;
- 				interrupts =3D <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_GPIO3_ROOT>;
- 				gpio-controller;
- 				#gpio-cells =3D <2>;
- 				interrupt-controller;
-@@ -239,6 +242,7 @@
- 				reg =3D <0x30230000 0x10000>;
- 				interrupts =3D <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_GPIO4_ROOT>;
- 				gpio-controller;
- 				#gpio-cells =3D <2>;
- 				interrupt-controller;
-@@ -250,6 +254,7 @@
- 				reg =3D <0x30240000 0x10000>;
- 				interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_GPIO5_ROOT>;
- 				gpio-controller;
- 				#gpio-cells =3D <2>;
- 				interrupt-controller;
---=20
-2.7.4
+SGkgR2VlcnQsCgpPbiBTdW4sIE1heSAxMiwgMjAxOSBhdCAxMDo1ODo1NEFNICswMjAwLCBHZWVy
+dCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gT24gU2F0LCBNYXkgMTEsIDIwMTkgYXQgMTE6MDcgUE0g
+TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IFRoZSBUSEM2M0xWRDEwMjQgTFZEUyBkZWNvZGVy
+IGNhbiBvcGVyYXRlIGluIHR3byBtb2Rlcywgc2luZ2xlLWxpbmsgb3IKPiA+IGR1YWwtbGluay4g
+SW4gZHVhbC1saW5rIG1vZGUgYm90aCBpbnB1dCBwb3J0cyBhcmUgdXNlZCB0byBjYXJyeSBldmVu
+LQo+ID4gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMgc2VwYXJhdGVseS4gRG9jdW1lbnQgdGhpcyBp
+biB0aGUgRFQgYmluZGluZ3MsCj4gPiBhbG9uZyB3aXRoIHRoZSByZWxhdGVkIHJ1bGVzIGdvdmVy
+bmluZyBwb3J0IGFuZCB1c2FnZS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNo
+YXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+IFJldmll
+d2VkLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Cj4gPiAtLS0K
+PiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCAg
+ICAgICAgICB8IDYgKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+
+ID4KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0Cj4gPiBp
+bmRleCAzN2YwYzA0ZDVhMjguLmQxN2QxZTU4MjBkNyAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEw
+MjQudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+ID4gQEAgLTI4LDYgKzI4LDEyIEBAIE9w
+dGlvbmFsIHZpZGVvIHBvcnQgbm9kZXM6Cj4gPiAgLSBwb3J0QDE6IFNlY29uZCBMVkRTIGlucHV0
+IHBvcnQKPiA+ICAtIHBvcnRAMzogU2Vjb25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwgb3V0
+cHV0Cj4gPgo+ID4gK1RoZSBkZXZpY2UgY2FuIG9wZXJhdGUgaW4gc2luZ2xlLWxpbmsgbW9kZSBv
+ciBkdWFsLWxpbmsgbW9kZS4gSW4gc2luZ2xlLWxpbmsKPiA+ICttb2RlLCBhbGwgcGl4ZWxzIGFy
+ZSByZWNlaXZlZCBvbiBwb3J0QDAsIGFuZCBwb3J0QDEgc2hhbGwgbm90IGNvbnRhaW4gYW55Cj4g
+PiArZW5kcG9pbnQuIEluIGR1YWwtbGluayBtb2RlLCBldmVuLW51bWJlcmVkIHBpeGVscyBhcmUg
+cmVjZWl2ZWQgb24gcG9ydEAwIGFuZAo+ID4gK29kZC1udW1iZXJlZCBwaXhlbHMgb24gcG9ydEAx
+LCBhbmQgYm90aCBwb3J0QDAgYW5kIHBvcnRAMSBzaGFsbCBjb250YWluCj4gPiArZW5kcG9pbnRz
+Lgo+IAo+IFRoaXMgZGVzY3JpYmVzIHNpbmdsZS9kdWFsIGlucHV0Lgo+IERvZXMgc2luZ2xlL2R1
+YWwgb3V0cHV0IG5lZWQgdG8gYmUgZGVzY3JpYmVkLCB0b28/CgpKYWNvcG8gYXNrZWQgdGhlIHNh
+bWUgcXVlc3Rpb24gb24gdjEgOi0pIER1YWwtb3V0cHV0IHNob3VsZCBiZSBkZXNjcmliZWQKYXMg
+d2VsbCwgYnV0IGFzIEkgaGF2ZSBubyBoYXJkd2FyZSBzZXR1cCB3aGVyZSB0byB0ZXN0IHRoYXQs
+IEkgZGVjaWRlZAp0byBsZWF2ZSBpdCBvdXQgb2YgdGhlIERUIGJpbmRpbmdzIHRvIHN0YXJ0IHdp
+dGgsIGFzIGl0J3MgZ2VuZXJhbGx5IGEKYmFkIGlkZWEgdG8gc3BlY2lmeSB1bnRlc3RlZCBEVCBi
+aW5kaW5ncyAoYXMgaW4gaGF2aW5nIG5vIGVuZC10by1lbmQKaW1wbGVtZW50YXRpb24pLiBJIGRv
+bid0IHRoaW5rIGl0IHdpbGwgYmUgYSBiaWcgZGVhbCB0aG91Z2gsIHRoZXJlIGlzCmFscmVhZHkg
+YSBwb3J0IGZvciB0aGUgc2Vjb25kIG91dHB1dCwgaXQgc2hvdWxkIGp1c3QgYmUgYSBtYXR0ZXIg
+b2YKY29ubmVjdGluZyBpdC4KCj4gQlRXLCBJIHNlZSB0aGUgc2Vjb25kIGlucHV0L291dHB1dCBz
+ZXQgaXMgb3B0aW9uYWwsIHdpbGUgdGhlIGZpcnN0IHNldAo+IGlzIHJlcXVpcmVkLiAgQ291bGQg
+aXQgaGFwcGVuIHRoZSBoYXJkd2FyZSBpcyB3aXJlZCBmb3IgdGhlIHNlY29uZAo+IHNldCBvbmx5
+PwoKTm90IHRvIG15IGtub3dsZWRnZS4gSW4gZHVhbC1pbiwgZHVhbC1vdXQgdGhlIHR3byBpbnB1
+dC9vdXRwdXQgcGFpcnMgYXJlCm5vdCBpbmRlcGVuZGVudCwgdGhlIHR3byBpbnB1dHMgYXJlIHVz
+ZWQgdG9nZXRoZXIgdG8gY3JlYXRlIGEgaGlnaGVyCmJhbmR3aWR0aCBsaW5rLCBhbmQgdGhlIG9k
+ZC0gYW5kIGV2ZW4tcGl4ZWxzIGFyZSB0aGVuIHNlbnQgdG8gc2VwYXJhdGUKcm91dGVzLgoKLS0g
+ClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbA==
