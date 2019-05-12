@@ -1,51 +1,39 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 02/10] dt-bindings: display: bridge: thc63lvd1024: Document
- dual-link operation
-Date: Sun, 12 May 2019 00:06:54 +0300
-Message-ID: <20190511210702.18394-3-laurent.pinchart+renesas@ideasonboard.com>
-References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 0/2] Enable wm8524 codec on i.MX8MM EVK
+Date: Sun, 12 May 2019 09:30:00 +0800
+Message-ID: <20190512012959.GM15856@dragon>
+References: <20190424150350.7963-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190424150350.7963-1-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRIQzYzTFZEMTAyNCBMVkRTIGRlY29kZXIgY2FuIG9wZXJhdGUgaW4gdHdvIG1vZGVzLCBz
-aW5nbGUtbGluayBvcgpkdWFsLWxpbmsuIEluIGR1YWwtbGluayBtb2RlIGJvdGggaW5wdXQgcG9y
-dHMgYXJlIHVzZWQgdG8gY2FycnkgZXZlbi0KYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMgc2VwYXJh
-dGVseS4gRG9jdW1lbnQgdGhpcyBpbiB0aGUgRFQgYmluZGluZ3MsCmFsb25nIHdpdGggdGhlIHJl
-bGF0ZWQgcnVsZXMgZ292ZXJuaW5nIHBvcnQgYW5kIHVzYWdlLgoKU2lnbmVkLW9mZi1ieTogTGF1
-cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+
-ClJldmlld2VkLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+Ci0t
-LQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQgICAg
-ICAgICAgfCA2ICsrKysrKwogMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
-aGluZSx0aGM2M2x2ZDEwMjQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYzbHZkMTAyNC50eHQKaW5kZXggMzdmMGMwNGQ1YTI4
-Li5kMTdkMWU1ODIwZDcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQudHh0CisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEw
-MjQudHh0CkBAIC0yOCw2ICsyOCwxMiBAQCBPcHRpb25hbCB2aWRlbyBwb3J0IG5vZGVzOgogLSBw
-b3J0QDE6IFNlY29uZCBMVkRTIGlucHV0IHBvcnQKIC0gcG9ydEAzOiBTZWNvbmQgZGlnaXRhbCBD
-TU9TL1RUTCBwYXJhbGxlbCBvdXRwdXQKIAorVGhlIGRldmljZSBjYW4gb3BlcmF0ZSBpbiBzaW5n
-bGUtbGluayBtb2RlIG9yIGR1YWwtbGluayBtb2RlLiBJbiBzaW5nbGUtbGluaworbW9kZSwgYWxs
-IHBpeGVscyBhcmUgcmVjZWl2ZWQgb24gcG9ydEAwLCBhbmQgcG9ydEAxIHNoYWxsIG5vdCBjb250
-YWluIGFueQorZW5kcG9pbnQuIEluIGR1YWwtbGluayBtb2RlLCBldmVuLW51bWJlcmVkIHBpeGVs
-cyBhcmUgcmVjZWl2ZWQgb24gcG9ydEAwIGFuZAorb2RkLW51bWJlcmVkIHBpeGVscyBvbiBwb3J0
-QDEsIGFuZCBib3RoIHBvcnRAMCBhbmQgcG9ydEAxIHNoYWxsIGNvbnRhaW4KK2VuZHBvaW50cy4K
-KwogRXhhbXBsZToKIC0tLS0tLS0tCiAKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Wed, Apr 24, 2019 at 03:04:12PM +0000, Daniel Baluta wrote:
+> This patch series introduces the SAI nodes on i.MX8MM EVK then
+> creates the wm8524 codec node and finally uses simple card machine
+> driver to create a sound card.
+> 
+> Changes since v2:
+> 	- place compatible strings one a single lines
+> 	- move GPIO pinctrl in a node of its own
+> 	- remove codec phandle
+> 
+> Changes since v1:
+>         - use "fsl,imx8mm-sai", "fsl,imx8mq-sai" compatbile strings and
+>           remove "fsl,imx6sx-sai" because SAI module on i.MX8M is not
+>           compatbile with SAI modules form i.MX6
+> 
+> Daniel Baluta (2):
+>   arm64: dts: imx8mm: Add SAI nodes
+>   arm64: dts: imx8mm-evk: Enable audio codec wm8524
+
+Hi Marco,
+
+Are you fine with this version?
+
+Shawn
