@@ -1,56 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 00/10] R-Car DU: LVDS dual-link mode support
-Date: Sun, 12 May 2019 10:55:20 +0200
-Message-ID: <CAMuHMdWqvKXXfjSAk3GRyk8fwa2TS+EwcV_n0YwcEU9d8XohUA@mail.gmail.com>
-References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH RESEND] ARM: dts: imx6ul: add clock-frequency to CPU node
+Date: Sun, 12 May 2019 08:57:16 +0000
+Message-ID: <1557651135-12109-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Content-ID: <6D9007DE5A2E53489B735BE3A21E20B6@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFNhdCwgTWF5IDExLCAyMDE5IGF0IDExOjA3IFBNIExhdXJlbnQgUGlu
-Y2hhcnQKPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPiB3cm90ZToK
-PiBPbiB0aGUgcmVjZWl2aW5nIHNpZGUsIHRoZSBUSEM2M0xWRDEwMjQgTFZEUy10by1wYXJhbGxl
-bCBicmlkZ2UgaGFzIHR3bwo+IExWRFMgaW5wdXRzIGFuZCB0d28gcGFyYWxsZWwgb3V0cHV0cy4g
-SXQgY2FuIG9wZXJhdGUgaW4gZm91ciBkaWZmZXJlbnQKPiBtb2RlczoKPgo+IC0gU2luZ2xlLWlu
-LCBzaW5nbGUtb3V0OiBUaGUgZmlyc3QgTFZEUyBpbnB1dCByZWNlaXZlcyB0aGUgdmlkZW8gc3Ry
-ZWFtLAo+ICAgYW5kIHRoZSBicmlkZ2Ugb3V0cHV0cyBpdCBvbiB0aGUgZmlyc3QgcGFyYWxsZWwg
-b3V0cHV0LiBUaGUgc2Vjb25kCj4gICBMVkRTIGlucHV0IGFuZCB0aGUgc2Vjb25kIHBhcmFsbGVs
-IG91dHB1dCBhcmUgbm90IHVzZWQuCj4KPiAtIFNpbmdsZS1pbiwgZHVhbC1vdXQ6IFRoZSBmaXJz
-dCBMVkRTIGlucHV0IHJlY2VpdmVzIHRoZSB2aWRlbyBzdHJlYW0sCj4gICBhbmQgdGhlIGJyaWRn
-ZSBzcGxpdHMgZXZlbi0gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMgYW5kIG91dHB1dHMgdGhlbQo+
-ICAgb24gdGhlIGZpcnN0IGFuZCBzZWNvbmQgcGFyYWxsZWwgb3V0cHV0cy4gVGhlIHNlY29uZCBM
-VkRTIGlucHV0IGlzIG5vdAo+ICAgdXNlZC4KPgo+IC0gRHVhbC1pbiwgc2luZ2xlLW91dDogVGhl
-IHR3byBMVkRTIGlucHV0cyBhcmUgdXNlZCBpbiBkdWFsLWxpbmsgbW9kZSwKPiAgIGFuZCB0aGUg
-YnJpZGdlIGNvbWJpbmVzIHRoZSBldmVuLSBhbmQgb2RkLW51bWJlcmVkIHBpeGVscyBhbmQgb3V0
-cHV0cwo+ICAgdGhlbSBvbiB0aGUgZmlyc3QgcGFyYWxsZWwgb3V0cHV0LiBUaGUgc2Vjb25kIHBh
-cmFsbGVsIG91dHB1dCBpcyBub3QKPiAgIHVzZWQuCj4KPiAtIER1YWwtaW4sIGR1YWwtb3V0OiBU
-aGUgdHdvIExWRFMgaW5wdXRzIGFyZSB1c2VkIGluIGR1YWwtbGluayBtb2RlLAo+ICAgYW5kIHRo
-ZSBicmlkZ2Ugb3V0cHV0cyB0aGUgZXZlbi0gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMgb24gdGhl
-IGZpcnN0Cj4gICBwYXJhbGxlbCBvdXRwdXQuCgphbmQgdGhlIHNlY29uZD8KCj4gVGhlIG9wZXJh
-dGluZyBtb2RlIGlzIHNlbGVjdGVkIGJ5IHR3byBpbnB1dCBwaW5zIG9mIHRoZSBicmlkZ2UsIHdo
-aWNoCj4gYXJlIGNvbm5lY3RlZCB0byBESVAgc3dpdGNoZXMgb24gdGhlIGRldmVsb3BtZW50IGJv
-YXJkcyBJIHVzZS4gVGhlIG1vZGUKPiBpcyB0aHVzIGZpeGVkIGZyb20gYSBMaW51eCBwb2ludCBv
-ZiB2aWV3LgoKQ2FuIHRoZSBzdGF0ZSBvZiB0aGVzZSBzd2l0Y2hlcyBiZSByZWFkIGZyb20gc29m
-dHdhcmU/CgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0
-CgotLQpHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBp
-YTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
-dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdt
-IHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRo
-aW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBU
-b3J2YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Add clock-frequency property to CPU node. Avoids warnings like
+"/cpus/cpu@0 missing clock-frequency property" for "arm,cortex-a7".
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No code change, just resend patch using correct encoding.
+---
+ arch/arm/boot/dts/imx6ul.dtsi  | 1 +
+ arch/arm/boot/dts/imx6ull.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index bbf010c..fc388b8 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -59,6 +59,7 @@
+ 			compatible =3D "arm,cortex-a7";
+ 			device_type =3D "cpu";
+ 			reg =3D <0>;
++			clock-frequency =3D <696000000>;
+ 			clock-latency =3D <61036>; /* two CLK32 periods */
+ 			#cooling-cells =3D <2>;
+ 			operating-points =3D <
+diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dts=
+i
+index 22e4a30..727b92f 100644
+--- a/arch/arm/boot/dts/imx6ull.dtsi
++++ b/arch/arm/boot/dts/imx6ull.dtsi
+@@ -12,6 +12,7 @@
+ /delete-node/ &crypto;
+=20
+ &cpu0 {
++	clock-frequency =3D <900000000>;
+ 	operating-points =3D <
+ 		/* kHz	uV */
+ 		900000	1275000
+--=20
+2.7.4
