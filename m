@@ -1,14 +1,14 @@
 From: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v4 4/8] arm64: dts: allwinner: Add ARM Mali GPU
- node for H6
-Date: Sun, 12 May 2019 19:46:04 +0200
-Message-ID: <20190512174608.10083-5-peron.clem@gmail.com>
+Subject: [PATCH v4 3/8] dt-bindings: gpu: mali-midgard: Add H6
+ mali gpu compatible
+Date: Sun, 12 May 2019 19:46:03 +0200
+Message-ID: <20190512174608.10083-4-peron.clem@gmail.com>
 References: <20190512174608.10083-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBB3FX4HTAKGQE6JTVUZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBB25X4HTAKGQERPHLHDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190512174608.10083-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,39 +23,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the mali gpu node to the H6 device-tree.
+This add the H6 mali compatible in the dt-bindings to later support
+specific implementation.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot=
-/dts/allwinner/sun50i-h6.dtsi
-index e0dc4a05c1ba..196753110434 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -157,6 +157,20 @@
- 			allwinner,sram =3D <&ve_sram 1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
+ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 2e8bbce35695..4bf17e1cf555 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -15,6 +15,7 @@ Required properties:
+     + "arm,mali-t860"
+     + "arm,mali-t880"
+   * which must be preceded by one of the following vendor specifics:
++    + "allwinner,sun50i-h6-mali"
+     + "amlogic,meson-gxm-mali"
+     + "rockchip,rk3288-mali"
+     + "rockchip,rk3399-mali"
+@@ -49,9 +50,15 @@ Vendor-specific bindings
+ ------------------------
 =20
-+		gpu: gpu@1800000 {
-+			compatible =3D "allwinner,sun50i-h6-mali",
-+				     "arm,mali-t720";
-+			reg =3D <0x01800000 0x4000>;
-+			interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "job", "mmu", "gpu";
-+			clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-+			clock-names =3D "core", "bus";
-+			resets =3D <&ccu RST_BUS_GPU>;
-+			status =3D "disabled";
-+		};
+ The Mali GPU is integrated very differently from one SoC to
+-another. In order to accomodate those differences, you have the option
++another. In order to accommodate those differences, you have the option
+ to specify one more vendor-specific compatible, among:
+=20
++- "allwinner,sun50i-h6-mali"
++  Required properties:
++  - clocks : phandles to core and bus clocks
++  - clock-names : must contain "core" and "bus"
++  - resets: phandle to GPU reset line
 +
- 		syscon: syscon@3000000 {
- 			compatible =3D "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+ - "amlogic,meson-gxm-mali"
+   Required properties:
+   - resets : Should contain phandles of :
 --=20
 2.17.1
 
@@ -65,5 +71,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190512174608.10083-5-peron.clem%40gmail.com.
+/linux-sunxi/20190512174608.10083-4-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
