@@ -1,76 +1,56 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V12 RESEND 3/3] ARM: dts: imx7ulp-evk: Add backlight support
-Date: Sun, 12 May 2019 08:51:26 +0000
-Message-ID: <1557650772-11973-3-git-send-email-Anson.Huang@nxp.com>
-References: <1557650772-11973-1-git-send-email-Anson.Huang@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 00/10] R-Car DU: LVDS dual-link mode support
+Date: Sun, 12 May 2019 10:55:20 +0200
+Message-ID: <CAMuHMdWqvKXXfjSAk3GRyk8fwa2TS+EwcV_n0YwcEU9d8XohUA@mail.gmail.com>
+References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557650772-11973-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-ID: <46EA10C9A2A34249BA4FC94771FDA5F5@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, Robin Gong <yibin.gong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds i.MX7ULP EVK board MIPI-DSI backlight support.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change change, just resend the patch with correct encoding for patch ser=
-ies:
-https://patchwork.kernel.org/patch/10937147/
----
- arch/arm/boot/dts/imx7ulp-evk.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-=
-evk.dts
-index a09026a..59f094e 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -22,6 +22,14 @@
- 		reg =3D <0x60000000 0x40000000>;
- 	};
-=20
-+	backlight {
-+		compatible =3D "pwm-backlight";
-+		pwms =3D <&tpm4 1 50000 0>;
-+		brightness-levels =3D <0 20 25 30 35 40 100>;
-+		default-brightness-level =3D <6>;
-+		status =3D "okay";
-+	};
-+
- 	reg_vsd_3v3: regulator-vsd-3v3 {
- 		compatible =3D "regulator-fixed";
- 		regulator-name =3D "VSD_3V3";
-@@ -40,6 +48,12 @@
- 	status =3D "okay";
- };
-=20
-+&tpm4 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_pwm0>;
-+	status =3D "okay";
-+};
-+
- &usdhc0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_usdhc0>;
-@@ -57,6 +71,12 @@
- 		bias-pull-up;
- 	};
-=20
-+	pinctrl_pwm0: pwm0grp {
-+		fsl,pins =3D <
-+			IMX7ULP_PAD_PTF2__TPM4_CH1	0x2
-+		>;
-+	};
-+
- 	pinctrl_usdhc0: usdhc0grp {
- 		fsl,pins =3D <
- 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
---=20
-2.7.4
+SGkgTGF1cmVudCwKCk9uIFNhdCwgTWF5IDExLCAyMDE5IGF0IDExOjA3IFBNIExhdXJlbnQgUGlu
+Y2hhcnQKPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPiB3cm90ZToK
+PiBPbiB0aGUgcmVjZWl2aW5nIHNpZGUsIHRoZSBUSEM2M0xWRDEwMjQgTFZEUy10by1wYXJhbGxl
+bCBicmlkZ2UgaGFzIHR3bwo+IExWRFMgaW5wdXRzIGFuZCB0d28gcGFyYWxsZWwgb3V0cHV0cy4g
+SXQgY2FuIG9wZXJhdGUgaW4gZm91ciBkaWZmZXJlbnQKPiBtb2RlczoKPgo+IC0gU2luZ2xlLWlu
+LCBzaW5nbGUtb3V0OiBUaGUgZmlyc3QgTFZEUyBpbnB1dCByZWNlaXZlcyB0aGUgdmlkZW8gc3Ry
+ZWFtLAo+ICAgYW5kIHRoZSBicmlkZ2Ugb3V0cHV0cyBpdCBvbiB0aGUgZmlyc3QgcGFyYWxsZWwg
+b3V0cHV0LiBUaGUgc2Vjb25kCj4gICBMVkRTIGlucHV0IGFuZCB0aGUgc2Vjb25kIHBhcmFsbGVs
+IG91dHB1dCBhcmUgbm90IHVzZWQuCj4KPiAtIFNpbmdsZS1pbiwgZHVhbC1vdXQ6IFRoZSBmaXJz
+dCBMVkRTIGlucHV0IHJlY2VpdmVzIHRoZSB2aWRlbyBzdHJlYW0sCj4gICBhbmQgdGhlIGJyaWRn
+ZSBzcGxpdHMgZXZlbi0gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMgYW5kIG91dHB1dHMgdGhlbQo+
+ICAgb24gdGhlIGZpcnN0IGFuZCBzZWNvbmQgcGFyYWxsZWwgb3V0cHV0cy4gVGhlIHNlY29uZCBM
+VkRTIGlucHV0IGlzIG5vdAo+ICAgdXNlZC4KPgo+IC0gRHVhbC1pbiwgc2luZ2xlLW91dDogVGhl
+IHR3byBMVkRTIGlucHV0cyBhcmUgdXNlZCBpbiBkdWFsLWxpbmsgbW9kZSwKPiAgIGFuZCB0aGUg
+YnJpZGdlIGNvbWJpbmVzIHRoZSBldmVuLSBhbmQgb2RkLW51bWJlcmVkIHBpeGVscyBhbmQgb3V0
+cHV0cwo+ICAgdGhlbSBvbiB0aGUgZmlyc3QgcGFyYWxsZWwgb3V0cHV0LiBUaGUgc2Vjb25kIHBh
+cmFsbGVsIG91dHB1dCBpcyBub3QKPiAgIHVzZWQuCj4KPiAtIER1YWwtaW4sIGR1YWwtb3V0OiBU
+aGUgdHdvIExWRFMgaW5wdXRzIGFyZSB1c2VkIGluIGR1YWwtbGluayBtb2RlLAo+ICAgYW5kIHRo
+ZSBicmlkZ2Ugb3V0cHV0cyB0aGUgZXZlbi0gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMgb24gdGhl
+IGZpcnN0Cj4gICBwYXJhbGxlbCBvdXRwdXQuCgphbmQgdGhlIHNlY29uZD8KCj4gVGhlIG9wZXJh
+dGluZyBtb2RlIGlzIHNlbGVjdGVkIGJ5IHR3byBpbnB1dCBwaW5zIG9mIHRoZSBicmlkZ2UsIHdo
+aWNoCj4gYXJlIGNvbm5lY3RlZCB0byBESVAgc3dpdGNoZXMgb24gdGhlIGRldmVsb3BtZW50IGJv
+YXJkcyBJIHVzZS4gVGhlIG1vZGUKPiBpcyB0aHVzIGZpeGVkIGZyb20gYSBMaW51eCBwb2ludCBv
+ZiB2aWV3LgoKQ2FuIHRoZSBzdGF0ZSBvZiB0aGVzZSBzd2l0Y2hlcyBiZSByZWFkIGZyb20gc29m
+dHdhcmU/CgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0
+CgotLQpHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBp
+YTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
+dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdt
+IHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRo
+aW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBU
+b3J2YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
