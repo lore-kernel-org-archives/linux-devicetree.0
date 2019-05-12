@@ -1,56 +1,46 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 00/10] R-Car DU: LVDS dual-link mode support
-Date: Sun, 12 May 2019 13:15:47 +0300
-Message-ID: <20190512101547.GA4960@pendragon.ideasonboard.com>
-References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdWqvKXXfjSAk3GRyk8fwa2TS+EwcV_n0YwcEU9d8XohUA@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH RESEND 1/3] dt-bindings: clock: imx8mm: Add GPIO clocks
+Date: Sun, 12 May 2019 10:17:08 +0000
+Message-ID: <1557655926-12915-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWqvKXXfjSAk3GRyk8fwa2TS+EwcV_n0YwcEU9d8XohUA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Content-ID: <08E01C7B0B1DA14D9F5AB10C0C2AF991@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsCgpPbiBTdW4sIE1heSAxMiwgMjAxOSBhdCAxMDo1NToyMEFNICswMjAwLCBHZWVy
-dCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gT24gU2F0LCBNYXkgMTEsIDIwMTkgYXQgMTE6MDcgUE0g
-TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9uIHRoZSByZWNlaXZpbmcgc2lkZSwgdGhlIFRI
-QzYzTFZEMTAyNCBMVkRTLXRvLXBhcmFsbGVsIGJyaWRnZSBoYXMgdHdvCj4gPiBMVkRTIGlucHV0
-cyBhbmQgdHdvIHBhcmFsbGVsIG91dHB1dHMuIEl0IGNhbiBvcGVyYXRlIGluIGZvdXIgZGlmZmVy
-ZW50Cj4gPiBtb2RlczoKPiA+Cj4gPiAtIFNpbmdsZS1pbiwgc2luZ2xlLW91dDogVGhlIGZpcnN0
-IExWRFMgaW5wdXQgcmVjZWl2ZXMgdGhlIHZpZGVvIHN0cmVhbSwKPiA+ICAgYW5kIHRoZSBicmlk
-Z2Ugb3V0cHV0cyBpdCBvbiB0aGUgZmlyc3QgcGFyYWxsZWwgb3V0cHV0LiBUaGUgc2Vjb25kCj4g
-PiAgIExWRFMgaW5wdXQgYW5kIHRoZSBzZWNvbmQgcGFyYWxsZWwgb3V0cHV0IGFyZSBub3QgdXNl
-ZC4KPiA+Cj4gPiAtIFNpbmdsZS1pbiwgZHVhbC1vdXQ6IFRoZSBmaXJzdCBMVkRTIGlucHV0IHJl
-Y2VpdmVzIHRoZSB2aWRlbyBzdHJlYW0sCj4gPiAgIGFuZCB0aGUgYnJpZGdlIHNwbGl0cyBldmVu
-LSBhbmQgb2RkLW51bWJlcmVkIHBpeGVscyBhbmQgb3V0cHV0cyB0aGVtCj4gPiAgIG9uIHRoZSBm
-aXJzdCBhbmQgc2Vjb25kIHBhcmFsbGVsIG91dHB1dHMuIFRoZSBzZWNvbmQgTFZEUyBpbnB1dCBp
-cyBub3QKPiA+ICAgdXNlZC4KPiA+Cj4gPiAtIER1YWwtaW4sIHNpbmdsZS1vdXQ6IFRoZSB0d28g
-TFZEUyBpbnB1dHMgYXJlIHVzZWQgaW4gZHVhbC1saW5rIG1vZGUsCj4gPiAgIGFuZCB0aGUgYnJp
-ZGdlIGNvbWJpbmVzIHRoZSBldmVuLSBhbmQgb2RkLW51bWJlcmVkIHBpeGVscyBhbmQgb3V0cHV0
-cwo+ID4gICB0aGVtIG9uIHRoZSBmaXJzdCBwYXJhbGxlbCBvdXRwdXQuIFRoZSBzZWNvbmQgcGFy
-YWxsZWwgb3V0cHV0IGlzIG5vdAo+ID4gICB1c2VkLgo+ID4KPiA+IC0gRHVhbC1pbiwgZHVhbC1v
-dXQ6IFRoZSB0d28gTFZEUyBpbnB1dHMgYXJlIHVzZWQgaW4gZHVhbC1saW5rIG1vZGUsCj4gPiAg
-IGFuZCB0aGUgYnJpZGdlIG91dHB1dHMgdGhlIGV2ZW4tIGFuZCBvZGQtbnVtYmVyZWQgcGl4ZWxz
-IG9uIHRoZSBmaXJzdAo+ID4gICBwYXJhbGxlbCBvdXRwdXQuCj4gCj4gYW5kIHRoZSBzZWNvbmQ/
-CgpJIHNob3VsZCBoYXZlIHJlYWQgIm9uIHRoZSBmaXJzdCBhbmQgc2Vjb25kIHBhcmFsbGVsIG91
-dHB1dHMKcmVzcGVjdGl2ZWx5IiBpbmRlZWQuCgo+ID4gVGhlIG9wZXJhdGluZyBtb2RlIGlzIHNl
-bGVjdGVkIGJ5IHR3byBpbnB1dCBwaW5zIG9mIHRoZSBicmlkZ2UsIHdoaWNoCj4gPiBhcmUgY29u
-bmVjdGVkIHRvIERJUCBzd2l0Y2hlcyBvbiB0aGUgZGV2ZWxvcG1lbnQgYm9hcmRzIEkgdXNlLiBU
-aGUgbW9kZQo+ID4gaXMgdGh1cyBmaXhlZCBmcm9tIGEgTGludXggcG9pbnQgb2Ygdmlldy4KPiAK
-PiBDYW4gdGhlIHN0YXRlIG9mIHRoZXNlIHN3aXRjaGVzIGJlIHJlYWQgZnJvbSBzb2Z0d2FyZT8K
-ClVuZm9ydHVuYXRlbHkgbm90IDotKAoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Add macro for the GPIO clocks of the i.MX8MM.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+No change, just resend patch with correct encoding.
+---
+ include/dt-bindings/clock/imx8mm-clock.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/include/dt-bindings/clock/imx8mm-clock.h b/include/dt-bindings=
+/clock/imx8mm-clock.h
+index 1b4353e..fe47798 100644
+--- a/include/dt-bindings/clock/imx8mm-clock.h
++++ b/include/dt-bindings/clock/imx8mm-clock.h
+@@ -239,6 +239,12 @@
+=20
+ #define IMX8MM_CLK_NAND_USDHC_BUS_RAWNAND_CLK	222
+=20
+-#define IMX8MM_CLK_END				223
++#define IMX8MM_CLK_GPIO1_ROOT			223
++#define IMX8MM_CLK_GPIO2_ROOT			224
++#define IMX8MM_CLK_GPIO3_ROOT			225
++#define IMX8MM_CLK_GPIO4_ROOT			226
++#define IMX8MM_CLK_GPIO5_ROOT			227
++
++#define IMX8MM_CLK_END				228
+=20
+ #endif
+--=20
+2.7.4
