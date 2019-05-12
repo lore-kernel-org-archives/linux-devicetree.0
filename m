@@ -1,64 +1,96 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 02/10] dt-bindings: display: bridge: thc63lvd1024:
- Document dual-link operation
-Date: Sun, 12 May 2019 10:58:54 +0200
-Message-ID: <CAMuHMdXtg3Kv+zt6kS9tViu93AjaHsOrSSotemt8T=8XVJcdyA@mail.gmail.com>
-References: <20190511210702.18394-1-laurent.pinchart+renesas@ideasonboard.com>
- <20190511210702.18394-3-laurent.pinchart+renesas@ideasonboard.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH RESEND 1/5] ARM: dts: imx6qdl-sabresd: Assign corresponding
+ power supply for LDOs
+Date: Sun, 12 May 2019 09:57:20 +0000
+Message-ID: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190511210702.18394-3-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Content-ID: <32D5768BD4DE3F43A90899F857CA9E6C@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFNhdCwgTWF5IDExLCAyMDE5IGF0IDExOjA3IFBNIExhdXJlbnQgUGlu
-Y2hhcnQKPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPiB3cm90ZToK
-PiBUaGUgVEhDNjNMVkQxMDI0IExWRFMgZGVjb2RlciBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMs
-IHNpbmdsZS1saW5rIG9yCj4gZHVhbC1saW5rLiBJbiBkdWFsLWxpbmsgbW9kZSBib3RoIGlucHV0
-IHBvcnRzIGFyZSB1c2VkIHRvIGNhcnJ5IGV2ZW4tCj4gYW5kIG9kZC1udW1iZXJlZCBwaXhlbHMg
-c2VwYXJhdGVseS4gRG9jdW1lbnQgdGhpcyBpbiB0aGUgRFQgYmluZGluZ3MsCj4gYWxvbmcgd2l0
-aCB0aGUgcmVsYXRlZCBydWxlcyBnb3Zlcm5pbmcgcG9ydCBhbmQgdXNhZ2UuCj4KPiBTaWduZWQt
-b2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNv
-bmJvYXJkLmNvbT4KPiBSZXZpZXdlZC1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0Bq
-bW9uZGkub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhj
-NjNsdmQxMDI0LnR4dCAgICAgICAgICB8IDYgKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGlu
-c2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aGluZSx0aGM2M2x2ZDEwMjQu
-dHh0Cj4gaW5kZXggMzdmMGMwNGQ1YTI4Li5kMTdkMWU1ODIwZDcgMTAwNjQ0Cj4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RoaW5lLHRoYzYz
-bHZkMTAyNC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmQxMDI0LnR4dAo+IEBAIC0yOCw2ICsyOCwxMiBAQCBP
-cHRpb25hbCB2aWRlbyBwb3J0IG5vZGVzOgo+ICAtIHBvcnRAMTogU2Vjb25kIExWRFMgaW5wdXQg
-cG9ydAo+ICAtIHBvcnRAMzogU2Vjb25kIGRpZ2l0YWwgQ01PUy9UVEwgcGFyYWxsZWwgb3V0cHV0
-Cj4KPiArVGhlIGRldmljZSBjYW4gb3BlcmF0ZSBpbiBzaW5nbGUtbGluayBtb2RlIG9yIGR1YWwt
-bGluayBtb2RlLiBJbiBzaW5nbGUtbGluawo+ICttb2RlLCBhbGwgcGl4ZWxzIGFyZSByZWNlaXZl
-ZCBvbiBwb3J0QDAsIGFuZCBwb3J0QDEgc2hhbGwgbm90IGNvbnRhaW4gYW55Cj4gK2VuZHBvaW50
-LiBJbiBkdWFsLWxpbmsgbW9kZSwgZXZlbi1udW1iZXJlZCBwaXhlbHMgYXJlIHJlY2VpdmVkIG9u
-IHBvcnRAMCBhbmQKPiArb2RkLW51bWJlcmVkIHBpeGVscyBvbiBwb3J0QDEsIGFuZCBib3RoIHBv
-cnRAMCBhbmQgcG9ydEAxIHNoYWxsIGNvbnRhaW4KPiArZW5kcG9pbnRzLgoKVGhpcyBkZXNjcmli
-ZXMgc2luZ2xlL2R1YWwgaW5wdXQuCkRvZXMgc2luZ2xlL2R1YWwgb3V0cHV0IG5lZWQgdG8gYmUg
-ZGVzY3JpYmVkLCB0b28/CgpCVFcsIEkgc2VlIHRoZSBzZWNvbmQgaW5wdXQvb3V0cHV0IHNldCBp
-cyBvcHRpb25hbCwgd2lsZSB0aGUgZmlyc3Qgc2V0CmlzIHJlcXVpcmVkLiAgQ291bGQgaXQgaGFw
-cGVuIHRoZSBoYXJkd2FyZSBpcyB3aXJlZCBmb3IgdGhlIHNlY29uZApzZXQgb25seT8KCkdye29l
-dGplLGVldGluZ31zLAoKICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVydCBV
-eXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0
-QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2Fs
-IHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8g
-am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
-dC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On i.MX6Q/DL SabreSD board, vgen5 supplies vdd1p1/vdd2p5 LDO and
+sw2 supplies vdd3p0 LDO, this patch assigns corresponding power
+supply for vdd1p1/vdd2p5/vdd3p0 to avoid confusion by below log:
+
+vdd1p1: supplied by regulator-dummy
+vdd3p0: supplied by regulator-dummy
+vdd2p5: supplied by regulator-dummy
+
+With this patch, the power supply is more accurate:
+
+vdd1p1: supplied by VGEN5
+vdd3p0: supplied by SW2
+vdd2p5: supplied by VGEN5
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No code change, just resend patch with correct encoding.
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/imx6qdl.dtsi         |  6 +++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
+6qdl-sabresd.dtsi
+index 185fb17..11103a4 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -745,6 +745,18 @@
+        vin-supply =3D <&sw1c_reg>;
+ };
+=20
++&reg_vdd1p1 {
++	vin-supply =3D <&vgen5_reg>;
++};
++
++&reg_vdd3p0 {
++	vin-supply =3D <&sw2_reg>;
++};
++
++&reg_vdd2p5 {
++	vin-supply =3D <&vgen5_reg>;
++};
++
+ &snvs_poweroff {
+ 	status =3D "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dts=
+i
+index 664f7b5..929fc7d 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -701,7 +701,7 @@
+ 					     <0 54 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+=20
+-				regulator-1p1 {
++				reg_vdd1p1: regulator-1p1 {
+ 					compatible =3D "fsl,anatop-regulator";
+ 					regulator-name =3D "vdd1p1";
+ 					regulator-min-microvolt =3D <1000000>;
+@@ -716,7 +716,7 @@
+ 					anatop-enable-bit =3D <0>;
+ 				};
+=20
+-				regulator-3p0 {
++				reg_vdd3p0: regulator-3p0 {
+ 					compatible =3D "fsl,anatop-regulator";
+ 					regulator-name =3D "vdd3p0";
+ 					regulator-min-microvolt =3D <2800000>;
+@@ -731,7 +731,7 @@
+ 					anatop-enable-bit =3D <0>;
+ 				};
+=20
+-				regulator-2p5 {
++				reg_vdd2p5: regulator-2p5 {
+ 					compatible =3D "fsl,anatop-regulator";
+ 					regulator-name =3D "vdd2p5";
+ 					regulator-min-microvolt =3D <2250000>;
+--=20
+2.7.4
