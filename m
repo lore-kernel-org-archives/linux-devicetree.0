@@ -1,87 +1,81 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Sun, 12 May 2019 13:15:16 -0400
-Message-ID: <20190512131500-mutt-send-email-mst@kernel.org>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+From: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date: Sun, 12 May 2019 19:46:00 +0200
+Message-ID: <20190512174608.10083-1-peron.clem@gmail.com>
+Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <virtio-dev-return-5739-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-Content-Disposition: inline
-In-Reply-To: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCELXIX7UICBB2FX4HTAKGQEGT4OE6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.9 [1].
-> 
-> This is a simple rebase onto Linux v5.0-rc2. We now use the
-> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
-> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
-> 
-> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
-> on Arm, and enable device assignment to guest userspace. In this
-> use-case the mappings are static, and don't require optimal performance,
-> so this series tries to keep things simple. However there is plenty more
-> to do for features and optimizations, and having this base in v5.1 would
-> be good. Given that most of the changes are to drivers/iommu, I believe
-> the driver and future changes should go via the IOMMU tree.
-> 
-> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
-> module and x86 support on virtio-iommu/devel. Also tested with Eric's
-> QEMU device [4]. Please note that the series depends on Robin's
-> probe-deferral fix [5], which will hopefully land in v5.0.
-> 
-> [1] Virtio-iommu specification v0.9, sources and pdf
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
-> 
-> [2] [PATCH v6 0/7] Add virtio-iommu driver
->     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
-> 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
-> 
-> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
-> 
-> [5] [PATCH] iommu/of: Fix probe-deferral
->     https://www.spinics.net/lists/arm-kernel/msg698371.html
+From: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-For virtio things:
+Hi,
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+The Allwinner H6 has a Mali-T720 MP2. The drivers are
+out-of-tree so this series only introduce the dt-bindings.
 
+The first patch is from Neil Amstrong and has been already
+merged in linux-amlogic. It is required for this series.
 
+The second patch is from Icenowy Zheng where I changed the
+order has required by Rob Herring.
+See: https://patchwork.kernel.org/patch/10699829/
 
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   of: Allow the iommu-map property to omit untranslated devices
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
-> 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1158 +++++++++++++++++
->  drivers/of/base.c                             |   10 +-
->  drivers/pci/of.c                              |    7 +
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  161 +++
->  10 files changed, 1449 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
-> 
-> -- 
-> 2.19.1
+Thanks,
+Cl=C3=A9ment
+
+Changes in v4:
+ - Add Rob Herring reviewed-by tag
+ - Resent with correct Maintainers
+
+Changes in v3 (Thanks to Maxime Ripard):
+ - Reauthor Icenowy for her patch
+
+Changes in v2 (Thanks to Maxime Ripard):
+ - Drop GPU OPP Table
+ - Add clocks and clock-names in required
+
+Cl=C3=A9ment P=C3=A9ron (6):
+  dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+  arm64: dts: allwinner: Add ARM Mali GPU node for H6
+  arm64: dts: allwinner: Add mali GPU supply for Pine H64
+  arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
+
+Icenowy Zheng (1):
+  dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+
+Neil Armstrong (1):
+  dt-bindings: gpu: mali-midgard: Add resets property
+
+ .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
+ 6 files changed, 61 insertions(+)
+
+--=20
+2.17.1
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190512174608.10083-1-peron.clem%40gmail.com.
+For more options, visit https://groups.google.com/d/optout.
