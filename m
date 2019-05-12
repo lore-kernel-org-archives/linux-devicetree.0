@@ -1,62 +1,144 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V3 5/9] spi: export spi core function spi_set_cs
-Date: Sun, 12 May 2019 12:12:42 +0900
-Message-ID: <20190512031242.GB21483@sirena.org.uk>
-References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
- <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
- <20190419151823.GS2803@sirena.org.uk>
- <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
- <20190506044425.GN14916@sirena.org.uk>
- <BYAPR12MB3398D946FDD0E5406B23EB50C20C0@BYAPR12MB3398.namprd12.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
+From: Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v4 1/2] Bluetooth: hci_qca: Load customized NVM based on the device property
+Date: Sun, 12 May 2019 11:19:08 +0800
+Message-ID: <1557631148-5120-1-git-send-email-rjliao@codeaurora.org>
+References: <1554888451-17518-1-git-send-email-rjliao@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BYAPR12MB3398D946FDD0E5406B23EB50C20C0@BYAPR12MB3398.namprd12.prod.outlook.com>
+In-Reply-To: <1554888451-17518-1-git-send-email-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, thierry.escande@linaro.org
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+QCA BTSOC NVM is a customized firmware file and different vendors may
+want to have different BTSOC configuration (e.g. Configure SCO over PCM
+or I2S, Setting Tx power, etc.) via this file. This patch will allow
+vendors to download different NVM firmware file by reading a device
+property "firmware-name".
 
---neYutvxvOLaeuPCA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+---
+Changes in v4:
+  * rebased the code base and merge with latest code
+---
+ drivers/bluetooth/btqca.c   | 14 ++++++++++----
+ drivers/bluetooth/btqca.h   |  6 ++++--
+ drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
+ 3 files changed, 32 insertions(+), 7 deletions(-)
 
-On Fri, May 10, 2019 at 06:53:25PM +0000, Sowjanya Komatineni wrote:
-> > On Mon, Apr 29, 2019 at 10:02:46PM +0000, Sowjanya Komatineni wrote:
-
-To reiterate:
-
-> > Please fix your mail client to word wrap within paragraphs at
-> > something substantially less than 80 columns.  Doing this makes your
-> > messages much easier to read and reply to.
-
-> Any concerns for using set_cs API from SPI core as it already does direct gpio based cs using
-> Descriptors?
-
-Yes, that is precisely what I'm telling you not to do.  That function
-doesn't do enough to make it worth exporting and the code that uses it
-assumes it's managing the chip select entirely, adding a single other
-use will make things fragile as it will mean that there's a chance
-someone will change what the core is doing without taking into account
-the different things that the Tegra code is doing.  Either let the core
-handle chip select entirely or open code it.
-
---neYutvxvOLaeuPCA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzXjykACgkQJNaLcl1U
-h9CdDwf/RMwk8JveODVogg3LW+9FdUslYiuSh/72+FYAjmKk28dm3H328PpA/y2c
-ZytPr8GyaF0vI4dbOhl7xFeHSJvb3FSmZxYUrD0f5kWkPjMI/SB2Z2hCZFdnONMm
-wssyJ+3Q7dS4fOCmSOg11yn8c02PAzP5R+G2Vqdt/tKH+hj2ItKxghQI10qGL78K
-AtAYMCzLlUNJ1QgWeg3cAfNZZlGTQoOuRCx6hvklNTgwxk6ED2aKF2FV4Jw2AxI0
-n89eG0UOGQeI0KmPSc8GOUduj/0vUITd0qSWVNOtvirNf1rV6gu6mMZIclPiLPjp
-kPI1Fp72G4ZAFyfGuleOFW2K6uDZVA==
-=qEfj
------END PGP SIGNATURE-----
-
---neYutvxvOLaeuPCA--
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index cc12eec..0ea690a 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+ EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
+ 
+ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+-		   enum qca_btsoc_type soc_type, u32 soc_ver)
++		   enum qca_btsoc_type soc_type, u32 soc_ver,
++		   const char *firmware_name)
+ {
+ 	struct rome_config config;
+ 	int err;
+@@ -368,9 +369,14 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 	if (qca_is_wcn399x(soc_type))
+ 		snprintf(config.fwname, sizeof(config.fwname),
+ 			 "qca/crnv%02x.bin", rom_ver);
+-	else
+-		snprintf(config.fwname, sizeof(config.fwname),
+-			 "qca/nvm_%08x.bin", soc_ver);
++	else {
++		if (firmware_name)
++			snprintf(config.fwname, sizeof(config.fwname),
++				 "qca/%s", firmware_name);
++		else
++			snprintf(config.fwname, sizeof(config.fwname),
++				 "qca/nvm_%08x.bin", soc_ver);
++	}
+ 
+ 	err = qca_download_firmware(hdev, &config);
+ 	if (err < 0) {
+diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+index 4c4fe2b..8c037bb 100644
+--- a/drivers/bluetooth/btqca.h
++++ b/drivers/bluetooth/btqca.h
+@@ -140,7 +140,8 @@ enum qca_btsoc_type {
+ 
+ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+-		   enum qca_btsoc_type soc_type, u32 soc_ver);
++		   enum qca_btsoc_type soc_type, u32 soc_ver,
++		   const char *firmware_name);
+ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
+ int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+ static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+@@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdad
+ }
+ 
+ static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+-				 enum qca_btsoc_type soc_type, u32 soc_ver)
++				 enum qca_btsoc_type soc_type, u32 soc_ver,
++				 const char *firmware_name)
+ {
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 57322c4..9590602 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -169,6 +169,7 @@ struct qca_serdev {
+ 	struct qca_power *bt_power;
+ 	u32 init_speed;
+ 	u32 oper_speed;
++	const char *firmware_name;
+ };
+ 
+ static int qca_power_setup(struct hci_uart *hu, bool on);
+@@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct hci_uart *hu)
+ 	return soc_type;
+ }
+ 
++static const char *qca_get_firmware_name(struct hci_uart *hu)
++{
++	if (hu->serdev) {
++		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
++
++		return qsd->firmware_name;
++	} else {
++		return NULL;
++	}
++}
++
+ static void __serial_clock_on(struct tty_struct *tty)
+ {
+ 	/* TODO: Some chipset requires to enable UART clock on client
+@@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	struct qca_data *qca = hu->priv;
+ 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+ 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
++	const char *firmware_name = qca_get_firmware_name(hu);
+ 	int ret;
+ 	int soc_ver = 0;
+ 
+@@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
+ 
+ 	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
+ 	/* Setup patch / NVM configurations */
+-	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
++	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
++			firmware_name);
+ 	if (!ret) {
+ 		set_bit(QCA_IBS_ENABLED, &qca->flags);
+ 		qca_debugfs_init(hdev);
+@@ -1477,6 +1491,9 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 			return PTR_ERR(qcadev->bt_en);
+ 		}
+ 
++		device_property_read_string(&serdev->dev, "firmware-name",
++					 &qcadev->firmware_name);
++
+ 		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+ 		if (IS_ERR(qcadev->susclk)) {
+ 			dev_err(&serdev->dev, "failed to acquire clk\n");
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
