@@ -1,14 +1,14 @@
 From: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v4 5/8] arm64: dts: allwinner: Add mali GPU
- supply for Pine H64
-Date: Sun, 12 May 2019 19:46:05 +0200
-Message-ID: <20190512174608.10083-6-peron.clem@gmail.com>
+Subject: [PATCH v4 6/8] arm64: dts: allwinner: Add mali GPU
+ supply for Beelink GS1
+Date: Sun, 12 May 2019 19:46:06 +0200
+Message-ID: <20190512174608.10083-7-peron.clem@gmail.com>
 References: <20190512174608.10083-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBB3NX4HTAKGQECFDAC3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBB3VX4HTAKGQEWWTS4TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190512174608.10083-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -24,19 +24,19 @@ List-Id: devicetree@vger.kernel.org
 From: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Enable and add supply to the Mali GPU node on the
-Pine H64 board.
+Beelink GS1 board.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/ar=
-m64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..e16a8c6738f9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -85,6 +85,11 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch=
+/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 0dc33c90dd60..21440d572f0a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -70,6 +70,11 @@
  	status =3D "okay";
  };
 =20
@@ -57,5 +57,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190512174608.10083-6-peron.clem%40gmail.com.
+/linux-sunxi/20190512174608.10083-7-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
