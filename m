@@ -1,14 +1,14 @@
 From: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v4 3/8] dt-bindings: gpu: mali-midgard: Add H6
- mali gpu compatible
-Date: Sun, 12 May 2019 19:46:03 +0200
-Message-ID: <20190512174608.10083-4-peron.clem@gmail.com>
+Subject: [PATCH v4 5/8] arm64: dts: allwinner: Add mali GPU
+ supply for Pine H64
+Date: Sun, 12 May 2019 19:46:05 +0200
+Message-ID: <20190512174608.10083-6-peron.clem@gmail.com>
 References: <20190512174608.10083-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBB25X4HTAKGQERPHLHDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBB3NX4HTAKGQECFDAC3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190512174608.10083-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,45 +23,31 @@ List-Id: devicetree@vger.kernel.org
 
 From: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This add the H6 mali compatible in the dt-bindings to later support
-specific implementation.
+Enable and add supply to the Mali GPU node on the
+Pine H64 board.
 
 Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/D=
-ocumentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 2e8bbce35695..4bf17e1cf555 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -15,6 +15,7 @@ Required properties:
-     + "arm,mali-t860"
-     + "arm,mali-t880"
-   * which must be preceded by one of the following vendor specifics:
-+    + "allwinner,sun50i-h6-mali"
-     + "amlogic,meson-gxm-mali"
-     + "rockchip,rk3288-mali"
-     + "rockchip,rk3399-mali"
-@@ -49,9 +50,15 @@ Vendor-specific bindings
- ------------------------
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/ar=
+m64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 4802902e128f..e16a8c6738f9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -85,6 +85,11 @@
+ 	status =3D "okay";
+ };
 =20
- The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
-+another. In order to accommodate those differences, you have the option
- to specify one more vendor-specific compatible, among:
-=20
-+- "allwinner,sun50i-h6-mali"
-+  Required properties:
-+  - clocks : phandles to core and bus clocks
-+  - clock-names : must contain "core" and "bus"
-+  - resets: phandle to GPU reset line
++&gpu {
++	mali-supply =3D <&reg_dcdcc>;
++	status =3D "okay";
++};
 +
- - "amlogic,meson-gxm-mali"
-   Required properties:
-   - resets : Should contain phandles of :
+ &hdmi {
+ 	status =3D "okay";
+ };
 --=20
 2.17.1
 
@@ -71,5 +57,5 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190512174608.10083-4-peron.clem%40gmail.com.
+/linux-sunxi/20190512174608.10083-6-peron.clem%40gmail.com.
 For more options, visit https://groups.google.com/d/optout.
