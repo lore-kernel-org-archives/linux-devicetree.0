@@ -1,26 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 05/10] regulator: Add document for MT6358 regulator
-Date: Mon, 13 May 2019 10:06:01 -0500
-Message-ID: <20190513150601.GA21798@bogus>
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
- <20190503093117.54830-6-hsin-hsiung.wang@mediatek.com>
+Subject: Re: [PATCH V6 06/15] dt-bindings: PCI: designware: Add binding for
+ CDM register check
+Date: Mon, 13 May 2019 10:10:38 -0500
+Message-ID: <20190513151038.GA30653@bogus>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-7-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190503093117.54830-6-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20190513050626.14991-7-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2019 at 05:31:12PM +0800, Hsin-Hsiung Wang wrote:
-> add dt-binding document for MediaTek MT6358 PMIC
+On Mon, May 13, 2019 at 10:36:17AM +0530, Vidya Sagar wrote:
+> Add support to enable CDM (Configuration Dependent Module) registers check
+> for any data corruption. CDM registers include standard PCIe configuration
+> space registers, Port Logic registers and iATU and DMA registers.
+> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
+> Version 4.90a
 > 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  .../bindings/regulator/mt6358-regulator.txt   | 358 ++++++++++++++++++
->  1 file changed, 358 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+> Changes since [v5]:
+> * None
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
+> * Added info about Port Logic and DMA registers being part of CDM
+> 
+> Changes since [v1]:
+> * This is a new patch in v2 series
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 5561a1c060d0..85b872c42a9f 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -34,6 +34,11 @@ Optional properties:
+>  - clock-names: Must include the following entries:
+>  	- "pcie"
+>  	- "pcie_bus"
+> +- enable-cdm-check: This is a boolean property and if present enables
+> +   automatic checking of CDM (Configuration Dependent Module) registers
+> +   for data corruption. CDM registers include standard PCIe configuration
+> +   space registers, Port Logic registers, DMA and iATU (internal Address
+> +   Translation Unit) registers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+snps,enable-cdm-check
+
+>  RC mode:
+>  - num-viewport: number of view ports configured in hardware. If a platform
+>    does not specify it, the driver assumes 2.
+> -- 
+> 2.17.1
+> 
