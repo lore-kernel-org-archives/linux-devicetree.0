@@ -1,45 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V6 10/15] dt-bindings: PHY: P2U: Add Tegra194 P2U block
-Date: Mon, 13 May 2019 10:22:05 -0500
-Message-ID: <20190513152204.GA20594@bogus>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-11-vidyas@nvidia.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: remoteproc: Rename and amend Hexagon
+ v56 binding
+Date: Mon, 13 May 2019 10:23:49 -0500
+Message-ID: <20190513152349.GA23710@bogus>
+References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
+ <20190510043421.31393-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190513050626.14991-11-vidyas@nvidia.com>
+In-Reply-To: <20190510043421.31393-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 May 2019 10:36:21 +0530, Vidya Sagar wrote:
-> Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-> module instantiated one for each PCIe lane between Synopsys DesignWare core
-> based PCIe IP and Universal PHY block.
+On Thu,  9 May 2019 21:34:14 -0700, Bjorn Andersson wrote:
+> The SDM845 Audio DSP peripheral image loader binding describes the
+> properties needed to load and boot firmware on a Hexagon v56. Rename the
+> file and add the Compute DSP (CDSP) found in QCS404 to the binding.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> Changes since [v5]:
-> * Added Sob
-> * Changed node name from "p2u@xxxxxxxx" to "phy@xxxxxxxx"
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Changed node label to reflect new format that includes either 'hsio' or
->   'nvhs' in its name to reflect which UPHY brick they belong to
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>  ...qcom,adsp-pil.txt => qcom,hexagon-v56.txt} | 35 +++++++++++++------
+>  1 file changed, 25 insertions(+), 10 deletions(-)
+>  rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp-pil.txt => qcom,hexagon-v56.txt} (74%)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
