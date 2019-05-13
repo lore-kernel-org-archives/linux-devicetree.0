@@ -1,76 +1,53 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 2/2] amr64: map FDT as RW for early_init_dt_scan()
-Date: Mon, 13 May 2019 11:58:53 +0300
-Message-ID: <20190513085853.GB9271@rapoport-lnx>
-References: <20190513003819.356-1-hsinyi@chromium.org>
- <20190513003819.356-2-hsinyi@chromium.org>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
+ property "nvmem_macaddr_swap" to swap macaddr bytes order]
+Date: Mon, 13 May 2019 11:07:00 +0200
+Message-ID: <20190513090700.GW81826@meh.true.cz>
+References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
+ <20190510112822.GT81826@meh.true.cz>
+ <20190510113155.mvpuhe4yzxdaanei@flea>
+ <20190511144444.GU81826@meh.true.cz>
+ <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190513003819.356-2-hsinyi@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, boot-architecture@lists.linaro.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>
+In-Reply-To: <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 08:38:19AM +0800, Hsin-Yi Wang wrote:
-> Currently in arm64, FDT is mapped to RO before it's passed to
-> early_init_dt_scan(). However, there might be some code that needs
-> to modify FDT during init. Map FDT to RW until unflatten DT.
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  arch/arm64/kernel/setup.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 413d566405d1..08b22c1e72a9 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -179,9 +179,13 @@ static void __init smp_build_mpidr_hash(void)
->  		pr_warn("Large number of MPIDR hash buckets detected\n");
->  }
->  
-> +extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
-> +				       pgprot_t prot);
-> +
->
->  static void __init setup_machine_fdt(phys_addr_t dt_phys)
->  {
-> -	void *dt_virt = fixmap_remap_fdt(dt_phys);
-> +	int size;
-> +	void *dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
->  	const char *name;
-  
-This makes the fdt mapped without the call to meblock_reserve(fdt) which
-makes the fdt memory available for memblock allocations.
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
 
-Chances that is will be actually allocated are small, but you know, things
-happen.
+Hi,
 
-IMHO, instead of calling directly __fixmap_remap_fdt() it would be better
-to add pgprot parameter to fixmap_remap_fdt(). Then here and in kaslr.c it
-can be called with PAGE_KERNEL and below with PAGE_KERNEL_RO.
+> My initial idea was to add compatible strings to the cell so that most of
+> the encoding information can be derived from it. For example if the encoding
+> representing in your example is pretty standard or vendor specific we could
+> just do with a simple compatible like below:
 
-There is no problem to call memblock_reserve() for the same area twice,
-it's essentially a NOP.
- 
->  	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
-> @@ -320,6 +324,9 @@ void __init setup_arch(char **cmdline_p)
->  	/* Parse the ACPI tables for possible boot-time configuration */
->  	acpi_boot_table_init();
->  
-> +	/* remap fdt to RO */
-> +	fixmap_remap_fdt(__fdt_pointer);
-> +
->  	if (acpi_disabled)
->  		unflatten_device_tree();
->  
-> -- 
-> 2.20.1
-> 
+that vendor/compatible list would be quite long[1], there are hundreds of
+devices in current OpenWrt tree (using currently custom patch) and probably
+dozens currently unsupported (ASCII encoded MAC address in NVMEM). So my goal
+is to add some DT functionality which would cover all of these.
 
--- 
-Sincerely yours,
-Mike.
+> eth1_addr: eth-mac-addr@18a {
+> 	compatible = "xxx,nvmem-mac-address";
+> 	reg = <0x18a 0x11>;	
+> };
+
+while sketching the possible DT use cases I came to the this option as well, it
+was very compeling as it would kill two birds with one stone (fix outstanding
+MTD/NVMEM OF clash as well[2]), but I think, that it makes more sense to add
+this functionality to nvmem core so it could be reused by other consumers, not
+just by network layer.
+
+1. https://git.openwrt.org/?p=openwrt%2Fopenwrt.git&a=search&h=HEAD&st=grep&s=mtd-mac-address
+2. https://lore.kernel.org/netdev/20190418133646.GA94236@meh.true.cz
+
+-- ynezz
