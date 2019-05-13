@@ -1,58 +1,53 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Mon, 13 May 2019 16:44:51 +0200
-Message-ID: <20190513144451.GQ17751@phenom.ffwll.local>
-References: <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
- <20190511173344.GA8507@mit.edu>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 0/4] Add reset controller support for BM1880 SoC
+Date: Mon, 13 May 2019 16:46:54 +0200
+Message-ID: <1557758814.4442.9.camel@pengutronix.de>
+References: <20190510184525.13568-1-manivannan.sadhasivam@linaro.org>
+         <1557745589.4442.5.camel@pengutronix.de>
+         <20190513140637.GA19120@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190511173344.GA8507@mit.edu>
+In-Reply-To: <20190513140637.GA19120@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Theodore Ts'o <tytso@mit.edu>, Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com, knut.omang@oracle.com, gregkh@linuxfoundation.org, brendanhiggins@google.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, alec.lin@bitmain.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
-> On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
-> > However, the reply is incorrect.  Kselftest in-kernel tests (which
-> > is the context here) can be configured as built in instead of as
-> > a module, and built in a UML kernel.  The UML kernel can boot,
-> > running the in-kernel tests before UML attempts to invoke the
-> > init process.
+On Mon, 2019-05-13 at 19:36 +0530, Manivannan Sadhasivam wrote:
+> Hi Philipp,
 > 
-> Um, Citation needed?
+> On Mon, May 13, 2019 at 01:06:29PM +0200, Philipp Zabel wrote:
+> > Hi,
+> > 
+> > On Sat, 2019-05-11 at 00:15 +0530, Manivannan Sadhasivam wrote:
+> > > Hello,
+> > > 
+> > > This patchset adds reset controller support for Bitmain BM1880 SoC.
+> > > BM1880 SoC has only one reset controller and the reset-simple driver
+> > > has been reused here.
+> > > 
+> > > This patchset has been tested on 96Boards Sophon Edge board.
+> > > 
+> > > Thanks,
+> > > Mani
+> > > 
+> > > Changes in v3:
+> > > 
+> > > * Removed the clk-rst part as it turned out be the clock gating register set.
+> > 
+> > Thank you, I'd like to pick up patches 1, 3, and 4.
+> > 
+> > Since patch 2 depends on patch 1, you could either temporarily replace
+> > the constants with their numerical value, until patch 1 is merged, or I
+> > could provide a stable branch that contains patch 1 after v5.2-rc1.
+> > 
 > 
-> I don't see any evidence for this in the kselftest documentation, nor
-> do I see any evidence of this in the kselftest Makefiles.
-> 
-> There exists test modules in the kernel that run before the init
-> scripts run --- but that's not strictly speaking part of kselftests,
-> and do not have any kind of infrastructure.  As noted, the
-> kselftests_harness header file fundamentally assumes that you are
-> running test code in userspace.
+> I can use the numerical value in meantime, please pick those patches and I'll
+> take the dts through arm-soc tree.
 
-Yeah I really like the "no userspace required at all" design of kunit,
-while still collecting results in a well-defined way (unless the current
-self-test that just run when you load the module, with maybe some
-kselftest ad-hoc wrapper around to collect the results).
+Done.
 
-What I want to do long-term is to run these kernel unit tests as part of
-the build-testing, most likely in gitlab (sooner or later, for drm.git
-only ofc). So that people get their pull requests (and patch series, we
-have some ideas to tie this into patchwork) automatically tested for this
-super basic stuff.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+regards
+Philipp
