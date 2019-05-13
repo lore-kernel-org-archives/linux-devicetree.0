@@ -1,45 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: stm32: Document Avenger96
- devicetree binding
-Date: Mon, 13 May 2019 13:02:46 -0500
-Message-ID: <20190513180246.GA8487@bogus>
-References: <20190506100534.24145-1-manivannan.sadhasivam@linaro.org>
- <20190506100534.24145-2-manivannan.sadhasivam@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: qcs404: Define APPS IOMMU
+Date: Mon, 13 May 2019 11:28:53 -0700
+Message-ID: <20190513182853.GI2085@tuxbook-pro>
+References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
+ <20190510043421.31393-8-bjorn.andersson@linaro.org>
+ <20190513045402.GA2707@vkoul-mobl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190506100534.24145-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190513045402.GA2707@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 06, 2019 at 03:35:32PM +0530, Manivannan Sadhasivam wrote:
-> Document devicetree binding for Avenger96 board.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  Documentation/devicetree/bindings/arm/stm32/stm32.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.txt b/Documentation/devicetree/bindings/arm/stm32/stm32.txt
-> index 6808ed9ddfd5..eba363a4b514 100644
-> --- a/Documentation/devicetree/bindings/arm/stm32/stm32.txt
-> +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.txt
-> @@ -8,3 +8,9 @@ using one of the following compatible strings:
->    st,stm32f746
->    st,stm32h743
->    st,stm32mp157
-> +
-> +Boards:
-> +
-> +Root node property compatible must contain one of below depending on board:
-> +
-> + - Avenger96: "arrow,stm32mp157a-avenger96"
+On Sun 12 May 21:54 PDT 2019, Vinod Koul wrote:
 
-With which SoC compatible?
-
-> -- 
-> 2.17.1
+> On 09-05-19, 21:34, Bjorn Andersson wrote:
+> > The APPS IOMMU provides contexts for FastRPC, MDP and WLAN, among other
+> > things.  Define these. We use the qcom_iommu binding because the
+>         ^^^
+> Double spaces crept in..
 > 
+
+That's to give you some breathing room while reading it - but not as
+much as a new paragraph :)
+
+> > firmware restrictions in incompatible with the arm-smmu.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 85 ++++++++++++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > index b213f6acad76..fcde4f0334c2 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > @@ -378,6 +378,91 @@
+> >  			reg = <0x01937000 0x25000>;
+> >  		};
+> >  
+> > +		apps_iommu: iommu@1e20000 {
+> > +			compatible = "qcom,qcs404-iommu", "qcom,msm-iommu-v1";
+> 
+> Did we define qcom,qcs404-iommu in bindings, It does not seem to be
+> there in this patch, next or integration one
+> 
+
+No, this was entirely intended to fall back on the generic compatible.
+
+That said, further testing of this series indicates that we have a
+cache issue related to the SMMU. In working out this I came up with a
+series of patches to the arm-smmu driver that allow us to use this with
+the standard Qualcomm bootloader.
+
+So let's ignore patch 7 and 8 in this series until we know how to deal
+with the SMMU.
+
+Regards,
+Bjorn
