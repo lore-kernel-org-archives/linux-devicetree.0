@@ -1,128 +1,68 @@
-Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 13/28] PCI: tegra: Increase the deskew retry time
-Date: Thu, 16 May 2019 11:22:52 +0530
-Message-ID: <20190516055307.25737-14-mmaddireddy@nvidia.com>
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+Subject: [PATCH V3 07/29] PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+Date: Mon, 13 May 2019 23:37:22 +0530
+Message-ID: <20190513180744.16493-8-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Sometimes link speed change from Gen2 to Gen1 fails due to instability
-in deskew logic on lane-0 in Tegra210. Increase the deskew retry time
-to resolve this issue.
+Default root port setting hides AER capability. This patch enables the
+advertisement of AER capability by root port.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V4: No change
-
 V3: No change
 
-V2: Took care of typos in commit log and coding style comments.
+V2: No change
 
- drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 96cd75821872..9c28f1d9f177 100644
+index cd542a8af618..e402627bd221 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -209,6 +209,10 @@
- #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
- #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
+@@ -180,6 +180,9 @@
+ #define RP_VEND_XP	0x00000f00
+ #define  RP_VEND_XP_DL_UP	(1 << 30)
  
-+#define RP_VEND_CTL0	0x00000f44
-+#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
-+#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH	(0x9 << 12)
++#define RP_VEND_CTL1	0x00000f48
++#define  RP_VEND_CTL1_ERPT	(1 << 13)
 +
- #define RP_VEND_CTL1	0x00000f48
- #define  RP_VEND_CTL1_ERPT	(1 << 13)
+ #define RP_VEND_CTL2 0x00000fa8
+ #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
  
-@@ -305,6 +309,7 @@ struct tegra_pcie_soc {
- 	bool force_pca_enable;
- 	bool program_uphy;
- 	bool update_clamp_threshold;
-+	bool program_deskew_time;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -620,6 +625,24 @@ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
- 	writel(value, port->base + RP_ECTL_6_R2);
+@@ -479,6 +482,16 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 	afi_writel(port->pcie, value, ctrl);
  }
  
-+static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
++static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
 +{
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
 +	u32 value;
 +
-+	/*
-+	 * Sometimes link speed change from Gen2 to Gen1 fails due to
-+	 * instability in deskew logic on lane-0. Increase the deskew
-+	 * retry time to resolve this issue.
-+	 */
-+	if (soc->program_deskew_time) {
-+		value = readl(port->base + RP_VEND_CTL0);
-+		value &= ~RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK;
-+		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
-+		writel(value, port->base + RP_VEND_CTL0);
-+	}
++	/* Enable AER capability */
++	value = readl(port->base + RP_VEND_CTL1);
++	value |= RP_VEND_CTL1_ERPT;
++	writel(value, port->base + RP_VEND_CTL1);
 +}
 +
  static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
  {
  	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -649,6 +672,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 
- 	if (soc->ectl.enable)
- 		tegra_pcie_program_ectl_settings(port);
+@@ -503,6 +516,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ 		value |= RP_VEND_CTL2_PCA_ENABLE;
+ 		writel(value, port->base + RP_VEND_CTL2);
+ 	}
 +
-+	tegra_pcie_apply_sw_fixup(port);
++	tegra_pcie_enable_rp_features(port);
  }
  
  static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
-@@ -2356,6 +2381,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2381,6 +2407,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2399,6 +2426,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2417,6 +2445,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.force_pca_enable = true,
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
-+	.program_deskew_time = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2454,6 +2483,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.force_pca_enable = false,
- 	.program_uphy = false,
- 	.update_clamp_threshold = false,
-+	.program_deskew_time = false,
- 	.ectl.enable = false,
- };
- 
 -- 
 2.17.1
