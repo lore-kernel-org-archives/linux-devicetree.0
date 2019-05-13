@@ -1,76 +1,52 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
- property "nvmem_macaddr_swap" to swap macaddr bytes order]
-Date: Mon, 13 May 2019 11:06:48 +0100
-Message-ID: <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz> <20190510113155.mvpuhe4yzxdaanei@flea>
- <20190511144444.GU81826@meh.true.cz>
- <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
- <20190513090700.GW81826@meh.true.cz>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v4 0/9] RPMPD for QCS404 and MSM8998
+Date: Mon, 13 May 2019 15:50:06 +0530
+Message-ID: <20190513102015.26551-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190513090700.GW81826@meh.true.cz>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
+Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, marc.w.gonzalez@free.fr, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Re-worked the macros of the rpmpd driver. Add power domains support
+for QCS404 and MSM8998.
 
+V4:
+* fixup fixes tag and commit message in patch 1 [Marc]
+* fixup typos in qcs404 and msm8998 dt nodes
+* fixup comments regarding resource type in patch 8 [Marc]
 
-On 13/05/2019 10:07, Petr Štetiar wrote:
-> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
-> 
-> Hi,
-> 
->> My initial idea was to add compatible strings to the cell so that most of
->> the encoding information can be derived from it. For example if the encoding
->> representing in your example is pretty standard or vendor specific we could
->> just do with a simple compatible like below:
-> 
-> that vendor/compatible list would be quite long[1], there are hundreds of
+V3:
+* always send level updates to vfc and vfl in set_performance state
+* fixup commit messages [Rajendra]
+* fixup s-o-b ordering
 
-You are right just vendor list could be very long, but I was hoping that 
-the post-processing would fall in some categories which can be used in 
-compatible string.
+V2:
+* Add rpmpd support for msm8998
+* fixup corner/vfc with vlfl/vfl
 
-Irrespective of which we need to have some sort of compatible string to 
-enable nvmem core to know that there is some form of post processing to 
-be done on the cells!. Without which there is a danger of continuing to 
-adding new properties to the cell bindings which have no relation to 
-each other.
+Bjorn Andersson (4):
+  soc: qcom: rpmpd: Modify corner defining macros
+  dt-bindings: power: Add rpm power domain bindings for qcs404
+  soc: qcom: rpmpd: Add QCS404 power-domains
+  arm64: dts: qcom: qcs404: Add rpmpd node
 
+Sibi Sankar (5):
+  soc: qcom: rpmpd: fixup rpmpd set performance state
+  soc: qcom: rpmpd: Add support to set rpmpd state to max
+  dt-bindings: power: Add rpm power domain bindings for msm8998
+  soc: qcom: rpmpd: Add MSM8998 power-domains
+  arm64: dts: qcom: msm8998: Add rpmpd node
 
-> devices in current OpenWrt tree (using currently custom patch) and probably
-> dozens currently unsupported (ASCII encoded MAC address in NVMEM). So my goal
-> is to add some DT functionality which would cover all of these.
+ .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |  51 +++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  55 +++++++
+ drivers/soc/qcom/rpmpd.c                      | 134 ++++++++++++++----
+ include/dt-bindings/power/qcom-rpmpd.h        |  34 +++++
+ 5 files changed, 252 insertions(+), 24 deletions(-)
 
-> 
->> eth1_addr: eth-mac-addr@18a {
->> 	compatible = "xxx,nvmem-mac-address";
->> 	reg = <0x18a 0x11>;	
->> };
-> 
-> while sketching the possible DT use cases I came to the this option as well, it
-> was very compeling as it would kill two birds with one stone (fix outstanding
-> MTD/NVMEM OF clash as well[2]), but I think, that it makes more sense to add
-> this functionality to nvmem core so it could be reused by other consumers, not
-> just by network layer.
-
-Changes to nvmem dt bindings have been already rejected, for this more 
-discussion at: https://lore.kernel.org/patchwork/patch/936312/
-
---srini
-
-> 
-> 1. https://git.openwrt.org/?p=openwrt%2Fopenwrt.git&a=search&h=HEAD&st=grep&s=mtd-mac-address
-> 2. https://lore.kernel.org/netdev/20190418133646.GA94236@meh.true.cz
-> 
-> -- ynezz
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
