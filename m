@@ -1,91 +1,73 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Date: Mon, 13 May 2019 16:31:20 +0530
-Message-ID: <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
-References: <20190114184255.258318-1-mka@chromium.org>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: [PATCH v4 0/5] cpufreq: Add imx-cpufreq-dt driver for speed grading
+Date: Mon, 13 May 2019 11:01:37 +0000
+Message-ID: <cover.1557742902.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114184255.258318-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+Content-ID: <13C41D9609273F49A77AE0DA0AB8AA6B@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> that describes this topology.
+Right now in upstream imx8m cpufreq support just lists a common subset
+of OPPs because the higher ones should only be attempted after checking
+speed grading in fuses.
 
-This is partly true. There are two groups of gold and silver cores,
-but AFAICT they are in a single cluster, not two separate ones. SDM845
-is one of the early examples of ARM's Dynamiq architecture.
+Driver reads from nvmem and calls dev_pm_opp_set_supported_hw before
+registering cpufreq-dt.
 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Changes since v3:
+ * Drop default m entirely (Viresh)
+Link to v3: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=114685
 
-I noticed that this patch sneaked through for this merge window but
-perhaps we can whip up a quick fix for -rc2?
+Changes since v2:
+ * Minor reformatting in Kconfig (Viresh)
+ * Open-code imx_cpufreq_dt_match_node (Viresh)
+ * Add mkt_segment bits to supported_hw and update .dtsi to match after
+reviewing latest datasheets.
+ * Add devicetree list (keep forgetting dts needs to be reviewed)
+Link to v2: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=113163
 
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index c27cbd3bcb0a6..f6c0d87e663f3 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -192,6 +192,44 @@
->                                 next-level-cache = <&L3_0>;
->                         };
->                 };
-> +
-> +               cpu-map {
-> +                       cluster0 {
-> +                               core0 {
-> +                                       cpu = <&CPU0>;
-> +                               };
-> +
-> +                               core1 {
-> +                                       cpu = <&CPU1>;
-> +                               };
-> +
-> +                               core2 {
-> +                                       cpu = <&CPU2>;
-> +                               };
-> +
-> +                               core3 {
-> +                                       cpu = <&CPU3>;
-> +                               };
-> +                       };
-> +
-> +                       cluster1 {
+Link to v1 (RFC): https://patchwork.kernel.org/patch/10916769/
 
-This shouldn't exist.
+Driver is built as a module. It depends on nvmem-imx which can also be a
+module.
 
-> +                               core0 {
+I never noticed anything wrong with going above the fused speed grading
+however it's technically unsafe so the cpufreq code changes should go in
+before DT changes.
 
-Rename to core4, 5, etc...
+Leonard Crestez (5):
+  cpufreq: Add imx-cpufreq-dt driver
+  dt-bindings: imx-cpufreq-dt: Document opp-supported-hw usage
+  arm64: dts: imx8mm: Add cpu speed grading and all OPPs
+  arm64: dts: imx8mq: Add cpu speed grading and all OPPs
+  arm64: defconfig: ARM_IMX_CPUFREQ_DT=m
 
-> +                                       cpu = <&CPU4>;
-> +                               };
-> +
-> +                               core1 {
-> +                                       cpu = <&CPU5>;
-> +                               };
-> +
-> +                               core2 {
-> +                                       cpu = <&CPU6>;
-> +                               };
-> +
-> +                               core3 {
-> +                                       cpu = <&CPU7>;
-> +                               };
-> +                       };
-> +               };
->         };
->
->         pmu {
-> --
-> 2.20.1.97.g81188d93c3-goog
->
+ .../bindings/cpufreq/imx-cpufreq-dt.txt       | 37 +++++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 17 +++-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 26 ++++-
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/cpufreq/Kconfig.arm                   |  9 ++
+ drivers/cpufreq/Makefile                      |  1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c          |  3 +
+ drivers/cpufreq/imx-cpufreq-dt.c              | 96 +++++++++++++++++++
+ drivers/soc/imx/soc-imx8.c                    |  3 +
+ 9 files changed, 191 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/imx-cpufreq-dt.txt
+ create mode 100644 drivers/cpufreq/imx-cpufreq-dt.c
+
+-- 
+2.17.1
