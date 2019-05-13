@@ -1,82 +1,45 @@
-Return-Path: <SRS0=F6NB=TG=pengutronix.de=mfe@kernel.org>
-Date: Mon, 6 May 2019 07:47:13 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v6 00/13] TVP5150 new features
-Message-ID: <20190506054713.crxc5pw6j5suvvq7@pengutronix.de>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 01/29] soc/tegra: pmc: Export tegra_powergate_power_on()
+Date: Mon, 13 May 2019 23:37:16 +0530
+Message-ID: <20190513180744.16493-2-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415124413.18456-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com, kernel@pengutronix.de, linux-media@vger.kernel.org
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Mauro,
+tegra_powergate_sequence_power_up() powers up partition and also enables
+clock & reset. However, if a controller like PCIe have multiple clocks
+& resets and they need to be enabled in a sequence, driver must use
+standalone function tegra_powergate_power_on() to power up partition.
 
-I know you are busy but can you have a look on it?
+Export tegra_powergate_power_on() to allow Tegra controller drivers to
+unpower gate partition independent to clock & reset.
 
-Regards,
-  Marco
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V3: No change
 
-On 19-04-15 14:44, Marco Felsch wrote:
-> Hi,
-> 
-> many thanks to Hans and Jacopo for the feedack :) this v6 address the
-> comments both made on my v5 [1].
-> 
-> In short this is round fixes just some minor issues rather than major
-> ones so the diff to the v5 is really small. The changed patches contain
-> the changelog so I omit it here.
-> 
-> I've tested it on a custom hardware but I can't test the em28xx usb
-> use-case since I haven't such a device. So other testers are welcome :)
-> 
-> Looking forward for your feedack,
-> 
-> 	Marco
-> 
-> [1] https://patchwork.kernel.org/cover/10886903/
-> 
-> Javier Martinez Canillas (1):
->   partial revert of "[media] tvp5150: add HW input connectors support"
-> 
-> Marco Felsch (11):
->   dt-bindings: connector: analog: add tv norms property
->   media: v4l2-fwnode: add v4l2_fwnode_connector
->   media: v4l2-fwnode: add initial connector parsing support
->   media: tvp5150: add input source selection of_graph support
->   media: dt-bindings: tvp5150: Add input port connectors DT bindings
->   media: tvp5150: add FORMAT_TRY support for get/set selection handlers
->   media: tvp5150: add s_power callback
->   media: dt-bindings: tvp5150: cleanup bindings stlye
->   media: dt-bindings: tvp5150: add optional tvnorms documentation
->   media: tvp5150: add support to limit tv norms on connector
->   media: tvp5150: make debug output more readable
-> 
-> Michael Tretter (1):
->   media: tvp5150: initialize subdev before parsing device tree
-> 
->  .../display/connector/analog-tv-connector.txt |   4 +
->  .../devicetree/bindings/media/i2c/tvp5150.txt | 125 +++-
->  drivers/media/i2c/tvp5150.c                   | 672 +++++++++++++-----
->  drivers/media/v4l2-core/v4l2-fwnode.c         | 111 +++
->  include/dt-bindings/media/tvnorms.h           |  56 ++
->  include/dt-bindings/media/tvp5150.h           |   2 -
->  include/media/v4l2-connector.h                |  30 +
->  include/media/v4l2-fwnode.h                   |  49 ++
->  8 files changed, 859 insertions(+), 190 deletions(-)
->  create mode 100644 include/dt-bindings/media/tvnorms.h
->  create mode 100644 include/media/v4l2-connector.h
-> 
-> -- 
-> 2.20.1
-> 
-> 
-> 
+V2: No change
 
+ drivers/soc/tegra/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 0c5f79528e5f..cb3de81348bd 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
+ 
+ 	return tegra_powergate_set(pmc, id, true);
+ }
++EXPORT_SYMBOL(tegra_powergate_power_on);
+ 
+ /**
+  * tegra_powergate_power_off() - power off partition
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.17.1
