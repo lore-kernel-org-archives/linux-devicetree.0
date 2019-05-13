@@ -1,8 +1,8 @@
 Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 28/29] PCI: tegra: Add support for GPIO based PERST#
-Date: Mon, 13 May 2019 23:37:43 +0530
-Message-ID: <20190513180744.16493-29-mmaddireddy@nvidia.com>
+Subject: [PATCH V3 10/29] PCI: tegra: Disable AFI dynamic clock gating
+Date: Mon, 13 May 2019 23:37:25 +0530
+Message-ID: <20190513180744.16493-11-mmaddireddy@nvidia.com>
 In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,101 +11,57 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for GPIO based PERST# signal. GPIO number comes from per port
-PCIe device tree node.
+Outstanding write counter in AFI is used to generate idle signal to
+dynamically gate the AFI clock. When there are 32 outstanding writes
+from AFI to memory, the outstanding write counter overflows and
+indicates that there are "0" outstanding write transactions.
+
+When memory controller is under heavy load, write completions to AFI
+gets delayed and AFI write counter overflows. This causes AFI clock gating
+even when there are outstanding transactions towards memory controller
+resulting in system hang.
+
+Disable dynamic clock gating of AFI clock to avoid system hang.
+
+CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
+programming this bit doesn't cause any side effects. Program this
+bit for all Tegra SoCs to avoid conditional check.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V3: Using helper function to get reset-gpios
+V3: No change
 
-V2: Using standard "reset-gpio" property
+V2: No change
 
- drivers/pci/controller/pci-tegra.c | 42 +++++++++++++++++++++++++-----
- 1 file changed, 36 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 06b99fcbf382..b021863303f1 100644
+index b1e2e398b4e8..17c6d858ddc6 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -17,6 +17,7 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/export.h>
-+#include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
-@@ -400,6 +401,8 @@ struct tegra_pcie_port {
- 	unsigned int lanes;
+@@ -95,7 +95,8 @@
+ #define AFI_MSI_EN_VEC7		0xa8
  
- 	struct phy **phys;
-+
-+	struct gpio_desc *reset_gpiod;
- };
+ #define AFI_CONFIGURATION		0xac
+-#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
++#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
++#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
  
- struct tegra_pcie_bus {
-@@ -583,15 +586,23 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 	unsigned long value;
+ #define AFI_FPCI_ERROR_MASKS	0xb0
  
- 	/* pulse reset signal */
--	value = afi_readl(port->pcie, ctrl);
--	value &= ~AFI_PEX_CTRL_RST;
--	afi_writel(port->pcie, value, ctrl);
-+	if (port->reset_gpiod) {
-+		gpiod_set_value(port->reset_gpiod, 0);
-+	} else {
-+		value = afi_readl(port->pcie, ctrl);
-+		value &= ~AFI_PEX_CTRL_RST;
-+		afi_writel(port->pcie, value, ctrl);
-+	}
- 
- 	usleep_range(1000, 2000);
- 
--	value = afi_readl(port->pcie, ctrl);
--	value |= AFI_PEX_CTRL_RST;
--	afi_writel(port->pcie, value, ctrl);
-+	if (port->reset_gpiod) {
-+		gpiod_set_value(port->reset_gpiod, 1);
-+	} else {
-+		value = afi_readl(port->pcie, ctrl);
-+		value |= AFI_PEX_CTRL_RST;
-+		afi_writel(port->pcie, value, ctrl);
-+	}
- }
- 
- static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
-@@ -2238,6 +2249,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		struct tegra_pcie_port *rp;
- 		unsigned int index;
- 		u32 value;
-+		char *label;
- 
- 		err = of_pci_get_devfn(port);
- 		if (err < 0) {
-@@ -2296,6 +2308,24 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		if (IS_ERR(rp->base))
- 			return PTR_ERR(rp->base);
- 
-+		label = kasprintf(GFP_KERNEL, "pex-reset-%u", index);
-+		if (!label) {
-+			dev_err(dev, "failed to create reset GPIO label\n");
-+			return -ENOMEM;
-+		}
-+
-+		rp->reset_gpiod = of_pci_get_reset_gpio(dev, port,
-+							GPIOD_OUT_LOW, label);
-+		kfree(label);
-+		if (!rp->reset_gpiod) {
-+			dev_dbg(dev, "missing optional reset-gpios prop\n");
-+		} else if (IS_ERR(rp->reset_gpiod)) {
-+			err = PTR_ERR(rp->reset_gpiod);
-+			rp->reset_gpiod = NULL;
-+			dev_err(dev, "failed to get reset GPIO: %d\n", err);
-+			return err;
-+		}
-+
- 		list_add_tail(&rp->list, &pcie->ports);
+@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 		afi_writel(pcie, value, AFI_FUSE);
  	}
  
+-	/* finally enable PCIe */
++	/* Disable AFI dynamic clock gating and enable PCIe */
+ 	value = afi_readl(pcie, AFI_CONFIGURATION);
+ 	value |= AFI_CONFIGURATION_EN_FPCI;
++	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
+ 	afi_writel(pcie, value, AFI_CONFIGURATION);
+ 
+ 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
 -- 
 2.17.1
