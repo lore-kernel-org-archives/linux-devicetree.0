@@ -1,97 +1,107 @@
 Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42957 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731515AbfEMRVg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 13:21:36 -0400
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v6 2/5] media: dt-bindings: media: document allegro-dvt bindings
-Date: Mon, 13 May 2019 19:21:28 +0200
-Message-Id: <20190513172131.15048-3-m.tretter@pengutronix.de>
-In-Reply-To: <20190513172131.15048-1-m.tretter@pengutronix.de>
-References: <20190513172131.15048-1-m.tretter@pengutronix.de>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18129 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732296AbfEMSJI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 14:09:08 -0400
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 18/29] PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+Date: Mon, 13 May 2019 23:37:33 +0530
+Message-ID: <20190513180744.16493-19-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device-tree bindings for the Allegro DVT video IP core found on the
-Xilinx ZynqMP EV family.
+Cacheable upstream transactions are supported in Tegra20 and Tegra186 only.
+AFI_CACHE* registers are available in Tegra20 to support cacheable upstream
+transactions. In Tegra186, AFI_AXCACHE register is defined instead of
+AFI_CACHE* to be in line with its MSS design. Therefore, program AFI_CACHE*
+registers only for Tegra20.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-v5 -> v6:
-none
+V3: Initialized has_cache_bars variable for each soc data structure.
 
-v4 -> v5:
-none
+V2: Used soc variable for comparision instead of compatible string.
 
-v3 -> v4:
-none
+ drivers/pci/controller/pci-tegra.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-v2 -> v3:
-- rename node to video-codec
-- drop interrupt-names
-- fix compatible in example
-- add clocks to required properties
-
-v1 -> v2:
-none
----
- .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
-
-diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
-new file mode 100644
-index 000000000000..a92e2fbf26c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allegro.txt
-@@ -0,0 +1,43 @@
-+Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
-+ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
-+decoder ip core.
-+
-+Each actual codec engines is controlled by a microcontroller (MCU). Host
-+software uses a provided mailbox interface to communicate with the MCU. The
-+MCU share an interrupt.
-+
-+Required properties:
-+  - compatible: value should be one of the following
-+    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
-+    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
-+  - reg: base and length of the memory mapped register region and base and
-+    length of the memory mapped sram
-+  - reg-names: must include "regs" and "sram"
-+  - interrupts: shared interrupt from the MCUs to the processing system
-+  - clocks: must contain an entry for each entry in clock-names
-+  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
-+    "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+
-+Example:
-+	al5e: video-codec@a0009000 {
-+		compatible = "allegro,al5e-1.1", "allegro,al5e";
-+		reg = <0 0xa0009000 0 0x1000>,
-+		      <0 0xa0000000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
-+	al5d: video-codec@a0029000 {
-+		compatible = "allegro,al5d-1.1", "allegro,al5d";
-+		reg = <0 0xa0029000 0 0x1000>,
-+		      <0 0xa0020000 0 0x8000>;
-+		reg-names = "regs", "sram";
-+		interrupts = <0 96 4>;
-+		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
-+			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
-+		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
-+			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
-+	};
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 4767af9f3b88..0f02f54f8a61 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -323,6 +323,7 @@ struct tegra_pcie_soc {
+ 	bool program_deskew_time;
+ 	bool raw_violation_fixup;
+ 	bool update_fc_timer;
++	bool has_cache_bars;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -932,11 +933,13 @@ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
+ 	afi_writel(pcie, 0, AFI_AXI_BAR5_SZ);
+ 	afi_writel(pcie, 0, AFI_FPCI_BAR5);
+ 
+-	/* map all upstream transactions as uncached */
+-	afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
+-	afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
+-	afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
+-	afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
++	if (pcie->soc->has_cache_bars) {
++		/* map all upstream transactions as uncached */
++		afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
++		afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
++		afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
++		afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
++	}
+ 
+ 	/* MSI translations are setup only when needed */
+ 	afi_writel(pcie, 0, AFI_MSI_FPCI_BAR_ST);
+@@ -2441,6 +2444,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
++	.has_cache_bars = true,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2469,6 +2473,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
++	.has_cache_bars = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2492,6 +2497,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = true,
+ 	.update_fc_timer = false,
++	.has_cache_bars = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2515,6 +2521,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.program_deskew_time = true,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = true,
++	.has_cache_bars = false,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2555,6 +2562,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.program_deskew_time = false,
+ 	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
++	.has_cache_bars = false,
+ 	.ectl.enable = false,
+ };
+ 
 -- 
-2.20.1
+2.17.1
