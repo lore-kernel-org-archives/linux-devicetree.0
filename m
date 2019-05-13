@@ -1,38 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/4] dt-bindings: clk: at91: add bindings for
- SAM9X60's  slow clock controller
-Date: Mon, 13 May 2019 12:48:20 -0500
-Message-ID: <20190513174820.GA16840@bogus>
-References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
- <1557487388-32098-4-git-send-email-claudiu.beznea@microchip.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: interrupt-controller: Update csky
+ mpintc
+Date: Mon, 13 May 2019 12:49:31 -0500
+Message-ID: <20190513174931.GA19167@bogus>
+References: <1557741339-29331-1-git-send-email-guoren@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557487388-32098-4-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1557741339-29331-1-git-send-email-guoren@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
+Cc: marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jason@lakedaemon.net, tglx@linutronix.de, guoren@kernel.org, ren_guo@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 May 2019 11:23:35 +0000, <Claudiu.Beznea@microchip.com> wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Mon, 13 May 2019 17:55:38 +0800, guoren@kernel.org wrote:
+> From: Guo Ren <ren_guo@c-sky.com>
 > 
-> Add bindings for SAM9X60's slow clock controller.
+> Add trigger type and priority setting for csky,mpintc. The driver also
+> could support #interrupt-cells <1> and it wouldn't invalidate existing
+> DTs. Here we only show the complete format.
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Changes for V3:
+>  - Update commit msg about compatible
+> 
+> Changes for V2:
+>  - change #interrupt-cells to <3>
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
 > ---
-> 
-> Hi Rob,
-> 
-> I didn't added your Reviewed-by tag to this version since I changed
-> the driver with regards to clock-cells DT binding (and I though you
-> may want to comment on this).
-> 
-> Thank you,
-> Claudiu Beznea
-> 
->  Documentation/devicetree/bindings/clock/at91-clock.txt | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  .../bindings/interrupt-controller/csky,mpintc.txt   | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
