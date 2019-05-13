@@ -1,202 +1,171 @@
-Return-Path: <SRS0=iNMp=TC=rockwellcollins.com=adam.michaelis@kernel.org>
+Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from ch3vs03.rockwellcollins.com ([205.175.226.47]:63494 "EHLO
+        ch3vs03.rockwellcollins.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727870AbfEMOvk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 May 2019 10:51:40 -0400
+Received: by mail-io1-f70.google.com with SMTP id d24so10027885iob.7
+        for <devicetree@vger.kernel.org>; Mon, 13 May 2019 07:51:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <1556745423-11368-1-git-send-email-adam.michaelis@rockwellcollins.com>
+ <1556745423-11368-2-git-send-email-adam.michaelis@rockwellcollins.com>
+ <20190505132234.313b78e9@archlinux> <CALMrGWUVnixueCbzKKkZ0af0rWze=N3SLD5EuynC869=nLw3PA@mail.gmail.com>
+ <20190511113849.3b15b542@archlinux>
+In-Reply-To: <20190511113849.3b15b542@archlinux>
 From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Subject: [PATCH v2 5/6] iio: ad7949: Fix SPI interfacing for 14-bit messages
-Date: Thu,  2 May 2019 11:14:31 -0500
-Message-Id: <1556813672-49861-5-git-send-email-adam.michaelis@rockwellcollins.com>
-In-Reply-To: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
-References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
-To: linux-iio@vger.kernel.org
-Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Date: Mon, 13 May 2019 09:51:27 -0500
+Message-ID: <CALMrGWVfpeRaHvRZq9nZoz--=soYAkbZ+r4HeHf9qbKFwWYyHA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH 2/6] dt-bindings: iio: ad7949: Add adi,reference-select
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, lars@metafoo.de, michael.hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, Couret Charles-Antoine <charles-antoine.couret@essensium.com>, devicetree@vger.kernel.org, Brandon Maier <brandon.maier@rockwellcollins.com>, Clayton Shotwell <clayton.shotwell@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The AD7949 (but not the other two models supported by this driver) uses
-samples 14 bits wide. When attempting to communicate through certain SPI
-controllers that require power-of-2 word widths, this fails. Adding
-logic to pack the 14-bit messages into the most-significant bits of a
-16-bit message for communicating over byte-based SPI bus.
+On Sat, May 11, 2019 at 5:39 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Tue, 7 May 2019 13:21:03 -0500
+> Adam Michaelis <adam.michaelis@collins.com> wrote:
+>
+> > On Sun, May 5, 2019 at 7:22 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> > >
+> > > On Wed,  1 May 2019 16:16:59 -0500
+> > > Adam Michaelis <adam.michaelis@rockwellcollins.com> wrote:
+> > >
+> > > > Adding optional parameter to AD7949 to specify the source for the
+> > > > reference voltage signal. Default value is maintaned with option '6' to
+> > > > match previous version of driver.
+> > > >
+> > > > Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
+> > > > ---
+> > > >  .../devicetree/bindings/iio/adc/ad7949.txt         | 22 ++++++++++++++++++++--
+> > > >  1 file changed, 20 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > > > index c7f5057356b1..14ee9a2cb2a5 100644
+> > > > --- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > > > +++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > > > @@ -6,11 +6,29 @@ Required properties:
+> > > >       * "adi,ad7682"
+> > > >       * "adi,ad7689"
+> > > >   - reg: spi chip select number for the device
+> > > > - - vref-supply: The regulator supply for ADC reference voltage
+> > > >
+> > > > -Example:
+> > > > +Optional properties:
+> > > > + - adi,reference-select: Select the reference voltage source to use
+> > > > + when converting the input voltages. Valid values are:
+> > > So my immediate thought here is we are mapping one binding to several
+> > > different things. Some of which are definitely better described in other
+> > > ways.
+> > >
+> > > So let us break it down:
+> > >
+> > > Internal vs external.
+> > > - External should require a regulator.  If the regulator is there, normal
+> > > assumption would be you want to use it.
+> > >
+> > > Which internal reference?  Hmm. This would be incompatible with the external
+> > > regulator and I'd expect the presence of such a regulator to override this.
+> > > That does need a new binding.
+> > > adi,internal-reference-milivolts = 2500 or 4096.   Much nicer to have
+> > > real numbers for someone wondering how it is configured than an enum.
+> > >
+> > > Temperature sensor enabled: Why is this a devicetree question rather than
+> > > a runtime decision?
+> > >
+> > > Buffer enabled: This needs a custom binding
+> > > adi,external-reference-buffer-enable or something like that?
+> > >
+> > > Makes for a more consistent binding where some elements can be common
+> > > across similar devices.  It would be good to see if similar bindings
+> > > already exist.  Potentially tings like the reference-buffer enable
+> > > may be worth making standard ADC properties rather than device
+> > > specific.
+> > >
+> > > Thanks,
+> > >
+> > > Jonathan
+> > >
+> > The property name "adi,reference-select" was copied from the
+> > adi,ad7124 bindings as a similar hardware register configuration value
+> > field. If the property was separated into three independent fields,
+> > there would be a lot of explanation and checking required since many
+> > of the combinations are invalid (for example, temperature sensor and
+> > buffer are always enabled if internal reference is used). I could
+> > possibly see removing the temperature sensor configuration from the
+> > device tree, but, the current driver (even after these patches) does
+> > not provide any support to read the temperature sensor's value. I
+> > include that information in the configuration options as a summary of
+> > the datasheet.
+>
+> There would certainly be nothing wrong with ignoring the temperature
+> sensor element for now.  It is the sort of thing it's possible no one will
+> ever actually add.
+>
+> The reference select for 7124 was both much simpler than this and is
+> per channel.  To use a regulator presence in that case would require
+> defining a separate regulator for each channel.  The aim is always
+> to have the most readable possible (and generic) bindings, but
+> sometimes it really is too hard to do and we fall back on manufacturer
+> specific ones.  Here I don't think that is true.
+>
+> I agree there is a small amount of additional complexity to validating
+> the provided settings, but it's not going to be that complex.
+>
+> First see if there is an external regulator.
+> If there is check for buffer enable (and possibly temperature enable).
+>
+> If no external buffer then check for internal ref.
+>
+> There is no need to check for invalid combinations. The documentation
+> needs to include this but the code doesn't.
+>
+> Thanks
+>
+> Jonathan
+>
+>
+After taking a closer look at the datasheet, I have overhauled this part in V3
+of the patch series such that it is still an enumeration for
+reference-select, but
+there are only 4 values solely relating to the voltage reference for the part:
+ - Internal 2.5V
+ - Internal 4.096V
+ - External on pin REF
+ - External on pin REFIN
+The temp sensor is ignored, and the "buffer" logic is corrected to
+refer to which
+pin the external reference is supplied by (which side of the internal buffer).
 
-Only able to test with AD7949 part, but should support the 16-bit
-samples of the AD7682 and AD7689, as well.
+Thanks for the feedback
 
-Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
----
-	V2: Add some defines to reduce use of magic numbers.
----
- drivers/iio/adc/ad7949.c | 106 +++++++++++++++++++++++++++--------------------
- 1 file changed, 60 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
-index 7820e1097787..cba152151908 100644
---- a/drivers/iio/adc/ad7949.c
-+++ b/drivers/iio/adc/ad7949.c
-@@ -33,6 +33,11 @@
- #define AD7949_CFG_READBACK_DIS            1
- #define AD7949_CFG_READBACK_MASK           GENMASK(0, 0)
- 
-+#define AD7949_BUFFER_LEN 4
-+
-+#define AD7949_HI_RESOLUTION 16
-+#define AD7949_LO_RESOLUTION 14
-+
- enum {
- 	ID_AD7949 = 0,
- 	ID_AD7682,
-@@ -57,9 +62,9 @@ struct ad7949_adc_spec {
- };
- 
- static const struct ad7949_adc_spec ad7949_adc_spec[] = {
--	[ID_AD7949] = { .num_channels = 8, .resolution = 14 },
--	[ID_AD7682] = { .num_channels = 4, .resolution = 16 },
--	[ID_AD7689] = { .num_channels = 8, .resolution = 16 },
-+	[ID_AD7949] = { .num_channels = 8, .resolution = AD7949_LO_RESOLUTION },
-+	[ID_AD7682] = { .num_channels = 4, .resolution = AD7949_HI_RESOLUTION },
-+	[ID_AD7689] = { .num_channels = 8, .resolution = AD7949_HI_RESOLUTION },
- };
- 
- /**
-@@ -85,7 +90,7 @@ struct ad7949_adc_chip {
- 	u8 resolution;
- 	u16 cfg;
- 	unsigned int current_channel;
--	u32 buffer ____cacheline_aligned;
-+	u8 buffer[AD7949_BUFFER_LEN] ____cacheline_aligned;
- };
- 
- static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
-@@ -96,41 +101,51 @@ static bool ad7949_spi_cfg_is_read_back(struct ad7949_adc_chip *ad7949_adc)
- 	return false;
- }
- 
--static int ad7949_spi_bits_per_word(struct ad7949_adc_chip *ad7949_adc)
-+static int ad7949_message_len(struct ad7949_adc_chip *ad7949_adc)
- {
--	int ret = ad7949_adc->resolution;
-+	int tx_len = 2;
- 
- 	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
--		ret += AD7949_CFG_REG_SIZE_BITS;
-+		tx_len += 2;
- 
--	return ret;
-+	return tx_len;
- }
- 
- static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
- 				u16 mask)
- {
--	int ret;
--	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
--	int shift = bits_per_word - AD7949_CFG_REG_SIZE_BITS;
-+	int ret = 0;
- 	struct spi_message msg;
--	struct spi_transfer tx[] = {
--		{
--			.tx_buf = &ad7949_adc->buffer,
--			.len = 4,
--			.bits_per_word = bits_per_word,
--		},
--	};
--
--	ad7949_adc->cfg = (val & mask) | (ad7949_adc->cfg & ~mask);
--	ad7949_adc->buffer = (ad7949_adc->cfg & AD7949_CFG_MASK_TOTAL) << shift;
--	spi_message_init_with_transfers(&msg, tx, 1);
--	ret = spi_sync(ad7949_adc->spi, &msg);
-+	struct spi_transfer tx;
-+	u16 tmp_cfg = 0;
-+
-+	(void)memset(&tx, 0, sizeof(tx));
-+	(void)memset(ad7949_adc->buffer, 0, AD7949_BUFFER_LEN);
-+
-+	tmp_cfg = ((val & mask) | (ad7949_adc->cfg & ~mask)) &
-+		AD7949_CFG_MASK_TOTAL;
-+
-+	if (tmp_cfg != ad7949_adc->cfg) {
-+		ad7949_adc->cfg = tmp_cfg;
-+
-+		/* Pack 14-bit value into 2 bytes, MSB first */
-+		ad7949_adc->buffer[0] = ((ad7949_adc->cfg & 0x7f00) >> 6) |
-+			((ad7949_adc->cfg & 0xc0) >> 6);
-+		ad7949_adc->buffer[1] = (ad7949_adc->cfg & 0x007f) << 2;
-+
-+		tx.tx_buf = ad7949_adc->buffer;
-+		tx.len = ad7949_message_len(ad7949_adc);
-+
-+		spi_message_init_with_transfers(&msg, &tx, 1);
-+		ret = spi_sync(ad7949_adc->spi, &msg);
-+
-+		/*
-+		 * This delay is to avoid a new request before the required
-+		 * time to send a new command to the device
-+		 */
-+		udelay(2);
-+	}
- 
--	/*
--	 * This delay is to avoid a new request before the required time to
--	 * send a new command to the device
--	 */
--	udelay(2);
- 	return ret;
- }
- 
-@@ -138,16 +153,10 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
- 				   unsigned int channel)
- {
- 	int ret;
--	int bits_per_word = ad7949_spi_bits_per_word(ad7949_adc);
--	int mask = GENMASK(ad7949_adc->resolution, 0);
- 	struct spi_message msg;
--	struct spi_transfer tx[] = {
--		{
--			.rx_buf = &ad7949_adc->buffer,
--			.len = 4,
--			.bits_per_word = bits_per_word,
--		},
--	};
-+	struct spi_transfer tx;
-+
-+	ad7949_adc->current_channel = channel;
- 
- 	ret = ad7949_spi_write_cfg(ad7949_adc,
- 				   channel << AD7949_CFG_CHAN_SEL_SHIFT,
-@@ -155,24 +164,29 @@ static int ad7949_spi_read_channel(struct ad7949_adc_chip *ad7949_adc, int *val,
- 	if (ret)
- 		return ret;
- 
--	ad7949_adc->buffer = 0;
--	spi_message_init_with_transfers(&msg, tx, 1);
-+	(void)memset(&tx, 0, sizeof(tx));
-+	(void)memset(ad7949_adc->buffer, 0, AD7949_BUFFER_LEN);
-+
-+	tx.rx_buf = ad7949_adc->buffer;
-+	tx.len = ad7949_message_len(ad7949_adc);
-+
-+	spi_message_init_with_transfers(&msg, &tx, 1);
- 	ret = spi_sync(ad7949_adc->spi, &msg);
- 	if (ret)
- 		return ret;
- 
- 	/*
--	 * This delay is to avoid a new request before the required time to
--	 * send a new command to the device
-+	 * This delay is to avoid a new request before the required time
-+	 * to send a new command to the device.
- 	 */
- 	udelay(2);
- 
--	ad7949_adc->current_channel = channel;
-+	*val = (ad7949_adc->buffer[0] << 8) | ad7949_adc->buffer[1];
- 
--	if (ad7949_spi_cfg_is_read_back(ad7949_adc))
--		*val = (ad7949_adc->buffer >> AD7949_CFG_REG_SIZE_BITS) & mask;
--	else
--		*val = ad7949_adc->buffer & mask;
-+	if (ad7949_adc->resolution == AD7949_LO_RESOLUTION) {
-+		/* 14-bit value in 16-bit buffer */
-+		*val = *val >> 2;
-+	}
- 
- 	return 0;
- }
--- 
-1.9.1
+Adam
+>
+> >
+> > Adam
+> > >
+> > > > +   0: Internal 2.5V reference; temperature sensor enabled
+> > > > +   1: Internal 4.096V reference; temperature sensor enabled
+> > > > +   2: External reference, temperature sensor enabled, no buffer
+> > > > +   3: External reference, temperature sensor enabled, buffer enabled
+> > > > +   6: External reference, temperature sensor disabled, no buffer
+> > > > +   7: External reference, temperature sensor disabled, buffer enabled
+> > > > + - vref-supply: The regulator supply for ADC reference voltage. Required
+> > > > + if external reference selected by 'adi,reference-select'.
+> > > > +
+> > > > +Examples:
+> > > >  adc@0 {
+> > > >       compatible = "adi,ad7949";
+> > > >       reg = <0>;
+> > > > +     adi,reference-select = <2>;
+> > > >       vref-supply = <&vdd_supply>;
+> > > >  };
+> > > > +
+> > > > +adc@0 {
+> > > > +     compatible = "adi,ad7949";
+> > > > +     reg = <0>;
+> > > > +     adi,reference-select = <0>;
+> > > > +};
+> > >
+>
