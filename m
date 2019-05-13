@@ -1,36 +1,45 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v10 1/4] MAINTAINERS: add an entry for for arm64 imx devicetrees
-Date: Mon, 13 May 2019 15:01:56 -0300
-Message-ID: <CAOMZO5BaQnrDOYogzgpmCExjB+uhYQ8SsxBiMWrSB-1KRtgeVQ@mail.gmail.com>
-References: <20190513174057.4410-1-angus@akkea.ca> <20190513174057.4410-2-angus@akkea.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: stm32: Document Avenger96
+ devicetree binding
+Date: Mon, 13 May 2019 13:02:46 -0500
+Message-ID: <20190513180246.GA8487@bogus>
+References: <20190506100534.24145-1-manivannan.sadhasivam@linaro.org>
+ <20190506100534.24145-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513174057.4410-2-angus@akkea.ca>
+Content-Disposition: inline
+In-Reply-To: <20190506100534.24145-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loic.pallardy@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 2:41 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
->
-> Add an explicit reference to imx* devicetrees
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+On Mon, May 06, 2019 at 03:35:32PM +0530, Manivannan Sadhasivam wrote:
+> Document devicetree binding for Avenger96 board.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7707c28628b9..0871a21a5bbb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1648,6 +1648,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
->  F:     arch/arm/boot/dts/ls1021a*
->  F:     arch/arm64/boot/dts/freescale/fsl-*
->  F:     arch/arm64/boot/dts/freescale/qoriq-*
-> +F:     arch/arm64/boot/dts/freescale/imx*
+>  Documentation/devicetree/bindings/arm/stm32/stm32.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.txt b/Documentation/devicetree/bindings/arm/stm32/stm32.txt
+> index 6808ed9ddfd5..eba363a4b514 100644
+> --- a/Documentation/devicetree/bindings/arm/stm32/stm32.txt
+> +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.txt
+> @@ -8,3 +8,9 @@ using one of the following compatible strings:
+>    st,stm32f746
+>    st,stm32h743
+>    st,stm32mp157
+> +
+> +Boards:
+> +
+> +Root node property compatible must contain one of below depending on board:
+> +
+> + - Avenger96: "arrow,stm32mp157a-avenger96"
 
-No, please put this entry under ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+With which SoC compatible?
 
-Thanks
+> -- 
+> 2.17.1
+> 
