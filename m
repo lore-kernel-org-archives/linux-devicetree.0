@@ -1,27 +1,79 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v9 1/3] arm64: dts: fsl: librem5: Add a device tree for
- the Librem5 devkit
-Date: Mon, 13 May 2019 08:11:29 -0700
-Message-ID: <0f355f524122cb4dd6388431495a9d182e3ed9d6.camel@perches.com>
-References: <20190513145539.28174-1-angus@akkea.ca>
-         <20190513145539.28174-2-angus@akkea.ca>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date: Mon, 13 May 2019 17:14:05 +0200
+Message-ID: <20190513151405.GW17751@phenom.ffwll.local>
+References: <20190512174608.10083-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513145539.28174-2-angus@akkea.ca>
+Content-Disposition: inline
+In-Reply-To: <20190512174608.10083-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: peron.clem@gmail.com
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-05-13 at 07:55 -0700, Angus Ainslie (Purism) wrote:
-> This is for the development kit board for the Librem 5. The current level
-> of support yields a working console and is able to boot userspace from
-> the network or eMMC.
-[]
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> new file mode 100644
+On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem@gmail.com wrote:
+> From: Clément Péron <peron.clem@gmail.com>
+> 
+> Hi,
+> 
+> The Allwinner H6 has a Mali-T720 MP2. The drivers are
+> out-of-tree so this series only introduce the dt-bindings.
 
-Perhaps add an entry in the MAINTAINERS file for this
-.dts file similar to other freescale boards?
+We do have an in-tree midgard driver now (since 5.2). Does this stuff work
+together with your dt changes here?
+-Daniel
+
+> The first patch is from Neil Amstrong and has been already
+> merged in linux-amlogic. It is required for this series.
+> 
+> The second patch is from Icenowy Zheng where I changed the
+> order has required by Rob Herring.
+> See: https://patchwork.kernel.org/patch/10699829/
+> 
+> Thanks,
+> Clément
+> 
+> Changes in v4:
+>  - Add Rob Herring reviewed-by tag
+>  - Resent with correct Maintainers
+> 
+> Changes in v3 (Thanks to Maxime Ripard):
+>  - Reauthor Icenowy for her patch
+> 
+> Changes in v2 (Thanks to Maxime Ripard):
+>  - Drop GPU OPP Table
+>  - Add clocks and clock-names in required
+> 
+> Clément Péron (6):
+>   dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+>   arm64: dts: allwinner: Add ARM Mali GPU node for H6
+>   arm64: dts: allwinner: Add mali GPU supply for Pine H64
+>   arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
+>   arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
+>   arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
+> 
+> Icenowy Zheng (1):
+>   dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+> 
+> Neil Armstrong (1):
+>   dt-bindings: gpu: mali-midgard: Add resets property
+> 
+>  .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
+>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
+>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
+>  6 files changed, 61 insertions(+)
+> 
+> -- 
+> 2.17.1
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
