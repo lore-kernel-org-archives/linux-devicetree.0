@@ -1,8 +1,8 @@
 Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 02/29] PCI: tegra: Handle failure cases in tegra_pcie_power_on()
-Date: Mon, 13 May 2019 23:37:17 +0530
-Message-ID: <20190513180744.16493-3-mmaddireddy@nvidia.com>
+Subject: [PATCH V3 23/29] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+Date: Mon, 13 May 2019 23:37:38 +0530
+Message-ID: <20190513180744.16493-24-mmaddireddy@nvidia.com>
 In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,84 +11,38 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Unroll the PCIe power on sequence if any one of the steps fail in
-tegra_pcie_power_on().
+Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
+in low power mode.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V3: No change
 
-V2: New patch to handle error cleanup in tegra_pcie_power_on().
+V2: Using standard pinctrl names, default and idle
 
- drivers/pci/controller/pci-tegra.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f4f53d092e00..8235d937951b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1052,7 +1052,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 		err = clk_prepare_enable(pcie->pex_clk);
- 		if (err) {
- 			dev_err(dev, "failed to enable PEX clock: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 		reset_control_deassert(pcie->pex_rst);
- 	} else {
-@@ -1061,7 +1061,7 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 							pcie->pex_rst);
- 		if (err) {
- 			dev_err(dev, "powerup sequence failed: %d\n", err);
--			return err;
-+			goto regulator_disable;
- 		}
- 	}
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index 145a4f04194f..7939bca47861 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -65,6 +65,14 @@ Required properties:
+   - afi
+   - pcie_x
  
-@@ -1070,24 +1070,40 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
- 	err = clk_prepare_enable(pcie->afi_clk);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable AFI clock: %d\n", err);
--		return err;
-+		goto powergate;
- 	}
- 
- 	if (soc->has_cml_clk) {
- 		err = clk_prepare_enable(pcie->cml_clk);
- 		if (err < 0) {
- 			dev_err(dev, "failed to enable CML clock: %d\n", err);
--			return err;
-+			goto disable_afi_clk;
- 		}
- 	}
- 
- 	err = clk_prepare_enable(pcie->pll_e);
- 	if (err < 0) {
- 		dev_err(dev, "failed to enable PLLE clock: %d\n", err);
--		return err;
-+		goto disable_cml_clk;
- 	}
- 
- 	return 0;
++Optional properties:
++- pinctrl-names: A list of pinctrl state names. Must contain the following
++  entries:
++  - "default": active state, puts PCIe I/O out of deep power down state
++  - "idle": puts PCIe I/O into deep power down state
++- pinctrl-0: phandle for the default/active state of pin configurations.
++- pinctrl-1: phandle for the idle state of pin configurations.
 +
-+disable_cml_clk:
-+	if (soc->has_cml_clk)
-+		clk_disable_unprepare(pcie->cml_clk);
-+disable_afi_clk:
-+	clk_disable_unprepare(pcie->afi_clk);
-+powergate:
-+	reset_control_assert(pcie->afi_rst);
-+	reset_control_assert(pcie->pex_rst);
-+	clk_disable_unprepare(pcie->pex_clk);
-+	if (!dev->pm_domain)
-+		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
-+regulator_disable:
-+	regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
-+
-+	return err;
- }
- 
- static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
+ Required properties on Tegra124 and later (deprecated):
+ - phys: Must contain an entry for each entry in phy-names.
+ - phy-names: Must include the following entries:
 -- 
 2.17.1
