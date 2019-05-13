@@ -1,93 +1,41 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v3 00/14] add ecspi ERR009165 for i.mx6/7 soc family
-Date: Mon, 13 May 2019 11:31:30 +0200
-Message-ID: <1557739890.3997.1.camel@pengutronix.de>
-References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+From: ynezz <ynezz@ibawizard.net>
+Subject: Re: [PATCH net 0/3] add property "nvmem_macaddr_swap" to swap
+ macaddr bytes order
+Date: Mon, 13 May 2019 11:35:39 +0200
+Message-ID: <20190513082625.GA14498@ibawizard.net>
+References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
+ <20190510112822.GT81826@meh.true.cz>
+ <20190510113155.mvpuhe4yzxdaanei@flea>
+ <VI1PR0402MB3600516CFAD9227B0E175DF4FF0F0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB3600516CFAD9227B0E175DF4FF0F0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andy Duan <fugang.duan@nxp.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+Andy Duan <fugang.duan@nxp.com> [2019-05-13 03:38:32]:
 
-Am Dienstag, den 07.05.2019, 09:15 +0000 schrieb Robin Gong:
->   There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
-> or not.
->   The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
-> have the chance to test this patch set if could fix their issues.
->   Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
-> 
-> PS:
->   Please get sdma firmware from below linux-firmware and copy it to your
-> local rootfs /lib/firmware/imx/sdma.
-> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
+> From: Maxime Ripard <maxime.ripard@bootlin.com> Sent: Friday, May 10, 2019 7:32 PM
+> > 
+> > It looks to me that it should be abstracted away by the nvmem interface and
+> > done at the provider level, not the customer.
+> > 
+> If to implement add above features like Petr Štetiar described, it should be abstracted
+> In nvmem core driver.
 
-This series is unfit for merging, as long as it depends on a SDMA RAM
-script that is known to break serial DMA. When can we expect to get a
-firmware version with the broken serial script removed out into the
-public?
+Maxime made it clear, that network layer as a consumer of the nvmem provider
+doesn't need to know about this byte order swapping details, so this byte
+order swapping should be implemented in nvmem as well, as a bonus it doesn't
+matter if you're going to swap 3, 6 or whatever other amount of bytes
+described by the reg property, so this functionality could be reused which is
+always good.
 
-Regards,
-Lucas
-
-> v2:
->   1. add commit log for reverted patches.
->   2. add comment for 'ecspi_fixed' in sdma driver.
->   3. add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
->      rather than remove.
-> v3:
->   1. confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
->   /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
->   Correct dts related dts patch in v2.
->   2. clean eratta information in binding doc and new 'tx_glitch_fixed' flag
->   in spi-imx driver to state ERR009165 fixed or not.
->   3. Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
->   errata workaroud, thus improve performance as possible.
-> 
-> Robin Gong (14):
->   Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
->   Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
->   Revert "dmaengine: imx-sdma: refine to load context only once"
->   dmaengine: imx-sdma: remove dupilicated sdma_load_context
->   dmaengine: imx-sdma: add mcu_2_ecspi script
->   spi: imx: fix ERR009165
->   spi: imx: remove ERR009165 workaround on i.mx6ul
->   dt-bindings: spi: imx: add new i.mx6ul compatible name
->   dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
->   dt-bindings: dma: imx-sdma: add i.mx6ul/6sx compatible name
->   dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
->   ARM: dts: imx6ul: add dma support on ecspi
->   ARM: dts: imx6sll: correct sdma compatible
->   arm64: defconfig: Enable SDMA on i.mx8mq/8mm
-> 
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  2 +
->  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
->  arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
->  arch/arm/boot/dts/imx6sll.dtsi                     |  2 +-
->  arch/arm/boot/dts/imx6ul.dtsi                      |  8 +++
->  arch/arm64/configs/defconfig                       |  3 +
->  drivers/dma/imx-sdma.c                             | 78 ++++++++++++++++------
->  drivers/spi/spi-imx.c                              | 61 ++++++++++++++---
->  include/linux/platform_data/dma-imx-sdma.h         |  1 +
->  10 files changed, 132 insertions(+), 34 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+-- ynezz
