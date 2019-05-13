@@ -1,36 +1,58 @@
-Return-Path: <SRS0=WSjT=TD=linaro.org=ulf.hansson@kernel.org>
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 09/29] PCI: tegra: Enable opportunistic UpdateFC and ACK
+Date: Mon, 13 May 2019 23:37:24 +0530
+Message-ID: <20190513180744.16493-10-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-References: <20190429090310.25484-1-haibo.chen@nxp.com>
-In-Reply-To: <20190429090310.25484-1-haibo.chen@nxp.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 3 May 2019 15:29:01 +0200
-Message-ID: <CAPDyKFqi=v6WBR5+n_U6ngQDgeDtrdHwS2xBgntqqLmNMPuK=A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Add struct esdhc_soc_data for i.MX7ULP
-Content-Type: text/plain; charset="UTF-8"
-To: BOUGH CHEN <haibo.chen@nxp.com>
-Cc: "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 29 Apr 2019 at 10:55, BOUGH CHEN <haibo.chen@nxp.com> wrote:
->
-> ---
-> Changes for V2:
-> -remove the request on the subsequent error paths in pm_runtime_resume
->
-> Haibo Chen (3):
->   dt-bindings: mmc: fsl-imx-esdhc: add imx7ulp compatible string
->   mmc: sdhci-esdhc-imx: add pm_qos to interact with cpuidle
->   mmc: add HS400 support for iMX7ULP
->
->  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt |  1 +
->  drivers/mmc/host/sdhci-esdhc-imx.c            | 41 +++++++++++++++++--
->  2 files changed, 39 insertions(+), 3 deletions(-)
->
-> --
-> 2.17.1
->
+Enable opportunistic UpdateFC and ACK to allow data link layer send
+pending ACKs and UpdateFC packets when link is idle instead of waiting
+for timers to expire. This improves the PCIe performance due to better
+utilization of PCIe bandwidth.
 
-Applied for next, thanks!
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V3: No change
 
-Kind regards
-Uffe
+V2: No change
+
+ drivers/pci/controller/pci-tegra.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 76d913ef5bf4..b1e2e398b4e8 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -204,7 +204,9 @@
+ #define  RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK	0xffffffff
+ 
+ #define RP_VEND_XP	0x00000f00
+-#define  RP_VEND_XP_DL_UP	(1 << 30)
++#define  RP_VEND_XP_DL_UP			(1 << 30)
++#define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
++#define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
+ 
+ #define RP_VEND_CTL1	0x00000f48
+ #define  RP_VEND_CTL1_ERPT	(1 << 13)
+@@ -529,6 +531,12 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	value = readl(port->base + RP_VEND_CTL1);
+ 	value |= RP_VEND_CTL1_ERPT;
+ 	writel(value, port->base + RP_VEND_CTL1);
++
++	/* Optimal settings to enhance bandwidth */
++	value = readl(port->base + RP_VEND_XP);
++	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
++	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
++	writel(value, port->base + RP_VEND_XP);
+ }
+ 
+ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+-- 
+2.17.1
