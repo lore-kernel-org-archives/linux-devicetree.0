@@ -1,52 +1,43 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 0/9] RPMPD for QCS404 and MSM8998
-Date: Mon, 13 May 2019 15:50:06 +0530
-Message-ID: <20190513102015.26551-1-sibis@codeaurora.org>
+Subject: [PATCH v4 1/9] soc: qcom: rpmpd: fixup rpmpd set performance state
+Date: Mon, 13 May 2019 15:50:07 +0530
+Message-ID: <20190513102015.26551-2-sibis@codeaurora.org>
+References: <20190513102015.26551-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190513102015.26551-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
 Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, marc.w.gonzalez@free.fr, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Re-worked the macros of the rpmpd driver. Add power domains support
-for QCS404 and MSM8998.
+Remoteproc q6v5-mss calls set_performace_state with INT_MAX on
+rpmpd. This is currently ignored since it is greater than the
+max supported state. Fixup rpmpd state to max if the required
+state is greater than all the supported states.
 
-V4:
-* fixup fixes tag and commit message in patch 1 [Marc]
-* fixup typos in qcs404 and msm8998 dt nodes
-* fixup comments regarding resource type in patch 8 [Marc]
+Fixes: 075d3db8d10d ("soc: qcom: rpmpd: Add support for get/set performance state")
 
-V3:
-* always send level updates to vfc and vfl in set_performance state
-* fixup commit messages [Rajendra]
-* fixup s-o-b ordering
+Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/soc/qcom/rpmpd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-V2:
-* Add rpmpd support for msm8998
-* fixup corner/vfc with vlfl/vfl
-
-Bjorn Andersson (4):
-  soc: qcom: rpmpd: Modify corner defining macros
-  dt-bindings: power: Add rpm power domain bindings for qcs404
-  soc: qcom: rpmpd: Add QCS404 power-domains
-  arm64: dts: qcom: qcs404: Add rpmpd node
-
-Sibi Sankar (5):
-  soc: qcom: rpmpd: fixup rpmpd set performance state
-  soc: qcom: rpmpd: Add support to set rpmpd state to max
-  dt-bindings: power: Add rpm power domain bindings for msm8998
-  soc: qcom: rpmpd: Add MSM8998 power-domains
-  arm64: dts: qcom: msm8998: Add rpmpd node
-
- .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +
- arch/arm64/boot/dts/qcom/msm8998.dtsi         |  51 +++++++
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  55 +++++++
- drivers/soc/qcom/rpmpd.c                      | 134 ++++++++++++++----
- include/dt-bindings/power/qcom-rpmpd.h        |  34 +++++
- 5 files changed, 252 insertions(+), 24 deletions(-)
-
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index 005326050c23..235d01870dd8 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -226,7 +226,7 @@ static int rpmpd_set_performance(struct generic_pm_domain *domain,
+ 	struct rpmpd *pd = domain_to_rpmpd(domain);
+ 
+ 	if (state > MAX_RPMPD_STATE)
+-		goto out;
++		state = MAX_RPMPD_STATE;
+ 
+ 	mutex_lock(&rpmpd_lock);
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
