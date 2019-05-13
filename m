@@ -1,63 +1,60 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: qcs404: Define APPS IOMMU
-Date: Mon, 13 May 2019 11:28:53 -0700
-Message-ID: <20190513182853.GI2085@tuxbook-pro>
-References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
- <20190510043421.31393-8-bjorn.andersson@linaro.org>
- <20190513045402.GA2707@vkoul-mobl>
+Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
+ reflect documentation
+Date: Mon, 13 May 2019 11:39:47 -0700
+Message-ID: <20190513183947.GJ2085@tuxbook-pro>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190513045402.GA2707@vkoul-mobl>
+In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 12 May 21:54 PDT 2019, Vinod Koul wrote:
+On Fri 10 May 04:29 PDT 2019, Amit Kucheria wrote:
 
-> On 09-05-19, 21:34, Bjorn Andersson wrote:
-> > The APPS IOMMU provides contexts for FastRPC, MDP and WLAN, among other
-> > things.  Define these. We use the qcom_iommu binding because the
->         ^^^
-> Double spaces crept in..
+Subject indicates pluralism, but this fixes a specific platform
+(board?). I think you should update that.
+
+> The idle-states binding documentation[1] mentions that the
+> 'entry-method' property is required on 64-bit platforms and must be set
+> to "psci".
 > 
-
-That's to give you some breathing room while reading it - but not as
-much as a new paragraph :)
-
-> > firmware restrictions in incompatible with the arm-smmu.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 85 ++++++++++++++++++++++++++++
-> >  1 file changed, 85 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > index b213f6acad76..fcde4f0334c2 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > @@ -378,6 +378,91 @@
-> >  			reg = <0x01937000 0x25000>;
-> >  		};
-> >  
-> > +		apps_iommu: iommu@1e20000 {
-> > +			compatible = "qcom,qcs404-iommu", "qcom,msm-iommu-v1";
+> We fixed up all uses of the entry-method property in
+> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
+> reflect documentation"). But a new one has appeared. Fix it up.
 > 
-> Did we define qcom,qcs404-iommu in bindings, It does not seem to be
-> there in this patch, next or integration one
-> 
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
 
-No, this was entirely intended to fall back on the generic compatible.
+The message looks good though, so with a new subject you have my:
 
-That said, further testing of this series indicates that we have a
-cache issue related to the SMMU. In working out this I came up with a
-series of patches to the arm-smmu driver that allow us to use this with
-the standard Qualcomm bootloader.
-
-So let's ignore patch 7 and 8 in this series until we know how to deal
-with the SMMU.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbcfa3bb..42e7822a0227 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -51,7 +51,7 @@
+>  		 * PSCI node is not added default, U-boot will add missing
+>  		 * parts if it determines to use PSCI.
+>  		 */
+> -		entry-method = "arm,psci";
+> +		entry-method = "psci";
+>  
+>  		CPU_PH20: cpu-ph20 {
+>  			compatible = "arm,idle-state";
+> -- 
+> 2.17.1
+> 
