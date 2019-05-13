@@ -1,63 +1,126 @@
-Return-Path: <SRS0=+B9Q=TD=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: How do I tell a dual role PHY to always be host or peripheral?
-Date: Fri, 3 May 2019 14:46:13 +0000
-Message-ID: 
- <TY1PR01MB1562C3DF1D5D538AF0156B738A350@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 13/29] PCI: tegra: Increase the deskew retry time
+Date: Mon, 13 May 2019 23:37:28 +0530
+Message-ID: <20190513180744.16493-14-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-To: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-I'm preparing patches to add USB support (host and device) for the=20
-RZ/A2M SoC. The internal HW is similar to the R-Car Gen 3 (USB 2.0, not
-USB 3.0).
-So I'm reusing drivers/phy/renesas/phy-rcar-gen3-usb2.c
+Sometimes link speed change from Gen2 to Gen1 fails due to instability
+in deskew logic on lane-0 in Tegra210. Increase the deskew retry time
+to resolve this issue.
 
-But, I'm not doing OTG, so I need to tell the PHY that it explicitly=20
-needs to be configured as host or peripheral mode.
-The controllers are individual (host or peripheral), but they use the=20
-same internal PHY.
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+V3: No change
 
-Looking at:
+V2: Took care of typos in commit log and coding style comments.
 
-https://www.kernel.org/doc/Documentation/devicetree/bindings/usb/generic.tx=
-t
+ drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Technically, I should not add "dr_mode" to the USB controller nodes (and
-let the PHY driver check that) because the "controller" is not dual=20
-role, only PHY is.
-
-I was adding a new property "renesas,is_peripheral" to the=20
-phy-rcar-gen3-usb2.c PHY driver that it would check if it was not OTG which=
- of course
-works.
-
-However, if I look at the PHY dt-bindings of:
-  Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-  Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-
-They are both using the name "dr_mode" in the PHY node.
-
-So, instead of adding something like "renesas,is_peripheral" to the=20
-current R-Car USB2 PHY driver, can I just use the generic name "dr_mode"?
-
-The PHY driver code change is pretty simple:
-
-	if (channel->is_otg_channel) {
-		x x x (existing code today)
-+	} else
-+		if (usb_get_dr_mode(channel->dev) =3D=3D USB_DR_MODE_PERIPHERAL)
-+			writel(0x80000000, usb2_base + USB2_COMMCTRL);
-+		else
-+			writel(0x00000000, usb2_base + USB2_COMMCTRL);
-
-
-
-I figured I would ask BEFORE I start submitting patches for review.
-
-
-Thank you,
-Chris
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 96cd75821872..9c28f1d9f177 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -209,6 +209,10 @@
+ #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
+ #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
+ 
++#define RP_VEND_CTL0	0x00000f44
++#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
++#define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH	(0x9 << 12)
++
+ #define RP_VEND_CTL1	0x00000f48
+ #define  RP_VEND_CTL1_ERPT	(1 << 13)
+ 
+@@ -305,6 +309,7 @@ struct tegra_pcie_soc {
+ 	bool force_pca_enable;
+ 	bool program_uphy;
+ 	bool update_clamp_threshold;
++	bool program_deskew_time;
+ 	struct {
+ 		struct {
+ 			u32 rp_ectl_2_r1;
+@@ -620,6 +625,24 @@ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
+ 	writel(value, port->base + RP_ECTL_6_R2);
+ }
+ 
++static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
++{
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
++	u32 value;
++
++	/*
++	 * Sometimes link speed change from Gen2 to Gen1 fails due to
++	 * instability in deskew logic on lane-0. Increase the deskew
++	 * retry time to resolve this issue.
++	 */
++	if (soc->program_deskew_time) {
++		value = readl(port->base + RP_VEND_CTL0);
++		value &= ~RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK;
++		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
++		writel(value, port->base + RP_VEND_CTL0);
++	}
++}
++
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ {
+ 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
+@@ -649,6 +672,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
+ 
+ 	if (soc->ectl.enable)
+ 		tegra_pcie_program_ectl_settings(port);
++
++	tegra_pcie_apply_sw_fixup(port);
+ }
+ 
+ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+@@ -2356,6 +2381,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = false,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2381,6 +2407,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = false,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2399,6 +2426,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+@@ -2417,6 +2445,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.force_pca_enable = true,
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
++	.program_deskew_time = true,
+ 	.ectl = {
+ 		.regs = {
+ 			.rp_ectl_2_r1 = 0x0000000f,
+@@ -2454,6 +2483,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.force_pca_enable = false,
+ 	.program_uphy = false,
+ 	.update_clamp_threshold = false,
++	.program_deskew_time = false,
+ 	.ectl.enable = false,
+ };
+ 
+-- 
+2.17.1
