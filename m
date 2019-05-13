@@ -1,49 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v3 PATCH] dt-binding: usb: add usb-role-switch property
-Date: Mon, 13 May 2019 12:28:47 -0500
-Message-ID: <20190513172847.GA15347@bogus>
-References: <c3596e996c9ab39c6b9bc14b93309244c4a55014.1557306151.git.chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v3 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling U1 and U2
+Date: Mon, 13 May 2019 12:31:37 -0500
+Message-ID: <20190513173137.GA20313@bogus>
+References: <1557472048-10536-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1557472048-10536-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c3596e996c9ab39c6b9bc14b93309244c4a55014.1557306151.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <1557472048-10536-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, "Claus H. Stovgaard" <cst@phaseone.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, v.anuragkumar@gmail.com, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 8 May 2019 17:17:44 +0800, Chunfeng Yun wrote:
-> Add a property usb-role-switch to tell the driver that use
-> USB Role Switch framework to handle the role switch,
-> it's useful when the driver has already supported other ways,
-> such as extcon framework etc.
+On Fri, 10 May 2019 12:37:26 +0530, Anurag Kumar Vulisha wrote:
+> This patch updates the documentation with the information related
+> to the quirks that needs to be added for disabling the link entering
+> into the U1 and U2 states
 > 
-> Cc: Biju Das <biju.das@bp.renesas.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 > ---
-> v3:
->     add property type, modify description suggested by Heikki
+>  Changes in v3:
+> 	-None
 > 
-> v2:
->     describe it in terms of h/w functionality suggested by Rob
-> 
-> v1:
->     the property is discussed in:
->     [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
->     https://patchwork.kernel.org/patch/10852497/
-> 
->     Mediatek and Hisilicon also try to use it:
->     [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
->     https://patchwork.kernel.org/patch/10918385/
->     [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
->     https://patchwork.kernel.org/patch/10918367/
-> 
->     [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
->     https://patchwork.kernel.org/patch/10909981/
+>  Changes in v2
+> 	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
+> 	   to "snps,dis-u1-entry-quirk"
 > ---
->  Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
