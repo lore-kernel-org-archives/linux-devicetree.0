@@ -1,70 +1,43 @@
-From: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Subject: Re: [PATCH v3 4/6] dt-bindings: soc/fsl: qe: document new
- fsl,qe-snums binding
-Date: Mon, 13 May 2019 11:39:01 +0000
-Message-ID: <35d7ec55a136259668cadbb662bfd4913c4423ca.camel@infinera.com>
-References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
-         <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
-         <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
+Date: Mon, 13 May 2019 13:42:25 +0200
+Message-ID: <20190513114225.jhd5in7zavd5wvbw@verge.net.au>
+References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+ <1557413011-1662-1-git-send-email-george_davis@mentor.com>
+ <CAMuHMdUCcxfVdY1PqfYRZMjHN2eP_-NAsniCY39XyrDysAu1Pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
-Content-Language: en-US
-Content-ID: <AFB1973088CD854496BB37D5532730F9@namprd10.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUCcxfVdY1PqfYRZMjHN2eP_-NAsniCY39XyrDysAu1Pw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "qiang.zhao@nxp.com" <qiang.zhao@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "Rasmus.Villemoes@prevas.se" <Rasmus.Villemoes@prevas.se>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "oss@buserror.net" <oss@buserror.net>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "George G. Davis" <ggdavisiv@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "George G. Davis" <george_davis@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA1LTEzIGF0IDExOjE0ICswMDAwLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3Rl
-Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
-cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
-cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
-Cj4gDQo+IA0KPiBSZWFkaW5nIHRhYmxlIDQtMzAsIGFuZCBpdHMgZm9vdG5vdGVzLCBvZiB0aGUg
-UVVJQ0MgRW5naW5lIEJsb2NrDQo+IFJlZmVyZW5jZSBNYW51YWwgc2hvd3MgdGhhdCB0aGUgc2V0
-IG9mIHNudW0gX3ZhbHVlc18gaXMgbm90DQo+IG5lY2Vzc2FyaWx5IGp1c3QgYSBmdW5jdGlvbiBv
-ZiB0aGUgX251bWJlcl8gb2Ygc251bXMsIGFzIGdpdmVuIGluIHRoZQ0KPiBmc2wscWUtbnVtLXNu
-dW1zIHByb3BlcnR5Lg0KPiANCj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVy
-IHRvIGFkZCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cw0KPiBvZiB0aGUgUVVJQ0MgZW5naW5l
-IElQLCB0aGlzIGludHJvZHVjZXMgYSBuZXcgYmluZGluZyBmc2wscWUtc251bXMsDQo+IHdoaWNo
-IGF1dG9tYXRpY2FsbHkgZW5jb2RlcyBib3RoIHRoZSBudW1iZXIgb2Ygc251bXMgYW5kIHRoZSBh
-Y3R1YWwNCj4gdmFsdWVzIHRvIHVzZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxs
-ZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJldmFzLmRrPg0KPiAtLS0NCj4gUm9iLCB0aGFua3Mg
-Zm9yIHRoZSByZXZpZXcgb2YgdjIuIEhvd2V2ZXIsIHNpbmNlIEkgbW92ZWQgdGhlIGV4YW1wbGUN
-Cj4gZnJvbSB0aGUgY29tbWl0IGxvZyB0byB0aGUgYmluZGluZyAocGVyIEpvYWtpbSdzIHJlcXVl
-c3QpLCBJIGRpZG4ndA0KDQpUaGFua3MsIGxvb2tzIGdvb2Qgbm93Lg0KDQo+IGFkZCBhIFJldmll
-d2VkLWJ5IHRhZyBmb3IgdGhpcyByZXZpc2lvbi4NCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHQgICAgICAgfCAxMyArKysrKysrKysrKystDQo+ICAx
-IGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9x
-ZS9xZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1f
-cWUvcWUudHh0DQo+IGluZGV4IGQ3YWZhZmY1ZmFmZi4uMDVlYzJhODM4YzU0IDEwMDY0NA0KPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUu
-dHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2Nw
-bV9xZS9xZS50eHQNCj4gQEAgLTE4LDcgKzE4LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
-IC0gcmVnIDogb2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIGRldmljZSByZWdpc3RlcnMuDQo+ICAt
-IGJ1cy1mcmVxdWVuY3kgOiB0aGUgY2xvY2sgZnJlcXVlbmN5IGZvciBRVUlDQyBFbmdpbmUuDQo+
-ICAtIGZzbCxxZS1udW0tcmlzY3M6IGRlZmluZSBob3cgbWFueSBSSVNDIGVuZ2luZXMgdGhlIFFF
-IGhhcy4NCj4gLS0gZnNsLHFlLW51bS1zbnVtczogZGVmaW5lIGhvdyBtYW55IHNlcmlhbCBudW1i
-ZXIoU05VTSkgdGhlIFFFIGNhbiB1c2UgZm9yIHRoZQ0KPiArLSBmc2wscWUtc251bXM6IFRoaXMg
-cHJvcGVydHkgaGFzIHRvIGJlIHNwZWNpZmllZCBhcyAnL2JpdHMvIDgnIHZhbHVlLA0KPiArICBk
-ZWZpbmluZyB0aGUgYXJyYXkgb2Ygc2VyaWFsIG51bWJlciAoU05VTSkgdmFsdWVzIGZvciB0aGUg
-dmlydHVhbA0KPiAgICB0aHJlYWRzLg0KPiANCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+IEBA
-IC0zNCw2ICszNSwxMSBAQCBSZWNvbW1lbmRlZCBwcm9wZXJ0aWVzDQo+ICAtIGJyZy1mcmVxdWVu
-Y3kgOiB0aGUgaW50ZXJuYWwgY2xvY2sgc291cmNlIGZyZXF1ZW5jeSBmb3IgYmF1ZC1yYXRlDQo+
-ICAgIGdlbmVyYXRvcnMgaW4gSHouDQo+IA0KPiArRGVwcmVjYXRlZCBwcm9wZXJ0aWVzDQo+ICst
-IGZzbCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0pIHRo
-ZSBRRSBjYW4gdXNlDQo+ICsgIGZvciB0aGUgdGhyZWFkcy4gVXNlIGZzbCxxZS1zbnVtcyBpbnN0
-ZWFkIHRvIG5vdCBvbmx5IHNwZWNpZnkgdGhlDQo+ICsgIG51bWJlciBvZiBzbnVtcywgYnV0IGFs
-c28gdGhlaXIgdmFsdWVzLg0KPiArDQo+ICBFeGFtcGxlOg0KPiAgICAgICBxZUBlMDEwMDAwMCB7
-DQo+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+IEBAIC00NCw2ICs1MCwxMSBAQCBF
-eGFtcGxlOg0KPiAgICAgICAgIHJlZyA9IDxlMDEwMDAwMCA0ODA+Ow0KPiAgICAgICAgIGJyZy1m
-cmVxdWVuY3kgPSA8MD47DQo+ICAgICAgICAgYnVzLWZyZXF1ZW5jeSA9IDwxNzlBN0IwMD47DQo+
-ICsgICAgICAgZnNsLHFlLXNudW1zID0gL2JpdHMvIDggPA0KPiArICAgICAgICAgICAgICAgMHgw
-NCAweDA1IDB4MEMgMHgwRCAweDE0IDB4MTUgMHgxQyAweDFEDQo+ICsgICAgICAgICAgICAgICAw
-eDI0IDB4MjUgMHgyQyAweDJEIDB4MzQgMHgzNSAweDg4IDB4ODkNCj4gKyAgICAgICAgICAgICAg
-IDB4OTggMHg5OSAweEE4IDB4QTkgMHhCOCAweEI5IDB4QzggMHhDOQ0KPiArICAgICAgICAgICAg
-ICAgMHhEOCAweEQ5IDB4RTggMHhFOT47DQo+ICAgICAgIH0NCj4gDQo+ICAqIE11bHRpLVVzZXIg
-UkFNIChNVVJBTSkNCj4gLS0NCj4gMi4yMC4xDQo+IA0KDQo=
+On Mon, May 13, 2019 at 01:13:16PM +0200, Geert Uytterhoeven wrote:
+> Hi George,
+> 
+> On Thu, May 9, 2019 at 4:44 PM George G. Davis <ggdavisiv@gmail.com> wrote:
+> > As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+> > console UART"), UART console lines use low-level PIO only access functions
+> > which will conflict with use of the line when DMA is enabled, e.g. when
+> > the console line is also used for systemd messages. So disable DMA
+> > support for UART console lines.
+> >
+> > Fixes: https://patchwork.kernel.org/patch/10929511/
+> > Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+> > Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+> > Signed-off-by: George G. Davis <george_davis@mentor.com>
+> 
+> I think this makes sense.  In addition to OMAP 8250, the same approach
+> is used in the Mediatek 8250 and iMX serial drivers.
+> 
+> Regardless, this is definitely better than removing the "dmas" properties
+> from DT, as DT describes hardware, not usage policies.
+
++1
+
+> Anyone else with a comment?
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
