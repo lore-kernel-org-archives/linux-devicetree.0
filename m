@@ -1,58 +1,87 @@
 Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32813 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729846AbfEMRVg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 13:21:36 -0400
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v6 1/5] videobuf2-v4l2: set last_buffer_dequeued in dqbuf
-Date: Mon, 13 May 2019 19:21:27 +0200
-Message-Id: <20190513172131.15048-2-m.tretter@pengutronix.de>
-In-Reply-To: <20190513172131.15048-1-m.tretter@pengutronix.de>
-References: <20190513172131.15048-1-m.tretter@pengutronix.de>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18150 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732296AbfEMSJS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 14:09:18 -0400
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 21/29] PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+Date: Mon, 13 May 2019 23:37:36 +0530
+Message-ID: <20190513180744.16493-22-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Tegra186 and Tegra30 have three PCIe root ports. AFI_PEX2_CTRL register
+is defined for third root port. Offset of this register in Tegra186 is
+different from Tegra30, so add offset as part of soc data structure.
 
-last_buffer_dequeued was set to true in __fill_v4l2_buffer, but this
-is called for qbuf as well. Move it to vb2_dqbuf.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/media/common/videobuf2/videobuf2-v4l2.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+V3: No change
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index fb9ac7696fc6..40d76eb4c2fe 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -563,11 +563,6 @@ static void __fill_v4l2_buffer(struct vb2_buffer *vb, void *pb)
- 		b->flags |= V4L2_BUF_FLAG_REQUEST_FD;
- 		b->request_fd = vbuf->request_fd;
+V2: No change
+
+ drivers/pci/controller/pci-tegra.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 0024bc42b400..d20c88a79e00 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -169,7 +169,6 @@
+ 
+ #define AFI_PEX0_CTRL			0x110
+ #define AFI_PEX1_CTRL			0x118
+-#define AFI_PEX2_CTRL			0x128
+ #define  AFI_PEX_CTRL_RST		(1 << 0)
+ #define  AFI_PEX_CTRL_CLKREQ_EN		(1 << 1)
+ #define  AFI_PEX_CTRL_REFCLK_EN		(1 << 3)
+@@ -308,6 +307,7 @@ struct tegra_pcie_soc {
+ 	unsigned int num_ports;
+ 	const struct tegra_pcie_port_soc *ports;
+ 	unsigned int msi_base_shift;
++	unsigned long afi_pex2_ctrl;
+ 	u32 pads_pll_ctl;
+ 	u32 tx_ref_sel;
+ 	u32 pads_refclk_cfg0;
+@@ -518,6 +518,7 @@ static struct pci_ops tegra_pcie_ops = {
+ 
+ static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
+ {
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
+ 	unsigned long ret = 0;
+ 
+ 	switch (port->index) {
+@@ -530,7 +531,7 @@ static unsigned long tegra_pcie_port_get_pex_ctrl(struct tegra_pcie_port *port)
+ 		break;
+ 
+ 	case 2:
+-		ret = AFI_PEX2_CTRL;
++		ret = soc->afi_pex2_ctrl;
+ 		break;
  	}
--
--	if (!q->is_output &&
--		b->flags & V4L2_BUF_FLAG_DONE &&
--		b->flags & V4L2_BUF_FLAG_LAST)
--		q->last_buffer_dequeued = true;
- }
  
- /*
-@@ -786,6 +781,11 @@ int vb2_dqbuf(struct vb2_queue *q, struct v4l2_buffer *b, bool nonblocking)
- 
- 	ret = vb2_core_dqbuf(q, NULL, b, nonblocking);
- 
-+	if (!q->is_output &&
-+	    b->flags & V4L2_BUF_FLAG_DONE &&
-+	    b->flags & V4L2_BUF_FLAG_LAST)
-+		q->last_buffer_dequeued = true;
-+
- 	/*
- 	 *  After calling the VIDIOC_DQBUF V4L2_BUF_FLAG_DONE must be
- 	 *  cleared.
+@@ -2431,6 +2432,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.num_ports = 2,
+ 	.ports = tegra20_pcie_ports,
+ 	.msi_base_shift = 0,
++	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+@@ -2548,6 +2550,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.num_ports = 3,
+ 	.ports = tegra186_pcie_ports,
+ 	.msi_base_shift = 8,
++	.afi_pex2_ctrl = 0x19c,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0x80b880b8,
 -- 
-2.20.1
+2.17.1
