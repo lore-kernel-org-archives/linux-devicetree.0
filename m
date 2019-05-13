@@ -1,16 +1,14 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFC, V2, 06/11] media: platform: Add Mediatek ISP P1 image & meta
- formats
-Date: Mon, 13 May 2019 10:35:36 +0200
-Message-ID: <5aad30f8-04b0-e3f1-e1d1-def349fd2974@xs4all.nl>
-References: <Jungo Lin <jungo.lin@mediatek.com>
- <20190510015755.51495-7-jungo.lin@mediatek.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 1/2] fdt: add support for rng-seed
+Date: Mon, 13 May 2019 11:42:02 +0300
+Message-ID: <20190513084201.GA9271@rapoport-lnx>
+References: <20190513003819.356-1-hsinyi@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190510015755.51495-7-jungo.lin@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190513003819.356-1-hsinyi@chromium.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,67 +18,95 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jungo Lin <jungo.lin@mediatek.com>, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, suleiman@chromium.org, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, ryan.yu@mediatek.com, Jerry-ch.Chen@mediatek.com, frankie.chiu@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, seraph.huang@mediatek.com, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, Michal Hocko <mhocko@suse.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Stephen Boyd <swboyd@chromium.org>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/10/19 3:57 AM, Jungo Lin wrote:
-> Add packed/unpacked/full-g bayer format with 8/10/12/14 bit
-> for image output. Add Pass 1 (P1) specific meta formats for
-> parameter processing and 3A/other statistics.
-
-These pixel formats will need to be documented in Documentation/media/uapi/v4l/pixfmt-<something>.rst.
-
+On Mon, May 13, 2019 at 08:38:18AM +0800, Hsin-Yi Wang wrote:
+> Introducing a chosen node, rng-seed, which is an entropy that can be
+> passed to kernel called very early to increase initial device
+> randomness. Bootloader should provide this entropy and the value is
+> read from /chosen/rng-seed in DT.
 > 
-> Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
->  include/uapi/linux/videodev2.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> change log:
+> v1->v2:
+> * call function in early_init_dt_scan_chosen
+> * will add doc to devicetree-org/dt-schema on github if this is accepted
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 14 ++++++++++++++
+>  drivers/of/fdt.c                             | 11 +++++++++++
+>  2 files changed, 25 insertions(+)
 > 
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 1db220da3bcc..b79046d2d812 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -711,6 +711,20 @@ struct v4l2_pix_format {
->  #define V4L2_PIX_FMT_IPU3_SGRBG10	v4l2_fourcc('i', 'p', '3', 'G') /* IPU3 packed 10-bit GRBG bayer */
->  #define V4L2_PIX_FMT_IPU3_SRGGB10	v4l2_fourcc('i', 'p', '3', 'r') /* IPU3 packed 10-bit RGGB bayer */
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 45e79172a646..fef5c82672dc 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
+>  the Linux EFI stub (which will populate the property itself, using
+>  EFI_RNG_PROTOCOL).
 >  
-> +/* Vendor specific - Mediatek ISP compressed formats */
-> +#define V4L2_PIX_FMT_MTISP_U8	v4l2_fourcc('M', 'T', 'U', '8') /* Unpacked bayer format, 16-bit */
-> +#define V4L2_PIX_FMT_MTISP_U10  v4l2_fourcc('M', 'T', 'U', 'A') /* Unpacked bayer format, 16-bit */
-> +#define V4L2_PIX_FMT_MTISP_U12  v4l2_fourcc('M', 'T', 'U', 'C') /* Unpacked bayer format, 16-bit */
-> +#define V4L2_PIX_FMT_MTISP_U14  v4l2_fourcc('M', 'T', 'U', 'E') /* Unpacked bayer format, 16-bit */
-> +#define V4L2_PIX_FMT_MTISP_B8	v4l2_fourcc('M', 'T', 'B', '8') /* Packed   bayer format,  8-bit */
-> +#define V4L2_PIX_FMT_MTISP_B10  v4l2_fourcc('M', 'T', 'B', 'A') /* Packed   bayer format, 10-bit */
-> +#define V4L2_PIX_FMT_MTISP_B12  v4l2_fourcc('M', 'T', 'B', 'C') /* Packed   bayer format, 12-bit */
-> +#define V4L2_PIX_FMT_MTISP_B14  v4l2_fourcc('M', 'T', 'B', 'E') /* Packed   bayer format, 14-bit */
-> +#define V4L2_PIX_FMT_MTISP_F8	v4l2_fourcc('M', 'T', 'F', '8') /* Full-G   bayer format,  8-bit */
-> +#define V4L2_PIX_FMT_MTISP_F10  v4l2_fourcc('M', 'T', 'F', 'A') /* Full-G   bayer format, 10-bit */
-> +#define V4L2_PIX_FMT_MTISP_F12  v4l2_fourcc('M', 'T', 'F', 'C') /* Full-G   bayer format, 12-bit */
-> +#define V4L2_PIX_FMT_MTISP_F14  v4l2_fourcc('M', 'T', 'F', 'E') /* Full-G   bayer format, 14-bit */
+> +rng-seed
+> +-----------
+> +
+> +This property served as an entropy to add device randomness. It is parsed
+> +as a byte array, e.g.
+> +
+> +/ {
+> +	chosen {
+> +		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
+> +	};
+> +};
+> +
+> +This random value should be provided by bootloader.
+> +
+>  stdout-path
+>  -----------
+>  
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index de893c9616a1..96ea5eba9dd5 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/serial_core.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/random.h>
+>  
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+> @@ -1079,6 +1080,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>  {
+>  	int l;
+>  	const char *p;
+> +	const void *rng_seed;
+>  
+>  	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+>  
+> @@ -1113,6 +1115,15 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>  
+>  	pr_debug("Command line is: %s\n", (char*)data);
+>  
+> +	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
+> +	if (!rng_seed || l == 0)
+> +		return 1;
+> +
+> +	/* try to clear seed so it won't be found. */
+> +        fdt_nop_property(initial_boot_params, node, "rng-seed");
+> +
+> +        add_device_randomness(rng_seed, l);
 
-Are these all compressed formats? What sort of compression is used? Can software unpack it,
-or this is meant to be fed to other mediatek hardware blocks?
+Please fix the indentation. 
 
 > +
->  /* SDR formats - used only for Software Defined Radio devices */
->  #define V4L2_SDR_FMT_CU8          v4l2_fourcc('C', 'U', '0', '8') /* IQ u8 */
->  #define V4L2_SDR_FMT_CU16LE       v4l2_fourcc('C', 'U', '1', '6') /* IQ u16le */
-> @@ -732,6 +746,12 @@ struct v4l2_pix_format {
->  #define V4L2_META_FMT_VSP1_HGT    v4l2_fourcc('V', 'S', 'P', 'T') /* R-Car VSP1 2-D Histogram */
->  #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
->  #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
-> +/* Vendor specific - Mediatek ISP parameters for firmware */
-> +#define V4L2_META_FMT_MTISP_PARAMS v4l2_fourcc('M', 'T', 'f', 'p') /* ISP tuning parameters */
-> +#define V4L2_META_FMT_MTISP_3A	   v4l2_fourcc('M', 'T', 'f', 'a') /* AE/AWB histogram */
-> +#define V4L2_META_FMT_MTISP_AF	   v4l2_fourcc('M', 'T', 'f', 'f') /* AF histogram */
-> +#define V4L2_META_FMT_MTISP_LCS	   v4l2_fourcc('M', 'T', 'f', 'c') /* Local contrast enhanced statistics */
-> +#define V4L2_META_FMT_MTISP_LMV	   v4l2_fourcc('M', 'T', 'f', 'm') /* Local motion vector histogram */
+>  	/* break now */
+>  	return 1;
+>  }
+> -- 
+> 2.20.1
+> 
 
-The documentation for these meta formats either needs to point to
-freely available mediatek documentation (i.e. no NDA needed), or it
-has to be documented in a header or in the pixelformat documentation.
-
-Regards,
-
-	Hans
+-- 
+Sincerely yours,
+Mike.
