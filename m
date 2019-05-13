@@ -1,64 +1,36 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Date: Mon, 13 May 2019 20:52:38 +0300
-Message-ID: <20190513175238.GA3198@t60.musicnaut.iki.fi>
-References: <20190510194018.28206-1-robh@kernel.org>
- <20190511181753.GA2444@t60.musicnaut.iki.fi>
- <CAL_JsqK_pTxYd0iq=-yKTexWKueVqBSyNfOrfek9k-8pg3YE9w@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v10 1/4] MAINTAINERS: add an entry for for arm64 imx devicetrees
+Date: Mon, 13 May 2019 15:01:56 -0300
+Message-ID: <CAOMZO5BaQnrDOYogzgpmCExjB+uhYQ8SsxBiMWrSB-1KRtgeVQ@mail.gmail.com>
+References: <20190513174057.4410-1-angus@akkea.ca> <20190513174057.4410-2-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK_pTxYd0iq=-yKTexWKueVqBSyNfOrfek9k-8pg3YE9w@mail.gmail.com>
+In-Reply-To: <20190513174057.4410-2-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, May 13, 2019 at 2:41 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+>
+> Add an explicit reference to imx* devicetrees
+>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7707c28628b9..0871a21a5bbb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1648,6 +1648,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+>  F:     arch/arm/boot/dts/ls1021a*
+>  F:     arch/arm64/boot/dts/freescale/fsl-*
+>  F:     arch/arm64/boot/dts/freescale/qoriq-*
+> +F:     arch/arm64/boot/dts/freescale/imx*
 
-On Mon, May 13, 2019 at 08:02:08AM -0500, Rob Herring wrote:
-> On Sat, May 11, 2019 at 1:23 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
-> > On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> > > Convert the vendor prefix registry to a schema. This will enable checking
-> > > that new vendor prefixes are added (in addition to the less than perfect
-> > > checkpatch.pl check) and will also check against adding other prefixes
-> > > which are not vendors.
-> > >
-> > > Converted vendor-prefixes.txt using the following sed script:
-> > >
-> > > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
-> > >
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > [...]
-> > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > deleted file mode 100644
-> > > index e9034a6c003a..000000000000
-> > > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > +++ /dev/null
-> > > @@ -1,476 +0,0 @@
-> > > -Device tree binding vendor prefix registry.  Keep list in alphabetical order.
-> > [...]
-> > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > new file mode 100644
-> > > index 000000000000..be037fb2cada
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > @@ -0,0 +1,975 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >
-> > Is there a license change as well?
-> 
-> It is, as we're trying to dual license schema files when possible. I
-> have permission from Grant who was the primary author. Also, given
-> that the file is 235 different authors with most being 1-2 lines, I
-> don't think that really meets the threshold of being copyright
-> holders.
+No, please put this entry under ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
 
-OK. I was just wondering because the changelog suggests it was only a
-mechanical conversion.
-
-I remember DT may have preference to dual license but based on quick
-grep couldn't find that stated anywhere...
-
-A.
+Thanks
