@@ -1,223 +1,59 @@
-From: guoren@kernel.org
-Subject: [PATCH V3 2/2] irqchip/irq-csky-mpintc: Add triger type and priority
-Date: Mon, 13 May 2019 17:55:39 +0800
-Message-ID: <1557741339-29331-2-git-send-email-guoren@kernel.org>
-References: <1557741339-29331-1-git-send-email-guoren@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Date: Mon, 13 May 2019 12:01:49 +0200
+Message-ID: <20190513100149.w3uvpnuqql4eqwid@flea>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512223955.6lhclj6jr2akmsdx@core.my.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557741339-29331-1-git-send-email-guoren@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190512223955.6lhclj6jr2akmsdx@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jason@lakedaemon.net, tglx@linutronix.de, guoren@kernel.org, ren_guo@c-sky.com
+To: Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, andy.gross@linaro.org, olof@lixom.net, bjorn.andersson@linaro.org, jagan@amarulasolutions.com, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+On Mon, May 13, 2019 at 12:39:55AM +0200, Ondřej Jirman wrote:
+> > +	/*
+> > +	 * clkin = 24MHz
+> > +	 * T acquire = clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
+> > +	 *           = 20us
+> > +	 */
+> > +	regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
+> > +		     SUN50I_THS_CTRL0_T_ACQ(479));
+> > +	/* average over 4 samples */
+> > +	regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
+> > +		     SUN50I_THS_FILTER_EN |
+> > +		     SUN50I_THS_FILTER_TYPE(1));
+> > +	/* period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
+> > +	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
+> > +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
+>
+> Also this math is not all that clear:
+>
+>   period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms
+>
+> SUN50I_H6_THS_PC_TEMP_PERIOD is a macro with an argument. So how does
+> this work?
+>
+> Also, related to this, I've noticed that you removed the interrupt
+> processing from the original driver. Without that you have to make sure
+> that OF contains non-zero polling-delay and polling-delay-passive.
+>
+> Nonzero values are necessary for enabling polling mode of the tz core,
+> otherwise tz core will not read values periodically from your driver.
+>
+> You should documment it in the DT bindings, too. Or keep the interrupt
+> handling for THS.
 
-Support 4 triger types:
- - IRQ_TYPE_LEVEL_HIGH
- - IRQ_TYPE_LEVEL_LOW
- - IRQ_TYPE_EDGE_RISING
- - IRQ_TYPE_EDGE_FALLING
+If there's interrupts for this in the H6, yeah we should use them over
+polling.
 
-Support 0-255 priority setting for each irq.
+Maxime
 
-All of above could be set in DeviceTree file and it still compatible
-with the old DeviceTree format.
-
-Changes for V3:
- - Use IRQ_TYPE_LEVEL_HIGH as default instead of IRQ_TYPE_NONE
- - Remove unnecessary loop in csky_mpintc_handler
-
-Changes for V2:
- - Fixup this_cpu_read() preempted problem.
- - Optimize the coding style.
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
----
- drivers/irqchip/irq-csky-mpintc.c | 113 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 106 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-index c67c961..5bc0868 100644
---- a/drivers/irqchip/irq-csky-mpintc.c
-+++ b/drivers/irqchip/irq-csky-mpintc.c
-@@ -17,6 +17,7 @@
- #include <asm/reg_ops.h>
- 
- static struct irq_domain *root_domain;
-+
- static void __iomem *INTCG_base;
- static void __iomem *INTCL_base;
- 
-@@ -29,11 +30,13 @@ static void __iomem *INTCL_base;
- 
- #define INTCG_ICTLR	0x0
- #define INTCG_CICFGR	0x100
-+#define INTCG_CIPRTR	0x200
- #define INTCG_CIDSTR	0x1000
- 
- #define INTCL_PICTLR	0x0
-+#define INTCL_CFGR	0x14
-+#define INTCL_PRTR	0x20
- #define INTCL_SIGR	0x60
--#define INTCL_HPPIR	0x68
- #define INTCL_RDYIR	0x6c
- #define INTCL_SENR	0xa0
- #define INTCL_CENR	0xa4
-@@ -41,21 +44,66 @@ static void __iomem *INTCL_base;
- 
- static DEFINE_PER_CPU(void __iomem *, intcl_reg);
- 
-+static unsigned long *__trigger;
-+static unsigned long *__priority;
-+
-+#define IRQ_OFFSET(irq) ((irq < COMM_IRQ_BASE) ? irq : (irq - COMM_IRQ_BASE))
-+
-+#define TRIG_BYTE_OFFSET(i)	((((i) * 2) / 32) * 4)
-+#define TRIG_BIT_OFFSET(i)	 (((i) * 2) % 32)
-+
-+#define PRI_BYTE_OFFSET(i)	((((i) * 8) / 32) * 4)
-+#define PRI_BIT_OFFSET(i)	 (((i) * 8) % 32)
-+
-+#define TRIG_VAL(trigger, irq)	(trigger << TRIG_BIT_OFFSET(IRQ_OFFSET(irq)))
-+#define TRIG_VAL_MSK(irq)	    (~(3 << TRIG_BIT_OFFSET(IRQ_OFFSET(irq))))
-+#define PRI_VAL(priority, irq)	(priority << PRI_BIT_OFFSET(IRQ_OFFSET(irq)))
-+#define PRI_VAL_MSK(irq)	  (~(0xff << PRI_BIT_OFFSET(IRQ_OFFSET(irq))))
-+
-+#define TRIG_BASE(irq) \
-+	(TRIG_BYTE_OFFSET(IRQ_OFFSET(irq)) + ((irq < COMM_IRQ_BASE) ? \
-+	(this_cpu_read(intcl_reg) + INTCL_CFGR) : (INTCG_base + INTCG_CICFGR)))
-+
-+#define PRI_BASE(irq) \
-+	(PRI_BYTE_OFFSET(IRQ_OFFSET(irq)) + ((irq < COMM_IRQ_BASE) ? \
-+	(this_cpu_read(intcl_reg) + INTCL_PRTR) : (INTCG_base + INTCG_CIPRTR)))
-+
-+static DEFINE_SPINLOCK(setup_lock);
-+static void setup_trigger_priority(unsigned long irq, unsigned long trigger,
-+				   unsigned long priority)
-+{
-+	unsigned int tmp;
-+
-+	spin_lock(&setup_lock);
-+
-+	/* setup trigger */
-+	tmp = readl_relaxed(TRIG_BASE(irq)) & TRIG_VAL_MSK(irq);
-+
-+	writel_relaxed(tmp | TRIG_VAL(trigger, irq), TRIG_BASE(irq));
-+
-+	/* setup priority */
-+	tmp = readl_relaxed(PRI_BASE(irq)) & PRI_VAL_MSK(irq);
-+
-+	writel_relaxed(tmp | PRI_VAL(priority, irq), PRI_BASE(irq));
-+
-+	spin_unlock(&setup_lock);
-+}
-+
- static void csky_mpintc_handler(struct pt_regs *regs)
- {
- 	void __iomem *reg_base = this_cpu_read(intcl_reg);
- 
--	do {
--		handle_domain_irq(root_domain,
--				  readl_relaxed(reg_base + INTCL_RDYIR),
--				  regs);
--	} while (readl_relaxed(reg_base + INTCL_HPPIR) & BIT(31));
-+	handle_domain_irq(root_domain,
-+		readl_relaxed(reg_base + INTCL_RDYIR), regs);
- }
- 
- static void csky_mpintc_enable(struct irq_data *d)
- {
- 	void __iomem *reg_base = this_cpu_read(intcl_reg);
- 
-+	setup_trigger_priority(d->hwirq, __trigger[d->hwirq],
-+				 __priority[d->hwirq]);
-+
- 	writel_relaxed(d->hwirq, reg_base + INTCL_SENR);
- }
- 
-@@ -73,6 +121,28 @@ static void csky_mpintc_eoi(struct irq_data *d)
- 	writel_relaxed(d->hwirq, reg_base + INTCL_CACR);
- }
- 
-+static int csky_mpintc_set_type(struct irq_data *d, unsigned int type)
-+{
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		__trigger[d->hwirq] = 0;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		__trigger[d->hwirq] = 1;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		__trigger[d->hwirq] = 2;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		__trigger[d->hwirq] = 3;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_SMP
- static int csky_irq_set_affinity(struct irq_data *d,
- 				 const struct cpumask *mask_val,
-@@ -105,6 +175,7 @@ static struct irq_chip csky_irq_chip = {
- 	.irq_eoi	= csky_mpintc_eoi,
- 	.irq_enable	= csky_mpintc_enable,
- 	.irq_disable	= csky_mpintc_disable,
-+	.irq_set_type	= csky_mpintc_set_type,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity = csky_irq_set_affinity,
- #endif
-@@ -125,9 +196,29 @@ static int csky_irqdomain_map(struct irq_domain *d, unsigned int irq,
- 	return 0;
- }
- 
-+static int csky_irq_domain_xlate_cells(struct irq_domain *d,
-+		struct device_node *ctrlr, const u32 *intspec,
-+		unsigned int intsize, unsigned long *out_hwirq,
-+		unsigned int *out_type)
-+{
-+	if (WARN_ON(intsize < 1))
-+		return -EINVAL;
-+
-+	*out_hwirq = intspec[0];
-+	if (intsize > 1)
-+		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-+	else
-+		*out_type = IRQ_TYPE_LEVEL_HIGH;
-+
-+	if (intsize > 2)
-+		__priority[*out_hwirq] = intspec[2];
-+
-+	return 0;
-+}
-+
- static const struct irq_domain_ops csky_irqdomain_ops = {
- 	.map	= csky_irqdomain_map,
--	.xlate	= irq_domain_xlate_onecell,
-+	.xlate	= csky_irq_domain_xlate_cells,
- };
- 
- #ifdef CONFIG_SMP
-@@ -161,6 +252,14 @@ csky_mpintc_init(struct device_node *node, struct device_node *parent)
- 	if (ret < 0)
- 		nr_irq = INTC_IRQS;
- 
-+	__priority = kcalloc(nr_irq, sizeof(unsigned long), GFP_KERNEL);
-+	if (__priority == NULL)
-+		return -ENXIO;
-+
-+	__trigger  = kcalloc(nr_irq, sizeof(unsigned long), GFP_KERNEL);
-+	if (__trigger == NULL)
-+		return -ENXIO;
-+
- 	if (INTCG_base == NULL) {
- 		INTCG_base = ioremap(mfcr("cr<31, 14>"),
- 				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
--- 
-2.7.4
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
