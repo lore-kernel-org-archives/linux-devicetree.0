@@ -1,66 +1,97 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 24/29] arm64: tegra: Add PEX DPD states as pinctrl properties
-Date: Mon, 13 May 2019 23:37:39 +0530
-Message-ID: <20190513180744.16493-25-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42957 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731515AbfEMRVg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 13:21:36 -0400
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v6 2/5] media: dt-bindings: media: document allegro-dvt bindings
+Date: Mon, 13 May 2019 19:21:28 +0200
+Message-Id: <20190513172131.15048-3-m.tretter@pengutronix.de>
+In-Reply-To: <20190513172131.15048-1-m.tretter@pengutronix.de>
+References: <20190513172131.15048-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Michael Tretter <m.tretter@pengutronix.de>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add PEX deep power down states as pinctrl properties to set in PCIe driver.
-In Tegra210, BIAS pads are not in power down mode when clamps are applied.
-To set the pads in DPD, pass the PEX DPD states as pinctrl properties to
-PCIe driver.
+Add device-tree bindings for the Allegro DVT video IP core found on the
+Xilinx ZynqMP EV family.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-V3: No change
+v5 -> v6:
+none
 
-V2: Using standard pinctrl names, default and idle
+v4 -> v5:
+none
 
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+v3 -> v4:
+none
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index a550c0a4d572..3899c54ea28f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -48,6 +48,11 @@
- 			 <&tegra_car 72>,
- 			 <&tegra_car 74>;
- 		reset-names = "pex", "afi", "pcie_x";
+v2 -> v3:
+- rename node to video-codec
+- drop interrupt-names
+- fix compatible in example
+- add clocks to required properties
+
+v1 -> v2:
+none
+---
+ .../devicetree/bindings/media/allegro.txt     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
+
+diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
+new file mode 100644
+index 000000000000..a92e2fbf26c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allegro.txt
+@@ -0,0 +1,43 @@
++Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
++ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
++decoder ip core.
 +
-+		pinctrl-names = "default", "idle";
-+		pinctrl-0 = <&pex_dpd_disable>;
-+		pinctrl-1 = <&pex_dpd_enable>;
++Each actual codec engines is controlled by a microcontroller (MCU). Host
++software uses a provided mailbox interface to communicate with the MCU. The
++MCU share an interrupt.
 +
- 		status = "disabled";
- 
- 		pci@1,0 {
-@@ -848,6 +853,20 @@
- 			pins = "sdmmc3";
- 			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
- 		};
++Required properties:
++  - compatible: value should be one of the following
++    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
++    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
++  - reg: base and length of the memory mapped register region and base and
++    length of the memory mapped sram
++  - reg-names: must include "regs" and "sram"
++  - interrupts: shared interrupt from the MCUs to the processing system
++  - clocks: must contain an entry for each entry in clock-names
++  - clock-names: must include "core_clk", "mcu_clk", "m_axi_core_aclk",
++    "m_axi_mcu_aclk", "s_axi_lite_aclk"
 +
-+		pex_dpd_disable: pex_en {
-+			pex-dpd-disable {
-+				pins = "pex-bias", "pex-clk1", "pex-clk2";
-+				low-power-disable;
-+			};
-+		};
-+
-+		pex_dpd_enable: pex_dis {
-+			pex-dpd-enable {
-+				pins = "pex-bias", "pex-clk1", "pex-clk2";
-+				low-power-enable;
-+			};
-+		};
- 	};
- 
- 	fuse@7000f800 {
++Example:
++	al5e: video-codec@a0009000 {
++		compatible = "allegro,al5e-1.1", "allegro,al5e";
++		reg = <0 0xa0009000 0 0x1000>,
++		      <0 0xa0000000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 0>, <&xlnx_vcu 1>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
++	};
++	al5d: video-codec@a0029000 {
++		compatible = "allegro,al5d-1.1", "allegro,al5d";
++		reg = <0 0xa0029000 0 0x1000>,
++		      <0 0xa0020000 0 0x8000>;
++		reg-names = "regs", "sram";
++		interrupts = <0 96 4>;
++		clocks = <&xlnx_vcu 2>, <&xlnx_vcu 3>,
++			 <&clkc 71>, <&clkc 71>, <&clkc 71>;
++		clock-names = "core_clk", "mcu_clk", "m_axi_core_aclk",
++			      "m_axi_mcu_aclk", "s_axi_lite_aclk"
++	};
 -- 
-2.17.1
+2.20.1
