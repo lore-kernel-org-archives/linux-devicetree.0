@@ -1,32 +1,58 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 1/3] dt-bindings: watchdog: move i.MX system
- controller  watchdog binding to SCU
-Date: Mon, 13 May 2019 10:26:28 -0500
-Message-ID: <20190513152628.GA28757@bogus>
-References: <1557192198-19640-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCHv4 1/2] dt-bindings: cadence-quadspi: add options reset
+ property
+Date: Mon, 13 May 2019 10:28:09 -0500
+Message-ID: <20190513152809.GA28897@bogus>
+References: <20190508134338.20565-1-dinguyen@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557192198-19640-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190508134338.20565-1-dinguyen@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm->
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: linux-mtd@lists.infradead.org, marex@denx.de, tudor.ambarus@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 7 May 2019 01:28:12 +0000, Anson Huang wrote:
-> i.MX system controller watchdog depends on SCU driver to support
-> interrupt function, so it needs to be subnode of SCU node in DT,
-> binding doc should be moved to fsl,scu.txt as well.
+On Wed, May 08, 2019 at 08:43:37AM -0500, Dinh Nguyen wrote:
+> The QSPI module can have an optional reset signals that will hold the
+> module in a reset state.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > ---
-> No change.
+> v4: no change
+> v3: created base on review comments
+> v2: did not exist
+> v1: did not exist
 > ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 15 ++++++++++++++
->  .../bindings/watchdog/fsl-imx-sc-wdt.txt           | 24 ----------------------
->  2 files changed, 15 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
+>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> index 4345c3a6f530..b6264323a03c 100644
+> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> @@ -35,6 +35,8 @@ custom properties:
+>  		  (qspi_n_ss_out).
+>  - cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+>                    and first bit transfer.
+> +- resets	: Must contain an entry for each entry in reset-names.
+> +		  See ../reset/reset.txt for details.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+reset-names needs to be documented with the values and order.
+
+>  
+>  Example:
+>  
+> @@ -50,6 +52,8 @@ Example:
+>  		cdns,fifo-depth = <128>;
+>  		cdns,fifo-width = <4>;
+>  		cdns,trigger-address = <0x00000000>;
+> +		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
+> +		reset-names = "qspi", "qspi-ocp";
+>  
+>  		flash0: n25q00@0 {
+>  			...
+> -- 
+> 2.20.0
+> 
