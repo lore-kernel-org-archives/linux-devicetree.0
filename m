@@ -1,60 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
- reflect documentation
-Date: Mon, 13 May 2019 11:39:47 -0700
-Message-ID: <20190513183947.GJ2085@tuxbook-pro>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v10 1/4] MAINTAINERS: add an entry for for arm64 imx  devicetrees
+Date: Mon, 13 May 2019 11:48:26 -0700
+Message-ID: <e61562bfc80e25bf233ae7fd7b032f83@www.akkea.ca>
+References: <20190513174057.4410-1-angus@akkea.ca>
+ <20190513174057.4410-2-angus@akkea.ca>
+ <CAOMZO5BaQnrDOYogzgpmCExjB+uhYQ8SsxBiMWrSB-1KRtgeVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
+In-Reply-To: <CAOMZO5BaQnrDOYogzgpmCExjB+uhYQ8SsxBiMWrSB-1KRtgeVQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 10 May 04:29 PDT 2019, Amit Kucheria wrote:
-
-Subject indicates pluralism, but this fixes a specific platform
-(board?). I think you should update that.
-
-> The idle-states binding documentation[1] mentions that the
-> 'entry-method' property is required on 64-bit platforms and must be set
-> to "psci".
+On 2019-05-13 11:01, Fabio Estevam wrote:
+> On Mon, May 13, 2019 at 2:41 PM Angus Ainslie (Purism) <angus@akkea.ca> 
+> wrote:
+>> 
+>> Add an explicit reference to imx* devicetrees
+>> 
+>> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+>> ---
+>>  MAINTAINERS | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7707c28628b9..0871a21a5bbb 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1648,6 +1648,7 @@ T:        git 
+>> git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+>>  F:     arch/arm/boot/dts/ls1021a*
+>>  F:     arch/arm64/boot/dts/freescale/fsl-*
+>>  F:     arch/arm64/boot/dts/freescale/qoriq-*
+>> +F:     arch/arm64/boot/dts/freescale/imx*
 > 
-> We fixed up all uses of the entry-method property in
-> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
-> reflect documentation"). But a new one has appeared. Fix it up.
+> No, please put this entry under ARM/FREESCALE IMX / MXC ARM 
+> ARCHITECTURE
 > 
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
 
-The message looks good though, so with a new subject you have my:
+I believe order is important. Would you like it before or after the "N:" 
+entries ? Or just as the last entry.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 2896bbcfa3bb..42e7822a0227 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -51,7 +51,7 @@
->  		 * PSCI node is not added default, U-boot will add missing
->  		 * parts if it determines to use PSCI.
->  		 */
-> -		entry-method = "arm,psci";
-> +		entry-method = "psci";
->  
->  		CPU_PH20: cpu-ph20 {
->  			compatible = "arm,idle-state";
-> -- 
-> 2.17.1
-> 
+> Thanks
