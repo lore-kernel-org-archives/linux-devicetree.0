@@ -1,8 +1,8 @@
 Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 14/29] PCI: tegra: Add SW fixup for RAW violations
-Date: Mon, 13 May 2019 23:37:29 +0530
-Message-ID: <20190513180744.16493-15-mmaddireddy@nvidia.com>
+Subject: [PATCH V3 04/29] PCI: tegra: Mask AFI_INTR in runtime suspend
+Date: Mon, 13 May 2019 23:37:19 +0530
+Message-ID: <20190513180744.16493-5-mmaddireddy@nvidia.com>
 In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,142 +11,127 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The logic which blocks read requests till AFI gets ACK for all outstanding
-writes from memory controller does not behave correctly when number of
-outstanding writes become more than 32 in Tegra124 and Tegra132.
+AFI_INTR is unmasked in tegra_pcie_enable_controller(), mask it to avoid
+unwanted interrupts raised by AFI after pex_rst is asserted.
 
-SW fixup is to prevent writes from accumulating more than 32 by,
- - limiting outstanding posted writes to 14
- - modifying Gen1 and Gen2 UpdateFC timer frequency
+Following sequence triggers such scenario,
+ - tegra_pcie_remove() triggers runtime suspend
+ - pex_rst is asserted in runtime suspend
+ - PRSNT_MAP bit field in RP_PRIV_MISC register changes from EP_PRSNT to
+   EP_ABSNT
+ - This is sensed by AFI and triggers "Slot present pin change" interrupt
+ - tegra_pcie_isr() function accesses AFI register when runtime suspend
+   is going through power off sequence
 
-UpdateFC timer frequency is equal to twice the value of register content
-in nsec. These settings are recommended after stress testing with different
-values.
+rmmod pci-tegra
+ pci_generic_config_write32: 108 callbacks suppressed
+ pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4c may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x9c may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x88 may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x90 may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4 may corrupt adjacent RW1C bits
+ igb 0002:04:00.1: removed PHC on enP2p4s0f1
+ igb 0002:04:00.0: removed PHC on enP2p4s0f0
+ pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4c may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x9c may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x88 may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x90 may corrupt adjacent RW1C bits
+ pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4 may corrupt adjacent RW1C bits
+ rcu: INFO: rcu_preempt self-detected stall on CPU
+ SError Interrupt on CPU0, code 0xbf000002 -- SError
+ CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
+ Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+ pstate: 20000085 (nzCv daIf -PAN -UAO)
+ pc : tegra_pcie_isr+0x58/0x178 [pci_tegra]
+ lr : tegra_pcie_isr+0x40/0x178 [pci_tegra]
+ sp : ffff000010003da0
+ x29: ffff000010003da0 x28: 0000000000000000
+ x27: ffff8000f9e61000 x26: ffff000010fbf420
+ x25: ffff000011427f93 x24: ffff8000fa600410
+ x23: ffff00001129d000 x22: ffff00001129d000
+ x21: ffff8000f18bf3c0 x20: 0000000000000070
+ x19: 00000000ffffffff x18: 0000000000000000
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: 0000000000000000 x14: ffff000008d40a48
+ x13: ffff000008d40a30 x12: ffff000008d40a20
+ x11: ffff000008d40a10 x10: ffff000008d40a00
+ x9 : ffff000008d409e8 x8 : ffff000008d40ae8
+ x7 : ffff000008d40ad0 x6 : ffff000010003e58
+ x5 : ffff8000fac00248 x4 : 0000000000000000
+ x3 : ffff000008d40b08 x2 : fffffffffffffff8
+ x1 : ffff000008d3f4e8 x0 : 00000000ffffffff
+ Kernel panic - not syncing: Asynchronous SError Interrupt
+ CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
+ Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+ Call trace:
+  dump_backtrace+0x0/0x158
+  show_stack+0x14/0x20
+  dump_stack+0xa8/0xcc
+  panic+0x140/0x2f4
+  nmi_panic+0x6c/0x70
+  arm64_serror_panic+0x74/0x80
+  __pte_error+0x0/0x28
+  el1_error+0x84/0xf8
+  tegra_pcie_isr+0x58/0x178 [pci_tegra]
+  __handle_irq_event_percpu+0x70/0x198
+  handle_irq_event_percpu+0x34/0x88
+  handle_irq_event+0x48/0x78
+  handle_fasteoi_irq+0xb4/0x190
+  generic_handle_irq+0x24/0x38
+  __handle_domain_irq+0x5c/0xb8
+  gic_handle_irq+0x58/0xa8
+  el1_irq+0xb8/0x180
+  cpuidle_enter_state+0x138/0x358
+  cpuidle_enter+0x18/0x20
+  call_cpuidle+0x1c/0x48
+  do_idle+0x230/0x2d0
+  cpu_startup_entry+0x20/0x28
+  rest_init+0xd4/0xe0
+  arch_call_rest_init+0xc/0x14
+  start_kernel+0x444/0x470
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V3: No change
+V3:
+* Update the commit log and comment to reflect why this fix is required
+* MSI interrupt is not disabled
 
-V2: Changed update_fc_val to update_fc_threshold
+V2: This is new patch in V2
 
- drivers/pci/controller/pci-tegra.c | 34 ++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9c28f1d9f177..be39f28a7a28 100644
+index bb3c0af9c830..d0e517f084a1 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -178,6 +178,13 @@
- 
- #define AFI_PEXBIAS_CTRL_0		0x168
- 
-+#define RP_PRIV_XP_DL		0x00000494
-+#define  RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD	(0x1ff << 1)
-+
-+#define RP_RX_HDR_LIMIT		0x00000e00
-+#define  RP_RX_HDR_LIMIT_PW_MASK	(0xff << 8)
-+#define  RP_RX_HDR_LIMIT_PW		(0x0e << 8)
-+
- #define RP_ECTL_2_R1	0x00000e84
- #define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
- 
-@@ -208,6 +215,7 @@
- #define  RP_VEND_XP_DL_UP			(1 << 30)
- #define  RP_VEND_XP_OPPORTUNISTIC_ACK		(1 << 27)
- #define  RP_VEND_XP_OPPORTUNISTIC_UPDATEFC	(1 << 28)
-+#define  RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK	(0xff << 18)
- 
- #define RP_VEND_CTL0	0x00000f44
- #define  RP_VEND_CTL0_DSK_RST_PULSE_WIDTH_MASK	(0xf << 12)
-@@ -301,6 +309,7 @@ struct tegra_pcie_soc {
- 	u32 tx_ref_sel;
- 	u32 pads_refclk_cfg0;
- 	u32 pads_refclk_cfg1;
-+	u32 update_fc_threshold;
- 	bool has_pex_clkreq_en;
- 	bool has_pex_bias_ctrl;
- 	bool has_intr_prsnt_sense;
-@@ -310,6 +319,7 @@ struct tegra_pcie_soc {
- 	bool program_uphy;
- 	bool update_clamp_threshold;
- 	bool program_deskew_time;
-+	bool raw_violation_fixup;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -641,6 +651,23 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= RP_VEND_CTL0_DSK_RST_PULSE_WIDTH;
- 		writel(value, port->base + RP_VEND_CTL0);
- 	}
-+
-+	/* Fixup for read after write violation. */
-+	if (soc->raw_violation_fixup) {
-+		value = readl(port->base + RP_RX_HDR_LIMIT);
-+		value &= ~RP_RX_HDR_LIMIT_PW_MASK;
-+		value |= RP_RX_HDR_LIMIT_PW;
-+		writel(value, port->base + RP_RX_HDR_LIMIT);
-+
-+		value = readl(port->base + RP_PRIV_XP_DL);
-+		value |= RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD;
-+		writel(value, port->base + RP_PRIV_XP_DL);
-+
-+		value = readl(port->base + RP_VEND_XP);
-+		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
-+		value |= soc->update_fc_threshold;
-+		writel(value, port->base + RP_VEND_XP);
-+	}
+@@ -1622,6 +1622,15 @@ static int tegra_pcie_disable_msi(struct tegra_pcie *pcie)
+ 	return 0;
  }
  
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
-@@ -2382,6 +2409,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
- 	.program_deskew_time = false,
-+	.raw_violation_fixup = false,
- 	.ectl.enable = false,
- };
++static void tegra_pcie_disable_interrupts(struct tegra_pcie *pcie)
++{
++	u32 value;
++
++	value = afi_readl(pcie, AFI_INTR_MASK);
++	value &= ~AFI_INTR_MASK_INT_MASK;
++	afi_writel(pcie, value, AFI_INTR_MASK);
++}
++
+ static int tegra_pcie_get_xbar_config(struct tegra_pcie *pcie, u32 lanes,
+ 				      u32 *xbar)
+ {
+@@ -2466,6 +2475,11 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
+ 		tegra_pcie_pme_turnoff(port);
  
-@@ -2408,6 +2436,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.program_uphy = true,
- 	.update_clamp_threshold = false,
- 	.program_deskew_time = false,
-+	.raw_violation_fixup = false,
- 	.ectl.enable = false,
- };
+ 	tegra_pcie_disable_ports(pcie);
++	/*
++	 * AFI_INTR is unmasked in tegra_pcie_enable_controller(), mask it to
++	 * avoid unwanted interrupts raised by AFI after pex_rst is asserted.
++	 */
++	tegra_pcie_disable_interrupts(pcie);
  
-@@ -2418,6 +2447,8 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
- 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
- 	.pads_refclk_cfg0 = 0x44ac44ac,
-+	/* FC threshold is bit[25:18] */
-+	.update_fc_threshold = 0x03fc0000,
- 	.has_pex_clkreq_en = true,
- 	.has_pex_bias_ctrl = true,
- 	.has_intr_prsnt_sense = true,
-@@ -2427,6 +2458,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
- 	.program_deskew_time = false,
-+	.raw_violation_fixup = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2446,6 +2478,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
- 	.program_deskew_time = true,
-+	.raw_violation_fixup = false,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2484,6 +2517,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.program_uphy = false,
- 	.update_clamp_threshold = false,
- 	.program_deskew_time = false,
-+	.raw_violation_fixup = false,
- 	.ectl.enable = false,
- };
- 
+ 	if (pcie->soc->program_uphy) {
+ 		err = tegra_pcie_phy_power_off(pcie);
 -- 
 2.17.1
