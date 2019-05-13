@@ -1,45 +1,91 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
-Date: Mon, 13 May 2019 15:47:26 -0500
-Message-ID: <CAL_JsqJRdjoTo2hGrKWvcyer18wt9N6w0nkfa9xx_e2xJ6pkYg@mail.gmail.com>
-References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 v2 1/3] dt-bindings: i2c: extend existing opencore
+ bindings.
+Date: Mon, 13 May 2019 15:56:15 -0500
+Message-ID: <20190513205615.GA5844@bogus>
+References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+ <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
+Content-Disposition: inline
+In-Reply-To: <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>
-Cc: devicetree@vger.kernel.org, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 7:06 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
->
-> For IP blocks that are generated from the public, open-source
-> sifive-blocks repository, describe the version numbering policy
-> that its maintainers intend to use, upon request from Rob
-> Herring <robh@kernel.org>.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Megan Wachs <megan@sifive.com>
-> Cc: Wesley Terpstra <wesley@sifive.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+On Tue, May 07, 2019 at 08:45:06PM +0530, Sagar Shrikant Kadam wrote:
+> Add FU540-C000 specific device tree bindings to already
+> available i2-ocores file. This device is available on
+> HiFive Unleashed Rev A00 board.
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 > ---
->
-> Hi Rob, please let me know if this document works with your
-> requirements, or if some changes are needed.  - Paul
->
->  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+>  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> index 17bef9a..f6bcf90 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -2,6 +2,7 @@ Device tree configuration for i2c-ocores
+>  
+>  Required properties:
+>  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+> +                    "sifive,fu540-c000-i2c" or "sifive,i2c0"
 
-I just noticed this was never re-spun and applied. We now have
-bindings in tree referring to it though.
+If this is Opencores IP, does it really follow the Sifive versioning 
+convention? If so, please reference sifive-blocks-ip-versioning.txt 
+(which appears to have missed going upstream). Also, referencing the IP 
+repository would be good too. If this IP block doesn't follow the same 
+convention, then don't try using it for this binding.
 
-Rob
+>  - reg             : bus address start and address range size of device
+>  - interrupts      : interrupt number
+>  - clocks          : handle to the controller clock; see the note below.
+> @@ -67,3 +68,22 @@ or
+>  			reg = <0x60>;
+>  		};
+>  	};
+> +or
+
+Just a new compatible isn't really a reason to add an example.
+
+> +	/*
+> +	  An Opencore based I2C node in FU540-C000 chip from SiFive
+> +	  This chip has a hardware erratum for broken IRQ
+> +	  so it's recommended not to define interrupt in the device node
+
+Then interrupts needs to be optional.
+
+> +	*/
+> +	i2c@10030000 {
+> +			compatible = "sifive,i2c0","sifive,fu540-c000-i2c";
+> +			reg = <0x0 0x10030000 0x0 0x1000>;
+> +			reg-names = "i2c-control";
+
+Not doucmented.
+
+> +			clocks = <&tlclk>;
+> +			clock-frequency = <100000>;
+> +
+> +			reg-shift = <2>;
+> +			reg-io-width = <1>;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +	};
+> -- 
+> 1.9.1
+> 
+> 
+> -- 
+> The information transmitted is intended only for the person or entity to 
+> which it is addressed and may contain confidential and/or privileged 
+> material. If you are not the intended recipient of this message please do 
+> not read, copy, use or disclose this communication and notify the sender 
+> immediately. It should be noted that any review, retransmission, 
+> dissemination or other use of, or taking action or reliance upon, this 
+> information by persons or entities other than the intended recipient is 
+> prohibited.
