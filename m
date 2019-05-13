@@ -1,40 +1,27 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v9 3/3] dt-bindings: arm: fsl: Add the imx8mq boards
-Date: Mon, 13 May 2019 07:55:39 -0700
-Message-ID: <20190513145539.28174-4-angus@akkea.ca>
-References: <20190513145539.28174-1-angus@akkea.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 04/10] dt-bindings: mfd: Add compatible for the
+ MediaTek MT6358 PMIC
+Date: Mon, 13 May 2019 10:04:20 -0500
+Message-ID: <20190513150420.GA16152@bogus>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+ <20190503093117.54830-5-hsin-hsiung.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513145539.28174-1-angus@akkea.ca>
+Content-Disposition: inline
+In-Reply-To: <20190503093117.54830-5-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add an entry for imx8mq based boards
+On Fri, May 03, 2019 at 05:31:11PM +0800, Hsin-Hsiung Wang wrote:
+> This adds compatible for the MediaTek MT6358 PMIC.
+> 
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 407138ebc0d0..41364b127200 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -177,6 +177,13 @@ properties:
-               - fsl,imx8mm-evk            # i.MX8MM EVK Board
-           - const: fsl,imx8mm
- 
-+      - description: i.MX8MQ based Boards
-+        items:
-+          - enum:
-+              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-+              - purism,librem5-devkit     # Purism Librem5 devkit
-+          - const: fsl,imx8mq
-+
-       - description: i.MX8QXP based Boards
-         items:
-           - enum:
--- 
-2.17.1
