@@ -1,153 +1,101 @@
-Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from secvs01.rockwellcollins.com ([205.175.225.240]:20744 "EHLO
-        secvs01.rockwellcollins.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730696AbfEMOwr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 May 2019 10:52:47 -0400
-Received: by mail-io1-f72.google.com with SMTP id s24so10095389iot.0
-        for <devicetree@vger.kernel.org>; Mon, 13 May 2019 07:52:45 -0700 (PDT)
-MIME-Version: 1.0
+Return-Path: <SRS0=i4KR=TN=analog.com=StefanSerban.Popa@kernel.org>
+From: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
+Subject: Re: [PATCH v2 3/6] iio: ad7949: Support configuration read-back
+Date: Mon, 13 May 2019 10:04:47 +0000
+Message-ID: <1557741886.29142.3.camel@analog.com>
 References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
- <1556813672-49861-3-git-send-email-adam.michaelis@rockwellcollins.com>
- <20190505154227.1735b1b2@archlinux> <CALMrGWV6rtYQShtm7uBQygtdOpPW30mLnKMxb2Jk8pY68B6yyw@mail.gmail.com>
- <20190511113112.2da6385d@archlinux> <1557741886.29142.3.camel@analog.com>
-In-Reply-To: <1557741886.29142.3.camel@analog.com>
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Date: Mon, 13 May 2019 09:52:33 -0500
-Message-ID: <CALMrGWWiNq03DidPQQ38gG81jyYuLDLx_ye_LUz-viHVt1c=+w@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v2 3/6] iio: ad7949: Support configuration read-back
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "charles-antoine.couret@essensium.com" <charles-antoine.couret@essensium.com>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "clayton.shotwell@rockwellcollins.com" <clayton.shotwell@rockwellcollins.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "brandon.maier@rockwellcollins.com" <brandon.maier@rockwellcollins.com>
+	 <1556813672-49861-3-git-send-email-adam.michaelis@rockwellcollins.com>
+	 <20190505154227.1735b1b2@archlinux>
+	 <CALMrGWV6rtYQShtm7uBQygtdOpPW30mLnKMxb2Jk8pY68B6yyw@mail.gmail.com>
+	 <20190511113112.2da6385d@archlinux>
+In-Reply-To: <20190511113112.2da6385d@archlinux>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E6541262E312764CBD6D8CC0A43AEDEC@analog.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: "adam.michaelis@collins.com" <adam.michaelis@collins.com>, "jic23@kernel.org" <jic23@kernel.org>
+Cc: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "Ardelean," Alexandru" <alexandru.Ardelean@analog.com>, "devicetree@vger.kernel.orgdevicetree@vger.kernel.org, "charles-antoine.couret@essensium.com" <charles-antoine.couret@essensium.com>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "clayton.shotwell@rockwellcollins.com" <clayton.shotwell@rockwellcollins.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "brandon.maier@rockwellcollins.com" <brandon.maier@rockwellcollins.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 13, 2019 at 5:04 AM Popa, Stefan Serban
-<StefanSerban.Popa@analog.com> wrote:
->
-> On Sb, 2019-05-11 at 11:31 +0100, Jonathan Cameron wrote:
-> > [External]
-> >
-> >
-> > On Tue, 7 May 2019 14:53:32 -0500
-> > Adam Michaelis <adam.michaelis@collins.com> wrote:
-> >
-> > >
-> > > On Sun, May 5, 2019 at 9:42 AM Jonathan Cameron <jic23@kernel.org>
-> > > wrote:
-> > > >
-> > > >
-> > > > On Thu,  2 May 2019 11:14:29 -0500
-> > > > Adam Michaelis <adam.michaelis@rockwellcollins.com> wrote:
-> > > >
-> > > > >
-> > > > > Adds device tree parameter to set the configuration read-back bit
-> > > > > in the configuration register to tell the AD7949 to include the
-> > > > > value of
-> > > > > the configuration register at the time the current sample was
-> > > > > acquired
-> > > > > when reading from the part.
-> > > > >
-> > > > > Further work must be done to make read-back information available
-> > > > > to
-> > > > > consumer.
-> > > > This needs some explanation of why it is useful at all. I'm certainly
-> > > > unclear
-> > > > on why it would be useful to configure this at boot time.
-> > > >
-> > > > Code looks fine.
-> > > >
-> > > > Jonathan
-> > > >
-> > > The configuration read-back feature is being maintained from the
-> > > original version of this driver. Before adding the device tree entry,
-> > > there was no way to change this setting other than debugfs raw access
-> > > to the SPI interface, and there is still no access to the returned
-> > > configuration data should the feature be enabled. I would be willing
-> > > to remove the feature altogether, but wanted to tread softly on
-> > > existing features.
-> > Ah. Makes sense.  My gut feeling is to drop it.
-> >
-> > Anyone at Analog have a view on this?
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >
->
-> Hi,
->
-> It is not obvious to me why this feature would be useful. I would not add
-> it.
->
-> Regards,
-> -Stefan
->
-
-I have removed this feature in V3 of the patch series.
-
-Thank you for the feedback,
-Adam
-
-> > >
-> > >
-> > > Adam
-> > > >
-> > > > >
-> > > > >
-> > > > > Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-> > > > > ---
-> > > > >       V2: Add some defines to reduce use of magic numbers.
-> > > > > ---
-> > > > >  drivers/iio/adc/ad7949.c | 12 +++++++++++-
-> > > > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
-> > > > > index afc1361af5fb..7820e1097787 100644
-> > > > > --- a/drivers/iio/adc/ad7949.c
-> > > > > +++ b/drivers/iio/adc/ad7949.c
-> > > > > @@ -69,6 +69,7 @@ struct ad7949_adc_spec {
-> > > > >   * @iio_dev: reference to iio structure
-> > > > >   * @spi: reference to spi structure
-> > > > >   * @ref_sel: selected reference voltage source
-> > > > > + * @cfg_readback: whether reads will include configuration data
-> > > > >   * @resolution: resolution of the chip
-> > > > >   * @cfg: copy of the configuration register
-> > > > >   * @current_channel: current channel in use
-> > > > > @@ -80,6 +81,7 @@ struct ad7949_adc_chip {
-> > > > >       struct iio_dev *indio_dev;
-> > > > >       struct spi_device *spi;
-> > > > >       enum ad7949_ref_sel ref_sel;
-> > > > > +     bool cfg_readback;
-> > > > >       u8 resolution;
-> > > > >       u16 cfg;
-> > > > >       unsigned int current_channel;
-> > > > > @@ -283,7 +285,11 @@ static int ad7949_spi_init(struct
-> > > > > ad7949_adc_chip *ad7949_adc)
-> > > > >                       AD7949_CFG_REF_SEL_MASK;
-> > > > >       adc_config |= (AD7949_CFG_SEQ_DISABLED <<
-> > > > > AD7949_CFG_SEQ_SHIFT) &
-> > > > >                       AD7949_CFG_SEQ_MASK;
-> > > > > -     adc_config |= AD7949_CFG_READBACK_DIS;
-> > > > > +
-> > > > > +     if (ad7949_adc->cfg_readback)
-> > > > > +             adc_config |= AD7949_CFG_READBACK_EN;
-> > > > > +     else
-> > > > > +             adc_config |= AD7949_CFG_READBACK_DIS;
-> > > > >
-> > > > >       ret = ad7949_spi_write_cfg(ad7949_adc,
-> > > > >                       adc_config,
-> > > > > @@ -331,6 +337,10 @@ static int ad7949_spi_probe(struct spi_device
-> > > > > *spi)
-> > > > >       indio_dev->num_channels = spec->num_channels;
-> > > > >       ad7949_adc->resolution = spec->resolution;
-> > > > >
-> > > > > +     ad7949_adc->cfg_readback = of_property_read_bool(
-> > > > > +                     ad7949_adc->indio_dev->dev.of_node,
-> > > > > +                     "adi,cfg-readback");
-> > > > > +
-> > > > >       ret = of_property_read_u32(ad7949_adc->indio_dev-
-> > > > > >dev.of_node,
-> > > > >                       "adi,reference-select",
-> > > > >                       &temp);
-> > > --
+T24gU2IsIDIwMTktMDUtMTEgYXQgMTE6MzEgKzAxMDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBPbiBUdWUsIDcgTWF5IDIwMTkgMTQ6NTM6MzIgLTA1
+MDANCj4gQWRhbSBNaWNoYWVsaXMgPGFkYW0ubWljaGFlbGlzQGNvbGxpbnMuY29tPiB3cm90ZToN
+Cj4gDQo+ID4gDQo+ID4gT24gU3VuLCBNYXkgNSwgMjAxOSBhdCA5OjQyIEFNIEpvbmF0aGFuIENh
+bWVyb24gPGppYzIzQGtlcm5lbC5vcmc+DQo+ID4gd3JvdGU6DQo+ID4gPiANCj4gPiA+IA0KPiA+
+ID4gT24gVGh1LMKgwqAyIE1heSAyMDE5IDExOjE0OjI5IC0wNTAwDQo+ID4gPiBBZGFtIE1pY2hh
+ZWxpcyA8YWRhbS5taWNoYWVsaXNAcm9ja3dlbGxjb2xsaW5zLmNvbT4gd3JvdGU6DQo+ID4gPiAN
+Cj4gPiA+ID4gDQo+ID4gPiA+IEFkZHMgZGV2aWNlIHRyZWUgcGFyYW1ldGVyIHRvIHNldCB0aGUg
+Y29uZmlndXJhdGlvbiByZWFkLWJhY2sgYml0DQo+ID4gPiA+IGluIHRoZSBjb25maWd1cmF0aW9u
+IHJlZ2lzdGVyIHRvIHRlbGwgdGhlIEFENzk0OSB0byBpbmNsdWRlIHRoZQ0KPiA+ID4gPiB2YWx1
+ZSBvZg0KPiA+ID4gPiB0aGUgY29uZmlndXJhdGlvbiByZWdpc3RlciBhdCB0aGUgdGltZSB0aGUg
+Y3VycmVudCBzYW1wbGUgd2FzDQo+ID4gPiA+IGFjcXVpcmVkDQo+ID4gPiA+IHdoZW4gcmVhZGlu
+ZyBmcm9tIHRoZSBwYXJ0Lg0KPiA+ID4gPiANCj4gPiA+ID4gRnVydGhlciB3b3JrIG11c3QgYmUg
+ZG9uZSB0byBtYWtlIHJlYWQtYmFjayBpbmZvcm1hdGlvbiBhdmFpbGFibGUNCj4gPiA+ID4gdG8N
+Cj4gPiA+ID4gY29uc3VtZXIuDQo+ID4gPiBUaGlzIG5lZWRzIHNvbWUgZXhwbGFuYXRpb24gb2Yg
+d2h5IGl0IGlzIHVzZWZ1bCBhdCBhbGwuIEknbSBjZXJ0YWlubHkNCj4gPiA+IHVuY2xlYXINCj4g
+PiA+IG9uIHdoeSBpdCB3b3VsZCBiZSB1c2VmdWwgdG8gY29uZmlndXJlIHRoaXMgYXQgYm9vdCB0
+aW1lLg0KPiA+ID4gDQo+ID4gPiBDb2RlIGxvb2tzIGZpbmUuDQo+ID4gPiANCj4gPiA+IEpvbmF0
+aGFuDQo+ID4gPiANCj4gPiBUaGUgY29uZmlndXJhdGlvbiByZWFkLWJhY2sgZmVhdHVyZSBpcyBi
+ZWluZyBtYWludGFpbmVkIGZyb20gdGhlDQo+ID4gb3JpZ2luYWwgdmVyc2lvbiBvZiB0aGlzIGRy
+aXZlci4gQmVmb3JlIGFkZGluZyB0aGUgZGV2aWNlIHRyZWUgZW50cnksDQo+ID4gdGhlcmUgd2Fz
+IG5vIHdheSB0byBjaGFuZ2UgdGhpcyBzZXR0aW5nIG90aGVyIHRoYW4gZGVidWdmcyByYXcgYWNj
+ZXNzDQo+ID4gdG8gdGhlIFNQSSBpbnRlcmZhY2UsIGFuZCB0aGVyZSBpcyBzdGlsbCBubyBhY2Nl
+c3MgdG8gdGhlIHJldHVybmVkDQo+ID4gY29uZmlndXJhdGlvbiBkYXRhIHNob3VsZCB0aGUgZmVh
+dHVyZSBiZSBlbmFibGVkLiBJIHdvdWxkIGJlIHdpbGxpbmcNCj4gPiB0byByZW1vdmUgdGhlIGZl
+YXR1cmUgYWx0b2dldGhlciwgYnV0IHdhbnRlZCB0byB0cmVhZCBzb2Z0bHkgb24NCj4gPiBleGlz
+dGluZyBmZWF0dXJlcy4NCj4gQWguIE1ha2VzIHNlbnNlLsKgwqBNeSBndXQgZmVlbGluZyBpcyB0
+byBkcm9wIGl0Lg0KPiANCj4gQW55b25lIGF0IEFuYWxvZyBoYXZlIGEgdmlldyBvbiB0aGlzPw0K
+PiANCj4gVGhhbmtzLA0KPiANCj4gSm9uYXRoYW4NCj4gDQoNCkhpLMKgDQoNCkl0IGlzIG5vdCBv
+YnZpb3VzIHRvIG1lIHdoeSB0aGlzIGZlYXR1cmUgd291bGQgYmUgdXNlZnVsLiBJIHdvdWxkIG5v
+dCBhZGQNCml0Lg0KDQpSZWdhcmRzLA0KLVN0ZWZhbg0KDQo+ID4gDQo+ID4gDQo+ID4gQWRhbQ0K
+PiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQWRhbSBN
+aWNoYWVsaXMgPGFkYW0ubWljaGFlbGlzQHJvY2t3ZWxsY29sbGlucy5jb20+DQo+ID4gPiA+IC0t
+LQ0KPiA+ID4gPiDCoMKgwqDCoMKgwqBWMjogQWRkIHNvbWUgZGVmaW5lcyB0byByZWR1Y2UgdXNl
+IG9mIG1hZ2ljIG51bWJlcnMuDQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiDCoGRyaXZlcnMvaWlvL2Fk
+Yy9hZDc5NDkuYyB8IDEyICsrKysrKysrKysrLQ0KPiA+ID4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAx
+MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9paW8vYWRjL2FkNzk0OS5jIGIvZHJpdmVycy9paW8vYWRjL2FkNzk0OS5j
+DQo+ID4gPiA+IGluZGV4IGFmYzEzNjFhZjVmYi4uNzgyMGUxMDk3Nzg3IDEwMDY0NA0KPiA+ID4g
+PiAtLS0gYS9kcml2ZXJzL2lpby9hZGMvYWQ3OTQ5LmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9p
+aW8vYWRjL2FkNzk0OS5jDQo+ID4gPiA+IEBAIC02OSw2ICs2OSw3IEBAIHN0cnVjdCBhZDc5NDlf
+YWRjX3NwZWMgew0KPiA+ID4gPiDCoCAqIEBpaW9fZGV2OiByZWZlcmVuY2UgdG8gaWlvIHN0cnVj
+dHVyZQ0KPiA+ID4gPiDCoCAqIEBzcGk6IHJlZmVyZW5jZSB0byBzcGkgc3RydWN0dXJlDQo+ID4g
+PiA+IMKgICogQHJlZl9zZWw6IHNlbGVjdGVkIHJlZmVyZW5jZSB2b2x0YWdlIHNvdXJjZQ0KPiA+
+ID4gPiArICogQGNmZ19yZWFkYmFjazogd2hldGhlciByZWFkcyB3aWxsIGluY2x1ZGUgY29uZmln
+dXJhdGlvbiBkYXRhDQo+ID4gPiA+IMKgICogQHJlc29sdXRpb246IHJlc29sdXRpb24gb2YgdGhl
+IGNoaXANCj4gPiA+ID4gwqAgKiBAY2ZnOiBjb3B5IG9mIHRoZSBjb25maWd1cmF0aW9uIHJlZ2lz
+dGVyDQo+ID4gPiA+IMKgICogQGN1cnJlbnRfY2hhbm5lbDogY3VycmVudCBjaGFubmVsIGluIHVz
+ZQ0KPiA+ID4gPiBAQCAtODAsNiArODEsNyBAQCBzdHJ1Y3QgYWQ3OTQ5X2FkY19jaGlwIHsNCj4g
+PiA+ID4gwqDCoMKgwqDCoMKgc3RydWN0IGlpb19kZXYgKmluZGlvX2RldjsNCj4gPiA+ID4gwqDC
+oMKgwqDCoMKgc3RydWN0IHNwaV9kZXZpY2UgKnNwaTsNCj4gPiA+ID4gwqDCoMKgwqDCoMKgZW51
+bSBhZDc5NDlfcmVmX3NlbCByZWZfc2VsOw0KPiA+ID4gPiArwqDCoMKgwqDCoGJvb2wgY2ZnX3Jl
+YWRiYWNrOw0KPiA+ID4gPiDCoMKgwqDCoMKgwqB1OCByZXNvbHV0aW9uOw0KPiA+ID4gPiDCoMKg
+wqDCoMKgwqB1MTYgY2ZnOw0KPiA+ID4gPiDCoMKgwqDCoMKgwqB1bnNpZ25lZCBpbnQgY3VycmVu
+dF9jaGFubmVsOw0KPiA+ID4gPiBAQCAtMjgzLDcgKzI4NSwxMSBAQCBzdGF0aWMgaW50IGFkNzk0
+OV9zcGlfaW5pdChzdHJ1Y3QNCj4gPiA+ID4gYWQ3OTQ5X2FkY19jaGlwICphZDc5NDlfYWRjKQ0K
+PiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoEFENzk0
+OV9DRkdfUkVGX1NFTF9NQVNLOw0KPiA+ID4gPiDCoMKgwqDCoMKgwqBhZGNfY29uZmlnIHw9IChB
+RDc5NDlfQ0ZHX1NFUV9ESVNBQkxFRCA8PA0KPiA+ID4gPiBBRDc5NDlfQ0ZHX1NFUV9TSElGVCkg
+Jg0KPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoEFE
+Nzk0OV9DRkdfU0VRX01BU0s7DQo+ID4gPiA+IC3CoMKgwqDCoMKgYWRjX2NvbmZpZyB8PSBBRDc5
+NDlfQ0ZHX1JFQURCQUNLX0RJUzsNCj4gPiA+ID4gKw0KPiA+ID4gPiArwqDCoMKgwqDCoGlmIChh
+ZDc5NDlfYWRjLT5jZmdfcmVhZGJhY2spDQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoGFkY19jb25maWcgfD0gQUQ3OTQ5X0NGR19SRUFEQkFDS19FTjsNCj4gPiA+ID4gK8KgwqDC
+oMKgwqBlbHNlDQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkY19jb25maWcg
+fD0gQUQ3OTQ5X0NGR19SRUFEQkFDS19ESVM7DQo+ID4gPiA+IA0KPiA+ID4gPiDCoMKgwqDCoMKg
+wqByZXQgPSBhZDc5NDlfc3BpX3dyaXRlX2NmZyhhZDc5NDlfYWRjLA0KPiA+ID4gPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkY19jb25maWcsDQo+ID4gPiA+
+IEBAIC0zMzEsNiArMzM3LDEwIEBAIHN0YXRpYyBpbnQgYWQ3OTQ5X3NwaV9wcm9iZShzdHJ1Y3Qg
+c3BpX2RldmljZQ0KPiA+ID4gPiAqc3BpKQ0KPiA+ID4gPiDCoMKgwqDCoMKgwqBpbmRpb19kZXYt
+Pm51bV9jaGFubmVscyA9IHNwZWMtPm51bV9jaGFubmVsczsNCj4gPiA+ID4gwqDCoMKgwqDCoMKg
+YWQ3OTQ5X2FkYy0+cmVzb2x1dGlvbiA9IHNwZWMtPnJlc29sdXRpb247DQo+ID4gPiA+IA0KPiA+
+ID4gPiArwqDCoMKgwqDCoGFkNzk0OV9hZGMtPmNmZ19yZWFkYmFjayA9IG9mX3Byb3BlcnR5X3Jl
+YWRfYm9vbCgNCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoGFkNzk0OV9hZGMtPmluZGlvX2Rldi0+ZGV2Lm9mX25vZGUsDQo+ID4gPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiYWRpLGNmZy1yZWFkYmFjayIpOw0K
+PiA+ID4gPiArDQo+ID4gPiA+IMKgwqDCoMKgwqDCoHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMy
+KGFkNzk0OV9hZGMtPmluZGlvX2Rldi0NCj4gPiA+ID4gPmRldi5vZl9ub2RlLA0KPiA+ID4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJhZGkscmVmZXJlbmNl
+LXNlbGVjdCIsDQo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgJnRlbXApOw0KPiA+IC0t
