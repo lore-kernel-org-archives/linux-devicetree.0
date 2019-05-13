@@ -1,58 +1,58 @@
-Return-Path: <SRS0=qLWK=TP=renesas.com=prvs=4038260dfd=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 05/13] dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
-Date: Wed, 15 May 2019 10:20:40 -0500
-Message-ID: <20190515152048.42363-6-chris.brandt@renesas.com>
-In-Reply-To: <20190515152048.42363-1-chris.brandt@renesas.com>
-References: <20190515152048.42363-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32813 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729846AbfEMRVg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 13:21:36 -0400
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v6 1/5] videobuf2-v4l2: set last_buffer_dequeued in dqbuf
+Date: Mon, 13 May 2019 19:21:27 +0200
+Message-Id: <20190513172131.15048-2-m.tretter@pengutronix.de>
+In-Reply-To: <20190513172131.15048-1-m.tretter@pengutronix.de>
+References: <20190513172131.15048-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, hverkuil@xs4all.nl, Hans Verkuil <hverkuil-cisco@xs4all.nl>
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/A2 (R7S9210) SoC bindings.
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
-v2:
- * added reviewed-by
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+last_buffer_dequeued was set to true in __fill_v4l2_buffer, but this
+is called for qbuf as well. Move it to vb2_dqbuf.
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index fa58663b7641..7f7a2ed2c9b1 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -1,10 +1,12 @@
- * Renesas R-Car generation 3 USB 2.0 PHY
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+---
+ drivers/media/common/videobuf2/videobuf2-v4l2.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+index fb9ac7696fc6..40d76eb4c2fe 100644
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -563,11 +563,6 @@ static void __fill_v4l2_buffer(struct vb2_buffer *vb, void *pb)
+ 		b->flags |= V4L2_BUF_FLAG_REQUEST_FD;
+ 		b->request_fd = vbuf->request_fd;
+ 	}
+-
+-	if (!q->is_output &&
+-		b->flags & V4L2_BUF_FLAG_DONE &&
+-		b->flags & V4L2_BUF_FLAG_LAST)
+-		q->last_buffer_dequeued = true;
+ }
  
- This file provides information on what the device node for the R-Car generation
--3, RZ/G1C and RZ/G2 USB 2.0 PHY contain.
-+3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
+ /*
+@@ -786,6 +781,11 @@ int vb2_dqbuf(struct vb2_queue *q, struct v4l2_buffer *b, bool nonblocking)
  
- Required properties:
--- compatible: "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
-+- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
-+	      SoC.
-+	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
- 	      SoC.
- 	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
- 	      SoC.
-@@ -20,8 +22,8 @@ Required properties:
- 	      R8A77990 SoC.
- 	      "renesas,usb2-phy-r8a77995" if the device is a part of an
- 	      R8A77995 SoC.
--	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 or RZ/G2
--	      compatible device.
-+	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
-+	      RZ/A2 compatible device.
+ 	ret = vb2_core_dqbuf(q, NULL, b, nonblocking);
  
- 	      When compatible with the generic version, nodes must list the
- 	      SoC-specific version corresponding to the platform first
++	if (!q->is_output &&
++	    b->flags & V4L2_BUF_FLAG_DONE &&
++	    b->flags & V4L2_BUF_FLAG_LAST)
++		q->last_buffer_dequeued = true;
++
+ 	/*
+ 	 *  After calling the VIDIOC_DQBUF V4L2_BUF_FLAG_DONE must be
+ 	 *  cleared.
 -- 
-2.16.1
+2.20.1
