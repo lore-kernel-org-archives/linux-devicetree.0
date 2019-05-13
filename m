@@ -1,39 +1,23 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/4] dt-bindings: fsl: scu: add ocotp binding
-Date: Mon, 13 May 2019 16:05:30 -0500
-Message-ID: <20190513210530.GA30749@bogus>
-References: <20190508030927.16668-1-peng.fan@nxp.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
+Date: Mon, 13 May 2019 14:07:05 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1905131406480.21198@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com> <CAL_JsqJRdjoTo2hGrKWvcyer18wt9N6w0nkfa9xx_e2xJ6pkYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190508030927.16668-1-peng.fan@nxp.com>
+In-Reply-To: <CAL_JsqJRdjoTo2hGrKWvcyer18wt9N6w0nkfa9xx_e2xJ6pkYg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Peng Fan <peng.fan@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Anson Huang <anson.huang@nxp.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 8 May 2019 02:56:02 +0000, Peng Fan wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller(SCU), the ocotp controller is being controlled
-> by the SCU, so Linux need use RPC to SCU for ocotp handling. This
-> patch adds binding doc for i.MX8 SCU OCOTP driver.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Aisheng Dong <aisheng.dong@nxp.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Anson Huang <anson.huang@nxp.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V2:
->  Move OCOTP to end, add example, add "scu"
-> 
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, 13 May 2019, Rob Herring wrote:
+
+> I just noticed this was never re-spun and applied. We now have
+> bindings in tree referring to it though.
+
+Will send an updated version shortly.
+
+- Paul
