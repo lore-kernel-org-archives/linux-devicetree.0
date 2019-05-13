@@ -1,96 +1,45 @@
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v10 0/4] Add support for the Purism Librem5 devkit
-Date: Mon, 13 May 2019 10:40:53 -0700
-Message-ID: <20190513174057.4410-1-angus@akkea.ca>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v10 1/4] MAINTAINERS: add an entry for for arm64 imx
+ devicetrees
+Date: Mon, 13 May 2019 10:40:54 -0700
+Message-ID: <20190513174057.4410-2-angus@akkea.ca>
+References: <20190513174057.4410-1-angus@akkea.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190513174057.4410-1-angus@akkea.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: angus.ainslie@puri.sm
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Angus Ainslie (Purism)" <angus@akkea.ca>, linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Librem5 devkit is based on the imx8mq from NXP. This is a default
-devicetree to boot the board to a command prompt.
+Add an explicit reference to imx* devicetrees
 
-Changes since v9:
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Added a MAINTAINERS entry for arm64 imx devicetree files.
-
-Changes since v8:
-
-Fixed license comment.
-Changed regulators to all lower case.
-Changed clock frequency for NXP errata e7805.
-Dropped blank line.
-
-Changes since v7:
-
-More regulators always on for USB.
-Add vbus regulator.
-Drop vbat regulator.
-Replace legacy "gpio-key,wakeup" with "wakeup-source".
-Add vbus-supply to get rid of warning
-imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not found,
-using dummy regulator
-
-Changes since v6:
-
-Dropped unused regulators.
-Fix regulator phandles case.
-Dropped extra whitespace.
-
-Changes since v5:
-
-Added reviewed-by tags.
-Moved USB port links to USB controller node.
-
-Changes since v4:
-
-Compiled against linux-next next-20190415.
-Added imx8mq to the arm yaml file.
-Re-arrange regulator nodes to drop undefined supplies.
-Additional ordering for aesthetics.
-Split some long lines.
-Added lots of blank lines.
-Moved pinctl muxes to where they are used.
-Cleaned out reg defintions from regulator nodes.
-
-Changes since v3:
-
-Freshly sorted and pressed nodes.
-Change the backlight to an interpolated scale.
-Dropped i2c2.
-Dropped devkit version number to match debian MR.
-
-Changes since v2:
-
-Fixed incorrect phy-supply for the fsl-fec.
-Dropped unused regulator property.
-Fixup Makefile for linux-next.
-
-Changes since v1:
-
-Dropped config file.
-Updated the board compatible label.
-Changed node names to follow naming conventions.
-Added a more complete regulator hierachy.
-Removed unused nodes.
-Removed unknown devices.
-Fixed comment style.
-Dropped undocumented properties.
-
-Angus Ainslie (Purism) (4):
-  MAINTAINERS: add an entry for for arm64 imx devicetrees
-  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
-  dt-bindings: Add an entry for Purism SPC
-  dt-bindings: arm: fsl: Add the imx8mq boards
-
- .../devicetree/bindings/arm/fsl.yaml          |   7 +
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- MAINTAINERS                                   |   1 +
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 821 ++++++++++++++++++
- 5 files changed, 831 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7707c28628b9..0871a21a5bbb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1648,6 +1648,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+ F:	arch/arm/boot/dts/ls1021a*
+ F:	arch/arm64/boot/dts/freescale/fsl-*
+ F:	arch/arm64/boot/dts/freescale/qoriq-*
++F:	arch/arm64/boot/dts/freescale/imx*
+ 
+ ARM/GLOMATION GESBC9312SX MACHINE SUPPORT
+ M:	Lennert Buytenhek <kernel@wantstofly.org>
 -- 
 2.17.1
