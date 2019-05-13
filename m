@@ -1,90 +1,83 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
- unsigned properties
-Date: Mon, 13 May 2019 23:43:32 +0200
-Message-ID: <20190513214332.GB12345@lunn.ch>
-References: <20190510214550.18657-1-tpiepho@impinj.com>
- <20190510214550.18657-5-tpiepho@impinj.com>
- <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
- <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
- <1557777496.4229.13.camel@impinj.com>
- <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
- <20190513204641.GA12345@lunn.ch>
- <1557782787.4229.36.camel@impinj.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v2] dt-bindings: sifive: describe sifive-blocks versioning
+Date: Mon, 13 May 2019 14:51:53 -0700
+Message-ID: <20190513215152.26578-1-paul.walmsley@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557782787.4229.36.camel@impinj.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, Paul Walmsley <paul@pwsan.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-> > Hi Trent
-> > 
-> > I already deleted the patches. For patch 3:
-> > 
-> > + 	  if (dp83867->clk_output_sel > DP83867_CLK_O_SEL_REF_CLK &&
-> > +	         dp83867->clk_output_sel != DP83867_CLK_O_SEL_OFF) {
-> > +		 	phydev_err(phydev, "ti,clk-output-sel value %u out of range\n",
-> > +				   dp83867->clk_output_sel);
-> > +			return -EINVAL;
-> > +		      }
-> > 
-> > This last bit looks odd. If it is not OFF, it is invalid?
-> 
-> The valid values are in the range 0 to DP83867_CLK_O_SEL_REF_CLK and
-> also DP83867_CLK_O_SEL_OFF.  Thus invalid values are those greater than
-> DP83867_CLK_O_SEL_REF_CLK which are not DP83867_CLK_O_SEL_OFF.
+For IP blocks that are generated from the public, open-source
+sifive-blocks repository, describe the version numbering policy
+that its maintainers intend to use, upon request from Rob
+Herring <robh@kernel.org>.
 
-Hi Trent
- 
-O.K.
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Megan Wachs <megan@sifive.com>
+Cc: Wesley Terpstra <wesley@sifive.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-> > Are there any in tree users of DP83867_CLK_O_SEL_REF_CLK? We have to
-> > be careful changing its meaning. But if nobody is actually using it...
-> 
-> Nope.  I doubt this will affect anyone.  They'd need to strap the phy
-> to get a different configuration, and the explicitly add a property,
-> which isn't in the example DTS files, to change the configuration to
-> something they didn't want, and then depend on a driver bug ignoring
-> the erroneous setting they added.
+This second version updates the example URL, requested by
+Rob Herring <robh+dt@kernel.org>.
 
-O.K, then this patch is O.K. Does the binding documentation need
-updating?
- 
-> > Patch 4:
-> > 
-> > This is harder. Ideally we want to fix this. At some point, somebody
-> > is going to want 'rgmii' to actually mean 'rgmii', because that is
-> > what their hardware needs.
-> > 
-> > Could you add a WARN_ON() for 'rgmii' but the PHY is actually adding a
-> > delay? And add a comment about setting the correct thing in device
-> > tree?  Hopefully we will then get patches correcting DT blobs. And if
-> > we later do need to fix 'rgmii', we will break less board.
-> 
-> Yes I can do this.  Should it warn on any use of "rgmii"?
+ .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
 
-No, i would only warn when there is a delay configured by
-strapping. If you want the PHY to be left alone, you should use
-PHY_INTERFACE_MODE_NA, which should be the default if there is no
-phy-mode property. If DT actually asked for "rgmii", it either means
-it is wrong and rgmii-id should be used to match the strapping, or
-both the strapping and the DT is wrong and somebody really does want
-"rgmii".
-
-> If so, how would someone make the warning go away if they actually
-> want rgmii mode with no delay?
-
-We take the warning out, and implement "rgmii" correctly, and let
-boards break which have broken DT. We have done this before, but
-without a period of time with a warning.
-
-> I suspect hsdk.dts is an example of an in-tree broken board that uses
-> "rgmii" would it should have used "rgmii-id".
-
-O.K, so when you submit the patch Cc: Alexey Brodkin <abrodkin@synopsys.com>
-
-     Andrew
+diff --git a/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+new file mode 100644
+index 000000000000..beaa3b64084e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+@@ -0,0 +1,38 @@
++DT compatible string versioning for SiFive open-source IP blocks
++
++This document describes the version specification for DT "compatible"
++strings for open-source SiFive IP blocks.  HDL for these IP blocks
++can be found in this public repository:
++
++https://github.com/sifive/sifive-blocks
++
++IP block-specific DT compatible strings are contained within the HDL,
++in the form "sifive,<ip-block-name><integer version number>".
++
++An example is "sifive,uart0" from:
++
++https://github.com/sifive/sifive-blocks/blob/v1.0/src/main/scala/devices/uart/UART.scala#L43
++
++Until these IP blocks (or IP integration) support version
++auto-discovery, the maintainers of these IP blocks intend to increment
++the suffixed number in the compatible string whenever the software
++interface to these IP blocks changes, or when the functionality of the
++underlying IP blocks changes in a way that software should be aware of.
++
++Driver developers can use compatible string "match" values such as
++"sifive,uart0" to indicate that their driver is compatible with the
++register interface and functionality associated with the relevant
++upstream sifive-blocks commits.  It is expected that most drivers will
++match on these IP block-specific compatible strings.
++
++DT data authors, when writing data for a particular SoC, should
++continue to specify an SoC-specific compatible string value, such as
++"sifive,fu540-c000-uart".  This way, if SoC-specific
++integration-specific bug fixes or workarounds are needed, the kernel
++or other system software can match on this string to apply them.  The
++IP block-specific compatible string (such as "sifive,uart0") should
++then be specified as a subsequent value.
++
++An example of this style:
++
++    compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+-- 
+2.20.1
