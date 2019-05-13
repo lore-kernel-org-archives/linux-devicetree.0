@@ -1,68 +1,67 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+Return-Path: <SRS0=gR28=TN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13551 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732296AbfEMSJP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 May 2019 14:09:15 -0400
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 07/29] PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-Date: Mon, 13 May 2019 23:37:22 +0530
-Message-ID: <20190513180744.16493-8-mmaddireddy@nvidia.com>
+Subject: [PATCH V3 20/29] PCI: tegra: Use legacy IRQ for port service drivers
+Date: Mon, 13 May 2019 23:37:35 +0530
+Message-ID: <20190513180744.16493-21-mmaddireddy@nvidia.com>
 In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
 To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Default root port setting hides AER capability. This patch enables the
-advertisement of AER capability by root port.
+Tegra signals PCIe services like AER, PME, etc. over legacy IRQ line.
+By default, service drivers register interrupt routine over MSI IRQ line.
+Use pcie_pme_disable_msi() function to disable MSI for service drivers.
+
+PME and AER interrupts registered to MSI without this change,
+cat /proc/interrupts | grep -i pci
+36: 21 0 0 0 0 0 GICv2 104 Level       PCIE
+37: 35 0 0 0 0 0 GICv2 105 Level       Tegra PCIe MSI
+76: 0  0 0 0 0 0 Tegra PCIe MSI 0 Edge PCIe PME, aerdrv, PCIe BW notif
+
+PME and AER interrupts registered to legacy IRQ with this change,
+cat /proc/interrupts | grep -i pci
+36: 33 0 0 0 0 0 GICv2 104 Level      PCIE, PCIe PME, aerdrv, PCIe BW notif
+37: 52 0 0 0 0 0 GICv2 105 Level      Tegra PCIe MSI
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V3: No change
+V3: Corrected typo in commit log
 
 V2: No change
 
- drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index cd542a8af618..e402627bd221 100644
+index ac57c5badd9b..0024bc42b400 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -180,6 +180,9 @@
- #define RP_VEND_XP	0x00000f00
- #define  RP_VEND_XP_DL_UP	(1 << 30)
+@@ -41,6 +41,7 @@
+ #include <soc/tegra/pmc.h>
  
-+#define RP_VEND_CTL1	0x00000f48
-+#define  RP_VEND_CTL1_ERPT	(1 << 13)
-+
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ #include "../pci.h"
++#include "../pcie/portdrv.h"
  
-@@ -479,6 +482,16 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 	afi_writel(port->pcie, value, ctrl);
- }
+ #define INT_PCI_MSI_NR (8 * 32)
  
-+static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
-+{
-+	u32 value;
-+
-+	/* Enable AER capability */
-+	value = readl(port->base + RP_VEND_CTL1);
-+	value |= RP_VEND_CTL1_ERPT;
-+	writel(value, port->base + RP_VEND_CTL1);
-+}
-+
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -503,6 +516,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 		value |= RP_VEND_CTL2_PCA_ENABLE;
- 		writel(value, port->base + RP_VEND_CTL2);
+@@ -2725,6 +2726,9 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 		goto put_resources;
  	}
-+
-+	tegra_pcie_enable_rp_features(port);
- }
  
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
++	/* Switch to legacy IRQ for PCIe services like AER, PME*/
++	pcie_pme_disable_msi();
++
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err) {
 -- 
 2.17.1
