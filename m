@@ -1,49 +1,107 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH v3 1/6] soc/fsl/qe: qe.c: drop useless static qualifier
-Date: Mon, 13 May 2019 11:14:54 +0000
-Message-ID: <20190513111442.25724-2-rasmus.villemoes@prevas.dk>
-References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
+ property "nvmem_macaddr_swap" to swap macaddr bytes order]
+Date: Mon, 13 May 2019 13:16:12 +0200
+Message-ID: <20190513111612.GA21475@meh.true.cz>
+References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
+ <20190510112822.GT81826@meh.true.cz>
+ <20190510113155.mvpuhe4yzxdaanei@flea>
+ <20190511144444.GU81826@meh.true.cz>
+ <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
+ <20190513090700.GW81826@meh.true.cz>
+ <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, Rob Herring <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The local variable snum_init has no reason to have static storage duration.
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 11:06:48]:
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Qiang Zhao <qiang.zhao@nxp.com>
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
----
- drivers/soc/fsl/qe/qe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On 13/05/2019 10:07, Petr Štetiar wrote:
+> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
+> > 
+> > > My initial idea was to add compatible strings to the cell so that most of
+> > > the encoding information can be derived from it. For example if the encoding
+> > > representing in your example is pretty standard or vendor specific we could
+> > > just do with a simple compatible like below:
+> > 
+> > that vendor/compatible list would be quite long[1], there are hundreds of
+> 
+> You are right just vendor list could be very long, but I was hoping that the
+> post-processing would fall in some categories which can be used in
+> compatible string.
+> 
+> Irrespective of which we need to have some sort of compatible string to
+> enable nvmem core to know that there is some form of post processing to be
+> done on the cells!. Without which there is a danger of continuing to adding
+> new properties to the cell bindings which have no relation to each other.
 
-diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-index 612d9c551be5..855373deb746 100644
---- a/drivers/soc/fsl/qe/qe.c
-+++ b/drivers/soc/fsl/qe/qe.c
-@@ -306,7 +306,7 @@ static void qe_snums_init(void)
- 		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
- 		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
- 	};
--	static const u8 *snum_init;
-+	const u8 *snum_init;
- 
- 	qe_num_of_snum = qe_get_num_of_snums();
- 
--- 
-2.20.1
+makes sense, so something like this would be acceptable?
+
+ eth1_addr: eth-mac-addr@18a {
+     /* or rather linux,nvmem-post-process ? */
+     compatible = "openwrt,nvmem-post-process";
+     reg = <0x189 0x11>;
+     indices = < 0 2
+                 3 2
+                 6 2
+                 9 2
+                12 2
+                15 2>;
+     transform = "ascii";
+     increment = <1>;
+     increment-at = <5>;
+     result-swap;
+ };
+
+ &eth1 {
+     nvmem-cells = <&eth1_addr>;
+     nvmem-cell-names = "mac-address";
+ };
+
+> > was very compeling as it would kill two birds with one stone (fix outstanding
+> > MTD/NVMEM OF clash as well[2]),
+> 
+> Changes to nvmem dt bindings have been already rejected, for this more
+> discussion at: https://lore.kernel.org/patchwork/patch/936312/
+
+I know, I've re-read this thread several times, but it's still unclear to me,
+how this should be approached in order to be accepted by you and by DT
+maintainers as well.
+
+Anyway, to sum it up, from your point of view, following is fine?
+
+ flash@0 {
+    partitions {
+        art: partition@ff0000 {
+            nvmem_dev: nvmem-cells {
+                compatible = "nvmem-cells";
+                eth1_addr: eth-mac-addr@189 {
+                    compatible = "openwrt,nvmem-post-process";
+                    reg = <0x189 0x6>;
+                    increment = <1>;
+                    increment-at = <5>;
+                    result-swap;
+                };
+            };
+        };
+    };
+ };
+
+ &eth1 {
+    nvmem = <&nvmem_dev>;
+    nvmem-cells = <&eth1_addr>;
+    nvmem-cell-names = "mac-address";
+ };
+
+-- ynezz
