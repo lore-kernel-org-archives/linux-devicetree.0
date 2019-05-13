@@ -1,8 +1,8 @@
 Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 27/29] PCI: OF: Add of_pci_get_reset_gpio() to parse reset-gpios from DT
-Date: Mon, 13 May 2019 23:37:42 +0530
-Message-ID: <20190513180744.16493-28-mmaddireddy@nvidia.com>
+Subject: [PATCH V3 16/29] PCI: tegra: Set target speed as Gen1 before starting LTSSM
+Date: Mon, 13 May 2019 23:37:31 +0530
+Message-ID: <20190513180744.16493-17-mmaddireddy@nvidia.com>
 In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,81 +11,51 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This new helper function could be used by host drivers to get the reset
-GPIO descriptor. If the property isn't assigned, it will return NULL to
-the caller.
+PCIe link up fails with few legacy endpoints if root port advertises both
+Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
+fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
+advertising only Gen1. Hence, the strategy followed here is to initially
+advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
+
+Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
+even if Gen2 is advertised, so there is no downside of this change.
+
+This behavior is observed with following two PCIe devices on Tegra,
+ - Fusion HDTV 5 Express card
+ - IOGear SIL - PCIE - SATA card
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-V3: New patch to add helper function to parse "reset-gpios"
+V3: No change
 
- drivers/pci/of.c       | 18 ++++++++++++++++++
- include/linux/of_pci.h | 10 ++++++++++
- 2 files changed, 28 insertions(+)
+V2: Updated commit log to reflect why this issue is observed on Tegra with
+these particular cards
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 9454c90980c9..2a0282115ff0 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -6,6 +6,7 @@
-  */
- #define pr_fmt(fmt)	"PCI: OF: " fmt
- 
-+#include <linux/gpio/consumer.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/pci.h>
-@@ -224,6 +225,23 @@ int of_pci_get_max_link_speed(struct device_node *node)
- }
- EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
- 
-+/**
-+ * of_pci_get_reset_gpio() - Get PCI reset gpio descriptor.
-+ *
-+ * @node: device node
-+ *
-+ * Returns PCI reset gpio descriptor from DT, or an ERR_PTR() if the
-+ * required property is invalid.
-+ */
-+struct gpio_desc *of_pci_get_reset_gpio(struct device *dev,
-+					struct device_node *node,
-+					int dflags, char *label)
-+{
-+	return devm_gpiod_get_from_of_node(dev, node, "reset-gpios", 0, dflags,
-+					   label);
-+}
-+EXPORT_SYMBOL_GPL(of_pci_get_reset_gpio);
+ drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 16d4d3cba3ff..9ee111062ab7 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -676,6 +676,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
+ 		value |= soc->update_fc_threshold;
+ 		writel(value, port->base + RP_VEND_XP);
+ 	}
 +
- /**
-  * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-  *                           is present and valid
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 21a89c4880fa..230ddc813ef9 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -13,6 +13,9 @@ struct device_node;
- struct device_node *of_pci_find_child_device(struct device_node *parent,
- 					     unsigned int devfn);
- int of_pci_get_devfn(struct device_node *np);
-+struct gpio_desc *of_pci_get_reset_gpio(struct device *dev,
-+					struct device_node *np,
-+					int dflags, char *label);
- void of_pci_check_probe_only(void);
- #else
- static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
-@@ -26,6 +29,13 @@ static inline int of_pci_get_devfn(struct device_node *np)
- 	return -EINVAL;
++	/*
++	 * PCIe link doesn't come up with few legacy PCIe endpoints if
++	 * root port advertises both Gen-1 and Gen-2 speeds in Tegra.
++	 * Hence, the strategy followed here is to initially advertise
++	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
++	 */
++	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
++	value &= ~PCI_EXP_LNKSTA_CLS;
++	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
++	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
  }
  
-+static inline struct gpio_desc *of_pci_get_reset_gpio(struct device *dev,
-+						      struct device_node *np,
-+						      int dflags, char *label)
-+{
-+	return -EINVAL;
-+}
-+
- static inline void of_pci_check_probe_only(void) { }
- #endif
- 
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
 -- 
 2.17.1
