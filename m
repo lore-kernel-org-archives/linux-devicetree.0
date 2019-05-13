@@ -1,7 +1,7 @@
 From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH 2/2] dt-bindings: Document the DesignWare IP reset bindings
-Date: Mon, 13 May 2019 17:41:28 +0200
-Message-ID: <57b3e24f85b0838fc7fafe35abab00e19993d458.1557759340.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH 1/2] reset: Add DesignWare IP support to simple reset
+Date: Mon, 13 May 2019 17:41:27 +0200
+Message-ID: <1928cabd16a83f1dfdbadc17f302339f00e93ef8.1557759340.git.gustavo.pimentel@synopsys.com>
 References: <cover.1557759340.git.gustavo.pimentel@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1557759340.git.gustavo.pimentel@synopsys.com>
@@ -12,51 +12,44 @@ To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-kern
 Cc: Joao.Pinto@synopsys.com, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the
-DesignWare IP reset controller.
+The reset-simple driver can be now used on DesignWare IPs by
+default by selecting the following compatible strings:
+ - snps,dw-high-reset for active high resets inputs
+ - snps,dw-low-reset for active low resets inputs
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
 ---
- .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+ drivers/reset/Kconfig        | 2 +-
+ drivers/reset/reset-simple.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-new file mode 100644
-index 0000000..5316212
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-@@ -0,0 +1,30 @@
-+Synopsys DesignWare Reset controller
-+=======================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+
-+- compatible: should be one of the following.
-+	"snps,dw-high-reset" - for active high configuration
-+	"snps,dw-low-reset" - for active low configuration
-+
-+- reg: physical base address of the controller and length of memory mapped
-+	region.
-+
-+- #reset-cells: must be 1.
-+
-+example:
-+
-+	dw_rst: reset-controller@0000 {
-+		compatible = "dw,dw-high-reset";
-+		reg = <0x0000 0x4>;
-+		#reset-cells = <1>;
-+	};
-+
-+	dw_rst: reset-controller@1000 {
-+		compatible = "dw,dw-low-reset";
-+		reg = <0x1000 0x4>;
-+		#reset-cells = <1>;
-+	};
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 2c8c23d..2ee69f2 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -117,7 +117,7 @@ config RESET_QCOM_PDC
+ 
+ config RESET_SIMPLE
+ 	bool "Simple Reset Controller Driver" if COMPILE_TEST
+-	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
++	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARC
+ 	help
+ 	  This enables a simple reset controller driver for reset lines that
+ 	  that can be asserted and deasserted by toggling bits in a contiguous,
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+index 77fbba3..79e73be 100644
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -129,6 +129,9 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 		.data = &reset_simple_active_low },
+ 	{ .compatible = "aspeed,ast2400-lpc-reset" },
+ 	{ .compatible = "aspeed,ast2500-lpc-reset" },
++	{ .compatible = "snps,dw-high-reset" },
++	{ .compatible = "snps,dw-low-reset",
++		.data = &reset_simple_active_low },
+ 	{ /* sentinel */ },
+ };
+ 
 -- 
 2.7.4
