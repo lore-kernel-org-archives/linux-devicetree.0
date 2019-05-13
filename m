@@ -1,118 +1,74 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845-mtp: Add Truly display
-Date: Mon, 13 May 2019 14:07:47 -0700
-Message-ID: <20190513210747.22429-1-bjorn.andersson@linaro.org>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+Date: Mon, 13 May 2019 21:26:28 +0000
+Message-ID: <1557782787.4229.36.camel@impinj.com>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+         <20190510214550.18657-5-tpiepho@impinj.com>
+         <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+         <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+         <1557777496.4229.13.camel@impinj.com>
+         <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
+         <20190513204641.GA12345@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190513204641.GA12345@lunn.ch>
+Content-Language: en-US
+Content-ID: <BBD6CD64ABF63E4DB485EB55C500E53B@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Bring in the Truly display and enable the DSI channels to make the
-mdss/gpu probe, even though we're lacking LABIB, preventing us from
-seeing anything on the screen.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 79 +++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 02b8357c8ce8..83198a19ff57 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -352,6 +352,77 @@
- 	status = "okay";
- };
- 
-+&dsi0 {
-+	status = "okay";
-+	vdda-supply = <&vdda_mipi_dsi0_1p2>;
-+
-+	qcom,dual-dsi-mode;
-+	qcom,master-dsi;
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&truly_in_0>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+
-+	panel@0 {
-+		compatible = "truly,nt35597-2K-display";
-+		reg = <0>;
-+		vdda-supply = <&vreg_l14a_1p88>;
-+
-+		reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
-+		mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				truly_in_0: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				truly_in_1: endpoint {
-+					remote-endpoint = <&dsi1_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&dsi0_phy {
-+	status = "okay";
-+	vdds-supply = <&vdda_mipi_dsi0_pll>;
-+};
-+
-+&dsi1 {
-+	status = "okay";
-+	vdda-supply = <&vdda_mipi_dsi1_1p2>;
-+
-+	qcom,dual-dsi-mode;
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&truly_in_1>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi1_phy {
-+	status = "okay";
-+	vdds-supply = <&vdda_mipi_dsi1_pll>;
-+};
-+
- &gcc {
- 	protected-clocks = <GCC_QSPI_CORE_CLK>,
- 			   <GCC_QSPI_CORE_CLK_SRC>,
-@@ -365,6 +436,14 @@
- 	clock-frequency = <400000>;
- };
- 
-+&mdss {
-+	status = "okay";
-+};
-+
-+&mdss_mdp {
-+	status = "okay";
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
--- 
-2.18.0
+T24gTW9uLCAyMDE5LTA1LTEzIGF0IDIyOjQ2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+PiA+IFBlcmhhcHMgeW91IGNvdWxkIHRlbGwgbWUgaWYgdGhlIGFwcHJvYWNoIEkndmUgdGFrZW4g
+aW4gcGF0Y2ggMywgDQo+ID4gPiAiQWRkIGFiaWxpdHkgdG8gZGlzYWJsZSBvdXRwdXQgY2xvY2si
+LCBhbmQgcGF0Y2ggNCwgIkRpc2FibGUgdHgvcngNCj4gPiA+IGRlbGF5IHdoZW4gbm90IGNvbmZp
+Z3VyZWQiLCBhcmUgY29uc2lkZXJlZCBhY2NlcHRhYmxlPyAgSSBjYW4gY29uY2VpdmUNCj4gPiA+
+IG9mIGFyZ3VtZW50cyBmb3IgYWx0ZXJuYXRlIGFwcHJvYWNoZXMuICBJIHdvdWxkIGxpa2UgdG8g
+YWRkIHN1cHBvcnQgZm9yDQo+ID4gPiAgdGhlc2UgaW50byB1LWJvb3QgdG9vLCBidXQgdHlwaWNh
+bGx5IHUtYm9vdCBmb2xsb3dzIHRoZSBrZXJuZWwgRFQNCj4gPiA+IGJpbmRpbmdzLCBzbyBJIHdh
+bnQgdG8gZmluYWxpemUgdGhlIGtlcm5lbCBEVCBzZW1hbnRpY3MgYmVmb3JlIHNlbmRpbmcNCj4g
+PiA+IHBhdGNoZXMgdG8gdS1ib290Lg0KPiA+ID4gDQo+ID4gDQo+ID4gSSBsYWNrIGV4cGVyaWVu
+Y2Ugd2l0aCB0aGVzZSBUSSBQSFkncy4gTWF5YmUgQW5kcmV3IG9yIEZsb3JpYW4gY2FuIGFkdmlz
+ZS4NCj4gDQo+IEhpIFRyZW50DQo+IA0KPiBJIGFscmVhZHkgZGVsZXRlZCB0aGUgcGF0Y2hlcy4g
+Rm9yIHBhdGNoIDM6DQo+IA0KPiArIAkgIGlmIChkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCA+IERQ
+ODM4NjdfQ0xLX09fU0VMX1JFRl9DTEsgJiYNCj4gKwkgICAgICAgICBkcDgzODY3LT5jbGtfb3V0
+cHV0X3NlbCAhPSBEUDgzODY3X0NMS19PX1NFTF9PRkYpIHsNCj4gKwkJIAlwaHlkZXZfZXJyKHBo
+eWRldiwgInRpLGNsay1vdXRwdXQtc2VsIHZhbHVlICV1IG91dCBvZiByYW5nZVxuIiwNCj4gKwkJ
+CQkgICBkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCk7DQo+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4g
+KwkJICAgICAgfQ0KPiANCj4gVGhpcyBsYXN0IGJpdCBsb29rcyBvZGQuIElmIGl0IGlzIG5vdCBP
+RkYsIGl0IGlzIGludmFsaWQ/DQoNClRoZSB2YWxpZCB2YWx1ZXMgYXJlIGluIHRoZSByYW5nZSAw
+IHRvIERQODM4NjdfQ0xLX09fU0VMX1JFRl9DTEsgYW5kDQphbHNvIERQODM4NjdfQ0xLX09fU0VM
+X09GRi4gIFRodXMgaW52YWxpZCB2YWx1ZXMgYXJlIHRob3NlIGdyZWF0ZXIgdGhhbg0KRFA4Mzg2
+N19DTEtfT19TRUxfUkVGX0NMSyB3aGljaCBhcmUgbm90IERQODM4NjdfQ0xLX09fU0VMX09GRi4N
+Cg0KPiANCj4gQXJlIHRoZXJlIGFueSBpbiB0cmVlIHVzZXJzIG9mIERQODM4NjdfQ0xLX09fU0VM
+X1JFRl9DTEs/IFdlIGhhdmUgdG8NCj4gYmUgY2FyZWZ1bCBjaGFuZ2luZyBpdHMgbWVhbmluZy4g
+QnV0IGlmIG5vYm9keSBpcyBhY3R1YWxseSB1c2luZyBpdC4uLg0KDQpOb3BlLiAgSSBkb3VidCB0
+aGlzIHdpbGwgYWZmZWN0IGFueW9uZS4gIFRoZXknZCBuZWVkIHRvIHN0cmFwIHRoZSBwaHkNCnRv
+IGdldCBhIGRpZmZlcmVudCBjb25maWd1cmF0aW9uLCBhbmQgdGhlIGV4cGxpY2l0bHkgYWRkIGEg
+cHJvcGVydHksDQp3aGljaCBpc24ndCBpbiB0aGUgZXhhbXBsZSBEVFMgZmlsZXMsIHRvIGNoYW5n
+ZSB0aGUgY29uZmlndXJhdGlvbiB0bw0Kc29tZXRoaW5nIHRoZXkgZGlkbid0IHdhbnQsIGFuZCB0
+aGVuIGRlcGVuZCBvbiBhIGRyaXZlciBidWcgaWdub3JpbmcNCnRoZSBlcnJvbmVvdXMgc2V0dGlu
+ZyB0aGV5IGFkZGVkLg0KDQo+IFBhdGNoIDQ6DQo+IA0KPiBUaGlzIGlzIGhhcmRlci4gSWRlYWxs
+eSB3ZSB3YW50IHRvIGZpeCB0aGlzLiBBdCBzb21lIHBvaW50LCBzb21lYm9keQ0KPiBpcyBnb2lu
+ZyB0byB3YW50ICdyZ21paScgdG8gYWN0dWFsbHkgbWVhbiAncmdtaWknLCBiZWNhdXNlIHRoYXQg
+aXMNCj4gd2hhdCB0aGVpciBoYXJkd2FyZSBuZWVkcy4NCj4gDQo+IENvdWxkIHlvdSBhZGQgYSBX
+QVJOX09OKCkgZm9yICdyZ21paScgYnV0IHRoZSBQSFkgaXMgYWN0dWFsbHkgYWRkaW5nIGENCj4g
+ZGVsYXk/IEFuZCBhZGQgYSBjb21tZW50IGFib3V0IHNldHRpbmcgdGhlIGNvcnJlY3QgdGhpbmcg
+aW4gZGV2aWNlDQo+IHRyZWU/ICBIb3BlZnVsbHkgd2Ugd2lsbCB0aGVuIGdldCBwYXRjaGVzIGNv
+cnJlY3RpbmcgRFQgYmxvYnMuIEFuZCBpZg0KPiB3ZSBsYXRlciBkbyBuZWVkIHRvIGZpeCAncmdt
+aWknLCB3ZSB3aWxsIGJyZWFrIGxlc3MgYm9hcmQuDQoNClllcyBJIGNhbiBkbyB0aGlzLiAgU2hv
+dWxkIGl0IHdhcm4gb24gYW55IHVzZSBvZiAicmdtaWkiPyAgSWYgc28sIGhvdw0Kd291bGQgc29t
+ZW9uZSBtYWtlIHRoZSB3YXJuaW5nIGdvIGF3YXkgaWYgdGhleSBhY3R1YWxseSB3YW50IHJnbWlp
+IG1vZGUNCndpdGggbm8gZGVsYXk/DQoNCkkgc3VzcGVjdCBoc2RrLmR0cyBpcyBhbiBleGFtcGxl
+IG9mIGFuIGluLXRyZWUgYnJva2VuIGJvYXJkIHRoYXQgdXNlcw0KInJnbWlpIiB3b3VsZCBpdCBz
+aG91bGQgaGF2ZSB1c2VkICJyZ21paS1pZCIuICBVbmZvcnR1bmF0ZWx5LCBwaHkgZHRzDQpub2Rl
+cyBkb24ndCB1c3VhbGx5IHByb3ZpZGUgYSBjb21wYXRpYmxlIHRoYXQgaWRlbnRpZmllcyB0aGUg
+cGh5LCB1c2luZw0KaW5zdGVhZCBydW4tdGltZSBhdXRvLWRldGVjdGlvbiBiYXNlZCBvbiBQSFkg
+aWQgcmVnaXN0ZXJzLCBzbyB0aGVyZSdzDQpubyB3YXkgdG8gdGVsbCBmcm9tIHRoZSBkdHMgZmls
+ZXMgd2hhdCBib2FyZHMgdXNlIHRoaXMgcGh5IHVubGVzcyB0aGV5DQphbHNvIHNwZWNpZnkgb25l
+IG9mIHRoZSBwaHkgc3BlY2lmaWMgcHJvcGVydGllcy4gIFdoaWNoIGlzIGhvdyBJIGZvdW5kDQpo
+c2RrLmR0cyAoYW5kIG5vIG90aGVyIGJvYXJkcykuDQo=
