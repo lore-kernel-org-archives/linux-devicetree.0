@@ -1,147 +1,83 @@
-Return-Path: <SRS0=MMxF=TJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33379 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfEIP6u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 May 2019 11:58:50 -0400
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 10/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add SMARC I2S interface
-Date: Thu,  9 May 2019 17:58:27 +0200
-Message-Id: <20190509155834.22838-11-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 25/29] PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
+Date: Mon, 13 May 2019 23:37:40 +0530
+Message-ID: <20190513180744.16493-26-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support according the SMARC Spec 1.1 [1] and provided schematics.
-Due to the lack of hardware the interface can't be tested right now.
+In Tegra210 AFI design has clamp value for the BIAS pad as 0, which keeps
+the bias pad in non power down mode. This is leading to power consumption
+of 2 mW in BIAS pad, even if the PCIe partition is powergated. To avoid
+unnecessary power consumption, put PEX CLK & BIAS pads in deep power down
+mode when PCIe partition is power gated.
 
-[1] https://sget.org/standards/smarc
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
+V3: No change
 
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index 19f97ab26e83..864e05b14b6f 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -8,6 +8,7 @@
-  */
+V2: Using standard pinctrl functions to apply default and idle states
+
+ drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 33f4dfab9e35..06b99fcbf382 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -30,6 +30,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ #include <linux/sizes.h>
+@@ -2875,6 +2876,7 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		tegra_pcie_disable_msi(pcie);
  
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
++	pinctrl_pm_select_idle_state(dev);
+ 	tegra_pcie_power_off(pcie);
  
- / {
- 	reg_1p0v_s0: regulator-1p0v-s0 {
-@@ -182,6 +183,52 @@
- 	};
- };
+ 	return 0;
+@@ -2890,6 +2892,13 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
+ 		dev_err(dev, "tegra pcie power on fail: %d\n", err);
+ 		return err;
+ 	}
++
++	err = pinctrl_pm_select_default_state(dev);
++	if (err < 0) {
++		dev_err(dev, "failed to disable PCIe IO DPD: %d\n", err);
++		goto poweroff;
++	}
++
+ 	tegra_pcie_enable_controller(pcie);
+ 	tegra_pcie_setup_translations(pcie);
  
-+/* I2S0, I2S1 */
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+
-+	audmux_ssi1 {
-+		fsl,audmux-port = <MX51_AUDMUX_PORT1_SSI0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSEL(MX51_AUDMUX_PORT3) |
-+			 IMX_AUDMUX_V2_PTCR_TCSEL(MX51_AUDMUX_PORT3) |
-+			 IMX_AUDMUX_V2_PTCR_SYN    |
-+			 IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			 IMX_AUDMUX_V2_PTCR_TCLKDIR)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(MX51_AUDMUX_PORT3)
-+		>;
-+	};
-+
-+	audmux_adu3 {
-+		fsl,audmux-port = <MX51_AUDMUX_PORT3>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(MX51_AUDMUX_PORT1_SSI0)
-+		>;
-+	};
-+
-+	audmux_ssi2 {
-+		fsl,audmux-port = <MX51_AUDMUX_PORT2_SSI1>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSEL(MX51_AUDMUX_PORT4) |
-+			 IMX_AUDMUX_V2_PTCR_TCSEL(MX51_AUDMUX_PORT4) |
-+			 IMX_AUDMUX_V2_PTCR_SYN    |
-+			 IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			 IMX_AUDMUX_V2_PTCR_TCLKDIR)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(MX51_AUDMUX_PORT4)
-+		>;
-+	};
-+
-+	audmux_adu4 {
-+		fsl,audmux-port = <MX51_AUDMUX_PORT4>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(MX51_AUDMUX_PORT2_SSI1)
-+		>;
-+	};
-+};
-+
- /* CAN0 */
- &can1 {
- 	pinctrl-names = "default";
-@@ -325,6 +372,13 @@
- 	};
- };
+@@ -2899,7 +2908,7 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
+ 	err = clk_prepare_enable(pcie->pex_clk);
+ 	if (err) {
+ 		dev_err(dev, "failed to enable PEX clock: %d\n", err);
+-		goto poweroff;
++		goto pex_dpd_enable;
+ 	}
  
-+/* I2C_GP */
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+};
-+
- /* HDMI_CTRL */
- &i2c2 {
- 	clock-frequency = <100000>;
-@@ -343,6 +397,23 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_mgmt_gpios &pinctrl_gpio>;
+ 	reset_control_deassert(pcie->pex_rst);
+@@ -2920,6 +2929,8 @@ static int __maybe_unused tegra_pcie_pm_resume(struct device *dev)
+ disable_pex_clk:
+ 	reset_control_assert(pcie->pex_rst);
+ 	clk_disable_unprepare(pcie->pex_clk);
++pex_dpd_enable:
++	pinctrl_pm_select_idle_state(dev);
+ poweroff:
+ 	tegra_pcie_power_off(pcie);
  
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-+			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x130b0
-+			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
-+			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-+
-+			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC	0x130b0
-+			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD	0x130b0
-+			MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS	0x130b0
-+			MX6QDL_PAD_DISP0_DAT23__AUD4_RXD	0x130b0
-+
-+			/* AUDIO MCLK */
-+			MX6QDL_PAD_NANDF_CS2__CCM_CLKO2		0x000b0
-+		>;
-+	};
-+
- 	pinctrl_ecspi4: ecspi4grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_D21__ECSPI4_SCLK 0x100b1
-@@ -430,6 +501,13 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001b8b1
-+			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
-+		>;
-+	};
-+
- 	pinctrl_i2c2: i2c2grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
 -- 
-2.20.1
+2.17.1
