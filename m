@@ -1,60 +1,74 @@
-From: Trent Piepho <tpiepho@impinj.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
  unsigned properties
-Date: Mon, 13 May 2019 19:58:17 +0000
-Message-ID: <1557777496.4229.13.camel@impinj.com>
+Date: Mon, 13 May 2019 22:12:58 +0200
+Message-ID: <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
 References: <20190510214550.18657-1-tpiepho@impinj.com>
-         <20190510214550.18657-5-tpiepho@impinj.com>
-         <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
-         <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+ <20190510214550.18657-5-tpiepho@impinj.com>
+ <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+ <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+ <1557777496.4229.13.camel@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+In-Reply-To: <1557777496.4229.13.camel@impinj.com>
 Content-Language: en-US
-Content-ID: <9152E8B6F38C8948B2CA03A5C5C96E9A@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+To: Trent Piepho <tpiepho@impinj.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAyMDE5LTA1LTExIGF0IDE0OjMyICswMjAwLCBIZWluZXIgS2FsbHdlaXQgd3JvdGU6
-DQo+IE9uIDExLjA1LjIwMTkgMTI6NDEsIEhlaW5lciBLYWxsd2VpdCB3cm90ZToNCj4gPiBPbiAx
-MC4wNS4yMDE5IDIzOjQ2LCBUcmVudCBQaWVwaG8gd3JvdGU6DQo+ID4gPiBUaGUgdmFyaWFibGVz
-IHVzZWQgdG8gc3RvcmUgdTMyIERUIHByb3BlcnRpZXMgd2VyZSBzaWduZWQNCj4gPiA+IGludHMu
-ICBUaGlzDQo+ID4gPiBkb2Vzbid0IHdvcmsgcHJvcGVybHkgaWYgdGhlIHZhbHVlIG9mIHRoZSBw
-cm9wZXJ0eSB3ZXJlIHRvDQo+ID4gPiBvdmVyZmxvdy4NCj4gPiA+IFVzZSB1bnNpZ25lZCB2YXJp
-YWJsZXMgc28gdGhpcyBkb2Vzbid0IGhhcHBlbi4NCj4gPiA+IA0KPiA+IA0KPiA+IEluIHBhdGNo
-IDMgeW91IGFkZGVkIGEgY2hlY2sgZm9yIERUIHByb3BlcnRpZXMgYmVpbmcgb3V0IG9mIHJhbmdl
-Lg0KPiA+IEkgdGhpbmsgdGhpcyB3b3VsZCBiZSBnb29kIGFsc28gZm9yIHRoZSB0aHJlZSBwcm9w
-ZXJ0aWVzIGhlcmUuDQo+ID4gVGhlIGRlbGF5IHZhbHVlcyBhcmUgb25seSA0IGJpdHMgd2lkZSwg
-c28geW91IG1pZ2h0IGFsc28gY29uc2lkZXINCj4gPiB0byBzd2l0Y2ggdG8gdTggb3IgdTE2Lg0K
-PiA+IA0KPiANCj4gSSBicmllZmx5IGxvb2tlZCBvdmVyIHRoZSByZXN0IG9mIHRoZSBkcml2ZXIu
-IFdoYXQgaXMgcGxhaW4gd3JvbmcNCj4gaXMgdG8gYWxsb2NhdGUgbWVtb3J5IGZvciB0aGUgcHJp
-dmF0ZSBkYXRhIHN0cnVjdHVyZSBpbiB0aGUNCj4gY29uZmlnX2luaXQgY2FsbGJhY2suIFRoaXMg
-aGFzIHRvIGJlIGRvbmUgaW4gdGhlIHByb2JlIGNhbGxiYWNrLg0KPiBBbiBleGFtcGxlIGlzIG1h
-cnZlbGxfcHJvYmUoKS4gQXMgeW91IHNlZW0gdG8gd29yayBvbiB0aGlzIGRyaXZlciwNCj4gY2Fu
-IHlvdSBwcm92aWRlIGEgcGF0Y2ggZm9yIHRoaXM/DQoNCkl0IG9ubHkgYWxsb2NhdGVzIHRoZSBk
-YXRhIG9uY2UsIHNvIGl0IGlzIG5vdCBhIG1lbW9yeSBsZWFrLiAgQnV0IHllcywNCnRvdGFsbHkg
-d3JvbmcgcGxhY2UgdG8gZG8gaXQuICBJIGNhbiBmaXggdGhpcy4gIEl0IGFsc28gZG9lcyBub3Qg
-c2V0DQp0aGUgc2lnbmFsIGxpbmUgaW1wZWRhbmNlIGZyb20gRFQgdmFsdWUgdW5sZXNzIHVubGVz
-cyBhbHNvIGNvbmZpZ3VyaW5nDQpjbG9jayBza2V3LCBldmVuIHRob3VnaCB0aGV5IGFyZSBvcnRo
-b2dvbmFsIGNvbmNlcHRzLiAgQW5kIGZhaWxzIHRvDQp2ZXJpZnkgYW55dGhpbmcgcmVhZCBmcm9t
-IHRoZSBEVC4NCg0KUGVyaGFwcyB5b3UgY291bGQgdGVsbCBtZSBpZiB0aGUgYXBwcm9hY2ggSSd2
-ZSB0YWtlbiBpbiBwYXRjaCAzLCANCiJBZGQgYWJpbGl0eSB0byBkaXNhYmxlIG91dHB1dCBjbG9j
-ayIsIGFuZCBwYXRjaCA0LCAiRGlzYWJsZSB0eC9yeA0KZGVsYXkgd2hlbiBub3QgY29uZmlndXJl
-ZCIsIGFyZSBjb25zaWRlcmVkIGFjY2VwdGFibGU/ICBJIGNhbiBjb25jZWl2ZQ0Kb2YgYXJndW1l
-bnRzIGZvciBhbHRlcm5hdGUgYXBwcm9hY2hlcy4gIEkgd291bGQgbGlrZSB0byBhZGQgc3VwcG9y
-dCBmb3INCiB0aGVzZSBpbnRvIHUtYm9vdCB0b28sIGJ1dCB0eXBpY2FsbHkgdS1ib290IGZvbGxv
-d3MgdGhlIGtlcm5lbCBEVA0KYmluZGluZ3MsIHNvIEkgd2FudCB0byBmaW5hbGl6ZSB0aGUga2Vy
-bmVsIERUIHNlbWFudGljcyBiZWZvcmUgc2VuZGluZw0KcGF0Y2hlcyB0byB1LWJvb3QuDQoNCj4g
-PiBQbGVhc2Ugbm90ZSB0aGF0IG5ldC1uZXh0IGlzIGNsb3NlZCBjdXJyZW50bHkuIFBsZWFzZSBy
-ZXN1Ym1pdCB0aGUNCj4gPiBwYXRjaGVzIG9uY2UgaXQncyBvcGVuIGFnYWluLCBhbmQgcGxlYXNl
-IGFubm90YXRlIHRoZW0gcHJvcGVybHkNCj4gPiB3aXRoIG5ldC1uZXh0Lg0KDQpTb3JyeSwgZGlk
-bid0IGtub3cgYWJvdXQgdGhpcyBwb2xpY3kuICBCZWVuIHllYXJzIHNpbmNlIEkndmUgc3VibWl0
-dGVkDQpuZXQgcGF0Y2hlcy4gIElzIHRoZXJlIGEgZGVzY3JpcHRpb24gc29tZXdoZXJlIG9mIGhv
-dyB0aGlzIGlzIGRvbmU/IA0KR29vZ2xpbmcgbmV0LW5leHQgd2Fzbid0IGhlbHBmdWwuICBJIGdh
-dGhlciBuZXcgcGF0Y2hlcyBhcmUgb25seQ0KYWxsb3dlZCB3aGVuIHRoZSBrZXJuZWwgbWVyZ2Ug
-d2luZG93IGlzIG9wZW4/ICBBbmQgdGhleSBjYW4ndCBiZSBxdWV1ZWQNCm9uIHBhdGNod29yayBv
-ciBhIHRvcGljIGJyYW5jaCB1bnRpbCB0aGlzIGhhcHBlbnM/DQoNCg==
+On 13.05.2019 21:58, Trent Piepho wrote:
+> On Sat, 2019-05-11 at 14:32 +0200, Heiner Kallweit wrote:
+>> On 11.05.2019 12:41, Heiner Kallweit wrote:
+>>> On 10.05.2019 23:46, Trent Piepho wrote:
+>>>> The variables used to store u32 DT properties were signed
+>>>> ints.  This
+>>>> doesn't work properly if the value of the property were to
+>>>> overflow.
+>>>> Use unsigned variables so this doesn't happen.
+>>>>
+>>>
+>>> In patch 3 you added a check for DT properties being out of range.
+>>> I think this would be good also for the three properties here.
+>>> The delay values are only 4 bits wide, so you might also consider
+>>> to switch to u8 or u16.
+>>>
+>>
+>> I briefly looked over the rest of the driver. What is plain wrong
+>> is to allocate memory for the private data structure in the
+>> config_init callback. This has to be done in the probe callback.
+>> An example is marvell_probe(). As you seem to work on this driver,
+>> can you provide a patch for this?
+> 
+> It only allocates the data once, so it is not a memory leak.  But yes,
+> totally wrong place to do it.  I can fix this.  It also does not set
+> the signal line impedance from DT value unless unless also configuring
+> clock skew, even though they are orthogonal concepts.  And fails to
+> verify anything read from the DT.
+> 
+> Perhaps you could tell me if the approach I've taken in patch 3, 
+> "Add ability to disable output clock", and patch 4, "Disable tx/rx
+> delay when not configured", are considered acceptable?  I can conceive
+> of arguments for alternate approaches.  I would like to add support for
+>  these into u-boot too, but typically u-boot follows the kernel DT
+> bindings, so I want to finalize the kernel DT semantics before sending
+> patches to u-boot.
+> 
+I lack experience with these TI PHY's. Maybe Andrew or Florian can advise.
+
+>>> Please note that net-next is closed currently. Please resubmit the
+>>> patches once it's open again, and please annotate them properly
+>>> with net-next.
+> 
+> Sorry, didn't know about this policy.  Been years since I've submitted
+> net patches.  Is there a description somewhere of how this is done? 
+> Googling net-next wasn't helpful.  I gather new patches are only
+> allowed when the kernel merge window is open?  And they can't be queued
+> on patchwork or a topic branch until this happens?
+> 
+https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+
+And the easy way to check whether net-next is open:
+http://vger.kernel.org/~davem/net-next.html
