@@ -1,28 +1,28 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-Date: Mon, 13 May 2019 14:17:14 +0200
-Message-ID: <20190513121714.hvyapq7t5zfhpmor@verge.net.au>
-References: <20190502123220.3016-1-geert+renesas@glider.be>
- <20190502123220.3016-2-geert+renesas@glider.be>
- <20190507135144.2pkfndhb2bduozh5@verge.net.au>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] of_net: Fix missing of_find_device_by_node ref count drop
+Date: Mon, 13 May 2019 14:55:20 +0200
+Message-ID: <20190513125520.GD28969@lunn.ch>
+References: <1557740500-2479-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190507135144.2pkfndhb2bduozh5@verge.net.au>
+In-Reply-To: <1557740500-2479-1-git-send-email-ynezz@true.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 07, 2019 at 03:51:44PM +0200, Simon Horman wrote:
-> On Thu, May 02, 2019 at 02:32:16PM +0200, Geert Uytterhoeven wrote:
-> > Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, May 13, 2019 at 11:41:39AM +0200, Petr Štetiar wrote:
+> of_find_device_by_node takes a reference to the embedded struct device
+> which needs to be dropped after use.
 > 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> Signed-off-by: Petr Štetiar <ynezz@true.cz>
 
-FWIIW, Acceptance/Approval of this patch is blocking me
-applying the soc and dt patches of this series.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
