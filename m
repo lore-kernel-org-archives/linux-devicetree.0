@@ -1,41 +1,45 @@
-From: ynezz <ynezz@ibawizard.net>
-Subject: Re: [PATCH net 0/3] add property "nvmem_macaddr_swap" to swap
- macaddr bytes order
-Date: Mon, 13 May 2019 11:35:39 +0200
-Message-ID: <20190513082625.GA14498@ibawizard.net>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz>
- <20190510113155.mvpuhe4yzxdaanei@flea>
- <VI1PR0402MB3600516CFAD9227B0E175DF4FF0F0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH] of_net: Fix missing of_find_device_by_node ref count drop
+Date: Mon, 13 May 2019 11:41:39 +0200
+Message-ID: <1557740500-2479-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB3600516CFAD9227B0E175DF4FF0F0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Andy Duan <fugang.duan@nxp.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Andy Duan <fugang.duan@nxp.com> [2019-05-13 03:38:32]:
+of_find_device_by_node takes a reference to the embedded struct device
+which needs to be dropped after use.
 
-> From: Maxime Ripard <maxime.ripard@bootlin.com> Sent: Friday, May 10, 2019 7:32 PM
-> > 
-> > It looks to me that it should be abstracted away by the nvmem interface and
-> > done at the provider level, not the customer.
-> > 
-> If to implement add above features like Petr Štetiar described, it should be abstracted
-> In nvmem core driver.
+Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+---
+ drivers/of/of_net.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Maxime made it clear, that network layer as a consumer of the nvmem provider
-doesn't need to know about this byte order swapping details, so this byte
-order swapping should be implemented in nvmem as well, as a bonus it doesn't
-matter if you're going to swap 3, 6 or whatever other amount of bytes
-described by the reg property, so this functionality could be reused which is
-always good.
-
--- ynezz
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index a4b392a5406b..6f1be80e8c4e 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -60,10 +60,13 @@ static const void *of_get_mac_addr_nvmem(struct device_node *np)
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	ret = nvmem_get_mac_address(&pdev->dev, &nvmem_mac);
+-	if (ret)
++	if (ret) {
++		put_device(&pdev->dev);
+ 		return ERR_PTR(ret);
++	}
+ 
+ 	mac = devm_kmemdup(&pdev->dev, nvmem_mac, ETH_ALEN, GFP_KERNEL);
++	put_device(&pdev->dev);
+ 	if (!mac)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-- 
+1.9.1
