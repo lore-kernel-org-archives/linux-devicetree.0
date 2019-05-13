@@ -1,67 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V6 06/15] dt-bindings: PCI: designware: Add binding for
- CDM register check
-Date: Mon, 13 May 2019 10:10:38 -0500
-Message-ID: <20190513151038.GA30653@bogus>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-7-vidyas@nvidia.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v9 1/3] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Date: Mon, 13 May 2019 08:11:29 -0700
+Message-ID: <0f355f524122cb4dd6388431495a9d182e3ed9d6.camel@perches.com>
+References: <20190513145539.28174-1-angus@akkea.ca>
+         <20190513145539.28174-2-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190513050626.14991-7-vidyas@nvidia.com>
+In-Reply-To: <20190513145539.28174-2-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 10:36:17AM +0530, Vidya Sagar wrote:
-> Add support to enable CDM (Configuration Dependent Module) registers check
-> for any data corruption. CDM registers include standard PCIe configuration
-> space registers, Port Logic registers and iATU and DMA registers.
-> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
-> Version 4.90a
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
-> * Added info about Port Logic and DMA registers being part of CDM
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..85b872c42a9f 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -34,6 +34,11 @@ Optional properties:
->  - clock-names: Must include the following entries:
->  	- "pcie"
->  	- "pcie_bus"
-> +- enable-cdm-check: This is a boolean property and if present enables
-> +   automatic checking of CDM (Configuration Dependent Module) registers
-> +   for data corruption. CDM registers include standard PCIe configuration
-> +   space registers, Port Logic registers, DMA and iATU (internal Address
-> +   Translation Unit) registers.
+On Mon, 2019-05-13 at 07:55 -0700, Angus Ainslie (Purism) wrote:
+> This is for the development kit board for the Librem 5. The current level
+> of support yields a working console and is able to boot userspace from
+> the network or eMMC.
+[]
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> new file mode 100644
 
-snps,enable-cdm-check
-
->  RC mode:
->  - num-viewport: number of view ports configured in hardware. If a platform
->    does not specify it, the driver assumes 2.
-> -- 
-> 2.17.1
-> 
+Perhaps add an entry in the MAINTAINERS file for this
+.dts file similar to other freescale boards?
