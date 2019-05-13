@@ -1,60 +1,49 @@
 From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH v3 4/6] dt-bindings: soc/fsl: qe: document new fsl,qe-snums
- binding
-Date: Mon, 13 May 2019 11:14:58 +0000
-Message-ID: <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
+Subject: [PATCH v3 1/6] soc/fsl/qe: qe.c: drop useless static qualifier
+Date: Mon, 13 May 2019 11:14:54 +0000
+Message-ID: <20190513111442.25724-2-rasmus.villemoes@prevas.dk>
 References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
  <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <oss@buserror.net>, Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Joakim Tjernlund <Joakim.Tjernlund@infinera.com>, Rasmus Villemoes <Rasmus.Villemoes@prevas.se>, Rob Herring <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-UmVhZGluZyB0YWJsZSA0LTMwLCBhbmQgaXRzIGZvb3Rub3Rlcywgb2YgdGhlIFFVSUNDIEVuZ2lu
-ZSBCbG9jaw0KUmVmZXJlbmNlIE1hbnVhbCBzaG93cyB0aGF0IHRoZSBzZXQgb2Ygc251bSBfdmFs
-dWVzXyBpcyBub3QNCm5lY2Vzc2FyaWx5IGp1c3QgYSBmdW5jdGlvbiBvZiB0aGUgX251bWJlcl8g
-b2Ygc251bXMsIGFzIGdpdmVuIGluIHRoZQ0KZnNsLHFlLW51bS1zbnVtcyBwcm9wZXJ0eS4NCg0K
-QXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVyIHRvIGFkZCBzdXBwb3J0IGZvciBv
-dGhlciB2YXJpYW50cw0Kb2YgdGhlIFFVSUNDIGVuZ2luZSBJUCwgdGhpcyBpbnRyb2R1Y2VzIGEg
-bmV3IGJpbmRpbmcgZnNsLHFlLXNudW1zLA0Kd2hpY2ggYXV0b21hdGljYWxseSBlbmNvZGVzIGJv
-dGggdGhlIG51bWJlciBvZiBzbnVtcyBhbmQgdGhlIGFjdHVhbA0KdmFsdWVzIHRvIHVzZS4NCg0K
-U2lnbmVkLW9mZi1ieTogUmFzbXVzIFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0BwcmV2YXMu
-ZGs+DQotLS0NClJvYiwgdGhhbmtzIGZvciB0aGUgcmV2aWV3IG9mIHYyLiBIb3dldmVyLCBzaW5j
-ZSBJIG1vdmVkIHRoZSBleGFtcGxlDQpmcm9tIHRoZSBjb21taXQgbG9nIHRvIHRoZSBiaW5kaW5n
-IChwZXIgSm9ha2ltJ3MgcmVxdWVzdCksIEkgZGlkbid0DQphZGQgYSBSZXZpZXdlZC1ieSB0YWcg
-Zm9yIHRoaXMgcmV2aXNpb24uDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2Nw
-bV9xZS9xZS50eHQgICAgICAgfCAxMyArKysrKysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDEy
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUudHh0DQppbmRleCBkN2Fm
-YWZmNWZhZmYuLjA1ZWMyYTgzOGM1NCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHQNCkBAIC0xOCw3ICsxOCw4
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogLSByZWcgOiBvZmZzZXQgYW5kIGxlbmd0aCBvZiB0
-aGUgZGV2aWNlIHJlZ2lzdGVycy4NCiAtIGJ1cy1mcmVxdWVuY3kgOiB0aGUgY2xvY2sgZnJlcXVl
-bmN5IGZvciBRVUlDQyBFbmdpbmUuDQogLSBmc2wscWUtbnVtLXJpc2NzOiBkZWZpbmUgaG93IG1h
-bnkgUklTQyBlbmdpbmVzIHRoZSBRRSBoYXMuDQotLSBmc2wscWUtbnVtLXNudW1zOiBkZWZpbmUg
-aG93IG1hbnkgc2VyaWFsIG51bWJlcihTTlVNKSB0aGUgUUUgY2FuIHVzZSBmb3IgdGhlDQorLSBm
-c2wscWUtc251bXM6IFRoaXMgcHJvcGVydHkgaGFzIHRvIGJlIHNwZWNpZmllZCBhcyAnL2JpdHMv
-IDgnIHZhbHVlLA0KKyAgZGVmaW5pbmcgdGhlIGFycmF5IG9mIHNlcmlhbCBudW1iZXIgKFNOVU0p
-IHZhbHVlcyBmb3IgdGhlIHZpcnR1YWwNCiAgIHRocmVhZHMuDQogDQogT3B0aW9uYWwgcHJvcGVy
-dGllczoNCkBAIC0zNCw2ICszNSwxMSBAQCBSZWNvbW1lbmRlZCBwcm9wZXJ0aWVzDQogLSBicmct
-ZnJlcXVlbmN5IDogdGhlIGludGVybmFsIGNsb2NrIHNvdXJjZSBmcmVxdWVuY3kgZm9yIGJhdWQt
-cmF0ZQ0KICAgZ2VuZXJhdG9ycyBpbiBIei4NCiANCitEZXByZWNhdGVkIHByb3BlcnRpZXMNCist
-IGZzbCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0pIHRo
-ZSBRRSBjYW4gdXNlDQorICBmb3IgdGhlIHRocmVhZHMuIFVzZSBmc2wscWUtc251bXMgaW5zdGVh
-ZCB0byBub3Qgb25seSBzcGVjaWZ5IHRoZQ0KKyAgbnVtYmVyIG9mIHNudW1zLCBidXQgYWxzbyB0
-aGVpciB2YWx1ZXMuDQorDQogRXhhbXBsZToNCiAgICAgIHFlQGUwMTAwMDAwIHsNCiAJI2FkZHJl
-c3MtY2VsbHMgPSA8MT47DQpAQCAtNDQsNiArNTAsMTEgQEAgRXhhbXBsZToNCiAJcmVnID0gPGUw
-MTAwMDAwIDQ4MD47DQogCWJyZy1mcmVxdWVuY3kgPSA8MD47DQogCWJ1cy1mcmVxdWVuY3kgPSA8
-MTc5QTdCMDA+Ow0KKwlmc2wscWUtc251bXMgPSAvYml0cy8gOCA8DQorCQkweDA0IDB4MDUgMHgw
-QyAweDBEIDB4MTQgMHgxNSAweDFDIDB4MUQNCisJCTB4MjQgMHgyNSAweDJDIDB4MkQgMHgzNCAw
-eDM1IDB4ODggMHg4OQ0KKwkJMHg5OCAweDk5IDB4QTggMHhBOSAweEI4IDB4QjkgMHhDOCAweEM5
-DQorCQkweEQ4IDB4RDkgMHhFOCAweEU5PjsNCiAgICAgIH0NCiANCiAqIE11bHRpLVVzZXIgUkFN
-IChNVVJBTSkNCi0tIA0KMi4yMC4xDQoNCg==
+The local variable snum_init has no reason to have static storage duration.
+
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Qiang Zhao <qiang.zhao@nxp.com>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+---
+ drivers/soc/fsl/qe/qe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+index 612d9c551be5..855373deb746 100644
+--- a/drivers/soc/fsl/qe/qe.c
++++ b/drivers/soc/fsl/qe/qe.c
+@@ -306,7 +306,7 @@ static void qe_snums_init(void)
+ 		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
+ 		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
+ 	};
+-	static const u8 *snum_init;
++	const u8 *snum_init;
+ 
+ 	qe_num_of_snum = qe_get_num_of_snums();
+ 
+-- 
+2.20.1
