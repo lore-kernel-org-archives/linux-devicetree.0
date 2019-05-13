@@ -1,34 +1,38 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v10 3/4] dt-bindings: Add an entry for Purism SPC
-Date: Mon, 13 May 2019 10:40:56 -0700
-Message-ID: <20190513174057.4410-4-angus@akkea.ca>
-References: <20190513174057.4410-1-angus@akkea.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/4] dt-bindings: clk: at91: add bindings for
+ SAM9X60's  slow clock controller
+Date: Mon, 13 May 2019 12:48:20 -0500
+Message-ID: <20190513174820.GA16840@bogus>
+References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
+ <1557487388-32098-4-git-send-email-claudiu.beznea@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513174057.4410-1-angus@akkea.ca>
+Content-Disposition: inline
+In-Reply-To: <1557487388-32098-4-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Add an entry for Purism, SPC
+On Fri, 10 May 2019 11:23:35 +0000, <Claudiu.Beznea@microchip.com> wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Add bindings for SAM9X60's slow clock controller.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+> 
+> Hi Rob,
+> 
+> I didn't added your Reviewed-by tag to this version since I changed
+> the driver with regards to clock-cells DT binding (and I though you
+> may want to comment on this).
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+>  Documentation/devicetree/bindings/clock/at91-clock.txt | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index e9034a6c003a..64bb1fa1a4d5 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -333,6 +333,7 @@ poslab	Poslab Technology Co., Ltd.
- powervr	PowerVR (deprecated, use img)
- probox2	PROBOX2 (by W2COMP Co., Ltd.)
- pulsedlight	PulsedLight, Inc
-+purism	Purism, SPC
- qca	Qualcomm Atheros, Inc.
- qcom	Qualcomm Technologies, Inc
- qemu	QEMU, a generic and open source machine emulator and virtualizer
--- 
-2.17.1
