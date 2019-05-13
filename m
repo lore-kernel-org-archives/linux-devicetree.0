@@ -1,93 +1,61 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 9/9] arm64: dts: qcom: msm8998: Add rpmpd node
-Date: Mon, 13 May 2019 15:50:15 +0530
-Message-ID: <20190513102015.26551-10-sibis@codeaurora.org>
-References: <20190513102015.26551-1-sibis@codeaurora.org>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
+Date: Mon, 13 May 2019 12:28:59 +0200
+Message-ID: <20190513102859.GA18462@vmlxhi-102.adit-jv.com>
+References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+ <1557413011-1662-1-git-send-email-george_davis@mentor.com>
+ <20190510171021.GA22691@vmlxhi-102.adit-jv.com>
+ <20190510183847.GB28648@mam-gdavis-lt>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513102015.26551-1-sibis@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190510183847.GB28648@mam-gdavis-lt>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
-Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, marc.w.gonzalez@free.fr, Sibi Sankar <sibis@codeaurora.org>
+To: "George G. Davis" <george_davis@mentor.com>
+Cc: "George G. Davis" <ggdavisiv@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>Eug
 List-Id: devicetree@vger.kernel.org
 
-Add the rpmpd node on the msm8998 and define the available levels.
+Hi George,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 51 +++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+On Fri, May 10, 2019 at 02:38:47PM -0400, George G. Davis wrote:
+> Hello Eugeniu,
+> 
+> On Fri, May 10, 2019 at 07:10:21PM +0200, Eugeniu Rosca wrote:
+> > Hi George,
+> > 
+> > I am able to reproduce the SCIF2 console freeze described in the
+> > referenced patchwork link using M3-ES1.1-Salvator-XS and recent
+> > v5.1-9573-gb970afcfcabd kernel.
+> > 
+> > I confirm the behavior is healed with this patch. Thanks!
+> > Hope to see it accepted soon, since it fixes a super annoying
+> > console breakage every fourth boot or so on lots of R-Car3 targets.
+> > 
+> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> 
+> Thanks for testing.
+> 
+> Also note, for the record, that the problem is not limited to SCIF2, e.g. try
+> setting console=ttySC<n> wheren <n> is not SCIF2 on any other board which
+> includes support for other serial ports, e.g. r8a7795-salvator-x, and you will
+> observe the same problem on other SCIF ports too. It's just a concidence that
+> most boards use SCIF2 as the default serial console where the console hangs
+> (resolved by this patch) have been observed on multiple boards.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 574be78a936e..aa501221ca4d 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -264,6 +265,56 @@
- 				compatible = "qcom,rpmcc-msm8998", "qcom,rpmcc";
- 				#clock-cells = <1>;
- 			};
-+
-+			rpmpd: power-controller {
-+				compatible = "qcom,msm8998-rpmpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmpd_opp_table>;
-+
-+				rpmpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmpd_opp_ret: opp1 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION>;
-+					};
-+
-+					rpmpd_opp_ret_plus: opp2 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
-+					};
-+
-+					rpmpd_opp_min_svs: opp3 {
-+						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmpd_opp_low_svs: opp4 {
-+						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmpd_opp_svs: opp5 {
-+						opp-level = <RPM_SMD_LEVEL_SVS>;
-+					};
-+
-+					rpmpd_opp_svs_plus: opp6 {
-+						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-+					};
-+
-+					rpmpd_opp_nom: opp7 {
-+						opp-level = <RPM_SMD_LEVEL_NOM>;
-+					};
-+
-+					rpmpd_opp_nom_plus: opp8 {
-+						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-+					};
-+
-+					rpmpd_opp_turbo: opp9 {
-+						opp-level = <RPM_SMD_LEVEL_TURBO>;
-+					};
-+
-+					rpmpd_opp_turbo_plus: opp10 {
-+						opp-level = <RPM_SMD_LEVEL_BINNING>;
-+					};
-+				};
-+			};
- 		};
- 	};
- 
+Thanks for the additional level of detail.
+
+FTR, trying to track the origin of the problem, it looks to me that the
+issue was _unmasked_ by v4.16-rc1 commit be7e251d20e6c8 ("tty: serial:
+sh-sci: Hide DMA config question") which turned on DMA on SCIF by
+default.
+
+I wonder if it'd be helpful to resend the patch w/o using --in-reply-to,
+so that it appears as standalone entry in linux-renesas-soc patchwork.
+Currently, assuming that the R-Car maintainers filter out any "Rejected"
+patches (which is the default patchwork behavior), your patch would be
+hidden from their eye.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Best Regards,
+Eugeniu.
