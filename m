@@ -1,113 +1,93 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
- property "nvmem_macaddr_swap" to swap macaddr bytes order]
-Date: Mon, 13 May 2019 11:28:07 +0200
-Message-ID: <20190513092807.GX81826@meh.true.cz>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz>
- <20190510113155.mvpuhe4yzxdaanei@flea>
- <20190511144444.GU81826@meh.true.cz>
- <20190512121910.432t2vncvmpu26qg@flea>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v3 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Date: Mon, 13 May 2019 11:31:30 +0200
+Message-ID: <1557739890.3997.1.camel@pengutronix.de>
+References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190512121910.432t2vncvmpu26qg@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <yibin.gong@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "plyatov@gmail.com" <plyatov@gmail.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> [2019-05-12 14:19:10]:
+Hi Robin,
 
-> > @@ -29,6 +31,19 @@ Optional properties:
-> >  bits:  Is pair of bit location and number of bits, which specifies offset
-> >         in bit and number of bits within the address range specified by reg property.
-> >         Offset takes values from 0-7.
-> > +byte-indices: array, encoded as an arbitrary number of (offset, length) pairs,
-> > +            within the address range specified by reg property. Each pair is
-> > +            then processed with byte-transform in order to produce single u8
-> > +            sized byte.
-> > +byte-transform: string, specifies the transformation which should be applied
-> > +              to every byte-indices pair in order to produce usable u8 sized byte,
-> > +              possible values are "none", "ascii" and "bcd". Default is "none".
-> > +byte-adjust: number, value by which should be adjusted resulting output byte at
-> > +           byte-adjust-at offset.
-> > +byte-adjust-at: number, specifies offset of resulting output byte which should be
-> > +              adjusted by byte-adjust value, default is 0.
-> > +byte-result-swap: boolean, specifies if the resulting output bytes should be
-> > +                swapped prior to return
-> >
-> >  For example:
-> >
-> > @@ -59,6 +74,36 @@ For example:
-> >                 ...
-> >         };
-> >
-> > +Another example where we've MAC address for eth1 stored in the NOR EEPROM as
-> > +following sequence of bytes (output of hexdump -C /dev/mtdX):
-> > +
-> > + 00000180  66 61 63 5f 6d 61 63 20  3d 20 44 34 3a 45 45 3a  |fac_mac = D4:EE:|
-> > + 00000190  30 37 3a 33 33 3a 36 43  3a 32 30 0a 42 44 49 4e  |07:33:6C:20.BDIN|
-> > +
-> > +Which means, that MAC address is stored in EEPROM as D4:EE:07:33:6C:20, so
-> > +ASCII delimited by colons, but we can't use this MAC address directly as
-> > +there's only one MAC address stored in the EEPROM and we need to increment last
-> > +octet/byte in this address in order to get usable MAC address for eth1 device.
-> > +
-> > + eth1_addr: eth-mac-addr@18a {
-> > +     reg = <0x18a 0x11>;
-> > +     byte-indices = < 0 2
-> > +                      3 2
-> > +                      6 2
-> > +                      9 2
-> > +                     12 2
-> > +                     15 2>;
-> > +     byte-transform = "ascii";
-> > +     byte-increment = <1>;
-> > +     byte-increment-at = <5>;
-> > +     byte-result-swap;
-> > + };
-> > +
-> > + &eth1 {
-> > +     nvmem-cells = <&eth1_addr>;
-> > +     nvmem-cell-names = "mac-address";
-> > + };
-> > +
+Am Dienstag, den 07.05.2019, 09:15 +0000 schrieb Robin Gong:
+>   There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+>   The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+>   Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
 > 
-> Something along those lines yes. I'm not sure why in your example the
-> cell doesn't start at the mac address itself, instead of starting at
-> the key + having to specify an offset though. The reg property is the
-> offset already.
+> PS:
+>   Please get sdma firmware from below linux-firmware and copy it to your
+> local rootfs /lib/firmware/imx/sdma.
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-The cell starts at the MAC address itself, 0x180 is offset within the EEPROM
-and 0xa is byte within the offset (off-by-one, correct should be 0x9 though).
+This series is unfit for merging, as long as it depends on a SDMA RAM
+script that is known to break serial DMA. When can we expect to get a
+firmware version with the broken serial script removed out into the
+public?
 
-  EEPROM                 byte within EEPROM offset
-  offset    1  2  3  4  5  5  6  7   8  9  a  b  c  d  e  f
- ------------------------------------------------------------|-----------------
- 00000180  66 61 63 5f 6d 61 63 20  3d 20 44 34 3a 45 45 3a  |fac_mac = D4:EE:|
- 00000190  30 37 3a 33 33 3a 36 43  3a 32 30 0a 42 44 49 4e  |07:33:6C:20.BDIN|
+Regards,
+Lucas
 
-So this would produce following:
-
- eth1_addr: eth-mac-addr@189 {
-    reg = <0x189 0x11>;         /* 0x44 0x34 0x3a 0x45 0x45 0x3a 0x30 0x37
-                                 * 0x3a 0x33 0x33 0x3a 0x36 0x43 0x3a 0x32 0x30 */
-    byte-indices = < 0 2        /* 0x44 0x34 */
-                     3 2        /* 0x45 0x45 */
-                     6 2        /* 0x30 0x37 */
-                     9 2        /* 0x33 0x33 */
-                    12 2        /* 0x36 0x43 */
-                    15 2>;      /* 0x32 0x30 */
-    byte-transform = "ascii";   /* 0xd4 0xee 0x7 0x33 0x6c 0x20 */
-    byte-increment = <1>;
-    byte-increment-at = <5>;    /* 0xd4 0xee 0x7 0x33 0x6c 0x21 */
-    byte-result-swap;           /* 0x21 0x6c 0x33 0x7 0xee 0xd4 */
- };
-
--- ynezz
+> v2:
+>   1. add commit log for reverted patches.
+>   2. add comment for 'ecspi_fixed' in sdma driver.
+>   3. add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+>      rather than remove.
+> v3:
+>   1. confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+>   /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+>   Correct dts related dts patch in v2.
+>   2. clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+>   in spi-imx driver to state ERR009165 fixed or not.
+>   3. Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+>   errata workaroud, thus improve performance as possible.
+> 
+> Robin Gong (14):
+>   Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+>   Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+>   Revert "dmaengine: imx-sdma: refine to load context only once"
+>   dmaengine: imx-sdma: remove dupilicated sdma_load_context
+>   dmaengine: imx-sdma: add mcu_2_ecspi script
+>   spi: imx: fix ERR009165
+>   spi: imx: remove ERR009165 workaround on i.mx6ul
+>   dt-bindings: spi: imx: add new i.mx6ul compatible name
+>   dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+>   dt-bindings: dma: imx-sdma: add i.mx6ul/6sx compatible name
+>   dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+>   ARM: dts: imx6ul: add dma support on ecspi
+>   ARM: dts: imx6sll: correct sdma compatible
+>   arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+> 
+>  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  2 +
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+>  arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
+>  arch/arm/boot/dts/imx6sll.dtsi                     |  2 +-
+>  arch/arm/boot/dts/imx6ul.dtsi                      |  8 +++
+>  arch/arm64/configs/defconfig                       |  3 +
+>  drivers/dma/imx-sdma.c                             | 78 ++++++++++++++++------
+>  drivers/spi/spi-imx.c                              | 61 ++++++++++++++---
+>  include/linux/platform_data/dma-imx-sdma.h         |  1 +
+>  10 files changed, 132 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
