@@ -1,61 +1,62 @@
-Return-Path: <SRS0=yXcy=TJ=gmail.com=thierry.reding@kernel.org>
-Date: Thu, 9 May 2019 16:22:39 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 15/28] PCI: tegra: Update flow control timer frequency
- in Tegra210
-Message-ID: <20190509142239.GL8907@ulmo>
-References: <20190423092825.759-1-mmaddireddy@nvidia.com>
- <20190423092825.759-16-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 00/29] Enable Tegra PCIe root port features
+Date: Mon, 13 May 2019 23:37:15 +0530
+Message-ID: <20190513180744.16493-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Pz0BBB9QxoYXlT+x"
-Content-Disposition: inline
-In-Reply-To: <20190423092825.759-16-mmaddireddy@nvidia.com>
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
+This series of patches adds,
+- Tegra root port features like Gen2, AER, etc
+- Power and perf optimizations
+- Fixes like "power up sequence", "dev_err prints", etc
 
---Pz0BBB9QxoYXlT+x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
+based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
+platforms.
 
-On Tue, Apr 23, 2019 at 02:58:12PM +0530, Manikanta Maddireddy wrote:
-> Recommended UpdateFC threshold in Tegra210 is 0x60 for best performance
-> of x1 link. Setting this to 0x60 provides the best balance between number
-> of UpdateFC packets and read data sent over the link.
->=20
-> UpdateFC timer frequency is equal to twice the value of register content
-> in nsec, i.e (2 * 0x60) =3D 192 nsec.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2: Changed update_fc_val to update_fc_threshold
->=20
->  drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+Manikanta Maddireddy (29):
+  soc/tegra: pmc: Export tegra_powergate_power_on()
+  PCI: tegra: Handle failure cases in tegra_pcie_power_on()
+  PCI: tegra: Rearrange Tegra PCIe driver functions
+  PCI: tegra: Mask AFI_INTR in runtime suspend
+  PCI: tegra: Fix PCIe host power up sequence
+  PCI: tegra: Add PCIe Gen2 link speed support
+  PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+  PCI: tegra: Program UPHY electrical settings for Tegra210
+  PCI: tegra: Enable opportunistic UpdateFC and ACK
+  PCI: tegra: Disable AFI dynamic clock gating
+  PCI: tegra: Process pending DLL transactions before entering L1 or L2
+  PCI: tegra: Enable PCIe xclk clock clamping
+  PCI: tegra: Increase the deskew retry time
+  PCI: tegra: Add SW fixup for RAW violations
+  PCI: tegra: Update flow control timer frequency in Tegra210
+  PCI: tegra: Set target speed as Gen1 before starting LTSSM
+  PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+  PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+  PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+  PCI: tegra: Use legacy IRQ for port service drivers
+  PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+  PCI: tegra: Access endpoint config only if PCIe link is up
+  dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+  arm64: tegra: Add PEX DPD states as pinctrl properties
+  PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
+  PCI: Add DT binding for "reset-gpios" property
+  PCI: OF: Add of_pci_get_reset_gpio() to parse reset-gpios from DT
+  PCI: tegra: Add support for GPIO based PERST#
+  PCI: tegra: Change link retry log level to debug
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+ .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
+ Documentation/devicetree/bindings/pci/pci.txt |   3 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
+ drivers/pci/controller/pci-tegra.c            | 616 +++++++++++++++---
+ drivers/pci/of.c                              |  18 +
+ drivers/soc/tegra/pmc.c                       |   1 +
+ include/linux/of_pci.h                        |  10 +
+ 7 files changed, 595 insertions(+), 80 deletions(-)
 
---Pz0BBB9QxoYXlT+x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUN68ACgkQ3SOs138+
-s6EUIQ//fPLO3+kOgp+cWleSpS5tQI/b3oSJYHWpm4WDf+3W00jaAOngR/nppT+R
-xZrL/NENwycIe9ShA3Fh1lOPKnYtTWEfjHj1lsWFMVvKqOykPQCpuQV74G2/BCF3
-rSv67tehrwMAgndniHosmKcmu1Pw0gYMITujiodA4J7R9OIkgYsaCb00gNujYfHl
-noT6w9b/s38NcSv1E8k4EvTd44YFfyWt1xrOW9QSuAFrqsKD79fFgwQmPr11e6P0
-IYLM9ylf0S6Pm5q9WML1CELnThLbuFUwr0UfjlSoLu6siDfD/JC0rTj7m+EIgEYT
-nh2Nb1QL8EsDIOLzxSq9h7ZdzQxnyGmGKpm4o1jGkacyjR4np90h8wJSeOZnBx31
-+Yo54EFeEUvfwZxbVCz8C8+IP/AbBLqEhKAp+0ES6vH0RDO42KepGQUcalv22Akr
-0ret0Bw5TCYw4kTPEsuDy5f0lziu4zqMICz+sATbzn9ptLqaP2KPLII2jEWUglPb
-ws5w3+OOvsAGAU160egM4X6cpToY0x0wulj1gguXysASERKwMQ5Q+xZpUWXWVr32
-1MiEUEvDPB41hQeqyHmvnMSVu8PfgzyjudOtHR4hzsH5zqXvD82mKVh12bIDBiob
-lqtVwu2VdMRm8BBw8tSB+xH25dlRD7xKJD8YVksWMyPElMWFnh4=
-=8+ux
------END PGP SIGNATURE-----
-
---Pz0BBB9QxoYXlT+x--
+-- 
+2.17.1
