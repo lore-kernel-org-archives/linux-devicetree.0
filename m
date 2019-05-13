@@ -1,51 +1,93 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH V6 15/15] arm64: Add Tegra194 PCIe driver to defconfig
-Date: Mon, 13 May 2019 10:36:26 +0530
-Message-ID: <20190513050626.14991-16-vidyas@nvidia.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513050626.14991-1-vidyas@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 0/4] kbuild: remove 'addtree' and 'flags' magic
+Date: Mon, 13 May 2019 15:22:13 +0900
+Message-ID: <20190513062217.20750-1-yamada.masahiro@socionext.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe host controller driver for DesignWare core based
-PCIe controller IP present in Tegra194.
+The 'addtree' and 'flags' are longstanding PITA.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v5]:
-* None
+When we discussed this in kbuild ML,
+(https://patchwork.kernel.org/patch/9632347/)
+we agreed to get rid of this hack.
 
-Changes since [v4]:
-* None
+This required lots of efforts to send many fixups
+to each subsystem.
 
-Changes since [v3]:
-* None
+I did it, all the per-subsystem fixups were merged
+except media subsystem.
 
-Changes since [v2]:
-* None
+I will apply all the remaining fixups,
+and delete 'addtree' and 'flags' magic.
 
-Changes since [v1]:
-* Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
+I have tested this series for a long time,
+and addressed all the reported issues.
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c12c505dd24f..57097c2dd67d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -195,6 +195,7 @@ CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
-+CONFIG_PCIE_TEGRA194=m
- CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
+
+Masahiro Yamada (4):
+  media: remove unneeded header search paths
+  media: prefix header search paths with $(srctree)/
+  treewide: prefix header search paths with $(srctree)/
+  kbuild: remove 'addtree' and 'flags' magic for header search paths
+
+ arch/mips/pnx833x/Platform                    |  2 +-
+ arch/powerpc/Makefile                         |  2 +-
+ arch/sh/Makefile                              |  4 +--
+ arch/x86/kernel/Makefile                      |  2 +-
+ arch/x86/mm/Makefile                          |  2 +-
+ arch/xtensa/boot/lib/Makefile                 |  2 +-
+ drivers/hid/intel-ish-hid/Makefile            |  2 +-
+ drivers/media/common/b2c2/Makefile            |  4 +--
+ drivers/media/dvb-frontends/cxd2880/Makefile  |  2 --
+ drivers/media/i2c/smiapp/Makefile             |  2 +-
+ drivers/media/mmc/siano/Makefile              |  3 +--
+ drivers/media/pci/b2c2/Makefile               |  2 +-
+ drivers/media/pci/bt8xx/Makefile              |  5 ++--
+ drivers/media/pci/cx18/Makefile               |  4 +--
+ drivers/media/pci/cx23885/Makefile            |  4 +--
+ drivers/media/pci/cx88/Makefile               |  4 +--
+ drivers/media/pci/ddbridge/Makefile           |  4 +--
+ drivers/media/pci/dm1105/Makefile             |  2 +-
+ drivers/media/pci/mantis/Makefile             |  2 +-
+ drivers/media/pci/netup_unidvb/Makefile       |  2 +-
+ drivers/media/pci/ngene/Makefile              |  4 +--
+ drivers/media/pci/pluto2/Makefile             |  2 +-
+ drivers/media/pci/pt1/Makefile                |  4 +--
+ drivers/media/pci/pt3/Makefile                |  4 +--
+ drivers/media/pci/smipcie/Makefile            |  5 ++--
+ drivers/media/pci/ttpci/Makefile              |  4 +--
+ drivers/media/platform/sti/c8sectpfe/Makefile |  5 ++--
+ drivers/media/radio/Makefile                  |  2 --
+ drivers/media/spi/Makefile                    |  4 +--
+ drivers/media/usb/as102/Makefile              |  2 +-
+ drivers/media/usb/au0828/Makefile             |  4 +--
+ drivers/media/usb/b2c2/Makefile               |  2 +-
+ drivers/media/usb/cx231xx/Makefile            |  5 ++--
+ drivers/media/usb/em28xx/Makefile             |  4 +--
+ drivers/media/usb/go7007/Makefile             |  2 +-
+ drivers/media/usb/pvrusb2/Makefile            |  4 +--
+ drivers/media/usb/siano/Makefile              |  2 +-
+ drivers/media/usb/tm6000/Makefile             |  4 +--
+ drivers/media/usb/ttusb-budget/Makefile       |  2 +-
+ drivers/media/usb/usbvision/Makefile          |  2 --
+ drivers/net/ethernet/chelsio/libcxgb/Makefile |  2 +-
+ drivers/target/iscsi/cxgbit/Makefile          |  6 ++---
+ drivers/usb/storage/Makefile                  |  2 +-
+ fs/ocfs2/dlm/Makefile                         |  3 +--
+ fs/ocfs2/dlmfs/Makefile                       |  2 +-
+ fs/xfs/Makefile                               |  4 +--
+ net/bpfilter/Makefile                         |  2 +-
+ scripts/Kbuild.include                        |  8 ------
+ scripts/Makefile.host                         | 12 ++++-----
+ scripts/Makefile.lib                          | 26 ++++++-------------
+ scripts/dtc/Makefile                          |  6 ++---
+ scripts/genksyms/Makefile                     |  4 +--
+ scripts/kconfig/Makefile                      |  4 +--
+ 53 files changed, 85 insertions(+), 119 deletions(-)
+
 -- 
 2.17.1
