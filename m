@@ -1,82 +1,113 @@
-Return-Path: <SRS0=EAgr=TC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from secvs02.rockwellcollins.com ([205.175.225.241]:35722 "EHLO
-        secvs02.rockwellcollins.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726524AbfEBQOp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 May 2019 12:14:45 -0400
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Subject: [PATCH v2 6/6] iio: ad7949: Fix dummy read cycle placement
-Date: Thu,  2 May 2019 11:14:32 -0500
-Message-Id: <1556813672-49861-6-git-send-email-adam.michaelis@rockwellcollins.com>
-In-Reply-To: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
-References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V3 22/29] PCI: tegra: Access endpoint config only if PCIe link is up
+Date: Mon, 13 May 2019 23:37:37 +0530
+Message-ID: <20190513180744.16493-23-mmaddireddy@nvidia.com>
+In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The AD7949 requires two conversion cycles following any configuration
-change (including changing the analog channel being sampled). Therefore,
-adding a dummy read cycle when config is changed and removing the extra
-cycles at initial configuration.
+Few endpoints like Wi-Fi supports power on/off and to leverage that
+root port must support hot-plug and hot-unplug. Tegra PCIe doesn't
+support hot-plug and hot-unplug, however it supports endpoint power
+on/off feature as follows,
+ - Power off sequence:
+   - Transition of PCIe link to L2
+   - Power off endpoint
+   - Leave root port in power up state with the link in L2
+ - Power on sequence:
+   - Power on endpoint
+   - Apply hot reset to get PCIe link up
 
-Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
----
-	V2: Add some defines to reduce use of magic numbers.
----
- drivers/iio/adc/ad7949.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+PCIe client driver stops accessing PCIe endpoint config and BAR registers
+after endpoint is powered off. However, software applications like x11
+server or lspci can access endpoint config registers in which case
+host controller raises "response decoding" errors. To avoid this scenario,
+add PCIe link up check in config read and write callback functions before
+accessing endpoint config registers.
 
-diff --git a/drivers/iio/adc/ad7949.c b/drivers/iio/adc/ad7949.c
-index cba152151908..5a6fe522c931 100644
---- a/drivers/iio/adc/ad7949.c
-+++ b/drivers/iio/adc/ad7949.c
-@@ -144,6 +144,25 @@ static int ad7949_spi_write_cfg(struct ad7949_adc_chip *ad7949_adc, u16 val,
- 		 * time to send a new command to the device
- 		 */
- 		udelay(2);
-+
-+		/*
-+		 * Perform extra read cycle to allow configuration, acquisition,
-+		 * and conversion sequences to complete for new configuration.
-+		 */
-+		(void)memset(&tx, 0, sizeof(tx));
-+		(void)memset(ad7949_adc->buffer, 0, AD7949_BUFFER_LEN);
-+
-+		tx.rx_buf = ad7949_adc->buffer;
-+		tx.len = ad7949_message_len(ad7949_adc);
-+
-+		spi_message_init_with_transfers(&msg, &tx, 1);
-+		ret = spi_sync(ad7949_adc->spi, &msg);
-+
-+		/*
-+		 * This delay is to avoid a new request before the required time
-+		 * to send a new command to the device.
-+		 */
-+		udelay(2);
- 	}
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+---
+V3: Update the commit log with explanation for the need of this patch
+
+V2: Change tegra_pcie_link_status() to tegra_pcie_link_up()
+
+ drivers/pci/controller/pci-tegra.c | 38 ++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index d20c88a79e00..33f4dfab9e35 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -428,6 +428,14 @@ static inline u32 pads_readl(struct tegra_pcie *pcie, unsigned long offset)
+ 	return readl(pcie->pads + offset);
+ }
  
- 	return ret;
-@@ -276,7 +295,6 @@ static int ad7949_spi_reg_access(struct iio_dev *indio_dev,
- static int ad7949_spi_init(struct ad7949_adc_chip *ad7949_adc)
++static bool tegra_pcie_link_up(struct tegra_pcie_port *port)
++{
++	u32 value;
++
++	value = readl(port->base + RP_LINK_CONTROL_STATUS);
++	return !!(value & RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE);
++}
++
+ /*
+  * The configuration space mapping on Tegra is somewhat similar to the ECAM
+  * defined by PCIe. However it deviates a bit in how the 4 bits for extended
+@@ -493,20 +501,50 @@ static void __iomem *tegra_pcie_map_bus(struct pci_bus *bus,
+ static int tegra_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+ 				  int where, int size, u32 *value)
  {
- 	int ret;
--	int val;
- 	u16 adc_config = 0;
++	struct tegra_pcie *pcie = bus->sysdata;
++	struct pci_dev *bridge;
++	struct tegra_pcie_port *port;
++
+ 	if (bus->number == 0)
+ 		return pci_generic_config_read32(bus, devfn, where, size,
+ 						 value);
  
- 	ad7949_adc->current_channel = 0;
-@@ -309,13 +327,6 @@ static int ad7949_spi_init(struct ad7949_adc_chip *ad7949_adc)
- 			adc_config,
- 			AD7949_CFG_MASK_TOTAL);
++	bridge = pcie_find_root_port(bus->self);
++
++	list_for_each_entry(port, &pcie->ports, list)
++		if (port->index + 1 == PCI_SLOT(bridge->devfn))
++			break;
++
++	/* If there is no link, then there is no device */
++	if (!tegra_pcie_link_up(port)) {
++		*value = 0xffffffff;
++		return PCIBIOS_DEVICE_NOT_FOUND;
++	}
++
+ 	return pci_generic_config_read(bus, devfn, where, size, value);
+ }
  
--	/*
--	 * Do two dummy conversions to apply the first configuration setting.
--	 * Required only after the start up of the device.
--	 */
--	ad7949_spi_read_channel(ad7949_adc, &val, ad7949_adc->current_channel);
--	ad7949_spi_read_channel(ad7949_adc, &val, ad7949_adc->current_channel);
--
- 	return ret;
+ static int tegra_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+ 				   int where, int size, u32 value)
+ {
++	struct tegra_pcie *pcie = bus->sysdata;
++	struct tegra_pcie_port *port;
++	struct pci_dev *bridge;
++
+ 	if (bus->number == 0)
+ 		return pci_generic_config_write32(bus, devfn, where, size,
+ 						  value);
+ 
++	bridge = pcie_find_root_port(bus->self);
++
++	list_for_each_entry(port, &pcie->ports, list)
++		if (port->index + 1 == PCI_SLOT(bridge->devfn))
++			break;
++
++	/* If there is no link, then there is no device */
++	if (!tegra_pcie_link_up(port))
++		return PCIBIOS_DEVICE_NOT_FOUND;
++
+ 	return pci_generic_config_write(bus, devfn, where, size, value);
  }
  
 -- 
-1.9.1
+2.17.1
