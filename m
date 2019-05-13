@@ -1,53 +1,90 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
- property "nvmem_macaddr_swap" to swap macaddr bytes order]
-Date: Mon, 13 May 2019 11:07:00 +0200
-Message-ID: <20190513090700.GW81826@meh.true.cz>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz>
- <20190510113155.mvpuhe4yzxdaanei@flea>
- <20190511144444.GU81826@meh.true.cz>
- <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Fabien DESSENNE <fabien.dessenne@st.com>
+Subject: Re: [PATCH v2 0/6] hwspinlock: allow sharing of hwspinlocks
+Date: Mon, 13 May 2019 09:13:11 +0000
+Message-ID: <25aae4ca-0568-ccaf-0c47-4f5f4e2e8599@st.com>
+References: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
+Content-Language: en-US
+Content-ID: <D55BFC742E8B3D4FAB756D29EDD9858A@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc: Benjamin GAIGNARD <benjamin.gaignard@st.com>, Fabien DESSENNE <fabien.dessenne@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
+Hi
 
-Hi,
 
-> My initial idea was to add compatible strings to the cell so that most of
-> the encoding information can be derived from it. For example if the encoding
-> representing in your example is pretty standard or vendor specific we could
-> just do with a simple compatible like below:
+I Got Rob's Reviewed-by. Any further comments?
 
-that vendor/compatible list would be quite long[1], there are hundreds of
-devices in current OpenWrt tree (using currently custom patch) and probably
-dozens currently unsupported (ASCII encoded MAC address in NVMEM). So my goal
-is to add some DT functionality which would cover all of these.
 
-> eth1_addr: eth-mac-addr@18a {
-> 	compatible = "xxx,nvmem-mac-address";
-> 	reg = <0x18a 0x11>;	
-> };
+Fabien
 
-while sketching the possible DT use cases I came to the this option as well, it
-was very compeling as it would kill two birds with one stone (fix outstanding
-MTD/NVMEM OF clash as well[2]), but I think, that it makes more sense to add
-this functionality to nvmem core so it could be reused by other consumers, not
-just by network layer.
 
-1. https://git.openwrt.org/?p=openwrt%2Fopenwrt.git&a=search&h=HEAD&st=grep&s=mtd-mac-address
-2. https://lore.kernel.org/netdev/20190418133646.GA94236@meh.true.cz
-
--- ynezz
+On 25/04/2019 11:17 AM, Fabien Dessenne wrote:
+> The current implementation does not allow two different devices to use
+> a common hwspinlock. This patch set proposes to have, as an option, some
+> hwspinlocks shared between several users.
+>
+> Below is an example that explain the need for this:
+> 	exti: interrupt-controller@5000d000 {
+> 		compatible = "st,stm32mp1-exti", "syscon";
+> 		interrupt-controller;
+> 		#interrupt-cells = <2>;
+> 		reg = <0x5000d000 0x400>;
+> 		hwlocks = <&hsem 1>;
+> 	};
+> The two drivers (stm32mp1-exti and syscon) refer to the same hwlock.
+> With the current hwspinlock implementation, only the first driver succeeds
+> in requesting (hwspin_lock_request_specific) the hwlock. The second request
+> fails.
+>
+>
+> The proposed approach does not modify the API, but extends the DT 'hwlocks'
+> property with a second optional parameter (the first one identifies an
+> hwlock) that specifies whether an hwlock is requested for exclusive usage
+> (current behavior) or can be shared between several users.
+> Examples:
+> 	hwlocks = <&hsem 8>;	Ref to hwlock #8 for exclusive usage
+> 	hwlocks = <&hsem 8 0>;	Ref to hwlock #8 for exclusive (0) usage
+> 	hwlocks = <&hsem 8 1>;	Ref to hwlock #8 for shared (1) usage
+>
+> As a constraint, the #hwlock-cells value must be 1 or 2.
+> In the current implementation, this can have theorically any value but:
+> - all of the exisiting drivers use the same value : 1.
+> - the framework supports only one value : 1 (see implementation of
+>    of_hwspin_lock_simple_xlate())
+> Hence, it shall not be a problem to restrict this value to 1 or 2 since
+> it won't break any driver.
+>
+> Changes since v1:
+> * Removed useless 'status = "okay"' from stm32mp157c.dtsi
+>
+> Fabien Dessenne (6):
+>    dt-bindings: hwlock: add support of shared locks
+>    hwspinlock: allow sharing of hwspinlocks
+>    dt-bindings: hwlock: update STM32 #hwlock-cells value
+>    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
+>    ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
+>    ARM: dts: stm32: hwlocks for GPIO for stm32mp157
+>
+>   .../devicetree/bindings/hwlock/hwlock.txt          | 27 +++++--
+>   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  6 +-
+>   Documentation/hwspinlock.txt                       | 10 ++-
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  2 +
+>   arch/arm/boot/dts/stm32mp157c.dtsi                 |  9 +++
+>   drivers/hwspinlock/hwspinlock_core.c               | 82 +++++++++++++++++-----
+>   drivers/hwspinlock/hwspinlock_internal.h           |  2 +
+>   7 files changed, 107 insertions(+), 31 deletions(-)
+>
