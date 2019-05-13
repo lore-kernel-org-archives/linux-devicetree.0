@@ -1,89 +1,97 @@
-Return-Path: <SRS0=mrdI=TO=analog.com=alexandru.Ardelean@kernel.org>
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 13 May 2019 12:25:17 -0500
+From: Rob Herring <robh@kernel.org>
 Subject: Re: [RFC][PATCH] dt-bindings: iio: accel: add adi,adxl345.yaml
  binding
-Date: Tue, 14 May 2019 06:28:44 +0000
-Message-ID: <31ba36096619cb2cf52c39f20fd23ebe13121877.camel@analog.com>
+Message-ID: <20190513172517.GA1637@bogus>
 References: <20190506114610.28083-1-alexandru.ardelean@analog.com>
-	 <CAL_JsqL-jKM-qpawVoaLaqTpZhqNNFmgAOjv_azSwOU6zFS08g@mail.gmail.com>
-	 <fdf60ff605e040ef24ae10c1e0b3b522de6ef9ab.camel@analog.com>
-	 <20190513172517.GA1637@bogus>
-In-Reply-To: <20190513172517.GA1637@bogus>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <45565600189E494799400FDE228D88CE@analog.com>
-Content-Transfer-Encoding: base64
+ <CAL_JsqL-jKM-qpawVoaLaqTpZhqNNFmgAOjv_azSwOU6zFS08g@mail.gmail.com>
+ <fdf60ff605e040ef24ae10c1e0b3b522de6ef9ab.camel@analog.com>
 MIME-Version: 1.0
-To: "robh@kernel.org" <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fdf60ff605e040ef24ae10c1e0b3b522de6ef9ab.camel@analog.com>
+To: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
 Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gTW9uLCAyMDE5LTA1LTEzIGF0IDEyOjI1IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gDQo+IE9uIE1vbiwgTWF5IDA2LCAyMDE5IGF0IDAyOjI5OjU0UE0g
-KzAwMDAsIEFyZGVsZWFuLCBBbGV4YW5kcnUgd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE5LTA1LTA2
-IGF0IDA5OjE3IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+IFtFeHRlcm5hbF0NCj4g
-PiA+IA0KPiA+ID4gDQo+ID4gPiBPbiBNb24sIE1heSA2LCAyMDE5IGF0IDY6NDYgQU0gQWxleGFu
-ZHJ1IEFyZGVsZWFuDQo+ID4gPiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdyb3Rl
-Og0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGEgWUFNTCBiaW5kaW5nIGZvciB0
-aGUgQW5hbG9nIERldmljZXMgQURYTDM0NQ0KPiA+ID4gPiBJMkMvU1BJDQo+ID4gPiA+IGFjY2Vs
-ZXJvbWV0ZXIuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJk
-ZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+
-ID4gDQo+ID4gPiA+IEFuZCBub3cgZm9yIHRoZSBSRkMgcGFydC4NCj4gPiA+ID4gTm9ybWFsbHks
-IEkgd291bGQgZGlnIGludG8gc291cmNlLWNvZGUgdG8gdHJ5IHRvIGZpZ3VyZSB0aGlzIG91dCwN
-Cj4gPiA+ID4gYnV0DQo+ID4gPiA+IGF0DQo+ID4gPiA+IHRoaXMgcG9pbnQtaW4tdGltZSwgSSBh
-bSBsb3cgb24gdGltZS9lbmVyZ3kgdG8gZG8gdGhpcy4NCj4gPiA+ID4gQW5kIG1heWJlIHRoaXMg
-aGVscHMgdHJpZ2dlciBhIGRpc2N1c3Npb24gYWJvdXQgdGhpcy4NCj4gPiA+ID4gDQo+ID4gPiA+
-IEFwb2xvZ2llcyBpZiB0aGlzIGhhcyBiZWVuIGNvdmVydGVkIG9uIHRoZSBkZXZpY2V0cmVlIG1h
-aWxpbmcgbGlzdCwNCj4gPiA+ID4gYnV0DQo+ID4gPiA+IGF0IGxlYXN0IHdlJ2QgZ2V0IHNvbWUg
-Y292ZXJhZ2Ugb24gdGhlIElJTyBsaXN0ICh3aXRoIHRoaXMpLg0KPiA+ID4gPiANCj4gPiA+ID4g
-VGhlIEFEWEwzNDUgZGV2aWNlIChhcyBvdGhlcnMpIHN1cHBvcnRzIGJvdGggSTJDICYgU1BJIGlu
-dGVyZmFjZXMuDQo+ID4gPiA+IA0KPiA+ID4gPiBRdWVzdGlvbjE6IGRvIHdlIHdyaXRlIDIgWUFN
-TCBmaWxlcywgb3IgMSA/IEkgd2FzIGxvb2tpbmcgYXQgWmVwaHlyDQo+ID4gPiA+IChmb3INCj4g
-PiA+ID4gc29tZSBpZGVhcy9yZWZlcmVuY2UpIGJ1dCBpdCBzZWVtcyB0byBtZSB0aGF0IHRoZSBZ
-QU1MIERUIGJpbmRpbmcNCj4gPiA+ID4gZm9ybWF0IGlzDQo+ID4gPiA+IGRpZmZlcmVudCB0aGFu
-IHRoaXMgb25lID8gVGhleSB3cml0ZSAyIGZpbGVzIGZvciBBRFhMMzcyICgxIGZvcg0KPiA+ID4g
-PiBTUEksIDENCj4gPiA+ID4gZm9yDQo+ID4gPiA+IEkyQykuDQo+ID4gPiA+IA0KPiA+ID4gPiBR
-dWVzdGlvbjEtYTogb25lIHRoaW5nIGlzIHRoYXQgU1BJIHJlcXVpcmVzIHNvbWUgcHJvcHMgdG8g
-YmUNCj4gPiA+ID4gYHJlcXVpcmVkYA0KPiA+ID4gPiB0aGF0IHdvdWxkIG5vdCBiZSByZXF1aXJl
-ZCBmb3IgdGhlIEkyQyBiaW5kaW5nLiBUaGlzIGNvdWxkIGJlDQo+ID4gPiA+IHNvbHZlZCBieQ0K
-PiA+ID4gPiBkb2luZyAyIGZpbGVzLCBidXQgaWYgZG9pbmcgMSBZQU1MIGZpbGUsIGlzIHRoZXJl
-IGEgd2F5IHRvIGRvDQo+ID4gPiA+IGNvbmRpdGlvbmFsDQo+ID4gPiA+IGByZXF1aXJlZGAgPyBp
-LmUuIHByb3BlcnR5IGlzIHJlcXVpcmVkIGlmIGBTUElgID8gbm90IHN1cmUgaG93IHRvDQo+ID4g
-PiA+IGNoZWNrDQo+ID4gPiA+IGZvcg0KPiA+ID4gPiBTUEkgdnMgSTJDLCBpdCB3b3VsZCBiZSBp
-bnRlcmVzdGluZyAoYXQgc29tZSBwb2ludCkgdG8gc29tZWhvdw0KPiA+ID4gPiBlbmZvcmNlDQo+
-ID4gPiA+IFNQSS9JMkMgYmluZGluZ3MgY29ycmVjdG5lc3MuDQo+ID4gPiANCj4gPiA+IFRoZSBj
-aGFsbGVuZ2UgaGVyZSBpcyB0aGVyZSdzIG5vdCByZWFsbHkgYW55IHdheSBmb3IgdGhlIHNjaGVt
-YSB0bw0KPiA+ID4ga25vdyB3aGljaCBidXMgaXQgaXMuIFRoZSBvbmx5IHdheXMgdG8ga25vdyB0
-aGlzIGFyZSBrbm93aW5nIGFsbA0KPiA+ID4gcG9zc2libGUgc3BpIG9yIGkyYyBjb250cm9sbGVy
-IGNvbXBhdGlibGVzIG9yIHVzaW5nIHRoZSBwYXJlbnQgbm9kZQ0KPiA+ID4gbmFtZSAod2hpY2gg
-aGFzbid0IGJlZW4gc3RyaWN0bHkgZW5mb3JjZWQpLiBJbiBvcmRlciB0byBnZXQgdGhpcw0KPiA+
-ID4gaW5mb3JtYXRpb24gYXZhaWxhYmxlIHRvIHRoZSBzY2hlbWEsIHdlJ2QgbmVlZCB0byBhZGQg
-dGhlIGluZm9ybWF0aW9uDQo+ID4gPiB0byB0aGUgbm9kZS4gV2UgZG8gdGhpcyB3aXRoICckbm9k
-ZW5hbWUnLiBXZSBjb3VsZCBhZGQgYSAnJGJ1cycNCj4gPiA+IHByb3BlcnR5IGZvciBleGFtcGxl
-LiBUaGUgdG9vbHMgd291bGQgaGF2ZSB0byB1bmRlcnN0YW5kIGRpZmZlcmVudA0KPiA+ID4gYnVz
-ZXMgYW5kIHRoaW5ncyBsaWtlIEkyQyBtdXhlcyBjb21wbGljYXRlIGRvaW5nIHRoYXQuDQo+ID4g
-PiANCj4gPiA+IE9uY2UgeW91IGhhdmUgc29tZXRoaW5nIGxpa2UgJGJ1cyBhdmFpbGFibGUsIHlv
-dSBjb3VsZCBlaXRoZXIgaGF2ZSAyDQo+ID4gPiBmaWxlcyB3aXRoIGEgY3VzdG9tICdzZWxlY3Qn
-IHRoYXQgY2hlY2tzIGNvbXBhdGlibGUgYW5kICRidXMgb3Igd2UNCj4gPiA+IGNvdWxkIGhhdmUg
-MSBmaWxlIHVzaW5nIGlmL3RoZW4vZWxzZSBrZXl3b3Jkcy4gSG93ZXZlciwgd2UgZG9uJ3QgeWV0
-DQo+ID4gPiBzdXBwb3J0IGlmL3RoZW4vZWxzZSBqc29uLXNjaGVtYSB0aGF0IHdhcyBhZGRlZCBp
-biBkcmFmdDcsIGJ1dCB0aGF0J3MNCj4gPiA+IGJlaW5nIHdvcmtlZCBvbiBieSBNYXhpbWUgUmlw
-YXJkLg0KPiA+ID4gDQo+ID4gPiBIb3dldmVyLCBmb3IgdGhpcyBjYXNlLCBJJ2QganVzdCBub3Qg
-d29ycnkgYWJvdXQgdGhlIGlzc3VlLiBSZWFsbHksDQo+ID4gPiBzcGktY3BoYSBhbmQgc3BpLWNw
-b2wgc2hvdWxkIG5vdCBiZSByZXF1aXJlZC4gSWYgb25seSAxIG1vZGUgaXMNCj4gPiA+IHN1cHBv
-cnRlZCwgdGhlIGRyaXZlciBjYW4ga25vdyB0aGF0LiBJT1csIGl0IGlzIGltcGxpZWQgYnkgdGhl
-DQo+ID4gPiBjb21wYXRpYmxlIHN0cmluZ3MuDQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gPiBRdWVz
-dGlvbjI6IGBtYWtlIGR0X2JpbmRpbmdfY2hlY2tgIHNlZW1zIHRvIGdlbmVyYXRlIG9ubHkgdGhl
-IGZpcnN0DQo+ID4gPiA+IGV4YW1wbGUuIElzIHRoaXMga25vd24gYmVoYXZpb3IsIG9yIGRvIEkg
-bmVlZCB0byB0YWtlIHNvbWV0aGluZw0KPiA+ID4gPiBlbHNlDQo+ID4gPiA+IGludG8NCj4gPiA+
-ID4gY29uc2lkZXJhdGlvbiA/DQo+ID4gPiANCj4gPiA+IFRoYXQncyBjb3JyZWN0LiBJIGhhdmVu
-J3QgZmlndXJlZCBvdXQgaG93IHRvIGRvIGEgdmFyaWFibGUgbnVtYmVyIG9mDQo+ID4gPiBleGFt
-cGxlcyBpbiBrYnVpbGQuDQo+ID4gDQo+ID4gVGhlbiwgd291bGQgaXQgYmUgZmluZSB0byBoYXZl
-IG11bHRpcGxlIGV4YW1wbGVzLCBhbmQgd2FpdCBmb3IgdGhpcyB0bw0KPiA+IHBvcC0NCj4gPiBp
-biB0aGUgWUFNTCBkdCBzdHVmZiBhdCBhIGxhdGVyIHBvaW50IGluIHRpbWUgPw0KPiA+IE9yLCBq
-dXN0IDEgZXhhbXBsZSA/DQo+IA0KPiBJJ3ZlIG5vdyBmaXhlZCB0aGlzIGJ5IGV4dHJhY3Rpbmcg
-ZWFjaCBleGFtcGxlIGludG8gYSBzdWItbm9kZSBpbiB0aGUNCj4gZ2VuZXJhdGVkIGR0cyBmaWxl
-LCBzbyBtdWx0aXBsZSBleGFtcGxlcyBhcmUgZmluZSBub3cuIFRoZSBvbmx5DQo+IHJlc3RyaWN0
-aW9uIGlzIGxhYmVscyBjYW4ndCBiZSByZXBlYXRlZC4NCg0KSGV5LA0KDQpNYW55IHRoYW5rcyA6
-KQ0KDQpJJ2xsIHRha2UgYSBsb29rIHRoZSBuZXh0IGNvdXBsZSBvZiBkYXlzLg0KDQpBbGV4DQoN
-Cj4gDQo+IFJvYg0K
+On Mon, May 06, 2019 at 02:29:54PM +0000, Ardelean, Alexandru wrote:
+> On Mon, 2019-05-06 at 09:17 -0500, Rob Herring wrote:
+> > [External]
+> > 
+> > 
+> > On Mon, May 6, 2019 at 6:46 AM Alexandru Ardelean
+> > <alexandru.ardelean@analog.com> wrote:
+> > > 
+> > > This patch adds a YAML binding for the Analog Devices ADXL345 I2C/SPI
+> > > accelerometer.
+> > > 
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> > > 
+> > > And now for the RFC part.
+> > > Normally, I would dig into source-code to try to figure this out, but
+> > > at
+> > > this point-in-time, I am low on time/energy to do this.
+> > > And maybe this helps trigger a discussion about this.
+> > > 
+> > > Apologies if this has been coverted on the devicetree mailing list, but
+> > > at least we'd get some coverage on the IIO list (with this).
+> > > 
+> > > The ADXL345 device (as others) supports both I2C & SPI interfaces.
+> > > 
+> > > Question1: do we write 2 YAML files, or 1 ? I was looking at Zephyr
+> > > (for
+> > > some ideas/reference) but it seems to me that the YAML DT binding
+> > > format is
+> > > different than this one ? They write 2 files for ADXL372 (1 for SPI, 1
+> > > for
+> > > I2C).
+> > > 
+> > > Question1-a: one thing is that SPI requires some props to be `required`
+> > > that would not be required for the I2C binding. This could be solved by
+> > > doing 2 files, but if doing 1 YAML file, is there a way to do
+> > > conditional
+> > > `required` ? i.e. property is required if `SPI` ? not sure how to check
+> > > for
+> > > SPI vs I2C, it would be interesting (at some point) to somehow enforce
+> > > SPI/I2C bindings correctness.
+> > 
+> > The challenge here is there's not really any way for the schema to
+> > know which bus it is. The only ways to know this are knowing all
+> > possible spi or i2c controller compatibles or using the parent node
+> > name (which hasn't been strictly enforced). In order to get this
+> > information available to the schema, we'd need to add the information
+> > to the node. We do this with '$nodename'. We could add a '$bus'
+> > property for example. The tools would have to understand different
+> > buses and things like I2C muxes complicate doing that.
+> > 
+> > Once you have something like $bus available, you could either have 2
+> > files with a custom 'select' that checks compatible and $bus or we
+> > could have 1 file using if/then/else keywords. However, we don't yet
+> > support if/then/else json-schema that was added in draft7, but that's
+> > being worked on by Maxime Ripard.
+> > 
+> > However, for this case, I'd just not worry about the issue. Really,
+> > spi-cpha and spi-cpol should not be required. If only 1 mode is
+> > supported, the driver can know that. IOW, it is implied by the
+> > compatible strings.
+> > 
+> > 
+> > > Question2: `make dt_binding_check` seems to generate only the first
+> > > example. Is this known behavior, or do I need to take something else
+> > > into
+> > > consideration ?
+> > 
+> > That's correct. I haven't figured out how to do a variable number of
+> > examples in kbuild.
+> 
+> Then, would it be fine to have multiple examples, and wait for this to pop-
+> in the YAML dt stuff at a later point in time ?
+> Or, just 1 example ?
+
+I've now fixed this by extracting each example into a sub-node in the 
+generated dts file, so multiple examples are fine now. The only 
+restriction is labels can't be repeated.
+
+Rob
