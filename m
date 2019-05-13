@@ -1,100 +1,54 @@
 From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH v2 1/2] fdt: add support for rng-seed
-Date: Mon, 13 May 2019 08:38:18 +0800
-Message-ID: <20190513003819.356-1-hsinyi@chromium.org>
+Subject: [PATCH v2 2/2] amr64: map FDT as RW for early_init_dt_scan()
+Date: Mon, 13 May 2019 08:38:19 +0800
+Message-ID: <20190513003819.356-2-hsinyi@chromium.org>
+References: <20190513003819.356-1-hsinyi@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190513003819.356-1-hsinyi@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, Michal Hocko <mhocko@suse.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Stephen Boyd <swboyd@chromium.org>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Hsin-Yi Wang <hsinyi@chromium.org>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Hsin-Yi Wang <hsinyi@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, boot-architecture@lists.linaro.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Introducing a chosen node, rng-seed, which is an entropy that can be
-passed to kernel called very early to increase initial device
-randomness. Bootloader should provide this entropy and the value is
-read from /chosen/rng-seed in DT.
+Currently in arm64, FDT is mapped to RO before it's passed to
+early_init_dt_scan(). However, there might be some code that needs
+to modify FDT during init. Map FDT to RW until unflatten DT.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
-change log:
-v1->v2:
-* call function in early_init_dt_scan_chosen
-* will add doc to devicetree-org/dt-schema on github if this is accepted
----
- Documentation/devicetree/bindings/chosen.txt | 14 ++++++++++++++
- drivers/of/fdt.c                             | 11 +++++++++++
- 2 files changed, 25 insertions(+)
+ arch/arm64/kernel/setup.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 45e79172a646..fef5c82672dc 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
- the Linux EFI stub (which will populate the property itself, using
- EFI_RNG_PROTOCOL).
- 
-+rng-seed
-+-----------
-+
-+This property served as an entropy to add device randomness. It is parsed
-+as a byte array, e.g.
-+
-+/ {
-+	chosen {
-+		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
-+	};
-+};
-+
-+This random value should be provided by bootloader.
-+
- stdout-path
- -----------
- 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9616a1..96ea5eba9dd5 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -24,6 +24,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/random.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -1079,6 +1080,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- {
- 	int l;
- 	const char *p;
-+	const void *rng_seed;
- 
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
- 
-@@ -1113,6 +1115,15 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	pr_debug("Command line is: %s\n", (char*)data);
- 
-+	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
-+	if (!rng_seed || l == 0)
-+		return 1;
-+
-+	/* try to clear seed so it won't be found. */
-+        fdt_nop_property(initial_boot_params, node, "rng-seed");
-+
-+        add_device_randomness(rng_seed, l);
-+
- 	/* break now */
- 	return 1;
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566405d1..08b22c1e72a9 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -179,9 +179,13 @@ static void __init smp_build_mpidr_hash(void)
+ 		pr_warn("Large number of MPIDR hash buckets detected\n");
  }
+ 
++extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
++				       pgprot_t prot);
++
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	void *dt_virt = fixmap_remap_fdt(dt_phys);
++	int size;
++	void *dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	const char *name;
+ 
+ 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+@@ -320,6 +324,9 @@ void __init setup_arch(char **cmdline_p)
+ 	/* Parse the ACPI tables for possible boot-time configuration */
+ 	acpi_boot_table_init();
+ 
++	/* remap fdt to RO */
++	fixmap_remap_fdt(__fdt_pointer);
++
+ 	if (acpi_disabled)
+ 		unflatten_device_tree();
+ 
 -- 
 2.20.1
