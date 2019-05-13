@@ -1,107 +1,135 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
- property "nvmem_macaddr_swap" to swap macaddr bytes order]
-Date: Mon, 13 May 2019 13:16:12 +0200
-Message-ID: <20190513111612.GA21475@meh.true.cz>
-References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz>
- <20190510113155.mvpuhe4yzxdaanei@flea>
- <20190511144444.GU81826@meh.true.cz>
- <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
- <20190513090700.GW81826@meh.true.cz>
- <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v2 2/3] drm/stm: dsi: add support of an optional regulator
+Date: Mon, 13 May 2019 11:21:44 +0000
+Message-ID: <514ab93f-ba2e-2799-003d-2cb484079c56@st.com>
+References: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
+ <1557498023-10766-3-git-send-email-yannick.fertre@st.com>
+ <c1a7f401-a736-8145-2732-c7eea881ba37@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <c1a7f401-a736-8145-2732-c7eea881ba37@st.com>
+Content-Language: en-US
+Content-ID: <C6D2B85254CDA041933D86D36928C1F4@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick FERTRE <yannick.fertre@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, David
+ Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 11:06:48]:
-
-> On 13/05/2019 10:07, Petr Štetiar wrote:
-> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
-> > 
-> > > My initial idea was to add compatible strings to the cell so that most of
-> > > the encoding information can be derived from it. For example if the encoding
-> > > representing in your example is pretty standard or vendor specific we could
-> > > just do with a simple compatible like below:
-> > 
-> > that vendor/compatible list would be quite long[1], there are hundreds of
-> 
-> You are right just vendor list could be very long, but I was hoping that the
-> post-processing would fall in some categories which can be used in
-> compatible string.
-> 
-> Irrespective of which we need to have some sort of compatible string to
-> enable nvmem core to know that there is some form of post processing to be
-> done on the cells!. Without which there is a danger of continuing to adding
-> new properties to the cell bindings which have no relation to each other.
-
-makes sense, so something like this would be acceptable?
-
- eth1_addr: eth-mac-addr@18a {
-     /* or rather linux,nvmem-post-process ? */
-     compatible = "openwrt,nvmem-post-process";
-     reg = <0x189 0x11>;
-     indices = < 0 2
-                 3 2
-                 6 2
-                 9 2
-                12 2
-                15 2>;
-     transform = "ascii";
-     increment = <1>;
-     increment-at = <5>;
-     result-swap;
- };
-
- &eth1 {
-     nvmem-cells = <&eth1_addr>;
-     nvmem-cell-names = "mac-address";
- };
-
-> > was very compeling as it would kill two birds with one stone (fix outstanding
-> > MTD/NVMEM OF clash as well[2]),
-> 
-> Changes to nvmem dt bindings have been already rejected, for this more
-> discussion at: https://lore.kernel.org/patchwork/patch/936312/
-
-I know, I've re-read this thread several times, but it's still unclear to me,
-how this should be approached in order to be accepted by you and by DT
-maintainers as well.
-
-Anyway, to sum it up, from your point of view, following is fine?
-
- flash@0 {
-    partitions {
-        art: partition@ff0000 {
-            nvmem_dev: nvmem-cells {
-                compatible = "nvmem-cells";
-                eth1_addr: eth-mac-addr@189 {
-                    compatible = "openwrt,nvmem-post-process";
-                    reg = <0x189 0x6>;
-                    increment = <1>;
-                    increment-at = <5>;
-                    result-swap;
-                };
-            };
-        };
-    };
- };
-
- &eth1 {
-    nvmem = <&nvmem_dev>;
-    nvmem-cells = <&eth1_addr>;
-    nvmem-cell-names = "mac-address";
- };
-
--- ynezz
+SGkgWWFubmljaywNCg0KDQpPbiA1LzEwLzE5IDY6MTYgUE0sIFBoaWxpcHBlIENvcm51IHdyb3Rl
+Og0KPiBEZWFyIFlhbm5pY2ssDQo+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaCwNCj4gDQo+IEkg
+bGlrZSBiZXR0ZXIgdGhlIG5ldyBzaG9ydGVyIGNvbW1pdCBoZWFkaW5nLCB0aGFuayB5b3UuDQo+
+IA0KPiANCj4gT24gNS8xMC8xOSA0OjIwIFBNLCBZYW5uaWNrIEZlcnRyw6kgd3JvdGU6DQo+PiBB
+ZGQgc3VwcG9ydCBvZiBhbiBvcHRpb25hbCByZWd1bGF0b3IgZm9yIHRoZSBwaHkgcGFydCBvZiB0
+aGUgRFNJDQo+PiBjb250cm9sbGVyLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFlhbm5pY2sgRmVy
+dHLDqSA8eWFubmljay5mZXJ0cmVAc3QuY29tPg0KPj4gLS0tDQo+PiDCoCBkcml2ZXJzL2dwdS9k
+cm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jIHwgNDUgDQo+PiArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystLS0tLQ0KPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKyksIDYg
+ZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdf
+bWlwaV9kc2ktc3RtLmMgDQo+PiBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3Rt
+LmMNCj4+IGluZGV4IDFiZWY3M2UuLjIyYmQwOTUgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3Rt
+L2R3X21pcGlfZHNpLXN0bS5jDQo+PiBAQCAtOSw2ICs5LDcgQEANCj4+IMKgICNpbmNsdWRlIDxs
+aW51eC9jbGsuaD4NCj4+IMKgICNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4NCj4+IMKgICNpbmNs
+dWRlIDxsaW51eC9tb2R1bGUuaD4NCj4+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1
+bWVyLmg+DQo+PiDCoCAjaW5jbHVkZSA8ZHJtL2RybVAuaD4NCj4+IMKgICNpbmNsdWRlIDxkcm0v
+ZHJtX21pcGlfZHNpLmg+DQo+PiDCoCAjaW5jbHVkZSA8ZHJtL2JyaWRnZS9kd19taXBpX2RzaS5o
+Pg0KPj4gQEAgLTc2LDYgKzc3LDcgQEAgc3RydWN0IGR3X21pcGlfZHNpX3N0bSB7DQo+PiDCoMKg
+wqDCoMKgIHUzMiBod192ZXJzaW9uOw0KPj4gwqDCoMKgwqDCoCBpbnQgbGFuZV9taW5fa2JwczsN
+Cj4+IMKgwqDCoMKgwqAgaW50IGxhbmVfbWF4X2ticHM7DQo+PiArwqDCoMKgIHN0cnVjdCByZWd1
+bGF0b3IgKnZkZF9zdXBwbHk7DQo+PiDCoCB9Ow0KPj4gwqAgc3RhdGljIGlubGluZSB2b2lkIGRz
+aV93cml0ZShzdHJ1Y3QgZHdfbWlwaV9kc2lfc3RtICpkc2ksIHUzMiByZWcsIA0KPj4gdTMyIHZh
+bCkNCj4+IEBAIC0zMTgsMTcgKzMyMCwzMSBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX3N0bV9w
+cm9iZShzdHJ1Y3QgDQo+PiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqAgcmV0dXJuIFBUUl9FUlIoZHNpLT5iYXNlKTsNCj4+IMKgwqDCoMKgwqAgfQ0KPj4gK8Kg
+wqDCoCBkc2ktPnZkZF9zdXBwbHkgPSBkZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoZGV2LCAi
+cGh5LWRzaSIpOw0KPj4gK8KgwqDCoCBpZiAoSVNfRVJSKGRzaS0+dmRkX3N1cHBseSkpIHsNCj4+
+ICvCoMKgwqDCoMKgwqDCoCByZXQgPSBQVFJfRVJSKGRzaS0+dmRkX3N1cHBseSk7DQo+PiArwqDC
+oMKgwqDCoMKgwqAgaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQ0KPj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgRFJNX0VSUk9SKCJmYWlsZWQgdG8gcmVxdWVzdCByZWd1bGF0b3I6ICVkXG4iLCBy
+ZXQpOw0KPj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7DQo+PiArwqDCoMKgIH0NCg0KDQpJ
+IGRpZCBtb3JlIHRlc3RzIG9uIGEgc3RtMzJmNDY5IGRpc2NvIGJvYXJkIGFuZCB0aGlzIGFib3Zl
+IGNvZGUgZG9lcyBub3QgDQp3b3JrICh0aGUgcmV0IHZhbHVlIGlzIC1FTk9ERVYpDQoNClR3byBw
+b3NzaWJpbGl0aWVzIHRoZW46DQoxKSByZW1vdmUgdGhlIF9vcHRpb25hbCAoYnV0IHdlIGhhdmUg
+dGhlICJ1c2luZyBkdW1teSByZWd1bGF0b3IiIA0KbWVzc2FnZSwgSSBhbSBmaW5lIHdpdGggaXQp
+DQoNCm9yDQoyKSBoYW5kbGUgLUVOT0RFViBidXQgZG8gbm90IGZvcmdldCB0byBjaGVjayB2ZGRf
+c3VwcGx5IT1OVUxMIGJlZm9yZSANCmNhbGxpbmcgYWxsIHJlZ3VsYXRvcl8oZW5hYmxlL2Rpc2Fi
+bGUpDQoNCglpZiAocmV0ICE9IC1FTk9ERVYpIHsNCgkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVS
+KQ0KCQkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gcmVxdWVzdCByZWd1bGF0b3I6ICVkXG4iLA0KCQkJ
+CXJldCk7DQoJCQlyZXR1cm4gcmV0Ow0KCQl9DQoJCWRzaS0+dmRkX3N1cHBseSA9IE5VTEw7DQoJ
+fQ0KDQoJaWYgKGRzaS0+dmRkX3N1cHBseSkgew0KCQlyZXQgPSByZWd1bGF0b3JfZW5hYmxlKGRz
+aS0+dmRkX3N1cHBseSk7DQoJCS4uLg0KDQoNCglpZiAoZHNpLT52ZGRfc3VwcGx5KQ0KCQlyZWd1
+bGF0b3JfZGlzYWJsZShkc2ktPnZkZF9zdXBwbHkpOw0KDQoNCkkgbGV0IHlvdSBjaG9vc2UgeW91
+ciBmYXZvcml0ZSBvbmUuDQoNClRoYW5rIHlvdSwNClBoaWxpcHBlDQoNCj4+ICsNCj4+ICvCoMKg
+wqAgcmV0ID0gcmVndWxhdG9yX2VuYWJsZShkc2ktPnZkZF9zdXBwbHkpOw0KPj4gK8KgwqDCoCBp
+ZiAocmV0KSB7DQo+PiArwqDCoMKgwqDCoMKgwqAgRFJNX0VSUk9SKCJmYWlsZWQgdG8gZW5hYmxl
+IHJlZ3VsYXRvcjogJWRcbiIsIHJldCk7DQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJldDsN
+Cj4+ICvCoMKgwqAgfQ0KPj4gKw0KPj4gwqDCoMKgwqDCoCBkc2ktPnBsbHJlZl9jbGsgPSBkZXZt
+X2Nsa19nZXQoZGV2LCAicmVmIik7DQo+PiDCoMKgwqDCoMKgIGlmIChJU19FUlIoZHNpLT5wbGxy
+ZWZfY2xrKSkgew0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgIHJldCA9IFBUUl9FUlIoZHNpLT5wbGxy
+ZWZfY2xrKTsNCj4+IC3CoMKgwqDCoMKgwqDCoCBkZXZfZXJyKGRldiwgIlVuYWJsZSB0byBnZXQg
+cGxsIHJlZmVyZW5jZSBjbG9jazogJWRcbiIsIHJldCk7DQo+PiAtwqDCoMKgwqDCoMKgwqAgcmV0
+dXJuIHJldDsNCj4+ICvCoMKgwqDCoMKgwqDCoCBEUk1fRVJST1IoIlVuYWJsZSB0byBnZXQgcGxs
+IHJlZmVyZW5jZSBjbG9jazogJWRcbiIsIHJldCk7DQo+PiArwqDCoMKgwqDCoMKgwqAgZ290byBl
+cnJfY2xrX2dldDsNCj4+IMKgwqDCoMKgwqAgfQ0KPj4gwqDCoMKgwqDCoCByZXQgPSBjbGtfcHJl
+cGFyZV9lbmFibGUoZHNpLT5wbGxyZWZfY2xrKTsNCj4+IMKgwqDCoMKgwqAgaWYgKHJldCkgew0K
+Pj4gLcKgwqDCoMKgwqDCoMKgIGRldl9lcnIoZGV2LCAiJXM6IEZhaWxlZCB0byBlbmFibGUgcGxs
+cmVmX2Nsa1xuIiwgX19mdW5jX18pOw0KPj4gLcKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7DQo+
+PiArwqDCoMKgwqDCoMKgwqAgRFJNX0VSUk9SKCIlczogRmFpbGVkIHRvIGVuYWJsZSBwbGxyZWZf
+Y2xrXG4iLCBfX2Z1bmNfXyk7DQo+PiArwqDCoMKgwqDCoMKgwqAgZ290byBlcnJfY2xrX2dldDsN
+Cj4+IMKgwqDCoMKgwqAgfQ0KPj4gwqDCoMKgwqDCoCBkd19taXBpX2RzaV9zdG1fcGxhdF9kYXRh
+LmJhc2UgPSBkc2ktPmJhc2U7DQo+PiBAQCAtMzM5LDExICszNTUsMTkgQEAgc3RhdGljIGludCBk
+d19taXBpX2RzaV9zdG1fcHJvYmUoc3RydWN0IA0KPj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0K
+Pj4gwqDCoMKgwqDCoCBkc2ktPmRzaSA9IGR3X21pcGlfZHNpX3Byb2JlKHBkZXYsICZkd19taXBp
+X2RzaV9zdG1fcGxhdF9kYXRhKTsNCj4+IMKgwqDCoMKgwqAgaWYgKElTX0VSUihkc2ktPmRzaSkp
+IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBEUk1fRVJST1IoIkZhaWxlZCB0byBpbml0aWFsaXpl
+IG1pcGkgZHNpIGhvc3RcbiIpOw0KPj4gLcKgwqDCoMKgwqDCoMKgIGNsa19kaXNhYmxlX3VucHJl
+cGFyZShkc2ktPnBsbHJlZl9jbGspOw0KPj4gLcKgwqDCoMKgwqDCoMKgIHJldHVybiBQVFJfRVJS
+KGRzaS0+ZHNpKTsNCj4+ICvCoMKgwqDCoMKgwqDCoCByZXQgPSBQVFJfRVJSKGRzaS0+ZHNpKTsN
+Cj4+ICvCoMKgwqDCoMKgwqDCoCBnb3RvIGVycl9kc2lfcHJvYmU7DQo+PiDCoMKgwqDCoMKgIH0N
+Cj4+IMKgwqDCoMKgwqAgcmV0dXJuIDA7DQo+PiArDQo+PiArZXJyX2RzaV9wcm9iZToNCj4+ICvC
+oMKgwqAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGxscmVmX2Nsayk7DQo+PiArZXJyX2Ns
+a19nZXQ6DQo+PiArwqDCoMKgIHJlZ3VsYXRvcl9kaXNhYmxlKGRzaS0+dmRkX3N1cHBseSk7DQo+
+PiArDQo+PiArwqDCoMKgIHJldHVybiByZXQ7DQo+PiArDQo+PiDCoCB9DQo+PiDCoCBzdGF0aWMg
+aW50IGR3X21pcGlfZHNpX3N0bV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+Cj4+IEBAIC0zNTEsNiArMzc1LDcgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9zdG1fcmVtb3Zl
+KHN0cnVjdCANCj4+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+IMKgwqDCoMKgwqAgc3RydWN0
+IGR3X21pcGlfZHNpX3N0bSAqZHNpID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+PiDC
+oMKgwqDCoMKgIGNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbHJlZl9jbGspOw0KPj4gK8Kg
+wqDCoCByZWd1bGF0b3JfZGlzYWJsZShkc2ktPnZkZF9zdXBwbHkpOw0KPj4gwqDCoMKgwqDCoCBk
+d19taXBpX2RzaV9yZW1vdmUoZHNpLT5kc2kpOw0KPiANCj4gZm9yIGEgZnV0dXJlIHBhdGNoOiB3
+ZSBtYXkgaGF2ZSBhIGRpZmZlcmVudCBvcmRlcg0KPiAgwqDCoMKgwqBkd19taXBpX2RzaV9yZW1v
+dmUoZHNpLT5kc2kpOw0KPiAgwqDCoMKgwqBjbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxy
+ZWZfY2xrKTsNCj4gIMKgwqDCoMKgcmVndWxhdG9yX2Rpc2FibGUoZHNpLT52ZGRfc3VwcGx5KTsN
+Cj4gDQo+PiDCoMKgwqDCoMKgIHJldHVybiAwOw0KPj4gQEAgLTM2Myw2ICszODgsNyBAQCBzdGF0
+aWMgaW50IF9fbWF5YmVfdW51c2VkIA0KPj4gZHdfbWlwaV9kc2lfc3RtX3N1c3BlbmQoc3RydWN0
+IGRldmljZSAqZGV2KQ0KPj4gwqDCoMKgwqDCoCBEUk1fREVCVUdfRFJJVkVSKCJcbiIpOw0KPj4g
+wqDCoMKgwqDCoCBjbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxyZWZfY2xrKTsNCj4+ICvC
+oMKgwqAgcmVndWxhdG9yX2Rpc2FibGUoZHNpLT52ZGRfc3VwcGx5KTsNCj4+IMKgwqDCoMKgwqAg
+cmV0dXJuIDA7DQo+PiDCoCB9DQo+PiBAQCAtMzcwLDkgKzM5NiwxNiBAQCBzdGF0aWMgaW50IF9f
+bWF5YmVfdW51c2VkIA0KPj4gZHdfbWlwaV9kc2lfc3RtX3N1c3BlbmQoc3RydWN0IGRldmljZSAq
+ZGV2KQ0KPj4gwqAgc3RhdGljIGludCBfX21heWJlX3VudWR3X21pcGlfZHNpX3JlbW92ZShkc2kt
+PmRzaSk7c2VkIA0KPj4gZHdfbWlwaV9kc2lfc3RtX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYp
+DQo+PiDCoCB7DQo+PiDCoMKgwqDCoMKgIHN0cnVjdCBkd19taXBpX2RzaV9zdG0gKmRzaSA9IGR3
+X21pcGlfZHNpX3N0bV9wbGF0X2RhdGEucHJpdl9kYXRhOw0KPj4gK8KgwqDCoCBpbnQgcmV0Ow0K
+Pj4gwqDCoMKgwqDCoCBEUk1fREVCVUdfRFJJVkVSKCJcbiIpOw0KPj4gK8KgwqDCoCByZXQgPSBy
+ZWd1bGF0b3JfZW5hYmxlKGRzaS0+dmRkX3N1cHBseSk7DQo+PiArwqDCoMKgIGlmIChyZXQpIHsN
+Cj4+ICvCoMKgwqDCoMKgwqDCoCBEUk1fRVJST1IoImZhaWxlZCB0byBlbmFibGUgcmVndWxhdG9y
+OiAlZFxuIiwgcmV0KTsNCj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gcmV0Ow0KPj4gK8KgwqDC
+oCB9DQo+PiArDQo+PiDCoMKgwqDCoMKgIGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBsbHJlZl9j
+bGspOw0KPiANCj4gZm9yIGEgZnV0dXJlIHBhdGNoOiB3ZSBtYXkgY2hlY2sgY2xrX3ByZXBhcmVf
+ZW5hYmxlIHJldHVybiB2YWx1ZS4NCj4gDQo+PiDCoMKgwqDCoMKgIHJldHVybiAwOw0KPj4NCj4g
+DQo+IA0KPiBBY2tlZC1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4N
+Cj4gDQo+IFBoaWxpcHBlIDopDQo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWw=
