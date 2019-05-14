@@ -1,65 +1,48 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
- reflect documentation
-Date: Tue, 14 May 2019 11:27:42 +0530
-Message-ID: <CAHLCerMx8MqMJYO4K6eNB6zOr01FwjP_JRWwz3=nM6dz4+KnSw@mail.gmail.com>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
- <20190513183947.GJ2085@tuxbook-pro>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Date: Mon, 13 May 2019 23:02:27 -0700
+Message-ID: <20190514060227.GA7625@infradead.org>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-3-vidyas@nvidia.com>
+ <20190513072539.GA27708@infradead.org>
+ <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513183947.GJ2085@tuxbook-pro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, lakml <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, mperttunen@nvidia.com, mmaddireddy@nvidia.com, linux-pci@vger.kernel.org, catalin.marinas@arm.com, kthota@nvidia.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jonathanh@nvidia.com, Christoph Hellwig <hch@infradead.org>, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, gustavo.pimentel@synopsys.com, jingoohan1@gmail.com, bhelgaas@google.com, kishon@ti.com, linux-arm-kernel@lists.infradead.org, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:09 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 10 May 04:29 PDT 2019, Amit Kucheria wrote:
->
-> Subject indicates pluralism, but this fixes a specific platform
-> (board?). I think you should update that.
+On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
+> There is nothing broken in Tegra194 root port as such, rather,  this is more
+> of software configuration choice and we are going with legacy interrupts than
+> MSI interrupts (as Tegra194 doesn't support raising PME interrupts through MSI
+> and please note that this doesn't mean root port is broken).
 
-Copy paste from the previous cleanup commit :-) Will fix.
+It seems odd at least and probably broken if it adverises MSI interrupts,
+but than doesn't actually support them fully.
 
-> > The idle-states binding documentation[1] mentions that the
-> > 'entry-method' property is required on 64-bit platforms and must be set
-> > to "psci".
-> >
-> > We fixed up all uses of the entry-method property in
-> > commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
-> > reflect documentation"). But a new one has appeared. Fix it up.
-> >
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
->
-> The message looks good though, so with a new subject you have my:
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Since Tegra194 has
+> only Synopsys DesignWare core based host controllers and not any other hosts, I
+> think it is fine to call this API in driver. Also, since this is a global setting,
+> calling this APIs from anywhere (be it from quirk or from driver) would have the
+> same effect, or did I miss anything here?
 
-Thanks
-
->
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index 2896bbcfa3bb..42e7822a0227 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -51,7 +51,7 @@
-> >                * PSCI node is not added default, U-boot will add missing
-> >                * parts if it determines to use PSCI.
-> >                */
-> > -             entry-method = "arm,psci";
-> > +             entry-method = "psci";
-> >
-> >               CPU_PH20: cpu-ph20 {
-> >                       compatible = "arm,idle-state";
-> > --
-> > 2.17.1
-> >
+Maybe in your current particular case this is true, but in general
+we see more and more systems with different kind of root ports, and
+having a driver set a global variable due to its own hardwares quirk
+defeats that.  So the right thing here is to replace the global
+flag with a per-device one first before setting it for a driver.
