@@ -1,95 +1,153 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V12 2/4] drivers/perf: imx_ddr: Add ddr performance
- counter support
-Date: Tue, 14 May 2019 15:55:41 +0100
-Message-ID: <20190514145541.GC2825@fuggles.cambridge.arm.com>
-References: <1556736193-29411-1-git-send-email-Frank.Li@nxp.com>
- <1556736193-29411-2-git-send-email-Frank.Li@nxp.com>
- <CAHQ1cqGszjTZ+kSTeqHjoZ-QPKd6f1Afn+00-haJy_dJY4X4+g@mail.gmail.com>
- <CAHrpEqQKyH0+vXJfWf0fuUDvQnSCKjrBmU8megsUWX1mHdbfrw@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
+ property "nvmem_macaddr_swap" to swap macaddr bytes order]
+Date: Tue, 14 May 2019 16:13:22 +0100
+Message-ID: <0c6cb9d4-2da1-00be-b527-5891b8b030a8@linaro.org>
+References: <1557476567-17397-4-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-3-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
+ <20190510112822.GT81826@meh.true.cz> <20190510113155.mvpuhe4yzxdaanei@flea>
+ <20190511144444.GU81826@meh.true.cz>
+ <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
+ <20190513090700.GW81826@meh.true.cz>
+ <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
+ <20190513111612.GA21475@meh.true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqQKyH0+vXJfWf0fuUDvQnSCKjrBmU8megsUWX1mHdbfrw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhi Li <lznuaa@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Frank Li <frank.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190513111612.GA21475@meh.true.cz>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 08:53:18AM -0500, Zhi Li wrote:
-> On Tue, May 7, 2019 at 2:30 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> >
-> > On Wed, May 1, 2019 at 11:43 AM Frank Li <frank.li@nxp.com> wrote:
-> > >
-> > > Add ddr performance monitor support for iMX8QXP
-> > >
-> > > There are 4 counters for ddr perfomance events.
-> > > counter 0 is dedicated for cycles.
-> > > you choose any up to 3 no cycles events.
-> > >
-> > > for example:
-> > >
-> > > perf stat -a -e imx8_ddr0/read-cycles/,imx8_ddr0/write-cycles/,imx8_ddr0/precharge/ ls
-> > > perf stat -a -e imx8_ddr0/cycles/,imx8_ddr0/read-access/,imx8_ddr0/write-access/ ls
-> > >
-> > > Support below events.
-> > >
-> > >   imx8_ddr0/activate/                                     [Kernel PMU event]
-> > >   imx8_ddr0/axid-read/                                    [Kernel PMU event]
-> > >   imx8_ddr0/axid-write/                                   [Kernel PMU event]
-> > >   imx8_ddr0/cycles/                                       [Kernel PMU event]
-> > >   imx8_ddr0/hp-read-credit-cnt/                           [Kernel PMU event]
-> > >   imx8_ddr0/hp-read/                                      [Kernel PMU event]
-> > >   imx8_ddr0/hp-req-nodcredit/                             [Kernel PMU event]
-> > >   imx8_ddr0/hp-xact-credit/                               [Kernel PMU event]
-> > >   imx8_ddr0/load-mode/                                    [Kernel PMU event]
-> > >   imx8_ddr0/lp-read-credit-cnt/                           [Kernel PMU event]
-> > >   imx8_ddr0/lp-req-nocredit/                              [Kernel PMU event]
-> > >   imx8_ddr0/lp-xact-credit/                               [Kernel PMU event]
-> > >   imx8_ddr0/mwr/                                          [Kernel PMU event]
-> > >   imx8_ddr0/precharge/                                    [Kernel PMU event]
-> > >   imx8_ddr0/raw-hazard/                                   [Kernel PMU event]
-> > >   imx8_ddr0/read-access/                                  [Kernel PMU event]
-> > >   imx8_ddr0/read-activate/                                [Kernel PMU event]
-> > >   imx8_ddr0/read-command/                                 [Kernel PMU event]
-> > >   imx8_ddr0/read-cycles/                                  [Kernel PMU event]
-> > >   imx8_ddr0/read-modify-write-command/                    [Kernel PMU event]
-> > >   imx8_ddr0/read-queue-depth/                             [Kernel PMU event]
-> > >   imx8_ddr0/read-write-transition/                        [Kernel PMU event]
-> > >   imx8_ddr0/read/                                         [Kernel PMU event]
-> > >   imx8_ddr0/refresh/                                      [Kernel PMU event]
-> > >   imx8_ddr0/selfresh/                                     [Kernel PMU event]
-> > >   imx8_ddr0/wr-xact-credit/                               [Kernel PMU event]
-> > >   imx8_ddr0/write-access/                                 [Kernel PMU event]
-> > >   imx8_ddr0/write-command/                                [Kernel PMU event]
-> > >   imx8_ddr0/write-credit-cnt/                             [Kernel PMU event]
-> > >   imx8_ddr0/write-cycles/                                 [Kernel PMU event]
-> > >   imx8_ddr0/write-queue-depth/                            [Kernel PMU event]
-> > >   imx8_ddr0/write/
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> >
-> > Don't really have anything to suggest, that I already haven't. LGTM, so:
-> >
-> > Reviewed-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> 
-> 
-> Will Deacon:
->             Is it okay to pick up these patches?  Andrey always acked.
 
-It's the merge window at the moment, so it's too late for 5.2. I'll have a
-look at these in a couple of weeks as candidates for 5.3.
+
+On 13/05/2019 12:16, Petr Štetiar wrote:
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 11:06:48]:
+> 
+>> On 13/05/2019 10:07, Petr Štetiar wrote:
+>>> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
+>>>
+>>>> My initial idea was to add compatible strings to the cell so that most of
+>>>> the encoding information can be derived from it. For example if the encoding
+>>>> representing in your example is pretty standard or vendor specific we could
+>>>> just do with a simple compatible like below:
+>>>
+>>> that vendor/compatible list would be quite long[1], there are hundreds of
+>>
+>> You are right just vendor list could be very long, but I was hoping that the
+>> post-processing would fall in some categories which can be used in
+>> compatible string.
+>>
+>> Irrespective of which we need to have some sort of compatible string to
+>> enable nvmem core to know that there is some form of post processing to be
+>> done on the cells!. Without which there is a danger of continuing to adding
+>> new properties to the cell bindings which have no relation to each other.
+> 
+> makes sense, so something like this would be acceptable?
+> 
+>   eth1_addr: eth-mac-addr@18a {
+>       /* or rather linux,nvmem-post-process ? */
+>       compatible = "openwrt,nvmem-post-process";
+
+I don't think this would be a correct compatible string to use here.
+Before we decide on naming, I would like to understand bit more on what 
+are the other possible forms of storing mac address,
+Here is what I found,
+
+Type 1: Octets in ASCII without delimiters. (Swapped/non-Swapped)
+Type 2: Octets in ASCII with delimiters like (":", ",", ".", "-"... so 
+on) (Swapped/non-Swapped)
+Type 3: Is the one which stores mac address in Type1/2 but this has to 
+be incremented to be used on other instances of eth.
+
+Did I miss anything?
+My suggestion for type1 and type2 would be something like this, as long 
+as its okay with DT maintainers
+
+eth1_addr: eth-mac-addr@18a {
+	compatible = "ascii-mac-address";
+	reg = <0x18a 2>, <0x192 2>, <0x196 2>, <0x200 2>, <0x304 2>, <0x306 2>;
+	swap-mac-address;
+	delimiter = ":";
+};
+
+For type 3:
+
+This sounds like very much vendor specific optimization thing which am 
+not 100% sure atm.
+If dt maintainers are okay, may be we can add an increment in the 
+"ascii-mac-address" binding itself.
+
+Do you think "increment-at " would ever change?
+
+>       reg = <0x189 0x11>;
+>       indices = < 0 2
+>                   3 2
+>                   6 2
+>                   9 2
+>                  12 2
+>                  15 2>;
+>       transform = "ascii";
+>       increment = <1>;
+>       increment-at = <5>;
+>       result-swap;
+
+>   };
+> 
+>   &eth1 {
+>       nvmem-cells = <&eth1_addr>;
+>       nvmem-cell-names = "mac-address";
+>   };
+> 
+>>> was very compeling as it would kill two birds with one stone (fix outstanding
+>>> MTD/NVMEM OF clash as well[2]),
+>>
+>> Changes to nvmem dt bindings have been already rejected, for this more
+>> discussion at: https://lore.kernel.org/patchwork/patch/936312/
+> 
+> I know, I've re-read this thread several times, but it's still unclear to me,
+> how this should be approached in order to be accepted by you and by DT
+> maintainers as well.
+> 
+> Anyway, to sum it up, from your point of view, following is fine?
+> 
+currently mtd already has support for nvmem but without dt support.
+
+>   flash@0 {
+>      partitions {
+>          art: partition@ff0000 {
+>              nvmem_dev: nvmem-cells {
+>                  compatible = "nvmem-cells";
+>                  eth1_addr: eth-mac-addr@189 {
+>                      compatible = "openwrt,nvmem-post-process";
+>                      reg = <0x189 0x6>;
+>                      increment = <1>;
+>                      increment-at = <5>;
+>                      result-swap;
+>                  };
+>              };
+>          };
+>      };
+>   };
+
+This [1] is what I had suggested at the end, where in its possible to 
+add provider node with its own custom bindings. In above example 
+nvmem_dev would be a proper nvmem provider.
 
 Thanks,
-
-Will
+srini
+[1] https://lkml.org/lkml/2018/6/7/972
+> 
+>   &eth1 {
+>      nvmem = <&nvmem_dev>;
+>      nvmem-cells = <&eth1_addr>;
+>      nvmem-cell-names = "mac-address";
+>   };
+> 
+> -- ynezz
+> 
