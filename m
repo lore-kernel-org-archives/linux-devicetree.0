@@ -1,48 +1,55 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
- noreturn list
-Date: Tue, 14 May 2019 10:46:55 +0200
-Message-ID: <20190514084655.GK2589@hirez.programming.kicks-ass.net>
-References: <20190514054251.186196-1-brendanhiggins@google.com>
- <20190514054251.186196-9-brendanhiggins@google.com>
- <20190514065643.GC2589@hirez.programming.kicks-ass.net>
- <20190514081223.GA230665@google.com>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH V3 5/8] memory: tegra: Add EMC scaling support code for
+ Tegra210
+Date: Tue, 14 May 2019 16:47:37 +0800
+Message-ID: <54203d4d-aced-543e-6ebb-6ffacb7c8a85@nvidia.com>
+References: <20190510084719.18902-1-josephl@nvidia.com>
+ <20190510084719.18902-6-josephl@nvidia.com>
+ <dc580a9b-4d37-ae20-888d-3956b284c43b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190514081223.GA230665@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, yamada.masahiro@socionext.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, kbuild test robot <lkp@intel.com>, linux-nvdimm@lists.01.org, frowand.list@gmail.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, Josh Poimboeuf <jpoimboe@redhat.com>, dan.j.williams@intel.com, kunit-dev@googlegroups.com, tytso@mit.edu, richard@nod.at, sboyd@kernel.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, keescook@google.
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dc580a9b-4d37-ae20-888d-3956b284c43b@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgMDE6MTI6MjNBTSAtMDcwMCwgQnJlbmRhbiBIaWdnaW5z
-IHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDE0LCAyMDE5IGF0IDA4OjU2OjQzQU0gKzAyMDAsIFBldGVy
-IFppamxzdHJhIHdyb3RlOgo+ID4gT24gTW9uLCBNYXkgMTMsIDIwMTkgYXQgMTA6NDI6NDJQTSAt
-MDcwMCwgQnJlbmRhbiBIaWdnaW5zIHdyb3RlOgo+ID4gPiBUaGlzIGZpeGVzIHRoZSBmb2xsb3dp
-bmcgd2FybmluZyBzZWVuIG9uIEdDQyA3LjM6Cj4gPiA+ICAga3VuaXQvdGVzdC10ZXN0Lm86IHdh
-cm5pbmc6IG9ianRvb2w6IGt1bml0X3Rlc3RfdW5zdWNjZXNzZnVsX3RyeSgpIGZhbGxzIHRocm91
-Z2ggdG8gbmV4dCBmdW5jdGlvbiBrdW5pdF90ZXN0X2NhdGNoKCkKPiA+ID4gCj4gPiAKPiA+IFdo
-YXQgaXMgdGhhdCBmaWxlIGFuZCBmdW5jdGlvbjsgbm8ga2VybmVsIHRyZWUgbmVhciBtZSBzZWVt
-cyB0byBoYXZlCj4gPiB0aGF0Lgo+IAo+IE9oLCBzb3JyeSBhYm91dCB0aGF0LiBUaGUgZnVuY3Rp
-b24gaXMgYWRkZWQgaW4gdGhlIGZvbGxvd2luZyBwYXRjaCwKPiAiW1BBVENIIHYzIDA5LzE4XSBr
-dW5pdDogdGVzdDogYWRkIHN1cHBvcnQgZm9yIHRlc3QgYWJvcnQiWzFdLgo+IAo+IE15IGFwb2xv
-Z2llcyBpZiB0aGlzIHBhdGNoIGlzIHN1cHBvc2VkIHRvIGNvbWUgYWZ0ZXIgaXQgaW4gc2VxdWVu
-Y2UsIGJ1dAo+IEkgYXNzdW1lZCBpdCBzaG91bGQgY29tZSBiZWZvcmUgb3RoZXJ3aXNlIG9ianRv
-b2wgd291bGQgY29tcGxhaW4gYWJvdXQKPiB0aGUgc3ltYm9sIHdoZW4gaXQgaXMgaW50cm9kdWNl
-ZC4KCk9yIHNlbmQgbWUgYWxsIHBhdGNoZXMgc3VjaCB0aGF0IEkgaGF2ZSBjb250ZXh0LCBvciBo
-YXZlIGEgc2FuZQpDaGFuZ2Vsb2cgdGhhdCBnaXZlcyBtZSBjb250ZXh0LiBKdXN0IGRvbid0IGdp
-dmUgbWUgb25lIHBhdGNoIHdpdGggYQpjcmFwcHkgY2hhbmdlbG9nLgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+T24gNS8xNC8xOSAxOjAyIEFNLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6Cj4gMTAuMDUuMjAxOSAx
+MTo0NywgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgcmVxdWly
+ZWQgQVBJcyBhbmQgdmFyaWFibGVzIGZvciB0aGUgRU1DIHNjYWxpbmcKPj4gc2VxdWVuY2UgY29k
+ZSBvbiBUZWdyYTIxMC4KPj4KPj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIgRGUgU2Nocmlq
+dmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEpvc2Vw
+aCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+PiAtLS0Kc25pcC4KPj4gK3ZvaWQgZG9fY2xvY2tf
+Y2hhbmdlKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywgdTMyIGNsa3NyYykKPj4gK3sKPj4gKwlpbnQg
+ZXJyOwo+PiArCj4+ICsJbWNfcmVhZGwoZW1jLT5tYywgTUNfRU1FTV9BRFJfQ0ZHKTsKPj4gKwll
+bWNfcmVhZGwoZW1jLCBFTUNfSU5UU1RBVFVTKTsKPj4gKwo+PiArCXRlZ3JhMjEwX2Nsa19lbWNf
+dXBkYXRlX3NldHRpbmcoY2xrc3JjKTsKPj4gKwo+PiArCWVyciA9IHdhaXRfZm9yX3VwZGF0ZShl
+bWMsIEVNQ19JTlRTVEFUVVMsCj4+ICsJCQkgICAgICBFTUNfSU5UU1RBVFVTX0NMS0NIQU5HRV9D
+T01QTEVURSwgdHJ1ZSwgUkVHX0VNQyk7Cj4+ICsJaWYgKGVycikgewo+PiArCQlwcl9lcnIoIiVz
+OiBjbG9jayBjaGFuZ2UgY29tcGxldGlvbiBlcnJvcjogJWQiLCBfX2Z1bmNfXywgZXJyKTsKPj4g
+KwkJV0FSTl9PTigxKTsKPj4gKwl9Cj4+ICt9Cj4+ICsKPj4gK3N0cnVjdCBlbWNfdGFibGUgKmdl
+dF90aW1pbmdfZnJvbV9mcmVxKHN0cnVjdCB0ZWdyYV9lbWMgKmVtYywKPj4gKwkJCQkgICAgICAg
+dW5zaWduZWQgbG9uZyByYXRlKQo+PiArewo+PiArCWludCBpOwo+PiArCj4+ICsJZm9yIChpID0g
+MDsgaSA8IGVtYy0+ZW1jX3RhYmxlX3NpemU7IGkrKykKPj4gKwkJaWYgKGVtYy0+ZW1jX3RhYmxl
+W2ldLnJhdGUgPT0gcmF0ZSkKPj4gKwkJCXJldHVybiAmZW1jLT5lbWNfdGFibGVbaV07Cj4+ICsK
+Pj4gKwlyZXR1cm4gTlVMTDsKPj4gK30KPj4gKwo+PiAraW50IHdhaXRfZm9yX3VwZGF0ZShzdHJ1
+Y3QgdGVncmFfZW1jICplbWMsIHUzMiBzdGF0dXNfcmVnLCB1MzIgYml0X21hc2ssCj4+ICsJCSAg
+ICBib29sIHVwZGF0ZWRfc3RhdGUsIGludCBjaGFuKQo+PiArewo+IAo+IFRoaXMgYW5kIGFsbCBv
+dGhlciBnbG9iYWwgZnVuY3Rpb25zIGhhdmUgdmVyeSBnZW5lcmljIG5hbWVzLiBFaXRoZXIKPiBz
+cXVhc2ggaXQgYWxsIGludG8gYSBzaW5nbGUgc291cmNlIGZpbGUgYW5kIG1ha2UgYWxsIGZ1bmN0
+aW9ucyBzdGF0aWMsCj4gb3IgY2hhbmdlIHRoZSBuYW1lcyB0byBzb21ldGhpbmcgbW9yZSB1bmlx
+dWUuCj4gCgpPa2F5LCB3aWxsIGZpeCBpdC4KClRoYW5rcywKSm9zZXBoCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
