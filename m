@@ -1,7 +1,8 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v2 7/8] ARM: dts: imx7ulp-evk: enable USBOTG1 support
-Date: Tue, 14 May 2019 07:38:26 +0000
-Message-ID: <20190514073529.29505-8-peter.chen@nxp.com>
+Subject: [PATCH v2 8/8] usb: chipidea: imx: "fsl,usbphy" phandle is not
+ mandatory now
+Date: Tue, 14 May 2019 07:38:30 +0000
+Message-ID: <20190514073529.29505-9-peter.chen@nxp.com>
 References: <20190514073529.29505-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -9,7 +10,7 @@ Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190514073529.29505-1-peter.chen@nxp.com>
 Content-Language: en-US
-Content-ID: <93AC2D794F08A54DB42E1EF04E8E79EB@eurprd04.prod.outlook.com>
+Content-ID: <72F16C411CA5A34AB2DD1235DDE3DE59@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,73 +24,30 @@ To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "balbi@kernel.org" <balbi@kerne
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable USBOTG1 support for evk board, it is dual-role function
-port.
+Since the chipidea common code support get the USB PHY phandle from
+"phys", the glue layer is not mandatory to get the "fsl,usbphy" phandle
+any more.
 
 Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp-evk.dts | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/usb/chipidea/ci_hdrc_imx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
-index a09026a6d22e..c8a56a2ae9a5 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -22,6 +22,17 @@
- 		reg = <0x60000000 0x40000000>;
- 	};
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index a76708501236..b5abfe89190c 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -398,8 +398,9 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 		ret = PTR_ERR(data->phy);
+ 		/* Return -EINVAL if no usbphy is available */
+ 		if (ret == -ENODEV)
+-			ret = -EINVAL;
+-		goto err_clk;
++			data->phy = NULL;
++		else
++			goto err_clk;
+ 	}
  
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbotg1_vbus>;
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio_ptc 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- 	reg_vsd_3v3: regulator-vsd-3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VSD_3V3";
-@@ -40,6 +51,17 @@
- 	status = "okay";
- };
- 
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1_id>;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	over-current-active-low;
-+	status = "okay";
-+};
-+
- &usdhc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc0>;
-@@ -57,6 +79,19 @@
- 		bias-pull-up;
- 	};
- 
-+	pinctrl_usbotg1_vbus: otg1vbusgrp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTC0__PTC0		0x20000
-+		>;
-+	};
-+
-+	pinctrl_usbotg1_id: otg1idgrp {
-+		fsl,pins = <
-+			IMX7ULP_PAD_PTC13__USB0_ID	0x10003
-+			IMX7ULP_PAD_PTC16__USB1_OC2	0x10003
-+		>;
-+	};
-+
- 	pinctrl_usdhc0: usdhc0grp {
- 		fsl,pins = <
- 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
+ 	pdata.usb_phy = data->phy;
 -- 
 2.14.1
