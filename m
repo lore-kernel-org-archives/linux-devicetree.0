@@ -1,79 +1,67 @@
-From: "George G. Davis" <george_davis@mentor.com>
-Subject: Re: [PATCH v2] serial: sh-sci: disable DMA for uart_console
-Date: Tue, 14 May 2019 11:30:22 -0400
-Message-ID: <20190514153021.GC18528@mam-gdavis-lt>
-References: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
- <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+Date: Tue, 14 May 2019 15:37:05 +0000
+Message-ID: <1557848224.4229.48.camel@impinj.com>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+         <20190510214550.18657-5-tpiepho@impinj.com>
+         <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+         <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+         <1557777496.4229.13.camel@impinj.com>
+         <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
+         <20190513204641.GA12345@lunn.ch> <1557782787.4229.36.camel@impinj.com>
+         <20190513214332.GB12345@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
+In-Reply-To: <20190513214332.GB12345@lunn.ch>
+Content-Language: en-US
+Content-ID: <5CA5BB3B1991E448ACEA897DA5A98120@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Eugeniu Rosca <erosca@de.adit-jv.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Chris Brandt <chris.brandt@renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, stable <stable@vger.kernel.org>
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Geert,
-
-On Tue, May 14, 2019 at 10:28:34AM +0200, Geert Uytterhoeven wrote:
-> Hi George,
-> 
-> On Mon, May 13, 2019 at 5:48 PM George G. Davis <george_davis@mentor.com> wrote:
-> > As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-> > console UART"), UART console lines use low-level PIO only access functions
-> > which will conflict with use of the line when DMA is enabled, e.g. when
-> > the console line is also used for systemd messages. So disable DMA
-> > support for UART console lines.
-> >
-> > Fixes: https://patchwork.kernel.org/patch/10929511/
-> 
-> I don't think this is an appropriate reference, as it points to a patch that
-> was never applied.
-
-I included it as a link to an upstream problem report similar to other commits
-that I previewed. The link provides the extra context that I was perhaps to
-lazy to note in the commit header.
-
-> As the problem has basically existed forever,
-
-Agreed
-
-> IMHO no Fixes tag
-> is needed.
-
-I've dropped the Fixes line.
-
-> > Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: George G. Davis <george_davis@mentor.com>
-> > ---
-> > v2: Clarify comment regarding DMA support on kernel console,
-> >     add {Tested,Reviewed}-by:, and Cc: linux-stable lines.
-> 
-> Thanks for the update!
-
-Thanks!
-
-
-I'll submit v3 later today.
-
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
--- 
-Regards,
-George
+T24gTW9uLCAyMDE5LTA1LTEzIGF0IDIzOjQzICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+PiA+IA0KPiA+ID4gQXJlIHRoZXJlIGFueSBpbiB0cmVlIHVzZXJzIG9mIERQODM4NjdfQ0xLX09f
+U0VMX1JFRl9DTEs/IFdlIGhhdmUgdG8NCj4gPiA+IGJlIGNhcmVmdWwgY2hhbmdpbmcgaXRzIG1l
+YW5pbmcuIEJ1dCBpZiBub2JvZHkgaXMgYWN0dWFsbHkgdXNpbmcgaXQuLi4NCj4gPiANCj4gPiBO
+b3BlLiAgSSBkb3VidCB0aGlzIHdpbGwgYWZmZWN0IGFueW9uZS4gIFRoZXknZCBuZWVkIHRvIHN0
+cmFwIHRoZSBwaHkNCj4gPiB0byBnZXQgYSBkaWZmZXJlbnQgY29uZmlndXJhdGlvbiwgYW5kIHRo
+ZSBleHBsaWNpdGx5IGFkZCBhIHByb3BlcnR5LA0KPiA+IHdoaWNoIGlzbid0IGluIHRoZSBleGFt
+cGxlIERUUyBmaWxlcywgdG8gY2hhbmdlIHRoZSBjb25maWd1cmF0aW9uIHRvDQo+ID4gc29tZXRo
+aW5nIHRoZXkgZGlkbid0IHdhbnQsIGFuZCB0aGVuIGRlcGVuZCBvbiBhIGRyaXZlciBidWcgaWdu
+b3JpbmcNCj4gPiB0aGUgZXJyb25lb3VzIHNldHRpbmcgdGhleSBhZGRlZC4NCj4gDQo+IE8uSywg
+dGhlbiB0aGlzIHBhdGNoIGlzIE8uSy4gRG9lcyB0aGUgYmluZGluZyBkb2N1bWVudGF0aW9uIG5l
+ZWQNCj4gdXBkYXRpbmc/DQoNCkRldmljZSB0cmVlIGJpbmRpbmcgcGF0Y2ggd2FzIHNwbGl0IG91
+dCBvZiB0aGUgY29tbWl0IGFuZCB3YXMgcGF0Y2ggMg0Kb2YgdGhlIHNlcmllcywgaHR0cHM6Ly9w
+YXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDk4MzQ5Lw0KDQo+ID4gPiBQYXRjaCA0Og0KPiA+
+ID4gDQo+ID4gPiBUaGlzIGlzIGhhcmRlci4gSWRlYWxseSB3ZSB3YW50IHRvIGZpeCB0aGlzLiBB
+dCBzb21lIHBvaW50LCBzb21lYm9keQ0KPiA+ID4gaXMgZ29pbmcgdG8gd2FudCAncmdtaWknIHRv
+IGFjdHVhbGx5IG1lYW4gJ3JnbWlpJywgYmVjYXVzZSB0aGF0IGlzDQo+ID4gPiB3aGF0IHRoZWly
+IGhhcmR3YXJlIG5lZWRzLg0KPiA+ID4gDQo+ID4gPiBDb3VsZCB5b3UgYWRkIGEgV0FSTl9PTigp
+IGZvciAncmdtaWknIGJ1dCB0aGUgUEhZIGlzIGFjdHVhbGx5IGFkZGluZyBhDQo+ID4gPiBkZWxh
+eT8gQW5kIGFkZCBhIGNvbW1lbnQgYWJvdXQgc2V0dGluZyB0aGUgY29ycmVjdCB0aGluZyBpbiBk
+ZXZpY2UNCj4gPiA+IHRyZWU/ICBIb3BlZnVsbHkgd2Ugd2lsbCB0aGVuIGdldCBwYXRjaGVzIGNv
+cnJlY3RpbmcgRFQgYmxvYnMuIEFuZCBpZg0KPiA+ID4gd2UgbGF0ZXIgZG8gbmVlZCB0byBmaXgg
+J3JnbWlpJywgd2Ugd2lsbCBicmVhayBsZXNzIGJvYXJkLg0KPiA+IA0KPiA+IFllcyBJIGNhbiBk
+byB0aGlzLiAgU2hvdWxkIGl0IHdhcm4gb24gYW55IHVzZSBvZiAicmdtaWkiPw0KPiANCj4gTm8s
+IGkgd291bGQgb25seSB3YXJuIHdoZW4gdGhlcmUgaXMgYSBkZWxheSBjb25maWd1cmVkIGJ5DQo+
+IHN0cmFwcGluZy4gSWYgeW91IHdhbnQgdGhlIFBIWSB0byBiZSBsZWZ0IGFsb25lLCB5b3Ugc2hv
+dWxkIHVzZQ0KPiBQSFlfSU5URVJGQUNFX01PREVfTkEsIHdoaWNoIHNob3VsZCBiZSB0aGUgZGVm
+YXVsdCBpZiB0aGVyZSBpcyBubw0KPiBwaHktbW9kZSBwcm9wZXJ0eS4gSWYgRFQgYWN0dWFsbHkg
+YXNrZWQgZm9yICJyZ21paSIsIGl0IGVpdGhlciBtZWFucw0KPiBpdCBpcyB3cm9uZyBhbmQgcmdt
+aWktaWQgc2hvdWxkIGJlIHVzZWQgdG8gbWF0Y2ggdGhlIHN0cmFwcGluZywgb3INCj4gYm90aCB0
+aGUgc3RyYXBwaW5nIGFuZCB0aGUgRFQgaXMgd3JvbmcgYW5kIHNvbWVib2R5IHJlYWxseSBkb2Vz
+IHdhbnQNCj4gInJnbWlpIi4NCg0KT2ssIHNlZW1zIHJlYXNvbmFibGUuICBJJ3ZlIHB1dCBpbiBh
+IHBoeWRldl93YXJuKCkgd2hlbiB0aGUgaW50ZXJmYWNlDQppcyAncmdtaWknIGFuZCB0aGUgc3Ry
+YXBwaW5nIGlzIHNldCB0byBoYXZlIGEgZGVsYXkuICBJJ20gY2hlY2tpbmcgdGhlDQpzdHJhcHBp
+bmcgY29uZmlnIHJlZ2lzdGVyIGZvciB0aGlzLCByYXRoZXIgdGhhbiB0aGUgY3VycmVudCBwaHkN
+CmNvbmZpZ3VyYXRpb24gb2YgZGVsYXkgdmFsdWVzLiAgVGhlIHByZXZpb3VzIGJlaGF2aW9yIG9m
+ICdyZ21paScgbW9kZQ0Kd2FzICJrZWVwIHN0cmFwcGluZyBkZWZhdWx0IiwgcmF0aGVyIHRoYW4g
+ImtlZXAgY3VycmVudCBwaHkNCmNvbmZpZ3VyYXRpb24iLCB3aGljaCBpc24ndCBleGFjdGx5IHRo
+ZSBzYW1lIHRoaW5nLg0KDQpIZXJlIGlzIHRoZSBtZXNzYWdlOg0KDQpwaHlkZXZfd2FybihwaHlk
+ZXYsDQogICAgICAgICAgICAiUEhZIGhhcyBkZWxheXMgdmlhIHBpbiBzdHJhcHBpbmcsIGJ1dCBw
+aHktbW9kZSA9ICdyZ21paSdcbiINCiAgICAgICAgICAgICJTaG91bGQgYmUgJ3JnbWlpLWlkJyB0
+byB1c2UgaW50ZXJuYWwgZGVsYXlzXG4iKTsgICANCg0K
