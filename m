@@ -1,15 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v11 1/4] MAINTAINERS: add an entry for for arm63 imx
- devicetrees
-Date: Tue, 14 May 2019 10:08:33 -0300
-Message-ID: <CAOMZO5Dn4sVJx3UPo-WXMen9N36CiBvq3i+GosJ_4FGZ7jnTqA@mail.gmail.com>
+Subject: Re: [PATCH v11 2/4] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Date: Tue, 14 May 2019 10:10:02 -0300
+Message-ID: <CAOMZO5BXq0nFBXtWb2cXQkqnv672vkWyyC4QoyQE2PyPmXdgUQ@mail.gmail.com>
 References: <20190513202258.30949-1-angus@akkea.ca>
- <20190513202258.30949-2-angus@akkea.ca>
+ <20190513202258.30949-3-angus@akkea.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190513202258.30949-2-angus@akkea.ca>
+In-Reply-To: <20190513202258.30949-3-angus@akkea.ca>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,10 +25,26 @@ List-Id: devicetree@vger.kernel.org
 
 On Mon, May 13, 2019 at 5:23 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
 >
-> Add an explicit reference to imx* devicetrees
+> This is for the development kit board for the Librem 5. The current level
+> of support yields a working console and is able to boot userspace from
+> the network or eMMC.
+>
+> Additional subsystems that are active :
+>
+> - Both USB ports
+> - SD card socket
+> - WiFi usdhc
+> - WWAN modem
+> - GNSS
+> - GPIO keys
+> - LEDs
+> - gyro
+> - magnetometer
+> - touchscreen
+> - pwm
+> - backlight
+> - haptic motor
 >
 > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-
-There is a typo in the Subject: "arm63" --> "arm64".
 
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
