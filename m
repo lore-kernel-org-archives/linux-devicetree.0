@@ -1,24 +1,22 @@
-Return-Path: <SRS0=m33C=TQ=ideasonboard.com=laurent.pinchart@kernel.org>
-Date: Thu, 16 May 2019 21:05:57 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Return-Path: <mchehab@kernel.org>
+Date: Tue, 14 May 2019 15:27:04 -0300
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
 Subject: Re: [PATCH v6 06/13] media: dt-bindings: tvp5150: Add input port
  connectors DT bindings
-Message-ID: <20190516180557.GR14820@pendragon.ideasonboard.com>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
- <20190415124413.18456-7-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Message-ID: <20190514152704.48208c7d@coco.lan>
 In-Reply-To: <20190415124413.18456-7-m.felsch@pengutronix.de>
+References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+	<20190415124413.18456-7-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Marco,
+Em Mon, 15 Apr 2019 14:44:06 +0200
+Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-Thank you for the patch.
-
-On Mon, Apr 15, 2019 at 02:44:06PM +0200, Marco Felsch wrote:
 > The TVP5150/1 decoders support different video input sources to their
 > AIP1A/B pins.
 > 
@@ -33,6 +31,9 @@ On Mon, Apr 15, 2019 at 02:44:06PM +0200, Marco Felsch wrote:
 > 
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > Reviewed-by: Rob Herring <robh@kernel.org>
+
+Looks good to me.
+
 > ---
 > Changelog:
 > 
@@ -44,20 +45,7 @@ On Mon, Apr 15, 2019 at 02:44:06PM +0200, Marco Felsch wrote:
 > - adapt port layout in accordance with
 >   https://www.spinics.net/lists/linux-media/msg138546.html with the
 >   svideo-connector deviation (use only one endpoint)
-
-As far as I understand the above link, you need two endpoints.
-
-tvp-5150 port@0 (AIP1A)
-	endpoint@0 -----------> Comp0-Con  port
-	endpoint@1 -----+-----> Svideo-Con port
-tvp-5150 port@1	(AIP1B) |
-	endpoint@1 -----+
-	endpoint@0 -----------> Comp1-Con  port
-tvp-5150 port@2
-	endpoint (video bitstream output at YOUT[0-7] parallel bus)
-
-The configuration below isn't accepted.
-
+> 
 >  .../devicetree/bindings/media/i2c/tvp5150.txt | 92 +++++++++++++++++--
 >  1 file changed, 85 insertions(+), 7 deletions(-)
 > 
@@ -181,7 +169,7 @@ The configuration below isn't accepted.
 >  				remote-endpoint = <&ccdc_ep>;
 >  			};
 
--- 
-Regards,
 
-Laurent Pinchart
+
+Thanks,
+Mauro
