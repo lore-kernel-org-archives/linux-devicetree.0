@@ -1,78 +1,37 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v2] ARM: dts: r8a7791: Move enable-method to CPU nodes
-Date: Tue, 14 May 2019 10:58:37 +0200
-Message-ID: <20190514085837.18325-1-geert+renesas@glider.be>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/3] arm64: dts: meson: g12a: add mmc B and C
+Date: Tue, 14 May 2019 11:16:08 +0200
+Message-ID: <20190514091611.15278-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-According to Documentation/devicetree/bindings/arm/cpus.yaml, the
-"enable-method" property should be a property of the individual CPU
-nodes, and not of the parent "cpus" container node.
-However, on R-Car M2-W, the property is tied to the "cpus" node instead.
+This patchset adds the MMC controller B and C to the g12a SoC as well
+as the u200 and sei510 boards.
 
-Secondary CPU bringup and CPU hot (un)plug work regardless, as
-arm_dt_init_cpu_maps() falls back to looking in the "cpus" node.
+MMC controller A has been left out on purpose. This controller is
+special on this SoC family and will be added later on.
 
-The cpuidle code does not have such a fallback, so it does not detect
-the enable-method.  Note that cpuidle does not support the
-"renesas,apmu" enable-method yet, so for now this does not make any
-difference.
+Notice the use of the pinconf DT property 'drive-strength-microamp'.
+Support for this property is not yet merged in meson pinctrl driver but
+the DT part as been acked by the DT maintainer [0] so it should be safe
+to use.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Arm64 and powerpc do not have such a fallback, but SH has, like arm32.
+[0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
 
-This is marked RFC, as the alternative is to update the DT bindings to
-keep the status quo.
+Jerome Brunet (3):
+  arm64: dts: meson: g12a: add mmc nodes
+  arm64: dts: meson: u200: add sd and emmc
+  arm64: dts: meson: sei510: add sd and emmc
 
-v2:
-  - Update reference after commit 672951cbd1b70a9e ("dt-bindings: arm:
-    Convert cpu binding to json-schema").
----
- arch/arm/boot/dts/r8a7791.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |  42 ++++++
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |  42 ++++++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 124 ++++++++++++++++++
+ 3 files changed, 208 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 6f875502453cf40a..a8266e76d7e50739 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -68,7 +68,6 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		enable-method = "renesas,apmu";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -77,6 +76,7 @@
- 			clock-frequency = <1500000000>;
- 			clocks = <&cpg CPG_CORE R8A7791_CLK_Z>;
- 			power-domains = <&sysc R8A7791_PD_CA15_CPU0>;
-+			enable-method = "renesas,apmu";
- 			next-level-cache = <&L2_CA15>;
- 			voltage-tolerance = <1>; /* 1% */
- 			clock-latency = <300000>; /* 300 us */
-@@ -97,6 +97,7 @@
- 			clock-frequency = <1500000000>;
- 			clocks = <&cpg CPG_CORE R8A7791_CLK_Z>;
- 			power-domains = <&sysc R8A7791_PD_CA15_CPU1>;
-+			enable-method = "renesas,apmu";
- 			next-level-cache = <&L2_CA15>;
- 			voltage-tolerance = <1>; /* 1% */
- 			clock-latency = <300000>; /* 300 us */
 -- 
-2.17.1
+2.20.1
