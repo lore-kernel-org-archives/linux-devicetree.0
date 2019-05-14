@@ -1,126 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-Date: Mon, 13 May 2019 19:50:33 -0500
-Message-ID: <20190514005033.15593-1-robh@kernel.org>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ MFD bindings
+Date: Tue, 14 May 2019 10:33:10 +0800
+Message-ID: <OFD347E742.50D5CB45-ON482583FA.000D5FC2-482583FA.000E05BB@mxic.com.tw>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <CAMuHMdWsZPevpYg0HfbgaXPD89RFdOOEPawvvZDt3Kp4=PeLRQ@mail.gmail.c
+ om>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWsZPevpYg0HfbgaXPD89RFdOOEPawvvZDt3Kp4=PeLRQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-gpio@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Boris Brezillon <bbrezillon@kernel.org>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, Lee Jones <lee.jones@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-Convert the Arm PL061 GPIO controller binding to json-schema format.
 
-As I'm the author for all but the gpio-ranges line, make the schema dual
-GPL/BSD license.
+Hi Geert,
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-This warns on a few platforms missing clocks, interrupt-controller 
-and/or #interrupt-cells. We could not make those required, but really 
-they should be IMO. OTOH, it's platforms like Spear and Calxeda which 
-aren't too active, so I don't know that we want to fix them.
+> Subject
+> 
+> Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF 
+MFD bindings
+> 
+> Hi Mason,
+> 
+> Note that if you send multipart/text+html emails, they will be dropped 
+silently
+> by most Linux mailing lists.
+> Hence I'm quoting your last email fully, to give other people a chance
+> reading it (and commenting).
 
- .../devicetree/bindings/gpio/pl061-gpio.txt   | 10 ---
- .../devicetree/bindings/gpio/pl061-gpio.yaml  | 69 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 10 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/pl061-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
+Thanks for your remind !
+I have configured my Lotus Notes to plain text mode only and it should be 
+OK
+for Linux mailing lists now.
 
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.txt b/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-deleted file mode 100644
-index 89058d375b7c..000000000000
---- a/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--ARM PL061 GPIO controller
--
--Required properties:
--- compatible : "arm,pl061", "arm,primecell"
--- #gpio-cells : Should be two. The first cell is the pin number and the
--  second cell is used to specify optional parameters:
--  - bit 0 specifies polarity (0 for normal, 1 for inverted)
--- gpio-controller : Marks the device node as a GPIO controller.
--- interrupts : Interrupt mapping for GPIO IRQ.
--- gpio-ranges : Interaction with the PINCTRL subsystem.
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-new file mode 100644
-index 000000000000..313b17229247
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/pl061-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM PL061 GPIO controller
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+  - Rob Herring <robh@kernel.org>
-+
-+# We need a select here so we don't match all nodes with 'arm,primecell'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: arm,pl061
-+  required:
-+    - compatible
-+
-+properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
-+  compatible:
-+    items:
-+      - const: arm,pl061
-+      - const: arm,primecell
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    oneOf:
-+      - maxItems: 1
-+      - maxItems: 8
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges:
-+    maxItems: 8
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - clocks
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+...
--- 
-2.20.1
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
