@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 6/8] arm64: dts: meson: g12a: add pdm
-Date: Tue, 14 May 2019 13:15:08 +0200
-Message-ID: <20190514111510.23299-7-jbrunet@baylibre.com>
+Subject: [PATCH 8/8] arm64: dts: meson: g12a: enable hdmi_tx sound dai provider
+Date: Tue, 14 May 2019 13:15:10 +0200
+Message-ID: <20190514111510.23299-9-jbrunet@baylibre.com>
 References: <20190514111510.23299-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,208 +12,25 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the pdm device node and the pinctrl definition for this capture
-interface g12a SoC family
+At the moment the sysnopsys hdmi i2s driver provides a single playback
+DAI. Add the corresponding sound-dai-cell to the hdmi device node.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 177 ++++++++++++++++++++
- 1 file changed, 177 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index fa10d6fbf370..37119564274b 100644
+index d4fc645f0ff3..5c8c93ff4816 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -497,6 +497,170 @@
- 						};
- 					};
- 
-+					pdm_din0_a_pins: pdm_din0_a {
-+						mux {
-+							groups = "pdm_din0_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din0_c_pins: pdm_din0_c {
-+						mux {
-+							groups = "pdm_din0_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din0_x_pins: pdm_din0_x {
-+						mux {
-+							groups = "pdm_din0_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din0_z_pins: pdm_din0_z {
-+						mux {
-+							groups = "pdm_din0_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_a_pins: pdm_din1_a {
-+						mux {
-+							groups = "pdm_din1_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_c_pins: pdm_din1_c {
-+						mux {
-+							groups = "pdm_din1_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_x_pins: pdm_din1_x {
-+						mux {
-+							groups = "pdm_din1_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_z_pins: pdm_din1_z {
-+						mux {
-+							groups = "pdm_din1_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_a_pins: pdm_din2_a {
-+						mux {
-+							groups = "pdm_din2_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_c_pins: pdm_din2_c {
-+						mux {
-+							groups = "pdm_din2_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_x_pins: pdm_din2_x {
-+						mux {
-+							groups = "pdm_din2_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_z_pins: pdm_din2_z {
-+						mux {
-+							groups = "pdm_din2_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_a_pins: pdm_din3_a {
-+						mux {
-+							groups = "pdm_din3_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_c_pins: pdm_din3_c {
-+						mux {
-+							groups = "pdm_din3_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_x_pins: pdm_din3_x {
-+						mux {
-+							groups = "pdm_din3_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_z_pins: pdm_din3_z {
-+						mux {
-+							groups = "pdm_din3_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_dclk_a_pins: pdm_dclk_a {
-+						mux {
-+							groups = "pdm_dclk_a";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pdm_dclk_c_pins: pdm_dclk_c {
-+						mux {
-+							groups = "pdm_dclk_c";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pdm_dclk_x_pins: pdm_dclk_x {
-+						mux {
-+							groups = "pdm_dclk_x";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pdm_dclk_z_pins: pdm_dclk_z {
-+						mux {
-+							groups = "pdm_dclk_z";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
- 					pwm_a_pins: pwm-a {
- 						mux {
- 							groups = "pwm_a";
-@@ -1164,6 +1328,19 @@
- 				};
- 			};
- 
-+			pdm: audio-controller@40000 {
-+				compatible = "amlogic,g12a-pdm",
-+					     "amlogic,axg-pdm";
-+				reg = <0x0 0x40000 0x0 0x34>;
+@@ -158,6 +158,7 @@
+ 				clock-names = "isfr", "iahb", "venci";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
 +				#sound-dai-cells = <0>;
-+				sound-name-prefix = "PDM";
-+				clocks = <&clkc_audio AUD_CLKID_PDM>,
-+					 <&clkc_audio AUD_CLKID_PDM_DCLK>,
-+					 <&clkc_audio AUD_CLKID_PDM_SYSCLK>;
-+				clock-names = "pclk", "dclk", "sysclk";
-+				status = "disabled";
-+			};
-+
- 			audio: bus@42000 {
- 				compatible = "simple-bus";
- 				reg = <0x0 0x42000 0x0 0x2000>;
+ 				status = "disabled";
+ 
+ 				/* VPU VENC Input */
 -- 
 2.20.1
