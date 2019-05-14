@@ -1,63 +1,77 @@
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v6 2/6] pinctrl: generic: add new 'drive-strength-microamp' property support
-Date: Tue, 14 May 2019 10:26:48 +0200
-Message-ID: <20190514082652.20686-3-glaroque@baylibre.com>
-References: <20190514082652.20686-1-glaroque@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, khilman@baylibre.com
-Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v4 1/8] dt-bindings: stm32: add bindings for ML-AHB
+ interconnect
+Date: Tue, 14 May 2019 10:26:56 +0200
+Message-ID: <1557822423-22658-2-git-send-email-fabien.dessenne@st.com>
+References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Cc: Ludovic Barre <ludovic.barre@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Loic Pallardy <loic.pallardy@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add drive-strength-microamp property support to allow drive strength in uA
+Document the ML-AHB interconnect for stm32 SoCs.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- drivers/pinctrl/pinconf-generic.c       | 2 ++
- include/linux/pinctrl/pinconf-generic.h | 3 +++
- 2 files changed, 5 insertions(+)
+ .../devicetree/bindings/arm/stm32/mlahb.txt        | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index b4f7f8a458ea..d0cbdb1ad76a 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -39,6 +39,7 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA", true),
-+	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH_UA, "output drive strength", "uA", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
-@@ -167,6 +168,7 @@ static const struct pinconf_generic_params dt_params[] = {
- 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
- 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
- 	{ "drive-strength", PIN_CONFIG_DRIVE_STRENGTH, 0 },
-+	{ "drive-strength-microamp", PIN_CONFIG_DRIVE_STRENGTH_UA, 0 },
- 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
- 	{ "input-disable", PIN_CONFIG_INPUT_ENABLE, 0 },
- 	{ "input-enable", PIN_CONFIG_INPUT_ENABLE, 1 },
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 6c0680641108..72d06d6a3099 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -55,6 +55,8 @@
-  *	push-pull mode, the argument is ignored.
-  * @PIN_CONFIG_DRIVE_STRENGTH: the pin will sink or source at most the current
-  *	passed as argument. The argument is in mA.
-+ * @PIN_CONFIG_DRIVE_STRENGTH_UA: the pin will sink or source at most the current
-+ *	passed as argument. The argument is in uA.
-  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
-  *	which means it will wait for signals to settle when reading inputs. The
-  *	argument gives the debounce time in usecs. Setting the
-@@ -112,6 +114,7 @@ enum pin_config_param {
- 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
- 	PIN_CONFIG_DRIVE_PUSH_PULL,
- 	PIN_CONFIG_DRIVE_STRENGTH,
-+	PIN_CONFIG_DRIVE_STRENGTH_UA,
- 	PIN_CONFIG_INPUT_DEBOUNCE,
- 	PIN_CONFIG_INPUT_ENABLE,
- 	PIN_CONFIG_INPUT_SCHMITT,
+diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+new file mode 100644
+index 0000000..25307aa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+@@ -0,0 +1,37 @@
++ML-AHB interconnect bindings
++
++These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
++a Cortex-M subsystem with dedicated memories.
++The MCU SRAM and RETRAM memory parts can be accessed through different addresses
++(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
++Cortex-M firmware accesses among those ports allows to tune the system
++performance.
++
++[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
++[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
++
++Required properties:
++- compatible: should be "simple-bus"
++- dma-ranges: describes memory addresses translation between the local CPU and
++	   the remote Cortex-M processor. Each memory region, is declared with
++	   3 parameters:
++		 - param 1: device base address (Cortex-M processor address)
++		 - param 2: physical base address (local CPU address)
++		 - param 3: size of the memory region.
++
++The Cortex-M remote processor accessed via the mlahb interconnect is described
++by a child node.
++
++Example:
++mlahb {
++	compatible = "simple-bus";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	dma-ranges = <0x00000000 0x38000000 0x10000>,
++		     <0x10000000 0x10000000 0x60000>,
++		     <0x30000000 0x30000000 0x60000>;
++
++	m4_rproc: m4@10000000 {
++		...
++	};
++};
 -- 
-2.17.1
+2.7.4
