@@ -1,7 +1,7 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v3 09/13] [media] mtk-mipicsi: add ISR for writing the data to buffer
-Date: Tue, 14 May 2019 14:13:46 +0800
-Message-ID: <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v3 01/13] dt-bindings: media: Add binding for MT2712 MIPI-CSI2
+Date: Tue, 14 May 2019 14:13:38 +0800
+Message-ID: <1557814430-9675-2-git-send-email-stu.hsieh@mediatek.com>
 References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,175 +12,162 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add ISR for writing the data to buffer
-
-When mipicsi HW complete to write the data in buffer,
-the interrupt woulb be trigger.
-So, the ISR need to clear interrupt status for next interrupt.
+Add MIPI-CSI2 dt-binding for Mediatek MT2712 SoC
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 110 ++++++++++++++++++
- 1 file changed, 110 insertions(+)
+ .../bindings/media/mediatek-mipicsi-camsv.txt | 53 ++++++++++++++++++
+ .../media/mediatek-mipicsi-common.txt         | 19 +++++++
+ .../bindings/media/mediatek-mipicsi.txt       | 54 +++++++++++++++++++
+ 3 files changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 44c01c8d566b..af5655345754 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -36,6 +36,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/iommu.h>
- #include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <media/v4l2-common.h>
- #include <media/v4l2-dev.h>
-@@ -93,6 +94,8 @@
- #define CAMSV_MODULE_EN					0x10
- #define CAMSV_FMT_SEL					0x14
- #define CAMSV_INT_EN					0x18
-+#define CAMSV_INT_STATUS				0x1C
-+#define PASS1_DONE_STATUS				10
- #define CAMSV_SW_CTL					0x20
- #define CAMSV_CLK_EN					0x30
- 
-@@ -122,6 +125,8 @@ struct mtk_mipicsi_dev {
- 	struct platform_device *pdev;
- 	unsigned int camsv_num;
- 	struct device *larb_pdev;
-+	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
-+	bool irq_status[MTK_CAMDMA_MAX_NUM];
- 	void __iomem		*ana;
- 	void __iomem		*seninf_ctrl;
- 	void __iomem		*seninf;
-@@ -132,6 +137,7 @@ struct mtk_mipicsi_dev {
- 	spinlock_t		lock;
- 	spinlock_t		queue_lock;
- 	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
-+	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
- 	bool streamon;
- 	unsigned int link;
- 	u8 link_reg_val;
-@@ -911,9 +917,96 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
- 		mtk_mipicsi_pm_resume, NULL)
- };
- 
-+static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
-+{
-+	int ch;
-+	u32 int_reg_val;
+diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+new file mode 100644
+index 000000000000..5f34974f12ac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+@@ -0,0 +1,53 @@
++* Mediatek MIPI-CSI2 receiver camsv
 +
-+	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
-+		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
-+		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
-+			return ch;
-+	}
++Mediatek MIPI-CSI2 receiver camsv transfer data to DRAM in Mediatek SoCs
 +
-+	return -1;
-+}
++Required properties:
++- reg : physical base address of the mipicsi receiver registers and length of
++  memory mapped region.
++- clocks: device clocks, see
++  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
++- interrupts : interrupt number to the interrupt controller.
 +
-+static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
-+{
-+	unsigned int i = 0U;
-+	struct mtk_mipicsi_buf *new_cam_buf = NULL;
-+	struct mtk_mipicsi_buf *tmp = NULL;
-+	unsigned int index = 0U;
-+	unsigned int next = 0U;
++Example:
++	seninf1_mux_camsv0: seninf_mux_camsv@15002100 {
++		reg = <0 0x15002120 0 0x40>,
++		      <0 0x15004000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
++		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_LOW>;
++	};
 +
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
-+		mipicsi->irq_status[i] = false;
++	seninf2_mux_camsv1: seninf_mux_camsv@15002500 {
++		reg = <0 0x15002520 0 0x40>,
++		      <0 0x15005000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
++		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>;
++	};
 +
-+	i = 0;
++	seninf3_mux_camsv2: seninf_mux_camsv@15002900 {
++		reg = <0 0x15002920 0 0x40>,
++		      <0 0x15006000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
++		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
++	};
 +
-+	/* only one buffer left */
-+	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-+		return;
++	seninf4_mux_camsv3: seninf_mux_camsv@15002D00 {
++		reg = <0 0x15002D20 0 0x40>,
++		      <0 0x15007000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
++		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
++	};
 +
-+	/*for each fb_lst 2 times to get the top 2 buffer.*/
-+	list_for_each_entry_safe(new_cam_buf, tmp,
-+		&(mipicsi->fb_list), queue) {
-+		if (i == 0U) {
-+			index = new_cam_buf->vb->index;
-+		} else {
-+			next = new_cam_buf->vb->index;
-+			break;
-+		}
-+		++i;
-+	}
++	seninf5_mux_camsv4: seninf_mux_camsv@15003100 {
++		reg = <0 0x15003120 0 0x40>,
++		      <0 0x15008000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
++		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_LOW>;
++	};
 +
-+	/*
-+	 * fb_list has one more buffer. Free the first buffer to user
-+	 * and fill the second buffer to HW.
-+	 */
-+	vb2_buffer_done(mipicsi->cam_buf[index].vb,
-+		VB2_BUF_STATE_DONE);
++	seninf6_mux_camsv5: seninf_mux_camsv@15003500 {
++		reg = <0 0x15003520 0 0x40>,
++		      <0 0x15009000 0 0x1000>;
++		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
++		interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>;
++	};
+diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+new file mode 100644
+index 000000000000..a67c744b75f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+@@ -0,0 +1,19 @@
++* Mediatek MIPI-CSI2 receiver common
 +
-+	list_del_init(&(mipicsi->cam_buf[index].queue));
-+}
++Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
 +
-+static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-+{
++Required properties:
++- compatible: should be "mediatek,mt2712-mipicsi-common"
++- reg : physical base address of the mipicsi receiver registers and length of
++  memory mapped region.
++- clocks: device clocks, see
++  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
 +
-+	struct mtk_mipicsi_dev *mipicsi = data;
-+	unsigned long flags = 0;
-+	int isr_ch;
-+	u8 irq_cnt = 0, i = 0;
 +
-+	spin_lock_irqsave(&mipicsi->lock, flags);
++Example:
++	mipicsi: mipicsi@15002000 {
++		compatible = "mediatek,mt2712-mipicsi-common", "syscon";
++		reg = <0 0x15002000 0 0x10>;
++		clocks = <&imgsys CLK_IMG_SENINF_CAM_EN>,
++			 <&imgsys CLK_IMG_SENINF_SCAM_EN>;
++	};
+diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+new file mode 100644
+index 000000000000..24741ed62b25
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+@@ -0,0 +1,54 @@
++* Mediatek MIPI-CSI2 receiver
 +
-+	isr_ch = get_irq_channel(mipicsi);
-+	if (isr_ch < 0) {
-+		spin_unlock_irqrestore(&mipicsi->lock, flags);
-+		return IRQ_HANDLED;
-+	}
++Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
 +
-+	/* clear interrupt */
-+	writel(1UL << PASS1_DONE_STATUS,
-+		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
-+	mipicsi->irq_status[isr_ch] = true;
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
-+		if (mipicsi->irq_status[i])
-+			++irq_cnt;
-+	}
++Required properties:
++- compatible: should be "mediatek,mt2712-mipicsi"
++- reg : physical base address of the mipicsi receiver registers and length of
++  memory mapped region.
++- power-domains: a phandle to the power domain, see
++  Documentation/devicetree/bindings/power/power_domain.txt for details.
++- mediatek,larb: must contain the local arbiters in the current Socs, see
++  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
++  for details.
++- iommus: should point to the respective IOMMU block with master port as
++  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
++  for details.
++- mediatek,seninf_mux_camsv: seninf_mux_camsv the data go through of the mipicsi port
++- mediatek,mipicsiid: the id of the mipicsi port
++- mediatek,mipicsi: the common component of the two mipicsi port
 +
-+	if (irq_cnt == mipicsi->link)
-+		mtk_mipicsi_irq_buf_process(mipicsi);
-+	spin_unlock_irqrestore(&mipicsi->lock, flags);
++Example:
++	mipicsi0: mipicsi@10217000 {
++		compatible = "mediatek,mt2712-mipicsi";
++		mediatek,mipicsi = <&mipicsi>;
++		iommus = <&iommu0 M4U_PORT_CAM_DMA0>,
++			 <&iommu0 M4U_PORT_CAM_DMA1>;
++		mediatek,larb = <&larb2>;
++		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
 +
-+	return IRQ_HANDLED;
-+}
++		mediatek,seninf_mux_camsv = <&seninf1_mux_camsv0
++					     &seninf2_mux_camsv1
++					     &seninf3_mux_camsv2
++					     &seninf4_mux_camsv3>;
++		reg = <0 0x10217000 0 0x60>,
++		      <0 0x15002100 0 0x4>,
++		      <0 0x15002300 0 0x100>;
++		mediatek,mipicsiid = <0>;
++		status="disabled";
++	};
 +
- static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
- 		int index)
- {
-+	int ret;
-+	int irq;
- 	struct clk *clk = NULL;
- 	struct device *dev = NULL;
- 	struct resource *res = NULL;
-@@ -951,6 +1044,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
- 	}
- 	mipicsi->clk[index] = clk;
- 
-+	irq = of_irq_get(np, 0);
-+	if (irq <= 0) {
-+		dev_err(dev, "get irq fail in %s node\n", np->full_name);
-+		return -ENODEV;
-+	}
-+	mipicsi->irq[index] = irq;
-+
-+	ret = devm_request_irq(dev, irq,
-+			mtk_mipicsi_isr, 0,
-+			mipicsi->drv_name, mipicsi);
-+	if (ret != 0) {
-+		dev_err(dev, "%s irq register failed\n", np->full_name);
-+		return -ENODEV;
-+	}
-+	disable_irq(mipicsi->irq[index]);
-+	mipicsi->irq_status[index] = false;
-+
- 	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
- 	if (res == NULL) {
- 		dev_err(dev, "get seninf_mux memory failed in %s node\n",
++	mipicsi1: mipicsi@10218000 {
++		compatible = "mediatek,mt2712-mipicsi";
++		mediatek,mipicsi = <&mipicsi>;
++		iommus = <&iommu0 M4U_PORT_CAM_DMA2>;
++		mediatek,larb = <&larb2>;
++		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
++		mediatek,seninf_mux_camsv = <&seninf5_mux_camsv4
++					     &seninf6_mux_camsv5>;
++		reg = <0 0x10218000 0 0x60>,
++		      <0 0x15002500 0 0x4>,
++		      <0 0x15002700 0 0x100>;
++		mediatek,mipicsiid = <1>;
++		status="disabled";
++	};
+\ No newline at end of file
 -- 
 2.18.0
