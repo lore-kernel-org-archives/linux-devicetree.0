@@ -1,151 +1,100 @@
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
- and U2 entries
-Date: Tue, 14 May 2019 21:40:50 +0000
-Message-ID: <30102591E157244384E984126FC3CB4F639F7681@us01wembx1.internal.synopsys.com>
-References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
- <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
- <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
- <BYAPR02MB55913E2D6F6865202DE88514A70C0@BYAPR02MB5591.namprd02.prod.outlook.com>
- <30102591E157244384E984126FC3CB4F639EA444@us01wembx1.internal.synopsys.com>
- <BYAPR02MB5591B928413B5118142841BDA70F0@BYAPR02MB5591.namprd02.prod.outlook.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date: Tue, 14 May 2019 22:56:50 +0100
+Message-ID: <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
+References: <20190512174608.10083-1-peron.clem@gmail.com>
+ <20190513151405.GW17751@phenom.ffwll.local>
+ <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
+ <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
+ <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com>
+Reply-To: robin.murphy-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anuragku@xilinx.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "Claus H. Stovgaard" <cst@phaseone.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+Return-path: <linux-sunxi+bncBCZOPTGF6YHRBLXT5TTAKGQENYSDSTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anurag,=0A=
-=0A=
-Anurag Kumar Vulisha wrote:=0A=
-> Hi Thinh,=0A=
->=0A=
->> -----Original Message-----=0A=
->> From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]=0A=
->> Sent: Saturday, May 11, 2019 7:18 AM=0A=
->> To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen=0A=
->> <Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman=0A=
->> <gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark Rut=
-land=0A=
->> <mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stovga=
-ard=0A=
->> <cst@phaseone.com>=0A=
->> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
->> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
->> Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling=
- U1 and U2=0A=
->> entries=0A=
->>=0A=
->> Hi,=0A=
->>=0A=
->> Anurag Kumar Vulisha wrote:=0A=
->>> Hi Thinh,=0A=
->>>=0A=
->>>> -----Original Message-----=0A=
->>>> From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]=0A=
->>>> Sent: Friday, May 10, 2019 5:30 AM=0A=
->>>> To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen=0A=
->>>> <Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman=0A=
->>>> <gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark R=
-utland=0A=
->>>> <mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stov=
-gaard=0A=
->>>> <cst@phaseone.com>=0A=
->>>> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
->>>> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
->>>> Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabli=
-ng U1 and=0A=
->> U2=0A=
->>>> entries=0A=
->>>>=0A=
->>>> Hi Anurag,=0A=
->>>>=0A=
->>>> Anurag Kumar Vulisha wrote:=0A=
->>>>>>> +		return -EINVAL;=0A=
->>>>>>>=0A=
->>>>>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
->>>>>>>  	if (set)=0A=
->>>>>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dw=
-c,=0A=
->>>> struct=0A=
->>>>>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=
-=0A=
->>>>>>> index e293400..f2d3112 100644=0A=
->>>>>>> --- a/drivers/usb/dwc3/gadget.c=0A=
->>>>>>> +++ b/drivers/usb/dwc3/gadget.c=0A=
->>>>>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadge=
-t *g)=0A=
->>>>>>>  	return 0;=0A=
->>>>>>>  }=0A=
->>>>>>>=0A=
->>>>>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,=0A=
->>>>>>> +				      struct usb_dcd_config_params *params)=0A=
->>>>>>> +{=0A=
->>>>>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);=0A=
->>>>>>> +=0A=
->>>>>>> +	/* U1 Device exit Latency */=0A=
->>>>>>> +	if (dwc->dis_u1_entry_quirk)=0A=
->>>>>>> +		params->bU1devExitLat =3D 0;=0A=
->>>>>> It doesn't make sense to have exit latency of 0. Rejecting=0A=
->>>>>> SET_FEATURE(enable U1/U2) should already let the host know that the=
-=0A=
->>>>>> device doesn't support U1/U2.=0A=
->>>>>>=0A=
->>>>> I am okay to remove this, but I feel that it is better to report zero=
- value instead=0A=
->>>>> of a non-zero value in exit latency of BOS when U1 or U2 entries are =
-not=0A=
->> supported.=0A=
->>>>> Advantage of reporting 0 is that some hosts doesn't even send=0A=
->>>> SET_FEATURE(U1/U2)=0A=
->>>>> requests on seeing zero value in BOS descriptor. Also there can be ca=
-ses where=0A=
->> U1 is=0A=
->>>>> disabled and U2 entry is allowed or vice versa, for these kind of cas=
-es the driver=0A=
->> can=0A=
->>>>> set zero exit latency value for U1 and non-zero exit latency value fo=
-r U2 . Based=0A=
->> on=0A=
->>>> this=0A=
->>>>> I think it would be better to report 0 when U1/U2 states are not enab=
-led. Please=0A=
->>>> provide=0A=
->>>>> your opinion on this.=0A=
->>>> Hm... I assume you're testing against linux usb stack and xhci host. I=
-f=0A=
->>>> that's the case, it looks like host will still request the device to=
-=0A=
->>>> enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). Th=
-is=0A=
->>>> needs to be fixed. I think what you have is fine to workaround this is=
-sue.=0A=
->>> Thanks . Will send the next series with the other fixes that you have s=
-uggested=0A=
->>>=0A=
->>> Best Regards,=0A=
->>> Anurag Kumar Vulisha=0A=
->>>=0A=
->> I want to try something. Can you see if this helps with your performance=
-=0A=
->> test without setting the U1/U2 exit latency to 0?=0A=
->> (No need to change what you have in your patch. This is just for testing=
-).=0A=
->>=0A=
-> With your patch , the link doesn't enter into U1/U2 and I am also getting=
-=0A=
-> better performance=0A=
->=0A=
-> Thanks,=0A=
-> Anurag Kumar Vulisha=0A=
-=0A=
-Thanks for testing.=0A=
-=0A=
-BR,=0A=
-Thinh=0A=
+On 2019-05-14 10:22 pm, Cl=C3=A9ment P=C3=A9ron wrote:
+> Hi,
+>=20
+> On Tue, 14 May 2019 at 17:17, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
+om> wrote:
+>>
+>> Hi,
+>>
+>> On Tue, 14 May 2019 at 12:29, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> w=
+rote:
+>>>
+>>> Hi,
+>>>
+>>> On 13/05/2019 17:14, Daniel Vetter wrote:
+>>>> On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>>>> From: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> The Allwinner H6 has a Mali-T720 MP2. The drivers are
+>>>>> out-of-tree so this series only introduce the dt-bindings.
+>>>>
+>>>> We do have an in-tree midgard driver now (since 5.2). Does this stuff =
+work
+>>>> together with your dt changes here?
+>>>
+>>> No, but it should be easy to add.
+>> I will give it a try and let you know.
+> Added the bus_clock and a ramp delay to the gpu_vdd but the driver
+> fail at probe.
+>=20
+> [    3.052919] panfrost 1800000.gpu: clock rate =3D 432000000
+> [    3.058278] panfrost 1800000.gpu: bus_clock rate =3D 100000000
+> [    3.179772] panfrost 1800000.gpu: mali-t720 id 0x720 major 0x1
+> minor 0x1 status 0x0
+> [    3.187432] panfrost 1800000.gpu: features: 00000000,10309e40,
+> issues: 00000000,21054400
+> [    3.195531] panfrost 1800000.gpu: Features: L2:0x07110206
+> Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002821 AS:0xf
+> JS:0x7
+> [    3.207178] panfrost 1800000.gpu: shader_present=3D0x3 l2_present=3D0x=
+1
+> [    3.238257] panfrost 1800000.gpu: Fatal error during GPU init
+> [    3.244165] panfrost: probe of 1800000.gpu failed with error -12
+>=20
+> The ENOMEM is coming from "panfrost_mmu_init"
+> alloc_io_pgtable_ops(ARM_MALI_LPAE, &pfdev->mmu->pgtbl_cfg,
+>                                           pfdev);
+>=20
+> Which is due to a check in the pgtable alloc "cfg->ias !=3D 48"
+> arm-lpae io-pgtable: arm_mali_lpae_alloc_pgtable cfg->ias 33 cfg->oas 40
+>=20
+> DRI stack is totally new for me, could you give me a little clue about
+> this issue ?
+
+Heh, this is probably the one bit which doesn't really count as "DRI stack"=
+.
+
+That's merely a somewhat-conservative sanity check - I'm pretty sure it=20
+*should* be fine to change the test to "cfg->ias > 48" (io-pgtable=20
+itself ought to cope). You'll just get to be the first to actually test=20
+a non-48-bit configuration here :)
+
+Robin.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/3c2c9094-69d4-bace-d5ee-c02b7f56ac82%40arm.com.
+For more options, visit https://groups.google.com/d/optout.
