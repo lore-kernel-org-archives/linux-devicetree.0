@@ -1,107 +1,70 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Tue, 14 May 2019 01:38:19 -0700
-Message-ID: <20190514083819.GC230665@google.com>
-References: <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
- <20190509233043.GC20877@mit.edu>
- <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
- <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
- <3faa022b-0b70-0375-aa6d-12ea83a2671f@deltatee.com>
- <d148a554-2a71-a5a4-4bb2-d84d2c483277@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v5 1/6] dt-bindings: connector: add optional properties for
+ Type-B
+Date: Tue, 14 May 2019 16:47:18 +0800
+Message-ID: <1557823643-8616-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d148a554-2a71-a5a4-4bb2-d84d2c483277@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>, Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com, knut.omang@oracle.com, gregkh@linuxfoundation.org, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, mpe@ellerman.id.au, pm
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Badhri Jagan Sridharan <badhri@google.com>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 03:13:40PM -0700, Frank Rowand wrote:
-> On 5/10/19 9:17 AM, Logan Gunthorpe wrote:
-> > 
-> > 
-> > On 2019-05-09 11:18 p.m., Frank Rowand wrote:
-> > 
-> >> YES, kselftest has in-kernel tests.  (Excuse the shouting...)
-> > 
-> > Cool. From my cursory look, in my opinion, these would be greatly
-> > improved by converting them to the framework Brendan is proposing for Kunit.
-> > 
-> >>> If they do exists, it seems like it would make sense to
-> >>> convert those to kunit and have Kunit tests run-able in a VM or
-> >>> baremetal instance.
-> >>
-> >> They already run in a VM.
-> >>
-> >> They already run on bare metal.
-> >>
-> >> They already run in UML.
-> > 
-> > Simply being able to run in UML is not the only thing here. Kunit
-> > provides the infrastructure to quickly build, run and report results for
-> > all the tests from userspace without needing to worry about the details
-> > of building and running a UML kernel, then parsing dmesg to figure out
-> > what tests were run or not.
-> 
-> Yes.  But that is not the only environment that KUnit must support to be
-> of use to me for devicetree unittests (this is not new, Brendan is quite
-> aware of my needs and is not ignoring them).
-> 
-> 
-> >> This is not to say that KUnit does not make sense.  But I'm still trying
-> >> to get a better description of the KUnit features (and there are
-> >> some).
-> > 
-> > So read the patches, or the documentation[1] or the LWN article[2]. It's
-> > pretty well described in a lot of places -- that's one of the big
-> > advantages of it. In contrast, few people seems to have any concept of
-> > what kselftests are or where they are or how to run them (I was
-> > surprised to find the in-kernel tests in the lib tree).
-> > 
-> > Logan
-> > 
-> > [1] https://google.github.io/kunit-docs/third_party/kernel/docs/
-> > [2] https://lwn.net/Articles/780985/
-> 
-> I have been following the RFC versions.  I have installed the RFC patches
-> and run them to the extent that they worked (devicetree unittests were
-> a guinea pig for test conversion in the RFC series, but the converted
-> tests did not work).  I read portions of the code while trying to
-> understand the unittests conversion.  I made review comments based on
-> the portion of the code that I did read.  I have read the documentation
-> (very nice btw, as I have said before, but should be expanded).
-> 
-> My comment is that the description to submit the patch series should
-> be fuller -- KUnit potentially has a lot of nice attributes, and I
-> still think I have only scratched the surface.  The average reviewer
-> may have even less in-depth knowledge than I do.  And as I have
-> commented before, I keep diving into areas that I had no previous
-> experience with (such as kselftest) to be able to properly judge this
-> patch series.
+Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+usb-b-connector
 
-Thanks for the praise! That means a lot coming from you!
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v5 no changes
+v4 no changes
 
-I really cannot disagree that I could use more documentation. You can
-pretty much always use more documentation. Nevertheless, is there a
-particular part of the documentation that you think it lacking?
+v3 changes:
+ 1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
 
-It sounds like there was a pretty long discussion here about, a number
-of different things.
+v2 changes:
+  1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
+---
+ .../bindings/connector/usb-connector.txt           | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Do you want a better description of what unit testing is and how KUnit
-helps make it possible?
-
-Do you want more of an explanation distinguishing KUnit from kselftest?
-How so?
-
-Do you just want better documentation on how to test the kernel? What
-tools we have at our disposal and when to use what tools?
-
-Thanks!
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+index a9a2f2fc44f2..e8f9e854fd11 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.txt
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -17,6 +17,20 @@ Optional properties:
+ - self-powered: Set this property if the usb device that has its own power
+   source.
+ 
++Optional properties for usb-b-connector:
++- id-gpios: an input gpio for USB ID pin.
++- vbus-gpios: an input gpio for USB VBUS pin, used to detect presence of
++  VBUS 5V.
++  see gpio/gpio.txt.
++- vbus-supply: a phandle to the regulator for USB VBUS if needed when host
++  mode or dual role mode is supported.
++  Particularly, if use an output GPIO to control a VBUS regulator, should
++  model it as a regulator.
++  see regulator/fixed-regulator.yaml
++- pinctrl-names : a pinctrl state named "default" is optional
++- pinctrl-0 : pin control group
++  see pinctrl/pinctrl-bindings.txt
++
+ Optional properties for usb-c-connector:
+ - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+   connector has power support.
+-- 
+2.21.0
