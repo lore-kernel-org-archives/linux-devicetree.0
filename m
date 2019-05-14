@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v4 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
-Date: Tue, 14 May 2019 10:27:00 +0200
-Message-ID: <1557822423-22658-6-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v4 4/8] ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
+Date: Tue, 14 May 2019 10:26:59 +0200
+Message-ID: <1557822423-22658-5-git-send-email-fabien.dessenne@st.com>
 References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,66 +12,41 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare reserved memories shared by the processors for STM32MP157c-ed1
-board.
+Declare the M4 remote processor in a sub-node of the mlahb simple bus.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 626ceb3..acfc5cd 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -21,6 +21,48 @@
- 		reg = <0xC0000000 0x40000000>;
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index c664b55..39bbcda 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1242,4 +1242,24 @@
+ 			status = "disabled";
+ 		};
  	};
- 
-+	reserved-memory {
++
++	mlahb {
++		compatible = "simple-bus";
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+		ranges;
++		dma-ranges = <0x00000000 0x38000000 0x10000>,
++			     <0x10000000 0x10000000 0x60000>,
++			     <0x30000000 0x30000000 0x60000>;
 +
-+		mcuram2: mcuram2@10000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10000000 0x40000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@10040000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10040000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@10041000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10041000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0buffer: vdev0buffer@10042000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10042000 0x4000>;
-+			no-map;
-+		};
-+
-+		mcuram: mcuram@30000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x30000000 0x40000>;
-+			no-map;
-+		};
-+
-+		retram: retram@38000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x38000000 0x10000>;
-+			no-map;
++		m4_rproc: m4@10000000 {
++			compatible = "st,stm32mp1-m4";
++			reg = <0x10000000 0x40000>,
++			      <0x30000000 0x40000>,
++			      <0x38000000 0x10000>;
++			resets = <&rcc MCU_R>;
++			st,syscfg-holdboot = <&rcc 0x10C 0x1>;
++			st,syscfg-tz = <&rcc 0x000 0x1>;
++			status = "disabled";
 +		};
 +	};
-+
- 	aliases {
- 		serial0 = &uart4;
- 	};
+ };
 -- 
 2.7.4
