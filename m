@@ -1,107 +1,73 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v3 10/13] [media] mtk-mipicsi: set the output address in HW reg
-Date: Tue, 14 May 2019 14:13:47 +0800
-Message-ID: <1557814430-9675-11-git-send-email-stu.hsieh@mediatek.com>
-References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+Date: Tue, 14 May 2019 11:55:48 +0530
+Message-ID: <4b1fe488-c99f-3deb-e6f0-a67eb65b2278@nvidia.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-11-vidyas@nvidia.com> <20190426154306.GA16455@bogus>
+ <504abd8f-9eb3-1089-953c-a6372c34b346@nvidia.com>
+ <CAL_JsqLEw+HAeqd2TD33cSVBjwDUNMb5amk2wGsW9m_4Z6CucQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+In-Reply-To: <CAL_JsqLEw+HAeqd2TD33cSVBjwDUNMb5amk2wGsW9m_4Z6CucQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Rob Herring <robh@kernel.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set the output address in HW reg when buffer queue and ISR.
+On 5/13/2019 8:50 PM, Rob Herring wrote:
+> On Tue, May 7, 2019 at 4:20 AM Vidya Sagar <vidyas@nvidia.com> wrote:
+>>
+>> On 4/26/2019 9:13 PM, Rob Herring wrote:
+>>> On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
+>>>> Add support for Tegra194 PCIe controllers. These controllers are based
+>>>> on Synopsys DesignWare core IP.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> ---
+> 
+>>>> +- nvidia,bpmp: Must contain a phandle to BPMP controller node.
+>>>> +- nvidia,controller-id : Controller specific ID
+>>>> +    0: C0
+>>>> +    1: C1
+>>>> +    2: C2
+>>>> +    3: C3
+>>>> +    4: C4
+>>>> +    5: C5
+>>>
+>>> We don't normal put device indexes into DT. Why do you need this.
+>>> Perhaps for accessing the BPMP? If so, make nvidia,bpmp a phandle+cell.
+>> BPMP needs to know the controller number to enable it hence it needs to be
+>> passed to BPMP. Just for accessing BPMP, I already added 'nvidia,bpmp' property.
+> 
+> Then make nvidia,bpmp take the phandle and this number.
+Ok. I'll take care of it in next patch series.
 
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+> 
+> 
+>>>> +- nvidia,disable-aspm-states: Controls advertisement of ASPM states
+>>>> +    bit-0 to '1': Disables advertisement of ASPM-L0s
+>>>> +    bit-1 to '1': Disables advertisement of ASPM-L1. This also disables
+>>>> +                   advertisement of ASPM-L1.1 and ASPM-L1.2
+>>>> +    bit-2 to '1': Disables advertisement of ASPM-L1.1
+>>>> +    bit-3 to '1': Disables advertisement of ASPM-L1.2
+>>>
+>>> Can't this cover what 'supports-clkreq' does?
+>> Well, they are related partially. i.e. if a platform doesn't have 'supports-clkreq' set,
+>> then, by definition, it can't advertise support for ASPM L1.1 and L1.2 states. But, ASPM-L0s
+>> and ASPM-L1 states don't depend on 'supports-clkreq' property.
+>> Having this property gives more granularity as to support for which particular ASPM state
+>> shouldn't be advertised by the root port.
+> 
+> Okay, then it should be a common property then.
+I'm planning to remove this given we have sysfs way (Heiner's patch series @
+http://patchwork.ozlabs.org/project/linux-pci/list/?series=107392 to control which ASPM states
+can be enabled run time. In case if that is not going to work for a given use case, I'll push
+patches separately for controlling ASPM states advertisement/working.
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index af5655345754..cf46fcd01a19 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -105,6 +105,7 @@
- #define CAMSV_TG_SEN_GRAB_LIN				0x50C
- #define CAMSV_TG_PATH_CFG				0x510
- 
-+#define IMGO_BASE_ADDR					0x220
- #define IMGO_XSIZE					0x230
- #define IMGO_YSIZE					0x234
- #define IMGO_STRIDE					0x238
-@@ -503,12 +504,22 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
- 	return 0;
- }
- 
-+static void mtk_mipicsi_fill_buffer(void __iomem *base, dma_addr_t dma_handle)
-+{
-+	writel(dma_handle, base + IMGO_BASE_ADDR);
-+}
-+
- static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- {
- 	struct soc_camera_device *icd = soc_camera_from_vb2q(vb->vb2_queue);
- 	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
- 	struct mtk_mipicsi_dev *mipicsi = ici->priv;
-+	unsigned int i = 0;
-+	u64 offset = 0;
-+	u8 link_index = 0U;
- 	char *va = NULL;
-+	u32 bytesperline = mipicsi->bytesperline;
-+	u32 height = mipicsi->height;
- 
- 	spin_lock(&mipicsi->queue_lock);
- 	list_add_tail(&(mipicsi->cam_buf[vb->index].queue),
-@@ -517,6 +528,20 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 
- 	va = vb2_plane_vaddr(vb, 0);
- 
-+	for (i = 0U; (mipicsi->enqueue_cnt == 0UL) && (i < MTK_CAMDMA_MAX_NUM);
-+		++i)
-+		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
-+			offset = (u64)link_index * bytesperline * height;
-+
-+			spin_lock(&mipicsi->lock);
-+			mtk_mipicsi_fill_buffer(mipicsi->camsv[i],
-+				mipicsi->cam_buf[vb->index].vb_dma_addr_phy
-+					+ offset);
-+			spin_unlock(&mipicsi->lock);
-+
-+			link_index++;
-+		}
-+
- 	++(mipicsi->enqueue_cnt);
- }
- 
-@@ -938,6 +963,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	struct mtk_mipicsi_buf *tmp = NULL;
- 	unsigned int index = 0U;
- 	unsigned int next = 0U;
-+	u64 offset = 0ULL;
-+	u8 link_index = 0U;
-+	void __iomem *base = NULL;
-+	dma_addr_t pa;
- 
- 	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
- 		mipicsi->irq_status[i] = false;
-@@ -960,6 +989,16 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 		++i;
- 	}
- 
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
-+		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
-+			offset = (u64)link_index *
-+				mipicsi->bytesperline * mipicsi->height;
-+			base = mipicsi->camsv[i];
-+			pa = mipicsi->cam_buf[next].vb_dma_addr_phy;
-+			mtk_mipicsi_fill_buffer(base, pa + offset);
-+			link_index++;
-+		}
-+	}
- 	/*
- 	 * fb_list has one more buffer. Free the first buffer to user
- 	 * and fill the second buffer to HW.
--- 
-2.18.0
+> 
+> Rob
+> 
