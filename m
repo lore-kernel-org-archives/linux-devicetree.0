@@ -1,25 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mediatek: audsys: add support for MT8516
-Date: Tue, 14 May 2019 15:31:56 -0500
-Message-ID: <20190514203156.GA28188@bogus>
-References: <20190502121843.14493-1-fparent@baylibre.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v2 0/3] Cleanup some unused functions in fdt.c
+Date: Tue, 14 May 2019 13:40:50 -0700
+Message-ID: <20190514204053.124122-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190502121843.14493-1-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, matthias.bgg@gmail.com, wenzhen.yu@mediatek.com, sean.wang@mediatek.com, ryder.lee@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Fabien Parent <fparent@baylibre.com>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  2 May 2019 14:18:42 +0200, Fabien Parent wrote:
-> Add AUDSYS device tree bindings documentation for MediaTek MT8516 SoC.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  .../bindings/arm/mediatek/mediatek,audsys.txt   |  1 +
->  include/dt-bindings/clock/mt8516-clk.h          | 17 +++++++++++++++++
->  2 files changed, 18 insertions(+)
-> 
+This series removes some unused functions, marks some more as __init,
+marks the FDT as __ro_after_init for some more protections, and updates
+the common properties binding to be less Linux specific.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes from v1:
+ * New patch for dt-bindings and removal of that hunk from patch 2
+
+Stephen Boyd (3):
+  dt-bindings: Remove Linuxisms from common-properties binding
+  of/fdt: Remove dead code and mark functions with __init
+  of/fdt: Mark initial_boot_params as __ro_after_init
+
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+
+ .../devicetree/bindings/common-properties.txt | 17 ++++----
+ drivers/of/fdt.c                              | 39 +++----------------
+ include/linux/of_fdt.h                        | 11 ------
+ 3 files changed, 14 insertions(+), 53 deletions(-)
+
+
+base-commit: e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+-- 
+Sent by a computer through tubes
