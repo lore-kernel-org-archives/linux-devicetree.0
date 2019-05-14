@@ -1,185 +1,44 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2 2/8] usb: phy: phy-mxs-usb: add imx7ulp support
-Date: Tue, 14 May 2019 16:12:03 +0800
-Message-ID: <1557821523.10179.284.camel@mhfsdcap03>
-References: <20190514073529.29505-1-peter.chen@nxp.com>
- <20190514073529.29505-3-peter.chen@nxp.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Date: Tue, 14 May 2019 01:12:23 -0700
+Message-ID: <20190514081223.GA230665@google.com>
+References: <20190514054251.186196-1-brendanhiggins@google.com>
+ <20190514054251.186196-9-brendanhiggins@google.com>
+ <20190514065643.GC2589@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190514073529.29505-3-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190514065643.GC2589@hirez.programming.kicks-ass.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, yamada.masahiro@socionext.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, kbuild test robot <lkp@intel.com>, linux-nvdimm@lists.01.org, frowand.list@gmail.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, Josh Poimboeuf <jpoimboe@redhat.com>, dan.j.williams@intel.com, kunit-dev@googlegroups.com, tytso@mit.edu, richard@nod.at, sboyd@kernel.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, keescook@google.
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-05-14 at 07:38 +0000, Peter Chen wrote:
-> At imx7ulp, the USB related analog register is located in PHY register
-> region too, so we need to control PLL at PHY driver directly.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c | 76 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index 1b1bb0ad40c3..90c96a8e9342 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -20,6 +20,7 @@
->  
->  #define DRIVER_NAME "mxs_phy"
->  
-> +/* Register Macro */
->  #define HW_USBPHY_PWD				0x00
->  #define HW_USBPHY_TX				0x10
->  #define HW_USBPHY_CTRL				0x30
-> @@ -37,6 +38,11 @@
->  #define GM_USBPHY_TX_TXCAL45DN(x)            (((x) & 0xf) << 8)
->  #define GM_USBPHY_TX_D_CAL(x)                (((x) & 0xf) << 0)
->  
-> +/* imx7ulp */
-> +#define HW_USBPHY_PLL_SIC			0xa0
-> +#define HW_USBPHY_PLL_SIC_SET			0xa4
-> +#define HW_USBPHY_PLL_SIC_CLR			0xa8
-> +
->  #define BM_USBPHY_CTRL_SFTRST			BIT(31)
->  #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
->  #define BM_USBPHY_CTRL_OTG_ID_VALUE		BIT(27)
-> @@ -55,6 +61,12 @@
->  #define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
->  
->  #define BM_USBPHY_DEBUG_CLKGATE			BIT(30)
-> +/* imx7ulp */
-> +#define BM_USBPHY_PLL_LOCK			BIT(31)
-> +#define BM_USBPHY_PLL_REG_ENABLE		BIT(21)
-> +#define BM_USBPHY_PLL_BYPASS			BIT(16)
-> +#define BM_USBPHY_PLL_POWER			BIT(12)
-> +#define BM_USBPHY_PLL_EN_USB_CLKS		BIT(6)
->  
->  /* Anatop Registers */
->  #define ANADIG_ANA_MISC0			0x150
-> @@ -167,6 +179,9 @@ static const struct mxs_phy_data imx6ul_phy_data = {
->  	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
->  };
->  
-> +static const struct mxs_phy_data imx7ulp_phy_data = {
-> +};
-> +
->  static const struct of_device_id mxs_phy_dt_ids[] = {
->  	{ .compatible = "fsl,imx6sx-usbphy", .data = &imx6sx_phy_data, },
->  	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
-> @@ -174,6 +189,7 @@ static const struct of_device_id mxs_phy_dt_ids[] = {
->  	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
->  	{ .compatible = "fsl,vf610-usbphy", .data = &vf610_phy_data, },
->  	{ .compatible = "fsl,imx6ul-usbphy", .data = &imx6ul_phy_data, },
-> +	{ .compatible = "fsl,imx7ulp-usbphy", .data = &imx7ulp_phy_data, },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> @@ -198,6 +214,11 @@ static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
->  	return mxs_phy->data == &imx6sl_phy_data;
->  }
->  
-> +static inline bool is_imx7ulp_phy(struct mxs_phy *mxs_phy)
-> +{
-> +	return mxs_phy->data == &imx7ulp_phy_data;
-> +}
-> +
->  /*
->   * PHY needs some 32K cycles to switch from 32K clock to
->   * bus (such as AHB/AXI, etc) clock.
-> @@ -221,14 +242,59 @@ static void mxs_phy_tx_init(struct mxs_phy *mxs_phy)
->  	}
->  }
->  
-> +static int wait_for_pll_lock(const void __iomem *base)
-> +{
-> +	int loop_count = 100;
-> +
-> +	/* Wait for PLL to lock */
-> +	do {
-> +		if (readl(base + HW_USBPHY_PLL_SIC) & BM_USBPHY_PLL_LOCK)
-> +			break;
-> +		usleep_range(100, 150);
-> +	} while (loop_count-- > 0);
-> +
-there is a common API readl_poll_timeout(), maybe you can try it.
-
-> +	return readl(base + HW_USBPHY_PLL_SIC) & BM_USBPHY_PLL_LOCK
-> +			? 0 : -ETIMEDOUT;
-> +}
-> +
-> +static int mxs_phy_pll_enable(void __iomem *base, bool enable)
-> +{
-> +	int ret = 0;
-> +
-> +	if (enable) {
-> +		writel(BM_USBPHY_PLL_REG_ENABLE, base + HW_USBPHY_PLL_SIC_SET);
-> +		writel(BM_USBPHY_PLL_BYPASS, base + HW_USBPHY_PLL_SIC_CLR);
-> +		writel(BM_USBPHY_PLL_POWER, base + HW_USBPHY_PLL_SIC_SET);
-> +		ret = wait_for_pll_lock(base);
-> +		if (ret)
-> +			return ret;
-> +		writel(BM_USBPHY_PLL_EN_USB_CLKS, base +
-> +				HW_USBPHY_PLL_SIC_SET);
-> +	} else {
-> +		writel(BM_USBPHY_PLL_EN_USB_CLKS, base +
-> +				HW_USBPHY_PLL_SIC_CLR);
-> +		writel(BM_USBPHY_PLL_POWER, base + HW_USBPHY_PLL_SIC_CLR);
-> +		writel(BM_USBPHY_PLL_BYPASS, base + HW_USBPHY_PLL_SIC_SET);
-> +		writel(BM_USBPHY_PLL_REG_ENABLE, base + HW_USBPHY_PLL_SIC_CLR);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->  {
->  	int ret;
->  	void __iomem *base = mxs_phy->phy.io_priv;
->  
-> +	if (is_imx7ulp_phy(mxs_phy)) {
-> +		ret = mxs_phy_pll_enable(base, true);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	ret = stmp_reset_block(base + HW_USBPHY_CTRL);
->  	if (ret)
-> -		return ret;
-> +		goto disable_pll;
->  
->  	/* Power up the PHY */
->  	writel(0, base + HW_USBPHY_PWD);
-> @@ -253,6 +319,11 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->  	mxs_phy_tx_init(mxs_phy);
->  
->  	return 0;
-> +
-> +disable_pll:
-> +	if (is_imx7ulp_phy(mxs_phy))
-> +		mxs_phy_pll_enable(base, false);
-> +	return ret;
->  }
->  
->  /* Return true if the vbus is there */
-> @@ -374,6 +445,9 @@ static void mxs_phy_shutdown(struct usb_phy *phy)
->  	writel(BM_USBPHY_CTRL_CLKGATE,
->  	       phy->io_priv + HW_USBPHY_CTRL_SET);
->  
-> +	if (is_imx7ulp_phy(mxs_phy))
-> +		mxs_phy_pll_enable(phy->io_priv, false);
-> +
->  	clk_disable_unprepare(mxs_phy->clk);
->  }
->  
+T24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgMDg6NTY6NDNBTSArMDIwMCwgUGV0ZXIgWmlqbHN0cmEg
+d3JvdGU6Cj4gT24gTW9uLCBNYXkgMTMsIDIwMTkgYXQgMTA6NDI6NDJQTSAtMDcwMCwgQnJlbmRh
+biBIaWdnaW5zIHdyb3RlOgo+ID4gVGhpcyBmaXhlcyB0aGUgZm9sbG93aW5nIHdhcm5pbmcgc2Vl
+biBvbiBHQ0MgNy4zOgo+ID4gICBrdW5pdC90ZXN0LXRlc3Qubzogd2FybmluZzogb2JqdG9vbDog
+a3VuaXRfdGVzdF91bnN1Y2Nlc3NmdWxfdHJ5KCkgZmFsbHMgdGhyb3VnaCB0byBuZXh0IGZ1bmN0
+aW9uIGt1bml0X3Rlc3RfY2F0Y2goKQo+ID4gCj4gCj4gV2hhdCBpcyB0aGF0IGZpbGUgYW5kIGZ1
+bmN0aW9uOyBubyBrZXJuZWwgdHJlZSBuZWFyIG1lIHNlZW1zIHRvIGhhdmUKPiB0aGF0LgoKT2gs
+IHNvcnJ5IGFib3V0IHRoYXQuIFRoZSBmdW5jdGlvbiBpcyBhZGRlZCBpbiB0aGUgZm9sbG93aW5n
+IHBhdGNoLAoiW1BBVENIIHYzIDA5LzE4XSBrdW5pdDogdGVzdDogYWRkIHN1cHBvcnQgZm9yIHRl
+c3QgYWJvcnQiWzFdLgoKTXkgYXBvbG9naWVzIGlmIHRoaXMgcGF0Y2ggaXMgc3VwcG9zZWQgdG8g
+Y29tZSBhZnRlciBpdCBpbiBzZXF1ZW5jZSwgYnV0CkkgYXNzdW1lZCBpdCBzaG91bGQgY29tZSBi
+ZWZvcmUgb3RoZXJ3aXNlIG9ianRvb2wgd291bGQgY29tcGxhaW4gYWJvdXQKdGhlIHN5bWJvbCB3
+aGVuIGl0IGlzIGludHJvZHVjZWQuCgpUaGFua3MhCgpbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21s
+LzIwMTkvNS8xNC80NApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWw=
