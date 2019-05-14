@@ -1,86 +1,111 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [v5 PATCH 0/6] add USB Type-B GPIO connector driver
-Date: Tue, 14 May 2019 16:47:17 +0800
-Message-ID: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Tue, 14 May 2019 16:47:21 +0800
+Message-ID: <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Because the USB Connector is introduced and the requirement of
-usb-connector.txt binding, the old way using extcon to support
-USB Dual-Role switch is now deprecated, meanwhile there is no
-available common driver when use Type-B connector, typically
-using an input GPIO to detect USB ID pin.
-This patch series introduce a Type-B GPIO connector driver and try
-to replace the function provided by extcon-usb-gpio driver.
+Add fwnode_usb_role_switch_get() to make easier to get
+usb_role_switch by fwnode which register it.
+It's useful when there is not device_connection registered
+between two drivers and only knows the fwnode which register
+usb_role_switch.
 
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Tested-by: Biju Das <biju.das@bp.renesas.com>
+---
 v5 changes:
-  1. remove linux/of.h and put usb_role_switch when error happens,
-     suggested by Biju
-  2. treat Type-B connector as USB controller's child, but not as
-     a virtual device, suggested by Rob
-  3. provide and use generic property "usb-role-switch", see [1],
-     suggested by Rob
+ 1. remove linux/of.h suggested by Biju
+ 2. add tested by Biju
 
-Note: this series still depends on [2]
-
-[1]: [v3] dt-binding: usb: add usb-role-switch property
-      https://patchwork.kernel.org/patch/10934835/
-[2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+Note: still depends on [1]
+ [1]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
       https://patchwork.kernel.org/patch/10909971/
 
 v4 changes:
   1. use switch_fwnode_match() to find fwnode suggested by Heikki
-  2. assign fwnode member of usb_role_switch struct suggested by Heikki
-  3. make [4/6] depend on [2]
-  3. remove linux/gpio.h suggested by Linus
-  4. put node when error happens
+  2. this patch now depends on [1]
 
-  [4/6] usb: roles: add API to get usb_role_switch by node
-  [2] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+ [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
     https://patchwork.kernel.org/patch/10909971/
 
 v3 changes:
-  1. add GPIO direction, and use fixed-regulator for GPIO controlled
-    VBUS regulator suggested by Rob;
-  2. rebuild fwnode_usb_role_switch_get() suggested by Andy and Heikki
-  3. treat the type-B connector as a virtual device;
-  4. change file name of driver again
-  5. select USB_ROLE_SWITCH in mtu3/Kconfig suggested by Heikki
-  6. rename ssusb_mode_manual_switch() to ssusb_mode_switch()
+  1. use fwnodes instead of node suggested by Andy
+  2. rebuild the API suggested by Heikki
 
-v2 changes:
- 1. make binding clear, and add a extra compatible suggested by Hans
+v2 no changes
+---
+ drivers/usb/roles/class.c | 24 ++++++++++++++++++++++++
+ include/linux/usb/role.h  |  8 ++++++++
+ 2 files changed, 32 insertions(+)
 
-Chunfeng Yun (6):
-  dt-bindings: connector: add optional properties for Type-B
-  dt-bindings: usb: add binding for Type-B GPIO connector driver
-  dt-bindings: usb: mtu3: add properties about USB Role Switch
-  usb: roles: add API to get usb_role_switch by node
-  usb: roles: add USB Type-B GPIO connector driver
-  usb: mtu3: register a USB Role Switch for dual role mode
-
- .../bindings/connector/usb-connector.txt      |  14 +
- .../devicetree/bindings/usb/mediatek,mtu3.txt |  10 +
- .../bindings/usb/typeb-conn-gpio.txt          |  42 +++
- drivers/usb/mtu3/Kconfig                      |   1 +
- drivers/usb/mtu3/mtu3.h                       |   5 +
- drivers/usb/mtu3/mtu3_debugfs.c               |   4 +-
- drivers/usb/mtu3/mtu3_dr.c                    |  48 ++-
- drivers/usb/mtu3/mtu3_dr.h                    |   6 +-
- drivers/usb/mtu3/mtu3_plat.c                  |   3 +-
- drivers/usb/roles/Kconfig                     |  11 +
- drivers/usb/roles/Makefile                    |   1 +
- drivers/usb/roles/class.c                     |  24 ++
- drivers/usb/roles/typeb-conn-gpio.c           | 295 ++++++++++++++++++
- include/linux/usb/role.h                      |   8 +
- 14 files changed, 465 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
- create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
-
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index f45d8df5cfb8..4a1f09a41ec0 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -135,6 +135,30 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ 
++/**
++ * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
++ * @fwnode: The fwnode that register USB role switch
++ *
++ * Finds and returns role switch registered by @fwnode. The reference count
++ * for the found switch is incremented.
++ */
++struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	struct usb_role_switch *sw;
++	struct device *dev;
++
++	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
++	if (!dev)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	sw = to_role_switch(dev);
++	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
++
++	return sw;
++}
++EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
++
+ /**
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index da2b9641b877..35d460f9ec40 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -48,6 +48,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
+ void usb_role_switch_put(struct usb_role_switch *sw);
++struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+ 
+ struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+@@ -72,6 +74,12 @@ static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ 
+ static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+ 
++static inline struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+ 			 const struct usb_role_switch_desc *desc)
 -- 
 2.21.0
