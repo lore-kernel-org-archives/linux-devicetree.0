@@ -1,54 +1,61 @@
-Return-Path: <SRS0=Hucj=TO=renesas.com=prvs=40371367b7=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 05/15] phy: renesas: rcar-gen3-usb2: Check dr_mode when not using OTG
-Date: Tue, 14 May 2019 09:55:55 -0500
-Message-ID: <20190514145605.19112-6-chris.brandt@renesas.com>
-In-Reply-To: <20190514145605.19112-1-chris.brandt@renesas.com>
-References: <20190514145605.19112-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=63HK=TO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.lunchkarty.eu ([80.211.141.150]:60075 "EHLO lunchkarty.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbfENHkk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 May 2019 03:40:40 -0400
+Received: by mail.lunchkarty.eu for <devicetree@vger.kernel.org>; Tue, 14 May 2019 07:30:47 GMT
+Message-ID: <20190514084500-0.1.r.2h2l.0.aqpa6zer1w@lunchkarty.eu>
+Date: Tue, 14 May 2019 07:30:47 GMT
+From: "Radoslav Dobrev" <radoslav.dobrev@lunchkarty.eu>
+Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-When not using OTG, the PHY will need to know if it should function as
-host or peripheral by checking dr_mode in the PHY node (not the parent
-controller node).
+=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5!
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v3:
- * changed 'if' to 'switch'
- * use rcar_gen3_set_host_mode() instead of writel()
-v2:
- * added braces to else statement
- * check if dr_mode is "host"
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+=D0=9D=D1=83=D0=B6=D0=B4=D0=B0=D0=B5=D1=82=D0=B5 =D0=BB=D0=B8 =D1=81=D0=B5=
+ =D0=BE=D1=82 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=
+=D0=B5=D0=BD =D0=BF=D0=B0=D0=BA=D0=B5=D1=82 =D0=B7=D0=B0 =D0=BF=D0=B5=D1=80=
+=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=B5=
+ =D1=83=D0=B4=D0=BE=D0=B1=D0=B5=D0=BD =D0=B8 =D0=BF=D1=80=D0=B8=D0=B2=D0=BB=
+=D0=B5=D0=BA=D0=B0=D1=82=D0=B5=D0=BB=D0=B5=D0=BD, =D0=BA=D0=B0=D0=BA=D1=82=
+=D0=BE =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=
+=D0=B5=D0=BB=D1=8F, =D1=82=D0=B0=D0=BA=D0=B0 =D0=B8 =D0=B7=D0=B0 =D1=81=D0=
+=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=B8=D1=82=D0=B5?
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 06e0fc804226..29da9c46ad9b 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -412,6 +412,18 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 		if (rcar_gen3_needs_init_otg(channel))
- 			rcar_gen3_init_otg(channel);
- 		rphy->otg_initialized = true;
-+	} else {
-+		/* Not OTG, so dr_mode should be set in PHY node */
-+		switch (usb_get_dr_mode(channel->dev)) {
-+		case USB_DR_MODE_HOST:
-+			rcar_gen3_set_host_mode(channel, 1);
-+			break;
-+		case USB_DR_MODE_PERIPHERAL:
-+			rcar_gen3_set_host_mode(channel, 0);
-+			break;
-+		default:
-+			break;
-+		}
- 	}
- 
- 	rphy->initialized = true;
--- 
-2.16.1
+=D0=92 =D1=82=D0=B0=D0=BA=D1=8A=D0=B2 =D1=81=D0=BB=D1=83=D1=87=D0=B0=D0=B9=
+ =D0=92=D0=B8 =D0=BF=D1=80=D0=B5=D0=BF=D0=BE=D1=80=D1=8A=D1=87=D0=B2=D0=B0=
+=D0=BC=D0=B5 =D0=B4=D0=B0 =D0=BE=D0=B1=D0=BC=D0=B8=D1=81=D0=BB=D0=B8=D1=82=
+=D0=B5 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=
+=D0=BE =D0=BD=D0=B0 =D0=B2=D1=81=D0=B5 =D0=BF=D0=BE-=D0=BF=D0=BE=D0=BF=D1=
+=83=D0=BB=D1=8F=D1=80=D0=BD=D0=B8=D1=82=D0=B5 =D0=BA=D0=B0=D1=80=D1=82=D0=
+=B8 =D0=B7=D0=B0 =D0=BE=D0=B1=D1=8F=D0=B4 - =D1=80=D0=B0=D0=B1=D0=BE=D1=82=
+=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D1=8F=D1=82 =D0=B7=D0=B0=D1=80=D0=B5=
+=D0=B6=D0=B4=D0=B0 =D0=BA=D0=B0=D1=80=D1=82=D0=B0=D1=82=D0=B0 =D1=81 =D0=BE=
+=D0=BF=D1=80=D0=B5=D0=B4=D0=B5=D0=BB=D0=B5=D0=BD=D0=B0 =D1=81=D1=83=D0=BC=
+=D0=B0, =D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D1=8F=D1=82=
+ =D0=BC=D0=BE=D0=B6=D0=B5 =D0=B4=D0=B0 =D1=8F =D0=B8=D0=B7=D0=BF=D0=BE=D0=
+=BB=D0=B7=D0=B2=D0=B0 =D0=B2=D1=8A=D0=B2 =D0=B2=D1=81=D1=8F=D0=BA=D0=BE =D0=
+=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B7=D0=B0 =D1=85=D1=
+=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5, =D0=BA=D0=B0=D0=BA=D1=82=D0=BE =D0=B8 =
+=D0=BE=D0=BD=D0=BB=D0=B0=D0=B9=D0=BD =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=
+=D0=B0 =D0=BF=D0=BE =D1=81=D0=B2=D0=BE=D0=B5 =D0=B6=D0=B5=D0=BB=D0=B0=D0=BD=
+=D0=B8=D0=B5.
+
+=D0=A9=D0=B5 =D1=81=D0=B5 =D1=80=D0=B0=D0=B4=D0=B2=D0=B0=D0=BC =D0=B4=D0=B0=
+ =D0=92=D0=B8 =D0=BF=D1=80=D0=B5=D0=B4=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=B2=
+=D1=8A=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =
+=D0=BD=D0=B0 =D0=BA=D0=B0=D1=80=D1=82=D0=B0=D1=82=D0=B0 =E2=80=93 =D0=BC=D0=
+=BE=D0=B3=D0=B0 =D0=BB=D0=B8 =D0=B4=D0=B0 =D0=92=D0=B8 =D1=81=D0=B5 =D0=BE=
+=D0=B1=D0=B0=D0=B4=D1=8F, =D0=B7=D0=B0 =D0=B4=D0=B0 =D0=BE=D0=B1=D1=81=D1=
+=8A=D0=B4=D0=B8=D0=BC =D0=B2 =D0=B4=D0=B5=D1=82=D0=B0=D0=B9=D0=BB=D0=B8?
+
+
+=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
+=D0=B5=D0=B2
+Head of HR Benefit Team
+www.lunchkarty.eu 
