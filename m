@@ -1,73 +1,216 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-Date: Tue, 14 May 2019 22:13:10 +0300
-Message-ID: <e0720e41-23da-2aa5-636b-777568974b17@cogentembedded.com>
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
- <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
- <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
- <cdee3d53-6ee3-4435-117e-8ba4a58ca72b@cogentembedded.com>
- <OF82CE76E9.E6395EF7-ON482583DD.000E37D7-482583DD.000E5077@mxic.com.tw>
- <3d334751-8fd4-7db1-9deb-e6c94936df13@cogentembedded.com>
- <OF4ABCC306.B053BA23-ON482583E0.000F480C-482583E0.000FAD4A@mxic.com.tw>
- <3971c669-9095-9d18-d029-37f9663a54b2@cogentembedded.com>
- <OF58AAFF49.C4593DEB-ON482583E1.001D551E-482583E1.001F089D@mxic.com.tw>
- <9014077e-2648-adad-72c1-baf834f5a511@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 01/13] dt-bindings: media: Add binding for MT2712
+ MIPI-CSI2
+Date: Tue, 14 May 2019 14:28:06 -0500
+Message-ID: <20190514192806.GA13654@bogus>
+References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+ <1557814430-9675-2-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9014077e-2648-adad-72c1-baf834f5a511@cogentembedded.com>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <1557814430-9675-2-git-send-email-stu.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, zhengxunli@mxic.com.tw
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, CK Hu <ck.hu@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2019 10:06 PM, Sergei Shtylyov wrote:
-
-[...]
->>>>>>>> Have you tested reading? v8 patch still works while v9 patches
->>>>>>>> hang on doing:
->>>>>>>>
->>>>>>>> $ cat /dev/mtd<n>...
->>>>>>>
->>>>>>>    Sorry, 'od -x', not 'cat'.
->>>>>>
->>>>>> root@draak:/# cat /proc/mtd
->>>>>> dev:    size   erasesize  name
->>>>>> mtd0: 00040000 00001000 "Bank 1 - Boot parameter"
->>>>>> mtd1: 00140000 00001000 "Bank 1 - Loader-BL2"
->>>>>> mtd2: 00040000 00001000 "Bank 1 - Certification"
->>>>>> mtd3: 00080000 00001000 "Bank 1 - ARM Trusted FW"
->>>>>> mtd4: 00400000 00001000 "Bank 1 - Reserved-1"
->>>>>> mtd5: 00300000 00001000 "Bank 1 - U-Boot"
->>>>>> mtd6: 00200000 00001000 "Bank 1 - Reserved-2"
->>>>>> mtd7: 00480000 00001000 "Bank 1 - Splash"
->>>>>> mtd8: 00040000 00001000 "Bank 1 - Device Tree"
->>>>>> root@draak:/# od -x /dev/mtd1
->>>>>> 0000000 0000 d280 0001 d280 0002 d280 0003 d280
->>>>>> 0000020 0004 d280 0005 d280 0006 d280 0007 d280
->>>>>> 0000040 0008 d280 0009 d280 000a d280 000b d280
->>>>>> 0000060 000c d280 000d d280 000e d280 000f d280
->>>>>> 0000100 0010 d280 0011 d280 0012 d280 0013 d280
->>>>>> 0000120 0014 d280 0015 d280 0016 d280 0017 d280
->>>>>> 0000140 0018 d280 0019 d280 001a d280 001b d280
->>>>>> 0000160 001c d280 001d d280 001e d280 1000 d53e
->>>>>> 0000200 f800 9266 1000 d51e 3fdf d503 3ba0 1005
->>>>>
->>>>>    Still hangs for me. After I patches spi-mem.c and the driver to
->>>>> call RPM for the MFD, it started working again. Perhaps, that clock>> >> is still enabled on your target. What does the following print (for
+On Tue, May 14, 2019 at 02:13:38PM +0800, Stu Hsieh wrote:
+> Add MIPI-CSI2 dt-binding for Mediatek MT2712 SoC
 > 
->    Even with these issues worked around, I still see strange behavior on
-> writes, e.g. after I mount JFFS2 partition, remove 1 file, unmount, re-mount,
-> and mount again, the removed file is back! :-/
-
-   Too many re-mounts, one was enough. :-)
-
-> [...]
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  .../bindings/media/mediatek-mipicsi-camsv.txt | 53 ++++++++++++++++++
+>  .../media/mediatek-mipicsi-common.txt         | 19 +++++++
+>  .../bindings/media/mediatek-mipicsi.txt       | 54 +++++++++++++++++++
+>  3 files changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
 > 
->> thanks & best regards,
->> Mason
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+> new file mode 100644
+> index 000000000000..5f34974f12ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+> @@ -0,0 +1,53 @@
+> +* Mediatek MIPI-CSI2 receiver camsv
+> +
+> +Mediatek MIPI-CSI2 receiver camsv transfer data to DRAM in Mediatek SoCs
+> +
+> +Required properties:
 
-MBR, Sergei
+compatible?
+
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+
+How many regions? Looks like 2.
+
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +- interrupts : interrupt number to the interrupt controller.
+> +
+> +Example:
+> +	seninf1_mux_camsv0: seninf_mux_camsv@15002100 {
+
+Node names should be generic.
+
+mipi-csi@...
+
+Or maybe not as that's the last block...
+
+> +		reg = <0 0x15002120 0 0x40>,
+> +		      <0 0x15004000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
+> +		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf2_mux_camsv1: seninf_mux_camsv@15002500 {
+> +		reg = <0 0x15002520 0 0x40>,
+> +		      <0 0x15005000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
+> +		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf3_mux_camsv2: seninf_mux_camsv@15002900 {
+> +		reg = <0 0x15002920 0 0x40>,
+> +		      <0 0x15006000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
+> +		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf4_mux_camsv3: seninf_mux_camsv@15002D00 {
+> +		reg = <0 0x15002D20 0 0x40>,
+> +		      <0 0x15007000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
+> +		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf5_mux_camsv4: seninf_mux_camsv@15003100 {
+> +		reg = <0 0x15003120 0 0x40>,
+> +		      <0 0x15008000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
+> +		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf6_mux_camsv5: seninf_mux_camsv@15003500 {
+> +		reg = <0 0x15003520 0 0x40>,
+> +		      <0 0x15009000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
+> +		interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+> new file mode 100644
+> index 000000000000..a67c744b75f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+> @@ -0,0 +1,19 @@
+> +* Mediatek MIPI-CSI2 receiver common
+> +
+> +Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
+> +
+> +Required properties:
+> +- compatible: should be "mediatek,mt2712-mipicsi-common"
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +
+> +
+> +Example:
+> +	mipicsi: mipicsi@15002000 {
+> +		compatible = "mediatek,mt2712-mipicsi-common", "syscon";
+> +		reg = <0 0x15002000 0 0x10>;
+> +		clocks = <&imgsys CLK_IMG_SENINF_CAM_EN>,
+> +			 <&imgsys CLK_IMG_SENINF_SCAM_EN>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> new file mode 100644
+> index 000000000000..24741ed62b25
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> @@ -0,0 +1,54 @@
+> +* Mediatek MIPI-CSI2 receiver
+> +
+> +Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
+
+What's the difference with this and the prior block? Same text...
+
+> +
+> +Required properties:
+> +- compatible: should be "mediatek,mt2712-mipicsi"
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+> +- power-domains: a phandle to the power domain, see
+> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- mediatek,larb: must contain the local arbiters in the current Socs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+> +- iommus: should point to the respective IOMMU block with master port as
+> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
+> +- mediatek,seninf_mux_camsv: seninf_mux_camsv the data go through of the mipicsi port
+
+s/_/-/
+
+How many entries? Needs a reference to the binding doc. 
+
+> +- mediatek,mipicsiid: the id of the mipicsi port
+
+If this is for the 'mediatek,mipicsi' block, then just make the id a 
+cell value in the 'mediatek,mipicsi' prop.
+
+> +- mediatek,mipicsi: the common component of the two mipicsi port
+> +
+> +Example:
+
+I'd prefer one complete example showing all 3 components in this file 
+rather than piecemeal.
+
+> +	mipicsi0: mipicsi@10217000 {
+> +		compatible = "mediatek,mt2712-mipicsi";
+> +		mediatek,mipicsi = <&mipicsi>;
+> +		iommus = <&iommu0 M4U_PORT_CAM_DMA0>,
+> +			 <&iommu0 M4U_PORT_CAM_DMA1>;
+> +		mediatek,larb = <&larb2>;
+> +		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
+> +
+> +		mediatek,seninf_mux_camsv = <&seninf1_mux_camsv0
+> +					     &seninf2_mux_camsv1
+> +					     &seninf3_mux_camsv2
+> +					     &seninf4_mux_camsv3>;
+> +		reg = <0 0x10217000 0 0x60>,
+> +		      <0 0x15002100 0 0x4>,
+> +		      <0 0x15002300 0 0x100>;
+> +		mediatek,mipicsiid = <0>;
+> +		status="disabled";
+
+Don't should status in examples.
+
+> +	};
+> +
+> +	mipicsi1: mipicsi@10218000 {
+
+This example doesn't add anything.
+
+> +		compatible = "mediatek,mt2712-mipicsi";
+> +		mediatek,mipicsi = <&mipicsi>;
+> +		iommus = <&iommu0 M4U_PORT_CAM_DMA2>;
+> +		mediatek,larb = <&larb2>;
+> +		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
+> +		mediatek,seninf_mux_camsv = <&seninf5_mux_camsv4
+> +					     &seninf6_mux_camsv5>;
+> +		reg = <0 0x10218000 0 0x60>,
+> +		      <0 0x15002500 0 0x4>,
+> +		      <0 0x15002700 0 0x100>;
+> +		mediatek,mipicsiid = <1>;
+> +		status="disabled";
+> +	};
+> \ No newline at end of file
+
+Fix this...
+
+> -- 
+> 2.18.0
+> 
