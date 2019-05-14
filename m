@@ -1,45 +1,39 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
- noreturn list
-Date: Tue, 14 May 2019 11:12:33 -0700
-Message-ID: <20190514181233.GB109557@google.com>
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 15/18] Documentation: kunit: add documentation for KUnit
+Date: Tue, 14 May 2019 12:16:23 -0600
+Message-ID: <20190514121623.0314bf07@lwn.net>
 References: <20190514054251.186196-1-brendanhiggins@google.com>
- <20190514054251.186196-9-brendanhiggins@google.com>
- <20190514065643.GC2589@hirez.programming.kicks-ass.net>
- <20190514081223.GA230665@google.com>
- <20190514084655.GK2589@hirez.programming.kicks-ass.net>
+ <20190514054251.186196-16-brendanhiggins@google.com>
+ <20190514073422.4287267c@lwn.net>
+ <20190514180810.GA109557@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190514084655.GK2589@hirez.programming.kicks-ass.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, Josh Poimboeuf <jpoimboe@redhat.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.om
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190514180810.GA109557@google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, yamada.masahiro@socionext.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, linux-nvdimm@lists.01.org, frowand.list@gmail.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, Felix Guo <felixguoxiuping@gmail.com>, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, dan.j.williams@intel.com, kunit-dev@googlegroups.com, tytso@mit.edu, richard@nod.at, sboyd@kernel.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, keescook@google.com, linux-fsdevel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 10:46:55AM +0200, Peter Zijlstra wrote:
-> On Tue, May 14, 2019 at 01:12:23AM -0700, Brendan Higgins wrote:
-> > On Tue, May 14, 2019 at 08:56:43AM +0200, Peter Zijlstra wrote:
-> > > On Mon, May 13, 2019 at 10:42:42PM -0700, Brendan Higgins wrote:
-> > > > This fixes the following warning seen on GCC 7.3:
-> > > >   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
-> > > > 
-> > > 
-> > > What is that file and function; no kernel tree near me seems to have
-> > > that.
-> > 
-> > Oh, sorry about that. The function is added in the following patch,
-> > "[PATCH v3 09/18] kunit: test: add support for test abort"[1].
-> > 
-> > My apologies if this patch is supposed to come after it in sequence, but
-> > I assumed it should come before otherwise objtool would complain about
-> > the symbol when it is introduced.
-> 
-> Or send me all patches such that I have context, or have a sane
-> Changelog that gives me context. Just don't give me one patch with a
-> crappy changelog.
-
-I will provide more context in the next revision.
-
-Sorry about that!
+T24gVHVlLCAxNCBNYXkgMjAxOSAxMTowODoxMCAtMDcwMApCcmVuZGFuIEhpZ2dpbnMgPGJyZW5k
+YW5oaWdnaW5zQGdvb2dsZS5jb20+IHdyb3RlOgoKPiA+IE5hdHVyYWxseSwgdGhvdWdoLCBJIGhh
+dmUgb25lIHJlcXVlc3Q6IEknZCByYXRoZXIgbm90IHNlZSB0aGlzIGF0IHRoZSB0b3AKPiA+IGxl
+dmVsLCB3aGljaCBpcyBtb3JlIHRoYW4gY3Jvd2RlZCBlbm91Z2ggYXMgaXQgaXMuICBDYW4gdGhp
+cyBtYXRlcmlhbAo+ID4gcGxlYXNlIGdvIGludG8gdGhlIGRldmVsb3BtZW50IHRvb2xzIGJvb2ss
+IGFsb25nc2lkZSB0aGUga3NlbGZ0ZXN0Cj4gPiBkb2N1bWVudGF0aW9uPyAgCj4gCj4gT2ggeWVh
+aCwgdGhhdCBzZWVtcyBsaWtlIHRoZSBvYnZpb3VzIGhvbWUgZm9yIHRoaXMgaW4gaGluZHNpZ2h0
+LiBTb3JyeQo+IGFib3V0IHRoYXQuIFdpbGwgZml4IGluIG5leHQgcmV2aXNpb24hCgpObyBuZWVk
+IHRvIGFwb2xvZ2l6ZSAtIEkgaGF2ZSB0byBzYXkgdGhlIHNhbWUgdGhpbmcgdG8gZXZlcnlib2R5
+IDopCgpUaGFua3MsCgpqb24KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVs
