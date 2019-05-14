@@ -1,47 +1,172 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Tue, 14 May 2019 15:17:11 -0700
-Message-ID: <20190514221711.248228-19-brendanhiggins@google.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: hwmon: Add DT bindings for TI ads1000/ads1100 ADCs
+Date: Wed, 15 May 2019 01:58:08 +0300
+Message-ID: <20190514225810.12591-2-fancer.lancer@gmail.com>
+References: <20190514225810.12591-1-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20190514221711.248228-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tytso-3s7WtUTddSA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
-Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190514225810.12591-1-fancer.lancer@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Serge Semin <fancer.lancer@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Serge Semin <Sergey.Semin@t-platforms.ru>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section.
+Add dt-binding documentation for the Texas Instruments ads1000/ads1100 ADCs
+driver.
 
-Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Reviewed-by: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/hwmon/ads1000.txt     | 61 ++++++++++++++++
+ Documentation/hwmon/ads1000.rst               | 72 +++++++++++++++++++
+ 2 files changed, 133 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ads1000.txt
+ create mode 100644 Documentation/hwmon/ads1000.rst
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a91887c8d541..2e539647589fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12526,6 +12526,7 @@ S:	Maintained
- F:	fs/proc/proc_sysctl.c
- F:	include/linux/sysctl.h
- F:	kernel/sysctl.c
-+F:	kernel/sysctl-test.c
- F:	tools/testing/selftests/sysctl/
- 
- PS3 NETWORK SUPPORT
+diff --git a/Documentation/devicetree/bindings/hwmon/ads1000.txt b/Documentation/devicetree/bindings/hwmon/ads1000.txt
+new file mode 100644
+index 000000000000..3907b7da9b33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ads1000.txt
+@@ -0,0 +1,61 @@
++ADS1000/ADS1100 (I2C)
++
++This device is a 12-16 bit A-D converter with 1 input.
++
++The inputs can be used either as a differential pair of Vin+ Vin- or as a single
++ended sensor for Vin+ GND. The inputs mode is platform-dependent and isn't
++configured by software in any case.
++
++Device A-D converter sensitivity can be configured using two parameters:
++ - pga is the programmable gain amplifier
++    0: x1 (default) 
++    1: x2
++    2: x4
++    3: x8
++ - data_rate in samples per second also affecting the output code accuracy
++    0: 128SPS - +/- Vdd*0.488mV (default, ads1000 accepts this rate only)
++    1: 32SPS  - +/- Vdd*0.122mV
++    2: 16SPS  - +/- Vdd*0.061mV
++    3: 8SPS   - +/- Vdd*0.030mV
++   Since this parameter also affects the output accuracy, be aware the greater
++   SPS the worse accuracy.
++
++As a result the output value is calculated by the next formulae:
++dVin = Cod * Vdd / (PGA * max(|Cod|)), where
++max(|Cod|) - maximum possible value of the output code, which depends on the SPS
++setting from the table above.
++
++The ADS1000/ADS1100 dts-node:
++
++  Required properties:
++   - compatible : must be "ti,ads1000" or "ti,ads1100"
++   - reg : I2C bus address of the device
++   - #address-cells : must be <1>
++   - #size-cells : must be <0>
++   - vdd-supply : regulator for reference supply voltage (usually fixed)
++
++  Optional properties:
++   - ti,gain : the programmable gain amplifier setting
++   - ti,datarate : the converter data rate
++   - ti,voltage-divider : <R1 R2> Ohms inbound voltage dividers,
++     so dVin = (R1 + R2)/R2 * dVin
++
++Example:
++
++vdd_5v0: fixedregulator@0 {
++	compatible = "regulator-fixed";
++	regulator-name = "vdd-ref";
++	regulator-min-microvolt = <5000000>;
++	regulator-max-microvolt = <5000000>;
++	regulator-always-on;
++};
++
++tiadc: ads1000@48 {
++	compatible = "ti,ads1000";
++	reg = <0x48>;
++
++	vdd-supply = <&vdd_5v0>;
++	ti,gain = <0>;
++	ti,voltage-divider = <31600 3600>;
++};
++
+diff --git a/Documentation/hwmon/ads1000.rst b/Documentation/hwmon/ads1000.rst
+new file mode 100644
+index 000000000000..fcfe52d5d64d
+--- /dev/null
++++ b/Documentation/hwmon/ads1000.rst
+@@ -0,0 +1,72 @@
++Kernel driver ads1000
++=====================
++
++Supported chips:
++
++  * Texas Instruments ADS1000
++
++    Prefix: 'ads1000'
++
++    Datasheet: Publicly available at the Texas Instruments website:
++
++               http://www.ti.com/lit/ds/symlink/ads1000.pdf
++
++  * Texas Instruments ADS1100
++
++    Prefix: 'ads1100'
++
++    Datasheet: Publicly available at the Texas Instruments website:
++
++               http://www.ti.com/lit/ds/symlink/ads1100.pdf
++
++Authors:
++	Serge Semin <fancer.lancer@gmail.com>
++
++Description
++-----------
++
++This driver implements support for the Texas Instruments ADS1000/ADS1100 ADCs.
++
++This device is a 12-16 bit A-D converter with 1 input.
++
++The inputs can be used either as a differential pair of Vin+ Vin- or as a single
++ended sensor for Vin+ GND. The inputs mode is platform-dependent and isn't
++configured by software in any case.
++
++Platform Data
++-------------
++
++In linux/platform_data/ads1000.h platform data is defined to be of
++the following fields:
++
++ - pga is the programmable gain amplifier.
++
++    - 0: x1
++    - 1: x2
++    - 2: x4
++    - 3: x8
++
++ - data_rate in samples per second also affecting the output code accuracy.
++
++    - 0: 128SPS - +/- Vdd*0.488mV (ads1000 accepts this rate only)
++    - 1: 32SPS  - +/- Vdd*0.122mV
++    - 2: 16SPS  - +/- Vdd*0.061mV
++    - 3: 8SPS   - +/- Vdd*0.030mV
++   Since this parameter also affects the output accuracy, be aware the greater
++   SPS the worse accuracy.
++
++ - vdd is a pointer to the voltage regulator with reference voltage source.
++
++ - divider is an array of inbound voltage dividers in <R1 R2> Ohms, if each of
++   them is non-zero then the output voltage will be modified as follows:
++   dVin = (R1 + R2)/R2 * dVin.
++
++As a result the output value is calculated by the next formulae:
++dVin = Cod * Vdd / (PGA * max(|Cod|)), where max(|Cod|) - maximum possible
++value of the output code, which depends on the SPS setting from data_rate.
++
++Devicetree
++----------
++
++Configuration is also possible via devicetree:
++Documentation/devicetree/bindings/hwmon/ads1000.txt
 -- 
-2.21.0.1020.gf2820cf01a-goog
+2.21.0
