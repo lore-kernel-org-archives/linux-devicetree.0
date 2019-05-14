@@ -1,173 +1,90 @@
 Return-Path: <mchehab@kernel.org>
-Date: Tue, 14 May 2019 15:27:04 -0300
+Date: Tue, 14 May 2019 17:13:40 -0300
 From: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v6 06/13] media: dt-bindings: tvp5150: Add input port
- connectors DT bindings
-Message-ID: <20190514152704.48208c7d@coco.lan>
-In-Reply-To: <20190415124413.18456-7-m.felsch@pengutronix.de>
+Subject: Re: [PATCH v6 09/13] media: tvp5150: add s_power callback
+Message-ID: <20190514171340.444ce55b@coco.lan>
+In-Reply-To: <20190415124413.18456-10-m.felsch@pengutronix.de>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
-	<20190415124413.18456-7-m.felsch@pengutronix.de>
+	<20190415124413.18456-10-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Em Mon, 15 Apr 2019 14:44:06 +0200
+Em Mon, 15 Apr 2019 14:44:09 +0200
 Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-> The TVP5150/1 decoders support different video input sources to their
-> AIP1A/B pins.
-> 
-> Possible configurations are as follows:
->   - Analog Composite signal connected to AIP1A.
->   - Analog Composite signal connected to AIP1B.
->   - Analog S-Video Y (luminance) and C (chrominance)
->     signals connected to AIP1A and AIP1B respectively.
-> 
-> This patch extends the device tree bindings documentation to describe
-> how the input connectors for these devices should be defined in a DT.
+> Don't en-/disable the interrupts during s_stream because someone can
+> disable the stream but wants to get informed if the stream is locked
+> again. So keep the interrupts enabled the whole time the pipeline is
+> opened.
+
+Not testing on any tvp5150 hardware, looks ok to me.
+
 > 
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Looks good to me.
-
 > ---
-> Changelog:
+>  drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
 > 
-> v3:
-> - remove examples for one and two inputs
-> - replace space by tabs
-> 
-> v2:
-> - adapt port layout in accordance with
->   https://www.spinics.net/lists/linux-media/msg138546.html with the
->   svideo-connector deviation (use only one endpoint)
-> 
->  .../devicetree/bindings/media/i2c/tvp5150.txt | 92 +++++++++++++++++--
->  1 file changed, 85 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> index 8c0fc1a26bf0..bdd273d8b44d 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> @@ -12,11 +12,31 @@ Optional Properties:
->  - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
->  - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+> index 305a5e256b31..cd54715eb641 100644
+> --- a/drivers/media/i2c/tvp5150.c
+> +++ b/drivers/media/i2c/tvp5150.c
+> @@ -1370,11 +1370,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
+>  /****************************************************************************
+>  			I2C Command
+>   ****************************************************************************/
+> +static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
+> +{
+> +	struct tvp5150 *decoder = to_tvp5150(sd);
+> +	unsigned int val = 0;
+> +
+> +	if (on)
+> +		val = TVP5150_INT_A_LOCK;
+> +
+> +	if (decoder->irq)
+> +		/* Enable / Disable lock interrupt */
+> +		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
+> +				   TVP5150_INT_A_LOCK, val);
+> +
+> +	return 0;
+> +}
 >  
-> -The device node must contain one 'port' child node for its digital output
-> -video port, in accordance with the video interface bindings defined in
-> -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +The device node must contain one 'port' child node per device physical input
-> +and output port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-> +are numbered as follows
+>  static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+>  {
+>  	struct tvp5150 *decoder = to_tvp5150(sd);
+> -	unsigned int mask, val = 0, int_val = 0;
+> +	unsigned int mask, val = 0;
 >  
-> -Required Endpoint Properties for parallel synchronization:
-> +	  Name		Type		Port
-> +	--------------------------------------
-> +	  AIP1A		sink		0
-> +	  AIP1B		sink		1
-> +	  Y-OUT		src		2
-> +
-> +The device node must contain at least one sink port and the src port. Each input
-> +port must be linked to an endpoint defined in
-> +Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
-> +port/connector layout is as follows
-> +
-> +tvp-5150 port@0 (AIP1A)
-> +	endpoint@0 -----------> Comp0-Con  port
-> +	endpoint@1 -----------> Svideo-Con port
-> +tvp-5150 port@1 (AIP1B)
-> +	endpoint   -----------> Comp1-Con  port
-> +tvp-5150 port@2
-> +	endpoint (video bitstream output at YOUT[0-7] parallel bus)
-> +
-> +Required Endpoint Properties for parallel synchronization on output port:
+>  	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
+>  	       TVP5150_MISC_CTL_CLOCK_OE;
+> @@ -1387,15 +1402,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+>  			val = decoder->lock ? decoder->oe : 0;
+>  		else
+>  			val = decoder->oe;
+> -		int_val = TVP5150_INT_A_LOCK;
+>  		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+>  	}
 >  
->  - hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
->  - vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
-> @@ -26,17 +46,75 @@ Required Endpoint Properties for parallel synchronization:
->  If none of hsync-active, vsync-active and field-even-active is specified,
->  the endpoint is assumed to use embedded BT.656 synchronization.
+>  	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
+> -	if (decoder->irq)
+> -		/* Enable / Disable lock interrupt */
+> -		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
+> -				   TVP5150_INT_A_LOCK, int_val);
 >  
-> -Example:
-> +Example - three input sources:
-> +
-> +comp_connector_0 {
-> +	compatible = "composite-video-connector";
-> +	label = "Composite0";
-> +
-> +	port {
-> +		composite0_to_tvp5150: endpoint {
-> +			remote-endpoint = <&tvp5150_to_composite0>;
-> +		};
-> +	};
-> +};
-> +
-> +comp_connector_1 {
-> +	compatible = "composite-video-connector";
-> +	label = "Composite1";
-> +
-> +	port {
-> +		composite1_to_tvp5150: endpoint {
-> +			remote-endpoint = <&tvp5150_to_composite1>;
-> +		};
-> +	};
-> +};
-> +
-> +svid_connector {
-> +	compatible = "svideo-connector";
-> +	label = "S-Video";
-> +
-> +	port {
-> +		svideo_to_tvp5150: endpoint {
-> +			remote-endpoint = <&tvp5150_to_svideo>;
-> +		};
-> +	};
-> +};
+>  	return 0;
+>  }
+> @@ -1586,6 +1596,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
+>  	.g_register = tvp5150_g_register,
+>  	.s_register = tvp5150_s_register,
+>  #endif
+> +	.s_power = tvp5150_s_power,
+>  };
 >  
->  &i2c2 {
-> -	...
->  	tvp5150@5c {
->  		compatible = "ti,tvp5150";
->  		reg = <0x5c>;
->  		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
->  		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
->  
-> -		port {
-> +		port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			tvp5150_to_composite0: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&composite0_to_tvp5150>;
-> +			};
-> +
-> +			tvp5150_to_svideo: endpoint@1 {
-> +				reg = <1>;
-> +				remote-endpoint = <&svideo_to_tvp5150>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +
-> +			tvp5150_to_composite1: endpoint {
-> +                                remote-endpoint = <&composite1_to_tvp5150>;
-> +			};
-> +		};
-> +
-> +		port@2 {
-> +			reg = <2>;
-> +
->  			tvp5150_1: endpoint {
->  				remote-endpoint = <&ccdc_ep>;
->  			};
+>  static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
 
 
 
