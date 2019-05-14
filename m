@@ -1,98 +1,48 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/6] dt-bindings: usb: add binding for Type-B GPIO
- connector driver
-Date: Tue, 14 May 2019 16:47:19 +0800
-Message-ID: <1557823643-8616-3-git-send-email-chunfeng.yun@mediatek.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Date: Tue, 14 May 2019 10:46:55 +0200
+Message-ID: <20190514084655.GK2589@hirez.programming.kicks-ass.net>
+References: <20190514054251.186196-1-brendanhiggins@google.com>
+ <20190514054251.186196-9-brendanhiggins@google.com>
+ <20190514065643.GC2589@hirez.programming.kicks-ass.net>
+ <20190514081223.GA230665@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1557823643-8616-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Badhri Jagan Sridharan <badhri-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Min Guo <min.guo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190514081223.GA230665@google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, yamada.masahiro@socionext.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, kbuild test robot <lkp@intel.com>, linux-nvdimm@lists.01.org, frowand.list@gmail.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, Josh Poimboeuf <jpoimboe@redhat.com>, dan.j.williams@intel.com, kunit-dev@googlegroups.com, tytso@mit.edu, richard@nod.at, sboyd@kernel.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, keescook@google.
 List-Id: devicetree@vger.kernel.org
 
-It's used to support dual role switch via GPIO when use Type-B
-receptacle, typically the USB ID pin is connected to an input
-GPIO pin
-
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
-v5 changes:
- 1. treat type-B connector as child device of USB controller's, but not
-    as a separate virtual device, suggested by Rob
- 2. put connector's port node under connector node, suggested by Rob
-
-v4 no changes
-
-v3 changes:
- 1. treat type-B connector as a virtual device, but not child device of
-    USB controller's
-
-v2 changes:
-  1. new patch to make binding clear suggested by Hans
----
- .../bindings/usb/typeb-conn-gpio.txt          | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-new file mode 100644
-index 000000000000..20dd3499a348
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-@@ -0,0 +1,42 @@
-+USB Type-B GPIO Connector
-+
-+This is used to switch dual role mode from the USB ID pin connected to
-+an input GPIO pin.
-+
-+Required properties:
-+- compatible : should include "linux,typeb-conn-gpio" and "usb-b-connector".
-+- id-gpios, vbus-gpios : either one of them must be present, and both
-+	can be present as well.
-+- vbus-supply : can be present if needed when supports dual role mode or
-+	host mode.
-+	see connector/usb-connector.txt
-+
-+Sub-nodes:
-+- port : should be present.
-+	see graph.txt
-+
-+Example:
-+
-+&mtu3 {
-+	status = "okay";
-+
-+	connector {
-+		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb_p0_vbus>;
-+
-+		port {
-+			bconn_ep: endpoint@0 {
-+				remote-endpoint = <&usb_role_sw>;
-+			};
-+		};
-+	};
-+
-+	port {
-+		usb_role_sw: endpoint@0 {
-+			remote-endpoint = <&bconn_ep>;
-+		};
-+	};
-+};
--- 
-2.21.0
+T24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgMDE6MTI6MjNBTSAtMDcwMCwgQnJlbmRhbiBIaWdnaW5z
+IHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDE0LCAyMDE5IGF0IDA4OjU2OjQzQU0gKzAyMDAsIFBldGVy
+IFppamxzdHJhIHdyb3RlOgo+ID4gT24gTW9uLCBNYXkgMTMsIDIwMTkgYXQgMTA6NDI6NDJQTSAt
+MDcwMCwgQnJlbmRhbiBIaWdnaW5zIHdyb3RlOgo+ID4gPiBUaGlzIGZpeGVzIHRoZSBmb2xsb3dp
+bmcgd2FybmluZyBzZWVuIG9uIEdDQyA3LjM6Cj4gPiA+ICAga3VuaXQvdGVzdC10ZXN0Lm86IHdh
+cm5pbmc6IG9ianRvb2w6IGt1bml0X3Rlc3RfdW5zdWNjZXNzZnVsX3RyeSgpIGZhbGxzIHRocm91
+Z2ggdG8gbmV4dCBmdW5jdGlvbiBrdW5pdF90ZXN0X2NhdGNoKCkKPiA+ID4gCj4gPiAKPiA+IFdo
+YXQgaXMgdGhhdCBmaWxlIGFuZCBmdW5jdGlvbjsgbm8ga2VybmVsIHRyZWUgbmVhciBtZSBzZWVt
+cyB0byBoYXZlCj4gPiB0aGF0Lgo+IAo+IE9oLCBzb3JyeSBhYm91dCB0aGF0LiBUaGUgZnVuY3Rp
+b24gaXMgYWRkZWQgaW4gdGhlIGZvbGxvd2luZyBwYXRjaCwKPiAiW1BBVENIIHYzIDA5LzE4XSBr
+dW5pdDogdGVzdDogYWRkIHN1cHBvcnQgZm9yIHRlc3QgYWJvcnQiWzFdLgo+IAo+IE15IGFwb2xv
+Z2llcyBpZiB0aGlzIHBhdGNoIGlzIHN1cHBvc2VkIHRvIGNvbWUgYWZ0ZXIgaXQgaW4gc2VxdWVu
+Y2UsIGJ1dAo+IEkgYXNzdW1lZCBpdCBzaG91bGQgY29tZSBiZWZvcmUgb3RoZXJ3aXNlIG9ianRv
+b2wgd291bGQgY29tcGxhaW4gYWJvdXQKPiB0aGUgc3ltYm9sIHdoZW4gaXQgaXMgaW50cm9kdWNl
+ZC4KCk9yIHNlbmQgbWUgYWxsIHBhdGNoZXMgc3VjaCB0aGF0IEkgaGF2ZSBjb250ZXh0LCBvciBo
+YXZlIGEgc2FuZQpDaGFuZ2Vsb2cgdGhhdCBnaXZlcyBtZSBjb250ZXh0LiBKdXN0IGRvbid0IGdp
+dmUgbWUgb25lIHBhdGNoIHdpdGggYQpjcmFwcHkgY2hhbmdlbG9nLgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
