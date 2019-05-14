@@ -1,64 +1,45 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
-Date: Tue, 14 May 2019 10:26:46 +0200
-Message-ID: <20190514082652.20686-1-glaroque@baylibre.com>
+Subject: [PATCH v6 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+Date: Tue, 14 May 2019 10:26:47 +0200
+Message-ID: <20190514082652.20686-2-glaroque@baylibre.com>
+References: <20190514082652.20686-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, khilman@baylibre.com
 Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The purpose of this patchset is to add drive-strength support in meson pinconf
-driver. This is a new feature that was added on the g12a. It is critical for us
-to support this since many functions are failing with default pad drive-strength.
+This property allow drive-strength parameter in uA instead of mA.
 
-The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-'drive-strength' is expressed in mA.
-So this patch add another generic property "drive-strength-microamp". The change to do so
-would be minimal and could be benefit to other platforms later on.
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Cheers
-Guillaume
-
-Changes since v5:
-- restore Tested-by/Reviewed-by/Ack-by tags
-
-Changes since v4:
-- fix dt-binding documentation
-- rename drive-strength-uA to drive-strength-microamp in coverletter
-
-Changes since v3:
-- remove dev_err in meson_get_drive_strength
-- cleanup code
-
-Changes since v2:
-- rename driver-strength-uA property to drive-strength-microamp
-- rework patch series for better understanding
-- rework set_bias function
-
-Changes since v1:
-- fix missing break
-- implement new pinctrl generic property "drive-strength-uA"
-
-[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-
-Guillaume La Roque (6):
-  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-  pinctrl: generic: add new 'drive-strength-microamp' property support
-  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-  pinctrl: meson: Rework enable/disable bias part
-  pinctrl: meson: add support of drive-strength-microamp
-  pinctrl: meson: g12a: add DS bank value
-
- .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
- .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
- drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
- drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
- drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
- drivers/pinctrl/pinconf-generic.c             |   2 +
- include/linux/pinctrl/pinconf-generic.h       |   3 +
- 7 files changed, 193 insertions(+), 53 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index cef2b5855d60..fcd37e93ed4d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+ drive-open-drain	- drive with open drain
+ drive-open-source	- drive with open source
+ drive-strength		- sink or source at most X mA
++drive-strength-microamp	- sink or source at most X uA
+ input-enable		- enable input on pin (no effect on output, such as
+ 			  enabling an input buffer)
+ input-disable		- disable input on pin (no effect on output, such as
+@@ -326,6 +327,8 @@ arguments are described below.
+ 
+ - drive-strength takes as argument the target strength in mA.
+ 
++- drive-strength-microamp takes as argument the target strength in uA.
++
+ - input-debounce takes the debounce time in usec as argument
+   or 0 to disable debouncing
+ 
 -- 
 2.17.1
