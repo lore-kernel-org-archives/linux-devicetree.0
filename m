@@ -1,62 +1,36 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-Date: Tue, 14 May 2019 12:07:54 +0200
-Message-ID: <CAMuHMdVyfnO+wTHNrjjvJoqopC_xC0+sxSY+9a=pv-Wf=w6aCQ@mail.gmail.com>
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
- <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
- <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
- <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
- <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
- <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
- <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/3] arm64: dts: meson: g12a: add i2c
+Date: Tue, 14 May 2019 12:12:34 +0200
+Message-ID: <20190514101237.13969-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Boris Brezillon <bbrezillon@kernel.org>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mason,
+Add the i2c controllers and pinctrl definitions to the g12a DT then
+the busses present on the u200 and sei510.
 
-On Tue, May 14, 2019 at 11:46 AM <masonccyang@mxic.com.tw> wrote:
-> > >> There's precedence for such constructs being an MFD: please see
-> > >> drivers/mfd/at91-usart.c, which registers a single MFD cell for
-> > >           second for the direct mapping read mode and
-> > >           third for the write buffer area.
-> > >   - reg-names: should contain "regs", "dirmap" and "wbuf"
-> > >   - clocks: should contain 1 entries for the module's clock
-> > >   - clock-names: should contain "rpc"
-> >
-> >    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not sure
-> yet)...
->
-> Need it ?
-> RPCD2 is derived from RPC and it's value is half of RPC,
-> i.e., RPC = 160MHz, RPCD2 = 80 MHz
+Notice the use of the pinconf DT property 'drive-strength-microamp'.
+Support for this property is not yet merged in meson pinctrl driver but
+the DT part as been acked by the DT maintainer [0] so it should be safe
+to use.
 
-That hierarchy depends on the actual SoC, right?
-AFAIU, both are derived from RPCSRC, and can be controlled individually
-on some SoCs.
+[0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
 
-BTW, I still haven't seen a patch for drivers/clk/renesas/r8a77995-cpg-mssr.c
-adding RPC-related clocks, so I have no idea what's the Linux view of the
-hierarchy on your system.
+Guillaume La Roque (1):
+  arm64: dts: meson: g12a: add i2c nodes
 
-Thanks!
+Jerome Brunet (2):
+  arm64: dts: meson: u200: enable i2c busses
+  arm64: dts: meson: sei510: enable i2c3
 
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |   6 +
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |  21 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 268 ++++++++++++++++++
+ 3 files changed, 295 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.20.1
