@@ -1,111 +1,79 @@
-From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
- property "nvmem_macaddr_swap" to swap macaddr bytes order]
-Date: Tue, 14 May 2019 19:44:47 +0200
-Message-ID: <20190514174447.GE93050@meh.true.cz>
-References: <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
- <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
- <20190510112822.GT81826@meh.true.cz>
- <20190510113155.mvpuhe4yzxdaanei@flea>
- <20190511144444.GU81826@meh.true.cz>
- <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
- <20190513090700.GW81826@meh.true.cz>
- <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
- <20190513111612.GA21475@meh.true.cz>
- <0c6cb9d4-2da1-00be-b527-5891b8b030a8@linaro.org>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on
+ Teres-I
+Date: Tue, 14 May 2019 10:48:40 -0700
+Message-ID: <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
+References: <20190514155911.6C0AC68B05@newverein.lst.de>
+ <20190514160241.9EAC768C7B@newverein.lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0c6cb9d4-2da1-00be-b527-5891b8b030a8@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190514160241.9EAC768C7B@newverein.lst.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-14 16:13:22]:
-
-> On 13/05/2019 12:16, Petr Štetiar wrote:
-> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 11:06:48]:
-> > 
-> > > On 13/05/2019 10:07, Petr Štetiar wrote:
-> > > > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
-> > > > 
-> > > > > My initial idea was to add compatible strings to the cell so that most of
-> > > > > the encoding information can be derived from it. For example if the encoding
-> > > > > representing in your example is pretty standard or vendor specific we could
-> > > > > just do with a simple compatible like below:
-> > > > 
-> > > > that vendor/compatible list would be quite long[1], there are hundreds of
-> > > 
-> > > You are right just vendor list could be very long, but I was hoping that the
-> > > post-processing would fall in some categories which can be used in
-> > > compatible string.
-> > > 
-> > > Irrespective of which we need to have some sort of compatible string to
-> > > enable nvmem core to know that there is some form of post processing to be
-> > > done on the cells!. Without which there is a danger of continuing to adding
-> > > new properties to the cell bindings which have no relation to each other.
-> > 
-> > makes sense, so something like this would be acceptable?
-> > 
-> >   eth1_addr: eth-mac-addr@18a {
-> >       /* or rather linux,nvmem-post-process ? */
-> >       compatible = "openwrt,nvmem-post-process";
-> 
-> I don't think this would be a correct compatible string to use here.
-> Before we decide on naming, I would like to understand bit more on what are
-> the other possible forms of storing mac address,
-> Here is what I found,
-> 
-> Type 1: Octets in ASCII without delimiters. (Swapped/non-Swapped)
-> Type 2: Octets in ASCII with delimiters like (":", ",", ".", "-"... so on)
-> (Swapped/non-Swapped)
-> Type 3: Is the one which stores mac address in Type1/2 but this has to be
-> incremented to be used on other instances of eth.
-> 
-> Did I miss anything?
-
-Type 4: Octets as bytes/u8, swapped/non-swapped
-
-Currently just type4-non-swapped is supported. Support for type4-swapped was
-goal of this patch series.
-
-I've simply tried to avoid using mac-address for the compatible as this
-provider could be reused by other potential nvmem consumers. The question is,
-how much abstracted it should be then.
-
-> My suggestion for type1 and type2 would be something like this, as long as
-> its okay with DT maintainers
-> 
-> eth1_addr: eth-mac-addr@18a {
-> 	compatible = "ascii-mac-address";
-> 	reg = <0x18a 2>, <0x192 2>, <0x196 2>, <0x200 2>, <0x304 2>, <0x306 2>;
-> 	swap-mac-address;
-> 	delimiter = ":";
-> };
-
-with this reg array, you don't need the delimiter property anymore, do you?
-
-> For type 3:
->
-> This sounds like very much vendor specific optimization thing which am not
-> 100% sure atm.  If dt maintainers are okay, may be we can add an increment
-> in the "ascii-mac-address" binding itself.
-> 
-> Do you think "increment-at " would ever change?
-
-Currently there's just one such real world use case in OpenWrt tree[1].
-Probably some vendor decided to increment 4th octet.
-
-> This [1] is what I had suggested at the end, where in its possible to add
-> provider node with its own custom bindings. In above example nvmem_dev would
-> be a proper nvmem provider.
-
-Ok, thanks.
-
-1. https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/ath79/dts/ar9331_embeddedwireless_dorin.dts;h=43bec35fa2860fe4d52880ad24ff7c56f5060a0a;hb=HEAD#l109
-
--- ynezz
+T24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgOTowMyBBTSBUb3JzdGVuIER1d2UgPGR1d2VAbHN0LmRl
+PiB3cm90ZToKPgo+IEZyb206IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPgo+IFRF
+UkVTLUkgaGFzIGFuIEFOWDYzNDUgYnJpZGdlIGNvbm5lY3RlZCB0byB0aGUgUkdCNjY2IExDRCBv
+dXRwdXQsIGFuZAo+IHRoZSBJMkMgY29udHJvbGxpbmcgc2lnbmFscyBhcmUgY29ubmVjdGVkIHRv
+IEkyQzAgYnVzLgo+Cj4gRW5hYmxlIGl0IGluIHRoZSBkZXZpY2UgdHJlZS4KPgo+IFNpZ25lZC1v
+ZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPiBTaWduZWQtb2ZmLWJ5OiBU
+b3JzdGVuIER1d2UgPGR1d2VAc3VzZS5kZT4KPiAtLS0KPgo+IG9yaWdpbmFsbHk6IHBhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzEwNjQ2ODY3Cj4KPiBDaGFuZ2VkIHRoZSByZXNldCBwb2xhcml0
+eSwgd2hpY2ggaXMgYWN0aXZlIGxvdywKPiBhY2NvcmRpbmcgdG8gdGhlICh0ZXJzZSkgZGF0YXNo
+ZWV0LCBUZXJlcy1JIGFuZCBwaW5lYm9vayBzY2hlbWF0aWNzLAo+IGFuZCB0aGUgY29uZnVzaW5n
+IHBhcnRzIG9mIHRoZSBsaW51eCBkcml2ZXIgY29kZSAobm90IHlldCBpbmNsdWRlZCBoZXJlKS4K
+PiBBY3RpdmUgbG93IC0+IG5vIG1vcmUgY29uZnVzaW9uLgo+Cj4gLS0tCj4gIC4uLi9ib290L2R0
+cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0cyB8IDQwICsrKysrKysrKysrKysrKysr
+LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4K
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10
+ZXJlcy1pLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtdGVy
+ZXMtaS5kdHMKPiBpbmRleCBjNDU1YjI0ZGQwNzkuLmJjMWQwZDZjMDY3MiAxMDA2NDQKPiAtLS0g
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LXRlcmVzLWkuZHRzCj4g
+KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0
+cwo+IEBAIC03MiwyMCArNzIsMzggQEAKPiAgICAgICAgIH07Cj4gIH07Cj4KPiArJmRlIHsKPiAr
+ICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gICZlaGNpMSB7Cj4gICAgICAgICBz
+dGF0dXMgPSAib2theSI7Cj4gIH07Cj4KPgo+IC0vKiBUaGUgQU5YNjM0NSBlRFAtYnJpZGdlIGlz
+IG9uIGkyYzAuIFRoZXJlIGlzIG5vIGxpbnV4IChtYWlubGluZSkKPiAtICogZHJpdmVyIGZvciB0
+aGlzIGNoaXAgYXQgdGhlIG1vbWVudCwgdGhlIGJvb3Rsb2FkZXIgaW5pdGlhbGl6ZXMgaXQuCj4g
+LSAqIEhvd2V2ZXIgaXQgY2FuIGJlIGFjY2Vzc2VkIHdpdGggdGhlIGkyYy1kZXYgZHJpdmVyIGZy
+b20gdXNlciBzcGFjZS4KPiAtICovCj4gICZpMmMwIHsKPiAgICAgICAgIGNsb2NrLWZyZXF1ZW5j
+eSA9IDwxMDAwMDA+Owo+ICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAgICAg
+ICAgIHBpbmN0cmwtMCA9IDwmaTJjMF9waW5zPjsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsK
+PiArCj4gKyAgICAgICBhbng2MzQ1OiBhbng2MzQ1QDM4IHsKPiArICAgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJhbmFsb2dpeCxhbng2MzQ1IjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDB4
+Mzg+Owo+ICsgICAgICAgICAgICAgICByZXNldC1ncGlvcyA9IDwmcGlvIDMgMjQgR1BJT19BQ1RJ
+VkVfTE9XPjsgLyogUEQyNCAqLwo+ICsgICAgICAgICAgICAgICBkdmRkMjUtc3VwcGx5ID0gPCZy
+ZWdfZGxkbzI+Owo+ICsgICAgICAgICAgICAgICBkdmRkMTItc3VwcGx5ID0gPCZyZWdfZGxkbzM+
+Owo+ICsKPiArICAgICAgICAgICAgICAgcG9ydCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+YW54NjM0NV9pbjogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9vdXRfYW54NjM0NT47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgfTsKCkl0IGRvZXNuJ3QgY29tcGx5IHdpdGgg
+YmluZGluZ3MgZG9jdW1lbnQuIFlvdSBuZWVkIHRvIGFkZCBvdXQgZW5kcG9pbnQKYXMgd2VsbCwg
+YW5kIHRvIGRvIHNvIHlvdSBuZWVkIHRvIGFkZCBiaW5kaW5ncyBmb3IgZURQIGNvbm5lY3RvciBm
+aXJzdAphbmQgdGhlbiBpbXBsZW1lbnQgcGFuZWwgZHJpdmVyLgpTZWUgUm9iJ3Mgc3VnZ2VzdGlv
+bnMgaGVyZTogaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwNDI1OTMvCgo+ICsg
+ICAgICAgfTsKPiArfTsKPiArCj4gKyZtaXhlcjAgewo+ICsgICAgICAgc3RhdHVzID0gIm9rYXki
+Owo+ICB9Owo+Cj4gICZtbWMwIHsKPiBAQCAtMjU4LDYgKzI3NiwyMCBAQAo+ICAgICAgICAgdmNj
+LWhkbWktc3VwcGx5ID0gPCZyZWdfZGxkbzE+Owo+ICB9Owo+Cj4gKyZ0Y29uMCB7Cj4gKyAgICAg
+ICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsgICAgICAgcGluY3RybC0wID0gPCZsY2Rf
+cmdiNjY2X3BpbnM+Owo+ICsKPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4g
+KyZ0Y29uMF9vdXQgewo+ICsgICAgICAgdGNvbjBfb3V0X2FueDYzNDU6IGVuZHBvaW50QDAgewo+
+ICsgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgIHJlbW90ZS1lbmRw
+b2ludCA9IDwmYW54NjM0NV9pbj47Cj4gKyAgICAgICB9Owo+ICt9Owo+ICsKPiAgJnVhcnQwIHsK
+PiAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gICAgICAgICBwaW5jdHJsLTAg
+PSA8JnVhcnQwX3BiX3BpbnM+OwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
