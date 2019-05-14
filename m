@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/3] arm64: dts: meson: u200: enable i2c busses
-Date: Tue, 14 May 2019 12:12:36 +0200
-Message-ID: <20190514101237.13969-3-jbrunet@baylibre.com>
+Subject: [PATCH 3/3] arm64: dts: meson: sei510: enable i2c3
+Date: Tue, 14 May 2019 12:12:37 +0200
+Message-ID: <20190514101237.13969-4-jbrunet@baylibre.com>
 References: <20190514101237.13969-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,44 +12,29 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the 3 i2c busses present on the u200 reference design.
+Add the i2c bus used for RGB led controller.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index 972926121beb..e02534ab7673 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -169,6 +169,27 @@
- 	pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+index bb45e3577ff5..f420935b76db 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+@@ -161,6 +161,12 @@
+ 	};
  };
  
-+/* i2c Touch */
-+&i2c0 {
-+	status = "okay";
-+	pinctrl-0 = <&i2c0_sda_z0_pins>, <&i2c0_sck_z1_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* i2c CM */
-+&i2c2 {
-+	status = "okay";
-+	pinctrl-0 = <&i2c2_sda_z_pins>, <&i2c2_sck_z_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* i2c Audio */
 +&i2c3 {
 +	status = "okay";
 +	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
 +	pinctrl-names = "default";
 +};
 +
- /* SD card */
- &sd_emmc_b {
+ &saradc {
  	status = "okay";
+ 	vref-supply = <&vddio_ao1v8>;
 -- 
 2.20.1
