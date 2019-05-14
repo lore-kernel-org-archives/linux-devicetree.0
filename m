@@ -1,79 +1,51 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on
- Teres-I
-Date: Tue, 14 May 2019 10:48:40 -0700
-Message-ID: <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
-References: <20190514155911.6C0AC68B05@newverein.lst.de>
- <20190514160241.9EAC768C7B@newverein.lst.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: meson-gx: add ddr-access-quirk property
+Date: Tue, 14 May 2019 19:50:34 +0200
+Message-ID: <CAFBinCAhTeywLZRBhcX_myktU9k4_YcjsjgCeTHEkP7SX8JCMQ@mail.gmail.com>
+References: <20190513091548.16674-1-narmstrong@baylibre.com> <20190513091548.16674-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190514160241.9EAC768C7B@newverein.lst.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Torsten Duwe <duwe@lst.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190513091548.16674-2-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: ulf.hansson@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, baylibre-upstreaming@groups.io, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgOTowMyBBTSBUb3JzdGVuIER1d2UgPGR1d2VAbHN0LmRl
-PiB3cm90ZToKPgo+IEZyb206IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPgo+IFRF
-UkVTLUkgaGFzIGFuIEFOWDYzNDUgYnJpZGdlIGNvbm5lY3RlZCB0byB0aGUgUkdCNjY2IExDRCBv
-dXRwdXQsIGFuZAo+IHRoZSBJMkMgY29udHJvbGxpbmcgc2lnbmFscyBhcmUgY29ubmVjdGVkIHRv
-IEkyQzAgYnVzLgo+Cj4gRW5hYmxlIGl0IGluIHRoZSBkZXZpY2UgdHJlZS4KPgo+IFNpZ25lZC1v
-ZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPiBTaWduZWQtb2ZmLWJ5OiBU
-b3JzdGVuIER1d2UgPGR1d2VAc3VzZS5kZT4KPiAtLS0KPgo+IG9yaWdpbmFsbHk6IHBhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzEwNjQ2ODY3Cj4KPiBDaGFuZ2VkIHRoZSByZXNldCBwb2xhcml0
-eSwgd2hpY2ggaXMgYWN0aXZlIGxvdywKPiBhY2NvcmRpbmcgdG8gdGhlICh0ZXJzZSkgZGF0YXNo
-ZWV0LCBUZXJlcy1JIGFuZCBwaW5lYm9vayBzY2hlbWF0aWNzLAo+IGFuZCB0aGUgY29uZnVzaW5n
-IHBhcnRzIG9mIHRoZSBsaW51eCBkcml2ZXIgY29kZSAobm90IHlldCBpbmNsdWRlZCBoZXJlKS4K
-PiBBY3RpdmUgbG93IC0+IG5vIG1vcmUgY29uZnVzaW9uLgo+Cj4gLS0tCj4gIC4uLi9ib290L2R0
-cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0cyB8IDQwICsrKysrKysrKysrKysrKysr
-LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4K
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10
-ZXJlcy1pLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtdGVy
-ZXMtaS5kdHMKPiBpbmRleCBjNDU1YjI0ZGQwNzkuLmJjMWQwZDZjMDY3MiAxMDA2NDQKPiAtLS0g
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LXRlcmVzLWkuZHRzCj4g
-KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC10ZXJlcy1pLmR0
-cwo+IEBAIC03MiwyMCArNzIsMzggQEAKPiAgICAgICAgIH07Cj4gIH07Cj4KPiArJmRlIHsKPiAr
-ICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gICZlaGNpMSB7Cj4gICAgICAgICBz
-dGF0dXMgPSAib2theSI7Cj4gIH07Cj4KPgo+IC0vKiBUaGUgQU5YNjM0NSBlRFAtYnJpZGdlIGlz
-IG9uIGkyYzAuIFRoZXJlIGlzIG5vIGxpbnV4IChtYWlubGluZSkKPiAtICogZHJpdmVyIGZvciB0
-aGlzIGNoaXAgYXQgdGhlIG1vbWVudCwgdGhlIGJvb3Rsb2FkZXIgaW5pdGlhbGl6ZXMgaXQuCj4g
-LSAqIEhvd2V2ZXIgaXQgY2FuIGJlIGFjY2Vzc2VkIHdpdGggdGhlIGkyYy1kZXYgZHJpdmVyIGZy
-b20gdXNlciBzcGFjZS4KPiAtICovCj4gICZpMmMwIHsKPiAgICAgICAgIGNsb2NrLWZyZXF1ZW5j
-eSA9IDwxMDAwMDA+Owo+ICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAgICAg
-ICAgIHBpbmN0cmwtMCA9IDwmaTJjMF9waW5zPjsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsK
-PiArCj4gKyAgICAgICBhbng2MzQ1OiBhbng2MzQ1QDM4IHsKPiArICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJhbmFsb2dpeCxhbng2MzQ1IjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDB4
-Mzg+Owo+ICsgICAgICAgICAgICAgICByZXNldC1ncGlvcyA9IDwmcGlvIDMgMjQgR1BJT19BQ1RJ
-VkVfTE9XPjsgLyogUEQyNCAqLwo+ICsgICAgICAgICAgICAgICBkdmRkMjUtc3VwcGx5ID0gPCZy
-ZWdfZGxkbzI+Owo+ICsgICAgICAgICAgICAgICBkdmRkMTItc3VwcGx5ID0gPCZyZWdfZGxkbzM+
-Owo+ICsKPiArICAgICAgICAgICAgICAgcG9ydCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-YW54NjM0NV9pbjogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9vdXRfYW54NjM0NT47Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgfTsKCkl0IGRvZXNuJ3QgY29tcGx5IHdpdGgg
-YmluZGluZ3MgZG9jdW1lbnQuIFlvdSBuZWVkIHRvIGFkZCBvdXQgZW5kcG9pbnQKYXMgd2VsbCwg
-YW5kIHRvIGRvIHNvIHlvdSBuZWVkIHRvIGFkZCBiaW5kaW5ncyBmb3IgZURQIGNvbm5lY3RvciBm
-aXJzdAphbmQgdGhlbiBpbXBsZW1lbnQgcGFuZWwgZHJpdmVyLgpTZWUgUm9iJ3Mgc3VnZ2VzdGlv
-bnMgaGVyZTogaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwNDI1OTMvCgo+ICsg
-ICAgICAgfTsKPiArfTsKPiArCj4gKyZtaXhlcjAgewo+ICsgICAgICAgc3RhdHVzID0gIm9rYXki
-Owo+ICB9Owo+Cj4gICZtbWMwIHsKPiBAQCAtMjU4LDYgKzI3NiwyMCBAQAo+ICAgICAgICAgdmNj
-LWhkbWktc3VwcGx5ID0gPCZyZWdfZGxkbzE+Owo+ICB9Owo+Cj4gKyZ0Y29uMCB7Cj4gKyAgICAg
-ICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsgICAgICAgcGluY3RybC0wID0gPCZsY2Rf
-cmdiNjY2X3BpbnM+Owo+ICsKPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4g
-KyZ0Y29uMF9vdXQgewo+ICsgICAgICAgdGNvbjBfb3V0X2FueDYzNDU6IGVuZHBvaW50QDAgewo+
-ICsgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgIHJlbW90ZS1lbmRw
-b2ludCA9IDwmYW54NjM0NV9pbj47Cj4gKyAgICAgICB9Owo+ICt9Owo+ICsKPiAgJnVhcnQwIHsK
-PiAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gICAgICAgICBwaW5jdHJsLTAg
-PSA8JnVhcnQwX3BiX3BpbnM+OwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWw=
+Hi Neil,
+
+On Mon, May 13, 2019 at 11:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
+> makes any DDR access from the MMC controller fail.
+>
+> Add the amlogic,ddr-access-quirk property so signal this particular
+> controller has this bug and needs a quirk to work properly.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+> ---
+>  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> index 13e70409e8ac..f8914dab06c6 100644
+> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> @@ -22,6 +22,10 @@ Required properties:
+>    clock rate requested by the MMC core.
+>  - resets     : phandle of the internal reset line
+>
+> +Optional properties:
+> +- amlogic,ddr-access-quirk: set when HW cannot access the DDR memory, like on
+> +  the G12A SDIO controller.
+(I believe we cannot use a standard property like "dma-ranges" to
+disable DMA access)
+personally I prefer "amlogic,no-direct-memory-access" or
+"amlogic,no-ddr-access", but if Rob is happy with the current naming
+then I'm happy as well
+
+
+Regards
+Martin
