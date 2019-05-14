@@ -1,48 +1,86 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Date: Mon, 13 May 2019 23:02:27 -0700
-Message-ID: <20190514060227.GA7625@infradead.org>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Mon, 13 May 2019 23:04:33 -0700
+Message-ID: <20190514060433.GA181462@google.com>
+References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
+ <20190511173344.GA8507@mit.edu>
+ <20190513144451.GQ17751@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, mperttunen@nvidia.com, mmaddireddy@nvidia.com, linux-pci@vger.kernel.org, catalin.marinas@arm.com, kthota@nvidia.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jonathanh@nvidia.com, Christoph Hellwig <hch@infradead.org>, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, gustavo.pimentel@synopsys.com, jingoohan1@gmail.com, bhelgaas@google.com, kishon@ti.com, linux-arm-kernel@lists.infradead.org, sagar.tv@gmail.com
+In-Reply-To: <20190513144451.GQ17751@phenom.ffwll.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Theodore Ts'o <tytso@mit.edu>, Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com, knut.omang@oracle.com, gregkh@linuxfoundation.org, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, logang@deltatee.com, mpe@ellerman.id.au
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
-> There is nothing broken in Tegra194 root port as such, rather,  this is more
-> of software configuration choice and we are going with legacy interrupts than
-> MSI interrupts (as Tegra194 doesn't support raising PME interrupts through MSI
-> and please note that this doesn't mean root port is broken).
+On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
+> On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
+> > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
+> > > However, the reply is incorrect.  Kselftest in-kernel tests (which
+> > > is the context here) can be configured as built in instead of as
+> > > a module, and built in a UML kernel.  The UML kernel can boot,
+> > > running the in-kernel tests before UML attempts to invoke the
+> > > init process.
+> > 
+> > Um, Citation needed?
+> > 
+> > I don't see any evidence for this in the kselftest documentation, nor
+> > do I see any evidence of this in the kselftest Makefiles.
+> > 
+> > There exists test modules in the kernel that run before the init
+> > scripts run --- but that's not strictly speaking part of kselftests,
+> > and do not have any kind of infrastructure.  As noted, the
+> > kselftests_harness header file fundamentally assumes that you are
+> > running test code in userspace.
+> 
+> Yeah I really like the "no userspace required at all" design of kunit,
+> while still collecting results in a well-defined way (unless the current
+> self-test that just run when you load the module, with maybe some
+> kselftest ad-hoc wrapper around to collect the results).
+> 
+> What I want to do long-term is to run these kernel unit tests as part of
+> the build-testing, most likely in gitlab (sooner or later, for drm.git
 
-It seems odd at least and probably broken if it adverises MSI interrupts,
-but than doesn't actually support them fully.
+Totally! This is part of the reason I have been insisting on a minimum
+of UML compatibility for all unit tests. If you can suffiently constrain
+the environment that is required for tests to run in, it makes it much
+easier not only for a human to run your tests, but it also makes it a
+lot easier for an automated service to be able to run your tests.
 
-> Since Tegra194 has
-> only Synopsys DesignWare core based host controllers and not any other hosts, I
-> think it is fine to call this API in driver. Also, since this is a global setting,
-> calling this APIs from anywhere (be it from quirk or from driver) would have the
-> same effect, or did I miss anything here?
+I actually have a prototype presubmit already working on my
+"stable/non-upstream" branch. You can checkout what presubmit results
+look like here[1][2].
 
-Maybe in your current particular case this is true, but in general
-we see more and more systems with different kind of root ports, and
-having a driver set a global variable due to its own hardwares quirk
-defeats that.  So the right thing here is to replace the global
-flag with a per-device one first before setting it for a driver.
+> only ofc). So that people get their pull requests (and patch series, we
+> have some ideas to tie this into patchwork) automatically tested for this
+
+Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
+and he seemed pretty open to collaboration.
+
+Before I heard about Snowpatch, I had an intern write a translation
+layer that made Prow (the presubmit service that I used in the prototype
+above) work with LKML[4].
+
+I am not married to either approach, but I think between the two of
+them, most of the initial legwork has been done to make presubmit on
+LKML a reality.
+
+> super basic stuff.
+
+I am really excited to hear back on what you think!
+
+Cheers!
+
+[1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
+[2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
+[3] https://developer.ibm.com/open/projects/snowpatch/
+[4] https://kunit.googlesource.com/prow-lkml/
