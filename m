@@ -1,61 +1,137 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 16/29] PCI: tegra: Set target speed as Gen1 before starting LTSSM
-Date: Mon, 13 May 2019 23:37:31 +0530
-Message-ID: <20190513180744.16493-17-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <mchehab+samsung@kernel.org>
+Date: Tue, 14 May 2019 20:41:30 -0300
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v6 00/13] TVP5150 new features
+Message-ID: <20190514204130.2c953d97@coco.lan>
+In-Reply-To: <20190514205824.ov6prllx2fp77fur@pengutronix.de>
+References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+	<20190506054713.crxc5pw6j5suvvq7@pengutronix.de>
+	<20190514141824.5bd41389@coco.lan>
+	<20190514172028.693ad354@coco.lan>
+	<20190514205824.ov6prllx2fp77fur@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PCIe link up fails with few legacy endpoints if root port advertises both
-Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
-fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
-advertising only Gen1. Hence, the strategy followed here is to initially
-advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
+Em Tue, 14 May 2019 22:58:24 +0200
+Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
-even if Gen2 is advertised, so there is no downside of this change.
+> Hi Mauro,
+> 
+> On 19-05-14 17:20, Mauro Carvalho Chehab wrote:
+> > Em Tue, 14 May 2019 14:18:24 -0300
+> > Mauro Carvalho Chehab <mchehab@kernel.org> escreveu:
+> >   
+> > > Em Mon, 6 May 2019 07:47:13 +0200
+> > > Marco Felsch <m.felsch@pengutronix.de> escreveu:
+> > >   
+> > > > Hi Mauro,
+> > > > 
+> > > > I know you are busy but can you have a look on it?    
+> > > 
+> > > You should really trust on the sub-maintainers for such kind of
+> > > reviews :-)  
+> 
+> I trust all of them and many thanks to Hans and Jacopo for the reviews
+> :) I will integrate them this week. The point is that you are the
+> maintainer and in that case the one who picks the patches.
 
-This behavior is observed with following two PCIe devices on Tegra,
- - Fusion HDTV 5 Express card
- - IOGear SIL - PCIE - SATA card
+Actually, Hans is the one that usually picks V4L2 patches after reviewing.
+I pull from his tree and from other media maintainers.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: No change
+> 
+> > > 
+> > > I'll take a look today.  
+> > 
+> > Done. Please notice that I didn't run any test here.  
+> 
+> Thanks for that will integrate it too and prepare a v7.
 
-V2: Updated commit log to reflect why this issue is observed on Tegra with
-these particular cards
+Thanks!
+Mauro
+> 
+> Regards,
+>   Marco
+> 
+> >   
+> > >   
+> > > > 
+> > > > Regards,
+> > > >   Marco
+> > > > 
+> > > > On 19-04-15 14:44, Marco Felsch wrote:    
+> > > > > Hi,
+> > > > > 
+> > > > > many thanks to Hans and Jacopo for the feedack :) this v6 address the
+> > > > > comments both made on my v5 [1].
+> > > > > 
+> > > > > In short this is round fixes just some minor issues rather than major
+> > > > > ones so the diff to the v5 is really small. The changed patches contain
+> > > > > the changelog so I omit it here.
+> > > > > 
+> > > > > I've tested it on a custom hardware but I can't test the em28xx usb
+> > > > > use-case since I haven't such a device. So other testers are welcome :)
+> > > > > 
+> > > > > Looking forward for your feedack,
+> > > > > 
+> > > > > 	Marco
+> > > > > 
+> > > > > [1] https://patchwork.kernel.org/cover/10886903/
+> > > > > 
+> > > > > Javier Martinez Canillas (1):
+> > > > >   partial revert of "[media] tvp5150: add HW input connectors support"
+> > > > > 
+> > > > > Marco Felsch (11):
+> > > > >   dt-bindings: connector: analog: add tv norms property
+> > > > >   media: v4l2-fwnode: add v4l2_fwnode_connector
+> > > > >   media: v4l2-fwnode: add initial connector parsing support
+> > > > >   media: tvp5150: add input source selection of_graph support
+> > > > >   media: dt-bindings: tvp5150: Add input port connectors DT bindings
+> > > > >   media: tvp5150: add FORMAT_TRY support for get/set selection handlers
+> > > > >   media: tvp5150: add s_power callback
+> > > > >   media: dt-bindings: tvp5150: cleanup bindings stlye
+> > > > >   media: dt-bindings: tvp5150: add optional tvnorms documentation
+> > > > >   media: tvp5150: add support to limit tv norms on connector
+> > > > >   media: tvp5150: make debug output more readable
+> > > > > 
+> > > > > Michael Tretter (1):
+> > > > >   media: tvp5150: initialize subdev before parsing device tree
+> > > > > 
+> > > > >  .../display/connector/analog-tv-connector.txt |   4 +
+> > > > >  .../devicetree/bindings/media/i2c/tvp5150.txt | 125 +++-
+> > > > >  drivers/media/i2c/tvp5150.c                   | 672 +++++++++++++-----
+> > > > >  drivers/media/v4l2-core/v4l2-fwnode.c         | 111 +++
+> > > > >  include/dt-bindings/media/tvnorms.h           |  56 ++
+> > > > >  include/dt-bindings/media/tvp5150.h           |   2 -
+> > > > >  include/media/v4l2-connector.h                |  30 +
+> > > > >  include/media/v4l2-fwnode.h                   |  49 ++
+> > > > >  8 files changed, 859 insertions(+), 190 deletions(-)
+> > > > >  create mode 100644 include/dt-bindings/media/tvnorms.h
+> > > > >  create mode 100644 include/media/v4l2-connector.h
+> > > > > 
+> > > > > -- 
+> > > > > 2.20.1
+> > > > > 
+> > > > > 
+> > > > >       
+> > > >     
+> > > 
+> > > 
+> > > 
+> > > Thanks,
+> > > Mauro  
+> > 
+> > 
+> > 
+> > Thanks,
+> > Mauro
+> >   
+> 
 
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 16d4d3cba3ff..9ee111062ab7 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -676,6 +676,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= soc->update_fc_threshold;
- 		writel(value, port->base + RP_VEND_XP);
- 	}
-+
-+	/*
-+	 * PCIe link doesn't come up with few legacy PCIe endpoints if
-+	 * root port advertises both Gen-1 and Gen-2 speeds in Tegra.
-+	 * Hence, the strategy followed here is to initially advertise
-+	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
-+	 */
-+	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+	value &= ~PCI_EXP_LNKSTA_CLS;
-+	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
-+	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
- }
- 
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
--- 
-2.17.1
+
+Thanks,
+Mauro
