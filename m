@@ -1,58 +1,111 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] of/fdt: Remove dead code and mark functions with __init
-Date: Tue, 14 May 2019 12:06:48 -0500
-Message-ID: <CAL_JsqKS5KgNpVvunhax+M4+NceP9uy_V=2cYk54kg5eOfxXwA@mail.gmail.com>
-References: <20190509215538.93346-1-swboyd@chromium.org>
+From: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: NVMEM address DT post processing [Was: Re: [PATCH net 0/3] add
+ property "nvmem_macaddr_swap" to swap macaddr bytes order]
+Date: Tue, 14 May 2019 19:44:47 +0200
+Message-ID: <20190514174447.GE93050@meh.true.cz>
+References: <1557476567-17397-2-git-send-email-fugang.duan@nxp.com>
+ <1557476567-17397-1-git-send-email-fugang.duan@nxp.com>
+ <20190510112822.GT81826@meh.true.cz>
+ <20190510113155.mvpuhe4yzxdaanei@flea>
+ <20190511144444.GU81826@meh.true.cz>
+ <547abcff-103a-13b8-f42a-c0bd1d910bbc@linaro.org>
+ <20190513090700.GW81826@meh.true.cz>
+ <8cee0086-7459-24c7-82f9-d559527df6e6@linaro.org>
+ <20190513111612.GA21475@meh.true.cz>
+ <0c6cb9d4-2da1-00be-b527-5891b8b030a8@linaro.org>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190509215538.93346-1-swboyd@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0c6cb9d4-2da1-00be-b527-5891b8b030a8@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Andy Duan <fugang.duan@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 9, 2019 at 4:55 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Some functions in here are never called, and others are only called
-> during __init. Remove the dead code and some dead exports for functions
-> that don't exist (I'm looking at you of_fdt_get_string!). Mark some
-> functions with __init so we can throw them away after we boot up and
-> poke at the FDT blob too.
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-14 16:13:22]:
 
-Some of these aren't called, but there are cases where they could be
-used instead of accessing initial_boot_params directly. The question
-is what direction do we want to go. Make initial_boot_params private
-or do away with the wrapper api and expect users to use libfdt api
-only. I guess I lean toward the latter because that aligns with my
-goal to move all the code in drivers/of/ somewhere else so I have
-nothing to maintain. :)
+> On 13/05/2019 12:16, Petr Štetiar wrote:
+> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 11:06:48]:
+> > 
+> > > On 13/05/2019 10:07, Petr Štetiar wrote:
+> > > > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> [2019-05-13 09:25:55]:
+> > > > 
+> > > > > My initial idea was to add compatible strings to the cell so that most of
+> > > > > the encoding information can be derived from it. For example if the encoding
+> > > > > representing in your example is pretty standard or vendor specific we could
+> > > > > just do with a simple compatible like below:
+> > > > 
+> > > > that vendor/compatible list would be quite long[1], there are hundreds of
+> > > 
+> > > You are right just vendor list could be very long, but I was hoping that the
+> > > post-processing would fall in some categories which can be used in
+> > > compatible string.
+> > > 
+> > > Irrespective of which we need to have some sort of compatible string to
+> > > enable nvmem core to know that there is some form of post processing to be
+> > > done on the cells!. Without which there is a danger of continuing to adding
+> > > new properties to the cell bindings which have no relation to each other.
+> > 
+> > makes sense, so something like this would be acceptable?
+> > 
+> >   eth1_addr: eth-mac-addr@18a {
+> >       /* or rather linux,nvmem-post-process ? */
+> >       compatible = "openwrt,nvmem-post-process";
+> 
+> I don't think this would be a correct compatible string to use here.
+> Before we decide on naming, I would like to understand bit more on what are
+> the other possible forms of storing mac address,
+> Here is what I found,
+> 
+> Type 1: Octets in ASCII without delimiters. (Swapped/non-Swapped)
+> Type 2: Octets in ASCII with delimiters like (":", ",", ".", "-"... so on)
+> (Swapped/non-Swapped)
+> Type 3: Is the one which stores mac address in Type1/2 but this has to be
+> incremented to be used on other instances of eth.
+> 
+> Did I miss anything?
 
->
-> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  .../devicetree/bindings/common-properties.txt |  4 +-
->  drivers/of/fdt.c                              | 37 +++----------------
->  include/linux/of_fdt.h                        | 11 ------
->  3 files changed, 7 insertions(+), 45 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
-> index a3448bfa1c82..1c50d8700ab5 100644
-> --- a/Documentation/devicetree/bindings/common-properties.txt
-> +++ b/Documentation/devicetree/bindings/common-properties.txt
-> @@ -25,8 +25,8 @@ Optional properties:
->  If a binding supports these properties, then the binding should also
->  specify the default behavior if none of these properties are present.
->  In such cases, little-endian is the preferred default, but it is not
-> -a requirement.  The of_device_is_big_endian() and of_fdt_is_big_endian()
-> -helper functions do assume that little-endian is the default, because
-> +a requirement.  The of_device_is_big_endian()
+Type 4: Octets as bytes/u8, swapped/non-swapped
 
-Hum, we shouldn't have kernel functions in binding docs. Can you
-reword to remove both functions.
+Currently just type4-non-swapped is supported. Support for type4-swapped was
+goal of this patch series.
 
-> +helper function assumes that little-endian is the default, because
->  most existing (PCI-based) drivers implicitly default to LE by using
->  readl/writel for MMIO accesses.
+I've simply tried to avoid using mac-address for the compatible as this
+provider could be reused by other potential nvmem consumers. The question is,
+how much abstracted it should be then.
+
+> My suggestion for type1 and type2 would be something like this, as long as
+> its okay with DT maintainers
+> 
+> eth1_addr: eth-mac-addr@18a {
+> 	compatible = "ascii-mac-address";
+> 	reg = <0x18a 2>, <0x192 2>, <0x196 2>, <0x200 2>, <0x304 2>, <0x306 2>;
+> 	swap-mac-address;
+> 	delimiter = ":";
+> };
+
+with this reg array, you don't need the delimiter property anymore, do you?
+
+> For type 3:
 >
+> This sounds like very much vendor specific optimization thing which am not
+> 100% sure atm.  If dt maintainers are okay, may be we can add an increment
+> in the "ascii-mac-address" binding itself.
+> 
+> Do you think "increment-at " would ever change?
+
+Currently there's just one such real world use case in OpenWrt tree[1].
+Probably some vendor decided to increment 4th octet.
+
+> This [1] is what I had suggested at the end, where in its possible to add
+> provider node with its own custom bindings. In above example nvmem_dev would
+> be a proper nvmem provider.
+
+Ok, thanks.
+
+1. https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/ath79/dts/ar9331_embeddedwireless_dorin.dts;h=43bec35fa2860fe4d52880ad24ff7c56f5060a0a;hb=HEAD#l109
+
+-- ynezz
