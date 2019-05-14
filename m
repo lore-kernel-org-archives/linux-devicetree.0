@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 3/8] arm64: dts: meson: g12a: add audio fifos
-Date: Tue, 14 May 2019 16:26:44 +0200
-Message-ID: <20190514142649.1127-4-jbrunet@baylibre.com>
+Subject: [PATCH v2 1/8] arm64: dts: meson: g12a: add audio clock controller
+Date: Tue, 14 May 2019 16:26:42 +0200
+Message-ID: <20190514142649.1127-2-jbrunet@baylibre.com>
 References: <20190514142649.1127-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,103 +12,59 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the playback and capture memory interfaces of the g12a SoC family.
+Add the g12a clock controller dedicated to audio.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 73 +++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 36 +++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 2d5bccad4035..935a84b9f836 100644
+index e6c0c19b3223..09aa024d9f0e 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/clock/g12a-aoclkc.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
- #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
- 
- / {
-@@ -709,6 +710,78 @@
- 					resets = <&reset RESET_AUDIO>;
+@@ -673,6 +673,42 @@
  				};
+ 			};
  
-+				toddr_a: audio-controller@100 {
-+					compatible = "amlogic,g12a-toddr",
-+						     "amlogic,axg-toddr";
-+					reg = <0x0 0x100 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "TODDR_A";
-+					interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
-+					resets = <&arb AXG_ARB_TODDR_A>;
-+					status = "disabled";
-+				};
++			audio: bus@42000 {
++				compatible = "simple-bus";
++				reg = <0x0 0x42000 0x0 0x2000>;
++				#address-cells = <2>;
++				#size-cells = <2>;
++				ranges = <0x0 0x0 0x0 0x42000 0x0 0x2000>;
 +
-+				toddr_b: audio-controller@140 {
-+					compatible = "amlogic,g12a-toddr",
-+						     "amlogic,axg-toddr";
-+					reg = <0x0 0x140 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "TODDR_B";
-+					interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
-+					resets = <&arb AXG_ARB_TODDR_B>;
++				clkc_audio: clock-controller@0 {
 +					status = "disabled";
-+				};
++					compatible = "amlogic,g12a-audio-clkc";
++					reg = <0x0 0x0 0x0 0xb4>;
++					#clock-cells = <1>;
 +
-+				toddr_c: audio-controller@180 {
-+					compatible = "amlogic,g12a-toddr",
-+						     "amlogic,axg-toddr";
-+					reg = <0x0 0x180 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "TODDR_C";
-+					interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
-+					resets = <&arb AXG_ARB_TODDR_C>;
-+					status = "disabled";
-+				};
++					clocks = <&clkc CLKID_AUDIO>,
++						 <&clkc CLKID_MPLL0>,
++						 <&clkc CLKID_MPLL1>,
++						 <&clkc CLKID_MPLL2>,
++						 <&clkc CLKID_MPLL3>,
++						 <&clkc CLKID_HIFI_PLL>,
++						 <&clkc CLKID_FCLK_DIV3>,
++						 <&clkc CLKID_FCLK_DIV4>,
++						 <&clkc CLKID_GP0_PLL>;
++					clock-names = "pclk",
++						      "mst_in0",
++						      "mst_in1",
++						      "mst_in2",
++						      "mst_in3",
++						      "mst_in4",
++						      "mst_in5",
++						      "mst_in6",
++						      "mst_in7";
 +
-+				frddr_a: audio-controller@1c0 {
-+					compatible = "amlogic,g12a-frddr",
-+						     "amlogic,axg-frddr";
-+					reg = <0x0 0x1c0 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "FRDDR_A";
-+					interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
-+					resets = <&arb AXG_ARB_FRDDR_A>;
-+					status = "disabled";
++					resets = <&reset RESET_AUDIO>;
 +				};
++			};
 +
-+				frddr_b: audio-controller@200 {
-+					compatible = "amlogic,g12a-frddr",
-+						     "amlogic,axg-frddr";
-+					reg = <0x0 0x200 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "FRDDR_B";
-+					interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
-+					resets = <&arb AXG_ARB_FRDDR_B>;
-+					status = "disabled";
-+				};
-+
-+				frddr_c: audio-controller@240 {
-+					compatible = "amlogic,g12a-frddr",
-+						     "amlogic,axg-frddr";
-+					reg = <0x0 0x240 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "FRDDR_C";
-+					interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
-+					resets = <&arb AXG_ARB_FRDDR_C>;
-+					status = "disabled";
-+				};
-+
- 				arb: reset-controller@280 {
- 					status = "disabled";
- 					compatible = "amlogic,meson-axg-audio-arb";
+ 			usb3_pcie_phy: phy@46000 {
+ 				compatible = "amlogic,g12a-usb3-pcie-phy";
+ 				reg = <0x0 0x46000 0x0 0x2000>;
 -- 
 2.20.1
