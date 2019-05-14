@@ -1,83 +1,84 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 3/3] arm64: dts: meson: sei510: add sd and emmc
-Date: Tue, 14 May 2019 11:16:11 +0200
-Message-ID: <20190514091611.15278-4-jbrunet@baylibre.com>
-References: <20190514091611.15278-1-jbrunet@baylibre.com>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH V3 4/8] memory: tegra: Add Tegra210 EMC clock driver
+Date: Tue, 14 May 2019 17:22:26 +0800
+Message-ID: <27db5517-e2fc-ff24-7a96-932202160478@nvidia.com>
+References: <20190510084719.18902-1-josephl@nvidia.com>
+ <20190510084719.18902-5-josephl@nvidia.com>
+ <50d5719c-63fb-279b-cf8a-388010e7bdb3@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190514091611.15278-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <50d5719c-63fb-279b-cf8a-388010e7bdb3@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable eMMC and SDCard on the g12a sei510 board
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../boot/dts/amlogic/meson-g12a-sei510.dts    | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index 61fb30047d7f..bb45e3577ff5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -45,6 +45,11 @@
- 		};
- 	};
- 
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -161,6 +166,43 @@
- 	vref-supply = <&vddio_ao1v8>;
- };
- 
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_c_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddao_3v3>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&emmc_1v8>;
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
--- 
-2.20.1
+T24gNS8xNC8xOSAxMjo1NCBBTSwgRG1pdHJ5IE9zaXBlbmtvIHdyb3RlOgo+IDEwLjA1LjIwMTkg
+MTE6NDcsIEpvc2VwaCBMbyDQv9C40YjQtdGCOgo+PiBUaGlzIGlzIHRoZSBpbml0aWFsIHBhdGNo
+IGZvciBUZWdyYTIxMCBFTUMgY2xvY2sgZHJpdmVyLCB3aGljaCBkb2Vzbid0Cj4+IGluY2x1ZGUg
+dGhlIHN1cHBvcnQgY29kZSBhbmQgZGV0YWlsIHNlcXVlbmNlIGZvciBjbG9jayBzY2FsaW5nIHll
+dC4KPj4KPj4gVGhlIGRyaXZlciBpcyBkZXNpZ25lZCB0byBzdXBwb3J0IExQRERSNCBTRFJBTS4g
+QmVjYXVzZSBvZiB0aGUgTFBERFI0Cj4+IGRldmljZXMgbmVlZCB0byBkbyBpbml0aWFsIHRpbWUg
+dHJhaW5pbmcgYmVmb3JlIGl0IGNhbiBiZSB1c2VkLCB0aGUKPj4gZmlybXdhcmUgd2lsbCBoZWxw
+IHRvIGRvIHRoYXQgYXQgZWFybHkgYm9vdCBzdGFnZS4gVGhlbiwgdGhlIHRyYWluZWQKPj4gdGFi
+bGUgZm9yIHRoZSByYXRlcyB3ZSBzdXBwb3J0IHdpbGwgcGFzcyB0byB0aGUga2VybmVsIHZpYSBE
+VC4gU28gdGhlCj4+IGRyaXZlciBjYW4gZ2V0IHRoZSB0cmFpbmVkIHRhYmxlIGZvciBjbG9jayBz
+Y2FsaW5nIHN1cHBvcnQuCj4+Cj4+IEZvciB0aGUgaGlnaGVyIHJhdGUgc3VwcG9ydCAoYWJvdmUg
+ODAwTUh6KSwgdGhlIHBlcmlvZGljIHRyYWluaW5nIGlzCj4+IG5lZWRlZCBmb3IgdGhlIHRpbWlu
+ZyBjb21wZW5zYXRpb24uIFNvIGJhc2ljYWxseSwgdHdvIG1ldGhvZG9sb2dpZXMgZm9yCj4+IGNs
+b2NrIHNjYWxpbmcgYXJlIHN1cHBvcnRlZCwgb25lIGlzIGZvbGxvd2luZyB0aGUgY2xvY2sgY2hh
+bmdpbmcKPj4gc2VxdWVuY2UgdG8gdXBkYXRlIHRoZSBFTUMgdGFibGUgdG8gRU1DIHJlZ2lzdGVy
+cyBhbmQgYW5vdGhlciBpcyBpZiB0aGUKPj4gcmF0ZSBuZWVkcyBwZXJpb2RpYyB0cmFpbmluZywg
+dGhlbiB3ZSB3aWxsIHN0YXJ0IGEgdGltZXIgdG8gZG8gdGhhdAo+PiBwZXJpb2RpY2FsbHkgdW50
+aWwgaXQgc2NhbGVzIHRvIHRoZSBsb3dlciByYXRlLgo+Pgo+PiBCYXNlZCBvbiB0aGUgd29yayBv
+ZiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29tPi4KPj4KPj4gU2ln
+bmVkLW9mZi1ieTogSm9zZXBoIExvIDxqb3NlcGhsQG52aWRpYS5jb20+Cj4+IC0tLQo+PiB2MzoK
+Pj4gLSBhZGRyZXNzIGFsbW9zdCBhbGwgdGhlIGNvbW1lbnRzIGZyb20gdGhlIHByZXZpb3VzIHZl
+cnNpb24KPj4gLSByZW1vdmUgdGhlIERUIHBhcnNlciBvZiBFTUMgdGFibGUKPj4gLSBUaGUgRU1D
+IHRhYmxlIGlzIHBhc3NpbmcgYXMgYSBiaW5hcnkgYmxvYiBub3cuCj4+IC0tLQpzbmlwLgo+PiAr
+I2lmZGVmIENPTkZJR19ERUJVR19GUwo+PiArc3RhdGljIGludCBlbWNfc3RhdHNfc2hvdyhzdHJ1
+Y3Qgc2VxX2ZpbGUgKnMsIHZvaWQgKmRhdGEpCj4+ICt7Cj4+ICsJaW50IGk7Cj4+ICsJc3RydWN0
+IHRlZ3JhX2VtYyAqZW1jID0gKHN0cnVjdCB0ZWdyYV9lbWMgKilzLT5wcml2YXRlOwo+IAo+IFRo
+ZXJlIGlzIG5vIG5lZWQgZm9yIGNhc3Rpbmcgb2YgdGhlIHZvaWQqLgo+IAo+PiArCj4+ICsJaWYg
+KCFlbWMtPmVtY190YWJsZV9zaXplIHx8ICFzZXEpCj4+ICsJCXJldHVybiAwOwo+PiArCj4+ICsJ
+ZW1jX2xhc3Rfc3RhdHNfdXBkYXRlKFRFR1JBX0VNQ19NQVhfRlJFUVMpOwo+PiArCj4+ICsJc2Vx
+X3ByaW50ZihzLCAiJS0xMHMgJS0xMHNcbiIsICJyYXRlIGtIeiIsICJ0aW1lIik7Cj4+ICsJZm9y
+IChpID0gMDsgaSA8IGVtYy0+ZW1jX3RhYmxlX3NpemU7IGkrKykgewo+PiArCQlpZiAoZW1jX2Ns
+a19zZWxbaV0uaW5wdXQgPT0gTlVMTCkKPj4gKwkJCWNvbnRpbnVlOwo+PiArCj4+ICsJCXNlcV9w
+cmludGYocywgIiUtMTB1ICUtMTBsbHVcbiIsCj4+ICsJCQkgICBlbWMtPmVtY190YWJsZVtpXS5y
+YXRlLAo+PiArCQkJICAgamlmZmllc182NF90b19jbG9ja190KAo+PiArCQkJICAgZW1jX3N0YXRz
+LnRpbWVfYXRfY2xvY2tbaV0pKTsKPj4gKwl9Cj4+ICsJc2VxX3ByaW50ZihzLCAiJS0xNXMgJWxs
+dVxuIiwgInRyYW5zaXRpb25zOiIsCj4+ICsJCSAgIGVtY19zdGF0cy5jbGtjaGFuZ2VfY291bnQp
+Owo+PiArCXNlcV9wcmludGYocywgIiUtMTVzICVsbHVcbiIsICJ0aW1lLXN0YW1wOiIsCj4+ICsJ
+CSAgIGppZmZpZXNfNjRfdG9fY2xvY2tfdChlbWNfc3RhdHMubGFzdF91cGRhdGUpKTsKPiAKPiBE
+ZXZmcmVxIHN1YnN5c3RlbSBoYXMgdGhlIHRyYW5zaXRpb24gc3RhdHMgdG9vIGFuZCBpdCBpcyBh
+IGJpdCBtb3JlIGFkdmFuY2VkIHRoYW4gd2hhdCB5b3UgaGF2ZSBoZXJlLgo+IAo+ICAgY2F0IC9z
+eXMvY2xhc3MvZGV2ZnJlcS9kZXZmcmVxMC90cmFuc19zdGF0Cj4gICAgICAgIEZyb20gIDogICBU
+bwo+ICAgICAgICAgICAgICA6ICA1MDAwMDAwMCAxMDAwMDAwMDAgMTUwMDAwMDAwIDMwMDAwMDAw
+MCA2MDAwMDAwMDAgICB0aW1lKG1zKQo+ICAgKiAgNTAwMDAwMDA6ICAgICAgICAgMCAgICAgICAg
+IDQgICAgICAgICA0ICAgICAgICAgMCAgICAgICAgNDYgMTE4MDk2MjEwCj4gICAgIDEwMDAwMDAw
+MDogICAgICAgIDIxICAgICAgICAgMCAgICAgICAgIDAgICAgICAgICAwICAgICAgICAgNSAgICAg
+MTU0NjAKPiAgICAgMTUwMDAwMDAwOiAgICAgICAgMTAgICAgICAgICA5ICAgICAgICAgMCAgICAg
+ICAgIDAgICAgIDEwNTYwICAyMDIxMzk0MAo+ICAgICAzMDAwMDAwMDA6ICAgICAgICAxMyAgICAg
+ICAgIDYgICAgICA1MDU4ICAgICAgICAgMCAgICAgMjIzNzUgICA2ODQ4NjkwCj4gICAgIDYwMDAw
+MDAwMDogICAgICAgIDExICAgICAgICAgNyAgICAgIDU1MTcgICAgIDI3NDUyICAgICAgICAgMCAg
+MTE5NTg5OTAKPiAgIFRvdGFsIHRyYW5zaXRpb24gOiA3MTA5OAo+IAo+IEhlbmNlIEknbSBxdWVz
+dGlvbmluZyB0aGUgbmVjZXNzaXR5IG9mIHRoZSBkZWJ1Zy1pbmZvIGR1cGxpY2F0aW9uLgo+IAoK
+T2theSwgd2lsbCByZW1vdmUgdGhlIHN0YXRpc3RpYyBkYXRhIGluIHRoZSBuZXh0IHZlcnNpb24u
+IEJUVywgSSB0aGluayAKd2Ugd2lsbCB1c2UgSW50ZXJjb25uZWN0IGZyYW1ld29yayBmb3IgdGhl
+IEVNQyBCVyBtYW5hZ2VyIGZvciB0aGUgVGVncmEgCmNoaXBzID49IFQyMTAuCgpUaGFua3MsCkpv
+c2VwaAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
