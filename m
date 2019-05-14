@@ -1,50 +1,67 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson: g12a: set uart_ao clocks
-Date: Tue, 14 May 2019 12:22:32 +0200
-Message-ID: <8e6fb5af-e158-d2a3-5c28-8360a03711db@baylibre.com>
-References: <20190514094537.8765-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date: Tue, 14 May 2019 12:29:14 +0200
+Message-ID: <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
+References: <20190512174608.10083-1-peron.clem@gmail.com>
+ <20190513151405.GW17751@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190514094537.8765-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190513151405.GW17751@phenom.ffwll.local>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: peron.clem@gmail.com, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/05/2019 11:45, Jerome Brunet wrote:
-> Now that the AO clock controller is available, make the uarts of the
-> always-on domain claim the appropriate peripheral clock.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> index b2f08fc96568..ca01064a771a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -708,7 +708,7 @@
->  					     "amlogic,meson-ao-uart";
->  				reg = <0x0 0x3000 0x0 0x18>;
->  				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-> -				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART>, <&xtal>;
->  				clock-names = "xtal", "pclk", "baud";
->  				status = "disabled";
->  			};
-> @@ -718,7 +718,7 @@
->  					     "amlogic,meson-ao-uart";
->  				reg = <0x0 0x4000 0x0 0x18>;
->  				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-> -				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
->  				clock-names = "xtal", "pclk", "baud";
->  				status = "disabled";
->  			};
-> 
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+SGksCgpPbiAxMy8wNS8yMDE5IDE3OjE0LCBEYW5pZWwgVmV0dGVyIHdyb3RlOgo+IE9uIFN1biwg
+TWF5IDEyLCAyMDE5IGF0IDA3OjQ2OjAwUE0gKzAyMDAsIHBlcm9uLmNsZW1AZ21haWwuY29tIHdy
+b3RlOgo+PiBGcm9tOiBDbMOpbWVudCBQw6lyb24gPHBlcm9uLmNsZW1AZ21haWwuY29tPgo+Pgo+
+PiBIaSwKPj4KPj4gVGhlIEFsbHdpbm5lciBINiBoYXMgYSBNYWxpLVQ3MjAgTVAyLiBUaGUgZHJp
+dmVycyBhcmUKPj4gb3V0LW9mLXRyZWUgc28gdGhpcyBzZXJpZXMgb25seSBpbnRyb2R1Y2UgdGhl
+IGR0LWJpbmRpbmdzLgo+IAo+IFdlIGRvIGhhdmUgYW4gaW4tdHJlZSBtaWRnYXJkIGRyaXZlciBu
+b3cgKHNpbmNlIDUuMikuIERvZXMgdGhpcyBzdHVmZiB3b3JrCj4gdG9nZXRoZXIgd2l0aCB5b3Vy
+IGR0IGNoYW5nZXMgaGVyZT8KCk5vLCBidXQgaXQgc2hvdWxkIGJlIGVhc3kgdG8gYWRkLgoKQ2zD
+qW1lbnQsIG5vIG5lZWQgdG8gcmVzZW5kIHRoZSBmaXJzdCBwYXRjaCwgaXQncyBub3cgb24KbGlu
+dXMgbWFzdGVyLgoKQ291bGQgeW91IGFsc28gYWRkIHN1cHBvcnQgZm9yIHRoZSBidXMgY2xvY2sg
+aW4gcGFuZnJvc3QKaW4gdGhlIHNhbWUgcGF0Y2hzZXQgc2luY2UgaXQncyBhbHNvIG9uIG1hc3Rl
+ciBub3cgPwoKTmVpbAoKPiAtRGFuaWVsCj4gCj4+IFRoZSBmaXJzdCBwYXRjaCBpcyBmcm9tIE5l
+aWwgQW1zdHJvbmcgYW5kIGhhcyBiZWVuIGFscmVhZHkKPj4gbWVyZ2VkIGluIGxpbnV4LWFtbG9n
+aWMuIEl0IGlzIHJlcXVpcmVkIGZvciB0aGlzIHNlcmllcy4KPj4KPj4gVGhlIHNlY29uZCBwYXRj
+aCBpcyBmcm9tIEljZW5vd3kgWmhlbmcgd2hlcmUgSSBjaGFuZ2VkIHRoZQo+PiBvcmRlciBoYXMg
+cmVxdWlyZWQgYnkgUm9iIEhlcnJpbmcuCj4+IFNlZTogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMDY5OTgyOS8KPj4KPj4gVGhhbmtzLAo+PiBDbMOpbWVudAo+Pgo+PiBDaGFu
+Z2VzIGluIHY0Ogo+PiAgLSBBZGQgUm9iIEhlcnJpbmcgcmV2aWV3ZWQtYnkgdGFnCj4+ICAtIFJl
+c2VudCB3aXRoIGNvcnJlY3QgTWFpbnRhaW5lcnMKPj4KPj4gQ2hhbmdlcyBpbiB2MyAoVGhhbmtz
+IHRvIE1heGltZSBSaXBhcmQpOgo+PiAgLSBSZWF1dGhvciBJY2Vub3d5IGZvciBoZXIgcGF0Y2gK
+Pj4KPj4gQ2hhbmdlcyBpbiB2MiAoVGhhbmtzIHRvIE1heGltZSBSaXBhcmQpOgo+PiAgLSBEcm9w
+IEdQVSBPUFAgVGFibGUKPj4gIC0gQWRkIGNsb2NrcyBhbmQgY2xvY2stbmFtZXMgaW4gcmVxdWly
+ZWQKPj4KPj4gQ2zDqW1lbnQgUMOpcm9uICg2KToKPj4gICBkdC1iaW5kaW5nczogZ3B1OiBtYWxp
+LW1pZGdhcmQ6IEFkZCBINiBtYWxpIGdwdSBjb21wYXRpYmxlCj4+ICAgYXJtNjQ6IGR0czogYWxs
+d2lubmVyOiBBZGQgQVJNIE1hbGkgR1BVIG5vZGUgZm9yIEg2Cj4+ICAgYXJtNjQ6IGR0czogYWxs
+d2lubmVyOiBBZGQgbWFsaSBHUFUgc3VwcGx5IGZvciBQaW5lIEg2NAo+PiAgIGFybTY0OiBkdHM6
+IGFsbHdpbm5lcjogQWRkIG1hbGkgR1BVIHN1cHBseSBmb3IgQmVlbGluayBHUzEKPj4gICBhcm02
+NDogZHRzOiBhbGx3aW5uZXI6IEFkZCBtYWxpIEdQVSBzdXBwbHkgZm9yIE9yYW5nZVBpIEJvYXJk
+cwo+PiAgIGFybTY0OiBkdHM6IGFsbHdpbm5lcjogQWRkIG1hbGkgR1BVIHN1cHBseSBmb3IgT3Jh
+bmdlUGkgMwo+Pgo+PiBJY2Vub3d5IFpoZW5nICgxKToKPj4gICBkdC1iaW5kaW5nczogZ3B1OiBh
+ZGQgYnVzIGNsb2NrIGZvciBNYWxpIE1pZGdhcmQgR1BVcwo+Pgo+PiBOZWlsIEFybXN0cm9uZyAo
+MSk6Cj4+ICAgZHQtYmluZGluZ3M6IGdwdTogbWFsaS1taWRnYXJkOiBBZGQgcmVzZXRzIHByb3Bl
+cnR5Cj4+Cj4+ICAuLi4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0ICAgICAgICAg
+fCAyNyArKysrKysrKysrKysrKysrKysrCj4+ICAuLi4vZHRzL2FsbHdpbm5lci9zdW41MGktaDYt
+YmVlbGluay1nczEuZHRzICAgfCAgNSArKysrCj4+ICAuLi4vZHRzL2FsbHdpbm5lci9zdW41MGkt
+aDYtb3JhbmdlcGktMy5kdHMgICAgfCAgNSArKysrCj4+ICAuLi4vZHRzL2FsbHdpbm5lci9zdW41
+MGktaDYtb3JhbmdlcGkuZHRzaSAgICAgfCAgNSArKysrCj4+ICAuLi4vYm9vdC9kdHMvYWxsd2lu
+bmVyL3N1bjUwaS1oNi1waW5lLWg2NC5kdHMgfCAgNSArKysrCj4+ICBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2FsbHdpbm5lci9zdW41MGktaDYuZHRzaSAgfCAxNCArKysrKysrKysrCj4+ICA2IGZpbGVz
+IGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKykKPj4KPj4gLS0gCj4+IDIuMTcuMQo+Pgo+IAoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
