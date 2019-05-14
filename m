@@ -1,114 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/6] dt-bindings: usb: add binding for Type-B GPIO
- connector driver
-Date: Tue, 14 May 2019 13:12:04 -0500
-Message-ID: <20190514181204.GA13949@bogus>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
- <1557823643-8616-3-git-send-email-chunfeng.yun@mediatek.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Date: Tue, 14 May 2019 11:12:33 -0700
+Message-ID: <20190514181233.GB109557@google.com>
+References: <20190514054251.186196-1-brendanhiggins@google.com>
+ <20190514054251.186196-9-brendanhiggins@google.com>
+ <20190514065643.GC2589@hirez.programming.kicks-ass.net>
+ <20190514081223.GA230665@google.com>
+ <20190514084655.GK2589@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557823643-8616-3-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20190514084655.GK2589@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, Josh Poimboeuf <jpoimboe@redhat.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.om
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 04:47:19PM +0800, Chunfeng Yun wrote:
-> It's used to support dual role switch via GPIO when use Type-B
-> receptacle, typically the USB ID pin is connected to an input
-> GPIO pin
+On Tue, May 14, 2019 at 10:46:55AM +0200, Peter Zijlstra wrote:
+> On Tue, May 14, 2019 at 01:12:23AM -0700, Brendan Higgins wrote:
+> > On Tue, May 14, 2019 at 08:56:43AM +0200, Peter Zijlstra wrote:
+> > > On Mon, May 13, 2019 at 10:42:42PM -0700, Brendan Higgins wrote:
+> > > > This fixes the following warning seen on GCC 7.3:
+> > > >   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+> > > > 
+> > > 
+> > > What is that file and function; no kernel tree near me seems to have
+> > > that.
+> > 
+> > Oh, sorry about that. The function is added in the following patch,
+> > "[PATCH v3 09/18] kunit: test: add support for test abort"[1].
+> > 
+> > My apologies if this patch is supposed to come after it in sequence, but
+> > I assumed it should come before otherwise objtool would complain about
+> > the symbol when it is introduced.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v5 changes:
->  1. treat type-B connector as child device of USB controller's, but not
->     as a separate virtual device, suggested by Rob
->  2. put connector's port node under connector node, suggested by Rob
-> 
-> v4 no changes
-> 
-> v3 changes:
->  1. treat type-B connector as a virtual device, but not child device of
->     USB controller's
-> 
-> v2 changes:
->   1. new patch to make binding clear suggested by Hans
-> ---
->  .../bindings/usb/typeb-conn-gpio.txt          | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> new file mode 100644
-> index 000000000000..20dd3499a348
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-> @@ -0,0 +1,42 @@
-> +USB Type-B GPIO Connector
-> +
-> +This is used to switch dual role mode from the USB ID pin connected to
-> +an input GPIO pin.
-> +
-> +Required properties:
-> +- compatible : should include "linux,typeb-conn-gpio" and "usb-b-connector".
+> Or send me all patches such that I have context, or have a sane
+> Changelog that gives me context. Just don't give me one patch with a
+> crappy changelog.
 
-I don't think we need "linux,typeb-conn-gpio". A driver can decide to 
-handle GPIO lines if they present or we assume the parent device handles 
-ID and/or Vbus if they are not present.
+I will provide more context in the next revision.
 
-> +- id-gpios, vbus-gpios : either one of them must be present, and both
-> +	can be present as well.
-
-Please clarify that vbus-gpios is an input to sense Vbus presence as an 
-output it should be modelled as a regulator only.
-
-These should be added to usb-connector.txt.
-
-The result of all this is you don't need this file. Just additions to 
-usb-connector.txt.
-
-> +- vbus-supply : can be present if needed when supports dual role mode or
-> +	host mode.
-> +	see connector/usb-connector.txt
-> +
-> +Sub-nodes:
-> +- port : should be present.
-> +	see graph.txt
-> +
-> +Example:
-> +
-> +&mtu3 {
-> +	status = "okay";
-
-Don't show status in examples.
-
-> +
-> +	connector {
-> +		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-> +		label = "micro-USB";
-> +		type = "micro";
-> +		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-> +		vbus-supply = <&usb_p0_vbus>;
-> +
-> +		port {
-> +			bconn_ep: endpoint@0 {
-> +				remote-endpoint = <&usb_role_sw>;
-> +			};
-> +		};
-> +	};
-> +
-> +	port {
-> +		usb_role_sw: endpoint@0 {
-> +			remote-endpoint = <&bconn_ep>;
-> +		};
-> +	};
-
-When the host controller is the parent of the connector, you don't need 
-the graph unless you're describing the alternate modes in Type-C.
-
-> +};
-> -- 
-> 2.21.0
-> 
+Sorry about that!
