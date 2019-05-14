@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 5/8] arm64: dts: meson: g12a: add spdifouts
-Date: Tue, 14 May 2019 13:15:07 +0200
-Message-ID: <20190514111510.23299-6-jbrunet@baylibre.com>
+Subject: [PATCH 6/8] arm64: dts: meson: g12a: add pdm
+Date: Tue, 14 May 2019 13:15:08 +0200
+Message-ID: <20190514111510.23299-7-jbrunet@baylibre.com>
 References: <20190514111510.23299-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,105 +12,208 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the devices nodes and pinctrl definitions for the spdif outputs of
-the g12a SoC family
+Add the pdm device node and the pinctrl definition for this capture
+interface g12a SoC family
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 60 +++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 177 ++++++++++++++++++++
+ 1 file changed, 177 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 825e874918c2..fa10d6fbf370 100644
+index fa10d6fbf370..37119564274b 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -643,6 +643,33 @@
+@@ -497,6 +497,170 @@
  						};
  					};
  
-+					spdif_out_h_pins: spdif-out-h {
++					pdm_din0_a_pins: pdm_din0_a {
 +						mux {
-+							groups = "spdif_out_h";
-+							function = "spdif_out";
-+							drive-strength-microamp = <500>;
++							groups = "pdm_din0_a";
++							function = "pdm";
 +							bias-disable;
 +						};
 +					};
 +
-+					spdif_out_a11_pins: spdif-out-a11 {
++					pdm_din0_c_pins: pdm_din0_c {
 +						mux {
-+							groups = "spdif_out_a11";
-+							function = "spdif_out";
-+							drive-strength-microamp = <500>;
++							groups = "pdm_din0_c";
++							function = "pdm";
 +							bias-disable;
 +						};
 +					};
 +
-+					spdif_out_a13_pins: spdif-out-a13 {
++					pdm_din0_x_pins: pdm_din0_x {
 +						mux {
-+							groups = "spdif_out_a13";
-+							function = "spdif_out";
-+							drive-strength-microamp = <500>;
++							groups = "pdm_din0_x";
++							function = "pdm";
 +							bias-disable;
 +						};
 +					};
 +
- 					tdm_a_din0_pins: tdm-a-din0 {
++					pdm_din0_z_pins: pdm_din0_z {
++						mux {
++							groups = "pdm_din0_z";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din1_a_pins: pdm_din1_a {
++						mux {
++							groups = "pdm_din1_a";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din1_c_pins: pdm_din1_c {
++						mux {
++							groups = "pdm_din1_c";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din1_x_pins: pdm_din1_x {
++						mux {
++							groups = "pdm_din1_x";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din1_z_pins: pdm_din1_z {
++						mux {
++							groups = "pdm_din1_z";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din2_a_pins: pdm_din2_a {
++						mux {
++							groups = "pdm_din2_a";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din2_c_pins: pdm_din2_c {
++						mux {
++							groups = "pdm_din2_c";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din2_x_pins: pdm_din2_x {
++						mux {
++							groups = "pdm_din2_x";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din2_z_pins: pdm_din2_z {
++						mux {
++							groups = "pdm_din2_z";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din3_a_pins: pdm_din3_a {
++						mux {
++							groups = "pdm_din3_a";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din3_c_pins: pdm_din3_c {
++						mux {
++							groups = "pdm_din3_c";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din3_x_pins: pdm_din3_x {
++						mux {
++							groups = "pdm_din3_x";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_din3_z_pins: pdm_din3_z {
++						mux {
++							groups = "pdm_din3_z";
++							function = "pdm";
++							bias-disable;
++						};
++					};
++
++					pdm_dclk_a_pins: pdm_dclk_a {
++						mux {
++							groups = "pdm_dclk_a";
++							function = "pdm";
++							bias-disable;
++							drive-strength-microamp = <500>;
++						};
++					};
++
++					pdm_dclk_c_pins: pdm_dclk_c {
++						mux {
++							groups = "pdm_dclk_c";
++							function = "pdm";
++							bias-disable;
++							drive-strength-microamp = <500>;
++						};
++					};
++
++					pdm_dclk_x_pins: pdm_dclk_x {
++						mux {
++							groups = "pdm_dclk_x";
++							function = "pdm";
++							bias-disable;
++							drive-strength-microamp = <500>;
++						};
++					};
++
++					pdm_dclk_z_pins: pdm_dclk_z {
++						mux {
++							groups = "pdm_dclk_z";
++							function = "pdm";
++							bias-disable;
++							drive-strength-microamp = <500>;
++						};
++					};
++
+ 					pwm_a_pins: pwm-a {
  						mux {
- 							groups = "tdm_a_din0";
-@@ -1306,6 +1333,18 @@
- 					status = "disabled";
+ 							groups = "pwm_a";
+@@ -1164,6 +1328,19 @@
  				};
- 
-+				spdifout: audio-controller@480 {
-+					compatible = "amlogic,g12a-spdifout",
-+						     "amlogic,axg-spdifout";
-+					reg = <0x0 0x480 0x0 0x50>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "SPDIFOUT";
-+					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
-+						 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
-+					clock-names = "pclk", "mclk";
-+					status = "disabled";
-+				};
-+
- 				tdmout_a: audio-controller@500 {
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x500 0x0 0x40>;
-@@ -1347,6 +1386,18 @@
- 						      "lrclk", "lrclk_sel";
- 					status = "disabled";
- 				};
-+
-+				spdifout_b: audio-controller@680 {
-+					compatible = "amlogic,g12a-spdifout",
-+						     "amlogic,axg-spdifout";
-+					reg = <0x0 0x680 0x0 0x50>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "SPDIFOUT_B";
-+					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
-+						 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
-+					clock-names = "pclk", "mclk";
-+					status = "disabled";
-+				};
  			};
  
- 			usb3_pcie_phy: phy@46000 {
-@@ -1500,6 +1551,15 @@
- 						};
- 					};
- 
-+					spdif_ao_out_pins: spdif_ao_out {
-+						mux {
-+							groups = "spdif_ao_out";
-+							function = "spdif_ao_out";
-+							drive-strength-microamp = <500>;
-+							bias-disable;
-+						};
-+					};
++			pdm: audio-controller@40000 {
++				compatible = "amlogic,g12a-pdm",
++					     "amlogic,axg-pdm";
++				reg = <0x0 0x40000 0x0 0x34>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "PDM";
++				clocks = <&clkc_audio AUD_CLKID_PDM>,
++					 <&clkc_audio AUD_CLKID_PDM_DCLK>,
++					 <&clkc_audio AUD_CLKID_PDM_SYSCLK>;
++				clock-names = "pclk", "dclk", "sysclk";
++				status = "disabled";
++			};
 +
- 					tdm_ao_b_din1_pins: tdm-ao-b-din1 {
- 						mux {
- 							groups = "tdm_ao_b_din1";
+ 			audio: bus@42000 {
+ 				compatible = "simple-bus";
+ 				reg = <0x0 0x42000 0x0 0x2000>;
 -- 
 2.20.1
