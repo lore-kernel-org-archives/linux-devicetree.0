@@ -1,41 +1,89 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 29/29] PCI: tegra: Change link retry log level to debug
-Date: Mon, 13 May 2019 23:37:44 +0530
-Message-ID: <20190513180744.16493-30-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=mrdI=TO=analog.com=alexandru.Ardelean@kernel.org>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [RFC][PATCH] dt-bindings: iio: accel: add adi,adxl345.yaml
+ binding
+Date: Tue, 14 May 2019 06:28:44 +0000
+Message-ID: <31ba36096619cb2cf52c39f20fd23ebe13121877.camel@analog.com>
+References: <20190506114610.28083-1-alexandru.ardelean@analog.com>
+	 <CAL_JsqL-jKM-qpawVoaLaqTpZhqNNFmgAOjv_azSwOU6zFS08g@mail.gmail.com>
+	 <fdf60ff605e040ef24ae10c1e0b3b522de6ef9ab.camel@analog.com>
+	 <20190513172517.GA1637@bogus>
+In-Reply-To: <20190513172517.GA1637@bogus>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <45565600189E494799400FDE228D88CE@analog.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Driver checks for link up three times before giving up, each retry attempt
-is printed as an error. Letting users know that PCIe link is down and in the
-process of being brought up again is for debug, not an error condition.
-
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
-V3: Changed dev_err to dev_dbg
-
-V2: Updated commit log
-
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index b021863303f1..1370d0015f50 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2373,7 +2373,7 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
- 		} while (--timeout);
- 
- 		if (!timeout) {
--			dev_err(dev, "link %u down, retrying\n", port->index);
-+			dev_dbg(dev, "link %u down, retrying\n", port->index);
- 			goto retry;
- 		}
- 
--- 
-2.17.1
+T24gTW9uLCAyMDE5LTA1LTEzIGF0IDEyOjI1IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gDQo+IE9uIE1vbiwgTWF5IDA2LCAyMDE5IGF0IDAyOjI5OjU0UE0g
+KzAwMDAsIEFyZGVsZWFuLCBBbGV4YW5kcnUgd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE5LTA1LTA2
+IGF0IDA5OjE3IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+IFtFeHRlcm5hbF0NCj4g
+PiA+IA0KPiA+ID4gDQo+ID4gPiBPbiBNb24sIE1heSA2LCAyMDE5IGF0IDY6NDYgQU0gQWxleGFu
+ZHJ1IEFyZGVsZWFuDQo+ID4gPiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdyb3Rl
+Og0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGEgWUFNTCBiaW5kaW5nIGZvciB0
+aGUgQW5hbG9nIERldmljZXMgQURYTDM0NQ0KPiA+ID4gPiBJMkMvU1BJDQo+ID4gPiA+IGFjY2Vs
+ZXJvbWV0ZXIuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJk
+ZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+
+ID4gDQo+ID4gPiA+IEFuZCBub3cgZm9yIHRoZSBSRkMgcGFydC4NCj4gPiA+ID4gTm9ybWFsbHks
+IEkgd291bGQgZGlnIGludG8gc291cmNlLWNvZGUgdG8gdHJ5IHRvIGZpZ3VyZSB0aGlzIG91dCwN
+Cj4gPiA+ID4gYnV0DQo+ID4gPiA+IGF0DQo+ID4gPiA+IHRoaXMgcG9pbnQtaW4tdGltZSwgSSBh
+bSBsb3cgb24gdGltZS9lbmVyZ3kgdG8gZG8gdGhpcy4NCj4gPiA+ID4gQW5kIG1heWJlIHRoaXMg
+aGVscHMgdHJpZ2dlciBhIGRpc2N1c3Npb24gYWJvdXQgdGhpcy4NCj4gPiA+ID4gDQo+ID4gPiA+
+IEFwb2xvZ2llcyBpZiB0aGlzIGhhcyBiZWVuIGNvdmVydGVkIG9uIHRoZSBkZXZpY2V0cmVlIG1h
+aWxpbmcgbGlzdCwNCj4gPiA+ID4gYnV0DQo+ID4gPiA+IGF0IGxlYXN0IHdlJ2QgZ2V0IHNvbWUg
+Y292ZXJhZ2Ugb24gdGhlIElJTyBsaXN0ICh3aXRoIHRoaXMpLg0KPiA+ID4gPiANCj4gPiA+ID4g
+VGhlIEFEWEwzNDUgZGV2aWNlIChhcyBvdGhlcnMpIHN1cHBvcnRzIGJvdGggSTJDICYgU1BJIGlu
+dGVyZmFjZXMuDQo+ID4gPiA+IA0KPiA+ID4gPiBRdWVzdGlvbjE6IGRvIHdlIHdyaXRlIDIgWUFN
+TCBmaWxlcywgb3IgMSA/IEkgd2FzIGxvb2tpbmcgYXQgWmVwaHlyDQo+ID4gPiA+IChmb3INCj4g
+PiA+ID4gc29tZSBpZGVhcy9yZWZlcmVuY2UpIGJ1dCBpdCBzZWVtcyB0byBtZSB0aGF0IHRoZSBZ
+QU1MIERUIGJpbmRpbmcNCj4gPiA+ID4gZm9ybWF0IGlzDQo+ID4gPiA+IGRpZmZlcmVudCB0aGFu
+IHRoaXMgb25lID8gVGhleSB3cml0ZSAyIGZpbGVzIGZvciBBRFhMMzcyICgxIGZvcg0KPiA+ID4g
+PiBTUEksIDENCj4gPiA+ID4gZm9yDQo+ID4gPiA+IEkyQykuDQo+ID4gPiA+IA0KPiA+ID4gPiBR
+dWVzdGlvbjEtYTogb25lIHRoaW5nIGlzIHRoYXQgU1BJIHJlcXVpcmVzIHNvbWUgcHJvcHMgdG8g
+YmUNCj4gPiA+ID4gYHJlcXVpcmVkYA0KPiA+ID4gPiB0aGF0IHdvdWxkIG5vdCBiZSByZXF1aXJl
+ZCBmb3IgdGhlIEkyQyBiaW5kaW5nLiBUaGlzIGNvdWxkIGJlDQo+ID4gPiA+IHNvbHZlZCBieQ0K
+PiA+ID4gPiBkb2luZyAyIGZpbGVzLCBidXQgaWYgZG9pbmcgMSBZQU1MIGZpbGUsIGlzIHRoZXJl
+IGEgd2F5IHRvIGRvDQo+ID4gPiA+IGNvbmRpdGlvbmFsDQo+ID4gPiA+IGByZXF1aXJlZGAgPyBp
+LmUuIHByb3BlcnR5IGlzIHJlcXVpcmVkIGlmIGBTUElgID8gbm90IHN1cmUgaG93IHRvDQo+ID4g
+PiA+IGNoZWNrDQo+ID4gPiA+IGZvcg0KPiA+ID4gPiBTUEkgdnMgSTJDLCBpdCB3b3VsZCBiZSBp
+bnRlcmVzdGluZyAoYXQgc29tZSBwb2ludCkgdG8gc29tZWhvdw0KPiA+ID4gPiBlbmZvcmNlDQo+
+ID4gPiA+IFNQSS9JMkMgYmluZGluZ3MgY29ycmVjdG5lc3MuDQo+ID4gPiANCj4gPiA+IFRoZSBj
+aGFsbGVuZ2UgaGVyZSBpcyB0aGVyZSdzIG5vdCByZWFsbHkgYW55IHdheSBmb3IgdGhlIHNjaGVt
+YSB0bw0KPiA+ID4ga25vdyB3aGljaCBidXMgaXQgaXMuIFRoZSBvbmx5IHdheXMgdG8ga25vdyB0
+aGlzIGFyZSBrbm93aW5nIGFsbA0KPiA+ID4gcG9zc2libGUgc3BpIG9yIGkyYyBjb250cm9sbGVy
+IGNvbXBhdGlibGVzIG9yIHVzaW5nIHRoZSBwYXJlbnQgbm9kZQ0KPiA+ID4gbmFtZSAod2hpY2gg
+aGFzbid0IGJlZW4gc3RyaWN0bHkgZW5mb3JjZWQpLiBJbiBvcmRlciB0byBnZXQgdGhpcw0KPiA+
+ID4gaW5mb3JtYXRpb24gYXZhaWxhYmxlIHRvIHRoZSBzY2hlbWEsIHdlJ2QgbmVlZCB0byBhZGQg
+dGhlIGluZm9ybWF0aW9uDQo+ID4gPiB0byB0aGUgbm9kZS4gV2UgZG8gdGhpcyB3aXRoICckbm9k
+ZW5hbWUnLiBXZSBjb3VsZCBhZGQgYSAnJGJ1cycNCj4gPiA+IHByb3BlcnR5IGZvciBleGFtcGxl
+LiBUaGUgdG9vbHMgd291bGQgaGF2ZSB0byB1bmRlcnN0YW5kIGRpZmZlcmVudA0KPiA+ID4gYnVz
+ZXMgYW5kIHRoaW5ncyBsaWtlIEkyQyBtdXhlcyBjb21wbGljYXRlIGRvaW5nIHRoYXQuDQo+ID4g
+PiANCj4gPiA+IE9uY2UgeW91IGhhdmUgc29tZXRoaW5nIGxpa2UgJGJ1cyBhdmFpbGFibGUsIHlv
+dSBjb3VsZCBlaXRoZXIgaGF2ZSAyDQo+ID4gPiBmaWxlcyB3aXRoIGEgY3VzdG9tICdzZWxlY3Qn
+IHRoYXQgY2hlY2tzIGNvbXBhdGlibGUgYW5kICRidXMgb3Igd2UNCj4gPiA+IGNvdWxkIGhhdmUg
+MSBmaWxlIHVzaW5nIGlmL3RoZW4vZWxzZSBrZXl3b3Jkcy4gSG93ZXZlciwgd2UgZG9uJ3QgeWV0
+DQo+ID4gPiBzdXBwb3J0IGlmL3RoZW4vZWxzZSBqc29uLXNjaGVtYSB0aGF0IHdhcyBhZGRlZCBp
+biBkcmFmdDcsIGJ1dCB0aGF0J3MNCj4gPiA+IGJlaW5nIHdvcmtlZCBvbiBieSBNYXhpbWUgUmlw
+YXJkLg0KPiA+ID4gDQo+ID4gPiBIb3dldmVyLCBmb3IgdGhpcyBjYXNlLCBJJ2QganVzdCBub3Qg
+d29ycnkgYWJvdXQgdGhlIGlzc3VlLiBSZWFsbHksDQo+ID4gPiBzcGktY3BoYSBhbmQgc3BpLWNw
+b2wgc2hvdWxkIG5vdCBiZSByZXF1aXJlZC4gSWYgb25seSAxIG1vZGUgaXMNCj4gPiA+IHN1cHBv
+cnRlZCwgdGhlIGRyaXZlciBjYW4ga25vdyB0aGF0LiBJT1csIGl0IGlzIGltcGxpZWQgYnkgdGhl
+DQo+ID4gPiBjb21wYXRpYmxlIHN0cmluZ3MuDQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gPiBRdWVz
+dGlvbjI6IGBtYWtlIGR0X2JpbmRpbmdfY2hlY2tgIHNlZW1zIHRvIGdlbmVyYXRlIG9ubHkgdGhl
+IGZpcnN0DQo+ID4gPiA+IGV4YW1wbGUuIElzIHRoaXMga25vd24gYmVoYXZpb3IsIG9yIGRvIEkg
+bmVlZCB0byB0YWtlIHNvbWV0aGluZw0KPiA+ID4gPiBlbHNlDQo+ID4gPiA+IGludG8NCj4gPiA+
+ID4gY29uc2lkZXJhdGlvbiA/DQo+ID4gPiANCj4gPiA+IFRoYXQncyBjb3JyZWN0LiBJIGhhdmVu
+J3QgZmlndXJlZCBvdXQgaG93IHRvIGRvIGEgdmFyaWFibGUgbnVtYmVyIG9mDQo+ID4gPiBleGFt
+cGxlcyBpbiBrYnVpbGQuDQo+ID4gDQo+ID4gVGhlbiwgd291bGQgaXQgYmUgZmluZSB0byBoYXZl
+IG11bHRpcGxlIGV4YW1wbGVzLCBhbmQgd2FpdCBmb3IgdGhpcyB0bw0KPiA+IHBvcC0NCj4gPiBp
+biB0aGUgWUFNTCBkdCBzdHVmZiBhdCBhIGxhdGVyIHBvaW50IGluIHRpbWUgPw0KPiA+IE9yLCBq
+dXN0IDEgZXhhbXBsZSA/DQo+IA0KPiBJJ3ZlIG5vdyBmaXhlZCB0aGlzIGJ5IGV4dHJhY3Rpbmcg
+ZWFjaCBleGFtcGxlIGludG8gYSBzdWItbm9kZSBpbiB0aGUNCj4gZ2VuZXJhdGVkIGR0cyBmaWxl
+LCBzbyBtdWx0aXBsZSBleGFtcGxlcyBhcmUgZmluZSBub3cuIFRoZSBvbmx5DQo+IHJlc3RyaWN0
+aW9uIGlzIGxhYmVscyBjYW4ndCBiZSByZXBlYXRlZC4NCg0KSGV5LA0KDQpNYW55IHRoYW5rcyA6
+KQ0KDQpJJ2xsIHRha2UgYSBsb29rIHRoZSBuZXh0IGNvdXBsZSBvZiBkYXlzLg0KDQpBbGV4DQoN
+Cj4gDQo+IFJvYg0K
