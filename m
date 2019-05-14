@@ -1,21 +1,73 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Remove unnecessary blank lines
-Date: Tue, 14 May 2019 11:26:43 +0300
-Message-ID: <CAEnQRZBNHXHvUu=90DZQzZHM3gp6sABPPbh5yfGQrrd5jdCRhQ@mail.gmail.com>
-References: <1557813807-3919-1-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v6 6/6] pinctrl: meson: g12a: add DS bank value
+Date: Tue, 14 May 2019 10:26:52 +0200
+Message-ID: <20190514082652.20686-7-glaroque@baylibre.com>
+References: <20190514082652.20686-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557813807-3919-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linus.walleij@linaro.org, khilman@baylibre.com
+Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 9:09 AM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Unnecessary blank lines do NOT help readability, so remove them.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+add drive-strength bank regiter and bit value for G12A SoC
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c | 36 +++++++++++-----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+index d494492e98e9..3475cd7bd2af 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+@@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
+ };
+ 
+ static struct meson_bank meson_g12a_periphs_banks[] = {
+-	/* name  first  last  irq  pullen  pull  dir  out  in */
+-	BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
+-	     4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
+-	BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
+-	     3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
+-	BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
+-	     0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
+-	BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
+-	     1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
+-	BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
+-	     5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
+-	BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
+-	     2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
++	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
++	BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
++		4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
++	BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
++		3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
++	BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
++		0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
++	BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
++		1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
++	BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
++		5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
++	BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
++		2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
+ };
+ 
+ static struct meson_bank meson_g12a_aobus_banks[] = {
+-	/* name  first  last  irq  pullen  pull  dir  out  in  */
+-	BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
+-	     3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
++	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
++	BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
++		0, 0),
+ 	/* GPIOE actually located in the AO bank */
+-	BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
+-	     3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
++	BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
++		16, 1, 0),
+ };
+ 
+ static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
+-- 
+2.17.1
