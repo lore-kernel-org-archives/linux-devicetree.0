@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v4 7/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
-Date: Tue, 14 May 2019 10:27:02 +0200
-Message-ID: <1557822423-22658-8-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v4 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+Date: Tue, 14 May 2019 10:27:00 +0200
+Message-ID: <1557822423-22658-6-git-send-email-fabien.dessenne@st.com>
 References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,19 +12,20 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare reserved memories shared by the processors for STM32MP157a-dk1
+Declare reserved memories shared by the processors for STM32MP157c-ed1
+board.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 42 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
  1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 85a761a..26ce8de 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -27,6 +27,48 @@
- 		reg = <0xc0000000 0x20000000>;
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 626ceb3..acfc5cd 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -21,6 +21,48 @@
+ 		reg = <0xC0000000 0x40000000>;
  	};
  
 +	reserved-memory {
@@ -69,8 +70,8 @@ index 85a761a..26ce8de 100644
 +		};
 +	};
 +
- 	led {
- 		compatible = "gpio-leds";
- 		blue {
+ 	aliases {
+ 		serial0 = &uart4;
+ 	};
 -- 
 2.7.4
