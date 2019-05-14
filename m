@@ -1,30 +1,68 @@
-Return-Path: <SRS0=4cVb=TP=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=Hucj=TO=renesas.com=prvs=40371367b7=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 14/15] ARM: dts: r7s9210: Add USB Device support
+Date: Tue, 14 May 2019 09:56:04 -0500
+Message-ID: <20190514145605.19112-15-chris.brandt@renesas.com>
+In-Reply-To: <20190514145605.19112-1-chris.brandt@renesas.com>
+References: <20190514145605.19112-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-References: <20190514145605.19112-1-chris.brandt@renesas.com> <20190514145605.19112-15-chris.brandt@renesas.com>
-In-Reply-To: <20190514145605.19112-15-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 15 May 2019 10:02:38 +0200
-Message-ID: <CAMuHMdW4TXiGjAzjKPg5As8Ew2N7M-9tSf0Au-GAG_fFtypeCQ@mail.gmail.com>
-Subject: Re: [PATCH v3 14/15] ARM: dts: r7s9210: Add USB Device support
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, May 14, 2019 at 4:58 PM Chris Brandt <chris.brandt@renesas.com> wrote:
-> Add USB Device support for RZ/A2.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Add USB Device support for RZ/A2.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+v2:
+ * changed to generic name usb@xxx
+ * Add space between compatible strings
+---
+ arch/arm/boot/dts/r7s9210.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
+index c3a50206ff86..65a8d5b126b4 100644
+--- a/arch/arm/boot/dts/r7s9210.dtsi
++++ b/arch/arm/boot/dts/r7s9210.dtsi
+@@ -362,6 +362,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		usbhs0: usb@e8219000 {
++			compatible = "renesas,usbhs-r7s9210", "renesas,rza2-usbhs";
++			reg = <0xe8219000 0x724>;
++			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 61>;
++			renesas,buswait = <7>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
+ 		ohci1: usb@e821a000 {
+ 			compatible = "generic-ohci";
+ 			reg = <0xe821a000 0x100>;
+@@ -395,6 +407,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		usbhs1: usb@e821b000 {
++			compatible = "renesas,usbhs-r7s9210", "renesas,rza2-usbhs";
++			reg = <0xe821b000 0x724>;
++			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 60>;
++			renesas,buswait = <7>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
+ 		sdhi0: sd@e8228000 {
+ 			compatible = "renesas,sdhi-r7s9210";
+ 			reg = <0xe8228000 0x8c0>;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.16.1
