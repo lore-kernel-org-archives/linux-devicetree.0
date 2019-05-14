@@ -1,27 +1,22 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/8] dt-bindings: remoteproc: add bindings for stm32
- remote processor driver
-Date: Tue, 14 May 2019 13:20:57 -0500
-Message-ID: <20190514182057.GA27475@bogus>
-References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
- <1557822423-22658-3-git-send-email-fabien.dessenne@st.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: meson: sei510: add sd and emmc
+Date: Tue, 14 May 2019 20:24:28 +0200
+Message-ID: <CAFBinCD8BLQ-5pLs2-gbX87kxkWgTibtM2TZWKu88uRg2euzkA@mail.gmail.com>
+References: <20190514091611.15278-1-jbrunet@baylibre.com> <20190514091611.15278-4-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557822423-22658-3-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <20190514091611.15278-4-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 14 May 2019 10:26:57 +0200, Fabien Dessenne wrote:
-> Add the device tree bindings document for the stm32 remoteproc devices.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> ---
->  .../devicetree/bindings/remoteproc/stm32-rproc.txt | 63 ++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, May 14, 2019 at 11:16 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> Enable eMMC and SDCard on the g12a sei510 board
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+I compared the GPIOs with the Odroid-N2 schematics because I'm
+assuming that they will be the same on all G12A/G12B boards:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
