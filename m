@@ -1,193 +1,239 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v3 12/13] [media] mtk-mipicsi: add debug message for mipicsi driver
-Date: Tue, 14 May 2019 14:13:49 +0800
-Message-ID: <1557814430-9675-13-git-send-email-stu.hsieh@mediatek.com>
+From: Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 11/13] [media] mtk-mipicsi: add function to get the format
+Date: Tue, 14 May 2019 14:13:48 +0800
+Message-ID: <1557814430-9675-12-git-send-email-stu.hsieh@mediatek.com>
 References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Stu Hsieh <stu.hsieh@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1557814430-9675-1-git-send-email-stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add debug message for mipicsi driver.
+This patch add function to get the format
 
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+This function can get the subdev format and host format.
+Calculate the number of format which intersection of subdev and host.
+
+Signed-off-by: Stu Hsieh <stu.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 58 ++++++++++++++++++-
- 1 file changed, 56 insertions(+), 2 deletions(-)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 151 ++++++++++++++++++
+ 1 file changed, 151 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 1b885de6d990..c1cbeb3c60e1 100644
+index cf46fcd01a19..1b885de6d990 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -28,6 +28,7 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/moduleparam.h>
-+#include <linux/time64.h>
- #include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
-@@ -114,6 +115,15 @@
- 
- #define SerDes_support 1
- 
-+static int mtk_mipicsi_dbg_level;
-+#define mtk_mipicsi_dbg(level, fmt, args...)				 \
-+	do {								 \
-+		if (mtk_mipicsi_dbg_level >= level)			\
-+			pr_info("[MTK_MIPICSI%d] L%d %s %d: " fmt "\n", \
-+				mipicsi->id, level,  __func__, __LINE__, \
-+				##args);	\
-+	} while (0)
-+
- /* buffer for one video frame */
- struct mtk_mipicsi_buf {
- 	struct list_head queue;
-@@ -145,6 +155,9 @@ struct mtk_mipicsi_dev {
- 	unsigned int link;
- 	u8 link_reg_val;
- 	unsigned long enqueue_cnt;
-+	unsigned long dequeue_cnt;
-+	struct timespec64 fps_time_cur;
-+	struct timespec64 fps_time_pre;
- 	char drv_name[16];
- 	u32 id;
- 	int clk_num;
-@@ -390,6 +403,8 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 
- 	mipicsi->width = width;
- 	mipicsi->height = height;
-+	mtk_mipicsi_dbg(1, "sub device width/height/bytesperline %d/%d/%d",
-+		width, height, mipicsi->bytesperline);
- 
- 	/*
- 	 * If power domain was closed before, it will be open.
-@@ -527,6 +542,9 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
- 	if (pix->pixelformat == V4L2_PIX_FMT_YUYV)
- 		pix->sizeimage = pix->width * pix->height * 2U;
- 
-+	mtk_mipicsi_dbg(0, "width/height/sizeimage %u/%u/%u",
-+		pix->width, pix->height, pix->sizeimage);
-+
- 	if (mf->code != xlate->code)
- 		return -EINVAL;
- 
-@@ -647,6 +665,9 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
- 		buf->vb_dma_addr_phy =
- 			vb2_dma_contig_plane_dma_addr(vb, 0);
- 		va = vb2_plane_vaddr(vb, 0);
-+		mtk_mipicsi_dbg(1, "va=%p vb_dma_addr_phy=%lx size=%d",
-+			va, (unsigned long)buf->vb_dma_addr_phy,
-+			vb->planes[0].bytesused);
- 		buf->vb = vb;
- 	}
- 
-@@ -692,6 +713,8 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 		}
- 
- 	++(mipicsi->enqueue_cnt);
-+	mtk_mipicsi_dbg(2, "enqueue NO.%d buffer(%p). Total %lu buffer",
-+		vb->index, vb, mipicsi->enqueue_cnt);
- }
- 
- static int mtk_mipicsi_vb2_start_streaming(struct vb2_queue *vq,
-@@ -770,6 +793,7 @@ static void mtk_mipicsi_vb2_stop_streaming(struct vb2_queue *vq)
- 	INIT_LIST_HEAD(&(mipicsi->fb_list));
- 
- 	mipicsi->enqueue_cnt = 0UL;
-+	mipicsi->dequeue_cnt = 0UL;
- }
- 
- static struct vb2_ops mtk_vb2_ops = {
-@@ -1064,8 +1088,10 @@ static int mtk_mipicsi_pm_resume(struct device *dev)
- 
- 	if (mipicsi->larb_pdev != NULL) {
- 		ret = mtk_smi_larb_get(mipicsi->larb_pdev);
--		if (ret != 0)
-+		if (ret != 0) {
-+			mtk_mipicsi_dbg(0, "failed to get larb, err %d", ret);
- 			return ret;
-+		}
- 	}
- 
- 	mtk_mipicsi_ana_clk_enable(mipicsi->ana, true);
-@@ -1115,6 +1141,7 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	unsigned int next = 0U;
- 	u64 offset = 0ULL;
- 	u8 link_index = 0U;
-+	long time_interval;
- 	void __iomem *base = NULL;
- 	dma_addr_t pa;
- 
-@@ -1124,8 +1151,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	i = 0;
- 
- 	/* only one buffer left */
--	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-+	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list)) {
-+		mtk_mipicsi_dbg(1, "only 1 buffer left, drop frame");
- 		return;
-+	}
- 
- 	/*for each fb_lst 2 times to get the top 2 buffer.*/
- 	list_for_each_entry_safe(new_cam_buf, tmp,
-@@ -1155,8 +1184,30 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	 */
- 	vb2_buffer_done(mipicsi->cam_buf[index].vb,
- 		VB2_BUF_STATE_DONE);
-+	++(mipicsi->dequeue_cnt);
- 
- 	list_del_init(&(mipicsi->cam_buf[index].queue));
-+
-+	if (mtk_mipicsi_dbg_level >= 2) {
-+		ktime_get_real_ts64(&(mipicsi->fps_time_cur));
-+		if (mipicsi->dequeue_cnt == 1) {
-+			mipicsi->fps_time_pre.tv_sec =
-+				mipicsi->fps_time_cur.tv_sec;
-+			mipicsi->fps_time_pre.tv_nsec =
-+				mipicsi->fps_time_cur.tv_nsec;
-+		} else {
-+			time_interval = (mipicsi->fps_time_cur.tv_sec
-+				- mipicsi->fps_time_pre.tv_sec) * 1000000000
-+				+ (mipicsi->fps_time_cur.tv_nsec
-+				- mipicsi->fps_time_pre.tv_nsec);
-+			mtk_mipicsi_dbg(0, "time interval is %ld\n",
-+				time_interval);
-+			mipicsi->fps_time_pre.tv_sec =
-+				mipicsi->fps_time_cur.tv_sec;
-+			mipicsi->fps_time_pre.tv_nsec =
-+				mipicsi->fps_time_cur.tv_nsec;
-+		}
-+	}
- }
- 
- static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-@@ -1171,6 +1222,7 @@ static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
- 
- 	isr_ch = get_irq_channel(mipicsi);
- 	if (isr_ch < 0) {
-+		mtk_mipicsi_dbg(0, "no interrupt occur");
- 		spin_unlock_irqrestore(&mipicsi->lock, flags);
- 		return IRQ_HANDLED;
- 	}
-@@ -1461,6 +1513,7 @@ static int mtk_mipicsi_probe(struct platform_device *pdev)
- 	spin_lock_init(&mipicsi->queue_lock);
- 	spin_lock_init(&mipicsi->lock);
- 	mipicsi->enqueue_cnt = 0UL;
-+	mipicsi->dequeue_cnt = 0UL;
- 
- 	ret = vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32U));
- 	if (ret != 0) {
-@@ -1504,5 +1557,6 @@ static struct platform_driver mtk_mipicsi_driver = {
+@@ -56,6 +56,7 @@
+ #define MIPICSI_CLK (MIPICSI_COMMON_CLK + MTK_CAMDMA_MAX_NUM)
+ #define MAX_DES_LINK 4U
+ #define SUBDEV_LINK_REG 0x49
++#define MTK_DATAWIDTH_8					(0x01U << 7U)
+ #define MAX_SUPPORT_WIDTH             4096U
+ #define MAX_SUPPORT_HEIGHT            4096U
+ #define MAX_BUFFER_NUM                  32U
+@@ -134,6 +135,7 @@ struct mtk_mipicsi_dev {
+ 	struct regmap		*seninf_top;
+ 	void __iomem		*seninf_mux[MTK_CAMDMA_MAX_NUM];
+ 	void __iomem		*camsv[MTK_CAMDMA_MAX_NUM];
++	u16			width_flags;	/* max 12 bits */
+ 	struct list_head	fb_list;
+ 	spinlock_t		lock;
+ 	spinlock_t		queue_lock;
+@@ -152,6 +154,50 @@ struct mtk_mipicsi_dev {
+ 	u32 bytesperline;
  };
  
- module_platform_driver(mtk_mipicsi_driver);
-+module_param(mtk_mipicsi_dbg_level, int, 0644);
- MODULE_DESCRIPTION("MediaTek SoC Camera Host driver");
- MODULE_LICENSE("GPL v2");
++static const struct soc_mbus_lookup mtk_mipicsi_formats[] = {
++{
++	.code = MEDIA_BUS_FMT_YUYV8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_YUYV,
++		.name			= "YUYV",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++}, {
++	.code = MEDIA_BUS_FMT_YVYU8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_YVYU,
++		.name			= "YVYU",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++}, {
++	.code = MEDIA_BUS_FMT_UYVY8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_UYVY,
++		.name			= "UYVY",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++}, {
++	.code = MEDIA_BUS_FMT_VYUY8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_VYUY,
++		.name			= "VYUY",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++},
++};
++
+ #define MTK_MIPICSI_BUS_PARAM (V4L2_MBUS_MASTER |	\
+ 		V4L2_MBUS_HSYNC_ACTIVE_HIGH |	\
+ 		V4L2_MBUS_HSYNC_ACTIVE_LOW |	\
+@@ -196,6 +242,43 @@ static void mtk_mipicsi_ana_clk_enable(void __iomem *base, bool enable)
+ 	}
+ }
+ 
++static int mtk_mipicsi_try_bus_param(struct soc_camera_device *icd,
++					    unsigned char buswidth)
++{
++	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
++	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
++	struct mtk_mipicsi_dev *mipicsi = ici->priv;
++	struct v4l2_mbus_config cfg = {.type = V4L2_MBUS_CSI2_DPHY,};
++	unsigned long common_flags = 0;
++	int ret = 0;
++
++	ret = v4l2_subdev_call(sd, video, g_mbus_config, &cfg);
++	if (ret == 0) {
++		common_flags = soc_mbus_config_compatible(&cfg,
++				MTK_MIPICSI_BUS_PARAM);
++		if (common_flags == 0U) {
++			dev_warn(icd->parent, "Flags incompatible: camera 0x%x\n",
++				cfg.flags);
++			return -EINVAL;
++		}
++	} else {
++		if (ret != -ENOIOCTLCMD)
++			return ret;
++	}
++
++	if ((((u16)1U << (buswidth - 1U)) & mipicsi->width_flags) != 0U)
++		return 0;
++
++	return -EINVAL;
++}
++
++static bool mtk_mipicsi_packing_supported(const struct soc_mbus_pixelfmt *fmt)
++{
++	return	fmt->packing == SOC_MBUS_PACKING_NONE ||
++		(fmt->bits_per_sample == 8U &&
++		 fmt->packing == SOC_MBUS_PACKING_2X8_PADHI);
++}
++
+ static int get_subdev_register(const struct soc_camera_device *icd,
+ 	struct v4l2_dbg_register *reg)
+ {
+@@ -322,6 +405,72 @@ static void mtk_mipicsi_remove_device(struct soc_camera_device *icd)
+ 	(void)pm_runtime_put_sync(icd->parent);
+ }
+ 
++static int mtk_mipicsi_get_formats(struct soc_camera_device *icd,
++		unsigned int idx, struct soc_camera_format_xlate *xlate)
++{
++	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
++	int formats = 0, ret, i;
++	int n = ARRAY_SIZE(mtk_mipicsi_formats);
++
++	struct v4l2_subdev_mbus_code_enum mbus_code = {
++		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
++		.index = idx,
++	};
++	/* subdev format */
++	const struct soc_mbus_pixelfmt *fmt;
++
++	ret = v4l2_subdev_call(sd, pad, enum_mbus_code, NULL, &mbus_code);
++	if (ret < 0)
++		/* No more formats */
++		return 0;
++
++	/* get subdev support format */
++	fmt = soc_mbus_get_fmtdesc(mbus_code.code);
++	if (fmt == NULL) {
++		dev_err(icd->parent, "Invalid format code #%u: %d",
++			idx, mbus_code.code);
++		return 0;
++	}
++
++	/* This also checks support for the requested bits-per-sample */
++	ret = mtk_mipicsi_try_bus_param(icd, fmt->bits_per_sample);
++	if (ret < 0) {
++		dev_err(icd->parent, "Fail to try the bus parameters.\n");
++		return 0;
++	}
++
++	switch (mbus_code.code) {
++	case MEDIA_BUS_FMT_UYVY8_2X8:
++	case MEDIA_BUS_FMT_VYUY8_2X8:
++	case MEDIA_BUS_FMT_YUYV8_2X8:
++	case MEDIA_BUS_FMT_YVYU8_2X8:
++			dev_dbg(icd->parent, "Providing format %s using code %d\n",
++				fmt->name, mbus_code.code);
++		break;
++	default:
++		if (!mtk_mipicsi_packing_supported(fmt))
++			return 0;
++		if (xlate != NULL)
++			dev_dbg(icd->parent,
++				"Providing format %s in pass-through mode\n",
++				fmt->name);
++		break;
++	}
++
++	/* get camera host and subdev format intersection */
++	for (i = 0; i < n; ++i)
++		if (mtk_mipicsi_formats[i].fmt.fourcc == fmt->fourcc) {
++			++formats;
++			if (xlate != NULL) {
++				xlate->host_fmt = &mtk_mipicsi_formats[i].fmt;
++				xlate->code = mbus_code.code;
++				xlate++;
++			}
++		}
++
++	return formats;
++}
++
+ static bool is_supported(const u32 pixformat)
+ {
+ 	switch (pixformat) {
+@@ -711,6 +860,7 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
+ 	.owner			= THIS_MODULE,
+ 	.add			= mtk_mipicsi_add_device,
+ 	.remove			= mtk_mipicsi_remove_device,
++	.get_formats            = mtk_mipicsi_get_formats,
+ 	.set_fmt		= mtk_mipicsi_set_fmt,
+ 	.try_fmt		= mtk_mipicsi_try_fmt,
+ 	.init_videobuf2	= mtk_mipicsi_init_videobuf2,
+@@ -1297,6 +1447,7 @@ static int mtk_mipicsi_probe(struct platform_device *pdev)
+ 	mipicsi->soc_host.priv		= mipicsi;
+ 	mipicsi->soc_host.v4l2_dev.dev	= &pdev->dev;
+ 	mipicsi->soc_host.nr		= mipicsi->id;
++	mipicsi->width_flags		= MTK_DATAWIDTH_8;
+ 	mipicsi->streamon		= false;
+ 
+ 	ret = soc_camera_host_register(&mipicsi->soc_host);
 -- 
 2.18.0
