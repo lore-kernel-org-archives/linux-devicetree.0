@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 7/8] arm64: dts: meson: g12a: add spdifin
-Date: Tue, 14 May 2019 16:26:48 +0200
-Message-ID: <20190514142649.1127-8-jbrunet@baylibre.com>
+Subject: [PATCH v2 5/8] arm64: dts: meson: g12a: add spdifouts
+Date: Tue, 14 May 2019 16:26:46 +0200
+Message-ID: <20190514142649.1127-6-jbrunet@baylibre.com>
 References: <20190514142649.1127-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,68 +12,105 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the spdif input device node and the pinctrl definition for
-this capture interface g12a SoC family
+Add the devices nodes and pinctrl definitions for the spdif outputs of
+the g12a SoC family
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 37 +++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 60 +++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 8dbdcbea5945..d6c6408281e9 100644
+index 40a82ddda79f..f25a7c7ed995 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -807,6 +807,30 @@
+@@ -643,6 +643,33 @@
  						};
  					};
  
-+					spdif_in_a10_pins: spdif-in-a10 {
++					spdif_out_h_pins: spdif-out-h {
 +						mux {
-+							groups = "spdif_in_a10";
-+							function = "spdif_in";
++							groups = "spdif_out_h";
++							function = "spdif_out";
++							drive-strength-microamp = <500>;
 +							bias-disable;
 +						};
 +					};
 +
-+					spdif_in_a12_pins: spdif-in-a12 {
++					spdif_out_a11_pins: spdif-out-a11 {
 +						mux {
-+							groups = "spdif_in_a12";
-+							function = "spdif_in";
++							groups = "spdif_out_a11";
++							function = "spdif_out";
++							drive-strength-microamp = <500>;
 +							bias-disable;
 +						};
 +					};
 +
-+					spdif_in_h_pins: spdif-in-h {
++					spdif_out_a13_pins: spdif-out-a13 {
 +						mux {
-+							groups = "spdif_in_h";
-+							function = "spdif_in";
++							groups = "spdif_out_a13";
++							function = "spdif_out";
++							drive-strength-microamp = <500>;
 +							bias-disable;
 +						};
 +					};
 +
- 					spdif_out_h_pins: spdif-out-h {
+ 					tdm_a_din0_pins: tdm-a-din0 {
  						mux {
- 							groups = "spdif_out_h";
-@@ -1516,6 +1540,19 @@
+ 							groups = "tdm_a_din0";
+@@ -1312,6 +1339,18 @@
  					status = "disabled";
  				};
  
-+				spdifin: audio-controller@400 {
-+					compatible = "amlogic,g12a-spdifin",
-+						     "amlogic,axg-spdifin";
-+					reg = <0x0 0x400 0x0 0x30>;
++				spdifout: audio-controller@480 {
++					compatible = "amlogic,g12a-spdifout",
++						     "amlogic,axg-spdifout";
++					reg = <0x0 0x480 0x0 0x50>;
 +					#sound-dai-cells = <0>;
-+					sound-name-prefix = "SPDIFIN";
-+					interrupts = <GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
-+						 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
-+					clock-names = "pclk", "refclk";
++					sound-name-prefix = "SPDIFOUT";
++					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
++						 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
++					clock-names = "pclk", "mclk";
 +					status = "disabled";
 +				};
 +
- 				spdifout: audio-controller@480 {
- 					compatible = "amlogic,g12a-spdifout",
- 						     "amlogic,axg-spdifout";
+ 				tdmout_a: audio-controller@500 {
+ 					compatible = "amlogic,g12a-tdmout";
+ 					reg = <0x0 0x500 0x0 0x40>;
+@@ -1353,6 +1392,18 @@
+ 						      "lrclk", "lrclk_sel";
+ 					status = "disabled";
+ 				};
++
++				spdifout_b: audio-controller@680 {
++					compatible = "amlogic,g12a-spdifout",
++						     "amlogic,axg-spdifout";
++					reg = <0x0 0x680 0x0 0x50>;
++					#sound-dai-cells = <0>;
++					sound-name-prefix = "SPDIFOUT_B";
++					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
++						 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
++					clock-names = "pclk", "mclk";
++					status = "disabled";
++				};
+ 			};
+ 
+ 			usb3_pcie_phy: phy@46000 {
+@@ -1506,6 +1557,15 @@
+ 						};
+ 					};
+ 
++					spdif_ao_out_pins: spdif-ao-out {
++						mux {
++							groups = "spdif_ao_out";
++							function = "spdif_ao_out";
++							drive-strength-microamp = <500>;
++							bias-disable;
++						};
++					};
++
+ 					tdm_ao_b_din1_pins: tdm-ao-b-din1 {
+ 						mux {
+ 							groups = "tdm_ao_b_din1";
 -- 
 2.20.1
