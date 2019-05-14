@@ -1,103 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 v2 1/3] dt-bindings: i2c: extend existing opencore bindings.
-Date: Tue, 14 May 2019 11:05:19 -0500
-Message-ID: <CAL_JsqKGyq-GaAXWqb=8DGCPYd-2kHWaOyNO9rC9dZkx2Z=LeQ@mail.gmail.com>
-References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
- <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
- <20190513205615.GA5844@bogus> <CAARK3HkTCGWg4CAo1LmQHmf4_NFukjTwO1LAHjgSTS+R_5CRSg@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
+ reflect documentation
+Date: Tue, 14 May 2019 18:11:35 +0200
+Message-ID: <20190514161135.GA1824@centauri.ideon.se>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAARK3HkTCGWg4CAo1LmQHmf4_NFukjTwO1LAHjgSTS+R_5CRSg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Kadam <sagar.kadam@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com, Andrew Lunn <andrew@lunn.ch>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 7:50 AM Sagar Kadam <sagar.kadam@sifive.com> wrote:
->
-> Hello Rob,
->
-> Thank you for the review.
->
-> On Tue, May 14, 2019 at 2:26 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, May 07, 2019 at 08:45:06PM +0530, Sagar Shrikant Kadam wrote:
-> > > Add FU540-C000 specific device tree bindings to already
-> > > available i2-ocores file. This device is available on
-> > > HiFive Unleashed Rev A00 board.
-> > >
-> > > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 20 ++++++++++++++++++++
-> > >  1 file changed, 20 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > > index 17bef9a..f6bcf90 100644
-> > > --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > > +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > > @@ -2,6 +2,7 @@ Device tree configuration for i2c-ocores
-> > >
-> > >  Required properties:
-> > >  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-> > > +                    "sifive,fu540-c000-i2c" or "sifive,i2c0"
-> >
-> > If this is Opencores IP, does it really follow the Sifive versioning
-> > convention? If so, please reference sifive-blocks-ip-versioning.txt
-> > (which appears to have missed going upstream). Also, referencing the IP
-> > repository would be good too. If this IP block doesn't follow the same
-> > convention, then don't try using it for this binding.
-> >
-> Yes, the sifive,fu540-c000-i2c is a SoC specific compatibility string,
-> this way SoC specific
-> workaround's or bugs, can be handled in the software and the ip-block
-> specific compatibility
-> string "sifive,<ip-block-name><integer version number>" i.e.
-> sifive,i2c0 is IP block specific compatibility
-> string. Please let me know if I need some correction here?
-> I will also update reference for sifive-blocks-ip-versioning and the
-> ip repository into next version of patch.
+On Fri, May 10, 2019 at 04:59:39PM +0530, Amit Kucheria wrote:
+> The idle-states binding documentation[1] mentions that the
 
-My question is whether I can correlate v0 to a specific revision of
-the IP and versions will be tracked in the same way as SiFive IP
-blocks?
+This [1] reference is a null pointer ;)
 
-> > >  - reg             : bus address start and address range size of device
-> > >  - interrupts      : interrupt number
-> > >  - clocks          : handle to the controller clock; see the note below.
-> > > @@ -67,3 +68,22 @@ or
-> > >                       reg = <0x60>;
-> > >               };
-> > >       };
-> > > +or
-> >
-> > Just a new compatible isn't really a reason to add an example.
-> >
-> > > +     /*
-> > > +       An Opencore based I2C node in FU540-C000 chip from SiFive
-> > > +       This chip has a hardware erratum for broken IRQ
-> > > +       so it's recommended not to define interrupt in the device node
-> >
-> > Then interrupts needs to be optional.
-> True, I will move interrupts and interrupt parent into optional section
-> >
-> > > +     */
-> > > +     i2c@10030000 {
-> > > +                     compatible = "sifive,i2c0","sifive,fu540-c000-i2c";
-> > > +                     reg = <0x0 0x10030000 0x0 0x1000>;
-> > > +                     reg-names = "i2c-control";
-> >
-> > Not doucmented.
-> In v1, I had added a new binding file as sifive-i2c-ocores.txt for
-> SiFive i2c core.
-> After Andrew's suggestion,  extending the available i2c-ocores.txt
-> seemed to be a better idea rather than adding a new file.
-> so added an example node which is HiFive specific in the existing file.
-> Please let me know if I need to handle this in a different way.
+Other than that:
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-That has nothing to do with whether reg-names is documented. Being in
-the example is not documented. You either need to add it to the
-property list or drop it from the example. IMO, you should drop it as
-it is not necessary with only 1 entry.
-
-Rob
+> 'entry-method' property is required on 64-bit platforms and must be set
+> to "psci".
+> 
+> We fixed up all uses of the entry-method property in
+> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
+> reflect documentation"). But a new one has appeared. Fix it up.
+> 
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbcfa3bb..42e7822a0227 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -51,7 +51,7 @@
+>  		 * PSCI node is not added default, U-boot will add missing
+>  		 * parts if it determines to use PSCI.
+>  		 */
+> -		entry-method = "arm,psci";
+> +		entry-method = "psci";
+>  
+>  		CPU_PH20: cpu-ph20 {
+>  			compatible = "arm,idle-state";
+> -- 
+> 2.17.1
+> 
