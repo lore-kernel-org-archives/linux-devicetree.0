@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v6 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-Date: Tue, 14 May 2019 10:26:47 +0200
-Message-ID: <20190514082652.20686-2-glaroque@baylibre.com>
+Subject: [PATCH v6 3/6] dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+Date: Tue, 14 May 2019 10:26:49 +0200
+Message-ID: <20190514082652.20686-4-glaroque@baylibre.com>
 References: <20190514082652.20686-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
@@ -10,36 +10,29 @@ To: linus.walleij@linaro.org, khilman@baylibre.com
 Cc: jbrunet@baylibre.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This property allow drive-strength parameter in uA instead of mA.
+Add optional drive-strength-microamp property
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index cef2b5855d60..fcd37e93ed4d 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
- drive-open-drain	- drive with open drain
- drive-open-source	- drive with open source
- drive-strength		- sink or source at most X mA
-+drive-strength-microamp	- sink or source at most X uA
- input-enable		- enable input on pin (no effect on output, such as
- 			  enabling an input buffer)
- input-disable		- disable input on pin (no effect on output, such as
-@@ -326,6 +327,8 @@ arguments are described below.
+diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+index a47dd990a8d3..a7618605bf1e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+@@ -51,6 +51,10 @@ Configuration nodes support the generic properties "bias-disable",
+ "bias-pull-up" and "bias-pull-down", described in file
+ pinctrl-bindings.txt
  
- - drive-strength takes as argument the target strength in mA.
- 
-+- drive-strength-microamp takes as argument the target strength in uA.
++Optional properties :
++ - drive-strength-microamp: Drive strength for the specified pins in uA.
++			    This property is only valid for G12A and newer.
 +
- - input-debounce takes the debounce time in usec as argument
-   or 0 to disable debouncing
+ === Example ===
  
+ 	pinctrl: pinctrl@c1109880 {
 -- 
 2.17.1
