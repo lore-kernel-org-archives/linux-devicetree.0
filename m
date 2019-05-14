@@ -1,95 +1,63 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 2/2] amr64: map FDT as RW for early_init_dt_scan()
-Date: Tue, 14 May 2019 18:42:24 +0300
-Message-ID: <20190514154223.GA11115@rapoport-lnx>
-References: <20190513003819.356-1-hsinyi@chromium.org>
- <20190513003819.356-2-hsinyi@chromium.org>
- <20190513085853.GB9271@rapoport-lnx>
- <CAJMQK-hKrU2J0_uGe3eO_JTNwM=HRkXbDx2u45izcdD7wqwGeQ@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] serial: sh-sci: disable DMA for uart_console
+Date: Tue, 14 May 2019 17:54:51 +0200
+Message-ID: <20190514155450.GB6508@kunai>
+References: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
+ <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
+ <20190514153021.GC18528@mam-gdavis-lt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJMQK-hKrU2J0_uGe3eO_JTNwM=HRkXbDx2u45izcdD7wqwGeQ@mail.gmail.com>
+In-Reply-To: <20190514153021.GC18528@mam-gdavis-lt>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Architecture Mailman List <boot-architecture@lists.linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>
+To: "George G. Davis" <george_davis@mentor.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Eugeniu Rosca <erosca@de.adit-jv.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Chris Brandt <chris.brandt@renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 07:14:32PM +0800, Hsin-Yi Wang wrote:
-> On Mon, May 13, 2019 at 4:59 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> 
-> >
-> > This makes the fdt mapped without the call to meblock_reserve(fdt) which
-> > makes the fdt memory available for memblock allocations.
-> >
-> > Chances that is will be actually allocated are small, but you know, things
-> > happen.
-> >
-> > IMHO, instead of calling directly __fixmap_remap_fdt() it would be better
-> > to add pgprot parameter to fixmap_remap_fdt(). Then here and in kaslr.c it
-> > can be called with PAGE_KERNEL and below with PAGE_KERNEL_RO.
-> >
-> > There is no problem to call memblock_reserve() for the same area twice,
-> > it's essentially a NOP.
-> >
-> Thanks for the suggestion. Will update fixmap_remap_fdt() in next patch.
-> 
-> However, I tested on some arm64 platform, if we also call
-> memblock_reserve() in kaslr.c, would cause warning[1] when
-> memblock_reserve() is called again in setup_machine_fdt(). The warning
-> comes from https://elixir.bootlin.com/linux/latest/source/mm/memblock.c#L601
-> ```
-> if (type->regions[0].size == 0) {
->   WARN_ON(type->cnt != 1 || type->total_size);
->   ...
-> ```
-> 
-> Call memblock_reserve() multiple times after setup_machine_fdt()
-> doesn't have such warning though.
 
-I'm not sure if early console is available at the time kaslr_early_init()
-is called, but if yes, running with memblock=debug may shed some light.
- 
-> I didn't trace the real reason causing this. But in this case, maybe
-> don't call memblock_reserve() in kaslr?
+--kXdP64Ggrk/fb43R
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My concern that this uncovered a real bug which might hit us later.
 
-> [1]
-> [    0.000000] WARNING: CPU: 0 PID: 0 at
-> /mnt/host/source/src/third_party/kernel/v4.19/mm/memblock.c:583
-> memblock_add_range+0x1bc/0x1c8
-> [    0.000000] Modules linked in:
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.38 #125
-> [    0.000000] pstate: 600001c5 (nZCv dAIF -PAN -UAO)
-> [    0.000000] pc : memblock_add_range+0x1bc/0x1c8
-> [    0.000000] lr : memblock_add_range+0x30/0x1c8
-> [    0.000000] sp : ffffff9b5e203e80
-> [    0.000000] x29: ffffff9b5e203ed0 x28: 0000000040959324
-> [    0.000000] x27: 0000000040080000 x26: 0000000000080000
-> [    0.000000] x25: 0000000080127e4b x24: 0000000000000000
-> [    0.000000] x23: 0000001b55000000 x22: 000000000001152b
-> [    0.000000] x21: 000000005f800000 x20: 0000000000000000
-> [    0.000000] x19: ffffff9b5e24bf00 x18: 00000000ffffffb8
-> [    0.000000] x17: 000000000000003c x16: ffffffbefea00000
-> [    0.000000] x15: ffffffbefea00000 x14: ffffff9b5e3c17d8
-> [    0.000000] x13: 00e8000000000713 x12: 0000000000000000
-> [    0.000000] x11: ffffffbefea00000 x10: 00e800005f800710
-> [    0.000000] x9 : 000000000001152b x8 : ffffff9b5e365690
-> [    0.000000] x7 : 6f20646573616228 x6 : 0000000000000002
-> [    0.000000] x5 : 0000000000000000 x4 : 0000000000000000
-> [    0.000000] x3 : 0000000000200000 x2 : 000000000001152b
-> [    0.000000] x1 : 000000005f800000 x0 : ffffff9b5e24bf00
-> [    0.000000] Call trace:
-> [    0.000000]  memblock_add_range+0x1bc/0x1c8
-> [    0.000000]  memblock_reserve+0x60/0xac
-> [    0.000000]  fixmap_remap_fdt+0x4c/0x78
-> [    0.000000]  setup_machine_fdt+0x64/0xfc
-> [    0.000000]  setup_arch+0x68/0x1e0
-> [    0.000000]  start_kernel+0x68/0x380
-> 
+> > > Fixes: https://patchwork.kernel.org/patch/10929511/
+> >=20
+> > I don't think this is an appropriate reference, as it points to a patch=
+ that
+> > was never applied.
+>=20
+> I included it as a link to an upstream problem report similar to other co=
+mmits
+> that I previewed. The link provides the extra context that I was perhaps =
+to
+> lazy to note in the commit header.
 
--- 
-Sincerely yours,
-Mike.
+We have a "Link:" tag for things like this, e.g.:
+
+Link: https://patchwork.kernel.org/patch/10929511/
+
+
+--kXdP64Ggrk/fb43R
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlza5MYACgkQFA3kzBSg
+KbbkfQ/+PL1lLGOvBp4WLSQof0j9gnQWmDJDxCG61/wtuAsqm6CkBe4BlgZIhoDq
+ZgOk6lcFvge3gPJPP+DOiPVa9Uebjx84+gJV8t/hJx5EkZ5d/VBzxLS9C74ae9KQ
+yC1BN8slbFbu4aS4bzbOoYCOGjRq2Wh7Se6MtdV5pCHZA6DxV60KvbrwvgVD8DrT
+2YgoyE5pVyou/2gn4FxoUVzKDPTxvFr7rTTcJLHdEBXiXxy5x+5gBIGsl0521+qy
+XIsJdaQXkI1wyssp/gRrUhZiAf/Du8W9MW0g4vXTC0a7nX8O5ENKW23FyV6FrzoX
+BpPl7ICCxAarMabDkaNvhlO+TCC8f88yhYaiZ8UZ2ZyzIg8MPGJBQ0jdOTOeWjkU
+DoLS5eVr8C2N9jT6iFY/f2UI/RfJlCx2gjdpgX23dUtn2uAkGjeFke4hXN0hmNnF
+HYHyfTDOODnfnM3QzowRGaMOHE9nVcUcTcR5VKK8M0GtnzKHr8yBzfFJJkfKeiHi
+CLjR9N37CcCUCKe5qDhIxwnmkXjJoUp6rgZxAS2hewGiv/CKi0WtfCvk6BzEkUV9
+Eg3rZ1Ipeqt0fSHK4EK4ltIrs+iSZp+nhx7W61UE2teWQ6IG+weOdVvBCHpe9FUN
+6RMlFFMcVzfvFKw2z+Q8uua9EPlKFFnUe7SAbydWO7d81KNyUGI=
+=BcaQ
+-----END PGP SIGNATURE-----
+
+--kXdP64Ggrk/fb43R--
