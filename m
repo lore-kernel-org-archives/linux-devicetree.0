@@ -1,36 +1,326 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/3] arm64: dts: meson: g12a: add i2c
-Date: Tue, 14 May 2019 12:12:34 +0200
-Message-ID: <20190514101237.13969-1-jbrunet@baylibre.com>
+Subject: [PATCH 1/3] arm64: dts: meson: g12a: add i2c nodes
+Date: Tue, 14 May 2019 12:12:35 +0200
+Message-ID: <20190514101237.13969-2-jbrunet@baylibre.com>
+References: <20190514101237.13969-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190514101237.13969-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Guillaume La Roque <glaroque@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the i2c controllers and pinctrl definitions to the g12a DT then
-the busses present on the u200 and sei510.
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-Notice the use of the pinconf DT property 'drive-strength-microamp'.
-Support for this property is not yet merged in meson pinctrl driver but
-the DT part as been acked by the DT maintainer [0] so it should be safe
-to use.
+Add pinctrl and nodes for i2c support on amlogic g12a
 
-[0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 268 ++++++++++++++++++++
+ 1 file changed, 268 insertions(+)
 
-Guillaume La Roque (1):
-  arm64: dts: meson: g12a: add i2c nodes
-
-Jerome Brunet (2):
-  arm64: dts: meson: u200: enable i2c busses
-  arm64: dts: meson: sei510: enable i2c3
-
- .../boot/dts/amlogic/meson-g12a-sei510.dts    |   6 +
- .../boot/dts/amlogic/meson-g12a-u200.dts      |  21 ++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 268 ++++++++++++++++++
- 3 files changed, 295 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index ca01064a771a..e6c0c19b3223 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -244,6 +244,188 @@
+ 						};
+ 					};
+ 
++
++					i2c0_sda_c_pins: i2c0-sda-c {
++						mux {
++							groups = "i2c0_sda_c";
++							function = "i2c0";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++
++						};
++					};
++
++					i2c0_sck_c_pins: i2c0-sck-c {
++						mux {
++							groups = "i2c0_sck_c";
++							function = "i2c0";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c0_sda_z0_pins: i2c0-sda-z0 {
++						mux {
++							groups = "i2c0_sda_z0";
++							function = "i2c0";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c0_sck_z1_pins: i2c0-sck-z1 {
++						mux {
++							groups = "i2c0_sck_z1";
++							function = "i2c0";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c0_sda_z7_pins: i2c0-sda-z7 {
++						mux {
++							groups = "i2c0_sda_z7";
++							function = "i2c0";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c0_sda_z8_pins: i2c0-sda-z8 {
++						mux {
++							groups = "i2c0_sda_z8";
++							function = "i2c0";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c1_sda_x_pins: i2c1-sda-x {
++						mux {
++							groups = "i2c1_sda_x";
++							function = "i2c1";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c1_sck_x_pins: i2c1-sck-x {
++						mux {
++							groups = "i2c1_sck_x";
++							function = "i2c1";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c1_sda_h2_pins: i2c1-sda-h2 {
++						mux {
++							groups = "i2c1_sda_h2";
++							function = "i2c1";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c1_sck_h3_pins: i2c1-sck-h3 {
++						mux {
++							groups = "i2c1_sck_h3";
++							function = "i2c1";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c1_sda_h6_pins: i2c1-sda-h6 {
++						mux {
++							groups = "i2c1_sda_h6";
++							function = "i2c1";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c1_sck_h7_pins: i2c1-sck-h7 {
++						mux {
++							groups = "i2c1_sck_h7";
++							function = "i2c1";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c2_sda_x_pins: i2c2-sda-x {
++						mux {
++							groups = "i2c2_sda_x";
++							function = "i2c2";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c2_sck_x_pins: i2c2-sck-x {
++						mux {
++							groups = "i2c2_sck_x";
++							function = "i2c2";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c2_sda_z_pins: i2c2-sda-z {
++						mux {
++							groups = "i2c2_sda_z";
++							function = "i2c2";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c2_sck_z_pins: i2c2-sck-z {
++						mux {
++							groups = "i2c2_sck_z";
++							function = "i2c2";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c3_sda_h_pins: i2c3-sda-h {
++						mux {
++							groups = "i2c3_sda_h";
++							function = "i2c3";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c3_sck_h_pins: i2c3-sck-h {
++						mux {
++							groups = "i2c3_sck_h";
++							function = "i2c3";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c3_sda_a_pins: i2c3-sda-a {
++						mux {
++							groups = "i2c3_sda_a";
++							function = "i2c3";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c3_sck_a_pins: i2c3-sck-a {
++						mux {
++							groups = "i2c3_sck_a";
++							function = "i2c3";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
+ 					pwm_a_pins: pwm-a {
+ 						mux {
+ 							groups = "pwm_a";
+@@ -589,6 +771,42 @@
+ 						gpio-ranges = <&ao_pinctrl 0 0 15>;
+ 					};
+ 
++					i2c_ao_sck_pins: i2c_ao_sck_pins {
++						mux {
++							groups = "i2c_ao_sck";
++							function = "i2c_ao";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c_ao_sda_pins: i2c_ao_sda {
++						mux {
++							groups = "i2c_ao_sda";
++							function = "i2c_ao";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c_ao_sck_e_pins: i2c_ao_sck_e {
++						mux {
++							groups = "i2c_ao_sck_e";
++							function = "i2c_ao";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
++					i2c_ao_sda_e_pins: i2c_ao_sda_e {
++						mux {
++							groups = "i2c_ao_sda_e";
++							function = "i2c_ao";
++							bias-disable;
++							drive-strength-microamp = <3000>;
++						};
++					};
++
+ 					uart_ao_a_pins: uart-a-ao {
+ 						mux {
+ 							groups = "uart_ao_a_tx",
+@@ -723,6 +941,16 @@
+ 				status = "disabled";
+ 			};
+ 
++			i2c_AO: i2c@5000 {
++				compatible = "amlogic,meson-axg-i2c";
++				status = "disabled";
++				reg = <0x0 0x05000 0x0 0x20>;
++				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc CLKID_I2C>;
++			};
++
+ 			pwm_AO_ab: pwm@7000 {
+ 				compatible = "amlogic,meson-g12a-ao-pwm-ab";
+ 				reg = <0x0 0x7000 0x0 0x20>;
+@@ -826,6 +1054,46 @@
+ 				status = "disabled";
+ 			};
+ 
++			i2c3: i2c@1c000 {
++				compatible = "amlogic,meson-axg-i2c";
++				status = "disabled";
++				reg = <0x0 0x1c000 0x0 0x20>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc CLKID_I2C>;
++			};
++
++			i2c2: i2c@1d000 {
++				compatible = "amlogic,meson-axg-i2c";
++				status = "disabled";
++				reg = <0x0 0x1d000 0x0 0x20>;
++				interrupts = <GIC_SPI 215 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc CLKID_I2C>;
++			};
++
++			i2c1: i2c@1e000 {
++				compatible = "amlogic,meson-axg-i2c";
++				status = "disabled";
++				reg = <0x0 0x1e000 0x0 0x20>;
++				interrupts = <GIC_SPI 214 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc CLKID_I2C>;
++			};
++
++			i2c0: i2c@1f000 {
++				compatible = "amlogic,meson-axg-i2c";
++				status = "disabled";
++				reg = <0x0 0x1f000 0x0 0x20>;
++				interrupts = <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc CLKID_I2C>;
++			};
++
+ 			clk_msr: clock-measure@18000 {
+ 				compatible = "amlogic,meson-g12a-clk-measure";
+ 				reg = <0x0 0x18000 0x0 0x10>;
 -- 
 2.20.1
