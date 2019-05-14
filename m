@@ -1,7 +1,7 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH v4 4/8] ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
-Date: Tue, 14 May 2019 10:26:59 +0200
-Message-ID: <1557822423-22658-5-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v4 6/8] ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+Date: Tue, 14 May 2019 10:27:01 +0200
+Message-ID: <1557822423-22658-7-git-send-email-fabien.dessenne@st.com>
 References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,33 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Declare the M4 remote processor in a sub-node of the mlahb simple bus.
+Enable m4 coprocessor for STM32MP157c-ed1 board.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index c664b55..39bbcda 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -1242,4 +1242,24 @@
- 			status = "disabled";
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index acfc5cd..e5a6f40 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -134,6 +134,16 @@
+ 	status = "okay";
+ };
+ 
++&m4_rproc {
++	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
++			<&vdev0vring1>, <&vdev0buffer>;
++	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
++	mbox-names = "vq0", "vq1", "shutdown";
++	interrupt-parent = <&exti>;
++	interrupts = <68 1>;
++	status = "okay";
++};
 +
-+	mlahb {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		dma-ranges = <0x00000000 0x38000000 0x10000>,
-+			     <0x10000000 0x10000000 0x60000>,
-+			     <0x30000000 0x30000000 0x60000>;
-+
-+		m4_rproc: m4@10000000 {
-+			compatible = "st,stm32mp1-m4";
-+			reg = <0x10000000 0x40000>,
-+			      <0x30000000 0x40000>,
-+			      <0x38000000 0x10000>;
-+			resets = <&rcc MCU_R>;
-+			st,syscfg-holdboot = <&rcc 0x10C 0x1>;
-+			st,syscfg-tz = <&rcc 0x000 0x1>;
-+			status = "disabled";
-+		};
-+	};
+ &rng1 {
+ 	status = "okay";
  };
 -- 
 2.7.4
