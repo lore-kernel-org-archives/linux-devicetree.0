@@ -1,81 +1,62 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v4 1/2] dt-bindings: display/panel: Add KOE tx14d24vm1bpa display description
-Date: Wed, 15 May 2019 18:04:28 +0200
-Message-ID: <20190515160428.6114-1-lukma@denx.de>
-References: <20180412143715.6828-1-lukma@denx.de>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M]
+ boards
+Date: Wed, 15 May 2019 16:20:51 +0000
+Message-ID: <TY1PR01MB17709902D813EB99E16FE6D2C0090@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1557920697-18057-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1557920697-18057-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180412143715.6828-1-lukma@denx.de>
+In-Reply-To: <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Lukasz Majewski <lukma@denx.de>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.c>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds documentation entry description for KOE's 5.7" display.
-
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-
----
-Previous discussion (and Rob's Reviewed-by) about this patch
-https://patchwork.kernel.org/patch/10339595/
-
-Changes for v4:
-- Rebase on top of newest mainline
-SHA1: 5ac94332248ee017964ba368cdda4ce647e3aba7
-
-Changes for v3 :
-- New patch
----
- .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-new file mode 100644
-index 000000000000..be7ac666807b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-@@ -0,0 +1,42 @@
-+Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "koe,tx14d24vm1bpa"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX53 based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "koe,tx14d24vm1bpa";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_3v3>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+Then one needs to extend the dispX node:
-+
-+	lcd_display: disp1 {
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
--- 
-2.11.0
+SGVsbG8gUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9i
+IEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMTUgTWF5IDIwMTkgMTQ6NDIN
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGR0LWJpbmRpbmdzOiBhcm06IHJlbmVzYXM6IEFk
+ZCBIb3BlUnVuIFJaL0cyW01dIGJvYXJkcw0KPiANCj4gT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQg
+Njo0NSBBTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
+bT4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgYm9hcmQgSGlIb3BlIFJaL0cyTSAo
+dGhlIG1haW4gYm9hcmQsIHBvd2VyZWQgYnkNCj4gPiB0aGUgUjhBNzc0QTEpIGFuZCBib2FyZCBI
+aUhvcGUgUlovRzIgRVggKHRoZSBleHBhbnNpb24gYm9hcmQNCj4gPiB0aGF0IHNpdHMgb24gdG9w
+IG9mIHRoZSBIaUhvcGUgUlovRzJNKS4gQm90aCBib2FyZHMgYXJlIG1hZGUNCj4gPiBieSBKaWFu
+Z3N1IEhvcGVSdW4gU29mdHdhcmUgQ28uLCBMdGQuIChhLmsuYS4gSG9wZVJ1bikuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
+c2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0ZXJzb24gPENocmlzLlBhdGVyc29u
+MkByZW5lc2FzLmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFVzZWZ1bCBsaW5rczoNCj4gPiBodHRw
+Oi8vaGlob3BlLm9yZy9wcm9kdWN0L2RldGFpbC9yemcyDQo+ID4gaHR0cHM6Ly9pdGVtLnRhb2Jh
+by5jb20vaXRlbS5odG0/c3BtPWEyb3EwLjEyNTc1MjgxLjAuMC42YmNmMWRlYlFwemtSUyZmdD10
+JmlkPTU5MjE3NzQ5ODQ3Mg0KPiA+IGh0dHA6Ly93d3cuaG9wZXJ1bi5jb20vQ24vbmV3cy9pZC8z
+NzkNCj4gPg0KPiA+IFdlIGFscmVhZHkga25vdyB0aGF0IHRoZSBIaUhvcGUgUlovRzIgRVggd2ls
+bCBhbHNvIHNpdCBvbiB0aGUNCj4gPiBIaUhvcGUgUlovRzJOLCBldmVuIHRob3VnaCB0aGUgSGlI
+b3BlIFJaL0cyTiBkb2Vzbid0IGV4aXN0IGp1c3QNCj4gPiB5ZXQuDQo+IA0KPiBTZWVtcyBsaWtl
+IHVzZWZ1bCBpbnRvIHRvIHB1dCBpbiB0aGUgY29tbWl0IG1zZy4NCg0KT2ssIHdpbGwgbW92ZSB0
+aGUgbm90ZXMgdG8gdGhlIGNvbW1pdCBtc2cgdGhlbiBmb3IgdjIuDQoNCj4gDQo+ID4gLS0tDQo+
+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVuZXNhcy55YW1sIHwg
+OCArKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4NCj4g
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZW5l
+c2FzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlbmVzYXMu
+eWFtbA0KPiA+IGluZGV4IDE5ZjM3OTguLjk1MzAyYjkgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZW5lc2FzLnlhbWwNCj4gPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlbmVzYXMueWFtbA0KPiA+IEBA
+IC0xMDYsNiArMTA2LDE0IEBAIHByb3BlcnRpZXM6DQo+ID4NCj4gPiAgICAgICAgLSBkZXNjcmlw
+dGlvbjogUlovRzJNIChSOEE3NzRBMSkNCj4gPiAgICAgICAgICBpdGVtczoNCj4gPiArICAgICAg
+ICAgIC0gZW51bToNCj4gPiArICAgICAgICAgICAgICAtIGhvcGVydW4saGlob3BlLXJ6ZzJtICMg
+SG9wZVJ1biBIaUhvcGUgUlovRzJNIHBsYXRmb3JtDQo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBy
+ZW5lc2FzLHI4YTc3NGExDQo+ID4gKw0KPiA+ICsgICAgICAgIGl0ZW1zOg0KPiANCj4gRGlkIHlv
+dSBydW4gdGhpcyB0aHJ1IHRoZSBjaGVja3MgYmVjYXVzZSB0aGlzIGlzbid0IHZhbGlkIGpzb24t
+c2NoZW1hLg0KPiBZb3UgY2FuJ3QgaGF2ZSBzYW1lIGtleXdvcmQgdHdpY2UuIFRoaXMgJ2l0ZW1z
+JyBuZWVkcyB0byBiZSBhbm90aGVyDQo+IGxpc3QgZW50cnkgKGkuZS4gYWRkIGEgJy0nKS4NCg0K
+T29wcywgc29ycnkgYWJvdXQgdGhhdC4gV2lsbCBmaXggaW4gdjIuDQoNClRoYW5rcywNCkZhYg0K
+DQo+IA0KPiA+ICsgICAgICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgICAgICAgIC0gaG9wZXJ1
+bixoaWhvcGUtcnpnMi1leCAjIEhvcGVSdW4gZXhwYW5zaW9uIGJvYXJkIGZvciBIaUhvcGUgUlov
+RzIgcGxhdGZvcm1zDQo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBob3BlcnVuLGhpaG9wZS1yemcy
+bQ0KPiA+ICAgICAgICAgICAgLSBjb25zdDogcmVuZXNhcyxyOGE3NzRhMQ0KPiA+DQo+ID4gICAg
+ICAgIC0gZGVzY3JpcHRpb246IFJaL0cyRSAoUjhBNzc0QzApDQo+ID4gLS0NCj4gPiAyLjcuNA0K
+PiA+DQo=
