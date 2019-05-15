@@ -1,41 +1,41 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: imx8mq: add clock for SNVS RTC node
-Date: Wed, 15 May 2019 01:09:36 +0000
-Message-ID: <1557882259-3353-3-git-send-email-Anson.Huang@nxp.com>
-References: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
+Date: Wed, 15 May 2019 01:29:53 +0000
+Message-ID: <1557883490-22360-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557882259-3353-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Content-ID: <851922EF67B41749A9F3AE2EB5ED1BCF@eurprd04.prod.outlook.com>
+Content-ID: <0B56FF142FDB6246A7385E3330CB0D7A@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MQ has clock gate for SNVS module, add clock info to SNVS
-RTC node for clock management.
+Add macro for the SNVS clock of the i.MX8MM.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+This patch is based on patch: https://patchwork.kernel.org/patch/10939997/
+---
+ include/dt-bindings/clock/imx8mm-clock.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index e5f3133..b706de8 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -438,6 +438,8 @@
- 					offset =3D <0x34>;
- 					interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
- 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+					clocks =3D <&clk IMX8MQ_CLK_SNVS_ROOT>;
-+					clock-names =3D "snvs-rtc";
- 				};
- 			};
+diff --git a/include/dt-bindings/clock/imx8mm-clock.h b/include/dt-bindings=
+/clock/imx8mm-clock.h
+index fe47798..83f6673 100644
+--- a/include/dt-bindings/clock/imx8mm-clock.h
++++ b/include/dt-bindings/clock/imx8mm-clock.h
+@@ -245,6 +245,8 @@
+ #define IMX8MM_CLK_GPIO4_ROOT			226
+ #define IMX8MM_CLK_GPIO5_ROOT			227
 =20
+-#define IMX8MM_CLK_END				228
++#define IMX8MM_CLK_SNVS_ROOT			228
++
++#define IMX8MM_CLK_END				229
+=20
+ #endif
 --=20
 2.7.4
