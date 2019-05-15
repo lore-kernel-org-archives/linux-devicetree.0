@@ -1,31 +1,41 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 0/2] Document HopeRun RZ/G2M boards
-Date: Wed, 15 May 2019 17:34:41 +0100
-Message-ID: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add vendor prefix for HopeRun
+Date: Wed, 15 May 2019 17:34:42 +0100
+Message-ID: <1557938083-25423-2-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>
 Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-Dear All,
+Add "Jiangsu HopeRun Software Co., Ltd." to the list of devicetree
+vendor prefixes as "hoperun".
 
-this series aims at documenting the HiHope RZ/G2M platform from
-HopeRun, and its corresponding expansion board.
+Website: http://www.hoperun.com/en
 
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+
+---
 v1->v2:
-* Applied Rob's comments
+* No change
 
-Thanks,
-Fab
-
-Fabrizio Castro (2):
-  dt-bindings: Add vendor prefix for HopeRun
-  dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
-
- Documentation/devicetree/bindings/arm/renesas.yaml    | 8 ++++++++
  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 2 files changed, 9 insertions(+)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index e9034a6..dc492f0 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -177,6 +177,7 @@ hit	Hitachi Ltd.
+ hitex	Hitex Development Tools
+ holt	Holt Integrated Circuits, Inc.
+ honeywell	Honeywell
++hoperun	Jiangsu HopeRun Software Co., Ltd.
+ hp	Hewlett Packard
+ holtek	Holtek Semiconductor, Inc.
+ hwacom	HwaCom Systems Inc.
 -- 
 2.7.4
