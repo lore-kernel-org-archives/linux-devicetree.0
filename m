@@ -1,34 +1,62 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/5] ASoC: meson: add hdmitx glue support
-Date: Wed, 15 May 2019 11:33:17 -0700
-Message-ID: <7h7eard0uq.fsf@baylibre.com>
-References: <20190515131858.32130-1-jbrunet@baylibre.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add #cooling-cells entry for rk3288 GPU
+Date: Wed, 15 May 2019 11:43:28 -0700
+Message-ID: <CAD=FV=WQ-yAeB_xU5UVHGWgsC=a9t_CtN9bHvZnoxkfuA9=zGw@mail.gmail.com>
+References: <20190424162827.5297-1-mka@chromium.org> <CAD=FV=W+QGLmhEaqGc-=wNFzmaCr_f4rb5e8KQ4ZmeRaNi_xCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515131858.32130-1-jbrunet@baylibre.com>
+In-Reply-To: <CAD=FV=W+QGLmhEaqGc-=wNFzmaCr_f4rb5e8KQ4ZmeRaNi_xCw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Hi,
 
-> On the Amlogic SoC, there is a glue between the SoC audio outputs and the
-> input of the embedded Synopsys HDMI controller.
->
-> On the g12a, this glue is mostly a couple of muxes to select the i2s and
-> spdif inputs of the hdmi controller. Each of these inputs may have
-> different hw_params and fmt which makes our life a little bit more
-> interesting, especially when switching between to active inputs.
->
-> This glue is modeled as codec driver and uses codec-to-codec links to
-> connect to the Synopsys controller. This allows to use the regular
-> hdmi-codec driver (used by dw-hdmi i2s).
->
-> To avoid glitches while switching input, the trick is to temporarily
-> force a disconnection of the mux output, which shutdowns the output dai
-> link. This also ensure that the stream parameters and fmt are updated
-> when the output is connected back.
+On Wed, May 15, 2019 at 10:59 AM Doug Anderson <dianders@chromium.org> wrote:
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Hi,
+>
+> On Wed, Apr 24, 2019 at 9:28 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> > The Mali GPU of the rk3288 can be used as cooling device, add
+> > a #cooling-cells entry for it.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >  arch/arm/boot/dts/rk3288.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> > index ca7d52daa8fb..767e62908a6e 100644
+> > --- a/arch/arm/boot/dts/rk3288.dtsi
+> > +++ b/arch/arm/boot/dts/rk3288.dtsi
+> > @@ -1275,6 +1275,7 @@
+> >                 interrupt-names = "job", "mmu", "gpu";
+> >                 clocks = <&cru ACLK_GPU>;
+> >                 operating-points-v2 = <&gpu_opp_table>;
+> > +               #cooling-cells = <2>; /* min followed by max */
+> >                 power-domains = <&power RK3288_PD_GPU>;
+> >                 status = "disabled";
+> >         };
+>
+> Seems like a good idea to me.  Presumably we should also add this to
+> the bindings?
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+I guess we could now also do a follow-up CL that starts using the GPU
+as a cooling device.  Presumably it's still OK to specify this and it
+will just be ignored if there's no GPU driver?  It's a little funny
+because the upstream device tree uses the CPU to cool things down if
+the GPU temperature sensor trips.  Downstream uses the GPU to cool
+down the GPU.  ...though, of course, it's not really all that simple
+since everything is packed in so tightly.
+
+The other case that sticks as a sore thumb is the upstream
+"rk3288-veyron-mickey" where all the comments still talk about the GPU
+cooling but we have only the CPU cooling actually in the device tree.
+:-)
+
+-Doug
