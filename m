@@ -1,7 +1,7 @@
 From: Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 3/4] defconfig: arm64: enable i.MX8 SCU octop driver
-Date: Wed, 15 May 2019 07:53:34 +0000
-Message-ID: <20190515080703.19147-3-peng.fan@nxp.com>
+Subject: [PATCH V3 4/4] arm64: dts: imx: add i.MX8QXP ocotp support
+Date: Wed, 15 May 2019 07:53:39 +0000
+Message-ID: <20190515080703.19147-4-peng.fan@nxp.com>
 References: <20190515080703.19147-1-peng.fan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,46 +19,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Build in CONFIG_NVMEM_IMX_OCOTP_SCU.
+Add i.MX8QXP ocotp node
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
 
 V3:
- No change
+ Add R-b tag
 V2:
- rename patch title, add review tag
+ move address/size-cells below compatible, add "scu"
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 979a95c915b6..32b85102b857 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -748,6 +748,7 @@ CONFIG_HISI_PMU=y
- CONFIG_QCOM_L2_PMU=y
- CONFIG_QCOM_L3_PMU=y
- CONFIG_NVMEM_IMX_OCOTP=y
-+CONFIG_NVMEM_IMX_OCOTP_SCU=y
- CONFIG_QCOM_QFPROM=y
- CONFIG_ROCKCHIP_EFUSE=y
- CONFIG_UNIPHIER_EFUSE=y
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 0683ee2a48ae..725d341ee160 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -141,6 +141,12 @@
+ 			compatible = "fsl,imx8qxp-iomuxc";
+ 		};
+ 
++		ocotp: imx8qx-ocotp {
++			compatible = "fsl,imx8qxp-scu-ocotp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
+ 		pd: imx8qx-pd {
+ 			compatible = "fsl,imx8qxp-scu-pd";
+ 			#power-domain-cells = <1>;
 -- 
 2.16.4
