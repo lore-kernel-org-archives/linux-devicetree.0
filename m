@@ -1,133 +1,74 @@
-From: Rob Herring <rob.e.herring@gmail.com>
-Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
-Date: Wed, 15 May 2019 18:22:22 -0500
-Message-ID: <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com>
-References: <20190512174608.10083-1-peron.clem@gmail.com>
- <20190513151405.GW17751@phenom.ffwll.local>
- <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
- <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
- <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com>
- <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
- <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
+Date: Wed, 15 May 2019 16:41:23 -0700
+Message-ID: <20190515234123.GP31438@minitux>
+References: <20190509184415.11592-1-robdclark@gmail.com>
+ <20190509184415.11592-3-robdclark@gmail.com>
+ <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
+ <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
+ <CAD=FV=Vgiej=+hCZ_Eekoa4FJfpKxhOge8Wy29EEmtjB8JeF9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Vgiej=+hCZ_Eekoa4FJfpKxhOge8Wy29EEmtjB8JeF9g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Rob Clark <robdclark@chromium.org>, Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgNTowNiBQTSBDbMOpbWVudCBQw6lyb24gPHBlcm9uLmNs
-ZW1AZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIFJvYmluLAo+Cj4gT24gVHVlLCAxNCBNYXkgMjAx
-OSBhdCAyMzo1NywgUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4gd3JvdGU6Cj4g
-Pgo+ID4gT24gMjAxOS0wNS0xNCAxMDoyMiBwbSwgQ2zDqW1lbnQgUMOpcm9uIHdyb3RlOgo+ID4g
-PiBIaSwKPiA+ID4KPiA+ID4gT24gVHVlLCAxNCBNYXkgMjAxOSBhdCAxNzoxNywgQ2zDqW1lbnQg
-UMOpcm9uIDxwZXJvbi5jbGVtQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+Pgo+ID4gPj4gSGksCj4g
-PiA+Pgo+ID4gPj4gT24gVHVlLCAxNCBNYXkgMjAxOSBhdCAxMjoyOSwgTmVpbCBBcm1zdHJvbmcg
-PG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPiB3cm90ZToKPiA+ID4+Pgo+ID4gPj4+IEhpLAo+ID4g
-Pj4+Cj4gPiA+Pj4gT24gMTMvMDUvMjAxOSAxNzoxNCwgRGFuaWVsIFZldHRlciB3cm90ZToKPiA+
-ID4+Pj4gT24gU3VuLCBNYXkgMTIsIDIwMTkgYXQgMDc6NDY6MDBQTSArMDIwMCwgcGVyb24uY2xl
-bUBnbWFpbC5jb20gd3JvdGU6Cj4gPiA+Pj4+PiBGcm9tOiBDbMOpbWVudCBQw6lyb24gPHBlcm9u
-LmNsZW1AZ21haWwuY29tPgo+ID4gPj4+Pj4KPiA+ID4+Pj4+IEhpLAo+ID4gPj4+Pj4KPiA+ID4+
-Pj4+IFRoZSBBbGx3aW5uZXIgSDYgaGFzIGEgTWFsaS1UNzIwIE1QMi4gVGhlIGRyaXZlcnMgYXJl
-Cj4gPiA+Pj4+PiBvdXQtb2YtdHJlZSBzbyB0aGlzIHNlcmllcyBvbmx5IGludHJvZHVjZSB0aGUg
-ZHQtYmluZGluZ3MuCj4gPiA+Pj4+Cj4gPiA+Pj4+IFdlIGRvIGhhdmUgYW4gaW4tdHJlZSBtaWRn
-YXJkIGRyaXZlciBub3cgKHNpbmNlIDUuMikuIERvZXMgdGhpcyBzdHVmZiB3b3JrCj4gPiA+Pj4+
-IHRvZ2V0aGVyIHdpdGggeW91ciBkdCBjaGFuZ2VzIGhlcmU/Cj4gPiA+Pj4KPiA+ID4+PiBObywg
-YnV0IGl0IHNob3VsZCBiZSBlYXN5IHRvIGFkZC4KPiA+ID4+IEkgd2lsbCBnaXZlIGl0IGEgdHJ5
-IGFuZCBsZXQgeW91IGtub3cuCj4gPiA+IEFkZGVkIHRoZSBidXNfY2xvY2sgYW5kIGEgcmFtcCBk
-ZWxheSB0byB0aGUgZ3B1X3ZkZCBidXQgdGhlIGRyaXZlcgo+ID4gPiBmYWlsIGF0IHByb2JlLgo+
-ID4gPgo+ID4gPiBbICAgIDMuMDUyOTE5XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogY2xvY2sgcmF0
-ZSA9IDQzMjAwMDAwMAo+ID4gPiBbICAgIDMuMDU4Mjc4XSBwYW5mcm9zdCAxODAwMDAwLmdwdTog
-YnVzX2Nsb2NrIHJhdGUgPSAxMDAwMDAwMDAKPiA+ID4gWyAgICAzLjE3OTc3Ml0gcGFuZnJvc3Qg
-MTgwMDAwMC5ncHU6IG1hbGktdDcyMCBpZCAweDcyMCBtYWpvciAweDEKPiA+ID4gbWlub3IgMHgx
-IHN0YXR1cyAweDAKPiA+ID4gWyAgICAzLjE4NzQzMl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IGZl
-YXR1cmVzOiAwMDAwMDAwMCwxMDMwOWU0MCwKPiA+ID4gaXNzdWVzOiAwMDAwMDAwMCwyMTA1NDQw
-MAo+ID4gPiBbICAgIDMuMTk1NTMxXSBwYW5mcm9zdCAxODAwMDAwLmdwdTogRmVhdHVyZXM6IEwy
-OjB4MDcxMTAyMDYKPiA+ID4gU2hhZGVyOjB4MDAwMDAwMDAgVGlsZXI6MHgwMDAwMDgwOSBNZW06
-MHgxIE1NVToweDAwMDAyODIxIEFTOjB4Zgo+ID4gPiBKUzoweDcKPiA+ID4gWyAgICAzLjIwNzE3
-OF0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IHNoYWRlcl9wcmVzZW50PTB4MyBsMl9wcmVzZW50PTB4
-MQo+ID4gPiBbICAgIDMuMjM4MjU3XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogRmF0YWwgZXJyb3Ig
-ZHVyaW5nIEdQVSBpbml0Cj4gPiA+IFsgICAgMy4yNDQxNjVdIHBhbmZyb3N0OiBwcm9iZSBvZiAx
-ODAwMDAwLmdwdSBmYWlsZWQgd2l0aCBlcnJvciAtMTIKPiA+ID4KPiA+ID4gVGhlIEVOT01FTSBp
-cyBjb21pbmcgZnJvbSAicGFuZnJvc3RfbW11X2luaXQiCj4gPiA+IGFsbG9jX2lvX3BndGFibGVf
-b3BzKEFSTV9NQUxJX0xQQUUsICZwZmRldi0+bW11LT5wZ3RibF9jZmcsCj4gPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBmZGV2KTsKPiA+ID4KPiA+ID4gV2hp
-Y2ggaXMgZHVlIHRvIGEgY2hlY2sgaW4gdGhlIHBndGFibGUgYWxsb2MgImNmZy0+aWFzICE9IDQ4
-Igo+ID4gPiBhcm0tbHBhZSBpby1wZ3RhYmxlOiBhcm1fbWFsaV9scGFlX2FsbG9jX3BndGFibGUg
-Y2ZnLT5pYXMgMzMgY2ZnLT5vYXMgNDAKPiA+ID4KPiA+ID4gRFJJIHN0YWNrIGlzIHRvdGFsbHkg
-bmV3IGZvciBtZSwgY291bGQgeW91IGdpdmUgbWUgYSBsaXR0bGUgY2x1ZSBhYm91dAo+ID4gPiB0
-aGlzIGlzc3VlID8KPiA+Cj4gPiBIZWgsIHRoaXMgaXMgcHJvYmFibHkgdGhlIG9uZSBiaXQgd2hp
-Y2ggZG9lc24ndCByZWFsbHkgY291bnQgYXMgIkRSSSBzdGFjayIuCj4gPgo+ID4gVGhhdCdzIG1l
-cmVseSBhIHNvbWV3aGF0LWNvbnNlcnZhdGl2ZSBzYW5pdHkgY2hlY2sgLSBJJ20gcHJldHR5IHN1
-cmUgaXQKPiA+ICpzaG91bGQqIGJlIGZpbmUgdG8gY2hhbmdlIHRoZSB0ZXN0IHRvICJjZmctPmlh
-cyA+IDQ4IiAoaW8tcGd0YWJsZQo+ID4gaXRzZWxmIG91Z2h0IHRvIGNvcGUpLiBZb3UnbGwganVz
-dCBnZXQgdG8gYmUgdGhlIGZpcnN0IHRvIGFjdHVhbGx5IHRlc3QKPiA+IGEgbm9uLTQ4LWJpdCBj
-b25maWd1cmF0aW9uIGhlcmUgOikKPgo+IFRoYW5rcyBhIGxvdCwgdGhlIHByb2JlIHNlZW1zIGZp
-bmUgbm93IDopCj4KPiBJIHRyeSB0byBydW4gZ2xtYXJrMiA6Cj4gIyBnbG1hcmsyLWVzMi1kcm0K
-PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-Cj4gICAgIGdsbWFyazIgMjAxNy4wNwo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT0KPiAgICAgT3BlbkdMIEluZm9ybWF0aW9uCj4gICAgIEdM
-X1ZFTkRPUjogICAgIHBhbmZyb3N0Cj4gICAgIEdMX1JFTkRFUkVSOiAgIHBhbmZyb3N0Cj4gICAg
-IEdMX1ZFUlNJT046ICAgIE9wZW5HTCBFUyAyLjAgTWVzYSAxOS4xLjAtcmMyCj4gPT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+IFtidWlsZF0g
-dXNlLXZibz1mYWxzZToKPgo+IEJ1dCBpdCBzZWVtcyB0aGF0IEg2IGlzIG5vdCBzbyBlYXN5IHRv
-IGFkZCA6KC4KPgo+IFsgIDM0NS4yMDQ4MTNdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJx
-IHN0YXR1cz0xCj4gWyAgMzQ1LjIwOTYxN10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxl
-ZCBQYWdlIGZhdWx0IGluIEFTMCBhdCBWQQo+IDB4MDAwMDAwMDAwMjQwMDQwMAo+IFsgIDM0NS4y
-MDk2MTddIFJlYXNvbjogVE9ETwo+IFsgIDM0NS4yMDk2MTddIHJhdyBmYXVsdCBzdGF0dXM6IDB4
-ODAwMDAyQzEKPiBbICAzNDUuMjA5NjE3XSBkZWNvZGVkIGZhdWx0IHN0YXR1czogU0xBVkUgRkFV
-TFQKPiBbICAzNDUuMjA5NjE3XSBleGNlcHRpb24gdHlwZSAweEMxOiBUUkFOU0xBVElPTl9GQVVM
-VF9MRVZFTDEKPiBbICAzNDUuMjA5NjE3XSBhY2Nlc3MgdHlwZSAweDI6IFJFQUQKPiBbICAzNDUu
-MjA5NjE3XSBzb3VyY2UgaWQgMHg4MDAwCj4gWyAgMzQ1LjcyOTk1N10gcGFuZnJvc3QgMTgwMDAw
-MC5ncHU6IGdwdSBzY2hlZCB0aW1lb3V0LCBqcz0wLAo+IHN0YXR1cz0weDgsIGhlYWQ9MHgyNDAw
-NDAwLCB0YWlsPTB4MjQwMDQwMCwgc2NoZWRfam9iPTAwMDAwMDAwOWUyMDRkZTkKPiBbICAzNDYu
-MDU1ODc2XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogbW11IGlycSBzdGF0dXM9MQo+IFsgIDM0Ni4w
-NjA2ODBdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBVbmhhbmRsZWQgUGFnZSBmYXVsdCBpbiBBUzAg
-YXQgVkEKPiAweDAwMDAwMDAwMDJDMDBBMDAKPiBbICAzNDYuMDYwNjgwXSBSZWFzb246IFRPRE8K
-PiBbICAzNDYuMDYwNjgwXSByYXcgZmF1bHQgc3RhdHVzOiAweDgxMDAwMkMxCj4gWyAgMzQ2LjA2
-MDY4MF0gZGVjb2RlZCBmYXVsdCBzdGF0dXM6IFNMQVZFIEZBVUxUCj4gWyAgMzQ2LjA2MDY4MF0g
-ZXhjZXB0aW9uIHR5cGUgMHhDMTogVFJBTlNMQVRJT05fRkFVTFRfTEVWRUwxCj4gWyAgMzQ2LjA2
-MDY4MF0gYWNjZXNzIHR5cGUgMHgyOiBSRUFECj4gWyAgMzQ2LjA2MDY4MF0gc291cmNlIGlkIDB4
-ODEwMAo+IFsgIDM0Ni41NjE5NTVdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBncHUgc2NoZWQgdGlt
-ZW91dCwganM9MSwKPiBzdGF0dXM9MHg4LCBoZWFkPTB4MmMwMGEwMCwgdGFpbD0weDJjMDBhMDAs
-IHNjaGVkX2pvYj0wMDAwMDAwMGI1NWE5YTg1Cj4gWyAgMzQ2LjU3MzkxM10gcGFuZnJvc3QgMTgw
-MDAwMC5ncHU6IG1tdSBpcnEgc3RhdHVzPTEKPiBbICAzNDYuNTc4NzA3XSBwYW5mcm9zdCAxODAw
-MDAwLmdwdTogVW5oYW5kbGVkIFBhZ2UgZmF1bHQgaW4gQVMwIGF0IFZBCj4gMHgwMDAwMDAwMDAy
-QzAwQjgwCj4gWyAgMzQ2LjU3ODcwN10gUmVhc29uOiBUT0RPCj4gWyAgMzQ2LjU3ODcwN10gcmF3
-IGZhdWx0IHN0YXR1czogMHg4MDAwMDJDMQo+IFsgIDM0Ni41Nzg3MDddIGRlY29kZWQgZmF1bHQg
-c3RhdHVzOiBTTEFWRSBGQVVMVAo+IFsgIDM0Ni41Nzg3MDddIGV4Y2VwdGlvbiB0eXBlIDB4QzE6
-IFRSQU5TTEFUSU9OX0ZBVUxUX0xFVkVMMQo+IFsgIDM0Ni41Nzg3MDddIGFjY2VzcyB0eXBlIDB4
-MjogUkVBRAo+IFsgIDM0Ni41Nzg3MDddIHNvdXJjZSBpZCAweDgwMDAKPiBbICAzNDcuMDczOTQ3
-XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogZ3B1IHNjaGVkIHRpbWVvdXQsIGpzPTAsCj4gc3RhdHVz
-PTB4OCwgaGVhZD0weDJjMDBiODAsIHRhaWw9MHgyYzAwYjgwLCBzY2hlZF9qb2I9MDAwMDAwMDBj
-ZjZhZjhlOAo+IFsgIDM0Ny4xMDQxMjVdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0
-YXR1cz0xCj4gWyAgMzQ3LjEwODkzMF0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQ
-YWdlIGZhdWx0IGluIEFTMCBhdCBWQQo+IDB4MDAwMDAwMDAwMjgwMDkwMAo+IFsgIDM0Ny4xMDg5
-MzBdIFJlYXNvbjogVE9ETwo+IFsgIDM0Ny4xMDg5MzBdIHJhdyBmYXVsdCBzdGF0dXM6IDB4ODEw
-MDAyQzEKPiBbICAzNDcuMTA4OTMwXSBkZWNvZGVkIGZhdWx0biB0aGkgc3RhdHVzOiBTTEFWRSBG
-QVVMVAo+IFsgIDM0Ny4xMDg5MzBdIGV4Y2VwdGlvbiB0eXBlIDB4QzE6IFRSQU5TTEFUSU9OX0ZB
-VUxUX0xFVkVMMQo+IFsgIDM0Ny4xMDg5MzBdIGFjY2VzcyB0eXBlIDB4MjogUkVBRAo+IFsgIDM0
-Ny4xMDg5MzBdIHNvdXJjZSBpZCAweDgxMDAKPiBbICAzNDcuNjE3OTUwXSBwYW5mcm9zdCAxODAw
-MDAwLmdwdTogZ3B1IHNjaGVkIHRpbWVvdXQsIGpzPTEsCj4gc3RhdHVzPTB4OCwgaGVhZD0weDI4
-MDA5MDAsIHRhaWw9MHgyODAwOTAwLCBzY2hlZF9qb2I9MDAwMDAwMDA5MzI1ZmRiNwo+IFsgIDM0
-Ny42Mjk5MDJdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0YXR1cz0xCj4gWyAgMzQ3
-LjYzNDY5Nl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFT
-MCBhdCBWQQo+IDB4MDAwMDAwMDAwMjgwMEE4MAoKSXMgdGhpcyAzMiBvciA2NCBiaXQgdXNlcnNw
-YWNlPyBJIHRoaW5rIDY0LWJpdCBkb2VzIG5vdCB3b3JrIHdpdGgKVDd4eC4gWW91IG1pZ2h0IG5l
-ZWQgdGhpc1sxXS4gWW91IG1heSBhbHNvIGJlIHRoZSBmaXJzdCB0byB0cnkgVDcyMCwKc28gaXQg
-Y291bGQgYmUgc29tZXRoaW5nIGVsc2UuCgpSb2IKClsxXSBodHRwczovL2dpdGxhYi5mcmVlZGVz
-a3RvcC5vcmcvbWVzYS9tZXNhL21lcmdlX3JlcXVlc3RzLzY1MAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed 15 May 14:50 PDT 2019, Doug Anderson wrote:
+
+> Hi,
+> 
+> On Tue, May 14, 2019 at 9:10 PM Rob Clark <robdclark@chromium.org> wrote:
+> 
+> > On Mon, May 13, 2019 at 3:48 PM Doug Anderson <dianders@chromium.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > > From: Douglas Anderson <dianders@chromium.org>
+> > > >
+> > > > Let's fixup the reserved memory to re-add the things we deleted in
+> > > > ("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
+> > > > reserved-mem changes") in a way that plays nicely with the new
+> > > > upstream definitions.
+> > >
+> > > The message above makes no sense since that commit you reference isn't
+> > > in upstream.
+> > >
+> > > ...but in any case, why not squash this in with the previous commit?
+> >
+> > Yeah, I should have mentioned this was my intention, I just left it
+> > unsquashed since (at the time) it was something I had cherry-picked on
+> > top of current 4.19 cros kernel..
+> >
+> > anyways, I pushed an (unsquashed, converted to fixup!'s) update to:
+> >
+> > https://github.com/freedreno/kernel-msm/commits/wip/cheza-dtb-upstreaming
+> >
+> > which has updates based on you're review comments (at least assuming I
+> > understood them correctly).. plus some unrelated to cheza-dt patches
+> > on top to get things actually working (ie. ignore everything on top of
+> > the fixup!'s)
+> 
+> Looks OK to me.  Are you going to post this?  Bjorn / Andy: do you
+> guys have opinions here?
+> 
+
+I think this is a good opportunity to get people with Cheza off 4.19, so
+I'm all for landing this upstream.
+
+Regards,
+Bjorn
+
+> 
+> > I didn't see any comments on the 'delete zap-shader' patch, so
+> > hopefully that means what I did there was a sane (or at least not
+> > insane) way to handle android/linux tz vs what we have on cheza?
+> 
+> I wasn't CCed, so I assumed you were looking for feedback from others
+> on that one.  ;-)  Oh, but I guess Jordan and Bjorn also weren't
+> CCed...  In any case, I replied now.
