@@ -1,62 +1,31 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M]
- boards
-Date: Wed, 15 May 2019 16:20:51 +0000
-Message-ID: <TY1PR01MB17709902D813EB99E16FE6D2C0090@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1557920697-18057-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1557920697-18057-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Subject: [PATCH v2 0/2] Document HopeRun RZ/G2M boards
+Date: Wed, 15 May 2019 17:34:41 +0100
+Message-ID: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.c>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9i
-IEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMTUgTWF5IDIwMTkgMTQ6NDIN
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGR0LWJpbmRpbmdzOiBhcm06IHJlbmVzYXM6IEFk
-ZCBIb3BlUnVuIFJaL0cyW01dIGJvYXJkcw0KPiANCj4gT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQg
-Njo0NSBBTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
-bT4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgYm9hcmQgSGlIb3BlIFJaL0cyTSAo
-dGhlIG1haW4gYm9hcmQsIHBvd2VyZWQgYnkNCj4gPiB0aGUgUjhBNzc0QTEpIGFuZCBib2FyZCBI
-aUhvcGUgUlovRzIgRVggKHRoZSBleHBhbnNpb24gYm9hcmQNCj4gPiB0aGF0IHNpdHMgb24gdG9w
-IG9mIHRoZSBIaUhvcGUgUlovRzJNKS4gQm90aCBib2FyZHMgYXJlIG1hZGUNCj4gPiBieSBKaWFu
-Z3N1IEhvcGVSdW4gU29mdHdhcmUgQ28uLCBMdGQuIChhLmsuYS4gSG9wZVJ1bikuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
-c2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0ZXJzb24gPENocmlzLlBhdGVyc29u
-MkByZW5lc2FzLmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFVzZWZ1bCBsaW5rczoNCj4gPiBodHRw
-Oi8vaGlob3BlLm9yZy9wcm9kdWN0L2RldGFpbC9yemcyDQo+ID4gaHR0cHM6Ly9pdGVtLnRhb2Jh
-by5jb20vaXRlbS5odG0/c3BtPWEyb3EwLjEyNTc1MjgxLjAuMC42YmNmMWRlYlFwemtSUyZmdD10
-JmlkPTU5MjE3NzQ5ODQ3Mg0KPiA+IGh0dHA6Ly93d3cuaG9wZXJ1bi5jb20vQ24vbmV3cy9pZC8z
-NzkNCj4gPg0KPiA+IFdlIGFscmVhZHkga25vdyB0aGF0IHRoZSBIaUhvcGUgUlovRzIgRVggd2ls
-bCBhbHNvIHNpdCBvbiB0aGUNCj4gPiBIaUhvcGUgUlovRzJOLCBldmVuIHRob3VnaCB0aGUgSGlI
-b3BlIFJaL0cyTiBkb2Vzbid0IGV4aXN0IGp1c3QNCj4gPiB5ZXQuDQo+IA0KPiBTZWVtcyBsaWtl
-IHVzZWZ1bCBpbnRvIHRvIHB1dCBpbiB0aGUgY29tbWl0IG1zZy4NCg0KT2ssIHdpbGwgbW92ZSB0
-aGUgbm90ZXMgdG8gdGhlIGNvbW1pdCBtc2cgdGhlbiBmb3IgdjIuDQoNCj4gDQo+ID4gLS0tDQo+
-ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVuZXNhcy55YW1sIHwg
-OCArKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZW5l
-c2FzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlbmVzYXMu
-eWFtbA0KPiA+IGluZGV4IDE5ZjM3OTguLjk1MzAyYjkgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZW5lc2FzLnlhbWwNCj4gPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlbmVzYXMueWFtbA0KPiA+IEBA
-IC0xMDYsNiArMTA2LDE0IEBAIHByb3BlcnRpZXM6DQo+ID4NCj4gPiAgICAgICAgLSBkZXNjcmlw
-dGlvbjogUlovRzJNIChSOEE3NzRBMSkNCj4gPiAgICAgICAgICBpdGVtczoNCj4gPiArICAgICAg
-ICAgIC0gZW51bToNCj4gPiArICAgICAgICAgICAgICAtIGhvcGVydW4saGlob3BlLXJ6ZzJtICMg
-SG9wZVJ1biBIaUhvcGUgUlovRzJNIHBsYXRmb3JtDQo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBy
-ZW5lc2FzLHI4YTc3NGExDQo+ID4gKw0KPiA+ICsgICAgICAgIGl0ZW1zOg0KPiANCj4gRGlkIHlv
-dSBydW4gdGhpcyB0aHJ1IHRoZSBjaGVja3MgYmVjYXVzZSB0aGlzIGlzbid0IHZhbGlkIGpzb24t
-c2NoZW1hLg0KPiBZb3UgY2FuJ3QgaGF2ZSBzYW1lIGtleXdvcmQgdHdpY2UuIFRoaXMgJ2l0ZW1z
-JyBuZWVkcyB0byBiZSBhbm90aGVyDQo+IGxpc3QgZW50cnkgKGkuZS4gYWRkIGEgJy0nKS4NCg0K
-T29wcywgc29ycnkgYWJvdXQgdGhhdC4gV2lsbCBmaXggaW4gdjIuDQoNClRoYW5rcywNCkZhYg0K
-DQo+IA0KPiA+ICsgICAgICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgICAgICAgIC0gaG9wZXJ1
-bixoaWhvcGUtcnpnMi1leCAjIEhvcGVSdW4gZXhwYW5zaW9uIGJvYXJkIGZvciBIaUhvcGUgUlov
-RzIgcGxhdGZvcm1zDQo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBob3BlcnVuLGhpaG9wZS1yemcy
-bQ0KPiA+ICAgICAgICAgICAgLSBjb25zdDogcmVuZXNhcyxyOGE3NzRhMQ0KPiA+DQo+ID4gICAg
-ICAgIC0gZGVzY3JpcHRpb246IFJaL0cyRSAoUjhBNzc0QzApDQo+ID4gLS0NCj4gPiAyLjcuNA0K
-PiA+DQo=
+Dear All,
+
+this series aims at documenting the HiHope RZ/G2M platform from
+HopeRun, and its corresponding expansion board.
+
+v1->v2:
+* Applied Rob's comments
+
+Thanks,
+Fab
+
+Fabrizio Castro (2):
+  dt-bindings: Add vendor prefix for HopeRun
+  dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
+
+ Documentation/devicetree/bindings/arm/renesas.yaml    | 8 ++++++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 2 files changed, 9 insertions(+)
+
+-- 
+2.7.4
