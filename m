@@ -1,101 +1,29 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Date: Wed, 15 May 2019 15:26:14 +0530
-Message-ID: <CAHLCerM6SVCx5vdrodh+O5nQ0uDwr7zpvOMxVYtreT9EFk22eg@mail.gmail.com>
-References: <20190508145600.GA26843@centauri> <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
- <20190510091158.GA10284@e107155-lin> <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
- <20190513094935.GA4885@e107155-lin>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/3] mfd: lp87565: Add support for 4-phase lp87561 combination
+Date: Wed, 15 May 2019 15:38:45 +0530
+Message-ID: <20190515100848.19560-1-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513094935.GA4885@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2019 at 3:19 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Fri, May 10, 2019 at 11:58:40PM +0530, Amit Kucheria wrote:
-> > On Fri, May 10, 2019 at 2:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > >
->
-> [...]
->
-> > >
-> > > Yes entry-method="psci" is required as per DT binding but not checked
-> > > in code on arm64. We have CPU ops with idle enabled only for "psci", so
-> > > there's not need to check.
-> >
-> > I don't see it being checked on arm32 either.
-> >
->
-> arm_cpuidle_get_ops in arch/arm/kernel/cpuidle.c checks the method, has
-> to match "psci" for drivers/firmware/psci.c to work on arm32
+Add support for 4-phase lp87561 combination.
 
-That is a check for the enable-method, not entry-method.
+Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
 
-We don't check for entry-method anywhere, AFAICT.
+Keerthy (3):
+  dt-bindings: mfd: lp87565: Add lp87561 configuration
+  mfd: lp87565: Add support for 4-phase lp87561 combination
+  regulator: lp87565: Add 4-phase lp87561 regulator support
 
-> [...]
->
-> > >
-> > > Why do you want to deprecated just because Linux kernel doesn't want to
-> > > use it. That's not a valid reason IMO.
-> >
-> > Fair enough. Just want to make sure that it isn't some vestigial
-> > property that was never used. Do you know if another OS is actually
-> > using it?
-> >
->
-> Not that I am aware of. But Linux uses it on arm32, so it's not entirely
-> unused.
+ .../devicetree/bindings/mfd/lp87565.txt       | 36 +++++++++++++++++++
+ drivers/mfd/lp87565.c                         |  4 +++
+ drivers/regulator/lp87565-regulator.c         |  9 +++++
+ include/linux/mfd/lp87565.h                   |  2 ++
+ 4 files changed, 51 insertions(+)
 
-entry-method is not read in Linux code (see above).
-
-> > > > Do we expect to support PSCI platforms that might have a different
-> > > > entry-method for idle states?
-> > >
-> > > Not on ARM64, but same DT bindings can be used for idle-states on
-> > > say RISC-V and have some value other than "psci".
-> >
-> > Both enable-method and entry-method properties are currently only used
-> > (and documented) for ARM platforms. Hence this discussion about
-> > deprecation of one of them.
-> >
->
-> Yes, it's used on arm32 as mentioned above.
-
-Only enable-method is checked.
-
-> > > > Should I whip up a patch removing entry-method? Since we don't check
-> > > > for it today, it won't break the old DTs either.
-> > > >
-> > >
-> > > Nope, I don't think so. But if it's causing issues, we can look into it.
-> > > I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
-> >
-> > Only a couple of minor issues:
-> > 1. There is a trickle of DTs that need fixing up every now and then
-> > because they don't use entry-method in their idle-states node. Schema
-> > validation ought to fix that.
->
-> I understand, scheme should fix it. This is not just restricted to this,
-> it's generic DT problem. So let's hope we get schema based validation soon.
->
-> > 2. A property that isn't ready by any code is a bit confusing. Perhaps
-> > we can mention something to the effect in the documentation?
-> >
->
-> Not entirely true. We have quite a lot of bindings that are added just
-> because downstream drivers use e.g. GPU and even standard ePAPR or DT
-> specification has lots of bindings which OS like Linux may choose
-> not to use at all. Same applies to ACPI, so I am not for removing bindings
-> just because there are no users in Linux.
-
-That is a fair point. But in those cases, the binding is probably used
-by another OS. entry-method seems to an example of one that isn't used
-by Linux or other OSes.
-
-Regards,
-Amit
+-- 
+2.17.1
