@@ -1,70 +1,54 @@
-Return-Path: <SRS0=HSAE=TV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.lunchkarty.eu ([80.211.141.150]:59856 "EHLO lunchkarty.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfEUJ2U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 May 2019 05:28:20 -0400
-Received: by mail.lunchkarty.eu for <devicetree@vger.kernel.org>; Tue, 21 May 2019 09:22:29 GMT
-Message-ID: <20190521111214-0.1.1a.2h2l.0.ew6iulgepw@lunchkarty.eu>
-Date: Tue, 21 May 2019 09:22:29 GMT
-From: "Radoslav Dobrev" <radoslav.dobrev@lunchkarty.eu>
-Subject: =?UTF-8?Q?=D0=9F=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B8_=D0=B7=D0=B0_=D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0?=
+Return-Path: <SRS0=4cVb=TP=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
+References: <20190514145605.19112-1-chris.brandt@renesas.com>
+ <20190514145605.19112-5-chris.brandt@renesas.com> <CAMuHMdVVu23_8=8CLwM46QAJsxUbYyN1TYQaAzoE+d2uM3YshQ@mail.gmail.com>
+ <f4ceaadb-62e1-9880-e8e3-4f5bf54ce91e@cogentembedded.com>
+In-Reply-To: <f4ceaadb-62e1-9880-e8e3-4f5bf54ce91e@cogentembedded.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 15 May 2019 11:03:54 +0200
+Message-ID: <CAMuHMdWDr0KwrqukgMC=UiMqW4YLF76sag-Jr_fJFfhkggjeKw@mail.gmail.com>
+Subject: Re: [PATCH v3 04/15] dt-bindings: rcar-gen3-phy-usb2: Document use of usb_x1
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5,
+Hi Sergei,
 
-=D0=9A=D0=B0=D1=82=D0=BE =D1=81=D0=B2=D0=B5=D1=82=D0=BE=D0=B2=D0=B5=D0=BD=
- =D0=BB=D0=B8=D0=B4=D0=B5=D1=80 =D0=B8 =D0=B2=D0=B5=D1=87=D0=B5 =D0=BD=D0=
-=B0=D0=BB=D0=BE=D0=B6=D0=B8=D0=BB =D1=81=D0=B5 =D0=B5=D0=BA=D1=81=D0=BF=D0=
-=B5=D1=80=D1=82 =D0=BF=D0=BE =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =D0=
-=B7=D0=B0 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0, =D0=BF=D0=
-=BE=D0=B4=D0=B3=D0=BE=D1=82=D0=B2=D0=B8=D1=85=D0=BC=D0=B5 =D0=B7=D0=B0 =D0=
-=92=D0=B0=D1=81 =D1=81=D0=BF=D0=B5=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=
-=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=D0=BD=D0=B0 =D0=
-=BF=D1=80=D0=BE=D0=B3=D1=80=D0=B0=D0=BC=D0=B0 =D0=BF=D0=BE=D0=B4 =D1=84=D0=
-=BE=D1=80=D0=BC=D0=B0=D1=82=D0=B0 =D0=BD=D0=B0 =D1=84=D0=B8=D0=BD=D0=B0=D0=
-=BD=D1=81=D0=B8=D1=80=D0=B0=D0=BD=D0=B5 =D0=BD=D0=B0 =D1=85=D1=80=D0=B0=D0=
-=BD=D0=B0 =D0=B7=D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=
-=B8=D1=82=D0=B5.
+On Wed, May 15, 2019 at 10:39 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 15.05.2019 10:35, Geert Uytterhoeven wrote:
+> >> Document the USB_X1 input and add clock-names to identify
+> >> functional and USB_X1 clocks.
+> >>
+> >> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> >> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> >> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> >> @@ -28,7 +28,11 @@ Required properties:
+> >>                followed by the generic version.
+> >>
+> >>   - reg: offset and length of the partial USB 2.0 Host register block.
+> >> -- clocks: clock phandle and specifier pair(s).
+> >> +- clocks: clock phandle and specifier pair(s). For SoCs that have a separate
+> >> +          dedicated USB_X1 input for the PLL, that is also listed.
+> >> +- clock-names: Name of the clocks. The functional clock shall be called "fclk"
+> >
+> > Names?
+>
+>     And I think the module clock name was "fck", not "fclk"...
 
-=D0=92=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=
-=D1=80=D0=B0=D0=BD=D0=B0 =D1=81=D0=B0 =D0=BC=D0=BE=D0=B4=D0=B5=D1=80=D0=B5=
-=D0=BD, =D0=B5=D1=84=D0=B5=D0=BA=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D0=B8 =D1=
-=80=D0=B5=D0=BD=D1=82=D0=B0=D0=B1=D0=B8=D0=BB=D0=B5=D0=BD =D0=BD=D0=B0=D1=
-=87=D0=B8=D0=BD =D0=B7=D0=B0 =D0=B8=D0=B7=D0=B3=D1=80=D0=B0=D0=B6=D0=B4=D0=
-=B0=D0=BD=D0=B5 =D0=BD=D0=B0 =D0=BB=D0=BE=D1=8F=D0=BB=D0=BD=D0=BE=D1=81=D1=
-=82 =D0=BD=D0=B0 =D0=92=D0=B0=D1=88=D0=B8=D1=8F =D0=BF=D0=B5=D1=80=D1=81=D0=
-=BE=D0=BD=D0=B0=D0=BB. =D0=92=D0=B8=D0=B5, =D0=BA=D0=B0=D1=82=D0=BE =D1=80=
-=D0=B0=D0=B1=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB, =D0=BF=D0=B5=
-=D1=87=D0=B5=D0=BB=D0=B8=D1=82=D0=B5 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B8=
-=D1=80=D0=B0=D0=BD =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=B0 =D0=B5=
-=D0=BA=D0=B8=D0=BF, =D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=
-=D0=B8=D1=82=D0=B5 =D0=92=D0=B8 =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B0=D0=B2=
-=D0=B0=D1=82 =D1=87=D1=80=D0=B5=D0=B7 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
-=D0=B8=D1=82=D0=B5 =D0=B4=D0=BE=D1=81=D1=82=D1=8A=D0=BF =D0=B4=D0=BE =D0=B8=
-=D0=B7=D0=B1=D1=80=D0=B0=D0=BD=D0=B8 =D0=BE=D1=82 =D1=82=D1=8F=D1=85 =D0=B2=
-=D0=B5=D1=80=D0=B8=D0=B3=D0=B8 =D1=85=D1=80=D0=B0=D0=BD=D0=B8=D1=82=D0=B5=
-=D0=BB=D0=BD=D0=B8 =D0=BC=D0=B0=D0=B3=D0=B0=D0=B7=D0=B8=D0=BD=D0=B8 =D0=B8=
- =D0=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D1=85=
-=D1=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5 =D0=BD=D0=B0=D0=B2=D1=81=D1=8F=D0=BA=
-=D1=8A=D0=B4=D0=B5 =D0=B8 =D0=BF=D0=BE =D0=B2=D1=81=D1=8F=D0=BA=D0=BE =D0=
-=B2=D1=80=D0=B5=D0=BC=D0=B5.
+Indeed, sorry for missing that.
 
-=D0=A9=D0=B5 =D1=81=D0=B5 =D1=80=D0=B0=D0=B4=D0=B2=D0=B0=D0=BC =D0=B4=D0=B0=
- =D0=92=D0=B8 =D1=80=D0=B0=D0=B7=D0=BA=D0=B0=D0=B6=D0=B0 =D0=B7=D0=B0 =D0=
-=B2=D1=8A=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5=
- =D0=BD=D0=B0 =D1=82=D0=B5=D0=B7=D0=B8 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
-=D0=B8. =D0=9C=D0=BE=D0=BB=D1=8F =D1=83=D0=B2=D0=B5=D0=B4=D0=BE=D0=BC=D0=B5=
-=D1=82=D0=B5 =D0=BC=D0=B5, =D0=B0=D0=BA=D0=BE =D0=B6=D0=B5=D0=BB=D0=B0=D0=
-=B5=D1=82=D0=B5 =D0=B4=D0=B0 =D0=BF=D0=BE=D0=B3=D0=BE=D0=B2=D0=BE=D1=80=D0=
-=B8=D0=BC.
+Gr{oetje,eeting}s,
 
+                        Geert
 
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.lunchkarty.eu
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
