@@ -1,48 +1,22 @@
-Return-Path: <SRS0=9bdO=TN=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V3 23/29] dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
-Date: Mon, 13 May 2019 23:37:38 +0530
-Message-ID: <20190513180744.16493-24-mmaddireddy@nvidia.com>
-In-Reply-To: <20190513180744.16493-1-mmaddireddy@nvidia.com>
-References: <20190513180744.16493-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=DwSA=TP=verge.net.au=horms@kernel.org>
+Date: Wed, 15 May 2019 09:56:59 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 06/15] dt-bindings: rcar-gen3-phy-usb2: Document
+ dr_mode
+Message-ID: <20190515075658.ra2w4lixewfhnsng@verge.net.au>
+References: <20190514145605.19112-1-chris.brandt@renesas.com>
+ <20190514145605.19112-7-chris.brandt@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514145605.19112-7-chris.brandt@renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document PCIe DPD pinctrl optional property to put PEX clk & BIAS pads
-in low power mode.
+On Tue, May 14, 2019 at 09:55:56AM -0500, Chris Brandt wrote:
+> Document the optional dr_mode property
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V3: No change
-
-V2: Using standard pinctrl names, default and idle
-
- .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt       | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-index 145a4f04194f..7939bca47861 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-@@ -65,6 +65,14 @@ Required properties:
-   - afi
-   - pcie_x
- 
-+Optional properties:
-+- pinctrl-names: A list of pinctrl state names. Must contain the following
-+  entries:
-+  - "default": active state, puts PCIe I/O out of deep power down state
-+  - "idle": puts PCIe I/O into deep power down state
-+- pinctrl-0: phandle for the default/active state of pin configurations.
-+- pinctrl-1: phandle for the idle state of pin configurations.
-+
- Required properties on Tegra124 and later (deprecated):
- - phys: Must contain an entry for each entry in phy-names.
- - phy-names: Must include the following entries:
--- 
-2.17.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
