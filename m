@@ -1,82 +1,63 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH 2/2] dt-bindings: iio: frequency: Add docs for ADF4371 PLL
-Date: Wed, 15 May 2019 14:00:43 +0300
-Message-ID: <1557918043-25733-1-git-send-email-stefan.popa@analog.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: meson-gx: add ddr-access-quirk
+ property
+Date: Wed, 15 May 2019 14:43:31 +0200
+Message-ID: <9615cdb8-0a7e-fd39-45f0-79fdc7c0441c@baylibre.com>
+References: <20190513091548.16674-1-narmstrong@baylibre.com>
+ <20190513091548.16674-2-narmstrong@baylibre.com>
+ <CAFBinCAhTeywLZRBhcX_myktU9k4_YcjsjgCeTHEkP7SX8JCMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCAhTeywLZRBhcX_myktU9k4_YcjsjgCeTHEkP7SX8JCMQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: ulf.hansson@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, baylibre-upstreaming@groups.io, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
+On 14/05/2019 19:50, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, May 13, 2019 at 11:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
+>> makes any DDR access from the MMC controller fail.
+>>
+>> Add the amlogic,ddr-access-quirk property so signal this particular
+>> controller has this bug and needs a quirk to work properly.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+>> ---
+>>  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+>> index 13e70409e8ac..f8914dab06c6 100644
+>> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+>> @@ -22,6 +22,10 @@ Required properties:
+>>    clock rate requested by the MMC core.
+>>  - resets     : phandle of the internal reset line
+>>
+>> +Optional properties:
+>> +- amlogic,ddr-access-quirk: set when HW cannot access the DDR memory, like on
+>> +  the G12A SDIO controller.
+> (I believe we cannot use a standard property like "dma-ranges" to
+> disable DMA access)
+> personally I prefer "amlogic,no-direct-memory-access" or
+> "amlogic,no-ddr-access", but if Rob is happy with the current naming
+> then I'm happy as well
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
- .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+I have no preference, I can change it easily,
 
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-new file mode 100644
-index 0000000..d7adf074
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADF4371 Wideband Synthesizer
-+
-+maintainers:
-+  - Popa Stefan <stefan.popa@analog.com>
-+
-+description: |
-+  Analog Devices ADF4371 SPI Wideband Synthesizer
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adf4371
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      Definition of the external clock (see clock/clock-bindings.txt)
-+    maxItems: 1
-+
-+  clock-names:
-+    description:
-+      Must be "clkin"
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        frequency@0 {
-+                compatible = "adi,adf4371";
-+                reg = <0>;
-+                spi-max-frequency = <1000000>;
-+                clocks = <&adf4371_clkin>;
-+                clock-names = "clkin";
-+        };
-+    };
-+...
--- 
-2.7.4
+Neil
+
+> 
+> 
+> Regards
+> Martin
+> 
