@@ -1,7 +1,7 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 1/2] arm64: dts: imx8mm: Add SAI nodes
-Date: Wed, 15 May 2019 14:42:28 +0000
-Message-ID: <20190515144210.25596-2-daniel.baluta@nxp.com>
+Subject: [PATCH v3 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
+Date: Wed, 15 May 2019 14:42:29 +0000
+Message-ID: <20190515144210.25596-3-daniel.baluta@nxp.com>
 References: <20190515144210.25596-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -9,103 +9,116 @@ Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190515144210.25596-1-daniel.baluta@nxp.com>
 Content-Language: en-US
-Content-ID: <9DD38CC770A78C4284E799FF968FF418@eurprd04.prod.outlook.com>
+Content-ID: <127BF082BBC1824D9BA7AEC6678EAD49@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>
 Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MM has 5 SAI instances with the following base
-addresses according to RM.
+i.MX8MM has one wm8524 audio codec connected with
+SAI3 digital audio interface.
 
-SAI1 base address: 3001_0000h
-SAI2 base address: 3002_0000h
-SAI3 base address: 3003_0000h
-SAI5 base address: 3005_0000h
-SAI6 base address: 3006_0000h
+This patch uses simple-card machine driver in order
+to enable wm8524 codec.
+
+We need to set:
+	* SAI3 pinctrl configuration
+	* codec reset gpio pinctrl configuration
+	* clock hierarchy
+	* codec node
+	* simple-card configuration
 
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 66 +++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 55 ++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mm.dtsi
-index 6b407a94c06e..52abe2d03f31 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -201,6 +201,72 @@
- 			#size-cells =3D <1>;
- 			ranges;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot=
+/dts/freescale/imx8mm-evk.dts
+index 2d5d89475b76..7c578d8762b9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -37,6 +37,37 @@
+ 		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	wm8524: audio-codec {
++		#sound-dai-cells =3D <0>;
++		compatible =3D "wlf,wm8524";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpio_wlf>;
++		wlf,mute-gpios =3D <&gpio5 21 GPIO_ACTIVE_LOW>;
++	};
++
++	sound-wm8524 {
++		compatible =3D "simple-audio-card";
++		simple-audio-card,name =3D "wm8524-audio";
++		simple-audio-card,format =3D "i2s";
++		simple-audio-card,frame-master =3D <&cpudai>;
++		simple-audio-card,bitclock-master =3D <&cpudai>;
++		simple-audio-card,widgets =3D
++			"Line", "Left Line Out Jack",
++			"Line", "Right Line Out Jack";
++		simple-audio-card,routing =3D
++			"Left Line Out Jack", "LINEVOUTL",
++			"Right Line Out Jack", "LINEVOUTR";
++
++		cpudai: simple-audio-card,cpu {
++			sound-dai =3D <&sai3>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai =3D <&wm8524>;
++			clocks =3D <&clk IMX8MM_CLK_SAI3_ROOT>;
++		};
++	};
+ };
 =20
-+			sai1: sai@30010000 {
-+				compatible =3D "fsl,imx8mm-sai", "fsl,imx8mq-sai";
-+				reg =3D <0x30010000 0x10000>;
-+				interrupts =3D <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_SAI1_IPG>,
-+					 <&clk IMX8MM_CLK_SAI1_ROOT>,
-+					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
-+				clock-names =3D "bus", "mclk1", "mclk2", "mclk3";
-+				dmas =3D <&sdma2 0 2 0>, <&sdma2 1 2 0>;
-+				dma-names =3D "rx", "tx";
-+				status =3D "disabled";
-+			};
+ &fec1 {
+@@ -61,6 +92,15 @@
+ 	};
+ };
+=20
++&sai3 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_sai3>;
++	assigned-clocks =3D <&clk IMX8MM_CLK_SAI3>;
++	assigned-clock-parents =3D <&clk IMX8MM_AUDIO_PLL1_OUT>;
++	assigned-clock-rates =3D <24576000>;
++	status =3D "okay";
++};
 +
-+			sai2: sai@30020000 {
-+				compatible =3D "fsl,imx8mm-sai", "fsl,imx8mq-sai";
-+				reg =3D <0x30020000 0x10000>;
-+				interrupts =3D <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_SAI2_IPG>,
-+					<&clk IMX8MM_CLK_SAI2_ROOT>,
-+					<&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
-+				clock-names =3D "bus", "mclk1", "mclk2", "mclk3";
-+				dmas =3D <&sdma2 2 2 0>, <&sdma2 3 2 0>;
-+				dma-names =3D "rx", "tx";
-+				status =3D "disabled";
-+			};
+ &uart2 { /* console */
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&pinctrl_uart2>;
+@@ -124,12 +164,27 @@
+ 		>;
+ 	};
+=20
++	pinctrl_gpio_wlf: gpiowlfgrp {
++		fsl,pins =3D <
++			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21        0xd6
++		>;
++	};
 +
-+			sai3: sai@30030000 {
-+				#sound-dai-cells =3D <0>;
-+				compatible =3D "fsl,imx8mm-sai", "fsl,imx8mq-sai";
-+				reg =3D <0x30030000 0x10000>;
-+				interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_SAI3_IPG>,
-+					 <&clk IMX8MM_CLK_SAI3_ROOT>,
-+					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
-+				clock-names =3D "bus", "mclk1", "mclk2", "mclk3";
-+				dmas =3D <&sdma2 4 2 0>, <&sdma2 5 2 0>;
-+				dma-names =3D "rx", "tx";
-+				status =3D "disabled";
-+			};
+ 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+ 		fsl,pins =3D <
+ 			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
+ 		>;
+ 	};
+=20
++	pinctrl_sai3: sai3grp {
++		fsl,pins =3D <
++			MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC     0xd6
++			MX8MM_IOMUXC_SAI3_TXC_SAI3_TX_BCLK      0xd6
++			MX8MM_IOMUXC_SAI3_MCLK_SAI3_MCLK        0xd6
++			MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
++		>;
++	};
 +
-+			sai5: sai@30050000 {
-+				compatible =3D "fsl,imx8mm-sai", "fsl,imx8mq-sai";
-+				reg =3D <0x30050000 0x10000>;
-+				interrupts =3D <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_SAI5_IPG>,
-+					 <&clk IMX8MM_CLK_SAI5_ROOT>,
-+					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
-+				clock-names =3D "bus", "mclk1", "mclk2", "mclk3";
-+				dmas =3D <&sdma2 8 2 0>, <&sdma2 9 2 0>;
-+				dma-names =3D "rx", "tx";
-+				status =3D "disabled";
-+			};
-+
-+			sai6: sai@30060000 {
-+				compatible =3D "fsl,imx8mm-sai", "fsl,imx8mq-sai";
-+				reg =3D <0x30060000 0x10000>;
-+				interrupts =3D <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MM_CLK_SAI6_IPG>,
-+					 <&clk IMX8MM_CLK_SAI6_ROOT>,
-+					 <&clk IMX8MM_CLK_DUMMY>, <&clk IMX8MM_CLK_DUMMY>;
-+				clock-names =3D "bus", "mclk1", "mclk2", "mclk3";
-+				dmas =3D <&sdma2 10 2 0>, <&sdma2 11 2 0>;
-+				dma-names =3D "rx", "tx";
-+				status =3D "disabled";
-+			};
-+
- 			gpio1: gpio@30200000 {
- 				compatible =3D "fsl,imx8mm-gpio", "fsl,imx35-gpio";
- 				reg =3D <0x30200000 0x10000>;
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins =3D <
+ 			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
 --=20
 2.17.1
