@@ -1,64 +1,101 @@
-Return-Path: <SRS0=AIG0=TP=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v6 6/7] arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral device node
-Date: Wed, 15 May 2019 13:09:11 +0100
-Message-Id: <1557922152-16449-7-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-References: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=qLWK=TP=renesas.com=prvs=4038260dfd=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 01/13] phy: renesas: rcar-gen3-usb2: detect usb_x1 clock
+Date: Wed, 15 May 2019 10:20:36 -0500
+Message-ID: <20190515152048.42363-2-chris.brandt@renesas.com>
+In-Reply-To: <20190515152048.42363-1-chris.brandt@renesas.com>
+References: <20190515152048.42363-1-chris.brandt@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables USB3.0 host/peripheral device node for r8a774c0
-cat874 board.
+The RZ/A2 has an optional dedicated 48MHz clock input for the PLL.
+If a clock node named 'usb_x1' exists and set to non-zero, then we can
+assume we want it use it.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
-V5-->V6
-  * No change
-V4-->V5
-  * No change
-V3-->V4
-  * No change
-V2-->V3
-  * No change
-V1-->V2
-  * No change
+v4:
+ * added reviewed-by
+v3:
+ * avoid magic number
+ * use devm_clk_get and clk_get_rate
+v2:
+ * use 'usb_x1' clock node instead of 'renesas,uses_usb_x1' property
 ---
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index 013a48c..b9ae7db 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -134,6 +134,11 @@
- 		function = "sdhi0";
- 		power-source = <1800>;
- 	};
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 1322185a00a2..06e0fc804226 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -12,6 +12,7 @@
+ #include <linux/extcon-provider.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/clk.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -34,6 +35,7 @@
+ #define USB2_VBCTRL		0x60c
+ #define USB2_LINECTRL1		0x610
+ #define USB2_ADPCTRL		0x630
++#define USB2_PHYCLK_CTRL	0x644
+ 
+ /* INT_ENABLE */
+ #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
+@@ -75,6 +77,9 @@
+ #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+ #define USB2_ADPCTRL_DRVVBUS		BIT(4)
+ 
++/* PHYCLK_CTRL */
++#define PHYCLK_CTRL_UCLKSEL		BIT(0)
 +
-+	usb30_pins: usb30 {
-+		groups = "usb30", "usb30_id";
-+		function = "usb30";
-+	};
+ #define NUM_OF_PHYS			4
+ enum rcar_gen3_phy_index {
+ 	PHY_INDEX_BOTH_HC,
+@@ -110,6 +115,7 @@ struct rcar_gen3_chan {
+ 	bool extcon_host;
+ 	bool is_otg_channel;
+ 	bool uses_otg_pins;
++	bool uses_usb_x1;
  };
  
- &rwdt {
-@@ -166,3 +171,15 @@
- 	renesas,no-otg-pins;
- 	status = "okay";
- };
+ /*
+@@ -391,6 +397,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ 	void __iomem *usb2_base = channel->base;
+ 	u32 val;
+ 
++	if (channel->uses_usb_x1)
++		writel(PHYCLK_CTRL_UCLKSEL, usb2_base + USB2_PHYCLK_CTRL);
 +
-+&usb3_peri0 {
-+	companion = <&xhci0>;
-+	status = "okay";
-+};
+ 	/* Initialize USB2 part */
+ 	val = readl(usb2_base + USB2_INT_ENABLE);
+ 	val |= USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
+@@ -583,6 +592,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct rcar_gen3_chan *channel;
+ 	struct phy_provider *provider;
++	struct clk *usb_x1_clk;
+ 	struct resource *res;
+ 	const struct phy_ops *phy_usb2_ops;
+ 	int irq, ret = 0, i;
+@@ -630,6 +640,10 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	usb_x1_clk = devm_clk_get(dev, "usb_x1");
++	if (!IS_ERR(usb_x1_clk) && clk_get_rate(usb_x1_clk))
++		channel->uses_usb_x1 = true;
 +
-+&xhci0 {
-+	pinctrl-0 = <&usb30_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
+ 	/*
+ 	 * devm_phy_create() will call pm_runtime_enable(&phy->dev);
+ 	 * And then, phy-core will manage runtime pm for this device.
 -- 
-2.7.4
+2.16.1
