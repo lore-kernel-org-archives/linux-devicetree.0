@@ -1,156 +1,113 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
-Date: Wed, 15 May 2019 21:48:52 +0800
-Message-ID: <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
-References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com> <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V3 1/8] dt-bindings: memory: tegra: Add external memory
+ controller binding for Tegra210
+Date: Wed, 15 May 2019 16:50:31 +0300
+Message-ID: <c3909c66-5aa4-161b-98d4-02ad20e02c88@gmail.com>
+References: <20190510084719.18902-1-josephl@nvidia.com>
+ <20190510084719.18902-2-josephl@nvidia.com>
+ <fd68f906-79b4-6eda-b1fa-abaf3b4c6a12@gmail.com>
+ <63360b18-6a17-ab3f-6c54-6e11e24885d0@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Long Cheng <long.cheng@mediatek.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@medi>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <63360b18-6a17-ab3f-6c54-6e11e24885d0@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 11:36 AM Long Cheng <long.cheng@mediatek.com> wrote:
->
-> Modify uart rx and complete for DMA.
-
-I don't know much about the DMA framework, but can you please explain
-why you are making the changes in this CL? I see that you are dropping
-dma_sync_single_for_device calls, for example, why?
-
->
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> ---
->  drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
->  1 file changed, 23 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index c1fdbc0..04081a6 100644
-> --- a/drivers/tty/serial/8250/8250_mtk.c
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -30,7 +30,6 @@
->  #define MTK_UART_DMA_EN_TX     0x2
->  #define MTK_UART_DMA_EN_RX     0x5
->
-> -#define MTK_UART_TX_SIZE       UART_XMIT_SIZE
->  #define MTK_UART_RX_SIZE       0x8000
->  #define MTK_UART_TX_TRIGGER    1
->  #define MTK_UART_RX_TRIGGER    MTK_UART_RX_SIZE
-> @@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
->         struct mtk8250_data *data = up->port.private_data;
->         struct tty_port *tty_port = &up->port.state->port;
->         struct dma_tx_state state;
-> +       int copied, cnt, tmp;
->         unsigned char *ptr;
-> -       int copied;
->
-> -       dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
-> -                               dma->rx_size, DMA_FROM_DEVICE);
-> +       if (data->rx_status == DMA_RX_SHUTDOWN)
-> +               return;
->
->         dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> +       cnt = dma->rx_size - state.residue;
-> +       tmp = cnt;
-
-I ponder, maybe we should rename cnt to left? (like, how many bytes
-are left to transfer, in total) Or maybe "total"
-Then maybe rename tmp to cnt.
-
->
-> -       if (data->rx_status == DMA_RX_SHUTDOWN)
-> -               return;
-> +       if ((data->rx_pos + cnt) > dma->rx_size)
-> +               tmp = dma->rx_size - data->rx_pos;
-
-Maybe replace this and the line above:
-tmp = max_t(int, cnt, dma->rx_size - data->rx_pos);
-
->
-> -       if ((data->rx_pos + state.residue) <= dma->rx_size) {
-> -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -               copied = tty_insert_flip_string(tty_port, ptr, state.residue);
-> -       } else {
-> -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -               copied = tty_insert_flip_string(tty_port, ptr,
-> -                                               dma->rx_size - data->rx_pos);
-> +       ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> +       copied = tty_insert_flip_string(tty_port, ptr, tmp);
-> +       data->rx_pos += tmp;
-> +
-> +       if (cnt > tmp) {
->                 ptr = (unsigned char *)(dma->rx_buf);
-> -               copied += tty_insert_flip_string(tty_port, ptr,
-> -                               data->rx_pos + state.residue - dma->rx_size);
-> +               tmp = cnt - tmp;
-> +               copied += tty_insert_flip_string(tty_port, ptr, tmp);
-> +               data->rx_pos = tmp;
->         }
-> +
->         up->port.icount.rx += copied;
->
->         tty_flip_buffer_push(tty_port);
-> @@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
->  static void mtk8250_rx_dma(struct uart_8250_port *up)
->  {
->         struct uart_8250_dma *dma = up->dma;
-> -       struct mtk8250_data *data = up->port.private_data;
->         struct dma_async_tx_descriptor  *desc;
-> -       struct dma_tx_state      state;
->
->         desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
->                                            dma->rx_size, DMA_DEV_TO_MEM,
-> @@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
->
->         dma->rx_cookie = dmaengine_submit(desc);
->
-> -       dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> -       data->rx_pos = state.residue;
-> -
-> -       dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
-> -                                  dma->rx_size, DMA_FROM_DEVICE);
-> -
->         dma_async_issue_pending(dma->rxchan);
->  }
->
-> @@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
->         if (data->rx_status != DMA_RX_START)
->                 return;
->
-> -       dma->rxconf.direction           = DMA_DEV_TO_MEM;
-> -       dma->rxconf.src_addr_width      = dma->rx_size / 1024;
-> -       dma->rxconf.src_addr            = dma->rx_addr;
-> +       dma->rxconf.direction                           = DMA_DEV_TO_MEM;
-> +       dma->rxconf.src_port_window_size        = dma->rx_size;
-> +       dma->rxconf.src_addr                            = dma->rx_addr;
->
-> -       dma->txconf.direction           = DMA_MEM_TO_DEV;
-> -       dma->txconf.dst_addr_width      = MTK_UART_TX_SIZE / 1024;
-> -       dma->txconf.dst_addr            = dma->tx_addr;
-> +       dma->txconf.direction                           = DMA_MEM_TO_DEV;
-> +       dma->txconf.dst_port_window_size        = UART_XMIT_SIZE;
-> +       dma->txconf.dst_addr                            = dma->tx_addr;
->
->         serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
->                 UART_FCR_CLEAR_XMIT);
-> @@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
->          * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
->          *
->          * We need to recalcualte the quot register, as the claculation depends
-> -        * on the vaule in the highspeed register.
-> +        * on the value in the highspeed register.
-
-Since you're doing some cosmetic changes here, you might as well fix
-recalcualte => recalculate and claculation => calculation on the line
-above.
-
-But technically, this should belong in another patch...
-
->          *
->          * Some baudrates are not supported by the chip, so we use the next
->          * lower rate supported and update termios c_flag.
-> --
-> 1.7.9.5
->
+MTUuMDUuMjAxOSAxMDoxNywgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gT24gNS8xNS8xOSAxMjoy
+OCBBTSwgRG1pdHJ5IE9zaXBlbmtvIHdyb3RlOgo+PiAxMC4wNS4yMDE5IDExOjQ3LCBKb3NlcGgg
+TG8g0L/QuNGI0LXRgjoKPj4+IEFkZCB0aGUgYmluZGluZyBkb2N1bWVudCBmb3IgdGhlIGV4dGVy
+bmFsIG1lbW9yeSBjb250cm9sbGVyIChFTUMpIHdoaWNoCj4+PiBjb21tdW5pY2F0ZXMgd2l0aCBl
+eHRlcm5hbCBMUEREUjQgZGV2aWNlcy4gSXQgaW5jbHVkZXMgdGhlIGJpbmRpbmdzIG9mCj4+PiB0
+aGUgRU1DIG5vZGUgYW5kIGEgc3ViLW5vZGUgb2YgRU1DIHRhYmxlIHdoaWNoIHVuZGVyIHRoZSBy
+ZXNlcnZlZCBtZW1vcnkKPj4+IG5vZGUuIFRoZSBFTUMgdGFibGUgY29udGFpbnMgdGhlIGRhdGEg
+b2YgdGhlIHJhdGVzIHRoYXQgRU1DIHN1cHBvcnRlZC4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBK
+b3NlcGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPj4+IC0tLQo+Pj4gdjM6Cj4+PiAtIGRyb3Ag
+dGhlIGJpbmRpbmdzIG9mIEVNQyB0YWJsZQo+Pj4gLSBhZGQgbWVtb3J5LXJlZ2lvbiBhbmQgcmVz
+ZXJ2ZWQtbWVtb3J5IG5vZGUgZm9yIEVNQyB0YWJsZQo+Pj4gLS0tCj4+PiDCoCAuLi4vbnZpZGlh
+LHRlZ3JhMjEwLWVtYy50eHTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCA1
+NSArKysrKysrKysrKysrKysrKysrCj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgNTUgaW5zZXJ0aW9u
+cygrKQo+Pj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL252aWRpYSx0ZWdyYTIxMC1lbWMudHh0Cj4+
+Pgo+Pj4KPj4+IGRpZmYgLS1naXQKPj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL21lbW9yeS1jb250cm9sbGVycy9udmlkaWEsdGVncmEyMTAtZW1jLnR4dAo+Pj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL252aWRpYSx0
+ZWdyYTIxMC1lbWMudHh0Cj4+Pgo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAw
+MDAwMDAwMDAwMC4uZDY1YWVlZjIzMjljCj4+PiAtLS0gL2Rldi9udWxsCj4+PiArKysKPj4+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9udmlk
+aWEsdGVncmEyMTAtZW1jLnR4dAo+Pj4KPj4+IEBAIC0wLDAgKzEsNTUgQEAKPj4+ICtOVklESUEg
+VGVncmEyMTAgU29DIEVNQyAoZXh0ZXJuYWwgbWVtb3J5IGNvbnRyb2xsZXIpCj4+PiArPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+Pj4gKwo+Pj4g
+K0RldmljZSBub2RlCj4+PiArPT09PT09PT09PT0KPj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIDoK
+Pj4+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgIm52aWRpYSx0ZWdyYTIxMC1lbWMiLgo+Pj4g
+Ky0gcmVnIDogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xs
+ZXIncyByZWdpc3RlcnMuCj4+PiArLSBjbG9ja3MgOiBwaGFuZGxlcyBvZiB0aGUgcG9zc2libGUg
+c291cmNlIGNsb2Nrcy4KPj4+ICstIGNsb2NrLW5hbWVzIDogbmFtZXMgb2YgdGhlIHBvc3NpYmxl
+IHNvdXJjZSBjbG9ja3MuCj4+PiArLSBpbnRlcnJ1cHRzIDogU2hvdWxkIGNvbnRhaW4gdGhlIEVN
+QyBnZW5lcmFsIGludGVycnVwdC4KPj4+ICstIG1lbW9yeS1yZWdpb24gOiBwaGFuZGxlIHRvIHRo
+ZSByZXNlcnZlZCBtZW1vcnkgKHNlZQo+Pj4gK8KgCj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVkLW1lbW9yeS50eHQpIHdoaWNoCj4+
+Pgo+Pj4gK8KgIGNvbnRhaW5zIGEgc3ViLW5vZGUgb2YgRU1DIHRhYmxlLgo+Pj4gKy0gbnZpZGlh
+LG1lbW9yeS1jb250cm9sbGVyIDogcGhhbmRsZSBvZiB0aGUgbWVtb3J5IGNvbnRyb2xsZXIuCj4+
+PiArCj4+PiArUmVzZXJ2ZWQgbWVtb3J5IG5vZGUKPj4+ICs9PT09PT09PT09PT09PT09PT09PQo+
+Pj4gK1Nob3VsZCBjb250YWluIGEgc3ViLW5vZGUgb2YgRU1DIHRhYmxlIHdpdGggcmVxdWlyZWQg
+cHJvcGVydGllczoKPj4+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgIm52aWRpYSx0ZWdyYTIx
+MC1lbWMtdGFibGUiLgo+Pj4gKy0gcmVnIDogcGh5c2ljYWwgYWRkcmVzcyBhbmQgbGVuZ3RoIG9m
+IHRoZSBsb2NhdGlvbiBvZiBFTUMgdGFibGUuCj4+PiArCj4+PiArRXhhbXBsZToKPj4+ICvCoMKg
+wqAgcmVzZXJ2ZWQtbWVtb3J5IHsKPj4+ICvCoMKgwqDCoMKgwqDCoCAjYWRkcmVzcy1jZWxscyA9
+IDwyPjsKPj4+ICvCoMKgwqDCoMKgwqDCoCAjc2l6ZS1jZWxscyA9IDwyPjsKPj4+ICvCoMKgwqDC
+oMKgwqDCoCByYW5nZXM7Cj4+PiArCj4+PiArwqDCoMKgwqDCoMKgwqAgZW1jX3RhYmxlOiBlbWMt
+dGFibGVAOGJlMDAwMDAgewo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9
+ICJudmlkaWEsdGVncmEyMTAtZW1jLXRhYmxlIjsKPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHJlZyA9IDwweDAgMHg4YmUwMDAwMCAweDAgMHgxMDAwMD47Cj4+PiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBzdGF0dXMgPSAib2theSI7Cj4+PiArwqDCoMKgwqDCoMKgwqAgfTsKPj4KPj4gWW91
+IGVzc2VudGlhbGx5IG1vdmVkIHRoZSB2MSBiaW5kaW5nIGludG8gb2JzY3VyZSBhbmQgdW5kb2N1
+bWVudGVkIGJsb2IsCj4+IGlnbm9yaW5nIHByZXZpb3VzIHJldmlldyBjb21tZW50cy4gVGhpcyBp
+cyBhIHZlcnkgb2RkIG1vdmUuLi4gcGxlYXNlCj4+IGV4cGxhaW4gd2hhdCBpcyBnb2luZyBvbi4K
+Pj4KPiAKPiBEaXNjdXNzZWQgd2l0aCBUaGllcnJ5IG9mZmxpbmUgd2hpY2ggd2F5IHdlIHByZWZl
+ciB0byBwYXNzIHRoZSBFTUMgdGFibGUKPiB0byB0aGUga2VybmVsLiBTb21lIHJlYXNvbnMgYmVs
+b3cgd2UgZGVjaWRlIHRvIGNob3NlIHRoaXMgb25lICh2aWEKPiBiaW5hcnkgYmxvYikuCj4gCj4g
+LSBUaGUgRU1DIHRhYmxlIGlzIG11Y2ggYmlnZ2VyIHRoYW4gdGhlIHByZXZpb3VzIFRlZ3JhIGdl
+bmVyYXRpb25zCj4gKExQRERSNCB2LnMuIExQRERSMi8zKS4gSXQncyBoYXJkZXIgdG8gc2V0dGxl
+IGluIHRoZSByZXZpZXcgcHJvY2Vzcy4gQW5kCj4gaWYgdGhlcmUgaXMgYSBuZXcgZml4IG9mIHRo
+ZSB0YWJsZSBpbiB0aGUgZnV0dXJlLCB3ZSdsbCBuZWVkIHRvIGdvCj4gdGhyb3VnaCB0aGF0IGFn
+YWluLgoKSSBkb24ndCB0aGluayB0aGF0IHRoaXMgYSB2ZXJ5IGdvb2QgZXhjdXNlIGZvciBub3Qg
+ZG9jdW1lbnRpbmcgdGhlCmJsb2IncyBzdHJ1Y3R1cmUuCgo+IC0gQmVjYXVzZSBpdCdzIExQRERS
+NCB3ZSB3YW50IHRvIHN1cHBvcnQgaGVyZSwgdG8gc3VwcG9ydCBoaWdoZXIgcmF0ZXMsCj4gdGhl
+IGRldmljZXMgaGF2ZSBtdXN0IGJlIGdvbmUgdGhyb3VnaCB0aGUgdHJhaW5pbmcgcHJvY2Vzcywg
+d2hpY2ggaXMKPiBkb25lIGluIHRoZSBmaXJtd2FyZS4gV2hpY2ggbWVhbnMgV2UgYWxyZWFkeSBo
+YXZlIHRoZSB0YWJsZSBzb21ld2hlcmUgaW4KPiB0aGUgbWVtb3J5IGFuZCBrZXJuZWwgY2FuIGp1
+c3QgcmUtdXNlIHRoYXQuIE5vIG5lZWQgdG8gY29udmVydCB0aGVtIGJhY2sKPiB0byBEVCBhbmQg
+cGFzcyB0byB0aGUga2VybmVsLiBUaGlzIGlzIG11Y2ggZWFzaWVyIHRvIG1haW50YWluIGluIHRo
+ZQo+IGZ1dHVyZSBpZiB0aGVyZSBpcyBzb21ldGhpbmcgbmVlZHMgdG8gZml4Lgo+IC0gV2l0aCB0
+aGUgbWVjaGFuaXNtIGFib3ZlLCB3ZSBkb24ndCBuZWVkIHRvIG1haW50YWluIHRoZSBodWdlIEVN
+QyB0YWJsZQo+IGluIHRoZSBEVCBmaWxlIGxpa2UgYmVsb3cuCj4gaHR0cDovL3BhdGNod29yay5v
+emxhYnMub3JnL3BhdGNoLzEwNjM4ODYvCj4gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3Bh
+dGNoLzEwNjM4ODkvCgpUaGUgYmxvYidzIEVNQyB0YWJsZSBjb250YWlucyBzdHVmZiBzcGVjaWZp
+YyB0byBkb3duc3RyZWFtIGtlcm5lbCwgaGVuY2UKaXQncyBhIG5vdCB2ZXJ5IHJlLXVzYWJsZSBk
+b3duc3RyZWFtIHNvZnR3YXJlIEFCSSBtaXhlZCB3aXRoIEhXCmRlc2NyaXB0aW9uIHRoYXQgeW91
+J3JlIGJyaW5naW5nIGludG8gdXBzdHJlYW0uIFRoaXMgaXMgbm90IHZlcnkKd2VsY29tZWQsIGFs
+dGhvdWdoIEkgZG9uJ3Qgc2VlIGl0IGFzIGEgYmlnIHByb2JsZW0gaWYgeW91J2xsIHN0YXRlIHRo
+YXQKYWxsIGNsZWFybHkgaW4gdGhlIGNvbW1pdCBtZXNzYWdlIHdpdGggYSBzb2xpZCBleHBsYW5h
+dGlvbiB3aHkgaXQgaXMgdGhlCmJlc3QgcG9zc2libGUgb3B0aW9uLgoKPiBBbmQgc29ycnksIG1h
+eWJlIGl0J3Mgbm90IGNsZWFyIGF0IHRoYXQgbW9tZW50LCBidXQgSSBkaWQgbWVudGlvbiB0aGF0
+Cj4gd2Ugd2FudCB0byBnbyB3aXRoIHRoZSBuZXcgbWV0aG9kICh2aWEgYmluYXJ5IGJsb2IpIGlu
+IHRoZSBwcmV2aW91cyByZXZpZXcuCj4gUGxlYXNlIHNlZSBodHRwOi8vcGF0Y2h3b3JrLm96bGFi
+cy5vcmcvcGF0Y2gvMTA4NDQ2Ny8KCk9rYXkuIEl0IHdpbGwgYmUgYmV0dGVyIGlmIHRoZSBkaXNj
+dXNzaW9uIGhhcHBlbmVkIHB1YmxpY2x5LCBhdCBsZWFzdCBJCmhvcGUgdGhhdCBSb2IgaXMgaW52
+b2x2ZWQgaW4gaXQuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
