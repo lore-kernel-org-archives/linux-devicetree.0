@@ -1,69 +1,81 @@
-Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 10/28] PCI: tegra: Disable AFI dynamic clock gating
-Date: Thu, 16 May 2019 11:22:49 +0530
-Message-ID: <20190516055307.25737-11-mmaddireddy@nvidia.com>
-In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
-References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=qLWK=TP=renesas.com=prvs=4038260dfd=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 00/13] usb: Add host and device support for RZ/A2
+Date: Wed, 15 May 2019 10:20:35 -0500
+Message-ID: <20190515152048.42363-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-Outstanding write counter in AFI is used to generate idle signal to
-dynamically gate the AFI clock. When there are 32 outstanding writes
-from AFI to memory, the outstanding write counter overflows and
-indicates that there are "0" outstanding write transactions.
 
-When memory controller is under heavy load, write completions to AFI
-gets delayed and AFI write counter overflows. This causes AFI clock gating
-even when there are outstanding transactions towards memory controller
-resulting in system hang.
+NOTE 1:
+This series requires the follow patch from Shimoda-san.
+  [PATCH v2] usb: renesas_usbhs: Use specific struct instead of USBHS_TYPE_* enums
 
-Disable dynamic clock gating of AFI clock to avoid system hang.
 
-CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
-programming this bit doesn't cause any side effects. Program this
-bit for all Tegra SoCs to avoid conditional check.
+NOTE 2:
+The first 2 patches from the V3 series (add USB_X1 clock) were removed from this
+V4 series because Simon already applied them.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4: No change
 
-V3: No change
 
-V2: No change
+For the most part, the RZ/A2 has the same USB 2.0 host and device
+HW as the R-Car Gen3, so we can reuse a lot of the code.
 
- drivers/pci/controller/pci-tegra.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+However, there are a couple extra register bits, and the CFIFO
+register 8-bit access works a little different.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index b1e2e398b4e8..17c6d858ddc6 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -95,7 +95,8 @@
- #define AFI_MSI_EN_VEC7		0xa8
- 
- #define AFI_CONFIGURATION		0xac
--#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
-+#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
-+#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
- 
- #define AFI_FPCI_ERROR_MASKS	0xb0
- 
-@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		afi_writel(pcie, value, AFI_FUSE);
- 	}
- 
--	/* finally enable PCIe */
-+	/* Disable AFI dynamic clock gating and enable PCIe */
- 	value = afi_readl(pcie, AFI_CONFIGURATION);
- 	value |= AFI_CONFIGURATION_EN_FPCI;
-+	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
- 	afi_writel(pcie, value, AFI_CONFIGURATION);
- 
- 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
+There is a dedicated DMAC for the RZ/A2 USB Device HW, but we
+have not been able to reliably get that working yet, so device
+operation is pio only at the moment.
+
+On the RZ/A2M eval board, both USB channels can be used as either
+host or device. But, it's not set up for otg (ie, there are jumpers
+and separate connectors). Therefore, below is an example of what it
+would look like to enable USB channel 0 as a device instead of a host.
+
+&usb2_phy0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb0_pins>;
+	dr_mode = "peripheral";
+	status = "okay";
+};
+
+&usbhs0 {
+	status = "okay";
+};
+
+Chris Brandt (13):
+  phy: renesas: rcar-gen3-usb2: detect usb_x1 clock
+  dt-bindings: rcar-gen3-phy-usb2: Document use of usb_x1
+  phy: renesas: rcar-gen3-usb2: Check dr_mode when not using OTG
+  dt-bindings: rcar-gen3-phy-usb2: Document dr_mode
+  dt-bindings: rcar-gen3-phy-usb2: Add r7s9210 support
+  usb: renesas_usbhs: move flags to param
+  usb: renesas_usbhs: add support for CNEN bit
+  usb: renesas_usbhs: support byte addressable CFIFO
+  usb: renesas_usbhs: Add support for RZ/A2
+  dt-bindings: usb: renesas_usbhs: Add support for r7s9210
+  ARM: dts: r7s9210: Add USB Host support
+  ARM: dts: r7s9210: Add USB Device support
+  ARM: dts: rza2mevb: Add USB Host support
+
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 19 +++--
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |  2 +
+ arch/arm/boot/dts/r7s9210-rza2mevb.dts             | 36 +++++++++
+ arch/arm/boot/dts/r7s9210.dtsi                     | 90 ++++++++++++++++++++++
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 26 +++++++
+ drivers/usb/renesas_usbhs/Makefile                 |  2 +-
+ drivers/usb/renesas_usbhs/common.c                 | 44 +++++++----
+ drivers/usb/renesas_usbhs/common.h                 |  3 +-
+ drivers/usb/renesas_usbhs/fifo.c                   |  9 ++-
+ drivers/usb/renesas_usbhs/rza.h                    |  1 +
+ drivers/usb/renesas_usbhs/rza2.c                   | 72 +++++++++++++++++
+ include/linux/usb/renesas_usbhs.h                  |  4 +
+ 12 files changed, 282 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/usb/renesas_usbhs/rza2.c
+
 -- 
-2.17.1
+2.16.1
