@@ -1,7 +1,7 @@
 From: Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH v3 1/5] dt-bindings: regulator: add support for MT6392
-Date: Wed, 15 May 2019 15:17:37 +0200
-Message-ID: <20190515131741.17294-2-fparent@baylibre.com>
+Subject: [PATCH v3 5/5] arm64: dts: mt6392: Add PMIC mt6392 dtsi
+Date: Wed, 15 May 2019 15:17:41 +0200
+Message-ID: <20190515131741.17294-6-fparent@baylibre.com>
 References: <20190515131741.17294-1-fparent@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,58 +9,44 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190515131741.17294-1-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Fabien Parent <fparent@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Fabien Parent <fparent@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation of the regulator for MT6392 SoCs.
+Add the regulator nodes for the MT6392 PMIC.
 
 Signed-off-by: Fabien Parent <fparent@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
-v3:
+V3:
 	* No change
 
-v2:
+V2:
 	* Use 'pmic' as node name for the pmic.
 	* Use 'regulators' as node name for the regulators
 	* use dash instead of underscore for regulator's node names.
 
 ---
- .../bindings/regulator/mt6392-regulator.txt   | 220 ++++++++++++++++++
- 1 file changed, 220 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
+ arch/arm64/boot/dts/mediatek/mt6392.dtsi | 208 +++++++++++++++++++++++
+ 1 file changed, 208 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6392.dtsi
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6392-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
+diff --git a/arch/arm64/boot/dts/mediatek/mt6392.dtsi b/arch/arm64/boot/dts/mediatek/mt6392.dtsi
 new file mode 100644
-index 000000000000..abf4c7dcad8b
+index 000000000000..ff2d83026bbb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
-@@ -0,0 +1,220 @@
-+Mediatek MT6392 Regulator
++++ b/arch/arm64/boot/dts/mediatek/mt6392.dtsi
+@@ -0,0 +1,208 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
 +
-+Required properties:
-+- compatible: "mediatek,mt6392-regulator"
-+- mt6392regulator: List of regulators provided by this controller. It is named
-+  according to its regulator type, buck_<name> and ldo_<name>.
-+  The definition for each of these nodes is defined using the standard binding
-+  for regulators at Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are::
-+BUCK:
-+  buck_vproc, buck_vsys, buck_vcore
-+LDO:
-+  ldo_vxo22, ldo_vaud22, ldo_vcama, ldo_vaud28, ldo_vadc18, ldo_vcn35,
-+  ldo_vio28. ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
-+  ldo_vcn18, ldo_vcamaf, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio, ldo_vm25,
-+  ldo_vefuse
-+
-+Example:
-+	pmic {
++&pwrap {
++	mt6392_pmic: pmic {
 +		compatible = "mediatek,mt6392", "mediatek,mt6323";
 +		mediatek,system-power-controller;
 +
-+		regulator {
++		regulators {
 +			compatible = "mediatek,mt6392-regulator";
 +
 +			mt6392_vproc_reg: buck-vproc {
@@ -257,5 +243,6 @@ index 000000000000..abf4c7dcad8b
 +			};
 +		};
 +	};
++};
 -- 
 2.20.1
