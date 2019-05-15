@@ -1,44 +1,117 @@
-From: Han Nandor <nandor.han@vaisala.com>
-Subject: [PATCH v4 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Date: Wed, 15 May 2019 10:47:15 +0000
-Message-ID: <20190515104658.25535-3-nandor.han@vaisala.com>
-References: <20190515104658.25535-1-nandor.han@vaisala.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
+Date: Wed, 15 May 2019 11:09:25 +0000
+Message-ID: <20190515110924.13726-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515104658.25535-1-nandor.han@vaisala.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "sre@kernel.org" <sre@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Han Nandor <nandor.han@vaisala.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBkb2N1bWVudCBmb3IgdGhlIE5WTUVNIGJhc2Vk
-IHJlYm9vdC1tb2RlDQpkcml2ZXIuDQoNClNpZ25lZC1vZmYtYnk6IE5hbmRvciBIYW4gPG5hbmRv
-ci5oYW5AdmFpc2FsYS5jb20+DQotLS0NCiAuLi4vcG93ZXIvcmVzZXQvbnZtZW0tcmVib290LW1v
-ZGUudHh0ICAgICAgICAgfCAyNiArKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
-IDI2IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1tb2RlLnR4dA0KDQpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252
-bWVtLXJlYm9vdC1tb2RlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQpp
-bmRleCAwMDAwMDAwMDAwMDAuLjc1MmQ2MTI2ZDVkYQ0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1t
-b2RlLnR4dA0KQEAgLTAsMCArMSwyNiBAQA0KK05WTUVNIHJlYm9vdCBtb2RlIGRyaXZlcg0KKw0K
-K1RoaXMgZHJpdmVyIGdldHMgcmVib290IG1vZGUgbWFnaWMgdmFsdWUgZnJvbSByZWJvb3QtbW9k
-ZSBkcml2ZXINCithbmQgc3RvcmVzIGl0IGluIGEgTlZNRU0gY2VsbCBuYW1lZCAicmVib290LW1v
-ZGUiLiBUaGVuIHRoZSBib290bG9hZGVyDQorY2FuIHJlYWQgaXQgYW5kIHRha2UgZGlmZmVyZW50
-IGFjdGlvbiBhY2NvcmRpbmcgdG8gdGhlIG1hZ2ljDQordmFsdWUgc3RvcmVkLg0KKw0KK1JlcXVp
-cmVkIHByb3BlcnRpZXM6DQorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgIm52bWVtLXJlYm9vdC1t
-b2RlIi4NCistIG52bWVtLWNlbGxzOiBBIHBoYW5kbGUgdG8gdGhlIHJlYm9vdCBtb2RlIHByb3Zp
-ZGVkIGJ5IGEgbnZtZW0gZGV2aWNlLg0KKy0gbnZtZW0tY2VsbC1uYW1lczogU2hvdWxkIGJlICJy
-ZWJvb3QtbW9kZSIuDQorDQorVGhlIHJlc3Qgb2YgdGhlIHByb3BlcnRpZXMgc2hvdWxkIGZvbGxv
-dyB0aGUgZ2VuZXJpYyByZWJvb3QtbW9kZSBkZXNjcmlwdGlvbg0KK2ZvdW5kIGluIHJlYm9vdC1t
-b2RlLnR4dA0KKw0KK0V4YW1wbGU6DQorCXJlYm9vdC1tb2RlIHsNCisJCWNvbXBhdGlibGUgPSAi
-bnZtZW0tcmVib290LW1vZGUiOw0KKwkJbnZtZW0tY2VsbHMgPSA8JnJlYm9vdF9tb2RlPjsNCisJ
-CW52bWVtLWNlbGwtbmFtZXMgPSAicmVib290LW1vZGUiOw0KKw0KKwkJbW9kZS1ub3JtYWwgICAg
-ID0gPDB4QUFBQTU1MDE+Ow0KKwkJbW9kZS1ib290bG9hZGVyID0gPDB4QkJCQjU1MDA+Ow0KKwkJ
-bW9kZS1yZWNvdmVyeSAgID0gPDB4Q0NDQzU1MDI+Ow0KKwkJbW9kZS10ZXN0ICAgICAgID0gPDB4
-RERERDU1MDM+Ow0KKwl9Ow0KLS0gDQoyLjE3LjINCg0K
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+
+Add fspi node property for LS1028A SoC for FlexSPI driver.
+Property added for the FlexSPI controller and for the connected
+slave device for the LS1028ARDB and LS1028AQDS target.
+This is having one SPI-NOR flash device, mt35xu02g connected at
+CS0.
+
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+v2:
+ - modify the commit message and the dts format.
+
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   12 ++++++++++++
+ 3 files changed, 42 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index 5bcd491..6e12806 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -158,6 +158,21 @@
+ 	};
+ };
+ 
++&fspi {
++	status = "okay";
++	mt35xu02g: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,m25p80";
++		m25p,fast-read;
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
++		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
++		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
++	};
++};
++
+ &sai1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index 25d2370..5d39616 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -136,6 +136,21 @@
+ 	};
+ };
+ 
++&fspi {
++	status = "okay";
++	mt35xu02g: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,m25p80";
++		m25p,fast-read;
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
++		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
++		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index ba71a33..a27cd60 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -109,6 +109,18 @@
+ 		};
+ 	};
+ 
++	fspi: spi@20c0000 {
++		compatible = "nxp,lx2160a-fspi", "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x0 0x20c0000 0x0 0x10000>,
++		    <0x0 0x20000000 0x0 0x10000000>;
++		reg-names = "FSPI", "FSPI-memory";
++		interrupts = <0 25 0x4>; /* Level high type */
++		clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++		clock-names = "fspi_en", "fspi";
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+-- 
+1.7.1
