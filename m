@@ -1,168 +1,142 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v3 4/4] dt-bindings: mfd: Document Macronix MX25F0A controller
- bindings
-Date: Wed, 15 May 2019 15:36:29 +0800
-Message-ID: <OF0FD6EB50.C92AD6D4-ON482583FB.00285AB8-482583FB.0029CAB7@mxic.com.tw>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw> <20190512152328.49576a0f@xps13>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Wed, 15 May 2019 09:41:41 +0200
+Message-ID: <20190515074141.GY17751@phenom.ffwll.local>
+References: <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
+ <20190511173344.GA8507@mit.edu>
+ <20190513144451.GQ17751@phenom.ffwll.local>
+ <20190514060433.GA181462@google.com>
+ <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
+ <20190514183618.GC109557@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190512152328.49576a0f@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com, marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190514183618.GC109557@google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Petr Mladek <pmladek@suse.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, linux-nvdimm@lists.01.org, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, jdike@addtoit.com, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, Julia Lawall <julia.lawall@lip6.fr>, Dan Williams <dan.j.williams@>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Miquel,
-
-
-> > +Macronix MX25F0A MultiFunction Device Tree Bindings
-> > +----------------------------------------------------
-> > +
-> > +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
-> > +supports either spi host controller or raw nand controller.
-> 
-> Acronyms in plain English should be in upper case.
-
-okay, will fix.
-
-> > +Example:
-> > +
-> > +   mxic: mx25f0a@43c30000 {
-> > +      compatible = "mxic,mx25f0a";
-> > +      reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-> > +      reg-names = "regs", "dirmap";
-> > +
-> > +      /* spi */
-> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      flash@0 {
-> > +         compatible = "jedec,spi-nor";
-> > +         reg = <0>;
-> > +         spi-max-frequency = <25000000>;
-> > +         spi-tx-bus-width = <4>;
-> > +         spi-rx-bus-width = <4>;
-> > +      };
-> > +
-> > +      /* nand */
-> > +      nand-ecc-mode = "soft";
-> > +      nand-ecc-algo = "bch";
-> > +      nand-ecc-step-size = <512>;
-> > +      nand-ecc-strength = <8>;
-> 
-> Any reason to enforce 512B/8b correction? Why not letting the core
-> choose for you depending on the NAND chip's requirements?
-> 
-
-I thought here is just a raw NAND DTS example. 
-Will remove it.
-
-> 
-> Anyway, I think you can have only one or the other (NAND or SPI), not
-> both, and you probably should have a compatible or a property to tell
-> the kernel which one you are using, right?
-> 
-
-yes, you are right.
-
-New DTS is bellow.
--------------------------------------------------------------------------->
-
-Macronix Flash Memory Controller Device Tree Bindings
------------------------------------------------------
-
-Macronix Flash Memory Controller supports serial and raw Flash, including
-NOR and NAND Flash for high throughput and low pin count applications.
-It's a MultiFunction Device which supports either SPI host controller or
-raw NAND controller.
-
-Required properties:
-- compatible: should be "mxic,mfd"
-- reg: should contain 2 entries, one for the registers and one for the 
-direct
-       mapping area in SPI mode.
-- reg-names: should contain "regs" and "dirmap"
-- interrupts: interrupt line connected to this controller
-- SPI:
-        - #address-cells: should be 1
-        - #size-cells: should be 0
-        - clock-names: should contain "ps_clk", "send_clk" and
-                       "send_dly_clk"
-        - clocks: should contain 3 entries for the "ps_clk", "send_clk"
-                  and "send_dly_clk" clocks
-- Raw NAND:
-        - nand-ecc-mode = "soft";
-        - nand-ecc-algo = "bch";
-
-Example:
-- SPI mode:
-
-        mxic: mxic-mfd@43c30000 {
-                compatible = "mxic,mfd";
-                reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-                reg-names = "regs", "dirmap";
-                clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-                clock-names = "send_clk", "send_dly_clk", "ps_clk";
-                #address-cells = <1>;
-                #size-cells = <0>;
-
-                flash@0 {
-                        compatible = "jedec,spi-nor";
-                        reg = <0>;
-                        spi-max-frequency = <25000000>;
-                        spi-tx-bus-width = <4>;
-                        spi-rx-bus-width = <4>;
-                };
-        };
- 
-- Raw NAND mode:
-
-        mxic: mxic-mfd@43c30000 {
-                compatible = "mxic,mfd";
-                reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-                reg-names = "regs", "dirmap";
-
-                nand-ecc-mode = "soft";
-                nand-ecc-algo = "bch";
-        };  
-
----------------------------------------------------------------------< 
-
-thanks for your review.
-
-best regards,
-Mason
-
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+T24gVHVlLCBNYXkgMTQsIDIwMTkgYXQgMTE6MzY6MThBTSAtMDcwMCwgQnJlbmRhbiBIaWdnaW5z
+IHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDE0LCAyMDE5IGF0IDAyOjA1OjA1UE0gKzAyMDAsIERhbmll
+bCBWZXR0ZXIgd3JvdGU6Cj4gPiBPbiBUdWUsIE1heSAxNCwgMjAxOSBhdCA4OjA0IEFNIEJyZW5k
+YW4gSGlnZ2lucwo+ID4gPGJyZW5kYW5oaWdnaW5zQGdvb2dsZS5jb20+IHdyb3RlOgo+ID4gPgo+
+ID4gPiBPbiBNb24sIE1heSAxMywgMjAxOSBhdCAwNDo0NDo1MVBNICswMjAwLCBEYW5pZWwgVmV0
+dGVyIHdyb3RlOgo+ID4gPiA+IE9uIFNhdCwgTWF5IDExLCAyMDE5IGF0IDAxOjMzOjQ0UE0gLTA0
+MDAsIFRoZW9kb3JlIFRzJ28gd3JvdGU6Cj4gPiA+ID4gPiBPbiBGcmksIE1heSAxMCwgMjAxOSBh
+dCAwMjoxMjo0MFBNIC0wNzAwLCBGcmFuayBSb3dhbmQgd3JvdGU6Cj4gPiA+ID4gPiA+IEhvd2V2
+ZXIsIHRoZSByZXBseSBpcyBpbmNvcnJlY3QuICBLc2VsZnRlc3QgaW4ta2VybmVsIHRlc3RzICh3
+aGljaAo+ID4gPiA+ID4gPiBpcyB0aGUgY29udGV4dCBoZXJlKSBjYW4gYmUgY29uZmlndXJlZCBh
+cyBidWlsdCBpbiBpbnN0ZWFkIG9mIGFzCj4gPiA+ID4gPiA+IGEgbW9kdWxlLCBhbmQgYnVpbHQg
+aW4gYSBVTUwga2VybmVsLiAgVGhlIFVNTCBrZXJuZWwgY2FuIGJvb3QsCj4gPiA+ID4gPiA+IHJ1
+bm5pbmcgdGhlIGluLWtlcm5lbCB0ZXN0cyBiZWZvcmUgVU1MIGF0dGVtcHRzIHRvIGludm9rZSB0
+aGUKPiA+ID4gPiA+ID4gaW5pdCBwcm9jZXNzLgo+ID4gPiA+ID4KPiA+ID4gPiA+IFVtLCBDaXRh
+dGlvbiBuZWVkZWQ/Cj4gPiA+ID4gPgo+ID4gPiA+ID4gSSBkb24ndCBzZWUgYW55IGV2aWRlbmNl
+IGZvciB0aGlzIGluIHRoZSBrc2VsZnRlc3QgZG9jdW1lbnRhdGlvbiwgbm9yCj4gPiA+ID4gPiBk
+byBJIHNlZSBhbnkgZXZpZGVuY2Ugb2YgdGhpcyBpbiB0aGUga3NlbGZ0ZXN0IE1ha2VmaWxlcy4K
+PiA+ID4gPiA+Cj4gPiA+ID4gPiBUaGVyZSBleGlzdHMgdGVzdCBtb2R1bGVzIGluIHRoZSBrZXJu
+ZWwgdGhhdCBydW4gYmVmb3JlIHRoZSBpbml0Cj4gPiA+ID4gPiBzY3JpcHRzIHJ1biAtLS0gYnV0
+IHRoYXQncyBub3Qgc3RyaWN0bHkgc3BlYWtpbmcgcGFydCBvZiBrc2VsZnRlc3RzLAo+ID4gPiA+
+ID4gYW5kIGRvIG5vdCBoYXZlIGFueSBraW5kIG9mIGluZnJhc3RydWN0dXJlLiAgQXMgbm90ZWQs
+IHRoZQo+ID4gPiA+ID4ga3NlbGZ0ZXN0c19oYXJuZXNzIGhlYWRlciBmaWxlIGZ1bmRhbWVudGFs
+bHkgYXNzdW1lcyB0aGF0IHlvdSBhcmUKPiA+ID4gPiA+IHJ1bm5pbmcgdGVzdCBjb2RlIGluIHVz
+ZXJzcGFjZS4KPiA+ID4gPgo+ID4gPiA+IFllYWggSSByZWFsbHkgbGlrZSB0aGUgIm5vIHVzZXJz
+cGFjZSByZXF1aXJlZCBhdCBhbGwiIGRlc2lnbiBvZiBrdW5pdCwKPiA+ID4gPiB3aGlsZSBzdGls
+bCBjb2xsZWN0aW5nIHJlc3VsdHMgaW4gYSB3ZWxsLWRlZmluZWQgd2F5ICh1bmxlc3MgdGhlIGN1
+cnJlbnQKPiA+ID4gPiBzZWxmLXRlc3QgdGhhdCBqdXN0IHJ1biB3aGVuIHlvdSBsb2FkIHRoZSBt
+b2R1bGUsIHdpdGggbWF5YmUgc29tZQo+ID4gPiA+IGtzZWxmdGVzdCBhZC1ob2Mgd3JhcHBlciBh
+cm91bmQgdG8gY29sbGVjdCB0aGUgcmVzdWx0cykuCj4gPiA+ID4KPiA+ID4gPiBXaGF0IEkgd2Fu
+dCB0byBkbyBsb25nLXRlcm0gaXMgdG8gcnVuIHRoZXNlIGtlcm5lbCB1bml0IHRlc3RzIGFzIHBh
+cnQgb2YKPiA+ID4gPiB0aGUgYnVpbGQtdGVzdGluZywgbW9zdCBsaWtlbHkgaW4gZ2l0bGFiIChz
+b29uZXIgb3IgbGF0ZXIsIGZvciBkcm0uZ2l0Cj4gPiA+Cj4gPiA+IFRvdGFsbHkhIFRoaXMgaXMg
+cGFydCBvZiB0aGUgcmVhc29uIEkgaGF2ZSBiZWVuIGluc2lzdGluZyBvbiBhIG1pbmltdW0KPiA+
+ID4gb2YgVU1MIGNvbXBhdGliaWxpdHkgZm9yIGFsbCB1bml0IHRlc3RzLiBJZiB5b3UgY2FuIHN1
+ZmZpZW50bHkgY29uc3RyYWluCj4gPiA+IHRoZSBlbnZpcm9ubWVudCB0aGF0IGlzIHJlcXVpcmVk
+IGZvciB0ZXN0cyB0byBydW4gaW4sIGl0IG1ha2VzIGl0IG11Y2gKPiA+ID4gZWFzaWVyIG5vdCBv
+bmx5IGZvciBhIGh1bWFuIHRvIHJ1biB5b3VyIHRlc3RzLCBidXQgaXQgYWxzbyBtYWtlcyBpdCBh
+Cj4gPiA+IGxvdCBlYXNpZXIgZm9yIGFuIGF1dG9tYXRlZCBzZXJ2aWNlIHRvIGJlIGFibGUgdG8g
+cnVuIHlvdXIgdGVzdHMuCj4gPiA+Cj4gPiA+IEkgYWN0dWFsbHkgaGF2ZSBhIHByb3RvdHlwZSBw
+cmVzdWJtaXQgYWxyZWFkeSB3b3JraW5nIG9uIG15Cj4gPiA+ICJzdGFibGUvbm9uLXVwc3RyZWFt
+IiBicmFuY2guIFlvdSBjYW4gY2hlY2tvdXQgd2hhdCBwcmVzdWJtaXQgcmVzdWx0cwo+ID4gPiBs
+b29rIGxpa2UgaGVyZVsxXVsyXS4KPiA+IAo+ID4gdWcgZ2Vycml0IDotKQo+IAo+IFllYWgsIHll
+YWgsIEkga25vdywgYnV0IGl0IGlzIGEgbG90IGVhc2llciBmb3IgbWUgdG8gZ2V0IGEgcHJvamVj
+dCBzZXQKPiB1cCBoZXJlIHVzaW5nIEdlcnJpdCwgd2hlbiB3ZSBhbHJlYWR5IHVzZSB0aGF0IGZv
+ciBhIGxvdCBvZiBvdGhlcgo+IHByb2plY3RzLgo+IAo+IEFsc28sIEdlcnJpdCBoYXMgZ290dGVu
+IGEgbG90IGJldHRlciBvdmVyIHRoZSBsYXN0IHR3byB5ZWFycyBvciBzby4gVHdvCj4geWVhcnMg
+YWdvLCBJIHdvdWxkbid0IHRvdWNoIGl0IHdpdGggYSB0ZW4gZm9vdCBwb2xlLiBJdCdzIG5vdCBz
+byBiYWQKPiBhbnltb3JlLCBhdCBsZWFzdCBpZiB5b3UgYXJlIHVzZWQgdG8gdXNpbmcgYSB3ZWIg
+VUkgdG8gcmV2aWV3IGNvZGUuCgpJIHdhcyBzb21ld2hhdCBqb2tpbmcsIEknbSBqdXN0IG5vdCB1
+c2VkIHRvIGdlcnJpdCAuLi4gQW5kIHNlZW1zIHRvIGluZGVlZApiZSBhIGxvdCBtb3JlIHBvbGlz
+aGVkIHRoYW4gbGFzdCB0aW1lIEkgbG9va2VkIGF0IGl0IHNlcmlvdXNseS4KCj4gPiA+ID4gb25s
+eSBvZmMpLiBTbyB0aGF0IHBlb3BsZSBnZXQgdGhlaXIgcHVsbCByZXF1ZXN0cyAoYW5kIHBhdGNo
+IHNlcmllcywgd2UKPiA+ID4gPiBoYXZlIHNvbWUgaWRlYXMgdG8gdGllIHRoaXMgaW50byBwYXRj
+aHdvcmspIGF1dG9tYXRpY2FsbHkgdGVzdGVkIGZvciB0aGlzCj4gPiA+Cj4gPiA+IE1pZ2h0IHRo
+YXQgYmUgU25vd3BhdGNoWzNdPyBJIHRhbGtlZCB0byBSdXNzZWxsLCB0aGUgY3JlYXRvciBvZiBT
+bm93cGF0Y2gsCj4gPiA+IGFuZCBoZSBzZWVtZWQgcHJldHR5IG9wZW4gdG8gY29sbGFib3JhdGlv
+bi4KPiA+ID4KPiA+ID4gQmVmb3JlIEkgaGVhcmQgYWJvdXQgU25vd3BhdGNoLCBJIGhhZCBhbiBp
+bnRlcm4gd3JpdGUgYSB0cmFuc2xhdGlvbgo+ID4gPiBsYXllciB0aGF0IG1hZGUgUHJvdyAodGhl
+IHByZXN1Ym1pdCBzZXJ2aWNlIHRoYXQgSSB1c2VkIGluIHRoZSBwcm90b3R5cGUKPiA+ID4gYWJv
+dmUpIHdvcmsgd2l0aCBMS01MWzRdLgo+ID4gCj4gPiBUaGVyZSdzIGFib3V0IDMtNCBmb3Jrcy9j
+bG9uZXMgb2YgcGF0Y2h3b3JrLiBzbm93cGF0Y2ggaXMgb25lLCB3ZSBoYXZlCj4gPiBhIGRpZmZl
+cmVudCBvbmUgb24gZnJlZWRlc2t0b3Aub3JnLiBJdCdzIGEgYml0IGEgbWVzcyA6LS8KPiAKPiBP
+aCwgSSBkaWRuJ3QgcmVhbGl6ZSB0aGF0LiBJIGZvdW5kIHlvdXIgcGF0Y2h3b3JrIGluc3RhbmNl
+IGhlcmVbNV0sIGJ1dAo+IGRvIHlvdSBoYXZlIGEgcGxhY2Ugd2hlcmUgSSBjYW4gc2VlIHRoZSBj
+aGFuZ2VzIHlvdSBoYXZlIGFkZGVkIHRvCj4gc3VwcG9ydCBwcmVzdWJtaXQ/CgpPayBoZXJlJ3Mg
+YSBmZXcgbGlua3MuIEFzaWRlIGZyb20gdGhlIHVzdWFsIHBhdGNoIHZpZXcgd2UndmUgYWxzbyBh
+ZGRlZCBhCnNlcmllcyB2aWV3OgoKaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3By
+b2plY3QvaW50ZWwtZ2Z4L3Nlcmllcy8/b3JkZXJpbmc9LWxhc3RfdXBkYXRlZAoKVGhpcyB0aWVz
+IHRoZSBwYXRjaGVzICsgY292ZXIgbGV0dGVyIHRvZ2V0aGVyLCBhbmQgaXQgZXZlbiAodHJpZXMg
+dG8gYXQKbGVhc3QpIHRyYWNrIHJldmlzaW9ucy4gSGVyZSdzIGFuIGV4YW1wbGUgd2hpY2ggaXMg
+Y3VycmVudGx5IGF0IHJldmlzaW9uCjk6CgpodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5v
+cmcvc2VyaWVzLzU3MjMyLwoKQmVsb3cgdGhlIHBhdGNoIGxpc3QgZm9yIGVhY2ggcmV2aXNpb24g
+d2UgYWxzbyBoYXZlIHRoZSB0ZXN0IHJlc3VsdCBsaXN0LgpJZiB5b3UgY2xpY2sgb24gdGhlIGdy
+ZXkgYmFyIGl0J2xsIGV4cGFuZCB3aXRoIHRoZSBzdW1tYXJ5IGZyb20gQ0ksIHRoZQoiU2VlIGZ1
+bGwgbG9ncyIgaXMgbGluayB0byB0aGUgZnVsbCByZXN1bHRzIGZyb20gb3VyIENJLiBUaGlzIGlz
+IGRyaXZlbgp3aXRoIHNvbWUgUkVTVCBhcGkgZnJvbSBvdXIgamVua2lucy4KClBhdGNod29yayBh
+bHNvIHNlbmRzIG91dCBtYWlscyBmb3IgdGhlc2UgcmVzdWx0cy4KClNvdXJjZSBpcyBvbiBnaXRs
+YWI6IGh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9wYXRjaHdvcmstZmRvCiAKPiA+ID4g
+SSBhbSBub3QgbWFycmllZCB0byBlaXRoZXIgYXBwcm9hY2gsIGJ1dCBJIHRoaW5rIGJldHdlZW4g
+dGhlIHR3byBvZgo+ID4gPiB0aGVtLCBtb3N0IG9mIHRoZSBpbml0aWFsIGxlZ3dvcmsgaGFzIGJl
+ZW4gZG9uZSB0byBtYWtlIHByZXN1Ym1pdCBvbgo+ID4gPiBMS01MIGEgcmVhbGl0eS4KPiA+IAo+
+ID4gV2UgZG8gaGF2ZSBwcmVzdWJtaXQgQ0kgd29ya2luZyBhbHJlYWR5IHdpdGggb3VyIGZyZWVk
+ZXNrdG9wLm9yZwo+ID4gcGF0Y2h3b3JrLiBUaGUgbWlzc2luZyBnbHVlIGlzIGp1c3QgdHlpbmcg
+dGhhdCBpbnRvIGdpdGxhYiBDSSBzb21laG93Cj4gPiAoc2luY2Ugd2Ugd2FudCB0byB1bmlmeSBi
+dWlsZCB0ZXN0aW5nIG1vcmUgYW5kIG1ha2UgaXQgZWFzaWVyIGZvcgo+ID4gY29udHJpYnV0b3Jz
+IHRvIGFkanVzdCB0aGluZ3MpLgo+IAo+IEkgY2hlY2tlZCBvdXQgYSBjb3VwbGUgb2YgeW91ciBw
+cm9qZWN0cyBvbiB5b3VyIHBhdGNod29yayBpbnN0YW5jZTogQU1ECj4gWC5PcmcgZHJpdmVycywg
+RFJJIGRldmVsLCBhbmQgV2F5bGFuZC4gSSBzYXcgdGhlIHRhYiB5b3UgYWRkZWQgZm9yCj4gdGVz
+dHMsIGJ1dCBub25lIG9mIHRoZW0gYWN0dWFsbHkgaGFkIGFueSB0ZXN0IHJlc3VsdHMuIENhbiB5
+b3UgcG9pbnQgbWUKPiBhdCBvbmUgdGhhdCBkb2VzPwoKQXRtIHdlIHVzZSB0aGUgQ0kgc3R1ZmYg
+b25seSBvbiBpbnRlbC1nZngsIHdpdGggdGhlIG91ciBncHUgQ0kgZmFybSwgc2VlCmxpbmtzIGFi
+b3ZlLgoKQ2hlZXJzLCBEYW5pZWwKCj4gCj4gQ2hlZXJzIQo+IAo+IFs1XSBodHRwczovL3BhdGNo
+d29yay5mcmVlZGVza3RvcC5vcmcvCj4gCj4gPiA+ID4gc3VwZXIgYmFzaWMgc3R1ZmYuCj4gPiA+
+Cj4gPiA+IEkgYW0gcmVhbGx5IGV4Y2l0ZWQgdG8gaGVhciBiYWNrIG9uIHdoYXQgeW91IHRoaW5r
+IQo+ID4gPgo+ID4gPiBDaGVlcnMhCj4gPiA+Cj4gPiA+IFsxXSBodHRwczovL2t1bml0LXJldmll
+dy5nb29nbGVzb3VyY2UuY29tL2MvbGludXgvKy8xNTA5LzEwI21lc3NhZ2UtN2JmYTQwZWZiMTMy
+ZTE1YzgzODg3NTVjMjczODM3NTU5OTExNDI1Ywo+ID4gPiBbMl0gaHR0cHM6Ly9rdW5pdC1yZXZp
+ZXcuZ29vZ2xlc291cmNlLmNvbS9jL2xpbnV4LysvMTUwOS8xMCNtZXNzYWdlLWE2Nzg0NDk2ZWFm
+ZmY0NDJhYzk4ZmIwNjhiZjFhMGYzNmVlNzM1MDkKPiA+ID4gWzNdIGh0dHBzOi8vZGV2ZWxvcGVy
+LmlibS5jb20vb3Blbi9wcm9qZWN0cy9zbm93cGF0Y2gvCj4gPiA+IFs0XSBodHRwczovL2t1bml0
+Lmdvb2dsZXNvdXJjZS5jb20vcHJvdy1sa21sLwo+ID4gPiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwo+ID4gPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
+PiA+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiA+ID4gaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKPiAKCi0tIApEYW5pZWwg
+VmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5m
+ZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
