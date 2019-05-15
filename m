@@ -1,65 +1,34 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/2] dts: rockchip: raise GPU trip point temperature for
- veyron to 72.5 degC
-Date: Wed, 15 May 2019 11:30:24 -0700
-Message-ID: <CAD=FV=U19uAGkwTqg-N6_m5WYQ7yMwjQir3TYUsb3SWWOihTOg@mail.gmail.com>
-References: <20190515153127.24626-1-mka@chromium.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/5] ASoC: meson: add hdmitx glue support
+Date: Wed, 15 May 2019 11:33:17 -0700
+Message-ID: <7h7eard0uq.fsf@baylibre.com>
+References: <20190515131858.32130-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515153127.24626-1-mka@chromium.org>
+In-Reply-To: <20190515131858.32130-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-On Wed, May 15, 2019 at 8:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-
-> This value matches what is used by the downstream Chrome OS 3.14
-> kernel, the 'official' kernel for veyron devices.
+> On the Amlogic SoC, there is a glue between the SoC audio outputs and the
+> input of the embedded Synopsys HDMI controller.
 >
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> On the g12a, this glue is mostly a couple of muxes to select the i2s and
+> spdif inputs of the hdmi controller. Each of these inputs may have
+> different hw_params and fmt which makes our life a little bit more
+> interesting, especially when switching between to active inputs.
 >
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 1252522392c7..169da06e1c09 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -446,6 +446,14 @@
->         status = "okay";
->  };
+> This glue is modeled as codec driver and uses codec-to-codec links to
+> connect to the Synopsys controller. This allows to use the regular
+> hdmi-codec driver (used by dw-hdmi i2s).
 >
-> +&gpu_thermal {
-> +       trips {
-> +               gpu_alert0: gpu_alert0 {
-> +                       temperature = <72500>; /* millicelsius */
-> +               };
-> +       };
-> +};
-> +
+> To avoid glitches while switching input, the trick is to temporarily
+> force a disconnection of the mux output, which shutdowns the output dai
+> link. This also ensure that the stream parameters and fmt are updated
+> when the output is connected back.
 
-This should be sorted alphabetically.  Thus this should sort right
-after this in rk3288-veyron.dtsi
-
-&gpu {
-  mali-supply = <&vdd_gpu>;
-  status = "okay";
-};
-
-Also you don't need to replicate the whole structure?  I think the
-above should just be:
-
-&gpu_alert0 {
-  temperature = <72500>; /* millicelsius */
-};
-
-NOTE also that that gpu and cpu critical is 100 C downstream.  Should
-we do that too?  Ah, but before we do that I guess we'd need to also
-override the "rockchip,hw-tshut-temp" to 125000 to match downstream.
-I guess that could be a separate series?
-
--Doug
+Tested-by: Kevin Hilman <khilman@baylibre.com>
