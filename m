@@ -1,182 +1,133 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Rob Herring <rob.e.herring@gmail.com>
 Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
-Date: Thu, 16 May 2019 00:05:16 +0200
-Message-ID: <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
-References: <20190512174608.10083-1-peron.clem@gmail.com> <20190513151405.GW17751@phenom.ffwll.local>
- <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com> <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
- <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com> <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Date: Wed, 15 May 2019 18:22:22 -0500
+Message-ID: <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com>
+References: <20190512174608.10083-1-peron.clem@gmail.com>
+ <20190513151405.GW17751@phenom.ffwll.local>
+ <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
+ <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
+ <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com>
+ <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
+ <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBKE26LTAKGQEIS3RY4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3c2c9094-69d4-bace-d5ee-c02b7f56ac82-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
-
-On Tue, 14 May 2019 at 23:57, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> On 2019-05-14 10:22 pm, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > On Tue, 14 May 2019 at 17:17, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
-.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On Tue, 14 May 2019 at 12:29, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>=
- wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> On 13/05/2019 17:14, Daniel Vetter wrote:
-> >>>> On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote=
-:
-> >>>>> From: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>>>>
-> >>>>> Hi,
-> >>>>>
-> >>>>> The Allwinner H6 has a Mali-T720 MP2. The drivers are
-> >>>>> out-of-tree so this series only introduce the dt-bindings.
-> >>>>
-> >>>> We do have an in-tree midgard driver now (since 5.2). Does this stuf=
-f work
-> >>>> together with your dt changes here?
-> >>>
-> >>> No, but it should be easy to add.
-> >> I will give it a try and let you know.
-> > Added the bus_clock and a ramp delay to the gpu_vdd but the driver
-> > fail at probe.
-> >
-> > [    3.052919] panfrost 1800000.gpu: clock rate =3D 432000000
-> > [    3.058278] panfrost 1800000.gpu: bus_clock rate =3D 100000000
-> > [    3.179772] panfrost 1800000.gpu: mali-t720 id 0x720 major 0x1
-> > minor 0x1 status 0x0
-> > [    3.187432] panfrost 1800000.gpu: features: 00000000,10309e40,
-> > issues: 00000000,21054400
-> > [    3.195531] panfrost 1800000.gpu: Features: L2:0x07110206
-> > Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002821 AS:0xf
-> > JS:0x7
-> > [    3.207178] panfrost 1800000.gpu: shader_present=3D0x3 l2_present=3D=
-0x1
-> > [    3.238257] panfrost 1800000.gpu: Fatal error during GPU init
-> > [    3.244165] panfrost: probe of 1800000.gpu failed with error -12
-> >
-> > The ENOMEM is coming from "panfrost_mmu_init"
-> > alloc_io_pgtable_ops(ARM_MALI_LPAE, &pfdev->mmu->pgtbl_cfg,
-> >                                           pfdev);
-> >
-> > Which is due to a check in the pgtable alloc "cfg->ias !=3D 48"
-> > arm-lpae io-pgtable: arm_mali_lpae_alloc_pgtable cfg->ias 33 cfg->oas 4=
-0
-> >
-> > DRI stack is totally new for me, could you give me a little clue about
-> > this issue ?
->
-> Heh, this is probably the one bit which doesn't really count as "DRI stac=
-k".
->
-> That's merely a somewhat-conservative sanity check - I'm pretty sure it
-> *should* be fine to change the test to "cfg->ias > 48" (io-pgtable
-> itself ought to cope). You'll just get to be the first to actually test
-> a non-48-bit configuration here :)
-
-Thanks a lot, the probe seems fine now :)
-
-I try to run glmark2 :
-# glmark2-es2-drm
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-    glmark2 2017.07
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-    OpenGL Information
-    GL_VENDOR:     panfrost
-    GL_RENDERER:   panfrost
-    GL_VERSION:    OpenGL ES 2.0 Mesa 19.1.0-rc2
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-[build] use-vbo=3Dfalse:
-
-But it seems that H6 is not so easy to add :(.
-
-[  345.204813] panfrost 1800000.gpu: mmu irq status=3D1
-[  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002400400
-[  345.209617] Reason: TODO
-[  345.209617] raw fault status: 0x800002C1
-[  345.209617] decoded fault status: SLAVE FAULT
-[  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  345.209617] access type 0x2: READ
-[  345.209617] source id 0x8000
-[  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-status=3D0x8, head=3D0x2400400, tail=3D0x2400400, sched_job=3D000000009e204=
-de9
-[  346.055876] panfrost 1800000.gpu: mmu irq status=3D1
-[  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002C00A00
-[  346.060680] Reason: TODO
-[  346.060680] raw fault status: 0x810002C1
-[  346.060680] decoded fault status: SLAVE FAULT
-[  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  346.060680] access type 0x2: READ
-[  346.060680] source id 0x8100
-[  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-status=3D0x8, head=3D0x2c00a00, tail=3D0x2c00a00, sched_job=3D00000000b55a9=
-a85
-[  346.573913] panfrost 1800000.gpu: mmu irq status=3D1
-[  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002C00B80
-[  346.578707] Reason: TODO
-[  346.578707] raw fault status: 0x800002C1
-[  346.578707] decoded fault status: SLAVE FAULT
-[  346.578707] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  346.578707] access type 0x2: READ
-[  346.578707] source id 0x8000
-[  347.073947] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-status=3D0x8, head=3D0x2c00b80, tail=3D0x2c00b80, sched_job=3D00000000cf6af=
-8e8
-[  347.104125] panfrost 1800000.gpu: mmu irq status=3D1
-[  347.108930] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002800900
-[  347.108930] Reason: TODO
-[  347.108930] raw fault status: 0x810002C1
-[  347.108930] decoded faultn thi status: SLAVE FAULT
-[  347.108930] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  347.108930] access type 0x2: READ
-[  347.108930] source id 0x8100
-[  347.617950] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-status=3D0x8, head=3D0x2800900, tail=3D0x2800900, sched_job=3D000000009325f=
-db7
-[  347.629902] panfrost 1800000.gpu: mmu irq status=3D1
-[  347.634696] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002800A80
-
-Regards,
-Clement
-
->
-> Robin.
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/CAJiuCcd%3DgCQJ4mxn3wNhHXveOhFLnYSEs%2BcnOMHcALPvd7bQZw%40mail=
-.gmail.com.
-For more options, visit https://groups.google.com/d/optout.
+T24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgNTowNiBQTSBDbMOpbWVudCBQw6lyb24gPHBlcm9uLmNs
+ZW1AZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIFJvYmluLAo+Cj4gT24gVHVlLCAxNCBNYXkgMjAx
+OSBhdCAyMzo1NywgUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4gd3JvdGU6Cj4g
+Pgo+ID4gT24gMjAxOS0wNS0xNCAxMDoyMiBwbSwgQ2zDqW1lbnQgUMOpcm9uIHdyb3RlOgo+ID4g
+PiBIaSwKPiA+ID4KPiA+ID4gT24gVHVlLCAxNCBNYXkgMjAxOSBhdCAxNzoxNywgQ2zDqW1lbnQg
+UMOpcm9uIDxwZXJvbi5jbGVtQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+Pgo+ID4gPj4gSGksCj4g
+PiA+Pgo+ID4gPj4gT24gVHVlLCAxNCBNYXkgMjAxOSBhdCAxMjoyOSwgTmVpbCBBcm1zdHJvbmcg
+PG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPiB3cm90ZToKPiA+ID4+Pgo+ID4gPj4+IEhpLAo+ID4g
+Pj4+Cj4gPiA+Pj4gT24gMTMvMDUvMjAxOSAxNzoxNCwgRGFuaWVsIFZldHRlciB3cm90ZToKPiA+
+ID4+Pj4gT24gU3VuLCBNYXkgMTIsIDIwMTkgYXQgMDc6NDY6MDBQTSArMDIwMCwgcGVyb24uY2xl
+bUBnbWFpbC5jb20gd3JvdGU6Cj4gPiA+Pj4+PiBGcm9tOiBDbMOpbWVudCBQw6lyb24gPHBlcm9u
+LmNsZW1AZ21haWwuY29tPgo+ID4gPj4+Pj4KPiA+ID4+Pj4+IEhpLAo+ID4gPj4+Pj4KPiA+ID4+
+Pj4+IFRoZSBBbGx3aW5uZXIgSDYgaGFzIGEgTWFsaS1UNzIwIE1QMi4gVGhlIGRyaXZlcnMgYXJl
+Cj4gPiA+Pj4+PiBvdXQtb2YtdHJlZSBzbyB0aGlzIHNlcmllcyBvbmx5IGludHJvZHVjZSB0aGUg
+ZHQtYmluZGluZ3MuCj4gPiA+Pj4+Cj4gPiA+Pj4+IFdlIGRvIGhhdmUgYW4gaW4tdHJlZSBtaWRn
+YXJkIGRyaXZlciBub3cgKHNpbmNlIDUuMikuIERvZXMgdGhpcyBzdHVmZiB3b3JrCj4gPiA+Pj4+
+IHRvZ2V0aGVyIHdpdGggeW91ciBkdCBjaGFuZ2VzIGhlcmU/Cj4gPiA+Pj4KPiA+ID4+PiBObywg
+YnV0IGl0IHNob3VsZCBiZSBlYXN5IHRvIGFkZC4KPiA+ID4+IEkgd2lsbCBnaXZlIGl0IGEgdHJ5
+IGFuZCBsZXQgeW91IGtub3cuCj4gPiA+IEFkZGVkIHRoZSBidXNfY2xvY2sgYW5kIGEgcmFtcCBk
+ZWxheSB0byB0aGUgZ3B1X3ZkZCBidXQgdGhlIGRyaXZlcgo+ID4gPiBmYWlsIGF0IHByb2JlLgo+
+ID4gPgo+ID4gPiBbICAgIDMuMDUyOTE5XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogY2xvY2sgcmF0
+ZSA9IDQzMjAwMDAwMAo+ID4gPiBbICAgIDMuMDU4Mjc4XSBwYW5mcm9zdCAxODAwMDAwLmdwdTog
+YnVzX2Nsb2NrIHJhdGUgPSAxMDAwMDAwMDAKPiA+ID4gWyAgICAzLjE3OTc3Ml0gcGFuZnJvc3Qg
+MTgwMDAwMC5ncHU6IG1hbGktdDcyMCBpZCAweDcyMCBtYWpvciAweDEKPiA+ID4gbWlub3IgMHgx
+IHN0YXR1cyAweDAKPiA+ID4gWyAgICAzLjE4NzQzMl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IGZl
+YXR1cmVzOiAwMDAwMDAwMCwxMDMwOWU0MCwKPiA+ID4gaXNzdWVzOiAwMDAwMDAwMCwyMTA1NDQw
+MAo+ID4gPiBbICAgIDMuMTk1NTMxXSBwYW5mcm9zdCAxODAwMDAwLmdwdTogRmVhdHVyZXM6IEwy
+OjB4MDcxMTAyMDYKPiA+ID4gU2hhZGVyOjB4MDAwMDAwMDAgVGlsZXI6MHgwMDAwMDgwOSBNZW06
+MHgxIE1NVToweDAwMDAyODIxIEFTOjB4Zgo+ID4gPiBKUzoweDcKPiA+ID4gWyAgICAzLjIwNzE3
+OF0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IHNoYWRlcl9wcmVzZW50PTB4MyBsMl9wcmVzZW50PTB4
+MQo+ID4gPiBbICAgIDMuMjM4MjU3XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogRmF0YWwgZXJyb3Ig
+ZHVyaW5nIEdQVSBpbml0Cj4gPiA+IFsgICAgMy4yNDQxNjVdIHBhbmZyb3N0OiBwcm9iZSBvZiAx
+ODAwMDAwLmdwdSBmYWlsZWQgd2l0aCBlcnJvciAtMTIKPiA+ID4KPiA+ID4gVGhlIEVOT01FTSBp
+cyBjb21pbmcgZnJvbSAicGFuZnJvc3RfbW11X2luaXQiCj4gPiA+IGFsbG9jX2lvX3BndGFibGVf
+b3BzKEFSTV9NQUxJX0xQQUUsICZwZmRldi0+bW11LT5wZ3RibF9jZmcsCj4gPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBmZGV2KTsKPiA+ID4KPiA+ID4gV2hp
+Y2ggaXMgZHVlIHRvIGEgY2hlY2sgaW4gdGhlIHBndGFibGUgYWxsb2MgImNmZy0+aWFzICE9IDQ4
+Igo+ID4gPiBhcm0tbHBhZSBpby1wZ3RhYmxlOiBhcm1fbWFsaV9scGFlX2FsbG9jX3BndGFibGUg
+Y2ZnLT5pYXMgMzMgY2ZnLT5vYXMgNDAKPiA+ID4KPiA+ID4gRFJJIHN0YWNrIGlzIHRvdGFsbHkg
+bmV3IGZvciBtZSwgY291bGQgeW91IGdpdmUgbWUgYSBsaXR0bGUgY2x1ZSBhYm91dAo+ID4gPiB0
+aGlzIGlzc3VlID8KPiA+Cj4gPiBIZWgsIHRoaXMgaXMgcHJvYmFibHkgdGhlIG9uZSBiaXQgd2hp
+Y2ggZG9lc24ndCByZWFsbHkgY291bnQgYXMgIkRSSSBzdGFjayIuCj4gPgo+ID4gVGhhdCdzIG1l
+cmVseSBhIHNvbWV3aGF0LWNvbnNlcnZhdGl2ZSBzYW5pdHkgY2hlY2sgLSBJJ20gcHJldHR5IHN1
+cmUgaXQKPiA+ICpzaG91bGQqIGJlIGZpbmUgdG8gY2hhbmdlIHRoZSB0ZXN0IHRvICJjZmctPmlh
+cyA+IDQ4IiAoaW8tcGd0YWJsZQo+ID4gaXRzZWxmIG91Z2h0IHRvIGNvcGUpLiBZb3UnbGwganVz
+dCBnZXQgdG8gYmUgdGhlIGZpcnN0IHRvIGFjdHVhbGx5IHRlc3QKPiA+IGEgbm9uLTQ4LWJpdCBj
+b25maWd1cmF0aW9uIGhlcmUgOikKPgo+IFRoYW5rcyBhIGxvdCwgdGhlIHByb2JlIHNlZW1zIGZp
+bmUgbm93IDopCj4KPiBJIHRyeSB0byBydW4gZ2xtYXJrMiA6Cj4gIyBnbG1hcmsyLWVzMi1kcm0K
+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+Cj4gICAgIGdsbWFyazIgMjAxNy4wNwo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT0KPiAgICAgT3BlbkdMIEluZm9ybWF0aW9uCj4gICAgIEdM
+X1ZFTkRPUjogICAgIHBhbmZyb3N0Cj4gICAgIEdMX1JFTkRFUkVSOiAgIHBhbmZyb3N0Cj4gICAg
+IEdMX1ZFUlNJT046ICAgIE9wZW5HTCBFUyAyLjAgTWVzYSAxOS4xLjAtcmMyCj4gPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+IFtidWlsZF0g
+dXNlLXZibz1mYWxzZToKPgo+IEJ1dCBpdCBzZWVtcyB0aGF0IEg2IGlzIG5vdCBzbyBlYXN5IHRv
+IGFkZCA6KC4KPgo+IFsgIDM0NS4yMDQ4MTNdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJx
+IHN0YXR1cz0xCj4gWyAgMzQ1LjIwOTYxN10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxl
+ZCBQYWdlIGZhdWx0IGluIEFTMCBhdCBWQQo+IDB4MDAwMDAwMDAwMjQwMDQwMAo+IFsgIDM0NS4y
+MDk2MTddIFJlYXNvbjogVE9ETwo+IFsgIDM0NS4yMDk2MTddIHJhdyBmYXVsdCBzdGF0dXM6IDB4
+ODAwMDAyQzEKPiBbICAzNDUuMjA5NjE3XSBkZWNvZGVkIGZhdWx0IHN0YXR1czogU0xBVkUgRkFV
+TFQKPiBbICAzNDUuMjA5NjE3XSBleGNlcHRpb24gdHlwZSAweEMxOiBUUkFOU0xBVElPTl9GQVVM
+VF9MRVZFTDEKPiBbICAzNDUuMjA5NjE3XSBhY2Nlc3MgdHlwZSAweDI6IFJFQUQKPiBbICAzNDUu
+MjA5NjE3XSBzb3VyY2UgaWQgMHg4MDAwCj4gWyAgMzQ1LjcyOTk1N10gcGFuZnJvc3QgMTgwMDAw
+MC5ncHU6IGdwdSBzY2hlZCB0aW1lb3V0LCBqcz0wLAo+IHN0YXR1cz0weDgsIGhlYWQ9MHgyNDAw
+NDAwLCB0YWlsPTB4MjQwMDQwMCwgc2NoZWRfam9iPTAwMDAwMDAwOWUyMDRkZTkKPiBbICAzNDYu
+MDU1ODc2XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogbW11IGlycSBzdGF0dXM9MQo+IFsgIDM0Ni4w
+NjA2ODBdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBVbmhhbmRsZWQgUGFnZSBmYXVsdCBpbiBBUzAg
+YXQgVkEKPiAweDAwMDAwMDAwMDJDMDBBMDAKPiBbICAzNDYuMDYwNjgwXSBSZWFzb246IFRPRE8K
+PiBbICAzNDYuMDYwNjgwXSByYXcgZmF1bHQgc3RhdHVzOiAweDgxMDAwMkMxCj4gWyAgMzQ2LjA2
+MDY4MF0gZGVjb2RlZCBmYXVsdCBzdGF0dXM6IFNMQVZFIEZBVUxUCj4gWyAgMzQ2LjA2MDY4MF0g
+ZXhjZXB0aW9uIHR5cGUgMHhDMTogVFJBTlNMQVRJT05fRkFVTFRfTEVWRUwxCj4gWyAgMzQ2LjA2
+MDY4MF0gYWNjZXNzIHR5cGUgMHgyOiBSRUFECj4gWyAgMzQ2LjA2MDY4MF0gc291cmNlIGlkIDB4
+ODEwMAo+IFsgIDM0Ni41NjE5NTVdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBncHUgc2NoZWQgdGlt
+ZW91dCwganM9MSwKPiBzdGF0dXM9MHg4LCBoZWFkPTB4MmMwMGEwMCwgdGFpbD0weDJjMDBhMDAs
+IHNjaGVkX2pvYj0wMDAwMDAwMGI1NWE5YTg1Cj4gWyAgMzQ2LjU3MzkxM10gcGFuZnJvc3QgMTgw
+MDAwMC5ncHU6IG1tdSBpcnEgc3RhdHVzPTEKPiBbICAzNDYuNTc4NzA3XSBwYW5mcm9zdCAxODAw
+MDAwLmdwdTogVW5oYW5kbGVkIFBhZ2UgZmF1bHQgaW4gQVMwIGF0IFZBCj4gMHgwMDAwMDAwMDAy
+QzAwQjgwCj4gWyAgMzQ2LjU3ODcwN10gUmVhc29uOiBUT0RPCj4gWyAgMzQ2LjU3ODcwN10gcmF3
+IGZhdWx0IHN0YXR1czogMHg4MDAwMDJDMQo+IFsgIDM0Ni41Nzg3MDddIGRlY29kZWQgZmF1bHQg
+c3RhdHVzOiBTTEFWRSBGQVVMVAo+IFsgIDM0Ni41Nzg3MDddIGV4Y2VwdGlvbiB0eXBlIDB4QzE6
+IFRSQU5TTEFUSU9OX0ZBVUxUX0xFVkVMMQo+IFsgIDM0Ni41Nzg3MDddIGFjY2VzcyB0eXBlIDB4
+MjogUkVBRAo+IFsgIDM0Ni41Nzg3MDddIHNvdXJjZSBpZCAweDgwMDAKPiBbICAzNDcuMDczOTQ3
+XSBwYW5mcm9zdCAxODAwMDAwLmdwdTogZ3B1IHNjaGVkIHRpbWVvdXQsIGpzPTAsCj4gc3RhdHVz
+PTB4OCwgaGVhZD0weDJjMDBiODAsIHRhaWw9MHgyYzAwYjgwLCBzY2hlZF9qb2I9MDAwMDAwMDBj
+ZjZhZjhlOAo+IFsgIDM0Ny4xMDQxMjVdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0
+YXR1cz0xCj4gWyAgMzQ3LjEwODkzMF0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQ
+YWdlIGZhdWx0IGluIEFTMCBhdCBWQQo+IDB4MDAwMDAwMDAwMjgwMDkwMAo+IFsgIDM0Ny4xMDg5
+MzBdIFJlYXNvbjogVE9ETwo+IFsgIDM0Ny4xMDg5MzBdIHJhdyBmYXVsdCBzdGF0dXM6IDB4ODEw
+MDAyQzEKPiBbICAzNDcuMTA4OTMwXSBkZWNvZGVkIGZhdWx0biB0aGkgc3RhdHVzOiBTTEFWRSBG
+QVVMVAo+IFsgIDM0Ny4xMDg5MzBdIGV4Y2VwdGlvbiB0eXBlIDB4QzE6IFRSQU5TTEFUSU9OX0ZB
+VUxUX0xFVkVMMQo+IFsgIDM0Ny4xMDg5MzBdIGFjY2VzcyB0eXBlIDB4MjogUkVBRAo+IFsgIDM0
+Ny4xMDg5MzBdIHNvdXJjZSBpZCAweDgxMDAKPiBbICAzNDcuNjE3OTUwXSBwYW5mcm9zdCAxODAw
+MDAwLmdwdTogZ3B1IHNjaGVkIHRpbWVvdXQsIGpzPTEsCj4gc3RhdHVzPTB4OCwgaGVhZD0weDI4
+MDA5MDAsIHRhaWw9MHgyODAwOTAwLCBzY2hlZF9qb2I9MDAwMDAwMDA5MzI1ZmRiNwo+IFsgIDM0
+Ny42Mjk5MDJdIHBhbmZyb3N0IDE4MDAwMDAuZ3B1OiBtbXUgaXJxIHN0YXR1cz0xCj4gWyAgMzQ3
+LjYzNDY5Nl0gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFT
+MCBhdCBWQQo+IDB4MDAwMDAwMDAwMjgwMEE4MAoKSXMgdGhpcyAzMiBvciA2NCBiaXQgdXNlcnNw
+YWNlPyBJIHRoaW5rIDY0LWJpdCBkb2VzIG5vdCB3b3JrIHdpdGgKVDd4eC4gWW91IG1pZ2h0IG5l
+ZWQgdGhpc1sxXS4gWW91IG1heSBhbHNvIGJlIHRoZSBmaXJzdCB0byB0cnkgVDcyMCwKc28gaXQg
+Y291bGQgYmUgc29tZXRoaW5nIGVsc2UuCgpSb2IKClsxXSBodHRwczovL2dpdGxhYi5mcmVlZGVz
+a3RvcC5vcmcvbWVzYS9tZXNhL21lcmdlX3JlcXVlc3RzLzY1MAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
