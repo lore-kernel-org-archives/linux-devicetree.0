@@ -1,51 +1,54 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 5/5] ARM: dts: rockchip: Add HDMI i2c unwedging for
- rk3288-veyron
-Date: Wed, 15 May 2019 14:26:02 -0400
-Message-ID: <20190515182602.GY17077@art_vandelay>
-References: <20190502225336.206885-1-dianders@chromium.org>
- <20190502225336.206885-5-dianders@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts: raise GPU trip point temperature for speedy
+ to 80 degC
+Date: Wed, 15 May 2019 11:30:12 -0700
+Message-ID: <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
+References: <20190515153127.24626-1-mka@chromium.org> <20190515153127.24626-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190502225336.206885-5-dianders@chromium.org>
+In-Reply-To: <20190515153127.24626-2-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, mka@chromium.org, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2019 at 03:53:36PM -0700, Douglas Anderson wrote:
-> Veyron uses the builtin i2c controller that's part of dw-hdmi.  Hook
-> up the unwedging feature.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Hi,
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+On Wed, May 15, 2019 at 8:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
 
+> Raise the temperature of the GPU thermal trip point for speedy
+> to 80=C2=B0C. This is the value used by the downstream Chrome OS 3.14
+> kernel, the 'official' kernel for speedy.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
-> 
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index e1bee663d2c5..340b276b6333 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -163,8 +163,9 @@
+>  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/d=
+ts/rk3288-veyron-speedy.dts
+> index 2ac8748a3a0c..394a9648faee 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> @@ -64,6 +64,10 @@
+>         temperature =3D <70000>;
 >  };
->  
->  &hdmi {
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "unwedge";
->  	pinctrl-0 = <&hdmi_ddc>;
-> +	pinctrl-1 = <&hdmi_ddc_unwedge>;
->  	status = "okay";
->  };
->  
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+>
+> +&gpu_alert0 {
+> +       temperature =3D <80000>;
+> +};
+> +
+>  &edp {
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Similar comments to patch set #1 about sort ordering.
+
+...I'll also notice that if we do end up setting the "critical" to 100
+C for most of veyron then I guess we'll have to switch it back to 90 C
+here for speedy to match downstream?  Maybe that's an argument for
+doing it in this patchset so we don't forget?  I'm somewhat amazed
+that downstream has only 10 C between "alert" and 'critical" for GPU
+for speedy, but I guess it's OK?
+
+-Doug
