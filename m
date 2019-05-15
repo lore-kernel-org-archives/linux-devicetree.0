@@ -1,41 +1,81 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 2/2] ARM: dts: raise GPU trip point temperature for speedy to 80 degC
-Date: Wed, 15 May 2019 08:31:27 -0700
-Message-ID: <20190515153127.24626-2-mka@chromium.org>
-References: <20190515153127.24626-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v4 1/2] dt-bindings: display/panel: Add KOE tx14d24vm1bpa display description
+Date: Wed, 15 May 2019 18:04:28 +0200
+Message-ID: <20190515160428.6114-1-lukma@denx.de>
+References: <20180412143715.6828-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515153127.24626-1-mka@chromium.org>
+In-Reply-To: <20180412143715.6828-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Raise the temperature of the GPU thermal trip point for speedy
-to 80°C. This is the value used by the downstream Chrome OS 3.14
-kernel, the 'official' kernel for speedy.
+This commit adds documentation entry description for KOE's 5.7" display.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+
 ---
- arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Previous discussion (and Rob's Reviewed-by) about this patch
+https://patchwork.kernel.org/patch/10339595/
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-index 2ac8748a3a0c..394a9648faee 100644
---- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-@@ -64,6 +64,10 @@
- 	temperature = <70000>;
- };
- 
-+&gpu_alert0 {
-+	temperature = <80000>;
-+};
+Changes for v4:
+- Rebase on top of newest mainline
+SHA1: 5ac94332248ee017964ba368cdda4ce647e3aba7
+
+Changes for v3 :
+- New patch
+---
+ .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+new file mode 100644
+index 000000000000..be7ac666807b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+@@ -0,0 +1,42 @@
++Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
 +
- &edp {
- 	/delete-property/pinctrl-names;
- 	/delete-property/pinctrl-0;
++Required properties:
++- compatible: should be "koe,tx14d24vm1bpa"
++- backlight: phandle of the backlight device attached to the panel
++- power-supply: single regulator to provide the supply voltage
++
++Required nodes:
++- port: Parallel port mapping to connect this display
++
++This panel needs single power supply voltage. Its backlight is conntrolled
++via PWM signal.
++
++Example:
++--------
++
++Example device-tree definition when connected to iMX53 based board
++
++	lcd_panel: lcd-panel {
++		compatible = "koe,tx14d24vm1bpa";
++		backlight = <&backlight_lcd>;
++		power-supply = <&reg_3v3>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++
++Then one needs to extend the dispX node:
++
++	lcd_display: disp1 {
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
 -- 
-2.21.0.1020.gf2820cf01a-goog
+2.11.0
