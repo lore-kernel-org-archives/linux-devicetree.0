@@ -1,54 +1,127 @@
-From: "George G. Davis" <george_davis@mentor.com>
-Subject: [PATCH v3] serial: sh-sci: disable DMA for uart_console
-Date: Tue, 14 May 2019 23:29:34 -0400
-Message-ID: <1557890974-21179-1-git-send-email-george_davis@mentor.com>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v1] arm64: ls1028: dtsi: Add esdhc node in dtsi
+Date: Wed, 15 May 2019 03:41:06 +0000
+Message-ID: <DB7PR04MB415311EAA94DDE209B42729FE9090@DB7PR04MB4153.eurprd04.prod.outlook.com>
+References: <20190423114424.3578-1-yinbo.zhu@nxp.com>
+ <CAL_Jsq+4g+inxc+qcC3oLrXuR+L9AMvXFShGaU5Y3iRDsK3P6A@mail.gmail.com>
+ <VI1PR04MB415896DA3F0AF8BA6AB149C9E9370@VI1PR04MB4158.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Andy Lowe <andy_lowe@mentor.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "George G. Davis" <george_davis@mentor.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB415896DA3F0AF8BA6AB149C9E9370@VI1PR04MB4158.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Leo Li <leoyang.li@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-console UART"), UART console lines use low-level PIO only access functions
-which will conflict with use of the line when DMA is enabled, e.g. when
-the console line is also used for systemd messages. So disable DMA
-support for UART console lines.
-
-Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-Link: https://patchwork.kernel.org/patch/10929511/
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: stable@vger.kernel.org
-Signed-off-by: George G. Davis <george_davis@mentor.com>
----
-v2: Clarify comment regarding DMA support on kernel console,
-    add {Tested,Reviewed}-by:, and Cc: linux-stable lines.
-v3: Change Fixes: reference to Link: reference and add another Reviewed-by.
----
- drivers/tty/serial/sh-sci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 3cd139752d3f..abc705716aa0 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1557,6 +1557,13 @@ static void sci_request_dma(struct uart_port *port)
- 
- 	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
- 
-+	/*
-+	 * DMA on console may interfere with Kernel log messages which use
-+	 * plain putchar(). So, simply don't use it with a console.
-+	 */
-+	if (uart_console(port))
-+		return;
-+
- 	if (!port->dev->of_node)
- 		return;
- 
--- 
-2.7.4
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogWWluYm8gWmh1DQo+IFNl
+bnQ6IDIwMTnlubQ15pyINeaXpSAxNDowNw0KPiBUbzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz4NCj4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExlbyBMaSA8
+bGVveWFuZy5saUBueHAuY29tPjsgWGlhb2JvDQo+IFhpZSA8eGlhb2JvLnhpZUBueHAuY29tPjsg
+TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc7IFkuYi4g
+THUNCj4gPHlhbmdiby5sdUBueHAuY29tPjsgSmlhZmVpIFBhbiA8amlhZmVpLnBhbkBueHAuY29t
+PjsgQXNoaXNoIEt1bWFyDQo+IDxhc2hpc2gua3VtYXJAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6
+IFtFWFRdIFJlOiBbUEFUQ0ggdjFdIGFybTY0OiBsczEwMjg6IGR0c2k6IEFkZCBlc2RoYyBub2Rl
+IGluIGR0c2kNCj4gDQo+IA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaCtkdEBrZXJuZWwub3JnXQ0KPiA+IFNlbnQ6
+IDIwMTnlubQ15pyIMuaXpSAxOjUwDQo+ID4gVG86IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5j
+b20+DQo+ID4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExlbyBMaSA8bGVv
+eWFuZy5saUBueHAuY29tPjsNCj4gPiBYaWFvYm8gWGllIDx4aWFvYm8ueGllQG54cC5jb20+OyBN
+YXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gPiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc7IFku
+Yi4gTHUNCj4gPiA8eWFuZ2JvLmx1QG54cC5jb20+OyBKaWFmZWkgUGFuIDxqaWFmZWkucGFuQG54
+cC5jb20+OyBBc2hpc2ggS3VtYXINCj4gPiA8YXNoaXNoLmt1bWFyQG54cC5jb20+DQo+ID4gU3Vi
+amVjdDogW0VYVF0gUmU6IFtQQVRDSCB2MV0gYXJtNjQ6IGxzMTAyODogZHRzaTogQWRkIGVzZGhj
+IG5vZGUgaW4NCj4gPiBkdHNpDQo+ID4NCj4gPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gPg0KPiA+
+IE9uIFR1ZSwgQXByIDIzLCAyMDE5IGF0IDY6NDIgQU0gWWluYm8gWmh1IDx5aW5iby56aHVAbnhw
+LmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gRnJvbTogQXNoaXNoIEt1bWFyIDxBc2hpc2guS3Vt
+YXJAbnhwLmNvbT4NCj4gPiA+DQo+ID4gPiBUaGlzIHBhdGNoIGlzIHRvIGFkZCBlc2RoYyBub2Rl
+IGFuZCBlbmFibGUgU0QgVUhTLUksIGVNTUMgSFMyMDAgZm9yDQo+ID4gPiBsczEwMjhhcmRiL2xz
+MTAyOGFxZHMgYm9hcmQuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQXNoaXNoIEt1bWFy
+IDxBc2hpc2guS3VtYXJAbnhwLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFlhbmdibyBMdSA8
+eWFuZ2JvLmx1QG54cC5jb20+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBZaW5ibyBaaHUgPHlpbmJv
+LnpodUBueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
+c2wtbHMxMDI4YS1xZHMuZHRzICAgIHwgIDggKysrKysrDQo+ID4gPiAgLi4uL2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzICAgIHwgMTMgKysrKysrKysrDQo+ID4gPiAgLi4u
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpIHwgMjcNCj4gPiA+ICsr
+KysrKysrKysrKysrKysrKysNCj4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMo
+KykNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ID4gPiBpbmRleCAxNGM3OWY0NjkxZWEuLjE4MGU1
+ZDJhMDBkMSAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gPiA+IEBAIC00Miw2ICs0MiwxNCBAQA0KPiA+
+ID4gICAgICAgICBzdGF0dXMgPSAib2theSI7DQo+ID4gPiAgfTsNCj4gPiA+DQo+ID4gPiArJmVz
+ZGhjIHsNCj4gPiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ID4gK307DQo+ID4gPiAr
+DQo+ID4gPiArJmVzZGhjMSB7DQo+ID4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiA+
+ICt9Ow0KPiA+ID4gKw0KPiA+ID4gICZpMmMwIHsNCj4gPiA+ICAgICAgICAgc3RhdHVzID0gIm9r
+YXkiOw0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5kdHMNCj4gPiA+IGluZGV4IGY4NmIwNTRhNzRhZS4uMWJm
+YWY0Mjk0ZGI0IDEwMDY0NA0KPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiA+ID4gQEAgLTMwLDYgKzMwLDE5IEBADQo+
+ID4gPiAgICAgICAgIH07DQo+ID4gPiAgfTsNCj4gPiA+DQo+ID4gPiArJmVzZGhjIHsNCj4gPiA+
+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ID4gKyAgICAgICBzZC11aHMtc2RyMTA0Ow0K
+PiA+ID4gKyAgICAgICBzZC11aHMtc2RyNTA7DQo+ID4gPiArICAgICAgIHNkLXVocy1zZHIyNTsN
+Cj4gPiA+ICsgICAgICAgc2QtdWhzLXNkcjEyOw0KPiA+ID4gKyAgICAgICB9Ow0KPiA+ID4gKw0K
+PiA+ID4gKyZlc2RoYzEgew0KPiA+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7DQo+ID4gPiAr
+ICAgICAgIG1tYy1oczIwMC0xXzh2Ow0KPiA+ID4gKyAgICAgICB9Ow0KPiA+ID4gKw0KPiA+ID4g
+ICZpMmMwIHsNCj4gPiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ID4NCj4gPiA+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNp
+DQo+ID4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kN
+Cj4gPiA+IGluZGV4IDI4OTZiYmNmYTNiYi4uZDEzY2QzZmI0NTViIDEwMDY0NA0KPiA+ID4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4g
+KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+
+ID4gQEAgLTI3NCw2ICsyNzQsMzMgQEANCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0
+YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiA+DQo+ID4g
+PiArICAgICAgICAgICAgICAgZXNkaGM6IGVzZGhjQDIxNDAwMDAgew0KPiA+DQo+ID4gbW1jQC4u
+Lg0KPiA+DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxs
+czEwMjhhLWVzZGhjIiwgImZzbCxlc2RoYyI7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICByZWcgPSA8MHgwIDB4MjE0MDAwMCAweDAgMHgxMDAwMD47DQo+ID4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMjggMHg0PjsgLyogTGV2ZWwgaGlnaCB0eXBlICov
+DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8MD47DQo+
+ID4NCj4gPiBGaWxsZWQgaW4gYnkgYm9vdGxvYWRlcj8gSWYgc28sIGFkZCBhIGNvbW1lbnQuDQo+
+IEhpIHJvYiwNCj4gRmlsbGVkIGluIGJ5IGtlcm5lbCwgcGxlYXNlIHlvdSBub3RlLg0KPiANCj4g
+UmVnYXJkcywNCj4gWWluYm8uDQoNCkhpIHJvYiwNCg0KSSdtIHNvcnJ5LCBJdCBpcyBmaXhlZCB1
+cCBieSBib290bG9hZGVyIGFjdHVhbGx5Lg0KQW5kIEkgd2lsbCBhZGQgYSBjb21tb250Lg0KDQp5
+aW5ibw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiAy
+IDE+Ow0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdm9sdGFnZS1yYW5nZXMgPSA8MTgw
+MCAxODAwIDMzMDAgMzMwMD47DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBzZGhjaSxh
+dXRvLWNtZDEyOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbGl0dGxlLWVuZGlhbjsN
+Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1cy13aWR0aCA9IDw0PjsNCj4gPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiArICAgICAg
+ICAgICAgICAgfTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgICAgICAgICBlc2RoYzE6IGVzZGhj
+QDIxNTAwMDAgew0KPiA+DQo+ID4gbW1jQC4uLg0KPiA+DQo+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczEwMjhhLWVzZGhjIiwgImZzbCxlc2RoYyI7DQo+
+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjE1MDAwMCAweDAgMHgx
+MDAwMD47DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgNjMg
+MHg0PjsgLyogTGV2ZWwgaGlnaCB0eXBlICovDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICBjbG9jay1mcmVxdWVuY3kgPSA8MD47DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBj
+bG9ja3MgPSA8JmNsb2NrZ2VuIDIgMT47DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICB2
+b2x0YWdlLXJhbmdlcyA9IDwxODAwIDE4MDAgMzMwMCAzMzAwPjsNCj4gPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIHNkaGNpLGF1dG8tY21kMTI7DQo+ID4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICBicm9rZW4tY2Q7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBsaXR0bGUtZW5k
+aWFuOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVzLXdpZHRoID0gPDQ+Ow0KPiA+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiA+ICsg
+ICAgICAgICAgICAgICB9Ow0KPiA+ID4gKw0KPiA+ID4gICAgICAgICAgICAgICAgIHNhdGE6IHNh
+dGFAMzIwMDAwMCB7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
+ImZzbCxsczEwMjhhLWFoY2kiOw0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PDB4MCAweDMyMDAwMDAgMHgwIDB4MTAwMDA+LA0KPiA+ID4gLS0NCj4gPiA+IDIuMTcuMQ0KPiA+
+ID4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
