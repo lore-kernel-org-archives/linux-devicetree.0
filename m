@@ -1,84 +1,56 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v12 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-Date: Wed, 15 May 2019 13:55:05 +0800
-Message-ID: <OF794FCFCD.155B914B-ON482583FB.001EDBB3-482583FB.0020821B@mxic.com.tw>
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <1556092536-17095-3-git-send-email-masonccyang@mxic.com.tw> <20190514065216.GL4319@dell>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH] arm64: dts: lx2160a: Enable usb3-lpm-capable for usb3 node
+Date: Wed, 15 May 2019 13:58:28 +0800
+Message-ID: <20190515055828.33331-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="GB2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190514065216.GL4319@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: bbrezillon@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, sergei.shtylyov@cogentembedded.com, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Enable USB3 HW LPM feature for lx2160a and active patch for
+snps erratum A-010131. It will disable U1/U2 temperary when
+initiate U3 request.
 
-SGkgSm9uZXMsDQoNCg0KPiA+ICsNCj4gPiArc3RydWN0IHJwY19zcGkgew0KPiA+ICsgICBzdHJ1
-Y3QgcnBjX21mZCAqbWZkOw0KPiANCj4gVGhlIHRlcm0gTUZEIGlzbid0IGEgcmVhbCB0aGluZy4g
-IFdoYXQgeW91J3JlIG9idGFpbmluZyBiZWxvdyBpcw0KPiBkcml2ZXIgZGF0YSBhbmQgaXMgbm9y
-bWFsbHkgYXJ0aWN1bGF0ZWQgYXMgJ2RkYXRhJyBpbiBkcml2ZXJzLg0KDQp5ZXMsIGl0J3MganVz
-dCBpbXBseSB0aGF0IGRhdGEgaXMgZnJvbSBNRkQuDQoNClNob3VsZCBJIHJlbmFtZSAibWZkIiA/
-DQoNCj4gDQo+ID4gKyAgIHUzMiBjdXJfc3BlZWRfaHo7DQo+ID4gKyAgIHUzMiBjbWQ7DQo+ID4g
-KyAgIHUzMiBhZGRyOw0KPiA+ICsgICB1MzIgZHVtbXk7DQo+ID4gKyAgIHUzMiBzbWNyOw0KPiA+
-ICsgICB1MzIgc21lbnI7DQo+ID4gKyAgIHUzMiB4ZmVybGVuOw0KPiA+ICsgICB1MzIgdG90YWx4
-ZmVybGVuOw0KPiA+ICsgICBlbnVtIHNwaV9tZW1fZGF0YV9kaXIgeGZlcl9kaXI7DQo+ID4gK307
-DQo+IA0KPiBbLi4uXQ0KPiANCj4gPiArc3RhdGljIHZvaWQgcnBjX3NwaV9od19pbml0KHN0cnVj
-dCBycGNfc3BpICpycGMpDQo+ID4gK3sNCj4gPiArICAgLy8NCj4gPiArICAgLy8gTk9URTogVGhl
-IDB4MjYwIGFyZSB1bmRvY3VtZW50ZWQgYml0cywgYnV0IHRoZXkgbXVzdCBiZSBzZXQuDQo+ID4g
-KyAgIC8vICAgIFJQQ19QSFlDTlRfU1RSVElNIGlzIHN0cm9iZSB0aW1pbmcgYWRqdXN0bWVudCBi
-aXQsDQo+ID4gKyAgIC8vICAgIDB4MCA6IHRoZSBkZWxheSBpcyBiaWdnZXN0LA0KPiA+ICsgICAv
-LyAgICAweDEgOiB0aGUgZGVsYXkgaXMgMm5kIGJpZ2dlc3QsDQo+ID4gKyAgIC8vICAgIE9uIEgz
-IEVTMS54LCB0aGUgdmFsdWUgc2hvdWxkIGJlIDAsIHdoaWxlIG9uIG90aGVycywNCj4gPiArICAg
-Ly8gICAgdGhlIHZhbHVlIHNob3VsZCBiZSA2Lg0KPiA+ICsgICAvLw0KPiANCj4gQysrIHN0eWxl
-IGNvbW1lbnRzPyAgSXMgdGhhdCBhIHRoaW5nIG5vdz8NCg0KSXQncyBraW5kIG9mIE1hcmsncyBw
-cmV2aW91cyBjb21tZW50cy4NCg0KPiANCj4gPiArICAgcmVnbWFwX3dyaXRlKHJwYy0+bWZkLT5y
-ZWdtYXAsIFJQQ19QSFlDTlQsIFJQQ19QSFlDTlRfQ0FMIHwNCj4gPiArICAgICAgICAgICAgICBS
-UENfUEhZQ05UX1NUUlRJTSg2KSB8IDB4MjYwKTsNCj4gPiArDQo+ID4gKyAgIC8vDQo+ID4gKyAg
-IC8vIE5PVEU6IFRoZSAweDE1MTExNDQgYXJlIHVuZG9jdW1lbnRlZCBiaXRzLCBidXQgdGhleSBt
-dXN0IGJlIHNldA0KPiA+ICsgICAvLyAgICAgICBmb3IgUlBDX1BIWU9GRlNFVDEuDQo+ID4gKyAg
-IC8vICAgIFRoZSAweDMxIGFyZSB1bmRvY3VtZW50ZWQgYml0cywgYnV0IHRoZXkgbXVzdCBiZSBz
-ZXQNCj4gPiArICAgLy8gICAgZm9yIFJQQ19QSFlPRkZTRVQyLg0KPiA+ICsgICAvLw0KPiA+ICsg
-ICByZWdtYXBfd3JpdGUocnBjLT5tZmQtPnJlZ21hcCwgUlBDX1BIWU9GRlNFVDEsDQo+ID4gKyAg
-ICAgICAgICAgUlBDX1BIWU9GRlNFVDFfRERSVE1HKDMpIHwgMHgxNTExMTQ0KTsNCj4gPiArICAg
-cmVnbWFwX3dyaXRlKHJwYy0+bWZkLT5yZWdtYXAsIFJQQ19QSFlPRkZTRVQyLCAweDMxIHwNCj4g
-PiArICAgICAgICAgICBSUENfUEhZT0ZGU0VUMl9PQ1RUTUcoNCkpOw0KPiA+ICsgICByZWdtYXBf
-d3JpdGUocnBjLT5tZmQtPnJlZ21hcCwgUlBDX1NTTERSLCBSUENfU1NMRFJfU1BOREwoNykgfA0K
-PiA+ICsgICAgICAgICAgIFJQQ19TU0xEUl9TTE5ETCg3KSB8IFJQQ19TU0xEUl9TQ0tETCg3KSk7
-DQo+ID4gKyAgIHJlZ21hcF93cml0ZShycGMtPm1mZC0+cmVnbWFwLCBSUENfQ01OQ1IsIFJQQ19D
-TU5DUl9NRCB8DQo+ID4gKyAgICAgICAgICAgUlBDX0NNTkNSX1NGREUgfCBSUENfQ01OQ1JfTU9J
-SU9fSElaIHwgUlBDX0NNTkNSX0lPRlZfSElaIA0KfA0KPiA+ICsgICAgICAgICAgIFJQQ19DTU5D
-Ul9CU1ooMCkpOw0KPiA+ICt9DQo+IA0KPiAtLSANCj4gTGVlIEpvbmVzIFvA7sfty7ldDQo+IExp
-bmFybyBTZXJ2aWNlcyBUZWNobmljYWwgTGVhZA0KPiBMaW5hcm8ub3JnIKmmIE9wZW4gc291cmNl
-IHNvZnR3YXJlIGZvciBBUk0gU29Dcw0KPiBGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0
-ZXIgfCBCbG9nDQoNCnRoYW5rcyAmIGJlc3QgcmVnYXJkcywNCk1hc29uDQoNCkNPTkZJREVOVElB
-TElUWSBOT1RFOg0KDQpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250YWlu
-IGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiANCmFuZC9vciBwZXJzb25hbCBkYXRhLCB3aGljaCBp
-cyBwcm90ZWN0ZWQgYnkgYXBwbGljYWJsZSBsYXdzLiBQbGVhc2UgYmUgDQpyZW1pbmRlZCB0aGF0
-IGR1cGxpY2F0aW9uLCBkaXNjbG9zdXJlLCBkaXN0cmlidXRpb24sIG9yIHVzZSBvZiB0aGlzIGUt
-bWFpbCANCihhbmQvb3IgaXRzIGF0dGFjaG1lbnRzKSBvciBhbnkgcGFydCB0aGVyZW9mIGlzIHBy
-b2hpYml0ZWQuIElmIHlvdSByZWNlaXZlIA0KdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBu
-b3RpZnkgdXMgaW1tZWRpYXRlbHkgYW5kIGRlbGV0ZSB0aGlzIG1haWwgYXMgDQp3ZWxsIGFzIGl0
-cyBhdHRhY2htZW50KHMpIGZyb20geW91ciBzeXN0ZW0uIEluIGFkZGl0aW9uLCBwbGVhc2UgYmUg
-DQppbmZvcm1lZCB0aGF0IGNvbGxlY3Rpb24sIHByb2Nlc3NpbmcsIGFuZC9vciB1c2Ugb2YgcGVy
-c29uYWwgZGF0YSBpcyANCnByb2hpYml0ZWQgdW5sZXNzIGV4cHJlc3NseSBwZXJtaXR0ZWQgYnkg
-cGVyc29uYWwgZGF0YSBwcm90ZWN0aW9uIGxhd3MuIA0KVGhhbmsgeW91IGZvciB5b3VyIGF0dGVu
-dGlvbiBhbmQgY29vcGVyYXRpb24uDQoNCk1hY3Jvbml4IEludGVybmF0aW9uYWwgQ28uLCBMdGQu
-DQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PQ0KDQoNCg0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KDQpDT05GSURFTlRJ
-QUxJVFkgTk9URToNCg0KVGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBtYXkgY29udGFp
-biBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gYW5kL29yIHBlcnNvbmFsIGRhdGEsIHdoaWNoIGlz
-IHByb3RlY3RlZCBieSBhcHBsaWNhYmxlIGxhd3MuIFBsZWFzZSBiZSByZW1pbmRlZCB0aGF0IGR1
-cGxpY2F0aW9uLCBkaXNjbG9zdXJlLCBkaXN0cmlidXRpb24sIG9yIHVzZSBvZiB0aGlzIGUtbWFp
-bCAoYW5kL29yIGl0cyBhdHRhY2htZW50cykgb3IgYW55IHBhcnQgdGhlcmVvZiBpcyBwcm9oaWJp
-dGVkLiBJZiB5b3UgcmVjZWl2ZSB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB1
-cyBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIHRoaXMgbWFpbCBhcyB3ZWxsIGFzIGl0cyBhdHRhY2ht
-ZW50KHMpIGZyb20geW91ciBzeXN0ZW0uIEluIGFkZGl0aW9uLCBwbGVhc2UgYmUgaW5mb3JtZWQg
-dGhhdCBjb2xsZWN0aW9uLCBwcm9jZXNzaW5nLCBhbmQvb3IgdXNlIG9mIHBlcnNvbmFsIGRhdGEg
-aXMgcHJvaGliaXRlZCB1bmxlc3MgZXhwcmVzc2x5IHBlcm1pdHRlZCBieSBwZXJzb25hbCBkYXRh
-IHByb3RlY3Rpb24gbGF3cy4gVGhhbmsgeW91IGZvciB5b3VyIGF0dGVudGlvbiBhbmQgY29vcGVy
-YXRpb24uDQoNCk1hY3Jvbml4IEludGVybmF0aW9uYWwgQ28uLCBMdGQuDQoNCj09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PQ0K
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+Depend on: https://lore.kernel.org/patchwork/patch/870134/
+
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 125a8cc..0073df3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -696,6 +696,8 @@
+ 			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
++			usb3-lpm-capable;
++			snps,dis-u1u2-when-u3-quirk;
+ 			snps,dis_rxdet_inp3_quirk;
+ 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 			status = "disabled";
+@@ -707,6 +709,8 @@
+ 			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
++			usb3-lpm-capable;
++			snps,dis-u1u2-when-u3-quirk;
+ 			snps,dis_rxdet_inp3_quirk;
+ 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 			status = "disabled";
+-- 
+1.7.1
