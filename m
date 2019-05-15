@@ -1,115 +1,110 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH V3 4/8] memory: tegra: Add Tegra210 EMC clock driver
-Date: Wed, 15 May 2019 16:42:12 +0800
-Message-ID: <648df201-eb63-6d26-3f90-02eba7624921@nvidia.com>
-References: <20190510084719.18902-1-josephl@nvidia.com>
- <20190510084719.18902-5-josephl@nvidia.com>
- <74fad66b-a6e9-ffc9-c1c9-e88b841e9209@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <74fad66b-a6e9-ffc9-c1c9-e88b841e9209@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1028a: Add esdhc node in dts
+Date: Wed, 15 May 2019 16:49:25 +0800
+Message-ID: <20190515084925.30155-1-yinbo.zhu@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc: yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, yangbo.lu@nxp.com, jiafei.pan@nxp.com, Ashish Kumar <Ashish.Kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gNS8xNS8xOSAxOjA0IEFNLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6Cj4gMTAuMDUuMjAxOSAx
-MTo0NywgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4+IFRoaXMgaXMgdGhlIGluaXRpYWwgcGF0Y2gg
-Zm9yIFRlZ3JhMjEwIEVNQyBjbG9jayBkcml2ZXIsIHdoaWNoIGRvZXNuJ3QKPj4gaW5jbHVkZSB0
-aGUgc3VwcG9ydCBjb2RlIGFuZCBkZXRhaWwgc2VxdWVuY2UgZm9yIGNsb2NrIHNjYWxpbmcgeWV0
-Lgo+Pgo+PiBUaGUgZHJpdmVyIGlzIGRlc2lnbmVkIHRvIHN1cHBvcnQgTFBERFI0IFNEUkFNLiBC
-ZWNhdXNlIG9mIHRoZSBMUEREUjQKPj4gZGV2aWNlcyBuZWVkIHRvIGRvIGluaXRpYWwgdGltZSB0
-cmFpbmluZyBiZWZvcmUgaXQgY2FuIGJlIHVzZWQsIHRoZQo+PiBmaXJtd2FyZSB3aWxsIGhlbHAg
-dG8gZG8gdGhhdCBhdCBlYXJseSBib290IHN0YWdlLiBUaGVuLCB0aGUgdHJhaW5lZAo+PiB0YWJs
-ZSBmb3IgdGhlIHJhdGVzIHdlIHN1cHBvcnQgd2lsbCBwYXNzIHRvIHRoZSBrZXJuZWwgdmlhIERU
-LiBTbyB0aGUKPj4gZHJpdmVyIGNhbiBnZXQgdGhlIHRyYWluZWQgdGFibGUgZm9yIGNsb2NrIHNj
-YWxpbmcgc3VwcG9ydC4KPj4KPj4gRm9yIHRoZSBoaWdoZXIgcmF0ZSBzdXBwb3J0IChhYm92ZSA4
-MDBNSHopLCB0aGUgcGVyaW9kaWMgdHJhaW5pbmcgaXMKPj4gbmVlZGVkIGZvciB0aGUgdGltaW5n
-IGNvbXBlbnNhdGlvbi4gU28gYmFzaWNhbGx5LCB0d28gbWV0aG9kb2xvZ2llcyBmb3IKPj4gY2xv
-Y2sgc2NhbGluZyBhcmUgc3VwcG9ydGVkLCBvbmUgaXMgZm9sbG93aW5nIHRoZSBjbG9jayBjaGFu
-Z2luZwo+PiBzZXF1ZW5jZSB0byB1cGRhdGUgdGhlIEVNQyB0YWJsZSB0byBFTUMgcmVnaXN0ZXJz
-IGFuZCBhbm90aGVyIGlzIGlmIHRoZQo+PiByYXRlIG5lZWRzIHBlcmlvZGljIHRyYWluaW5nLCB0
-aGVuIHdlIHdpbGwgc3RhcnQgYSB0aW1lciB0byBkbyB0aGF0Cj4+IHBlcmlvZGljYWxseSB1bnRp
-bCBpdCBzY2FsZXMgdG8gdGhlIGxvd2VyIHJhdGUuCj4+Cj4+IEJhc2VkIG9uIHRoZSB3b3JrIG9m
-IFBldGVyIERlIFNjaHJpanZlciA8cGRlc2NocmlqdmVyQG52aWRpYS5jb20+Lgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPj4gLS0tCj4gCj4gW3Nu
-aXBdCj4gCj4+ICtzdGF0aWMgaW50IHRlZ3JhMjEwX2VtY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQo+PiArewo+PiArCWludCBpOwo+PiArCXVuc2lnbmVkIGxvbmcgdGFibGVf
-cmF0ZTsKPj4gKwl1bnNpZ25lZCBsb25nIGN1cnJlbnRfcmF0ZTsKPj4gKwlzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5wOwo+PiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKm1jOwo+PiArCXN0cnVjdCB0
-ZWdyYV9lbWMgKmVtYzsKPj4gKwlzdHJ1Y3QgY2xrX2luaXRfZGF0YSBpbml0Owo+PiArCXN0cnVj
-dCBjbGsgKmNsazsKPj4gKwlzdHJ1Y3QgcmVzb3VyY2UgKnIsIHJlczsKPj4gKwl2b2lkICp0YWJs
-ZV9hZGRyOwo+PiArCj4+ICsJZW1jID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigq
-ZW1jKSwgR0ZQX0tFUk5FTCk7Cj4+ICsJaWYgKCFlbWMpCj4+ICsJCXJldHVybiAtRU5PTUVNOwo+
-PiArCj4+ICsJbnAgPSBvZl9wYXJzZV9waGFuZGxlKHBkZXYtPmRldi5vZl9ub2RlLCAibnZpZGlh
-LG1lbW9yeS1jb250cm9sbGVyIiwgMCk7Cj4+ICsJaWYgKCFucCkgewo+PiArCQlkZXZfZXJyKCZw
-ZGV2LT5kZXYsICJjb3VsZCBub3QgZ2V0IG1lbW9yeSBjb250cm9sbGVyXG4iKTsKPj4gKwkJcmV0
-dXJuIC1FTk9FTlQ7Cj4+ICsJfQo+PiArCj4+ICsJbWMgPSBvZl9maW5kX2RldmljZV9ieV9ub2Rl
-KG5wKTsKPj4gKwlvZl9ub2RlX3B1dChucCk7Cj4+ICsJaWYgKCFtYykKPj4gKwkJcmV0dXJuIC1F
-Tk9FTlQ7Cj4+ICsKPj4gKwllbWMtPm1jID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEobWMpOwo+PiAr
-CWlmICghZW1jLT5tYykKPj4gKwkJcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4+ICsKPj4gKwllbWMt
-PnJhbV9jb2RlID0gdGVncmFfcmVhZF9yYW1fY29kZSgpOwo+IAo+IGVtYy0+cmFtX2NvZGUgaXNu
-J3QgdXNlZCBhbnl3aGVyZSBpbiB0aGUgY29kZS4KPiAKPiBJIGhhdmVuJ3QgY2hlY2tlZCBvdGhl
-ciBmaWVsZHMuIFBsZWFzZSByZW1vdmUgZXZlcnl0aGluZyB0aGF0IGlzIHVudXNlZC4KCkdvb2Qg
-Y2F0Y2gsIEkgbWlzc2VkIHRoaXMgd2hlbiBjbGVhbiB1cCB0aGUgY29kZSBmb3IgVjMuCgo+IAo+
-PiArCXIgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+
-PiArCWVtYy0+ZW1jX2Jhc2VbUkVHX0VNQ10gPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYt
-PmRldiwgcik7Cj4+ICsJciA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNF
-X01FTSwgMSk7Cj4+ICsJZW1jLT5lbWNfYmFzZVtSRUdfRU1DMF0gPSBkZXZtX2lvcmVtYXBfcmVz
-b3VyY2UoJnBkZXYtPmRldiwgcik7Cj4+ICsJciA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2
-LCBJT1JFU09VUkNFX01FTSwgMik7Cj4+ICsJZW1jLT5lbWNfYmFzZVtSRUdfRU1DMV0gPSBkZXZt
-X2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcik7Cj4gCj4gVXNlIGRldm1fcGxhdGZvcm1f
-aW9yZW1hcF9yZXNvdXJjZSgpLgo+IAo+PiArCWZvciAoaSA9IDA7IGkgPCBURUdSQV9FTUNfU1JD
-X0NPVU5UOyBpKyspIHsKPj4gKwkJZW1jX3NyY1tpXSA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2
-LAo+PiArCQkJCQkJZW1jX3NyY19uYW1lc1tpXSk7Cj4+ICsJCWlmIChJU19FUlIoZW1jX3NyY1tp
-XSkpIHsKPj4gKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgIkNhbiBub3QgZmluZCBFTUMgc291cmNl
-IGNsb2NrXG4iKTsKPj4gKwkJCXJldHVybiAtRU5PREFUQTsKPj4gKwkJfQo+PiArCX0KPj4gKwo+
-PiArCW5wID0gb2ZfcGFyc2VfcGhhbmRsZShwZGV2LT5kZXYub2Zfbm9kZSwgIm1lbW9yeS1yZWdp
-b24iLCAwKTsKPj4gKwlpZiAoIW5wKSB7Cj4+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImNvdWxk
-IG5vdCBmaW5kIEVNQyB0YWJsZVxuIik7Cj4+ICsJCWdvdG8gZW1jX2Nsa19yZWdpc3RlcjsKPj4g
-Kwl9Cj4+ICsKPj4gKwlpZiAoIW9mX2RldmljZV9pc19jb21wYXRpYmxlKG5wLCAibnZpZGlhLHRl
-Z3JhMjEwLWVtYy10YWJsZSIpIHx8Cj4+ICsJICAgICFvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKG5w
-KSkgewo+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJFTUMgdGFibGUgaXMgaW52YWxpZFxuIik7
-Cj4+ICsJCWdvdG8gZW1jX2Nsa19yZWdpc3RlcjsKPj4gKwl9Cj4+ICsKPj4gKwlvZl9hZGRyZXNz
-X3RvX3Jlc291cmNlKG5wLCAwLCAmcmVzKTsKPj4gKwl0YWJsZV9hZGRyID0gbWVtcmVtYXAocmVz
-LnN0YXJ0LCByZXNvdXJjZV9zaXplKCZyZXMpLCBNRU1SRU1BUF9XQik7Cj4+ICsJb2Zfbm9kZV9w
-dXQobnApOwo+PiArCWlmICghdGFibGVfYWRkcikgewo+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYs
-ICJjb3VsZCBub3QgbWFwIEVNQyB0YWJsZVxuIik7Cj4+ICsJCWdvdG8gZW1jX2Nsa19yZWdpc3Rl
-cjsKPj4gKwl9Cj4+ICsJZW1jLT5lbWNfdGFibGUgPSAoc3RydWN0IGVtY190YWJsZSAqKXRhYmxl
-X2FkZHI7Cj4+ICsKPj4gKwlmb3IgKGkgPSAwOyBpIDwgVEVHUkFfRU1DX01BWF9GUkVRUzsgaSsr
-KQo+PiArCQlpZiAoZW1jLT5lbWNfdGFibGVbaV0ucmV2ICE9IDApCj4+ICsJCQllbWMtPmVtY190
-YWJsZV9zaXplKys7Cj4+ICsJCWVsc2UKPj4gKwkJCWJyZWFrOwo+PiArCj4+ICsJLyogSW5pdCBF
-TUMgcmF0ZSBzdGF0aXN0aWMgZGF0YSAqLwo+PiArCWVtY19zdGF0cy5jbGtjaGFuZ2VfY291bnQg
-PSAwOwo+PiArCXNwaW5fbG9ja19pbml0KCZlbWNfc3RhdHMuc3BpbmxvY2spOwo+PiArCWVtY19z
-dGF0cy5sYXN0X3VwZGF0ZSA9IGdldF9qaWZmaWVzXzY0KCk7Cj4+ICsJZW1jX3N0YXRzLmxhc3Rf
-c2VsID0gVEVHUkFfRU1DX01BWF9GUkVRUzsKPj4gKwo+PiArCS8qIENoZWNrIHRoZSBzdXBwb3J0
-ZWQgc2VxdWVuY2UgKi8KPj4gKwl3aGlsZSAoc2VxLT50YWJsZV9yZXYpIHsKPj4gKwkJaWYgKHNl
-cS0+dGFibGVfcmV2ID09IGVtYy0+ZW1jX3RhYmxlWzBdLnJldikKPj4gKwkJCWJyZWFrOwo+PiAr
-CQlzZXErKzsKPj4gKwl9Cj4+ICsJaWYgKCFzZXEtPnNldF9jbG9jaykgewo+PiArCQlzZXEgPSBO
-VUxMOwo+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJJbnZhbGlkIEVNQyBzZXF1ZW5jZSBmb3Ig
-dGFibGUgUmV2LiAlZFxuIiwKPj4gKwkJCWVtYy0+ZW1jX3RhYmxlWzBdLnJldik7Cj4+ICsJCWdv
-dG8gZW1jX2Nsa19yZWdpc3RlcjsKPiAKPiBXaHkgZG8geW91IHdhbnQgdG8gcmVnaXN0ZXIgRU1D
-IGNsb2NrIGlmIHNvbWV0aGluZyBmYWlscz8gS01TRyB3aWxsIGJlCj4gZmxvb2RlZCB3aXRoIGVy
-cm9ycyBjb21pbmcgZnJvbSBjbGtfc2V0X3JhdGUuCj4gCgpTZWUgcGF0Y2ggNyBpbiB0aGUgc2Vy
-aWVzLCB0aGUgbGVnYWN5IEVNQyBjbG9jayB3aWxsIGJlIHJlbW92ZWQgbGF0ZXIsIApzbyB3ZSBu
-ZWVkIHRvIHJlZ2lzdGVyIHRoZSBFTUMgY2xvY2sgd2hldGhlciB0aGUgdGFibGUgaXMgcmVhZHkg
-b3Igbm90LiAKSW4gdGhhdCBjYXNlLCBJIG1lYW4gaWYgdGhlIHRhYmxlIGlzIG5vdCBhdmFpbGFi
-bGUsIGl0IHdpbGwgc3RpbGwgCnJlZ2lzdGVyIEVNQyBjbG9jayBhdCB0aGUgcmF0ZSB0aGF0IGJv
-b3QgbG9hZGVyIGNvbmZpZ3VyZWQgYmVmb3JlIGtlcm5lbCAKYm9vdGluZy4gU28gdGhlIE1DIGNs
-b2NrIGNhbiBzdGlsbCB3b3JrIGFzIGV4cGVjdGVkLCB3aGljaCBpcyB1bmRlciBFTUMgCmNsb2Nr
-LgoKQW5kIEkgZGlkIHRlc3QgdGhhdCwgY291bGRuJ3Qgb2JzZXJ2ZSBhbnkgS01TRyBpbiB0aGF0
-IGNhc2UuCgpUaGFua3MsCkpvc2VwaAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Ashish Kumar <Ashish.Kumar@nxp.com>
+
+This patch is to add esdhc node and enable SD UHS-I,
+eMMC HS200 for ls1028ardb/ls1028aqds board.
+
+Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+---
+Change in v3:
+		replace "esdhc@" with "mmc@"
+
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    8 ++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   13 ++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   27 +++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index 14c79f4..180e5d2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -42,6 +42,14 @@
+ 	status = "okay";
+ };
+ 
++&esdhc {
++	status = "okay";
++};
++
++&esdhc1 {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index f86b054..1bfaf42 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -30,6 +30,19 @@
+ 	};
+ };
+ 
++&esdhc {
++	status = "okay";
++	sd-uhs-sdr104;
++	sd-uhs-sdr50;
++	sd-uhs-sdr25;
++	sd-uhs-sdr12;
++	};
++
++&esdhc1 {
++	status = "okay";
++	mmc-hs200-1_8v;
++	};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2896bbc..462833c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -274,6 +274,33 @@
+ 			status = "disabled";
+ 		};
+ 
++		esdhc: mmc@2140000 {
++			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2140000 0x0 0x10000>;
++			interrupts = <0 28 0x4>; /* Level high type */
++			clock-frequency = <0>; /* fixed up by bootloader */
++			clocks = <&clockgen 2 1>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			little-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
++		esdhc1: mmc@2150000 {
++			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2150000 0x0 0x10000>;
++			interrupts = <0 63 0x4>; /* Level high type */
++			clock-frequency = <0>; /* fixed up by bootloader */
++			clocks = <&clockgen 2 1>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			broken-cd;
++			little-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1028a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
+-- 
+1.7.1
