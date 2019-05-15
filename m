@@ -1,44 +1,24 @@
-Return-Path: <SRS0=Hucj=TO=renesas.com=prvs=40371367b7=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 01/15] ARM: dts: r7s9210: Add USB clock
-Date: Tue, 14 May 2019 09:55:51 -0500
-Message-ID: <20190514145605.19112-2-chris.brandt@renesas.com>
-In-Reply-To: <20190514145605.19112-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=7B8F=TP=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v3 13/15] ARM: dts: r7s9210: Add USB Host support
+Date: Wed, 15 May 2019 13:38:46 +0000
+Message-ID: 
+ <TYXPR01MB1568E1D79AFDB6FF4F5329568A090@TYXPR01MB1568.jpnprd01.prod.outlook.com>
 References: <20190514145605.19112-1-chris.brandt@renesas.com>
+ <20190514145605.19112-14-chris.brandt@renesas.com>
+ <CAMuHMdUU3EBFXHpvw8y_yYf3L1qNNH6HJw+RHP_ioSFwJcd3Vg@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdUU3EBFXHpvw8y_yYf3L1qNNH6HJw+RHP_ioSFwJcd3Vg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, USB list <linux-usb@vger.kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add USB clock node. If present, this clock input must be 48MHz.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
-v2:
- * added reviewed-by
----
- arch/arm/boot/dts/r7s9210.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-index 2eaa5eeba509..73041f04fef5 100644
---- a/arch/arm/boot/dts/r7s9210.dtsi
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -30,6 +30,13 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	usb_x1_clk: usb_x1 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		/* If clk present, value (48000000) must be set by board */
-+		clock-frequency = <0>;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.16.1
+SGkgR2VlcnQsDQoNCk9uIFdlZCwgTWF5IDE1LCAyMDE5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
+dGU6DQoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHhlODIxODIwMCAweDEw
+PjsNCj4gDQo+IFdoYXQgYWJvdXQgdGhlIG90aGVyIHJlZ2lzdGVycz8NCj4gT24gUi1DYXIgR2Vu
+Mywgc2l6ZSBpcyAweDcwMC4NCj4gU2FtZSBmb3IgdXNiMl9waHkxLg0KDQpBaGhoLCBnb29kIGNh
+dGNoLg0KDQpDaHJpcw0KDQo=
