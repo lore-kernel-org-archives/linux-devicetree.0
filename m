@@ -1,39 +1,41 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V3 5/8] memory: tegra: Add EMC scaling support code for
- Tegra210
-Date: Wed, 15 May 2019 17:09:34 +0300
-Message-ID: <630d7218-3f5f-88bc-1ba4-065a6200265e@gmail.com>
-References: <20190510084719.18902-1-josephl@nvidia.com>
- <20190510084719.18902-6-josephl@nvidia.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [RESEND PATCH v3 0/2] Enable wm8524 codec on i.MX8MM EVK
+Date: Wed, 15 May 2019 14:42:27 +0000
+Message-ID: <20190515144210.25596-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190510084719.18902-6-josephl@nvidia.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-ID: <2C46ACD4F00E9A4DB116E9692A0D211A@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-MTAuMDUuMjAxOSAxMTo0NywgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gVGhpcyBwYXRjaCBhZGRz
-IHRoZSByZXF1aXJlZCBBUElzIGFuZCB2YXJpYWJsZXMgZm9yIHRoZSBFTUMgc2NhbGluZwo+IHNl
-cXVlbmNlIGNvZGUgb24gVGVncmEyMTAuCj4gCj4gQmFzZWQgb24gdGhlIHdvcmsgb2YgUGV0ZXIg
-RGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4uCj4gCj4gU2lnbmVkLW9mZi1i
-eTogSm9zZXBoIExvIDxqb3NlcGhsQG52aWRpYS5jb20+Cj4gLS0tCgo+ICtpbnQgdGVncmFfZW1j
-X2R0X3BhcnNlX3BkYXRhKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gKwkJCSAgICAg
-c3RydWN0IGVtY190YWJsZSAqKnRhYmxlcywKPiArCQkJICAgICBzdHJ1Y3QgZW1jX3RhYmxlICoq
-ZGVyYXRlZF90YWJsZXMsCj4gKwkJCSAgICAgaW50ICpudW1fZW50cmllcyk7ClRoZXJlIGlzIG5v
-IGRlZmluaXRpb24gZm9yIHRoaXMgZnVuY3Rpb24uIEFnYWluLCBwbGVhc2UgY2xlYW4gdXAgdGhl
-CmNvZGUgcHJvcGVybHkuCgotLSAKRG1pdHJ5CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+This patch series introduces the SAI nodes on i.MX8MM EVK then
+creates the wm8524 codec node and finally uses simple card machine
+driver to create a sound card.
+
+Changes since v2:
+       - place compatible strings one a single lines
+       - move GPIO pinctrl in a node of its own
+       - remove codec phandle
+
+Changes since v1:
+        - use "fsl,imx8mm-sai", "fsl,imx8mq-sai" compatbile strings and
+          remove "fsl,imx6sx-sai" because SAI module on i.MX8M is not
+          compatbile with SAI modules form i.MX6
+
+RESEND to fix email encoding.
+
+Daniel Baluta (2):
+  arm64: dts: imx8mm: Add SAI nodes
+  arm64: dts: imx8mm-evk: Enable audio codec wm8524
+
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 55 ++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi    | 66 ++++++++++++++++++++
+ 2 files changed, 121 insertions(+)
+
+--=20
+2.17.1
