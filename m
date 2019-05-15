@@ -1,53 +1,69 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [RFC 3/3] arm64: dts: qcom: sdm845-cheza: delete zap-shader
-Date: Wed, 15 May 2019 14:43:13 -0700
-Message-ID: <CAD=FV=Xa0kAReU7CFvO8QiCRkNxGaQY_JohK+psykqeN9e+QJw@mail.gmail.com>
-References: <20190509184415.11592-1-robdclark@gmail.com> <20190509184415.11592-4-robdclark@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts: raise GPU trip point temperature for
+ speedy to 80 degC
+Date: Wed, 15 May 2019 14:47:59 -0700
+Message-ID: <20190515214759.GF40515@google.com>
+References: <20190515153127.24626-1-mka@chromium.org>
+ <20190515153127.24626-2-mka@chromium.org>
+ <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190509184415.11592-4-robdclark@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Clark <robdclark@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Jordan Crouse <jcrouse@codeaurora.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, May 15, 2019 at 11:30:12AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, May 15, 2019 at 8:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> 
+> > Raise the temperature of the GPU thermal trip point for speedy
+> > to 80°C. This is the value used by the downstream Chrome OS 3.14
+> > kernel, the 'official' kernel for speedy.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> > index 2ac8748a3a0c..394a9648faee 100644
+> > --- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> > +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> > @@ -64,6 +64,10 @@
+> >         temperature = <70000>;
+> >  };
+> >
+> > +&gpu_alert0 {
+> > +       temperature = <80000>;
+> > +};
+> > +
+> >  &edp {
+> 
+> Similar comments to patch set #1 about sort ordering.
 
-On Thu, May 9, 2019 at 12:08 PM Rob Clark <robdclark@gmail.com> wrote:
+ack
 
-> From: Rob Clark <robdclark@chromium.org>
->
-> This is unused on cheza.  Delete the node to get rid of the reserved-
-> memory section, and to avoid the driver from attempting to load a zap
-> shader that doesn't exist every time it powers up the GPU.
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+> ...I'll also notice that if we do end up setting the "critical" to 100
+> C for most of veyron then I guess we'll have to switch it back to 90 C
+> here for speedy to match downstream?
 
-nit: up to Bjorn / Andy, but personally I'd put cheza and non-cheza
-changes in two patches.
+yes
 
+> Maybe that's an argument for doing it in this patchset so we don't
+> forget?
 
->  2 files changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> index 8ccbe246dff4..28c28517b21a 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> @@ -175,6 +175,8 @@
->  /delete-node/ &venus_mem;
->  /delete-node/ &cdsp_mem;
->  /delete-node/ &cdsp_pas;
-> +/delete-node/ &zap_shader;
+sounds good to me
 
-nit: I'd probably move the delete of the zap shader to a slightly
-different place just because the rest of the lines here are deleting
-reserved memory regions.
+> I'm somewhat amazed that downstream has only 10 C between "alert"
+> and 'critical" for GPU for speedy, but I guess it's OK?
 
-Other than nits this seems OK to me.  Not that I know anything about
-the zap shader or why a zap shader wouldn't be appropriate for cheza.
-
--Doug
+In tests on other veyron devices I observed gradual temperature
+in response to CPU or GPU load, so unless there's a sudden spike in
+the ambient temperature I think the 10°C delta should be fine with the
+current polling interval of 100ms.
