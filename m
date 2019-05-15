@@ -1,76 +1,47 @@
-Return-Path: <SRS0=AIG0=TP=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v6 0/7] Add USB3.0 and TI HD3SS3220 driver support
-Date: Wed, 15 May 2019 13:09:05 +0100
-Message-Id: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=DwSA=TP=verge.net.au=horms@kernel.org>
+Date: Wed, 15 May 2019 09:53:14 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 02/15] ARM: dts: rza2mevb: Add 48MHz USB clock
+Message-ID: <20190515075313.nq4hp2xgy5er3ni7@verge.net.au>
+References: <20190514145605.19112-1-chris.brandt@renesas.com>
+ <20190514145605.19112-3-chris.brandt@renesas.com>
+ <CAMuHMdWctj6bEBQ9OF93T6h10Chb-ankN4QRaY+UPLLQuBJDHQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWctj6bEBQ9OF93T6h10Chb-ankN4QRaY+UPLLQuBJDHQ@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds USB 3.0 support for the CAT874 platform, including a
-new driver for the TI HD3SS3220 USB Type-C DRP port controller.
+On Wed, May 15, 2019 at 09:43:02AM +0200, Geert Uytterhoeven wrote:
+> Hi Chris,
+> 
+> On Tue, May 14, 2019 at 4:57 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> > The RZ/A2M EVB has a 48MHz clock attached to USB_X1.
+> >
+> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This patch series supports:
-1) Host hotplug operation
-2) Device hot plug operation
-3) USB type-C data_role switch
-   (Tested with 2 RZ/G2E boards connected with a Type-C cable)
+Thanks, applied for v5.3.
 
-This patchset is based on linux_next next-20190514 branch.
-V5-->V6
-  * Updated bindings patch by using usb-role-switch property
-  * Used graph api's to get role switch supported by the usb-c-connector
-V4-->V5
-  * Incorporated Heikki's review comment.
-    (https://patchwork.kernel.org/patch/10902531/)
-  * Patch 1 is a dependency patch to make the compilation successful.
-    (https://patchwork.kernel.org/patch/10909971/)
-  * Patch 2 is also dependency patch to make the compilation successful.
-    Rebased on top of Patch1 and fixed Heikki's review comments
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Incorporated Shimoda-San's review comment.
-    (https://patchwork.kernel.org/patch/10902535/)
-V3-->V4
-  * Incorporated Chunfeng Yun's review comment
-    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
-  * Used fwnode API's to get roleswitch handle
+> > --- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+> > +++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
+> > @@ -58,6 +58,11 @@
+> >         clock-frequency = <32768>;
+> >  };
+> >
+> > +/* USB_X1 */
+> > +&usb_x1_clk {
+> > +       clock-frequency = <48000000>;
+> > +};
+> > +
+> >  &pinctrl {
+> >         /* Serial Console */
+> >         scif4_pins: serial4 {
+> 
+> BTW, it looks like this file can use a sorting sweep.
 
-V2-->V3
-  * Used the new API to usb_role_switch by node to find the remote endpoint
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Added renesas,usb-role-switch property
-  * Incorporated shimoda-san's review comment
-    (https://patchwork.kernel.org/patch/10852507/)
-
-V1-->V2
-  * Use USB role class instead of extcon to receive connect and disconnect
-    events and also for the dual role switch.
-  * Dropped patch 6
-  * Squashed patch 8 and patch 9
-  * https://patchwork.kernel.org/cover/10840641/
-
-
-Biju Das (7):
-  dt-bindings: usb: hd3ss3220 device tree binding document
-  dt-bindings: usb: renesas_usb3: Document usb role switch support
-  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
-  usb: gadget: udc: renesas_usb3: Add dual role switch support
-  arm64: defconfig: enable TYPEC_HD3SS3220 config option
-  arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral
-    device node
-  arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
-
- .../devicetree/bindings/usb/renesas_usb3.txt       |  26 ++
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  37 +++
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |  56 +++++
- arch/arm64/configs/defconfig                       |   2 +
- drivers/usb/gadget/udc/renesas_usb3.c              | 121 +++++++++-
- drivers/usb/typec/Kconfig                          |  10 +
- drivers/usb/typec/Makefile                         |   1 +
- drivers/usb/typec/hd3ss3220.c                      | 263 +++++++++++++++++++++
- 8 files changed, 509 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 drivers/usb/typec/hd3ss3220.c
-
--- 
-2.7.4
+Thanks, I'll look into it.
