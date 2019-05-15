@@ -1,55 +1,68 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/5] ASoC: meson: add hdmitx glue support
-Date: Wed, 15 May 2019 15:32:55 +0200
-Message-ID: <f7bafd16-1332-e124-79fb-7f045975aed9@baylibre.com>
-References: <20190515131858.32130-1-jbrunet@baylibre.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
+Date: Wed, 15 May 2019 08:42:18 -0500
+Message-ID: <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
+References: <1557920697-18057-1-git-send-email-fabrizio.castro@bp.renesas.com> <1557920697-18057-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515131858.32130-1-jbrunet@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <1557920697-18057-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-On 15/05/2019 15:18, Jerome Brunet wrote:
-> On the Amlogic SoC, there is a glue between the SoC audio outputs and the
-> input of the embedded Synopsys HDMI controller.
-> 
-> On the g12a, this glue is mostly a couple of muxes to select the i2s and
-> spdif inputs of the hdmi controller. Each of these inputs may have
-> different hw_params and fmt which makes our life a little bit more
-> interesting, especially when switching between to active inputs.
-> 
-> This glue is modeled as codec driver and uses codec-to-codec links to
-> connect to the Synopsys controller. This allows to use the regular
-> hdmi-codec driver (used by dw-hdmi i2s).
-> 
-> To avoid glitches while switching input, the trick is to temporarily
-> force a disconnection of the mux output, which shutdowns the output dai
-> link. This also ensure that the stream parameters and fmt are updated
-> when the output is connected back.
-> 
-> Jerome Brunet (5):
->   ASoC: meson: axg-card: set link name based on link node name
->   ASoC: dapm: allow muxes to force a disconnect
->   ASoC: meson: add tohdmitx DT bindings
->   ASoC: meson: axg-card: add basic codec-to-codec link support
->   ASoC: meson: add g12a tohdmitx control
-> 
->  .../bindings/sound/amlogic,g12a-tohdmitx.txt  |  55 +++
->  .../dt-bindings/sound/meson-g12a-tohdmitx.h   |  13 +
->  sound/soc/meson/Kconfig                       |   8 +
->  sound/soc/meson/Makefile                      |   2 +
->  sound/soc/meson/axg-card.c                    |  31 +-
->  sound/soc/meson/g12a-tohdmitx.c               | 413 ++++++++++++++++++
->  sound/soc/soc-dapm.c                          |   2 +-
->  7 files changed, 518 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
->  create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
->  create mode 100644 sound/soc/meson/g12a-tohdmitx.c
-> 
+On Wed, May 15, 2019 at 6:45 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+>
+> This patch adds board HiHope RZ/G2M (the main board, powered by
+> the R8A774A1) and board HiHope RZ/G2 EX (the expansion board
+> that sits on top of the HiHope RZ/G2M). Both boards are made
+> by Jiangsu HopeRun Software Co., Ltd. (a.k.a. HopeRun).
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>
+> ---
+> Useful links:
+> http://hihope.org/product/detail/rzg2
+> https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.6bcf1debQpzkRS&ft=t&id=592177498472
+> http://www.hoperun.com/Cn/news/id/379
+>
+> We already know that the HiHope RZ/G2 EX will also sit on the
+> HiHope RZ/G2N, even though the HiHope RZ/G2N doesn't exist just
+> yet.
 
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+Seems like useful into to put in the commit msg.
+
+> ---
+>  Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
+> index 19f3798..95302b9 100644
+> --- a/Documentation/devicetree/bindings/arm/renesas.yaml
+> +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
+> @@ -106,6 +106,14 @@ properties:
+>
+>        - description: RZ/G2M (R8A774A1)
+>          items:
+> +          - enum:
+> +              - hoperun,hihope-rzg2m # HopeRun HiHope RZ/G2M platform
+> +          - const: renesas,r8a774a1
+> +
+> +        items:
+
+Did you run this thru the checks because this isn't valid json-schema.
+You can't have same keyword twice. This 'items' needs to be another
+list entry (i.e. add a '-').
+
+> +          - enum:
+> +              - hoperun,hihope-rzg2-ex # HopeRun expansion board for HiHope RZ/G2 platforms
+> +          - const: hoperun,hihope-rzg2m
+>            - const: renesas,r8a774a1
+>
+>        - description: RZ/G2E (R8A774C0)
+> --
+> 2.7.4
+>
