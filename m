@@ -1,22 +1,58 @@
-Return-Path: <SRS0=ZBEu=TQ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 0/2] Add WLAN/BT support
-Date: Thu, 16 May 2019 09:59:24 +0100
-Message-Id: <1557997166-63351-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=qLWK=TP=renesas.com=prvs=4038260dfd=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 03/13] phy: renesas: rcar-gen3-usb2: Check dr_mode when not using OTG
+Date: Wed, 15 May 2019 10:20:38 -0500
+Message-ID: <20190515152048.42363-4-chris.brandt@renesas.com>
+In-Reply-To: <20190515152048.42363-1-chris.brandt@renesas.com>
+References: <20190515152048.42363-1-chris.brandt@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds WLAN/BT support for the CAT874 platform.
+When not using OTG, the PHY will need to know if it should function as
+host or peripheral by checking dr_mode in the PHY node (not the parent
+controller node).
 
-This patchset is based on renesas dev branch.
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v4:
+ * added reviewed-by
+v3:
+ * changed 'if' to 'switch'
+ * use rcar_gen3_set_host_mode() instead of writel()
+v2:
+ * added braces to else statement
+ * check if dr_mode is "host"
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Biju Das (2):
-  arm64: dts: renesas: r8a774c0-cat874: Add WLAN support
-  arm64: dts: renesas: r8a774c0-cat874: Add BT support
-
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 57 +++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
-
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 06e0fc804226..29da9c46ad9b 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -412,6 +412,18 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ 		if (rcar_gen3_needs_init_otg(channel))
+ 			rcar_gen3_init_otg(channel);
+ 		rphy->otg_initialized = true;
++	} else {
++		/* Not OTG, so dr_mode should be set in PHY node */
++		switch (usb_get_dr_mode(channel->dev)) {
++		case USB_DR_MODE_HOST:
++			rcar_gen3_set_host_mode(channel, 1);
++			break;
++		case USB_DR_MODE_PERIPHERAL:
++			rcar_gen3_set_host_mode(channel, 0);
++			break;
++		default:
++			break;
++		}
+ 	}
+ 
+ 	rphy->initialized = true;
 -- 
-2.7.4
+2.16.1
