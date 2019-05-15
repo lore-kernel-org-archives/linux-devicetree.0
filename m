@@ -1,58 +1,53 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v4 16/18] MAINTAINERS: add entry for KUnit the unit
- testing framework
-Date: Tue, 14 May 2019 16:25:06 -0700
-Message-ID: <20190514232506.GA16788@google.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com>
- <20190514221711.248228-17-brendanhiggins@google.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: amlogic: remove ethernet-phy-idAAAA.BBBB
+ compatible strings
+Date: Tue, 14 May 2019 17:01:42 -0700
+Message-ID: <7hv9ycd1qx.fsf@baylibre.com>
+References: <20190511174534.2403-1-martin.blumenstingl@googlemail.com>
+ <20190511195150.GI4889@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190514221711.248228-17-brendanhiggins@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190511195150.GI4889@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 03:17:09PM -0700, Brendan Higgins wrote:
-> Add myself as maintainer of KUnit, the Linux kernel's unit testing
-> framework.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2c2fce72e694f..8a91887c8d541 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8448,6 +8448,17 @@ S:	Maintained
->  F:	tools/testing/selftests/
->  F:	Documentation/dev-tools/kselftest*
+Andrew Lunn <andrew@lunn.ch> writes:
+
+> On Sat, May 11, 2019 at 07:45:34PM +0200, Martin Blumenstingl wrote:
+>> The Ethernet PHY documentation
+>> (Documentation/devicetree/bindings/net/phy.txt) states that:
+>>   If the PHY reports an incorrect ID (or none at all) then the
+>>   "compatible" list may contain an entry with the correct PHY ID in the
+>>   form: "ethernet-phy-idAAAA.BBBB"
+>> 
+>> An older version of the documentation suggested that the compatible
+>> string can be used when the PHY ID is known.
+>> 
+>> Remove the ethernet-phy-id compatible string and add a comment with the
+>> PHY ID instead.
+>> This is a no-op on boards which are shipped with the PHY that was
+>> listed (= all known cases). However, if a board manufacturer decides to
+>> ship a different PHY we will now load and use the correct driver because
+>> we ask the PHY to identify itself.
+>> 
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 >  
-> +KERNEL UNIT TESTING FRAMEWORK (KUnit)
-> +M:	Brendan Higgins <brendanhiggins@google.com>
-> +L:	linux-kselftest@vger.kernel.org
-> +L:	kunit-dev@googlegroups.com
-> +W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
-> +S:	Maintained
-> +F:	Documentation/kunit/
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Dang it! I forgot to update the documentation path...
+Queuing for v5.3,
 
-Will fix in next revision.
+Thanks,
 
-> +F:	include/kunit/
-> +F:	kunit/
-> +F:	tools/testing/kunit/
-> +
->  KERNEL USERMODE HELPER
->  M:	Luis Chamberlain <mcgrof@kernel.org>
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+Kevin
