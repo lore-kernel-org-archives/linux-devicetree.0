@@ -1,124 +1,73 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Date: Wed, 15 May 2019 14:42:29 +0000
-Message-ID: <20190515144210.25596-3-daniel.baluta@nxp.com>
-References: <20190515144210.25596-1-daniel.baluta@nxp.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
+Date: Wed, 15 May 2019 08:08:57 -0700
+Message-ID: <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
+References: <20190514155911.6C0AC68B05@newverein.lst.de> <20190514160241.9EAC768C7B@newverein.lst.de>
+ <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com> <20190515093141.41016b11@blackhole.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515144210.25596-1-daniel.baluta@nxp.com>
-Content-Language: en-US
-Content-ID: <127BF082BBC1824D9BA7AEC6678EAD49@eurprd04.prod.outlook.com>
+In-Reply-To: <20190515093141.41016b11@blackhole.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>
+To: Torsten Duwe <duwe@lst.de>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MM has one wm8524 audio codec connected with
-SAI3 digital audio interface.
+On Wed, May 15, 2019 at 12:32 AM Torsten Duwe <duwe@lst.de> wrote:
+>
+> On Tue, 14 May 2019 10:48:40 -0700
+> Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> > > +       anx6345: anx6345@38 {
+> > > +               compatible = "analogix,anx6345";
+> > > +               reg = <0x38>;
+> > > +               reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24
+> > > */
+> > > +               dvdd25-supply = <&reg_dldo2>;
+> > > +               dvdd12-supply = <&reg_dldo3>;
+> > > +
+> > > +               port {
+> > > +                       anx6345_in: endpoint {
+> > > +                               remote-endpoint =
+> > > <&tcon0_out_anx6345>;
+> > > +                       };
+> > > +               };
+> >
+> > It doesn't comply with bindings document. You need to add out endpoint
+>
+> It does comply with the bindings. The ports are all optional.
+> As far as DT is concerned, the signal path ends here. This is also the
+> final component _required_ to get the Linux kernel DRI up and running.
 
-This patch uses simple-card machine driver in order
-to enable wm8524 codec.
+Ugh, then bindings should be fixed. It's not optional. It may work if
+bootloader enables power for you, but it won't if you disable display
+driver in u-boot.
 
-We need to set:
-	* SAI3 pinctrl configuration
-	* codec reset gpio pinctrl configuration
-	* clock hierarchy
-	* codec node
-	* simple-card configuration
+> > as well, and to do so you need to add bindings for eDP connector first
+> > and then implement panel driver.
+> > See Rob's suggestions here: http://patchwork.ozlabs.org/patch/1042593/
+>
+> Well, one *could* extend the hardware description down to the actual
+> panel if necessary, but on the Teres-I it is not. I assume the panel
+> they ship provides proper EDID to the anx6345, because the display
+> works fine here with this DT.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 55 ++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+I guess you're testing it with older version of anx6345. Newer version
+that supports power management [1] needs startup delay for panel.
+Another issue that you're seeing is that backlight is not disabled on
+DPMS events. All in all, you need to describe panel in dts.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot=
-/dts/freescale/imx8mm-evk.dts
-index 2d5d89475b76..7c578d8762b9 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -37,6 +37,37 @@
- 		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	wm8524: audio-codec {
-+		#sound-dai-cells =3D <0>;
-+		compatible =3D "wlf,wm8524";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpio_wlf>;
-+		wlf,mute-gpios =3D <&gpio5 21 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sound-wm8524 {
-+		compatible =3D "simple-audio-card";
-+		simple-audio-card,name =3D "wm8524-audio";
-+		simple-audio-card,format =3D "i2s";
-+		simple-audio-card,frame-master =3D <&cpudai>;
-+		simple-audio-card,bitclock-master =3D <&cpudai>;
-+		simple-audio-card,widgets =3D
-+			"Line", "Left Line Out Jack",
-+			"Line", "Right Line Out Jack";
-+		simple-audio-card,routing =3D
-+			"Left Line Out Jack", "LINEVOUTL",
-+			"Right Line Out Jack", "LINEVOUTR";
-+
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai =3D <&sai3>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai =3D <&wm8524>;
-+			clocks =3D <&clk IMX8MM_CLK_SAI3_ROOT>;
-+		};
-+	};
- };
-=20
- &fec1 {
-@@ -61,6 +92,15 @@
- 	};
- };
-=20
-+&sai3 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sai3>;
-+	assigned-clocks =3D <&clk IMX8MM_CLK_SAI3>;
-+	assigned-clock-parents =3D <&clk IMX8MM_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates =3D <24576000>;
-+	status =3D "okay";
-+};
-+
- &uart2 { /* console */
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_uart2>;
-@@ -124,12 +164,27 @@
- 		>;
- 	};
-=20
-+	pinctrl_gpio_wlf: gpiowlfgrp {
-+		fsl,pins =3D <
-+			MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21        0xd6
-+		>;
-+	};
-+
- 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
- 		fsl,pins =3D <
- 			MX8MM_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
- 		>;
- 	};
-=20
-+	pinctrl_sai3: sai3grp {
-+		fsl,pins =3D <
-+			MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC     0xd6
-+			MX8MM_IOMUXC_SAI3_TXC_SAI3_TX_BCLK      0xd6
-+			MX8MM_IOMUXC_SAI3_MCLK_SAI3_MCLK        0xd6
-+			MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
-+		>;
-+	};
-+
- 	pinctrl_uart2: uart2grp {
- 		fsl,pins =3D <
- 			MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
---=20
-2.17.1
+[1] https://github.com/anarsoul/linux-2.6/commit/2fbf9c242419c8bda698e8331a02d4312143ae2c
+
+
+> Do I understand this correctly that the (3 different?) pinebook panels
+> are not that easy to handle? I try to include the pinebook wherever
+> possible, just because it's so similar, but here I'm a bit lost, so I
+> had to omit these parts.
+>
+> Should I also have added a Tested-by: ? ;-)
+
+I don't have Teres, so I haven't tested these.
+
+>
+>         Torsten
