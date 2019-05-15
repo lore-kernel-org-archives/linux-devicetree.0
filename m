@@ -1,46 +1,69 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add #cooling-cells entry for rk3288 GPU
-Date: Wed, 15 May 2019 10:59:21 -0700
-Message-ID: <CAD=FV=W+QGLmhEaqGc-=wNFzmaCr_f4rb5e8KQ4ZmeRaNi_xCw@mail.gmail.com>
-References: <20190424162827.5297-1-mka@chromium.org>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH 3/5] ARM: dts: rockchip: Switch to builtin HDMI DDC bus
+ on rk3288-veyron
+Date: Wed, 15 May 2019 14:25:44 -0400
+Message-ID: <20190515182544.GW17077@art_vandelay>
+References: <20190502225336.206885-1-dianders@chromium.org>
+ <20190502225336.206885-3-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424162827.5297-1-mka@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20190502225336.206885-3-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, mka@chromium.org, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, May 02, 2019 at 03:53:34PM -0700, Douglas Anderson wrote:
+> Downstream Chrome OS kernels use the builtin DDC bus from dw_hdmi on
+> veyron.  This is the only way to get them to negotiate HDCP.
+> 
+> Although HDCP isn't currently all supported upstream, it still seems
+> like it makes sense to use dw_hdmi's builtin I2C.  Maybe eventually we
+> can get HDCP negotiation working.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-On Wed, Apr 24, 2019 at 9:28 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-> The Mali GPU of the rk3288 can be used as cooling device, add
-> a #cooling-cells entry for it.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  arch/arm/boot/dts/rk3288.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index ca7d52daa8fb..767e62908a6e 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -1275,6 +1275,7 @@
->                 interrupt-names = "job", "mmu", "gpu";
->                 clocks = <&cru ACLK_GPU>;
->                 operating-points-v2 = <&gpu_opp_table>;
-> +               #cooling-cells = <2>; /* min followed by max */
->                 power-domains = <&power RK3288_PD_GPU>;
->                 status = "disabled";
->         };
+> 
+>  arch/arm/boot/dts/rk3288-veyron.dtsi | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> index 1252522392c7..e1bee663d2c5 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> @@ -163,7 +163,8 @@
+>  };
+>  
+>  &hdmi {
+> -	ddc-i2c-bus = <&i2c5>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&hdmi_ddc>;
+>  	status = "okay";
+>  };
+>  
+> @@ -334,14 +335,6 @@
+>  	i2c-scl-rising-time-ns = <300>;		/* 225ns measured */
+>  };
+>  
+> -&i2c5 {
+> -	status = "okay";
+> -
+> -	clock-frequency = <100000>;
+> -	i2c-scl-falling-time-ns = <300>;
+> -	i2c-scl-rising-time-ns = <1000>;
+> -};
+> -
+>  &io_domains {
+>  	status = "okay";
+>  
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
 
-Seems like a good idea to me.  Presumably we should also add this to
-the bindings?
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-
--Doug
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
