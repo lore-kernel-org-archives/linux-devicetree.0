@@ -1,81 +1,53 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 1/2] dts: rockchip: raise GPU trip point temperature for
- veyron to 72.5 degC
-Date: Wed, 15 May 2019 14:37:03 -0700
-Message-ID: <20190515213703.GE40515@google.com>
-References: <20190515153127.24626-1-mka@chromium.org>
- <CAD=FV=U19uAGkwTqg-N6_m5WYQ7yMwjQir3TYUsb3SWWOihTOg@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [RFC 3/3] arm64: dts: qcom: sdm845-cheza: delete zap-shader
+Date: Wed, 15 May 2019 14:43:13 -0700
+Message-ID: <CAD=FV=Xa0kAReU7CFvO8QiCRkNxGaQY_JohK+psykqeN9e+QJw@mail.gmail.com>
+References: <20190509184415.11592-1-robdclark@gmail.com> <20190509184415.11592-4-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=U19uAGkwTqg-N6_m5WYQ7yMwjQir3TYUsb3SWWOihTOg@mail.gmail.com>
+In-Reply-To: <20190509184415.11592-4-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Rob Clark <robdclark@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Clark <robdclark@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Jordan Crouse <jcrouse@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+Hi,
 
-thanks for the review!
+On Thu, May 9, 2019 at 12:08 PM Rob Clark <robdclark@gmail.com> wrote:
 
-On Wed, May 15, 2019 at 11:30:24AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, May 15, 2019 at 8:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> 
-> > This value matches what is used by the downstream Chrome OS 3.14
-> > kernel, the 'official' kernel for veyron devices.
-> >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  arch/arm/boot/dts/rk3288-veyron.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> > index 1252522392c7..169da06e1c09 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> > @@ -446,6 +446,14 @@
-> >         status = "okay";
-> >  };
-> >
-> > +&gpu_thermal {
-> > +       trips {
-> > +               gpu_alert0: gpu_alert0 {
-> > +                       temperature = <72500>; /* millicelsius */
-> > +               };
-> > +       };
-> > +};
-> > +
-> 
-> This should be sorted alphabetically.  Thus this should sort right
-> after this in rk3288-veyron.dtsi
-> 
-> &gpu {
->   mali-supply = <&vdd_gpu>;
->   status = "okay";
-> };
+> From: Rob Clark <robdclark@chromium.org>
+>
+> This is unused on cheza.  Delete the node to get rid of the reserved-
+> memory section, and to avoid the driver from attempting to load a zap
+> shader that doesn't exist every time it powers up the GPU.
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
 
-will do in the next revision.
+nit: up to Bjorn / Andy, but personally I'd put cheza and non-cheza
+changes in two patches.
 
-> Also you don't need to replicate the whole structure?  I think the
-> above should just be:
-> 
-> &gpu_alert0 {
->   temperature = <72500>; /* millicelsius */
-> };
 
-ack
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> index 8ccbe246dff4..28c28517b21a 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> @@ -175,6 +175,8 @@
+>  /delete-node/ &venus_mem;
+>  /delete-node/ &cdsp_mem;
+>  /delete-node/ &cdsp_pas;
+> +/delete-node/ &zap_shader;
 
-> NOTE also that that gpu and cpu critical is 100 C downstream.  Should
-> we do that too?
+nit: I'd probably move the delete of the zap shader to a slightly
+different place just because the rest of the lines here are deleting
+reserved memory regions.
 
-I missed this delta, yes let's do this too in this series.
+Other than nits this seems OK to me.  Not that I know anything about
+the zap shader or why a zap shader wouldn't be appropriate for cheza.
 
-> Ah, but before we do that I guess we'd need to also  override the
-> "rockchip,hw-tshut-temp" to 125000 to match downstream. I guess that
-> could be a separate series?
-
-Yes, the value should at least be higher than the critical trip point,
-matching downstream seems to make sense.
+-Doug
