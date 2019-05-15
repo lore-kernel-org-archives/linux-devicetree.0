@@ -1,54 +1,28 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: meson-gx: add ddr-access-quirk property
-Date: Wed, 15 May 2019 13:37:29 +0200
-Message-ID: <CAPDyKFr9HVLNpqncs6YhGvqPdXCk6mtVSPVcWDvmnrKiNB+ACQ@mail.gmail.com>
-References: <20190513091548.16674-1-narmstrong@baylibre.com> <20190513091548.16674-2-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/2] Document HopeRun RZ/G2M boards
+Date: Wed, 15 May 2019 12:44:55 +0100
+Message-ID: <1557920697-18057-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513091548.16674-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, DTML <devicetree@vger.kernel.org>, baylibre-upstreaming@groups.io, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 May 2019 at 11:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
-> makes any DDR access from the MMC controller fail.
->
-> Add the amlogic,ddr-access-quirk property so signal this particular
-> controller has this bug and needs a quirk to work properly.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> index 13e70409e8ac..f8914dab06c6 100644
-> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> @@ -22,6 +22,10 @@ Required properties:
->    clock rate requested by the MMC core.
->  - resets     : phandle of the internal reset line
->
-> +Optional properties:
-> +- amlogic,ddr-access-quirk: set when HW cannot access the DDR memory, like on
-> +  the G12A SDIO controller.
+Dear All,
 
-As stated on the other patch, may I suggest to use DRAM instead of DDR.
+this series aims at documenting the HiHope RZ/G2M platform from
+HopeRun, and its corresponding expansion board.
 
-Moreover, please mention that this is about the internal DMA support
-of the controller.
+Thanks,
+Fab
 
-> +
->  Example:
->
->         sd_emmc_a: mmc@70000 {
-> --
-> 2.21.0
->
+Fabrizio Castro (2):
+  dt-bindings: Add vendor prefix for HopeRun
+  dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
 
-Kind regards
-Uffe
+ Documentation/devicetree/bindings/arm/renesas.yaml    | 8 ++++++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 2 files changed, 9 insertions(+)
+
+-- 
+2.7.4
