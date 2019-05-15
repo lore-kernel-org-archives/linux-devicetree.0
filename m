@@ -1,47 +1,76 @@
-Return-Path: <SRS0=Hucj=TO=renesas.com=prvs=40371367b7=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 04/15] dt-bindings: rcar-gen3-phy-usb2: Document use of usb_x1
-Date: Tue, 14 May 2019 09:55:54 -0500
-Message-ID: <20190514145605.19112-5-chris.brandt@renesas.com>
-In-Reply-To: <20190514145605.19112-1-chris.brandt@renesas.com>
-References: <20190514145605.19112-1-chris.brandt@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+Return-Path: <SRS0=AIG0=TP=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v6 0/7] Add USB3.0 and TI HD3SS3220 driver support
+Date: Wed, 15 May 2019 13:09:05 +0100
+Message-Id: <1557922152-16449-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the USB_X1 input and add clock-names to identify
-functional and USB_X1 clocks.
+This series adds USB 3.0 support for the CAT874 platform, including a
+new driver for the TI HD3SS3220 USB Type-C DRP port controller.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v3:
- * added clock names
-v2:
- * removed 'use_usb_x1' option
- * document that 'usb_x1' clock node will be detected to determine if
-   48MHz clock exists
----
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+This patch series supports:
+1) Host hotplug operation
+2) Device hot plug operation
+3) USB type-C data_role switch
+   (Tested with 2 RZ/G2E boards connected with a Type-C cable)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index d46188f450bf..ca8a831d4273 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -28,7 +28,11 @@ Required properties:
- 	      followed by the generic version.
- 
- - reg: offset and length of the partial USB 2.0 Host register block.
--- clocks: clock phandle and specifier pair(s).
-+- clocks: clock phandle and specifier pair(s). For SoCs that have a separate
-+          dedicated USB_X1 input for the PLL, that is also listed.
-+- clock-names: Name of the clocks. The functional clock shall be called "fclk"
-+	       and USB_X1 shall be called "usb_x1". If only one clock is listed,
-+	       this property is not required.
- - #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
- 	      using <0> is deprecated).
- 
+This patchset is based on linux_next next-20190514 branch.
+V5-->V6
+  * Updated bindings patch by using usb-role-switch property
+  * Used graph api's to get role switch supported by the usb-c-connector
+V4-->V5
+  * Incorporated Heikki's review comment.
+    (https://patchwork.kernel.org/patch/10902531/)
+  * Patch 1 is a dependency patch to make the compilation successful.
+    (https://patchwork.kernel.org/patch/10909971/)
+  * Patch 2 is also dependency patch to make the compilation successful.
+    Rebased on top of Patch1 and fixed Heikki's review comments
+    (https://patchwork.kernel.org/patch/10882555/)
+  * Incorporated Shimoda-San's review comment.
+    (https://patchwork.kernel.org/patch/10902535/)
+V3-->V4
+  * Incorporated Chunfeng Yun's review comment
+    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
+  * Used fwnode API's to get roleswitch handle
+
+V2-->V3
+  * Used the new API to usb_role_switch by node to find the remote endpoint
+    (https://patchwork.kernel.org/patch/10882555/)
+  * Added renesas,usb-role-switch property
+  * Incorporated shimoda-san's review comment
+    (https://patchwork.kernel.org/patch/10852507/)
+
+V1-->V2
+  * Use USB role class instead of extcon to receive connect and disconnect
+    events and also for the dual role switch.
+  * Dropped patch 6
+  * Squashed patch 8 and patch 9
+  * https://patchwork.kernel.org/cover/10840641/
+
+
+Biju Das (7):
+  dt-bindings: usb: hd3ss3220 device tree binding document
+  dt-bindings: usb: renesas_usb3: Document usb role switch support
+  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
+  usb: gadget: udc: renesas_usb3: Add dual role switch support
+  arm64: defconfig: enable TYPEC_HD3SS3220 config option
+  arm64: dts: renesas: r8a774c0-cat874: Enable USB3.0 host/peripheral
+    device node
+  arm64: dts: renesas: r8a774c0-cat874: Enable usb role switch support
+
+ .../devicetree/bindings/usb/renesas_usb3.txt       |  26 ++
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  37 +++
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |  56 +++++
+ arch/arm64/configs/defconfig                       |   2 +
+ drivers/usb/gadget/udc/renesas_usb3.c              | 121 +++++++++-
+ drivers/usb/typec/Kconfig                          |  10 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/hd3ss3220.c                      | 263 +++++++++++++++++++++
+ 8 files changed, 509 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+ create mode 100644 drivers/usb/typec/hd3ss3220.c
+
 -- 
-2.16.1
+2.7.4
