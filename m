@@ -1,61 +1,54 @@
-From: Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v5 2/2] dt-bindings: net: bluetooth: Add device property firmware-name for QCA6174
-Date: Wed, 15 May 2019 19:20:03 +0800
-Message-ID: <1557919203-11055-1-git-send-email-rjliao@codeaurora.org>
-References: <1557631185-5167-1-git-send-email-rjliao@codeaurora.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: meson-gx: add ddr-access-quirk property
+Date: Wed, 15 May 2019 13:37:29 +0200
+Message-ID: <CAPDyKFr9HVLNpqncs6YhGvqPdXCk6mtVSPVcWDvmnrKiNB+ACQ@mail.gmail.com>
+References: <20190513091548.16674-1-narmstrong@baylibre.com> <20190513091548.16674-2-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557631185-5167-1-git-send-email-rjliao@codeaurora.org>
+In-Reply-To: <20190513091548.16674-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, thierry.escande@linaro.org
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, c-hbandi@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, DTML <devicetree@vger.kernel.org>, baylibre-upstreaming@groups.io, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds an optional device property "firmware-name" to allow the
-driver to load customized nvm firmware file based on this property.
+On Mon, 13 May 2019 at 11:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
+> makes any DDR access from the MMC controller fail.
+>
+> Add the amlogic,ddr-access-quirk property so signal this particular
+> controller has this bug and needs a quirk to work properly.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> index 13e70409e8ac..f8914dab06c6 100644
+> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> @@ -22,6 +22,10 @@ Required properties:
+>    clock rate requested by the MMC core.
+>  - resets     : phandle of the internal reset line
+>
+> +Optional properties:
+> +- amlogic,ddr-access-quirk: set when HW cannot access the DDR memory, like on
+> +  the G12A SDIO controller.
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v5:
-  * Made the change applicable to the wcn399x series chip sets
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+As stated on the other patch, may I suggest to use DRAM instead of DDR.
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 7ef6118..68b67d9 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -17,6 +17,7 @@ Optional properties for compatible string qcom,qca6174-bt:
- 
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
-+ - firmware-name: specify the name of nvm firmware to load
- 
- Required properties for compatible string qcom,wcn399x-bt:
- 
-@@ -28,6 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
- Optional properties for compatible string qcom,wcn399x-bt:
- 
-  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+ - firmware-name: specify the name of nvm firmware to load
- 
- Examples:
- 
-@@ -40,6 +42,7 @@ serial@7570000 {
- 
- 		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
- 		clocks = <&divclk4>;
-+		firmware-name = "nvm_00440302.bin";
- 	};
- };
- 
-@@ -52,5 +55,6 @@ serial@898000 {
- 		vddrf-supply = <&vreg_l17a_1p3>;
- 		vddch0-supply = <&vreg_l25a_3p3>;
- 		max-speed = <3200000>;
-+		firmware-name = "crnv21.bin";
- 	};
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Moreover, please mention that this is about the internal DMA support
+of the controller.
+
+> +
+>  Example:
+>
+>         sd_emmc_a: mmc@70000 {
+> --
+> 2.21.0
+>
+
+Kind regards
+Uffe
