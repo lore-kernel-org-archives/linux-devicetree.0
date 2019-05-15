@@ -1,63 +1,61 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
-Date: Wed, 15 May 2019 11:14:05 +0000
-Message-ID: <DB3PR0402MB39164F45F288EB251D5C10F4F5090@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1557883490-22360-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB6434DFD7728BD5B105EF2A31EE090@AM0PR04MB6434.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB6434DFD7728BD5B105EF2A31EE090@AM0PR04MB6434.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v5 2/2] dt-bindings: net: bluetooth: Add device property firmware-name for QCA6174
+Date: Wed, 15 May 2019 19:20:03 +0800
+Message-ID: <1557919203-11055-1-git-send-email-rjliao@codeaurora.org>
+References: <1557631185-5167-1-git-send-email-rjliao@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557631185-5167-1-git-send-email-rjliao@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, thierry.escande@linaro.org
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, c-hbandi@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Leonard
+This patch adds an optional device property "firmware-name" to allow the
+driver to load customized nvm firmware file based on this property.
 
-> -----Original Message-----
-> From: Leonard Crestez
-> Sent: Wednesday, May 15, 2019 6:18 PM
-> To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org;
-> sboyd@kernel.org; Jacky Bai <ping.bai@nxp.com>
-> Cc: robh+dt@kernel.org; mark.rutland@arm.com; s.hauer@pengutronix.de;
-> kernel@pengutronix.de; festevam@gmail.com; mturquette@baylibre.com;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; linux-clk@vger.kernel.org; dl-linux-imx <linux-
-> imx@nxp.com>; Abel Vesa <abel.vesa@nxp.com>
-> Subject: Re: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
-> 
-> On 15.05.2019 04:29, Anson Huang wrote:
-> > Add macro for the SNVS clock of the i.MX8MM.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > This patch is based on patch:
-> > https://patchwork.kernel.org/patch/10939997/
-> 
-> Numbering also conflicts with one of my patches:
-> 
-> https://patchwork.kernel.org/patch/10940303/
-> 
-> The conflict is easy to resolve but I don't mind resending if your patches get
-> accepted first. If should probably resend anyway to also add gic clk to 8mq.
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in v5:
+  * Made the change applicable to the wcn399x series chip sets
+---
+ Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks, I did NOT notice this, feel free if want me to resend the patch set, both
-the GPIO clock and SNVS clock patch series.
-
-Thanks,
-Anson.
-> 
-> For series:
-> 
-> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+index 7ef6118..68b67d9 100644
+--- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+@@ -17,6 +17,7 @@ Optional properties for compatible string qcom,qca6174-bt:
+ 
+  - enable-gpios: gpio specifier used to enable chip
+  - clocks: clock provided to the controller (SUSCLK_32KHZ)
++ - firmware-name: specify the name of nvm firmware to load
+ 
+ Required properties for compatible string qcom,wcn399x-bt:
+ 
+@@ -28,6 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
+ Optional properties for compatible string qcom,wcn399x-bt:
+ 
+  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
++ - firmware-name: specify the name of nvm firmware to load
+ 
+ Examples:
+ 
+@@ -40,6 +42,7 @@ serial@7570000 {
+ 
+ 		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+ 		clocks = <&divclk4>;
++		firmware-name = "nvm_00440302.bin";
+ 	};
+ };
+ 
+@@ -52,5 +55,6 @@ serial@898000 {
+ 		vddrf-supply = <&vreg_l17a_1p3>;
+ 		vddch0-supply = <&vreg_l25a_3p3>;
+ 		max-speed = <3200000>;
++		firmware-name = "crnv21.bin";
+ 	};
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
