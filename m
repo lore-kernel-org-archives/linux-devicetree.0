@@ -1,24 +1,34 @@
-Return-Path: <SRS0=DwSA=TP=verge.net.au=horms@kernel.org>
-Date: Wed, 15 May 2019 10:02:45 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 03/15] phy: renesas: rcar-gen3-usb2: detect usb_x1
+Return-Path: <SRS0=FRIL=TP=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v3 03/15] phy: renesas: rcar-gen3-usb2: detect usb_x1
  clock
-Message-ID: <20190515080244.yxoi6bt7ggawuekq@verge.net.au>
+Date: Wed, 15 May 2019 07:32:04 +0000
+Message-ID: 
+ <OSBPR01MB3174601B890703A6BF1A080AD8090@OSBPR01MB3174.jpnprd01.prod.outlook.com>
 References: <20190514145605.19112-1-chris.brandt@renesas.com>
  <20190514145605.19112-4-chris.brandt@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20190514145605.19112-4-chris.brandt@renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Chris Brandt <Chris.Brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, May 14, 2019 at 09:55:53AM -0500, Chris Brandt wrote:
+Hi Chris-san,
+
+> From: Chris Brandt, Sent: Tuesday, May 14, 2019 11:56 PM
+>=20
 > The RZ/A2 has an optional dedicated 48MHz clock input for the PLL.
 > If a clock node named 'usb_x1' exists and set to non-zero, then we can
 > assume we want it use it.
-> 
+>=20
 > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Thank you for the patch!
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
