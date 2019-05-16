@@ -1,521 +1,173 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: add g12a tohdmitx control" to the asoc tree
-Date: Thu, 16 May 2019 12:13:53 +0100 (BST)
-Message-ID: <20190516111353.C8FFF1126D45@debutante.sirena.org.uk>
-References: <20190515131858.32130-6-jbrunet@baylibre.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date: Thu, 16 May 2019 12:19:06 +0100
+Message-ID: <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
+References: <20190512174608.10083-1-peron.clem@gmail.com>
+ <20190513151405.GW17751@phenom.ffwll.local>
+ <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
+ <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
+ <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com>
+ <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
+ <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
+ <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515131858.32130-6-jbrunet@baylibre.com>
+In-Reply-To: <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
+To: Rob Herring <rob.e.herring@gmail.com>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 16/05/2019 00:22, Rob Herring wrote:
+> On Wed, May 15, 2019 at 5:06 PM Clément Péron <peron.clem@gmail.com> wrote:
+>>
+>> Hi Robin,
+>>
+>> On Tue, 14 May 2019 at 23:57, Robin Murphy <robin.murphy@arm.com> wrote:
+>>>
+>>> On 2019-05-14 10:22 pm, Clément Péron wrote:
+>>>> Hi,
+>>>>
+>>>> On Tue, 14 May 2019 at 17:17, Clément Péron <peron.clem@gmail.com> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> On Tue, 14 May 2019 at 12:29, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 13/05/2019 17:14, Daniel Vetter wrote:
+>>>>>>> On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem@gmail.com wrote:
+>>>>>>>> From: Clément Péron <peron.clem@gmail.com>
+>>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> The Allwinner H6 has a Mali-T720 MP2. The drivers are
+>>>>>>>> out-of-tree so this series only introduce the dt-bindings.
+>>>>>>>
+>>>>>>> We do have an in-tree midgard driver now (since 5.2). Does this stuff work
+>>>>>>> together with your dt changes here?
+>>>>>>
+>>>>>> No, but it should be easy to add.
+>>>>> I will give it a try and let you know.
+>>>> Added the bus_clock and a ramp delay to the gpu_vdd but the driver
+>>>> fail at probe.
+>>>>
+>>>> [    3.052919] panfrost 1800000.gpu: clock rate = 432000000
+>>>> [    3.058278] panfrost 1800000.gpu: bus_clock rate = 100000000
+>>>> [    3.179772] panfrost 1800000.gpu: mali-t720 id 0x720 major 0x1
+>>>> minor 0x1 status 0x0
+>>>> [    3.187432] panfrost 1800000.gpu: features: 00000000,10309e40,
+>>>> issues: 00000000,21054400
+>>>> [    3.195531] panfrost 1800000.gpu: Features: L2:0x07110206
+>>>> Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002821 AS:0xf
+>>>> JS:0x7
+>>>> [    3.207178] panfrost 1800000.gpu: shader_present=0x3 l2_present=0x1
+>>>> [    3.238257] panfrost 1800000.gpu: Fatal error during GPU init
+>>>> [    3.244165] panfrost: probe of 1800000.gpu failed with error -12
+>>>>
+>>>> The ENOMEM is coming from "panfrost_mmu_init"
+>>>> alloc_io_pgtable_ops(ARM_MALI_LPAE, &pfdev->mmu->pgtbl_cfg,
+>>>>                                            pfdev);
+>>>>
+>>>> Which is due to a check in the pgtable alloc "cfg->ias != 48"
+>>>> arm-lpae io-pgtable: arm_mali_lpae_alloc_pgtable cfg->ias 33 cfg->oas 40
+>>>>
+>>>> DRI stack is totally new for me, could you give me a little clue about
+>>>> this issue ?
+>>>
+>>> Heh, this is probably the one bit which doesn't really count as "DRI stack".
+>>>
+>>> That's merely a somewhat-conservative sanity check - I'm pretty sure it
+>>> *should* be fine to change the test to "cfg->ias > 48" (io-pgtable
+>>> itself ought to cope). You'll just get to be the first to actually test
+>>> a non-48-bit configuration here :)
+>>
+>> Thanks a lot, the probe seems fine now :)
+>>
+>> I try to run glmark2 :
+>> # glmark2-es2-drm
+>> =======================================================
+>>      glmark2 2017.07
+>> =======================================================
+>>      OpenGL Information
+>>      GL_VENDOR:     panfrost
+>>      GL_RENDERER:   panfrost
+>>      GL_VERSION:    OpenGL ES 2.0 Mesa 19.1.0-rc2
+>> =======================================================
+>> [build] use-vbo=false:
+>>
+>> But it seems that H6 is not so easy to add :(.
+>>
+>> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
+>> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+>> 0x0000000002400400
+>> [  345.209617] Reason: TODO
+>> [  345.209617] raw fault status: 0x800002C1
+>> [  345.209617] decoded fault status: SLAVE FAULT
+>> [  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+>> [  345.209617] access type 0x2: READ
+>> [  345.209617] source id 0x8000
+>> [  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=0,
+>> status=0x8, head=0x2400400, tail=0x2400400, sched_job=000000009e204de9
+>> [  346.055876] panfrost 1800000.gpu: mmu irq status=1
+>> [  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+>> 0x0000000002C00A00
+>> [  346.060680] Reason: TODO
+>> [  346.060680] raw fault status: 0x810002C1
+>> [  346.060680] decoded fault status: SLAVE FAULT
+>> [  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+>> [  346.060680] access type 0x2: READ
+>> [  346.060680] source id 0x8100
+>> [  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=1,
+>> status=0x8, head=0x2c00a00, tail=0x2c00a00, sched_job=00000000b55a9a85
+>> [  346.573913] panfrost 1800000.gpu: mmu irq status=1
+>> [  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+>> 0x0000000002C00B80
+>> [  346.578707] Reason: TODO
+>> [  346.578707] raw fault status: 0x800002C1
+>> [  346.578707] decoded fault status: SLAVE FAULT
+>> [  346.578707] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+>> [  346.578707] access type 0x2: READ
+>> [  346.578707] source id 0x8000
+>> [  347.073947] panfrost 1800000.gpu: gpu sched timeout, js=0,
+>> status=0x8, head=0x2c00b80, tail=0x2c00b80, sched_job=00000000cf6af8e8
+>> [  347.104125] panfrost 1800000.gpu: mmu irq status=1
+>> [  347.108930] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+>> 0x0000000002800900
+>> [  347.108930] Reason: TODO
+>> [  347.108930] raw fault status: 0x810002C1
+>> [  347.108930] decoded faultn thi status: SLAVE FAULT
+>> [  347.108930] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
+>> [  347.108930] access type 0x2: READ
+>> [  347.108930] source id 0x8100
+>> [  347.617950] panfrost 1800000.gpu: gpu sched timeout, js=1,
+>> status=0x8, head=0x2800900, tail=0x2800900, sched_job=000000009325fdb7
+>> [  347.629902] panfrost 1800000.gpu: mmu irq status=1
+>> [  347.634696] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
+>> 0x0000000002800A80
+> 
+> Is this 32 or 64 bit userspace? I think 64-bit does not work with
+> T7xx. You might need this[1].
 
-   ASoC: meson: add g12a tohdmitx control
+[ Oooh... that makes T620 actually do stuff without falling over 
+dereferencing VA 0 somewhere halfway through the job chain :D
 
-has been applied to the asoc tree at
+I shall continue to play... ]
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+> You may also be the first to try T720,
+> so it could be something else.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I was expecting to see a similar behaviour to my T620 (which I now 
+assume was down to 64-bit job descriptors sort-of-but-not-quite working) 
+but this does look a bit more fundamental - the fact that it's a level 1 
+fault with VA == head == tail suggests to me that the MMU can't see the 
+page tables at all to translate anything. I really hope that the H6 GPU 
+integration doesn't suffer from the same DMA offset as the Allwinner 
+display pipeline stuff, because that would be a real pain to support in 
+io-pgtable.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c8609f3870f7078fc7922eb816ed4908a9bd44f3 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Wed, 15 May 2019 15:18:58 +0200
-Subject: [PATCH] ASoC: meson: add g12a tohdmitx control
-
-Add support for the hdmitx control glue of the Amlogic g12a SoC family.
-This glue links the 3 TDM and 2 SPDIF output interfaces of the SoC to
-the related inputs of the Synopsys HDMI controller found in these SoCs.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/meson/Kconfig         |   8 +
- sound/soc/meson/Makefile        |   2 +
- sound/soc/meson/g12a-tohdmitx.c | 413 ++++++++++++++++++++++++++++++++
- 3 files changed, 423 insertions(+)
- create mode 100644 sound/soc/meson/g12a-tohdmitx.c
-
-diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
-index 8779fe23671d..4e5b4d4f3531 100644
---- a/sound/soc/meson/Kconfig
-+++ b/sound/soc/meson/Kconfig
-@@ -56,6 +56,7 @@ config SND_MESON_AXG_SOUND_CARD
- 	imply SND_MESON_AXG_SPDIFOUT
- 	imply SND_MESON_AXG_SPDIFIN
- 	imply SND_MESON_AXG_PDM
-+	imply SND_MESON_G12A_TOHDMITX if DRM_MESON_DW_HDMI
- 	help
- 	  Select Y or M to add support for the AXG SoC sound card
- 
-@@ -82,4 +83,11 @@ config SND_MESON_AXG_PDM
- 	help
- 	  Select Y or M to add support for PDM input embedded
- 	  in the Amlogic AXG SoC family
-+
-+config SND_MESON_G12A_TOHDMITX
-+	tristate "Amlogic G12A To HDMI TX Control Support"
-+	imply SND_SOC_HDMI_CODEC
-+	help
-+	  Select Y or M to add support for HDMI audio on the g12a SoC
-+	  family
- endmenu
-diff --git a/sound/soc/meson/Makefile b/sound/soc/meson/Makefile
-index b45dfb9e2f88..1a8b1470ed84 100644
---- a/sound/soc/meson/Makefile
-+++ b/sound/soc/meson/Makefile
-@@ -11,6 +11,7 @@ snd-soc-meson-axg-sound-card-objs := axg-card.o
- snd-soc-meson-axg-spdifin-objs := axg-spdifin.o
- snd-soc-meson-axg-spdifout-objs := axg-spdifout.o
- snd-soc-meson-axg-pdm-objs := axg-pdm.o
-+snd-soc-meson-g12a-tohdmitx-objs := g12a-tohdmitx.o
- 
- obj-$(CONFIG_SND_MESON_AXG_FIFO) += snd-soc-meson-axg-fifo.o
- obj-$(CONFIG_SND_MESON_AXG_FRDDR) += snd-soc-meson-axg-frddr.o
-@@ -23,3 +24,4 @@ obj-$(CONFIG_SND_MESON_AXG_SOUND_CARD) += snd-soc-meson-axg-sound-card.o
- obj-$(CONFIG_SND_MESON_AXG_SPDIFIN) += snd-soc-meson-axg-spdifin.o
- obj-$(CONFIG_SND_MESON_AXG_SPDIFOUT) += snd-soc-meson-axg-spdifout.o
- obj-$(CONFIG_SND_MESON_AXG_PDM) += snd-soc-meson-axg-pdm.o
-+obj-$(CONFIG_SND_MESON_G12A_TOHDMITX) += snd-soc-meson-g12a-tohdmitx.o
-diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
-new file mode 100644
-index 000000000000..707ccb192e4c
---- /dev/null
-+++ b/sound/soc/meson/g12a-tohdmitx.c
-@@ -0,0 +1,413 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2019 BayLibre, SAS.
-+// Author: Jerome Brunet <jbrunet@baylibre.com>
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <sound/pcm_params.h>
-+#include <linux/regmap.h>
-+#include <sound/soc.h>
-+#include <sound/soc-dai.h>
-+
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
-+
-+#define G12A_TOHDMITX_DRV_NAME "g12a-tohdmitx"
-+
-+#define TOHDMITX_CTRL0			0x0
-+#define  CTRL0_ENABLE_SHIFT		31
-+#define  CTRL0_I2S_DAT_SEL		GENMASK(13, 12)
-+#define  CTRL0_I2S_LRCLK_SEL		GENMASK(9, 8)
-+#define  CTRL0_I2S_BLK_CAP_INV		BIT(7)
-+#define  CTRL0_I2S_BCLK_O_INV		BIT(6)
-+#define  CTRL0_I2S_BCLK_SEL		GENMASK(5, 4)
-+#define  CTRL0_SPDIF_CLK_CAP_INV	BIT(3)
-+#define  CTRL0_SPDIF_CLK_O_INV		BIT(2)
-+#define  CTRL0_SPDIF_SEL		BIT(1)
-+#define  CTRL0_SPDIF_CLK_SEL		BIT(0)
-+
-+struct g12a_tohdmitx_input {
-+	struct snd_pcm_hw_params params;
-+	unsigned int fmt;
-+};
-+
-+static struct snd_soc_dapm_widget *
-+g12a_tohdmitx_get_input(struct snd_soc_dapm_widget *w)
-+{
-+	struct snd_soc_dapm_path *p = NULL;
-+	struct snd_soc_dapm_widget *in;
-+
-+	snd_soc_dapm_widget_for_each_source_path(w, p) {
-+		if (!p->connect)
-+			continue;
-+
-+		/* Check that we still are in the same component */
-+		if (snd_soc_dapm_to_component(w->dapm) !=
-+		    snd_soc_dapm_to_component(p->source->dapm))
-+			continue;
-+
-+		if (p->source->id == snd_soc_dapm_dai_in)
-+			return p->source;
-+
-+		in = g12a_tohdmitx_get_input(p->source);
-+		if (in)
-+			return in;
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct g12a_tohdmitx_input *
-+g12a_tohdmitx_get_input_data(struct snd_soc_dapm_widget *w)
-+{
-+	struct snd_soc_dapm_widget *in =
-+		g12a_tohdmitx_get_input(w);
-+	struct snd_soc_dai *dai;
-+
-+	if (WARN_ON(!in))
-+		return NULL;
-+
-+	dai = in->priv;
-+
-+	return dai->playback_dma_data;
-+}
-+
-+static const char * const g12a_tohdmitx_i2s_mux_texts[] = {
-+	"I2S A", "I2S B", "I2S C",
-+};
-+
-+static SOC_ENUM_SINGLE_EXT_DECL(g12a_tohdmitx_i2s_mux_enum,
-+				g12a_tohdmitx_i2s_mux_texts);
-+
-+static int g12a_tohdmitx_get_input_val(struct snd_soc_component *component,
-+				       unsigned int mask)
-+{
-+	unsigned int val;
-+
-+	snd_soc_component_read(component, TOHDMITX_CTRL0, &val);
-+	return (val & mask) >> __ffs(mask);
-+}
-+
-+static int g12a_tohdmitx_i2s_mux_get_enum(struct snd_kcontrol *kcontrol,
-+					  struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component =
-+		snd_soc_dapm_kcontrol_component(kcontrol);
-+
-+	ucontrol->value.enumerated.item[0] =
-+		g12a_tohdmitx_get_input_val(component, CTRL0_I2S_DAT_SEL);
-+
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_i2s_mux_put_enum(struct snd_kcontrol *kcontrol,
-+					  struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component =
-+		snd_soc_dapm_kcontrol_component(kcontrol);
-+	struct snd_soc_dapm_context *dapm =
-+		snd_soc_dapm_kcontrol_dapm(kcontrol);
-+	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
-+	unsigned int mux = ucontrol->value.enumerated.item[0];
-+	unsigned int val = g12a_tohdmitx_get_input_val(component,
-+						       CTRL0_I2S_DAT_SEL);
-+
-+	/* Force disconnect of the mux while updating */
-+	if (val != mux)
-+		snd_soc_dapm_mux_update_power(dapm, kcontrol, 0, NULL, NULL);
-+
-+	snd_soc_component_update_bits(component, TOHDMITX_CTRL0,
-+				      CTRL0_I2S_DAT_SEL |
-+				      CTRL0_I2S_LRCLK_SEL |
-+				      CTRL0_I2S_BCLK_SEL,
-+				      FIELD_PREP(CTRL0_I2S_DAT_SEL, mux) |
-+				      FIELD_PREP(CTRL0_I2S_LRCLK_SEL, mux) |
-+				      FIELD_PREP(CTRL0_I2S_BCLK_SEL, mux));
-+
-+	snd_soc_dapm_mux_update_power(dapm, kcontrol, mux, e, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct snd_kcontrol_new g12a_tohdmitx_i2s_mux =
-+	SOC_DAPM_ENUM_EXT("I2S Source", g12a_tohdmitx_i2s_mux_enum,
-+			  g12a_tohdmitx_i2s_mux_get_enum,
-+			  g12a_tohdmitx_i2s_mux_put_enum);
-+
-+static const char * const g12a_tohdmitx_spdif_mux_texts[] = {
-+	"SPDIF A", "SPDIF B",
-+};
-+
-+static SOC_ENUM_SINGLE_EXT_DECL(g12a_tohdmitx_spdif_mux_enum,
-+				g12a_tohdmitx_spdif_mux_texts);
-+
-+static int g12a_tohdmitx_spdif_mux_get_enum(struct snd_kcontrol *kcontrol,
-+					    struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component =
-+		snd_soc_dapm_kcontrol_component(kcontrol);
-+
-+	ucontrol->value.enumerated.item[0] =
-+		g12a_tohdmitx_get_input_val(component, CTRL0_SPDIF_SEL);
-+
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_spdif_mux_put_enum(struct snd_kcontrol *kcontrol,
-+					    struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component =
-+		snd_soc_dapm_kcontrol_component(kcontrol);
-+	struct snd_soc_dapm_context *dapm =
-+		snd_soc_dapm_kcontrol_dapm(kcontrol);
-+	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
-+	unsigned int mux = ucontrol->value.enumerated.item[0];
-+	unsigned int val = g12a_tohdmitx_get_input_val(component,
-+						       CTRL0_SPDIF_SEL);
-+
-+	/* Force disconnect of the mux while updating */
-+	if (val != mux)
-+		snd_soc_dapm_mux_update_power(dapm, kcontrol, 0, NULL, NULL);
-+
-+	snd_soc_component_update_bits(component, TOHDMITX_CTRL0,
-+				      CTRL0_SPDIF_SEL |
-+				      CTRL0_SPDIF_CLK_SEL,
-+				      FIELD_PREP(CTRL0_SPDIF_SEL, mux) |
-+				      FIELD_PREP(CTRL0_SPDIF_CLK_SEL, mux));
-+
-+	snd_soc_dapm_mux_update_power(dapm, kcontrol, mux, e, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct snd_kcontrol_new g12a_tohdmitx_spdif_mux =
-+	SOC_DAPM_ENUM_EXT("SPDIF Source", g12a_tohdmitx_spdif_mux_enum,
-+			  g12a_tohdmitx_spdif_mux_get_enum,
-+			  g12a_tohdmitx_spdif_mux_put_enum);
-+
-+static const struct snd_kcontrol_new g12a_tohdmitx_out_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", TOHDMITX_CTRL0,
-+				    CTRL0_ENABLE_SHIFT, 1, 0);
-+
-+static const struct snd_soc_dapm_widget g12a_tohdmitx_widgets[] = {
-+	SND_SOC_DAPM_MUX("I2S SRC", SND_SOC_NOPM, 0, 0,
-+			 &g12a_tohdmitx_i2s_mux),
-+	SND_SOC_DAPM_SWITCH("I2S OUT EN", SND_SOC_NOPM, 0, 0,
-+			    &g12a_tohdmitx_out_enable),
-+	SND_SOC_DAPM_MUX("SPDIF SRC", SND_SOC_NOPM, 0, 0,
-+			 &g12a_tohdmitx_spdif_mux),
-+	SND_SOC_DAPM_SWITCH("SPDIF OUT EN", SND_SOC_NOPM, 0, 0,
-+			    &g12a_tohdmitx_out_enable),
-+};
-+
-+static int g12a_tohdmitx_input_probe(struct snd_soc_dai *dai)
-+{
-+	struct g12a_tohdmitx_input *data;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	dai->playback_dma_data = data;
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_input_remove(struct snd_soc_dai *dai)
-+{
-+	kfree(dai->playback_dma_data);
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_input_hw_params(struct snd_pcm_substream *substream,
-+					 struct snd_pcm_hw_params *params,
-+					 struct snd_soc_dai *dai)
-+{
-+	struct g12a_tohdmitx_input *data = dai->playback_dma_data;
-+
-+	/* Save the stream params for the downstream link */
-+	memcpy(&data->params, params, sizeof(*params));
-+
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_output_hw_params(struct snd_pcm_substream *substream,
-+					  struct snd_pcm_hw_params *params,
-+					  struct snd_soc_dai *dai)
-+{
-+	struct g12a_tohdmitx_input *in_data =
-+		g12a_tohdmitx_get_input_data(dai->capture_widget);
-+
-+	if (!in_data)
-+		return -ENODEV;
-+
-+	memcpy(params, &in_data->params, sizeof(*params));
-+
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_input_set_fmt(struct snd_soc_dai *dai,
-+				       unsigned int fmt)
-+{
-+	struct g12a_tohdmitx_input *data = dai->playback_dma_data;
-+
-+	/* Save the source stream format for the downstream link */
-+	data->fmt = fmt;
-+	return 0;
-+}
-+
-+static int g12a_tohdmitx_output_startup(struct snd_pcm_substream *substream,
-+					struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct g12a_tohdmitx_input *in_data =
-+		g12a_tohdmitx_get_input_data(dai->capture_widget);
-+
-+	if (!in_data)
-+		return -ENODEV;
-+
-+	if (!in_data->fmt)
-+		return 0;
-+
-+	return snd_soc_runtime_set_dai_fmt(rtd, in_data->fmt);
-+}
-+
-+static const struct snd_soc_dai_ops g12a_tohdmitx_input_ops = {
-+	.hw_params	= g12a_tohdmitx_input_hw_params,
-+	.set_fmt	= g12a_tohdmitx_input_set_fmt,
-+};
-+
-+static const struct snd_soc_dai_ops g12a_tohdmitx_output_ops = {
-+	.hw_params	= g12a_tohdmitx_output_hw_params,
-+	.startup	= g12a_tohdmitx_output_startup,
-+};
-+
-+#define TOHDMITX_SPDIF_FORMATS					\
-+	(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |	\
-+	 SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S24_LE)
-+
-+#define TOHDMITX_I2S_FORMATS					\
-+	(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |	\
-+	 SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S24_LE |	\
-+	 SNDRV_PCM_FMTBIT_S32_LE)
-+
-+#define TOHDMITX_STREAM(xname, xsuffix, xfmt, xchmax)		\
-+{								\
-+	.stream_name	= xname " " xsuffix,			\
-+	.channels_min	= 1,					\
-+	.channels_max	= (xchmax),				\
-+	.rate_min       = 8000,					\
-+	.rate_max	= 192000,				\
-+	.formats	= (xfmt),				\
-+}
-+
-+#define TOHDMITX_IN(xname, xid, xfmt, xchmax) {				\
-+	.name = xname,							\
-+	.id = (xid),							\
-+	.playback = TOHDMITX_STREAM(xname, "Playback", xfmt, xchmax),	\
-+	.ops = &g12a_tohdmitx_input_ops,				\
-+	.probe = g12a_tohdmitx_input_probe,				\
-+	.remove = g12a_tohdmitx_input_remove,				\
-+}
-+
-+#define TOHDMITX_OUT(xname, xid, xfmt, xchmax) {			\
-+	.name = xname,							\
-+	.id = (xid),							\
-+	.capture = TOHDMITX_STREAM(xname, "Capture", xfmt, xchmax),	\
-+	.ops = &g12a_tohdmitx_output_ops,				\
-+}
-+
-+static struct snd_soc_dai_driver g12a_tohdmitx_dai_drv[] = {
-+	TOHDMITX_IN("I2S IN A", TOHDMITX_I2S_IN_A,
-+		    TOHDMITX_I2S_FORMATS, 8),
-+	TOHDMITX_IN("I2S IN B", TOHDMITX_I2S_IN_B,
-+		    TOHDMITX_I2S_FORMATS, 8),
-+	TOHDMITX_IN("I2S IN C", TOHDMITX_I2S_IN_C,
-+		    TOHDMITX_I2S_FORMATS, 8),
-+	TOHDMITX_OUT("I2S OUT", TOHDMITX_I2S_OUT,
-+		     TOHDMITX_I2S_FORMATS, 8),
-+	TOHDMITX_IN("SPDIF IN A", TOHDMITX_SPDIF_IN_A,
-+		    TOHDMITX_SPDIF_FORMATS, 2),
-+	TOHDMITX_IN("SPDIF IN B", TOHDMITX_SPDIF_IN_B,
-+		    TOHDMITX_SPDIF_FORMATS, 2),
-+	TOHDMITX_OUT("SPDIF OUT", TOHDMITX_SPDIF_OUT,
-+		     TOHDMITX_SPDIF_FORMATS, 2),
-+};
-+
-+static int g12a_tohdmi_component_probe(struct snd_soc_component *c)
-+{
-+	/* Initialize the static clock parameters */
-+	return snd_soc_component_write(c, TOHDMITX_CTRL0,
-+		     CTRL0_I2S_BLK_CAP_INV | CTRL0_SPDIF_CLK_CAP_INV);
-+}
-+
-+static const struct snd_soc_dapm_route g12a_tohdmitx_routes[] = {
-+	{ "I2S SRC", "I2S A", "I2S IN A Playback" },
-+	{ "I2S SRC", "I2S B", "I2S IN B Playback" },
-+	{ "I2S SRC", "I2S C", "I2S IN C Playback" },
-+	{ "I2S OUT EN", "Switch", "I2S SRC" },
-+	{ "I2S OUT Capture", NULL, "I2S OUT EN" },
-+	{ "SPDIF SRC", "SPDIF A", "SPDIF IN A Playback" },
-+	{ "SPDIF SRC", "SPDIF B", "SPDIF IN B Playback" },
-+	{ "SPDIF OUT EN", "Switch", "SPDIF SRC" },
-+	{ "SPDIF OUT Capture", NULL, "SPDIF OUT EN" },
-+};
-+
-+static const struct snd_soc_component_driver g12a_tohdmitx_component_drv = {
-+	.probe			= g12a_tohdmi_component_probe,
-+	.dapm_widgets		= g12a_tohdmitx_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(g12a_tohdmitx_widgets),
-+	.dapm_routes		= g12a_tohdmitx_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(g12a_tohdmitx_routes),
-+	.endianness		= 1,
-+	.non_legacy_dai_naming	= 1,
-+};
-+
-+static const struct regmap_config g12a_tohdmitx_regmap_cfg = {
-+	.reg_bits	= 32,
-+	.val_bits	= 32,
-+	.reg_stride	= 4,
-+};
-+
-+static const struct of_device_id g12a_tohdmitx_of_match[] = {
-+	{ .compatible = "amlogic,g12a-tohdmitx", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, g12a_tohdmitx_of_match);
-+
-+static int g12a_tohdmitx_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	void __iomem *regs;
-+	struct regmap *map;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	map = devm_regmap_init_mmio(dev, regs, &g12a_tohdmitx_regmap_cfg);
-+	if (IS_ERR(map)) {
-+		dev_err(dev, "failed to init regmap: %ld\n",
-+			PTR_ERR(map));
-+		return PTR_ERR(map);
-+	}
-+
-+	return devm_snd_soc_register_component(dev,
-+			&g12a_tohdmitx_component_drv, g12a_tohdmitx_dai_drv,
-+			ARRAY_SIZE(g12a_tohdmitx_dai_drv));
-+}
-+
-+static struct platform_driver g12a_tohdmitx_pdrv = {
-+	.driver = {
-+		.name = G12A_TOHDMITX_DRV_NAME,
-+		.of_match_table = g12a_tohdmitx_of_match,
-+	},
-+	.probe = g12a_tohdmitx_probe,
-+};
-+module_platform_driver(g12a_tohdmitx_pdrv);
-+
-+MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
-+MODULE_DESCRIPTION("Amlogic G12a To HDMI Tx Control Codec Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+Robin.
