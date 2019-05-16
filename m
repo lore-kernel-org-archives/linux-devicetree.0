@@ -1,29 +1,45 @@
 From: Torsten Duwe <duwe@lst.de>
-Subject: [PATCH v2 0/4] Add missing device nodes for Olimex Teres-I
-Date: Thu, 16 May 2019 17:49:43 +0200 (CEST)
-Message-ID: <20190516154943.239E668B05@newverein.lst.de>
+Subject: [PATCH v2 1/4] arm64: DTS: allwinner: a64: Add pinmux for RGB666 LCD
+Date: Thu, 16 May 2019 17:51:30 +0200 (CEST)
+Message-ID: <20190516155130.8A52768B20@newverein.lst.de>
+References: <20190516154943.239E668B05@newverein.lst.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, info@olimex.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+From: Icenowy Zheng <icenowy@aosc.io>
 
-based on Maxime's sunxi-dt64-for-5.2, here is what I found so far
-still missing in the device tree. Those bits and pieces have already
-been submitted but were not yet applied.
+Allwinner A64's TCON0 can output RGB666 LCD signal.
 
-Changes since v1:
+Add its pinmux.
 
-* lcd-rgb666-pins
-            -----
-* dvdd12-supply, dvdd25-supply now are required by the anx6345 bindings
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-* updated Harald's commit message, removing the ref to the now-deleted
-  debug pin and added a "CTIA" (android) pinout mention.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 2abb335145a6..a8bbee84e7da 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -559,6 +559,16 @@
+ 				function = "i2c1";
+ 			};
 
-* removed the refs to the old patchwork
-
-
-	  Torsten
++			/omit-if-no-ref/
++			lcd_rgb666_pins: lcd-rgb666-pins {
++				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
++				       "PD5", "PD6", "PD7", "PD8", "PD9",
++				       "PD10", "PD11", "PD12", "PD13",
++				       "PD14", "PD15", "PD16", "PD17",
++				       "PD18", "PD19", "PD20", "PD21";
++				function = "lcd0";
++			};
++
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2", "PF3",
+ 				       "PF4", "PF5";
