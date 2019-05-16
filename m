@@ -1,29 +1,88 @@
-From: "Y.b. Lu" <yangbo.lu@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: fsl: ls1028a: add ENETC 1588 timer node
-Date: Thu, 16 May 2019 09:59:17 +0000
-Message-ID: <20190516100028.48256-4-yangbo.lu@nxp.com>
-References: <20190516100028.48256-1-yangbo.lu@nxp.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v6 11/12] soc: mediatek: cmdq: add cmdq_dev_get_event
+ function
+Date: Thu, 16 May 2019 18:27:52 +0800
+Message-ID: <1558002472.26743.2.camel@mtksdaap41>
+References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+         <20190516090224.59070-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516100028.48256-1-yangbo.lu@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190516090224.59070-12-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>, David Miller <davem@davemloft.net>, Claudiu Manoil <claudiu.manoil@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.ch
 List-Id: devicetree@vger.kernel.org
 
-QWRkIEVORVRDIDE1ODggdGltZXIgbm9kZSB3aGljaCBpcyBFTkVUQyBQRiA0IChQaHlzaXNjYWwg
-RnVuY3Rpb24gNCkuDQoNClNpZ25lZC1vZmYtYnk6IFlhbmdibyBMdSA8eWFuZ2JvLmx1QG54cC5j
-b20+DQotLS0NCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNp
-IHwgNSArKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQppbmRleCAyODk2YmJj
-ZmEzYmIuLmQ3MzJhNjM3NTRmYiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLmR0c2kNCkBAIC0zNjksNiArMzY5LDExIEBADQogCQkJCWNvbXBhdGli
-bGUgPSAiZnNsLGVuZXRjIjsNCiAJCQkJcmVnID0gPDB4MDAwMTAwIDAgMCAwIDA+Ow0KIAkJCX07
-DQorCQkJZXRoZXJuZXRAMCw0IHsgLyogUFRQIGNsb2NrICovDQorCQkJCXJlZyA9IDwweDAwMDQw
-MCAwIDAgMCAwPjsNCisJCQkJY2xvY2tzID0gPCZjbG9ja2dlbiA0IDA+Ow0KKwkJCQlsaXR0bGUt
-ZW5kaWFuOw0KKwkJCX07DQogCQl9Ow0KIAl9Ow0KIH07DQotLSANCjIuMTcuMQ0KDQo=
+Hi, Bibby:
+
+On Thu, 2019-05-16 at 17:02 +0800, Bibby Hsieh wrote:
+> When client ask gce to clear or wait for event,
+> client need to pass event number to the API.
+> We suggest client store the event information in device node,
+> so we provide an API for client parse the event property.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 18 ++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 12 ++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index a64060a34e01..e9658063c3d4 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -52,6 +52,24 @@ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
+>  }
+>  EXPORT_SYMBOL(cmdq_dev_get_subsys);
+>  
+> +s32 cmdq_dev_get_event(struct device *dev, int index)
+> +{
+> +	s32 result;
+> +
+> +	if (!dev)
+> +		return -EINVAL;
+> +
+> +	if (of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
+> +				       index, &result)) {
+> +		dev_err(dev, "can't parse gce-events property");
+> +
+> +		return -ENODEV;
+> +	}
+> +
+> +	return result;
+
+This function just does one thing, so client driver could just directly
+call of_property_read_u32_index().
+
+Regards,
+CK
+
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_event);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 574006c5cd76..525713bf79b5 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -160,4 +160,16 @@ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>   */
+>  struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
+>  
+> +/**
+> + * cmdq_dev_get_event() - parse event from the device node of CMDQ client
+> + * @dev:	device of CMDQ mailbox client
+> + * @index:	the index of desired event
+> + *
+> + * Return: CMDQ event number
+> + *
+> + * Help CMDQ client pasing the event number
+> + * from the device node of CMDQ client.
+> + */
+> +s32 cmdq_dev_get_event(struct device *dev, int index);
+> +
+>  #endif	/* __MTK_CMDQ_H__ */
