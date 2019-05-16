@@ -1,52 +1,81 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
-Date: Thu, 16 May 2019 18:34:16 +0100
-Message-ID: <5f598806-1c36-7c2a-0f47-da79ec7d28c6@arm.com>
-References: <20190516102817.188519-1-hsinyi@chromium.org>
- <20190516102817.188519-2-hsinyi@chromium.org>
- <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
- <CAJMQK-jrJQri3gM=X6JRD6Rk+B5S4939HJTptrQMY64xEWr1qA@mail.gmail.com>
- <CAL_Jsq+dVg9E_EzpoC4Bz1ytUckDGXUcEJyU5pV2HS6rZuKmHA@mail.gmail.com>
- <CAJMQK-hzjSBf2-QFMn52Sa8fwvm5-gaddzBOudfEc1neR2rwnA@mail.gmail.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Date: Thu, 16 May 2019 19:36:49 +0200
+Message-ID: <20190516173649.5s2s32ol43kbbhzg@core.my.home>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512133930.t5txssl7mou2gljt@flea>
+ <20190512214128.qjyys3vfpwdiacib@core.my.home>
+ <20190516150252.hf4u3bloo37chy6q@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJMQK-hzjSBf2-QFMn52Sa8fwvm5-gaddzBOudfEc1neR2rwnA@mail.gmail.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190516150252.hf4u3bloo37chy6q@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com, daniel.lezcano@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, bjorn.andersson@linaro.org, mchehab+samsung@kernel.org, paulmck@linux.ibm.com, stefan.wahren@i2se.com, linux-pm@vger.kernel.org, wens@csie.org, jagan@amarulasolutions.com, andy.gross@linaro.org, rui.zhang@intel.com, devicetree@vger.kernel.org, marc.w.gonzalez@free.fr, edubezval@gmail.com, enric.balletbo@collabora.com, robh+dt@kernel.org, Jonathan.Cameron@huawei.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, olof@lixom.net, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hello Maxime,
 
-On 16/05/2019 17:48, Hsin-Yi Wang wrote:
-> On Thu, May 16, 2019 at 11:32 PM Rob Herring <robh+dt@kernel.org> wrote:
->> Doesn't kexec operate on a copy because it already does modifications.
-
-It does!
-
-> This patch is to assist "[PATCH v3 3/3] fdt: add support for rng-seed"
-> (https://lkml.org/lkml/2019/5/16/257). I thought that by default
-> second kernel would use original fdt, so I write new seed back to
-> original fdt. Might be wrong.
+On Thu, May 16, 2019 at 05:02:52PM +0200, Maxime Ripard wrote:
+> Hi,
 > 
-> ** "[PATCH v3 3/3] fdt: add support for rng-seed" is supposed to
-> handle for adding new seed in kexec case, discussed in v2
-> (https://lkml.org/lkml/2019/5/13/425)
+> On Sun, May 12, 2019 at 11:41:28PM +0200, Ondřej Jirman wrote:
+> > > > +static int tsens_get_temp(void *data, int *temp)
+> > > > +{
+> > > > +	struct tsensor *s = data;
+> > > > +	struct tsens_device *tmdev = s->tmdev;
+> > > > +	int val;
+> > > > +
+> > > > +	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+> > > > +		    0x4 * s->id, &val);
+> > > > +
+> > > > +	if (unlikely(val == 0))
+> > > > +		return -EBUSY;
+> > >
+> > > I'm not sure why a val equals to 0 would be associated with EBUSY?
+> >
+> > Thermal zone driver can (will) call get_temp before we got the
+> > first interrupt and the thermal data. In that case val will be 0.
+> >
+> > Resulting in:
+> >
+> >  (val + offset) * scale = (-2794) * -67 = 187198
+> >
+> > 187°C and immediate shutdown during boot - based on cirtical
+> > temperature being reached.
+> >
+> > Busy here means, get_temp does not yet have data. Thermal zone
+> > driver just reports any error to dmesg output.
 > 
-> By default (not considering user defines their own fdt), if second
-> kernel uses copied fdt, when is it copied and can we modify that?
+> Ah, that makes sense.
+> 
+> I guess if we're switching to an interrupt-based driver, then we can
+> just use a waitqueue, or is get_temp supposed to be atomic?
 
-Regular kexec's user-space already updates the dtb for the cmdline and maybe the initrd.
-For KASLR, it generates its own seed with getrandom():
+I'm not entirely sure, because I might have inadverently used a combination of
+interrupt and polling when testing this. It may be that if we set polling-delay
+to 0 in dts, that tz core will not try to call get_temp prematurely at all, and
+will simply wait for temperature update from the interrupt.
 
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/kexec/arch/arm64/kexec-arm64.c#n483
+I guess this needs to be tested/checked in tz code.
 
-If user-space can do it, user-space should do it!
+regards,
+	o.
+
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
 
-Thanks,
 
-James
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
