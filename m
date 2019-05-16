@@ -1,83 +1,60 @@
-Return-Path: <SRS0=Hucj=TO=renesas.com=prvs=40371367b7=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 15/15] ARM: dts: rza2mevb: Add USB host support
-Date: Tue, 14 May 2019 09:56:05 -0500
-Message-ID: <20190514145605.19112-16-chris.brandt@renesas.com>
-In-Reply-To: <20190514145605.19112-1-chris.brandt@renesas.com>
-References: <20190514145605.19112-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V4 11/28] PCI: tegra: Process pending DLL transactions before entering L1 or L2
+Date: Thu, 16 May 2019 11:22:50 +0530
+Message-ID: <20190516055307.25737-12-mmaddireddy@nvidia.com>
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable USB Host support for both the Type-C connector on the CPU board
-and the Type-A plug on the sub board.
+PM message are truncated while entering L1 or L2, which is resulting in
+receiver errors. Set the required bit to finish processing DLLP before
+link enter L1 or L2.
 
-Both boards are also capable of USB Device operation as well after the
-appropriate Device Tree modifications.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-v2:
- * added blank line between nodes
- * removed 'r7s9210-' from patch title
- * removed 'renesas,uses_usb_x1' property
----
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 37 ++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+V4: No change
 
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-index 7da409170db5..c0a4484a0bde 100644
---- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -107,6 +107,18 @@
- 		pinmux = <RZA2_PINMUX(PORT5, 4, 3)>,	/* SD1_CD */
- 			 <RZA2_PINMUX(PORT5, 5, 3)>;	/* SD1_WP */
- 	};
-+
-+	usb0_pins: usb0 {
-+		pinmux = <RZA2_PINMUX(PORT5, 2, 3)>,	/* VBUSIN0 */
-+			 <RZA2_PINMUX(PORTC, 6, 1)>,	/* VBUSEN0 */
-+			 <RZA2_PINMUX(PORTC, 7, 1)>;	/* OVRCUR0 */
-+	};
-+
-+	usb1_pins: usb1 {
-+		pinmux = <RZA2_PINMUX(PORTC, 0, 1)>,	/* VBUSIN1 */
-+			 <RZA2_PINMUX(PORTC, 5, 1)>,	/* VBUSEN1 */
-+			 <RZA2_PINMUX(PORT7, 5, 5)>;	/* OVRCUR1 */
-+	};
- };
+V3: No change
+
+V2: No change
+
+ drivers/pci/controller/pci-tegra.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 17c6d858ddc6..d3da03a10e04 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -212,6 +212,9 @@
+ #define RP_VEND_CTL1	0x00000f48
+ #define  RP_VEND_CTL1_ERPT	(1 << 13)
  
- /* High resolution System tick timers */
-@@ -161,3 +173,28 @@
- 	bus-width = <4>;
- 	status = "okay";
- };
++#define RP_VEND_XP_BIST	0x00000f4c
++#define  RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE	(1 << 28)
 +
-+/* USB-0 as Host */
-+/* NOTE: Requires JP3 to be fitted */
-+&usb2_phy0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_pins>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
+ #define RP_VEND_CTL2 0x00000fa8
+ #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ 
+@@ -538,6 +541,14 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	value |= RP_VEND_XP_OPPORTUNISTIC_ACK;
+ 	value |= RP_VEND_XP_OPPORTUNISTIC_UPDATEFC;
+ 	writel(value, port->base + RP_VEND_XP);
 +
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+/* USB-1 as Host */
-+&usb2_phy1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb1_pins>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
++	/*
++	 * LTSSM will wait for DLLP to finish before entering L1 or L2,
++	 * to avoid truncation of PM messages which results in receiver errors
++	 */
++	value = readl(port->base + RP_VEND_XP_BIST);
++	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
++	writel(value, port->base + RP_VEND_XP_BIST);
+ }
+ 
+ static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
 -- 
-2.16.1
+2.17.1
