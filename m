@@ -1,101 +1,63 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: [PATCH v2 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
-Date: Thu, 16 May 2019 17:51:44 +0200 (CEST)
-Message-ID: <20190516155144.964B068C4E@newverein.lst.de>
-References: <20190516154943.239E668B05@newverein.lst.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 5/5] dt-bindings: add Atmel SHA204A I2C crypto processor
+Date: Thu, 16 May 2019 18:06:05 +0200
+Message-ID: <CAKv+Gu96ZVOXSp+3nHrPOoQUJRNgW5MG8wOv_Refyo8yL54RjA@mail.gmail.com>
+References: <20190430162910.16771-1-ard.biesheuvel@linaro.org>
+ <20190430162910.16771-6-ard.biesheuvel@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190430162910.16771-6-ard.biesheuvel@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Joakim Bech <joakim.bech@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+(+ devicetree list)
 
-TERES-I has an ANX6345 bridge connected to the RGB666 LCD output, and
-the I2C controlling signals are connected to I2C0 bus.
+On Tue, 30 Apr 2019 at 18:29, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> Add a compatible string for the Atmel SHA204A I2C crypto processor.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/crypto/atmel-crypto.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/crypto/atmel-crypto.txt b/Documentation/devicetree/bindings/crypto/atmel-crypto.txt
+> index 6b458bb2440d..a93d4b024d0e 100644
+> --- a/Documentation/devicetree/bindings/crypto/atmel-crypto.txt
+> +++ b/Documentation/devicetree/bindings/crypto/atmel-crypto.txt
+> @@ -79,3 +79,16 @@ atecc508a@c0 {
+>         compatible = "atmel,atecc508a";
+>         reg = <0xC0>;
+>  };
+> +
+> +* Symmetric Cryptography (I2C)
+> +
+> +Required properties:
+> +- compatible : must be "atmel,atsha204a".
+> +- reg: I2C bus address of the device.
+> +- clock-frequency: must be present in the i2c controller node.
+> +
+> +Example:
+> +atsha204a@c0 {
+> +       compatible = "atmel,atsha204a";
+> +       reg = <0xC0>;
+> +};
+> --
+> 2.20.1
+>
 
-Enable it in the device tree.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
-
-originally: patchwork.kernel.org/patch/10646867
-
-Changed the reset polarity, which is active low,
-according to the (terse) datasheet, Teres-I and pinebook schematics,
-and the confusing parts of the linux driver code (not yet included here).
-Active low -> no more confusion.
-
----
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts | 40 +++++++++++++++++--
- 1 file changed, 36 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index c455b24dd079..bc1d0d6c0672 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -72,20 +72,38 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
- 
- 
--/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-- * driver for this chip at the moment, the bootloader initializes it.
-- * However it can be accessed with the i2c-dev driver from user space.
-- */
- &i2c0 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_dldo3>;
-+
-+		port {
-+			anx6345_in: endpoint {
-+				remote-endpoint = <&tcon0_out_anx6345>;
-+			};
-+		};
-+	};
-+};
-+
-+&mixer0 {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -258,6 +276,20 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+If there are no objections to this patch, may I please have an ack?
