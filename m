@@ -1,30 +1,38 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-Date: Thu, 16 May 2019 14:44:30 +0200
-Message-ID: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
-References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
+Date: Thu, 16 May 2019 14:52:03 +0200
+Message-ID: <CACRpkdZ+p-J5Em3rzZcUwpA-a+CVOY91CgLqoRm_QVZP6E4Osw@mail.gmail.com>
+References: <20190514082652.20686-1-glaroque@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: MSM <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
+On Tue, May 14, 2019 at 10:26 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
 
-> The property is spelled 'bias-pull-up', as documented in
-> pinctrl-bindings.txt.
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
 >
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-microamp". The change to do so
+> would be minimal and could be benefit to other platforms later on.
+>
+> Cheers
+> Guillaume
+>
+> Changes since v5:
+> - restore Tested-by/Reviewed-by/Ack-by tags
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+All 6 patches applied for v5.3.
 
-It appears from Rob's comment that he's applying it,
-tell me if I need to apply it to the pinctrl tree.
+They will appear in the tree once v5.2-rc1 is out.
 
 Yours,
 Linus Walleij
