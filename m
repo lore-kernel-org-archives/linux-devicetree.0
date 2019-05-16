@@ -1,53 +1,58 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: allwinner: a64:
- orangepi-win: Add wifi and bluetooth nodes
-Date: Thu, 16 May 2019 10:52:57 +0200
-Message-ID: <20190516085257.tbli227f7mm3daac@flea>
-References: <20190514205445.11591-1-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/4] arm64: DTS: allwinner: a64: Add pinmux for RGB666 LCD
+Date: Thu, 16 May 2019 10:54:16 +0200
+Message-ID: <20190516085416.qfrbylku7226rub6@flea>
+References: <20190514155911.6C0AC68B05@newverein.lst.de>
+ <20190514160225.AB0D368B20@newverein.lst.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5iqdhuknfkakdubp"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3OJ6TTAKGQEV65SXGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="h2fn4argqt45zmoa"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190514205445.11591-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190514160225.AB0D368B20@newverein.lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Torsten Duwe <duwe@lst.de>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---5iqdhuknfkakdubp
-Content-Type: text/plain; charset="UTF-8"
+--h2fn4argqt45zmoa
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, May 14, 2019 at 10:54:45PM +0200, Jernej Skrabec wrote:
-> The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
-> identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+On Tue, May 14, 2019 at 06:02:25PM +0200, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
 >
-> WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
-> in a 4 wire configuration. Same as the WiFi side, due to being the same
-> chip and package, DLDO2 provides overall power via VBAT, and DLDO4
-> provides I/O power via VDDIO. The RTC clock output provides the LPO low
-> power clock at 32.768 kHz.
+> Allwinner A64's TCON0 can output RGB666 LCD signal.
 >
-> This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
-> missing LPO clock on the WiFi side. PCM connection also exists for
-> Bluetooth audio, but it's not used here.
+> Add its pinmux.
 >
-> Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
-> audio. While module supports even higher speeds, currently sunxi clock
-> driver doesn't support higher speed.
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> ---
 >
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> originally: patchwork.kernel.org/patch/10814179
+>
+> Almost trivial, and obviously correct.
+> I added the /omit-if-no-ref/.
+>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 2abb335145a6..a8bbee84e7da 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -559,6 +559,16 @@
+>  				function = "i2c1";
+>  			};
+>
+> +			/omit-if-no-ref/
+> +			lcd_rgb666_pins: lcd-rgb666 {
 
-Queued for 5.3, thanks
+This should have the -pins suffix
 
 Maxime
 
@@ -55,4 +60,16 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---5iqdhuknfkakdubp--
+
+--h2fn4argqt45zmoa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN0lOAAKCRDj7w1vZxhR
+xfczAP949KD6LxwvBpLAV424mzw9jhUzLgBNJAOIYxQ1QQ2afAEAqHyh7A4+J2EV
+4OxzrWJXa/IL7TiTlQCvFyhQrynH+AI=
+=R8dD
+-----END PGP SIGNATURE-----
+
+--h2fn4argqt45zmoa--
