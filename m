@@ -1,39 +1,50 @@
-Return-Path: <SRS0=+lTq=TQ=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=GYkJ=TQ=ragnatech.se=niklas.soderlund+renesas@kernel.org>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH] dt-bindings: rcar-{csi2,vin}: Rename bindings documentation files
+Date: Thu, 16 May 2019 02:38:03 +0200
+Message-Id: <20190516003803.808-1-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-References: <20190516003803.808-1-niklas.soderlund+renesas@ragnatech.se>
-In-Reply-To: <20190516003803.808-1-niklas.soderlund+renesas@ragnatech.se>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 16 May 2019 09:15:16 +0200
-Message-ID: <CAMuHMdVU5WhL66Lve1qjZx7OGYWbkUmC9JNvYye0SGvtWmawVQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: rcar-{csi2,vin}: Rename bindings
- documentation files
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 16, 2019 at 3:49 AM Niklas S=C3=B6derlund
-<niklas.soderlund+renesas@ragnatech.se> wrote:
-> Renesas media binding documentation files uses a naming schema of
-> 'renesas,<module>.txt'. Rename VIN and CSI-2 files to match this
-> pattern.
->
-> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
+Renesas media binding documentation files uses a naming schema of
+'renesas,<module>.txt'. Rename VIN and CSI-2 files to match this
+pattern.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+---
+ .../media/{renesas,rcar-csi2.txt => renesas,csi2.txt}         | 0
+ .../bindings/media/{rcar_vin.txt => renesas,vin.txt}          | 0
+ MAINTAINERS                                                   | 4 ++--
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+ rename Documentation/devicetree/bindings/media/{renesas,rcar-csi2.txt => renesas,csi2.txt} (100%)
+ rename Documentation/devicetree/bindings/media/{rcar_vin.txt => renesas,vin.txt} (100%)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,csi2.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+rename to Documentation/devicetree/bindings/media/renesas,csi2.txt
+diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/renesas,vin.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/media/rcar_vin.txt
+rename to Documentation/devicetree/bindings/media/renesas,vin.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 878588cfb453d83c..c3a23726472d7d4d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9629,8 +9629,8 @@ L:	linux-media@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+-F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+-F:	Documentation/devicetree/bindings/media/rcar_vin.txt
++F:	Documentation/devicetree/bindings/media/renesas,csi2.txt
++F:	Documentation/devicetree/bindings/media/renesas,vin.txt
+ F:	drivers/media/platform/rcar-vin/
+ 
+ MEDIA DRIVERS FOR RENESAS - VSP1
+-- 
+2.21.0
