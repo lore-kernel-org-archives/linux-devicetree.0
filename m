@@ -1,59 +1,51 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: gpu: add #cooling-cells property to
- the ARM Mali Midgard GPU binding
-Date: Thu, 16 May 2019 10:40:38 -0700
-Message-ID: <CAD=FV=UQcv1+HC2eAk2ctBofufCi9-VvWc+OnY0mtBw3L-YG+Q@mail.gmail.com>
-References: <20190516172510.181473-1-mka@chromium.org>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
+Date: Thu, 16 May 2019 10:44:28 -0700
+Message-ID: <5cdda17d.1c69fb81.8e244.683a@mx.google.com>
+References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org> <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com> <CAJMQK-jrJQri3gM=X6JRD6Rk+B5S4939HJTptrQMY64xEWr1qA@mail.gmail.com> <CAL_Jsq+dVg9E_EzpoC4Bz1ytUckDGXUcEJyU5pV2HS6rZuKmHA@mail.gmail.com> <CAJMQK-hzjSBf2-QFMn52Sa8fwvm5-gaddzBOudfEc1neR2rwnA@mail.gmail.com> <5f598806-1c36-7c2a-0f47-da79ec7d28c6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516172510.181473-1-mka@chromium.org>
+In-Reply-To: <5f598806-1c36-7c2a-0f47-da79ec7d28c6@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>
+To: Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting James Morse (2019-05-16 10:34:16)
+> Hi!
+>=20
+> On 16/05/2019 17:48, Hsin-Yi Wang wrote:
+> > On Thu, May 16, 2019 at 11:32 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >> Doesn't kexec operate on a copy because it already does modifications.
+>=20
+> It does!
+>=20
+> > This patch is to assist "[PATCH v3 3/3] fdt: add support for rng-seed"
+> > (https://lkml.org/lkml/2019/5/16/257). I thought that by default
+> > second kernel would use original fdt, so I write new seed back to
+> > original fdt. Might be wrong.
+> >=20
+> > ** "[PATCH v3 3/3] fdt: add support for rng-seed" is supposed to
+> > handle for adding new seed in kexec case, discussed in v2
+> > (https://lkml.org/lkml/2019/5/13/425)
+> >=20
+> > By default (not considering user defines their own fdt), if second
+> > kernel uses copied fdt, when is it copied and can we modify that?
+>=20
+> Regular kexec's user-space already updates the dtb for the cmdline and ma=
+ybe the initrd.
+> For KASLR, it generates its own seed with getrandom():
+>=20
+> https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/ke=
+xec/arch/arm64/kexec-arm64.c#n483
+>=20
+> If user-space can do it, user-space should do it!
+>=20
 
-On Thu, May 16, 2019 at 10:25 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-
-> The GPU can be used as a thermal cooling device, add an optional
-> '#cooling-cells' property.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v2:
-> - patch added to the series
-> ---
->  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> index 18a2cde2e5f3..61fd41a20f99 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> @@ -37,6 +37,8 @@ Optional properties:
->  - operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
->    for details.
->
-> +- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
-> +  for details.
->
->  Example for a Mali-T760:
->
-> @@ -51,6 +53,7 @@ gpu@ffa30000 {
->         mali-supply = <&vdd_gpu>;
->         operating-points-v2 = <&gpu_opp_table>;
->         power-domains = <&power RK3288_PD_GPU>;
-> +       #cooling-cells = <2>;
->  };
-
-You will conflict with d5ff1adb3809 ("dt-bindings: gpu: mali-midgard:
-Add resets property"), but it's easy to rebase.  I'll leave it to
-whoever is going to land this to decide if they would like you to
-re-post or if they can handle resolving the conflict themselves.
-+Kevin who appears to be the one who landed the conflicting commit.
-
-With that:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Doesn't it need to be done in two places? Userspace and also in the
+kernel when kexec_file_load() is used? At least, I see a bit of code
+that does kaslr seed updates to the copied dtb in setup_dtb() of
+arch/arm64/kernel/machine_kexec_file.c that probably needs to get an
+update for this new property too.
