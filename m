@@ -1,53 +1,54 @@
-Return-Path: <SRS0=RGXl=TW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4460 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfEVFfu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 May 2019 01:35:50 -0400
-From: Puneet Saxena <puneets@nvidia.com>
-Subject: [PATCH] of: resered-memory: ignore disabled memory-region nodes
-Date: Wed, 22 May 2019 11:05:53 +0530
-Message-ID: <1558503353-13179-2-git-send-email-puneets@nvidia.com>
-In-Reply-To: <1558503353-13179-1-git-send-email-puneets@nvidia.com>
-References: <1558503353-13179-1-git-send-email-puneets@nvidia.com>
+Return-Path: <SRS0=87Xd=TQ=atomide.com=tony@kernel.org>
+Date: Thu, 16 May 2019 09:58:24 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/2] arm: dts: dra76-evm: Disable rtc target module
+Message-ID: <20190516165824.GD5447@atomide.com>
+References: <20190516090657.25211-1-j-keerthy@ti.com>
+ <20190516090657.25211-2-j-keerthy@ti.com>
+ <20190516161256.GB5447@atomide.com>
+ <f3c2a6cd-b478-cec4-cde6-3eb5b6a11392@ti.com>
+ <20190516164729.GC5447@atomide.com>
+ <f2470149-0a17-cd1a-30d3-288fe2b821e3@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: pantelis.antoniou@konsulko.com, frowand.list@gmail.com, devicetree@vger.kernel.org
-Cc: treding@nvidia.com, vdumpa@nvidia.com, snikam@nvidia.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2470149-0a17-cd1a-30d3-288fe2b821e3@ti.com>
+To: keerthy <j-keerthy@ti.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Krishna Reddy <vdumpa@nvidia.com>
+* keerthy <j-keerthy@ti.com> [190516 16:54]:
+> On 5/16/2019 10:17 PM, Tony Lindgren wrote:
+> > But then any new board with dra76 or dra71 will need to debug
+> > the same issue again. Sure we can get away for now tweaking the
+> > board file, but to me it sounds like it's going to be more
+> > devices that will be affected too?
+> 
+> Okay. This is a SoC related issue so yes any new board will have to again
+> implement disabling.
 
-Ignore disabled nodes in the memory-region nodes list and continue
-to initialize the rest of enabled nodes.
+OK
 
-Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
----
- drivers/of/of_reserved_mem.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> > Is there some feature matrix available somewhere online?
+> 
+> Not that i know of. I will try finding something.
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 1977ee0adcb1..58d95d774e3b 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -314,6 +314,7 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
- 	struct device_node *target;
- 	struct reserved_mem *rmem;
- 	int ret;
-+	const char *status;
- 
- 	if (!np || !dev)
- 		return -EINVAL;
-@@ -322,6 +323,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
- 	if (!target)
- 		return -ENODEV;
- 
-+	status = of_get_property(target, "status", NULL);
-+	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
-+		return 0;
-+
- 	rmem = __find_rmem(target);
- 	of_node_put(target);
- 
--- 
-2.7.4
+OK thanks.
+
+> > How about add minimal dra76 and dra71 dtsi files in addition to
+> > the board specific fix(es)? Then for v5.3, we can deal adding more
+> > dra7 specifc evm files using these dtsi files or dynamically start
+> > disabling modules.
+> 
+> You mean having a dra76/dra71.dtsi with rtc/usb4_tm disabled and that gets
+> included in dra76/dra71-evm.dts?
+
+Yeah, add dra76.dtsi and dra71.dtsi, then include those.
+
+If however you have the same evm dts file with multiple SoC variants
+available, then for now you need to also disable devices in the
+evm dts. Or add another evm dts file.
+
+Regards,
+
+Tony
