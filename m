@@ -1,8 +1,8 @@
 Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 07/28] PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
-Date: Thu, 16 May 2019 11:22:46 +0530
-Message-ID: <20190516055307.25737-8-mmaddireddy@nvidia.com>
+Subject: [PATCH V4 17/28] PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+Date: Thu, 16 May 2019 11:22:56 +0530
+Message-ID: <20190516055307.25737-18-mmaddireddy@nvidia.com>
 In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,8 +11,13 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Default root port setting hides AER capability. This patch enables the
-advertisement of AER capability by root port.
+Disable controllers which failed to link up and configure CLKREQ# signals
+of these controllers as GPIO. This is required to avoid CLKREQ# signal of
+inactive controllers interfering with PLLE power down sequence.
+
+PCIE_CLKREQ_GPIO bits are defined only in Tegra186, however programming
+these bits in other SoCs doesn't cause any side effects. Program these
+bits for all Tegra SoCs to avoid conditional check.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
@@ -21,50 +26,50 @@ V4: No change
 
 V3: No change
 
-V2: No change
+V2: Corrected the comment in driver
 
- drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index cd542a8af618..e402627bd221 100644
+index 9ee111062ab7..4767af9f3b88 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -180,6 +180,9 @@
- #define RP_VEND_XP	0x00000f00
- #define  RP_VEND_XP_DL_UP	(1 << 30)
+@@ -160,6 +160,8 @@
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_211	(0x1 << 20)
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_411	(0x2 << 20)
+ #define  AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_111	(0x2 << 20)
++#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(x)		(1 << ((x) + 29))
++#define  AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL		(0x7 << 29)
  
-+#define RP_VEND_CTL1	0x00000f48
-+#define  RP_VEND_CTL1_ERPT	(1 << 13)
-+
- #define RP_VEND_CTL2 0x00000fa8
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
+ #define AFI_FUSE			0x104
+ #define  AFI_FUSE_PCIE_T0_GEN2_DIS	(1 << 2)
+@@ -741,6 +743,12 @@ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
  
-@@ -479,6 +482,16 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 	value &= ~AFI_PEX_CTRL_REFCLK_EN;
  	afi_writel(port->pcie, value, ctrl);
++
++	/* disable PCIe port and set CLKREQ# as GPIO to allow PLLE power down */
++	value = afi_readl(port->pcie, AFI_PCIE_CONFIG);
++	value |= AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
++	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
++	afi_writel(port->pcie, value, AFI_PCIE_CONFIG);
  }
  
-+static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
-+{
-+	u32 value;
-+
-+	/* Enable AER capability */
-+	value = readl(port->base + RP_VEND_CTL1);
-+	value |= RP_VEND_CTL1_ERPT;
-+	writel(value, port->base + RP_VEND_CTL1);
-+}
-+
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- {
- 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
-@@ -503,6 +516,8 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
- 		value |= RP_VEND_CTL2_PCA_ENABLE;
- 		writel(value, port->base + RP_VEND_CTL2);
- 	}
-+
-+	tegra_pcie_enable_rp_features(port);
- }
+ static void tegra_pcie_port_free(struct tegra_pcie_port *port)
+@@ -1153,9 +1161,12 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 	value = afi_readl(pcie, AFI_PCIE_CONFIG);
+ 	value &= ~AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK;
+ 	value |= AFI_PCIE_CONFIG_PCIE_DISABLE_ALL | pcie->xbar_config;
++	value |= AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO_ALL;
  
- static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+-	list_for_each_entry(port, &pcie->ports, list)
++	list_for_each_entry(port, &pcie->ports, list) {
+ 		value &= ~AFI_PCIE_CONFIG_PCIE_DISABLE(port->index);
++		value &= ~AFI_PCIE_CONFIG_PCIE_CLKREQ_GPIO(port->index);
++	}
+ 
+ 	afi_writel(pcie, value, AFI_PCIE_CONFIG);
+ 
 -- 
 2.17.1
