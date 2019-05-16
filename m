@@ -1,66 +1,55 @@
-From: Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 5/5] iio: adc: ad7606: Add debug mode for ad7616
-Date: Thu, 16 May 2019 17:32:08 +0300
-Message-ID: <20190516143208.19294-5-beniamin.bia@analog.com>
-References: <20190516143208.19294-1-beniamin.bia@analog.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] arm64: dts: meson: g12a: add tohdmitx
+Date: Thu, 16 May 2019 16:32:16 +0200
+Message-ID: <20190516143216.6193-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516143208.19294-1-beniamin.bia@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com, Beniamin Bia <beniamin.bia@analog.com>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Support for register access was added for spi devices.
+Add the hdmitx glue device linking the SoC audio interfaces to the
+embedded Synopsys hdmi controller.
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/iio/adc/ad7606.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index f77df3efe43f..b03bdce4fd4e 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -134,6 +134,30 @@ static int ad7606_spi_write_mask(struct ad7606_state *st,
- 	return ad7606_spi_reg_write(st, addr, readval);
- }
+ Hi Kevin,
+
+ The related device driver and dt-binding have been merged in the ASoC
+ tree, for-5.3 branch [0]
+
+ This patch is based on the audio series I have just sent [1]. Like the
+ patches I have sent this week, they are all based on Linus's master
+ branch. This is done so it applies nicely when setup your branch based
+ on 5.2-rc1
+
+[0]: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/log/?h=for-5.3
+[1]: https://lkml.kernel.org/r/20190514142649.1127-1-jbrunet@baylibre.com
+
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 3c92d165621c..90da7cc81681 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -1677,6 +1677,14 @@
+ 					clock-names = "pclk", "mclk";
+ 					status = "disabled";
+ 				};
++
++				tohdmitx: audio-controller@744 {
++					compatible = "amlogic,g12a-tohdmitx";
++					reg = <0x0 0x744 0x0 0x4>;
++					#sound-dai-cells = <1>;
++					sound-name-prefix = "TOHDMITX";
++					status = "disabled";
++				};
+ 			};
  
-+static int ad7606_reg_access(struct iio_dev *indio_dev,
-+			     unsigned int reg,
-+			     unsigned int writeval,
-+			     unsigned int *readval)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&st->lock);
-+	if (readval) {
-+		ret = ad7606_spi_reg_read(st, reg);
-+		if (ret < 0)
-+			goto err_unlock;
-+		*readval = ret;
-+		ret = 0;
-+	} else {
-+		ret = ad7606_spi_reg_write(st, reg, writeval);
-+	}
-+err_unlock:
-+	mutex_unlock(&st->lock);
-+
-+	return ret;
-+}
-+
- static int ad7606_read_samples(struct ad7606_state *st)
- {
- 	unsigned int num = st->chip_info->num_channels;
-@@ -645,6 +669,7 @@ static const struct iio_info ad7606_info_no_os_or_range = {
- static const struct iio_info ad7606_info_os_and_range = {
- 	.read_raw = &ad7606_read_raw,
- 	.write_raw = &ad7606_write_raw,
-+	.debugfs_reg_access = &ad7606_reg_access,
- 	.attrs = &ad7606_attribute_group_os_and_range,
- 	.validate_trigger = &ad7606_validate_trigger,
- };
+ 			usb3_pcie_phy: phy@46000 {
 -- 
-2.17.1
+2.20.1
