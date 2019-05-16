@@ -1,79 +1,115 @@
-From: Sagar Kadam <sagar.kadam@sifive.com>
-Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Date: Thu, 16 May 2019 18:24:32 +0530
-Message-ID: <CAARK3H=L2AFtog6wdJGU7rKi7yk-AzDgFdjcjktZgkqdDwnOZQ@mail.gmail.com>
-References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
- <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com> <20190516123120.GB14298@lunn.ch>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/3] dt-bindings: Add binding for IT6505.
+Date: Thu, 16 May 2019 14:58:08 +0200
+Message-ID: <3548960.TAD2hRMT5j@phil>
+References: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw> <1557301722-20827-2-git-send-email-allen.chen@ite.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516123120.GB14298@lunn.ch>
+In-Reply-To: <1557301722-20827-2-git-send-email-allen.chen@ite.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: allen <allen.chen@ite.com.tw>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, Johan Hovold <johan@kernel.org>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Koen Kooi <koen@dominion.thruhere.net>, Vladimir Zapolskiy <vz@mleia.com>, Ben Whitten <ben.whitten@gmail.com>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Guenter Roeck <groeck@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrew,
+Hi Allen,
 
-On Thu, May 16, 2019 at 6:01 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > @@ -682,13 +693,24 @@ static int ocores_i2c_probe(struct platform_device *pdev)
-> >
-> >       irq = platform_get_irq(pdev, 0);
-> >       if (irq == -ENXIO) {
-> > -             i2c->flags |= OCORES_FLAG_POLL;
-> > +             /*
-> > +              * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
-> > +              * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
-> > +              * Else enable default polling mode interface for SIFIVE/OCORE
-> > +              * device types.
-> > +              */
-> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-> > +             if (match && (long)match->data ==
-> > +                             (TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ))
->
-> This looks wrong. You added:
->
-> +       {
-> +               .compatible = "sifive,fu540-c000-i2c",
-> +               .data = (void *)TYPE_SIFIVE_REV0,
-> +       },
-> +       {
-> +               .compatible = "sifive,i2c0",
-> +               .data = (void *)TYPE_SIFIVE_REV0,
-> +       },
->
-> So match->data just has TYPE_SIFIVE_REV0.
-I updated the device_id table into two logically separated patches as follows:-
+Am Mittwoch, 8. Mai 2019, 09:48:40 CEST schrieb allen:
+> From: Allen Chen <allen.chen@ite.com.tw>
+> 
+> Add a DT binding documentation for IT6505.
+> 
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> 
+> ---
+>  .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> new file mode 100644
+> index 0000000..c3506ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> @@ -0,0 +1,30 @@
+> +iTE it6505 DP bridge bindings
+> +
+> +Required properties:
+> +        - compatible: "ite,it6505"
+> +        - reg: i2c address of the bridge
+> +        - ovdd-supply: I/O voltage
+> +        - pwr18-supply: Core voltage
+> +        - interrupts: interrupt specifier of INT pin
+> +        - reset-gpios: gpio specifier of RESET pin
+> +
+> +Example:
+> +	it6505dptx: it6505dptx@5c {
+> +                compatible = "ite,it6505";
+> +                status = "okay";
 
-1. Update device id table for Sifive devices
-    [PATCH v3 2/3] i2c-ocore:
-                  .data for sifive,fu540-540-c000 and sifive,i2c0 both
-are for sifive devices hence TYPE_SIFIVE_REV0
-2. Add polling mode workaround fix for fu540-c000 SoC
-    [PATCH v3 3/3] i2c-ocores:
-                  .data for sifive,fu540-540-c000 is of
-TYPE_SIFIVE_REV0 and has a broken IRQ so the flag
-OCORES_FLAG_BROKEN_IRQ is OR'd to data into device id table.
+binding examples should not contain a "status" property.
+Also as this is a board-specific i2c device, you shouldn't need
+a status property in the board dts as well, as the default is
+"okay" anyway.
 
-Please let me know if you feel patch 2 and patch 3 need to be squashed
-together into a single patch.
 
->
-> > +                     i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
-> > +             else
-> > +                     i2c->flags |= OCORES_FLAG_POLL;
->
-> These two don't need to be exclusive. It makes more sense to say
-> SIFIVE needs to poll and it its IRQ is broken. A lot of your other
-> changes then go away.
->
-Other SiFive chip's with Ocore based I2C re-implementation might not
-need the broken IRQ workaround.
-and can use the the existing mainline polling mode interface, using
-OCORES_FLAG_POLL.
+> +                interrupt-parent = <&pio>;
+> +                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
+> +                reg = <0x5c>;
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&it6505_pins>;
+> +                ovdd-supply = <&mt6358_vsim1_reg>;
+> +                pwr18-supply = <&it6505_pp18_reg>;
+> +                reset-gpios = <&pio 179 1>;
+> +                hpd-gpios = <&pio 9 0>;
 
-Thanks & BR,
-Sagar Kadam
->        Andrew
+This is missing from the property-list above.
+
+> +                extcon = <&usbc_extcon>;
+
+Not documented as well. Also this looks like it is the same functionality
+as on rk3399-gru devices and circumvents the Type-C subsystem entirely
+when handling the display-port alt-mode of the typec port.
+
+At least on rk3399-gru the extcon from the chromeos-ec delivered the
+status and allowed chaning settings of the hidden type-c controller
+(fusb302 in that case). And while that works for ChromeOS devices this
+makes it impossible for other devices to sanely use the chip as well.
+
+
+The kernels type-c framework did develop a lot more in the meantime,
+so this "hack" should probably not spread to more parts and instead should
+use the type-c framework.
+
+I pestered Guenter last year at ELCE about making cros-ec-pd a part of
+the kernel's type-c subsystem, but I guess nobody had the time so far.
+
+ 
+
+> +                port {
+> +                        it6505_in: endpoint {
+> +                                remote-endpoint = <&dpi_out>;
+
+Ports usage also it not documented above. 
+
+
+Heiko
+
+> +                        };
+> +                };
+> +        };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c3fc51..c088646 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -184,6 +184,7 @@ iom	Iomega Corporation
+>  isee	ISEE 2007 S.L.
+>  isil	Intersil
+>  issi	Integrated Silicon Solutions Inc.
+> +ite	iTE Tech. Inc.
+>  itead	ITEAD Intelligent Systems Co.Ltd
+>  iwave  iWave Systems Technologies Pvt. Ltd.
+>  jdi	Japan Display Inc.
+> 
