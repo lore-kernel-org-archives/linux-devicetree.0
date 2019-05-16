@@ -1,8 +1,8 @@
 Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
 From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V4 24/28] arm64: tegra: Add PEX DPD states as pinctrl properties
-Date: Thu, 16 May 2019 11:23:03 +0530
-Message-ID: <20190516055307.25737-25-mmaddireddy@nvidia.com>
+Subject: [PATCH V4 10/28] PCI: tegra: Disable AFI dynamic clock gating
+Date: Thu, 16 May 2019 11:22:49 +0530
+Message-ID: <20190516055307.25737-11-mmaddireddy@nvidia.com>
 In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
@@ -11,58 +11,59 @@ To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add PEX deep power down states as pinctrl properties to set in PCIe driver.
-In Tegra210, BIAS pads are not in power down mode when clamps are applied.
-To set the pads in DPD, pass the PEX DPD states as pinctrl properties to
-PCIe driver.
+Outstanding write counter in AFI is used to generate idle signal to
+dynamically gate the AFI clock. When there are 32 outstanding writes
+from AFI to memory, the outstanding write counter overflows and
+indicates that there are "0" outstanding write transactions.
+
+When memory controller is under heavy load, write completions to AFI
+gets delayed and AFI write counter overflows. This causes AFI clock gating
+even when there are outstanding transactions towards memory controller
+resulting in system hang.
+
+Disable dynamic clock gating of AFI clock to avoid system hang.
+
+CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
+programming this bit doesn't cause any side effects. Program this
+bit for all Tegra SoCs to avoid conditional check.
 
 Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V4: No change
 
 V3: No change
 
-V2: Using standard pinctrl names, default and idle
+V2: No change
 
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index a550c0a4d572..3899c54ea28f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -48,6 +48,11 @@
- 			 <&tegra_car 72>,
- 			 <&tegra_car 74>;
- 		reset-names = "pex", "afi", "pcie_x";
-+
-+		pinctrl-names = "default", "idle";
-+		pinctrl-0 = <&pex_dpd_disable>;
-+		pinctrl-1 = <&pex_dpd_enable>;
-+
- 		status = "disabled";
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index b1e2e398b4e8..17c6d858ddc6 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -95,7 +95,8 @@
+ #define AFI_MSI_EN_VEC7		0xa8
  
- 		pci@1,0 {
-@@ -848,6 +853,20 @@
- 			pins = "sdmmc3";
- 			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
- 		};
-+
-+		pex_dpd_disable: pex_en {
-+			pex-dpd-disable {
-+				pins = "pex-bias", "pex-clk1", "pex-clk2";
-+				low-power-disable;
-+			};
-+		};
-+
-+		pex_dpd_enable: pex_dis {
-+			pex-dpd-enable {
-+				pins = "pex-bias", "pex-clk1", "pex-clk2";
-+				low-power-enable;
-+			};
-+		};
- 	};
+ #define AFI_CONFIGURATION		0xac
+-#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
++#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
++#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
  
- 	fuse@7000f800 {
+ #define AFI_FPCI_ERROR_MASKS	0xb0
+ 
+@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+ 		afi_writel(pcie, value, AFI_FUSE);
+ 	}
+ 
+-	/* finally enable PCIe */
++	/* Disable AFI dynamic clock gating and enable PCIe */
+ 	value = afi_readl(pcie, AFI_CONFIGURATION);
+ 	value |= AFI_CONFIGURATION_EN_FPCI;
++	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
+ 	afi_writel(pcie, value, AFI_CONFIGURATION);
+ 
+ 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
 -- 
 2.17.1
