@@ -1,68 +1,46 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 14/15] ARM: dts: r7s9210: Add USB Device support
-Date: Thu, 9 May 2019 15:11:41 -0500
-Message-ID: <20190509201142.10543-15-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
-References: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V4 19/28] PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+Date: Thu, 16 May 2019 11:22:58 +0530
+Message-ID: <20190516055307.25737-20-mmaddireddy@nvidia.com>
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add USB Device support for RZ/A2.
+PRSNT_MAP bit field is programmed to update the slot present status.
+PRSNT_SENSE IRQ is triggered when this bit field is programmed, which is
+not an error. Add a new if condition to trap PRSNT_SENSE code and print it
+with debug log level.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-v2:
- * changed to generic name usb@xxx
- * Add space between compatible strings
----
- arch/arm/boot/dts/r7s9210.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+V4: No change
 
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-index 1877871af3fc..5ebef1583f56 100644
---- a/arch/arm/boot/dts/r7s9210.dtsi
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -361,6 +361,18 @@
- 			status = "disabled";
- 		};
- 
-+		usbhs0: usb@e8219000 {
-+			compatible = "renesas,usbhs-r7s9210", "renesas,rza2-usbhs";
-+			reg = <0xe8219000 0x724>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 61>;
-+			renesas,buswait = <7>;
-+			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
- 		ohci1: usb@e821a000 {
- 			compatible = "generic-ohci";
- 			reg = <0xe821a000 0x100>;
-@@ -393,6 +405,18 @@
- 			status = "disabled";
- 		};
- 
-+		usbhs1: usb@e821b000 {
-+			compatible = "renesas,usbhs-r7s9210", "renesas,rza2-usbhs";
-+			reg = <0xe821b000 0x724>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 60>;
-+			renesas,buswait = <7>;
-+			phys = <&usb2_phy1>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@e8228000 {
- 			compatible = "renesas,sdhi-r7s9210";
- 			reg = <0xe8228000 0x8c0>;
+V3: Correct typos in commit log
+
+V2: If-else to switch-case conversion patch is dropped, this patch is
+rebased to stay with if-else statements
+
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 0f02f54f8a61..ac57c5badd9b 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -864,7 +864,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
+ 	 * do not pollute kernel log with master abort reports since they
+ 	 * happen a lot during enumeration
+ 	 */
+-	if (code == AFI_INTR_MASTER_ABORT)
++	if (code == AFI_INTR_MASTER_ABORT || code == AFI_INTR_PE_PRSNT_SENSE)
+ 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
+ 	else
+ 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
 -- 
-2.16.1
+2.17.1
