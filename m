@@ -1,24 +1,75 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Date: Thu, 16 May 2019 15:35:06 -0300
-Message-ID: <CAOMZO5A6Gv5k3up0AtKrhQPyMLMe_8SXift68KEP2J+j8D_cJg@mail.gmail.com>
-References: <20190515144210.25596-1-daniel.baluta@nxp.com> <20190515144210.25596-3-daniel.baluta@nxp.com>
+From: "Lei Wang (BSP)" <Wang.Lei@microsoft.com>
+Subject: RE: [PATCH v2 2/2] dt-bindings: edac: arm-dmc520.txt
+Date: Thu, 16 May 2019 19:36:05 +0000
+Message-ID: <DM6PR21MB13245182E07A6276E9BB5B18900A0@DM6PR21MB1324.namprd21.prod.outlook.com>
+References: <1551921818-2825-1-git-send-email-ruizhao@outlook.com>
+ <BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+ <3b740d3a-ba0d-d186-e8f8-6fdf75a36056@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515144210.25596-3-daniel.baluta@nxp.com>
+In-Reply-To: <3b740d3a-ba0d-d186-e8f8-6fdf75a36056@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
+To: James Morse <james.morse@arm.com>, Rui Zhao <ruizhao@outlook.com>
+Cc: "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "okaya@kernel.org" <okaya@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "sashal@kernel.org" <sashal@kernel.org>, Hang Li <hangl@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:42 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
-
-> +               simple-audio-card,codec {
-> +                       sound-dai = <&wm8524>;
-> +                       clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
-
-IMX8MM_CLK_SAI3_ROOT is the internal clock that drives the SAI3
-interface, not an external clock that feeds the codec.
-
-It seems you should remove this 'clocks' entry.
+SGkgSmFtZXMvQm9yaXNsYXYsDQoNCkkgYWRkcmVzc2VkIHlvdXIgY29tbWVudHMgYW5kIHNlbnQg
+b3V0ICJbUEFUQ0ggdjMgMS8yXSBkdC1iaW5kaW5nczogZWRhYzogYXJtLWRtYzUyMC50eHQiIGZv
+ciByZXZpZXcuIFRoYW5rcyENCg0KLUxlaQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+RnJvbTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+IA0KU2VudDogTW9uZGF5LCBN
+YXJjaCAyNSwgMjAxOSAxMTozMCBBTQ0KVG86IFJ1aSBaaGFvIDxydWl6aGFvQG91dGxvb2suY29t
+Pg0KQ2M6IGJwQGFsaWVuOC5kZTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJt
+LmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBva2F5YUBrZXJuZWwub3JnOyBtY2hl
+aGFiQGtlcm5lbC5vcmc7IHdpbGwuZGVhY29uQGFybS5jb207IHNhc2hhbEBrZXJuZWwub3JnOyBI
+YW5nIExpIDxoYW5nbEBtaWNyb3NvZnQuY29tPjsgTGVpIFdhbmcgKEJTUCkgPFdhbmcuTGVpQG1p
+Y3Jvc29mdC5jb20+OyBSdWkgWmhhbyA8cnVpemhhb0BtaWNyb3NvZnQuY29tPg0KU3ViamVjdDog
+UmU6IFtQQVRDSCB2MiAyLzJdIGR0LWJpbmRpbmdzOiBlZGFjOiBhcm0tZG1jNTIwLnR4dA0KDQpI
+aSBSdWksDQoNCk9uIDA3LzAzLzIwMTkgMDE6MjQsIFJ1aSBaaGFvIHdyb3RlOg0KPiBGcm9tOiBS
+dWkgWmhhbyA8cnVpemhhb0BtaWNyb3NvZnQuY29tPiBkdC1iaW5kaW5ncyBmb3IgbmV3IEVEQUMg
+ZHJpdmVyIA0KPiBkbWM1MjBfZWRhYy5jLg0KDQoobWlub3Igbml0LCB0aGUgRFQgZm9sayBwcmVm
+ZXIgdGhlIGJpbmRpbmcgdG8gY29tZSBmaXJzdCBpbiB0aGUgc2VyaWVzLCB0aGlzIG1ha2VzIGl0
+IGVhc2llciB0byByZXZpZXcpDQoNCg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQgDQo+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQNCj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uN2JlYTdkZA0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9lZGFjL2FybS1kbWM1MjAudHh0DQo+
+IEBAIC0wLDAgKzEsMjEgQEANCj4gKyogQVJNIERNQy01MjAgRURBQyBub2RlDQo+ICsNCj4gK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6DQo+ICstIGNvbXBhdGlibGUJCTogImFybSxkbWMtNTIwIi4NCj4g
+Ky0gcmVnCQkJOiBBZGRyZXNzIHJhbmdlIG9mIHRoZSBETUMtNTIwIHJlZ2lzdGVycy4NCj4gKy0g
+aW50ZXJydXB0cwkJOiBETUMtNTIwIGludGVycnVwdCBudW1iZXJzLg0KDQpZb3VyIGV4YW1wbGUg
+aGFzIHR3byBpbnRlcnJ1cHRzLCB3aGF0IGRvIHRoZXkgY29ycmVzcG9uZCB0bz8gKEl0IG5lZWRz
+IHRvIGJlIGNsZWFyIGZyb20gdGhlIGJpbmRpbmcpDQoNCkJlY2F1c2UgdGhpcyB0aGluZyBoYXMg
+cXVpdGUgYSBmZXcsIGl0IG1heSBiZSB3b3J0aCBuYW1pbmcgdGhlIG9uZXMgeW91IHVzZS4gSWYg
+c29tZW9uZSBlbHNlJ3MgcGxhdGZvcm0gdXNlcyBvbmUgb2YgdGhlIG90aGVycywgdGhleSBjYW4g
+YWRkIGl0IHdpdGhvdXQgY29uZmxpY3Rpbmcgd2l0aCBEVHMgZm9yIHlvdXJzLg0KDQpMb29raW5n
+IHRocm91Z2ggdGhlIFRSTSBmb3IgdGhpbmdzIGVuZGluZyBpbiBfaW50LCB0aGV5IHNlZW0gdG8g
+YmU6DQoqIHJhbV9lY2NfZXJjDQoqIHJhbV9lY2NfZXJkDQoqIGRyYW1fZWNjX2VyYw0KKiBkcmFt
+X2VjY19lcmQNCiogZmFpbGVkX2FjY2Vzcw0KKiBmYWlsZWRfcHJvZw0KKiBsaW5rX2Vycg0KKiBh
+cmNoX2ZzbQ0KKiB0ZW1wZXJhdHVyZV9ldmVudA0KKiBwaHlfcmVxdWVzdA0KKiBjb21iaW5lZF9p
+bnQNCg0KSSB0aGluayB0aGlzIGlzIGZhciB0b28gbWFueSB0byBlbnVtZXJhdGUgZnJvbSBkYXkg
+b25lLCBlc3BlY2lhbGx5IGFzIHlvdXIgcGxhdGZvcm0gb25seSBuZWVkcyB0d28uIENvdWxkIHdl
+IG5hbWUgdGhlIHR3byB5b3UgbmVlZCBzbyB0aGF0IGl0cyBjbGVhciB3aGljaCBvbmVzIHRoZXkg
+YXJlLCBhbmQgb3RoZXJzIGNhbiBiZSBhZGRlZCB3aGVuIHNvbWVvbmUgbmVlZHMgdGhlbS4NCg0K
+DQo+ICstIGludGVycnVwdC1tYXNrCTogSW50ZXJydXB0cyB0byBiZSBlbmFibGVkLCByZWZlciB0
+byBpbnRlcnJ1cHRfY29udHJvbA0KPiArCQkJICByZWdpc3RlciBpbiBETUMtNTIwIFRSTSBmb3Ig
+aW50ZXJydXB0IG1hcHBpbmcuDQoNClRoaXMgc291bmRzIGxpa2UgcG9saWN5LiBJdCB3b3VsZCBi
+ZSBnb29kIHRvIG9taXQgdGhlIGludGVycnVwdHMgdGhhdCBhcmVuJ3Qgd2lyZWQgdXAuIElmIHRo
+ZXJlIGlzIGEgcG9saWN5IGxpa2UgJ3VzZSByYW0gbm90IGRyYW0gb24gcGxhdGZvcm0gWScgd2Ug
+Y2FuIGdldCB0aGUgZWRhYyBkcml2ZXIgdG8gZG8gdGhhdCBiYXNlZCBvbiBvZl9tYWNoaW5lX2lz
+X2NvbXBhdGlibGUoKSAoYXMgdGhlIGFsdGVyYSBlZGFjIGRyaXZlciBhbHJlYWR5IGRvZXMpLg0K
+DQoNCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICstIGludGVycnVwdC1zaGFyZWQJOiBzZXQg
+dGhpcyBwcm9wZXJ0eSBpZiBhbmQgb25seSBpZiBhbGwgRE1DLTUyMA0KPiArCQkJICBpbnRlcnJ1
+cHRzIHNoYXJlIHRoZSBpbnRlcnJ1cHQgbnVtYmVyLg0KDQpXaGF0IGlmIHNvbWUgb2YgdGhlbSBh
+cmUgY29tYmluZWQsIGFuZCBzb21lIGFyZW4ndD8NCg0KKHRoaXMgc2hhcmVkLWludGVycnVwdHMg
+d2FzIG15IGV4YW1wbGUgb2Ygd2h5IHdlIG5lZWQgYSBkb2N1bWVudGVkIGJpbmRpbmcgdG8gd29y
+ayBvdXQgd2hhdCBpcyBzcGVjaWZpYyB0byB5b3VyIHBsYXRvZnJtKQ0KDQpJJ20gbm90IHN1cmUg
+aG93IHRoaXMgdXN1YWxseSBnZXRzIGRlc2NyaWJlZCBpbiBhIERUIGJpbmRpbmcgLi4uIGNvdWxk
+bid0IHdlIHNwb3QgdGhpcyBmcm9tIGR1cGxpY2F0ZSBlbnRyaWVzIGluIHRoZSBpbnRlcnJ1cHRz
+IHByb3BlcnR5PyBJZiB3ZSByZWdpc3RlciB0aGVtIHdpdGggSVJRRl9TSEFSRUQsIHdvdWxkIGl0
+IG1hdHRlcj8NCg0KKFdlIGNhbiBhbHdheXMgdGVsbCBpdHMgb3VyIGRldmljZSBmcm9tIHRoZSBz
+dGF0dXMgcmVnaXN0ZXIsIHNvIEkgdGhpbmsgd2Ugc2hvdWxkIHVzZSBJUlFGX1NIQVJFRCByZWdh
+cmRsZXNzLikNCg0KDQpUaGFua3MsDQoNCkphbWVzDQo=
