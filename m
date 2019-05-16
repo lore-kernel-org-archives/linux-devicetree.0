@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 01/12] dt-binding: gce: remove thread-num property
-Date: Thu, 16 May 2019 17:02:13 +0800
-Message-ID: <20190516090224.59070-2-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 06/12] mailbox: mediatek: cmdq: support mt8183 gce function
+Date: Thu, 16 May 2019 17:02:18 +0800
+Message-ID: <20190516090224.59070-7-bibby.hsieh@mediatek.com>
 References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,25 +12,25 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-"thread-num" is an unused property so we remove it from example.
+add mt8183 compatible name for supporting gce function
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index 7d72b21c9e94..cfe40b01d164 100644
---- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -39,7 +39,6 @@ Example:
- 		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&infracfg CLK_INFRA_GCE>;
- 		clock-names = "gce";
--		thread-num = CMDQ_THR_MAX_COUNT;
- 		#mbox-cells = <3>;
- 	};
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 87617dc7504d..6db1e2dd2dea 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -538,6 +538,7 @@ static const struct dev_pm_ops cmdq_pm_ops = {
+ 
+ static const struct of_device_id cmdq_of_ids[] = {
+ 	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
++	{.compatible = "mediatek,mt8183-gce", .data = (void *)24},
+ 	{}
+ };
  
 -- 
 2.18.0
