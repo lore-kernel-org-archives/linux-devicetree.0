@@ -1,82 +1,139 @@
-From: Andrew-sh.Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/8] cpufreq: mediatek: add clock enable for intermediate clock
-Date: Thu, 16 May 2019 17:08:39 +0800
-Message-ID: <1557997725-12178-3-git-send-email-andrew-sh.cheng@mediatek.com>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+Date: Thu, 16 May 2019 12:14:04 +0300
+Message-ID: <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
+ <20190502001955.10575-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1557997725-12178-1-git-send-email-andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob
- Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias
- Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen
- Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew-sh.Cheng" <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190502001955.10575-2-bjorn.andersson@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Andrew-sh.Cheng" <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi Bjorn,
 
-Intermediate clock is not always enabled by ccf in different projects,
-so cpufreq should always enable it by itself.
+On 5/2/19 3:19 AM, Bjorn Andersson wrote:
+> Before introducing the QCS404 platform, which uses the same PCIe
+> controller as IPQ4019, migrate this to use the bulk clock API, in order
+> to make the error paths slighly cleaner.
+> 
+> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
+> 
+>  drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
+>  1 file changed, 14 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0ed235d560e3..d740cbe0e56d 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+>  };
+>  
+> +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
+>  struct qcom_pcie_resources_2_4_0 {
+> -	struct clk *aux_clk;
+> -	struct clk *master_clk;
+> -	struct clk *slave_clk;
+> +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+> +	int num_clks;
+>  	struct reset_control *axi_m_reset;
+>  	struct reset_control *axi_s_reset;
+>  	struct reset_control *pipe_reset;
+> @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> +	int ret;
+>  
+> -	res->aux_clk = devm_clk_get(dev, "aux");
+> -	if (IS_ERR(res->aux_clk))
+> -		return PTR_ERR(res->aux_clk);
+> +	res->clks[0].id = "aux";
+> +	res->clks[1].id = "master_bus";
+> +	res->clks[2].id = "slave_bus";
+>  
+> -	res->master_clk = devm_clk_get(dev, "master_bus");
+> -	if (IS_ERR(res->master_clk))
+> -		return PTR_ERR(res->master_clk);
+> +	res->num_clks = 3;
 
-Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/cpufreq/mediatek-cpufreq.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-index f2464c1ff17c..b2fc01b17b57 100644
---- a/drivers/cpufreq/mediatek-cpufreq.c
-+++ b/drivers/cpufreq/mediatek-cpufreq.c
-@@ -376,13 +376,17 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 		goto out_free_resources;
- 	}
- 
-+	ret = clk_prepare_enable(inter_clk);
-+	if (ret)
-+		goto out_free_opp_table;
-+
- 	/* Search a safe voltage for intermediate frequency. */
- 	rate = clk_get_rate(inter_clk);
- 	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
- 	if (IS_ERR(opp)) {
- 		pr_err("failed to get intermediate opp for cpu%d\n", cpu);
- 		ret = PTR_ERR(opp);
--		goto out_free_opp_table;
-+		goto out_disable_clock;
- 	}
- 	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
- 	dev_pm_opp_put(opp);
-@@ -401,6 +405,9 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 
- 	return 0;
- 
-+out_disable_clock:
-+	clk_disable_unprepare(inter_clk);
-+
- out_free_opp_table:
- 	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
- 
-@@ -427,6 +434,10 @@ static void mtk_cpu_dvfs_info_release(struct mtk_cpu_dvfs_info *info)
- 		clk_put(info->cpu_clk);
- 	if (!IS_ERR(info->inter_clk))
- 		clk_put(info->inter_clk);
-+	if (!IS_ERR(info->inter_clk)) {
-+		clk_disable_unprepare(info->inter_clk);
-+		clk_put(info->inter_clk);
-+	}
- 
- 	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
- }
+>  
+> -	res->slave_clk = devm_clk_get(dev, "slave_bus");
+> -	if (IS_ERR(res->slave_clk))
+> -		return PTR_ERR(res->slave_clk);
+> +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
+>  	if (IS_ERR(res->axi_m_reset))
+> @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+>  	reset_control_assert(res->axi_m_sticky_reset);
+>  	reset_control_assert(res->pwr_reset);
+>  	reset_control_assert(res->ahb_reset);
+> -	clk_disable_unprepare(res->aux_clk);
+> -	clk_disable_unprepare(res->master_clk);
+> -	clk_disable_unprepare(res->slave_clk);
+> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+>  }
+>  
+>  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>  
+>  	usleep_range(10000, 12000);
+>  
+> -	ret = clk_prepare_enable(res->aux_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable iface clock\n");
+> +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+> +	if (ret)
+>  		goto err_clk_aux;
+
+Maybe you have to change the name of the label too?
+
+> -	}
+> -
+> -	ret = clk_prepare_enable(res->master_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable core clock\n");
+> -		goto err_clk_axi_m;
+> -	}
+> -
+> -	ret = clk_prepare_enable(res->slave_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable phy clock\n");
+> -		goto err_clk_axi_s;
+> -	}
+>  
+>  	/* enable PCIe clocks and resets */
+>  	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> @@ -891,10 +874,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>  
+>  	return 0;
+>  
+> -err_clk_axi_s:
+> -	clk_disable_unprepare(res->master_clk);
+> -err_clk_axi_m:
+> -	clk_disable_unprepare(res->aux_clk);
+>  err_clk_aux:
+>  	reset_control_assert(res->ahb_reset);
+>  err_rst_ahb:
+> 
+
 -- 
-2.12.5
+regards,
+Stan
