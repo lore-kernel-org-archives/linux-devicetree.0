@@ -1,105 +1,44 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V3 1/8] dt-bindings: memory: tegra: Add external memory
- controller binding for Tegra210
-Date: Thu, 16 May 2019 17:39:05 +0300
-Message-ID: <1a5b539a-03bb-c326-8ba2-56ea8de97237@gmail.com>
-References: <20190510084719.18902-1-josephl@nvidia.com>
- <20190510084719.18902-2-josephl@nvidia.com>
- <fd68f906-79b4-6eda-b1fa-abaf3b4c6a12@gmail.com>
- <63360b18-6a17-ab3f-6c54-6e11e24885d0@nvidia.com>
- <c3909c66-5aa4-161b-98d4-02ad20e02c88@gmail.com>
- <f1e4ab1e-11b9-ba65-20b8-35c6459d2410@nvidia.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
+Date: Thu, 16 May 2019 16:39:32 +0200
+Message-ID: <CAKv+Gu_kgHEhk-p8KoGVgpifdjA67Li-D19_KSLo+1h4ZvL=3g@mail.gmail.com>
+References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org>
+ <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f1e4ab1e-11b9-ba65-20b8-35c6459d2410@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Chintan Pandya <cpandya@codeaurora.org>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.>
 List-Id: devicetree@vger.kernel.org
 
-MTYuMDUuMjAxOSAxMjowMSwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gT24gNS8xNS8xOSA5OjUw
-IFBNLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6Cj4+IDE1LjA1LjIwMTkgMTA6MTcsIEpvc2VwaCBM
-byDQv9C40YjQtdGCOgo+Pj4gT24gNS8xNS8xOSAxMjoyOCBBTSwgRG1pdHJ5IE9zaXBlbmtvIHdy
-b3RlOgo+Pj4+IDEwLjA1LjIwMTkgMTE6NDcsIEpvc2VwaCBMbyDQv9C40YjQtdGCOgo+Pj4+PiBB
-ZGQgdGhlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIHRoZSBleHRlcm5hbCBtZW1vcnkgY29udHJvbGxl
-ciAoRU1DKQo+Pj4+PiB3aGljaAo+Pj4+PiBjb21tdW5pY2F0ZXMgd2l0aCBleHRlcm5hbCBMUERE
-UjQgZGV2aWNlcy4gSXQgaW5jbHVkZXMgdGhlIGJpbmRpbmdzIG9mCj4+Pj4+IHRoZSBFTUMgbm9k
-ZSBhbmQgYSBzdWItbm9kZSBvZiBFTUMgdGFibGUgd2hpY2ggdW5kZXIgdGhlIHJlc2VydmVkCj4+
-Pj4+IG1lbW9yeQo+Pj4+PiBub2RlLiBUaGUgRU1DIHRhYmxlIGNvbnRhaW5zIHRoZSBkYXRhIG9m
-IHRoZSByYXRlcyB0aGF0IEVNQyBzdXBwb3J0ZWQuCj4+Pj4+Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6
-IEpvc2VwaCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+Pj4+PiAtLS0KPj4+Pj4gdjM6Cj4+Pj4+
-IC0gZHJvcCB0aGUgYmluZGluZ3Mgb2YgRU1DIHRhYmxlCj4+Pj4+IC0gYWRkIG1lbW9yeS1yZWdp
-b24gYW5kIHJlc2VydmVkLW1lbW9yeSBub2RlIGZvciBFTUMgdGFibGUKPj4+Pj4gLS0tCj4+Pj4+
-IMKgwqAgLi4uL252aWRpYSx0ZWdyYTIxMC1lbWMudHh0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHwgNTUKPj4+Pj4gKysrKysrKysrKysrKysrKysrKwo+Pj4+PiDCoMKgIDEg
-ZmlsZSBjaGFuZ2VkLCA1NSBpbnNlcnRpb25zKCspCj4+Pj4+IMKgwqAgY3JlYXRlIG1vZGUgMTAw
-NjQ0Cj4+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJv
-bGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVtYy50eHQKPj4+Pj4KPj4+Pj4KPj4+Pj4KPj4+Pj4gZGlm
-ZiAtLWdpdAo+Pj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnkt
-Y29udHJvbGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVtYy50eHQKPj4+Pj4KPj4+Pj4gYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL252aWRpYSx0ZWdy
-YTIxMC1lbWMudHh0Cj4+Pj4+Cj4+Pj4+Cj4+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uZDY1YWVlZjIzMjljCj4+Pj4+IC0tLSAvZGV2L251bGwKPj4+
-Pj4gKysrCj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1j
-b250cm9sbGVycy9udmlkaWEsdGVncmEyMTAtZW1jLnR4dAo+Pj4+Pgo+Pj4+Pgo+Pj4+PiBAQCAt
-MCwwICsxLDU1IEBACj4+Pj4+ICtOVklESUEgVGVncmEyMTAgU29DIEVNQyAoZXh0ZXJuYWwgbWVt
-b3J5IGNvbnRyb2xsZXIpCj4+Pj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09Cj4+Pj4+ICsKPj4+Pj4gK0RldmljZSBub2RlCj4+Pj4+ICs9PT09
-PT09PT09PQo+Pj4+PiArUmVxdWlyZWQgcHJvcGVydGllcyA6Cj4+Pj4+ICstIGNvbXBhdGlibGUg
-OiBzaG91bGQgYmUgIm52aWRpYSx0ZWdyYTIxMC1lbWMiLgo+Pj4+PiArLSByZWcgOiBwaHlzaWNh
-bCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzCj4+Pj4+IHJlZ2lz
-dGVycy4KPj4+Pj4gKy0gY2xvY2tzIDogcGhhbmRsZXMgb2YgdGhlIHBvc3NpYmxlIHNvdXJjZSBj
-bG9ja3MuCj4+Pj4+ICstIGNsb2NrLW5hbWVzIDogbmFtZXMgb2YgdGhlIHBvc3NpYmxlIHNvdXJj
-ZSBjbG9ja3MuCj4+Pj4+ICstIGludGVycnVwdHMgOiBTaG91bGQgY29udGFpbiB0aGUgRU1DIGdl
-bmVyYWwgaW50ZXJydXB0Lgo+Pj4+PiArLSBtZW1vcnktcmVnaW9uIDogcGhhbmRsZSB0byB0aGUg
-cmVzZXJ2ZWQgbWVtb3J5IChzZWUKPj4+Pj4gKwo+Pj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVkLW1lbW9yeS50eHQpCj4+Pj4+IHdo
-aWNoCj4+Pj4+Cj4+Pj4+ICvCoCBjb250YWlucyBhIHN1Yi1ub2RlIG9mIEVNQyB0YWJsZS4KPj4+
-Pj4gKy0gbnZpZGlhLG1lbW9yeS1jb250cm9sbGVyIDogcGhhbmRsZSBvZiB0aGUgbWVtb3J5IGNv
-bnRyb2xsZXIuCj4+Pj4+ICsKPj4+Pj4gK1Jlc2VydmVkIG1lbW9yeSBub2RlCj4+Pj4+ICs9PT09
-PT09PT09PT09PT09PT09PQo+Pj4+PiArU2hvdWxkIGNvbnRhaW4gYSBzdWItbm9kZSBvZiBFTUMg
-dGFibGUgd2l0aCByZXF1aXJlZCBwcm9wZXJ0aWVzOgo+Pj4+PiArLSBjb21wYXRpYmxlIDogc2hv
-dWxkIGJlICJudmlkaWEsdGVncmEyMTAtZW1jLXRhYmxlIi4KPj4+Pj4gKy0gcmVnIDogcGh5c2lj
-YWwgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBsb2NhdGlvbiBvZiBFTUMgdGFibGUuCj4+Pj4+
-ICsKPj4+Pj4gK0V4YW1wbGU6Cj4+Pj4+ICvCoMKgwqAgcmVzZXJ2ZWQtbWVtb3J5IHsKPj4+Pj4g
-K8KgwqDCoMKgwqDCoMKgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+Pj4+PiArwqDCoMKgwqDCoMKg
-wqAgI3NpemUtY2VsbHMgPSA8Mj47Cj4+Pj4+ICvCoMKgwqDCoMKgwqDCoCByYW5nZXM7Cj4+Pj4+
-ICsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgIGVtY190YWJsZTogZW1jLXRhYmxlQDhiZTAwMDAwIHsK
-Pj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJudmlkaWEsdGVncmEy
-MTAtZW1jLXRhYmxlIjsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVnID0gPDB4MCAw
-eDhiZTAwMDAwIDB4MCAweDEwMDAwPjsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3Rh
-dHVzID0gIm9rYXkiOwo+Pj4+PiArwqDCoMKgwqDCoMKgwqAgfTsKPj4+Pgo+Pj4+IFlvdSBlc3Nl
-bnRpYWxseSBtb3ZlZCB0aGUgdjEgYmluZGluZyBpbnRvIG9ic2N1cmUgYW5kIHVuZG9jdW1lbnRl
-ZAo+Pj4+IGJsb2IsCj4+Pj4gaWdub3JpbmcgcHJldmlvdXMgcmV2aWV3IGNvbW1lbnRzLiBUaGlz
-IGlzIGEgdmVyeSBvZGQgbW92ZS4uLiBwbGVhc2UKPj4+PiBleHBsYWluIHdoYXQgaXMgZ29pbmcg
-b24uCj4+Pj4KPj4+Cj4+PiBEaXNjdXNzZWQgd2l0aCBUaGllcnJ5IG9mZmxpbmUgd2hpY2ggd2F5
-IHdlIHByZWZlciB0byBwYXNzIHRoZSBFTUMgdGFibGUKPj4+IHRvIHRoZSBrZXJuZWwuIFNvbWUg
-cmVhc29ucyBiZWxvdyB3ZSBkZWNpZGUgdG8gY2hvc2UgdGhpcyBvbmUgKHZpYQo+Pj4gYmluYXJ5
-IGJsb2IpLgo+Pj4KPj4+IC0gVGhlIEVNQyB0YWJsZSBpcyBtdWNoIGJpZ2dlciB0aGFuIHRoZSBw
-cmV2aW91cyBUZWdyYSBnZW5lcmF0aW9ucwo+Pj4gKExQRERSNCB2LnMuIExQRERSMi8zKS4gSXQn
-cyBoYXJkZXIgdG8gc2V0dGxlIGluIHRoZSByZXZpZXcgcHJvY2Vzcy4gQW5kCj4+PiBpZiB0aGVy
-ZSBpcyBhIG5ldyBmaXggb2YgdGhlIHRhYmxlIGluIHRoZSBmdXR1cmUsIHdlJ2xsIG5lZWQgdG8g
-Z28KPj4+IHRocm91Z2ggdGhhdCBhZ2Fpbi4KPj4KPj4gSSBkb24ndCB0aGluayB0aGF0IHRoaXMg
-YSB2ZXJ5IGdvb2QgZXhjdXNlIGZvciBub3QgZG9jdW1lbnRpbmcgdGhlCj4+IGJsb2IncyBzdHJ1
-Y3R1cmUuCj4gCj4gVGhlIGJsb2IncyBzdHJ1Y3R1cmUgaXMgaW4gcGF0Y2ggNCBub3cgdGhhdCB3
-ZSBvcmlnaW5hbGx5IHdhbnRlZCB0bwo+IGRlc2NyaWJlIGJlbG93LiBCYXNpY2FsbHksIHRoZSBj
-b250ZW50IGlzIHRoZSBzYW1lLgo+IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8x
-MDg0NDY3Lwo+IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDYzODc5LwoKSSdt
-IG5vdCBhc2tpbmcgYWJvdXQgd2hhdCBleGFjdGx5IGl0IGlzLCBidXQgc2F5aW5nIHRoYXQgZXZl
-cnkgc3VwcG9ydGVkCmJsb2Igc3RydWN0dXJlIHZlcnNpb24gc2hvdWxkIGJlIGRvY3VtZW50ZWQg
-aW4gbXkgb3Bpbmlvbiwgb3RoZXJ3aXNlIHRoZQpkb2N1bWVudGF0aW9uIGlzIG5vdCByZWFsbHkg
-dXNlZnVsLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On Thu, 16 May 2019 at 16:37, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, May 16, 2019 at 5:28 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> >
+> > Basically does similar things like __fixmap_remap_fdt(). It's supposed
+> > to be called after fixmap_remap_fdt() is called at least once, so region
+> > checking can be skipped. Since it needs to know dt physical address, make
+> > a copy of the value of __fdt_pointer.
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> >  arch/arm64/kernel/setup.c |  2 ++
+> >  arch/arm64/mm/mmu.c       | 17 +++++++++++++++++
+> >  2 files changed, 19 insertions(+)
+>
+> Why not just map the FDT R/W at the start and change it to RO just
+> before calling unflatten_device_tree? Then all the FDT scanning
+> functions or any future fixups we need can just assume R/W. That is
+> essentially what Stephen suggested. However, there's no need for a
+> weak function as it can all be done within the arch code.
+>
+> However, I'm still wondering why the FDT needs to be RO in the first place.
+>
+
+It was RO because it could be RO, and we wanted to ensure that it
+didn't get modified inadvertently (hence the CRC check we added as
+well)
+
+If there is a need for the FDT to be RW, let's make it RW.
