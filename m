@@ -1,124 +1,89 @@
-Return-Path: <SRS0=eS3R=TG=analog.com=alexandru.Ardelean@kernel.org>
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [RFC][PATCH] dt-bindings: iio: accel: add adi,adxl345.yaml binding
-Date: Mon, 6 May 2019 14:46:10 +0300
-Message-ID: <20190506114610.28083-1-alexandru.ardelean@analog.com>
+Return-Path: <SRS0=MLGG=TQ=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V3 0/8] Tegra XUSB gadget driver support 
+Date: Thu, 16 May 2019 12:09:24 +0530
+Message-ID: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a YAML binding for the Analog Devices ADXL345 I2C/SPI
-accelerometer.
+This is the third verion of series "Tegra XUSB gadget driver support"
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Patches 1-3 are phy driver changes to add support for device
+mode.
+Patches 4-7 are changes related to XUSB device mode
+controller driver.
+Patch 8 is to enable XUDC driver in defconfig
+
+Test Steps(USB 2.0):
+- Enable "USB Gadget precomposed configurations" in defconfig
+- Build, flash and boot Jetson TX1
+- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
+  cable
+- After boot on Jetson TX1 terminal usb0 network device should be
+  enumerated
+- Assign static ip to usb0 on Jetson TX1 and corresponding net
+  device on ubuntu
+- Run ping test and transfer test(used scp) to check data transfer
+  communication
+
+SS mode is verified by enabling Type A port as peripheral
+
 ---
+V3:
+* Rebased patch 1 to top of tree.
+* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
+  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
+  usb port data is updated based on soc flag need_fake_usb3_port.
+* Added extra lines whereever necessary to make code more readable in patch 3
+  and 7.
+* dt binding doc is corrected for typos and extcon references. Also added
+  details for clocks and removed xusb_ references to clock and power-domain
+  names and accordingly patch 5 is updated.
+* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
+* Patch 8 has no changes.
+---
+V2:
+* Patches 1-3 are new patches in this series, which splits unified features
+  patch to speprated features and removes need of port-fake entry in DT.
+* Patch 4 is re-arragend dt-bindings patch which incorporates previous
+  patch comments to sort DT entries alphabetically, addresses name changes
+  and PM domain details added.
+* Patch 5-6 are re-arranged DT patches with major changes - sort entries
+  alphabetically, and adds clock names.
+* Patch 7 is UDC driver tegra XUSB device mode controller with major
+  changes - remove un-used module params, lockinng for device_mode flag,
+  moving un-needed info logs to debug level, making changes feature flag
+  dependent rather than SOC based macros and other error handling in probe.
+* Patch 8 has no changes.
 
-And now for the RFC part.
-Normally, I would dig into source-code to try to figure this out, but at
-this point-in-time, I am low on time/energy to do this.
-And maybe this helps trigger a discussion about this.
+Nagarjuna Kristam (8):
+  phy: tegra: xusb: t210: add XUSB dual mode support
+  phy: tegra: xusb: t210: add usb3 port fake support
+  phy: tegra: xusb: t210: add vbus override support
+  dt-bindings: usb: Add  NVIDIA Tegra XUSB device mode controller
+    binding
+  arm64: tegra: Add xudc node for Tegra210
+  arm64: tegra: Enable xudc on Jetson TX1
+  usb: gadget: Add UDC driver for tegra XUSB device mode controller
+  arm64: defconfig: Enable tegra XUDC driver
 
-Apologies if this has been coverted on the devicetree mailing list, but
-at least we'd get some coverage on the IIO list (with this).
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  101 +
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   14 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/phy/tegra/xusb-tegra210.c                  |  137 +-
+ drivers/phy/tegra/xusb.c                           |   91 +
+ drivers/phy/tegra/xusb.h                           |    4 +
+ drivers/usb/gadget/udc/Kconfig                     |   10 +
+ drivers/usb/gadget/udc/Makefile                    |    1 +
+ drivers/usb/gadget/udc/tegra_xudc.c                | 3807 ++++++++++++++++++++
+ include/linux/phy/tegra/xusb.h                     |    6 +-
+ 11 files changed, 4186 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+ create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
 
-The ADXL345 device (as others) supports both I2C & SPI interfaces.
-
-Question1: do we write 2 YAML files, or 1 ? I was looking at Zephyr (for
-some ideas/reference) but it seems to me that the YAML DT binding format is
-different than this one ? They write 2 files for ADXL372 (1 for SPI, 1 for
-I2C).
-
-Question1-a: one thing is that SPI requires some props to be `required`
-that would not be required for the I2C binding. This could be solved by
-doing 2 files, but if doing 1 YAML file, is there a way to do conditional
-`required` ? i.e. property is required if `SPI` ? not sure how to check for
-SPI vs I2C, it would be interesting (at some point) to somehow enforce
-SPI/I2C bindings correctness.
-
-Question2: `make dt_binding_check` seems to generate only the first
-example. Is this known behavior, or do I need to take something else into
-consideration ?
-
-Question3: one idea that was neat in Zephyr, is that there is a 'inherits'
-+ `!include` mechanism for including common SPI & I2C device stuff. It
-would be neat to have this. Is there a way to do this now, or maybe this
-would come later ? Maybe, just having a way to include a YAML file into
-another would be interesting.
-
- .../bindings/iio/accel/adi,adxl345.yaml       | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-new file mode 100644
-index 000000000000..246b90c07aaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl345.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+
-+description: |
-+  Driver for Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
-+    http://www.analog.com/en/products/mems/accelerometers/adxl345.html
-+    http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - adi,adxl345
-+              - adi,adxl375
-+
-+  reg:
-+    description:
-+      The I2C address or SPI chip select number of the sensor
-+    maxItems: 1
-+
-+  spi-cpha:
-+    description:
-+      SPI clock phase must be set, to select SPI mode 3
-+
-+  spi-cpol:
-+    description:
-+      SPI clock polarity must be set, to select SPI mode 3
-+
-+  interrupts:
-+    description:
-+      A variable number of interrupts warrants a description of what conditions
-+      affect the number of interrupts. Otherwise, descriptions on standard
-+      properties are not necessary.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    /* Example for a I2C device node */
-+    accelerometer@2a {
-+         compatible = "adi,adxl345";
-+         reg = <0x53>;
-+    };
-+  - |
-+    /* Example for a SPI device node */
-+    accelerometer@0 {
-+         compatible = "adi,adxl345";
-+         reg = <0>;
-+         spi-max-frequency = <5000000>;
-+         spi-cpol;
-+         spi-cpha;
-+    };
 -- 
-2.17.1
+2.7.4
