@@ -1,75 +1,103 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 2/4] clk: at91: sckc: add support to specify registers
- bit offsets
-Date: Thu, 16 May 2019 08:10:34 +0000
-Message-ID: <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
-References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
- <1557487388-32098-3-git-send-email-claudiu.beznea@microchip.com>
- <20190510213242.GE7622@piout.net>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: spi: Add YAML schemas for the
+ generic SPI options
+Date: Thu, 16 May 2019 10:27:22 +0200
+Message-ID: <20190516082722.wcv2kmg4b5lqhszi@flea>
+References: <1acc9ff7f59064b74cc319b7812479bcd842a897.1557386749.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqLRWSWk7cV=pYi1fbYsLJFUxE1fMo6Bm2FC99oPtS-88w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190510213242.GE7622@piout.net>
-Content-Language: en-US
-Content-ID: <383569B37B17E34ABBDAAB8948BC2E04@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============2519322183430374619=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqLRWSWk7cV=pYi1fbYsLJFUxE1fMo6Bm2FC99oPtS-88w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDExLjA1LjIwMTkgMDA6MzIsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBPbiAx
-MC8wNS8yMDE5IDExOjIzOjMxKzAwMDAsIENsYXVkaXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3Jv
-dGU6DQo+PiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNv
-bT4NCj4+DQo+PiBEaWZmZXJlbnQgSVBzIHVzZXMgZGlmZmVyZW50IGJpdCBvZmZzZXRzIGluIHJl
-Z2lzdGVycyBmb3IgdGhlIHNhbWUNCj4+IGZ1bmN0aW9uYWxpdHksIHRodXMgYWRhcHQgdGhlIGRy
-aXZlciB0byBzdXBwb3J0IHRoaXMuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpu
-ZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+ICBkcml2ZXJzL2Ns
-ay9hdDkxL3Nja2MuYyB8IDEwMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0t
-LS0tLS0tLS0tLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgNjcgaW5zZXJ0aW9ucygrKSwgMzMgZGVs
-ZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jIGIv
-ZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMNCj4+IGluZGV4IDZjNTVhN2E4NmY3OS4uMmE0YWM1NDhk
-ZTgwIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMNCj4+ICsrKyBiL2Ry
-aXZlcnMvY2xrL2F0OTEvc2NrYy5jDQo+PiBAQCAtMjIsMTUgKzIyLDIzIEBADQo+PiAgI2RlZmlu
-ZSBTTE9XQ0tfU1dfVElNRV9VU0VDCSgoU0xPV0NLX1NXX0NZQ0xFUyAqIFVTRUNfUEVSX1NFQykg
-LyBcDQo+PiAgCQkJCSBTTE9XX0NMT0NLX0ZSRVEpDQo+PiAgDQo+PiAtI2RlZmluZQlBVDkxX1ND
-S0NfQ1IJCQkweDAwDQo+PiAtI2RlZmluZQkJQVQ5MV9TQ0tDX1JDRU4JCSgxIDw8IDApDQo+PiAt
-I2RlZmluZQkJQVQ5MV9TQ0tDX09TQzMyRU4JKDEgPDwgMSkNCj4+IC0jZGVmaW5lCQlBVDkxX1ND
-S0NfT1NDMzJCWVAJKDEgPDwgMikNCj4+IC0jZGVmaW5lCQlBVDkxX1NDS0NfT1NDU0VMCSgxIDw8
-IDMpDQo+PiArI2RlZmluZQlBVDkxX1NDS0NfQ1IJCTB4MDANCj4+ICsjZGVmaW5lCQlBVDkxX1ND
-S0NfUkNFTihvZmYpCSgob2ZmKS0+Y3JfcmNlbikNCj4+ICsjZGVmaW5lCQlBVDkxX1NDS0NfT1ND
-MzJFTihvZmYpCSgob2ZmKS0+Y3Jfb3NjMzJlbikNCj4+ICsjZGVmaW5lCQlBVDkxX1NDS0NfT1ND
-MzJCWVAob2ZmKQkoKG9mZiktPmNyX29zYzMyYnlwKQ0KPj4gKyNkZWZpbmUJCUFUOTFfU0NLQ19P
-U0NTRUwob2ZmKQkoKG9mZiktPmNyX29zY3NlbCkNCj4+ICsNCj4+ICtzdHJ1Y3QgY2xrX3Nsb3df
-Yml0cyB7DQo+PiArCXUzMiBjcl9yY2VuOw0KPiANCj4gVGhpcyBiaXQgaXMgb25seSB1c2VkIG9u
-IHNhbTl4NSBzbyBJIHdvdWxkbid0IGJvdGhlciBoYXZpbmcgaXQgaW4gdGhlDQo+IHN0cnVjdHVy
-ZSwgZXNwZWNpYWxseSBzaW5jZSBpdHMgdXNlIHdpbGwgYWx3YXlzIGJlIHF1aXRlIHNlcGFyYXRl
-IGZyb20NCj4gdGhlIG90aGVyIG9uZXMgYXMgaXQgaXMgY29udHJvbGxpbmcgYSBzZXBhcmF0ZSBj
-bG9jay4NCj4gDQo+PiArCXUzMiBjcl9vc2MzMmVuOw0KPj4gKwl1MzIgY3Jfb3NjMzJieXA7DQo+
-PiArCXUzMiBjcl9vc2NzZWw7DQo+PiArfTsNCj4+ICANCj4+ICBzdHJ1Y3QgY2xrX3Nsb3dfb3Nj
-IHsNCj4+ICAJc3RydWN0IGNsa19odyBodzsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjcjsNCj4+
-ICsJY29uc3Qgc3RydWN0IGNsa19zbG93X2JpdHMgKmJpdHM7DQo+PiAgCXVuc2lnbmVkIGxvbmcg
-c3RhcnR1cF91c2VjOw0KPj4gIH07DQo+PiAgDQo+PiBAQCAtMzksNiArNDcsNyBAQCBzdHJ1Y3Qg
-Y2xrX3Nsb3dfb3NjIHsNCj4+ICBzdHJ1Y3QgY2xrX3NhbWE1ZDRfc2xvd19vc2Mgew0KPj4gIAlz
-dHJ1Y3QgY2xrX2h3IGh3Ow0KPj4gIAl2b2lkIF9faW9tZW0gKnNja2NyOw0KPj4gKwljb25zdCBz
-dHJ1Y3QgY2xrX3Nsb3dfYml0cyAqYml0czsNCj4+ICAJdW5zaWduZWQgbG9uZyBzdGFydHVwX3Vz
-ZWM7DQo+PiAgCWJvb2wgcHJlcGFyZWQ7DQo+PiAgfTsNCj4+IEBAIC00OCw2ICs1Nyw3IEBAIHN0
-cnVjdCBjbGtfc2FtYTVkNF9zbG93X29zYyB7DQo+PiAgc3RydWN0IGNsa19zbG93X3JjX29zYyB7
-DQo+PiAgCXN0cnVjdCBjbGtfaHcgaHc7DQo+PiAgCXZvaWQgX19pb21lbSAqc2NrY3I7DQo+PiAr
-CWNvbnN0IHN0cnVjdCBjbGtfc2xvd19iaXRzICpiaXRzOw0KPj4gIAl1bnNpZ25lZCBsb25nIGZy
-ZXF1ZW5jeTsNCj4+ICAJdW5zaWduZWQgbG9uZyBhY2N1cmFjeTsNCj4+ICAJdW5zaWduZWQgbG9u
-ZyBzdGFydHVwX3VzZWM7DQo+PiBAQCAtNTgsNiArNjgsNyBAQCBzdHJ1Y3QgY2xrX3Nsb3dfcmNf
-b3NjIHsNCj4+ICBzdHJ1Y3QgY2xrX3NhbTl4NV9zbG93IHsNCj4+ICAJc3RydWN0IGNsa19odyBo
-dzsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjcjsNCj4+ICsJY29uc3Qgc3RydWN0IGNsa19zbG93
-X2JpdHMgKmJpdHM7DQo+PiAgCXU4IHBhcmVudDsNCj4+ICB9Ow0KPj4gIA0KPj4gQEAgLTY5LDEw
-ICs4MCwxMSBAQCBzdGF0aWMgaW50IGNsa19zbG93X29zY19wcmVwYXJlKHN0cnVjdCBjbGtfaHcg
-Kmh3KQ0KPj4gIAl2b2lkIF9faW9tZW0gKnNja2NyID0gb3NjLT5zY2tjcjsNCj4+ICAJdTMyIHRt
-cCA9IHJlYWRsKHNja2NyKTsNCj4+ICANCj4+IC0JaWYgKHRtcCAmIChBVDkxX1NDS0NfT1NDMzJC
-WVAgfCBBVDkxX1NDS0NfT1NDMzJFTikpDQo+PiArCWlmICh0bXAgJiAoQVQ5MV9TQ0tDX09TQzMy
-QllQKG9zYy0+Yml0cykgfA0KPj4gKwkJICAgQVQ5MV9TQ0tDX09TQzMyRU4ob3NjLT5iaXRzKSkp
-DQo+IA0KPiBJIHN0aWxsIGZpbmQgdGhhdDoNCj4gDQo+IAlpZiAodG1wICYgKG9zYy0+Yml0cy0+
-Y3Jfb3NjMzJieXAgfCBvc2MtPmJpdHMtPmNyX29zYzMyZW4pKQ0KPiANCj4gd291bGQgYmUgc2hv
-cnRlciBhbmQgZWFzaWVyIHRvIHJlYWQgYW5kIHN0aWxsIGZpdHMgb24gb25lIGxpbmUuDQoNCkFn
-cmVlLCBidXQgSSB0aG91Z2h0IHRvIHVzZSB0aGUgc2FtZSBpbnRlcmZhY2UgZXZlcnl3aGVyZS4g
-QW55d2F5LCB0ZWxsIG1lDQppZiB5b3Ugd2FudCB0byByZXNlbmQgd2l0aCB0aGVzZSBjaGFuZ2Vz
-Lg0KDQo+IA0K
+
+--===============2519322183430374619==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l2jinyemzygueieg"
+Content-Disposition: inline
+
+
+--l2jinyemzygueieg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Fri, May 10, 2019 at 11:05:48AM -0500, Rob Herring wrote:
+> > +description: |
+> > +  SPI busses can be described with a node for the SPI controller device
+> > +  and a set of child nodes for each SPI slave on the bus. The system SPI
+> > +  controller may be described for use in SPI master mode or in SPI slave mode,
+> > +  but not for both at the same time.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^spi(@.*)$"
+>
+> Doing some testing with spi-gpio schema I'm writing, this needs to be
+> "^spi(@.*)*$" so that just 'spi' is allowed.
+
+I guess "^spi(@.*)+$" would be enough then?
+
+> However, that's not enough for handling multiple instances of
+> spi-gpio. So maybe we need "^spi(@.*|-[0-9a-f])*$" to allow spi-1,
+> spi-2, etc. Really, we need to decide the larger issue of how we
+> handle multiple instances when there's no address space.
+
+That works for me, I'll change it.
+
+> Also, this schema will be applied to any matching node name as it is
+> used for automatic selection if compatible schema is not present. If
+> we want to prevent that and only apply it when explicitly included,
+> then we need to add a 'select: false'. Without it, we get more
+> coverage, but it could slow things down and we'll get double printing
+> of errors.
+
+I guess we can change that later if it becomes too slow and / or
+confusing?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--l2jinyemzygueieg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN0e6gAKCRDj7w1vZxhR
+xZD0AQDElc8nw58kmcEtzisrHDw0kwYpGMDedspqGUAaatx23gEA+etEsJlvv+2n
+byABh15Bk0eVWPg8bNsQLSXD9sx2FQ4=
+=Xl7S
+-----END PGP SIGNATURE-----
+
+--l2jinyemzygueieg--
+
+
+--===============2519322183430374619==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2519322183430374619==--
