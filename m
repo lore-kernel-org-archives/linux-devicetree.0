@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 02/12] dt-binding: gce: add gce header file for mt8183
-Date: Thu, 16 May 2019 17:02:14 +0800
-Message-ID: <20190516090224.59070-3-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 07/12] soc: mediatek: cmdq: clear the event in cmdq initial flow
+Date: Thu, 16 May 2019 17:02:19 +0800
+Message-ID: <20190516090224.59070-8-bibby.hsieh@mediatek.com>
 References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,225 +12,77 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the mt8183 gce.
+GCE hardware stored event information in own internal sysram,
+if the initial value in those sysram is not zero value
+it will cause a situation that gce can wait the event immediately
+after client ask gce to wait event but not really trigger the
+corresponding hardware.
 
-Add gce header file defined the gce hardware event,
-subsys number and constant for mt8183.
+In order to make sure that the wait event function is
+exactly correct, we need to clear the sysram value in
+cmdq initial flow.
+
+Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- .../devicetree/bindings/mailbox/mtk-gce.txt   |   6 +-
- include/dt-bindings/gce/mt8183-gce.h          | 177 ++++++++++++++++++
- 2 files changed, 180 insertions(+), 3 deletions(-)
- create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+ drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
+ include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index cfe40b01d164..1f7f8f2a3f49 100644
---- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -9,7 +9,7 @@ CMDQ driver uses mailbox framework for communication. Please refer to
- mailbox.txt for generic information about mailbox device-tree bindings.
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 6db1e2dd2dea..2c1b80d82c3a 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -20,6 +20,7 @@
+ #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
  
- Required properties:
--- compatible: Must be "mediatek,mt8173-gce"
-+- compatible: can be "mediatek,mt8173-gce" or "mediatek,mt8183-gce"
- - reg: Address range of the GCE unit
- - interrupts: The interrupt signal from the GCE block
- - clock: Clocks according to the common clock binding
-@@ -28,8 +28,8 @@ Required properties for a client device:
- - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
-   to the register address.
+ #define CMDQ_CURR_IRQ_STATUS		0x10
++#define CMDQ_SYNC_TOKEN_UPDATE		0x68
+ #define CMDQ_THR_SLOT_CYCLES		0x30
+ #define CMDQ_THR_BASE			0x100
+ #define CMDQ_THR_SIZE			0x80
+@@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
  
--Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'. Such as
--sub-system ids, thread priority, event ids.
-+Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
-+or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+ static void cmdq_init(struct cmdq *cmdq)
+ {
++	int i;
++
+ 	WARN_ON(clk_enable(cmdq->clock) < 0);
+ 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
++	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
++		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
+ 	clk_disable(cmdq->clock);
+ }
  
- Example:
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index ccb73422c2fa..911475da7a53 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -19,6 +19,8 @@
+ #define CMDQ_WFE_UPDATE			BIT(31)
+ #define CMDQ_WFE_WAIT			BIT(15)
+ #define CMDQ_WFE_WAIT_VALUE		0x1
++/** cmdq event maximum */
++#define CMDQ_MAX_EVENT			0x3ff
  
-diff --git a/include/dt-bindings/gce/mt8183-gce.h b/include/dt-bindings/gce/mt8183-gce.h
-new file mode 100644
-index 000000000000..aeb95154fac2
---- /dev/null
-+++ b/include/dt-bindings/gce/mt8183-gce.h
-@@ -0,0 +1,177 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ * Author: Bibby Hsieh <bibby.hsieh@mediatek.com>
-+ *
-+ */
-+
-+#ifndef _DT_BINDINGS_GCE_MT8183_H
-+#define _DT_BINDINGS_GCE_MT8183_H
-+
-+#define CMDQ_NO_TIMEOUT		0xffffffff
-+
-+#define CMDQ_THR_MAX_COUNT	24
-+
-+/* GCE HW thread priority */
-+#define CMDQ_THR_PRIO_LOWEST	0
-+#define CMDQ_THR_PRIO_HIGHEST	1
-+
-+/* GCE SUBSYS */
-+#define SUBSYS_1300XXXX		0
-+#define SUBSYS_1400XXXX		1
-+#define SUBSYS_1401XXXX		2
-+#define SUBSYS_1402XXXX		3
-+#define SUBSYS_1502XXXX		4
-+#define SUBSYS_1880XXXX		5
-+#define SUBSYS_1881XXXX		6
-+#define SUBSYS_1882XXXX		7
-+#define SUBSYS_1883XXXX		8
-+#define SUBSYS_1884XXXX		9
-+#define SUBSYS_1000XXXX		10
-+#define SUBSYS_1001XXXX		11
-+#define SUBSYS_1002XXXX		12
-+#define SUBSYS_1003XXXX		13
-+#define SUBSYS_1004XXXX		14
-+#define SUBSYS_1005XXXX		15
-+#define SUBSYS_1020XXXX		16
-+#define SUBSYS_1028XXXX		17
-+#define SUBSYS_1700XXXX		18
-+#define SUBSYS_1701XXXX		19
-+#define SUBSYS_1702XXXX		20
-+#define SUBSYS_1703XXXX		21
-+#define SUBSYS_1800XXXX		22
-+#define SUBSYS_1801XXXX		23
-+#define SUBSYS_1802XXXX		24
-+#define SUBSYS_1804XXXX		25
-+#define SUBSYS_1805XXXX		26
-+#define SUBSYS_1808XXXX		27
-+#define SUBSYS_180aXXXX		28
-+#define SUBSYS_180bXXXX		29
-+
-+#define CMDQ_EVENT_DISP_RDMA0_SOF					0
-+#define CMDQ_EVENT_DISP_RDMA1_SOF					1
-+#define CMDQ_EVENT_MDP_RDMA0_SOF					2
-+#define CMDQ_EVENT_MDP_RSZ0_SOF						4
-+#define CMDQ_EVENT_MDP_RSZ1_SOF						5
-+#define CMDQ_EVENT_MDP_TDSHP_SOF					6
-+#define CMDQ_EVENT_MDP_WROT0_SOF					7
-+#define CMDQ_EVENT_MDP_WDMA0_SOF					8
-+#define CMDQ_EVENT_DISP_OVL0_SOF					9
-+#define CMDQ_EVENT_DISP_OVL0_2L_SOF					10
-+#define CMDQ_EVENT_DISP_OVL1_2L_SOF					11
-+#define CMDQ_EVENT_DISP_WDMA0_SOF					12
-+#define CMDQ_EVENT_DISP_COLOR0_SOF					13
-+#define CMDQ_EVENT_DISP_CCORR0_SOF					14
-+#define CMDQ_EVENT_DISP_AAL0_SOF					15
-+#define CMDQ_EVENT_DISP_GAMMA0_SOF					16
-+#define CMDQ_EVENT_DISP_DITHER0_SOF					17
-+#define CMDQ_EVENT_DISP_PWM0_SOF					18
-+#define CMDQ_EVENT_DISP_DSI0_SOF					19
-+#define CMDQ_EVENT_DISP_DPI0_SOF					20
-+#define CMDQ_EVENT_DISP_RSZ_SOF						22
-+#define CMDQ_EVENT_MDP_AAL_SOF						23
-+#define CMDQ_EVENT_MDP_CCORR_SOF					24
-+#define CMDQ_EVENT_DISP_DBI_SOF						25
-+#define CMDQ_EVENT_DISP_RDMA0_EOF					26
-+#define CMDQ_EVENT_DISP_RDMA1_EOF					27
-+#define CMDQ_EVENT_MDP_RDMA0_EOF					28
-+#define CMDQ_EVENT_MDP_RSZ0_EOF						30
-+#define CMDQ_EVENT_MDP_RSZ1_EOF						31
-+#define CMDQ_EVENT_MDP_TDSHP_EOF					32
-+#define CMDQ_EVENT_MDP_WROT0_EOF					33
-+#define CMDQ_EVENT_MDP_WDMA0_EOF					34
-+#define CMDQ_EVENT_DISP_OVL0_EOF					35
-+#define CMDQ_EVENT_DISP_OVL0_2L_EOF					36
-+#define CMDQ_EVENT_DISP_OVL1_2L_EOF					37
-+#define CMDQ_EVENT_DISP_WDMA0_EOF					38
-+#define CMDQ_EVENT_DISP_COLOR0_EOF					39
-+#define CMDQ_EVENT_DISP_CCORR0_EOF					40
-+#define CMDQ_EVENT_DISP_AAL0_EOF					41
-+#define CMDQ_EVENT_DISP_GAMMA0_EOF					42
-+#define CMDQ_EVENT_DISP_DITHER0_EOF					43
-+#define CMDQ_EVENT_DSI0_EOF						44
-+#define CMDQ_EVENT_DPI0_EOF						45
-+#define CMDQ_EVENT_DISP_RSZ_EOF						47
-+#define CMDQ_EVENT_MDP_AAL_EOF						48
-+#define CMDQ_EVENT_MDP_CCORR_EOF					49
-+#define CMDQ_EVENT_DBI_EOF						50
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE0					130
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE1					131
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE2					132
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE3					133
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE4					134
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE5					135
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE6					136
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE7					137
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE8					138
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE9					139
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE10					140
-+#define CMDQ_EVENT_MUTEX_STREAM_DONE11					141
-+#define CMDQ_EVENT_DISP_RDMA0_BUF_UNDERRUN_EVEN				142
-+#define CMDQ_EVENT_DISP_RDMA1_BUF_UNDERRUN_EVEN				143
-+#define CMDQ_EVENT_DSI0_TE_EVENT					144
-+#define CMDQ_EVENT_DSI0_IRQ_EVENT					145
-+#define CMDQ_EVENT_DSI0_DONE_EVENT					146
-+#define CMDQ_EVENT_DISP_WDMA0_SW_RST_DONE				150
-+#define CMDQ_EVENT_MDP_WDMA_SW_RST_DONE					151
-+#define CMDQ_EVENT_MDP_WROT0_SW_RST_DONE				152
-+#define CMDQ_EVENT_MDP_RDMA0_SW_RST_DONE				154
-+#define CMDQ_EVENT_DISP_OVL0_FRAME_RST_DONE_PULE			155
-+#define CMDQ_EVENT_DISP_OVL0_2L_FRAME_RST_DONE_ULSE			156
-+#define CMDQ_EVENT_DISP_OVL1_2L_FRAME_RST_DONE_ULSE			157
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_0					257
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_1					258
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_2					259
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_3					260
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_4					261
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_5					262
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_6					263
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_7					264
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_8					265
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_9					266
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_10					267
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_11					268
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_12					269
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_13					270
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_14					271
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_15					272
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_16					273
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_17					274
-+#define CMDQ_EVENT_ISP_FRAME_DONE_P2_18					275
-+#define CMDQ_EVENT_AMD_FRAME_DONE					276
-+#define CMDQ_EVENT_DVE_DONE						277
-+#define CMDQ_EVENT_WMFE_DONE						278
-+#define CMDQ_EVENT_RSC_DONE						279
-+#define CMDQ_EVENT_MFB_DONE						280
-+#define CMDQ_EVENT_WPE_A_DONE						281
-+#define CMDQ_EVENT_SPE_B_DONE						282
-+#define CMDQ_EVENT_OCC_DONE						283
-+#define CMDQ_EVENT_VENC_CMDQ_FRAME_DONE					289
-+#define CMDQ_EVENT_JPG_ENC_CMDQ_DONE					290
-+#define CMDQ_EVENT_JPG_DEC_CMDQ_DONE					291
-+#define CMDQ_EVENT_VENC_CMDQ_MB_DONE					292
-+#define CMDQ_EVENT_VENC_CMDQ_128BYTE_DONE				293
-+#define CMDQ_EVENT_ISP_FRAME_DONE_A					321
-+#define CMDQ_EVENT_ISP_FRAME_DONE_B					322
-+#define CMDQ_EVENT_CAMSV0_PASS1_DONE					323
-+#define CMDQ_EVENT_CAMSV1_PASS1_DONE					324
-+#define CMDQ_EVENT_CAMSV2_PASS1_DONE					325
-+#define CMDQ_EVENT_TSF_DONE						326
-+#define CMDQ_EVENT_SENINF_CAM0_FIFO_FULL				327
-+#define CMDQ_EVENT_SENINF_CAM1_FIFO_FULL				328
-+#define CMDQ_EVENT_SENINF_CAM2_FIFO_FULL				329
-+#define CMDQ_EVENT_SENINF_CAM3_FIFO_FULL				330
-+#define CMDQ_EVENT_SENINF_CAM4_FIFO_FULL				331
-+#define CMDQ_EVENT_SENINF_CAM5_FIFO_FULL				332
-+#define CMDQ_EVENT_SENINF_CAM6_FIFO_FULL				333
-+#define CMDQ_EVENT_SENINF_CAM7_FIFO_FULL				334
-+#define CMDQ_EVENT_IPU_CORE0_DONE0					353
-+#define CMDQ_EVENT_IPU_CORE0_DONE1					354
-+#define CMDQ_EVENT_IPU_CORE0_DONE2					355
-+#define CMDQ_EVENT_IPU_CORE0_DONE3					356
-+#define CMDQ_EVENT_IPU_CORE1_DONE0					385
-+#define CMDQ_EVENT_IPU_CORE1_DONE1					386
-+#define CMDQ_EVENT_IPU_CORE1_DONE2					387
-+#define CMDQ_EVENT_IPU_CORE1_DONE3					388
-+
-+#endif
+ /*
+  * CMDQ_CODE_MASK:
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 54ade13a9b15..4e8899972db4 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -13,9 +13,6 @@
+ 
+ #define CMDQ_NO_TIMEOUT		0xffffffffu
+ 
+-/** cmdq event maximum */
+-#define CMDQ_MAX_EVENT				0x3ff
+-
+ struct cmdq_pkt;
+ 
+ struct cmdq_client {
 -- 
 2.18.0
