@@ -1,143 +1,199 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V3 4/8] memory: tegra: Add Tegra210 EMC clock driver
-Date: Thu, 16 May 2019 17:29:58 +0300
-Message-ID: <25e11e09-fab5-4ba5-2612-6af068b21406@gmail.com>
-References: <20190510084719.18902-1-josephl@nvidia.com>
- <20190510084719.18902-5-josephl@nvidia.com>
- <74fad66b-a6e9-ffc9-c1c9-e88b841e9209@gmail.com>
- <648df201-eb63-6d26-3f90-02eba7624921@nvidia.com>
- <bb2ef045-7d77-02d0-79fb-06f68732c5a5@gmail.com>
- <3afd909c-5be9-370d-e21a-ec57be3b841b@nvidia.com>
+From: Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH 1/5] iio: adc: ad7606: Move oversampling and scale options to chip info
+Date: Thu, 16 May 2019 17:32:04 +0300
+Message-ID: <20190516143208.19294-1-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3afd909c-5be9-370d-e21a-ec57be3b841b@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com, Beniamin Bia <beniamin.bia@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-MTYuMDUuMjAxOSAxMDo1MiwgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4gT24gNS8xNS8xOSAxMToy
-NSBQTSwgRG1pdHJ5IE9zaXBlbmtvIHdyb3RlOgo+PiAxNS4wNS4yMDE5IDExOjQyLCBKb3NlcGgg
-TG8g0L/QuNGI0LXRgjoKPj4+IE9uIDUvMTUvMTkgMTowNCBBTSwgRG1pdHJ5IE9zaXBlbmtvIHdy
-b3RlOgo+Pj4+IDEwLjA1LjIwMTkgMTE6NDcsIEpvc2VwaCBMbyDQv9C40YjQtdGCOgo+Pj4+PiBU
-aGlzIGlzIHRoZSBpbml0aWFsIHBhdGNoIGZvciBUZWdyYTIxMCBFTUMgY2xvY2sgZHJpdmVyLCB3
-aGljaCBkb2Vzbid0Cj4+Pj4+IGluY2x1ZGUgdGhlIHN1cHBvcnQgY29kZSBhbmQgZGV0YWlsIHNl
-cXVlbmNlIGZvciBjbG9jayBzY2FsaW5nIHlldC4KPj4+Pj4KPj4+Pj4gVGhlIGRyaXZlciBpcyBk
-ZXNpZ25lZCB0byBzdXBwb3J0IExQRERSNCBTRFJBTS4gQmVjYXVzZSBvZiB0aGUgTFBERFI0Cj4+
-Pj4+IGRldmljZXMgbmVlZCB0byBkbyBpbml0aWFsIHRpbWUgdHJhaW5pbmcgYmVmb3JlIGl0IGNh
-biBiZSB1c2VkLCB0aGUKPj4+Pj4gZmlybXdhcmUgd2lsbCBoZWxwIHRvIGRvIHRoYXQgYXQgZWFy
-bHkgYm9vdCBzdGFnZS4gVGhlbiwgdGhlIHRyYWluZWQKPj4+Pj4gdGFibGUgZm9yIHRoZSByYXRl
-cyB3ZSBzdXBwb3J0IHdpbGwgcGFzcyB0byB0aGUga2VybmVsIHZpYSBEVC4gU28gdGhlCj4+Pj4+
-IGRyaXZlciBjYW4gZ2V0IHRoZSB0cmFpbmVkIHRhYmxlIGZvciBjbG9jayBzY2FsaW5nIHN1cHBv
-cnQuCj4+Pj4+Cj4+Pj4+IEZvciB0aGUgaGlnaGVyIHJhdGUgc3VwcG9ydCAoYWJvdmUgODAwTUh6
-KSwgdGhlIHBlcmlvZGljIHRyYWluaW5nIGlzCj4+Pj4+IG5lZWRlZCBmb3IgdGhlIHRpbWluZyBj
-b21wZW5zYXRpb24uIFNvIGJhc2ljYWxseSwgdHdvIG1ldGhvZG9sb2dpZXMKPj4+Pj4gZm9yCj4+
-Pj4+IGNsb2NrIHNjYWxpbmcgYXJlIHN1cHBvcnRlZCwgb25lIGlzIGZvbGxvd2luZyB0aGUgY2xv
-Y2sgY2hhbmdpbmcKPj4+Pj4gc2VxdWVuY2UgdG8gdXBkYXRlIHRoZSBFTUMgdGFibGUgdG8gRU1D
-IHJlZ2lzdGVycyBhbmQgYW5vdGhlciBpcyBpZgo+Pj4+PiB0aGUKPj4+Pj4gcmF0ZSBuZWVkcyBw
-ZXJpb2RpYyB0cmFpbmluZywgdGhlbiB3ZSB3aWxsIHN0YXJ0IGEgdGltZXIgdG8gZG8gdGhhdAo+
-Pj4+PiBwZXJpb2RpY2FsbHkgdW50aWwgaXQgc2NhbGVzIHRvIHRoZSBsb3dlciByYXRlLgo+Pj4+
-Pgo+Pj4+PiBCYXNlZCBvbiB0aGUgd29yayBvZiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJp
-anZlckBudmlkaWEuY29tPi4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogSm9zZXBoIExvIDxq
-b3NlcGhsQG52aWRpYS5jb20+Cj4+Pj4+IC0tLQo+IHNuaXAuCj4+Pj4+ICvCoMKgwqAgaWYgKCFz
-ZXEtPnNldF9jbG9jaykgewo+Pj4+PiArwqDCoMKgwqDCoMKgwqAgc2VxID0gTlVMTDsKPj4+Pj4g
-K8KgwqDCoMKgwqDCoMKgIGRldl9lcnIoJnBkZXYtPmRldiwgIkludmFsaWQgRU1DIHNlcXVlbmNl
-IGZvciB0YWJsZSBSZXYuCj4+Pj4+ICVkXG4iLAo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBlbWMtPmVtY190YWJsZVswXS5yZXYpOwo+Pj4+PiArwqDCoMKgwqDCoMKgwqAgZ290byBlbWNf
-Y2xrX3JlZ2lzdGVyOwo+Pj4+Cj4+Pj4gV2h5IGRvIHlvdSB3YW50IHRvIHJlZ2lzdGVyIEVNQyBj
-bG9jayBpZiBzb21ldGhpbmcgZmFpbHM/IEtNU0cgd2lsbCBiZQo+Pj4+IGZsb29kZWQgd2l0aCBl
-cnJvcnMgY29taW5nIGZyb20gY2xrX3NldF9yYXRlLgo+Pj4+Cj4+Pgo+Pj4gU2VlIHBhdGNoIDcg
-aW4gdGhlIHNlcmllcywgdGhlIGxlZ2FjeSBFTUMgY2xvY2sgd2lsbCBiZSByZW1vdmVkIGxhdGVy
-LAo+Pj4gc28gd2UgbmVlZCB0byByZWdpc3RlciB0aGUgRU1DIGNsb2NrIHdoZXRoZXIgdGhlIHRh
-YmxlIGlzIHJlYWR5IG9yCj4+PiBub3Q+IEluIHRoYXQgY2FzZSwgSSBtZWFuIGlmIHRoZSB0YWJs
-ZSBpcyBub3QgYXZhaWxhYmxlLCBpdCB3aWxsIHN0aWxsCj4+PiByZWdpc3RlciBFTUMgY2xvY2sg
-YXQgdGhlIHJhdGUgdGhhdCBib290IGxvYWRlciBjb25maWd1cmVkIGJlZm9yZSBrZXJuZWwKPj4+
-IGJvb3RpbmcuIFNvIHRoZSBNQyBjbG9jayBjYW4gc3RpbGwgd29yayBhcyBleHBlY3RlZCwgd2hp
-Y2ggaXMgdW5kZXIgRU1DCj4+PiBjbG9jay4KPj4+Cj4+PiBBbmQgSSBkaWQgdGVzdCB0aGF0LCBj
-b3VsZG4ndCBvYnNlcnZlIGFueSBLTVNHIGluIHRoYXQgY2FzZS4KPj4KPj4gTG9va3MgbGlrZSBp
-dCBraW5kYSBzaG91bGQgd29yayBpbiB0aGUgZW5kLgo+Pgo+PiBBbHRob3VnaCBpdCdzIG5vdCBn
-b29kIHRoYXQgbm93IE1DIGRyaXZlciByZWxpZXMgb24gdGhlIEVNQyBkcml2ZXIKPj4gcHJlc2Vu
-Y2UuIE1heWJlIGl0J3Mgbm90IHRoZSBiZXN0IHZhcmlhbnQgd2l0aCBtb3ZpbmcgdGhlIGNsb2Nr
-IHN0dWZmCj4+IGludG8gdGhlIEVNQyBkcml2ZXI/Cj4+Cj4+IFdoYXQgYWJvdXQgdGhlIGJhY2t3
-YXJkcyBjb21wYXRpYmlsaXR5IGZvciBEVCB0aGF0IGRvZXNuJ3QgaGF2ZSB0aGUgRU1DCj4+IG5v
-ZGU/Cj4+Cj4+IFdoYXQgaWYgRU1DIGRyaXZlciBpcyBkaXNhYmxlZCBpbiB0aGUga2VybmVsJ3Mg
-Y29uZmlnPwo+IAo+IFRoZSB0aHJlZSBxdWVzdGlvbnMgYWJvdmUgYXJlIGFjdHVhbGx5IG9uZSBw
-cm9ibGVtIGhlcmUuIEl0J3Mgbm90IGFib3V0Cj4gTUMgY2xvY2ssIGJlY2F1c2UgaXQncyBzdGls
-bCBhdmFpbGFibGUgYWZ0ZXIgdGhlc2UgY2hhbmdlcy4gQW5kIE1DCj4gZHJpdmVyIGNhbiBzdGls
-bCBnZXQgaXQgaW4gdGhlIHByb2JlIGZ1bmN0aW9uIGV2ZW4gdGhlIEVNQyBkcml2ZXIgaXNuJ3QK
-PiB0aGVyZS4KCk5vLCB0aGVzZSBhcmUgc2VwYXJhdGUgcHJvYmxlbXMuIE1DIGRyaXZlciBxdWVy
-aWVzIHRoZSBjbG9jayByYXRlIGR1cmluZwp0aGUgcHJvYmUgdG8gY29uZmlndXJlIG1lbW9yeSBh
-cmJpdHJhdGlvbi4gSW4geW91ciBjYXNlIHRoZSBjbG9jayByYXRlCmlzIGFsd2F5cyB6ZXJvIGZv
-ciBNQy4KCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB3aXRob3V0IEVNQyBkcml2ZXIgYWZ0ZXIgdGhl
-c2UgY2hhbmdlcy4gVGhlIFBMTE0KPiB3aWxsIGhhdmUgbm8gY2xpZW50IHVuZGVyIGl0LCB3aGlj
-aCB3aWxsIGNhdXNlIHRoZSBQTExNIHRvIGJlIGRpc2FibGVkCj4gaW4gdGhlIGxhdGUgaW5pdCBj
-YWxsIG9mICJjbGtfZGlzYWJsZV91bnVzZWQiLiBTbyB0aGUgc3lzdGVtIHdpbGwgYmUgc3R1Y2su
-CgpUaGlzIGFuZCB0aGUgYWJvdmUgYXJlIHZlcnkgY29tcGVsbGluZyByZWFzb25zIHRvICpOT1Qq
-IHJlZ2lzdGVyIHRoZQpjbG9jayBmcm9tIHRoZSBFTUMgZHJpdmVyLiBZb3Ugc2hhbGwgbW92ZSBh
-bGwgdGhlIGNsb2NrIHN0dWZmIGludG8gdGhlCmNsb2NrIGRyaXZlci4gUGxlYXNlIHNlZSBUMTI0
-IEVNQyBkcml2ZXIgYW5kIHdoYXQgaXMgZG9uZSBmb3IgdGhlCnVwY29taW5nIFQzMCBFTUMgZHJp
-dmVyIFsxXSBmb3IgdGhlIGV4YW1wbGUsIGJvcnJvdyBwYXJ0cyB0aGF0IGZpdCBiZXN0CmZvciBU
-MjEwLgoKWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcHJvamVjdC9saW51eC10ZWdy
-YS9saXN0Lz9zZXJpZXM9MTAyNjg4Cgo+Pgo+PiBBbmQgbGFzdGx5Li4gd2hhdCBzdG9wcyB0aGUg
-TUMgZHJpdmVyIHRvIHByb2JlIGJlZm9yZSB0aGUgRU1DPyBMb29rcwo+PiBsaWtlIE1DIGRyaXZl
-ciBpcyBhbHJlYWR5IGluIHRyb3VibGUgYmVjYXVzZSBpdCdzIG9uIGFyY2ggbGV2ZWwgYW5kIHRo
-ZQo+PiBFTUMgaXMgb24gc3Vic3lzLCBoZW5jZSBNQyB3aWxsIGdldCB0aGUgb3JwaGFuZWQgY2xv
-Y2sgYW5kIHdvbid0Cj4+IGluaXRpYWxpemUgaGFyZHdhcmUgcHJvcGVybHkgb24gcHJvYmUuCj4g
-Cj4gQWZ0ZXIgdGhpcyBtb3ZpbmcsIHRoZSBFTUMgZHJpdmVyIHdpbGwgYmUgYWx3YXlzIGVuYWJs
-ZWQgYnkgZGVmYXVsdC4gQW5kCj4gdGhlIERUIGNoYW5nZSBpcyBuZWNlc3NhcnkgYXMgd2VsbC4g
-VGhlIGJsb2Igb2YgRU1DIHRhYmxlIGlzIG5vdAo+IG5lY2Vzc2FyeSwgYmVjYXVzZSBpdCBuZWVk
-cyBhIGZpcm13YXJlIHVwZGF0ZS4gV2Ugd2lsbCB1cGRhdGUgdGhlCj4gZmlybXdhcmUgYWNjb3Jk
-aW5nbHkgYWZ0ZXIgdGhlIHJldmlldyBzZXR0bGVkIGFuZCByZWxlYXNlIGl0IGxhdGVyLgo+IAo+
-IEluIGNhc2Ugb2Ygbm8gRU1DIHRhYmxlIGJsb2IsIHRoZSBkcml2ZXIgY2FuIHN0aWxsIGJlIHJl
-Z2lzdGVyZWQsIGJ1dCBubwo+IHNjYWxpbmcgZnVuY3Rpb24gcHJvdmlkZWQuCgpBbnlvbmUgY291
-bGQgY2hhbmdlIHRoZSBkZWZhdWx0IGtlcm5lbCBjb25maWd1cmF0aW9uLiBLZXJuZWwgc2hhbGwg
-Ym9vdAphbmQgd29yayBmaW5lIHdpdGggb2xkZXIgZGV2aWNlLXRyZWUncyBhbmQgYW55IGN1c3Rv
-bSBjb25maWcgYWZ0ZXIKdXBkYXRlLiBZb3Ugc2hvdWxkIG5vdCBicmVhayBzb21lb25lcyBlc3Rh
-Ymxpc2hlZCBzZXR1cCB3aXRob3V0IGEgZ29vZApyZWFzb24gYW5kIHlvdSBkb24ndCBoYXZlIG9u
-ZSBoZXJlLgoKPj4KPj4gQlRXLCBob3cgYXJlIHlvdSB0ZXN0aW5nIHRoZSBFTUMgZHJpdmVyPyBJ
-cyB0aGVyZSBUMjEwIGRldmZyZXEgcGF0Y2hlcwo+PiBpbiB3b3Jrcz8gT3Igd2hhdCdzIHRoZSB1
-c2VyIG9mIHRoZSBFTUMgb24gVDIxMD8KPj4KPiAKPiAxLiBDdXJyZW50bHksIHZpYSBkZWJ1Z2Zz
-Lgo+IDIuIE5vLCB3ZSBwcmVmZXIgdG8gdXNlIEludGVyY29ubmVjdCBmcmFtZXdvcmsgZm9yIHRo
-YXQuIFRoZSBldmFsdWF0aW9uCj4gaXMgb25nb2luZy4KPiAzLiBXaXRoIEludGVyY29ubmVjdCwg
-dGhlIGRldmljZXMgb3IgcGVyaXBoZXJhbHMgY2FuIHJlZ2lzdGVyIG9uIGl0IHRvCj4gcmVxdWVz
-dCB0aGUgQlcuIFNvIHdlIGNhbiBmaW5lLXR1bmUgdGhlIEJXIHJlcXVpcmVtZW50cyB3aXRoIHRo
-ZSBsYXRlbmN5Cj4gYWxsb3dhbmNlIHJlZ2lzdGVycyBhbHRvZ2V0aGVyIHRvIGdldCBiZXR0ZXIg
-ZWZmaWNpZW5jeS4KCkRldmZyZXEgaXMgdGhlIGRyaXZlciBmb3IgdGhlIEFDVE1PTiBoYXJkd2Fy
-ZSB1bml0LiBUaGlzIHVuaXQgdGVsbHMgdGhlCmRyaXZlciB3aGVuIG1lbW9yeSBjbG9jayByYXRl
-IG5lZWQgdG8gZ28gaGlnaGVyIG9yIGxvd2VyLCBkZXBlbmRpbmcgb24Kb3ZlcmFsbCBtZW1vcnkg
-Y2xpZW50cyBhY3Rpdml0eS4gQ3VycmVudGx5IHRoZSB0ZWdyYS1kZXZmcmVxIGRyaXZlcgpzdXBw
-b3J0cyBUMTI0IG9ubHksIGl0IHdpbGwgc3VwcG9ydCBUMzAgc3RhcnRpbmcgd2l0aCB2NS4zLiBB
-RkFJSywgaXQKc2hvdWxkbid0IGJlIGRpZmZpY3VsdCB0byBhZGQgc3VwcG9ydCBmb3IgVDIxMCBh
-cyB3ZWxsLgoKSUlSQywgdGhlIG5ldyBJbnRlcmNvbm5lY3QgQVBJIGlzIGFub3RoZXIgYXdheSBv
-ZiBjb252ZXlpbmcgZGlmZmVyZW50CnJlcXVpcmVtZW50cyBiZXR3ZWVuIGRldmljZXMuIEFsbCBU
-ZWdyYSdzIGhhdmUga25vYnMgZm9yIG1lbW9yeQpjb25maWd1cmF0aW9uIHR1bmluZywgYnV0IHRo
-ZXJlIGlzIG5vIHJlYWwgbmVlZCB0byBjaGFuZ2UgdGhlIGRlZmF1bHQKZ29vZC1lbm91Z2ggY29u
-ZmlndXJhdGlvbiBmb3IgdGhlIHRpbWUgYmVpbmcgaW4gdXBzdHJlYW0uCgpBRkFJSywgdGhlcmUg
-aXMgb25seSBvbmUgbWVtb3J5IGNsaWVudCB0aGF0IGlzIHJlYWxseSB2ZXJ5IHNlbnNpdGl2ZSB0
-bwphdmFpbGFibGUgbWVtb3J5IGJhbmR3aWR0aCAtIERpc3BsYXkgQ29udHJvbGxlci4gVGhlIFBN
-IFFvUyBtZW1vcnkKYmFuZHdpZHRoIEFQSSBpcyBtb3JlIHRoYW4gZW5vdWdoIGZvciB0aGUgZWFz
-eSBzdGFydCBhbmQgaXQncyBhbGwKaW50ZXJuYWwgdG8ga2VybmVsLCBoZW5jZSBpdCB3aWxsIGJl
-IHBvc3NpYmxlIHRvIHJlcGxhY2UgdGhlIFBNIEFQSSB3aXRoCnNvbWV0aGluZyBtb3JlIGFkdmFu
-Y2VkIGxhdGVyIG9uIGJ5IGFzLW5lZWRlZCBiYXNpcy4gVGhhdCdzIHdoYXQgSSdtCmN1cnJlbnRs
-eSB0YXJnZXRpbmcgZm9yIFQyMC1UMTI0LiBUaGUgUE0gUW9TIEFQSSBjb3VsZCBjb2V4aXN0IHdp
-dGggdGhlCkludGVyY29ubmVjdCBBUEkgKG9yIHdoYXRldmVyIGVsc2UpIHdpdGhvdXQgYW55IHRy
-b3VibGVzLCBzbyBpdCB3b24ndCBiZQphIHByb2JsZW0gaWYgeW91J2xsIGRlY2lkZSB0byBwdWxs
-IGludG8gb3RoZXIgZGlyZWN0aW9uIGZvciBUMjEwLgoKQUZBSUssIHRoZSBsYXRlbmN5IGFsbG93
-YW5jZSBjb25maWcgc2hvdWxkIGJlIHNpbWlsYXIgb24gYWxsIFRlZ3JhJ3MKc3RhcnRpbmcgZnJv
-bSBUMzAuIFdpbGwgYmUgYXdlc29tZSBpZiB5b3UnbGwgZG8gYWxsIHRoZSBoYXJkIGpvYiBvZgpi
-cmluZ2luZyB1cCB0aGUgZnJlc2ggbmV3IEFQSSBmb3IgVDIxMCwgaXQgYWx3YXlzIGVhc2llciB0
-byBmb2xsb3cgYnkKZXhhbXBsZS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+The device dependent options which are going to be different for devices
+which will be supported  in the future by this driver,
+were moved in chip info for a more generic driver. This patch allows
+supporting more devices by the driver. Also, it is an intermediate
+step of adding support for ad7616 in software mode.
+
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+ drivers/iio/adc/ad7606.c | 61 +++++++++++++++++++++++++++++-----------
+ drivers/iio/adc/ad7606.h | 15 +++++++++-
+ 2 files changed, 58 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index 24c70c3cefb4..c66ff22f32d2 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -158,7 +158,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 0;
+-		*val2 = st->scale_avail[st->range];
++		*val2 = st->scale_avail[st->range[0]];
+ 		return IIO_VAL_INT_PLUS_MICRO;
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+ 		*val = st->oversampling;
+@@ -194,6 +194,32 @@ static ssize_t in_voltage_scale_available_show(struct device *dev,
+ 
+ static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
+ 
++static int ad7606_write_scale_hw(struct iio_dev *indio_dev, int ch, int val)
++{
++	struct ad7606_state *st = iio_priv(indio_dev);
++
++	gpiod_set_value(st->gpio_range, val);
++
++	return 0;
++}
++
++static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
++{
++	struct ad7606_state *st = iio_priv(indio_dev);
++	DECLARE_BITMAP(values, 3);
++
++	values[0] = val;
++
++	gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
++			      st->gpio_os->info, values);
++
++	/* AD7616 requires a reset to update value */
++	if (st->chip_info->os_req_reset)
++		ad7606_reset(st);
++
++	return 0;
++}
++
+ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 			    struct iio_chan_spec const *chan,
+ 			    int val,
+@@ -201,15 +227,18 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 			    long mask)
+ {
+ 	struct ad7606_state *st = iio_priv(indio_dev);
+-	DECLARE_BITMAP(values, 3);
+-	int i;
++	int i, ret, ch = 0;
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_SCALE:
+ 		mutex_lock(&st->lock);
+ 		i = find_closest(val2, st->scale_avail, st->num_scales);
+-		gpiod_set_value(st->gpio_range, i);
+-		st->range = i;
++		ret = st->write_scale(indio_dev, chan->address, i);
++		if (ret < 0) {
++			mutex_unlock(&st->lock);
++			return ret;
++		}
++		st->range[ch] = i;
+ 		mutex_unlock(&st->lock);
+ 
+ 		return 0;
+@@ -218,17 +247,12 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 			return -EINVAL;
+ 		i = find_closest(val, st->oversampling_avail,
+ 				 st->num_os_ratios);
+-
+-		values[0] = i;
+-
+ 		mutex_lock(&st->lock);
+-		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+-				      st->gpio_os->info, values);
+-
+-		/* AD7616 requires a reset to update value */
+-		if (st->chip_info->os_req_reset)
+-			ad7606_reset(st);
+-
++		ret = st->write_os(indio_dev, i);
++		if (ret < 0) {
++			mutex_unlock(&st->lock);
++			return ret;
++		}
+ 		st->oversampling = st->oversampling_avail[i];
+ 		mutex_unlock(&st->lock);
+ 
+@@ -536,7 +560,7 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+ 	st->bops = bops;
+ 	st->base_address = base_address;
+ 	/* tied to logic low, analog input range is +/- 5V */
+-	st->range = 0;
++	st->range[0] = 0;
+ 	st->oversampling = 1;
+ 	st->scale_avail = ad7606_scale_avail;
+ 	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
+@@ -589,6 +613,9 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+ 	if (ret)
+ 		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
+ 
++	st->write_scale = ad7606_write_scale_hw;
++	st->write_os = ad7606_write_os_hw;
++
+ 	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+ 					  indio_dev->name, indio_dev->id);
+ 	if (!st->trig)
+@@ -643,7 +670,7 @@ static int ad7606_resume(struct device *dev)
+ 	struct ad7606_state *st = iio_priv(indio_dev);
+ 
+ 	if (st->gpio_standby) {
+-		gpiod_set_value(st->gpio_range, st->range);
++		gpiod_set_value(st->gpio_range, st->range[0]);
+ 		gpiod_set_value(st->gpio_standby, 1);
+ 		ad7606_reset(st);
+ 	}
+diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+index f9ef52131e74..143c30163df9 100644
+--- a/drivers/iio/adc/ad7606.h
++++ b/drivers/iio/adc/ad7606.h
+@@ -16,6 +16,12 @@
+  *			oversampling ratios.
+  * @oversampling_num	number of elements stored in oversampling_avail array
+  * @os_req_reset	some devices require a reset to update oversampling
++ * @write_scale_sw	pointer to the function which writes the scale via spi
++			in software mode
++ * @write_os_sw		pointer to the function which writes the os via spi
++			in software mode
++ * @sw_mode_config:	pointer to a function which configured the device
++ *			for software mode
+  */
+ struct ad7606_chip_info {
+ 	const struct iio_chan_spec	*channels;
+@@ -23,6 +29,9 @@ struct ad7606_chip_info {
+ 	const unsigned int		*oversampling_avail;
+ 	unsigned int			oversampling_num;
+ 	bool				os_req_reset;
++	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
++	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
++	int (*sw_mode_config)(struct iio_dev *indio_dev);
+ };
+ 
+ /**
+@@ -39,6 +48,8 @@ struct ad7606_chip_info {
+  * @oversampling_avail	pointer to the array which stores the available
+  *			oversampling ratios.
+  * @num_os_ratios	number of elements stored in oversampling_avail array
++ * @write_scale		pointer to the function which writes the scale
++ * @write_os		pointer to the function which writes the os
+  * @lock		protect sensor state from concurrent accesses to GPIOs
+  * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
+  * @gpio_reset		GPIO descriptor for device hard-reset
+@@ -57,13 +68,15 @@ struct ad7606_state {
+ 	const struct ad7606_chip_info	*chip_info;
+ 	struct regulator		*reg;
+ 	const struct ad7606_bus_ops	*bops;
+-	unsigned int			range;
++	unsigned int			range[16];
+ 	unsigned int			oversampling;
+ 	void __iomem			*base_address;
+ 	const unsigned int		*scale_avail;
+ 	unsigned int			num_scales;
+ 	const unsigned int		*oversampling_avail;
+ 	unsigned int			num_os_ratios;
++	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
++	int (*write_os)(struct iio_dev *indio_dev, int val);
+ 
+ 	struct mutex			lock; /* protect sensor state */
+ 	struct gpio_desc		*gpio_convst;
+-- 
+2.17.1
