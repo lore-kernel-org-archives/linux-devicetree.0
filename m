@@ -1,92 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] ARM: dts: at91: Avoid colliding 'display' node and property
- names
-Date: Thu, 16 May 2019 17:56:14 -0500
-Message-ID: <20190516225614.1458-1-robh@kernel.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [REPOST PATCH v2 0/3] USB: dwc2: Allow wakeup from suspend; enable for rk3288-veyron
+Date: Thu, 16 May 2019 15:59:38 -0700
+Message-ID: <20190516225941.170355-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Minas Harutyunyan <hminas@synopsys.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de
+Cc: Alan Stern <stern@rowland.harvard.edu>, Artur Petrosyan <Arthur.Petrosyan@synopsys.com>, amstan@chromium.org, linux-rockchip@lists.infradead.org, William Wu <william.wu@rock-chips.com>, linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Randy Li <ayaka@soulik.info>, zyw@rock-chips.com, mka@chromium.org, ryandcase@chromium.org, Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org, dinguyen@opensource.altera.com, Elaine Zhang <zhangqing@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-While properties and child nodes with the same name are valid DT, the
-practice is not encouraged. Furthermore, the collision is problematic for
-YAML encoded DT. Let's just avoid the issue and rename the nodes.
+This is a re-post of the last 3 patches of a series I posted earlier
+at:
+  https://lkml.kernel.org/r/20190418001356.124334-1-dianders@chromium.org
 
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
- arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
- arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
- arch/arm/boot/dts/at91sam9rlek.dts     | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+The first two patches were applied but the last three weren't because
+they didn't apply at the time.  They apply fine now so are ready to
+land.
 
-diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-index f681cd727010..02b116b48c3b 100644
---- a/arch/arm/boot/dts/at91sam9261ek.dts
-+++ b/arch/arm/boot/dts/at91sam9261ek.dts
-@@ -49,7 +49,7 @@
- 			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
- 			status = "okay";
- 
--			display0: display {
-+			display0: panel {
- 				bits-per-pixel = <16>;
- 				atmel,lcdcon-backlight;
- 				atmel,dmacon = <0x1>;
-diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-index 13d415c22a69..924fe563f6fa 100644
---- a/arch/arm/boot/dts/at91sam9263ek.dts
-+++ b/arch/arm/boot/dts/at91sam9263ek.dts
-@@ -111,7 +111,7 @@
- 			display = <&display0>;
- 			status = "okay";
- 
--			display0: display {
-+			display0: panel {
- 				bits-per-pixel = <16>;
- 				atmel,lcdcon-backlight;
- 				atmel,dmacon = <0x1>;
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 46107c2f1ab9..5226e952a729 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -236,7 +236,7 @@
- 			display = <&display0>;
- 			status = "okay";
- 
--			display0: display {
-+			display0: panel {
- 				bits-per-pixel = <32>;
- 				atmel,lcdcon-backlight;
- 				atmel,dmacon = <0x1>;
-diff --git a/arch/arm/boot/dts/at91sam9rlek.dts b/arch/arm/boot/dts/at91sam9rlek.dts
-index 27d8a1f44233..a000a459f17b 100644
---- a/arch/arm/boot/dts/at91sam9rlek.dts
-+++ b/arch/arm/boot/dts/at91sam9rlek.dts
-@@ -37,7 +37,7 @@
- 			display = <&display0>;
- 			status = "okay";
- 
--			display0: display {
-+			display0: panel {
- 				bits-per-pixel = <16>;
- 				atmel,lcdcon-backlight;
- 				atmel,dmacon = <0x1>;
+Changes in v2:
+- Rebased to mainline atop rk3288 remote wake quirk series.
+- rk3288-veyron dts patch new for v2.
+
+Douglas Anderson (3):
+  Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+  USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+  ARM: dts: rockchip: Allow wakeup from rk3288-veyron's dwc2 USB ports
+
+ .../devicetree/bindings/usb/dwc2.txt          |  3 ++
+ arch/arm/boot/dts/rk3288-veyron.dtsi          |  2 +
+ drivers/usb/dwc2/core.h                       |  5 +++
+ drivers/usb/dwc2/platform.c                   | 43 ++++++++++++++++++-
+ 4 files changed, 51 insertions(+), 2 deletions(-)
+
 -- 
-2.20.1
+2.21.0.1020.gf2820cf01a-goog
