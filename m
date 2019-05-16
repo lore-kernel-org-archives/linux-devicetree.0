@@ -1,49 +1,112 @@
-Return-Path: <SRS0=25OJ=TV=bootlin.com=miquel.raynal@kernel.org>
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 2/4] clk: mvebu: armada-37xx-periph: change suspend/resume time
-Date: Tue, 21 May 2019 15:03:55 +0200
-Message-Id: <20190521130357.20803-3-miquel.raynal@bootlin.com>
-In-Reply-To: <20190521130357.20803-1-miquel.raynal@bootlin.com>
-References: <20190521130357.20803-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V4 27/28] PCI: tegra: Add support for GPIO based PERST#
+Date: Thu, 16 May 2019 11:23:06 +0530
+Message-ID: <20190516055307.25737-28-mmaddireddy@nvidia.com>
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Armada 3700 PCIe IP relies on the PCIe clock managed by this
-driver. For reasons related to the PCI core's organization when
-suspending/resuming, PCI host controller drivers must reconfigure
-their register at suspend_noirq()/resume_noirq() which happens after
-suspend()/suspend_late() and before resume_early()/resume().
+Add support for GPIO based PERST# signal. GPIO number comes from per port
+PCIe device tree node.
 
-Device link support in the clock framework enforce that the clock
-driver's resume() callback will be called before the PCIe
-driver's. But, any resume_noirq() callback will be called before all
-the registered resume() callbacks.
-
-The solution to support PCIe resume operation is to change the
-"priority" of this clock driver PM callbacks to "_noirq()".
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 ---
- drivers/clk/mvebu/armada-37xx-periph.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+V4: Using devm_gpiod_get_from_of_node() to get reset-gpios
 
-diff --git a/drivers/clk/mvebu/armada-37xx-periph.c b/drivers/clk/mvebu/armada-37xx-periph.c
-index 1e18c5a875bd..bee45e43a85f 100644
---- a/drivers/clk/mvebu/armada-37xx-periph.c
-+++ b/drivers/clk/mvebu/armada-37xx-periph.c
-@@ -715,8 +715,8 @@ static int __maybe_unused armada_3700_periph_clock_resume(struct device *dev)
- }
+V3: Using helper function to get reset-gpios
+
+V2: Using standard "reset-gpio" property
+
+ drivers/pci/controller/pci-tegra.c | 41 +++++++++++++++++++++++++-----
+ 1 file changed, 35 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 06b99fcbf382..09b4d384ba38 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -17,6 +17,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/export.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irq.h>
+@@ -400,6 +401,8 @@ struct tegra_pcie_port {
+ 	unsigned int lanes;
  
- static const struct dev_pm_ops armada_3700_periph_clock_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(armada_3700_periph_clock_suspend,
--				armada_3700_periph_clock_resume)
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(armada_3700_periph_clock_suspend,
-+				      armada_3700_periph_clock_resume)
+ 	struct phy **phys;
++
++	struct gpio_desc *reset_gpiod;
  };
  
- static int armada_3700_periph_clock_probe(struct platform_device *pdev)
+ struct tegra_pcie_bus {
+@@ -583,15 +586,23 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
+ 	unsigned long value;
+ 
+ 	/* pulse reset signal */
+-	value = afi_readl(port->pcie, ctrl);
+-	value &= ~AFI_PEX_CTRL_RST;
+-	afi_writel(port->pcie, value, ctrl);
++	if (port->reset_gpiod) {
++		gpiod_set_value(port->reset_gpiod, 0);
++	} else {
++		value = afi_readl(port->pcie, ctrl);
++		value &= ~AFI_PEX_CTRL_RST;
++		afi_writel(port->pcie, value, ctrl);
++	}
+ 
+ 	usleep_range(1000, 2000);
+ 
+-	value = afi_readl(port->pcie, ctrl);
+-	value |= AFI_PEX_CTRL_RST;
+-	afi_writel(port->pcie, value, ctrl);
++	if (port->reset_gpiod) {
++		gpiod_set_value(port->reset_gpiod, 1);
++	} else {
++		value = afi_readl(port->pcie, ctrl);
++		value |= AFI_PEX_CTRL_RST;
++		afi_writel(port->pcie, value, ctrl);
++	}
+ }
+ 
+ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+@@ -2238,6 +2249,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		struct tegra_pcie_port *rp;
+ 		unsigned int index;
+ 		u32 value;
++		char *label;
+ 
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+@@ -2296,6 +2308,23 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (IS_ERR(rp->base))
+ 			return PTR_ERR(rp->base);
+ 
++		label = kasprintf(GFP_KERNEL, "pex-reset-%u", index);
++		if (!label) {
++			dev_err(dev, "failed to create reset GPIO label\n");
++			return -ENOMEM;
++		}
++
++		rp->reset_gpiod = devm_gpiod_get_from_of_node(dev, port,
++							      "reset-gpios", 0,
++							      GPIOD_OUT_LOW,
++							      label);
++		kfree(label);
++		if (IS_ERR(rp->reset_gpiod)) {
++			err = PTR_ERR(rp->reset_gpiod);
++			dev_err(dev, "failed to get reset GPIO: %d\n", err);
++			return err;
++		}
++
+ 		list_add_tail(&rp->list, &pcie->ports);
+ 	}
+ 
 -- 
-2.19.1
+2.17.1
