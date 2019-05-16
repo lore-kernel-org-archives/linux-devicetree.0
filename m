@@ -1,84 +1,46 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: thermal: add binding document for h6
- thermal controller
-Date: Fri, 17 May 2019 02:13:58 +0800
-Message-ID: <CAEExFWvkM86ajB4io8yopkKEOfRE3UObRpqoi=Sq0RtDnuaRWA@mail.gmail.com>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-4-tiny.windzz@gmail.com>
- <20190512134152.yrletgtiglxncyo4@flea>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
+Date: Thu, 16 May 2019 11:26:45 -0700
+Message-ID: <CA+E=qVdxvU5t9MB447Zd+-MO7rw+qBxxaZApjp4fgDx=W47r-g@mail.gmail.com>
+References: <20190514155911.6C0AC68B05@newverein.lst.de> <20190514160241.9EAC768C7B@newverein.lst.de>
+ <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
+ <20190515093141.41016b11@blackhole.lan> <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
+ <20190516154820.GA10431@lst.de> <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
+ <20190516164859.GB10431@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190512134152.yrletgtiglxncyo4@flea>
+In-Reply-To: <20190516164859.GB10431@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com, will.deacon@arm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>, olof@lixom.net, bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infra>
+To: Torsten Duwe <duwe@lst.de>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 12, 2019 at 9:41 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Thu, May 16, 2019 at 9:49 AM Torsten Duwe <duwe@lst.de> wrote:
 >
-> Hi,
->
-> On Sun, May 12, 2019 at 04:26:14AM -0400, Yangtao Li wrote:
-> > This patch adds binding document for allwinner h6 thermal controller.
+> On Thu, May 16, 2019 at 09:06:41AM -0700, Vasily Khoruzhick wrote:
 > >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  .../bindings/thermal/sun50i-thermal.txt       | 32 +++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
+> > Driver can talk to the panel over AUX channel only after t1+t3, t1 is
+> > up to 10ms, t3 is up to 200ms.
 >
-> We're starting to convert to YAML for binding descriptions that will
-> allow to validate that all DT are properly using the binding. It would
-> be great if you could use it as well.
+> This is after power-on. The boot loader needs to deal with this.
 
-What have been changed to this now?
+Actually panel driver has to deal with it and not bootloader.
 
+> > It works with older version of driver
+> > that keeps panel always on because it takes a while between driver
+> > probe and pipeline start.
 >
-> > diff --git a/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt b/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> > new file mode 100644
-> > index 000000000000..67eda7794262
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> > @@ -0,0 +1,32 @@
-> > +Binding for Thermal Sensor of Allwinner SOC.
-> > +
-> > +This describes the device tree binding for the Allwinner thermal controller
-> > +which measures the on-SoC temperatures.
-> > +
-> > +Required properties:
-> > +- compatible:
-> > +  - "allwinner,sun50i-h6-ths" : For H6
-> > +- reg: Address range of the thermal controller
-> > +- clocks, clock-names: Clocks needed for the thermal controller.
-> > +                    The required clocks for h6 are: "bus".
->
-> If there's a single clock, then we don't need clock-names
+> No lid switch, no USB, no WiFi, no MMC. If you disable DCDC1 you'll
+> run out of wakeup-sources ;-) IOW: I see no practical way any OS
+> driver can switch this panel voltage off and survive...
 
-Yeah, but, IIRC, H3 have two clk.
-So I'd like to keep it.
+Ouch, looks like someone made a huge mistake in HW design?
 
+> > All in all - you don't need panel timings since there's EDID but you
+> > still need panel delays. Anyway, it's up to you and maintainers.
 >
-> > +- resets, reset-names: Reference to the reset controller controlling
-> > +                    the thermal controller.
+> Let's give it a try.
 >
-> Ditto.
-
-Done.
-
-Thx,
-Yangtao
+>         Torsten
 >
-> > +- nvmem-cells: A phandle to the calibration data provided by a nvmem device. If
-> > +            unspecified default values shall be used.
-> > +- nvmem-cell-names: Should be "calib"
->
-> I thought you said that nvmem support was optional in the
-> driver. Maybe we could make it optional in the DT too?
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
