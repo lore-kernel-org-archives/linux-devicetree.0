@@ -1,139 +1,59 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Date: Thu, 16 May 2019 12:14:04 +0300
-Message-ID: <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
- <20190502001955.10575-2-bjorn.andersson@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 0/8] Add cpufreq and cci devfreq for mt8183, and SVS
+ support
+Date: Thu, 16 May 2019 14:53:28 +0530
+Message-ID: <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
+References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502001955.10575-2-bjorn.andersson@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On 5/2/19 3:19 AM, Bjorn Andersson wrote:
-> Before introducing the QCS404 platform, which uses the same PCIe
-> controller as IPQ4019, migrate this to use the bulk clock API, in order
-> to make the error paths slighly cleaner.
+On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 > 
-> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
+> So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
 > 
-> Changes since v2:
-> - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
+> For SVS support, add OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
+
+No version information here or what has changed. That doesn't help.
+
+I believe this is V3.
+
+Don't resend it but please mention the changes in reply now. Thanks.
+
+> Andrew-sh.Cheng (7):
+>   cpufreq: mediatek: change to regulator_get_optional
+>   cpufreq: mediatek: add clock enable for intermediate clock
+>   cpufreq: mediatek: Add support for mt8183
+>   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+>   devfreq: add mediatek cci devfreq
+>   cpufreq: mediatek: add opp notification for SVS support
+>   devfreq: cci devfreq register opp notification for SVS support
 > 
->  drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
->  1 file changed, 14 insertions(+), 35 deletions(-)
+> Stephen Boyd (1):
+>   PM / OPP: Support adjusting OPP voltages at runtime
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 0ed235d560e3..d740cbe0e56d 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
->  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
->  };
->  
-> +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
->  struct qcom_pcie_resources_2_4_0 {
-> -	struct clk *aux_clk;
-> -	struct clk *master_clk;
-> -	struct clk *slave_clk;
-> +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
-> +	int num_clks;
->  	struct reset_control *axi_m_reset;
->  	struct reset_control *axi_s_reset;
->  	struct reset_control *pipe_reset;
-> @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
->  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
->  	struct dw_pcie *pci = pcie->pci;
->  	struct device *dev = pci->dev;
-> +	int ret;
->  
-> -	res->aux_clk = devm_clk_get(dev, "aux");
-> -	if (IS_ERR(res->aux_clk))
-> -		return PTR_ERR(res->aux_clk);
-> +	res->clks[0].id = "aux";
-> +	res->clks[1].id = "master_bus";
-> +	res->clks[2].id = "slave_bus";
->  
-> -	res->master_clk = devm_clk_get(dev, "master_bus");
-> -	if (IS_ERR(res->master_clk))
-> -		return PTR_ERR(res->master_clk);
-> +	res->num_clks = 3;
-
-Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
-
->  
-> -	res->slave_clk = devm_clk_get(dev, "slave_bus");
-> -	if (IS_ERR(res->slave_clk))
-> -		return PTR_ERR(res->slave_clk);
-> +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
-> +	if (ret < 0)
-> +		return ret;
->  
->  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
->  	if (IS_ERR(res->axi_m_reset))
-> @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
->  	reset_control_assert(res->axi_m_sticky_reset);
->  	reset_control_assert(res->pwr_reset);
->  	reset_control_assert(res->ahb_reset);
-> -	clk_disable_unprepare(res->aux_clk);
-> -	clk_disable_unprepare(res->master_clk);
-> -	clk_disable_unprepare(res->slave_clk);
-> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
->  }
->  
->  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
->  
->  	usleep_range(10000, 12000);
->  
-> -	ret = clk_prepare_enable(res->aux_clk);
-> -	if (ret) {
-> -		dev_err(dev, "cannot prepare/enable iface clock\n");
-> +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-> +	if (ret)
->  		goto err_clk_aux;
-
-Maybe you have to change the name of the label too?
-
-> -	}
-> -
-> -	ret = clk_prepare_enable(res->master_clk);
-> -	if (ret) {
-> -		dev_err(dev, "cannot prepare/enable core clock\n");
-> -		goto err_clk_axi_m;
-> -	}
-> -
-> -	ret = clk_prepare_enable(res->slave_clk);
-> -	if (ret) {
-> -		dev_err(dev, "cannot prepare/enable phy clock\n");
-> -		goto err_clk_axi_s;
-> -	}
->  
->  	/* enable PCIe clocks and resets */
->  	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> @@ -891,10 +874,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
->  
->  	return 0;
->  
-> -err_clk_axi_s:
-> -	clk_disable_unprepare(res->master_clk);
-> -err_clk_axi_m:
-> -	clk_disable_unprepare(res->aux_clk);
->  err_clk_aux:
->  	reset_control_assert(res->ahb_reset);
->  err_rst_ahb:
+>  .../bindings/devfreq/mt8183-cci-devfreq.txt        |  20 ++
+>  drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
+>  drivers/cpufreq/mediatek-cpufreq.c                 |  88 +++++-
+>  drivers/devfreq/Kconfig                            |  10 +
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/mt8183-cci-devfreq.c               | 310 +++++++++++++++++++++
+>  drivers/opp/core.c                                 |  78 ++++++
+>  include/linux/pm_opp.h                             |  11 +
+>  8 files changed, 517 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+>  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
 > 
+> -- 
+> 2.12.5
 
 -- 
-regards,
-Stan
+viresh
