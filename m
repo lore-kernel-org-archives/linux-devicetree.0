@@ -1,88 +1,60 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v6 11/12] soc: mediatek: cmdq: add cmdq_dev_get_event
- function
-Date: Thu, 16 May 2019 18:27:52 +0800
-Message-ID: <1558002472.26743.2.camel@mtksdaap41>
-References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
-         <20190516090224.59070-12-bibby.hsieh@mediatek.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: [PATCH v3 1/3] include/of_fdt.h: add a weak arch hook to update fdt pgprot
+Date: Thu, 16 May 2019 18:28:15 +0800
+Message-ID: <20190516102817.188519-1-hsinyi@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516090224.59070-12-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.ch
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Chintan Pandya <cpandya@codeaurora.org>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+Does nothing as default, arch can implement their function to map
+fdt to RO/RW. This is convenient if arch map fdt to RO during init
+but needs to write fdt in some special cases after that.
 
-On Thu, 2019-05-16 at 17:02 +0800, Bibby Hsieh wrote:
-> When client ask gce to clear or wait for event,
-> client need to pass event number to the API.
-> We suggest client store the event information in device node,
-> so we provide an API for client parse the event property.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 18 ++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 12 ++++++++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index a64060a34e01..e9658063c3d4 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -52,6 +52,24 @@ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
->  }
->  EXPORT_SYMBOL(cmdq_dev_get_subsys);
->  
-> +s32 cmdq_dev_get_event(struct device *dev, int index)
-> +{
-> +	s32 result;
-> +
-> +	if (!dev)
-> +		return -EINVAL;
-> +
-> +	if (of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
-> +				       index, &result)) {
-> +		dev_err(dev, "can't parse gce-events property");
-> +
-> +		return -ENODEV;
-> +	}
-> +
-> +	return result;
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ drivers/of/fdt.c       | 13 +++++++++++++
+ include/linux/of_fdt.h |  2 ++
+ 2 files changed, 15 insertions(+)
 
-This function just does one thing, so client driver could just directly
-call of_property_read_u32_index().
-
-Regards,
-CK
-
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_event);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 574006c5cd76..525713bf79b5 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -160,4 +160,16 @@ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
->   */
->  struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
->  
-> +/**
-> + * cmdq_dev_get_event() - parse event from the device node of CMDQ client
-> + * @dev:	device of CMDQ mailbox client
-> + * @index:	the index of desired event
-> + *
-> + * Return: CMDQ event number
-> + *
-> + * Help CMDQ client pasing the event number
-> + * from the device node of CMDQ client.
-> + */
-> +s32 cmdq_dev_get_event(struct device *dev, int index);
-> +
->  #endif	/* __MTK_CMDQ_H__ */
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index de893c9616a1..e84971d1e9ea 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -30,6 +30,19 @@
+ 
+ #include "of_private.h"
+ 
++/*
++ * update_fdt_pgprot - Arch hook for changing fdt pgprot
++ *
++ * @prot: page protection flags for fdt
++ *
++ * Architecture can implement this function if they want to chagne
++ * fdt page protection flags before or after doing modification and
++ * fixups to fdt.
++ *
++ * Default does nothing.
++ */
++__weak void update_fdt_pgprot(pgprot_t prot) {}
++
+ /*
+  * of_fdt_limit_memory - limit the number of regions in the /memory node
+  * @limit: maximum entries
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index a713e5d156d8..406c3e7b2b75 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -109,5 +109,7 @@ static inline void unflatten_device_tree(void) {}
+ static inline void unflatten_and_copy_device_tree(void) {}
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+ 
++extern void update_fdt_pgprot(pgprot_t prot);
++
+ #endif /* __ASSEMBLY__ */
+ #endif /* _LINUX_OF_FDT_H */
+-- 
+2.20.1
