@@ -1,87 +1,126 @@
-From: Ley Foon Tan <lftan.linux@gmail.com>
-Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
-Date: Thu, 16 May 2019 10:12:52 +0800
-Message-ID: <CAFiDJ5-1YncDFFES+vj2bnaRwq74RT=s0KB9FBpYFt-r9T+a2g@mail.gmail.com>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
- <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
- <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com> <20190515135933.GB30985@e121166-lin.cambridge.arm.com>
+From: Daoyuan Huang <daoyuan.huang@mediatek.com>
+Subject: [RFC v2 0/4] media: mediatek: support mdp3 on mt8183 platform
+Date: Thu, 16 May 2019 11:23:28 +0800
+Message-ID: <20190516032332.56844-1-daoyuan.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515135933.GB30985@e121166-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Ley Foon Tan <ley.foon.tan@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2019 at 9:59 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Tue, May 14, 2019 at 01:35:20PM +0800, Ley Foon Tan wrote:
-> > On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
-> > >
-> > > Altera MSI IP is a soft IP and is only available after
-> > > FPGA image is programmed.
-> > >
-> > > Make driver modulable to support use case FPGA image is programmed
-> > > after kernel is booted. User proram FPGA image in kernel then only load
-> > > MSI driver module.
-> > >
-> > > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> > > ---
-> > >  drivers/pci/controller/Kconfig           |  2 +-
-> > >  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
-> > >  2 files changed, 11 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > index 4b550f9cdd56..920546cb84e2 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -181,7 +181,7 @@ config PCIE_ALTERA
-> > >           FPGA.
-> > >
-> > >  config PCIE_ALTERA_MSI
-> > > -       bool "Altera PCIe MSI feature"
-> > > +       tristate "Altera PCIe MSI feature"
-> > >         depends on PCIE_ALTERA
-> > >         depends on PCI_MSI_IRQ_DOMAIN
-> > >         help
-> > > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> > > index 025ef7d9a046..16d938920ca5 100644
-> > > --- a/drivers/pci/controller/pcie-altera-msi.c
-> > > +++ b/drivers/pci/controller/pcie-altera-msi.c
-> > > @@ -10,6 +10,7 @@
-> > >  #include <linux/interrupt.h>
-> > >  #include <linux/irqchip/chained_irq.h>
-> > >  #include <linux/init.h>
-> > > +#include <linux/module.h>
-> > >  #include <linux/msi.h>
-> > >  #include <linux/of_address.h>
-> > >  #include <linux/of_irq.h>
-> > > @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
-> > >  {
-> > >         return platform_driver_register(&altera_msi_driver);
-> > >  }
-> > > +
-> > > +static void __exit altera_msi_exit(void)
-> > > +{
-> > > +       platform_driver_unregister(&altera_msi_driver);
-> > > +}
-> > > +
-> > >  subsys_initcall(altera_msi_init);
-> > > +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
-> > > +module_exit(altera_msi_exit);
-> > > +MODULE_LICENSE("GPL v2");
-> > > --
-> > > 2.19.0
-> > >
-> > Hi
-> >
-> > Any comment for this patch?
->
-> I will get to these patches for the next merge window, thanks.
+Hi,
 
-Thanks.
+This is the first version of RFC patch for Media Data Path 3 (MDP3),
+MDP3 is used for scaling and color format conversion.
+support using GCE to write register in critical time limitation.
+support V4L2 m2m device control.
 
-Regards
-Ley Foon
+Changes since v1:
+- modify code for CMDQ v3 API support
+- EC ipi cmd migration
+- fix compliance test fail item (m2m cmd with -f)
+due to there is two problem in runing all format(-f) cmd:
+1. out of memory before test complete
+	Due to capture buffer mmap (refcount + 1) after reqbuf but seems
+	no corresponding munmap called before device close.
+	There are total 12XX items(formats) in format test and each format
+	alloc 8 capture/output buffers.
+2. unceasingly captureBufs() (randomly)
+	Seems the break statement didn't catch the count == 0 situation:
+	In v4l2-test-buffers.cpp, function: captureBufs()
+			...
+			count--;
+			if (!node->is_m2m && !count)
+				break;
+	Log is as attachment
+
+I will paste the test result with problem part in another e-mail
+
+
+
+---
+Based on v5.0-rc1 and these series:
+device tree:
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
+clock control:
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
+system control processor (SCP):
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017774.html
+global command engine (GCE):
+http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017143.html
+---
+
+daoyuan huang (4):
+  dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
+  dts: arm64: mt8183: Add Mediatek MDP3 nodes
+  media: platform: Add Mediatek MDP3 driver KConfig
+  media: platform: mtk-mdp3: Add Mediatek MDP3 driver
+
+ .../bindings/media/mediatek,mt8183-mdp3.txt   |  217 +++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  173 +++
+ drivers/media/platform/Kconfig                |   18 +
+ drivers/media/platform/Makefile               |    2 +
+ drivers/media/platform/mtk-mdp3/Makefile      |    9 +
+ drivers/media/platform/mtk-mdp3/isp_reg.h     |   38 +
+ .../media/platform/mtk-mdp3/mdp-platform.h    |   67 +
+ .../media/platform/mtk-mdp3/mdp_reg_ccorr.h   |   76 +
+ .../media/platform/mtk-mdp3/mdp_reg_rdma.h    |  207 +++
+ drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h |  110 ++
+ .../media/platform/mtk-mdp3/mdp_reg_wdma.h    |  126 ++
+ .../media/platform/mtk-mdp3/mdp_reg_wrot.h    |  116 ++
+ .../media/platform/mtk-mdp3/mmsys_config.h    |  189 +++
+ drivers/media/platform/mtk-mdp3/mmsys_mutex.h |   36 +
+ .../media/platform/mtk-mdp3/mmsys_reg_base.h  |   39 +
+ drivers/media/platform/mtk-mdp3/mtk-img-ipi.h |  282 ++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-cmdq.c   |  442 ++++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-cmdq.h   |   57 +
+ .../media/platform/mtk-mdp3/mtk-mdp3-comp.c   | 1325 +++++++++++++++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-comp.h   |  177 +++
+ .../media/platform/mtk-mdp3/mtk-mdp3-core.c   |  256 ++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-core.h   |   88 ++
+ .../media/platform/mtk-mdp3/mtk-mdp3-m2m.c    |  823 ++++++++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-m2m.h    |   52 +
+ .../media/platform/mtk-mdp3/mtk-mdp3-regs.c   |  757 ++++++++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-regs.h   |  386 +++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-vpu.c    |  277 ++++
+ .../media/platform/mtk-mdp3/mtk-mdp3-vpu.h    |   90 ++
+ 28 files changed, 6435 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-mdp3.txt
+ create mode 100644 drivers/media/platform/mtk-mdp3/Makefile
+ create mode 100644 drivers/media/platform/mtk-mdp3/isp_reg.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp-platform.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_ccorr.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rdma.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_rsz.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wdma.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mdp_reg_wrot.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_config.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_mutex.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mmsys_reg_base.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-comp.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-core.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-m2m.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-regs.h
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.c
+ create mode 100644 drivers/media/platform/mtk-mdp3/mtk-mdp3-vpu.h
+
+-- 
+2.18.0
