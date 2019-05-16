@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 09/12] soc: mediatek: cmdq: add polling function
-Date: Thu, 16 May 2019 17:02:21 +0800
-Message-ID: <20190516090224.59070-10-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 11/12] soc: mediatek: cmdq: add cmdq_dev_get_event function
+Date: Thu, 16 May 2019 17:02:23 +0800
+Message-ID: <20190516090224.59070-12-bibby.hsieh@mediatek.com>
 References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,92 +12,66 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-add polling function in cmdq helper functions
+When client ask gce to clear or wait for event,
+client need to pass event number to the API.
+We suggest client store the event information in device node,
+so we provide an API for client parse the event property.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
- include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
- 3 files changed, 44 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 18 ++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 12 ++++++++++++
+ 2 files changed, 30 insertions(+)
 
 diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 17ee8196fb3d..a53cdd71cfc2 100644
+index a64060a34e01..e9658063c3d4 100644
 --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -220,6 +220,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+@@ -52,6 +52,24 @@ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
  }
- EXPORT_SYMBOL(cmdq_pkt_clear_event);
+ EXPORT_SYMBOL(cmdq_dev_get_subsys);
  
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-+		  u16 offset, u32 value, u32 mask)
++s32 cmdq_dev_get_event(struct device *dev, int index)
 +{
-+	struct cmdq_instruction *inst;
++	s32 result;
 +
-+	if (mask != 0xffffffff) {
-+		inst = cmdq_pkt_append_command(pkt);
-+		if (!inst)
-+			return -ENOMEM;
++	if (!dev)
++		return -EINVAL;
 +
-+		inst->op = CMDQ_CODE_MASK;
-+		inst->value = ~mask;
-+		offset = offset | 0x1;
++	if (of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
++				       index, &result)) {
++		dev_err(dev, "can't parse gce-events property");
++
++		return -ENODEV;
 +	}
 +
-+	inst = cmdq_pkt_append_command(pkt);
-+	if (!inst)
-+		return -ENOMEM;
-+
-+	inst->op = CMDQ_CODE_POLL;
-+	inst->value = value;
-+	inst->offset = offset;
-+	inst->subsys = subsys;
-+
-+	return 0;
++	return result;
 +}
-+EXPORT_SYMBOL(cmdq_pkt_poll);
++EXPORT_SYMBOL(cmdq_dev_get_event);
 +
- static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ static void cmdq_client_timeout(struct timer_list *t)
  {
- 	struct cmdq_instruction *inst;
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index f21801d32a3a..1dfd5ed5c8c5 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -46,6 +46,7 @@
- enum cmdq_code {
- 	CMDQ_CODE_MASK = 0x02,
- 	CMDQ_CODE_WRITE = 0x04,
-+	CMDQ_CODE_POLL = 0x08,
- 	CMDQ_CODE_JUMP = 0x10,
- 	CMDQ_CODE_WFE = 0x20,
- 	CMDQ_CODE_EOC = 0x40,
+ 	struct cmdq_client *client = from_timer(client, t, timer);
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 52f69c8db8de..0651a0bffa54 100644
+index 574006c5cd76..525713bf79b5 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+@@ -160,4 +160,16 @@ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
   */
- int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
  
 +/**
-+ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
-+ *		     execute an instruction that wait for a specified hardware
-+ *		     register to check for the value. All GCE hardware
-+ *		     threads will be blocked by this instruction.
-+ * @pkt:	the CMDQ packet
-+ * @subsys:	the CMDQ sub system code
-+ * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-+ * @mask:	the specified target register mask
++ * cmdq_dev_get_event() - parse event from the device node of CMDQ client
++ * @dev:	device of CMDQ mailbox client
++ * @index:	the index of desired event
 + *
-+ * Return: 0 for success; else the error code is returned
++ * Return: CMDQ event number
++ *
++ * Help CMDQ client pasing the event number
++ * from the device node of CMDQ client.
 + */
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-+		  u16 offset, u32 value, u32 mask);
- /**
-  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-  *                          packet and call back at the end of done packet
++s32 cmdq_dev_get_event(struct device *dev, int index);
++
+ #endif	/* __MTK_CMDQ_H__ */
 -- 
 2.18.0
