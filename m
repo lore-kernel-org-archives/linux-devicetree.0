@@ -1,47 +1,59 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/2] dt-bindings: pinctrl: meson: add output support in pinconf
-Date: Thu, 16 May 2019 17:13:38 +0200
-Message-ID: <20190516151339.25846-2-jbrunet@baylibre.com>
-References: <20190516151339.25846-1-jbrunet@baylibre.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
+Date: Thu, 16 May 2019 10:17:56 -0500
+Message-ID: <CAL_Jsq+Tmht+oxdmjtyhzwrYw4NNAkVnimAuEGODC_2fAprSjg@mail.gmail.com>
+References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org>
+ <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com> <20190516144303.GF43059@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516151339.25846-1-jbrunet@baylibre.com>
+In-Reply-To: <20190516144303.GF43059@lakrids.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Chintan Pandya <cpandya@codeaurora.org>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Steph
 List-Id: devicetree@vger.kernel.org
 
-add support for the pinconf DT property output-enable, output-disable,
-output-low and output-high in the meson pinctrl driver.
+On Thu, May 16, 2019 at 9:43 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Thu, May 16, 2019 at 09:37:05AM -0500, Rob Herring wrote:
+> > On Thu, May 16, 2019 at 5:28 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> > >
+> > > Basically does similar things like __fixmap_remap_fdt(). It's supposed
+> > > to be called after fixmap_remap_fdt() is called at least once, so region
+> > > checking can be skipped. Since it needs to know dt physical address, make
+> > > a copy of the value of __fdt_pointer.
+> > >
+> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > > ---
+> > >  arch/arm64/kernel/setup.c |  2 ++
+> > >  arch/arm64/mm/mmu.c       | 17 +++++++++++++++++
+> > >  2 files changed, 19 insertions(+)
+> >
+> > Why not just map the FDT R/W at the start and change it to RO just
+> > before calling unflatten_device_tree? Then all the FDT scanning
+> > functions or any future fixups we need can just assume R/W. That is
+> > essentially what Stephen suggested. However, there's no need for a
+> > weak function as it can all be done within the arch code.
+> >
+> > However, I'm still wondering why the FDT needs to be RO in the first place.
+>
+> We want to preserve the original FDT in a pristine form for kexec (and
+> when exposed to userspace), and mapping it RO was the easiest way to
+> catch it being randomly modified (e.g. without fixups applied).
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt    | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+The CRC check already existed for this purpose and that works for
+every arch including ones where the FDT is copied.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index a7618605bf1e..10dc4f7176ca 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -47,9 +47,15 @@ Required properties for pinmux nodes are:
- Required properties for configuration nodes:
-  - pins: a list of pin names
- 
--Configuration nodes support the generic properties "bias-disable",
--"bias-pull-up" and "bias-pull-down", described in file
--pinctrl-bindings.txt
-+Configuration nodes support the following generic properties, as
-+described in file pinctrl-bindings.txt:
-+ - "bias-disable"
-+ - "bias-pull-up"
-+ - "bias-pull-down"
-+ - "output-enable"
-+ - "output-disable"
-+ - "output-low"
-+ - "output-high"
- 
- Optional properties :
-  - drive-strength-microamp: Drive strength for the specified pins in uA.
--- 
-2.20.1
+BTW, This version of the patchset disables the export to userspace
+since the CRC will be wrong.
+
+> I'd prefer to keep it RO once we've removed/cleared certain properties
+> from the chosen node that don't make sense to pass on for kexec
+
+I want clear rules about when the FDT can be modified or not which are
+not arch specific.
+
+It's really only a question of with what granularity it's made R/W.
+Wrapping every modification seems like overkill to me.
+
+Rob
