@@ -1,84 +1,205 @@
-Return-Path: <SRS0=d+eE=TJ=renesas.com=prvs=4032988503=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 03/15] phy: renesas: rcar-gen3-usb2: detect usb_x1 clock
-Date: Thu, 9 May 2019 15:11:30 -0500
-Message-ID: <20190509201142.10543-4-chris.brandt@renesas.com>
-In-Reply-To: <20190509201142.10543-1-chris.brandt@renesas.com>
-References: <20190509201142.10543-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V4 08/28] PCI: tegra: Program UPHY electrical settings for Tegra210
+Date: Thu, 16 May 2019 11:22:47 +0530
+Message-ID: <20190516055307.25737-9-mmaddireddy@nvidia.com>
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/A2 has an optional dedicated 48MHz clock input for the PLL.
-If a clock node named 'usb_x1' exists and set to non-zero, then we can
-assume we want it use it.
+UPHY electrical programming guidelines are documented in Tegra210 TRM.
+Program these electrical settings for proper eye diagram in Gen1 and Gen2
+link speeds.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
-v2:
- * use 'usb_x1' clock node instead of 'renesas,uses_usb_x1' property
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+V4: No change
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 1322185a00a2..1ebb08f8323f 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -34,6 +34,7 @@
- #define USB2_VBCTRL		0x60c
- #define USB2_LINECTRL1		0x610
- #define USB2_ADPCTRL		0x630
-+#define USB2_PHYCLK_CTRL	0x644
+V3: No change
+
+V2: Addressed coding style comments
+
+ drivers/pci/controller/pci-tegra.c | 107 +++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index e402627bd221..76d913ef5bf4 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -177,6 +177,32 @@
  
- /* INT_ENABLE */
- #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
-@@ -110,6 +111,7 @@ struct rcar_gen3_chan {
- 	bool extcon_host;
- 	bool is_otg_channel;
- 	bool uses_otg_pins;
-+	bool uses_usb_x1;
+ #define AFI_PEXBIAS_CTRL_0		0x168
+ 
++#define RP_ECTL_2_R1	0x00000e84
++#define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
++
++#define RP_ECTL_4_R1	0x00000e8c
++#define  RP_ECTL_4_R1_RX_CDR_CTRL_1C_MASK	(0xffff << 16)
++#define  RP_ECTL_4_R1_RX_CDR_CTRL_1C_SHIFT	16
++
++#define RP_ECTL_5_R1	0x00000e90
++#define  RP_ECTL_5_R1_RX_EQ_CTRL_L_1C_MASK	0xffffffff
++
++#define RP_ECTL_6_R1	0x00000e94
++#define  RP_ECTL_6_R1_RX_EQ_CTRL_H_1C_MASK	0xffffffff
++
++#define RP_ECTL_2_R2	0x00000ea4
++#define  RP_ECTL_2_R2_RX_CTLE_1C_MASK	0xffff
++
++#define RP_ECTL_4_R2	0x00000eac
++#define  RP_ECTL_4_R2_RX_CDR_CTRL_1C_MASK	(0xffff << 16)
++#define  RP_ECTL_4_R2_RX_CDR_CTRL_1C_SHIFT	16
++
++#define RP_ECTL_5_R2	0x00000eb0
++#define  RP_ECTL_5_R2_RX_EQ_CTRL_L_1C_MASK	0xffffffff
++
++#define RP_ECTL_6_R2	0x00000eb4
++#define  RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK	0xffffffff
++
+ #define RP_VEND_XP	0x00000f00
+ #define  RP_VEND_XP_DL_UP	(1 << 30)
+ 
+@@ -266,6 +292,19 @@ struct tegra_pcie_soc {
+ 	bool has_gen2;
+ 	bool force_pca_enable;
+ 	bool program_uphy;
++	struct {
++		struct {
++			u32 rp_ectl_2_r1;
++			u32 rp_ectl_4_r1;
++			u32 rp_ectl_5_r1;
++			u32 rp_ectl_6_r1;
++			u32 rp_ectl_2_r2;
++			u32 rp_ectl_4_r2;
++			u32 rp_ectl_5_r2;
++			u32 rp_ectl_6_r2;
++		} regs;
++		bool enable;
++	} ectl;
  };
  
- /*
-@@ -391,6 +393,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
+ static inline struct tegra_msi *to_tegra_msi(struct msi_controller *chip)
+@@ -492,6 +531,54 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
+ 	writel(value, port->base + RP_VEND_CTL1);
+ }
  
-+	if (channel->uses_usb_x1)
-+		writel(0x00000001, usb2_base + USB2_PHYCLK_CTRL);
++static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
++{
++	const struct tegra_pcie_soc *soc = port->pcie->soc;
++	u32 value;
 +
- 	/* Initialize USB2 part */
- 	val = readl(usb2_base + USB2_INT_ENABLE);
- 	val |= USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
-@@ -582,10 +587,12 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
++	value = readl(port->base + RP_ECTL_2_R1);
++	value &= ~RP_ECTL_2_R1_RX_CTLE_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_2_r1;
++	writel(value, port->base + RP_ECTL_2_R1);
++
++	value = readl(port->base + RP_ECTL_4_R1);
++	value &= ~RP_ECTL_4_R1_RX_CDR_CTRL_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_4_r1 <<
++				RP_ECTL_4_R1_RX_CDR_CTRL_1C_SHIFT;
++	writel(value, port->base + RP_ECTL_4_R1);
++
++	value = readl(port->base + RP_ECTL_5_R1);
++	value &= ~RP_ECTL_5_R1_RX_EQ_CTRL_L_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_5_r1;
++	writel(value, port->base + RP_ECTL_5_R1);
++
++	value = readl(port->base + RP_ECTL_6_R1);
++	value &= ~RP_ECTL_6_R1_RX_EQ_CTRL_H_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_6_r1;
++	writel(value, port->base + RP_ECTL_6_R1);
++
++	value = readl(port->base + RP_ECTL_2_R2);
++	value &= ~RP_ECTL_2_R2_RX_CTLE_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_2_r2;
++	writel(value, port->base + RP_ECTL_2_R2);
++
++	value = readl(port->base + RP_ECTL_4_R2);
++	value &= ~RP_ECTL_4_R2_RX_CDR_CTRL_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_4_r2 <<
++				RP_ECTL_4_R2_RX_CDR_CTRL_1C_SHIFT;
++	writel(value, port->base + RP_ECTL_4_R2);
++
++	value = readl(port->base + RP_ECTL_5_R2);
++	value &= ~RP_ECTL_5_R2_RX_EQ_CTRL_L_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_5_r2;
++	writel(value, port->base + RP_ECTL_5_R2);
++
++	value = readl(port->base + RP_ECTL_6_R2);
++	value &= ~RP_ECTL_6_R2_RX_EQ_CTRL_H_1C_MASK;
++	value |= soc->ectl.regs.rp_ectl_6_r2;
++	writel(value, port->base + RP_ECTL_6_R2);
++}
++
+ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
  {
- 	struct device *dev = &pdev->dev;
- 	struct rcar_gen3_chan *channel;
-+	struct device_node *usb_x1_clk;
- 	struct phy_provider *provider;
- 	struct resource *res;
- 	const struct phy_ops *phy_usb2_ops;
- 	int irq, ret = 0, i;
-+	u32 freq_usb = 0;
- 
- 	if (!dev->of_node) {
- 		dev_err(dev, "This driver needs device tree\n");
-@@ -630,6 +637,13 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		}
+ 	unsigned long ctrl = tegra_pcie_port_get_pex_ctrl(port);
+@@ -518,6 +605,9 @@ static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
  	}
  
-+	usb_x1_clk = of_find_node_by_name(NULL, "usb_x1");
-+	if (usb_x1_clk) {
-+		of_property_read_u32(usb_x1_clk, "clock-frequency", &freq_usb);
-+		if (freq_usb)
-+			channel->uses_usb_x1 = true;
-+	}
+ 	tegra_pcie_enable_rp_features(port);
 +
- 	/*
- 	 * devm_phy_create() will call pm_runtime_enable(&phy->dev);
- 	 * And then, phy-core will manage runtime pm for this device.
++	if (soc->ectl.enable)
++		tegra_pcie_program_ectl_settings(port);
+ }
+ 
+ static void tegra_pcie_port_disable(struct tegra_pcie_port *port)
+@@ -2223,6 +2313,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.has_gen2 = false,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.ectl.enable = false,
+ };
+ 
+ static const struct tegra_pcie_port_soc tegra30_pcie_ports[] = {
+@@ -2246,6 +2337,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.has_gen2 = false,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.ectl.enable = false,
+ };
+ 
+ static const struct tegra_pcie_soc tegra124_pcie = {
+@@ -2262,6 +2354,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = false,
+ 	.program_uphy = true,
++	.ectl.enable = false,
+ };
+ 
+ static const struct tegra_pcie_soc tegra210_pcie = {
+@@ -2278,6 +2371,19 @@ static const struct tegra_pcie_soc tegra210_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = true,
+ 	.program_uphy = true,
++	.ectl = {
++		.regs = {
++			.rp_ectl_2_r1 = 0x0000000f,
++			.rp_ectl_4_r1 = 0x00000067,
++			.rp_ectl_5_r1 = 0x55010000,
++			.rp_ectl_6_r1 = 0x00000001,
++			.rp_ectl_2_r2 = 0x0000008f,
++			.rp_ectl_4_r2 = 0x000000c7,
++			.rp_ectl_5_r2 = 0x55010000,
++			.rp_ectl_6_r2 = 0x00000001,
++		},
++		.enable = true,
++	},
+ };
+ 
+ static const struct tegra_pcie_port_soc tegra186_pcie_ports[] = {
+@@ -2301,6 +2407,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
+ 	.has_gen2 = true,
+ 	.force_pca_enable = false,
+ 	.program_uphy = false,
++	.ectl.enable = false,
+ };
+ 
+ static const struct of_device_id tegra_pcie_of_match[] = {
 -- 
-2.16.1
+2.17.1
