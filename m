@@ -1,76 +1,58 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for vibrator
-Date: Thu, 16 May 2019 04:50:18 -0400
-Message-ID: <20190516085018.2207-1-masneyb@onstation.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: allwinner: a64:
+ orangepi-win: Add wifi and bluetooth nodes
+Date: Thu, 16 May 2019 10:52:57 +0200
+Message-ID: <20190516085257.tbli227f7mm3daac@flea>
+References: <20190514205445.11591-1-jernej.skrabec@siol.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, david.brown@linaro.org
-Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5iqdhuknfkakdubp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3OJ6TTAKGQEV65SXGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190514205445.11591-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device device tree bindings for the vibrator found on
-the LG Nexus 5 (hammerhead) phone.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-This is a resend of the following patch that has missed the last two
-merge windows:
+--5iqdhuknfkakdubp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-https://lore.kernel.org/lkml/20190206013329.18195-4-masneyb@onstation.org/
+On Tue, May 14, 2019 at 10:54:45PM +0200, Jernej Skrabec wrote:
+> The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+> identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+>
+> WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
+> in a 4 wire configuration. Same as the WiFi side, due to being the same
+> chip and package, DLDO2 provides overall power via VBAT, and DLDO4
+> provides I/O power via VDDIO. The RTC clock output provides the LPO low
+> power clock at 32.768 kHz.
+>
+> This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
+> missing LPO clock on the WiFi side. PCM connection also exists for
+> Bluetooth audio, but it's not used here.
+>
+> Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
+> audio. While module supports even higher speeds, currently sunxi clock
+> driver doesn't support higher speed.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Queued for 5.3, thanks
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index b3b04736a159..1fd9f429f34a 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -5,6 +5,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8974.h>
- 
- / {
- 	model = "LGE MSM 8974 HAMMERHEAD";
-@@ -306,6 +307,36 @@
- 				input-enable;
- 			};
- 		};
-+
-+		vibrator_pin: vibrator {
-+			pwm {
-+				pins = "gpio27";
-+				function = "gp1_clk";
-+
-+				drive-strength = <6>;
-+				bias-disable;
-+			};
-+
-+			enable {
-+				pins = "gpio60";
-+				function = "gpio";
-+			};
-+		};
-+	};
-+
-+	vibrator@fd8c3450 {
-+		compatible = "qcom,msm8974-vibrator";
-+		reg = <0xfd8c3450 0x400>;
-+
-+		vcc-supply = <&pm8941_l19>;
-+
-+		clocks = <&mmcc CAMSS_GP1_CLK>;
-+		clock-names = "pwm";
-+
-+		enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_pin>;
- 	};
- 
- 	sdhci@f9824900 {
--- 
-2.17.2
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--5iqdhuknfkakdubp--
