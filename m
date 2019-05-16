@@ -1,42 +1,59 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: Use GPU as cooling device for
- the GPU thermal zone of the rk3288
-Date: Thu, 16 May 2019 10:39:17 -0700
-Message-ID: <CAD=FV=Wk0EFO2+c=KAfemo0_w+QEA8==KzOdN-niD0mA_myh=Q@mail.gmail.com>
-References: <20190516172510.181473-1-mka@chromium.org> <20190516172510.181473-3-mka@chromium.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: gpu: add #cooling-cells property to
+ the ARM Mali Midgard GPU binding
+Date: Thu, 16 May 2019 10:40:38 -0700
+Message-ID: <CAD=FV=UQcv1+HC2eAk2ctBofufCi9-VvWc+OnY0mtBw3L-YG+Q@mail.gmail.com>
+References: <20190516172510.181473-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516172510.181473-3-mka@chromium.org>
+In-Reply-To: <20190516172510.181473-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Kaehlcke <mka@chromium.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
 On Thu, May 16, 2019 at 10:25 AM Matthias Kaehlcke <mka@chromium.org> wrote:
 
-> Currently the CPUs are used as cooling devices of the rk3288 GPU
-> thermal zone. The CPUs are also configured as cooling devices in the
-> CPU thermal zone, which indirectly helps with cooling the GPU thermal
-> zone, since the CPU and GPU temperatures are correlated on the rk3288.
->
-> Configure the ARM Mali Midgard GPU as cooling device for the GPU
-> thermal zone instead of the CPUs.
+> The GPU can be used as a thermal cooling device, add an optional
+> '#cooling-cells' property.
 >
 > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
 > Changes in v2:
 > - patch added to the series
 > ---
->  arch/arm/boot/dts/rk3288.dtsi | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> index 18a2cde2e5f3..61fd41a20f99 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -37,6 +37,8 @@ Optional properties:
+>  - operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+>    for details.
+>
+> +- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
+> +  for details.
+>
+>  Example for a Mali-T760:
+>
+> @@ -51,6 +53,7 @@ gpu@ffa30000 {
+>         mali-supply = <&vdd_gpu>;
+>         operating-points-v2 = <&gpu_opp_table>;
+>         power-domains = <&power RK3288_PD_GPU>;
+> +       #cooling-cells = <2>;
+>  };
 
-This makes sense to me unless there is some better way to model the
-intertwined nature of the CPU and GPU temperature.  It's my
-understanding that the original device tree snippet was there because
-it was added before the gpu node existed in the device tree so the
-best we could do is to suggest that the cpu could cool things down.
+You will conflict with d5ff1adb3809 ("dt-bindings: gpu: mali-midgard:
+Add resets property"), but it's easy to rebase.  I'll leave it to
+whoever is going to land this to decide if they would like you to
+re-post or if they can handle resolving the conflict themselves.
++Kevin who appears to be the one who landed the conflicting commit.
+
+With that:
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
