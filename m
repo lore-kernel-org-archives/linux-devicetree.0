@@ -1,56 +1,44 @@
-From: Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
-Date: Thu, 16 May 2019 14:21:35 +0100
-Message-ID: <fa434575-5576-aff5-8705-1f93eefa209c@arm.com>
-References: <20190512174608.10083-1-peron.clem@gmail.com>
- <20190513151405.GW17751@phenom.ffwll.local>
- <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
- <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
- <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com>
- <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
- <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
- <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com>
- <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 04/11] ARM: dts: ste: Update coresight DT bindings
+Date: Thu, 16 May 2019 21:21:56 +0800
+Message-ID: <20190516132156.GF12557@leoy-ThinkPad-X240s>
+References: <20190508021902.10358-1-leo.yan@linaro.org>
+ <20190508021902.10358-5-leo.yan@linaro.org>
+ <CACRpkda4aEfgW6e7EfqC=FE_=QzKi5UTDLLzHEryQ6kpcKYzVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <CACRpkda4aEfgW6e7EfqC=FE_=QzKi5UTDLLzHEryQ6kpcKYzVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Rob Herring <rob.e.herring@gmail.com>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Linux ARM <linux-arm-kernel@lists>
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/2019 12:19, Robin Murphy wrote:
-[...]
-> I was expecting to see a similar behaviour to my T620 (which I now
-> assume was down to 64-bit job descriptors sort-of-but-not-quite working)
-> but this does look a bit more fundamental - the fact that it's a level 1
-> fault with VA == head == tail suggests to me that the MMU can't see the
-> page tables at all to translate anything. I really hope that the H6 GPU
-> integration doesn't suffer from the same DMA offset as the Allwinner
-> display pipeline stuff, because that would be a real pain to support in
-> io-pgtable.
+Hi Linus,
 
-Assuming you mean the case where the physical address (as seen by the
-CPU) is different from the dma address (as seen by the GPU), then I
-highly doubt it because mali_kbase doesn't support it:
+On Thu, May 16, 2019 at 02:53:48PM +0200, Linus Walleij wrote:
+> On Wed, May 8, 2019 at 4:20 AM Leo Yan <leo.yan@linaro.org> wrote:
+> 
+> > CoreSight DT bindings have been updated, thus the old compatible strings
+> > are obsolete and the drivers will report warning if DTS uses these
+> > obsolete strings.
+> >
+> > This patch switches to the new bindings for CoreSight dynamic funnel and
+> > static replicator, so can dismiss warning during initialisation.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Will I need to carry this patch or will you send it to ARM SoC?
 
-[from kbase_mem_pool_alloc_page() in mali_kbase_mem_pool.c]:
+Please pick this patch into your tree and I will monitor rest
+patches with other maintainers.  Thanks a lot!
 
-	dma_addr = dma_map_page(dev, p, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
-	if (dma_mapping_error(dev, dma_addr)) {
-		__free_page(p);
-		return NULL;
-	}
-
-	WARN_ON(dma_addr != page_to_phys(p));
-
-
-That being said it's quite possible there could be something in the bus
-which needs configuring to make this work - in which case your best bet
-is to look at the vendor kernel and see if anything extra is poked when
-the Mali driver is loaded.
-
-Steve
+Thanks,
+Leo Yan
