@@ -1,53 +1,68 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Date: Thu, 16 May 2019 15:07:20 +0200
-Message-ID: <20190516130720.GE14298@lunn.ch>
-References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
- <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+Date: Thu, 16 May 2019 15:15:15 +0200
+Message-ID: <20190516131515.GB2000@latitude>
+References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+ <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, palmer@sifive.com, paul.walmsley@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, MSM <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:38:40AM +0530, Sagar Shrikant Kadam wrote:
-> The i2c-ocore driver already has a polling mode interface.But it needs
-> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> There is an erratum in FU540 chip that prevents interrupt driven i2c
-> transfers from working, and also the I2C controller's interrupt bit
-> cannot be cleared if set, due to this the existing i2c polling mode
-> interface added in mainline earlier doesn't work, and CPU stall's
-> infinitely, when-ever i2c transfer is initiated.
-> 
-> Ref:previous polling mode support in mainline
-> 
-> 	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
-> 
-> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> FU540-COOO SoC.
-> 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  drivers/i2c/busses/i2c-ocores.c | 34 ++++++++++++++++++++++++++++------
->  1 file changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-> index aee1d86..00ee45c 100644
-> --- a/drivers/i2c/busses/i2c-ocores.c
-> +++ b/drivers/i2c/busses/i2c-ocores.c
-> @@ -27,6 +27,7 @@
->  #include <linux/jiffies.h>
->  
->  #define OCORES_FLAG_POLL BIT(0)
-> +#define OCORES_FLAG_BROKEN_IRQ BIT(2) /* Broken IRQ in HiFive Unleashed */
 
-Hi Sigar
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BIT(1). Don't leave a gap.
+On Thu, May 16, 2019 at 02:44:30PM +0200, Linus Walleij wrote:
+> On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+>=20
+> > The property is spelled 'bias-pull-up', as documented in
+> > pinctrl-bindings.txt.
+> >
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> It appears from Rob's comment that he's applying it,
+> tell me if I need to apply it to the pinctrl tree.
 
-	Andrew
+Yes, Rob applied Christian's version to dt/next:
+https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=3D=
+dt/next&id=3Dc50495aa4cfcaace5f61174ab3069d5047d14f17
+
+So there's no need to apply my version.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlzdYl0ACgkQCDBEmo7z
+X9vDaBAArHDvJllzymlUcI+Bs9d6A5YfI4V3wR7SI7nvjkCSa+ctj11a0qOLsLqw
+4+QoXkCETu5Qrwz4utAi8emKVpSjWaEkkickLtpjNDZacjF8kt8QA28uzn8WScoe
+7gs+bd0DZ2Q+doK/QRoGAIZvY/SPSTacaNwec2wKc0d63dn8tKoqrz29r9fNOW3Z
+MvS03f9PF2JFgHCPJkQPDbfmaMXl+57S4N7F9USDhFZmiF2hZNAwL4/p8whw8fLq
+1aRjIpqLw9otvivF4LpK5WUj5XZoSGxbIfAQ2pS2Uj8K+MUp95fB8TqXCGG9hQHw
+dstusnYe8NrcwCBYkedHoNAy2cmj3l73JTe9bSZkeSpSo/dFO9GEvILvS9BaYhJZ
+9bTydEkP1YmAUeC0R962HGD1Yx1t6izL0WNzX/cawg4iQUC1uJPPLWu1p2y2FajO
+FX+nUz3/z8CtGu49Wl8gezj+eI1L3joUuRAMypw7MfQzDsFv0G39wNzjcsfllhZg
+8w71tQx7yA7M4tUGFBWip1tj30d1M8HghAn7psNN8FOKxZbb5NUyDT8l1v+wt1Xl
+VcIfIfT9P2p9//etRlY3gdiTVj7rkZedJttSPq4LUWxENMUVnBf8BYF49hruMat8
+w6L9nhPmq1qQMjZStJBQQupKADwnt6Yce6xhk4f6BYeNbuHAtZY=
+=BpWe
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
