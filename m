@@ -1,199 +1,132 @@
 From: Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 1/5] iio: adc: ad7606: Move oversampling and scale options to chip info
-Date: Thu, 16 May 2019 17:32:04 +0300
-Message-ID: <20190516143208.19294-1-beniamin.bia@analog.com>
+Subject: [PATCH 3/5] iio: adc: ad7606: Make SPI register calculation generic and add spi support
+Date: Thu, 16 May 2019 17:32:06 +0300
+Message-ID: <20190516143208.19294-3-beniamin.bia@analog.com>
+References: <20190516143208.19294-1-beniamin.bia@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190516143208.19294-1-beniamin.bia@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org
 Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, biabeniamin@outlook.com, Beniamin Bia <beniamin.bia@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The device dependent options which are going to be different for devices
-which will be supported  in the future by this driver,
-were moved in chip info for a more generic driver. This patch allows
-supporting more devices by the driver. Also, it is an intermediate
-step of adding support for ad7616 in software mode.
+In order to support AD7616 software mode, the spi register access must be
+added and the calculation of registers address must be generic.
+The length of address and bit which specifies the read/write operation is
+different for every device, that is why it was made generic.
 
 Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 ---
- drivers/iio/adc/ad7606.c | 61 +++++++++++++++++++++++++++++-----------
- drivers/iio/adc/ad7606.h | 15 +++++++++-
- 2 files changed, 58 insertions(+), 18 deletions(-)
+ drivers/iio/adc/ad7606.c | 60 ++++++++++++++++++++++++++++++++++++++++
+ drivers/iio/adc/ad7606.h |  2 ++
+ 2 files changed, 62 insertions(+)
 
 diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index 24c70c3cefb4..c66ff22f32d2 100644
+index aba0fd123a51..6df81117cacc 100644
 --- a/drivers/iio/adc/ad7606.c
 +++ b/drivers/iio/adc/ad7606.c
-@@ -158,7 +158,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = 0;
--		*val2 = st->scale_avail[st->range];
-+		*val2 = st->scale_avail[st->range[0]];
- 		return IIO_VAL_INT_PLUS_MICRO;
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = st->oversampling;
-@@ -194,6 +194,32 @@ static ssize_t in_voltage_scale_available_show(struct device *dev,
+@@ -25,6 +25,8 @@
+ #include <linux/iio/triggered_buffer.h>
+ #include <linux/iio/trigger_consumer.h>
  
- static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
++#include <linux/spi/spi.h>
++
+ #include "ad7606.h"
  
-+static int ad7606_write_scale_hw(struct iio_dev *indio_dev, int ch, int val)
+ /*
+@@ -43,6 +45,11 @@ static const unsigned int ad7616_oversampling_avail[8] = {
+ 	1, 2, 4, 8, 16, 32, 64, 128,
+ };
+ 
++static int ad7616_spi_rd_wr_cmd(int addr, char isWriteOp)
 +{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+
-+	gpiod_set_value(st->gpio_range, val);
-+
-+	return 0;
++	return ((addr & 0x7F) << 1) | ((isWriteOp & 0x1) << 7);
 +}
 +
-+static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+	DECLARE_BITMAP(values, 3);
-+
-+	values[0] = val;
-+
-+	gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
-+			      st->gpio_os->info, values);
-+
-+	/* AD7616 requires a reset to update value */
-+	if (st->chip_info->os_req_reset)
-+		ad7606_reset(st);
-+
-+	return 0;
-+}
-+
- static int ad7606_write_raw(struct iio_dev *indio_dev,
- 			    struct iio_chan_spec const *chan,
- 			    int val,
-@@ -201,15 +227,18 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
- 			    long mask)
+ static int ad7606_reset(struct ad7606_state *st)
  {
- 	struct ad7606_state *st = iio_priv(indio_dev);
--	DECLARE_BITMAP(values, 3);
--	int i;
-+	int i, ret, ch = 0;
+ 	if (st->gpio_reset) {
+@@ -55,6 +62,59 @@ static int ad7606_reset(struct ad7606_state *st)
+ 	return -ENODEV;
+ }
  
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SCALE:
- 		mutex_lock(&st->lock);
- 		i = find_closest(val2, st->scale_avail, st->num_scales);
--		gpiod_set_value(st->gpio_range, i);
--		st->range = i;
-+		ret = st->write_scale(indio_dev, chan->address, i);
-+		if (ret < 0) {
-+			mutex_unlock(&st->lock);
-+			return ret;
-+		}
-+		st->range[ch] = i;
- 		mutex_unlock(&st->lock);
- 
- 		return 0;
-@@ -218,17 +247,12 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
- 			return -EINVAL;
- 		i = find_closest(val, st->oversampling_avail,
- 				 st->num_os_ratios);
--
--		values[0] = i;
--
- 		mutex_lock(&st->lock);
--		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
--				      st->gpio_os->info, values);
--
--		/* AD7616 requires a reset to update value */
--		if (st->chip_info->os_req_reset)
--			ad7606_reset(st);
--
-+		ret = st->write_os(indio_dev, i);
-+		if (ret < 0) {
-+			mutex_unlock(&st->lock);
-+			return ret;
-+		}
- 		st->oversampling = st->oversampling_avail[i];
- 		mutex_unlock(&st->lock);
- 
-@@ -536,7 +560,7 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
- 	st->bops = bops;
- 	st->base_address = base_address;
- 	/* tied to logic low, analog input range is +/- 5V */
--	st->range = 0;
-+	st->range[0] = 0;
- 	st->oversampling = 1;
- 	st->scale_avail = ad7606_scale_avail;
- 	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
-@@ -589,6 +613,9 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
- 	if (ret)
- 		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
- 
-+	st->write_scale = ad7606_write_scale_hw;
-+	st->write_os = ad7606_write_os_hw;
++static int ad7606_spi_reg_read(struct ad7606_state *st, unsigned int addr)
++{
++	struct spi_device *spi = to_spi_device(st->dev);
++	struct spi_transfer t[] = {
++		{
++			.tx_buf = &st->data[0],
++			.len = 2,
++			.cs_change = 0,
++		}, {
++			.rx_buf = &st->data[1],
++			.len = 2,
++		},
++	};
++	int ret;
 +
- 	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
- 					  indio_dev->name, indio_dev->id);
- 	if (!st->trig)
-@@ -643,7 +670,7 @@ static int ad7606_resume(struct device *dev)
- 	struct ad7606_state *st = iio_priv(indio_dev);
- 
- 	if (st->gpio_standby) {
--		gpiod_set_value(st->gpio_range, st->range);
-+		gpiod_set_value(st->gpio_range, st->range[0]);
- 		gpiod_set_value(st->gpio_standby, 1);
- 		ad7606_reset(st);
- 	}
++	st->data[0] = cpu_to_be16(st->chip_info->spi_rd_wr_cmd(addr, 0) << 8);
++
++	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
++	if (ret < 0)
++		return ret;
++
++	return be16_to_cpu(st->data[1]);
++}
++
++static int ad7606_spi_reg_write(struct ad7606_state *st,
++				unsigned int addr,
++				unsigned int val)
++{
++	struct spi_device *spi = to_spi_device(st->dev);
++
++	st->data[0] = cpu_to_be16((st->chip_info->spi_rd_wr_cmd(addr, 1) << 8) |
++				  (val & 0x1FF));
++
++	return spi_write(spi, &st->data[0], sizeof(st->data[0]));
++}
++
++static int ad7606_spi_write_mask(struct ad7606_state *st,
++				 unsigned int addr,
++				 unsigned long mask,
++				 unsigned int val)
++{
++	int readval;
++
++	readval = ad7606_spi_reg_read(st, addr);
++	if (readval < 0)
++		return readval;
++
++	readval &= ~mask;
++	readval |= val;
++
++	return ad7606_spi_reg_write(st, addr, readval);
++}
++
+ static int ad7606_read_samples(struct ad7606_state *st)
+ {
+ 	unsigned int num = st->chip_info->num_channels;
 diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-index f9ef52131e74..143c30163df9 100644
+index d8a509c2c428..dfc60af9b8ac 100644
 --- a/drivers/iio/adc/ad7606.h
 +++ b/drivers/iio/adc/ad7606.h
-@@ -16,6 +16,12 @@
+@@ -16,6 +16,7 @@
   *			oversampling ratios.
   * @oversampling_num	number of elements stored in oversampling_avail array
   * @os_req_reset	some devices require a reset to update oversampling
-+ * @write_scale_sw	pointer to the function which writes the scale via spi
-+			in software mode
-+ * @write_os_sw		pointer to the function which writes the os via spi
-+			in software mode
-+ * @sw_mode_config:	pointer to a function which configured the device
-+ *			for software mode
-  */
- struct ad7606_chip_info {
- 	const struct iio_chan_spec	*channels;
-@@ -23,6 +29,9 @@ struct ad7606_chip_info {
++ * @spi_rd_wr_cmd	pointer to the function which calculates the spi address
+  * @write_scale_sw	pointer to the function which writes the scale via spi
+ 			in software mode
+  * @write_os_sw		pointer to the function which writes the os via spi
+@@ -29,6 +30,7 @@ struct ad7606_chip_info {
  	const unsigned int		*oversampling_avail;
  	unsigned int			oversampling_num;
  	bool				os_req_reset;
-+	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
-+	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
-+	int (*sw_mode_config)(struct iio_dev *indio_dev);
- };
- 
- /**
-@@ -39,6 +48,8 @@ struct ad7606_chip_info {
-  * @oversampling_avail	pointer to the array which stores the available
-  *			oversampling ratios.
-  * @num_os_ratios	number of elements stored in oversampling_avail array
-+ * @write_scale		pointer to the function which writes the scale
-+ * @write_os		pointer to the function which writes the os
-  * @lock		protect sensor state from concurrent accesses to GPIOs
-  * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
-  * @gpio_reset		GPIO descriptor for device hard-reset
-@@ -57,13 +68,15 @@ struct ad7606_state {
- 	const struct ad7606_chip_info	*chip_info;
- 	struct regulator		*reg;
- 	const struct ad7606_bus_ops	*bops;
--	unsigned int			range;
-+	unsigned int			range[16];
- 	unsigned int			oversampling;
- 	void __iomem			*base_address;
- 	const unsigned int		*scale_avail;
- 	unsigned int			num_scales;
- 	const unsigned int		*oversampling_avail;
- 	unsigned int			num_os_ratios;
-+	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
-+	int (*write_os)(struct iio_dev *indio_dev, int val);
- 
- 	struct mutex			lock; /* protect sensor state */
- 	struct gpio_desc		*gpio_convst;
++	int (*spi_rd_wr_cmd)(int addr, char isWriteOp);
+ 	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
+ 	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
+ 	int (*sw_mode_config)(struct iio_dev *indio_dev);
 -- 
 2.17.1
