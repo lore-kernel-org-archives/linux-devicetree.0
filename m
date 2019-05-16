@@ -1,60 +1,74 @@
-Return-Path: <SRS0=iNMp=TC=rockwellcollins.com=adam.michaelis@kernel.org>
-From: Adam Michaelis <adam.michaelis@rockwellcollins.com>
-Subject: [PATCH v2 2/6] dt-bindings: iio: ad7949: Add adi,reference-select
-Date: Thu,  2 May 2019 11:14:28 -0500
-Message-Id: <1556813672-49861-2-git-send-email-adam.michaelis@rockwellcollins.com>
-In-Reply-To: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
-References: <1556813672-49861-1-git-send-email-adam.michaelis@rockwellcollins.com>
-To: linux-iio@vger.kernel.org
-Cc: lars@metafoo.de, michael.hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, charles-antoine.couret@essensium.com, devicetree@vger.kernel.org, brandon.maier@rockwellcollins.com, clayton.shotwell@rockwellcollins.com, Adam Michaelis <adam.michaelis@rockwellcollins.com>
+Return-Path: <SRS0=0yxz=TQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:25406 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfEPH7H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 May 2019 03:59:07 -0400
+Date: Thu, 16 May 2019 09:59:02 +0200 (CEST)
+From: Ulrich Hecht <uli@fpond.eu>
+Message-ID: <1010579666.68696.1557993542697@webmail.strato.com>
+In-Reply-To: <20190516003803.808-1-niklas.soderlund+renesas@ragnatech.se>
+References: <20190516003803.808-1-niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH] dt-bindings: rcar-{csi2,vin}: Rename bindings
+ documentation files
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Adding optional parameter to AD7949 to specify the source for the
-reference voltage signal. Default value is maintaned with option '6' to
-match previous version of driver.
 
-Signed-off-by: Adam Michaelis <adam.michaelis@rockwellcollins.com>
----
-	V2: Add some defines to reduce use of magic numbers.
----
- .../devicetree/bindings/iio/adc/ad7949.txt         | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+> On May 16, 2019 at 2:38 AM Niklas S=C3=B6derlund <niklas.soderlund+renesa=
+s@ragnatech.se> wrote:
+>=20
+>=20
+> Renesas media binding documentation files uses a naming schema of
+> 'renesas,<module>.txt'. Rename VIN and CSI-2 files to match this
+> pattern.
+>=20
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+> ---
+>  .../media/{renesas,rcar-csi2.txt =3D> renesas,csi2.txt}         | 0
+>  .../bindings/media/{rcar_vin.txt =3D> renesas,vin.txt}          | 0
+>  MAINTAINERS                                                   | 4 ++--
+>  3 files changed, 2 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/media/{renesas,rcar-csi2.txt =
+=3D> renesas,csi2.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/{rcar_vin.txt =3D> renesa=
+s,vin.txt} (100%)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.tx=
+t b/Documentation/devicetree/bindings/media/renesas,csi2.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> rename to Documentation/devicetree/bindings/media/renesas,csi2.txt
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
+entation/devicetree/bindings/media/renesas,vin.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/rcar_vin.txt
+> rename to Documentation/devicetree/bindings/media/renesas,vin.txt
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 878588cfb453d83c..c3a23726472d7d4d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9629,8 +9629,8 @@ L:=09linux-media@vger.kernel.org
+>  L:=09linux-renesas-soc@vger.kernel.org
+>  T:=09git git://linuxtv.org/media_tree.git
+>  S:=09Supported
+> -F:=09Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> -F:=09Documentation/devicetree/bindings/media/rcar_vin.txt
+> +F:=09Documentation/devicetree/bindings/media/renesas,csi2.txt
+> +F:=09Documentation/devicetree/bindings/media/renesas,vin.txt
+>  F:=09drivers/media/platform/rcar-vin/
+> =20
+>  MEDIA DRIVERS FOR RENESAS - VSP1
+> --=20
+> 2.21.0
+>
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-index c7f5057356b1..14ee9a2cb2a5 100644
---- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
-@@ -6,11 +6,29 @@ Required properties:
- 	* "adi,ad7682"
- 	* "adi,ad7689"
-  - reg: spi chip select number for the device
-- - vref-supply: The regulator supply for ADC reference voltage
- 
--Example:
-+Optional properties:
-+ - adi,reference-select: Select the reference voltage source to use
-+ when converting the input voltages. Valid values are:
-+   0: Internal 2.5V reference; temperature sensor enabled
-+   1: Internal 4.096V reference; temperature sensor enabled
-+   2: External reference, temperature sensor enabled, no buffer
-+   3: External reference, temperature sensor enabled, buffer enabled
-+   6: External reference, temperature sensor disabled, no buffer
-+   7: External reference, temperature sensor disabled, buffer enabled
-+ - vref-supply: The regulator supply for ADC reference voltage. Required
-+ if external reference selected by 'adi,reference-select'.
-+
-+Examples:
- adc@0 {
- 	compatible = "adi,ad7949";
- 	reg = <0>;
-+	adi,reference-select = <2>;
- 	vref-supply = <&vdd_supply>;
- };
-+
-+adc@0 {
-+	compatible = "adi,ad7949";
-+	reg = <0>;
-+	adi,reference-select = <0>;
-+};
--- 
-1.9.1
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+
+CU
+Uli
