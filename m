@@ -1,153 +1,114 @@
 Return-Path: <SRS0=h84k=TQ=analog.com=alexandru.Ardelean@kernel.org>
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH V2] dt-bindings: iio: accel: adxl345: switch to YAML bindings
-Date: Thu, 16 May 2019 16:36:09 +0300
-Message-ID: <20190516133609.10975-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20190516121509.1441-1-alexandru.ardelean@analog.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH] dt-bindings: iio: accel: adxl345: switch to YAML
+ bindings
+Date: Thu, 16 May 2019 13:34:10 +0000
+Message-ID: <f2c3728e370bab8998d11ecabd4366e4776ea671.camel@analog.com>
 References: <20190516121509.1441-1-alexandru.ardelean@analog.com>
+	 <CAL_JsqJLEuCJWnD1G5iXdCNcJ+a_0zhoUH2a=4i6VBm8_B9r6w@mail.gmail.com>
+In-Reply-To: <CAL_JsqJLEuCJWnD1G5iXdCNcJ+a_0zhoUH2a=4i6VBm8_B9r6w@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A7CB4942CF932143ACA5F70E6BA74DB2@analog.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The ADX345 supports both I2C & SPI bindings.
-This change switches from old text bindings, to YAML bindings, and also
-tries to make use of the recent multiple-examples support.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
-Changelog v1 -> v2:
-* dropped interrupt-parent from DT, as suggested by Rob
-
- .../bindings/iio/accel/adi,adxl345.yaml       | 72 +++++++++++++++++++
- .../devicetree/bindings/iio/accel/adxl345.txt | 39 ----------
- 2 files changed, 72 insertions(+), 39 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-new file mode 100644
-index 000000000000..7ba167e2e1ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl345.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+
-+description: |
-+  Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers that supports
-+  both I2C & SPI interfaces.
-+    http://www.analog.com/en/products/mems/accelerometers/adxl345.html
-+    http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adxl345
-+      - adi,adxl375
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-cpha: true
-+
-+  spi-cpol: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* Example for a I2C device node */
-+        accelerometer@2a {
-+            compatible = "adi,adxl345";
-+            reg = <0x53>;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* Example for a SPI device node */
-+        accelerometer@0 {
-+            compatible = "adi,adxl345";
-+            reg = <0>;
-+            spi-max-frequency = <5000000>;
-+            spi-cpol;
-+            spi-cpha;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/accel/adxl345.txt b/Documentation/devicetree/bindings/iio/accel/adxl345.txt
-deleted file mode 100644
-index f9525f6e3d43..000000000000
---- a/Documentation/devicetree/bindings/iio/accel/adxl345.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
--
--http://www.analog.com/en/products/mems/accelerometers/adxl345.html
--http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
--
--Required properties:
-- - compatible : should be one of
--		"adi,adxl345"
--		"adi,adxl375"
-- - reg : the I2C address or SPI chip select number of the sensor
--
--Required properties for SPI bus usage:
-- - spi-max-frequency : set maximum clock frequency, must be 5000000
-- - spi-cpol and spi-cpha : must be defined for adxl345 to enable SPI mode 3
--
--Optional properties:
-- - interrupts: interrupt mapping for IRQ as documented in
--   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--
--Example for a I2C device node:
--
--	accelerometer@2a {
--		compatible = "adi,adxl345";
--		reg = <0x53>;
--		interrupt-parent = <&gpio1>;
--		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
--	};
--
--Example for a SPI device node:
--
--	accelerometer@0 {
--		compatible = "adi,adxl345";
--		reg = <0>;
--		spi-max-frequency = <5000000>;
--		spi-cpol;
--		spi-cpha;
--		interrupt-parent = <&gpio1>;
--		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
--	};
--- 
-2.17.1
+T24gVGh1LCAyMDE5LTA1LTE2IGF0IDA4OjI5IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gDQo+IE9uIFRodSwgTWF5IDE2LCAyMDE5IGF0IDc6MTUgQU0gQWxl
+eGFuZHJ1IEFyZGVsZWFuDQo+IDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6
+DQo+ID4gDQo+ID4gVGhlIEFEWDM0NSBzdXBwb3J0cyBib3RoIEkyQyAmIFNQSSBiaW5kaW5ncy4N
+Cj4gPiBUaGlzIGNoYW5nZSBzd2l0Y2hlcyBmcm9tIG9sZCB0ZXh0IGJpbmRpbmdzLCB0byBZQU1M
+IGJpbmRpbmdzLCBhbmQgYWxzbw0KPiA+IHRyaWVzIHRvIG1ha2UgdXNlIG9mIHRoZSByZWNlbnQg
+bXVsdGlwbGUtZXhhbXBsZXMgc3VwcG9ydC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4
+YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+IC0tLQ0K
+PiA+ICAuLi4vYmluZGluZ3MvaWlvL2FjY2VsL2FkaSxhZHhsMzQ1LnlhbWwgICAgICAgfCA3NCAr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2Nl
+bC9hZHhsMzQ1LnR4dCB8IDM5IC0tLS0tLS0tLS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA3NCBp
+bnNlcnRpb25zKCspLCAzOSBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+
+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2NlbC9hZGksYWR4bDM0
+NS55YW1sDQo+ID4gIGRlbGV0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM0NS50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
+DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FjY2VsL2FkaSxh
+ZHhsMzQ1LnlhbWwNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8v
+YWNjZWwvYWRpLGFkeGwzNDUueWFtbA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5k
+ZXggMDAwMDAwMDAwMDAwLi40N2NkZmIzYjgxODINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hY2NlbC9hZGksYWR4bDM0
+NS55YW1sDQo+ID4gQEAgLTAsMCArMSw3NCBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlm
+aWVyOiBHUEwtMi4wDQo+ID4gKyVZQU1MIDEuMg0KPiA+ICstLS0NCj4gPiArJGlkOiANCj4gPiBo
+dHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9paW8vYWNjZWxlcm9tZXRlcnMvYWRpLGFkeGwz
+NDUueWFtbCMNCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1h
+cy9jb3JlLnlhbWwjDQo+ID4gKw0KPiA+ICt0aXRsZTogQW5hbG9nIERldmljZXMgQURYTDM0NS9B
+RFhMMzc1IDMtQXhpcyBEaWdpdGFsIEFjY2VsZXJvbWV0ZXJzDQo+ID4gKw0KPiA+ICttYWludGFp
+bmVyczoNCj4gPiArICAtIE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5lcmljaEBhbmFs
+b2cuY29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246IHwNCj4gPiArICBBbmFsb2cgRGV2aWNl
+cyBBRFhMMzQ1L0FEWEwzNzUgMy1BeGlzIERpZ2l0YWwgQWNjZWxlcm9tZXRlcnMgdGhhdA0KPiA+
+IHN1cHBvcnRzDQo+ID4gKyAgYm90aCBJMkMgJiBTUEkgaW50ZXJmYWNlcy4NCj4gPiArICAgIGh0
+dHA6Ly93d3cuYW5hbG9nLmNvbS9lbi9wcm9kdWN0cy9tZW1zL2FjY2VsZXJvbWV0ZXJzL2FkeGwz
+NDUuaHRtbA0KPiA+ICsgICAgDQo+ID4gaHR0cDovL3d3dy5hbmFsb2cuY29tL2VuL3Byb2R1Y3Rz
+L3NlbnNvcnMtbWVtcy9hY2NlbGVyb21ldGVycy9hZHhsMzc1Lmh0bWwNCj4gPiArDQo+ID4gK3By
+b3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiArICAgIGVudW06DQo+ID4gKyAgICAg
+IC0gYWRpLGFkeGwzNDUNCj4gPiArICAgICAgLSBhZGksYWR4bDM3NQ0KPiA+ICsNCj4gPiArICBy
+ZWc6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBzcGktY3BoYTogdHJ1ZQ0K
+PiA+ICsNCj4gPiArICBzcGktY3BvbDogdHJ1ZQ0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHQtcGFy
+ZW50OiB0cnVlDQo+IA0KPiBZb3UgZG9uJ3QgbmVlZCB0byBkb2N1bWVudCBpbnRlcnJ1cHQtcGFy
+ZW50LiBJdCBpcyBpbXBsaWVkLiBXaXRoIHRoYXQNCj4gZHJvcHBlZCwNCg0KSSdsbCBzZW5kIGEg
+VjIgZHJvcHBpbmcgaXQuDQoNClRoYW5rcw0KQWxleA0KDQo+IA0KPiBSZXZpZXdlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gDQo+ID4gKw0KPiA+ICsgIGludGVycnVwdHM6
+DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBj
+b21wYXRpYmxlDQo+ID4gKyAgLSByZWcNCj4gPiArICAtIGludGVycnVwdHMNCj4gPiArDQo+ID4g
+K2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dw
+aW8vZ3Bpby5oPg0KPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250
+cm9sbGVyL2lycS5oPg0KPiA+ICsgICAgaTJjMCB7DQo+ID4gKyAgICAgICAgI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47DQo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICsg
+ICAgICAgIC8qIEV4YW1wbGUgZm9yIGEgSTJDIGRldmljZSBub2RlICovDQo+ID4gKyAgICAgICAg
+YWNjZWxlcm9tZXRlckAyYSB7DQo+ID4gKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFk
+eGwzNDUiOw0KPiA+ICsgICAgICAgICAgICByZWcgPSA8MHg1Mz47DQo+ID4gKyAgICAgICAgICAg
+IGludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8wPjsNCj4gPiArICAgICAgICAgICAgaW50ZXJydXB0
+cyA9IDwwIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsgICAgICAgIH07DQo+ID4gKyAgICB9
+Ow0KPiA+ICsgIC0gfA0KPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5o
+Pg0KPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ly
+cS5oPg0KPiA+ICsgICAgc3BpMCB7DQo+ID4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICsgICAgICAgIC8q
+IEV4YW1wbGUgZm9yIGEgU1BJIGRldmljZSBub2RlICovDQo+ID4gKyAgICAgICAgYWNjZWxlcm9t
+ZXRlckAwIHsNCj4gPiArICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhZGksYWR4bDM0NSI7DQo+
+ID4gKyAgICAgICAgICAgIHJlZyA9IDwwPjsNCj4gPiArICAgICAgICAgICAgc3BpLW1heC1mcmVx
+dWVuY3kgPSA8NTAwMDAwMD47DQo+ID4gKyAgICAgICAgICAgIHNwaS1jcG9sOw0KPiA+ICsgICAg
+ICAgICAgICBzcGktY3BoYTsNCj4gPiArICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwm
+Z3BpbzA+Ow0KPiA+ICsgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgSVJRX1RZUEVfTEVWRUxf
+SElHSD47DQo+ID4gKyAgICAgICAgfTsNCj4gPiArICAgIH07DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM0NS50eHQNCj4g
+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWNjZWwvYWR4bDM0NS50
+eHQNCj4gPiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCBmOTUyNWY2ZTNkNDMu
+LjAwMDAwMDAwMDAwMA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9paW8vYWNjZWwvYWR4bDM0NS50eHQNCj4gPiArKysgL2Rldi9udWxsDQo+ID4gQEAgLTEsMzkg
+KzAsMCBAQA0KPiA+IC1BbmFsb2cgRGV2aWNlcyBBRFhMMzQ1L0FEWEwzNzUgMy1BeGlzIERpZ2l0
+YWwgQWNjZWxlcm9tZXRlcnMNCj4gPiAtDQo+ID4gLWh0dHA6Ly93d3cuYW5hbG9nLmNvbS9lbi9w
+cm9kdWN0cy9tZW1zL2FjY2VsZXJvbWV0ZXJzL2FkeGwzNDUuaHRtbA0KPiA+IC0NCj4gPiBodHRw
+Oi8vd3d3LmFuYWxvZy5jb20vZW4vcHJvZHVjdHMvc2Vuc29ycy1tZW1zL2FjY2VsZXJvbWV0ZXJz
+L2FkeGwzNzUuaHRtbA0KPiA+IC0NCj4gPiAtUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtIC0g
+Y29tcGF0aWJsZSA6IHNob3VsZCBiZSBvbmUgb2YNCj4gPiAtICAgICAgICAgICAgICAgImFkaSxh
+ZHhsMzQ1Ig0KPiA+IC0gICAgICAgICAgICAgICAiYWRpLGFkeGwzNzUiDQo+ID4gLSAtIHJlZyA6
+IHRoZSBJMkMgYWRkcmVzcyBvciBTUEkgY2hpcCBzZWxlY3QgbnVtYmVyIG9mIHRoZSBzZW5zb3IN
+Cj4gPiAtDQo+ID4gLVJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFNQSSBidXMgdXNhZ2U6DQo+ID4g
+LSAtIHNwaS1tYXgtZnJlcXVlbmN5IDogc2V0IG1heGltdW0gY2xvY2sgZnJlcXVlbmN5LCBtdXN0
+IGJlIDUwMDAwMDANCj4gPiAtIC0gc3BpLWNwb2wgYW5kIHNwaS1jcGhhIDogbXVzdCBiZSBkZWZp
+bmVkIGZvciBhZHhsMzQ1IHRvIGVuYWJsZSBTUEkNCj4gPiBtb2RlIDMNCj4gPiAtDQo+ID4gLU9w
+dGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gLSAtIGludGVycnVwdHM6IGludGVycnVwdCBtYXBwaW5n
+IGZvciBJUlEgYXMgZG9jdW1lbnRlZCBpbg0KPiA+IC0gICBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaW50ZXJydXB0LQ0KPiA+IGNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQNCj4g
+PiAtDQo+ID4gLUV4YW1wbGUgZm9yIGEgSTJDIGRldmljZSBub2RlOg0KPiA+IC0NCj4gPiAtICAg
+ICAgIGFjY2VsZXJvbWV0ZXJAMmEgew0KPiA+IC0gICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
+ImFkaSxhZHhsMzQ1IjsNCj4gPiAtICAgICAgICAgICAgICAgcmVnID0gPDB4NTM+Ow0KPiA+IC0g
+ICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ID4gLSAgICAgICAg
+ICAgICAgIGludGVycnVwdHMgPSA8MCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAtICAgICAg
+IH07DQo+ID4gLQ0KPiA+IC1FeGFtcGxlIGZvciBhIFNQSSBkZXZpY2Ugbm9kZToNCj4gPiAtDQo+
+ID4gLSAgICAgICBhY2NlbGVyb21ldGVyQDAgew0KPiA+IC0gICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gImFkaSxhZHhsMzQ1IjsNCj4gPiAtICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+
+IC0gICAgICAgICAgICAgICBzcGktbWF4LWZyZXF1ZW5jeSA9IDw1MDAwMDAwPjsNCj4gPiAtICAg
+ICAgICAgICAgICAgc3BpLWNwb2w7DQo+ID4gLSAgICAgICAgICAgICAgIHNwaS1jcGhhOw0KPiA+
+IC0gICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ID4gLSAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8MCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAtICAg
+ICAgIH07DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPiANCg==
