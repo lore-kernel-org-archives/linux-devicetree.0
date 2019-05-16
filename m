@@ -1,120 +1,278 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH V3 1/8] dt-bindings: memory: tegra: Add external memory
- controller binding for Tegra210
-Date: Thu, 16 May 2019 17:01:19 +0800
-Message-ID: <f1e4ab1e-11b9-ba65-20b8-35c6459d2410@nvidia.com>
-References: <20190510084719.18902-1-josephl@nvidia.com>
- <20190510084719.18902-2-josephl@nvidia.com>
- <fd68f906-79b4-6eda-b1fa-abaf3b4c6a12@gmail.com>
- <63360b18-6a17-ab3f-6c54-6e11e24885d0@nvidia.com>
- <c3909c66-5aa4-161b-98d4-02ad20e02c88@gmail.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 08/12] soc: mediatek: cmdq: define the instruction struct
+Date: Thu, 16 May 2019 17:02:20 +0800
+Message-ID: <20190516090224.59070-9-bibby.hsieh@mediatek.com>
+References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c3909c66-5aa4-161b-98d4-02ad20e02c88@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gNS8xNS8xOSA5OjUwIFBNLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6Cj4gMTUuMDUuMjAxOSAx
-MDoxNywgSm9zZXBoIExvINC/0LjRiNC10YI6Cj4+IE9uIDUvMTUvMTkgMTI6MjggQU0sIERtaXRy
-eSBPc2lwZW5rbyB3cm90ZToKPj4+IDEwLjA1LjIwMTkgMTE6NDcsIEpvc2VwaCBMbyDQv9C40YjQ
-tdGCOgo+Pj4+IEFkZCB0aGUgYmluZGluZyBkb2N1bWVudCBmb3IgdGhlIGV4dGVybmFsIG1lbW9y
-eSBjb250cm9sbGVyIChFTUMpIHdoaWNoCj4+Pj4gY29tbXVuaWNhdGVzIHdpdGggZXh0ZXJuYWwg
-TFBERFI0IGRldmljZXMuIEl0IGluY2x1ZGVzIHRoZSBiaW5kaW5ncyBvZgo+Pj4+IHRoZSBFTUMg
-bm9kZSBhbmQgYSBzdWItbm9kZSBvZiBFTUMgdGFibGUgd2hpY2ggdW5kZXIgdGhlIHJlc2VydmVk
-IG1lbW9yeQo+Pj4+IG5vZGUuIFRoZSBFTUMgdGFibGUgY29udGFpbnMgdGhlIGRhdGEgb2YgdGhl
-IHJhdGVzIHRoYXQgRU1DIHN1cHBvcnRlZC4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEpvc2Vw
-aCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+Pj4+IC0tLQo+Pj4+IHYzOgo+Pj4+IC0gZHJvcCB0
-aGUgYmluZGluZ3Mgb2YgRU1DIHRhYmxlCj4+Pj4gLSBhZGQgbWVtb3J5LXJlZ2lvbiBhbmQgcmVz
-ZXJ2ZWQtbWVtb3J5IG5vZGUgZm9yIEVNQyB0YWJsZQo+Pj4+IC0tLQo+Pj4+ICDCoCAuLi4vbnZp
-ZGlhLHRlZ3JhMjEwLWVtYy50eHTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fCA1NSArKysrKysrKysrKysrKysrKysrCj4+Pj4gIMKgIDEgZmlsZSBjaGFuZ2VkLCA1NSBpbnNl
-cnRpb25zKCspCj4+Pj4gIMKgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4+IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVt
-Yy50eHQKPj4+Pgo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdAo+Pj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9udmlkaWEsdGVncmEyMTAtZW1jLnR4
-dAo+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9s
-bGVycy9udmlkaWEsdGVncmEyMTAtZW1jLnR4dAo+Pj4+Cj4+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQKPj4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmQ2NWFlZWYyMzI5Ywo+Pj4+IC0tLSAvZGV2L251
-bGwKPj4+PiArKysKPj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1v
-cnktY29udHJvbGxlcnMvbnZpZGlhLHRlZ3JhMjEwLWVtYy50eHQKPj4+Pgo+Pj4+IEBAIC0wLDAg
-KzEsNTUgQEAKPj4+PiArTlZJRElBIFRlZ3JhMjEwIFNvQyBFTUMgKGV4dGVybmFsIG1lbW9yeSBj
-b250cm9sbGVyKQo+Pj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09Cj4+Pj4gKwo+Pj4+ICtEZXZpY2Ugbm9kZQo+Pj4+ICs9PT09PT09PT09PQo+
-Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIDoKPj4+PiArLSBjb21wYXRpYmxlIDogc2hvdWxkIGJl
-ICJudmlkaWEsdGVncmEyMTAtZW1jIi4KPj4+PiArLSByZWcgOiBwaHlzaWNhbCBiYXNlIGFkZHJl
-c3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPj4+PiArLSBjbG9j
-a3MgOiBwaGFuZGxlcyBvZiB0aGUgcG9zc2libGUgc291cmNlIGNsb2Nrcy4KPj4+PiArLSBjbG9j
-ay1uYW1lcyA6IG5hbWVzIG9mIHRoZSBwb3NzaWJsZSBzb3VyY2UgY2xvY2tzLgo+Pj4+ICstIGlu
-dGVycnVwdHMgOiBTaG91bGQgY29udGFpbiB0aGUgRU1DIGdlbmVyYWwgaW50ZXJydXB0Lgo+Pj4+
-ICstIG1lbW9yeS1yZWdpb24gOiBwaGFuZGxlIHRvIHRoZSByZXNlcnZlZCBtZW1vcnkgKHNlZQo+
-Pj4+ICsKPj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVt
-b3J5L3Jlc2VydmVkLW1lbW9yeS50eHQpIHdoaWNoCj4+Pj4KPj4+PiArwqAgY29udGFpbnMgYSBz
-dWItbm9kZSBvZiBFTUMgdGFibGUuCj4+Pj4gKy0gbnZpZGlhLG1lbW9yeS1jb250cm9sbGVyIDog
-cGhhbmRsZSBvZiB0aGUgbWVtb3J5IGNvbnRyb2xsZXIuCj4+Pj4gKwo+Pj4+ICtSZXNlcnZlZCBt
-ZW1vcnkgbm9kZQo+Pj4+ICs9PT09PT09PT09PT09PT09PT09PQo+Pj4+ICtTaG91bGQgY29udGFp
-biBhIHN1Yi1ub2RlIG9mIEVNQyB0YWJsZSB3aXRoIHJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4g
-Ky0gY29tcGF0aWJsZSA6IHNob3VsZCBiZSAibnZpZGlhLHRlZ3JhMjEwLWVtYy10YWJsZSIuCj4+
-Pj4gKy0gcmVnIDogcGh5c2ljYWwgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBsb2NhdGlvbiBv
-ZiBFTUMgdGFibGUuCj4+Pj4gKwo+Pj4+ICtFeGFtcGxlOgo+Pj4+ICvCoMKgwqAgcmVzZXJ2ZWQt
-bWVtb3J5IHsKPj4+PiArwqDCoMKgwqDCoMKgwqAgI2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4+Pj4g
-K8KgwqDCoMKgwqDCoMKgICNzaXplLWNlbGxzID0gPDI+Owo+Pj4+ICvCoMKgwqDCoMKgwqDCoCBy
-YW5nZXM7Cj4+Pj4gKwo+Pj4+ICvCoMKgwqDCoMKgwqDCoCBlbWNfdGFibGU6IGVtYy10YWJsZUA4
-YmUwMDAwMCB7Cj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJudmlk
-aWEsdGVncmEyMTAtZW1jLXRhYmxlIjsKPj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcg
-PSA8MHgwIDB4OGJlMDAwMDAgMHgwIDB4MTAwMDA+Owo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHN0YXR1cyA9ICJva2F5IjsKPj4+PiArwqDCoMKgwqDCoMKgwqAgfTsKPj4+Cj4+PiBZb3Ug
-ZXNzZW50aWFsbHkgbW92ZWQgdGhlIHYxIGJpbmRpbmcgaW50byBvYnNjdXJlIGFuZCB1bmRvY3Vt
-ZW50ZWQgYmxvYiwKPj4+IGlnbm9yaW5nIHByZXZpb3VzIHJldmlldyBjb21tZW50cy4gVGhpcyBp
-cyBhIHZlcnkgb2RkIG1vdmUuLi4gcGxlYXNlCj4+PiBleHBsYWluIHdoYXQgaXMgZ29pbmcgb24u
-Cj4+Pgo+Pgo+PiBEaXNjdXNzZWQgd2l0aCBUaGllcnJ5IG9mZmxpbmUgd2hpY2ggd2F5IHdlIHBy
-ZWZlciB0byBwYXNzIHRoZSBFTUMgdGFibGUKPj4gdG8gdGhlIGtlcm5lbC4gU29tZSByZWFzb25z
-IGJlbG93IHdlIGRlY2lkZSB0byBjaG9zZSB0aGlzIG9uZSAodmlhCj4+IGJpbmFyeSBibG9iKS4K
-Pj4KPj4gLSBUaGUgRU1DIHRhYmxlIGlzIG11Y2ggYmlnZ2VyIHRoYW4gdGhlIHByZXZpb3VzIFRl
-Z3JhIGdlbmVyYXRpb25zCj4+IChMUEREUjQgdi5zLiBMUEREUjIvMykuIEl0J3MgaGFyZGVyIHRv
-IHNldHRsZSBpbiB0aGUgcmV2aWV3IHByb2Nlc3MuIEFuZAo+PiBpZiB0aGVyZSBpcyBhIG5ldyBm
-aXggb2YgdGhlIHRhYmxlIGluIHRoZSBmdXR1cmUsIHdlJ2xsIG5lZWQgdG8gZ28KPj4gdGhyb3Vn
-aCB0aGF0IGFnYWluLgo+IAo+IEkgZG9uJ3QgdGhpbmsgdGhhdCB0aGlzIGEgdmVyeSBnb29kIGV4
-Y3VzZSBmb3Igbm90IGRvY3VtZW50aW5nIHRoZQo+IGJsb2IncyBzdHJ1Y3R1cmUuCgpUaGUgYmxv
-YidzIHN0cnVjdHVyZSBpcyBpbiBwYXRjaCA0IG5vdyB0aGF0IHdlIG9yaWdpbmFsbHkgd2FudGVk
-IHRvIApkZXNjcmliZSBiZWxvdy4gQmFzaWNhbGx5LCB0aGUgY29udGVudCBpcyB0aGUgc2FtZS4K
-aHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwODQ0NjcvCmh0dHA6Ly9wYXRjaHdv
-cmsub3psYWJzLm9yZy9wYXRjaC8xMDYzODc5LwoKPiAKPj4gLSBCZWNhdXNlIGl0J3MgTFBERFI0
-IHdlIHdhbnQgdG8gc3VwcG9ydCBoZXJlLCB0byBzdXBwb3J0IGhpZ2hlciByYXRlcywKPj4gdGhl
-IGRldmljZXMgaGF2ZSBtdXN0IGJlIGdvbmUgdGhyb3VnaCB0aGUgdHJhaW5pbmcgcHJvY2Vzcywg
-d2hpY2ggaXMKPj4gZG9uZSBpbiB0aGUgZmlybXdhcmUuIFdoaWNoIG1lYW5zIFdlIGFscmVhZHkg
-aGF2ZSB0aGUgdGFibGUgc29tZXdoZXJlIGluCj4+IHRoZSBtZW1vcnkgYW5kIGtlcm5lbCBjYW4g
-anVzdCByZS11c2UgdGhhdC4gTm8gbmVlZCB0byBjb252ZXJ0IHRoZW0gYmFjawo+PiB0byBEVCBh
-bmQgcGFzcyB0byB0aGUga2VybmVsLiBUaGlzIGlzIG11Y2ggZWFzaWVyIHRvIG1haW50YWluIGlu
-IHRoZQo+PiBmdXR1cmUgaWYgdGhlcmUgaXMgc29tZXRoaW5nIG5lZWRzIHRvIGZpeC4KPj4gLSBX
-aXRoIHRoZSBtZWNoYW5pc20gYWJvdmUsIHdlIGRvbid0IG5lZWQgdG8gbWFpbnRhaW4gdGhlIGh1
-Z2UgRU1DIHRhYmxlCj4+IGluIHRoZSBEVCBmaWxlIGxpa2UgYmVsb3cuCj4+IGh0dHA6Ly9wYXRj
-aHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDYzODg2Lwo+PiBodHRwOi8vcGF0Y2h3b3JrLm96bGFi
-cy5vcmcvcGF0Y2gvMTA2Mzg4OS8KPiAKPiBUaGUgYmxvYidzIEVNQyB0YWJsZSBjb250YWlucyBz
-dHVmZiBzcGVjaWZpYyB0byBkb3duc3RyZWFtIGtlcm5lbCwgaGVuY2UKPiBpdCdzIGEgbm90IHZl
-cnkgcmUtdXNhYmxlIGRvd25zdHJlYW0gc29mdHdhcmUgQUJJIG1peGVkIHdpdGggSFcKPiBkZXNj
-cmlwdGlvbiB0aGF0IHlvdSdyZSBicmluZ2luZyBpbnRvIHVwc3RyZWFtLiBUaGlzIGlzIG5vdCB2
-ZXJ5Cj4gd2VsY29tZWQsIGFsdGhvdWdoIEkgZG9uJ3Qgc2VlIGl0IGFzIGEgYmlnIHByb2JsZW0g
-aWYgeW91J2xsIHN0YXRlIHRoYXQKPiBhbGwgY2xlYXJseSBpbiB0aGUgY29tbWl0IG1lc3NhZ2Ug
-d2l0aCBhIHNvbGlkIGV4cGxhbmF0aW9uIHdoeSBpdCBpcyB0aGUKPiBiZXN0IHBvc3NpYmxlIG9w
-dGlvbi4KPiAKPj4gQW5kIHNvcnJ5LCBtYXliZSBpdCdzIG5vdCBjbGVhciBhdCB0aGF0IG1vbWVu
-dCwgYnV0IEkgZGlkIG1lbnRpb24gdGhhdAo+PiB3ZSB3YW50IHRvIGdvIHdpdGggdGhlIG5ldyBt
-ZXRob2QgKHZpYSBiaW5hcnkgYmxvYikgaW4gdGhlIHByZXZpb3VzIHJldmlldy4KPj4gUGxlYXNl
-IHNlZSBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTA4NDQ2Ny8KPiAKPiBPa2F5
-LiBJdCB3aWxsIGJlIGJldHRlciBpZiB0aGUgZGlzY3Vzc2lvbiBoYXBwZW5lZCBwdWJsaWNseSwg
-YXQgbGVhc3QgSQo+IGhvcGUgdGhhdCBSb2IgaXMgaW52b2x2ZWQgaW4gaXQuCj4gCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Define a instruction structure for gce driver to append command.
+This structure can make the client's code more readability.
+
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 113 +++++++++++++++--------
+ include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+ include/linux/soc/mediatek/mtk-cmdq.h    |  14 +--
+ 3 files changed, 84 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index ff9fef5a032b..17ee8196fb3d 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -9,12 +9,24 @@
+ #include <linux/mailbox_controller.h>
+ #include <linux/soc/mediatek/mtk-cmdq.h>
+ 
+-#define CMDQ_ARG_A_WRITE_MASK	0xffff
+ #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+ #define CMDQ_EOC_IRQ_EN		BIT(0)
+ #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+ 				<< 32 | CMDQ_EOC_IRQ_EN)
+ 
++struct cmdq_instruction {
++	union {
++		u32 value;
++		u32 mask;
++	};
++	union {
++		u16 offset;
++		u16 event;
++	};
++	u8 subsys;
++	u8 op;
++};
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+@@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_destroy);
+ 
+-static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+-				   u32 arg_a, u32 arg_b)
++static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+ {
+-	u64 *cmd_ptr;
+ 
+ 	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+ 		/*
+@@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+ 		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+ 			__func__, (u32)pkt->buf_size);
+-		return -ENOMEM;
++		return NULL;
+ 	}
+-	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+-	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
++
+ 	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+ 
+-	return 0;
++	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+ }
+ 
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+ {
+-	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+-		    (subsys << CMDQ_SUBSYS_SHIFT);
++	struct cmdq_instruction *inst;
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WRITE;
++	inst->value = value;
++	inst->offset = offset;
++	inst->subsys = subsys;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
+ 
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+-			u32 subsys, u32 offset, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
++			u32 value, u32 mask)
+ {
++	struct cmdq_instruction *inst;
+ 	u32 offset_mask = offset;
+-	int err = 0;
+ 
+ 	if (mask != 0xffffffff) {
+-		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
++		inst = cmdq_pkt_append_command(pkt);
++		if (!inst)
++			return -ENOMEM;
++
++		inst->op = CMDQ_CODE_MASK;
++		inst->mask = ~mask;
+ 		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+ 	}
+-	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+ 
+-	return err;
++	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+-	u32 arg_b;
++	struct cmdq_instruction *inst;
+ 
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * WFE arg_b
+-	 * bit 0-11: wait value
+-	 * bit 15: 1 - wait, 0 - no wait
+-	 * bit 16-27: update value
+-	 * bit 31: 1 - update, 0 - no update
+-	 */
+-	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WFE;
++	inst->value = CMDQ_WFE_OPTION;
++	inst->event = event;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
++	struct cmdq_instruction *inst;
++
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+-				       CMDQ_WFE_UPDATE);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WFE;
++	inst->value = CMDQ_WFE_UPDATE;
++	inst->event = event;
++
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
+ 
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ {
+-	int err;
++	struct cmdq_instruction *inst;
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
+ 
+-	/* insert EOC and generate IRQ for each command iteration */
+-	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
++	inst->op = CMDQ_CODE_EOC;
++	inst->value = CMDQ_EOC_IRQ_EN;
+ 
+-	/* JUMP to end */
+-	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_JUMP;
++	inst->value = CMDQ_JUMP_PASS;
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index 911475da7a53..f21801d32a3a 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -19,6 +19,8 @@
+ #define CMDQ_WFE_UPDATE			BIT(31)
+ #define CMDQ_WFE_WAIT			BIT(15)
+ #define CMDQ_WFE_WAIT_VALUE		0x1
++#define CMDQ_WFE_OPTION                 (CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
++					CMDQ_WFE_WAIT_VALUE)
+ /** cmdq event maximum */
+ #define CMDQ_MAX_EVENT			0x3ff
+ 
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 4e8899972db4..52f69c8db8de 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+ /**
+  * cmdq_pkt_write() - append write command to the CMDQ packet
+  * @pkt:	the CMDQ packet
+- * @value:	the specified target register value
+  * @subsys:	the CMDQ sub system code
+  * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
+ 
+ /**
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+  * @pkt:	the CMDQ packet
+- * @value:	the specified target register value
+  * @subsys:	the CMDQ sub system code
+  * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
+  * @mask:	the specified target register mask
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+-			u32 subsys, u32 offset, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
++			u32 value, u32 mask);
+ 
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+@@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+@@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+-- 
+2.18.0
