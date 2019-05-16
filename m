@@ -1,68 +1,56 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-Date: Thu, 16 May 2019 15:15:15 +0200
-Message-ID: <20190516131515.GB2000@latitude>
-References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
- <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
+From: Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date: Thu, 16 May 2019 14:21:35 +0100
+Message-ID: <fa434575-5576-aff5-8705-1f93eefa209c@arm.com>
+References: <20190512174608.10083-1-peron.clem@gmail.com>
+ <20190513151405.GW17751@phenom.ffwll.local>
+ <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
+ <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
+ <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com>
+ <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
+ <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
+ <CAC=3edbn1yXih5vP0SwsDkqRB0j5q0c4FL0jhCq9DQ9Wt2-hAA@mail.gmail.com>
+ <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
+In-Reply-To: <e8618889-9b22-7f9f-7451-3c08a80a0f9b@arm.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, MSM <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>, Rob Herring <rob.e.herring@gmail.com>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16/05/2019 12:19, Robin Murphy wrote:
+[...]
+> I was expecting to see a similar behaviour to my T620 (which I now
+> assume was down to 64-bit job descriptors sort-of-but-not-quite working)
+> but this does look a bit more fundamental - the fact that it's a level 1
+> fault with VA == head == tail suggests to me that the MMU can't see the
+> page tables at all to translate anything. I really hope that the H6 GPU
+> integration doesn't suffer from the same DMA offset as the Allwinner
+> display pipeline stuff, because that would be a real pain to support in
+> io-pgtable.
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Assuming you mean the case where the physical address (as seen by the
+CPU) is different from the dma address (as seen by the GPU), then I
+highly doubt it because mali_kbase doesn't support it:
 
-On Thu, May 16, 2019 at 02:44:30PM +0200, Linus Walleij wrote:
-> On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
->=20
-> > The property is spelled 'bias-pull-up', as documented in
-> > pinctrl-bindings.txt.
-> >
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> It appears from Rob's comment that he's applying it,
-> tell me if I need to apply it to the pinctrl tree.
+[from kbase_mem_pool_alloc_page() in mali_kbase_mem_pool.c]:
 
-Yes, Rob applied Christian's version to dt/next:
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=3D=
-dt/next&id=3Dc50495aa4cfcaace5f61174ab3069d5047d14f17
+	dma_addr = dma_map_page(dev, p, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
+	if (dma_mapping_error(dev, dma_addr)) {
+		__free_page(p);
+		return NULL;
+	}
 
-So there's no need to apply my version.
+	WARN_ON(dma_addr != page_to_phys(p));
 
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+That being said it's quite possible there could be something in the bus
+which needs configuring to make this work - in which case your best bet
+is to look at the vendor kernel and see if anything extra is poked when
+the Mali driver is loaded.
 
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlzdYl0ACgkQCDBEmo7z
-X9vDaBAArHDvJllzymlUcI+Bs9d6A5YfI4V3wR7SI7nvjkCSa+ctj11a0qOLsLqw
-4+QoXkCETu5Qrwz4utAi8emKVpSjWaEkkickLtpjNDZacjF8kt8QA28uzn8WScoe
-7gs+bd0DZ2Q+doK/QRoGAIZvY/SPSTacaNwec2wKc0d63dn8tKoqrz29r9fNOW3Z
-MvS03f9PF2JFgHCPJkQPDbfmaMXl+57S4N7F9USDhFZmiF2hZNAwL4/p8whw8fLq
-1aRjIpqLw9otvivF4LpK5WUj5XZoSGxbIfAQ2pS2Uj8K+MUp95fB8TqXCGG9hQHw
-dstusnYe8NrcwCBYkedHoNAy2cmj3l73JTe9bSZkeSpSo/dFO9GEvILvS9BaYhJZ
-9bTydEkP1YmAUeC0R962HGD1Yx1t6izL0WNzX/cawg4iQUC1uJPPLWu1p2y2FajO
-FX+nUz3/z8CtGu49Wl8gezj+eI1L3joUuRAMypw7MfQzDsFv0G39wNzjcsfllhZg
-8w71tQx7yA7M4tUGFBWip1tj30d1M8HghAn7psNN8FOKxZbb5NUyDT8l1v+wt1Xl
-VcIfIfT9P2p9//etRlY3gdiTVj7rkZedJttSPq4LUWxENMUVnBf8BYF49hruMat8
-w6L9nhPmq1qQMjZStJBQQupKADwnt6Yce6xhk4f6BYeNbuHAtZY=
-=BpWe
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+Steve
