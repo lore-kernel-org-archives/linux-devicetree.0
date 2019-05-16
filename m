@@ -1,75 +1,54 @@
-From: andrew-sh.cheng <andrew-sh.cheng@mediatek.com>
-Subject: Re: [PATCH 0/8] Add cpufreq and cci devfreq for mt8183, and SVS
- support
-Date: Thu, 16 May 2019 20:23:46 +0800
-Message-ID: <1558009426.29944.1.camel@mtksdaap41>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+Date: Thu, 16 May 2019 14:31:20 +0200
+Message-ID: <20190516123120.GB14298@lunn.ch>
+References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
+ <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, fan.chen@mediatek.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, palmer@sifive.com, paul.walmsley@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-05-16 at 14:53 +0530, Viresh Kumar wrote:
-> On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
-> > From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> > 
-> > MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
-> > So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
-> > 
-> > For SVS support, add OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
-> 
-> No version information here or what has changed. That doesn't help.
-> 
-> I believe this is V3.
-> 
-> Don't resend it but please mention the changes in reply now. Thanks.
-Yes, this is patch v3
+> @@ -682,13 +693,24 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq == -ENXIO) {
+> -		i2c->flags |= OCORES_FLAG_POLL;
+> +		/*
+> +		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
+> +		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
+> +		 * Else enable default polling mode interface for SIFIVE/OCORE
+> +		 * device types.
+> +		 */
+> +		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> +		if (match && (long)match->data ==
+> +				(TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ))
 
-Change since v2:
-- Separate cpufreq modification into 3 patches.
-- Modify dt-binding for more HW information.
-- Refine cci devfreq coding style.
-- patch 6 ~ patch 8 are for SVS support
+This looks wrong. You added:
 
-> 
-> > Andrew-sh.Cheng (7):
-> >   cpufreq: mediatek: change to regulator_get_optional
-> >   cpufreq: mediatek: add clock enable for intermediate clock
-> >   cpufreq: mediatek: Add support for mt8183
-> >   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
-> >   devfreq: add mediatek cci devfreq
-> >   cpufreq: mediatek: add opp notification for SVS support
-> >   devfreq: cci devfreq register opp notification for SVS support
-> > 
-> > Stephen Boyd (1):
-> >   PM / OPP: Support adjusting OPP voltages at runtime
-> > 
-> >  .../bindings/devfreq/mt8183-cci-devfreq.txt        |  20 ++
-> >  drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
-> >  drivers/cpufreq/mediatek-cpufreq.c                 |  88 +++++-
-> >  drivers/devfreq/Kconfig                            |  10 +
-> >  drivers/devfreq/Makefile                           |   1 +
-> >  drivers/devfreq/mt8183-cci-devfreq.c               | 310 +++++++++++++++++++++
-> >  drivers/opp/core.c                                 |  78 ++++++
-> >  include/linux/pm_opp.h                             |  11 +
-> >  8 files changed, 517 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> >  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
-> > 
-> > -- 
-> > 2.12.5
-> 
++       {
++               .compatible = "sifive,fu540-c000-i2c",
++               .data = (void *)TYPE_SIFIVE_REV0,
++       },
++       {
++               .compatible = "sifive,i2c0",
++               .data = (void *)TYPE_SIFIVE_REV0,
++       },
+
+So match->data just has TYPE_SIFIVE_REV0.
+
+> +			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+> +		else
+> +			i2c->flags |= OCORES_FLAG_POLL;
+
+These two don't need to be exclusive. It makes more sense to say
+SIFIVE needs to poll and it its IRQ is broken. A lot of your other
+changes then go away.
+
+       Andrew
