@@ -1,28 +1,38 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 2/4] nvmem: imx: add i.MX8 nvmem driver
-Date: Thu, 16 May 2019 11:21:10 +0000
-Message-ID: <AM0PR04MB42117D189498804D5E3A485F800A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190515080703.19147-1-peng.fan@nxp.com>
- <20190515080703.19147-2-peng.fan@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [alsa-devel] [PATCH V5] ASoC: cs42xx8: add reset-gpios in binding document
+Date: Thu, 16 May 2019 08:46:36 -0300
+Message-ID: <CAOMZO5A7Xtg_pV2VAfmw5NacpRLS=0aGMAazu8p8tOTfa9PrCA@mail.gmail.com>
+References: <3e15abaee348468a69005e4240346822320c7f69.1558006714.git.shengjiu.wang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515080703.19147-2-peng.fan@nxp.com>
-Content-Language: en-US
+In-Reply-To: <3e15abaee348468a69005e4240346822320c7f69.1558006714.git.shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Pengutronix Kernel Team <kernel@pengutronix.de>
+To: "S.j. Wang" <shengjiu.wang@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: "brian.austin@cirrus.com" <brian.austin@cirrus.com>, "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBQZW5nIEZhbg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSAxNSwgMjAxOSAzOjUzIFBN
-DQo+IA0KPiBUaGlzIHBhdGNoIGFkZHMgaS5NWDggbnZtZW0gb2NvdHAgZHJpdmVyIHRvIGFjY2Vz
-cyBmdXNlIHZpYSBSUEMgdG8gaS5NWDgNCj4gc3lzdGVtIGNvbnRyb2xsZXIuDQo+IA0KPiBDYzog
-U3Jpbml2YXMgS2FuZGFnYXRsYSA8c3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnPg0KPiBD
-YzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBDYzogU2FzY2hhIEhhdWVyIDxz
-LmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBDYzogUGVuZ3V0cm9uaXggS2VybmVsIFRlYW0gPGtl
-cm5lbEBwZW5ndXRyb25peC5kZT4NCj4gQ2M6IEZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWls
-LmNvbT4NCj4gQ2M6IE5YUCBMaW51eCBUZWFtIDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gQ2M6IGxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBQZW5n
-IEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlz
-aGVuZy5kb25nQG54cC5jb20+DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
+[You should always submit dt-bindings patches to Rob and to the
+devicetree list as indicated by checkpatch]
+
+On Thu, May 16, 2019 at 8:42 AM S.j. Wang <shengjiu.wang@nxp.com> wrote:
+>
+> Add reset-gpios property, which is optional.
+>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+
+> +Optional properties:
+> +
+> +  - reset-gpios : a GPIO spec to define which pin is connected to the chip's
+> +    !RESET pin
+> +
+>  Example:
+>
+>  cs42888: codec@48 {
+> @@ -25,4 +30,5 @@ cs42888: codec@48 {
+>         VD-supply = <&reg_audio>;
+>         VLS-supply = <&reg_audio>;
+>         VLC-supply = <&reg_audio>;
+> +       reset-gpios = <&pca9557_b 1 GPIO_ACTIVE_LOW>;
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
