@@ -1,71 +1,58 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator support
-Date: Thu, 16 May 2019 10:02:18 +0530
-Message-ID: <20190516043218.8222-4-j-keerthy@ti.com>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v3 0/3] Extend dt bindings to support I2C on sifive devices and a fix broken IRQ in polling mode.
+Date: Thu, 16 May 2019 10:38:37 +0530
+Message-ID: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516043218.8222-1-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
+To: robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com, sagar.kadam@sifive.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LP8756x family has a single output 4-phase regulator
-configuration. Add support for the same. The control
-lies in the master buck which is buck0 for 4-phase
-configuration. Enable/disable/voltage set happen via
-buck0 registers.
+The patch is based on mainline v5.1 and extends DT-bindings for Opencore based I2C IP block reimplemented 
+in FU540 SoC, available on HiFive unleashed board (Rev A00), and also provides a workaround for broken IRQ
+which affects the already available I2C polling mode interface in mainline, for FU540-C000 chipsets. 
 
-Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
+The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
+This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
+core's IF(interrupt flag) and TIP flags to break from the polling loop upon completion of transfer.
 
-Changes in v2:
+To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and 
+appropriate device node is added into board specific device tree as per the information provided in 
+dt-bindings in Documentation/devicetree/bindings/i2c/i2c-sifive.txt.
+Without this workaround, the CPU stall's infinitely.
 
-  * Changed if/else block to switch statement.
+Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
 
- drivers/regulator/lp87565-regulator.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
-index 81eb4b890c0c..af00d1ffcf33 100644
---- a/drivers/regulator/lp87565-regulator.c
-+++ b/drivers/regulator/lp87565-regulator.c
-@@ -153,6 +153,12 @@ static const struct lp87565_regulator regulators[] = {
- 			  LP87565_REG_BUCK2_CTRL_1,
- 			  LP87565_BUCK_CTRL_1_EN, 3230,
- 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
-+	LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
-+			  lp87565_buck_ops, 256, LP87565_REG_BUCK0_VOUT,
-+			  LP87565_BUCK_VSET, LP87565_REG_BUCK0_CTRL_1,
-+			  LP87565_BUCK_CTRL_1_EN |
-+			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
-+			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
- };
- 
- static int lp87565_regulator_probe(struct platform_device *pdev)
-@@ -169,9 +175,18 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
- 	config.driver_data = lp87565;
- 	config.regmap = lp87565->regmap;
- 
--	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
-+	switch (lp87565->dev_type) {
-+	case LP87565_DEVICE_TYPE_LP87565_Q1:
- 		min_idx = LP87565_BUCK_10;
- 		max_idx = LP87565_BUCK_23;
-+		break;
-+	case LP87565_DEVICE_TYPE_LP87561_Q1:
-+		min_idx = LP87565_BUCK_3210;
-+		max_idx = LP87565_BUCK_3210;
-+	default:
-+		dev_err(lp87565->dev, "Invalid lp config %d\n",
-+			lp87565->dev_type);
-+		return -EINVAL;
- 	}
- 
- 	for (i = min_idx; i <= max_idx; i++) {
+Patch History:
+
+V2<->V3:
+-Incorporated review comments on v2 patch as follows:
+-Rectified compatibility string sequence with the most specific one at the first (dt bindings). 
+-Moved interrupts and interrupt-parent under optional property list (dt-bindings).
+-Updated reference to sifive-blocks-ip-versioning.txt and URL to IP repository used (dt-bindings).
+-Removed example for i2c0 device node from binding doc (dt-bindings).
+-Included sifive,i2c0 device under compatibility table in i2c-ocores driver (i2c-ocores).
+-Updated polling mode hooks for SoC specific fix to handle broken IRQ (i2c-ocores).
+
+
+V1<->V2:
+-Incorporate review comments from Andrew
+-Extend dt bindings into i2c-ocores.txt instead of adding new file
+-Rename SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ
+
+V1:
+-Update dt bindings for sifive i2c devices
+-Fix broken IRQ affecting i2c polling mode interface.
+
+Sagar Shrikant Kadam (3):
+  dt-bindings: i2c: extend existing opencore bindings.
+  i2c-ocore: sifive: add support for i2c device on FU540-c000 SoC.
+  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC
+
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |  7 +++-
+ drivers/i2c/busses/i2c-ocores.c                    | 41 +++++++++++++++++++---
+ 2 files changed, 42 insertions(+), 6 deletions(-)
+
 -- 
-2.17.1
+1.9.1
