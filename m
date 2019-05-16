@@ -1,18 +1,14 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH V3 4/8] memory: tegra: Add Tegra210 EMC clock driver
-Date: Thu, 16 May 2019 15:52:02 +0800
-Message-ID: <3afd909c-5be9-370d-e21a-ec57be3b841b@nvidia.com>
-References: <20190510084719.18902-1-josephl@nvidia.com>
- <20190510084719.18902-5-josephl@nvidia.com>
- <74fad66b-a6e9-ffc9-c1c9-e88b841e9209@gmail.com>
- <648df201-eb63-6d26-3f90-02eba7624921@nvidia.com>
- <bb2ef045-7d77-02d0-79fb-06f68732c5a5@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v3 2/2] dt-bindings: sound: sun4i-spdif: Document that the RX
+ channel can be missing
+Date: Thu, 16 May 2019 09:59:26 +0200
+Message-ID: <a0558cf83011d21c4f44fecc078dff1e67cdbe9d.1557993523.git-series.maxime.ripard@bootlin.com>
+References: <706cb97ae45cc9edc49c8709b2189ed786d2c7db.1557993523.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bb2ef045-7d77-02d0-79fb-06f68732c5a5@gmail.com>
-Content-Language: en-US
+In-Reply-To: <706cb97ae45cc9edc49c8709b2189ed786d2c7db.1557993523.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,81 +18,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gNS8xNS8xOSAxMToyNSBQTSwgRG1pdHJ5IE9zaXBlbmtvIHdyb3RlOgo+IDE1LjA1LjIwMTkg
-MTE6NDIsIEpvc2VwaCBMbyDQv9C40YjQtdGCOgo+PiBPbiA1LzE1LzE5IDE6MDQgQU0sIERtaXRy
-eSBPc2lwZW5rbyB3cm90ZToKPj4+IDEwLjA1LjIwMTkgMTE6NDcsIEpvc2VwaCBMbyDQv9C40YjQ
-tdGCOgo+Pj4+IFRoaXMgaXMgdGhlIGluaXRpYWwgcGF0Y2ggZm9yIFRlZ3JhMjEwIEVNQyBjbG9j
-ayBkcml2ZXIsIHdoaWNoIGRvZXNuJ3QKPj4+PiBpbmNsdWRlIHRoZSBzdXBwb3J0IGNvZGUgYW5k
-IGRldGFpbCBzZXF1ZW5jZSBmb3IgY2xvY2sgc2NhbGluZyB5ZXQuCj4+Pj4KPj4+PiBUaGUgZHJp
-dmVyIGlzIGRlc2lnbmVkIHRvIHN1cHBvcnQgTFBERFI0IFNEUkFNLiBCZWNhdXNlIG9mIHRoZSBM
-UEREUjQKPj4+PiBkZXZpY2VzIG5lZWQgdG8gZG8gaW5pdGlhbCB0aW1lIHRyYWluaW5nIGJlZm9y
-ZSBpdCBjYW4gYmUgdXNlZCwgdGhlCj4+Pj4gZmlybXdhcmUgd2lsbCBoZWxwIHRvIGRvIHRoYXQg
-YXQgZWFybHkgYm9vdCBzdGFnZS4gVGhlbiwgdGhlIHRyYWluZWQKPj4+PiB0YWJsZSBmb3IgdGhl
-IHJhdGVzIHdlIHN1cHBvcnQgd2lsbCBwYXNzIHRvIHRoZSBrZXJuZWwgdmlhIERULiBTbyB0aGUK
-Pj4+PiBkcml2ZXIgY2FuIGdldCB0aGUgdHJhaW5lZCB0YWJsZSBmb3IgY2xvY2sgc2NhbGluZyBz
-dXBwb3J0Lgo+Pj4+Cj4+Pj4gRm9yIHRoZSBoaWdoZXIgcmF0ZSBzdXBwb3J0IChhYm92ZSA4MDBN
-SHopLCB0aGUgcGVyaW9kaWMgdHJhaW5pbmcgaXMKPj4+PiBuZWVkZWQgZm9yIHRoZSB0aW1pbmcg
-Y29tcGVuc2F0aW9uLiBTbyBiYXNpY2FsbHksIHR3byBtZXRob2RvbG9naWVzIGZvcgo+Pj4+IGNs
-b2NrIHNjYWxpbmcgYXJlIHN1cHBvcnRlZCwgb25lIGlzIGZvbGxvd2luZyB0aGUgY2xvY2sgY2hh
-bmdpbmcKPj4+PiBzZXF1ZW5jZSB0byB1cGRhdGUgdGhlIEVNQyB0YWJsZSB0byBFTUMgcmVnaXN0
-ZXJzIGFuZCBhbm90aGVyIGlzIGlmIHRoZQo+Pj4+IHJhdGUgbmVlZHMgcGVyaW9kaWMgdHJhaW5p
-bmcsIHRoZW4gd2Ugd2lsbCBzdGFydCBhIHRpbWVyIHRvIGRvIHRoYXQKPj4+PiBwZXJpb2RpY2Fs
-bHkgdW50aWwgaXQgc2NhbGVzIHRvIHRoZSBsb3dlciByYXRlLgo+Pj4+Cj4+Pj4gQmFzZWQgb24g
-dGhlIHdvcmsgb2YgUGV0ZXIgRGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4u
-Cj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4K
-Pj4+PiAtLS0Kc25pcC4KPj4+PiArwqDCoMKgIGlmICghc2VxLT5zZXRfY2xvY2spIHsKPj4+PiAr
-wqDCoMKgwqDCoMKgwqAgc2VxID0gTlVMTDsKPj4+PiArwqDCoMKgwqDCoMKgwqAgZGV2X2Vycigm
-cGRldi0+ZGV2LCAiSW52YWxpZCBFTUMgc2VxdWVuY2UgZm9yIHRhYmxlIFJldi4gJWRcbiIsCj4+
-Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW1jLT5lbWNfdGFibGVbMF0ucmV2KTsKPj4+PiAr
-wqDCoMKgwqDCoMKgwqAgZ290byBlbWNfY2xrX3JlZ2lzdGVyOwo+Pj4KPj4+IFdoeSBkbyB5b3Ug
-d2FudCB0byByZWdpc3RlciBFTUMgY2xvY2sgaWYgc29tZXRoaW5nIGZhaWxzPyBLTVNHIHdpbGwg
-YmUKPj4+IGZsb29kZWQgd2l0aCBlcnJvcnMgY29taW5nIGZyb20gY2xrX3NldF9yYXRlLgo+Pj4K
-Pj4KPj4gU2VlIHBhdGNoIDcgaW4gdGhlIHNlcmllcywgdGhlIGxlZ2FjeSBFTUMgY2xvY2sgd2ls
-bCBiZSByZW1vdmVkIGxhdGVyLAo+PiBzbyB3ZSBuZWVkIHRvIHJlZ2lzdGVyIHRoZSBFTUMgY2xv
-Y2sgd2hldGhlciB0aGUgdGFibGUgaXMgcmVhZHkgb3Igbm90PiBJbiB0aGF0IGNhc2UsIEkgbWVh
-biBpZiB0aGUgdGFibGUgaXMgbm90IGF2YWlsYWJsZSwgaXQgd2lsbCBzdGlsbAo+PiByZWdpc3Rl
-ciBFTUMgY2xvY2sgYXQgdGhlIHJhdGUgdGhhdCBib290IGxvYWRlciBjb25maWd1cmVkIGJlZm9y
-ZSBrZXJuZWwKPj4gYm9vdGluZy4gU28gdGhlIE1DIGNsb2NrIGNhbiBzdGlsbCB3b3JrIGFzIGV4
-cGVjdGVkLCB3aGljaCBpcyB1bmRlciBFTUMKPj4gY2xvY2suCj4+Cj4+IEFuZCBJIGRpZCB0ZXN0
-IHRoYXQsIGNvdWxkbid0IG9ic2VydmUgYW55IEtNU0cgaW4gdGhhdCBjYXNlLgo+IAo+IExvb2tz
-IGxpa2UgaXQga2luZGEgc2hvdWxkIHdvcmsgaW4gdGhlIGVuZC4KPiAKPiBBbHRob3VnaCBpdCdz
-IG5vdCBnb29kIHRoYXQgbm93IE1DIGRyaXZlciByZWxpZXMgb24gdGhlIEVNQyBkcml2ZXIKPiBw
-cmVzZW5jZS4gTWF5YmUgaXQncyBub3QgdGhlIGJlc3QgdmFyaWFudCB3aXRoIG1vdmluZyB0aGUg
-Y2xvY2sgc3R1ZmYKPiBpbnRvIHRoZSBFTUMgZHJpdmVyPwo+IAo+IFdoYXQgYWJvdXQgdGhlIGJh
-Y2t3YXJkcyBjb21wYXRpYmlsaXR5IGZvciBEVCB0aGF0IGRvZXNuJ3QgaGF2ZSB0aGUgRU1DCj4g
-bm9kZT8KPiAKPiBXaGF0IGlmIEVNQyBkcml2ZXIgaXMgZGlzYWJsZWQgaW4gdGhlIGtlcm5lbCdz
-IGNvbmZpZz8KClRoZSB0aHJlZSBxdWVzdGlvbnMgYWJvdmUgYXJlIGFjdHVhbGx5IG9uZSBwcm9i
-bGVtIGhlcmUuIEl0J3Mgbm90IGFib3V0IApNQyBjbG9jaywgYmVjYXVzZSBpdCdzIHN0aWxsIGF2
-YWlsYWJsZSBhZnRlciB0aGVzZSBjaGFuZ2VzLiBBbmQgTUMgCmRyaXZlciBjYW4gc3RpbGwgZ2V0
-IGl0IGluIHRoZSBwcm9iZSBmdW5jdGlvbiBldmVuIHRoZSBFTUMgZHJpdmVyIGlzbid0IAp0aGVy
-ZS4KClRoZSBwcm9ibGVtIGlzIHRoYXQgd2l0aG91dCBFTUMgZHJpdmVyIGFmdGVyIHRoZXNlIGNo
-YW5nZXMuIFRoZSBQTExNIAp3aWxsIGhhdmUgbm8gY2xpZW50IHVuZGVyIGl0LCB3aGljaCB3aWxs
-IGNhdXNlIHRoZSBQTExNIHRvIGJlIGRpc2FibGVkIAppbiB0aGUgbGF0ZSBpbml0IGNhbGwgb2Yg
-ImNsa19kaXNhYmxlX3VudXNlZCIuIFNvIHRoZSBzeXN0ZW0gd2lsbCBiZSBzdHVjay4KCj4gCj4g
-QW5kIGxhc3RseS4uIHdoYXQgc3RvcHMgdGhlIE1DIGRyaXZlciB0byBwcm9iZSBiZWZvcmUgdGhl
-IEVNQz8gTG9va3MKPiBsaWtlIE1DIGRyaXZlciBpcyBhbHJlYWR5IGluIHRyb3VibGUgYmVjYXVz
-ZSBpdCdzIG9uIGFyY2ggbGV2ZWwgYW5kIHRoZQo+IEVNQyBpcyBvbiBzdWJzeXMsIGhlbmNlIE1D
-IHdpbGwgZ2V0IHRoZSBvcnBoYW5lZCBjbG9jayBhbmQgd29uJ3QKPiBpbml0aWFsaXplIGhhcmR3
-YXJlIHByb3Blcmx5IG9uIHByb2JlLgoKQWZ0ZXIgdGhpcyBtb3ZpbmcsIHRoZSBFTUMgZHJpdmVy
-IHdpbGwgYmUgYWx3YXlzIGVuYWJsZWQgYnkgZGVmYXVsdC4gQW5kIAp0aGUgRFQgY2hhbmdlIGlz
-IG5lY2Vzc2FyeSBhcyB3ZWxsLiBUaGUgYmxvYiBvZiBFTUMgdGFibGUgaXMgbm90IApuZWNlc3Nh
-cnksIGJlY2F1c2UgaXQgbmVlZHMgYSBmaXJtd2FyZSB1cGRhdGUuIFdlIHdpbGwgdXBkYXRlIHRo
-ZSAKZmlybXdhcmUgYWNjb3JkaW5nbHkgYWZ0ZXIgdGhlIHJldmlldyBzZXR0bGVkIGFuZCByZWxl
-YXNlIGl0IGxhdGVyLgoKSW4gY2FzZSBvZiBubyBFTUMgdGFibGUgYmxvYiwgdGhlIGRyaXZlciBj
-YW4gc3RpbGwgYmUgcmVnaXN0ZXJlZCwgYnV0IG5vIApzY2FsaW5nIGZ1bmN0aW9uIHByb3ZpZGVk
-LgoKPiAKPiBCVFcsIGhvdyBhcmUgeW91IHRlc3RpbmcgdGhlIEVNQyBkcml2ZXI/IElzIHRoZXJl
-IFQyMTAgZGV2ZnJlcSBwYXRjaGVzCj4gaW4gd29ya3M/IE9yIHdoYXQncyB0aGUgdXNlciBvZiB0
-aGUgRU1DIG9uIFQyMTA/Cj4gCgoxLiBDdXJyZW50bHksIHZpYSBkZWJ1Z2ZzLgoyLiBObywgd2Ug
-cHJlZmVyIHRvIHVzZSBJbnRlcmNvbm5lY3QgZnJhbWV3b3JrIGZvciB0aGF0LiBUaGUgZXZhbHVh
-dGlvbiAKaXMgb25nb2luZy4KMy4gV2l0aCBJbnRlcmNvbm5lY3QsIHRoZSBkZXZpY2VzIG9yIHBl
-cmlwaGVyYWxzIGNhbiByZWdpc3RlciBvbiBpdCB0byAKcmVxdWVzdCB0aGUgQlcuIFNvIHdlIGNh
-biBmaW5lLXR1bmUgdGhlIEJXIHJlcXVpcmVtZW50cyB3aXRoIHRoZSBsYXRlbmN5IAphbGxvd2Fu
-Y2UgcmVnaXN0ZXJzIGFsdG9nZXRoZXIgdG8gZ2V0IGJldHRlciBlZmZpY2llbmN5LgoKVGhhbmtz
-LApKb3NlcGgKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+The H3 and compatibles controllers don't have any reception capabilities,
+even though it was never documented as such in the binding before.
+
+Therefore, on those controllers, we don't have the option to set an RX DMA
+channel.
+
+This was already done in the DTSI, but the binding itself was never
+updated. Let's add a special case in the schemas.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+---
+
+Changes from v2:
+  - Removed the expanded items description and rely on yaml-bindings tools
+    to fill them
+  - Fix typo in dmas property description
+
+Changes from v1:
+  - switch to a draft7 conditional
+---
+ Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
+index 5d72d48e923e..a49ef2294a74 100644
+--- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
+@@ -44,19 +44,11 @@ properties:
+       - const: apb
+       - const: spdif
+ 
+-  dmas:
+-    items:
+-      - description: RX DMA Channel
+-      - description: TX DMA Channel
+-
+-  dma-names:
+-    items:
+-      - const: rx
+-      - const: tx
+-
+   # Even though it only applies to subschemas under the conditionals,
+   # not listing them here will trigger a warning because of the
+   # additionalsProperties set to false.
++  dmas: true
++  dma-names: true
+   resets:
+     maxItems: 1
+ 
+@@ -73,6 +65,32 @@ allOf:
+       required:
+         - resets
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun8i-h3-spdif
++
++    then:
++      properties:
++        dmas:
++          description: TX DMA Channel
++
++        dma-names:
++          const: tx
++
++    else:
++      properties:
++        dmas:
++          items:
++            - description: RX DMA Channel
++            - description: TX DMA Channel
++
++        dma-names:
++          items:
++            - const: rx
++            - const: tx
++
+ required:
+   - "#sound-dai-cells"
+   - compatible
+-- 
+git-series 0.9.1
