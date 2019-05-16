@@ -1,35 +1,68 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
-Date: Thu, 16 May 2019 22:51:25 +0800
-Message-ID: <CAJMQK-jrJQri3gM=X6JRD6Rk+B5S4939HJTptrQMY64xEWr1qA@mail.gmail.com>
-References: <20190516102817.188519-1-hsinyi@chromium.org>
- <20190516102817.188519-2-hsinyi@chromium.org>
- <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+Date: Thu, 16 May 2019 17:55:10 +0300
+Message-ID: <063f38c2-d594-f584-d2b5-6586b73a2b92@gmail.com>
+References: <20190414202009.31268-1-digetx@gmail.com>
+ <20190414202009.31268-3-digetx@gmail.com> <20190429220542.GA17924@bogus>
+ <137c766e-66f6-828a-5c3b-f526d66d37bd@gmail.com>
+ <CAL_JsqKCWytgQEDPLX27xdaDrARtHssbhFcL47RO0zfECm0Gig@mail.gmail.com>
+ <27d24f4e-cf4c-b2d1-140a-5dcef021fa40@gmail.com>
+ <7b6867f4-54b2-f3b5-2b4e-87ea3000fa44@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Stephen Boyd <swboyd@chromium.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Chintan Pandya <cpandya@codeaurora.org>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7b6867f4-54b2-f3b5-2b4e-87ea3000fa44@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:37 PM Rob Herring <robh+dt@kernel.org> wrote:
+02.05.2019 4:39, Dmitry Osipenko пишет:
+> 02.05.2019 3:52, Dmitry Osipenko пишет:
+>> 02.05.2019 3:17, Rob Herring пишет:
+>>> On Wed, May 1, 2019 at 7:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> 30.04.2019 1:05, Rob Herring пишет:
+>>>>> On Sun, Apr 14, 2019 at 11:20:07PM +0300, Dmitry Osipenko wrote:
+>>>>>> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+>>>>>> The binding is based on the Tegra124 EMC binding since hardware is
+>>>>>> similar, although there are couple significant differences.
+>>>>>
+>>>>> My comments on Tegra124 binding apply here.
+>>>>
+>>>> The common timing definition doesn't fully match the definition that is
+>>>> used by Tegra's Memory Controller, thus the DQS (data strobe) timing
+>>>> parameter is comprised of multiple sub-parameters that describe how to
+>>>> generate the strobe in hardware. There are also more additional
+>>>> parameters that are specific to Tegra and they are individually
+>>>> characterized for each memory model and clock rate. Hence the common
+>>>> timing definition isn't usable.
+>>>
+>>> I don't understand. Every PC in the world can work with any DIMM
+>>> (within a given generation) just with SPD data. Why is that not
+>>> sufficient here?
+>>
+>> Because this is not a standard PC, but a custom embedded hardware that
+>> is simpler and also doesn't fully follow the standards in some cases.
+> 
+> Even if there is a way to derive at least some of required parameters
+> from the common timing, I don't have information about how to do it and
+> there is pretty much no chance to get it into public.
+> 
+> Rob, please let me know if you're okay with this binding.
+> 
 
->
-> Why not just map the FDT R/W at the start and change it to RO just
-> before calling unflatten_device_tree? Then all the FDT scanning
-> functions or any future fixups we need can just assume R/W. That is
-> essentially what Stephen suggested. However, there's no need for a
-> weak function as it can all be done within the arch code.
->
-We need to add a new seed for kexec
+I looked through the Technical Reference Manual a bit more closely and
+it actually has comments about how to convert some of the common timing
+parameters into register values. Some of those parameters are not
+trivial to convert and the doc could be incomplete, and some of the
+parameters are not documented at all.
+
+The other much more minor reason against the common timing description
+is that all boards come with the memory timing definition in a
+platform-specific form in downstream kernel. We're re-using that
+definition in the device-tree, hence it is easy to port the timings from
+downstream into upstream.
