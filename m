@@ -1,47 +1,44 @@
-Return-Path: <SRS0=MLGG=TQ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V3 6/8] arm64: tegra: Enable xudc on Jetson TX1
-Date: Thu, 16 May 2019 12:09:30 +0530
-Message-ID: <1557988772-15406-7-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
-References: <1557988772-15406-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=ucJs=TQ=outlook.com=leiwang_git@kernel.org>
+From: Lei Wang <leiwang_git@outlook.com>
+Subject: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+Date: Thu, 16 May 2019 02:35:47 +0000
+Message-ID: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+To: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "lewan@microsoft.com" <lewan@microsoft.com>, Lei Wang <leiwang_git@outlook.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable XUSB device mode driver for USB0 slot on Jetson TX1.
-
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index a7dc319..e0e67cd 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1483,6 +1483,20 @@
- 		vmmc-supply = <&vdd_3v3_sd>;
- 	};
- 
-+	xudc@700d0000 {
-+		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>;
-+		phy-names = "usb2";
-+		avddio-usb-supply = <&vdd_3v3_sys>;
-+		hvdd-usb-supply = <&vdd_1v8>;
-+		extcon = <&extcon_usb>;
-+		status = "okay";
-+	};
-+
-+	extcon_usb: extcon_vbus {
-+		compatible = "linux,extcon-usb-gpio";
-+		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
-+	};
-+
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
--- 
-2.7.4
+RnJvbTogTGVpIFdhbmcgPGxlaXdhbmdfZ2l0QG91dGxvb2suY29tPg0KDQpUaGlzIGlzIHRoZSBk
+ZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgbmV3IEVEQUMgZHJpdmVyIGRtYzUyMF9lZGFjLmMuDQoN
+ClNpZ25lZC1vZmYtYnk6IExlaSBXYW5nIDxsZWl3YW5nX2dpdEBvdXRsb29rLmNvbT4NCi0tLQ0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQgICAgICAgIHwgMjYg
+KysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCsp
+DQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9l
+ZGFjL2FybS1kbWM1MjAudHh0DQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZWRhYy9hcm0tZG1jNTIwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9lZGFjL2FybS1kbWM1MjAudHh0DQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5k
+ZXggMDAwMDAwMC4uNzFlN2FhMw0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQNCkBAIC0wLDAgKzEsMjYgQEAN
+CisqIEFSTSBETUMtNTIwIEVEQUMgbm9kZQ0KKw0KK1JlcXVpcmVkIHByb3BlcnRpZXM6DQorLSBj
+b21wYXRpYmxlCQk6ICJicmNtLGRtYy01MjAiLCAiYXJtLGRtYy01MjAiLg0KKy0gcmVnCQkJOiBB
+ZGRyZXNzIHJhbmdlIG9mIHRoZSBETUMtNTIwIHJlZ2lzdGVycy4NCistIGludGVycnVwdHMJCTog
+RE1DLTUyMCBpbnRlcnJ1cHQgbnVtYmVycy4gVGhlIGV4YW1wbGUgYmVsb3cgc3BlY2lmaWVzDQor
+CQkJICB0d28gaW50ZXJydXB0IGxpbmVzIGZvciBkcmFtX2VjY19lcnJjX2ludCBhbmQNCisJCQkg
+IGRyYW1fZWNjX2VycmRfaW50Lg0KKy0gaW50ZXJydXB0LWNvbmZpZwk6IFRoaXMgaXMgYW4gYXJy
+YXkgb2YgaW50ZXJydXB0IG1hc2tzLiBGb3IgZWFjaCBvZiB0aGUNCisJCQkgIGFib3ZlIGludGVy
+cnVwdCBsaW5lLCBhZGQgb25lIGludGVycnVwdCBtYXNrIGVsZW1lbnQgdG8NCisJCQkgIGl0LiBU
+aGF0IGlzLCB0aGVyZSBpcyBhIDE6MSBtYXBwaW5nIGZyb20gZWFjaCBpbnRlcnJ1cHQNCisJCQkg
+IGxpbmUgdG8gYW4gaW50ZXJydXB0IG1hc2suIEFuIGludGVycnVwdCBtYXNrIGNhbiByZXByZXNl
+bnQNCisJCQkgIG11bHRpcGxlIGludGVycnVwdHMgYmVpbmcgZW5hYmxlZC4gUmVmZXIgdG8gaW50
+ZXJydXB0X2NvbnRyb2wNCisJCQkgIHJlZ2lzdGVyIGluIERNQy01MjAgVFJNIGZvciBpbnRlcnJ1
+cHQgbWFwcGluZy4gSW4gdGhlIGV4YW1wbGUNCisJCQkgIGJlbG93LCB0aGUgaW50ZXJydXB0IGNv
+bmZpZ3VyYXRpb24gZW5hYmxlcyBkcmFtX2VjY19lcnJjX2ludA0KKwkJCSAgYW5kIGRyYW1fZWNj
+X2VycmRfaW50LiBBbmQgZWFjaCBpbnRlcnJ1cHQgaXMgY29ubmVjdGVkIHRvDQorCQkJICBhIHNl
+cGFyYXRlIGludGVycnVwdCBsaW5lLg0KKw0KK0V4YW1wbGU6DQorDQorZG1jMDogZG1jQDIwMDAw
+MCB7DQorCWNvbXBhdGlibGUgPSAiYnJjbSxkbWMtNTIwIiwgImFybSxkbWMtNTIwIjsNCisJcmVn
+ID0gPDB4MjAwMDAwIDB4ODAwMDA+Ow0KKwlpbnRlcnJ1cHRzID0gPDB4MCAweDM0OSAweDQ+LCA8
+MHgwIDB4MzRCIDB4ND47DQorCWludGVycnVwdC1jb25maWcgPSA8MHg0PiwgPDB4OD47DQorfTsN
+Ci0tIA0KMi43LjQNCg0K
