@@ -1,41 +1,53 @@
-Return-Path: <SRS0=0yxz=TQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:49652 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfEPQNA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 May 2019 12:13:00 -0400
-Date: Thu, 16 May 2019 09:12:56 -0700
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/2] arm: dts: dra76-evm: Disable rtc target module
-Message-ID: <20190516161256.GB5447@atomide.com>
+Return-Path: <SRS0=LvYT=TQ=ti.com=j-keerthy@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 2/2] arm: dts: dra76-evm: Disable rtc target module
+Date: Thu, 16 May 2019 14:36:57 +0530
+Message-ID: <20190516090657.25211-2-j-keerthy@ti.com>
+In-Reply-To: <20190516090657.25211-1-j-keerthy@ti.com>
 References: <20190516090657.25211-1-j-keerthy@ti.com>
- <20190516090657.25211-2-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516090657.25211-2-j-keerthy@ti.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
+Content-Type: text/plain
+To: tony@atomide.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+rtc is fused out on dra76 and accessing target module
+register is causing a boot crash hence disable it.
 
-* Keerthy <j-keerthy@ti.com> [190516 09:06]:
-> rtc is fused out on dra76 and accessing target module
-> register is causing a boot crash hence disable it.
+Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ arch/arm/boot/dts/dra7-l4.dtsi  | 2 +-
+ arch/arm/boot/dts/dra76-evm.dts | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-So for a fix, can we have a separate dra7 something dtsi file
-to disable these instead?
-
-Or are there already multiple SoC revisions for the same EVM?
-
-Then in the long run, if there are the same EVMs with multiple
-SoC options, the best thing to do is to would be to detect the
-SoC type and update the property dynamically to set the features
-not available on the booted SoC to status = "disabled". Seems
-like that could be done in the ti-sysc driver probe unless needed
-earlier.
-
-Regards,
-
-Tony
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index fe9f0bc29fec..3b4cba9da91f 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3543,7 +3543,7 @@
+ 			};
+ 		};
+ 
+-		target-module@38000 {			/* 0x48838000, ap 29 12.0 */
++		rtctarget: target-module@38000 {			/* 0x48838000, ap 29 12.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+ 			ti,hwmods = "rtcss";
+ 			reg = <0x38074 0x4>,
+diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
+index 6607fbe3c67c..644fe1961d28 100644
+--- a/arch/arm/boot/dts/dra76-evm.dts
++++ b/arch/arm/boot/dts/dra76-evm.dts
+@@ -363,6 +363,10 @@
+ 	pinctrl-3 = <&mmc4_pins_hs &mmc4_iodelay_manual1_conf>;
+ };
+ 
++&rtctarget {
++	status = "disabled";
++};
++
+ /* No RTC on this device */
+ &rtc {
+ 	status = "disabled";
+-- 
+2.17.1
