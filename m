@@ -1,33 +1,46 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: raise GPU trip point temperature for
- speedy to 80 degC
-Date: Thu, 16 May 2019 09:58:26 -0700
-Message-ID: <CAD=FV=WJrfAPMvK99QycHLuoTqXG8UWWojF+DpGZwB9ijckLig@mail.gmail.com>
-References: <20190516162942.154823-1-mka@chromium.org> <20190516162942.154823-3-mka@chromium.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 1/3] dt-bindings: gpu: add #cooling-cells property to the ARM Mali Midgard GPU binding
+Date: Thu, 16 May 2019 10:25:08 -0700
+Message-ID: <20190516172510.181473-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516162942.154823-3-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The GPU can be used as a thermal cooling device, add an optional
+'#cooling-cells' property.
 
-On Thu, May 16, 2019 at 9:29 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in v2:
+- patch added to the series
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Raise the temperature of the GPU thermal trip point for speedy
-> to 80=C2=B0C. This is the value used by the downstream Chrome OS 3.14
-> kernel, the 'official' kernel for speedy.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v2:
-> - add entry at position in alphabetical order
-> ---
->  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 18a2cde2e5f3..61fd41a20f99 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -37,6 +37,8 @@ Optional properties:
+ - operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+   for details.
+ 
++- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
++  for details.
+ 
+ Example for a Mali-T760:
+ 
+@@ -51,6 +53,7 @@ gpu@ffa30000 {
+ 	mali-supply = <&vdd_gpu>;
+ 	operating-points-v2 = <&gpu_opp_table>;
+ 	power-domains = <&power RK3288_PD_GPU>;
++	#cooling-cells = <2>;
+ };
+ 
+ gpu_opp_table: opp_table0 {
+-- 
+2.21.0.1020.gf2820cf01a-goog
