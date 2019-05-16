@@ -1,86 +1,76 @@
-Return-Path: <SRS0=qLWK=TP=renesas.com=prvs=4038260dfd=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 13/13] ARM: dts: rza2mevb: Add USB Host support
-Date: Wed, 15 May 2019 10:20:48 -0500
-Message-ID: <20190515152048.42363-14-chris.brandt@renesas.com>
-In-Reply-To: <20190515152048.42363-1-chris.brandt@renesas.com>
-References: <20190515152048.42363-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=Pg6C=TQ=nxp.com=pankaj.bansal@kernel.org>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH v2 1/2] Documentation: can: flexcan: Add flexcan clocks'
+ information
+Date: Thu, 16 May 2019 06:17:29 +0000
+Message-ID: <20190516114057.5878-2-pankaj.bansal@nxp.com>
+References: <20190516114057.5878-1-pankaj.bansal@nxp.com>
+In-Reply-To: <20190516114057.5878-1-pankaj.bansal@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris
+To: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable USB Host support for both the Type-C connector on the CPU board
-and the Type-A plug on the sub board.
-
-Both boards are also capable of USB Device operation as well after the
-appropriate Device Tree modifications.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
- * moved note about JP3
- * added reviewed-by
-v2:
- * added blank line between nodes
- * removed 'r7s9210-' from patch title
- * removed 'renesas,uses_usb_x1' property
----
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 36 ++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-index 7da409170db5..3e1a8d943c17 100644
---- a/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -107,6 +107,18 @@
- 		pinmux = <RZA2_PINMUX(PORT5, 4, 3)>,	/* SD1_CD */
- 			 <RZA2_PINMUX(PORT5, 5, 3)>;	/* SD1_WP */
- 	};
-+
-+	usb0_pins: usb0 {
-+		pinmux = <RZA2_PINMUX(PORT5, 2, 3)>,	/* VBUSIN0 */
-+			 <RZA2_PINMUX(PORTC, 6, 1)>,	/* VBUSEN0 */
-+			 <RZA2_PINMUX(PORTC, 7, 1)>;	/* OVRCUR0 */
-+	};
-+
-+	usb1_pins: usb1 {
-+		pinmux = <RZA2_PINMUX(PORTC, 0, 1)>,	/* VBUSIN1 */
-+			 <RZA2_PINMUX(PORTC, 5, 1)>,	/* VBUSEN1 */
-+			 <RZA2_PINMUX(PORT7, 5, 5)>;	/* OVRCUR1 */
-+	};
- };
- 
- /* High resolution System tick timers */
-@@ -161,3 +173,27 @@
- 	bus-width = <4>;
- 	status = "okay";
- };
-+
-+/* USB-0 as Host */
-+&usb2_phy0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_pins>;
-+	dr_mode = "host";	/* Requires JP3 to be fitted */
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+/* USB-1 as Host */
-+&usb2_phy1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb1_pins>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
--- 
-2.16.1
+VGhlIGNsb2NraW5nIGluZm9ybWF0aW9uIGlzIG1pc3NpbmcgZnJvbSBmbGV4Y2FuIGRldmljZSB0
+cmVlIGJpbmRpbmdzLg0KVGhpcyBpbmZvcm1hdGlvbiBpcyBuZWVkZWQgdG8gYmUgYWJsZSB0byB1
+c2UgZmxleGNhbi4gRG9jdW1lbnQgdGhlIHNhbWUuDQoNClNpZ25lZC1vZmYtYnk6IFBhbmthaiBC
+YW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNvbT4NCi0tLQ0KDQpOb3RlczoNCiAgICBEZXBlbmRl
+bmNpZXM6DQogICAgLSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvY292ZXIvMTAy
+NDUzNi8NCiAgICANCiAgICBWMjoNCiAgICAtIFJlbW92ZWQgY2xvY2stZnJlcXVlbmN5IGZyb20g
+b3B0aW9uYWwgcHJvcGVydGllcw0KICAgIC0gQWRkZWQgRGVwZW5kZW5jaWVzIGluIE5vdGVzDQoN
+CiAuLi4vYmluZGluZ3MvbmV0L2Nhbi9mc2wtZmxleGNhbi50eHQgICAgICAgICB8IDQ2ICsrKysr
+KysrKysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L25ldC9jYW4vZnNsLWZsZXhjYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL25ldC9jYW4vZnNsLWZsZXhjYW4udHh0DQppbmRleCBhMDQxNjg2MDU5OTguLjczYzYxNmNh
+MGY5YSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQv
+Y2FuL2ZzbC1mbGV4Y2FuLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL25ldC9jYW4vZnNsLWZsZXhjYW4udHh0DQpAQCAtMTIsOSArMTIsNDIgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoNCiAtIHJlZyA6IE9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBz
+ZXQgZm9yIHRoaXMgZGV2aWNlDQogLSBpbnRlcnJ1cHRzIDogSW50ZXJydXB0IHR1cGxlIGZvciB0
+aGlzIGRldmljZQ0KIA0KLU9wdGlvbmFsIHByb3BlcnRpZXM6DQorQ2xvY2tpbmcgaW5mb3JtYXRp
+b24gaXMgbXVzdCBmb3IgZmxleGNhbi4gcGxlYXNlIHJlZmVyIGJlbG93IGluZm8gZm9yDQordW5k
+ZXJzdGFuZGluZyBjbG9ja2luZyBpbiBmbGV4Y2FuOg0KKw0KK+KAoiBUaGUgRkxFWENBTiBtb2R1
+bGUgaXMgZGl2aWRlZCBpbnRvIHR3byBibG9ja3MuIENvbnRyb2xsZXIgaG9zdCBpbnRlcmZhY2UN
+CisgICgiQ0hJIikgYW5kIFByb3RvY29sIEVuZ2luZSAoIlBFIikNCivigKIgQm90aCB0aGVzZSBi
+bG9ja3MgcmVxdWlyZSBjbG9jay4NCivigKIgQ0hJIGlzIHJlc3BvbnNpYmxlIGZvciByZWdpc3Rl
+cnMgcmVhZCB3cml0ZSBpbmNsdWRpbmcgTUIgcmVhZC93cml0ZS4NCisgIFdoaWxlIFBFIGlzIHJl
+c3BvbnNpYmxlIGZvciBUcmFuc2Zlci9yZWNlaXZlIGRhdGEgb24gQ0FOIGJ1cy4NCivigKIgVGhl
+IGNsb2NrcyBmZWVkaW5nIHRvIHRoZXNlIHR3byBibG9ja3MgY2FuIGJlIHN5bmNocm9ub3VzIChp
+LmUuIHNhbWUgY2xvY2spDQorICBvciBhc3luY2hyb25vdXMgKGkuZS4gc2VwYXJhdGUgY2xvY2tz
+KS4NCivigKIgU2VsZWN0aW9uIGlzIG1hZGUgaW4gdGhlIENMS19TUkMgYml0IChiaXQgMTMpIG9m
+IENvbnRyb2wgMSBSZWdpc3Rlci4NCisgIC0gQ0xLX1NSQyA9IDAsIGFzeW5jaHJvbm91cyBpLmUu
+IHNlcGFyYXRlIGNsb2NrcyBmb3IgQ0hJIGFuZCBQRQ0KKyAgLSBDTEtfU1JDID0gMSwgc3luY2hy
+b25vdXMgaS5lLiBDSEkgY2xvY2sgaXMgdXNlZCBmb3IgUEUgYW5kIFBFDQorICAgICAgICAgICAg
+ICAgICBjbG9jayBpcyBub3QgdXNlZC4NCivigKIgSWYgdGhpcyBiaXQgaXMgbm90IGltcGxlbWVu
+dGVkIGluIFNPQywgdGhlbiBTT0Mgb25seSBzdXBwb3J0cyBhc3luY2hyb25vdXMNCisgIGNsb2Nr
+cy4NCivigKIgRWl0aGVyIG9mIHRoZSBjbG9jayBjYW4gYmUgZ2VuZXJhdGVkIGJ5IGFueSBvZiB0
+aGUgY2xvY2sgc291cmNlLg0KK+KAoiBXaGVuIHRoZSB0d28gY2xvY2tzIGFyZSBhc3luY2hyb25v
+dXMsIHRoZW4gZm9sbG93aW5nIHJlc3RyaWN0aW9ucyBhcHBseSB0bw0KKyAgUEUgY2xvY2suDQor
+ICAtIFBFIGNsb2NrIG11c3QgYmUgbGVzcyB0aGFuIENISSBjbG9jay4NCivigKIgSWYgbG93IGpp
+dHRlciBpcyByZXF1aXJlZCBvbiBDQU4gYnVzLCBkZWRpY2F0ZWQgb3NjaWxsYXRvciBjYW4gYmUg
+dXNlZCB0bw0KKyAgcHJvdmlkZSBQRSBjbG9jaywgYnV0IGl0IG11c3QgYmUgbGVzcyB0aGFuIENI
+SSBjbG9jay4NCisNCitCYXNlIG9uIGFib3ZlIGluZm9ybWF0aW9uIGNsb2NraW5nIGluZm8gaW4g
+ZmxleGNhbiBjYW4gYmUgZGVmaW5lZCBpbiB0d28gd2F5czoNCisNCitNZXRob2QgMShQcmVmZXJy
+ZWQpOg0KKyAgLSBjbG9ja3M6IHBoYW5kbGUgdG8gdGhlIGNsb2NrcyBmZWVkaW5nIHRoZSBmbGV4
+Y2FuLiBUd28gY2FuIGJlIGdpdmVuOg0KKyAgICAtICJpcGciOiBQcm90b2NvbCBFbmdpbmUgY2xv
+Y2sNCisgICAgLSAicGVyIjogQ29udHJvbGxlciBob3N0IGludGVyZmFjZSBjbG9jaw0KKyAgLSBj
+bG9jay1uYW1lczogTXVzdCBjb250YWluIHRoZSBjbG9jayBuYW1lcyBkZXNjcmliZWQganVzdCBh
+Ym92ZS4NCiANCi0tIGNsb2NrLWZyZXF1ZW5jeSA6IFRoZSBvc2NpbGxhdG9yIGZyZXF1ZW5jeSBk
+cml2aW5nIHRoZSBmbGV4Y2FuIGRldmljZQ0KK01ldGhvZCAyKE5vdCBQcmVmZXJyZWQpOg0KKyAg
+LSBjbG9jay1mcmVxdWVuY3kgOiBUaGUgc3luY2hyb25vdXMgY2xvY2sgZnJlcXVlbmN5IHN1cHBs
+aWVkIHRvIGJvdGgNCisgIENvbnRyb2xsZXIgaG9zdCBpbnRlcmZhY2UgYW5kIFByb3RvY29sIEVu
+Z2luZQ0KKw0KK09wdGlvbmFsIHByb3BlcnRpZXM6DQogDQogLSB4Y2VpdmVyLXN1cHBseTogUmVn
+dWxhdG9yIHRoYXQgcG93ZXJzIHRoZSBDQU4gdHJhbnNjZWl2ZXINCiANCkBAIC00Nyw1ICs4MCwx
+NCBAQCBFeGFtcGxlOg0KIAkJaW50ZXJydXB0cyA9IDw0OCAweDI+Ow0KIAkJaW50ZXJydXB0LXBh
+cmVudCA9IDwmbXBpYz47DQogCQljbG9jay1mcmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsgLy8gZmls
+bGVkIGluIGJ5IGJvb3Rsb2FkZXINCisJfTsNCisNCisJY2FuQDIxODAwMDAgew0KKwkJY29tcGF0
+aWJsZSA9ICJmc2wsbHgyMTYwYXIxLWZsZXhjYW4iOw0KKwkJcmVnID0gPDB4MCAweDIxODAwMDAg
+MHgwIDB4MTAwMDA+Ow0KKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIxIElSUV9UWVBFX0xFVkVM
+X0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZzeXNjbGs+LCA8JmNsb2NrZ2VuIDQgNz47DQorCQljbG9j
+ay1uYW1lcyA9ICJpcGciLCAicGVyIjsNCiAJCWZzbCxjbGstc291cmNlID0gPDA+OyAvLyBzZWxl
+Y3QgY2xvY2sgc291cmNlIDAgZm9yIFBFDQorCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KIAl9Ow0K
+LS0gDQoyLjE3LjENCg0K
