@@ -1,42 +1,36 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
-Date: Thu, 16 May 2019 08:26:51 -0500
-Message-ID: <CAL_JsqKZNPGwTp3OR7E-05cA5Kh5+2TmaP5c3ryOoX_V-FbmLw@mail.gmail.com>
-References: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com> <1557938083-25423-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] pinctrl: bcm2835: bcm7211: Add support for 7211
+ pull-up functionality
+Date: Thu, 16 May 2019 15:27:40 +0200
+Message-ID: <CACRpkdY3-yARtO9KQnUUMNefygzLC_c2RRn+ROZUdYfBJkRASQ@mail.gmail.com>
+References: <20190509205955.27842-1-f.fainelli@gmail.com> <20190509205955.27842-4-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557938083-25423-3-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190509205955.27842-4-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, Al Cooper <alcooperx@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Doug Berger <opendmb@gmail.com>, Matheus Castello <matheus@castello.eng.br>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Lukas Wunner <lukas@wunner.de>, Nathan Chancellor <natechancellor@gmail.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:35 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->
-> This patch adds board HiHope RZ/G2M (the main board, powered by
-> the R8A774A1) and board HiHope RZ/G2 EX (the expansion board
-> that sits on top of the HiHope RZ/G2M). Both boards are made
-> by Jiangsu HopeRun Software Co., Ltd. (a.k.a. HopeRun).
->
-> Useful links:
-> http://hihope.org/product/detail/rzg2
-> https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.6bcf1debQpzkRS&ft=t&id=592177498472
-> http://www.hoperun.com/Cn/news/id/379
->
-> We already know that the HiHope RZ/G2 EX will also sit on the
-> HiHope RZ/G2N, even though the HiHope RZ/G2N doesn't exist just
-> yet.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
->
-> ---
-> v1->v2:
-> * Fixed according to Rob's comments
->
->  Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+On Thu, May 9, 2019 at 11:01 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> From: Al Cooper <alcooperx@gmail.com>
+>
+> The 7211 has a new way of selecting the pull-up/pull-down setting
+> for a GPIO pin. The registers used for the bcm2837, GP_PUD and
+> GP_PUDCLKn0, are no longer connected. A new set of registers,
+> GP_GPIO_PUP_PDN_CNTRL_REGx must be used. This commit will add
+> a new compatible string "brcm,bcm7211-gpio" and the kernel
+> driver will use it to select which method is used to select
+> pull-up/pull-down.
+>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Following the discussion with Stefan it appears this patch
+needs more work, but you will only need to resend this
+one patch.
+
+Yours,
+Linus Walleij
