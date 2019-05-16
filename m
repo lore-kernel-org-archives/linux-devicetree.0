@@ -1,60 +1,75 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Date: Thu, 16 May 2019 17:24:45 +0530
-Message-ID: <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
-References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com> <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
+From: andrew-sh.cheng <andrew-sh.cheng@mediatek.com>
+Subject: Re: [PATCH 0/8] Add cpufreq and cci devfreq for mt8183, and SVS
+ support
+Date: Thu, 16 May 2019 20:23:46 +0800
+Message-ID: <1558009426.29944.1.camel@mtksdaap41>
+References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, fan.chen@mediatek.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(cc'ing Andy's correct email address)
+On Thu, 2019-05-16 at 14:53 +0530, Viresh Kumar wrote:
+> On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
+> > From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+> > 
+> > MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
+> > So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
+> > 
+> > For SVS support, add OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
+> 
+> No version information here or what has changed. That doesn't help.
+> 
+> I believe this is V3.
+> 
+> Don't resend it but please mention the changes in reply now. Thanks.
+Yes, this is patch v3
 
-On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > >
-> > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > >
-> > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > that describes this topology.
-> > >
-> > > This is partly true. There are two groups of gold and silver cores,
-> > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > is one of the early examples of ARM's Dynamiq architecture.
-> > >
-> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > >
-> > > I noticed that this patch sneaked through for this merge window but
-> > > perhaps we can whip up a quick fix for -rc2?
-> > >
-> >
-> > And please find attached a patch to fix this up. Andy, since this
-> > hasn't landed yet (can we still squash this into the original patch?),
-> > I couldn't add a Fixes tag.
-> >
->
-> I had the same concern. Thanks for catching this. I suspect this must
-> cause some problem for IPA given that it can't discern between the big
-> and little "power clusters"?
+Change since v2:
+- Separate cpufreq modification into 3 patches.
+- Modify dt-binding for more HW information.
+- Refine cci devfreq coding style.
+- patch 6 ~ patch 8 are for SVS support
 
-Both EAS and IPA, I believe. It influences the scheduler's view of the
-the topology.
-
-> Either way,
->
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
-Thanks.
-
-Andy/Bjorn, can we squeeze this in for -rc2 as a bugfix?
-
-Regards,
-Amit
+> 
+> > Andrew-sh.Cheng (7):
+> >   cpufreq: mediatek: change to regulator_get_optional
+> >   cpufreq: mediatek: add clock enable for intermediate clock
+> >   cpufreq: mediatek: Add support for mt8183
+> >   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+> >   devfreq: add mediatek cci devfreq
+> >   cpufreq: mediatek: add opp notification for SVS support
+> >   devfreq: cci devfreq register opp notification for SVS support
+> > 
+> > Stephen Boyd (1):
+> >   PM / OPP: Support adjusting OPP voltages at runtime
+> > 
+> >  .../bindings/devfreq/mt8183-cci-devfreq.txt        |  20 ++
+> >  drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
+> >  drivers/cpufreq/mediatek-cpufreq.c                 |  88 +++++-
+> >  drivers/devfreq/Kconfig                            |  10 +
+> >  drivers/devfreq/Makefile                           |   1 +
+> >  drivers/devfreq/mt8183-cci-devfreq.c               | 310 +++++++++++++++++++++
+> >  drivers/opp/core.c                                 |  78 ++++++
+> >  include/linux/pm_opp.h                             |  11 +
+> >  8 files changed, 517 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+> >  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
+> > 
+> > -- 
+> > 2.12.5
+> 
