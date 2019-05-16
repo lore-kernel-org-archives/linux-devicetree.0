@@ -1,59 +1,96 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 0/8] Add cpufreq and cci devfreq for mt8183, and SVS
- support
-Date: Thu, 16 May 2019 14:53:28 +0530
-Message-ID: <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 10/12] soc: mediatek: cmdq: add cmdq_dev_get_subsys function
+Date: Thu, 16 May 2019 17:27:53 +0800
+Message-ID: <20190516092754.33425-2-bibby.hsieh@mediatek.com>
+References: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
-> So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
-> 
-> For SVS support, add OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
+GCE cannot know the register base address, this function
+can help cmdq client to get the relationship of subsys
+and register base address.
 
-No version information here or what has changed. That doesn't help.
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-I believe this is V3.
-
-Don't resend it but please mention the changes in reply now. Thanks.
-
-> Andrew-sh.Cheng (7):
->   cpufreq: mediatek: change to regulator_get_optional
->   cpufreq: mediatek: add clock enable for intermediate clock
->   cpufreq: mediatek: Add support for mt8183
->   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
->   devfreq: add mediatek cci devfreq
->   cpufreq: mediatek: add opp notification for SVS support
->   devfreq: cci devfreq register opp notification for SVS support
-> 
-> Stephen Boyd (1):
->   PM / OPP: Support adjusting OPP voltages at runtime
-> 
->  .../bindings/devfreq/mt8183-cci-devfreq.txt        |  20 ++
->  drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
->  drivers/cpufreq/mediatek-cpufreq.c                 |  88 +++++-
->  drivers/devfreq/Kconfig                            |  10 +
->  drivers/devfreq/Makefile                           |   1 +
->  drivers/devfreq/mt8183-cci-devfreq.c               | 310 +++++++++++++++++++++
->  drivers/opp/core.c                                 |  78 ++++++
->  include/linux/pm_opp.h                             |  11 +
->  8 files changed, 517 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
->  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
-> 
-> -- 
-> 2.12.5
-
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index a53cdd71cfc2..a64060a34e01 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -27,6 +27,31 @@ struct cmdq_instruction {
+ 	u8 op;
+ };
+ 
++struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
++{
++	struct cmdq_subsys *subsys;
++	struct of_phandle_args spec;
++
++	subsys = devm_kzalloc(dev, sizeof(*subsys), GFP_KERNEL);
++	if (!subsys)
++		return NULL;
++
++	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
++				       "#subsys-cells", idx, &spec)) {
++		dev_err(dev, "can't parse gce-client-reg property");
++
++		return (struct cmdq_subsys *)-ENODEV;
++	}
++
++	subsys->id = spec.args[0];
++	subsys->offset = spec.args[1];
++	subsys->size = spec.args[2];
++	of_node_put(spec.np);
++
++	return subsys;
++}
++EXPORT_SYMBOL(cmdq_dev_get_subsys);
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 0651a0bffa54..574006c5cd76 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -15,6 +15,12 @@
+ 
+ struct cmdq_pkt;
+ 
++struct cmdq_subsys {
++	u8 id;
++	u16 offset;
++	u16 size;
++};
++
+ struct cmdq_client {
+ 	spinlock_t lock;
+ 	u32 pkt_cnt;
+@@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+  */
+ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+ 
++/**
++ * cmdq_dev_get_subsys() - parse sub system from the device node of CMDQ client
++ * @dev:	device of CMDQ mailbox client
++ * @idx:	the index of desired subsys
++ *
++ * Return: CMDQ subsys pointer
++ *
++ * Help CMDQ client pasing the sub system number
++ * from the device node of CMDQ client.
++ */
++struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
++
+ #endif	/* __MTK_CMDQ_H__ */
 -- 
-viresh
+2.18.0
