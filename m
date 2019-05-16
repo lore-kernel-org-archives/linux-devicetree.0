@@ -1,207 +1,129 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 1/2] dt-bindings: sound: Convert Allwinner SPDIF binding to
- YAML
-Date: Thu, 16 May 2019 09:59:25 +0200
-Message-ID: <706cb97ae45cc9edc49c8709b2189ed786d2c7db.1557993523.git-series.maxime.ripard@bootlin.com>
+From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: [PATCH 2/4] iio: adc: mediatek: mt6765 upstream driver
+Date: Thu, 16 May 2019 16:10:45 +0800
+Message-ID: <1557994247-16739-3-git-send-email-chun-hung.wu@mediatek.com>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com, Chun-Hung Wu <chun-hung.wu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner SoCs feature an SPDIF controller across multiple SoC
-generations.
+1. Add calibrated sample data support
+2. Use of_match_table to decide each platform's
+   feature set
 
-However, earlier generations were a bit simpler than the subsequent ones,
-and for example would always have RX and TX capabilities, and no reset
-lines.
-
-In order to express this, let's create two YAML schemas instead of the free
-form text we had before.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
+Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
 ---
+ drivers/iio/adc/mt6577_auxadc.c | 54 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 41 insertions(+), 13 deletions(-)
 
-Changes from v2:
-  - Add comments
-
-Changes from v1:
-  - Merged the two schemas together and used the draft-7 conditionals
----
- Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt          |  42 +------------------------------
- 2 files changed, 101 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-new file mode 100644
-index 000000000000..5d72d48e923e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/allwinner,sun4i-a10-spdif.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+index 95d76ab..e1bdcc0 100644
+--- a/drivers/iio/adc/mt6577_auxadc.c
++++ b/drivers/iio/adc/mt6577_auxadc.c
+@@ -42,10 +42,26 @@
+ #define MT6577_AUXADC_POWER_READY_MS          1
+ #define MT6577_AUXADC_SAMPLE_READY_US         25
+ 
++struct mtk_auxadc_compatible {
++	bool sample_data_cali;
++	bool check_global_idle;
++};
 +
-+title: Allwinner A10 S/PDIF Controller Device Tree Bindings
+ struct mt6577_auxadc_device {
+ 	void __iomem *reg_base;
+ 	struct clk *adc_clk;
+ 	struct mutex lock;
++	const struct mtk_auxadc_compatible *dev_comp;
++};
 +
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Liam Girdwood <lgirdwood@gmail.com>
-+  - Mark Brown <broonie@kernel.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
++static const struct mtk_auxadc_compatible mt8173_compat = {
++	.sample_data_cali = false,
++	.check_global_idle = true,
++};
 +
-+properties:
-+  "#sound-dai-cells":
-+    const: 0
++static const struct mtk_auxadc_compatible mt6765_compat = {
++	.sample_data_cali = true,
++	.check_global_idle = false,
+ };
+ 
+ #define MT6577_AUXADC_CHANNEL(idx) {				    \
+@@ -74,6 +90,11 @@ struct mt6577_auxadc_device {
+ 	MT6577_AUXADC_CHANNEL(15),
+ };
+ 
++static int mt_auxadc_get_cali_data(int rawdata, bool enable_cali)
++{
++	return rawdata;
++}
 +
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun4i-a10-spdif
-+      - const: allwinner,sun6i-a31-spdif
-+      - const: allwinner,sun8i-h3-spdif
-+      - items:
-+          - const: allwinner,sun8i-a83t-spdif
-+          - const: allwinner,sun8i-h3-spdif
-+      - items:
-+          - const: allwinner,sun50i-a64-spdif
-+          - const: allwinner,sun8i-h3-spdif
+ static inline void mt6577_auxadc_mod_reg(void __iomem *reg,
+ 					 u32 or_mask, u32 and_mask)
+ {
+@@ -120,15 +141,17 @@ static int mt6577_auxadc_read(struct iio_dev *indio_dev,
+ 	/* we must delay here for hardware sample channel data */
+ 	udelay(MT6577_AUXADC_SAMPLE_READY_US);
+ 
+-	/* check MTK_AUXADC_CON2 if auxadc is idle */
+-	ret = readl_poll_timeout(adc_dev->reg_base + MT6577_AUXADC_CON2, val,
+-				 ((val & MT6577_AUXADC_STA) == 0),
+-				 MT6577_AUXADC_SLEEP_US,
+-				 MT6577_AUXADC_TIMEOUT_US);
+-	if (ret < 0) {
+-		dev_err(indio_dev->dev.parent,
+-			"wait for auxadc idle time out\n");
+-		goto err_timeout;
++	if (adc_dev->dev_comp->check_global_idle) {
++		/* check MTK_AUXADC_CON2 if auxadc is idle */
++		ret = readl_poll_timeout(adc_dev->reg_base + MT6577_AUXADC_CON2,
++					 val, ((val & MT6577_AUXADC_STA) == 0),
++					 MT6577_AUXADC_SLEEP_US,
++					 MT6577_AUXADC_TIMEOUT_US);
++		if (ret < 0) {
++			dev_err(indio_dev->dev.parent,
++				"wait for auxadc idle time out\n");
++			goto err_timeout;
++		}
+ 	}
+ 
+ 	/* read channel and make sure ready bit == 1 */
+@@ -163,6 +186,8 @@ static int mt6577_auxadc_read_raw(struct iio_dev *indio_dev,
+ 				  int *val2,
+ 				  long info)
+ {
++	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
 +
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Bus Clock
-+      - description: Module Clock
-+
-+  clock-names:
-+    items:
-+      - const: apb
-+      - const: spdif
-+
-+  dmas:
-+    items:
-+      - description: RX DMA Channel
-+      - description: TX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+  # Even though it only applies to subschemas under the conditionals,
-+  # not listing them here will trigger a warning because of the
-+  # additionalsProperties set to false.
-+  resets:
-+    maxItems: 1
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun6i-a31-spdif
-+              - allwinner,sun8i-h3-spdif
-+
-+    then:
-+      required:
-+        - resets
-+
-+required:
-+  - "#sound-dai-cells"
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spdif: spdif@1c21000 {
-+        #sound-dai-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-spdif";
-+        reg = <0x01c21000 0x40>;
-+        interrupts = <13>;
-+        clocks = <&apb0_gates 1>, <&spdif_clk>;
-+        clock-names = "apb", "spdif";
-+        dmas = <&dma 0 2>, <&dma 0 2>;
-+        dma-names = "rx", "tx";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt b/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt
-deleted file mode 100644
-index 0c64a209c2e9..000000000000
---- a/Documentation/devicetree/bindings/sound/sunxi,sun4i-spdif.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--Allwinner Sony/Philips Digital Interface Format (S/PDIF) Controller
--
--The Allwinner S/PDIF audio block is a transceiver that allows the
--processor to receive and transmit digital audio via an coaxial cable or
--a fibre cable.
--For now only playback is supported.
--
--Required properties:
--
--  - compatible		: should be one of the following:
--    - "allwinner,sun4i-a10-spdif": for the Allwinner A10 SoC
--    - "allwinner,sun6i-a31-spdif": for the Allwinner A31 SoC
--    - "allwinner,sun8i-h3-spdif": for the Allwinner H3 SoC
--
--  - reg			: Offset and length of the register set for the device.
--
--  - interrupts		: Contains the spdif interrupt.
--
--  - dmas		: Generic dma devicetree binding as described in
--			  Documentation/devicetree/bindings/dma/dma.txt.
--
--  - dma-names		: Two dmas have to be defined, "tx" and "rx".
--
--  - clocks		: Contains an entry for each entry in clock-names.
--
--  - clock-names		: Includes the following entries:
--	"apb"		  clock for the spdif bus.
--	"spdif"		  clock for spdif controller.
--
--  - resets		: reset specifier for the ahb reset (A31 and newer only)
--
--Example:
--
--spdif: spdif@1c21000 {
--	compatible = "allwinner,sun4i-a10-spdif";
--	reg = <0x01c21000 0x40>;
--	interrupts = <13>;
--	clocks = <&apb0_gates 1>, <&spdif_clk>;
--	clock-names = "apb", "spdif";
--	dmas = <&dma 0 2>, <&dma 0 2>;
--	dma-names = "rx", "tx";
--};
-
-base-commit: 00c3bc00f0cadbb48f2414370733892676511e79
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_PROCESSED:
+ 		*val = mt6577_auxadc_read(indio_dev, chan);
+@@ -172,6 +197,8 @@ static int mt6577_auxadc_read_raw(struct iio_dev *indio_dev,
+ 				chan->channel);
+ 			return *val;
+ 		}
++		if (adc_dev->dev_comp->sample_data_cali)
++			*val = mt_auxadc_get_cali_data(*val, true);
+ 		return IIO_VAL_INT;
+ 
+ 	default:
+@@ -304,10 +331,11 @@ static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+ 			 mt6577_auxadc_resume);
+ 
+ static const struct of_device_id mt6577_auxadc_of_match[] = {
+-	{ .compatible = "mediatek,mt2701-auxadc", },
+-	{ .compatible = "mediatek,mt2712-auxadc", },
+-	{ .compatible = "mediatek,mt7622-auxadc", },
+-	{ .compatible = "mediatek,mt8173-auxadc", },
++	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},
++	{ .compatible = "mediatek,mt2712-auxadc", .data = &mt8173_compat},
++	{ .compatible = "mediatek,mt7622-auxadc", .data = &mt8173_compat},
++	{ .compatible = "mediatek,mt8173-auxadc", .data = &mt8173_compat},
++	{ .compatible = "mediatek,mt6765-auxadc", .data = &mt6765_compat},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, mt6577_auxadc_of_match);
 -- 
-git-series 0.9.1
+1.9.1
