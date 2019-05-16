@@ -1,26 +1,75 @@
-From: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: [PATCH 0/4] iio: adc: mediatek: add mt6765 driver support
-Date: Thu, 16 May 2019 16:10:43 +0800
-Message-ID: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v3 2/4] clk: at91: sckc: add support to specify registers
+ bit offsets
+Date: Thu, 16 May 2019 08:10:34 +0000
+Message-ID: <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
+References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
+ <1557487388-32098-3-git-send-email-claudiu.beznea@microchip.com>
+ <20190510213242.GE7622@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190510213242.GE7622@piout.net>
+Content-Language: en-US
+Content-ID: <383569B37B17E34ABBDAAB8948BC2E04@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, peter.wang@mediatek.com, kuohong.wang@mediatek.com, jg_poxu@mediatek.com, Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To: alexandre.belloni@bootlin.com
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support of auxadc to MT6765 SoC.
-
-Chun-Hung Wu (4):
-  dt-bindings: iio: adc: mediatek: Add document for mt6765
-  iio: adc: mediatek: mt6765 upstream driver
-  iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS support
-  iio: auxadc: mediatek: change to subsys_initcall
-
- .../devicetree/bindings/iio/adc/mt6577_auxadc.txt  |  1 +
- drivers/iio/adc/mt6577_auxadc.c                    | 75 +++++++++++++++++-----
- 2 files changed, 59 insertions(+), 17 deletions(-)
-
--- 
-1.9.1
+DQoNCk9uIDExLjA1LjIwMTkgMDA6MzIsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBPbiAx
+MC8wNS8yMDE5IDExOjIzOjMxKzAwMDAsIENsYXVkaXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3Jv
+dGU6DQo+PiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNv
+bT4NCj4+DQo+PiBEaWZmZXJlbnQgSVBzIHVzZXMgZGlmZmVyZW50IGJpdCBvZmZzZXRzIGluIHJl
+Z2lzdGVycyBmb3IgdGhlIHNhbWUNCj4+IGZ1bmN0aW9uYWxpdHksIHRodXMgYWRhcHQgdGhlIGRy
+aXZlciB0byBzdXBwb3J0IHRoaXMuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpu
+ZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+ICBkcml2ZXJzL2Ns
+ay9hdDkxL3Nja2MuYyB8IDEwMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0t
+LS0tLS0tLS0tLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgNjcgaW5zZXJ0aW9ucygrKSwgMzMgZGVs
+ZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jIGIv
+ZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMNCj4+IGluZGV4IDZjNTVhN2E4NmY3OS4uMmE0YWM1NDhk
+ZTgwIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMNCj4+ICsrKyBiL2Ry
+aXZlcnMvY2xrL2F0OTEvc2NrYy5jDQo+PiBAQCAtMjIsMTUgKzIyLDIzIEBADQo+PiAgI2RlZmlu
+ZSBTTE9XQ0tfU1dfVElNRV9VU0VDCSgoU0xPV0NLX1NXX0NZQ0xFUyAqIFVTRUNfUEVSX1NFQykg
+LyBcDQo+PiAgCQkJCSBTTE9XX0NMT0NLX0ZSRVEpDQo+PiAgDQo+PiAtI2RlZmluZQlBVDkxX1ND
+S0NfQ1IJCQkweDAwDQo+PiAtI2RlZmluZQkJQVQ5MV9TQ0tDX1JDRU4JCSgxIDw8IDApDQo+PiAt
+I2RlZmluZQkJQVQ5MV9TQ0tDX09TQzMyRU4JKDEgPDwgMSkNCj4+IC0jZGVmaW5lCQlBVDkxX1ND
+S0NfT1NDMzJCWVAJKDEgPDwgMikNCj4+IC0jZGVmaW5lCQlBVDkxX1NDS0NfT1NDU0VMCSgxIDw8
+IDMpDQo+PiArI2RlZmluZQlBVDkxX1NDS0NfQ1IJCTB4MDANCj4+ICsjZGVmaW5lCQlBVDkxX1ND
+S0NfUkNFTihvZmYpCSgob2ZmKS0+Y3JfcmNlbikNCj4+ICsjZGVmaW5lCQlBVDkxX1NDS0NfT1ND
+MzJFTihvZmYpCSgob2ZmKS0+Y3Jfb3NjMzJlbikNCj4+ICsjZGVmaW5lCQlBVDkxX1NDS0NfT1ND
+MzJCWVAob2ZmKQkoKG9mZiktPmNyX29zYzMyYnlwKQ0KPj4gKyNkZWZpbmUJCUFUOTFfU0NLQ19P
+U0NTRUwob2ZmKQkoKG9mZiktPmNyX29zY3NlbCkNCj4+ICsNCj4+ICtzdHJ1Y3QgY2xrX3Nsb3df
+Yml0cyB7DQo+PiArCXUzMiBjcl9yY2VuOw0KPiANCj4gVGhpcyBiaXQgaXMgb25seSB1c2VkIG9u
+IHNhbTl4NSBzbyBJIHdvdWxkbid0IGJvdGhlciBoYXZpbmcgaXQgaW4gdGhlDQo+IHN0cnVjdHVy
+ZSwgZXNwZWNpYWxseSBzaW5jZSBpdHMgdXNlIHdpbGwgYWx3YXlzIGJlIHF1aXRlIHNlcGFyYXRl
+IGZyb20NCj4gdGhlIG90aGVyIG9uZXMgYXMgaXQgaXMgY29udHJvbGxpbmcgYSBzZXBhcmF0ZSBj
+bG9jay4NCj4gDQo+PiArCXUzMiBjcl9vc2MzMmVuOw0KPj4gKwl1MzIgY3Jfb3NjMzJieXA7DQo+
+PiArCXUzMiBjcl9vc2NzZWw7DQo+PiArfTsNCj4+ICANCj4+ICBzdHJ1Y3QgY2xrX3Nsb3dfb3Nj
+IHsNCj4+ICAJc3RydWN0IGNsa19odyBodzsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjcjsNCj4+
+ICsJY29uc3Qgc3RydWN0IGNsa19zbG93X2JpdHMgKmJpdHM7DQo+PiAgCXVuc2lnbmVkIGxvbmcg
+c3RhcnR1cF91c2VjOw0KPj4gIH07DQo+PiAgDQo+PiBAQCAtMzksNiArNDcsNyBAQCBzdHJ1Y3Qg
+Y2xrX3Nsb3dfb3NjIHsNCj4+ICBzdHJ1Y3QgY2xrX3NhbWE1ZDRfc2xvd19vc2Mgew0KPj4gIAlz
+dHJ1Y3QgY2xrX2h3IGh3Ow0KPj4gIAl2b2lkIF9faW9tZW0gKnNja2NyOw0KPj4gKwljb25zdCBz
+dHJ1Y3QgY2xrX3Nsb3dfYml0cyAqYml0czsNCj4+ICAJdW5zaWduZWQgbG9uZyBzdGFydHVwX3Vz
+ZWM7DQo+PiAgCWJvb2wgcHJlcGFyZWQ7DQo+PiAgfTsNCj4+IEBAIC00OCw2ICs1Nyw3IEBAIHN0
+cnVjdCBjbGtfc2FtYTVkNF9zbG93X29zYyB7DQo+PiAgc3RydWN0IGNsa19zbG93X3JjX29zYyB7
+DQo+PiAgCXN0cnVjdCBjbGtfaHcgaHc7DQo+PiAgCXZvaWQgX19pb21lbSAqc2NrY3I7DQo+PiAr
+CWNvbnN0IHN0cnVjdCBjbGtfc2xvd19iaXRzICpiaXRzOw0KPj4gIAl1bnNpZ25lZCBsb25nIGZy
+ZXF1ZW5jeTsNCj4+ICAJdW5zaWduZWQgbG9uZyBhY2N1cmFjeTsNCj4+ICAJdW5zaWduZWQgbG9u
+ZyBzdGFydHVwX3VzZWM7DQo+PiBAQCAtNTgsNiArNjgsNyBAQCBzdHJ1Y3QgY2xrX3Nsb3dfcmNf
+b3NjIHsNCj4+ICBzdHJ1Y3QgY2xrX3NhbTl4NV9zbG93IHsNCj4+ICAJc3RydWN0IGNsa19odyBo
+dzsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjcjsNCj4+ICsJY29uc3Qgc3RydWN0IGNsa19zbG93
+X2JpdHMgKmJpdHM7DQo+PiAgCXU4IHBhcmVudDsNCj4+ICB9Ow0KPj4gIA0KPj4gQEAgLTY5LDEw
+ICs4MCwxMSBAQCBzdGF0aWMgaW50IGNsa19zbG93X29zY19wcmVwYXJlKHN0cnVjdCBjbGtfaHcg
+Kmh3KQ0KPj4gIAl2b2lkIF9faW9tZW0gKnNja2NyID0gb3NjLT5zY2tjcjsNCj4+ICAJdTMyIHRt
+cCA9IHJlYWRsKHNja2NyKTsNCj4+ICANCj4+IC0JaWYgKHRtcCAmIChBVDkxX1NDS0NfT1NDMzJC
+WVAgfCBBVDkxX1NDS0NfT1NDMzJFTikpDQo+PiArCWlmICh0bXAgJiAoQVQ5MV9TQ0tDX09TQzMy
+QllQKG9zYy0+Yml0cykgfA0KPj4gKwkJICAgQVQ5MV9TQ0tDX09TQzMyRU4ob3NjLT5iaXRzKSkp
+DQo+IA0KPiBJIHN0aWxsIGZpbmQgdGhhdDoNCj4gDQo+IAlpZiAodG1wICYgKG9zYy0+Yml0cy0+
+Y3Jfb3NjMzJieXAgfCBvc2MtPmJpdHMtPmNyX29zYzMyZW4pKQ0KPiANCj4gd291bGQgYmUgc2hv
+cnRlciBhbmQgZWFzaWVyIHRvIHJlYWQgYW5kIHN0aWxsIGZpdHMgb24gb25lIGxpbmUuDQoNCkFn
+cmVlLCBidXQgSSB0aG91Z2h0IHRvIHVzZSB0aGUgc2FtZSBpbnRlcmZhY2UgZXZlcnl3aGVyZS4g
+QW55d2F5LCB0ZWxsIG1lDQppZiB5b3Ugd2FudCB0byByZXNlbmQgd2l0aCB0aGVzZSBjaGFuZ2Vz
+Lg0KDQo+IA0K
