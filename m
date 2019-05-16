@@ -1,45 +1,42 @@
-Return-Path: <SRS0=z2TU=TJ=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 14/17] ARCH: arm: dts: imx6qdl-kontron-samx6i: add boot spi-nor
-Date: Thu,  9 May 2019 17:58:31 +0200
-Message-Id: <20190509155834.22838-15-m.felsch@pengutronix.de>
-In-Reply-To: <20190509155834.22838-1-m.felsch@pengutronix.de>
-References: <20190509155834.22838-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=blGF=TQ=nvidia.com=mmaddireddy@kernel.org>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH V4 26/28] PCI: Add DT binding for "reset-gpios" property
+Date: Thu, 16 May 2019 11:23:05 +0530
+Message-ID: <20190516055307.25737-27-mmaddireddy@nvidia.com>
+In-Reply-To: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, linux-imx@nxp.com
-Cc: Stefan.Nickl@kontron.com, Gilles.Buloz@kontron.com, Michael.Brunner@kontron.com, thomas.schaefer@kontron.com, frieder.schrempf@kontron.de, kernel@pengutronix.de, devicetree@vger.kernel.org, Michael Grzeschik <m.grzeschik@pengutronix.de>
+Content-Type: text/plain
+To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Add DT binding for "reset-gpios" property which supports GPIO based PERST#
+signal.
 
-Since Kontron still uses silicon version below 1.3 they have add a
-spi-nor to implement Workaround #1 of erratum ERR006282.
-
-Sigend-off-by; Michael Grzeschik <m.grzeschik@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+V4: No change
 
-diff --git a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-index 0b45b3062358..7e60142f09c1 100644
---- a/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-kontron-samx6i.dtsi
-@@ -255,6 +255,14 @@
- 	pinctrl-0 = <&pinctrl_ecspi4>;
- 	cs-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>,
- 		   <&gpio3 29 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	/* default boot source: workaround #1 for errata ERR006282 */
-+	m25p80@0 {
-+		compatible = "winbond,w25q16dw", "jedec,spi-nor";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
- };
- 
- /* GBE */
+V3: Moved to common pci binding doc
+
+V2: Using standard "reset-gpio" property
+
+ Documentation/devicetree/bindings/pci/pci.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index c77981c5dd18..79124898aa5b 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -24,3 +24,6 @@ driver implementation may support the following properties:
+    unsupported link speed, for instance, trying to do training for
+    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+    for gen2, and '1' for gen1. Any other values are invalid.
++- reset-gpios:
++   If present this property specifies PERST# GPIO. Host drivers can parse the
++   GPIO and apply fundamental reset to endpoints.
 -- 
-2.20.1
+2.17.1
