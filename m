@@ -1,7 +1,7 @@
 From: Torsten Duwe <duwe@lst.de>
-Subject: [PATCH v2 2/4] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-Date: Thu, 16 May 2019 17:51:35 +0200 (CEST)
-Message-ID: <20190516155135.36B8468BFE@newverein.lst.de>
+Subject: [PATCH v2 3/4] arm64: DTS: allwinner: a64: Enable audio on Teres-I
+Date: Thu, 16 May 2019 17:51:39 +0200 (CEST)
+Message-ID: <20190516155139.E6EE568C65@newverein.lst.de>
 References: <20190516154943.239E668B05@newverein.lst.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -9,81 +9,77 @@ To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herrin
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Harald Geyer <harald@ccbib.org>
 
-The ANX6345 is an ultra-low power DisplayPort/eDP transmitter designed
-for portable devices.
+The TERES-I has internal speakers (left, right), internal microphone
+and a headset combo jack (headphones + mic), "CTIA" (android) pinout.
 
-Add a binding document for it.
+The headphone and mic detect lines of the A64 are connected properly,
+but AFAIK currently unsupported by the driver.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Harald Geyer <harald@ccbib.org>
 Signed-off-by: Torsten Duwe <duwe@suse.de>
 ---
- .../bindings/display/bridge/anx6345.txt       | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-new file mode 100644
-index 000000000000..e79a11348d11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-@@ -0,0 +1,56 @@
-+Analogix ANX6345 eDP Transmitter
-+--------------------------------
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index f9eede0a8bd3..d57049fbdaca 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -70,6 +70,25 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+ 	};
 +
-+The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-+portable devices.
-+
-+Required properties:
-+
-+ - compatible		: "analogix,anx6345"
-+ - reg			: I2C address of the device
-+ - reset-gpios		: Which GPIO to use for reset
-+ - dvdd12-supply	: Regulator for 1.2V digital core power.
-+ - dvdd25-supply	: Regulator for 2.5V digital core power.
-+
-+Optional properties:
-+
-+ - Video ports for RGB input and eDP output using the DT bindings
-+   defined in [1]
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+anx6345: anx6345@38 {
-+	compatible = "analogix,anx6345";
-+	reg = <0x38>;
-+	reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+	dvdd25-supply = <&reg_dldo2>;
-+	dvdd12-supply = <&reg_fldo1>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		anx6345_in: port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			anx6345_in_tcon0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_anx6345>;
-+			};
-+		};
-+
-+		anx6345_out: port@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			anx6345_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
++	speaker_amp: audio-amplifier {
++		compatible = "simple-audio-amplifier";
++		enable-gpios = <&r_pio 0 12 GPIO_ACTIVE_HIGH>; /* PL12 */
++		sound-name-prefix = "Speaker Amp";
 +	};
 +};
++
++&codec {
++	status = "okay";
++};
++
++&codec_analog {
++	cpvdd-supply = <&reg_eldo1>;
++	status = "okay";
++};
++
++&dai {
++	status = "okay";
+ };
+ 
+ &ehci1 {
+@@ -258,6 +286,29 @@
+ 	vcc-hdmi-supply = <&reg_dldo1>;
+ };
+ 
++&sound {
++	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
++	simple-audio-card,widgets = "Headphone", "Headphone Jack",
++				    "Microphone", "Headset Microphone",
++				    "Microphone", "Internal Microphone",
++				    "Speaker", "Internal Speaker";
++	simple-audio-card,routing =
++			"Left DAC", "AIF1 Slot 0 Left",
++			"Right DAC", "AIF1 Slot 0 Right",
++			"AIF1 Slot 0 Left ADC", "Left ADC",
++			"AIF1 Slot 0 Right ADC", "Right ADC",
++			"Headphone Jack", "HP",
++			"Speaker Amp INL", "LINEOUT",
++			"Speaker Amp INR", "LINEOUT",
++			"Internal Speaker", "Speaker Amp OUTL",
++			"Internal Speaker", "Speaker Amp OUTR",
++			"Internal Microphone", "MBIAS",
++			"MIC1", "Internal Microphone",
++			"Headset Microphone", "HBIAS",
++			"MIC2", "Headset Microphone";
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
