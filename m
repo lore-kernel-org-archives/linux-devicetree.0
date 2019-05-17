@@ -1,84 +1,34 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Date: Fri, 17 May 2019 09:31:51 +0200
-Message-ID: <20190517073151.mz6hcmzubk7iqfre@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <20190512214128.qjyys3vfpwdiacib@core.my.home>
- <20190516150252.hf4u3bloo37chy6q@flea>
- <CAEExFWu-T2mGQ9Teo7TQOcJsEzXi_dB=S8CFv7MiwHyu5z4-ow@mail.gmail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 1/2] dt-bindings: Add vendor prefix for HopeRun
+Date: Fri, 17 May 2019 07:34:44 +0000
+Message-ID: <TY1PR01MB1770D6A5A20BC7E592BF6DF6C00B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1557938083-25423-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_JsqJtS4R57t+-CQZaDNYQ7HsW+TORUhXLxWLGkf+mkg94HA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lfvwzxrwqixjwfma"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAEExFWu-T2mGQ9Teo7TQOcJsEzXi_dB=S8CFv7MiwHyu5z4-ow@mail.gmail.com>
+In-Reply-To: <CAL_JsqJtS4R57t+-CQZaDNYQ7HsW+TORUhXLxWLGkf+mkg94HA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Lee <tiny.windzz@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, bjorn.andersson@linaro.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, paulmck@linux.ibm.com, stefan.wahren@i2se.com, Linux PM <linux-pm@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com, devicetree@vger.kernel.org, marc.w.gonzalez@free.fr, Eduardo Valentin <edubezval@gmail.com>, enric.balletbo@collabora.com, robh+dt@kernel.org, Jonathan.Cameron@huawei.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, olof@lixom.n
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.c>
 List-Id: devicetree@vger.kernel.org
 
-
---lfvwzxrwqixjwfma
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 17, 2019 at 02:10:47AM +0800, Frank Lee wrote:
-> > On Sun, May 12, 2019 at 11:41:28PM +0200, Ond=C5=99ej Jirman wrote:
-> > > > > +static int tsens_get_temp(void *data, int *temp)
-> > > > > +{
-> > > > > + struct tsensor *s =3D data;
-> > > > > + struct tsens_device *tmdev =3D s->tmdev;
-> > > > > + int val;
-> > > > > +
-> > > > > + regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > > > > +             0x4 * s->id, &val);
-> > > > > +
-> > > > > + if (unlikely(val =3D=3D 0))
-> > > > > +         return -EBUSY;
-> > > >
-> > > > I'm not sure why a val equals to 0 would be associated with EBUSY?
-> > >
-> > > Thermal zone driver can (will) call get_temp before we got the
-> > > first interrupt and the thermal data. In that case val will be 0.
-> > >
-> > > Resulting in:
-> > >
-> > >  (val + offset) * scale =3D (-2794) * -67 =3D 187198
-> > >
-> > > 187=C2=B0C and immediate shutdown during boot - based on cirtical
-> > > temperature being reached.
-> > >
-> > > Busy here means, get_temp does not yet have data. Thermal zone
-> > > driver just reports any error to dmesg output.
-> >
-> > Ah, that makes sense.
-> >
-> > I guess if we're switching to an interrupt-based driver, then we can
-> > just use a waitqueue, or is get_temp supposed to be atomic?
->
-> I think get_temp should not be bloacked.
-
-Why not?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---lfvwzxrwqixjwfma
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN5jZwAKCRDj7w1vZxhR
-xRjwAQCF+RoytL/Gdpf15Jq+KQoPxEwYs/XaBIKW6ehF38tr0QD/T1i40/vfptIH
-f1vUZGQCwcHvI4eTbggzXinFNG1BsAM=
-=UQjS
------END PGP SIGNATURE-----
-
---lfvwzxrwqixjwfma--
+SGVsbG8gUm9iLA0KDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+
+IFNlbnQ6IDE3IE1heSAyMDE5IDAzOjMxDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSBk
+dC1iaW5kaW5nczogQWRkIHZlbmRvciBwcmVmaXggZm9yIEhvcGVSdW4NCj4gDQo+IE9uIFdlZCwg
+TWF5IDE1LCAyMDE5IGF0IDExOjM1IEFNIEZhYnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2Fz
+dHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFkZCAiSmlhbmdzdSBIb3BlUnVu
+IFNvZnR3YXJlIENvLiwgTHRkLiIgdG8gdGhlIGxpc3Qgb2YgZGV2aWNldHJlZQ0KPiA+IHZlbmRv
+ciBwcmVmaXhlcyBhcyAiaG9wZXJ1biIuDQo+ID4NCj4gPiBXZWJzaXRlOiBodHRwOi8vd3d3Lmhv
+cGVydW4uY29tL2VuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZh
+YnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0
+ZXJzb24gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IHYx
+LT52MjoNCj4gPiAqIE5vIGNoYW5nZQ0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKQ0KPiANCj4gSSd2ZSBjb252ZXJ0ZWQgdGhpcyBmaWxlIHRvIGpzb24t
+c2NoZW1hIGFzIG9mIHY1LjItcmMxLiBTZWUgY29tbWl0DQo+IDgxMjJkZTU0NjAyZS4gU29ycnks
+IGJ1dCB5b3Ugd2lsbCBoYXZlIHRvIHJld29yayB0aGlzIHBhdGNoLg0KDQpJIHNlZSwgd2lsbCBz
+ZW5kIGEgbmV3IHZlcnNpb24uDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiANCj4gUm9iDQo=
