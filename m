@@ -1,66 +1,71 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v4 0/9] RPMPD for QCS404 and MSM8998
-Date: Fri, 17 May 2019 11:03:52 -0600
-Message-ID: <2d453c99-4ea2-e4f0-1d99-e13d099bfa07@codeaurora.org>
-References: <20190513102015.26551-1-sibis@codeaurora.org>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Date: Sat, 18 May 2019 01:19:54 +0800
+Message-ID: <CAEExFWtban8Fjw6aZ5gdeC2GNk1vdqFoaJB_o-JtYZ_z70AJcQ@mail.gmail.com>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512133930.t5txssl7mou2gljt@flea> <20190512214128.qjyys3vfpwdiacib@core.my.home>
+ <20190516150252.hf4u3bloo37chy6q@flea> <CAEExFWu-T2mGQ9Teo7TQOcJsEzXi_dB=S8CFv7MiwHyu5z4-ow@mail.gmail.com>
+ <20190517073151.mz6hcmzubk7iqfre@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513102015.26551-1-sibis@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20190517073151.mz6hcmzubk7iqfre@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
-Cc: david.brown@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, marc.w.gonzalez@free.fr
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, bjorn.andersson@linaro.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, paulmck@linux.ibm.com, stefan.wahren@i2se.com, Linux PM <linux-pm@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com, devicetree@vger.kernel.org, marc.w.gonzalez@free.fr, Eduardo Valentin <edubezval@gmail.com>, enric.balletbo@collabora.com, robh+dt@kernel.org, Jonathan.Cameron@huawei.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, olof@lixom.n
 List-Id: devicetree@vger.kernel.org
 
-On 5/13/2019 4:20 AM, Sibi Sankar wrote:
-> Re-worked the macros of the rpmpd driver. Add power domains support
-> for QCS404 and MSM8998.
+On Fri, May 17, 2019 at 3:32 PM Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+>
+> On Fri, May 17, 2019 at 02:10:47AM +0800, Frank Lee wrote:
+> > > On Sun, May 12, 2019 at 11:41:28PM +0200, Ond=C5=99ej Jirman wrote:
+> > > > > > +static int tsens_get_temp(void *data, int *temp)
+> > > > > > +{
+> > > > > > + struct tsensor *s =3D data;
+> > > > > > + struct tsens_device *tmdev =3D s->tmdev;
+> > > > > > + int val;
+> > > > > > +
+> > > > > > + regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+> > > > > > +             0x4 * s->id, &val);
+> > > > > > +
+> > > > > > + if (unlikely(val =3D=3D 0))
+> > > > > > +         return -EBUSY;
+> > > > >
+> > > > > I'm not sure why a val equals to 0 would be associated with EBUSY=
+?
+> > > >
+> > > > Thermal zone driver can (will) call get_temp before we got the
+> > > > first interrupt and the thermal data. In that case val will be 0.
+> > > >
+> > > > Resulting in:
+> > > >
+> > > >  (val + offset) * scale =3D (-2794) * -67 =3D 187198
+> > > >
+> > > > 187=C2=B0C and immediate shutdown during boot - based on cirtical
+> > > > temperature being reached.
+> > > >
+> > > > Busy here means, get_temp does not yet have data. Thermal zone
+> > > > driver just reports any error to dmesg output.
+> > >
+> > > Ah, that makes sense.
+> > >
+> > > I guess if we're switching to an interrupt-based driver, then we can
+> > > just use a waitqueue, or is get_temp supposed to be atomic?
+> >
+> > I think get_temp should not be bloacked.
+>
+> Why not?
 
-For the series:
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Maybe, I am wrong. I also want to know if we should do this.
 
-> 
-> V4:
-> * fixup fixes tag and commit message in patch 1 [Marc]
-> * fixup typos in qcs404 and msm8998 dt nodes
-> * fixup comments regarding resource type in patch 8 [Marc]
-> 
-> V3:
-> * always send level updates to vfc and vfl in set_performance state
-> * fixup commit messages [Rajendra]
-> * fixup s-o-b ordering
-> 
-> V2:
-> * Add rpmpd support for msm8998
-> * fixup corner/vfc with vlfl/vfl
-> 
-> Bjorn Andersson (4):
->    soc: qcom: rpmpd: Modify corner defining macros
->    dt-bindings: power: Add rpm power domain bindings for qcs404
->    soc: qcom: rpmpd: Add QCS404 power-domains
->    arm64: dts: qcom: qcs404: Add rpmpd node
-> 
-> Sibi Sankar (5):
->    soc: qcom: rpmpd: fixup rpmpd set performance state
->    soc: qcom: rpmpd: Add support to set rpmpd state to max
->    dt-bindings: power: Add rpm power domain bindings for msm8998
->    soc: qcom: rpmpd: Add MSM8998 power-domains
->    arm64: dts: qcom: msm8998: Add rpmpd node
-> 
->   .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +
->   arch/arm64/boot/dts/qcom/msm8998.dtsi         |  51 +++++++
->   arch/arm64/boot/dts/qcom/qcs404.dtsi          |  55 +++++++
->   drivers/soc/qcom/rpmpd.c                      | 134 ++++++++++++++----
->   include/dt-bindings/power/qcom-rpmpd.h        |  34 +++++
->   5 files changed, 252 insertions(+), 24 deletions(-)
-> 
+Yangtao
 
-
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
