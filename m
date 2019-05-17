@@ -1,74 +1,24 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] arm64: dts: ls1028a: Add USB dt nodes
-Date: Fri, 17 May 2019 10:10:51 +0800
-Message-ID: <20190517021050.GW15856@dragon>
-References: <20190508064814.14223-1-ran.wang_1@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: pr-tracker-bot@kernel.org
+Subject: Re: [GIT PULL] Devicetree vendor prefix schema for 5.2
+Date: Fri, 17 May 2019 02:25:20 +0000
+Message-ID: <155805992067.6110.7638939329773662220.pr-tracker-bot@kernel.org>
+References: <CAL_JsqLtkGfSX5bdRWy7MXM+opAd-gWzhTorUoVXOpKktN8YKQ@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190508064814.14223-1-ran.wang_1@nxp.com>
+In-Reply-To: <CAL_JsqLtkGfSX5bdRWy7MXM+opAd-gWzhTorUoVXOpKktN8YKQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 08, 2019 at 06:46:37AM +0000, Ran Wang wrote:
-> This patch adds USB dt nodes for LS1028A.
-> 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Changes in v3:
->   - Add space between label and node name.
->   - Add spcae with properties and '='.
->   - Add SoC specific compatible.
-> 
-> Changes in v2:
->   - Rename node from usb3@... to usb@... to meet DTSpec
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20 ++++++++++++++++++++
->  1 files changed, 20 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 8dd3501..19519df 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -144,6 +144,26 @@
->  			clocks = <&sysclk>;
->  		};
->  
-> +		usb0: usb@3100000 {
+The pull request you sent on Thu, 16 May 2019 15:43:27 -0500:
 
-Please sort the nodes with unit-address in the address.  That said, it
-should go after watchdog@23c0000.
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.2-part2
 
-> +			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
-> +			reg = <0x0 0x3100000 0x0 0x10000>;
-> +			interrupts = <0 80 0x4>;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9cbda1bddb4c561f3a7360d36ce13a73bb02bfeb
 
-interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+Thank you!
 
-Shawn
-
-> +			dr_mode = "host";
-> +			snps,dis_rxdet_inp3_quirk;
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> +		};
-> +
-> +		usb1: usb@3110000 {
-> +			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
-> +			reg = <0x0 0x3110000 0x0 0x10000>;
-> +			interrupts = <0 81 0x4>;
-> +			dr_mode = "host";
-> +			snps,dis_rxdet_inp3_quirk;
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> +		};
-> +
->  		i2c0: i2c@2000000 {
->  			compatible = "fsl,vf610-i2c";
->  			#address-cells = <1>;
-> -- 
-> 1.7.1
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
