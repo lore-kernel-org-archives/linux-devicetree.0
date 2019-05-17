@@ -1,82 +1,59 @@
-Return-Path: <SRS0=bR7J=TU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.myocard.eu ([80.211.34.180]:58200 "EHLO mail.myocard.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfETJFu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 May 2019 05:05:50 -0400
-Received: by mail.myocard.eu for <devicetree@vger.kernel.org>; Mon, 20 May 2019 08:49:02 GMT
-Message-ID: <20190520104634-0.1.6.7o2.0.8clh81mnma@myocard.eu>
-Date: Mon, 20 May 2019 08:49:02 GMT
-From: "Radoslav Dobrev" <radoslav.dobrev@myocard.eu>
-Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
+Return-Path: <SRS0=gB64=TR=ti.com=j-keerthy@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v2 3/4] arm: dts: dra71x: Disable rtc target module
+Date: Fri, 17 May 2019 06:44:08 +0530
+Message-ID: <20190517011409.22167-4-j-keerthy@ti.com>
+In-Reply-To: <20190517011409.22167-1-j-keerthy@ti.com>
+References: <20190517011409.22167-1-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Type: text/plain
+To: tony@atomide.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-=D0=A3=D0=B2=D0=B0=D0=B6=D0=B0=D0=B5=D0=BC=D0=B8 =D0=93=D0=BE=D1=81=D0=BF=
-=D0=BE=D0=B4=D0=B8=D0=BD=D0=B5/=D0=93=D0=BE=D1=81=D0=BF=D0=BE=D0=B6=D0=BE=
-,
+Introduce dra71x.dtsi to include dra71x specific changes.
+rtc is fused out on dra71 and accessing target module
+register is causing a boot crash hence disable it.
 
-=D0=A1=D1=8A=D0=B2=D1=80=D0=B5=D0=BC=D0=B5=D0=BD=D0=BD=D0=B0=D1=82=D0=B0 =
-=D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0 =D0=BF=D1=80=D0=B8=D0=B4=
-=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=
-=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0, =D0=BA=D0=BE=D0=B8=D1=
-=82=D0=BE =D0=BC=D0=BE=D0=B3=D0=B0=D1=82 =D0=B4=D0=B0 =D0=B1=D1=8A=D0=B4=D0=
-=B0=D1=82 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B8 =D0=
-=B2 =D1=88=D0=B8=D1=80=D0=BE=D0=BA=D0=B0 =D1=82=D1=8A=D1=80=D0=B3=D0=BE=D0=
-=B2=D1=81=D0=BA=D0=B0 =D0=BC=D1=80=D0=B5=D0=B6=D0=B0 =D0=BE=D1=82 =D1=81=D1=
-=83=D0=BF=D0=B5=D1=80=D0=BC=D0=B0=D1=80=D0=BA=D0=B5=D1=82=D0=B8 =D0=B8 =D0=
-=B7=D0=B0=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D1=85=D1=
-=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B5 =D0=B2 =D1=81=D1=82=D1=80=D0=B0=D0=BD=D0=
-=B0=D1=82=D0=B0, =D0=B5 =D0=B8=D0=BD=D1=81=D1=82=D1=80=D1=83=D0=BC=D0=B5=D0=
-=BD=D1=82, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=B5=D1=84=D0=B5=D0=BA=D1=82=D0=
-=B8=D0=B2=D0=BD=D0=BE =D0=BF=D0=BE=D0=B2=D0=B8=D1=88=D0=B0=D0=B2=D0=B0 =D0=
-=B5=D1=84=D0=B8=D0=BA=D0=B0=D1=81=D0=BD=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=
-=BD=D0=B0 =D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0.
+Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ arch/arm/boot/dts/dra71-evm.dts |  2 +-
+ arch/arm/boot/dts/dra71x.dtsi   | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/dra71x.dtsi
 
-=D0=A2=D0=BE=D0=B2=D0=B0 =D1=81=D0=B5 =D0=BF=D0=BE=D1=82=D0=B2=D1=8A=D1=80=
-=D0=B6=D0=B4=D0=B0=D0=B2=D0=B0 =D0=B8 =D0=BE=D1=82 =D0=BF=D1=80=D0=BE=D1=83=
-=D1=87=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=D0=BE =D0=BD=D0=B0 =D0=A1=D0=B2=D0=B5=
-=D1=82=D0=BE=D0=B2=D0=BD=D0=B0=D1=82=D0=B0 =D0=B7=D0=B4=D1=80=D0=B0=D0=B2=
-=D0=BD=D0=B0 =D0=BE=D1=80=D0=B3=D0=B0=D0=BD=D0=B8=D0=B7=D0=B0=D1=86=D0=B8=
-=D1=8F (=D0=A1=D0=97=D0=9E), =D0=BA=D0=BE=D0=B5=D1=82=D0=BE =D0=BF=D0=BE=D0=
-=BA=D0=B0=D0=B7=D0=B2=D0=B0, =D1=87=D0=B5 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=
-=82=D0=B5=D0=BB, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=BF=D0=BE=D0=BB=D1=83=D1=
-=87=D0=B0=D0=B2=D0=B0 =D0=B4=D0=BE=D0=BF=D0=BB=D0=B0=D1=89=D0=B0=D0=BD=D0=
-=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0, =D0=B5 =D0=BF=D0=BE-=D0=B5=
-=D1=84=D0=B5=D0=BA=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D1=81 20%, =D0=B0  =D0=BE=
-=D1=82=D1=81=D1=8A=D1=81=D1=82=D0=B2=D0=B8=D1=8F=D1=82=D0=B0 =D0=BC=D1=83=
- =D0=BD=D0=B0=D0=BC=D0=B0=D0=BB=D1=8F=D0=B2=D0=B0=D1=82 =D1=81 27%.
-
-=D0=98=D0=B7=D0=B1=D0=BE=D1=80=D1=8A=D1=82 =D0=BD=D0=B0 =D0=BD=D0=B0=D1=88=
-=D0=B8=D1=82=D0=B5 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =D0=B7=D0=B0=
- =D1=85=D1=80=D0=B0=D0=BD=D0=B0 =D0=BA=D0=B0=D1=82=D0=BE =D1=84=D0=BE=D1=80=
-=D0=BC=D0=B0 =D0=BD=D0=B0 =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B0=
- =D0=BF=D1=80=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B0 =D0=B5 =D1=80=
-=D0=B0=D0=B2=D0=BD=D0=BE=D0=B7=D0=BD=D0=B0=D1=87=D0=BD=D0=BE =D0=BD=D0=B5=
- =D1=81=D0=B0=D0=BC=D0=BE =D0=BD=D0=B0 =D0=BF=D1=80=D0=BE=D0=B4=D1=83=D0=BA=
-=D1=82=D0=B8=D0=B2=D0=B5=D0=BD =D0=B8 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B8=
-=D1=80=D0=B0=D0=BD =D0=B5=D0=BA=D0=B8=D0=BF =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=
-=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D1=8F, =D0=BD=D0=BE =D0=B8=
- =D1=84=D0=B8=D0=BD=D0=B0=D0=BD=D1=81=D0=BE=D0=B2=D0=BE =D0=BE=D0=B1=D0=BB=
-=D0=B5=D0=BA=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 - =D1=81=D1=82=D0=BE=D0=B9=D0=BD=
-=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=BD=D0=B0 =D0=B8=D0=B7=D1=80=D0=B0=D0=B7=
-=D1=85=D0=BE=D0=B4=D0=B2=D0=B0=D0=BD=D0=B8=D1=82=D0=B5 =D1=81=D1=80=D0=B5=
-=D0=B4=D1=81=D1=82=D0=B2=D0=B0 =D0=BD=D0=B5 =D1=81=D0=B5 =D0=BE=D0=B1=D0=BB=
-=D0=B0=D0=B3=D0=B0 =D1=81 =D0=B4=D0=B0=D0=BD=D1=8A=D0=BA.
-
-=D0=96=D0=B5=D0=BB=D0=B0=D0=B5=D1=82=D0=B5 =D0=BB=D0=B8 =D0=B4=D0=B0 =D0=92=
-=D0=B8 =D0=BF=D1=80=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=BF=
-=D0=BE=D0=B2=D0=B5=D1=87=D0=B5 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=
-=D1=86=D0=B8=D1=8F =D0=BE=D1=82=D0=BD=D0=BE=D1=81=D0=BD=D0=BE =D0=B2=D0=B0=
-=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=
-=D0=BD=D0=B0 =D0=B7=D0=B0 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=
-=D0=B8?
-
-
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.myocard.eu
+diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
+index 82cc7ec37af0..c496ae83e27e 100644
+--- a/arch/arm/boot/dts/dra71-evm.dts
++++ b/arch/arm/boot/dts/dra71-evm.dts
+@@ -6,7 +6,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
+-#include "dra72-evm-common.dtsi"
++#include "dra71x.dtsi"
+ #include "dra7-mmc-iodelay.dtsi"
+ #include "dra72x-mmc-iodelay.dtsi"
+ #include <dt-bindings/net/ti-dp83867.h>
+diff --git a/arch/arm/boot/dts/dra71x.dtsi b/arch/arm/boot/dts/dra71x.dtsi
+new file mode 100644
+index 000000000000..aad7394902a6
+--- /dev/null
++++ b/arch/arm/boot/dts/dra71x.dtsi
+@@ -0,0 +1,13 @@
++/*
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "dra72-evm-common.dtsi"
++
++&rtctarget {
++	status = "disabled";
++};
+-- 
+2.17.1
