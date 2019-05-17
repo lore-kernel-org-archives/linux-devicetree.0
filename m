@@ -1,67 +1,45 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 2/3] dt-bindings: backlight: add lm3630a bindings
-Date: Fri, 17 May 2019 16:11:48 -0500
-Message-ID: <CAL_JsqLdS2SDd-dczZmqDTN3XMY7fwDjdkX5OibXbrksd7qQYA@mail.gmail.com>
-References: <20190424092505.6578-1-masneyb@onstation.org> <20190424092505.6578-3-masneyb@onstation.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v3 2/4] clk: at91: sckc: add support to specify registers
+ bit offsets
+Date: Fri, 17 May 2019 23:13:36 +0200
+Message-ID: <20190517211336.GB7685@piout.net>
+References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
+ <1557487388-32098-3-git-send-email-claudiu.beznea@microchip.com>
+ <20190510213242.GE7622@piout.net>
+ <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190424092505.6578-3-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
+To: Claudiu.Beznea@microchip.com
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 4:25 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> Add new backlight bindings for the TI LM3630A dual-string white LED.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v5:
-> - Change 'lm3630a_bl@38' in examples to 'led-controller@38'
->
-> Changes since v4:
-> - Drop $ref from led-sources
-> - Drop description from reg of i2c address
-> - Expand description of reg for the control bank
-> - Drop status from examples
->
-> Changes since v3:
-> - Add label. I didn't add a description for it since that'll come from
->   the common properties once its converted.
->
-> Changes since v2:
-> - Update description of max-brightness
-> - Add description for reg
-> - Correct typo: s/tranisiton/transition
-> - add reg to control banks
-> - add additionalProperties
->
->  .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
->  1 file changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+On 16/05/2019 08:10:34+0000, Claudiu.Beznea@microchip.com wrote:
+> >> @@ -69,10 +80,11 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+> >>  	void __iomem *sckcr = osc->sckcr;
+> >>  	u32 tmp = readl(sckcr);
+> >>  
+> >> -	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
+> >> +	if (tmp & (AT91_SCKC_OSC32BYP(osc->bits) |
+> >> +		   AT91_SCKC_OSC32EN(osc->bits)))
+> > 
+> > I still find that:
+> > 
+> > 	if (tmp & (osc->bits->cr_osc32byp | osc->bits->cr_osc32en))
+> > 
+> > would be shorter and easier to read and still fits on one line.
+> 
+> Agree, but I thought to use the same interface everywhere. Anyway, tell me
+> if you want to resend with these changes.
+> 
+My comment applies to all the AT91_SCKC_.*() macros. I don't feel that
+the macros make the code clearer, accessing bits->cr_.* is self
+documenting enough (and makes the code shorter).
 
-I'm working on getting the examples to be validated by the schema (in
-addition to just building with dtc) and there's a couple of errors:
-
-Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-'#address-cells', '#size-cells' do not match any of the regexes:
-'^led@[01]$', 'pinctrl-[0-9]+'
-Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-'#address-cells', '#size-cells' do not match any of the regexes:
-'^led@[01]$', 'pinctrl-[0-9]+'
-
-You didn't list '#address-cells' and '#size-cells'.
-
-Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
-'pinctrl-[0-9]+'
-Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-led@1: 'ti,linear-mapping-mode' does not match any of the regexes:
-'pinctrl-[0-9]+'
-
-'ti,linear-mapping-mode' is not defined in the child nodes.
-
-Rob
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
