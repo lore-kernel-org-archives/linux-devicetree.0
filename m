@@ -1,46 +1,94 @@
-Return-Path: <SRS0=cOqY=T6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:51864 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfE3G4k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 May 2019 02:56:40 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
-Date: Wed, 29 May 2019 23:56:35 -0700
-Message-Id: <20190530065635.42811-1-tony@atomide.com>
+Return-Path: <SRS0=N2Ii=TR=nvidia.com=mmaddireddy@kernel.org>
+Subject: Re: [PATCH V4 00/28] Enable Tegra PCIe root port features
+References: <20190516055307.25737-1-mmaddireddy@nvidia.com>
+ <20190516131257.GA101793@google.com>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <1d6b0b74-5b66-c936-a374-3a19dc7637e5@nvidia.com>
+Date: Fri, 17 May 2019 14:08:48 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+In-Reply-To: <20190516131257.GA101793@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-There is no CLKSEL for timer12 on dra6 unlike for timer1. This
-causes issues on booting the device that Tomi noticed if
-DEBUG_SLAB is enabled and the clkctrl clock does not properly
-handle non-existing clock. Let's drop the bogus CLKSEL clock,
-the clkctrl clock handling gets fixed separately.
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 4ed0dfe3cf39 ("ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dra7-l4.dtsi | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -4450,8 +4450,6 @@
- 			timer12: timer@0 {
- 				compatible = "ti,omap5430-timer";
- 				reg = <0x0 0x80>;
--				clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 24>;
--				clock-names = "fck";
- 				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
- 				ti,timer-alwon;
- 				ti,timer-secure;
--- 
-2.21.0
+On 16-May-19 6:42 PM, Bjorn Helgaas wrote:
+> On Thu, May 16, 2019 at 11:22:39AM +0530, Manikanta Maddireddy wrote:
+>> This series of patches adds,
+>> - Tegra root port features like Gen2, AER, etc
+>> - Power and perf optimizations
+>> - Fixes like "power up sequence", "dev_err prints", etc
+> Please:
+>
+>   1) Put the brakes on.  You posted v3 of these 30 patches on May 13
+>      and v4 on May 16.  There's no hurry; the merge window is still
+>      open and nothing will be added to -next until at least next week.
+>      If you space these out a little, people will have time to digest
+>      them.
+>
+>   2) Mention in the cover letter what changed between v3 and v4 so
+>      people know where to spend their effort.
+
+Reason for sending v4 quickly is because one of the patches deviated from
+Rob & Thierry's comments in v2. To address this I published v4 and marked
+v3 series as superseded. 
+
+I will follow these two points from next time, meanwhile updating the
+changes from v3 to v4 below,
+
+Changes from v3 to v4:
+ - Patch [V3,27/29] is dropped
+ - Patch [V3,28/29]: devm_gpiod_get_from_of_node() is directly used in
+   pci-tegra driver instead of of_get_pci* wrapper function defined in
+   Patch [V3,27/29].
+
+Manikanta 
+
+>> This series of patches are tested on Tegra186 based Jetson-TX2, Tegra210
+>> based Jetson-TX1, T124 based Jetson-TK1 platforms, Tegra20 and Tegra30
+>> platforms.
+>>
+>> Manikanta Maddireddy (28):
+>>   soc/tegra: pmc: Export tegra_powergate_power_on()
+>>   PCI: tegra: Handle failure cases in tegra_pcie_power_on()
+>>   PCI: tegra: Rearrange Tegra PCIe driver functions
+>>   PCI: tegra: Mask AFI_INTR in runtime suspend
+>>   PCI: tegra: Fix PCIe host power up sequence
+>>   PCI: tegra: Add PCIe Gen2 link speed support
+>>   PCI: tegra: Advertise PCIe Advanced Error Reporting (AER) capability
+>>   PCI: tegra: Program UPHY electrical settings for Tegra210
+>>   PCI: tegra: Enable opportunistic UpdateFC and ACK
+>>   PCI: tegra: Disable AFI dynamic clock gating
+>>   PCI: tegra: Process pending DLL transactions before entering L1 or L2
+>>   PCI: tegra: Enable PCIe xclk clock clamping
+>>   PCI: tegra: Increase the deskew retry time
+>>   PCI: tegra: Add SW fixup for RAW violations
+>>   PCI: tegra: Update flow control timer frequency in Tegra210
+>>   PCI: tegra: Set target speed as Gen1 before starting LTSSM
+>>   PCI: tegra: Fix PLLE power down issue due to CLKREQ# signal
+>>   PCI: tegra: Program AFI_CACHE* registers only for Tegra20
+>>   PCI: tegra: Change PRSNT_SENSE IRQ log to debug
+>>   PCI: tegra: Use legacy IRQ for port service drivers
+>>   PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of soc struct
+>>   PCI: tegra: Access endpoint config only if PCIe link is up
+>>   dt-bindings: pci: tegra: Document PCIe DPD pinctrl optional prop
+>>   arm64: tegra: Add PEX DPD states as pinctrl properties
+>>   PCI: tegra: Put PEX CLK & BIAS pads in DPD mode
+>>   PCI: Add DT binding for "reset-gpios" property
+>>   PCI: tegra: Add support for GPIO based PERST#
+>>   PCI: tegra: Change link retry log level to debug
+>>
+>>  .../bindings/pci/nvidia,tegra20-pcie.txt      |   8 +
+>>  Documentation/devicetree/bindings/pci/pci.txt |   3 +
+>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  19 +
+>>  drivers/pci/controller/pci-tegra.c            | 615 +++++++++++++++---
+>>  drivers/soc/tegra/pmc.c                       |   1 +
+>>  5 files changed, 566 insertions(+), 80 deletions(-)
+>>
+>> -- 
+>> 2.17.1
+>>
