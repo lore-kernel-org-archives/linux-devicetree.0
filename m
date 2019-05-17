@@ -1,90 +1,67 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: Re: [PATCH 1/1] arm64: dts: marvell: mcbin: enlarge PCI memory window
-Date: Fri, 17 May 2019 22:55:50 +0200
-Message-ID: <f633e7d1-264b-8a17-7bc0-452ab38883af@gmx.de>
-References: <20190517161123.9293-1-xypron.glpk@gmx.de>
- <87k1eozvxb.fsf@FE-laptop>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 2/3] dt-bindings: backlight: add lm3630a bindings
+Date: Fri, 17 May 2019 16:11:48 -0500
+Message-ID: <CAL_JsqLdS2SDd-dczZmqDTN3XMY7fwDjdkX5OibXbrksd7qQYA@mail.gmail.com>
+References: <20190424092505.6578-1-masneyb@onstation.org> <20190424092505.6578-3-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87k1eozvxb.fsf@FE-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190424092505.6578-3-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 5/17/19 10:08 PM, Gregory CLEMENT wrote:
-> Hi Heinrich Schuchardt,
+On Wed, Apr 24, 2019 at 4:25 AM Brian Masney <masneyb@onstation.org> wrote:
 >
->> Running a graphics adapter on the MACCHIATObin fails due to an
->> insufficently sized memory window.
-> I think "insufficient" is enough or I miss something.
+> Add new backlight bindings for the TI LM3630A dual-string white LED.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v5:
+> - Change 'lm3630a_bl@38' in examples to 'led-controller@38'
+>
+> Changes since v4:
+> - Drop $ref from led-sources
+> - Drop description from reg of i2c address
+> - Expand description of reg for the control bank
+> - Drop status from examples
+>
+> Changes since v3:
+> - Add label. I didn't add a description for it since that'll come from
+>   the common properties once its converted.
+>
+> Changes since v2:
+> - Update description of max-brightness
+> - Add description for reg
+> - Correct typo: s/tranisiton/transition
+> - add reg to control banks
+> - add additionalProperties
+>
+>  .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
 
-Thanks for reviewing. Do I have to resend with corrected wording?
+I'm working on getting the examples to be validated by the schema (in
+addition to just building with dtc) and there's a couple of errors:
 
->
->>
->> Enlarge the memory window for the PCIe slot to 512 MiB.
->>
->> With the patch I am able to use a GT710 graphics adapter with 1 GB onboard
->> memory.
->>
->> These are the mapped memory areas that the graphics adapter is actually
->> using:
->>
->> Region 0: Memory at cc000000 (32-bit, non-prefetchable) [size=16M]
->> Region 1: Memory at c0000000 (64-bit, prefetchable) [size=128M]
->> Region 3: Memory at c8000000 (64-bit, prefetchable) [size=32M]
->> Region 5: I/O ports at 1000 [size=128]
->> Expansion ROM at ca000000 [disabled] [size=512K]
->
->>From my point of view this patch is correct, I don't think it is a
-> problem to map more memory. So I applied on it mvebu/dt64.
->
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+'#address-cells', '#size-cells' do not match any of the regexes:
+'^led@[01]$', 'pinctrl-[0-9]+'
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+'#address-cells', '#size-cells' do not match any of the regexes:
+'^led@[01]$', 'pinctrl-[0-9]+'
 
-To which repository are your referring?
+You didn't list '#address-cells' and '#size-cells'.
 
-Best regards
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
+'pinctrl-[0-9]+'
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+led@1: 'ti,linear-mapping-mode' does not match any of the regexes:
+'pinctrl-[0-9]+'
 
-Heinrich
+'ti,linear-mapping-mode' is not defined in the child nodes.
 
-> But I add also Thomas in CC who know better the PCIe support on mvebu/
->
-> Thanks,
->
-> Gregory
->
->
->>
->> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
->> ---
->>  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
->> index 329f8ceeebea..205071b45a32 100644
->> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
->> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
->> @@ -184,6 +184,8 @@
->>  	num-lanes = <4>;
->>  	num-viewport = <8>;
->>  	reset-gpios = <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
->> +	ranges = <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
->> +		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
->>  	status = "okay";
->>  };
->>
->> --
->> 2.20.1
->>
->
+Rob
