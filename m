@@ -1,249 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3] dt-bindings: arm: Convert Atmel board/soc bindings to json-schema
-Date: Fri, 17 May 2019 10:39:11 -0500
-Message-ID: <20190517153911.19545-1-robh@kernel.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCHv1 3/8] arm64: dts: qcom: msm8916: Add entry-method
+ property for the idle-states node
+Date: Fri, 17 May 2019 17:40:09 +0200
+Message-ID: <35c77a53-d8cb-0b32-6b60-ce57fabd5243@linaro.org>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <030b5d9c6dc2e872466b7132e4fd65c473f9883f.1557486950.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <030b5d9c6dc2e872466b7132e4fd65c473f9883f.1557486950.git.amit.kucheria@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert Atmel SoC bindings to DT schema format using json-schema.
+On 10/05/2019 13:29, Amit Kucheria wrote:
+> The idle-states binding documentation[1] mentions that the
+> 'entry-method' property is required on 64-bit platforms and must be set
+> to "psci".
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v3:
-- correct maintainers
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
- .../devicetree/bindings/arm/atmel-at91.txt    |  72 ----------
- .../devicetree/bindings/arm/atmel-at91.yaml   | 133 ++++++++++++++++++
- 2 files changed, 133 insertions(+), 72 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 0803ca8c02da..ded1052e5693 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -158,6 +158,8 @@
+>  		};
+>  
+>  		idle-states {
+> +			entry-method="psci";
+> +
+>  			CPU_SPC: spc {
+>  				compatible = "arm,idle-state";
+>  				arm,psci-suspend-param = <0x40000002>;
+> 
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-deleted file mode 100644
-index 4bf1b4da7659..000000000000
---- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-+++ /dev/null
-@@ -1,72 +0,0 @@
--Atmel AT91 device tree bindings.
--================================
--
--Boards with a SoC of the Atmel AT91 or SMART family shall have the following
--properties:
--
--Required root node properties:
--compatible: must be one of:
-- * "atmel,at91rm9200"
--
-- * "atmel,at91sam9" for SoCs using an ARM926EJ-S core, shall be extended with
--   the specific SoC family or compatible:
--    o "atmel,at91sam9260"
--    o "atmel,at91sam9261"
--    o "atmel,at91sam9263"
--    o "atmel,at91sam9x5" for the 5 series, shall be extended with the specific
--      SoC compatible:
--       - "atmel,at91sam9g15"
--       - "atmel,at91sam9g25"
--       - "atmel,at91sam9g35"
--       - "atmel,at91sam9x25"
--       - "atmel,at91sam9x35"
--    o "atmel,at91sam9g20"
--    o "atmel,at91sam9g45"
--    o "atmel,at91sam9n12"
--    o "atmel,at91sam9rl"
--    o "atmel,at91sam9xe"
-- * "atmel,sama5" for SoCs using a Cortex-A5, shall be extended with the specific
--   SoC family:
--    o "atmel,sama5d2" shall be extended with the specific SoC compatible:
--       - "atmel,sama5d27"
--    o "atmel,sama5d3" shall be extended with the specific SoC compatible:
--       - "atmel,sama5d31"
--       - "atmel,sama5d33"
--       - "atmel,sama5d34"
--       - "atmel,sama5d35"
--       - "atmel,sama5d36"
--    o "atmel,sama5d4" shall be extended with the specific SoC compatible:
--       - "atmel,sama5d41"
--       - "atmel,sama5d42"
--       - "atmel,sama5d43"
--       - "atmel,sama5d44"
--
-- * "atmel,samv7" for MCUs using a Cortex-M7, shall be extended with the specific
--   SoC family:
--    o "atmel,sams70" shall be extended with the specific MCU compatible:
--       - "atmel,sams70j19"
--       - "atmel,sams70j20"
--       - "atmel,sams70j21"
--       - "atmel,sams70n19"
--       - "atmel,sams70n20"
--       - "atmel,sams70n21"
--       - "atmel,sams70q19"
--       - "atmel,sams70q20"
--       - "atmel,sams70q21"
--    o "atmel,samv70" shall be extended with the specific MCU compatible:
--       - "atmel,samv70j19"
--       - "atmel,samv70j20"
--       - "atmel,samv70n19"
--       - "atmel,samv70n20"
--       - "atmel,samv70q19"
--       - "atmel,samv70q20"
--    o "atmel,samv71" shall be extended with the specific MCU compatible:
--       - "atmel,samv71j19"
--       - "atmel,samv71j20"
--       - "atmel,samv71j21"
--       - "atmel,samv71n19"
--       - "atmel,samv71n20"
--       - "atmel,samv71n21"
--       - "atmel,samv71q19"
--       - "atmel,samv71q20"
--       - "atmel,samv71q21"
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-new file mode 100644
-index 000000000000..7cc1d6c7af55
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-@@ -0,0 +1,133 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/atmel-at91.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel AT91 device tree bindings.
-+
-+maintainers:
-+  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-+  - Ludovic Desroches <ludovic.desroches@microchip.com>
-+
-+description: |
-+  Boards with a SoC of the Atmel AT91 or SMART family shall have the following
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: atmel,at91rm9200
-+      - items:
-+          - enum:
-+              - olimex,sam9-l9260
-+          - enum:
-+              - atmel,at91sam9260
-+              - atmel,at91sam9261
-+              - atmel,at91sam9263
-+              - atmel,at91sam9g20
-+              - atmel,at91sam9g45
-+              - atmel,at91sam9n12
-+              - atmel,at91sam9rl
-+              - atmel,at91sam9xe
-+          - const: atmel,at91sam9
-+
-+      - items:
-+          - enum:
-+              - atmel,at91sam9g15
-+              - atmel,at91sam9g25
-+              - atmel,at91sam9g35
-+              - atmel,at91sam9x25
-+              - atmel,at91sam9x35
-+          - const: atmel,at91sam9x5
-+          - const: atmel,at91sam9
-+
-+      - items:
-+          - const: atmel,sama5d27
-+          - const: atmel,sama5d2
-+          - const: atmel,sama5
-+
-+      - description: Nattis v2 board with Natte v2 power board
-+        items:
-+          - const: axentia,nattis-2
-+          - const: axentia,natte-2
-+          - const: axentia,linea
-+          - const: atmel,sama5d31
-+          - const: atmel,sama5d3
-+          - const: atmel,sama5
-+
-+      - description: TSE-850 v3 board
-+        items:
-+          - const: axentia,tse850v3
-+          - const: axentia,linea
-+          - const: atmel,sama5d31
-+          - const: atmel,sama5d3
-+          - const: atmel,sama5
-+
-+      - items:
-+          - const: axentia,linea
-+          - const: atmel,sama5d31
-+          - const: atmel,sama5d3
-+          - const: atmel,sama5
-+
-+      - items:
-+          - enum:
-+              - atmel,sama5d31
-+              - atmel,sama5d33
-+              - atmel,sama5d34
-+              - atmel,sama5d35
-+              - atmel,sama5d36
-+          - const: atmel,sama5d3
-+          - const: atmel,sama5
-+
-+      - items:
-+          - enum:
-+              - atmel,sama5d41
-+              - atmel,sama5d42
-+              - atmel,sama5d43
-+              - atmel,sama5d44
-+          - const: atmel,sama5d4
-+          - const: atmel,sama5
-+
-+      - items:
-+          - enum:
-+              - atmel,sams70j19
-+              - atmel,sams70j20
-+              - atmel,sams70j21
-+              - atmel,sams70n19
-+              - atmel,sams70n20
-+              - atmel,sams70n21
-+              - atmel,sams70q19
-+              - atmel,sams70q20
-+              - atmel,sams70q21
-+          - const: atmel,sams70
-+          - const: atmel,samv7
-+
-+      - items:
-+          - enum:
-+              - atmel,samv70j19
-+              - atmel,samv70j20
-+              - atmel,samv70n19
-+              - atmel,samv70n20
-+              - atmel,samv70q19
-+              - atmel,samv70q20
-+          - const: atmel,samv70
-+          - const: atmel,samv7
-+
-+      - items:
-+          - enum:
-+              - atmel,samv71j19
-+              - atmel,samv71j20
-+              - atmel,samv71j21
-+              - atmel,samv71n19
-+              - atmel,samv71n20
-+              - atmel,samv71n21
-+              - atmel,samv71q19
-+              - atmel,samv71q20
-+              - atmel,samv71q21
-+          - const: atmel,samv71
-+          - const: atmel,samv7
-+
-+...
+
 -- 
-2.20.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
