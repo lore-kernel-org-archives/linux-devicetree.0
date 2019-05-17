@@ -1,37 +1,58 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add vendor prefix for HopeRun
-Date: Fri, 17 May 2019 08:38:14 -0500
-Message-ID: <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
-References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com> <1558085189-22061-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Add YAML schemas for the generic
+ MMC options
+Date: Fri, 17 May 2019 09:56:51 -0500
+Message-ID: <CAL_Jsq+X8uyA6rJFXJWSno8eHz1LAE=Ywvo9DZ4FZTdEEjU=9w@mail.gmail.com>
+References: <225e90a94e9558db9f72f64aca05b0951b88c7c5.1558017853.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1558085189-22061-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <225e90a94e9558db9f72f64aca05b0951b88c7c5.1558017853.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 4:27 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
+On Thu, May 16, 2019 at 9:44 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> Add "Jiangsu HopeRun Software Co., Ltd." to the list of devicetree
-> vendor prefixes as "hoperun".
+> The MMC controllers have a bunch of generic options that are needed in a
+> device tree. Add a YAML schemas for those.
 >
-> Website: http://www.hoperun.com/en
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 >
 > ---
-> v2->v3:
-> * Moved to vendor-prefixes.yaml
-> * Dropped Reviewed-by Simon as this is a completely new patch and as
->   such it needs a brand new review
-> v1->v2:
-> * No change
+>
+> Changes from v1:
+>
+>   - Added back the cd-inverted and wp-inverted note
+>   - Removed the dependency of cd-inverted and wp-inverted on cd-gpios and
+>     wp-gpios
+>   - Fixed typo in the title
+>   - Fixed default in the bus-width property
+>   - Fixed typo in the wp-inverted property
+>   - Removed redundant type on cd-debounce-delay-ms
+>   - Switched the dsr maximum to hex instead of decimal notation
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 358 +++++++-
+>  Documentation/devicetree/bindings/mmc/mmc.txt             | 177 +---
+>  2 files changed, 358 insertions(+), 177 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/mmc.txt
+
+BTW, in order to avoid updating every reference to mmc.txt, I think it
+is better to leave it with a note 'This file has moved to
+mmc-controller.yaml'. Then we just update the references when we
+convert those bindings.
+
+With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
