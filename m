@@ -1,92 +1,224 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCHv1 4/8] arm64: dts: qcom: msm8916: Use more generic idle
- state names
-Date: Fri, 17 May 2019 17:41:02 +0200
-Message-ID: <c4751930-e176-881e-a3dc-cf1a2e8d5257@linaro.org>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <2a0626da4d8d5a1018c351b24b63e5e0d7a45a10.1557486950.git.amit.kucheria@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v3] dt-bindings: arm: Convert MediaTek board/soc bindings to json-schema
+Date: Fri, 17 May 2019 10:42:02 -0500
+Message-ID: <20190517154202.24594-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2a0626da4d8d5a1018c351b24b63e5e0d7a45a10.1557486950.git.amit.kucheria@linaro.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/2019 13:29, Amit Kucheria wrote:
-> Instead of using Qualcomm-specific terminology, use generic node names
-> for the idle states that are easier to understand. Move the description
-> into the "idle-state-name" property.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Convert MediaTek SoC bindings to DT schema format using json-schema.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v3:
+ - Rebase to Linus' master
 
+ .../devicetree/bindings/arm/mediatek.txt      | 89 ------------------
+ .../devicetree/bindings/arm/mediatek.yaml     | 91 +++++++++++++++++++
+ 2 files changed, 91 insertions(+), 89 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek.yaml
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index ded1052e5693..400b609bb3fd 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -110,7 +110,7 @@
->  			reg = <0x0>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -122,7 +122,7 @@
->  			reg = <0x1>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -134,7 +134,7 @@
->  			reg = <0x2>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -146,7 +146,7 @@
->  			reg = <0x3>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -160,8 +160,9 @@
->  		idle-states {
->  			entry-method="psci";
->  
-> -			CPU_SPC: spc {
-> +			CPU_SLEEP_0: cpu-sleep-0 {
->  				compatible = "arm,idle-state";
-> +				idle-state-name = "standalone-power-collapse";
->  				arm,psci-suspend-param = <0x40000002>;
->  				entry-latency-us = <130>;
->  				exit-latency-us = <150>;
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+deleted file mode 100644
+index 56ac7896d6d8..000000000000
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ /dev/null
+@@ -1,89 +0,0 @@
+-MediaTek SoC based Platforms Device Tree Bindings
+-
+-Boards with a MediaTek SoC shall have the following property:
+-
+-Required root node property:
+-
+-compatible: Must contain one of
+-   "mediatek,mt2701"
+-   "mediatek,mt2712"
+-   "mediatek,mt6580"
+-   "mediatek,mt6589"
+-   "mediatek,mt6592"
+-   "mediatek,mt6755"
+-   "mediatek,mt6765"
+-   "mediatek,mt6795"
+-   "mediatek,mt6797"
+-   "mediatek,mt7622"
+-   "mediatek,mt7623"
+-   "mediatek,mt7629"
+-   "mediatek,mt8127"
+-   "mediatek,mt8135"
+-   "mediatek,mt8173"
+-   "mediatek,mt8183"
+-
+-
+-Supported boards:
+-
+-- Evaluation board for MT2701:
+-    Required root node properties:
+-      - compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
+-- Evaluation board for MT2712:
+-    Required root node properties:
+-      - compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
+-- Evaluation board for MT6580:
+-    Required root node properties:
+-      - compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
+-- bq Aquaris5 smart phone:
+-    Required root node properties:
+-      - compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
+-- Evaluation board for MT6592:
+-    Required root node properties:
+-      - compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
+-- Evaluation phone for MT6755(Helio P10):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6755-evb", "mediatek,mt6755";
+-- Evaluation board for MT6765(Helio P22):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
+-- Evaluation board for MT6795(Helio X10):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
+-- Evaluation board for MT6797(Helio X20):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6797-evb", "mediatek,mt6797";
+-- Mediatek X20 Development Board:
+-    Required root node properties:
+-      - compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+-- Reference board variant 1 for MT7622:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
+-- Bananapi BPI-R64 for MT7622:
+-    Required root node properties:
+-      - compatible = "bananapi,bpi-r64", "mediatek,mt7622";
+-- Reference board for MT7623a with eMMC:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
+-- Reference board for MT7623a with NAND:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623a-rfb-nand", "mediatek,mt7623";
+-- Reference board for MT7623n with eMMC:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623n-rfb-emmc", "mediatek,mt7623";
+-- Bananapi BPI-R2 board:
+-      - compatible = "bananapi,bpi-r2", "mediatek,mt7623";
+-- Reference board for MT7629:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7629-rfb", "mediatek,mt7629";
+-- MTK mt8127 tablet moose EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
+-- MTK mt8135 tablet EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8135-evbp1", "mediatek,mt8135";
+-- MTK mt8173 tablet EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
+-- Evaluation board for MT8183:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+new file mode 100644
+index 000000000000..a4ad2eb926f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/mediatek.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek SoC based Platforms Device Tree Bindings
++
++maintainers:
++  - Sean Wang <sean.wang@mediatek.com>
++  - Matthias Brugger <matthias.bgg@gmail.com>
++description: |
++  Boards with a MediaTek SoC shall have the following properties.
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - mediatek,mt2701-evb
++          - const: mediatek,mt2701
++
++      - items:
++          - enum:
++              - mediatek,mt2712-evb
++          - const: mediatek,mt2712
++      - items:
++          - enum:
++              - mediatek,mt6580-evbp1
++          - const: mediatek,mt6580
++      - items:
++          - enum:
++              - mundoreader,bq-aquaris5
++          - const: mediatek,mt6589
++      - items:
++          - enum:
++              - mediatek,mt6592-evb
++          - const: mediatek,mt6592
++      - items:
++          - enum:
++              - mediatek,mt6755-evb
++          - const: mediatek,mt6755
++      - items:
++          - enum:
++              - mediatek,mt6765-evb
++          - const: mediatek,mt6765
++      - items:
++          - enum:
++              - mediatek,mt6795-evb
++          - const: mediatek,mt6795
++      - items:
++          - enum:
++              - archermind,mt6797-x20-dev
++              - mediatek,mt6797-evb
++          - const: mediatek,mt6797
++      - items:
++          - enum:
++              - bananapi,bpi-r64
++              - mediatek,mt7622-rfb1
++          - const: mediatek,mt7622
++      - items:
++          - enum:
++              - mediatek,mt7623a-rfb-emmc
++              - mediatek,mt7623a-rfb-nand
++              - mediatek,mt7623n-rfb-emmc
++              - bananapi,bpi-r2
++          - const: mediatek,mt7623
++
++      - items:
++          - enum:
++              - mediatek,mt7629-rfb
++          - const: mediatek,mt7629
++      - items:
++          - enum:
++              - mediatek,mt8127-moose
++          - const: mediatek,mt8127
++      - items:
++          - enum:
++              - mediatek,mt8135-evbp1
++          - const: mediatek,mt8135
++      - items:
++          - enum:
++              - mediatek,mt8173-evb
++          - const: mediatek,mt8173
++      - items:
++          - enum:
++              - mediatek,mt8183-evb
++          - const: mediatek,mt8183
++...
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.20.1
