@@ -1,516 +1,108 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH V7 11/15] arm64: tegra: Add P2U and PCIe controller nodes
- to Tegra194 DT
-Date: Fri, 17 May 2019 15:03:58 +0200
-Message-ID: <CAKv+Gu909VM9o9AP4CfO_w6V9u=dgjONrjKhtWDCxZUE-zNwAA@mail.gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com> <20190517123846.3708-12-vidyas@nvidia.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Date: Fri, 17 May 2019 16:05:11 +0300
+Message-ID: <20190517130511.GA1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190517103736.GA1490@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517123846.3708-12-vidyas@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <20190517103736.GA1490@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Kishon <kishon@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jingoo Han <jingoohan1@gmail.com>, gustavo.pimentel@synopsys.com, Devicetree List <devicetree@vger.kernel.org>, mmaddireddy@nvidia.com, kthota@nvidia.com, linux-pci <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, mperttunen@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sagar.tv@gmail.com
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 May 2019 at 14:41, Vidya Sagar <vidyas@nvidia.com> wrote:
->
-> Add P2U (PIPE to UPHY) and PCIe controller nodes to device tree.
-> The Tegra194 SoC contains six PCIe controllers and twenty P2U instances
-> grouped into two different PHY bricks namely High-Speed IO (HSIO-12 P2Us)
-> and NVIDIA High Speed (NVHS-8 P2Us) respectively.
->
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v6]:
-> * Removed properties "nvidia,disable-aspm-states" & "nvidia,controller-id".
-> * Modified property "nvidia,bpmp" to include controller-id as well.
->
-> Changes since [v5]:
-> * Changes 'p2u@xxxxxxxx' to 'phy@xxxxxxxx'
-> * Arranged all PCIe nodes in the order of their addresses
->
-> Changes since [v4]:
-> * None
->
-> Changes since [v3]:
-> * None
->
-> Changes since [v2]:
-> * Included 'hsio' or 'nvhs' in P2U node's label names to reflect which brick
->   they belong to
-> * Removed leading zeros in unit address
->
-> Changes since [v1]:
-> * Flattened all P2U nodes by removing 'hsio-p2u' and 'nvhs-p2u' super nodes
-> * Changed P2U nodes compatible string from 'nvidia,tegra194-phy-p2u' to 'nvidia,tegra194-p2u'
-> * Changed reg-name from 'base' to 'ctl'
-> * Updated all PCIe nodes according to the changes made to DT documentation file
->
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 437 +++++++++++++++++++++++
->  1 file changed, 437 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> index c77ca211fa8f..838202150823 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> @@ -884,6 +884,166 @@
->                                 nvidia,interface = <3>;
->                         };
->                 };
-> +
-> +               p2u_hsio_0: phy@3e10000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e10000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_1: phy@3e20000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e20000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_2: phy@3e30000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e30000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_3: phy@3e40000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e40000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_4: phy@3e50000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e50000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_5: phy@3e60000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e60000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_6: phy@3e70000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e70000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_7: phy@3e80000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e80000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_8: phy@3e90000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03e90000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_9: phy@3ea0000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03ea0000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_0: phy@3eb0000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03eb0000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_1: phy@3ec0000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03ec0000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_2: phy@3ed0000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03ed0000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_3: phy@3ee0000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03ee0000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_4: phy@3ef0000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03ef0000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_5: phy@3f00000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03f00000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_6: phy@3f10000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03f10000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_nvhs_7: phy@3f20000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03f20000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_10: phy@3f30000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03f30000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               p2u_hsio_11: phy@3f40000 {
-> +                       compatible = "nvidia,tegra194-p2u";
-> +                       reg = <0x03f40000 0x10000>;
-> +                       reg-names = "ctl";
-> +
-> +                       #phy-cells = <0>;
-> +               };
->         };
->
->         sysram@40000000 {
-> @@ -1054,4 +1214,281 @@
->                                 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->                 interrupt-parent = <&gic>;
->         };
-> +
-> +       pcie@14100000 {
-> +               compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +               power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
-> +               reg = <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)      */
-> +                      0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) */
-> +                      0x00 0x30040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> +                      0x00 0x30080000 0x0 0x00040000>; /* DBI reg space (256K)       */
-> +               reg-names = "appl", "config", "atu_dma", "dbi";
-> +
-> +               status = "disabled";
-> +
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               device_type = "pci";
-> +               num-lanes = <1>;
-> +               num-viewport = <8>;
-> +               linux,pci-domain = <1>;
-> +
-> +               clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_1>;
-> +               clock-names = "core";
-> +
-> +               resets = <&bpmp TEGRA194_RESET_PEX0_CORE_1_APB>,
-> +                        <&bpmp TEGRA194_RESET_PEX0_CORE_1>;
-> +               reset-names = "core_apb", "core";
-> +
-> +               interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,  /* controller interrupt */
-> +                            <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;  /* MSI interrupt */
-> +               interrupt-names = "intr", "msi";
-> +
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 0>;
-> +               interrupt-map = <0 0 0 0 &gic 0 45 0x04>;
+Hi,
 
-Please use the GIC_SPI and IRQ_TYPE_LEVEL_HIGH macros here as well.
+On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
+> > Add fwnode_usb_role_switch_get() to make easier to get
+> > usb_role_switch by fwnode which register it.
+> > It's useful when there is not device_connection registered
+> > between two drivers and only knows the fwnode which register
+> > usb_role_switch.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-> +
-> +               nvidia,bpmp = <&bpmp 1>;
-> +
-> +               supports-clkreq;
-> +               nvidia,aspm-cmrt-us = <60>;
-> +               nvidia,aspm-pwr-on-t-us = <20>;
-> +               nvidia,aspm-l0s-entrance-latency-us = <3>;
-> +
-> +               bus-range = <0x0 0xff>;
-> +               ranges = <0x81000000 0x0 0x30100000 0x0 0x30100000 0x0 0x00100000    /* downstream I/O (1MB) */
-> +                         0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000  /* prefetchable memory (768MB) */
-> +                         0x82000000 0x0 0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
-> +       };
-> +
-> +       pcie@14120000 {
-> +               compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +               power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
-> +               reg = <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)      */
-> +                      0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) */
-> +                      0x00 0x32040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> +                      0x00 0x32080000 0x0 0x00040000>; /* DBI reg space (256K)       */
-> +               reg-names = "appl", "config", "atu_dma", "dbi";
-> +
-> +               status = "disabled";
-> +
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               device_type = "pci";
-> +               num-lanes = <1>;
-> +               num-viewport = <8>;
-> +               linux,pci-domain = <2>;
-> +
-> +               clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_2>;
-> +               clock-names = "core";
-> +
-> +               resets = <&bpmp TEGRA194_RESET_PEX0_CORE_2_APB>,
-> +                        <&bpmp TEGRA194_RESET_PEX0_CORE_2>;
-> +               reset-names = "core_apb", "core";
-> +
-> +               interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,  /* controller interrupt */
-> +                            <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;  /* MSI interrupt */
-> +               interrupt-names = "intr", "msi";
-> +
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 0>;
-> +               interrupt-map = <0 0 0 0 &gic 0 47 0x04>;
-> +
-> +               nvidia,bpmp = <&bpmp 2>;
-> +
-> +               supports-clkreq;
-> +               nvidia,aspm-cmrt-us = <60>;
-> +               nvidia,aspm-pwr-on-t-us = <20>;
-> +               nvidia,aspm-l0s-entrance-latency-us = <3>;
-> +
-> +               bus-range = <0x0 0xff>;
-> +               ranges = <0x81000000 0x0 0x32100000 0x0 0x32100000 0x0 0x00100000    /* downstream I/O (1MB) */
-> +                         0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000  /* prefetchable memory (768MB) */
-> +                         0x82000000 0x0 0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
-> +       };
-> +
-> +       pcie@14140000 {
-> +               compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +               power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
-> +               reg = <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)      */
-> +                      0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) */
-> +                      0x00 0x34040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> +                      0x00 0x34080000 0x0 0x00040000>; /* DBI reg space (256K)       */
-> +               reg-names = "appl", "config", "atu_dma", "dbi";
-> +
-> +               status = "disabled";
-> +
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               device_type = "pci";
-> +               num-lanes = <1>;
-> +               num-viewport = <8>;
-> +               linux,pci-domain = <3>;
-> +
-> +               clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_3>;
-> +               clock-names = "core";
-> +
-> +               resets = <&bpmp TEGRA194_RESET_PEX0_CORE_3_APB>,
-> +                        <&bpmp TEGRA194_RESET_PEX0_CORE_3>;
-> +               reset-names = "core_apb", "core";
-> +
-> +               interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,  /* controller interrupt */
-> +                            <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;  /* MSI interrupt */
-> +               interrupt-names = "intr", "msi";
-> +
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 0>;
-> +               interrupt-map = <0 0 0 0 &gic 0 49 0x04>;
-> +
-> +               nvidia,bpmp = <&bpmp 3>;
-> +
-> +               supports-clkreq;
-> +               nvidia,aspm-cmrt-us = <60>;
-> +               nvidia,aspm-pwr-on-t-us = <20>;
-> +               nvidia,aspm-l0s-entrance-latency-us = <3>;
-> +
-> +               bus-range = <0x0 0xff>;
-> +               ranges = <0x81000000 0x0 0x34100000 0x0 0x34100000 0x0 0x00100000    /* downstream I/O (1MB) */
-> +                         0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000  /* prefetchable memory (768MB) */
-> +                         0x82000000 0x0 0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
-> +       };
-> +
-> +       pcie@14160000 {
-> +               compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +               power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
-> +               reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
-> +                      0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) */
-> +                      0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> +                      0x00 0x36080000 0x0 0x00040000>; /* DBI reg space (256K)       */
-> +               reg-names = "appl", "config", "atu_dma", "dbi";
-> +
-> +               status = "disabled";
-> +
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               device_type = "pci";
-> +               num-lanes = <4>;
-> +               num-viewport = <8>;
-> +               linux,pci-domain = <4>;
-> +
-> +               clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
-> +               clock-names = "core";
-> +
-> +               resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
-> +                        <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
-> +               reset-names = "core_apb", "core";
-> +
-> +               interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,  /* controller interrupt */
-> +                            <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;  /* MSI interrupt */
-> +               interrupt-names = "intr", "msi";
-> +
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 0>;
-> +               interrupt-map = <0 0 0 0 &gic 0 51 0x04>;
-> +
-> +               nvidia,bpmp = <&bpmp 4>;
-> +
-> +               supports-clkreq;
-> +               nvidia,aspm-cmrt-us = <60>;
-> +               nvidia,aspm-pwr-on-t-us = <20>;
-> +               nvidia,aspm-l0s-entrance-latency-us = <3>;
-> +
-> +               bus-range = <0x0 0xff>;
-> +               ranges = <0x81000000 0x0 0x36100000 0x0 0x36100000 0x0 0x00100000    /* downstream I/O (1MB) */
-> +                         0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000  /* prefetchable memory (13GB) */
-> +                         0x82000000 0x0 0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
-> +       };
-> +
-> +       pcie@14180000 {
-> +               compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +               power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
-> +               reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
-> +                      0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
-> +                      0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> +                      0x00 0x38080000 0x0 0x00040000>; /* DBI reg space (256K)       */
-> +               reg-names = "appl", "config", "atu_dma", "dbi";
-> +
-> +               status = "disabled";
-> +
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               device_type = "pci";
-> +               num-lanes = <8>;
-> +               num-viewport = <8>;
-> +               linux,pci-domain = <0>;
-> +
-> +               clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
-> +               clock-names = "core";
-> +
-> +               resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
-> +                        <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
-> +               reset-names = "core_apb", "core";
-> +
-> +               interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,  /* controller interrupt */
-> +                            <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;  /* MSI interrupt */
-> +               interrupt-names = "intr", "msi";
-> +
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 0>;
-> +               interrupt-map = <0 0 0 0 &gic 0 72 0x04>;
-> +
-> +               nvidia,bpmp = <&bpmp 0>;
-> +
-> +               supports-clkreq;
-> +               nvidia,aspm-cmrt-us = <60>;
-> +               nvidia,aspm-pwr-on-t-us = <20>;
-> +               nvidia,aspm-l0s-entrance-latency-us = <3>;
-> +
-> +               bus-range = <0x0 0xff>;
-> +               ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000    /* downstream I/O (1MB) */
-> +                         0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000  /* prefetchable memory (13GB) */
-> +                         0x82000000 0x0 0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
-> +       };
-> +
-> +       pcie@141a0000 {
-> +               compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-> +               power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
-> +               reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
-> +                      0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
-> +                      0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> +                      0x00 0x3a080000 0x0 0x00040000>; /* DBI reg space (256K)       */
-> +               reg-names = "appl", "config", "atu_dma", "dbi";
-> +
-> +               status = "disabled";
-> +
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               device_type = "pci";
-> +               num-lanes = <8>;
-> +               num-viewport = <8>;
-> +               linux,pci-domain = <5>;
-> +
-> +               clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>,
-> +                       <&bpmp TEGRA194_CLK_PEX1_CORE_5M>;
-> +               clock-names = "core", "core_m";
-> +
-> +               resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
-> +                        <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
-> +               reset-names = "core_apb", "core";
-> +
-> +               interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,  /* controller interrupt */
-> +                            <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;  /* MSI interrupt */
-> +               interrupt-names = "intr", "msi";
-> +
-> +               nvidia,bpmp = <&bpmp 5>;
-> +
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 0>;
-> +               interrupt-map = <0 0 0 0 &gic 0 53 0x04>;
-> +
-> +               supports-clkreq;
-> +               nvidia,aspm-cmrt-us = <60>;
-> +               nvidia,aspm-pwr-on-t-us = <20>;
-> +               nvidia,aspm-l0s-entrance-latency-us = <3>;
-> +
-> +               bus-range = <0x0 0xff>;
-> +               ranges = <0x81000000 0x0 0x3a100000 0x0 0x3a100000 0x0 0x00100000    /* downstream I/O (1MB) */
-> +                         0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000  /* prefetchable memory (13GB) */
-> +                         0x82000000 0x0 0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
-> +       };
->  };
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Hold on. I just noticed Rob's comment on patch 2/6, where he points out
+that you don't need to use device graph since the controller is the
+parent of the connector. Doesn't that mean you don't really need this
+API?
+
+> > ---
+> > v5 changes:
+> >  1. remove linux/of.h suggested by Biju
+> >  2. add tested by Biju
+> > 
+> > Note: still depends on [1]
+> >  [1]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> >       https://patchwork.kernel.org/patch/10909971/
+> > 
+> > v4 changes:
+> >   1. use switch_fwnode_match() to find fwnode suggested by Heikki
+> >   2. this patch now depends on [1]
+> > 
+> >  [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> >     https://patchwork.kernel.org/patch/10909971/
+> > 
+> > v3 changes:
+> >   1. use fwnodes instead of node suggested by Andy
+> >   2. rebuild the API suggested by Heikki
+> > 
+> > v2 no changes
+> > ---
+> >  drivers/usb/roles/class.c | 24 ++++++++++++++++++++++++
+> >  include/linux/usb/role.h  |  8 ++++++++
+> >  2 files changed, 32 insertions(+)
+> > 
+> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> > index f45d8df5cfb8..4a1f09a41ec0 100644
+> > --- a/drivers/usb/roles/class.c
+> > +++ b/drivers/usb/roles/class.c
+> > @@ -135,6 +135,30 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+> >  
+> > +/**
+> > + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
+> > + * @fwnode: The fwnode that register USB role switch
+> > + *
+> > + * Finds and returns role switch registered by @fwnode. The reference count
+> > + * for the found switch is incremented.
+> > + */
+> > +struct usb_role_switch *
+> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+> > +{
+> > +	struct usb_role_switch *sw;
+> > +	struct device *dev;
+> > +
+> > +	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
+> > +	if (!dev)
+> > +		return ERR_PTR(-EPROBE_DEFER);
+> > +
+> > +	sw = to_role_switch(dev);
+> > +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> > +
+> > +	return sw;
+> > +}
+> > +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+
+This function only basically converts the fwnode to usb_role_switch,
+but I would actually prefer that we walked through the device graph
+here instead of expecting the caller to do that.
+
+So this function should probable be called fwnode_to_usb_role_switch()
+and not fwnode_usb_role_switch_get(), but I guess you don't need it
+at all, right?
+
+
+thanks,
+
+-- 
+heikki
