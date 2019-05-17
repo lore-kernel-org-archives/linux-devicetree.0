@@ -1,75 +1,50 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Date: Fri, 17 May 2019 13:49:49 +0530
-Message-ID: <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
- <20190516133426.GC101793@google.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add vendor prefix for Evervision
+ Electronics
+Date: Fri, 17 May 2019 10:37:40 +0200
+Message-ID: <20190517083740.vykcm7kphvsnmzv7@pengutronix.de>
+References: <20190416100645.21689-1-m.felsch@pengutronix.de>
+ <20190416100645.21689-2-m.felsch@pengutronix.de>
+ <20190423122612.GN23448@ulmo>
+ <CAL_JsqK5jKza61=KOmHCU9SjSsZf-jkstwDZYBr4V-JOa0iSsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516133426.GC101793@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK5jKza61=KOmHCU9SjSsZf-jkstwDZYBr4V-JOa0iSsw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/16/2019 7:04 PM, Bjorn Helgaas wrote:
-> On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
->> On 5/13/2019 12:55 PM, Christoph Hellwig wrote:
->>> On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
->>>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
->>>> using these APIs be able to build as loadable modules.
->>>
->>> But this is a global setting.  If you root port is broken you need
->>> a per-rootport quirk instead.
->>>
->> There is nothing broken in Tegra194 root port as such, rather, this
->> is more of software configuration choice and we are going with
->> legacy interrupts than MSI interrupts (as Tegra194 doesn't support
->> raising PME interrupts through MSI and please note that this doesn't
->> mean root port is broken).
-> 
-> I think the port *is* broken.  PCIe r4.0, sec 6.1.6, says
-> 
->    If the Root Port is enabled for edge-triggered interrupt signaling
->    using MSI or MSI-X, an interrupt message must be sent every time the
->    logical AND of the following conditions transitions from FALSE to
->    TRUE:
-> 
->      * The associated vector is unmasked (not applicable if MSI does
->        not support PVM).
-> 
->      * The PME Interrupt Enable bit in the Root Control register is set
->        to 1b.
-> 
->      * The PME Status bit in the Root Status register is set.
-> 
-> The Tegra194 root port advertises MSI support, so the above should
-> apply.
-I had a discussion with our hardware engineers and we are of the opinion
-that the root port is not really broken w.r.t MSI as spec doesn't clearly
-say that if root port advertises MSI support, it must generate MSI interrupts
-for PME. All that it says is, if MSI is enabled, then MSI should be raised
-for PME events. Here, by 'enable', we understand that as enabling at
-hardware level to generate MSI interrupt which is not the case with Tegra194.
-In Tegra194, root port is enabled to generate MSI only for hot-plug events and
-legacy interrupts are used for PME, AER. Having said that I'm fine to add a
-quick based on Vendor-ID and Device-IDs of root port in Tegra194 to set
-pdev->no_msi to '1'.
-
-> 
->> Since Tegra194 has only Synopsys DesignWare core based host
->> controllers and not any other hosts, I think it is fine to call this
->> API in driver.
-> 
-> It's fine to add a per-device quirk to set pdev->no_msi or something
-> similar.
-> 
-> Bjorn
-> 
+T24gMTktMDUtMTYgMjE6MzgsIFJvYiBIZXJyaW5nIHdyb3RlOgo+IE9uIFR1ZSwgQXByIDIzLCAy
+MDE5IGF0IDc6MjYgQU0gVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4g
+d3JvdGU6Cj4gPgo+ID4gT24gVHVlLCBBcHIgMTYsIDIwMTkgYXQgMTI6MDY6NDNQTSArMDIwMCwg
+TWFyY28gRmVsc2NoIHdyb3RlOgo+ID4gPiBFdmVydmlzaW9uIEVsZWN0cm9uaWNzIGlzIGEgcGFu
+ZWwgbWFudWZhY3R1cmVyIGZyb20gVGFpcGVpLgo+ID4gPiBodHRwOi8vd3d3LmV2ZXJ2aXNpb25s
+Y2QuY29tL2luZGV4LnBocD9sYW5nPWVuCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmNv
+IEZlbHNjaCA8bS5mZWxzY2hAcGVuZ3V0cm9uaXguZGU+Cj4gPiA+IFJldmlld2VkLWJ5OiBSb2Ig
+SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4gPiAtLS0KPiA+ID4gIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCj4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+Cj4gPiBBcHBsaWVkLCB0aGFua3MuCj4gCj4g
+SSd2ZSBjb252ZXJ0ZWQgdGhpcyBmaWxlIHRvIGpzb24tc2NoZW1hIGFzIG9mIHY1LjItcmMxLiBT
+ZWUgY29tbWl0Cj4gODEyMmRlNTQ2MDJlLiBBcHBsaWVkLCBidXQgZG9lc24ndCBzZWVtIHRvIGJl
+IGluIGxpbnV4LW5leHQ/Cj4gCj4gUm9iCgpJIHRvdWdodCB0aGlzIHBhdGNoIHdhcyBhbHJlYWR5
+IGFwcGxpZWQ/CgpSZWdhcmRzLAogIE1hcmNvCgotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwKSW5kdXN0
+cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRy
+b25peC5kZS8gIHwKUGVpbmVyIFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwg
+UGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wICAgIHwKQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJB
+IDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy01NTU1IHwKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
