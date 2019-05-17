@@ -1,153 +1,112 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCHv1 6/8] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
- power states
-Date: Fri, 17 May 2019 14:37:10 +0530
-Message-ID: <CAP245DViCCMuDVF3M4GUuVm-8O4s=xFYio6Q5B4zqMxYRm875A@mail.gmail.com>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <8648ba97d49a9f731001e4b36611be9650e37f37.1557486950.git.amit.kucheria@linaro.org>
- <CAHYWTt1ZiX4mC01PRwVHU7417NC2tHY-_Cd+fwn1EyY+shKW-g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on
+ Teres-I
+Date: Fri, 17 May 2019 11:08:45 +0200
+Message-ID: <20190517090845.oujs33nplbaxcyun@flea>
+References: <20190514155911.6C0AC68B05@newverein.lst.de>
+ <20190514160241.9EAC768C7B@newverein.lst.de>
+ <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
+ <20190515093141.41016b11@blackhole.lan>
+ <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
+ <20190516154820.GA10431@lst.de>
+ <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
+ <20190516164859.GB10431@lst.de>
+ <20190517072738.deohh5fly4jxms7k@flea>
+ <20190517101353.3e86d696@blackhole.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHYWTt1ZiX4mC01PRwVHU7417NC2tHY-_Cd+fwn1EyY+shKW-g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0557666394=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190517101353.3e86d696@blackhole.lan>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 9:42 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> On Fri, May 10, 2019 at 04:59:44PM +0530, Amit Kucheria wrote:
-> > Add device bindings for cpuidle states for cpu devices.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 28 +++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > index c761269caf80..b615bcb9e351 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > @@ -95,6 +95,7 @@
-> >                       compatible = "qcom,kryo";
-> >                       reg = <0x0 0x0>;
-> >                       enable-method = "psci";
-> > +                     cpu-idle-states = <&LITTLE_CPU_PD>;
-> >                       next-level-cache = <&L2_0>;
-> >                       L2_0: l2-cache {
-> >                             compatible = "cache";
-> > @@ -107,6 +108,7 @@
-> >                       compatible = "qcom,kryo";
-> >                       reg = <0x0 0x1>;
-> >                       enable-method = "psci";
-> > +                     cpu-idle-states = <&LITTLE_CPU_PD>;
-> >                       next-level-cache = <&L2_0>;
-> >               };
-> >
-> > @@ -115,6 +117,7 @@
-> >                       compatible = "qcom,kryo";
-> >                       reg = <0x0 0x100>;
-> >                       enable-method = "psci";
-> > +                     cpu-idle-states = <&BIG_CPU_PD>;
-> >                       next-level-cache = <&L2_1>;
-> >                       L2_1: l2-cache {
-> >                             compatible = "cache";
-> > @@ -127,6 +130,7 @@
-> >                       compatible = "qcom,kryo";
-> >                       reg = <0x0 0x101>;
-> >                       enable-method = "psci";
-> > +                     cpu-idle-states = <&BIG_CPU_PD>;
-> >                       next-level-cache = <&L2_1>;
-> >               };
-> >
-> > @@ -151,6 +155,30 @@
-> >                               };
-> >                       };
-> >               };
-> > +
-> > +             idle-states {
-> > +                     entry-method="psci";
->
-> Please add a space before and after "=".
->
-> > +
-> > +                     LITTLE_CPU_PD: little-power-down {
->
-> In Documentation/devicetree/bindings/arm/idle-states.txt
-> they seem to use labels such as CPU_SLEEP_0_0 for the first
-> cluster and CPU_SLEEP_1_0 for the second cluster.
 
-Will change this to LITTLE_CPU_SLEEP_0. I feel there is value in
-keeping BIG and LITTLE in the name explicitly to improve readability
-when correlating the idle state parameters to each CPU.
+--===============0557666394==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rsrvm5wgc3yqgwap"
+Content-Disposition: inline
 
->
-> Please also consider my comment in patch 4/8.
->
-> > +                             compatible = "arm,idle-state";
-> > +                             idle-state-name = "standalone-power-collapse";
-> > +                             arm,psci-suspend-param = <0x00000004>;
-> > +                             entry-latency-us = <40>;
-> > +                             exit-latency-us = <40>;
->
-> Where did you get the latency values from?
-> Downstream seems to use qcom,latency-us = <80> for "fpc".
->
 
-Will fix.
+--rsrvm5wgc3yqgwap
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> (Sure downstream also defines "fpc-def", but that seems to require
-> additional psci code/calls that doesn't exist upstream.)
+On Fri, May 17, 2019 at 10:14:18AM +0200, Torsten Duwe wrote:
+> On Fri, 17 May 2019 09:27:38 +0200
+> Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> > +                             min-residency-us = <300>;
-> > +                             local-timer-stop;
->
-> Are you sure that the local timer is stopped?
-> the equivalent DT property to "local-timer-stop" in downstream is
-> "qcom,use-broadcast-timer", and this property seems to be missing
-> from this node:
-> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8996-pm.dtsi?h=msm-4.4#n158
->
-> You could try to remove "local-timer-stop", if it is really needed,
-> then the system should hang without this property.
-
-Will review and test again.
-
->
-> > +                     };
-> > +
-> > +                     BIG_CPU_PD: big-power-down {
-> > +                             compatible = "arm,idle-state";
-> > +                             idle-state-name = "standalone-power-collapse";
-> > +                             arm,psci-suspend-param = <0x00000004>;
-> > +                             entry-latency-us = <40>;
-> > +                             exit-latency-us = <40>;
->
-> Where did you get the latency values from?
-> Downstream seems to use qcom,latency-us = <80> for "fpc".
->
-> (Sure downstream also defines "fpc-def", but that seems to require
-> additional psci code/calls that doesn't exist upstream.)
->
-> > +                             min-residency-us = <300>;
-> > +                             local-timer-stop;
->
-> Are you sure that the local timer is stopped?
-> the equivalent DT property to "local-timer-stop" in downstream is
-> "qcom,use-broadcast-timer", and this property seems to be missing
-> from this node:
-> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8996-pm.dtsi?h=msm-4.4#n247
->
-> You could try to remove "local-timer-stop", if it is really needed,
-> then the system should hang without this property.
->
->
-> > +                     };
-> > +             };
-> >       };
+> > On Thu, May 16, 2019 at 06:48:59PM +0200, Torsten Duwe wrote:
+> > > On Thu, May 16, 2019 at 09:06:41AM -0700, Vasily Khoruzhick wrote:
+> > > >
+> > > > Driver can talk to the panel over AUX channel only after t1+t3,
+> > > > t1 is up to 10ms, t3 is up to 200ms.
+> > >
+> > > This is after power-on. The boot loader needs to deal with this.
 > >
-> >       thermal-zones {
-> > --
-> > 2.17.1
-> >
+> > The bootloader can deal with it, but the kernel will also need to. The
+> > bootloader might not be doing this because it's not been updated, the
+> > regulator might have been disabled between the time the kernel was
+> > started and the time the bridge driver probes, etc.
+>
+> No, you cannot practically switch off this voltage. It supports _all_
+> the devices I mentioned. In fact, the PMIC needs to enable it initially,
+> and then it takes some time before the SoC can access the MMC and read
+> the SPL from it, just because of exactly these 3.3V. Then the boot
+> loader starts, and later the eDP bridge gets initialised.
+
+All these devices can be unused, disabled, or compiled as modules.
+
+> In *theory*, albeit a very daring one, I could imagine a very deep
+> sleep mode that can only be ended by pressing the power button, which
+> should still work without DCDC1. Only then, a description of the panel
+> would be required. But I probably missed something and even this does
+> not work.
+>
+> So for all current practical purposes, we can assume the Teres-I panel
+> to be powered properly and providing valid EDID; nothing to worry about
+> in software.
+
+You're creating a generic binding for all the users of that bridge,
+while considering only the specific case of the Teres-I.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--rsrvm5wgc3yqgwap
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN56HQAKCRDj7w1vZxhR
+xZh0AP4+w3VFZULGFliCxVroYWWP58DFQSolgLvZtZpZrGVBeAEA6zaZsM+cYTlD
+SY3UolrT94qs2Tr0bSG5TvhQwQ111wk=
+=giob
+-----END PGP SIGNATURE-----
+
+--rsrvm5wgc3yqgwap--
+
+--===============0557666394==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0557666394==--
