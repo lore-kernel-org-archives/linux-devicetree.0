@@ -1,80 +1,85 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT
- nodes
-Date: Fri, 17 May 2019 03:21:33 +0000
-Message-ID: <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
- <20190515072747.39941-2-xiaowei.bao@nxp.com>
- <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v6 08/12] soc: mediatek: cmdq: define the instruction
+ struct
+Date: Fri, 17 May 2019 11:32:39 +0800
+Message-ID: <1558063959.14401.18.camel@mtksdaap41>
+References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+         <20190516090224.59070-9-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190516090224.59070-9-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Kishon <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, gregkh <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-pci <linux-pci@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.ch
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJuZCwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFybmQgQmVyZ21h
-bm4gPGFybmRAYXJuZGIuZGU+IA0KU2VudDogMjAxOeW5tDXmnIgxNeaXpSAxNjowNQ0KVG86IFhp
-YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEJqb3JuIEhlbGdhYXMgPGJoZWxn
-YWFzQGdvb2dsZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBS
-dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
-Lm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgS2lzaG9uIDxraXNob25AdGkuY29t
-PjsgTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBncmVna2gg
-PGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54
-cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95Lnph
-bmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz47
-IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgU2hhd24gTGluIDxz
-aGF3bi5saW5Acm9jay1jaGlwcy5jb20+OyBsaW51eC1wY2kgPGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc+OyBEVE1MIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBN
-YWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4cHBjLWRldiA8bGludXhw
-cGMtZGV2QGxpc3RzLm96bGFicy5vcmc+DQpTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIIDIvM10g
-YXJtNjQ6IGR0czogbHMxMDI4YTogQWRkIFBDSWUgY29udHJvbGxlciBEVCBub2Rlcw0KDQpDYXV0
-aW9uOiBFWFQgRW1haWwNCg0KT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgOTozNiBBTSBYaWFvd2Vp
-IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4gd3JvdGU6DQo+IFNpZ25lZC1vZmYtYnk6IFhpYW93
-ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAgIDUyICsrKysrKysrKysrKysrKysrKysr
-KysrKw0KPiAgMSBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygt
-KQ0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
-c2kNCj4gaW5kZXggYjA0NTgxMi4uNTBiNTc5YiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+IEBAIC0zOTgsNiArMzk4LDU4IEBA
-DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAgICAg
-ICAgICAgICAgICB9Ow0KPg0KPiArICAgICAgICAgICAgICAgcGNpZUAzNDAwMDAwIHsNCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIjsNCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDEw
-MDAwMCAgIC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweDgwIDB4MDAwMDAwMDAgMHgwIDB4MDAwMDIwMDA+OyAvKiBjb25maWd1cmF0
-aW9uIHNwYWNlICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJyZWdz
-IiwgImNvbmZpZyI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lD
-X1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRSBpbnRlcnJ1cHQgKi8NCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsgLyogYWVyIGludGVycnVwdCAqLw0KPiArICAgICAgICAgICAgICAgICAgICAg
-ICBpbnRlcnJ1cHQtbmFtZXMgPSAicG1lIiwgImFlciI7DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6
-ZS1jZWxscyA9IDwyPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAi
-cGNpIjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZG1hLWNvaGVyZW50Ow0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICBudW0tbGFuZXMgPSA8ND47DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGJ1cy1yYW5nZSA9IDwweDAgMHhmZj47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJh
-bmdlcyA9IDwweDgxMDAwMDAwIDB4MCAweDAwMDAwMDAwIDB4ODAgMHgwMDAxMDAwMCAweDAgMHgw
-MDAxMDAwMCAgIC8qIGRvd25zdHJlYW0gSS9PICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgMHg0MDAwMDAwMCAweDAg
-MHg0MDAwMDAwMD47IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQoNCkFyZSB5b3Ugc3Vy
-ZSB0aGVyZSBpcyBubyBzdXBwb3J0IGZvciA2NC1iaXQgQkFScyBvciBwcmVmZXRjaGFibGUgbWVt
-b3J5Pw0KW1hpYW93ZWkgQmFvXSBzb3JyeSBmb3IgbGF0ZSByZXBseSwgVGhvdWdodCB0aGF0IG91
-ciBMYXllcnNjYXBlIHBsYXRmb3JtIGhhcyBub3QgYWRkZWQgcHJlZmV0Y2hhYmxlIG1lbW9yeSBz
-dXBwb3J0IGluIERUUywgc28gdGhpcyBwbGF0Zm9ybSBoYXMgbm90IGJlZW4gYWRkZWQsIEkgd2ls
-bCBzdWJtaXQgYSBzZXBhcmF0ZSBwYXRjaCB0byBhZGQgcHJlZmV0Y2hhYmxlIG1lbW9yeSBzdXBw
-b3J0IGZvciBhbGwgTGF5ZXJzY2FwZSBwbGF0Zm9ybXMuIA0KT2YgY291cnNlLCB0aGUgcHJlZmV0
-Y2hhYmxlIFBDSUUgZGV2aWNlIGNhbiB3b3JrIGluIG91ciBib2FyZHMsIGJlY2F1c2UgdGhlIFJD
-IHdpbGwgYXNzaWduIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5IGZvciB0aGlzIGRldmljZS4gV2Ug
-cmVzZXJ2ZSAxRyBuby1wcmVmZXRjaGFibGUgbWVtb3J5IGZvciBQQ0lFIGRldmljZSwgaXQgaXMg
-ZW5vdWdoIGZvciBnZW5lcmFsIGRldmljZXMuICANCg0KSXMgdGhpcyBhIGhhcmR3YXJlIGJ1Zywg
-b3Igc29tZXRoaW5nIHRoYXQgY2FuIGJlIGZpeGVkIGluIGZpcm13YXJlPw0KW1hpYW93ZWkgQmFv
-XSB0aGlzIGlzIG5vdCBhIGhhcmR3YXJlIGJ1Zywgb3VyIEhXIHN1cHBvcnQgdGhlIDY0LWJpdCBw
-cmVmZXRjaGFibGUgbWVtb3J5Lg0KDQogICAgICAgQXJuZA0K
+Hi, Bibby:
+
+On Thu, 2019-05-16 at 17:02 +0800, Bibby Hsieh wrote:
+> Define a instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 113 +++++++++++++++--------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    |  14 +--
+>  3 files changed, 84 insertions(+), 45 deletions(-)
+> 
+
+[snip]
+
+>  
+>  /**
+>   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   * @mask:	the specified target register mask
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask);
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
+> +			u32 value, u32 mask);
+
+You have do two things for this interface: one is reordering the
+parameter, another one is changing type of subsys from u32 to u8.
+
+Define the instruction struct is not necessary to change the order and
+type. I would like you to separate these two things to another patches.
+So the patch sequence may be:
+
+1. Reorder parameter of cmdq_pkt_write_mask()
+2. Change subsys type to u8
+3. define the instruction struct
+
+Regards,
+CK
+
+>  
+>  /**
+>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
