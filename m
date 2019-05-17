@@ -1,36 +1,61 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC/PATCH 1/4] of: Export of_phandle_iterator_args() to modules
-Date: Fri, 17 May 2019 17:06:48 -0500
-Message-ID: <CAL_JsqKcZaQCZuodCiaTKV1ZyQQcufL4P4jpcDcKCDwR0B+6EA@mail.gmail.com>
-References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
-	<1558118857-16912-2-git-send-email-isaacm@codeaurora.org>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
+Date: Sat, 18 May 2019 00:08:22 +0200
+Message-ID: <CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
+References: <20190517184659.18828-1-peron.clem@gmail.com> <20190517184659.18828-2-peron.clem@gmail.com>
+ <CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1558118857-16912-2-git-send-email-isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Isaac J. Manjarres" <isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, lmark-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux IOMMU <iommu@lists.linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 1:48 PM Isaac J. Manjarres
-<isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
-> Kernel modules may want to use of_phandle_iterator_args(),
-> so export it.
->
-> Signed-off-by: Isaac J. Manjarres <isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/of/base.c | 1 +
->  1 file changed, 1 insertion(+)
+Hi Rob,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Fri, 17 May 2019 at 22:07, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, May 17, 2019 at 1:47 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
+.com> wrote:
+> >
+> > Allwinner H6 has an ARM Mali-T720 MP2 which required a bus_clock.
+> >
+> > Add an optional bus_clock at the init of the panfrost driver.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/gpu/drm/panfrost/panfrost_device.c | 25 +++++++++++++++++++++-
+> >  drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
+> >  2 files changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/d=
+rm/panfrost/panfrost_device.c
+> > index 3b2bced1b015..8da6e612d384 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > @@ -44,7 +44,8 @@ static int panfrost_clk_init(struct panfrost_device *=
+pfdev)
+> >
+> >         pfdev->clock =3D devm_clk_get(pfdev->dev, NULL);
+> >         if (IS_ERR(pfdev->clock)) {
+> > -               dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR(p=
+fdev->clock));
+> > +               dev_err(pfdev->dev, "get clock failed %ld\n",
+> > +                       PTR_ERR(pfdev->clock));
+>
+> Please drop this whitespace change.
+
+Sorry, I thought it was only a mistake here, I will drop it.
+Why are they so many lines over 80 characters?
+Is there a specific coding style to follow ?
+
+Thanks,
+Clement
+
+>
+> >                 return PTR_ERR(pfdev->clock);
+> >         }
+> >
