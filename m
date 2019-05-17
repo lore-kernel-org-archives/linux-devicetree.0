@@ -1,63 +1,39 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Fri, 17 May 2019 10:37:30 +0800
-Message-ID: <20190517023728.GA15856@dragon>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add vendor prefix for Evervision
+ Electronics
+Date: Thu, 16 May 2019 21:38:57 -0500
+Message-ID: <CAL_JsqK5jKza61=KOmHCU9SjSsZf-jkstwDZYBr4V-JOa0iSsw@mail.gmail.com>
+References: <20190416100645.21689-1-m.felsch@pengutronix.de>
+ <20190416100645.21689-2-m.felsch@pengutronix.de> <20190423122612.GN23448@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190509070657.18281-1-chuanhua.han@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: leoyang.li@nxp.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zhang Ying-22455 <ying.zhang22455@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190423122612.GN23448@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, Sascha Hauer <kernel@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 09, 2019 at 03:06:57PM +0800, Chuanhua Han wrote:
-> ls1028a platform uses sp805 watchdog, and use 1/16 platform clock as
-> timer clock, this patch fix device tree node.
-> 
-> Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index b04581249f0b..1510b1858246 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -285,13 +285,18 @@
->  			#interrupt-cells = <2>;
->  		};
->  
-> -		wdog0: watchdog@23c0000 {
-> -			compatible = "fsl,ls1028a-wdt", "fsl,imx21-wdt";
-> -			reg = <0x0 0x23c0000 0x0 0x10000>;
-> -			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&clockgen 4 1>;
-> -			big-endian;
-> -			status = "disabled";
-> +		cluster1_core0_watchdog: wdt@c000000 {
-
-Keep 'watchdog' as the node name, and keep nodes sort in unit-address.
-
-Shawn
-
-> +			compatible = "arm,sp805", "arm,primecell";
-> +			reg = <0x0 0xc000000 0x0 0x1000>;
-> +			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
-> +			clock-names = "apb_pclk", "wdog_clk";
-> +		};
-> +
-> +		cluster1_core1_watchdog: wdt@c010000 {
-> +			compatible = "arm,sp805", "arm,primecell";
-> +			reg = <0x0 0xc010000 0x0 0x1000>;
-> +			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
-> +			clock-names = "apb_pclk", "wdog_clk";
->  		};
->  
->  		sata: sata@3200000 {
-> -- 
-> 2.17.1
-> 
+T24gVHVlLCBBcHIgMjMsIDIwMTkgYXQgNzoyNiBBTSBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5y
+ZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIFR1ZSwgQXByIDE2LCAyMDE5IGF0IDEyOjA2
+OjQzUE0gKzAyMDAsIE1hcmNvIEZlbHNjaCB3cm90ZToKPiA+IEV2ZXJ2aXNpb24gRWxlY3Ryb25p
+Y3MgaXMgYSBwYW5lbCBtYW51ZmFjdHVyZXIgZnJvbSBUYWlwZWkuCj4gPiBodHRwOi8vd3d3LmV2
+ZXJ2aXNpb25sY2QuY29tL2luZGV4LnBocD9sYW5nPWVuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTog
+TWFyY28gRmVsc2NoIDxtLmZlbHNjaEBwZW5ndXRyb25peC5kZT4KPiA+IFJldmlld2VkLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4gLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgfCAxICsKPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPgo+IEFwcGxpZWQsIHRoYW5rcy4KCkkndmUgY29udmVy
+dGVkIHRoaXMgZmlsZSB0byBqc29uLXNjaGVtYSBhcyBvZiB2NS4yLXJjMS4gU2VlIGNvbW1pdAo4
+MTIyZGU1NDYwMmUuIEFwcGxpZWQsIGJ1dCBkb2Vzbid0IHNlZW0gdG8gYmUgaW4gbGludXgtbmV4
+dD8KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
