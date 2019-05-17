@@ -1,143 +1,484 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Date: Fri, 17 May 2019 13:55:45 -0500
-Message-ID: <20190517185545.GB49425@google.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
- <20190516133426.GC101793@google.com>
- <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
- <20190517132453.GA30700@google.com>
- <ba611a45-9589-8dce-58e1-d99dd463265d@nvidia.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Date: Fri, 17 May 2019 12:21:57 -0700
+Message-ID: <CA+E=qVe82xXPBXpgyLgt2ME6EjGMWWMVvD5eU-b3ntQk_okMdg@mail.gmail.com>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512133930.t5txssl7mou2gljt@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ba611a45-9589-8dce-58e1-d99dd463265d@nvidia.com>
+In-Reply-To: <20190512133930.t5txssl7mou2gljt@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yangtao Li <tiny.windzz@gmail.com>, Mark Rutland <mark.rutland@arm.com>, daniel.lezcano@linaro.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, bjorn.andersson@linaro.org, mchehab+samsung@kernel.org, paulmck@linux.ibm.com, Stefan Wahren <stefan.wahren@i2se.com>, linux-pm@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, andy.gross@linaro.org, rui.zhang@intel.com, devicetree <devicetree@vger.kernel.org>, marc.w.gonzalez@free.fr, edubezval@gmail.com, enric.balletbo@collabora.com, Rob Herring <robh+dt@kernel.org>, Jonathan.Cameron@huawei.com, arm-linux <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, Olof
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:23:36PM +0530, Vidya Sagar wrote:
-> On 5/17/2019 6:54 PM, Bjorn Helgaas wrote:
-> > Do you have "lspci -vvxxx" output for the root ports handy?
-> > 
-> > If there's some clue in the standard config space that would tell us
-> > that MSI works for some events but not others, we could make the PCI
-> > core pay attention it.  That would be the best solution because it
-> > wouldn't require Tegra-specific code.
-> 
-> Here is the output of 'lspci vvxxx' for one of Tegra194's root ports.
+On Sun, May 12, 2019 at 6:39 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi,
+>
+> Thanks a lot for working on this!
+>
+> On Sun, May 12, 2019 at 04:26:13AM -0400, Yangtao Li wrote:
+> > This patch adds the support for allwinner thermal sensor, within
+> > allwinner SoC. It will register sensors for thermal framework
+> > and use device tree to bind cooling device.
+> >
+> > Based on driver code found here:
+> > https://megous.com/git/linux and https://github.com/Allwinner-Homlet/H6-BSP4.9-linux
+>
+> I wouldn't place the URL in the commit log. The commit log stays
+> forever in the linux history. Git repos and branches are going away
+> over time.
+>
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  MAINTAINERS                      |   7 +
+> >  drivers/thermal/Kconfig          |  14 ++
+> >  drivers/thermal/Makefile         |   1 +
+> >  drivers/thermal/sun50i_thermal.c | 357 +++++++++++++++++++++++++++++++
+>
+> The long term goal is to support all the thermal sensors, not just the
+> H6. Since that controller was introduced with the sun8i family, it
+> makes more sense to use that prefix for the driver and the functions.
+>
+> >  4 files changed, 379 insertions(+)
+> >  create mode 100644 drivers/thermal/sun50i_thermal.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 3c65228e93c5..8da56582e72a 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -674,6 +674,13 @@ L:       linux-crypto@vger.kernel.org
+> >  S:   Maintained
+> >  F:   drivers/crypto/sunxi-ss/
+> >
+> > +ALLWINNER THERMAL DRIVER
+> > +M:   Yangtao Li <tiny.windzz@gmail.com>
+> > +L:   linux-pm@vger.kernel.org
+> > +S:   Maintained
+> > +F:   Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
+> > +F:   drivers/thermal/sun50i_thermal.c
+> > +
+> >  ALLWINNER VPU DRIVER
+> >  M:   Maxime Ripard <maxime.ripard@bootlin.com>
+> >  M:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> > index 653aa27a25a4..2a8d1c98c6ca 100644
+> > --- a/drivers/thermal/Kconfig
+> > +++ b/drivers/thermal/Kconfig
+> > @@ -252,6 +252,20 @@ config SPEAR_THERMAL
+> >         Enable this to plug the SPEAr thermal sensor driver into the Linux
+> >         thermal framework.
+> >
+> > +config SUN50I_THERMAL
+> > +     tristate "Allwinner sun50i thermal driver"
+> > +     depends on ARCH_SUNXI || COMPILE_TEST
+> > +     depends on HAS_IOMEM
+> > +     depends on NVMEM
+> > +     depends on OF
+> > +     depends on RESET_CONTROLLER
+> > +     help
+> > +       Support for the sun50i thermal sensor driver into the Linux thermal
+> > +       framework.
+> > +
+> > +       To compile this driver as a module, choose M here: the
+> > +       module will be called sun50i-thermal.
+> > +
+> >  config ROCKCHIP_THERMAL
+> >       tristate "Rockchip thermal driver"
+> >       depends on ARCH_ROCKCHIP || COMPILE_TEST
+> > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> > index 486d682be047..a09b30b90003 100644
+> > --- a/drivers/thermal/Makefile
+> > +++ b/drivers/thermal/Makefile
+> > @@ -30,6 +30,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+> >  # platform thermal drivers
+> >  obj-y                                += broadcom/
+> >  obj-$(CONFIG_SPEAR_THERMAL)  += spear_thermal.o
+> > +obj-$(CONFIG_SUN50I_THERMAL) += sun50i_thermal.o
+> >  obj-$(CONFIG_ROCKCHIP_THERMAL)       += rockchip_thermal.o
+> >  obj-$(CONFIG_RCAR_THERMAL)   += rcar_thermal.o
+> >  obj-$(CONFIG_RCAR_GEN3_THERMAL)      += rcar_gen3_thermal.o
+> > diff --git a/drivers/thermal/sun50i_thermal.c b/drivers/thermal/sun50i_thermal.c
+> > new file mode 100644
+> > index 000000000000..3bdb3677b3d4
+> > --- /dev/null
+> > +++ b/drivers/thermal/sun50i_thermal.c
+> > @@ -0,0 +1,357 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Thermal sensor driver for Allwinner SOC
+> > + * Copyright (C) 2019 Yangtao Li
+> > + *
+> > + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
+> > + * Based on the work of Ondrej Jirman <megous@megous.com>
+> > + * Based on the work of Josef Gajdusek <atx@atx.name>
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/nvmem-consumer.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/thermal.h>
+> > +
+> > +#define MAX_SENSOR_NUM       4
+> > +
+> > +#define FT_TEMP_MASK                         GENMASK(11, 0)
+> > +#define TEMP_CALIB_MASK                              GENMASK(11, 0)
+> > +#define TEMP_TO_REG                          672
+> > +#define CALIBRATE_DEFAULT                    0x800
+> > +
+> > +#define SUN50I_THS_CTRL0                     0x00
+> > +#define SUN50I_H6_THS_ENABLE                 0x04
+> > +#define SUN50I_H6_THS_PC                     0x08
+> > +#define SUN50I_H6_THS_MFC                    0x30
+> > +#define SUN50I_H6_TEMP_CALIB                 0xa0
+> > +#define SUN50I_H6_TEMP_DATA                  0xc0
+> > +
+> > +#define SUN50I_THS_CTRL0_T_ACQ(x)            ((GENMASK(15, 0) & (x)) << 16)
+> > +#define SUN50I_THS_FILTER_EN                 BIT(2)
+> > +#define SUN50I_THS_FILTER_TYPE(x)            (GENMASK(1, 0) & (x))
+> > +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)              ((GENMASK(19, 0) & (x)) << 12)
+> > +
+> > +/* millidegree celsius */
+> > +#define SUN50I_H6_FT_DEVIATION                       7000
+> > +
+> > +struct tsens_device;
+> > +
+> > +struct tsensor {
+> > +     struct tsens_device             *tmdev;
+> > +     struct thermal_zone_device      *tzd;
+> > +     int                             id;
+> > +};
+> > +
+> > +struct sun50i_thermal_chip {
+> > +     int     sensor_num;
+> > +     int     offset;
+> > +     int     scale;
+> > +     int     ft_deviation;
+> > +     int     temp_calib_base;
+> > +     int     temp_data_base;
+> > +     int     (*enable)(struct tsens_device *tmdev);
+> > +     int     (*disable)(struct tsens_device *tmdev);
+> > +};
+>
+> I'm not super fond of having a lot of quirks that are not needed. If
+> we ever need those quirks when adding support for a new SoC, then
+> yeah, we should totally have some, but only when and if it's needed.
+>
+> Otherwise, the driver is more complicated for no particular reason.
+>
+> > +
+> > +struct tsens_device {
+>
+> IIRC the acronym used by allwinner is THS, maybe we can just use that
+> as a prefix?
+>
+> > +     const struct sun50i_thermal_chip        *chip;
+> > +     struct device                           *dev;
+> > +     struct regmap                           *regmap;
+> > +     struct reset_control                    *reset;
+> > +     struct clk                              *bus_clk;
+> > +     struct tsensor                          sensor[MAX_SENSOR_NUM];
+> > +};
+> > +
+> > +/* Temp Unit: millidegree Celsius */
+> > +static int tsens_reg2temp(struct tsens_device *tmdev,
+> > +                           int reg)
+> > +{
+> > +     return (reg + tmdev->chip->offset) * tmdev->chip->scale;
+> > +}
+> > +
+> > +static int tsens_get_temp(void *data, int *temp)
+> > +{
+> > +     struct tsensor *s = data;
+> > +     struct tsens_device *tmdev = s->tmdev;
+> > +     int val;
+> > +
+> > +     regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+> > +                 0x4 * s->id, &val);
+> > +
+> > +     if (unlikely(val == 0))
+> > +             return -EBUSY;
+>
+> I'm not sure why a val equals to 0 would be associated with EBUSY?
 
-Thanks!
+First few reads of temp data return 0, and in case of H6 (and A64) it
+means max temperature, so kernel does emergency shutdown. I used
+-ETIMEDOUT as a workaround in my tree, but it's not appropriate here
+either. Any suggestions are welcome.
 
-This port advertises both MSI and MSI-X, and neither one is enabled.
-This particular port doesn't have a slot, so hotplug isn't applicable
-to it.
+> Also, it's not in a fast path, so you can drop the unlikely. Chances
+> are it's not that unlikely anyway.
 
-But if I understand correctly, if MSI or MSI-X were enabled and the
-port had a slot, the port would generate MSI/MSI-X hotplug interrupts.
-But PME and AER events would still cause INTx interrupts (even with
-MSI or MSI-X enabled).
+As I said earlier, it's just few samples after start up.
 
-Do I have that right?  I just want to make sure that the reason for
-PME being INTx is a permanent hardware choice and that it's not
-related to MSI and MSI-X currently being disabled.
-
-> 0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1) (prog-if 00 [Normal decode])
-> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Latency: 0
-> 	Interrupt: pin A routed to IRQ 50
-> 	Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> 	I/O behind bridge: None
-> 	Memory behind bridge: 40000000-400fffff [size=1M]
-> 	Prefetchable memory behind bridge: None
-> 	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-> 	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> 	Capabilities: [40] Power Management version 3
-> 		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> 		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> 	Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-> 		Address: 0000000000000000  Data: 0000
-> 		Masking: 00000000  Pending: 00000000
-> 	Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
-> 		DevCap:	MaxPayload 256 bytes, PhantFunc 0
-> 			ExtTag- RBE+
-> 		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-> 			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
-> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-> 		LnkCap:	Port #0, Speed 16GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <1us, L1 <64us
-> 			ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
-> 		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
-> 			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt-
-> 		LnkSta:	Speed 5GT/s (downgraded), Width x1 (downgraded)
-> 			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt+
-> 		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible+
-> 		RootCap: CRSVisible+
-> 		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-> 		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR+, OBFF Not Supported ARIFwd-
-> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
-> 			 AtomicOpsCtl: ReqEn- EgressBlck-
-> 		LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
-> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-> 			 Compliance De-emphasis: -6dB
-> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
-> 			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
-> 	Capabilities: [b0] MSI-X: Enable- Count=8 Masked-
-> 		Vector table: BAR=2 offset=00000000
-> 		PBA: BAR=2 offset=00010000
-> 	Capabilities: [100 v2] Advanced Error Reporting
-> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-> 		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-> 			MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
-> 		HeaderLog: 00000000 00000000 00000000 00000000
-> 		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-> 		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-> 			 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-> 		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-> 	Capabilities: [148 v1] Secondary PCI Express <?>
-> 	Capabilities: [168 v1] Physical Layer 16.0 GT/s <?>
-> 	Capabilities: [190 v1] Lane Margining at the Receiver <?>
-> 	Capabilities: [1c0 v1] L1 PM Substates
-> 		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-> 			  PortCommonModeRestoreTime=60us PortTPowerOnTime=40us
-> 		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-> 			   T_CommonMode=10us LTR1.2_Threshold=0ns
-> 		L1SubCtl2: T_PwrOn=10us
-> 	Capabilities: [1d0 v1] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
-> 	Capabilities: [2d0 v1] Vendor Specific Information: ID=0001 Rev=1 Len=038 <?>
-> 	Capabilities: [308 v1] Data Link Feature <?>
-> 	Capabilities: [314 v1] Precision Time Measurement
-> 		PTMCap: Requester:+ Responder:+ Root:+
-> 		PTMClockGranularity: 16ns
-> 		PTMControl: Enabled:- RootSelected:-
-> 		PTMEffectiveGranularity: Unknown
-> 	Capabilities: [320 v1] Vendor Specific Information: ID=0004 Rev=1 Len=054 <?>
-> 	Kernel driver in use: pcieport
-> 00: de 10 d0 1a 07 01 10 00 a1 00 04 06 00 00 01 00
-> 10: 00 00 00 00 00 00 00 00 00 01 ff 00 f0 00 00 00
-> 20: 00 40 00 40 f1 ff 01 00 00 00 00 00 00 00 00 00
-> 30: 00 00 00 00 40 00 00 00 00 00 00 00 32 01 02 00
-> 40: 01 50 c3 c9 08 00 00 00 00 00 00 00 00 00 00 00
-> 50: 05 70 80 01 00 00 00 00 00 00 00 00 00 00 00 00
-> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 70: 10 b0 42 00 01 80 00 00 1f 28 10 00 84 4c 7b 00
-> 80: 40 04 12 f0 00 00 00 00 c0 03 40 00 18 00 01 00
-> 90: 00 00 00 00 1f 0c 01 00 00 04 00 00 1e 00 80 01
-> a0: 04 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00
-> b0: 11 00 07 00 02 00 00 00 02 00 01 00 00 00 00 00
-> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > +     *temp = tsens_reg2temp(tmdev, val);
+> > +     if (tmdev->chip->ft_deviation)
+> > +             *temp += tmdev->chip->ft_deviation;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct thermal_zone_of_device_ops tsens_ops = {
+> > +     .get_temp = tsens_get_temp,
+> > +};
+> > +
+> > +static const struct regmap_config config = {
+> > +     .reg_bits = 32,
+> > +     .val_bits = 32,
+> > +     .reg_stride = 4,
+> > +     .fast_io = true,
+> > +};
+> > +
+> > +static int tsens_init(struct tsens_device *tmdev)
+> > +{
+> > +     struct device *dev = tmdev->dev;
+> > +     struct platform_device *pdev = to_platform_device(dev);
+> > +     struct resource *mem;
+> > +     void __iomem *base;
+> > +
+> > +     mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +     base = devm_ioremap_resource(dev, mem);
+> > +     if (IS_ERR(base))
+> > +             return PTR_ERR(base);
+> > +
+> > +     tmdev->regmap = devm_regmap_init_mmio_clk(dev, "bus",
+> > +                                               base,
+> > +                                               &config);
+> > +     if (IS_ERR(tmdev->regmap))
+> > +             return PTR_ERR(tmdev->regmap);
+> > +
+> > +     tmdev->reset = devm_reset_control_get(dev, "bus");
+> > +     if (IS_ERR(tmdev->reset))
+> > +             return PTR_ERR(tmdev->reset);
+> > +
+> > +     tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> > +     if (IS_ERR(tmdev->bus_clk))
+> > +             return PTR_ERR(tmdev->bus_clk);
+>
+> You don't need to get that clock if regmap has it already.
+>
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * Even if the external calibration data stored in sid is not accessible,
+> > + * the THS hardware can still work, although the data won't be so accurate.
+> > + * The default value of calibration register is 0x800 for every sensor,
+> > + * and the calibration value is usually 0x7xx or 0x8xx, so they won't be
+> > + * away from the default value for a lot.
+> > + *
+> > + * So here we do not return error if the calibartion data is
+> > + * not available, except the probe needs deferring.
+> > + */
+> > +static int tsens_calibrate(struct tsens_device *tmdev)
+> > +{
+> > +     struct nvmem_cell *calcell;
+> > +     struct device *dev = tmdev->dev;
+> > +     u16 *caldata;
+> > +     size_t callen;
+> > +     int ft_temp;
+> > +     int i = 0;
+> > +
+> > +     calcell = devm_nvmem_cell_get(dev, "calib");
+> > +     if (IS_ERR(calcell)) {
+> > +             if (PTR_ERR(calcell) == -EPROBE_DEFER)
+> > +                     return -EPROBE_DEFER;
+> > +
+> > +             goto out;
+> > +     }
+> > +
+> > +     caldata = nvmem_cell_read(calcell, &callen);
+> > +     if (IS_ERR(caldata))
+> > +             goto out;
+> > +
+> > +     if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num)
+> > +             goto out_free;
+>
+> The first part of your or isn't obvious and should have a comment.
+>
+> The second part shouldn't return 0 but an error
+>
+> > +
+> > +     /*
+> > +      * The calbration data on H6 is stored as temperature-value
+> > +      * pair when being filled at factory test stage.
+> > +      * The unit of stored FT temperature is 0.1 degreee celusis.
+> > +      */
+> > +     ft_temp = caldata[0] & FT_TEMP_MASK;
+> > +
+> > +     for (; i < tmdev->chip->sensor_num; i++) {
+>
+> Usually you would initialize i here, and not when declared.
+>
+> > +             int reg = (int)caldata[i + 1];
+> > +             int sensor_temp = tsens_reg2temp(tmdev, reg);
+> > +             int delta, cdata, calib_offest;
+> > +
+> > +             /*
+> > +              * To calculate the calibration value:
+> > +              *
+> > +              * X(in Celsius) = Ts - ft_temp
+> > +              * delta = X * 10000 / TEMP_TO_REG
+> > +              * cdata = CALIBRATE_DEFAULT - delta
+> > +              *
+> > +              * cdata: calibration value
+> > +              */
+> > +             delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
+> > +             cdata = CALIBRATE_DEFAULT - delta;
+> > +             if (cdata & ~TEMP_CALIB_MASK) {
+> > +                     dev_warn(dev, "sensor%d calibration value error", i);
+> > +
+> > +                     continue;
+> > +             }
+> > +
+> > +             calib_offest = tmdev->chip->temp_calib_base + (i / 2) * 0x4;
+> > +
+> > +             if (i % 2) {
+> > +                     int val;
+> > +
+> > +                     regmap_read(tmdev->regmap, calib_offest, &val);
+> > +                     val = (val & TEMP_CALIB_MASK) | (cdata << 16);
+> > +                     regmap_write(tmdev->regmap, calib_offest, val);
+> > +             } else
+> > +                     regmap_write(tmdev->regmap, calib_offest, cdata);
+>
+> This should have brackets as well
+>
+> > +     }
+> > +
+> > +out_free:
+> > +     kfree(caldata);
+> > +out:
+> > +     return 0;
+> > +}
+> > +
+> > +static int tsens_register(struct tsens_device *tmdev)
+> > +{
+> > +     struct thermal_zone_device *tzd;
+> > +     int i = 0;
+> > +
+> > +     for (; i < tmdev->chip->sensor_num; i++) {
+>
+> Ditto
+>
+> > +             tmdev->sensor[i].tmdev = tmdev;
+> > +             tmdev->sensor[i].id = i;
+> > +             tmdev->sensor[i].tzd = devm_thermal_zone_of_sensor_register(
+> > +                                     tmdev->dev, i, &tmdev->sensor[i],
+> > +                                     &tsens_ops);
+> > +             if (IS_ERR(tmdev->sensor[i].tzd))
+> > +                     return PTR_ERR(tzd);
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tsens_probe(struct platform_device *pdev)
+> > +{
+> > +     struct tsens_device *tmdev;
+> > +     struct device *dev = &pdev->dev;
+> > +     int ret;
+> > +
+> > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
+> > +     if (!tmdev)
+> > +             return -ENOMEM;
+> > +
+> > +     tmdev->dev = dev;
+> > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
+> > +     if (!tmdev->chip)
+> > +             return -EINVAL;
+> > +
+> > +     ret = tsens_init(tmdev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret = tsens_register(tmdev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret = tmdev->chip->enable(tmdev);
+> > +     if (ret)
+> > +             return ret;
+> >
+> > +     platform_set_drvdata(pdev, tmdev);
+>
+> Your registration should be the very last thing you do. Otherwise, you
+> have a small window where the get_temp callback can be called, but the
+> driver will not be functional yet.
+>
+> > +     return ret;
+> > +}
+> > +
+> > +static int tsens_remove(struct platform_device *pdev)
+> > +{
+> > +     struct tsens_device *tmdev = platform_get_drvdata(pdev);
+> > +
+> > +     tmdev->chip->disable(tmdev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int sun50i_thermal_enable(struct tsens_device *tmdev)
+> > +{
+> > +     int ret, val;
+> > +
+> > +     ret = reset_control_deassert(tmdev->reset);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret = clk_prepare_enable(tmdev->bus_clk);
+> > +     if (ret)
+> > +             goto assert_reset;
+>
+> This is done by regmap as well
+>
+> > +     ret = tsens_calibrate(tmdev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * clkin = 24MHz
+> > +      * T acquire = clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
+> > +      *           = 20us
+> > +      */
+> > +     regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
+> > +                  SUN50I_THS_CTRL0_T_ACQ(479));
+> > +     /* average over 4 samples */
+> > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
+> > +                  SUN50I_THS_FILTER_EN |
+> > +                  SUN50I_THS_FILTER_TYPE(1));
+> > +     /* period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
+> > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
+> > +                  SUN50I_H6_THS_PC_TEMP_PERIOD(58));
+> > +     /* enable sensor */
+> > +     val = GENMASK(tmdev->chip->sensor_num - 1, 0);
+> > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
+> > +
+> > +     return 0;
+> > +
+> > +assert_reset:
+> > +     reset_control_assert(tmdev->reset);
+> > +
+> > +     return ret;
+>
+> Can't we do that with runtime_pm?
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
