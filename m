@@ -1,76 +1,37 @@
-Return-Path: <SRS0=Pg6C=TQ=nxp.com=pankaj.bansal@kernel.org>
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH v2 1/2] Documentation: can: flexcan: Add flexcan clocks'
- information
-Date: Thu, 16 May 2019 06:17:29 +0000
-Message-ID: <20190516114057.5878-2-pankaj.bansal@nxp.com>
-References: <20190516114057.5878-1-pankaj.bansal@nxp.com>
-In-Reply-To: <20190516114057.5878-1-pankaj.bansal@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=gB64=TR=ti.com=j-keerthy@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v2 2/4] arm: dts: dra76x: Disable usb4_tm target module
+Date: Fri, 17 May 2019 06:44:07 +0530
+Message-ID: <20190517011409.22167-3-j-keerthy@ti.com>
+In-Reply-To: <20190517011409.22167-1-j-keerthy@ti.com>
+References: <20190517011409.22167-1-j-keerthy@ti.com>
 MIME-Version: 1.0
-To: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: tony@atomide.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-VGhlIGNsb2NraW5nIGluZm9ybWF0aW9uIGlzIG1pc3NpbmcgZnJvbSBmbGV4Y2FuIGRldmljZSB0
-cmVlIGJpbmRpbmdzLg0KVGhpcyBpbmZvcm1hdGlvbiBpcyBuZWVkZWQgdG8gYmUgYWJsZSB0byB1
-c2UgZmxleGNhbi4gRG9jdW1lbnQgdGhlIHNhbWUuDQoNClNpZ25lZC1vZmYtYnk6IFBhbmthaiBC
-YW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNvbT4NCi0tLQ0KDQpOb3RlczoNCiAgICBEZXBlbmRl
-bmNpZXM6DQogICAgLSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvY292ZXIvMTAy
-NDUzNi8NCiAgICANCiAgICBWMjoNCiAgICAtIFJlbW92ZWQgY2xvY2stZnJlcXVlbmN5IGZyb20g
-b3B0aW9uYWwgcHJvcGVydGllcw0KICAgIC0gQWRkZWQgRGVwZW5kZW5jaWVzIGluIE5vdGVzDQoN
-CiAuLi4vYmluZGluZ3MvbmV0L2Nhbi9mc2wtZmxleGNhbi50eHQgICAgICAgICB8IDQ2ICsrKysr
-KysrKysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L25ldC9jYW4vZnNsLWZsZXhjYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL25ldC9jYW4vZnNsLWZsZXhjYW4udHh0DQppbmRleCBhMDQxNjg2MDU5OTguLjczYzYxNmNh
-MGY5YSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQv
-Y2FuL2ZzbC1mbGV4Y2FuLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL25ldC9jYW4vZnNsLWZsZXhjYW4udHh0DQpAQCAtMTIsOSArMTIsNDIgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoNCiAtIHJlZyA6IE9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBz
-ZXQgZm9yIHRoaXMgZGV2aWNlDQogLSBpbnRlcnJ1cHRzIDogSW50ZXJydXB0IHR1cGxlIGZvciB0
-aGlzIGRldmljZQ0KIA0KLU9wdGlvbmFsIHByb3BlcnRpZXM6DQorQ2xvY2tpbmcgaW5mb3JtYXRp
-b24gaXMgbXVzdCBmb3IgZmxleGNhbi4gcGxlYXNlIHJlZmVyIGJlbG93IGluZm8gZm9yDQordW5k
-ZXJzdGFuZGluZyBjbG9ja2luZyBpbiBmbGV4Y2FuOg0KKw0KK+KAoiBUaGUgRkxFWENBTiBtb2R1
-bGUgaXMgZGl2aWRlZCBpbnRvIHR3byBibG9ja3MuIENvbnRyb2xsZXIgaG9zdCBpbnRlcmZhY2UN
-CisgICgiQ0hJIikgYW5kIFByb3RvY29sIEVuZ2luZSAoIlBFIikNCivigKIgQm90aCB0aGVzZSBi
-bG9ja3MgcmVxdWlyZSBjbG9jay4NCivigKIgQ0hJIGlzIHJlc3BvbnNpYmxlIGZvciByZWdpc3Rl
-cnMgcmVhZCB3cml0ZSBpbmNsdWRpbmcgTUIgcmVhZC93cml0ZS4NCisgIFdoaWxlIFBFIGlzIHJl
-c3BvbnNpYmxlIGZvciBUcmFuc2Zlci9yZWNlaXZlIGRhdGEgb24gQ0FOIGJ1cy4NCivigKIgVGhl
-IGNsb2NrcyBmZWVkaW5nIHRvIHRoZXNlIHR3byBibG9ja3MgY2FuIGJlIHN5bmNocm9ub3VzIChp
-LmUuIHNhbWUgY2xvY2spDQorICBvciBhc3luY2hyb25vdXMgKGkuZS4gc2VwYXJhdGUgY2xvY2tz
-KS4NCivigKIgU2VsZWN0aW9uIGlzIG1hZGUgaW4gdGhlIENMS19TUkMgYml0IChiaXQgMTMpIG9m
-IENvbnRyb2wgMSBSZWdpc3Rlci4NCisgIC0gQ0xLX1NSQyA9IDAsIGFzeW5jaHJvbm91cyBpLmUu
-IHNlcGFyYXRlIGNsb2NrcyBmb3IgQ0hJIGFuZCBQRQ0KKyAgLSBDTEtfU1JDID0gMSwgc3luY2hy
-b25vdXMgaS5lLiBDSEkgY2xvY2sgaXMgdXNlZCBmb3IgUEUgYW5kIFBFDQorICAgICAgICAgICAg
-ICAgICBjbG9jayBpcyBub3QgdXNlZC4NCivigKIgSWYgdGhpcyBiaXQgaXMgbm90IGltcGxlbWVu
-dGVkIGluIFNPQywgdGhlbiBTT0Mgb25seSBzdXBwb3J0cyBhc3luY2hyb25vdXMNCisgIGNsb2Nr
-cy4NCivigKIgRWl0aGVyIG9mIHRoZSBjbG9jayBjYW4gYmUgZ2VuZXJhdGVkIGJ5IGFueSBvZiB0
-aGUgY2xvY2sgc291cmNlLg0KK+KAoiBXaGVuIHRoZSB0d28gY2xvY2tzIGFyZSBhc3luY2hyb25v
-dXMsIHRoZW4gZm9sbG93aW5nIHJlc3RyaWN0aW9ucyBhcHBseSB0bw0KKyAgUEUgY2xvY2suDQor
-ICAtIFBFIGNsb2NrIG11c3QgYmUgbGVzcyB0aGFuIENISSBjbG9jay4NCivigKIgSWYgbG93IGpp
-dHRlciBpcyByZXF1aXJlZCBvbiBDQU4gYnVzLCBkZWRpY2F0ZWQgb3NjaWxsYXRvciBjYW4gYmUg
-dXNlZCB0bw0KKyAgcHJvdmlkZSBQRSBjbG9jaywgYnV0IGl0IG11c3QgYmUgbGVzcyB0aGFuIENI
-SSBjbG9jay4NCisNCitCYXNlIG9uIGFib3ZlIGluZm9ybWF0aW9uIGNsb2NraW5nIGluZm8gaW4g
-ZmxleGNhbiBjYW4gYmUgZGVmaW5lZCBpbiB0d28gd2F5czoNCisNCitNZXRob2QgMShQcmVmZXJy
-ZWQpOg0KKyAgLSBjbG9ja3M6IHBoYW5kbGUgdG8gdGhlIGNsb2NrcyBmZWVkaW5nIHRoZSBmbGV4
-Y2FuLiBUd28gY2FuIGJlIGdpdmVuOg0KKyAgICAtICJpcGciOiBQcm90b2NvbCBFbmdpbmUgY2xv
-Y2sNCisgICAgLSAicGVyIjogQ29udHJvbGxlciBob3N0IGludGVyZmFjZSBjbG9jaw0KKyAgLSBj
-bG9jay1uYW1lczogTXVzdCBjb250YWluIHRoZSBjbG9jayBuYW1lcyBkZXNjcmliZWQganVzdCBh
-Ym92ZS4NCiANCi0tIGNsb2NrLWZyZXF1ZW5jeSA6IFRoZSBvc2NpbGxhdG9yIGZyZXF1ZW5jeSBk
-cml2aW5nIHRoZSBmbGV4Y2FuIGRldmljZQ0KK01ldGhvZCAyKE5vdCBQcmVmZXJyZWQpOg0KKyAg
-LSBjbG9jay1mcmVxdWVuY3kgOiBUaGUgc3luY2hyb25vdXMgY2xvY2sgZnJlcXVlbmN5IHN1cHBs
-aWVkIHRvIGJvdGgNCisgIENvbnRyb2xsZXIgaG9zdCBpbnRlcmZhY2UgYW5kIFByb3RvY29sIEVu
-Z2luZQ0KKw0KK09wdGlvbmFsIHByb3BlcnRpZXM6DQogDQogLSB4Y2VpdmVyLXN1cHBseTogUmVn
-dWxhdG9yIHRoYXQgcG93ZXJzIHRoZSBDQU4gdHJhbnNjZWl2ZXINCiANCkBAIC00Nyw1ICs4MCwx
-NCBAQCBFeGFtcGxlOg0KIAkJaW50ZXJydXB0cyA9IDw0OCAweDI+Ow0KIAkJaW50ZXJydXB0LXBh
-cmVudCA9IDwmbXBpYz47DQogCQljbG9jay1mcmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsgLy8gZmls
-bGVkIGluIGJ5IGJvb3Rsb2FkZXINCisJfTsNCisNCisJY2FuQDIxODAwMDAgew0KKwkJY29tcGF0
-aWJsZSA9ICJmc2wsbHgyMTYwYXIxLWZsZXhjYW4iOw0KKwkJcmVnID0gPDB4MCAweDIxODAwMDAg
-MHgwIDB4MTAwMDA+Ow0KKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIxIElSUV9UWVBFX0xFVkVM
-X0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZzeXNjbGs+LCA8JmNsb2NrZ2VuIDQgNz47DQorCQljbG9j
-ay1uYW1lcyA9ICJpcGciLCAicGVyIjsNCiAJCWZzbCxjbGstc291cmNlID0gPDA+OyAvLyBzZWxl
-Y3QgY2xvY2sgc291cmNlIDAgZm9yIFBFDQorCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KIAl9Ow0K
-LS0gDQoyLjE3LjENCg0K
+usb4_tm is unsed on dra76 and accessing the module
+with ti,sysc is causing a boot crash hence disable its target
+module.
+
+Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ arch/arm/boot/dts/dra76x.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra76x.dtsi b/arch/arm/boot/dts/dra76x.dtsi
+index 5c437271d307..82b3dc90b7d6 100644
+--- a/arch/arm/boot/dts/dra76x.dtsi
++++ b/arch/arm/boot/dts/dra76x.dtsi
+@@ -85,3 +85,7 @@
+ &rtctarget {
+ 	status = "disabled";
+ };
++
++&usb4_tm {
++	status = "disabled";
++};
+-- 
+2.17.1
