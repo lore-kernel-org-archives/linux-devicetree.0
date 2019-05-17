@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 2/6] iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
-Date: Fri, 17 May 2019 20:46:55 +0200
-Message-ID: <20190517184659.18828-3-peron.clem@gmail.com>
+Subject: [PATCH v5 3/6] dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+Date: Fri, 17 May 2019 20:46:56 +0200
+Message-ID: <20190517184659.18828-4-peron.clem@gmail.com>
 References: <20190517184659.18828-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,32 +10,38 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517184659.18828-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Icenowy Zheng <icenowy@aosc.io>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H6 SoC has a Mali T720MP2 with a 33-bit iommu which
-trig the sanity check during the alloc of the pgtable.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Change the sanity check to allow non 48-bit configuration.
+Some SoCs adds a bus clock gate to the Mali Midgard GPU.
 
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Add the binding for the bus clock.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 4e21efbc4459..74f2ce802e6f 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -1016,7 +1016,7 @@ arm_mali_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg, void *cookie)
- {
- 	struct io_pgtable *iop;
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 1b1a74129141..2e8bbce35695 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -31,6 +31,12 @@ Optional properties:
  
--	if (cfg->ias != 48 || cfg->oas > 40)
-+	if (cfg->ias > 48 || cfg->oas > 40)
- 		return NULL;
+ - clocks : Phandle to clock for the Mali Midgard device.
  
- 	cfg->pgsize_bitmap &= (SZ_4K | SZ_2M | SZ_1G);
++- clock-names : Specify the names of the clocks specified in clocks
++  when multiple clocks are present.
++    * core: clock driving the GPU itself (When only one clock is present,
++      assume it's this clock.)
++    * bus: bus clock for the GPU
++
+ - mali-supply : Phandle to regulator for the Mali device. Refer to
+   Documentation/devicetree/bindings/regulator/regulator.txt for details.
+ 
 -- 
 2.17.1
