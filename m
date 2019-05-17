@@ -1,141 +1,69 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Date: Sat, 18 May 2019 01:27:39 +0800
-Message-ID: <CAEExFWtNhTqLR+v3o6vn0Y4L65i_XsrEeiex6DNLEPEkhseCjA@mail.gmail.com>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea> <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
- <20190517073634.izdmba3yqvxviyg3@flea>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC/PATCH 0/5] Read-only memremap() proposal
+Date: Fri, 17 May 2019 10:35:14 -0700
+Message-ID: <20190517173514.GM2085@tuxbook-pro>
+References: <20190517164746.110786-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517073634.izdmba3yqvxviyg3@flea>
+Content-Disposition: inline
+In-Reply-To: <20190517164746.110786-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com, will.deacon@arm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>, olof@lixom.net, bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infra>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 3:36 PM Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
->
-> On Fri, May 17, 2019 at 01:51:56AM +0800, Frank Lee wrote:
-> > > > +struct sun50i_thermal_chip {
-> > > > +     int     sensor_num;
-> > > > +     int     offset;
-> > > > +     int     scale;
-> > > > +     int     ft_deviation;
-> > > > +     int     temp_calib_base;
-> > > > +     int     temp_data_base;
-> > > > +     int     (*enable)(struct tsens_device *tmdev);
-> > > > +     int     (*disable)(struct tsens_device *tmdev);
-> > > > +};
-> > >
-> > > I'm not super fond of having a lot of quirks that are not needed. If
-> > > we ever need those quirks when adding support for a new SoC, then
-> > > yeah, we should totally have some, but only when and if it's needed.
-> > >
-> > > Otherwise, the driver is more complicated for no particular reason.
-> >
-> > This is unavoidable because of the difference in soc.
->
-> I know, but this isn't my point.
->
-> My point is that at this time of the driver development, we don't know
-> what is going to be needed to support all of those SoCs.
->
-> Some of the parameters you added might not be needed, some parameters
-> might be missing, we don't know. So let's keep it simple for now.
->
-> > > > +static int tsens_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct tsens_device *tmdev;
-> > > > +     struct device *dev =3D &pdev->dev;
-> > > > +     int ret;
-> > > > +
-> > > > +     tmdev =3D devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > > > +     if (!tmdev)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     tmdev->dev =3D dev;
-> > > > +     tmdev->chip =3D of_device_get_match_data(&pdev->dev);
-> > > > +     if (!tmdev->chip)
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     ret =3D tsens_init(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     ret =3D tsens_register(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     ret =3D tmdev->chip->enable(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > >
-> > > > +     platform_set_drvdata(pdev, tmdev);
-> > >
-> > > Your registration should be the very last thing you do. Otherwise, yo=
-u
-> > > have a small window where the get_temp callback can be called, but th=
-e
-> > > driver will not be functional yet.
-> >
-> > No. Anyway, ths data qcquisition is ms level.
->
-> That's kind of irrelevant. There's nothing preventing get_temp to be
-> called right away.
-As Ond=C5=99ej said,
+On Fri 17 May 09:47 PDT 2019, Stephen Boyd wrote:
 
-Registration after enabling will lead to call tz update on non-registered t=
-z
-from an interrupt handler.
+> This patch series implements a read-only version of memremap() via
+> a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
+> try to map the memory region as read-only if it doesn't intersect
+> with an existing mapping. Otherwise, we'll try to fallback to other
+> flags to try to map the memory that way.
+> 
+> The main use case I have is to map the command-db memory region on
+> Qualcomm devices with a read-only mapping. It's already a const marked
+> pointer and the API returns const pointers as well, so this series makes
+> sure that even stray writes can't modify the memory. To get there we
+> introduce a devm version of memremap() for a reserved memory region, add
+> a memremap() flag, and implement support for that flag on arm64.
+> 
 
->
-> > > > +     ret =3D tsens_calibrate(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     /*
-> > > > +      * clkin =3D 24MHz
-> > > > +      * T acquire =3D clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
-> > > > +      *           =3D 20us
-> > > > +      */
-> > > > +     regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> > > > +                  SUN50I_THS_CTRL0_T_ACQ(479));
-> > > > +     /* average over 4 samples */
-> > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> > > > +                  SUN50I_THS_FILTER_EN |
-> > > > +                  SUN50I_THS_FILTER_TYPE(1));
-> > > > +     /* period =3D (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clk=
-in; ~10ms */
-> > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> > > > +                  SUN50I_H6_THS_PC_TEMP_PERIOD(58));
-> > > > +     /* enable sensor */
-> > > > +     val =3D GENMASK(tmdev->chip->sensor_num - 1, 0);
-> > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
-> > > > +
-> > > > +     return 0;
-> > > > +
-> > > > +assert_reset:
-> > > > +     reset_control_assert(tmdev->reset);
-> > > > +
-> > > > +     return ret;
-> > >
-> > > Can't we do that with runtime_pm?
-> >
-> > Saving energy doesn't make much sense compared to system security.
->
-> I'm not sure what you mean by security.
+I have a few places where the first patch will be useful, and the rest
+looks good.
 
-Protect system hardware from damage.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Thx,
-Yangtao
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Regards,
+Bjorn
+
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> 
+> Stephen Boyd (5):
+>   reserved_mem: Add a devm_memremap_reserved_mem() API
+>   soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
+>   memremap: Add support for read-only memory mappings
+>   arm64: Add support for arch_memremap_ro()
+>   soc: qcom: cmd-db: Map with read-only mappings
+> 
+>  arch/arm64/include/asm/io.h     |  1 +
+>  drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
+>  drivers/soc/qcom/cmd-db.c       | 14 +++-------
+>  include/linux/io.h              |  1 +
+>  include/linux/of_reserved_mem.h |  6 +++++
+>  kernel/iomem.c                  | 15 +++++++++--
+>  6 files changed, 70 insertions(+), 12 deletions(-)
+> 
+> 
+> base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
+> prerequisite-patch-id: 62119e27c0c0686e02f0cb55c296b878fb7f5e47
+> prerequisite-patch-id: bda32cfc1733c245ae3f141d7c27b18e4adcc628
+> prerequisite-patch-id: b8f8097161bd15e87d54dcfbfa67b9ca1abc7204
+> -- 
+> Sent by a computer through tubes
+> 
