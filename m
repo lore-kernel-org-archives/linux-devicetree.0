@@ -1,75 +1,85 @@
-From: Chuanhua Han <chuanhua.han@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Fri, 17 May 2019 06:10:59 +0000
-Message-ID: <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on
+ Teres-I
+Date: Fri, 17 May 2019 09:27:38 +0200
+Message-ID: <20190517072738.deohh5fly4jxms7k@flea>
+References: <20190514155911.6C0AC68B05@newverein.lst.de>
+ <20190514160241.9EAC768C7B@newverein.lst.de>
+ <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
+ <20190515093141.41016b11@blackhole.lan>
+ <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
+ <20190516154820.GA10431@lst.de>
+ <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
+ <20190516164859.GB10431@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190517023728.GA15856@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0817643669=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190516164859.GB10431@lst.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo11MIxN8jVIDEwOjM4DQo+IFRvOiBDaHVh
-bmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiBDYzogTGVvIExpIDxsZW95YW5nLmxp
-QG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+
-DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3
-YXRjaGRvZyBkZXZpY2Ugbm9kZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBU
-aHUsIE1heSAwOSwgMjAxOSBhdCAwMzowNjo1N1BNICswODAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6
-DQo+ID4gbHMxMDI4YSBwbGF0Zm9ybSB1c2VzIHNwODA1IHdhdGNoZG9nLCBhbmQgdXNlIDEvMTYg
-cGxhdGZvcm0gY2xvY2sgYXMNCj4gPiB0aW1lciBjbG9jaywgdGhpcyBwYXRjaCBmaXggZGV2aWNl
-IHRyZWUgbm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW5nIFlpbmctMjI0NTUgPHlp
-bmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENodWFuaHVhIEhhbiA8
-Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDE5DQo+ID4gKysrKysrKysrKysrLS0tLS0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMx
-MDI4YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
-YS5kdHNpDQo+ID4gaW5kZXggYjA0NTgxMjQ5ZjBiLi4xNTEwYjE4NTgyNDYgMTAwNjQ0DQo+ID4g
-LS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+
-ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4g
-PiBAQCAtMjg1LDEzICsyODUsMTggQEANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgI2ludGVy
-cnVwdC1jZWxscyA9IDwyPjsNCj4gPiAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiAtICAgICAg
-ICAgICAgIHdkb2cwOiB3YXRjaGRvZ0AyM2MwMDAwIHsNCj4gPiAtICAgICAgICAgICAgICAgICAg
-ICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS13ZHQiLCAiZnNsLGlteDIxLXdkdCI7DQo+ID4g
-LSAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHgyM2MwMDAwIDB4MCAweDEwMDAwPjsN
-Cj4gPiAtICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU5IElSUV9U
-WVBFX0xFVkVMX0hJR0g+Ow0KPiA+IC0gICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNs
-b2NrZ2VuIDQgMT47DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgIGJpZy1lbmRpYW47DQo+ID4g
-LSAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKyAgICAgICAg
-ICAgICBjbHVzdGVyMV9jb3JlMF93YXRjaGRvZzogd2R0QGMwMDAwMDAgew0KPiANCj4gS2VlcCAn
-d2F0Y2hkb2cnIGFzIHRoZSBub2RlIG5hbWUsDQpUaGFua3MgZm9yIHlvdXIgcmVwbGF5DQpEbyB5
-b3UgbWVhbiByZXBsYWNlIHRoZSChrndkdKGvIHdpdGggoa53YXRjaGRvZ6GvPw0KYW5kIGtlZXAg
-bm9kZXMgc29ydCBpbiB1bml0LWFkZHJlc3MuDQpXaGF0IGRvZXMgdGhpcyBtZWFuPw0KPiANCj4g
-U2hhd24NCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNw
-ODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY2xv
-Y2tzID0gPCZjbG9ja2dlbiA0IDE1PiwgPCZjbG9ja2dlbiA0IDE1PjsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ICsg
-ICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMV93
-YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gImFybSxzcDgwNSIsICJhcm0scHJpbWVjZWxsIjsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgcmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIiwgIndkb2df
-Y2xrIjsNCj4gPiAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiAgICAgICAgICAgICAgIHNhdGE6
-IHNhdGFAMzIwMDAwMCB7DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+--===============0817643669==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="f4mha6snzgf75knu"
+Content-Disposition: inline
+
+
+--f4mha6snzgf75knu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 16, 2019 at 06:48:59PM +0200, Torsten Duwe wrote:
+> On Thu, May 16, 2019 at 09:06:41AM -0700, Vasily Khoruzhick wrote:
+> >
+> > Driver can talk to the panel over AUX channel only after t1+t3, t1 is
+> > up to 10ms, t3 is up to 200ms.
+>
+> This is after power-on. The boot loader needs to deal with this.
+
+The bootloader can deal with it, but the kernel will also need to. The
+bootloader might not be doing this because it's not been updated, the
+regulator might have been disabled between the time the kernel was
+started and the time the bridge driver probes, etc.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--f4mha6snzgf75knu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN5iagAKCRDj7w1vZxhR
+xSOTAQCltYqEUg7d+BcEgl5RN6diNU5EHsL/qXA4yAy1FZI9NwD/epfnmdGcVWie
+o0KQWW6HOXO96Su1afZmNzHrEtQffwQ=
+=zj1P
+-----END PGP SIGNATURE-----
+
+--f4mha6snzgf75knu--
+
+--===============0817643669==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0817643669==--
