@@ -1,45 +1,69 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 2/4] clk: at91: sckc: add support to specify registers
- bit offsets
-Date: Fri, 17 May 2019 23:13:36 +0200
-Message-ID: <20190517211336.GB7685@piout.net>
-References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
- <1557487388-32098-3-git-send-email-claudiu.beznea@microchip.com>
- <20190510213242.GE7622@piout.net>
- <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
+From: Stefano Manni <stefano.manni@gmail.com>
+Subject: [PATCH 1/2] Input: atmel_mxt_ts - add wakeup support
+Date: Fri, 17 May 2019 23:17:40 +0200
+Message-ID: <20190517211741.8906-1-stefano.manni@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: nick@shmanahar.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Stefano Manni <stefano.manni@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/2019 08:10:34+0000, Claudiu.Beznea@microchip.com wrote:
-> >> @@ -69,10 +80,11 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
-> >>  	void __iomem *sckcr = osc->sckcr;
-> >>  	u32 tmp = readl(sckcr);
-> >>  
-> >> -	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
-> >> +	if (tmp & (AT91_SCKC_OSC32BYP(osc->bits) |
-> >> +		   AT91_SCKC_OSC32EN(osc->bits)))
-> > 
-> > I still find that:
-> > 
-> > 	if (tmp & (osc->bits->cr_osc32byp | osc->bits->cr_osc32en))
-> > 
-> > would be shorter and easier to read and still fits on one line.
-> 
-> Agree, but I thought to use the same interface everywhere. Anyway, tell me
-> if you want to resend with these changes.
-> 
-My comment applies to all the AT91_SCKC_.*() macros. I don't feel that
-the macros make the code clearer, accessing bits->cr_.* is self
-documenting enough (and makes the code shorter).
+Add wakeup support to the maxtouch driver.
+The device can wake up the system from suspend,
+mark the IRQ as wakeup capable, so that device
+irq is not disabled during system suspend.
 
+Signed-off-by: Stefano Manni <stefano.manni@gmail.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 5c63d25ce84e..2e0abc0b665d 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -3041,6 +3041,7 @@ static const struct dmi_system_id chromebook_T9_suspend_dmi[] = {
+ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
+ 	struct mxt_data *data;
++	struct device_node *node = client->dev.of_node;
+ 	int error;
+ 
+ 	/*
+@@ -3125,6 +3126,12 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		goto err_free_object;
+ 	}
+ 
++	if (node) {
++		if (of_property_read_bool(node, "wakeup-source") ||
++			of_property_read_bool(node, "linux,wakeup"))
++			device_init_wakeup(&client->dev, true);
++	}
++
+ 	return 0;
+ 
+ err_free_object:
+@@ -3156,6 +3163,9 @@ static int __maybe_unused mxt_suspend(struct device *dev)
+ 
+ 	mutex_lock(&input_dev->mutex);
+ 
++	if (device_may_wakeup(&client->dev))
++		enable_irq_wake(client->irq);
++
+ 	if (input_dev->users)
+ 		mxt_stop(data);
+ 
+@@ -3175,6 +3185,9 @@ static int __maybe_unused mxt_resume(struct device *dev)
+ 
+ 	mutex_lock(&input_dev->mutex);
+ 
++	if (device_may_wakeup(&client->dev))
++		disable_irq_wake(client->irq);
++
+ 	if (input_dev->users)
+ 		mxt_start(data);
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
