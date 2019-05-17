@@ -1,72 +1,185 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 1/1] arm64: dts: marvell: mcbin: enlarge PCI memory window
-Date: Fri, 17 May 2019 22:08:00 +0200
-Message-ID: <87k1eozvxb.fsf@FE-laptop>
-References: <20190517161123.9293-1-xypron.glpk@gmx.de>
+From: "kernelci.org bot" <bot@kernelci.org>
+Subject: mainline/master boot bisection: v5.1-12172-g2c45e7fbc962 on
+ meson-g12a-x96-max
+Date: Fri, 17 May 2019 13:19:42 -0700 (PDT)
+Message-ID: <5cdf175e.1c69fb81.9d43b.8249@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517161123.9293-1-xypron.glpk@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com, mgalka@collabora.com, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org, matthew.hart@linaro.orgkhilman@baylibre.com, enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heinrich Schuchardt,
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-> Running a graphics adapter on the MACCHIATObin fails due to an
-> insufficently sized memory window.
-I think "insufficient" is enough or I miss something.
+mainline/master boot bisection: v5.1-12172-g2c45e7fbc962 on meson-g12a-x96-=
+max
 
->
-> Enlarge the memory window for the PCIe slot to 512 MiB.
->
-> With the patch I am able to use a GT710 graphics adapter with 1 GB onboard
-> memory.
->
-> These are the mapped memory areas that the graphics adapter is actually
-> using:
->
-> Region 0: Memory at cc000000 (32-bit, non-prefetchable) [size=16M]
-> Region 1: Memory at c0000000 (64-bit, prefetchable) [size=128M]
-> Region 3: Memory at c8000000 (64-bit, prefetchable) [size=32M]
-> Region 5: I/O ports at 1000 [size=128]
-> Expansion ROM at ca000000 [disabled] [size=512K]
+Summary:
+  Start:      2c45e7fbc962 Merge branch 'next' of git://git.kernel.org/pub/=
+scm/linux/kernel/git/rzhang/linux
+  Details:    https://kernelci.org/boot/id/5cde4f3459b5143cfb7a3628
+  Plain log:  https://storage.kernelci.org//mainline/master/v5.1-12172-g2c4=
+5e7fbc962/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/boot=
+-meson-g12a-x96-max.txt
+  HTML log:   https://storage.kernelci.org//mainline/master/v5.1-12172-g2c4=
+5e7fbc962/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/boot=
+-meson-g12a-x96-max.html
+  Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support con=
+trollers
 
->From my point of view this patch is correct, I don't think it is a
-problem to map more memory. So I applied on it mvebu/dt64.
+Checks:
+  revert:     PASS
+  verify:     PASS
 
-But I add also Thomas in CC who know better the PCIe support on mvebu/
+Parameters:
+  Tree:       mainline
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
+git
+  Branch:     master
+  Target:     meson-g12a-x96-max
+  CPU arch:   arm64
+  Lab:        lab-baylibre
+  Compiler:   gcc-8
+  Config:     defconfig+CONFIG_RANDOMIZE_BASE=3Dy
+  Test suite: boot
 
-Thanks,
+Breaking commit found:
 
-Gregory
+---------------------------------------------------------------------------=
+----
+commit 11a7bea17c9e0a36daab934d83e15a760f402147
+Author: Jerome Brunet <jbrunet@baylibre.com>
+Date:   Mon Mar 18 10:58:45 2019 +0100
+
+    arm64: dts: meson: g12a: add pinctrl support controllers
+    =
+
+    Add the peripheral and always-on pinctrl controllers to the g12a soc.
+    =
+
+    Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+    Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+    Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/=
+dts/amlogic/meson-g12a.dtsi
+index abfa167751af..5e07e4ca3f4b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -104,6 +104,29 @@
+ 				#address-cells =3D <2>;
+ 				#size-cells =3D <2>;
+ 				ranges =3D <0x0 0x0 0x0 0x34400 0x0 0x400>;
++
++				periphs_pinctrl: pinctrl@40 {
++					compatible =3D "amlogic,meson-g12a-periphs-pinctrl";
++					#address-cells =3D <2>;
++					#size-cells =3D <2>;
++					ranges;
++
++					gpio: bank@40 {
++						reg =3D <0x0 0x40  0x0 0x4c>,
++						      <0x0 0xe8  0x0 0x18>,
++						      <0x0 0x120 0x0 0x18>,
++						      <0x0 0x2c0 0x0 0x40>,
++						      <0x0 0x340 0x0 0x1c>;
++						reg-names =3D "gpio",
++							    "pull",
++							    "pull-enable",
++							    "mux",
++							    "ds";
++						gpio-controller;
++						#gpio-cells =3D <2>;
++						gpio-ranges =3D <&periphs_pinctrl 0 0 86>;
++					};
++				};
+ 			};
+ =
+
+ 			hiu: bus@3c000 {
+@@ -150,6 +173,25 @@
+ 					clocks =3D <&xtal>, <&clkc CLKID_CLK81>;
+ 					clock-names =3D "xtal", "mpeg-clk";
+ 				};
++
++				ao_pinctrl: pinctrl@14 {
++					compatible =3D "amlogic,meson-g12a-aobus-pinctrl";
++					#address-cells =3D <2>;
++					#size-cells =3D <2>;
++					ranges;
++
++					gpio_ao: bank@14 {
++						reg =3D <0x0 0x14 0x0 0x8>,
++						      <0x0 0x1c 0x0 0x8>,
++						      <0x0 0x24 0x0 0x14>;
++						reg-names =3D "mux",
++							    "ds",
++							    "gpio";
++						gpio-controller;
++						#gpio-cells =3D <2>;
++						gpio-ranges =3D <&ao_pinctrl 0 0 15>;
++					};
++				};
+ 			};
+ =
+
+ 			sec_AO: ao-secure@140 {
+---------------------------------------------------------------------------=
+----
 
 
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> ---
->  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-> index 329f8ceeebea..205071b45a32 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-> @@ -184,6 +184,8 @@
->  	num-lanes = <4>;
->  	num-viewport = <8>;
->  	reset-gpios = <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
-> +	ranges = <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
-> +		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
->  	status = "okay";
->  };
->
-> --
-> 2.20.1
->
+Git bisection log:
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
+git bisect good a455eda33faafcaac1effb31d682765b14ef868c
+# bad: [2c45e7fbc962be1b03f2c2af817a76f5ba810af2] Merge branch 'next' of gi=
+t://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux
+git bisect bad 2c45e7fbc962be1b03f2c2af817a76f5ba810af2
+# bad: [be058ba65d9e43f40d31d9b16b99627f0a20de1b] Merge tag 'imx-dt-5.2' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/dt
+git bisect bad be058ba65d9e43f40d31d9b16b99627f0a20de1b
+# bad: [7996313656b83ba516a1546d51f08f1a0fab4e06] Merge tag 'omap-for-v5.2/=
+dt-am3-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linu=
+x-omap into arm/dt
+git bisect bad 7996313656b83ba516a1546d51f08f1a0fab4e06
+# bad: [2140eaf2f46faf2627ec030d7cabf2dda2cb546b] Merge tag 'stm32-dt-for-v=
+5.2-1' of git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32 into =
+arm/dt
+git bisect bad 2140eaf2f46faf2627ec030d7cabf2dda2cb546b
+# bad: [1a88083b9349b8310b25d9a9a96802ee4447e6b9] Merge tag 'v5.2-rockchip-=
+dts64-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
+hip into arm/dt
+git bisect bad 1a88083b9349b8310b25d9a9a96802ee4447e6b9
+# bad: [1c93235a6d92deaab38bbb1cfc764b0757331ebb] Merge tag 'amlogic-dt' of=
+ https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic into=
+ arm/dt
+git bisect bad 1c93235a6d92deaab38bbb1cfc764b0757331ebb
+# bad: [ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb] arm64: dts: meson: g12a: =
+Add UART A, B & C nodes and pins
+git bisect bad ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb
+# good: [965c827ac37e71f76d3ac55c75ac08909f2a4eed] arm64: dts: meson: g12a:=
+ add efuse
+git bisect good 965c827ac37e71f76d3ac55c75ac08909f2a4eed
+# bad: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: meson: g12a: =
+add pinctrl support controllers
+git bisect bad 11a7bea17c9e0a36daab934d83e15a760f402147
+# good: [b019f4a4199f865b054262ff78f606ca70f7b981] arm64: dts: meson: g12a:=
+ Add AO Clock + Reset Controller support
+git bisect good b019f4a4199f865b054262ff78f606ca70f7b981
+# first bad commit: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: =
+meson: g12a: add pinctrl support controllers
+---------------------------------------------------------------------------=
+----
