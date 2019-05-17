@@ -1,153 +1,110 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3] dt-bindings: arm: Convert Actions Semi bindings to jsonschema
-Date: Fri, 17 May 2019 10:32:23 -0500
-Message-ID: <20190517153223.7650-1-robh@kernel.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: amlogic: Move
+ 'amlogic,meson-gx-ao-secure' binding to its own file
+Date: Fri, 17 May 2019 17:34:38 +0200
+Message-ID: <009f9311-4f26-0d80-a8da-062debe85291@baylibre.com>
+References: <20190517152723.28518-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190517152723.28518-1-robh@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert Actions Semi SoC bindings to DT schema format using json-schema.
+On 17/05/2019 17:27, Rob Herring wrote:
+> It is best practice to have 1 binding per file, so board level bindings
+> should be separate for various misc SoC bindings.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Carlo Caione <carlo@caione.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-amlogic@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> It seems this one fell thru the cracks and didn't get applied.
+> 
+>  .../devicetree/bindings/arm/amlogic.txt       | 29 -------------------
+>  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ++++++++++++++++++
+>  2 files changed, 28 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 061f7b98a07f..5f650248b18e 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -111,32 +111,3 @@ Board compatible values (alphabetically, grouped by SoC):
+>    - "amlogic,u200" (Meson g12a s905d2)
+>    - "amediatech,x96-max" (Meson g12a s905x2)
+>    - "seirobotics,sei510" (Meson g12a s905x2)
+> -
+> -Amlogic Meson Firmware registers Interface
+> -------------------------------------------
+> -
+> -The Meson SoCs have a register bank with status and data shared with the
+> -secure firmware.
+> -
+> -Required properties:
+> - - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+> -
+> -Properties should indentify components of this register interface :
+> -
+> -Meson GX SoC Information
+> -------------------------
+> -A firmware register encodes the SoC type, package and revision information on
+> -the Meson GX SoCs.
+> -If present, the following property should be added :
+> -
+> -Optional properties:
+> -  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
+> -
+> -Example
+> --------
+> -
+> -ao-secure@140 {
+> -	compatible = "amlogic,meson-gx-ao-secure", "syscon";
+> -	reg = <0x0 0x140 0x0 0x140>;
+> -	amlogic,has-chip-id;
+> -};
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> new file mode 100644
+> index 000000000000..c67d9f48fb91
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> @@ -0,0 +1,28 @@
+> +Amlogic Meson Firmware registers Interface
+> +------------------------------------------
+> +
+> +The Meson SoCs have a register bank with status and data shared with the
+> +secure firmware.
+> +
+> +Required properties:
+> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+> +
+> +Properties should indentify components of this register interface :
+> +
+> +Meson GX SoC Information
+> +------------------------
+> +A firmware register encodes the SoC type, package and revision information on
+> +the Meson GX SoCs.
+> +If present, the following property should be added :
+> +
+> +Optional properties:
+> +  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
+> +
+> +Example
+> +-------
+> +
+> +ao-secure@140 {
+> +	compatible = "amlogic,meson-gx-ao-secure", "syscon";
+> +	reg = <0x0 0x140 0x0 0x140>;
+> +	amlogic,has-chip-id;
+> +};
 
-Cc: "Andreas Färber" <afaerber@suse.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v3:
-- update MAINTAINERS
 
- .../devicetree/bindings/arm/actions.txt       | 56 -------------------
- .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 39 insertions(+), 57 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
- create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
-
-diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
-deleted file mode 100644
-index d54f33c4e0da..000000000000
---- a/Documentation/devicetree/bindings/arm/actions.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--Actions Semi platforms device tree bindings
---------------------------------------------
--
--
--S500 SoC
--========
--
--Required root node properties:
--
-- - compatible :  must contain "actions,s500"
--
--
--Modules:
--
--Root node property compatible must contain, depending on module:
--
-- - LeMaker Guitar: "lemaker,guitar"
--
--
--Boards:
--
--Root node property compatible must contain, depending on board:
--
-- - Allo.com Sparky: "allo,sparky"
-- - Cubietech CubieBoard6: "cubietech,cubieboard6"
-- - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
--
--
--S700 SoC
--========
--
--Required root node properties:
--
--- compatible :  must contain "actions,s700"
--
--
--Boards:
--
--Root node property compatible must contain, depending on board:
--
-- - Cubietech CubieBoard7: "cubietech,cubieboard7"
--
--
--S900 SoC
--========
--
--Required root node properties:
--
--- compatible :  must contain "actions,s900"
--
--
--Boards:
--
--Root node property compatible must contain, depending on board:
--
-- - uCRobotics Bubblegum-96: "ucrobotics,bubblegum-96"
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-new file mode 100644
-index 000000000000..60abd371e474
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/actions.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Actions Semi platforms device tree bindings
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      # The Actions Semi S500 is a quad-core ARM Cortex-A9 SoC.
-+      - items:
-+          - enum:
-+              - allo,sparky # Allo.com Sparky
-+              - cubietech,cubieboard6 # Cubietech CubieBoard6
-+          - const: actions,s500
-+      - items:
-+          - enum:
-+              - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
-+          - const: lemaker,guitar
-+          - const: actions,s500
-+
-+      # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
-+      - items:
-+          - enum:
-+              - cubietech,cubieboard7 # Cubietech CubieBoard7
-+          - const: actions,s700
-+
-+      # The Actions Semi S900 is a quad-core ARM Cortex-A53 SoC.
-+      - items:
-+          - enum:
-+              - ucrobotics,bubblegum-96 # uCRobotics Bubblegum-96
-+          - const: actions,s900
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 005902ea1450..be8c3564804c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1338,7 +1338,7 @@ F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
--F:	Documentation/devicetree/bindings/arm/actions.txt
-+F:	Documentation/devicetree/bindings/arm/actions.yaml
- F:	Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
- F:	Documentation/devicetree/bindings/dma/owl-dma.txt
- F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
--- 
-2.20.1
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
