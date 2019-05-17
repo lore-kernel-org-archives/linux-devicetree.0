@@ -1,209 +1,63 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] add dts file to enable support for ls1046afrwy board.
-Date: Fri, 17 May 2019 10:35:04 +0800
-Message-ID: <20190517023502.GZ15856@dragon>
-References: <20190508135501.17578-1-pramod.kumar_1@nxp.com>
- <20190508135501.17578-3-pramod.kumar_1@nxp.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Date: Fri, 17 May 2019 10:37:30 +0800
+Message-ID: <20190517023728.GA15856@dragon>
+References: <20190509070657.18281-1-chuanhua.han@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190508135501.17578-3-pramod.kumar_1@nxp.com>
+In-Reply-To: <20190509070657.18281-1-chuanhua.han@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Chuanhua Han <chuanhua.han@nxp.com>
+Cc: leoyang.li@nxp.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zhang Ying-22455 <ying.zhang22455@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 08, 2019 at 01:53:10PM +0000, Pramod Kumar wrote:
-> ls1046afrwy board is based on nxp ls1046a SoC.
+On Thu, May 09, 2019 at 03:06:57PM +0800, Chuanhua Han wrote:
+> ls1028a platform uses sp805 watchdog, and use 1/16 platform clock as
+> timer clock, this patch fix device tree node.
 > 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
+> Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> ---
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index b04581249f0b..1510b1858246 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -285,13 +285,18 @@
+>  			#interrupt-cells = <2>;
+>  		};
+>  
+> -		wdog0: watchdog@23c0000 {
+> -			compatible = "fsl,ls1028a-wdt", "fsl,imx21-wdt";
+> -			reg = <0x0 0x23c0000 0x0 0x10000>;
+> -			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&clockgen 4 1>;
+> -			big-endian;
+> -			status = "disabled";
+> +		cluster1_core0_watchdog: wdt@c000000 {
 
-Please have a subject prefix like 'arm64: dts: ...'
+Keep 'watchdog' as the node name, and keep nodes sort in unit-address.
 
 Shawn
 
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 156 ++++++++++++++++++
->  2 files changed, 157 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 13604e558dc1..84ff6995b41e 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> new file mode 100644
-> index 000000000000..de0d19c02944
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> + *
-> + * Copyright 2019 NXP.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1046a.dtsi"
-> +
-> +/ {
-> +	model = "LS1046A FRWY Board";
-> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
-> +
-> +	aliases {
-> +		serial0 = &duart0;
-> +		serial1 = &duart1;
-> +		serial2 = &duart2;
-> +		serial3 = &duart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sb_3v3: regulator-sb3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "LT8642SEV-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&duart2 {
-> +	status = "okay";
-> +};
-> +
-> +&duart3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	i2c-mux@77 {
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		i2c-mux-never-disable;
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			eeprom@52 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x52>;
-> +			};
-> +
-> +			eeprom@53 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x53>;
-> +			};
-> +
-> +			power-monitor@40 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +
-> +			rtc@51 {
-> +				compatible = "nxp,pcf2129";
-> +				reg = <0x51>;
-> +			};
-> +
-> +			temperature-sensor@4c {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4c>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NAND Flash */
-> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
-> +	status = "okay";
-> +
-> +	nand@0,0 {
-> +		compatible = "fsl,ifc-nand";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x0 0x0 0x10000>;
-> +	};
-> +
-> +};
-> +
-> +#include "fsl-ls1046-post.dtsi"
-> +
-> +&fman0 {
-> +	ethernet@e0000 {
-> +		phy-handle = <&qsgmii_phy4>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@e8000 {
-> +		phy-handle = <&qsgmii_phy2>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@ea000 {
-> +		phy-handle = <&qsgmii_phy1>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@f2000 {
-> +		phy-handle = <&qsgmii_phy3>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	mdio@fd000 {
-> +		qsgmii_phy1: ethernet-phy@1c {
-> +			reg = <0x1c>;
+> +			compatible = "arm,sp805", "arm,primecell";
+> +			reg = <0x0 0xc000000 0x0 0x1000>;
+> +			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
+> +			clock-names = "apb_pclk", "wdog_clk";
 > +		};
 > +
-> +		qsgmii_phy2: ethernet-phy@1d {
-> +			reg = <0x1d>;
-> +		};
-> +
-> +		qsgmii_phy3: ethernet-phy@1e {
-> +			reg = <0x1e>;
-> +		};
-> +
-> +		qsgmii_phy4: ethernet-phy@1f {
-> +			reg = <0x1f>;
-> +		};
-> +	};
-> +};
+> +		cluster1_core1_watchdog: wdt@c010000 {
+> +			compatible = "arm,sp805", "arm,primecell";
+> +			reg = <0x0 0xc010000 0x0 0x1000>;
+> +			clocks = <&clockgen 4 15>, <&clockgen 4 15>;
+> +			clock-names = "apb_pclk", "wdog_clk";
+>  		};
+>  
+>  		sata: sata@3200000 {
 > -- 
 > 2.17.1
 > 
