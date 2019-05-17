@@ -1,65 +1,205 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Date: Fri, 17 May 2019 10:58:37 +0200
-Message-ID: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
- <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com> <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v3 09/13] [media] mtk-mipicsi: add ISR for writing the
+ data to buffer
+Date: Fri, 17 May 2019 17:05:34 +0800
+Message-ID: <1558083934.29098.6.camel@mtksdaap41>
+References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+         <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Kishon <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, gregkh <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-pci <linux-pci@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:21 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
-> -----Original Message-----
-> From: Arnd Bergmann <arnd@arndb.de>
-> On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
-> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++++++++++++
-> >  1 files changed, 52 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index b045812..50b579b 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -398,6 +398,58 @@
-> >                         status = "disabled";
-> >                 };
-> >
-> > +               pcie@3400000 {
-> > +                       compatible = "fsl,ls1028a-pcie";
-> > +                       reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-> > +                              0x80 0x00000000 0x0 0x00002000>; /* configuration space */
-> > +                       reg-names = "regs", "config";
-> > +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> > +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-> > +                       interrupt-names = "pme", "aer";
-> > +                       #address-cells = <3>;
-> > +                       #size-cells = <2>;
-> > +                       device_type = "pci";
-> > +                       dma-coherent;
-> > +                       num-lanes = <4>;
-> > +                       bus-range = <0x0 0xff>;
-> > +                       ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
-> > +                                 0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
->
-> Are you sure there is no support for 64-bit BARs or prefetchable memory?
-> [Xiaowei Bao] sorry for late reply, Thought that our Layerscape platform has not added prefetchable memory support in DTS, so this platform has not been added, I will submit a separate patch to add prefetchable memory support for all Layerscape platforms.
+Hi, Stu:
 
-Ok, thanks.
+On Tue, 2019-05-14 at 14:13 +0800, Stu Hsieh wrote:
+> This patch add ISR for writing the data to buffer
+> 
+> When mipicsi HW complete to write the data in buffer,
+> the interrupt woulb be trigger.
+> So, the ISR need to clear interrupt status for next interrupt.
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+> 
+> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> index 44c01c8d566b..af5655345754 100644
+> --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/iommu.h>
+>  #include <linux/of.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <media/v4l2-common.h>
+>  #include <media/v4l2-dev.h>
+> @@ -93,6 +94,8 @@
+>  #define CAMSV_MODULE_EN					0x10
+>  #define CAMSV_FMT_SEL					0x14
+>  #define CAMSV_INT_EN					0x18
+> +#define CAMSV_INT_STATUS				0x1C
+> +#define PASS1_DONE_STATUS				10
+>  #define CAMSV_SW_CTL					0x20
+>  #define CAMSV_CLK_EN					0x30
+>  
+> @@ -122,6 +125,8 @@ struct mtk_mipicsi_dev {
+>  	struct platform_device *pdev;
+>  	unsigned int camsv_num;
+>  	struct device *larb_pdev;
+> +	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
+> +	bool irq_status[MTK_CAMDMA_MAX_NUM];
+>  	void __iomem		*ana;
+>  	void __iomem		*seninf_ctrl;
+>  	void __iomem		*seninf;
+> @@ -132,6 +137,7 @@ struct mtk_mipicsi_dev {
+>  	spinlock_t		lock;
+>  	spinlock_t		queue_lock;
+>  	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
+> +	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
 
-> Of course, the prefetchable PCIE device can work in our boards, because the RC will
-> assign non-prefetchable memory for this device. We reserve 1G no-prefetchable
-> memory for PCIE device, it is enough for general devices.
+Useless, so remove it.
 
-Sure, many devices work just fine, this is mostly a question of supporting those
-devices that do require multiple gigabytes, or that need prefetchable memory
-semantics to get the expected performance. GPUs are the obvious example,
-but I think there are others (infiniband?).
+>  	bool streamon;
+>  	unsigned int link;
+>  	u8 link_reg_val;
+> @@ -911,9 +917,96 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
+>  		mtk_mipicsi_pm_resume, NULL)
+>  };
+>  
+> +static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
+> +{
+> +	int ch;
+> +	u32 int_reg_val;
+> +
+> +	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
+> +		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
+> +		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
+> +			return ch;
+> +	}
+> +
+> +	return -1;
+> +}
+> +
+> +static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+> +{
+> +	unsigned int i = 0U;
+> +	struct mtk_mipicsi_buf *new_cam_buf = NULL;
+> +	struct mtk_mipicsi_buf *tmp = NULL;
+> +	unsigned int index = 0U;
+> +	unsigned int next = 0U;
+> +
+> +	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
+> +		mipicsi->irq_status[i] = false;
+> +
+> +	i = 0;
+> +
+> +	/* only one buffer left */
+> +	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
+> +		return;
+> +
+> +	/*for each fb_lst 2 times to get the top 2 buffer.*/
+> +	list_for_each_entry_safe(new_cam_buf, tmp,
+> +		&(mipicsi->fb_list), queue) {
+> +		if (i == 0U) {
+> +			index = new_cam_buf->vb->index;
+> +		} else {
+> +			next = new_cam_buf->vb->index;
+> +			break;
+> +		}
+> +		++i;
+> +	}
+> +
+> +	/*
+> +	 * fb_list has one more buffer. Free the first buffer to user
+> +	 * and fill the second buffer to HW.
+> +	 */
+> +	vb2_buffer_done(mipicsi->cam_buf[index].vb,
+> +		VB2_BUF_STATE_DONE);
+> +
+> +	list_del_init(&(mipicsi->cam_buf[index].queue));
+> +}
+> +
+> +static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
+> +{
+> +
+> +	struct mtk_mipicsi_dev *mipicsi = data;
+> +	unsigned long flags = 0;
+> +	int isr_ch;
+> +	u8 irq_cnt = 0, i = 0;
+> +
+> +	spin_lock_irqsave(&mipicsi->lock, flags);
+> +
+> +	isr_ch = get_irq_channel(mipicsi);
 
-      Arnd
+I think you should pass data as camsv instance, so you need not to
+search the camsv instance, and each camsv instance could pointer to the
+same misicsi instance.
+
+> +	if (isr_ch < 0) {
+> +		spin_unlock_irqrestore(&mipicsi->lock, flags);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	/* clear interrupt */
+> +	writel(1UL << PASS1_DONE_STATUS,
+> +		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
+> +	mipicsi->irq_status[isr_ch] = true;
+> +	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
+> +		if (mipicsi->irq_status[i])
+> +			++irq_cnt;
+> +	}
+> +
+> +	if (irq_cnt == mipicsi->link)
+> +		mtk_mipicsi_irq_buf_process(mipicsi);
+
+I think mtk_mipicsi_irq_buf_process() should not be processed in irq
+handler. In irq handler, do as few things as possible.
+
+Regards,
+CK
+
+> +	spin_unlock_irqrestore(&mipicsi->lock, flags);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+>  		int index)
+>  {
+> +	int ret;
+> +	int irq;
+>  	struct clk *clk = NULL;
+>  	struct device *dev = NULL;
+>  	struct resource *res = NULL;
+> @@ -951,6 +1044,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+>  	}
+>  	mipicsi->clk[index] = clk;
+>  
+> +	irq = of_irq_get(np, 0);
+> +	if (irq <= 0) {
+> +		dev_err(dev, "get irq fail in %s node\n", np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->irq[index] = irq;
+> +
+> +	ret = devm_request_irq(dev, irq,
+> +			mtk_mipicsi_isr, 0,
+> +			mipicsi->drv_name, mipicsi);
+> +	if (ret != 0) {
+> +		dev_err(dev, "%s irq register failed\n", np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	disable_irq(mipicsi->irq[index]);
+> +	mipicsi->irq_status[index] = false;
+> +
+>  	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
+>  	if (res == NULL) {
+>  		dev_err(dev, "get seninf_mux memory failed in %s node\n",
