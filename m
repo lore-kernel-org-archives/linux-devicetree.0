@@ -1,182 +1,223 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Date: Fri, 17 May 2019 23:23:36 +0530
-Message-ID: <ba611a45-9589-8dce-58e1-d99dd463265d@nvidia.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
- <20190516133426.GC101793@google.com>
- <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
- <20190517132453.GA30700@google.com>
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 04/18] kunit: test: add kunit_stream a std::stream like
+ logger
+Date: Fri, 17 May 2019 10:58:41 -0700
+Message-ID: <20190517175841.F3396216FD@mail.kernel.org>
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+ <20190514221711.248228-5-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517132453.GA30700@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20190514221711.248228-5-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tytso-3s7WtUTddSA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/17/2019 6:54 PM, Bjorn Helgaas wrote:
-> On Fri, May 17, 2019 at 01:49:49PM +0530, Vidya Sagar wrote:
->> On 5/16/2019 7:04 PM, Bjorn Helgaas wrote:
->>> On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
->>>> On 5/13/2019 12:55 PM, Christoph Hellwig wrote:
->>>>> On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
->>>>>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
->>>>>> using these APIs be able to build as loadable modules.
->>>>>
->>>>> But this is a global setting.  If you root port is broken you need
->>>>> a per-rootport quirk instead.
->>>>>
->>>> There is nothing broken in Tegra194 root port as such, rather, this
->>>> is more of software configuration choice and we are going with
->>>> legacy interrupts than MSI interrupts (as Tegra194 doesn't support
->>>> raising PME interrupts through MSI and please note that this doesn't
->>>> mean root port is broken).
->>>
->>> I think the port *is* broken.  PCIe r4.0, sec 6.1.6, says
->>>
->>>     If the Root Port is enabled for edge-triggered interrupt signaling
->>>     using MSI or MSI-X, an interrupt message must be sent every time the
->>>     logical AND of the following conditions transitions from FALSE to
->>>     TRUE:
->>>
->>>       * The associated vector is unmasked (not applicable if MSI does
->>>         not support PVM).
->>>
->>>       * The PME Interrupt Enable bit in the Root Control register is set
->>>         to 1b.
->>>
->>>       * The PME Status bit in the Root Status register is set.
->>>
->>> The Tegra194 root port advertises MSI support, so the above should
->>> apply.
->> I had a discussion with our hardware engineers and we are of the
->> opinion that the root port is not really broken w.r.t MSI as spec
->> doesn't clearly say that if root port advertises MSI support, it
->> must generate MSI interrupts for PME. All that it says is, if MSI is
->> enabled, then MSI should be raised for PME events. Here, by
->> 'enable', we understand that as enabling at hardware level to
->> generate MSI interrupt which is not the case with Tegra194.  In
->> Tegra194, root port is enabled to generate MSI only for hot-plug
->> events and legacy interrupts are used for PME, AER.
-> 
-> Do you have "lspci -vvxxx" output for the root ports handy?
-> 
-> If there's some clue in the standard config space that would tell us
-> that MSI works for some events but not others, we could make the PCI
-> core pay attention it.  That would be the best solution because it
-> wouldn't require Tegra-specific code.
+Quoting Brendan Higgins (2019-05-14 15:16:57)
+> diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
+> new file mode 100644
+> index 0000000000000..1884f1b550888
+> --- /dev/null
+> +++ b/kunit/kunit-stream.c
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * C++ stream style string formatter and printer used in KUnit for outputting
+> + * KUnit messages.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <kunit/kunit-stream.h>
+> +#include <kunit/string-stream.h>
+> +
+> +static const char *kunit_stream_get_level(struct kunit_stream *this)
+> +{
+> +       unsigned long flags;
+> +       const char *level;
+> +
+> +       spin_lock_irqsave(&this->lock, flags);
+> +       level = this->level;
+> +       spin_unlock_irqrestore(&this->lock, flags);
+> +
+> +       return level;
 
-Here is the output of 'lspci vvxxx' for one of Tegra194's root ports.
+Please remove this whole function and inline it to the one call-site.
 
-0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1) (prog-if 00 [Normal decode])
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 50
-	Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-	I/O behind bridge: None
-	Memory behind bridge: 40000000-400fffff [size=1M]
-	Prefetchable memory behind bridge: None
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-		Address: 0000000000000000  Data: 0000
-		Masking: 00000000  Pending: 00000000
-	Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
-		DevCap:	MaxPayload 256 bytes, PhantFunc 0
-			ExtTag- RBE+
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-			MaxPayload 128 bytes, MaxReadReq 512 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #0, Speed 16GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <1us, L1 <64us
-			ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
-		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt-
-		LnkSta:	Speed 5GT/s (downgraded), Width x1 (downgraded)
-			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt+
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible+
-		RootCap: CRSVisible+
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR+, OBFF Not Supported ARIFwd-
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-		LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance De-emphasis: -6dB
-		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
-			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
-	Capabilities: [b0] MSI-X: Enable- Count=8 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00010000
-	Capabilities: [100 v2] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-			MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-			 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-	Capabilities: [148 v1] Secondary PCI Express <?>
-	Capabilities: [168 v1] Physical Layer 16.0 GT/s <?>
-	Capabilities: [190 v1] Lane Margining at the Receiver <?>
-	Capabilities: [1c0 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=60us PortTPowerOnTime=40us
-		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-			   T_CommonMode=10us LTR1.2_Threshold=0ns
-		L1SubCtl2: T_PwrOn=10us
-	Capabilities: [1d0 v1] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
-	Capabilities: [2d0 v1] Vendor Specific Information: ID=0001 Rev=1 Len=038 <?>
-	Capabilities: [308 v1] Data Link Feature <?>
-	Capabilities: [314 v1] Precision Time Measurement
-		PTMCap: Requester:+ Responder:+ Root:+
-		PTMClockGranularity: 16ns
-		PTMControl: Enabled:- RootSelected:-
-		PTMEffectiveGranularity: Unknown
-	Capabilities: [320 v1] Vendor Specific Information: ID=0004 Rev=1 Len=054 <?>
-	Kernel driver in use: pcieport
-00: de 10 d0 1a 07 01 10 00 a1 00 04 06 00 00 01 00
-10: 00 00 00 00 00 00 00 00 00 01 ff 00 f0 00 00 00
-20: 00 40 00 40 f1 ff 01 00 00 00 00 00 00 00 00 00
-30: 00 00 00 00 40 00 00 00 00 00 00 00 32 01 02 00
-40: 01 50 c3 c9 08 00 00 00 00 00 00 00 00 00 00 00
-50: 05 70 80 01 00 00 00 00 00 00 00 00 00 00 00 00
-60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-70: 10 b0 42 00 01 80 00 00 1f 28 10 00 84 4c 7b 00
-80: 40 04 12 f0 00 00 00 00 c0 03 40 00 18 00 01 00
-90: 00 00 00 00 1f 0c 01 00 00 04 00 00 1e 00 80 01
-a0: 04 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00
-b0: 11 00 07 00 02 00 00 00 02 00 01 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> +}
+> +
+> +void kunit_stream_set_level(struct kunit_stream *this, const char *level)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&this->lock, flags);
+> +       this->level = level;
+> +       spin_unlock_irqrestore(&this->lock, flags);
 
-> 
-> If this situation requires Tegra-specific code, that becomes an issue
-> if you ever want to use the part in an ACPI system because the ACPI
-> host bridge driver is generic and there isn't a place to put
-> device-specific code.
-Thanks for bringing it up. I'll make a note of this and discuss about it internally.
+I don't get the locking here. What are we protecting against? Are tests
+running in parallel using the same kunit_stream? If so, why is the level
+changeable in one call and then adding strings is done in a different
+function call? It would make sense to combine the level setting and
+string adding so that it's one atomic operation if it's truly a parallel
+operation, or remove the locking entirely.
 
-> 
-> Bjorn
-> 
+> +}
+> +
+> +void kunit_stream_add(struct kunit_stream *this, const char *fmt, ...)
+> +{
+> +       va_list args;
+> +       struct string_stream *stream = this->internal_stream;
+> +
+> +       va_start(args, fmt);
+> +
+> +       if (string_stream_vadd(stream, fmt, args) < 0)
+> +               kunit_err(this->test, "Failed to allocate fragment: %s\n", fmt);
+> +
+> +       va_end(args);
+> +}
+> +
+> +void kunit_stream_append(struct kunit_stream *this,
+> +                               struct kunit_stream *other)
+> +{
+> +       struct string_stream *other_stream = other->internal_stream;
+> +       const char *other_content;
+> +
+> +       other_content = string_stream_get_string(other_stream);
+> +
+> +       if (!other_content) {
+> +               kunit_err(this->test,
+> +                         "Failed to get string from second argument for appending.\n");
+> +               return;
+> +       }
+> +
+> +       kunit_stream_add(this, other_content);
+> +}
+> +
+> +void kunit_stream_clear(struct kunit_stream *this)
+> +{
+> +       string_stream_clear(this->internal_stream);
+> +}
+> +
+> +void kunit_stream_commit(struct kunit_stream *this)
+
+Should this be rather called kunit_stream_flush()?
+
+> +{
+> +       struct string_stream *stream = this->internal_stream;
+> +       struct string_stream_fragment *fragment;
+> +       const char *level;
+> +       char *buf;
+> +
+> +       level = kunit_stream_get_level(this);
+> +       if (!level) {
+> +               kunit_err(this->test,
+> +                         "Stream was committed without a specified log level.\n");
+
+Drop the full-stop?
+
+> +               level = KERN_ERR;
+> +               kunit_stream_set_level(this, level);
+> +       }
+> +
+> +       buf = string_stream_get_string(stream);
+> +       if (!buf) {
+> +               kunit_err(this->test,
+
+Can you grow a local variable for 'this->test'? It's used many times.
+
+Also, 'this' is not very kernel idiomatic. We usually name variables by
+their type instead of 'this' which is a keyword in other languages.
+Perhaps it could be named 'kstream'?
+
+> +                        "Could not allocate buffer, dumping stream:\n");
+> +               list_for_each_entry(fragment, &stream->fragments, node) {
+> +                       kunit_err(this->test, fragment->fragment);
+> +               }
+> +               kunit_err(this->test, "\n");
+> +               goto cleanup;
+> +       }
+> +
+> +       kunit_printk(level, this->test, buf);
+> +       kfree(buf);
+> +
+> +cleanup:
+> +       kunit_stream_clear(this);
+> +}
+> +
+> +static int kunit_stream_init(struct kunit_resource *res, void *context)
+> +{
+> +       struct kunit *test = context;
+> +       struct kunit_stream *stream;
+> +
+> +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
+
+Of course, here it's called 'stream', so maybe it should be 'kstream'
+here too.
+
+> +       if (!stream)
+> +               return -ENOMEM;
+> +
+> +       res->allocation = stream;
+> +       stream->test = test;
+> +       spin_lock_init(&stream->lock);
+> +       stream->internal_stream = new_string_stream();
+
+Can new_string_stream() be renamed to alloc_string_stream()? Sorry, I
+just see so much C++ isms in here it's hard to read from the kernel
+developer perspective.
+
+> +
+> +       if (!stream->internal_stream) {
+
+Nitpick: Please join this to the "allocation" event above instead of
+keeping it separated.
+
+> +               kfree(stream);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void kunit_stream_free(struct kunit_resource *res)
+> +{
+> +       struct kunit_stream *stream = res->allocation;
+> +
+> +       if (!string_stream_is_empty(stream->internal_stream)) {
+> +               kunit_err(stream->test,
+> +                        "End of test case reached with uncommitted stream entries.\n");
+> +               kunit_stream_commit(stream);
+> +       }
+> +
+> +       destroy_string_stream(stream->internal_stream);
+> +       kfree(stream);
+> +}
+> +
+> +struct kunit_stream *kunit_new_stream(struct kunit *test)
+> +{
+> +       struct kunit_resource *res;
+> +
+> +       res = kunit_alloc_resource(test,
+> +                                  kunit_stream_init,
+> +                                  kunit_stream_free,
+> +                                  test);
+> +
+> +       if (res)
+> +               return res->allocation;
+> +       else
+> +               return NULL;
+
+Don't have if (...) return ...; else return ..., just return instead of
+else.
