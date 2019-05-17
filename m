@@ -1,24 +1,32 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v12 3/4] dt-bindings: Add an entry for Purism SPC
-Date: Thu, 16 May 2019 21:31:13 -0500
-Message-ID: <CAL_Jsq+p_Hu5hY3XGx168iq8jo+-rD1qu8tbGfQdBXASi7H+mg@mail.gmail.com>
-References: <20190514132822.27023-1-angus@akkea.ca> <20190514132822.27023-4-angus@akkea.ca>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add vendor prefix for HopeRun
+Date: Thu, 16 May 2019 21:31:19 -0500
+Message-ID: <CAL_JsqJtS4R57t+-CQZaDNYQ7HsW+TORUhXLxWLGkf+mkg94HA@mail.gmail.com>
+References: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com> <1557938083-25423-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190514132822.27023-4-angus@akkea.ca>
+In-Reply-To: <1557938083-25423-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2019 at 8:28 AM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+On Wed, May 15, 2019 at 11:35 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
 >
-> Add an entry for Purism, SPC
+> Add "Jiangsu HopeRun Software Co., Ltd." to the list of devicetree
+> vendor prefixes as "hoperun".
 >
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Website: http://www.hoperun.com/en
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>
 > ---
+> v1->v2:
+> * No change
+>
 >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
 >  1 file changed, 1 insertion(+)
 
