@@ -1,60 +1,131 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
-Date: Fri, 17 May 2019 17:16:49 -0500
-Message-ID: <CAL_JsqJgo8NpK00ApBcdtYGW24yuqU=4EMna+r_07=dqceZyyg@mail.gmail.com>
-References: <20190517184659.18828-1-peron.clem@gmail.com>
- <20190517184659.18828-2-peron.clem@gmail.com>
- <CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com>
- <CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH V1 1/6] dt-bindings: mt8183: Add binding for DIP
+ shared memory
+Date: Fri, 17 May 2019 17:22:41 -0500
+Message-ID: <CAL_Jsq+hcgth5gT4gCKPiWtFvje8eOHFs1PxtkHJ6Raj8TOw3w@mail.gmail.com>
+References: <20190417104511.21514-1-frederic.chen@mediatek.com>
+ <20190417104511.21514-2-frederic.chen@mediatek.com>
+ <20190430011506.GA8514@bogus>
+ <1557238925.11663.21.camel@mtksdccf07>
+ <CAL_JsqKGW9WqyNgqKD0MxsqxYHKZ+VNV5A2p+neGqwmKmiODOQ@mail.gmail.com>
+ <CAAFQd5BVWjcxp9Tia9Pmgn_54bc9n5Vs1s__G7YWHiezfVVYpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Robin Murphy <robin.murphy@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAFQd5BVWjcxp9Tia9Pmgn_54bc9n5Vs1s__G7YWHiezfVVYpA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Shik Chen <shik@chromium.org>, devicetree@vger.kernel.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng@mediatek.com>, Frederic Chen <frederic.chen@mediatek.com>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou@mediatek.com>, suleiman@chromium.org, Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>, yuzhao@chromium.org, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, zwisler@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Mauro
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXkgMTcsIDIwMTkgYXQgNTowOCBQTSBDbMOpbWVudCBQw6lyb24gPHBlcm9uLmNs
-ZW1AZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIFJvYiwKPgo+IE9uIEZyaSwgMTcgTWF5IDIwMTkg
-YXQgMjI6MDcsIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+
-IE9uIEZyaSwgTWF5IDE3LCAyMDE5IGF0IDE6NDcgUE0gQ2zDqW1lbnQgUMOpcm9uIDxwZXJvbi5j
-bGVtQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+Cj4gPiA+IEFsbHdpbm5lciBINiBoYXMgYW4gQVJN
-IE1hbGktVDcyMCBNUDIgd2hpY2ggcmVxdWlyZWQgYSBidXNfY2xvY2suCj4gPiA+Cj4gPiA+IEFk
-ZCBhbiBvcHRpb25hbCBidXNfY2xvY2sgYXQgdGhlIGluaXQgb2YgdGhlIHBhbmZyb3N0IGRyaXZl
-ci4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogQ2zDqW1lbnQgUMOpcm9uIDxwZXJvbi5jbGVt
-QGdtYWlsLmNvbT4KPiA+ID4gLS0tCj4gPiA+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFu
-ZnJvc3RfZGV2aWNlLmMgfCAyNSArKysrKysrKysrKysrKysrKysrKystCj4gPiA+ICBkcml2ZXJz
-L2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmggfCAgMSArCj4gPiA+ICAyIGZpbGVz
-IGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+ID4KPiA+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuYwo+ID4gPiBpbmRleCAzYjJi
-Y2VkMWIwMTUuLjhkYTZlNjEyZDM4NCAxMDA2NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9w
-YW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuYwo+ID4gPiBAQCAtNDQsNyArNDQsOCBAQCBzdGF0aWMg
-aW50IHBhbmZyb3N0X2Nsa19pbml0KHN0cnVjdCBwYW5mcm9zdF9kZXZpY2UgKnBmZGV2KQo+ID4g
-Pgo+ID4gPiAgICAgICAgIHBmZGV2LT5jbG9jayA9IGRldm1fY2xrX2dldChwZmRldi0+ZGV2LCBO
-VUxMKTsKPiA+ID4gICAgICAgICBpZiAoSVNfRVJSKHBmZGV2LT5jbG9jaykpIHsKPiA+ID4gLSAg
-ICAgICAgICAgICAgIGRldl9lcnIocGZkZXYtPmRldiwgImdldCBjbG9jayBmYWlsZWQgJWxkXG4i
-LCBQVFJfRVJSKHBmZGV2LT5jbG9jaykpOwo+ID4gPiArICAgICAgICAgICAgICAgZGV2X2Vycihw
-ZmRldi0+ZGV2LCAiZ2V0IGNsb2NrIGZhaWxlZCAlbGRcbiIsCj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIFBUUl9FUlIocGZkZXYtPmNsb2NrKSk7Cj4gPgo+ID4gUGxlYXNlIGRyb3AgdGhp
-cyB3aGl0ZXNwYWNlIGNoYW5nZS4KPgo+IFNvcnJ5LCBJIHRob3VnaHQgaXQgd2FzIG9ubHkgYSBt
-aXN0YWtlIGhlcmUsIEkgd2lsbCBkcm9wIGl0Lgo+IFdoeSBhcmUgdGhleSBzbyBtYW55IGxpbmVz
-IG92ZXIgODAgY2hhcmFjdGVycz8KCkknZCBndWVzcyBtb3N0IGFyZSBwcmludHMgYW5kL29yIGp1
-c3Qgc2xpZ2h0bHkgb3Zlci4KCj4gSXMgdGhlcmUgYSBzcGVjaWZpYyBjb2Rpbmcgc3R5bGUgdG8g
-Zm9sbG93ID8KClllcywgYnV0IGdlbmVyYWxseSB0aGUgODAgY2hhcmFjdGVyIHRoaW5nIGlzIG1v
-cmUgYSBndWlkYW5jZS4gTm90CmhhdmluZyB1bnJlbGF0ZWQgY2hhbmdlcyBpbiBhIHNpbmdsZSBj
-b21taXQgaXMgbW9yZSBvZiBhIGhhcmQgcnVsZS4KClJvYgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Thu, May 16, 2019 at 1:12 AM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> On Wed, May 15, 2019 at 1:19 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, May 7, 2019 at 9:22 AM Frederic Chen <frederic.chen@mediatek.com> wrote:
+> > >
+> > > Dear Rob,
+> > >
+> > > I appreciate your comments.
+> > >
+> > > On Mon, 2019-04-29 at 20:15 -0500, Rob Herring wrote:
+> > > > On Wed, Apr 17, 2019 at 06:45:06PM +0800, Frederic Chen wrote:
+> > > > > This patch adds the binding for describing the shared memory
+> > > > > used to exchange configuration and tuning data between the
+> > > > > co-processor and Digital Image Processing (DIP) unit of the
+> > > > > camera ISP system on Mediatek SoCs.
+> > > > >
+> > > > > Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
+> > > > > ---
+> > > > >  .../mediatek,reserve-memory-dip_smem.txt      | 45 +++++++++++++++++++
+> > > > >  1 file changed, 45 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..64c001b476b9
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-dip_smem.txt
+> > > > > @@ -0,0 +1,45 @@
+> > > > > +Mediatek DIP Shared Memory binding
+> > > > > +
+> > > > > +This binding describes the shared memory, which serves the purpose of
+> > > > > +describing the shared memory region used to exchange data between Digital
+> > > > > +Image Processing (DIP) and co-processor in Mediatek SoCs.
+> > > > > +
+> > > > > +The co-processor doesn't have the iommu so we need to use the physical
+> > > > > +address to access the shared buffer in the firmware.
+> > > > > +
+> > > > > +The Digital Image Processing (DIP) can access memory through mt8183 IOMMU so
+> > > > > +it can use dma address to access the memory region.
+> > > > > +(See iommu/mediatek,iommu.txt for the detailed description of Mediatek IOMMU)
+> > > > > +
+> > > > > +
+> > > > > +Required properties:
+> > > > > +
+> > > > > +- compatible: must be "mediatek,reserve-memory-dip_smem"
+> > > >
+> > > > Don't use '_'.
+> > >
+> > > I got it. I will use "mediatek,reserve-memory-dip-smem" instead in next
+> > > version of the patch
+> > >
+> > > >
+> > > > > +
+> > > > > +- reg: required for static allocation (see reserved-memory.txt for
+> > > > > +  the detailed usage)
+> > > > > +
+> > > > > +- alloc-range: required for dynamic allocation. The range must
+> > > > > +  between 0x00000400 and 0x100000000 due to the co-processer's
+> > > > > +  addressing limitation
+> > > >
+> > > > Generally, you should pick either static or dynamic allocation for a
+> > > > given binding. Static if there's some address restriction or sharing,
+> > > > dynamic if not.
+> > > >
+> > > > Sounds like static in this case.
+> > > >
+> > >
+> > > DIP reserved memory has address restriction so it is the static case. I
+> > > would like to remove the dynamic allocation part and modify the
+> > > description as following:
+> > >
+> > > - reg: required for DIP. The range must be between 0x00000400 and
+> > >   0x100000000 due to the co-processor's addressing limitation.
+> > >   The size must be 26MB. Please see reserved-memory.txt for the
+> > >   detailed usage.
+> >
+> > You can use dma-ranges to define addressing translations and
+> > restrictions like this. That will in turn set the device's dma-mask to
+> > ensure allocations are done in a region that is addressable.
+> >
+> > But if you have a known, fixed size, then a carve out with
+> > reserved-memory is fine.
+>
+> There is also another aspect here. The coprocessor that we're
+> allocating the memory for is behind an MPU that must be programmed
+> completely in one go and locked for security reasons to ensure that
+> the coprocessor itself doesn't rewrite the MPU settings. That means
+> that we need to have all the allocations completed before booting that
+> coprocessor.
+>
+> To be honest, I'd adopt a completely different design here.
+>
+> We're going to have a driver for that coprocessor (SCP) and IMHO any
+> shared memory areas should belong to it. Then, any specific drivers
+> talking to the firmware running on SCP should ask the SCP driver to
+> allocate some memory from its fixed pool. WDYT?
+
+That's more than just an address restriction, so yeah, use a
+reserved-memory area.
+
+Rob
