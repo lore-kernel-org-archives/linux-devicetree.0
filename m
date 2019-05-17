@@ -1,62 +1,75 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v4] arm64: dts: ls1028a: Add USB dt nodes
-Date: Fri, 17 May 2019 13:16:24 +0800
-Message-ID: <20190517051624.4930-1-ran.wang_1@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+From: Chuanhua Han <chuanhua.han@nxp.com>
+Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Date: Fri, 17 May 2019 06:10:59 +0000
+Message-ID: <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
+References: <20190509070657.18281-1-chuanhua.han@nxp.com>
+ <20190517023728.GA15856@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190517023728.GA15856@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds USB dt nodes for LS1028A.
-
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Changes in v4:
-  - Move nodes to follow rule of unit-address in the address.
-  - Use macro to replace 'interrupts' values.
-
-Changes in v3:
-  - Add space between label and node name.
-  - Add spcae with properties and '='.
-  - Add SoC specific compatible.
-
-Changes in v2:
-  - Rename node from usb3@... to usb@... to meet DTSpec
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 8dd3501..e4ed17f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -294,6 +294,26 @@
- 			status = "disabled";
- 		};
- 
-+		usb0: usb@3100000 {
-+			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
-+			reg = <0x0 0x3100000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "host";
-+			snps,dis_rxdet_inp3_quirk;
-+			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-+		};
-+
-+		usb1: usb@3110000 {
-+			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
-+			reg = <0x0 0x3110000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "host";
-+			snps,dis_rxdet_inp3_quirk;
-+			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-+		};
-+
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1028a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>,
--- 
-1.7.1
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
+bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo11MIxN8jVIDEwOjM4DQo+IFRvOiBDaHVh
+bmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiBDYzogTGVvIExpIDxsZW95YW5nLmxp
+QG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+
+DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3
+YXRjaGRvZyBkZXZpY2Ugbm9kZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBU
+aHUsIE1heSAwOSwgMjAxOSBhdCAwMzowNjo1N1BNICswODAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6
+DQo+ID4gbHMxMDI4YSBwbGF0Zm9ybSB1c2VzIHNwODA1IHdhdGNoZG9nLCBhbmQgdXNlIDEvMTYg
+cGxhdGZvcm0gY2xvY2sgYXMNCj4gPiB0aW1lciBjbG9jaywgdGhpcyBwYXRjaCBmaXggZGV2aWNl
+IHRyZWUgbm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW5nIFlpbmctMjI0NTUgPHlp
+bmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENodWFuaHVhIEhhbiA8
+Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDE5DQo+ID4gKysrKysrKysrKysrLS0tLS0tLQ0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMx
+MDI4YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
+YS5kdHNpDQo+ID4gaW5kZXggYjA0NTgxMjQ5ZjBiLi4xNTEwYjE4NTgyNDYgMTAwNjQ0DQo+ID4g
+LS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+
+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4g
+PiBAQCAtMjg1LDEzICsyODUsMTggQEANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgI2ludGVy
+cnVwdC1jZWxscyA9IDwyPjsNCj4gPiAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiAtICAgICAg
+ICAgICAgIHdkb2cwOiB3YXRjaGRvZ0AyM2MwMDAwIHsNCj4gPiAtICAgICAgICAgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS13ZHQiLCAiZnNsLGlteDIxLXdkdCI7DQo+ID4g
+LSAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHgyM2MwMDAwIDB4MCAweDEwMDAwPjsN
+Cj4gPiAtICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU5IElSUV9U
+WVBFX0xFVkVMX0hJR0g+Ow0KPiA+IC0gICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNs
+b2NrZ2VuIDQgMT47DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgIGJpZy1lbmRpYW47DQo+ID4g
+LSAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKyAgICAgICAg
+ICAgICBjbHVzdGVyMV9jb3JlMF93YXRjaGRvZzogd2R0QGMwMDAwMDAgew0KPiANCj4gS2VlcCAn
+d2F0Y2hkb2cnIGFzIHRoZSBub2RlIG5hbWUsDQpUaGFua3MgZm9yIHlvdXIgcmVwbGF5DQpEbyB5
+b3UgbWVhbiByZXBsYWNlIHRoZSChrndkdKGvIHdpdGggoa53YXRjaGRvZ6GvPw0KYW5kIGtlZXAg
+bm9kZXMgc29ydCBpbiB1bml0LWFkZHJlc3MuDQpXaGF0IGRvZXMgdGhpcyBtZWFuPw0KPiANCj4g
+U2hhd24NCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNw
+ODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
+MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY2xv
+Y2tzID0gPCZjbG9ja2dlbiA0IDE1PiwgPCZjbG9ja2dlbiA0IDE1PjsNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ICsg
+ICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMV93
+YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gImFybSxzcDgwNSIsICJhcm0scHJpbWVjZWxsIjsNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47DQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIiwgIndkb2df
+Y2xrIjsNCj4gPiAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiAgICAgICAgICAgICAgIHNhdGE6
+IHNhdGFAMzIwMDAwMCB7DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
