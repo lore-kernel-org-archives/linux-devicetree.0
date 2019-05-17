@@ -1,27 +1,20 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [RFC/PATCH 0/5] Read-only memremap() proposal
-Date: Fri, 17 May 2019 09:47:41 -0700
-Message-ID: <20190517164746.110786-1-swboyd@chromium.org>
+Subject: [RFC/PATCH 4/5] arm64: Add support for arch_memremap_ro()
+Date: Fri, 17 May 2019 09:47:45 -0700
+Message-ID: <20190517164746.110786-5-swboyd@chromium.org>
+References: <20190517164746.110786-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190517164746.110786-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Dan Williams <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series implements a read-only version of memremap() via
-a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
-try to map the memory region as read-only if it doesn't intersect
-with an existing mapping. Otherwise, we'll try to fallback to other
-flags to try to map the memory that way.
-
-The main use case I have is to map the command-db memory region on
-Qualcomm devices with a read-only mapping. It's already a const marked
-pointer and the API returns const pointers as well, so this series makes
-sure that even stray writes can't modify the memory. To get there we
-introduce a devm version of memremap() for a reserved memory region, add
-a memremap() flag, and implement support for that flag on arm64.
+Pass in PAGE_KERNEL_RO to the underlying IO mapping mechanism to get a
+read-only mapping for the MEMREMAP_RO type of memory mappings that
+memremap() supports.
 
 Cc: Evan Green <evgreen@chromium.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -29,26 +22,23 @@ Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Andy Gross <agross@kernel.org>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ arch/arm64/include/asm/io.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Stephen Boyd (5):
-  reserved_mem: Add a devm_memremap_reserved_mem() API
-  soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
-  memremap: Add support for read-only memory mappings
-  arm64: Add support for arch_memremap_ro()
-  soc: qcom: cmd-db: Map with read-only mappings
-
- arch/arm64/include/asm/io.h     |  1 +
- drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
- drivers/soc/qcom/cmd-db.c       | 14 +++-------
- include/linux/io.h              |  1 +
- include/linux/of_reserved_mem.h |  6 +++++
- kernel/iomem.c                  | 15 +++++++++--
- 6 files changed, 70 insertions(+), 12 deletions(-)
-
-
-base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
-prerequisite-patch-id: 62119e27c0c0686e02f0cb55c296b878fb7f5e47
-prerequisite-patch-id: bda32cfc1733c245ae3f141d7c27b18e4adcc628
-prerequisite-patch-id: b8f8097161bd15e87d54dcfbfa67b9ca1abc7204
+diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
+index 8bb7210ac286..245bd371e8dc 100644
+--- a/arch/arm64/include/asm/io.h
++++ b/arch/arm64/include/asm/io.h
+@@ -185,6 +185,7 @@ extern void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size);
+ #define ioremap_nocache(addr, size)	__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
+ #define ioremap_wc(addr, size)		__ioremap((addr), (size), __pgprot(PROT_NORMAL_NC))
+ #define ioremap_wt(addr, size)		__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
++#define arch_memremap_ro(addr, size)	__ioremap((addr), (size), PAGE_KERNEL_RO)
+ #define iounmap				__iounmap
+ 
+ /*
 -- 
 Sent by a computer through tubes
