@@ -1,34 +1,144 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 1/2] dt-bindings: Add vendor prefix for HopeRun
-Date: Fri, 17 May 2019 07:34:44 +0000
-Message-ID: <TY1PR01MB1770D6A5A20BC7E592BF6DF6C00B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1557938083-25423-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqJtS4R57t+-CQZaDNYQ7HsW+TORUhXLxWLGkf+mkg94HA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Date: Fri, 17 May 2019 09:36:34 +0200
+Message-ID: <20190517073634.izdmba3yqvxviyg3@flea>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512133930.t5txssl7mou2gljt@flea>
+ <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k3cws7k6b2j4fvaj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJtS4R57t+-CQZaDNYQ7HsW+TORUhXLxWLGkf+mkg94HA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.c>
+To: Frank Lee <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com, will.deacon@arm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>, olof@lixom.net, bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>, marc.w.gonzalez@free.fr, stefan.wahren@i2se.com, enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infra>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+
-IFNlbnQ6IDE3IE1heSAyMDE5IDAzOjMxDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSBk
-dC1iaW5kaW5nczogQWRkIHZlbmRvciBwcmVmaXggZm9yIEhvcGVSdW4NCj4gDQo+IE9uIFdlZCwg
-TWF5IDE1LCAyMDE5IGF0IDExOjM1IEFNIEZhYnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2Fz
-dHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFkZCAiSmlhbmdzdSBIb3BlUnVu
-IFNvZnR3YXJlIENvLiwgTHRkLiIgdG8gdGhlIGxpc3Qgb2YgZGV2aWNldHJlZQ0KPiA+IHZlbmRv
-ciBwcmVmaXhlcyBhcyAiaG9wZXJ1biIuDQo+ID4NCj4gPiBXZWJzaXRlOiBodHRwOi8vd3d3Lmhv
-cGVydW4uY29tL2VuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZh
-YnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0
-ZXJzb24gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IHYx
-LT52MjoNCj4gPiAqIE5vIGNoYW5nZQ0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQ0KPiANCj4gSSd2ZSBjb252ZXJ0ZWQgdGhpcyBmaWxlIHRvIGpzb24t
-c2NoZW1hIGFzIG9mIHY1LjItcmMxLiBTZWUgY29tbWl0DQo+IDgxMjJkZTU0NjAyZS4gU29ycnks
-IGJ1dCB5b3Ugd2lsbCBoYXZlIHRvIHJld29yayB0aGlzIHBhdGNoLg0KDQpJIHNlZSwgd2lsbCBz
-ZW5kIGEgbmV3IHZlcnNpb24uDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiANCj4gUm9iDQo=
+
+--k3cws7k6b2j4fvaj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, May 17, 2019 at 01:51:56AM +0800, Frank Lee wrote:
+> > > +struct sun50i_thermal_chip {
+> > > +     int     sensor_num;
+> > > +     int     offset;
+> > > +     int     scale;
+> > > +     int     ft_deviation;
+> > > +     int     temp_calib_base;
+> > > +     int     temp_data_base;
+> > > +     int     (*enable)(struct tsens_device *tmdev);
+> > > +     int     (*disable)(struct tsens_device *tmdev);
+> > > +};
+> >
+> > I'm not super fond of having a lot of quirks that are not needed. If
+> > we ever need those quirks when adding support for a new SoC, then
+> > yeah, we should totally have some, but only when and if it's needed.
+> >
+> > Otherwise, the driver is more complicated for no particular reason.
+>
+> This is unavoidable because of the difference in soc.
+
+I know, but this isn't my point.
+
+My point is that at this time of the driver development, we don't know
+what is going to be needed to support all of those SoCs.
+
+Some of the parameters you added might not be needed, some parameters
+might be missing, we don't know. So let's keep it simple for now.
+
+> > > +static int tsens_probe(struct platform_device *pdev)
+> > > +{
+> > > +     struct tsens_device *tmdev;
+> > > +     struct device *dev = &pdev->dev;
+> > > +     int ret;
+> > > +
+> > > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
+> > > +     if (!tmdev)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     tmdev->dev = dev;
+> > > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
+> > > +     if (!tmdev->chip)
+> > > +             return -EINVAL;
+> > > +
+> > > +     ret = tsens_init(tmdev);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     ret = tsens_register(tmdev);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     ret = tmdev->chip->enable(tmdev);
+> > > +     if (ret)
+> > > +             return ret;
+> > >
+> > > +     platform_set_drvdata(pdev, tmdev);
+> >
+> > Your registration should be the very last thing you do. Otherwise, you
+> > have a small window where the get_temp callback can be called, but the
+> > driver will not be functional yet.
+>
+> No. Anyway, ths data qcquisition is ms level.
+
+That's kind of irrelevant. There's nothing preventing get_temp to be
+called right away.
+
+> > > +     ret = tsens_calibrate(tmdev);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     /*
+> > > +      * clkin = 24MHz
+> > > +      * T acquire = clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
+> > > +      *           = 20us
+> > > +      */
+> > > +     regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
+> > > +                  SUN50I_THS_CTRL0_T_ACQ(479));
+> > > +     /* average over 4 samples */
+> > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
+> > > +                  SUN50I_THS_FILTER_EN |
+> > > +                  SUN50I_THS_FILTER_TYPE(1));
+> > > +     /* period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
+> > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
+> > > +                  SUN50I_H6_THS_PC_TEMP_PERIOD(58));
+> > > +     /* enable sensor */
+> > > +     val = GENMASK(tmdev->chip->sensor_num - 1, 0);
+> > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
+> > > +
+> > > +     return 0;
+> > > +
+> > > +assert_reset:
+> > > +     reset_control_assert(tmdev->reset);
+> > > +
+> > > +     return ret;
+> >
+> > Can't we do that with runtime_pm?
+>
+> Saving energy doesn't make much sense compared to system security.
+
+I'm not sure what you mean by security.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--k3cws7k6b2j4fvaj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN5kggAKCRDj7w1vZxhR
+xSjEAP0ROb9O13AokItNEnWe0Lv3GDFB7l31wQEb3cxsP3Vh7QEAr1e8+X/0WwOo
+AWNOgr6T4osFIe+fzrg7yYJbVXsPogc=
+=AWAL
+-----END PGP SIGNATURE-----
+
+--k3cws7k6b2j4fvaj--
