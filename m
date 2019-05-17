@@ -1,107 +1,80 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH 1/3] PM: wakeup: Add routine to help fetch wakeup source
- object.
-Date: Fri, 17 May 2019 10:47:46 +0800
-Message-ID: <20190517024748.15534-1-ran.wang_1@nxp.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT
+ nodes
+Date: Fri, 17 May 2019 03:21:33 +0000
+Message-ID: <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
+ <20190515072747.39941-2-xiaowei.bao@nxp.com>
+ <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Len Brown <len.brown@intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Ran Wang <ran.wang_1@nxp.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Kishon <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, gregkh <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-pci <linux-pci@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Some user might want to go through all registered wakeup sources
-and doing things accordingly. For example, SoC PM driver might need to
-do HW programming to prevent powering down specific IP which wakeup
-source depending on. And is user's responsibility to identify if this
-wakeup source he is interested in.
-
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
- drivers/base/power/wakeup.c |   18 ++++++++++++++++++
- include/linux/pm_wakeup.h   |    3 +++
- 2 files changed, 21 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 5fa1898..8d75795 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -14,6 +14,7 @@
- #include <linux/suspend.h>
- #include <linux/seq_file.h>
- #include <linux/debugfs.h>
-+#include <linux/of_device.h>
- #include <linux/pm_wakeirq.h>
- #include <trace/events/power.h>
- 
-@@ -236,6 +237,22 @@ void wakeup_source_unregister(struct wakeup_source *ws)
- 	}
- }
- EXPORT_SYMBOL_GPL(wakeup_source_unregister);
-+/**
-+ * wakeup_source_get_next - Get next wakeup source from the list
-+ * @ws: Previous wakeup source object, null means caller want first one.
-+ */
-+struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
-+{
-+	struct list_head *ws_head = &wakeup_sources;
-+
-+	if (ws)
-+		return list_next_or_null_rcu(ws_head, &ws->entry,
-+				struct wakeup_source, entry);
-+	else
-+		return list_entry_rcu(ws_head->next,
-+				struct wakeup_source, entry);
-+}
-+EXPORT_SYMBOL_GPL(wakeup_source_get_next);
- 
- /**
-  * device_wakeup_attach - Attach a wakeup source object to a device object.
-@@ -252,6 +269,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
- 		return -EEXIST;
- 	}
- 	dev->power.wakeup = ws;
-+	ws->attached_dev = dev;
- 	if (dev->power.wakeirq)
- 		device_wakeup_attach_irq(dev, dev->power.wakeirq);
- 	spin_unlock_irq(&dev->power.lock);
-diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-index 4238dde..1335487 100644
---- a/include/linux/pm_wakeup.h
-+++ b/include/linux/pm_wakeup.h
-@@ -50,6 +50,7 @@
-  * @wakeup_count: Number of times the wakeup source might abort suspend.
-  * @active: Status of the wakeup source.
-  * @has_timeout: The wakeup source has been activated with a timeout.
-+ * @attached_dev: The device it attached to
-  */
- struct wakeup_source {
- 	const char 		*name;
-@@ -70,6 +71,7 @@ struct wakeup_source {
- 	unsigned long		wakeup_count;
- 	bool			active:1;
- 	bool			autosleep_enabled:1;
-+	struct device	*attached_dev;
- };
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -102,6 +104,7 @@ static inline void device_set_wakeup_path(struct device *dev)
- extern void wakeup_source_remove(struct wakeup_source *ws);
- extern struct wakeup_source *wakeup_source_register(const char *name);
- extern void wakeup_source_unregister(struct wakeup_source *ws);
-+extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
- extern int device_wakeup_enable(struct device *dev);
- extern int device_wakeup_disable(struct device *dev);
- extern void device_set_wakeup_capable(struct device *dev, bool capable);
--- 
-1.7.1
+SGkgQXJuZCwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFybmQgQmVyZ21h
+bm4gPGFybmRAYXJuZGIuZGU+IA0KU2VudDogMjAxOeW5tDXmnIgxNeaXpSAxNjowNQ0KVG86IFhp
+YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEJqb3JuIEhlbGdhYXMgPGJoZWxn
+YWFzQGdvb2dsZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBS
+dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
+Lm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgS2lzaG9uIDxraXNob25AdGkuY29t
+PjsgTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBncmVna2gg
+PGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54
+cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95Lnph
+bmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz47
+IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgU2hhd24gTGluIDxz
+aGF3bi5saW5Acm9jay1jaGlwcy5jb20+OyBsaW51eC1wY2kgPGxpbnV4LXBjaUB2Z2VyLmtlcm5l
+bC5vcmc+OyBEVE1MIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBN
+YWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4cHBjLWRldiA8bGludXhw
+cGMtZGV2QGxpc3RzLm96bGFicy5vcmc+DQpTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIIDIvM10g
+YXJtNjQ6IGR0czogbHMxMDI4YTogQWRkIFBDSWUgY29udHJvbGxlciBEVCBub2Rlcw0KDQpDYXV0
+aW9uOiBFWFQgRW1haWwNCg0KT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgOTozNiBBTSBYaWFvd2Vp
+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4gd3JvdGU6DQo+IFNpZ25lZC1vZmYtYnk6IFhpYW93
+ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAgIDUyICsrKysrKysrKysrKysrKysrKysr
+KysrKw0KPiAgMSBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygt
+KQ0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
+c2kNCj4gaW5kZXggYjA0NTgxMi4uNTBiNTc5YiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+IEBAIC0zOTgsNiArMzk4LDU4IEBA
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAgICAg
+ICAgICAgICAgICB9Ow0KPg0KPiArICAgICAgICAgICAgICAgcGNpZUAzNDAwMDAwIHsNCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIjsNCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDEw
+MDAwMCAgIC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAweDgwIDB4MDAwMDAwMDAgMHgwIDB4MDAwMDIwMDA+OyAvKiBjb25maWd1cmF0
+aW9uIHNwYWNlICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJyZWdz
+IiwgImNvbmZpZyI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lD
+X1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRSBpbnRlcnJ1cHQgKi8NCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9M
+RVZFTF9ISUdIPjsgLyogYWVyIGludGVycnVwdCAqLw0KPiArICAgICAgICAgICAgICAgICAgICAg
+ICBpbnRlcnJ1cHQtbmFtZXMgPSAicG1lIiwgImFlciI7DQo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6
+ZS1jZWxscyA9IDwyPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAi
+cGNpIjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZG1hLWNvaGVyZW50Ow0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICBudW0tbGFuZXMgPSA8ND47DQo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIGJ1cy1yYW5nZSA9IDwweDAgMHhmZj47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJh
+bmdlcyA9IDwweDgxMDAwMDAwIDB4MCAweDAwMDAwMDAwIDB4ODAgMHgwMDAxMDAwMCAweDAgMHgw
+MDAxMDAwMCAgIC8qIGRvd25zdHJlYW0gSS9PICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgMHg0MDAwMDAwMCAweDAg
+MHg0MDAwMDAwMD47IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQoNCkFyZSB5b3Ugc3Vy
+ZSB0aGVyZSBpcyBubyBzdXBwb3J0IGZvciA2NC1iaXQgQkFScyBvciBwcmVmZXRjaGFibGUgbWVt
+b3J5Pw0KW1hpYW93ZWkgQmFvXSBzb3JyeSBmb3IgbGF0ZSByZXBseSwgVGhvdWdodCB0aGF0IG91
+ciBMYXllcnNjYXBlIHBsYXRmb3JtIGhhcyBub3QgYWRkZWQgcHJlZmV0Y2hhYmxlIG1lbW9yeSBz
+dXBwb3J0IGluIERUUywgc28gdGhpcyBwbGF0Zm9ybSBoYXMgbm90IGJlZW4gYWRkZWQsIEkgd2ls
+bCBzdWJtaXQgYSBzZXBhcmF0ZSBwYXRjaCB0byBhZGQgcHJlZmV0Y2hhYmxlIG1lbW9yeSBzdXBw
+b3J0IGZvciBhbGwgTGF5ZXJzY2FwZSBwbGF0Zm9ybXMuIA0KT2YgY291cnNlLCB0aGUgcHJlZmV0
+Y2hhYmxlIFBDSUUgZGV2aWNlIGNhbiB3b3JrIGluIG91ciBib2FyZHMsIGJlY2F1c2UgdGhlIFJD
+IHdpbGwgYXNzaWduIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5IGZvciB0aGlzIGRldmljZS4gV2Ug
+cmVzZXJ2ZSAxRyBuby1wcmVmZXRjaGFibGUgbWVtb3J5IGZvciBQQ0lFIGRldmljZSwgaXQgaXMg
+ZW5vdWdoIGZvciBnZW5lcmFsIGRldmljZXMuICANCg0KSXMgdGhpcyBhIGhhcmR3YXJlIGJ1Zywg
+b3Igc29tZXRoaW5nIHRoYXQgY2FuIGJlIGZpeGVkIGluIGZpcm13YXJlPw0KW1hpYW93ZWkgQmFv
+XSB0aGlzIGlzIG5vdCBhIGhhcmR3YXJlIGJ1Zywgb3VyIEhXIHN1cHBvcnQgdGhlIDY0LWJpdCBw
+cmVmZXRjaGFibGUgbWVtb3J5Lg0KDQogICAgICAgQXJuZA0K
