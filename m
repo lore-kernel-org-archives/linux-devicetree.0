@@ -1,87 +1,36 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Date: Fri, 17 May 2019 22:01:03 +0000
-Message-ID: <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCH 1/4] of: Export of_phandle_iterator_args() to modules
+Date: Fri, 17 May 2019 17:06:48 -0500
+Message-ID: <CAL_JsqKcZaQCZuodCiaTKV1ZyQQcufL4P4jpcDcKCDwR0B+6EA@mail.gmail.com>
+References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+	<1558118857-16912-2-git-send-email-isaacm@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chuanhua Han <chuanhua.han@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ying Zhang <ying.zhang22455@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1558118857-16912-2-git-send-email-isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Isaac J. Manjarres" <isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, lmark-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2h1YW5odWEgSGFuDQo+
-IFNlbnQ6IEZyaWRheSwgTWF5IDE3LCAyMDE5IDE6MTEgQU0NCj4gVG86IFNoYXduIEd1byA8c2hh
-d25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgbWFy
-ay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+IFN1YmplY3Q6
-IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cg
-ZGV2aWNlIG5vZGUNCj4gDQo+IA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiA+IEZyb206IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiBTZW50OiAyMDE5
-xOo11MIxN8jVIDEwOjM4DQo+ID4gVG86IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5j
-b20+DQo+ID4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgbWFyay5ydXRsYW5kQGFy
-bS5jb207DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZ
-aW5nIFpoYW5nIDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBbRVhUXSBS
-ZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cgZGV2aWNlDQo+ID4g
-bm9kZQ0KPiA+DQo+ID4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4NCj4gPiBPbiBUaHUsIE1heSAw
-OSwgMjAxOSBhdCAwMzowNjo1N1BNICswODAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6DQo+ID4gPiBs
-czEwMjhhIHBsYXRmb3JtIHVzZXMgc3A4MDUgd2F0Y2hkb2csIGFuZCB1c2UgMS8xNiBwbGF0Zm9y
-bSBjbG9jayBhcw0KPiA+ID4gdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4IGRldmljZSB0cmVl
-IG5vZGUuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWluZy0yMjQ1NSA8eWlu
-Zy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmh1YSBIYW4g
-PGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpIHwgMTkNCj4gPiA+ICsrKysrKysrKysrKy0t
-LS0tLS0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlv
-bnMoLSkNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gPiBpbmRleCBiMDQ1ODEyNDlmMGIuLjE1MTBiMTg1
-ODI0NiAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
-bC1sczEwMjhhLmR0c2kNCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwMjhhLmR0c2kNCj4gPiA+IEBAIC0yODUsMTMgKzI4NSwxOCBAQA0KPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4gPiAgICAgICAg
-ICAgICAgIH07DQo+ID4gPg0KPiA+ID4gLSAgICAgICAgICAgICB3ZG9nMDogd2F0Y2hkb2dAMjNj
-MDAwMCB7DQo+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMx
-MDI4YS13ZHQiLCAiZnNsLGlteDIxLXdkdCI7DQo+ID4gPiAtICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPDB4MCAweDIzYzAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gLSAgICAgICAgICAgICAg
-ICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1OSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4g
-PiA+IC0gICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDQgMT47DQo+ID4g
-PiAtICAgICAgICAgICAgICAgICAgICAgYmlnLWVuZGlhbjsNCj4gPiA+IC0gICAgICAgICAgICAg
-ICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVy
-MV9jb3JlMF93YXRjaGRvZzogd2R0QGMwMDAwMDAgew0KPiA+DQo+ID4gS2VlcCAnd2F0Y2hkb2cn
-IGFzIHRoZSBub2RlIG5hbWUsDQo+IFRoYW5rcyBmb3IgeW91ciByZXBsYXkNCj4gRG8geW91IG1l
-YW4gcmVwbGFjZSB0aGUgoa53ZHShryB3aXRoIKGud2F0Y2hkb2ehrz8NCj4gYW5kIGtlZXAgbm9k
-ZXMgc29ydCBpbiB1bml0LWFkZHJlc3MuDQo+IFdoYXQgZG9lcyB0aGlzIG1lYW4/DQoNClRoYXQg
-bWVhbnMgb3JkZXIgdGhlIG5vZGVzIGJ5IHRoZSBhZGRyZXNzZXMgKGUuZy4gYzAwMDAwMCwgYzAx
-MDAwMCkNCg0KPiA+DQo+ID4gU2hhd24NCj4gPg0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
-IGNvbXBhdGlibGUgPSAiYXJtLHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHhjMDAwMDAwIDB4MCAweDEwMDA+Ow0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tn
-ZW4gNCAxNT47DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBi
-X3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gKyAgICAgICAgICAgICB9Ow0KPiA+ID4gKw0KPiA+
-ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0K
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNwODA1IiwgImFy
-bSxwcmltZWNlbGwiOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHhj
-MDEwMDAwIDB4MCAweDEwMDA+Ow0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9
-IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gICAg
-ICAgICAgICAgICB9Ow0KPiA+ID4NCj4gPiA+ICAgICAgICAgICAgICAgc2F0YTogc2F0YUAzMjAw
-MDAwIHsNCj4gPiA+IC0tDQo+ID4gPiAyLjE3LjENCj4gPiA+DQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, May 17, 2019 at 1:48 PM Isaac J. Manjarres
+<isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>
+> Kernel modules may want to use of_phandle_iterator_args(),
+> so export it.
+>
+> Signed-off-by: Isaac J. Manjarres <isaacm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/of/base.c | 1 +
+>  1 file changed, 1 insertion(+)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
