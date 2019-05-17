@@ -1,205 +1,153 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3 09/13] [media] mtk-mipicsi: add ISR for writing the
- data to buffer
-Date: Fri, 17 May 2019 17:05:34 +0800
-Message-ID: <1558083934.29098.6.camel@mtksdaap41>
-References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
-         <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCHv1 6/8] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
+ power states
+Date: Fri, 17 May 2019 14:37:10 +0530
+Message-ID: <CAP245DViCCMuDVF3M4GUuVm-8O4s=xFYio6Q5B4zqMxYRm875A@mail.gmail.com>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <8648ba97d49a9f731001e4b36611be9650e37f37.1557486950.git.amit.kucheria@linaro.org>
+ <CAHYWTt1ZiX4mC01PRwVHU7417NC2tHY-_Cd+fwn1EyY+shKW-g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
+In-Reply-To: <CAHYWTt1ZiX4mC01PRwVHU7417NC2tHY-_Cd+fwn1EyY+shKW-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stu:
+On Tue, May 14, 2019 at 9:42 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> On Fri, May 10, 2019 at 04:59:44PM +0530, Amit Kucheria wrote:
+> > Add device bindings for cpuidle states for cpu devices.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 28 +++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index c761269caf80..b615bcb9e351 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -95,6 +95,7 @@
+> >                       compatible = "qcom,kryo";
+> >                       reg = <0x0 0x0>;
+> >                       enable-method = "psci";
+> > +                     cpu-idle-states = <&LITTLE_CPU_PD>;
+> >                       next-level-cache = <&L2_0>;
+> >                       L2_0: l2-cache {
+> >                             compatible = "cache";
+> > @@ -107,6 +108,7 @@
+> >                       compatible = "qcom,kryo";
+> >                       reg = <0x0 0x1>;
+> >                       enable-method = "psci";
+> > +                     cpu-idle-states = <&LITTLE_CPU_PD>;
+> >                       next-level-cache = <&L2_0>;
+> >               };
+> >
+> > @@ -115,6 +117,7 @@
+> >                       compatible = "qcom,kryo";
+> >                       reg = <0x0 0x100>;
+> >                       enable-method = "psci";
+> > +                     cpu-idle-states = <&BIG_CPU_PD>;
+> >                       next-level-cache = <&L2_1>;
+> >                       L2_1: l2-cache {
+> >                             compatible = "cache";
+> > @@ -127,6 +130,7 @@
+> >                       compatible = "qcom,kryo";
+> >                       reg = <0x0 0x101>;
+> >                       enable-method = "psci";
+> > +                     cpu-idle-states = <&BIG_CPU_PD>;
+> >                       next-level-cache = <&L2_1>;
+> >               };
+> >
+> > @@ -151,6 +155,30 @@
+> >                               };
+> >                       };
+> >               };
+> > +
+> > +             idle-states {
+> > +                     entry-method="psci";
+>
+> Please add a space before and after "=".
+>
+> > +
+> > +                     LITTLE_CPU_PD: little-power-down {
+>
+> In Documentation/devicetree/bindings/arm/idle-states.txt
+> they seem to use labels such as CPU_SLEEP_0_0 for the first
+> cluster and CPU_SLEEP_1_0 for the second cluster.
 
-On Tue, 2019-05-14 at 14:13 +0800, Stu Hsieh wrote:
-> This patch add ISR for writing the data to buffer
-> 
-> When mipicsi HW complete to write the data in buffer,
-> the interrupt woulb be trigger.
-> So, the ISR need to clear interrupt status for next interrupt.
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> ---
->  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
-> 
-> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> index 44c01c8d566b..af5655345754 100644
-> --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> @@ -36,6 +36,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/iommu.h>
->  #include <linux/of.h>
-> +#include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <media/v4l2-common.h>
->  #include <media/v4l2-dev.h>
-> @@ -93,6 +94,8 @@
->  #define CAMSV_MODULE_EN					0x10
->  #define CAMSV_FMT_SEL					0x14
->  #define CAMSV_INT_EN					0x18
-> +#define CAMSV_INT_STATUS				0x1C
-> +#define PASS1_DONE_STATUS				10
->  #define CAMSV_SW_CTL					0x20
->  #define CAMSV_CLK_EN					0x30
->  
-> @@ -122,6 +125,8 @@ struct mtk_mipicsi_dev {
->  	struct platform_device *pdev;
->  	unsigned int camsv_num;
->  	struct device *larb_pdev;
-> +	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
-> +	bool irq_status[MTK_CAMDMA_MAX_NUM];
->  	void __iomem		*ana;
->  	void __iomem		*seninf_ctrl;
->  	void __iomem		*seninf;
-> @@ -132,6 +137,7 @@ struct mtk_mipicsi_dev {
->  	spinlock_t		lock;
->  	spinlock_t		queue_lock;
->  	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
-> +	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
+Will change this to LITTLE_CPU_SLEEP_0. I feel there is value in
+keeping BIG and LITTLE in the name explicitly to improve readability
+when correlating the idle state parameters to each CPU.
 
-Useless, so remove it.
+>
+> Please also consider my comment in patch 4/8.
+>
+> > +                             compatible = "arm,idle-state";
+> > +                             idle-state-name = "standalone-power-collapse";
+> > +                             arm,psci-suspend-param = <0x00000004>;
+> > +                             entry-latency-us = <40>;
+> > +                             exit-latency-us = <40>;
+>
+> Where did you get the latency values from?
+> Downstream seems to use qcom,latency-us = <80> for "fpc".
+>
 
->  	bool streamon;
->  	unsigned int link;
->  	u8 link_reg_val;
-> @@ -911,9 +917,96 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
->  		mtk_mipicsi_pm_resume, NULL)
->  };
->  
-> +static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
-> +{
-> +	int ch;
-> +	u32 int_reg_val;
-> +
-> +	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
-> +		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
-> +		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
-> +			return ch;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
-> +static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
-> +{
-> +	unsigned int i = 0U;
-> +	struct mtk_mipicsi_buf *new_cam_buf = NULL;
-> +	struct mtk_mipicsi_buf *tmp = NULL;
-> +	unsigned int index = 0U;
-> +	unsigned int next = 0U;
-> +
-> +	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
-> +		mipicsi->irq_status[i] = false;
-> +
-> +	i = 0;
-> +
-> +	/* only one buffer left */
-> +	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-> +		return;
-> +
-> +	/*for each fb_lst 2 times to get the top 2 buffer.*/
-> +	list_for_each_entry_safe(new_cam_buf, tmp,
-> +		&(mipicsi->fb_list), queue) {
-> +		if (i == 0U) {
-> +			index = new_cam_buf->vb->index;
-> +		} else {
-> +			next = new_cam_buf->vb->index;
-> +			break;
-> +		}
-> +		++i;
-> +	}
-> +
-> +	/*
-> +	 * fb_list has one more buffer. Free the first buffer to user
-> +	 * and fill the second buffer to HW.
-> +	 */
-> +	vb2_buffer_done(mipicsi->cam_buf[index].vb,
-> +		VB2_BUF_STATE_DONE);
-> +
-> +	list_del_init(&(mipicsi->cam_buf[index].queue));
-> +}
-> +
-> +static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-> +{
-> +
-> +	struct mtk_mipicsi_dev *mipicsi = data;
-> +	unsigned long flags = 0;
-> +	int isr_ch;
-> +	u8 irq_cnt = 0, i = 0;
-> +
-> +	spin_lock_irqsave(&mipicsi->lock, flags);
-> +
-> +	isr_ch = get_irq_channel(mipicsi);
+Will fix.
 
-I think you should pass data as camsv instance, so you need not to
-search the camsv instance, and each camsv instance could pointer to the
-same misicsi instance.
+> (Sure downstream also defines "fpc-def", but that seems to require
+> additional psci code/calls that doesn't exist upstream.)
+>
+> > +                             min-residency-us = <300>;
+> > +                             local-timer-stop;
+>
+> Are you sure that the local timer is stopped?
+> the equivalent DT property to "local-timer-stop" in downstream is
+> "qcom,use-broadcast-timer", and this property seems to be missing
+> from this node:
+> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8996-pm.dtsi?h=msm-4.4#n158
+>
+> You could try to remove "local-timer-stop", if it is really needed,
+> then the system should hang without this property.
 
-> +	if (isr_ch < 0) {
-> +		spin_unlock_irqrestore(&mipicsi->lock, flags);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	/* clear interrupt */
-> +	writel(1UL << PASS1_DONE_STATUS,
-> +		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
-> +	mipicsi->irq_status[isr_ch] = true;
-> +	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
-> +		if (mipicsi->irq_status[i])
-> +			++irq_cnt;
-> +	}
-> +
-> +	if (irq_cnt == mipicsi->link)
-> +		mtk_mipicsi_irq_buf_process(mipicsi);
+Will review and test again.
 
-I think mtk_mipicsi_irq_buf_process() should not be processed in irq
-handler. In irq handler, do as few things as possible.
-
-Regards,
-CK
-
-> +	spin_unlock_irqrestore(&mipicsi->lock, flags);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
->  		int index)
->  {
-> +	int ret;
-> +	int irq;
->  	struct clk *clk = NULL;
->  	struct device *dev = NULL;
->  	struct resource *res = NULL;
-> @@ -951,6 +1044,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
->  	}
->  	mipicsi->clk[index] = clk;
->  
-> +	irq = of_irq_get(np, 0);
-> +	if (irq <= 0) {
-> +		dev_err(dev, "get irq fail in %s node\n", np->full_name);
-> +		return -ENODEV;
-> +	}
-> +	mipicsi->irq[index] = irq;
-> +
-> +	ret = devm_request_irq(dev, irq,
-> +			mtk_mipicsi_isr, 0,
-> +			mipicsi->drv_name, mipicsi);
-> +	if (ret != 0) {
-> +		dev_err(dev, "%s irq register failed\n", np->full_name);
-> +		return -ENODEV;
-> +	}
-> +	disable_irq(mipicsi->irq[index]);
-> +	mipicsi->irq_status[index] = false;
-> +
->  	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
->  	if (res == NULL) {
->  		dev_err(dev, "get seninf_mux memory failed in %s node\n",
+>
+> > +                     };
+> > +
+> > +                     BIG_CPU_PD: big-power-down {
+> > +                             compatible = "arm,idle-state";
+> > +                             idle-state-name = "standalone-power-collapse";
+> > +                             arm,psci-suspend-param = <0x00000004>;
+> > +                             entry-latency-us = <40>;
+> > +                             exit-latency-us = <40>;
+>
+> Where did you get the latency values from?
+> Downstream seems to use qcom,latency-us = <80> for "fpc".
+>
+> (Sure downstream also defines "fpc-def", but that seems to require
+> additional psci code/calls that doesn't exist upstream.)
+>
+> > +                             min-residency-us = <300>;
+> > +                             local-timer-stop;
+>
+> Are you sure that the local timer is stopped?
+> the equivalent DT property to "local-timer-stop" in downstream is
+> "qcom,use-broadcast-timer", and this property seems to be missing
+> from this node:
+> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8996-pm.dtsi?h=msm-4.4#n247
+>
+> You could try to remove "local-timer-stop", if it is really needed,
+> then the system should hang without this property.
+>
+>
+> > +                     };
+> > +             };
+> >       };
+> >
+> >       thermal-zones {
+> > --
+> > 2.17.1
+> >
