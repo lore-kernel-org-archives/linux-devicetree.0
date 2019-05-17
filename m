@@ -1,77 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3] dt-bindings: arm: Convert Alpine board/soc bindings to json-schema
-Date: Fri, 17 May 2019 10:35:10 -0500
-Message-ID: <20190517153510.13647-1-robh@kernel.org>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [RFC 0/5] cpufreq support for the Raspberry Pi
+Date: Fri, 17 May 2019 17:35:02 +0200
+Message-ID: <20190517153508.18314-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net, sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert Alpine SoC bindings to DT schema format using json-schema.
+Hi all,
+as some of you may recall I've been spending some time looking into
+providing 'cpufreq' support for the Raspberry Pi platform[1]. I think
+I'm close to something workable, so I'd love for you to comment on it.
 
-Cc: Tsahee Zidenberg <tsahee@annapurnalabs.com>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+There has been some design changes since the last version. Namely the
+fact that I now make sure *only* the CPU frequency is updated. The
+firmware API we use has two modes, with or without turbo. Enabling turbo
+implies not only scaling the CPU clock but also the VPU and other
+peripheral related clocks.  This is problematic as some of them are not
+prepared for this kind frequency changes. I spent some time adapting the
+peripheral drivers, but the result was disappointing as they poorly
+support live frequency changes (which most other chips accept, think for
+instance I2C and clock stretching) but also turned out hard to integrate
+into the kernel. As we were planning to use 'clk_notifiers' which turns
+out not to be such a good idea as it's prone to deadlocks and not
+recommended by the clock maintainers[2]. It's also worth mentioning that
+the foundation kernel doesn't support VPU frequency scaling either.
+
+With this in mind, and as suggested by clock maintainers[2], I've
+decided to integrate the firmware clock interface into the bcm2835 clock
+driver. This, in my opinion, provides the least friction with the
+firmware and lets us write very simple and portable higher level
+drivers. As I did with the 'cpufreq' driver which simply queries the max
+and min frequencies available, which are configurable in the firmware,
+to then trigger the generic 'cpufreq-dt'.
+
+In the future we could further integrate other firmware dependent clocks
+into the main driver. For instance to be able to scale the VPU clock,
+which should be operated through a 'devfreq' driver.
+
+This was tested on a RPi3b+ and if the series is well received I'll test
+it further on all platforms I own.
+
+That's all,
+kind regards,
+Nicolas
+
+[1] https://lists.infradead.org/pipermail/linux-rpi-kernel/2019-April/008634.html
+[2] https://www.spinics.net/lists/linux-clk/msg36937.html
+
 ---
- .../devicetree/bindings/arm/al,alpine.txt     | 16 --------------
- .../devicetree/bindings/arm/al,alpine.yaml    | 21 +++++++++++++++++++
- 2 files changed, 21 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.txt
- create mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/al,alpine.txt b/Documentation/devicetree/bindings/arm/al,alpine.txt
-deleted file mode 100644
-index d00debe2e86f..000000000000
---- a/Documentation/devicetree/bindings/arm/al,alpine.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--Annapurna Labs Alpine Platform Device Tree Bindings
-----------------------------------------------------------------
--
--Boards in the Alpine family shall have the following properties:
--
--* Required root node properties:
--compatible: must contain "al,alpine"
--
--* Example:
--
--/ {
--	model = "Annapurna Labs Alpine Dev Board";
--	compatible = "al,alpine";
--
--	...
--}
-diff --git a/Documentation/devicetree/bindings/arm/al,alpine.yaml b/Documentation/devicetree/bindings/arm/al,alpine.yaml
-new file mode 100644
-index 000000000000..a70dff277e05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/al,alpine.yaml
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/al,alpine.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Annapurna Labs Alpine Platform Device Tree Bindings
-+
-+maintainers:
-+  - Tsahee Zidenberg <tsahee@annapurnalabs.com>
-+  - Antoine Tenart <antoine.tenart@bootlin.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: al,alpine
-+  model:
-+    items:
-+      - const: "Annapurna Labs Alpine Dev Board"
-+
-+...
+Nicolas Saenz Julienne (5):
+  clk: bcm2835: set CLK_GET_RATE_NOCACHE on CPU clocks
+  clk: bcm2835: set pllb_arm divisor as readonly
+  clk: bcm2835: use firmware interface to update pllb
+  dts: bcm2837: add per-cpu clock devices
+  cpufreq: add driver for Raspbery Pi
+
+ arch/arm/boot/dts/bcm2837.dtsi        |   8 +
+ drivers/clk/bcm/clk-bcm2835.c         | 284 ++++++++++++++++++++++++--
+ drivers/cpufreq/Kconfig.arm           |   8 +
+ drivers/cpufreq/Makefile              |   1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c |  79 +++++++
+ 5 files changed, 362 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+
 -- 
-2.20.1
+2.21.0
