@@ -1,65 +1,55 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
-Date: Fri, 17 May 2019 20:46:54 +0200
-Message-ID: <20190517184659.18828-2-peron.clem@gmail.com>
+Subject: [PATCH v5 4/6] dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+Date: Fri, 17 May 2019 20:46:57 +0200
+Message-ID: <20190517184659.18828-5-peron.clem@gmail.com>
 References: <20190517184659.18828-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517184659.18828-1-peron.clem@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Neil Armstrong <narmstrong@baylibre.com>, Steven Price <steven.price@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-QWxsd2lubmVyIEg2IGhhcyBhbiBBUk0gTWFsaS1UNzIwIE1QMiB3aGljaCByZXF1aXJlZCBhIGJ1
-c19jbG9jay4KCkFkZCBhbiBvcHRpb25hbCBidXNfY2xvY2sgYXQgdGhlIGluaXQgb2YgdGhlIHBh
-bmZyb3N0IGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IENsw6ltZW50IFDDqXJvbiA8cGVyb24uY2xl
-bUBnbWFpbC5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2Rldmlj
-ZS5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0
-L3BhbmZyb3N0X2RldmljZS5oIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25z
-KCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0
-L3BhbmZyb3N0X2RldmljZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2Rl
-dmljZS5jCmluZGV4IDNiMmJjZWQxYjAxNS4uOGRhNmU2MTJkMzg0IDEwMDY0NAotLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5jCkBAIC00NCw3ICs0NCw4IEBAIHN0YXRpYyBp
-bnQgcGFuZnJvc3RfY2xrX2luaXQoc3RydWN0IHBhbmZyb3N0X2RldmljZSAqcGZkZXYpCiAKIAlw
-ZmRldi0+Y2xvY2sgPSBkZXZtX2Nsa19nZXQocGZkZXYtPmRldiwgTlVMTCk7CiAJaWYgKElTX0VS
-UihwZmRldi0+Y2xvY2spKSB7Ci0JCWRldl9lcnIocGZkZXYtPmRldiwgImdldCBjbG9jayBmYWls
-ZWQgJWxkXG4iLCBQVFJfRVJSKHBmZGV2LT5jbG9jaykpOworCQlkZXZfZXJyKHBmZGV2LT5kZXYs
-ICJnZXQgY2xvY2sgZmFpbGVkICVsZFxuIiwKKwkJCVBUUl9FUlIocGZkZXYtPmNsb2NrKSk7CiAJ
-CXJldHVybiBQVFJfRVJSKHBmZGV2LT5jbG9jayk7CiAJfQogCkBAIC01NSwxMSArNTYsMzMgQEAg
-c3RhdGljIGludCBwYW5mcm9zdF9jbGtfaW5pdChzdHJ1Y3QgcGFuZnJvc3RfZGV2aWNlICpwZmRl
-dikKIAlpZiAoZXJyKQogCQlyZXR1cm4gZXJyOwogCisJcGZkZXYtPmJ1c19jbG9jayA9IGRldm1f
-Y2xrX2dldF9vcHRpb25hbChwZmRldi0+ZGV2LCAiYnVzIik7CisJaWYgKElTX0VSUihwZmRldi0+
-YnVzX2Nsb2NrKSkgeworCQlkZXZfZXJyKHBmZGV2LT5kZXYsICJnZXQgYnVzX2Nsb2NrIGZhaWxl
-ZCAlbGRcbiIsCisJCQlQVFJfRVJSKHBmZGV2LT5idXNfY2xvY2spKTsKKwkJcmV0dXJuIFBUUl9F
-UlIocGZkZXYtPmJ1c19jbG9jayk7CisJfQorCisJaWYgKHBmZGV2LT5idXNfY2xvY2spIHsKKwkJ
-cmF0ZSA9IGNsa19nZXRfcmF0ZShwZmRldi0+YnVzX2Nsb2NrKTsKKwkJZGV2X2luZm8ocGZkZXYt
-PmRldiwgImJ1c19jbG9jayByYXRlID0gJWx1XG4iLCByYXRlKTsKKworCQllcnIgPSBjbGtfcHJl
-cGFyZV9lbmFibGUocGZkZXYtPmJ1c19jbG9jayk7CisJCWlmIChlcnIpCisJCQlnb3RvIGRpc2Fi
-bGVfY2xvY2s7CisJfQorCiAJcmV0dXJuIDA7CisKK2Rpc2FibGVfY2xvY2s6CisJY2xrX2Rpc2Fi
-bGVfdW5wcmVwYXJlKHBmZGV2LT5jbG9jayk7CisKKwlyZXR1cm4gZXJyOwogfQogCiBzdGF0aWMg
-dm9pZCBwYW5mcm9zdF9jbGtfZmluaShzdHJ1Y3QgcGFuZnJvc3RfZGV2aWNlICpwZmRldikKIHsK
-KwljbGtfZGlzYWJsZV91bnByZXBhcmUocGZkZXYtPmJ1c19jbG9jayk7CiAJY2xrX2Rpc2FibGVf
-dW5wcmVwYXJlKHBmZGV2LT5jbG9jayk7CiB9CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuaCBiL2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9w
-YW5mcm9zdF9kZXZpY2UuaAppbmRleCA1NmY0NTJkZmI0OTAuLjgwNzRmMjIxMDM0YiAxMDA2NDQK
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5oCisrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9kZXZpY2UuaApAQCAtNjYsNiArNjYsNyBA
-QCBzdHJ1Y3QgcGFuZnJvc3RfZGV2aWNlIHsKIAogCXZvaWQgX19pb21lbSAqaW9tZW07CiAJc3Ry
-dWN0IGNsayAqY2xvY2s7CisJc3RydWN0IGNsayAqYnVzX2Nsb2NrOwogCXN0cnVjdCByZWd1bGF0
-b3IgKnJlZ3VsYXRvcjsKIAlzdHJ1Y3QgcmVzZXRfY29udHJvbCAqcnN0YzsKIAotLSAKMi4xNy4x
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+This add the H6 mali compatible in the dt-bindings to later support
+specific implementation.
+
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 2e8bbce35695..4bf17e1cf555 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -15,6 +15,7 @@ Required properties:
+     + "arm,mali-t860"
+     + "arm,mali-t880"
+   * which must be preceded by one of the following vendor specifics:
++    + "allwinner,sun50i-h6-mali"
+     + "amlogic,meson-gxm-mali"
+     + "rockchip,rk3288-mali"
+     + "rockchip,rk3399-mali"
+@@ -49,9 +50,15 @@ Vendor-specific bindings
+ ------------------------
+ 
+ The Mali GPU is integrated very differently from one SoC to
+-another. In order to accomodate those differences, you have the option
++another. In order to accommodate those differences, you have the option
+ to specify one more vendor-specific compatible, among:
+ 
++- "allwinner,sun50i-h6-mali"
++  Required properties:
++  - clocks : phandles to core and bus clocks
++  - clock-names : must contain "core" and "bus"
++  - resets: phandle to GPU reset line
++
+ - "amlogic,meson-gxm-mali"
+   Required properties:
+   - resets : Should contain phandles of :
+-- 
+2.17.1
