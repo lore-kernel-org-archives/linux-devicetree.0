@@ -1,40 +1,78 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: Introduce the NXP LS1021A-TSN board
-Date: Fri, 17 May 2019 21:26:02 +0800
-Message-ID: <20190517132600.GD15856@dragon>
-References: <20190506010800.2433-1-olteanv@gmail.com>
- <20190517010450.GT15856@dragon>
- <CA+h21hos=kHRGq089=3Js2pPnW71BBv02rqiMqPcZFe_bzBUHA@mail.gmail.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [v3 PATCH] dt-binding: usb: add usb-role-switch property
+Date: Fri, 17 May 2019 16:27:21 +0300
+Message-ID: <20190517132721.GB1887@kuha.fi.intel.com>
+References: <c3596e996c9ab39c6b9bc14b93309244c4a55014.1557306151.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CA+h21hos=kHRGq089=3Js2pPnW71BBv02rqiMqPcZFe_bzBUHA@mail.gmail.com>
+In-Reply-To: <c3596e996c9ab39c6b9bc14b93309244c4a55014.1557306151.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev <netdev@vger.kernel.org>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Yu Chen <chenyu56@huawei.com>, Min Guo <min.guo@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 03:05:59PM +0300, Vladimir Oltean wrote:
-> Hi Shawn,
+On Wed, May 08, 2019 at 05:17:44PM +0800, Chunfeng Yun wrote:
+> Add a property usb-role-switch to tell the driver that use
+> USB Role Switch framework to handle the role switch,
+> it's useful when the driver has already supported other ways,
+> such as extcon framework etc.
 > 
-> Thanks for the feedback!
-> Do you want a v2 now (will you merge it for 5.2) or should I send it
-> after the merge window closes?
+> Cc: Biju Das <biju.das@bp.renesas.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-It's a 5.3 material.
+Who is meant to pick this? Can you include this in your series where
+you introduce that USB Type-B GPIO connector driver?
 
-Shawn
+FWIW:
 
-> The "nxp,sja1105t" compatible is not undocumented but belongs to
-> drivers/net/dsa/sja1105/ which was recently merged into mainline via
-> the netdev tree (hence it's not in your tree yet).
-> The situation with "ad7924" is more funny. The compatible is indeed
-> undocumented but belongs to drivers/iio/adc/ad7923.c. I don't know why
-> it lacks an entry in Documentation/devicetree/bindings/iio/adc/.
-> However I mistook the chip and it's not a Analog Devices AD7924 ADC
-> with a SPI interface, but a TI ADS7924 ADC with an I2C interface. I
-> can remove it from v2 since it does not have a Linux driver as far as
-> I can tell.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+> v3:
+>     add property type, modify description suggested by Heikki
 > 
-> -Vladimir
+> v2:
+>     describe it in terms of h/w functionality suggested by Rob
+> 
+> v1:
+>     the property is discussed in:
+>     [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
+>     https://patchwork.kernel.org/patch/10852497/
+> 
+>     Mediatek and Hisilicon also try to use it:
+>     [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
+>     https://patchwork.kernel.org/patch/10918385/
+>     [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
+>     https://patchwork.kernel.org/patch/10918367/
+> 
+>     [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
+>     https://patchwork.kernel.org/patch/10909981/
+> ---
+>  Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> index 0a74ab8dfdc2..cf5a1ad456e6 100644
+> --- a/Documentation/devicetree/bindings/usb/generic.txt
+> +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> @@ -30,6 +30,10 @@ Optional properties:
+>  			optional for OTG device.
+>   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+>  			optional for OTG device.
+> + - usb-role-switch: boolean, indicates that the device is capable of assigning
+> +			the USB data role (USB host or USB device) for a given
+> +			USB connector, such as Type-C, Type-B(micro).
+> +			see connector/usb-connector.txt.
+>  
+>  This is an attribute to a USB controller such as:
+>  
+> -- 
+> 2.21.0
+
+thanks,
+
+-- 
+heikki
