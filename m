@@ -1,85 +1,55 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v6 08/12] soc: mediatek: cmdq: define the instruction
- struct
-Date: Fri, 17 May 2019 11:32:39 +0800
-Message-ID: <1558063959.14401.18.camel@mtksdaap41>
-References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
-         <20190516090224.59070-9-bibby.hsieh@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH V2 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
+Date: Fri, 17 May 2019 11:39:45 +0800
+Message-ID: <20190517033946.30763-2-ran.wang_1@nxp.com>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516090224.59070-9-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190517033946.30763-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.ch
+To: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+By default, QorIQ SoC's RCPM register block is Big Endian. But
+there are some exceptions, such as LS1088A and LS2088A, are Little
+Endian. So add this optional property to help identify them.
 
-On Thu, 2019-05-16 at 17:02 +0800, Bibby Hsieh wrote:
-> Define a instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 113 +++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
->  include/linux/soc/mediatek/mtk-cmdq.h    |  14 +--
->  3 files changed, 84 insertions(+), 45 deletions(-)
-> 
+Actually LS2021A and other Layerscapes won't totally follow Chassis
+2.1, so separate them from powerpc SoC.
 
-[snip]
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+Change in v2:
+	- None.
 
->  
->  /**
->   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
->   * @pkt:	the CMDQ packet
-> - * @value:	the specified target register value
->   * @subsys:	the CMDQ sub system code
->   * @offset:	register offset from CMDQ sub system
-> + * @value:	the specified target register value
->   * @mask:	the specified target register mask
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
-> -			u32 subsys, u32 offset, u32 mask);
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
-> +			u32 value, u32 mask);
+ Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
 
-You have do two things for this interface: one is reordering the
-parameter, another one is changing type of subsys from u32 to u8.
-
-Define the instruction struct is not necessary to change the order and
-type. I would like you to separate these two things to another patches.
-So the patch sequence may be:
-
-1. Reorder parameter of cmdq_pkt_write_mask()
-2. Change subsys type to u8
-3. define the instruction struct
-
-Regards,
-CK
-
->  
->  /**
->   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
->  
->  /**
->   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
-> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
->  
->  /**
->   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+index e284e4e..058154c 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+@@ -20,6 +20,7 @@ Required properites:
+ 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
+ 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
+ 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
++	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
+ 
+ All references to "1.0" and "2.0" refer to the QorIQ chassis version to
+ which the chip complies.
+@@ -27,7 +28,12 @@ Chassis Version		Example Chips
+ ---------------		-------------------------------
+ 1.0				p4080, p5020, p5040, p2041, p3041
+ 2.0				t4240, b4860, b4420
+-2.1				t1040, ls1021
++2.1				t1040,
++2.1+			ls1021a, ls1012a, ls1043a, ls1046a
++
++Optional properties:
++ - little-endian : RCPM register block is Little Endian. Without it RCPM
++   will be Big Endian (default case).
+ 
+ Example:
+ The RCPM node for T4240:
+-- 
+1.7.1
