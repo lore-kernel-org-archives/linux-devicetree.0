@@ -1,58 +1,75 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Fri, 17 May 2019 10:14:18 +0200
-Message-ID: <20190517101353.3e86d696@blackhole.lan>
-References: <20190514155911.6C0AC68B05@newverein.lst.de>
-        <20190514160241.9EAC768C7B@newverein.lst.de>
-        <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
-        <20190515093141.41016b11@blackhole.lan>
-        <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
-        <20190516154820.GA10431@lst.de>
-        <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
-        <20190516164859.GB10431@lst.de>
-        <20190517072738.deohh5fly4jxms7k@flea>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Date: Fri, 17 May 2019 13:49:49 +0530
+Message-ID: <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-3-vidyas@nvidia.com>
+ <20190513072539.GA27708@infradead.org>
+ <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
+ <20190516133426.GC101793@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517072738.deohh5fly4jxms7k@flea>
+In-Reply-To: <20190516133426.GC101793@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 May 2019 09:27:38 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-
-> On Thu, May 16, 2019 at 06:48:59PM +0200, Torsten Duwe wrote:
-> > On Thu, May 16, 2019 at 09:06:41AM -0700, Vasily Khoruzhick wrote:
-> > >
-> > > Driver can talk to the panel over AUX channel only after t1+t3,
-> > > t1 is up to 10ms, t3 is up to 200ms.
-> >
-> > This is after power-on. The boot loader needs to deal with this.
+On 5/16/2019 7:04 PM, Bjorn Helgaas wrote:
+> On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
+>> On 5/13/2019 12:55 PM, Christoph Hellwig wrote:
+>>> On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
+>>>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+>>>> using these APIs be able to build as loadable modules.
+>>>
+>>> But this is a global setting.  If you root port is broken you need
+>>> a per-rootport quirk instead.
+>>>
+>> There is nothing broken in Tegra194 root port as such, rather, this
+>> is more of software configuration choice and we are going with
+>> legacy interrupts than MSI interrupts (as Tegra194 doesn't support
+>> raising PME interrupts through MSI and please note that this doesn't
+>> mean root port is broken).
 > 
-> The bootloader can deal with it, but the kernel will also need to. The
-> bootloader might not be doing this because it's not been updated, the
-> regulator might have been disabled between the time the kernel was
-> started and the time the bridge driver probes, etc.
+> I think the port *is* broken.  PCIe r4.0, sec 6.1.6, says
+> 
+>    If the Root Port is enabled for edge-triggered interrupt signaling
+>    using MSI or MSI-X, an interrupt message must be sent every time the
+>    logical AND of the following conditions transitions from FALSE to
+>    TRUE:
+> 
+>      * The associated vector is unmasked (not applicable if MSI does
+>        not support PVM).
+> 
+>      * The PME Interrupt Enable bit in the Root Control register is set
+>        to 1b.
+> 
+>      * The PME Status bit in the Root Status register is set.
+> 
+> The Tegra194 root port advertises MSI support, so the above should
+> apply.
+I had a discussion with our hardware engineers and we are of the opinion
+that the root port is not really broken w.r.t MSI as spec doesn't clearly
+say that if root port advertises MSI support, it must generate MSI interrupts
+for PME. All that it says is, if MSI is enabled, then MSI should be raised
+for PME events. Here, by 'enable', we understand that as enabling at
+hardware level to generate MSI interrupt which is not the case with Tegra194.
+In Tegra194, root port is enabled to generate MSI only for hot-plug events and
+legacy interrupts are used for PME, AER. Having said that I'm fine to add a
+quick based on Vendor-ID and Device-IDs of root port in Tegra194 to set
+pdev->no_msi to '1'.
 
-No, you cannot practically switch off this voltage. It supports _all_
-the devices I mentioned. In fact, the PMIC needs to enable it initially,
-and then it takes some time before the SoC can access the MMC and read
-the SPL from it, just because of exactly these 3.3V. Then the boot
-loader starts, and later the eDP bridge gets initialised.
-
-In *theory*, albeit a very daring one, I could imagine a very deep
-sleep mode that can only be ended by pressing the power button, which
-should still work without DCDC1. Only then, a description of the panel
-would be required. But I probably missed something and even this does
-not work.
-
-So for all current practical purposes, we can assume the Teres-I panel
-to be powered properly and providing valid EDID; nothing to worry about
-in software.
-
-HTH,
-	Torsten
+> 
+>> Since Tegra194 has only Synopsys DesignWare core based host
+>> controllers and not any other hosts, I think it is fine to call this
+>> API in driver.
+> 
+> It's fine to add a per-device quirk to set pdev->no_msi or something
+> similar.
+> 
+> Bjorn
+> 
