@@ -1,38 +1,55 @@
-From: Kamal Dasu <kdasu.kdev@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional
-Date: Fri, 17 May 2019 14:29:54 -0400
-Message-ID: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-cheza: add initial cheza dt
+Date: Fri, 17 May 2019 11:34:59 -0700
+Message-ID: <CAD=FV=XWz9iigg-GWrKZdsYePhH7==d3hZ9kZDXKeEuwLXOhaw@mail.gmail.com>
+References: <20190517015305.23194-1-robdclark@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190517015305.23194-1-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Rob Clark <robdclark@chromium.org>, Sibi Sankar <sibis@codeaurora.org>, Evan Green <evgreen@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Abhinav Kumar <abhinavk@codeaurora.org>, Brian Norris <briannorris@chromium.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-nand-ecc-strength and nand-ecc-step-size can be made optional as
-brcmanand driver can support using the nand_base driver detected
-values.
+Hi,
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, May 16, 2019 at 6:53 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> This is essentialy a squash of a bunch of history of cheza dt updates
+> from chromium kernel, some of which were themselves squashes of history
+> from older chromium kernels.
+>
+> I don't claim any credit other than wanting to more easily boot upstream
+> kernel on cheza to have an easier way to test upstream driver work ;-)
+>
+> I've added below in Cc tags all the original actual authors (apologies
+> if I missed any).
+>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Sibi Sankar <sibis@codeaurora.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Matthias Kaehlcke <mka@chromium.org>
+> Cc: Abhinav Kumar <abhinavk@codeaurora.org>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Cc: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+> Cc: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+> Updated from review comments and squashed.  I left out the the patch
+> related to deleting gpu_mem/zap_shader nodes as the corresponding
+> patch that adds them in sdm845.dtsi hasn't landed yet, but once it
+> has we will need to revisit that patch for cheza.
+>
+>  arch/arm64/boot/dts/qcom/Makefile            |    3 +
+>  arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dts |  238 ++++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dts |  238 ++++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dts |  174 +++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi   | 1326 ++++++++++++++++++
+>  5 files changed, 1979 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index bcda1df..29feaba 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -101,10 +101,10 @@ Required properties:
-                               number (e.g., 0, 1, 2, etc.)
- - #address-cells            : see partition.txt
- - #size-cells               : see partition.txt
--- nand-ecc-strength         : see nand.txt
--- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
- 
- Optional properties:
-+- nand-ecc-strength         : see nand.txt
-+- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
- - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
-                               chip-select. See nand.txt
- - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
--- 
-1.9.0.138.g2de3478
+Looks sane to me.  Thanks!
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
