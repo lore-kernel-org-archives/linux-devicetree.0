@@ -1,64 +1,58 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
-Date: Sat, 18 May 2019 16:45:10 +0200
-Message-ID: <CAJiuCcfjEqS8BdYdwD22W4hhD27TTs7DPsiEErF_Xt+5Gdkewg@mail.gmail.com>
-References: <20190517184659.18828-1-peron.clem@gmail.com>
-	<20190517184659.18828-2-peron.clem@gmail.com>
-	<CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com>
-	<CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
-	<CAL_JsqJgo8NpK00ApBcdtYGW24yuqU=4EMna+r_07=dqceZyyg@mail.gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
+Date: Sat, 18 May 2019 17:07:11 +0200
+Message-ID: <36237813.UWQAqNRFN9@jernej-laptop>
+References: <20190516161039.18534-1-jernej.skrabec@siol.net> <20190517073048.y6mzgbhhryfmuckl@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAL_JsqJgo8NpK00ApBcdtYGW24yuqU=4EMna+r_07=dqceZyyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Steven Price <steven.price-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190517073048.y6mzgbhhryfmuckl@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBTYXQsIDE4IE1heSAyMDE5IGF0IDAwOjE3LCBSb2IgSGVycmluZyA8cm9iaCtkdEBr
-ZXJuZWwub3JnPiB3cm90ZToKPgo+IE9uIEZyaSwgTWF5IDE3LCAyMDE5IGF0IDU6MDggUE0gQ2zD
-qW1lbnQgUMOpcm9uIDxwZXJvbi5jbGVtQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPgo+ID4gSGkgUm9i
-LAo+ID4KPiA+IE9uIEZyaSwgMTcgTWF5IDIwMTkgYXQgMjI6MDcsIFJvYiBIZXJyaW5nIDxyb2Jo
-K2R0QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBPbiBGcmksIE1heSAxNywgMjAxOSBh
-dCAxOjQ3IFBNIENsw6ltZW50IFDDqXJvbiA8cGVyb24uY2xlbUBnbWFpbC5jb20+IHdyb3RlOgo+
-ID4gPiA+Cj4gPiA+ID4gQWxsd2lubmVyIEg2IGhhcyBhbiBBUk0gTWFsaS1UNzIwIE1QMiB3aGlj
-aCByZXF1aXJlZCBhIGJ1c19jbG9jay4KPiA+ID4gPgo+ID4gPiA+IEFkZCBhbiBvcHRpb25hbCBi
-dXNfY2xvY2sgYXQgdGhlIGluaXQgb2YgdGhlIHBhbmZyb3N0IGRyaXZlci4KPiA+ID4gPgo+ID4g
-PiA+IFNpZ25lZC1vZmYtYnk6IENsw6ltZW50IFDDqXJvbiA8cGVyb24uY2xlbUBnbWFpbC5jb20+
-Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9k
-ZXZpY2UuYyB8IDI1ICsrKysrKysrKysrKysrKysrKysrKy0KPiA+ID4gPiAgZHJpdmVycy9ncHUv
-ZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2RldmljZS5oIHwgIDEgKwo+ID4gPiA+ICAyIGZpbGVzIGNo
-YW5nZWQsIDI1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+ID4gPgo+ID4gPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmMKPiA+ID4gPiBpbmRleCAz
-YjJiY2VkMWIwMTUuLjhkYTZlNjEyZDM4NCAxMDA2NDQKPiA+ID4gPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmMKPiA+ID4gPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfZGV2aWNlLmMKPiA+ID4gPiBAQCAtNDQsNyArNDQsOCBA
-QCBzdGF0aWMgaW50IHBhbmZyb3N0X2Nsa19pbml0KHN0cnVjdCBwYW5mcm9zdF9kZXZpY2UgKnBm
-ZGV2KQo+ID4gPiA+Cj4gPiA+ID4gICAgICAgICBwZmRldi0+Y2xvY2sgPSBkZXZtX2Nsa19nZXQo
-cGZkZXYtPmRldiwgTlVMTCk7Cj4gPiA+ID4gICAgICAgICBpZiAoSVNfRVJSKHBmZGV2LT5jbG9j
-aykpIHsKPiA+ID4gPiAtICAgICAgICAgICAgICAgZGV2X2VycihwZmRldi0+ZGV2LCAiZ2V0IGNs
-b2NrIGZhaWxlZCAlbGRcbiIsIFBUUl9FUlIocGZkZXYtPmNsb2NrKSk7Cj4gPiA+ID4gKyAgICAg
-ICAgICAgICAgIGRldl9lcnIocGZkZXYtPmRldiwgImdldCBjbG9jayBmYWlsZWQgJWxkXG4iLAo+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIFBUUl9FUlIocGZkZXYtPmNsb2NrKSk7Cj4g
-PiA+Cj4gPiA+IFBsZWFzZSBkcm9wIHRoaXMgd2hpdGVzcGFjZSBjaGFuZ2UuCj4gPgo+ID4gU29y
-cnksIEkgdGhvdWdodCBpdCB3YXMgb25seSBhIG1pc3Rha2UgaGVyZSwgSSB3aWxsIGRyb3AgaXQu
-Cj4gPiBXaHkgYXJlIHRoZXkgc28gbWFueSBsaW5lcyBvdmVyIDgwIGNoYXJhY3RlcnM/Cj4KPiBJ
-J2QgZ3Vlc3MgbW9zdCBhcmUgcHJpbnRzIGFuZC9vciBqdXN0IHNsaWdodGx5IG92ZXIuCj4KPiA+
-IElzIHRoZXJlIGEgc3BlY2lmaWMgY29kaW5nIHN0eWxlIHRvIGZvbGxvdyA/Cj4KPiBZZXMsIGJ1
-dCBnZW5lcmFsbHkgdGhlIDgwIGNoYXJhY3RlciB0aGluZyBpcyBtb3JlIGEgZ3VpZGFuY2UuIE5v
-dAo+IGhhdmluZyB1bnJlbGF0ZWQgY2hhbmdlcyBpbiBhIHNpbmdsZSBjb21taXQgaXMgbW9yZSBv
-ZiBhIGhhcmQgcnVsZS4KCk9rLCB0aGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0aW9uLgoKQ2zDqW1l
-bnQKCj4KPiBSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0
-dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
+Dne petek, 17. maj 2019 ob 09:30:48 CEST je Maxime Ripard napisal(a):
+> Hi,
+> 
+> On Thu, May 16, 2019 at 06:10:39PM +0200, Jernej Skrabec wrote:
+> > mmc1 node where wifi module is connected doesn't have properly defined
+> > power supplies so wifi module is never powered up. Fix that by
+> > specifying additional power supplies.
+> > 
+> > Additionally, this STB may have either Realtek or Broadcom based wifi
+> > module. One based on Broadcom module also needs external clock to work
+> > properly. Fix that by adding clock property to wifi_pwrseq node.
+> > 
+> > Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+> > b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts index
+> > 6277f13f3eb3..6a0ac85b4616 100644
+> > --- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+> > +++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+> > @@ -89,7 +89,10 @@
+> > 
+> >  	wifi_pwrseq: wifi_pwrseq {
+> >  	
+> >  		compatible = "mmc-pwrseq-simple";
+> > 
+> > +		pinctrl-names = "default";
+> 
+> pinctrl-names only make sense with another pinctrl-[0-255]
+> property. Did you forgot something here?
+
+No, I just took BananaPi M2+ as a example, which has pinctrl-names property 
+too and no "pinctrl-*". But digging through history of this DT, it seems that 
+this is just leftover which somebody forgot to remove.
+
+I'll send v2.
+
+Best regards,
+Jernej
