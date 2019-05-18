@@ -1,62 +1,39 @@
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v2] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date: Sat, 18 May 2019 17:40:14 +0200
-Message-ID: <20190518154014.28998-1-jernej.skrabec@siol.net>
+From: stefano.manni@gmail.com
+Subject: Re: [PATCH 1/2] Input: atmel_mxt_ts - add wakeup support
+Date: Sat, 18 May 2019 18:55:10 +0200
+Message-ID: <6f94097bb9192424f92e055e8af8062b2ae3e19f.camel@gmail.com>
+References: <20190517211741.8906-1-stefano.manni@gmail.com>
+         <20190517213016.GA93581@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@bootlin.com, wens@csie.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190517213016.GA93581@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: nick@shmanahar.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-mmc1 node where wifi module is connected doesn't have properly defined
-power supplies so wifi module is never powered up. Fix that by
-specifying additional power supplies.
+Hi Dmitry,
 
-Additionally, this STB may have either Realtek or Broadcom based wifi
-module. One based on Broadcom module also needs external clock to work
-properly. Fix that by adding clock property to wifi_pwrseq node.
+On Fri, 2019-05-17 at 14:30 -0700, Dmitry Torokhov wrote:
+> Hi Sefano,
+> 
+> On Fri, May 17, 2019 at 11:17:40PM +0200, Stefano Manni wrote:
+> > Add wakeup support to the maxtouch driver.
+> > The device can wake up the system from suspend,
+> > mark the IRQ as wakeup capable, so that device
+> > irq is not disabled during system suspend.
+> 
+> This should already be handled by I2C core, see lines after "if
+> (client->flags & I2C_CLIENT_WAKE)" in drivers/i2c/i2c-core-base.c.
+> 
+> Unless there is dedicated wakeup interrupt we configure main
+> interrupt
+> as wake source.
+> 
 
-Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
-Changes from v1:
-- removed unneeded pinctrl-names node
+what's about the other drivers (e.g. ili210x.c) doing like this?
+Shall they be purged?
 
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 6277f13f3eb3..ac9e26b1d906 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -90,6 +90,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
- 
- 	sound_spdif {
-@@ -155,6 +157,8 @@
- 
- &mmc1 {
- 	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
--- 
-2.21.0
+Thank you.
