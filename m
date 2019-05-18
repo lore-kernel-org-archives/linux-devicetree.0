@@ -1,142 +1,180 @@
-From: Lucas Oshiro <lucasseikioshiro@gmail.com>
-Subject: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML bindings
-Date: Sat, 18 May 2019 18:55:42 -0300
-Message-ID: <20190518215542.25140-1-lucasseikioshiro@gmail.com>
+From: Renato Lui Geh <renatogeh@gmail.com>
+Subject: [PATCH] dt-bindings: iio: adc: add adi,ad7780.yaml binding
+Date: Sat, 18 May 2019 19:41:12 -0300
+Message-ID: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Popa <stefan.popa@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Convert the old device tree documentation to yaml format.
+This patch adds a YAML binding for the Analog Devices AD7780/1 and
+AD7170/1 analog-to-digital converters.
 
-Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
 ---
+ .../bindings/iio/adc/adi,ad7780.txt           | 48 -----------
+ .../bindings/iio/adc/adi,ad7780.yaml          | 85 +++++++++++++++++++
+ 2 files changed, 85 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
 
-Hello,
-We've added Stefan Popa as maintainer of the yaml documentation of this driver
-because we found through git that he was the author of the older documentation.
-
- .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
- .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
- 2 files changed, 66 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+deleted file mode 100644
+index 440e52555349..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-* Analog Devices AD7170/AD7171/AD7780/AD7781
+-
+-Data sheets:
+-
+-- AD7170:
+-	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+-- AD7171:
+-	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+-- AD7780:
+-	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+-- AD7781:
+-	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+-
+-Required properties:
+-
+-- compatible: should be one of
+-	* "adi,ad7170"
+-	* "adi,ad7171"
+-	* "adi,ad7780"
+-	* "adi,ad7781"
+-- reg: spi chip select number for the device
+-- vref-supply: the regulator supply for the ADC reference voltage
+-
+-Optional properties:
+-
+-- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
+-		    specified, it will be asserted during driver probe. As the
+-		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
+-- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
+-		    the ad778x chips. If specified, it will be asserted during
+-		    driver probe. As the line is active low, it should be marked
+-		    GPIO_ACTIVE_LOW.
+-- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
+-		    for the ad778x chips. If specified, it will be asserted
+-		    during driver probe. As the line is active low, it should be
+-		    marked GPIO_ACTIVE_LOW.
+-
+-Example:
+-
+-adc@0 {
+-	compatible =  "adi,ad7780";
+-	reg =	      <0>;
+-	vref-supply = <&vdd_supply>
+-
+-	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
+-	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
+-	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
 new file mode 100644
-index 000000000000..a6e2893d2ab1
+index 000000000000..931bc4f8ec04
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-@@ -0,0 +1,66 @@
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+@@ -0,0 +1,85 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
++title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
 +
 +maintainers:
-+  - Stefan Popa <stefan.popa@analog.com>
++  - Michael Hennerich <michael.hennerich@analog.com>
 +
 +description: |
-+  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
-+  both I2C & SPI interfaces
-+    https://www.analog.com/en/products/adxl372.html
++  The ad7780 is a sigma-delta analog to digital converter. This driver provides
++  reading voltage values and status bits from both the ad778x and ad717x series.
++  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
++  ad778x.
++
++  Specifications on the converters can be found at:
++    AD7170:
++      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
++    AD7171:
++      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
++    AD7780:
++      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
++    AD7781:
++      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
 +
 +properties:
 +  compatible:
 +    enum:
-+      - adi,adxl372
++      - adi,ad7170
++      - adi,ad7171
++      - adi,ad7780
++      - adi,ad7781
 +
 +  reg:
-+    description: the I2C address or SPI chip select number for the device
++    description:
++      Chip select number for the device
 +    maxItems: 1
 +
-+  interrupts:
++  vref-supply:
 +    description:
-+      interrupt mapping for IRQ as documented in
-+      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++      The regulator supply for the ADC reference voltage
++    maxItems: 1
++
++  powerdown-gpios:
++    description:
++      Must be the device tree identifier of the PDRST pin. If
++      specified, it will be asserted during driver probe. As the
++      line is active high, it should be marked GPIO_ACTIVE_HIGH.
++    maxItems: 1
++
++  adi,gain-gpios:
++    description:
++      Must be the device tree identifier of the GAIN pin. Only for
++      the ad778x chips. If specified, it will be asserted during
++      driver probe. As the line is active low, it should be marked
++      GPIO_ACTIVE_LOW.
++    maxItems: 1
++
++  adi,filter-gpios:
++    description:
++      Must be the device tree identifier of the FILTER pin. Only
++      for the ad778x chips. If specified, it will be asserted
++      during driver probe. As the line is active low, it should be
++      marked GPIO_ACTIVE_LOW.
 +    maxItems: 1
 +
 +required:
 +  - compatible
 +  - reg
++  - vref-supply
 +
 +examples:
 +  - |
-+        #include <dt-bindings/gpio/gpio.h>
-+        #include <dt-bindings/interrupt-controller/irq.h>
-+        i2c0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
++    #include <dt-bindings/gpio/gpio.h>
++    adc@0 {
++      compatible =  "adi,ad7780";
++      reg = <0>;
++      vref-supply = <&vdd_supply>;
 +
-+                /* Example for a I2C device node */
-+                accelerometer@53 {
-+                        compatible = "adi,adxl372";
-+                        reg = <0x53>;
-+                        interrupt-parent = <&gpio>;
-+                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+                };
-+        };
-+  - |
-+        #include <dt-bindings/gpio/gpio.h>
-+        #include <dt-bindings/interrupt-controller/irq.h>
-+        spi0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                accelerometer@0 {
-+                        compatible = "adi,adxl372";
-+                        reg = <0>;
-+                        spi-max-frequency = <1000000>;
-+                        interrupt-parent = <&gpio>;
-+                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+                };
-+        };
-diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-deleted file mode 100644
-index a289964756a7..000000000000
---- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
--
--http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
--
--Required properties:
-- - compatible : should be "adi,adxl372"
-- - reg: the I2C address or SPI chip select number for the device
--
--Required properties for SPI bus usage:
-- - spi-max-frequency: Max SPI frequency to use
--
--Optional properties:
-- - interrupts: interrupt mapping for IRQ as documented in
--   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--
--Example for a I2C device node:
--
--	accelerometer@53 {
--		compatible = "adi,adxl372";
--		reg = <0x53>;
--		interrupt-parent = <&gpio>;
--		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
--	};
--
--Example for a SPI device node:
--
--	accelerometer@0 {
--		compatible = "adi,adxl372";
--		reg = <0>;
--		spi-max-frequency = <1000000>;
--		interrupt-parent = <&gpio>;
--		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
--	};
++      powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
++      adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
++      adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
++    };
 -- 
 2.21.0
