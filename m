@@ -1,142 +1,185 @@
-Return-Path: <SRS0=3h+n=T7=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774a1: Add operating points
-Date: Fri, 31 May 2019 16:58:53 +0100
-Message-Id: <1559318333-27306-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=Y1ev=TS=jic23.retrosnub.co.uk=jic23@kernel.org>
+Date: Sat, 18 May 2019 11:27:07 +0100
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH][V3] dt-bindings: iio: accel: adxl345: switch to YAML
+ bindings
+Message-ID: <20190518112707.565525a6@archlinux>
+In-Reply-To: <20190517154441.27080-1-ardeleanalex@gmail.com>
+References: <20190516133609.10975-1-alexandru.ardelean@analog.com>
+	<20190517154441.27080-1-ardeleanalex@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Alexandru Ardelean <ardeleanalex@gmail.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/G2M (a.k.a. r8a774a1) comes with two clusters of
-processors, similarly to the r8a7796.
-The first cluster is made of A57s, the second cluster is
-made of A53s.
+On Fri, 17 May 2019 18:44:41 +0300
+Alexandru Ardelean <ardeleanalex@gmail.com> wrote:
 
-The operating points for the cluster with the A57s are:
+> From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> 
+> The ADX345 supports both I2C & SPI bindings.
+> This change switches from old text bindings, to YAML bindings, and also
+> tries to make use of the recent multiple-examples support.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
- Frequency | Voltage
------------|---------
- 500 MHz   | 0.82V
- 1.0 GHz   | 0.82V
- 1.5 GHz   | 0.82V
+Thanks,
 
-The operating points for the cluster with the A53s are:
+Jonathan
 
- Frequency | Voltage
------------|---------
- 800 MHz   | 0.82V
- 1.0 GHz   | 0.82V
- 1.2 GHz   | 0.82V
-
-This patch adds the definitions for the operating points
-to the SoC specific DT.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 48 +++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index c2d99f5..4b1332f 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -56,6 +56,48 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	cluster0_opp: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <820000>;
-+			clock-latency-ns = <300000>;
-+		};
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <820000>;
-+			clock-latency-ns = <300000>;
-+		};
-+		opp-1500000000 {
-+			opp-hz = /bits/ 64 <1500000000>;
-+			opp-microvolt = <820000>;
-+			clock-latency-ns = <300000>;
-+		};
-+	};
-+
-+	cluster1_opp: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = <820000>;
-+			clock-latency-ns = <300000>;
-+		};
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <820000>;
-+			clock-latency-ns = <300000>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <820000>;
-+			clock-latency-ns = <300000>;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -68,6 +110,7 @@
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		a57_1: cpu@1 {
-@@ -78,6 +121,7 @@
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z>;
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		a53_0: cpu@100 {
-@@ -88,6 +132,7 @@
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		a53_1: cpu@101 {
-@@ -98,6 +143,7 @@
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		a53_2: cpu@102 {
-@@ -108,6 +154,7 @@
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		a53_3: cpu@103 {
-@@ -118,6 +165,7 @@
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 			clocks = <&cpg CPG_CORE R8A774A1_CLK_Z2>;
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		L2_CA57: cache-controller-0 {
--- 
-2.7.4
+> ---
+> 
+> Changelog v1 -> v2:
+> * dropped interrupt-parent from DT, as suggested by Rob
+> 
+> Changelog v2 -> v3:
+> * add Rob's Reviewed-by tag
+> * add YAML file to MAINTAINERS - main reason for this V3
+> 
+>  .../bindings/iio/accel/adi,adxl345.yaml       | 72 +++++++++++++++++++
+>  .../devicetree/bindings/iio/accel/adxl345.txt | 39 ----------
+>  MAINTAINERS                                   |  1 +
+>  3 files changed, 73 insertions(+), 39 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> new file mode 100644
+> index 000000000000..7ba167e2e1ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl345.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +
+> +description: |
+> +  Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers that supports
+> +  both I2C & SPI interfaces.
+> +    http://www.analog.com/en/products/mems/accelerometers/adxl345.html
+> +    http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adxl345
+> +      - adi,adxl375
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-cpha: true
+> +
+> +  spi-cpol: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* Example for a I2C device node */
+> +        accelerometer@2a {
+> +            compatible = "adi,adxl345";
+> +            reg = <0x53>;
+> +            interrupt-parent = <&gpio0>;
+> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* Example for a SPI device node */
+> +        accelerometer@0 {
+> +            compatible = "adi,adxl345";
+> +            reg = <0>;
+> +            spi-max-frequency = <5000000>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            interrupt-parent = <&gpio0>;
+> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/iio/accel/adxl345.txt b/Documentation/devicetree/bindings/iio/accel/adxl345.txt
+> deleted file mode 100644
+> index f9525f6e3d43..000000000000
+> --- a/Documentation/devicetree/bindings/iio/accel/adxl345.txt
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers
+> -
+> -http://www.analog.com/en/products/mems/accelerometers/adxl345.html
+> -http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
+> -
+> -Required properties:
+> - - compatible : should be one of
+> -		"adi,adxl345"
+> -		"adi,adxl375"
+> - - reg : the I2C address or SPI chip select number of the sensor
+> -
+> -Required properties for SPI bus usage:
+> - - spi-max-frequency : set maximum clock frequency, must be 5000000
+> - - spi-cpol and spi-cpha : must be defined for adxl345 to enable SPI mode 3
+> -
+> -Optional properties:
+> - - interrupts: interrupt mapping for IRQ as documented in
+> -   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> -
+> -Example for a I2C device node:
+> -
+> -	accelerometer@2a {
+> -		compatible = "adi,adxl345";
+> -		reg = <0x53>;
+> -		interrupt-parent = <&gpio1>;
+> -		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> -	};
+> -
+> -Example for a SPI device node:
+> -
+> -	accelerometer@0 {
+> -		compatible = "adi,adxl345";
+> -		reg = <0>;
+> -		spi-max-frequency = <5000000>;
+> -		spi-cpol;
+> -		spi-cpha;
+> -		interrupt-parent = <&gpio1>;
+> -		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> -	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 43a9cebb2c19..54c8e14fae98 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -551,6 +551,7 @@ W:	http://wiki.analog.com/ADXL345
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/input/misc/adxl34x.c
+> +F:	Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+>  
+>  ADXL372 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
