@@ -1,39 +1,40 @@
-From: stefano.manni@gmail.com
-Subject: Re: [PATCH 1/2] Input: atmel_mxt_ts - add wakeup support
-Date: Sat, 18 May 2019 18:55:10 +0200
-Message-ID: <6f94097bb9192424f92e055e8af8062b2ae3e19f.camel@gmail.com>
-References: <20190517211741.8906-1-stefano.manni@gmail.com>
-         <20190517213016.GA93581@dtor-ws>
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Date: Sat, 18 May 2019 19:09:30 +0200
+Message-ID: <20190518170929.24789-1-luca@z3ntu.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517213016.GA93581@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: nick@shmanahar.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luca Weiss <luca@z3ntu.xyz>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner
+        sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Add a node describing the KEYADC on the A64.
 
-On Fri, 2019-05-17 at 14:30 -0700, Dmitry Torokhov wrote:
-> Hi Sefano,
-> 
-> On Fri, May 17, 2019 at 11:17:40PM +0200, Stefano Manni wrote:
-> > Add wakeup support to the maxtouch driver.
-> > The device can wake up the system from suspend,
-> > mark the IRQ as wakeup capable, so that device
-> > irq is not disabled during system suspend.
-> 
-> This should already be handled by I2C core, see lines after "if
-> (client->flags & I2C_CLIENT_WAKE)" in drivers/i2c/i2c-core-base.c.
-> 
-> Unless there is dedicated wakeup interrupt we configure main
-> interrupt
-> as wake source.
-> 
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-what's about the other drivers (e.g. ili210x.c) doing like this?
-Shall they be purged?
-
-Thank you.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 7734f70e1057..dc1bf8c1afb5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -704,6 +704,13 @@
+ 			status = "disabled";
+ 		};
+ 
++		lradc: lradc@1c21800 {
++			compatible = "allwinner,sun4i-a10-lradc-keys";
++			reg = <0x01c21800 0x100>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		i2s0: i2s@1c22000 {
+ 			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun50i-a64-i2s",
+-- 
+2.21.0
