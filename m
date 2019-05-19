@@ -1,11 +1,13 @@
 From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH v4 1/3] amr64: map FDT as RW for early_init_dt_scan()
-Date: Mon, 20 May 2019 00:04:44 +0800
-Message-ID: <20190519160446.320-1-hsinyi@chromium.org>
+Subject: [PATCH v4 2/3] fdt: add support for rng-seed
+Date: Mon, 20 May 2019 00:04:45 +0800
+Message-ID: <20190519160446.320-2-hsinyi@chromium.org>
+References: <20190519160446.320-1-hsinyi@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190519160446.320-1-hsinyi@chromium.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,75 +21,80 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Stephen Boyd <swboyd@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Hsin-Yi Wang <hsinyi@chromium.org>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently in arm64, FDT is mapped to RO before it's passed to
-early_init_dt_scan(). However, there might be some code that needs
-to modify FDT during init. Map FDT to RW until unflatten DT.
+Introducing a chosen node, rng-seed, which is an entropy that can be
+passed to kernel called very early to increase initial device
+randomness. Bootloader should provide this entropy and the value is
+read from /chosen/rng-seed in DT.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
 change log v2->v4:
 * v3 abandoned
-* add an arg pgprot_t to fixmap_remap_fdt()
+* fix doc error
 ---
- arch/arm64/include/asm/mmu.h | 2 +-
- arch/arm64/kernel/setup.c    | 5 ++++-
- arch/arm64/mm/mmu.c          | 4 ++--
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/chosen.txt | 14 ++++++++++++++
+ drivers/of/fdt.c                             | 10 ++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-index 67ef25d037ea..4499cb00ece7 100644
---- a/arch/arm64/include/asm/mmu.h
-+++ b/arch/arm64/include/asm/mmu.h
-@@ -137,7 +137,7 @@ extern void init_mem_pgprot(void);
- extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
- 			       unsigned long virt, phys_addr_t size,
- 			       pgprot_t prot, bool page_mappings_only);
--extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
-+extern void *fixmap_remap_fdt(phys_addr_t dt_phys, pgprot_t prot);
- extern void mark_linear_text_alias_ro(void);
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 45e79172a646..678e81bc4383 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
+ the Linux EFI stub (which will populate the property itself, using
+ EFI_RNG_PROTOCOL).
  
- #define INIT_MM_CONTEXT(name)	\
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 413d566405d1..064df3de1d14 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -181,7 +181,7 @@ static void __init smp_build_mpidr_hash(void)
- 
- static void __init setup_machine_fdt(phys_addr_t dt_phys)
- {
--	void *dt_virt = fixmap_remap_fdt(dt_phys);
-+	void *dt_virt = fixmap_remap_fdt(dt_phys, PAGE_KERNEL);
- 	const char *name;
- 
- 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
-@@ -320,6 +320,9 @@ void __init setup_arch(char **cmdline_p)
- 	/* Parse the ACPI tables for possible boot-time configuration */
- 	acpi_boot_table_init();
- 
-+	/* remap fdt to RO */
-+	fixmap_remap_fdt(__fdt_pointer, PAGE_KERNEL_RO);
++rng-seed
++-----------
 +
- 	if (acpi_disabled)
- 		unflatten_device_tree();
++This property serves as an entropy to add device randomness. It is parsed
++as a byte array, e.g.
++
++/ {
++	chosen {
++		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
++	};
++};
++
++This random value should be provided by bootloader.
++
+ stdout-path
+ -----------
  
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index a170c6369a68..29648e86f7e5 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -940,12 +940,12 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
- 	return dt_virt;
- }
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index de893c9616a1..7f3d72921b23 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -24,6 +24,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/random.h>
  
--void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
-+void *__init fixmap_remap_fdt(phys_addr_t dt_phys, pgprot_t prot)
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -1079,6 +1080,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
  {
- 	void *dt_virt;
- 	int size;
+ 	int l;
+ 	const char *p;
++	const void *rng_seed;
  
--	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
-+	dt_virt = __fixmap_remap_fdt(dt_phys, &size, prot);
- 	if (!dt_virt)
- 		return NULL;
+ 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
  
+@@ -1113,6 +1115,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	pr_debug("Command line is: %s\n", (char*)data);
+ 
++	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
++	if (rng_seed && l > 0) {
++		add_device_randomness(rng_seed, l);
++
++		/* try to clear seed so it won't be found. */
++		fdt_delprop(initial_boot_params, node, "rng-seed");
++	}
++
+ 	/* break now */
+ 	return 1;
+ }
 -- 
 2.20.1
