@@ -1,180 +1,40 @@
-From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: [PATCH] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Date: Sat, 18 May 2019 19:41:12 -0300
-Message-ID: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [v3 0/7] Support dsi for mt8183
+Date: Sun, 19 May 2019 17:25:30 +0800
+Message-ID: <20190519092537.69053-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a YAML binding for the Analog Devices AD7780/1 and
-AD7170/1 analog-to-digital converters.
-
-Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
----
- .../bindings/iio/adc/adi,ad7780.txt           | 48 -----------
- .../bindings/iio/adc/adi,ad7780.yaml          | 85 +++++++++++++++++++
- 2 files changed, 85 insertions(+), 48 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-deleted file mode 100644
-index 440e52555349..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--* Analog Devices AD7170/AD7171/AD7780/AD7781
--
--Data sheets:
--
--- AD7170:
--	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
--- AD7171:
--	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
--- AD7780:
--	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
--- AD7781:
--	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
--
--Required properties:
--
--- compatible: should be one of
--	* "adi,ad7170"
--	* "adi,ad7171"
--	* "adi,ad7780"
--	* "adi,ad7781"
--- reg: spi chip select number for the device
--- vref-supply: the regulator supply for the ADC reference voltage
--
--Optional properties:
--
--- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
--		    specified, it will be asserted during driver probe. As the
--		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
--- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
--		    the ad778x chips. If specified, it will be asserted during
--		    driver probe. As the line is active low, it should be marked
--		    GPIO_ACTIVE_LOW.
--- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
--		    for the ad778x chips. If specified, it will be asserted
--		    during driver probe. As the line is active low, it should be
--		    marked GPIO_ACTIVE_LOW.
--
--Example:
--
--adc@0 {
--	compatible =  "adi,ad7780";
--	reg =	      <0>;
--	vref-supply = <&vdd_supply>
--
--	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
--	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
--	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-new file mode 100644
-index 000000000000..931bc4f8ec04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+
-+description: |
-+  The ad7780 is a sigma-delta analog to digital converter. This driver provides
-+  reading voltage values and status bits from both the ad778x and ad717x series.
-+  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
-+  ad778x.
-+
-+  Specifications on the converters can be found at:
-+    AD7170:
-+      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-+    AD7171:
-+      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-+    AD7780:
-+      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-+    AD7781:
-+      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7170
-+      - adi,ad7171
-+      - adi,ad7780
-+      - adi,ad7781
-+
-+  reg:
-+    description:
-+      Chip select number for the device
-+    maxItems: 1
-+
-+  vref-supply:
-+    description:
-+      The regulator supply for the ADC reference voltage
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    description:
-+      Must be the device tree identifier of the PDRST pin. If
-+      specified, it will be asserted during driver probe. As the
-+      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-+    maxItems: 1
-+
-+  adi,gain-gpios:
-+    description:
-+      Must be the device tree identifier of the GAIN pin. Only for
-+      the ad778x chips. If specified, it will be asserted during
-+      driver probe. As the line is active low, it should be marked
-+      GPIO_ACTIVE_LOW.
-+    maxItems: 1
-+
-+  adi,filter-gpios:
-+    description:
-+      Must be the device tree identifier of the FILTER pin. Only
-+      for the ad778x chips. If specified, it will be asserted
-+      during driver probe. As the line is active low, it should be
-+      marked GPIO_ACTIVE_LOW.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    adc@0 {
-+      compatible =  "adi,ad7780";
-+      reg = <0>;
-+      vref-supply = <&vdd_supply>;
-+
-+      powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-+      adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
-+      adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
-+    };
--- 
-2.21.0
+Q2hhbmdlcyBzaW5jZSB2MjoKIC0gY2hhbmdlIHRoZSB2aWRlbyB0aW1pbmcgY2FsYyBtZXRob2QK
+IC0gZmluZSB0aGUgZHNpIGFuZCBtaXBpdHggaW5pdCBzZXF1ZW5jZQogLSBmaW5lIHR1bmUgY29t
+bWl0IG1zZwoKQ2hhbmdlcyBzaW5jZSB2MToKIC0gc2VwYXJhdGUgZnJhbWUgc2l6ZSBhbmQgcmVn
+IGNvbW1pdCBjb250cm9sIGluZGVwZW5kZW50IHBhdGNoZXMuCiAtIGZpeCBzb21lIHJldHVybiB2
+YWx1ZXMgaW4gcHJvYmUKIC0gcmVtb3ZlIERTSV9DTURXMCBpbiAiQ01EUSByZWcgYWRkcmVzcyBv
+ZiBtdDgxNzMgaXMgZGlmZmVyZW50IHdpdGggbXQyNzAxIgoKSml0YW8gU2hpICg3KToKICBkcm0v
+bWVkaWF0ZWs6IG1vdmUgbWlwaV9kc2lfaG9zdF9yZWdpc3RlciB0byBwcm9iZQogIGRybS9tZWRp
+YXRlazogZml4ZXMgQ01EUSByZWcgYWRkcmVzcyBvZiBtdDgxNzMgaXMgZGlmZmVyZW50IHdpdGgK
+ICAgIG10MjcwMQogIGRybS9tZWRpYXRlazogYWRkIGRzaSByZWcgY29tbWl0IGRpc2FibGUgY29u
+dHJvbAogIGRybS9tZWRpYXRlazogYWRkIGZyYW1lIHNpemUgY29udHJvbAogIGRybS9tZWRpYXRl
+azogYWRkIG10ODE4MyBkc2kgZHJpdmVyIHN1cHBvcnQKICBkcm0vbWVkaWF0ZWs6IGNoYW5nZSB0
+aGUgZHNpIHBoeXRpbWluZyBjYWxjdWxhdGUgbWV0aG9kCiAgZHJtOiBtZWRpYXRlazogYWRqdXN0
+IGRzaSBhbmQgbWlwaV90eCBwcm9iZSBzZXF1ZW5jZQoKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2Rydi5jIHwgICAyICstCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rz
+aS5jICAgICB8IDIxOSArKysrKysrKysrKysrKysrKystLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQs
+IDE2MyBpbnNlcnRpb25zKCspLCA1OCBkZWxldGlvbnMoLSkKCi0tIAoyLjIxLjAKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
