@@ -1,83 +1,44 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH v4 3/3] arm64: kexec_file: add rng-seed support
-Date: Mon, 20 May 2019 00:04:46 +0800
-Message-ID: <20190519160446.320-3-hsinyi@chromium.org>
-References: <20190519160446.320-1-hsinyi@chromium.org>
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH] of_net: fix of_get_mac_address retval if compiled without CONFIG_OF
+Date: Sun, 19 May 2019 14:18:44 +0200
+Message-ID: <1558268324-5596-1-git-send-email-ynezz@true.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190519160446.320-1-hsinyi@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Stephen Boyd <swboyd@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Hsin-Yi Wang <hsinyi@chromium.org>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Cc: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, Mirko Lindner <mlindner@marvell.com>, Stephen Hemminger <stephen@networkplumber.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding "rng-seed" to dtb. It's fine to add this property if original
-fdt doesn't contain it. Since original seed will be deleted after
-read, so use a default size 128 bytes here.
+of_get_mac_address prior to commit d01f449c008a ("of_net: add NVMEM
+support to of_get_mac_address") could return only valid pointer or NULL,
+after this change it could return only valid pointer or ERR_PTR encoded
+error value, but I've forget to change the return value of
+of_get_mac_address in case where the kernel is compiled without
+CONFIG_OF, so I'm doing so now.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Mirko Lindner <mlindner@marvell.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+Reported-by: Octavio Alvarez <octallk1@alvarezp.org>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
-* Will add corresponding part to userspace kexec-tools if this is accepted.
----
- arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ include/linux/of_net.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 58871333737a..d40fde72a023 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -27,6 +27,8 @@
- #define FDT_PROP_INITRD_END	"linux,initrd-end"
- #define FDT_PROP_BOOTARGS	"bootargs"
- #define FDT_PROP_KASLR_SEED	"kaslr-seed"
-+#define FDT_PROP_RNG_SEED	"rng-seed"
-+#define RNG_SEED_SIZE		128
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 9cd72aab76fe..0f0346e6829c 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -22,7 +22,7 @@ static inline int of_get_phy_mode(struct device_node *np)
  
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_image_ops,
-@@ -102,6 +104,23 @@ static int setup_dtb(struct kimage *image,
- 				FDT_PROP_KASLR_SEED);
- 	}
- 
-+	/* add rng-seed */
-+	if (rng_is_initialized()) {
-+		void *rng_seed = kmalloc(RNG_SEED_SIZE, GFP_ATOMIC);
-+		get_random_bytes(rng_seed, RNG_SEED_SIZE);
-+
-+		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-+				RNG_SEED_SIZE);
-+		kfree(rng_seed);
-+
-+		if (ret)
-+			goto out;
-+
-+	} else {
-+		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
-+				FDT_PROP_RNG_SEED);
-+	}
-+
- out:
- 	if (ret)
- 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
-@@ -110,7 +129,8 @@ static int setup_dtb(struct kimage *image,
+ static inline const void *of_get_mac_address(struct device_node *np)
+ {
+-	return NULL;
++	return ERR_PTR(-ENODEV);
  }
  
- /*
-- * More space needed so that we can add initrd, bootargs and kaslr-seed.
-+ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
-+ * rng-seed.
-  */
- #define DTB_EXTRA_SPACE 0x1000
- 
+ static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
 -- 
-2.20.1
+1.9.1
