@@ -1,191 +1,143 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Date: Sun, 19 May 2019 12:32:08 +0100
-Message-ID: <20190519123208.26c864ce@archlinux>
-References: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Date: Sun, 19 May 2019 15:54:22 +0200
+Message-ID: <20190519135422.l2bnumyjr3dxehhx@core.my.home>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
+ <20190409145225.2ltluiyqa5xha4zd@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <9992a318aec777b9b7788bb40d976aa89e5963fe.1558219042.git.renatogeh@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Renato Lui Geh <renatogeh@gmail.com>
-Cc: mark.rutland@arm.com, devel@driverdev.osuosl.org, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, robh+dt@kernel.org, stefan.popa@analog.com, knaack.h@gmx.de, alexandru.Ardelean@analog.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190409145225.2ltluiyqa5xha4zd@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel <linux-kernel@vger.kernel.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Yong Deng <yong.deng@magewell.com>, Chen-Yu Tsai <wens@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 18 May 2019 19:41:12 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
+Hi Maxime,
 
-> This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> AD7170/1 analog-to-digital converters.
+On Tue, Apr 09, 2019 at 04:52:25PM +0200, Maxime Ripard wrote:
+> On Tue, Apr 09, 2019 at 04:40:40PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > > > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > > > >
+> > > > > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> > > > > > lingo), which is similar to the one found on the A64 and H3. The only
+> > > > > > difference seems to be that support of MIPI CSI through a connected
+> > > > > > MIPI CSI-2 bridge.
+> > > > > >
+> > > > > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> > > > > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> > > > > > the pinctrl nodes to keep the device tree blob size down if they are
+> > > > > > unused.
+> > > > > >
+> > > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > > ---
+> > > > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 31 insertions(+)
+> > > > > >
+> > > > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > @@ -682,6 +682,20 @@
+> > > > > >                       #interrupt-cells = <3>;
+> > > > > >                       #gpio-cells = <3>;
+> > > > > >
+> > > > > > +                     /omit-if-no-ref/
+> > > > > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
+> > > > > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
+> > > > > > +                                    "PE8", "PE9", "PE10", "PE11",
+> > > > > > +                                    "PE12", "PE13";
+> > > > > > +                             function = "csi";
+> > > > > > +                     };
+> > > > > > +
+> > > > > > +                     /omit-if-no-ref/
+> > > > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > > > +                             pins = "PE1";
+> > > > > > +                             function = "csi";
+> > > > > > +                     };
+> > > > > > +
+> > > > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > > > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > > > > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > > > > > @@ -994,6 +1008,23 @@
+> > > > > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > > > >               };
+> > > > > >
+> > > > > > +             csi: camera@1cb0000 {
+> > > > > > +                     compatible = "allwinner,sun8i-a83t-csi";
+> > > > > > +                     reg = <0x01cb0000 0x1000>;
+> > > > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > > > +                     clock-names = "bus", "mod", "ram";
+> > > > > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > > > > +                     status = "disabled";
+> > > > > > +
+> > > > > > +                     csi_in: port {
+> > > > > > +                             #address-cells = <1>;
+> > > > > > +                             #size-cells = <0>;
+> > > > >
+> > > > > If we expect a single enpoint, then we don't need the address-cells
+> > > > > and size-cells properties.
+> > > >
+> > > > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> > > > is kind of genius if not very hacky. They have two "identical" sensors
+> > > > on the same I2C bus and CSI bus, with shared reset line but separate
+> > > > shutdown lines. Since they are identical, they also have the same I2C
+> > > > address. I haven't figured out how to model this in the device tree.
+> > > >
+> > > > The point is, it's perfectly possible to have two or more sensors use
+> > > > the same controller, provided only one be active at a time.
+> > >
+> > > Right, but I guess the common case would be to have a single sensor,
+> > > where that wouldn't be needed.
+> > >
+> > > In odd cases, we can always specify it in the DTS, and if it becomes
+> > > common enough, we can move it to the DTSI.
+> >
+> > Makes sense. Do you want me to re-spin?
 > 
-> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-One comment inline.  I'll also be needing an ack from Analog on this,
-preferably Michael's.
+> If there's no other comment, we'll fix it when applying.
 
-Thanks,
+This patch series seems to have been forgotten. It doesn't seem there are any
+blockers. Can you please apply it now? I have some further series (camera module
+support for TBS-A711) that depend on this.
 
-Jonathan
-> ---
->  .../bindings/iio/adc/adi,ad7780.txt           | 48 -----------
->  .../bindings/iio/adc/adi,ad7780.yaml          | 85 +++++++++++++++++++
->  2 files changed, 85 insertions(+), 48 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+thank you and regards,
+	Ondrej
+
+> Maxime
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> deleted file mode 100644
-> index 440e52555349..000000000000
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> +++ /dev/null
-> @@ -1,48 +0,0 @@
-> -* Analog Devices AD7170/AD7171/AD7780/AD7781
-> -
-> -Data sheets:
-> -
-> -- AD7170:
-> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> -- AD7171:
-> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> -- AD7780:
-> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> -- AD7781:
-> -	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> -
-> -Required properties:
-> -
-> -- compatible: should be one of
-> -	* "adi,ad7170"
-> -	* "adi,ad7171"
-> -	* "adi,ad7780"
-> -	* "adi,ad7781"
-> -- reg: spi chip select number for the device
-> -- vref-supply: the regulator supply for the ADC reference voltage
-> -
-> -Optional properties:
-> -
-> -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
-> -		    specified, it will be asserted during driver probe. As the
-> -		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
-> -		    the ad778x chips. If specified, it will be asserted during
-> -		    driver probe. As the line is active low, it should be marked
-> -		    GPIO_ACTIVE_LOW.
-> -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
-> -		    for the ad778x chips. If specified, it will be asserted
-> -		    during driver probe. As the line is active low, it should be
-> -		    marked GPIO_ACTIVE_LOW.
-> -
-> -Example:
-> -
-> -adc@0 {
-> -	compatible =  "adi,ad7780";
-> -	reg =	      <0>;
-> -	vref-supply = <&vdd_supply>
-> -
-> -	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-> -	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-> -	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> new file mode 100644
-> index 000000000000..931bc4f8ec04
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +
-> +description: |
-> +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
-> +  reading voltage values and status bits from both the ad778x and ad717x series.
-> +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
-> +  ad778x.
-> +
-> +  Specifications on the converters can be found at:
-> +    AD7170:
-> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-> +    AD7171:
-> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-> +    AD7780:
-> +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-> +    AD7781:
-> +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7170
-> +      - adi,ad7171
-> +      - adi,ad7780
-> +      - adi,ad7781
-> +
-> +  reg:
-> +    description:
-> +      Chip select number for the device
-> +    maxItems: 1
-> +
-> +  vref-supply:
-> +    description:
-> +      The regulator supply for the ADC reference voltage
-> +    maxItems: 1
-> +
-> +  powerdown-gpios:
-> +    description:
-> +      Must be the device tree identifier of the PDRST pin. If
-> +      specified, it will be asserted during driver probe. As the
-> +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
-> +    maxItems: 1
-> +
-> +  adi,gain-gpios:
-> +    description:
-> +      Must be the device tree identifier of the GAIN pin. Only for
-> +      the ad778x chips. If specified, it will be asserted during
-> +      driver probe. As the line is active low, it should be marked
-> +      GPIO_ACTIVE_LOW.
-> +    maxItems: 1
-> +
-> +  adi,filter-gpios:
-> +    description:
-> +      Must be the device tree identifier of the FILTER pin. Only
-> +      for the ad778x chips. If specified, it will be asserted
-> +      during driver probe. As the line is active low, it should be
-> +      marked GPIO_ACTIVE_LOW.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vref-supply
-Is that actually true?  I'd imagine it'll use a stub regulator if
-it isn't supplied.
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    adc@0 {
-> +      compatible =  "adi,ad7780";
-> +      reg = <0>;
-> +      vref-supply = <&vdd_supply>;
-> +
-> +      powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> +      adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
-> +      adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
-> +    };
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
