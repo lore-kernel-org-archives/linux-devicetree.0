@@ -1,158 +1,76 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML
- bindings
-Date: Sun, 19 May 2019 12:24:18 +0100
-Message-ID: <20190519122418.7722641b@archlinux>
-References: <20190518215542.25140-1-lucasseikioshiro@gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v4 1/3] dt-bindings: net: add qca,ar71xx.txt documentation
+Date: Sun, 19 May 2019 10:03:02 +0200
+Message-ID: <20190519080304.5811-2-o.rempel@pengutronix.de>
+References: <20190519080304.5811-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190518215542.25140-1-lucasseikioshiro@gmail.com>
+In-Reply-To: <20190519080304.5811-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Oshiro <lucasseikioshiro@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Popa <stefan.popa@analog.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+To: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Chuanhong Guo <gch981213@gmail.com>, info@freifunk-bad-gandersheim.net
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 18 May 2019 18:55:42 -0300
-Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
+Add binding documentation for Atheros/QCA networking IP core used
+in many routers.
 
-> Convert the old device tree documentation to yaml format.
-> 
-> Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-> Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> ---
-> 
-> Hello,
-> We've added Stefan Popa as maintainer of the yaml documentation of this driver
-> because we found through git that he was the author of the older documentation.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../devicetree/bindings/net/qca,ar71xx.txt    | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
 
-Definitely going to need an Ack from Stefan for that ;)
-
-I've not really gotten yaml formats into my head yet, but from a quick
-look I think this is fine.  I will however be looking for review from others
-on these. 
-
-Thanks,
-
-Jonathan
-
-> 
->  .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
->  .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
->  2 files changed, 66 insertions(+), 33 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> new file mode 100644
-> index 000000000000..a6e2893d2ab1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-> +
-> +maintainers:
-> +  - Stefan Popa <stefan.popa@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
-> +  both I2C & SPI interfaces
-> +    https://www.analog.com/en/products/adxl372.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adxl372
-> +
-> +  reg:
-> +    description: the I2C address or SPI chip select number for the device
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      interrupt mapping for IRQ as documented in
-> +      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/gpio/gpio.h>
-> +        #include <dt-bindings/interrupt-controller/irq.h>
-> +        i2c0 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                /* Example for a I2C device node */
-> +                accelerometer@53 {
-> +                        compatible = "adi,adxl372";
-> +                        reg = <0x53>;
-> +                        interrupt-parent = <&gpio>;
-> +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +                };
-> +        };
-> +  - |
-> +        #include <dt-bindings/gpio/gpio.h>
-> +        #include <dt-bindings/interrupt-controller/irq.h>
-> +        spi0 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                accelerometer@0 {
-> +                        compatible = "adi,adxl372";
-> +                        reg = <0>;
-> +                        spi-max-frequency = <1000000>;
-> +                        interrupt-parent = <&gpio>;
-> +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +                };
-> +        };
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> deleted file mode 100644
-> index a289964756a7..000000000000
-> --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> +++ /dev/null
-> @@ -1,33 +0,0 @@
-> -Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-> -
-> -http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
-> -
-> -Required properties:
-> - - compatible : should be "adi,adxl372"
-> - - reg: the I2C address or SPI chip select number for the device
-> -
-> -Required properties for SPI bus usage:
-> - - spi-max-frequency: Max SPI frequency to use
-> -
-> -Optional properties:
-> - - interrupts: interrupt mapping for IRQ as documented in
-> -   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> -
-> -Example for a I2C device node:
-> -
-> -	accelerometer@53 {
-> -		compatible = "adi,adxl372";
-> -		reg = <0x53>;
-> -		interrupt-parent = <&gpio>;
-> -		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> -	};
-> -
-> -Example for a SPI device node:
-> -
-> -	accelerometer@0 {
-> -		compatible = "adi,adxl372";
-> -		reg = <0>;
-> -		spi-max-frequency = <1000000>;
-> -		interrupt-parent = <&gpio>;
-> -		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> -	};
+diff --git a/Documentation/devicetree/bindings/net/qca,ar71xx.txt b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
+new file mode 100644
+index 000000000000..2a33e71ba72b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qca,ar71xx.txt
+@@ -0,0 +1,45 @@
++Required properties:
++- compatible:	Should be "qca,<soc>-eth". Currently support compatibles are:
++		qca,ar7100-eth - Atheros AR7100
++		qca,ar7240-eth - Atheros AR7240
++		qca,ar7241-eth - Atheros AR7241
++		qca,ar7242-eth - Atheros AR7242
++		qca,ar9130-eth - Atheros AR9130
++		qca,ar9330-eth - Atheros AR9330
++		qca,ar9340-eth - Atheros AR9340
++		qca,qca9530-eth - Qualcomm Atheros QCA9530
++		qca,qca9550-eth - Qualcomm Atheros QCA9550
++		qca,qca9560-eth - Qualcomm Atheros QCA9560
++
++- reg : Address and length of the register set for the device
++- interrupts : Should contain eth interrupt
++- phy-mode : See ethernet.txt file in the same directory
++- clocks: the clock used by the core
++- clock-names: the names of the clock listed in the clocks property. These are
++	"eth" and "mdio".
++- resets: Should contain phandles to the reset signals
++- reset-names: Should contain the names of reset signal listed in the resets
++		property. These are "mac" and "mdio"
++
++Optional properties:
++- phy-handle : phandle to the PHY device connected to this device.
++- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
++  Use instead of phy-handle.
++
++Optional subnodes:
++- mdio : specifies the mdio bus, used as a container for phy nodes
++  according to phy.txt in the same directory
++
++Example:
++
++ethernet@1a000000 {
++	compatible = "qca,ar9330-eth";
++	reg = <0x1a000000 0x200>;
++	interrupts = <5>;
++	resets = <&rst 13>, <&rst 23>;
++	reset-names = "mac", "mdio";
++	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_MDIO>;
++	clock-names = "eth", "mdio";
++
++	phy-mode = "gmii";
++};
+-- 
+2.20.1
