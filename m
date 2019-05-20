@@ -1,43 +1,32 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add vendor prefix for HopeRun
-Date: Mon, 20 May 2019 13:55:26 +0200
-Message-ID: <20190520115526.zhhinfb52szptrtl@verge.net.au>
-References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1558085189-22061-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [RFC v2 4/5] dts: bcm2837: add per-cpu clock devices
+Date: Mon, 20 May 2019 14:19:04 +0200
+Message-ID: <af50c1e9-5f52-e06b-8d0b-c9f72fba1324@i2se.com>
+References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+ <20190520104708.11980-5-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kevin Hilman <khilman@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.co
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190520104708.11980-5-nsaenzjulienne@suse.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, ptesarik@suse.com, sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, eric@anholt.net, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2019 at 08:38:14AM -0500, Rob Herring wrote:
-> On Fri, May 17, 2019 at 4:27 AM Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com> wrote:
-> >
-> > Add "Jiangsu HopeRun Software Co., Ltd." to the list of devicetree
-> > vendor prefixes as "hoperun".
-> >
-> > Website: http://www.hoperun.com/en
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> >
-> > ---
-> > v2->v3:
-> > * Moved to vendor-prefixes.yaml
-> > * Dropped Reviewed-by Simon as this is a completely new patch and as
-> >   such it needs a brand new review
-> > v1->v2:
-> > * No change
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Nicolas,
 
-Thanks, applied for inclusion in v5.3 via the renesas tree.
+On 20.05.19 12:47, Nicolas Saenz Julienne wrote:
+> The four CPUs share a same clock source called pllb_arm. The clock can
+> be scaled through the raspberrypi firmware interface.
+do you see a problem with applying this also to bcm2835.dtsi and
+bcm2836.dtsi?
