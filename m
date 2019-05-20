@@ -1,39 +1,20 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: amlogic: Move 'amlogic,meson-gx-ao-secure' binding to its own file
-Date: Mon, 20 May 2019 10:10:21 -0700
-Message-ID: <7hmujh832a.fsf@baylibre.com>
-References: <draft-7hsgt9842a.fsf@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 1/5] arm64: dts: meson: g12a: add ethernet mac controller
+Date: Mon, 20 May 2019 19:29:18 +0200
+Message-ID: <CAFBinCDR_eYBEtbkvF3mF4VdsNuTuWEirAzViYrwVvfjYNpymQ@mail.gmail.com>
+References: <20190520131401.11804-1-jbrunet@baylibre.com> <20190520131401.11804-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <draft-7hsgt9842a.fsf@baylibre.com>
+In-Reply-To: <20190520131401.11804-2-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
-
-> Rob Herring <robh@kernel.org> writes:
+On Mon, May 20, 2019 at 3:14 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
->> It is best practice to have 1 binding per file, so board level bindings
->> should be separate for various misc SoC bindings.
->>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Carlo Caione <carlo@caione.org>
->> Cc: Kevin Hilman <khilman@baylibre.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-amlogic@lists.infradead.org
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->> It seems this one fell thru the cracks and didn't get applied.
+> Add the synopsys ethernet mac controller embedded in the g12a SoC family.
 >
-> Feel free to apply directly.
->
-> Acked-by: Kevin Hilman <khilman@baylibre.com>
-
-On second that, we're going to have dependencies on that for the v5.3
-cycle, so I'll queue these up.
-
-Kevin
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
