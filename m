@@ -1,13 +1,16 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 0/3] mfd: bd718x7: Set button press duration via dt only
-Date: Mon, 20 May 2019 08:55:54 +0000
-Message-ID: <cover.1558341613.git.leonard.crestez@nxp.com>
+Subject: [PATCH 1/3] mfd: bd718x7: Remove hardcoded config for button press
+ duration
+Date: Mon, 20 May 2019 08:55:56 +0000
+Message-ID: <ed27e04ba7486cce7860197bc8c76bcedafde398.1558341613.git.leonard.crestez@nxp.com>
+References: <cover.1558341613.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1558341613.git.leonard.crestez@nxp.com>
 Content-Language: en-US
-Content-ID: <7D4AA115DD9EB6489166E8B154FAA49A@eurprd04.prod.outlook.com>
+Content-ID: <11F0B0946517B24C9DC75E7EE8C1629A@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,20 +29,50 @@ long press duration is set to zero from OTP. The linux driver overrides
 those values and breaks reset from button.
 
 Overwriting OTP or bootloader configuration with some hardcoded defaults
-is not desirable, power button should behave identically from bootloader
-to kernel.
+is not desirable, keep already programmed values instead.
 
-Add DT properties to allow explicitly overriding press durations but
-don't do anything by default.
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+---
+ drivers/mfd/rohm-bd718x7.c | 23 -----------------------
+ 1 file changed, 23 deletions(-)
 
-Leonard Crestez (3):
-  mfd: bd718x7: Remove hardcoded config for button press duration
-  dt-bindings: mfd: Document short/long press duration for bd718x7
-  mfd: bd718x7: Make power button press duration configurable
-
- .../bindings/mfd/rohm,bd71837-pmic.txt        |  8 +++
- drivers/mfd/rohm-bd718x7.c                    | 61 ++++++++++++-------
- 2 files changed, 48 insertions(+), 21 deletions(-)
-
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index a29d529a96f4..cdbef83884f0 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -115,33 +115,10 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "Failed to add irq_chip\n");
+ 		return ret;
+ 	}
+ 
+-	/* Configure short press to 10 milliseconds */
+-	ret = regmap_update_bits(bd718xx->regmap,
+-				 BD718XX_REG_PWRONCONFIG0,
+-				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+-				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
+-	if (ret) {
+-		dev_err(&i2c->dev,
+-			"Failed to configure button short press timeout\n");
+-		return ret;
+-	}
+-
+-	/* Configure long press to 10 seconds */
+-	ret = regmap_update_bits(bd718xx->regmap,
+-				 BD718XX_REG_PWRONCONFIG1,
+-				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+-				 BD718XX_PWRBTN_LONG_PRESS_10S);
+-
+-	if (ret) {
+-		dev_err(&i2c->dev,
+-			"Failed to configure button long press timeout\n");
+-		return ret;
+-	}
+-
+ 	ret = regmap_irq_get_virq(bd718xx->irq_data, BD718XX_INT_PWRBTN_S);
+ 
+ 	if (ret < 0) {
+ 		dev_err(&i2c->dev, "Failed to get the IRQ\n");
+ 		return ret;
 -- 
 2.17.1
