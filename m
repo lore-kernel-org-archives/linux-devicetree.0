@@ -1,34 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: bcm: Add missing device_type = "memory"
- property
-Date: Mon, 20 May 2019 09:30:29 -0700
-Message-ID: <d28229cf-3fc5-9599-f886-9e2a0da28080@gmail.com>
-References: <20190509171527.2331-1-f.fainelli@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
+Date: Mon, 20 May 2019 11:35:01 -0500
+Message-ID: <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
+References: <20190510194018.28206-1-robh@kernel.org> <20190520131846.tqx7h7sjyw6sgka5@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190509171527.2331-1-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190520131846.tqx7h7sjyw6sgka5@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org
-Cc: robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/9/19 10:15 AM, Florian Fainelli wrote:
-> During the removal of the skeleton.dtsi file with commit abe60a3a7afb
-> ("ARM: dts: Kill off skeleton{64}.dtsi") a number of Broadcom SoCs were
-> converted, but a few were left unoticed, now causing boot failures with
-> v5.1 since the kernel cannot find suitable memory.
-> 
-> Updating the .dtsi files with the property will be done next, since
-> there are some memory nodes that do not follow the proper naming
-> convention and lack an unit name.
-> 
-> Fixes: abe60a3a7afb ("ARM: dts: Kill off skeleton{64}.dtsi")
-> Reported-by: Kevin Hilman <khilman@kernel.org>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Mon, May 20, 2019 at 8:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
+> > Convert the vendor prefix registry to a schema. This will enable checking
+> > that new vendor prefixes are added (in addition to the less than perfect
+> > checkpatch.pl check) and will also check against adding other prefixes
+> > which are not vendors.
+> >
+> > Converted vendor-prefixes.txt using the following sed script:
+> >
+> > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > As vendor prefix updates come in via multiple trees, I plan to merge
+> > this before -rc1 to avoid cross tree conflicts.
+>
+> I just tried this with the 5.2-rc1 release, and this very
+> significantly slows down the validation.
+>
+> With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
+> threads, I go from 1.30 minutes to more than 12.
 
-Applied to devicetree/fixes, thanks!
--- 
-Florian
+Indeed. 6 min to 45 min for allmodconfig. However, it's only 5 min to
+run checks with only this file. I'd expect a more linear hit. Maybe
+we're exceeding some cache size and thrashing.
+
+> Should we improve the dt-validate tool before merging this patch?
+
+How? I've looked at optimizing things some and implemented areas I
+found (primarily, saving the fixed-up schema and not printing line
+numbers (of the yaml encoded DT)).
+
+I've been wanting to have some way to categorize checks, so we can
+split rules from pedantic guidance. Maybe we can add a level keyword
+in select or something.
+
+Short term, I'm fine with just disabling this one by default with
+'select: false'.
+
+Rob
