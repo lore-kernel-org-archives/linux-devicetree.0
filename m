@@ -1,41 +1,45 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 2/4] clk: at91: sckc: add support to specify registers
- bit offsets
-Date: Mon, 20 May 2019 08:54:24 +0000
-Message-ID: <8900ba46-7166-2b5e-961b-3786121c845f@microchip.com>
-References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
- <1557487388-32098-3-git-send-email-claudiu.beznea@microchip.com>
- <20190510213242.GE7622@piout.net>
- <b99b1782-30be-b6b9-0df2-f14125be22ac@microchip.com>
- <20190517211336.GB7685@piout.net>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: [PATCH 0/3] mfd: bd718x7: Set button press duration via dt only
+Date: Mon, 20 May 2019 08:55:54 +0000
+Message-ID: <cover.1558341613.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190517211336.GB7685@piout.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Content-ID: <17043DB5617E724DA7B445DF92546F4F@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-ID: <7D4AA115DD9EB6489166E8B154FAA49A@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Angus Ainslie <angus@akkea.ca>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDE4LjA1LjIwMTkgMDA6MTMsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFeHRl
-cm5hbCBFLU1haWwNCj4gDQo+IA0KPiBPbiAxNi8wNS8yMDE5IDA4OjEwOjM0KzAwMDAsIENsYXVk
-aXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+Pj4+IEBAIC02OSwxMCArODAsMTEgQEAg
-c3RhdGljIGludCBjbGtfc2xvd19vc2NfcHJlcGFyZShzdHJ1Y3QgY2xrX2h3ICpodykNCj4+Pj4g
-IAl2b2lkIF9faW9tZW0gKnNja2NyID0gb3NjLT5zY2tjcjsNCj4+Pj4gIAl1MzIgdG1wID0gcmVh
-ZGwoc2NrY3IpOw0KPj4+PiAgDQo+Pj4+IC0JaWYgKHRtcCAmIChBVDkxX1NDS0NfT1NDMzJCWVAg
-fCBBVDkxX1NDS0NfT1NDMzJFTikpDQo+Pj4+ICsJaWYgKHRtcCAmIChBVDkxX1NDS0NfT1NDMzJC
-WVAob3NjLT5iaXRzKSB8DQo+Pj4+ICsJCSAgIEFUOTFfU0NLQ19PU0MzMkVOKG9zYy0+Yml0cykp
-KQ0KPj4+DQo+Pj4gSSBzdGlsbCBmaW5kIHRoYXQ6DQo+Pj4NCj4+PiAJaWYgKHRtcCAmIChvc2Mt
-PmJpdHMtPmNyX29zYzMyYnlwIHwgb3NjLT5iaXRzLT5jcl9vc2MzMmVuKSkNCj4+Pg0KPj4+IHdv
-dWxkIGJlIHNob3J0ZXIgYW5kIGVhc2llciB0byByZWFkIGFuZCBzdGlsbCBmaXRzIG9uIG9uZSBs
-aW5lLg0KPj4NCj4+IEFncmVlLCBidXQgSSB0aG91Z2h0IHRvIHVzZSB0aGUgc2FtZSBpbnRlcmZh
-Y2UgZXZlcnl3aGVyZS4gQW55d2F5LCB0ZWxsIG1lDQo+PiBpZiB5b3Ugd2FudCB0byByZXNlbmQg
-d2l0aCB0aGVzZSBjaGFuZ2VzLg0KPj4NCj4gTXkgY29tbWVudCBhcHBsaWVzIHRvIGFsbCB0aGUg
-QVQ5MV9TQ0tDXy4qKCkgbWFjcm9zLiBJIGRvbid0IGZlZWwgdGhhdA0KPiB0aGUgbWFjcm9zIG1h
-a2UgdGhlIGNvZGUgY2xlYXJlciwgYWNjZXNzaW5nIGJpdHMtPmNyXy4qIGlzIHNlbGYNCj4gZG9j
-dW1lbnRpbmcgZW5vdWdoIChhbmQgbWFrZXMgdGhlIGNvZGUgc2hvcnRlcikuDQoNCk9LLCBJJ2xs
-IHNlbmQgYSBuZXcgdmVyc2lvbiB0YWtpbmcgdGhpcyBpbnRvIGNvbnNpZGVyYXRpb24uDQoNCj4g
-DQo=
+The reset button on imx8mm-evk is tied to PWRON_B pin of bd71847 and the
+long press duration is set to zero from OTP. The linux driver overrides
+those values and breaks reset from button.
+
+Overwriting OTP or bootloader configuration with some hardcoded defaults
+is not desirable, power button should behave identically from bootloader
+to kernel.
+
+Add DT properties to allow explicitly overriding press durations but
+don't do anything by default.
+
+Leonard Crestez (3):
+  mfd: bd718x7: Remove hardcoded config for button press duration
+  dt-bindings: mfd: Document short/long press duration for bd718x7
+  mfd: bd718x7: Make power button press duration configurable
+
+ .../bindings/mfd/rohm,bd71837-pmic.txt        |  8 +++
+ drivers/mfd/rohm-bd718x7.c                    | 61 ++++++++++++-------
+ 2 files changed, 48 insertions(+), 21 deletions(-)
+
+-- 
+2.17.1
