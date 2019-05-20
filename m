@@ -1,63 +1,116 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 2/4] arm64: dts: allwinner: h6: add watchdog node
-Date: Mon, 20 May 2019 22:57:04 +0800
-Message-ID: <CAGb2v65P1tne+-FuJ-tLTRMaPdBPYd9eJS+rS5TXaAULNCLBZg@mail.gmail.com>
-References: <20190518152355.11134-1-peron.clem@gmail.com> <20190518152355.11134-3-peron.clem@gmail.com>
- <20190520073652.itk452vrpnicta5v@flea> <CAJiuCceEL9xH45P6Gj99YTir_1tkyraf5HefDNfm9p+UtdLs8w@mail.gmail.com>
- <20190520144404.zprbuqt3d7uuxgr2@flea>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: at91: Avoid colliding 'display' node and
+ property names
+Date: Mon, 20 May 2019 16:58:30 +0200
+Message-ID: <20190520145830.GE3274@piout.net>
+References: <20190516225614.1458-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520144404.zprbuqt3d7uuxgr2@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190516225614.1458-1-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:44 PM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> On Mon, May 20, 2019 at 10:21:40AM +0200, Clément Péron wrote:
-> > Hi,
-> >
-> > On Mon, 20 May 2019 at 09:36, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Sat, May 18, 2019 at 05:23:53PM +0200, Clément Péron wrote:
-> > > > Allwinner H6 has a watchog node which seems broken
-> > > > on some boards.
-> > > >
-> > > > Test has been performed on several boards.
-> > > >
-> > > > Chen-Yu Tsai boards:
-> > > > Pine H64 - H6448BA 7782 => OK
-> > > > OrangePi Lite 2 - H8068BA 61C2 => KO
-> > > >
-> > > > Martin Ayotte boards:
-> > > > Pine H64 - H8069BA 6892 => OK
-> > > > OrangePi 3 - HA047BA 69W2 => KO
-> > > > OrangePi One Plus - H7310BA 6842 => KO
-> > > > OrangePi Lite2 - H6448BA 6662 => KO
-> > > >
-> > > > Clément Péron board:
-> > > > Beelink GS1 - H7309BA 6842 => KO
-> > > >
-> > > > As it seems not fixable for now, declare the node
-> > > > but leave it disable with a comment.
-> > > >
-> > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > >
-> > > If it doesn't work most boards, then why do we need to merge that
-> > > patch in the first place?
-> >
-> > My personnal opinion, is that having the IP declared and disabled with
-> > a comment saying "it's broken on some boards" in the device-tree is
-> > better than not having at all.
-> >
-> > This will explicit say "the IP exist but don't use it!".
-> > Maybe some people with a functionnal board would like to explicitly
-> > use it on their dts.
->
-> Yeah, that makes sense. Chen-Yu, any opinion on the matter?
+On 16/05/2019 17:56:14-0500, Rob Herring wrote:
+> While properties and child nodes with the same name are valid DT, the
+> practice is not encouraged.
 
-Works for me.
+I don't see anything mentioning that in the devicetree specification. I
+think this is something you should add if you don't want that to happen
+again.
+
+> Furthermore, the collision is problematic for
+> YAML encoded DT. Let's just avoid the issue and rename the nodes.
+> 
+
+Or maybe you should fix the tool ;)
+
+Do you plan to enforce it at some point? How close are you?
+
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
+> ---
+>  arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
+>  arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
+>  arch/arm/boot/dts/at91sam9rlek.dts     | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
+> index f681cd727010..02b116b48c3b 100644
+> --- a/arch/arm/boot/dts/at91sam9261ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
+> @@ -49,7 +49,7 @@
+>  			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
+>  			status = "okay";
+>  
+> -			display0: display {
+> +			display0: panel {
+>  				bits-per-pixel = <16>;
+>  				atmel,lcdcon-backlight;
+>  				atmel,dmacon = <0x1>;
+> diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
+> index 13d415c22a69..924fe563f6fa 100644
+> --- a/arch/arm/boot/dts/at91sam9263ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9263ek.dts
+> @@ -111,7 +111,7 @@
+>  			display = <&display0>;
+>  			status = "okay";
+>  
+> -			display0: display {
+> +			display0: panel {
+>  				bits-per-pixel = <16>;
+>  				atmel,lcdcon-backlight;
+>  				atmel,dmacon = <0x1>;
+> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> index 46107c2f1ab9..5226e952a729 100644
+> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> @@ -236,7 +236,7 @@
+>  			display = <&display0>;
+>  			status = "okay";
+>  
+> -			display0: display {
+> +			display0: panel {
+>  				bits-per-pixel = <32>;
+>  				atmel,lcdcon-backlight;
+>  				atmel,dmacon = <0x1>;
+> diff --git a/arch/arm/boot/dts/at91sam9rlek.dts b/arch/arm/boot/dts/at91sam9rlek.dts
+> index 27d8a1f44233..a000a459f17b 100644
+> --- a/arch/arm/boot/dts/at91sam9rlek.dts
+> +++ b/arch/arm/boot/dts/at91sam9rlek.dts
+> @@ -37,7 +37,7 @@
+>  			display = <&display0>;
+>  			status = "okay";
+>  
+> -			display0: display {
+> +			display0: panel {
+>  				bits-per-pixel = <16>;
+>  				atmel,lcdcon-backlight;
+>  				atmel,dmacon = <0x1>;
+> -- 
+> 2.20.1
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
