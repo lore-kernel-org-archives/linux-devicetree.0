@@ -1,79 +1,73 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 1/4] arm64: DTS: allwinner: a64: Add pinmux for RGB666
- LCD
-Date: Mon, 20 May 2019 09:42:11 +0200
-Message-ID: <20190520074211.mq2au6gt7tyxijrv@flea>
-References: <20190516154943.239E668B05@newverein.lst.de>
- <20190516155130.8A52768B20@newverein.lst.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+Date: Mon, 20 May 2019 09:44:48 +0200
+Message-ID: <CAMuHMdU5a2qXVG52Creftp4wR_nnwB9xk=jFeiOWUO0vJSyV0w@mail.gmail.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+ <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
+ <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
+ <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+ <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
+ <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
+ <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+ <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0504618374=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190516155130.8A52768B20@newverein.lst.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Torsten Duwe <duwe@lst.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mason Yang <masonccyang@mxic.com.tw>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Boris Brezillon <bbrezillon@kernel.org>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mason,
 
---===============0504618374==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nmucr3o54tqc5cok"
-Content-Disposition: inline
-
-
---nmucr3o54tqc5cok
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, May 16, 2019 at 05:51:30PM +0200, Torsten Duwe wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
+On Mon, May 20, 2019 at 9:24 AM <masonccyang@mxic.com.tw> wrote:
+> > >>>   - clocks: should contain 1 entries for the module's clock
+> > >>>   - clock-names: should contain "rpc"
+> > >>
+> > >>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not
+> sure
+> > > yet)...
+> > >
+> > > Need it ?
+> >
+> >    You seem to call clk_get_rate() on the module clock, I doubt that's
+> > correct topologically...
 >
-> Allwinner A64's TCON0 can output RGB666 LCD signal.
+> I think it's correct but just like Geert mentioned that there is no any
+> patch
+> in drivers/clk/renesas/r8a77995-cpg-mssr.c adding RPC-related clocks.
 >
-> Add its pinmux.
 >
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> I patched dt-bindings/clock/r8a77995-cpg-mssr.h for some simple testing
+>
+> -#define R8A77995_CLK_RPC               29
+> -#define R8A77995_CLK_RPCD2             30
+> +#define R8A77995_CLK_RPC               31
+> +#define R8A77995_CLK_RPCD2             32
 
-Applied, with sed/DTS/dts/ in the commit title
+That change doesn't make sense to me...
 
-Maxime
+> by clk_prepare_enable() & clk_disable_unprepare() with CPG_MOD 917
+> on D3 draak board, it is working fine.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+... and is not sufficient to allow the above two calls.
 
---nmucr3o54tqc5cok
-Content-Type: application/pgp-signature; name="signature.asc"
+Besides, making explicit clk_prepare_enable() calls bypasses Runtime PM
+and the automatic disabling of unused clocks, thus hiding bugs related to
+Runtime PM.  Which is probably why your driver doesn't work for Sergei...
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJaUwAKCRDj7w1vZxhR
-xeRpAP9JHeg2w3hIcKAnJSqyT4MAdUGk3w86iyTzdo8MN3q3FwEAiizS3iTsBbIV
-WSkjcMS/7QscOwCwAxJe8Na87XN4owM=
-=CwT1
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---nmucr3o54tqc5cok--
+                        Geert
 
---===============0504618374==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0504618374==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
