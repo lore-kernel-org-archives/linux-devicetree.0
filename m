@@ -1,82 +1,64 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: Re: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
- driver support
-Date: Mon, 20 May 2019 09:32:15 +0000
-Message-ID: <VI1PR0402MB3519CE9CC1BD721708304D2987060@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+Date: Mon, 20 May 2019 09:33:36 +0000
+Message-ID: <AM0PR04MB643466338B440374D97F2805EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
+References: <20190520032020.7920-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Peng Fan <peng.fan@nxp.com>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Cc: "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-U29ycnkgZm9yIGRlbGF5ZWQgcmVzcG9uc2UgdG8geW91LCBteSBtYWlsIGNsaWVudCBkaWQgc29t
-ZXRoaW5nIHdyb25nLiA6KA0KDQo+IE9uIFdlZCwgMyBBcHIgMjAxOSwgSmFja3kgQmFpIHdyb3Rl
-Og0KPiANCj4gPiBGcm9tOiBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4NCj4gPg0KPiA+IFRo
-ZSBzeXN0ZW0gY291bnRlciAoc3lzX2N0cikgaXMgYSBwcm9ncmFtbWFibGUgc3lzdGVtIGNvdW50
-ZXIgd2hpY2gNCj4gPiBwcm92aWRlcyBhIHNoYXJlZCB0aW1lIGJhc2UgdG8gdGhlIENvcnRleCBB
-MTUsIEE3LCBBNTMgZXRjIGNvcmVzLg0KPiA+IEl0IGlzIGludGVuZGVkIGZvciB1c2UgaW4gYXBw
-bGljYXRpb25zIHdoZXJlIHRoZSBjb3VudGVyIGlzIGFsd2F5cw0KPiA+IHBvd2VyZWQgb24gYW5k
-IHN1cHBvcnRzIG11bHRpcGxlLCB1bnJlbGF0ZWQgY2xvY2tzLiBUaGUgc3lzX2N0cg0KPiA+IGhh
-cmR3YXJlDQo+ID4gc3VwcG9ydHM6DQo+ID4gIC0gNTYtYml0IGNvdW50ZXIgd2lkdGggKHJvbGwt
-b3ZlciB0aW1lIGdyZWF0ZXIgdGhhbiA0MCB5ZWFycykNCj4gPiAgLSBjb21wYXJlIGZyYW1lKDY0
-LWJpdCBjb21wYXJlIHZhbHVlKSBjb250YWlucyBwcm9ncmFtbWFibGUgaW50ZXJydXB0DQo+ID4g
-ICAgZ2VuZXJhdGlvbg0KPiANCj4gSSBob3BlIHRoYXQncyBhIDw9IGNvbXBhcmUgYW5kIG5vdCBh
-ID09IC4uLi4NCj4gDQoNClllcywgaXQgaXMgPD0gY29tcGFyZSwgd2hlbiB0aGUgZnJlZSBydW5u
-aW5nIGNvdW50ZXIgdmFsdWUgPj0gdGhlIGNvbXBhcmUgdmFsdWUsIHRoZW4gaW50ZXJydXB0IGlz
-IHRyaWdnZXJlZC4NCg0KPiA+ICtzdGF0aWMgdm9pZCBzeXNjdHJfdGltZXJfZW5hYmxlKGJvb2wg
-ZW5hYmxlKSB7DQo+ID4gKyAgICAgdTMyIHZhbDsNCj4gPiArDQo+ID4gKyAgICAgdmFsID0gcmVh
-ZGwoc3lzX2N0cl9iYXNlICsgQ01QQ1IpOw0KPiA+ICsgICAgIHZhbCAmPSB+U1lTX0NUUl9FTjsN
-Cj4gPiArICAgICBpZiAoZW5hYmxlKQ0KPiA+ICsgICAgICAgICAgICAgdmFsIHw9IFNZU19DVFJf
-RU47DQo+ID4gKw0KPiA+ICsgICAgIHdyaXRlbCh2YWwsIHN5c19jdHJfYmFzZSArIENNUENSKTsN
-Cj4gDQo+IFRoaXMgcmVhZCBpcyByZWFsbHkganVzdCBvdmVyaGVhZC4gV2h5IGFyZW4ndCB5b3Ug
-Y2FjaGluZyB0aGUgY29udHJvbCByZWdpc3Rlcg0KPiB2YWx1ZT8gSXQncyBub3QgYSBzZWxmIG1v
-ZGlmeWluZyByZWdpc3RlciBhbmQgSSBkb24ndCBzZWUgY29uY3VycmVuY3kgaGVyZQ0KPiBlaXRo
-ZXIuDQo+IA0KDQpUaGFua3MsIEkgd2lsbCB1c2UgYSBjYWNoZWQgdmFsdWUgZm9yIGl0Lg0KDQo+
-ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHN5c2N0cl9pcnFfYWNrbm93bGVkZ2Uodm9p
-ZCkgew0KPiA+ICsgICAgIC8qDQo+ID4gKyAgICAgICogY2xlYXIgdGhlIGVuYWJsZSBiaXQoRU4g
-PTApIHdpbGwgY2xlYXINCj4gPiArICAgICAgKiB0aGUgc3RhdHVzIGJpdChJU1RBVCA9IDApLCB0
-aGVuIHRoZSBpbnRlcnJ1cHQNCj4gPiArICAgICAgKiBzaWduYWwgd2lsbCBiZSBuZWdhdGVkKGFj
-a25vd2xlZGdlZCkuDQo+ID4gKyAgICAgICovDQo+ID4gKyAgICAgc3lzY3RyX3RpbWVyX2VuYWJs
-ZShmYWxzZSk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbmxpbmUgdTY0IHN5c2N0cl9y
-ZWFkX2NvdW50ZXIodm9pZCkgew0KPiA+ICsgICAgIHUzMiBjbnRfaGksIHRtcF9oaSwgY250X2xv
-Ow0KPiA+ICsNCj4gPiArICAgICBkbyB7DQo+ID4gKyAgICAgICAgICAgICBjbnRfaGkgPSByZWFk
-bF9yZWxheGVkKHN5c19jdHJfYmFzZSArIENOVENWX0hJKTsNCj4gPiArICAgICAgICAgICAgIGNu
-dF9sbyA9IHJlYWRsX3JlbGF4ZWQoc3lzX2N0cl9iYXNlICsgQ05UQ1ZfTE8pOw0KPiA+ICsgICAg
-ICAgICAgICAgdG1wX2hpID0gcmVhZGxfcmVsYXhlZChzeXNfY3RyX2Jhc2UgKyBDTlRDVl9ISSk7
-DQo+ID4gKyAgICAgfSB3aGlsZSAodG1wX2hpICE9IGNudF9oaSk7DQo+IA0KPiBXaGVuIHdpbGwg
-aGFyZHdhcmUgcGVvcGxlIGZpbmFsbHkgZ2V0IGl0PyBJcyBpdCBzbyBkYW1uZWQgaGFyZCB0byBt
-YWtlIHRoZQ0KPiByZWFkb3V0IGRvOg0KPiANCj4gICAgICAgICBsbyA9IHJlYWRfbG8oKSAgICAg
-ICAgICAtPiBpbnRlcm5hbGx5IGxhdGNoZXMgSEkgaW4gaGFyZHdhcmUNCj4gICAgICAgICBoaSA9
-IHJlYWRfaGkoKSAgICAgICAgICAtPiByZWFkcyB0aGUgbGF0Y2hlZCB2YWx1ZQ0KPiANCj4gSXQn
-cyBub3Qgcm9ja2V0IHNjaWVuY2UsIGJ1dCBpdCB3b3VsZCBzcGFyZSB0aGVzZSBob3JyaWJsZSBy
-ZWFkIGxvb3BzLiBCdXQgc3VyZSwNCj4gcGVyZm9ybWFuY2UgaGFwcGVucyBpbiB3aGl0ZXBhcGVy
-cyBhbmQgbWFya2V0aW5nIHNsaWRlcyAuLi4uDQo+IA0KDQpTYWRseSwgaGFyZHdhcmUgcGVvcGxl
-IGRvbid0IGltcGxlbWVudCBzdWNoIGludGVybmFsIGxhdGNoIGxvZ2ljLCBzbyB3ZSBuZWVkIHRv
-IHVzZSBzdWNoIHJlYWQgbG9vcC4NCg0KPiA+ICsNCj4gPiArICAgICByZXR1cm4gICgodTY0KSBj
-bnRfaGkgPDwgMzIpIHwgY250X2xvOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHN5c2N0cl9z
-ZXRfbmV4dF9ldmVudCh1bnNpZ25lZCBsb25nIGRlbHRhLA0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpIHsNCj4gPiArICAg
-ICB1MzIgY21wX2hpLCBjbXBfbG87DQo+ID4gKyAgICAgdTY0IG5leHQ7DQo+ID4gKw0KPiA+ICsg
-ICAgIHN5c2N0cl90aW1lcl9lbmFibGUoZmFsc2UpOw0KPiA+ICsNCj4gPiArICAgICBuZXh0ID0g
-c3lzY3RyX3JlYWRfY291bnRlcigpOw0KPiA+ICsNCj4gPiArICAgICBuZXh0ICs9IGRlbHRhOw0K
-PiA+ICsNCj4gPiArICAgICBjbXBfaGkgPSAobmV4dCA+PiAzMikgJiAweDAwZmZmZmY7DQo+ID4g
-KyAgICAgY21wX2xvID0gbmV4dCAmIDB4ZmZmZmZmZmY7DQo+ID4gKw0KPiA+ICsgICAgIHdyaXRl
-bF9yZWxheGVkKGNtcF9oaSwgc3lzX2N0cl9iYXNlICsgQ01QQ1ZfSEkpOw0KPiA+ICsgICAgIHdy
-aXRlbF9yZWxheGVkKGNtcF9sbywgc3lzX2N0cl9iYXNlICsgQ01QQ1ZfTE8pOw0KPiANCj4gUGxl
-YXNlIGRvY3VtZW50IHRoYXQgdGhpcyBpcyBhIDw9IGNvbXBhcmF0b3IuIElmIHRoYXQncyBub3Qg
-dHJ1ZSB0aGVuIHRoaXMNCj4gZnVuY3Rpb24gaXMgYnJva2VuIGZvciBzbWFsbCBkZWx0YXMgYW5k
-IGRlbGF5cyBiZXR3ZWVuIHJlYWRfY291bnRlcigpIGFuZA0KPiBlbmFibGUuDQoNCkl0IGlzIDw9
-IGNvbXBhcmF0b3IsIHNvIGl0IGlzIHNhZmUuDQoNCj4gDQo+ID4gKw0KPiA+ICsgICAgIHN5c2N0
-cl90aW1lcl9lbmFibGUodHJ1ZSk7DQo+ID4gKw0KPiA+ICsgICAgIHJldHVybiAwOw0KPiA+ICt9
-DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHN5c2N0cl9zZXRfc3RhdGVfb25lc2hvdChzdHJ1Y3Qg
-Y2xvY2tfZXZlbnRfZGV2aWNlICpldnQpIHsNCj4gPiArICAgICBzeXNjdHJfdGltZXJfZW5hYmxl
-KHRydWUpOw0KPiANCj4gVGhhdCdzIHdyb25nLiBXaHkgZG8geW91IHdhbnQgdG8gZW5hYmxlIHRo
-ZSB0aW1lciBoZXJlPyBXaGVuIHRoZSBzdGF0ZSBpcw0KPiBzZXQgdG8gb25lIHNob3QgdGhlbiB0
-aGUgbmV4dCBvcGVyYXRpb24gaXMgc2V0X25leHRfZXZlbnQoKSBidXQgYmVmb3JlIHRoYXQNCj4g
-bm90aGluZyBzaG91bGQgZXZlciBjb21lIG91dCBvZiB0aGUgdGltZXIuDQo+IA0KDQpUaGFua3Ms
-IEkgd2lsbCByZW1vdmUgaXQgaW4gVjQuDQoNCkJSDQpKYWNreSBCYWkNCg0KPiBUaGFua3MsDQo+
-IA0KPiAgICAgICAgIHRnbHgNCg==
+On 20.05.2019 06:06, Peng Fan wrote:=0A=
+> Introduce fusable-node property for i.MX OCOTP driver.=0A=
+> The property will only be used by Firmware(eg. U-Boot) to=0A=
+> runtime disable the nodes.=0A=
+> =0A=
+> Take i.MX6ULL for example, there are several parts that only=0A=
+> have limited modules enabled controlled by OCOTP fuse. It is=0A=
+> not flexible to provide several dts for the serval parts, instead=0A=
+> we could provide one device tree and let Firmware to runtime disable=0A=
+> the device tree nodes for those modules that are disable(fused).=0A=
+> =0A=
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>=0A=
+> ---=0A=
+> =0A=
+> Currently NXP vendor use U-Boot to set status to disabled for devices=0A=
+> that could not function,=0A=
+> https://source.codeaurora.org/external/imx/uboot-imx/tree/arch/arm/mach-i=
+mx/mx6/module_fuse.c?h=3Dimx_v2018.03_4.14.98_2.0.0_ga#n149=0A=
+> But this approach is will not work if kernel dts node path changed.=0A=
+> =0A=
+> There are two approaches to resolve:=0A=
+> =0A=
+> 1. This patch is to add a fusable-node property, and Firmware will parse=
+=0A=
+>     the property and read fuse to decide whether to disable or keeep enab=
+le=0A=
+>     the nodes.=0A=
+> =0A=
+> 2. There is another approach is that add nvmem-cells for all nodes that=
+=0A=
+>     could be disabled(fused). Then in each linux driver to use nvmem=0A=
+>     api to detect fused or not, or in linux driver common code to check=
+=0A=
+>     device functionable or not with nvmem API.=0A=
+> =0A=
+> =0A=
+> To make it easy to work, we choose [1] here. Please advise whether=0A=
+> it is acceptable, because the property is not used by linux driver in=0A=
+> approach [1]. Or you prefer [2] or please advise if any better solution.=
+=0A=
+=0A=
+Couldn't firmware parse nvmem-cells? Even without a full nvmem subsystem =
+=0A=
+it would be possible for imx-specific code to walk the entire device =0A=
+tree, parse nvmem-cells and disable nodes which are disabled by fuse.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
