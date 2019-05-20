@@ -1,8 +1,8 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 2/3] dt-bindings: mfd: Document short/long press duration for
- bd718x7
-Date: Mon, 20 May 2019 08:55:57 +0000
-Message-ID: <6983773421a6d89b7c206a71684a95c83eef118b.1558341613.git.leonard.crestez@nxp.com>
+Subject: [PATCH 3/3] mfd: bd718x7: Make power button press duration
+ configurable
+Date: Mon, 20 May 2019 08:55:58 +0000
+Message-ID: <3ffd7b9d0b9cc45ac0fd671a701f857be4cfde46.1558341613.git.leonard.crestez@nxp.com>
 References: <cover.1558341613.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -10,7 +10,7 @@ Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1558341613.git.leonard.crestez@nxp.com>
 Content-Language: en-US
-Content-ID: <75392B1B12119348BD5D51BAB52C4B5C@eurprd04.prod.outlook.com>
+Content-ID: <0E4DA6406293D14A8503094617A5C4CB@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,35 +24,84 @@ To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee.jones@li
 Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Angus Ainslie <angus@akkea.ca>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-These valeus can be overwritten at probe time.
+Allow overwriting the values in BD718XX_REG_PWRONCONFIG0 and
+BD718XX_REG_PWRONCONFIG1 via devicetree.
+
+Keep existing values (from bootloader or OTP) if property is not
+present.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt         | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mfd/rohm-bd718x7.c | 42 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-index d5f68ac78d15..3649c1191432 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-@@ -36,10 +36,18 @@ switched power state to SNVS. If reset is done via READY state the power
- outputs will be returned to HW control by OTP loading. Thus the reset
- target state is set to READY by default. If SNVS state is used the boot
- crucial regulators must have the regulator-always-on and regulator-boot-on
- properties set in regulator node.
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index cdbef83884f0..dffa3f4bffad 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -79,10 +79,48 @@ static const struct regmap_config bd718xx_regmap_config = {
+ 	.volatile_table = &volatile_regs,
+ 	.max_register = BD718XX_MAX_REGISTER - 1,
+ 	.cache_type = REGCACHE_RBTREE,
+ };
  
-+- rohm,short-press-ms	: Short press duration in milliseconds
-+- rohm,long-press-ms	: Long press duration in milliseconds
++static int bd718xx_init_press_duration(struct bd718xx *bd718xx)
++{
++	struct device* dev = bd718xx->dev;
++	u32 short_press_ms, long_press_ms;
++	u32 short_press_value, long_press_value;
++	int ret;
 +
-+Configure the "short press" and "long press" timers for the power button.
-+Values are rounded to what hardware supports (500ms multiple for short and
-+1000ms multiple for long). If these properties are not present the existing
-+configuration (from bootloader or OTP) is not touched.
++	ret = of_property_read_u32(dev->of_node, "rohm,short-press-ms",
++				   &short_press_ms);
++	if (!ret) {
++		short_press_value = min(15u, short_press_ms / 500);
++		ret = regmap_update_bits(bd718xx->regmap,
++					 BD718XX_REG_PWRONCONFIG0,
++					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
++					 short_press_value);
++		if (ret) {
++			dev_err(dev, "Failed to init pwron short press\n");
++			return ret;
++		}
++	}
 +
- Example:
++	ret = of_property_read_u32(dev->of_node, "rohm,long-press-ms",
++				   &long_press_ms);
++	if (!ret) {
++		long_press_value = min(15u, long_press_ms / 1000);
++		ret = regmap_update_bits(bd718xx->regmap,
++					 BD718XX_REG_PWRONCONFIG1,
++					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
++					 long_press_value);
++		if (ret) {
++			dev_err(dev, "Failed to init pwron long press\n");
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
+ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+ {
+ 	struct bd718xx *bd718xx;
+ 	int ret;
+@@ -115,10 +153,14 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "Failed to add irq_chip\n");
+ 		return ret;
+ 	}
  
- 	/* external oscillator node */
- 	osc: oscillator {
- 		compatible = "fixed-clock";
++	ret = bd718xx_init_press_duration(bd718xx);
++	if (ret)
++		return ret;
++
+ 	ret = regmap_irq_get_virq(bd718xx->irq_data, BD718XX_INT_PWRBTN_S);
+ 
+ 	if (ret < 0) {
+ 		dev_err(&i2c->dev, "Failed to get the IRQ\n");
+ 		return ret;
 -- 
 2.17.1
