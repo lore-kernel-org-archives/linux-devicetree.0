@@ -1,118 +1,74 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 3/3] ARM: dts: rockchip: Configure the GPU thermal zone for mickey
-Date: Mon, 20 May 2019 15:00:51 -0700
-Message-ID: <20190520220051.54847-3-mka@chromium.org>
-References: <20190520220051.54847-1-mka@chromium.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 08/10] dt: fix refs that were renamed to json with the
+ same file name
+Date: Mon, 20 May 2019 18:00:06 -0500
+Message-ID: <CAL_JsqJj42BR42NNFj2xkY_EF_6nQnU_D-onV4GZvortv8ptvQ@mail.gmail.com>
+References: <cover.1558362030.git.mchehab+samsung@kernel.org>
+ <66231286de0f11b45075292216a939858de8c3e5.1558362030.git.mchehab+samsung@kernel.org>
+ <CAL_JsqKGzNBjxhvY2Vq9v8SXiND+7sjmsOwKkeu+gEM=2Y-n_A@mail.gmail.com> <20190520131344.39635733@coco.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520220051.54847-1-mka@chromium.org>
+In-Reply-To: <20190520131344.39635733@coco.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, devicetree@
 List-Id: devicetree@vger.kernel.org
 
-mickey crams a lot of hardware into a tiny package, which requires
-more aggressive thermal throttling than for devices with a larger
-footprint. Configure the GPU thermal zone to throttle the GPU
-progressively at temperatures >= 60°C. Heat dissipated by the
-CPUs also affects the GPU temperature, hence we cap the CPU
-frequency to 1.4 GHz for temperatures above 65°C. Further throttling
-of the CPUs may be performed by the CPU thermal zone.
+On Mon, May 20, 2019 at 11:14 AM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Em Mon, 20 May 2019 10:57:47 -0500
+> Rob Herring <robh+dt@kernel.org> escreveu:
+>
+> > On Mon, May 20, 2019 at 9:48 AM Mauro Carvalho Chehab
+> > <mchehab+samsung@kernel.org> wrote:
+> > >
+> > > This file was converted to json, but the references weren't
+> >
+> > Technically, converted to json-schema (the language) or yaml (the format).
+>
+> Ok. Do you want me to change it at the patch and resend?
 
-The configuration matches that of the downstream Chrome OS 3.14
-kernel, the 'official' kernel for mickey.
+No, I can fixup.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v2:
-- specify all CPUs as cooling devices
-- s/downstram/downstream/ in commit message
+>
+> >
+> > > renamed.
+> > >
+> > > Fixes: 66ed144f147a ("dt-bindings: interrupt-controller: Convert ARM GIC to json-schema")
+> > > (and other similar commits)
+> > >
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/omap/crossbar.txt       | 2 +-
+> > >  .../devicetree/bindings/clock/samsung,s5pv210-clock.txt       | 2 +-
+> > >  .../bindings/interrupt-controller/marvell,odmi-controller.txt | 2 +-
+> > >  Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt   | 2 +-
+> > >  MAINTAINERS                                                   | 4 ++--
+> > >  5 files changed, 6 insertions(+), 6 deletions(-)
+> >
+> > FYI, I'm actively looking for this in conversions now as we've had a
+> > few of these. For cases where we have a lot of references, I'm fixing
+> > this by keeping the .txt file with a reference to the .yaml file.
+>
+> If the file name remains with the same name, except for the .txt -> .yaml,
+> you can just run the "scripts/documentation-file-ref-check --fix"
+> after this patch:
+>
+>         Subject: [PATCH 04/10] scripts/documentation-file-ref-check: teach about .txt -> .yaml renames
+>
+> and it should detect and automatically fix all the references. As any
+> auto-hint script, you need to double-check the results.
 
-Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
-entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
----
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+Nice!
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index 34797abe3403..945e80801292 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -136,6 +136,73 @@
- 	};
- };
- 
-+&gpu_thermal {
-+	/delete-node/ trips;
-+	/delete-node/ cooling-maps;
-+
-+	trips {
-+		gpu_alert_warmish: gpu_alert_warmish {
-+			temperature = <60000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_alert_warm: gpu_alert_warm {
-+			temperature = <65000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_alert_hotter: gpu_alert_hotter {
-+			temperature = <84000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_alert_very_very_hot: gpu_alert_very_very_hot {
-+			temperature = <86000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_crit: gpu_crit {
-+			temperature = <90000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+
-+	cooling-maps {
-+		/* After 1st level throttle the GPU down to as low as 400 MHz */
-+		gpu_warmish_limit_gpu {
-+			trip = <&gpu_alert_warmish>;
-+			cooling-device = <&gpu THERMAL_NO_LIMIT 1>;
-+		};
-+
-+		/*
-+		 * Slightly after we throttle the GPU, we'll also make sure that
-+		 * the CPU can't go faster than 1.4 GHz.  Note that we won't
-+		 * throttle the CPU lower than 1.4 GHz due to GPU heat--we'll
-+		 * let the CPU do the rest itself.
-+		 */
-+		gpu_warm_limit_cpu {
-+			trip = <&gpu_alert_warm>;
-+			cooling-device = <&cpu0 4 4>,
-+					 <&cpu1 4 4>,
-+					 <&cpu2 4 4>,
-+					 <&cpu3 4 4>;
-+		};
-+
-+		/* When hot, GPU goes down to 300 MHz */
-+		gpu_hotter_limit_gpu {
-+			trip = <&gpu_alert_hotter>;
-+			cooling-device = <&gpu 2 2>;
-+		};
-+
-+		/* When really hot, don't let GPU go _above_ 300 MHz */
-+		gpu_very_very_hot_limit_gpu {
-+			trip = <&gpu_alert_very_very_hot>;
-+			cooling-device = <&gpu 2 THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-+
- &i2c2 {
- 	status = "disabled";
- };
--- 
-2.21.0.1020.gf2820cf01a-goog
+>
+> > I'll pick up the DT patches in the series.
+>
+> OK. There are a few such fixes inside patch 10/10. Do you want me
+> to split it or can it go through Jonathan's doc tree?
+
+Jon's tree is fine.
+
+Rob
