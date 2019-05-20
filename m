@@ -1,59 +1,67 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH v3 3/3] soc: fsl: add RCPM driver
-Date: Mon, 20 May 2019 07:39:29 +0000
-Message-ID: <AM5PR0402MB2865E57004468965FF2003A2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190520065816.32360-1-ran.wang_1@nxp.com>
- <20190520065816.32360-3-ran.wang_1@nxp.com> <20190520072630.GA3674@amd>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/3] arm64: allwinner: Enable AXP803's USB power supply
+Date: Mon, 20 May 2019 09:41:40 +0200
+Message-ID: <20190520074140.7kln73ws3fkt63gm@flea>
+References: <20190418161804.17723-1-wens@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5pummrpkyefqzedl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520072630.GA3674@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190418161804.17723-1-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On Monday, May 20, 2019 15:27: Pavel Machek wrote:
->=20
-> Hi!
->=20
-> > The NXP's QorIQ Processors based on ARM Core have RCPM module (Run
-> > Control and Power Management), which performs all device-level tasks
-> > associated with power management such as wakeup source control.
-> >
-> > This driver depends on PM wakeup source framework which help to
-> > collect wake information.
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
->=20
-> > +// Copyright 2019 NXP
-> > +//
-> > +// Author: Ran Wang <ran.wang_1@nxp.com>,
->=20
-> extra ,
+--5pummrpkyefqzedl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK, will update.
+On Fri, Apr 19, 2019 at 12:18:01AM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> Hi everyone,
+>
+> This series follows up on the A83T USB OTG series. The USB power supply
+> portion of the AXP803, the PMIC used with the A64, is identical to the
+> part in the AXP813/AXP818, used with the A83T.
+>
+> This series enables the USB power supply in the AXP803 using the AXP813's
+> compatible string as a fallback. The per-model compatible string is still
+> added as a contigency.
+>
+> Patch 1 adds an mfd cell for the USB power supply, to the AXP803.
+>
+> Patch 2 adds a device node for the USB power supply.
+>
+> Patch 3 enables the USB power supply on the Bananapi M64.
+>
+> Unfortunately the original Pine64 does not wire up the USB power supply,
+> and I don't have any other A64 boards.
+>
+> The mfd patch can go in through the mfd tree. There are no compile-time
+> dependencies. We, sunxi, can take the DT patches.
 
-> > +	rcpm =3D dev_get_drvdata(dev);
-> > +	if (!rcpm)
-> > +		return -EINVAL;
-> > +
-> > +	/* Begin with first registered wakeup source */
-> > +	ws =3D wakeup_source_get_next(NULL);
-> > +	while (ws) {
->=20
-> while (ws =3D wakeup_source_get_next(NULL))
->=20
-> ?
-I just answered this in v2 mail thread:=20
-"Actually, we only pass NULL to wakeup_source_get_next()
-at very first call to get 1st wakeup source. Then in the while
-loop, we will fetch next source but not 1st, that's different.
-I am afraid your suggestion is not quite correct."
+Applied 2 and 3, thanks!
 
-Regards
-Ran
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--5pummrpkyefqzedl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJaNAAKCRDj7w1vZxhR
+xT8YAQCrhNoaCeDiNfKD0yyLnByQlt1Fhq3zrDMR7EoKAmRKSwD47VSRP1Bqcw2Q
+ljwc/WnLZXRKEMlsgmjlH+EMmQ0vAg==
+=A9Ui
+-----END PGP SIGNATURE-----
+
+--5pummrpkyefqzedl--
