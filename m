@@ -1,38 +1,24 @@
-Return-Path: <SRS0=MGmW=T3=klsmartin.com=Leif.Middelschulte@kernel.org>
-From: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-Subject: [PATCH 00/10] input: touchscreen: stmpe: ext. features
-Date: Mon, 27 May 2019 18:07:26 +0200
-Message-ID: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
+Return-Path: <SRS0=+993=TU=verge.net.au=horms@kernel.org>
+Date: Mon, 20 May 2019 13:42:51 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 11/13] ARM: dts: r7s9210: Add USB Host support
+Message-ID: <20190520114246.krdualiwdhr3gu4h@verge.net.au>
+References: <20190515152048.42363-1-chris.brandt@renesas.com>
+ <20190515152048.42363-12-chris.brandt@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-To: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515152048.42363-12-chris.brandt@renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This set of patches implements various features suppported by the STMPE811
-touchscreen controller. It integrates certain properties to facilitate the
-operation/integration with kernel provided interfaces/properties and userland
-libraries, such as libinput.
+On Wed, May 15, 2019 at 10:20:46AM -0500, Chris Brandt wrote:
+> Add EHCI and OHCI host support for RZ/A2.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Based on Linus' v5.2-rc2
+Thanks Chris,
 
-Leif Middelschulte (10):
-  dt-bindings: input: touchscreen: stmpe: add touch window configuration
-  Input: stmpe-ts - implement touch window configuration support
-  dt-bindings: input: touchscreen: stmpe: add resolution support
-  Input: stmpe-ts - implement resolution support
-  dt-bindings: input: touchscreen: stmpe: add XY mode
-  Input: stmpe-ts - implement XY acquisition mode
-  dt-bindings: input: touchscreen: stmpe: add axes inversion and swap
-  Input: stmpe-ts - axes inversion and swapping
-  dt-bindings: input: touchscreen: stmpe: add tracking index
-  Input: stmpe-ts - implement tracking index
-
- .../bindings/input/touchscreen/stmpe.txt      |  35 ++++
- drivers/input/touchscreen/stmpe-ts.c          | 161 ++++++++++++++++--
- include/linux/mfd/stmpe.h                     |   1 +
- 3 files changed, 185 insertions(+), 12 deletions(-)
-
--- 
-2.21.0
+applied for inclusion in v5.3.
