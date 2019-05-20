@@ -1,48 +1,88 @@
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH 2/2] dt-bindings: power: supply: Add documentation for the VINDPM properties
-Date: Mon, 20 May 2019 11:07:12 -0700
-Message-ID: <20190520180712.32405-3-angus@akkea.ca>
+Subject: [PATCH 1/2] power: supply: bq25890: Add support for setting bq25890 and bq25896's VINDPM
+Date: Mon, 20 May 2019 11:07:11 -0700
+Message-ID: <20190520180712.32405-2-angus@akkea.ca>
 References: <20190520180712.32405-1-angus@akkea.ca>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190520180712.32405-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 To: angus.ainslie@puri.sm
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Kuzmenko <eric.kuzmenko@puri.sm>, Angus Ainslie <angus@akkea.ca>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation on how to control VINDPM from the devicetree.
+From: Eric Kuzmenko <eric.kuzmenko@puri.sm>
 
+The bq25890 has low voltage protection on VIN. Allow the register
+to be set from the device tree.
+
+Signed-off-by: Eric Kuzmenko <eric.kuzmenko@puri.sm>
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- .../devicetree/bindings/power/supply/bq25890.txt          | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/power/supply/bq25890_charger.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-index dc0568933359..fe8b709dd666 100644
---- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-+++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-@@ -26,9 +26,15 @@ Optional properties:
- - ti,use-ilim-pin: boolean, if present the ILIM resistor will be used and the
-     input current will be the lower between the resistor setting and the IINLIM
-     register setting;
-+- ti,use-vinmin-threshold: boolean, if present the FORCE_VINDPM bit will be set
-+    and the input voltage limit will be configured based on "ti,vinmin-threshold"
- - ti,thermal-regulation-threshold: integer, temperature above which the charge
-     current is lowered, to avoid overheating (in degrees Celsius). If omitted,
-     the default setting will be used (120 degrees);
-+- ti,vinmin-threshold: integer, lower absolute threshold for VINDPM. If the
-+    voltage falls below this threshold the charge current is reduced until the
-+    input voltage rises above the input voltage limit. If omitted, the default
-+    setting will be used (4.4V);
- 
- Example:
- 
-@@ -46,4 +52,6 @@ bq25890 {
- 
-         ti,use-ilim-pin;
-         ti,thermal-regulation-threshold = <120>;
-+        ti,use-vinmin-threshold;
-+        ti,vinmin-threshold = <3900000>;
+diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
+index 66991e6f75d9..34fc89776994 100644
+--- a/drivers/power/supply/bq25890_charger.c
++++ b/drivers/power/supply/bq25890_charger.c
+@@ -75,6 +75,8 @@ struct bq25890_init_data {
+ 	u8 boosti;	/* boost current limit		*/
+ 	u8 boostf;	/* boost frequency		*/
+ 	u8 ilim_en;	/* enable ILIM pin		*/
++	u8 force_vindpm;/* force vinmin threshold	*/
++	u8 vindpm;	/* vinmin threshold		*/
+ 	u8 treg;	/* thermal regulation threshold */
  };
+ 
+@@ -250,6 +252,7 @@ enum bq25890_table_ids {
+ 	TBL_VREG,
+ 	TBL_BOOSTV,
+ 	TBL_SYSVMIN,
++	TBL_VINDPM,
+ 
+ 	/* lookup tables */
+ 	TBL_TREG,
+@@ -289,6 +292,7 @@ static const union {
+ 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
+ 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
+ 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
++	[TBL_VINDPM] =	{ .rt = {2600000, 15300000, 100000} },	 /* uV */
+ 
+ 	/* lookup tables */
+ 	[TBL_TREG] =	{ .lt = {bq25890_treg_tbl, BQ25890_TREG_TBL_SIZE} },
+@@ -621,6 +625,8 @@ static int bq25890_hw_init(struct bq25890_device *bq)
+ 		{F_BOOSTI,	 bq->init_data.boosti},
+ 		{F_BOOSTF,	 bq->init_data.boostf},
+ 		{F_EN_ILIM,	 bq->init_data.ilim_en},
++		{F_FORCE_VINDPM, bq->init_data.force_vindpm},
++		{F_VINDPM,	 bq->init_data.vindpm},
+ 		{F_TREG,	 bq->init_data.treg}
+ 	};
+ 
+@@ -783,11 +789,14 @@ static int bq25890_fw_read_u32_props(struct bq25890_device *bq)
+ 		{"ti,boost-max-current", false, TBL_BOOSTI, &init->boosti},
+ 
+ 		/* optional properties */
+-		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg}
++		{"ti,thermal-regulation-threshold",
++			true, TBL_TREG, &init->treg},
++		{"ti,vinmin-threshold", true, TBL_VINDPM, &init->vindpm}
+ 	};
+ 
+ 	/* initialize data for optional properties */
+ 	init->treg = 3; /* 120 degrees Celsius */
++	init->vindpm = 0x12; /* 4.4V */
+ 
+ 	for (i = 0; i < ARRAY_SIZE(props); i++) {
+ 		ret = device_property_read_u32(bq->dev, props[i].name,
+@@ -820,6 +829,8 @@ static int bq25890_fw_probe(struct bq25890_device *bq)
+ 
+ 	init->ilim_en = device_property_read_bool(bq->dev, "ti,use-ilim-pin");
+ 	init->boostf = device_property_read_bool(bq->dev, "ti,boost-low-freq");
++	init->force_vindpm =
++		device_property_read_bool(bq->dev, "ti,use-vinmin-threshold");
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
