@@ -1,52 +1,64 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm: Add SAI nodes
-Date: Mon, 20 May 2019 16:33:07 -0300
-Message-ID: <CAOMZO5BO7fXFX=qQh29P7Eji7WaAVsjR++BwiyRbkO9EtfNWxg@mail.gmail.com>
-References: <20190515144210.25596-1-daniel.baluta@nxp.com>
- <20190515144210.25596-2-daniel.baluta@nxp.com>
- <CAOMZO5Avmjf9GpGWBbMJrOxWdvdBTyXMoOPQw_uOQHhCayuHtg@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/5] 32-bit Meson: add the canvas module
+Date: Mon, 20 May 2019 21:43:48 +0200
+Message-ID: <20190520194353.24445-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5Avmjf9GpGWBbMJrOxWdvdBTyXMoOPQw_uOQHhCayuHtg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, mjourdan@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2019 at 3:33 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Daniel,
->
-> On Wed, May 15, 2019 at 11:42 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> >
-> > i.MX8MM has 5 SAI instances with the following base
-> > addresses according to RM.
-> >
-> > SAI1 base address: 3001_0000h
-> > SAI2 base address: 3002_0000h
-> > SAI3 base address: 3003_0000h
-> > SAI5 base address: 3005_0000h
-> > SAI6 base address: 3006_0000h
->
-> No SAI4?
->
-> I know the RM does not show the SAI4 in the memory map, but the clock
-> driver does show a SAI4 clock gate.
->
-> So it seems we have a contradiction in the reference manual. Could you
-> please double check with the internal folks?
+This adds the canvas module on Meson8, Meson8b and Meson8m2. The canvas
+IP is used by the video decoder hardware as well as the VPU (video
+output) hardware.
 
-Despite the SAI4 confusion, the current patch correctly describe the
-SAI interfaces as per the Reference Manual, so:
+Neither the VPU nor the video decoder driver support the 32-bit SoCs
+yet. However, we can still add the canvas module to have it available
+once these drivers gain support for the older SoCs.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+I have tested this on my Meson8m2 board by hacking the VPU driver to
+not re-initialize the VPU (and to use the configuration set by u-boot).
+With that hack I could get some image out of the CVBS connector. No
+changes to the canvas driver were required.
+
+Due to lack of hardware I could not test Meson8, but I'm following (as
+always) what the Amlogic 3.10 vendor kernel uses.
+Meson8b is also not tested because u-boot of my EC-100 doesn't have
+video output enabled (so I couldn't use the same hack I used on my
+Meson8m2 board).
+
+This series meant to be applied on top of "Meson8b: add support for the
+RTC on EC-100 and Odroid-C1" from [0]
+
+
+changes since v1 at [1]:
+- added new bindings for the 32-bit SoCs because they don't support the
+  "endianness" configuration (new patch #1, thanks to Maxime Jourdan
+  for pointing this out)
+- update the driver to reject the "endianness" configuration on the
+  32-bit SoCs (new patch #2)
+- patches #3 to #5 haven't changed compared to v1
+
+
+[0] https://patchwork.kernel.org/cover/10899509/
+[1] https://patchwork.kernel.org/cover/10899565/
+
+
+Martin Blumenstingl (5):
+  dt-bindings: soc: amlogic: canvas: document support for Meson8/8b/8m2
+  soc: amlogic: canvas: add support for Meson8, Meson8b and Meson8m2
+  ARM: dts: meson8: add the canvas module
+  ARM: dts: meson8m2: update the offset of the canvas module
+  ARM: dts: meson8b: add the canvas module
+
+ .../bindings/soc/amlogic/amlogic,canvas.txt   | 10 ++++++---
+ arch/arm/boot/dts/meson8.dtsi                 | 22 +++++++++++++++++++
+ arch/arm/boot/dts/meson8b.dtsi                | 22 +++++++++++++++++++
+ arch/arm/boot/dts/meson8m2.dtsi               | 10 +++++++++
+ drivers/soc/amlogic/meson-canvas.c            | 14 +++++++++++-
+ 5 files changed, 74 insertions(+), 4 deletions(-)
+
+-- 
+2.21.0
