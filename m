@@ -1,189 +1,76 @@
-From: Alexandru Ardelean <ardeleanalex@gmail.com>
-Subject: Re: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML bindings
-Date: Mon, 20 May 2019 13:46:37 +0300
-Message-ID: <CA+U=DsrvRcAARa+jZB8GKQ+q+wWWqAh7dmnHymLd9cpFGC2QSw@mail.gmail.com>
-References: <20190518215542.25140-1-lucasseikioshiro@gmail.com> <20190519122418.7722641b@archlinux>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [RFC v2 0/5] cpufreq support for the Raspberry Pi
+Date: Mon, 20 May 2019 12:47:02 +0200
+Message-ID: <20190520104708.11980-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190519122418.7722641b@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lucas Oshiro <lucasseikioshiro@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Popa <stefan.popa@analog.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com, Rodrigo Ribeiro <rodrigorsdc@gmail.com>, Alexandru Ardelean <alexandru.ardelean@analog.com>
+To: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net, sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com, ssuloev@orpaltech.com, linux-clk@vger.kernel.org, mturquette@baylibre.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 19, 2019 at 8:27 PM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Sat, 18 May 2019 18:55:42 -0300
-> Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
->
-> > Convert the old device tree documentation to yaml format.
-> >
-> > Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-> > Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> > Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> > ---
-> >
-> > Hello,
-> > We've added Stefan Popa as maintainer of the yaml documentation of this driver
-> > because we found through git that he was the author of the older documentation.
->
-> Definitely going to need an Ack from Stefan for that ;)
+Hi all,
+as some of you may recall I've been spending some time looking into
+providing 'cpufreq' support for the Raspberry Pi platform[1]. I think
+I'm close to something workable, so I'd love for you to comment on it.
 
-CC-ing my work-email
-There are some issues with it and mailing lists; I'll hopefully sort
-them out in the next weeks.
+There has been some design changes since the last version. Namely the
+fact that I now make sure *only* the CPU frequency is updated. The
+firmware API we use has two modes, with or without turbo. Enabling turbo
+implies not only scaling the CPU clock but also the VPU and other
+peripheral related clocks.  This is problematic as some of them are not
+prepared for this kind frequency changes. I spent some time adapting the
+peripheral drivers, but the result was disappointing as they poorly
+support live frequency changes (which most other chips accept, think for
+instance I2C and clock stretching) but also turned out hard to integrate
+into the kernel. As we were planning to use 'clk_notifiers' which turns
+out not to be such a good idea as it's prone to deadlocks and not
+recommended by the clock maintainers[2]. It's also worth mentioning that
+the foundation kernel doesn't support VPU frequency scaling either.
 
-Stefan is out-of-office.
-He'll take a look when he comes back.
+With this in mind, and as suggested by clock maintainers[2], I've
+decided to integrate the firmware clock interface into the bcm2835 clock
+driver. This, in my opinion, provides the least friction with the
+firmware and lets us write very simple and portable higher level
+drivers. As I did with the 'cpufreq' driver which simply queries the max
+and min frequencies available, which are configurable in the firmware,
+to then trigger the generic 'cpufreq-dt'.
 
-I'll add a few notes until then.
+In the future we could further integrate other firmware dependent clocks
+into the main driver. For instance to be able to scale the VPU clock,
+which should be operated through a 'devfreq' driver.
 
-I'd still like Stefan's ack to be final.
+This was tested on a RPi3b+ and if the series is well received I'll test
+it further on all platforms I own.
 
->
-> I've not really gotten yaml formats into my head yet, but from a quick
-> look I think this is fine.  I will however be looking for review from others
-> on these.
->
-> Thanks,
->
-> Jonathan
->
-> >
-> >  .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
-> >  .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
-> >  2 files changed, 66 insertions(+), 33 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
+That's all,
+kind regards,
+Nicolas
 
-Also update the MAINTAINERS file when changing this.
-For reference, many things can be borrowed from the ADXL345, which is
-similar (from a dt-binding doc perspective only).
+[1] https://lists.infradead.org/pipermail/linux-rpi-kernel/2019-April/008634.html
+[2] https://www.spinics.net/lists/linux-clk/msg36937.html
 
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> > new file mode 100644
-> > index 000000000000..a6e2893d2ab1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-> > +
-> > +maintainers:
-> > +  - Stefan Popa <stefan.popa@analog.com>
-> > +
-> > +description: |
-> > +  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
-> > +  both I2C & SPI interfaces
-> > +    https://www.analog.com/en/products/adxl372.html
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,adxl372
-> > +
-> > +  reg:
-> > +    description: the I2C address or SPI chip select number for the device
+---
 
-no need to add a description for reg
-it's a standard property
+Changes since v1:
+  - Addressed Viresh's comments in cpufreq driver
+  - Resend with (hopefully) proper CCs
 
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description:
-> > +      interrupt mapping for IRQ as documented in
-> > +      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+Nicolas Saenz Julienne (5):
+  clk: bcm2835: set CLK_GET_RATE_NOCACHE on CPU clocks
+  clk: bcm2835: set pllb_arm divisor as readonly
+  clk: bcm2835: use firmware interface to update pllb
+  dts: bcm2837: add per-cpu clock devices
+  cpufreq: add driver for Raspbery Pi
 
-no need to describe this either
+ arch/arm/boot/dts/bcm2837.dtsi        |   8 +
+ drivers/clk/bcm/clk-bcm2835.c         | 284 ++++++++++++++++++++++++--
+ drivers/cpufreq/Kconfig.arm           |   8 +
+ drivers/cpufreq/Makefile              |   1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c |  83 ++++++++
+ 5 files changed, 366 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
 
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-
-I think interrupts is also required.
-
-> > +
-> > +examples:
-> > +  - |
-> > +        #include <dt-bindings/gpio/gpio.h>
-> > +        #include <dt-bindings/interrupt-controller/irq.h>
-> > +        i2c0 {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                /* Example for a I2C device node */
-> > +                accelerometer@53 {
-> > +                        compatible = "adi,adxl372";
-> > +                        reg = <0x53>;
-> > +                        interrupt-parent = <&gpio>;
-> > +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > +                };
-> > +        };
-> > +  - |
-> > +        #include <dt-bindings/gpio/gpio.h>
-> > +        #include <dt-bindings/interrupt-controller/irq.h>
-> > +        spi0 {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                accelerometer@0 {
-> > +                        compatible = "adi,adxl372";
-> > +                        reg = <0>;
-> > +                        spi-max-frequency = <1000000>;
-> > +                        interrupt-parent = <&gpio>;
-> > +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > +                };
-> > +        };
-
-Rest looks good.
-
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> > deleted file mode 100644
-> > index a289964756a7..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> > +++ /dev/null
-> > @@ -1,33 +0,0 @@
-> > -Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-> > -
-> > -http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
-> > -
-> > -Required properties:
-> > - - compatible : should be "adi,adxl372"
-> > - - reg: the I2C address or SPI chip select number for the device
-> > -
-> > -Required properties for SPI bus usage:
-> > - - spi-max-frequency: Max SPI frequency to use
-> > -
-> > -Optional properties:
-> > - - interrupts: interrupt mapping for IRQ as documented in
-> > -   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > -
-> > -Example for a I2C device node:
-> > -
-> > -     accelerometer@53 {
-> > -             compatible = "adi,adxl372";
-> > -             reg = <0x53>;
-> > -             interrupt-parent = <&gpio>;
-> > -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > -     };
-> > -
-> > -Example for a SPI device node:
-> > -
-> > -     accelerometer@0 {
-> > -             compatible = "adi,adxl372";
-> > -             reg = <0>;
-> > -             spi-max-frequency = <1000000>;
-> > -             interrupt-parent = <&gpio>;
-> > -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > -     };
->
+-- 
+2.21.0
