@@ -1,36 +1,74 @@
-From: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: Document short/long press
- duration for bd718x7
-Date: Mon, 20 May 2019 09:15:57 +0000
-Message-ID: <79db32fef865216dc51d40b8bed81b45943b2687.camel@fi.rohmeurope.com>
-References: <cover.1558341613.git.leonard.crestez@nxp.com>
- <6983773421a6d89b7c206a71684a95c83eef118b.1558341613.git.leonard.crestez@nxp.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 3/3] soc: fsl: add RCPM driver
+Date: Mon, 20 May 2019 09:17:59 +0000
+Message-ID: <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+ <20190517033946.30763-3-ran.wang_1@nxp.com> <20190519213844.GH31403@amd>
+ <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <20190520085647.GA9748@amd>
+ <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <20190520090748.GB9748@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6983773421a6d89b7c206a71684a95c83eef118b.1558341613.git.leonard.crestez@nxp.com>
-Content-Language: de-DE
-Content-ID: <802EDE242BBF104DA2859AA9C0EA6AB1@de.rohmeurope.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>
-Cc: "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yibin.gong@nxp.com" <yibin.gong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190520090748.GB9748@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Leonard!
+Hi Pavel,
 
-This is how it should've been done from the beginning =)
+On Monday, May 20, 2019 17:08 Pavel Machek wrote:
+> > > Hi!
+> > >
+> > > > > > +static int rcpm_pm_prepare(struct device *dev) {
+> > > > > > +	struct device_node *np =3D dev->of_node;
+> > > > > > +	struct wakeup_source *ws;
+> > > > > > +	struct rcpm *rcpm;
+> > > > > > +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
+> > > > > > +	int i, ret;
+> > > > > > +
+> > > > > > +	rcpm =3D dev_get_drvdata(dev);
+> > > > > > +	if (!rcpm)
+> > > > > > +		return -EINVAL;
+> > > > > > +
+> > > > > > +	/* Begin with first registered wakeup source */
+> > > > > > +	ws =3D wakeup_source_get_next(NULL);
+> > > > > > +	while (ws) {
+> > > > >
+> > > > > while (ws =3D wakeup_source_get_next(NULL)) ?
+> > > >
+> > > > Actually, we only pass NULL to wakeup_source_get_next() at very
+> > > > first call to get 1st wakeup source. Then in the while loop, we
+> > > > will fetch next source but not 1st, that's different. I am afraid
+> > > > your suggestion is not quite correct.
+> > >
+> > > Sorry, I seen your next version before seeing this explanation.
+> > >
+> > > You are right, but the current code is "interesting". What about
+> > >
+> > >     ws =3D NULL;
+> > >     while (ws =3D wakeup_source_get_next(NULL)) ...
+> > >
+> > > then?
+> >
+> > Did you mean:
+> >      ws =3D NULL;
+> >      while (ws =3D wakeup_source_get_next(ws)) ...
+> >
+> >    Yes, that will be the same to my original logic, do you recommend
+> > to change to this? :)
+>=20
+> Yes please. It will be less confusing to the reader.
 
-On Mon, 2019-05-20 at 08:55 +0000, Leonard Crestez wrote:
-> These valeus can be overwritten at probe time.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+OK, if no other comment, I will work out v4, fix this and extra ','
+=20
+> Thanks (and sorry for cross-talk),
+
+That's OK, thanks for your time.
+
+Regards,
+Ran
