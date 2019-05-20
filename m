@@ -1,8 +1,8 @@
 From: megous via linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: [PATCH v5 5/6] drm: sun4i: Add support for enabling DDC
- I2C bus to sun8i_dw_hdmi glue
-Date: Tue, 21 May 2019 01:50:08 +0200
-Message-ID: <20190520235009.16734-6-megous@megous.com>
+Subject: [PATCH v5 3/6] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Tue, 21 May 2019 01:50:06 +0200
+Message-ID: <20190520235009.16734-4-megous@megous.com>
 References: <20190520235009.16734-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,135 +21,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-for the DDC bus to be usable.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+to the phy datasheet, both regulators need to be enabled at the same time,
+but we can only specify a single phy-supply in the DT.
 
-Add support for hdmi-connector node's optional ddc-en-gpios property to
-support this use case.
+This can be achieved by making one regulator depedning on the other via
+vin-supply. While it's not a technically correct description of the
+hardware, it achieves the purpose.
+
+All values of RX/TX delay were tested exhaustively and a middle one of the
+working values was chosen.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
- 2 files changed, 55 insertions(+), 3 deletions(-)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 39d8509d96a0..59b81ba02d96 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
- 	return crtcs;
- }
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 17d496990108..2c6807b74ff6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
-+static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-+					     struct platform_device **pdev_out)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *remote;
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-+	if (!remote)
-+		return -ENODEV;
-+
-+	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-+		of_node_put(remote);
-+		return -ENODEV;
-+	}
-+
-+	pdev = of_find_device_by_node(remote);
-+	of_node_put(remote);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	*pdev_out = pdev;
-+	return 0;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
-@@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
  
-+	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-+	if (!ret) {
-+		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev->dev,
-+						  "ddc-en", GPIOD_OUT_HIGH);
-+		if (IS_ERR(hdmi->ddc_en)) {
-+			platform_device_put(hdmi->connector_pdev);
-+			dev_err(dev, "Couldn't get ddc-en gpio\n");
-+			return PTR_ERR(hdmi->ddc_en);
-+		}
-+	}
+ 	chosen {
+@@ -44,6 +45,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
 +
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
--		return ret;
-+		goto err_unref_ddc_en;
- 	}
- 
-+	gpiod_set_value(hdmi->ddc_en, 1);
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
++	 * at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
 +
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_en;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
--err_disable_regulator:
-+err_disable_ddc_en:
-+	gpiod_set_value(hdmi->ddc_en, 0);
- 	regulator_disable(hdmi->regulator);
-+err_unref_ddc_en:
-+	if (hdmi->ddc_en)
-+		gpiod_put(hdmi->ddc_en);
-+
-+	platform_device_put(hdmi->connector_pdev);
- 
- 	return ret;
- }
-@@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	sun8i_hdmi_phy_remove(hdmi);
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
-+	gpiod_set_value(hdmi->ddc_en, 0);
- 	regulator_disable(hdmi->regulator);
-+
-+	if (hdmi->ddc_en)
-+		gpiod_put(hdmi->ddc_en);
-+
-+	platform_device_put(hdmi->connector_pdev);
- }
- 
- static const struct component_ops sun8i_dw_hdmi_ops = {
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..dad66b8301c2 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -9,6 +9,7 @@
- #include <drm/bridge/dw_hdmi.h>
- #include <drm/drm_encoder.h>
- #include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
-@@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
- 	struct regulator		*regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
-+	struct platform_device		*connector_pdev;
-+	struct gpio_desc		*ddc_en;
++		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
++		 * enable two regulators to power the phy. This is one way
++		 * to achieve that.
++		 */
++		vin-supply = <&reg_aldo2>; /* GMAC-3V */
++	};
  };
  
- static inline struct sun8i_dw_hdmi *
+ &cpu0 {
+@@ -58,6 +80,28 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	vmmc-supply = <&reg_cldo1>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
 -- 
 2.21.0
