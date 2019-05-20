@@ -1,120 +1,137 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v4 3/3] net: ethernet: add ag71xx driver
-Date: Mon, 20 May 2019 09:05:26 +0200
-Message-ID: <5e836144-44e5-d99c-716c-8af42486a6b0@pengutronix.de>
-References: <20190519080304.5811-1-o.rempel@pengutronix.de>
- <20190519080304.5811-4-o.rempel@pengutronix.de>
- <20190520003302.GA1695@lunn.ch>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [v2 1/5] drm/mediatek: move mipi_dsi_host_register to probe
+Date: Mon, 20 May 2019 15:06:28 +0800
+Message-ID: <1558335988.7311.34.camel@mtksdaap41>
+References: <20190416060501.76276-1-jitao.shi@mediatek.com>
+         <20190416060501.76276-2-jitao.shi@mediatek.com>
+         <1557222735.3498.11.camel@mtksdaap41> <1558258588.367.5.camel@mszsdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190520003302.GA1695@lunn.ch>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Chris Snook <chris.snook@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>, info@freifunk-bad-gandersheim.net
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1558258588.367.5.camel@mszsdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20.05.19 02:33, Andrew Lunn wrote:
-> Hi Oleksij
+On Sun, 2019-05-19 at 17:36 +0800, Jitao Shi wrote:
+> On Tue, 2019-05-07 at 17:52 +0800, CK Hu wrote:
+> > Hi, Jitao:
+> > 
+> > On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
+> > > DSI panel driver need attach function which is inculde in
+> > > mipi_dsi_host_ops.
+> > > 
+> > > If mipi_dsi_host_register is not in probe, dsi panel will
+> > > probe fail or more delay.
+> > 
+> > I think this patch just prevent delay, not to prevent dsi panel probe
+> > fail. In [1], you mention mipi_dsi_attach() is called in
+> > panel_simple_dsi_probe(), but panel_simple_dsi_probe() is trigger by
+> > mipi_dsi_host_register(), so the probe would success.
+> > 
+> > [1]
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/panel/panel-simple.c?h=v5.0-rc6#n2987
+> > 
+> > 
 > 
->> +static int ag71xx_mdio_mii_read(struct mii_bus *bus, int addr, int reg)
->> +{
->> +	struct ag71xx *ag = bus->priv;
->> +	struct net_device *ndev = ag->ndev;
->> +	int err;
->> +	int ret;
->> +
->> +	err = ag71xx_mdio_wait_busy(ag);
->> +	if (err)
->> +		return err;
->> +
->> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+> Yes, this just prevent delay.
 > 
-> It looks like you have not removed this.
-
-done.
-
+> > > 
+> > > So move the mipi_dsi_host_register to probe from bind.
+> > > 
+> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 50 ++++++++++++++++++------------
+> > >  1 file changed, 30 insertions(+), 20 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > index b00eb2d2e086..6c4ac37f983d 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > -	ret = mipi_dsi_host_register(&dsi->host);
+> > > -	if (ret < 0) {
+> > > -		dev_err(dev, "failed to register DSI host: %d\n", ret);
+> > > -		goto err_ddp_comp_unregister;
+> > > -	}
+> > > -
+> > >  	ret = mtk_dsi_create_conn_enc(drm, dsi);
+> > >  	if (ret) {
+> > >  		DRM_ERROR("Encoder create failed with %d\n", ret);
+> > > @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+> > >  	return 0;
+> > >  
+> > >  err_unregister:
+> > > -	mipi_dsi_host_unregister(&dsi->host);
+> > > -err_ddp_comp_unregister:
+> > >  	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+> > >  	return ret;
+> > >  }
+> > > @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+> > >  
+> > >  	dsi->host.ops = &mtk_dsi_ops;
+> > >  	dsi->host.dev = dev;
+> > > +	dsi->dev = dev;
+> > 
+> > Why do this?
+> > 
+> > Regards,
+> > CK
+> > 
 > 
->> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
->> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
->> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_READ);
->> +
->> +	err = ag71xx_mdio_wait_busy(ag);
->> +	if (err)
->> +		return err;
->> +
->> +	ret = ag71xx_rr(ag, AG71XX_REG_MII_STATUS);
->> +	/*
->> +	 * ar9331 doc: bits 31:16 are reserved and must be must be written
->> +	 * with zero.
->> +	 */
->> +	ret &= 0xffff;
->> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
-> 
-> Or this.
+> There are some error message require this poweron().
 
-this one is needed. MII_CMD_WRITE is a wrong name, it is actually disabling MII_CMD_READ mode.
+So this should not be in this patch. This patch is related to the timing
+of mipi_dsi_host_register().
 
-> 
->> +
->> +	netif_dbg(ag, link, ndev, "mii_read: addr=%04x, reg=%04x, value=%04x\n",
->> +		  addr, reg, ret);
->> +
->> +	return ret;
->> +}
->> +
->> +static int ag71xx_mdio_mii_write(struct mii_bus *bus, int addr, int reg,
->> +				 u16 val)
->> +{
->> +	struct ag71xx *ag = bus->priv;
->> +	struct net_device *ndev = ag->ndev;
->> +
->> +	netif_dbg(ag, link, ndev, "mii_write: addr=%04x, reg=%04x, value=%04x\n",
->> +		  addr, reg, val);
->> +
->> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
->> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
-> 
-> addr have the vale 0-31. So a mask of 0xff is a couple of bits too
-> big.
-
-done
+Regards,
+CK
 
 > 
->> +	ag71xx_wr(ag, AG71XX_REG_MII_CTRL, val);
->> +
->> +	return ag71xx_mdio_wait_busy(ag);
->> +}
+> > > +	ret = mipi_dsi_host_register(&dsi->host);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "failed to register DSI host: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > >  
+> > >  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+> > >  					  &dsi->panel, &dsi->bridge);
+> > >  	if (ret)
+> > > -		return ret;
+> > > +		goto err_unregister_host;
+> > >  
+> > >  	dsi->engine_clk = devm_clk_get(dev, "engine");
+> > >  	if (IS_ERR(dsi->engine_clk)) {
+> > >  		ret = PTR_ERR(dsi->engine_clk);
+> > >  		dev_err(dev, "Failed to get engine clock: %d\n", ret);
+> > > -		return ret;
+> > > +		goto err_unregister_host;
+> > >  	}
+> > >  
+> > >  	dsi->digital_clk = devm_clk_get(dev, "digital");
+> > >  	if (IS_ERR(dsi->digital_clk)) {
+> > >  		ret = PTR_ERR(dsi->digital_clk);
+> > >  		dev_err(dev, "Failed to get digital clock: %d\n", ret);
+> > > -		return ret;
+> > > +		goto err_unregister_host;
+> > >  	}
+> > >  
+> > >  	dsi->hs_clk = devm_clk_get(dev, "hs");
+> > >  	if (IS_ERR(dsi->hs_clk)) {
+> > >  		ret = PTR_ERR(dsi->hs_clk);
+> > >  		dev_err(dev, "Failed to get hs clock: %d\n", ret);
+> > > -		return ret;
+> > > +		goto err_unregister_host;
+> > >  	}
+> > >  
+> > >  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > 
+> > 
+> > 
 > 
->> +static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
->> +{
->> +	struct net_device *ndev = ag->ndev;
->> +	struct phy_device *phydev = ndev->phydev;
->> +	u32 cfg2;
->> +	u32 ifctl;
->> +	u32 fifo5;
->> +
->> +	if (!phydev->link && update) {
->> +		ag71xx_hw_stop(ag);
->> +		netif_carrier_off(ag->ndev);
 > 
-> phylib will take care of the carrier for you.
-
-done
-
->         Andrew
-
-thx!
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
