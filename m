@@ -1,34 +1,56 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH RESEND 1/5] ARM: dts: imx6qdl-sabresd: Assign
- corresponding power supply for LDOs
-Date: Mon, 20 May 2019 11:04:09 +0800
-Message-ID: <20190520030408.GN15856@dragon>
-References: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+Date: Mon, 20 May 2019 03:06:35 +0000
+Message-ID: <20190520032020.7920-1-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Cc: "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 12, 2019 at 09:57:20AM +0000, Anson Huang wrote:
-> On i.MX6Q/DL SabreSD board, vgen5 supplies vdd1p1/vdd2p5 LDO and
-> sw2 supplies vdd3p0 LDO, this patch assigns corresponding power
-> supply for vdd1p1/vdd2p5/vdd3p0 to avoid confusion by below log:
-> 
-> vdd1p1: supplied by regulator-dummy
-> vdd3p0: supplied by regulator-dummy
-> vdd2p5: supplied by regulator-dummy
-> 
-> With this patch, the power supply is more accurate:
-> 
-> vdd1p1: supplied by VGEN5
-> vdd3p0: supplied by SW2
-> vdd2p5: supplied by VGEN5
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Applied all, thanks.
+SW50cm9kdWNlIGZ1c2FibGUtbm9kZSBwcm9wZXJ0eSBmb3IgaS5NWCBPQ09UUCBkcml2ZXIuDQpU
+aGUgcHJvcGVydHkgd2lsbCBvbmx5IGJlIHVzZWQgYnkgRmlybXdhcmUoZWcuIFUtQm9vdCkgdG8N
+CnJ1bnRpbWUgZGlzYWJsZSB0aGUgbm9kZXMuDQoNClRha2UgaS5NWDZVTEwgZm9yIGV4YW1wbGUs
+IHRoZXJlIGFyZSBzZXZlcmFsIHBhcnRzIHRoYXQgb25seQ0KaGF2ZSBsaW1pdGVkIG1vZHVsZXMg
+ZW5hYmxlZCBjb250cm9sbGVkIGJ5IE9DT1RQIGZ1c2UuIEl0IGlzDQpub3QgZmxleGlibGUgdG8g
+cHJvdmlkZSBzZXZlcmFsIGR0cyBmb3IgdGhlIHNlcnZhbCBwYXJ0cywgaW5zdGVhZA0Kd2UgY291
+bGQgcHJvdmlkZSBvbmUgZGV2aWNlIHRyZWUgYW5kIGxldCBGaXJtd2FyZSB0byBydW50aW1lIGRp
+c2FibGUNCnRoZSBkZXZpY2UgdHJlZSBub2RlcyBmb3IgdGhvc2UgbW9kdWxlcyB0aGF0IGFyZSBk
+aXNhYmxlKGZ1c2VkKS4NCg0KU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5j
+b20+DQotLS0NCg0KQ3VycmVudGx5IE5YUCB2ZW5kb3IgdXNlIFUtQm9vdCB0byBzZXQgc3RhdHVz
+IHRvIGRpc2FibGVkIGZvciBkZXZpY2VzDQp0aGF0IGNvdWxkIG5vdCBmdW5jdGlvbiwNCmh0dHBz
+Oi8vc291cmNlLmNvZGVhdXJvcmEub3JnL2V4dGVybmFsL2lteC91Ym9vdC1pbXgvdHJlZS9hcmNo
+L2FybS9tYWNoLWlteC9teDYvbW9kdWxlX2Z1c2UuYz9oPWlteF92MjAxOC4wM180LjE0Ljk4XzIu
+MC4wX2dhI24xNDkNCkJ1dCB0aGlzIGFwcHJvYWNoIGlzIHdpbGwgbm90IHdvcmsgaWYga2VybmVs
+IGR0cyBub2RlIHBhdGggY2hhbmdlZC4NCg0KVGhlcmUgYXJlIHR3byBhcHByb2FjaGVzIHRvIHJl
+c29sdmU6DQoNCjEuIFRoaXMgcGF0Y2ggaXMgdG8gYWRkIGEgZnVzYWJsZS1ub2RlIHByb3BlcnR5
+LCBhbmQgRmlybXdhcmUgd2lsbCBwYXJzZQ0KICAgdGhlIHByb3BlcnR5IGFuZCByZWFkIGZ1c2Ug
+dG8gZGVjaWRlIHdoZXRoZXIgdG8gZGlzYWJsZSBvciBrZWVlcCBlbmFibGUNCiAgIHRoZSBub2Rl
+cy4NCg0KMi4gVGhlcmUgaXMgYW5vdGhlciBhcHByb2FjaCBpcyB0aGF0IGFkZCBudm1lbS1jZWxs
+cyBmb3IgYWxsIG5vZGVzIHRoYXQNCiAgIGNvdWxkIGJlIGRpc2FibGVkKGZ1c2VkKS4gVGhlbiBp
+biBlYWNoIGxpbnV4IGRyaXZlciB0byB1c2UgbnZtZW0NCiAgIGFwaSB0byBkZXRlY3QgZnVzZWQg
+b3Igbm90LCBvciBpbiBsaW51eCBkcml2ZXIgY29tbW9uIGNvZGUgdG8gY2hlY2sNCiAgIGRldmlj
+ZSBmdW5jdGlvbmFibGUgb3Igbm90IHdpdGggbnZtZW0gQVBJLg0KDQoNClRvIG1ha2UgaXQgZWFz
+eSB0byB3b3JrLCB3ZSBjaG9vc2UgWzFdIGhlcmUuIFBsZWFzZSBhZHZpc2Ugd2hldGhlcg0KaXQg
+aXMgYWNjZXB0YWJsZSwgYmVjYXVzZSB0aGUgcHJvcGVydHkgaXMgbm90IHVzZWQgYnkgbGludXgg
+ZHJpdmVyIGluDQphcHByb2FjaCBbMV0uIE9yIHlvdSBwcmVmZXIgWzJdIG9yIHBsZWFzZSBhZHZp
+c2UgaWYgYW55IGJldHRlciBzb2x1dGlvbi4NCg0KVGhhbmtzLg0KDQogRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL252bWVtL2lteC1vY290cC50eHQgfCA1ICsrKysrDQogMSBmaWxl
+IGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL252bWVtL2lteC1vY290cC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbnZtZW0vaW14LW9jb3RwLnR4dA0KaW5kZXggN2E5OTlhMTM1ZTU2
+Li5lOWE5OTg1ODhkYmQgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbnZtZW0vaW14LW9jb3RwLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL252bWVtL2lteC1vY290cC50eHQNCkBAIC0yMSw2ICsyMSw4IEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6DQogDQogT3B0aW9uYWwgcHJvcGVydGllczoNCiAtIHJlYWQtb25seTogZGlz
+YWJsZSB3cml0ZSBhY2Nlc3MNCistIGZ1c2FibGUtbm9kZTogYXJyYXkgb2YgcGhhbmRsZXMgd2l0
+aCByZWcgYmFzZSBhbmQgYml0IG9mZnNldCwgdGhpcw0KKwkJcHJvcGVydHkgaXMgdXNlZCBieSBG
+aXJtd2FyZSB0byBydW50aW1lIGRpc2FibGUgbm9kZXMuDQogDQogT3B0aW9uYWwgQ2hpbGQgbm9k
+ZXM6DQogDQpAQCAtNDIsNCArNDQsNyBAQCBFeGFtcGxlOg0KIAkJdGVtcG1vbl90ZW1wX2dyYWRl
+OiB0ZW1wLWdyYWRlQDIwIHsNCiAJCQlyZWcgPSA8MHgyMCA0PjsNCiAJCX07DQorDQorCQlmdXNh
+YmxlLW5vZGUgPSA8JnVzZGhjMSAweDEwIDQNCisJCQkJJnVzZGhjMiAweDEwIDU+Ow0KIAl9Ow0K
+LS0gDQoyLjE2LjQNCg0K
