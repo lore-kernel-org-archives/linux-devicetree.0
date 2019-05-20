@@ -1,42 +1,34 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 3/4] dt-bindings: spi: sun6i: Add YAML schemas
-Date: Mon, 20 May 2019 18:08:03 -0500
-Message-ID: <CAL_JsqK4aj4tNoHpnhkJfw_2+sf=EZkZ14vC=nnUDTM0Ogp20A@mail.gmail.com>
-References: <f53ee257855c6499fd783dc8665558f7670312f6.1558363790.git-series.maxime.ripard@bootlin.com>
- <682af95d93f4065ee7ab6a5d6f226c848f6a7da8.1558363790.git-series.maxime.ripard@bootlin.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: disable GPU 500 MHz OPP for veyron
+Date: Mon, 20 May 2019 16:24:21 -0700
+Message-ID: <CAD=FV=WxhL3FLYWvOoys3GOB68WVKinfgjTVK5byyzyTzVsyBw@mail.gmail.com>
+References: <20190520220051.54847-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <682af95d93f4065ee7ab6a5d6f226c848f6a7da8.1558363790.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190520220051.54847-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2019 at 9:51 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Switch the DT binding to a YAML schema to enable the DT validation.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> ---
->
-> Changes from v1:
->   - Fix the slave device regex
-> ---
->  Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml | 106 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/spi/spi-sun6i.txt                |  44 +------------------------------
->  2 files changed, 106 insertions(+), 44 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-sun6i.txt
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, May 20, 2019 at 3:01 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The NPLL is the only safe way to generate 500 MHz for the GPU. The
+> downstream Chrome OS 3.14 kernel ('official' kernel for veyron
+> devices) re-purposes NPLL to HDMI and hence disables the OPP for
+> the GPU (see https://crrev.com/c/1574579). Disable it here as well
+> to keep in sync and avoid problems in case someone decides to
+> re-purpose NPLL.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v2:
+> - patch added to the series
+> ---
+>  arch/arm/boot/dts/rk3288-veyron.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
