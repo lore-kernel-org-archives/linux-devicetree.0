@@ -1,94 +1,51 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Limit GPU frequency on veyron
- mickey to 300 MHz when the CPU gets very hot
-Date: Mon, 20 May 2019 13:16:46 -0700
-Message-ID: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
-References: <20190520170132.91571-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v2 1/7] dt-bindings: soc: Add Aspeed XDMA engine binding documentation
+Date: Mon, 20 May 2019 15:19:19 -0500
+Message-ID: <1558383565-11821-2-git-send-email-eajames@linux.ibm.com>
+References: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520170132.91571-1-mka@chromium.org>
+In-Reply-To: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: linux-aspeed@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Document the bindings.
 
-On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote=
-:
->
-> On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
-> frequency on veyron mickey to 300 MHz for CPU temperatures >=3D 85=C2=B0C=
-.
->
-> This matches the configuration of the downstream Chrome OS 3.14 kernel,
-> the 'official' kernel for mickey.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
-> entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
-> ---
->  arch/arm/boot/dts/rk3288-veyron-mickey.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/d=
-ts/rk3288-veyron-mickey.dts
-> index d889ab3c8235..f118d92a49d0 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> @@ -125,6 +125,12 @@
->                                          <&cpu2 8 THERMAL_NO_LIMIT>,
->                                          <&cpu3 8 THERMAL_NO_LIMIT>;
->                 };
-> +
-> +               /* At very hot, don't let GPU go over 300 MHz */
-> +               cpu_very_hot_limit_gpu {
-> +                       trip =3D <&cpu_alert_very_hot>;
-> +                       cooling-device =3D <&gpu 2 2>;
-> +               };
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ .../devicetree/bindings/soc/aspeed/xdma.txt        | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
 
-Two things:
-
-A) If I'm reading things properly, you're actually limiting things to
-400 MHz.  This is because you don't have <https://crrev.com/c/1574579>
-which deletes the 500 MHz GPU operating point.  So on upstream the
-available points are:
-
-0: 600 MHz
-1: 500 MHz
-2: 400 MHz
-3: 300 MHz
-4: 200 MHz
-5: 100 MHz
-
-...and downstream:
-
-0: 600 MHz
-1: 400 MHz
-2: 300 MHz
-3: 200 MHz
-4: 100 MHz
-
-Thinking about it more, I bet Heiko would actually be OK deleting the
-500 MHz GPU operating point for veyron.  Technically it's not needed
-upstream because upstream doesn't have our hacks to allow re-purposing
-NPLL for HDMI (so they _can_ make 500 MHz) but maybe we can make the
-argument that these laptops have only ever been tested with the 500
-MHz operating point removed and also that eventually someonje will
-probably figure out a way to re-purpose NPLL for HDMI even upstream...
-
-
-B) It seems like in the same patch you'd want to introduce
-"cpu_warm_limit_gpu", AKA:
-
-cpu_warm_limit_gpu {
-  trip =3D <&cpu_alert_warm>;
-  cooling-device =3D
-  <&gpu 1 1>;
-};
-
-
--Doug
+diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+new file mode 100644
+index 0000000..85e82ea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+@@ -0,0 +1,23 @@
++* Device tree bindings for the Aspeed XDMA Engine
++
++The XDMA Engine embedded in the AST2500 SOC can perform automatic DMA
++operations over PCI between the AST2500 (acting as a BMC) and a host processor.
++
++Required properties:
++
++ - compatible		"aspeed,ast2500-xdma"
++ - reg			contains the offset and length of the memory region
++			assigned to the XDMA registers
++ - resets		reset specifier for the syscon reset associated with
++			the XDMA engine
++ - interrupts		the interrupt associated with the XDMA engine on this
++			platform
++
++Example:
++
++    xdma@1e6e7000 {
++        compatible = "aspeed,ast2500-xdma";
++        reg = <0x1e6e7000 0x100>;
++        resets = <&syscon ASPEED_RESET_XDMA>;
++        interrupts = <6>;
++    };
+-- 
+1.8.3.1
